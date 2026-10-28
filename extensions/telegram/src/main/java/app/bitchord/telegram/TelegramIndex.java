@@ -17,7 +17,19 @@ final class TelegramIndex {
     interface Pages {
         /** Up to 100 messages of one kind (0 audio, 1 documents) older than the given id. */
         TdApi.FoundChatMessages page(long chat, int kind, long fromMessageId) throws Exception;
+
+        /** Telegram's count of one kind of message in a chat, as its Media tabs show it. */
+        int count(long chat, int kind) throws Exception;
+
+        /** How many messages of one kind are newer than this one, plus one. */
+        int position(long chat, int kind, long messageId) throws Exception;
     }
+
+    /** A line in BitChord's log every this many pages, with how long they took. */
+    static final int LOG_EVERY = 25;
+
+    /** How far back the time-left estimate looks. */
+    static final long RATE_WINDOW_MILLIS = 10 * 60 * 1000L;
 
     interface Clock {
         long millis();
@@ -37,6 +49,12 @@ final class TelegramIndex {
     static final long REBUILD_MILLIS = 30 * 24 * 3600 * 1000L;
 
     volatile boolean enabled = true;
+    // Messages read over time, for the time-left estimate: {millis, messages read so far}.
+    private final ArrayDeque<long[]> pace = new ArrayDeque<>();
+    private long read;
+    private int pagesSinceLog;
+    private final Set<String> asked = ConcurrentHashMap.newKeySet();
+    private long loggedAt;
     private final IndexStore store;
     private final Pages pages;
     private final Clock clock;
@@ -64,6 +82,8 @@ final class TelegramIndex {
             if (chat.built() && now - chat.builtAt > REBUILD_MILLIS) {
                 Arrays.fill(chat.cursor, 0);
                 Arrays.fill(chat.complete, false);
+                Arrays.fill(chat.total, -1);
+                Arrays.fill(chat.scanned, 0);
                 chat.generation++;
                 chat.rebuilding = true;
                 store.save(chat);
@@ -82,12 +102,45 @@ final class TelegramIndex {
     }
 
     private void build(IndexStore.State chat, int kind) throws Exception {
+        // Both totals are asked for once per run, before the first page, so progress has a
+        // percentage from the start. A build started by 1.0.8 has neither number yet.
+        if (asked.add(Long.toString(chat.chat)))
+            for (int k = 0; k < KINDS; k++)
+                try {
+                    if (chat.total[k] < 0) chat.total[k] = Math.max(0, pages.count(chat.chat, k));
+                    if (chat.scanned[k] == 0 && chat.cursor[k] != 0)
+                        chat.scanned[k] = Math.max(0, pages.position(chat.chat, k, chat.cursor[k]));
+                } catch (LiveSearch.RateLimited e) {
+                    throw e;
+                } catch (Exception e) {
+                    // Progress then shows without a percentage.
+                }
         TdApi.FoundChatMessages found = pages.page(chat.chat, kind, chat.cursor[kind]);
-        if (chat.cursor[kind] == 0 && found != null && found.totalCount > 0)
+        if (chat.total[kind] < 0 && found != null && found.totalCount >= 0)
             chat.total[kind] = found.totalCount;
         List<JSONObject> rows = new ArrayList<>();
         long oldest = read(chat.chat, found, rows);
         store.put(chat.chat, rows, chat.generation);
+        int messages = found == null || found.messages == null ? 0 : found.messages.length;
+        chat.scanned[kind] += messages;
+        progressed(messages);
+        if (++pagesSinceLog >= LOG_EVERY) {
+            long now = clock.millis();
+            HostLog.d(
+                    String.format(
+                            Locale.US,
+                            "Unofficial Telegram index: chat %d, %s, %,d of %,d messages read, %,d"
+                                    + " files kept; the last %d pages took %d s",
+                            chat.chat,
+                            kind == 0 ? "music" : "other files",
+                            chat.scanned[kind],
+                            chat.total[kind],
+                            store.count(chat.chat),
+                            pagesSinceLog,
+                            (now - loggedAt) / 1000));
+            pagesSinceLog = 0;
+            loggedAt = now;
+        }
         if (oldest == 0 || oldest == chat.cursor[kind]) {
             chat.complete[kind] = true;
             if (chat.built()) {
@@ -104,6 +157,25 @@ final class TelegramIndex {
             chat.cursor[kind] = oldest;
         }
         store.save(chat);
+    }
+
+    private synchronized void progressed(int messages) {
+        long now = clock.millis();
+        if (pace.isEmpty()) {
+            loggedAt = now;
+            pace.add(new long[] {now, read});
+        }
+        read += messages;
+        pace.add(new long[] {now, read});
+        while (pace.size() > 2 && now - pace.peekFirst()[0] > RATE_WINDOW_MILLIS) pace.pollFirst();
+    }
+
+    /** Messages read per minute lately, or 0 before there's enough to tell. */
+    synchronized double perMinute() {
+        if (pace.size() < 2) return 0;
+        long[] first = pace.peekFirst(), last = pace.peekLast();
+        long millis = Math.max(clock.millis(), last[0]) - first[0];
+        return millis < 30_000 ? 0 : (last[1] - first[1]) * 60_000.0 / millis;
     }
 
     private void topUp(IndexStore.State chat) throws Exception {
@@ -187,6 +259,20 @@ final class TelegramIndex {
         return rows;
     }
 
+    /** One chat's files posted after a message, oldest first; null until the chat is indexed. */
+    List<JSONObject> after(long chat, long message, int limit) throws Exception {
+        if (!enabled || state(chat).builtAt == 0) return null;
+        return store.after(chat, message, limit);
+    }
+
+    int countAfter(long chat, long message) throws Exception {
+        return store.countAfter(chat, message);
+    }
+
+    boolean built(long chat) throws Exception {
+        return enabled && state(chat).builtAt > 0;
+    }
+
     int count(long chat) throws Exception {
         return store.count(chat);
     }
@@ -252,22 +338,28 @@ final class TelegramIndex {
     }
 
     /**
-     * "1,234 files indexed from 2 chats", or while building, "Indexing: 12,300 files so far, of
-     * about 223,776".
+     * "1,234 files indexed from 2 chats", or while building, "Indexing: 12,920 files found · 6% ·
+     * about 1 h 40 min left (0 of 2 chats done)".
      */
     String status(Collection<Long> selected) throws Exception {
         int files = 0, done = 0, chats = 0;
-        long expected = 0;
+        long total = 0, scanned = 0;
+        boolean known = true;
         for (long id : new TreeSet<>(selected)) {
             if (id == 0) continue;
             chats++;
             IndexStore.State chat = state(id);
-            int count = store.count(id);
-            files += count;
-            if (chat.builtAt > 0) {
+            files += store.count(id);
+            if (chat.builtAt > 0 && !chat.rebuilding) {
                 done++;
-                expected += count;
-            } else expected += Math.max(count, chat.total[0]);
+                continue;
+            }
+            for (int k = 0; k < KINDS; k++) {
+                if (chat.total[k] < 0 && !chat.complete[k]) known = false;
+                long all = Math.max(chat.total[k], chat.scanned[k]);
+                total += all;
+                scanned += chat.complete[k] ? all : chat.scanned[k];
+            }
         }
         if (chats == 0) return "No music chats selected";
         if (done == chats)
@@ -278,15 +370,31 @@ final class TelegramIndex {
                     files == 1 ? "file" : "files",
                     chats,
                     chats == 1 ? "chat" : "chats");
-        String text = String.format(Locale.US, "Indexing: %,d files so far", files);
-        if (expected > files) text += String.format(Locale.US, ", of about %,d", expected);
-        if (chats > 1) text += " (" + done + " of " + chats + " chats done)";
-        return text;
+        StringBuilder text =
+                new StringBuilder(String.format(Locale.US, "Indexing: %,d files found", files));
+        if (known && total > 0) {
+            text.append(String.format(Locale.US, " · %d%%", (int) (100 * scanned / total)));
+            double rate = perMinute();
+            if (rate > 0)
+                text.append(" · about ").append(timeLeft((total - scanned) / rate)).append(" left");
+        }
+        if (chats > 1)
+            text.append(" (").append(done).append(" of ").append(chats).append(" chats done)");
+        return text.toString();
+    }
+
+    /** "40 min", "1 h 40 min", "2 days". */
+    static String timeLeft(double minutes) {
+        long m = Math.max(1, Math.round(minutes));
+        if (m < 60) return m + " min";
+        if (m < 48 * 60) return m / 60 + " h" + (m % 60 == 0 ? "" : " " + m % 60 + " min");
+        return Math.round(m / 1440.0) + " days";
     }
 
     /** Forgets everything, on disk too: when it's turned off or you sign out. */
     synchronized void clear() throws Exception {
         states.clear();
+        asked.clear();
         top.clear();
         fresh.clear();
         store.clear();

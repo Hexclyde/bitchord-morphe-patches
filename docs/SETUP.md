@@ -57,7 +57,7 @@ Each listener needs their own account, API details and access to the channel. Se
 
 ## 5. Search and play
 
-1. Tap **Open BitChord**.
+1. Go back to BitChord.
 2. Open **Search → Addons**.
 3. Search for a song title, artist or filename from your selected chats.
 4. Open a Telegram result and press **Play**.

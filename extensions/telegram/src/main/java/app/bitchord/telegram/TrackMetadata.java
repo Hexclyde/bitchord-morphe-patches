@@ -71,6 +71,9 @@ public final class TrackMetadata {
                         .put("mime", mime)
                         .put("fileName", name)
                         .put("tagged", tagged);
+        // The same for every copy of the file, in any chat: what duplicates are told apart by.
+        String unique = file.remote == null ? "" : text(file.remote.uniqueId);
+        if (!unique.isEmpty()) row.put("unique", unique);
         if (cover != null && cover.file != null && cover.file.id != 0) {
             String key = cover.file.remote == null ? "" : text(cover.file.remote.uniqueId);
             row.put("cover", cover.file.id)

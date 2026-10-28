@@ -271,21 +271,19 @@ public final class LiveSearch implements AutoCloseable {
         try {
             return gateway.search(
                     new TdApi.SearchChatMessages(
-                            chat,
-                            null,
-                            "",
-                            null,
-                            fromMessageId,
-                            0,
-                            100,
-                            kind == 0
-                                    ? new TdApi.SearchMessagesFilterAudio()
-                                    : new TdApi.SearchMessagesFilterDocument()),
+                            chat, null, "", null, fromMessageId, 0, 100, filter(kind)),
                     timeoutMillis);
         } catch (RateLimited e) {
             rateLimited(e.retrySeconds);
             throw e;
         }
+    }
+
+    /** The index's two passes: music sent as audio, then everything sent as a file. */
+    static TdApi.SearchMessagesFilter filter(int kind) {
+        return kind == 0
+                ? new TdApi.SearchMessagesFilterAudio()
+                : new TdApi.SearchMessagesFilterDocument();
     }
 
     /** No search running or waiting, so the index can fetch a page without getting in the way. */

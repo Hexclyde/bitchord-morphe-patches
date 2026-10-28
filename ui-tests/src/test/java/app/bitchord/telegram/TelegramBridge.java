@@ -69,6 +69,49 @@ public final class TelegramBridge {
         collections.add("download " + title);
     }
 
+    final MainChannel mainChannel = new MainChannel(null, (to, from, ids) -> {}, () -> 0L);
+    final List<TdApi.Chat> owned = new ArrayList<>();
+
+    List<TdApi.Chat> ownedPrivateChannels() {
+        return owned;
+    }
+
+    List<TdApi.Chat> communityChoices() throws Exception {
+        return chats();
+    }
+
+    void setMainChannel(TdApi.Chat chat) throws Exception {
+        mainChannel.setMain(chat.id, chat.title);
+    }
+
+    void setCommunity(List<TdApi.Chat> chats, boolean[] checked) throws Exception {
+        List<Long> ids = new ArrayList<>();
+        for (int i = 0; i < chats.size(); i++) if (checked[i]) ids.add(chats.get(i).id);
+        mainChannel.setCommunity(ids);
+    }
+
+    boolean importOption(String name) {
+        return mainChannel.option(name);
+    }
+
+    void setImportOption(String name, boolean on) throws Exception {
+        if (name.equals("import") && on && mainChannel.main() == 0)
+            throw new java.io.IOException("Choose your main channel first.");
+        mainChannel.setOption(name, on);
+    }
+
+    int importPerHour() {
+        return mainChannel.perHour();
+    }
+
+    void setImportPerHour(int files) throws Exception {
+        mainChannel.setPerHour(files);
+    }
+
+    String importStatus() {
+        return mainChannel.status;
+    }
+
     boolean soundCheck;
 
     boolean soundCheck() {

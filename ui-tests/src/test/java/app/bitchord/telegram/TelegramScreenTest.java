@@ -77,11 +77,17 @@ public class TelegramScreenTest {
     }
 
     SeekBar slider(View view) {
-        if (view instanceof SeekBar) return (SeekBar) view;
+        return slider(view, "Telegram audio cache target");
+    }
+
+    /** The slider with this accessibility label. */
+    SeekBar slider(View view, String label) {
+        if (view instanceof SeekBar && label.contentEquals(view.getContentDescription()))
+            return (SeekBar) view;
         if (view instanceof ViewGroup) {
             ViewGroup group = (ViewGroup) view;
             for (int i = 0; i < group.getChildCount(); i++) {
-                SeekBar found = slider(group.getChildAt(i));
+                SeekBar found = slider(group.getChildAt(i), label);
                 if (found != null) return found;
             }
         }
@@ -444,6 +450,39 @@ public class TelegramScreenTest {
         assertNotNull(
                 "The index says how far it has got",
                 text(activity.body, "12 files indexed from 1 chat"));
+        for (String option : new String[] {"import", "sync", "losslessOnly", "skipDuplicates"})
+            assertFalse(option + " starts off", bridge.importOption(option));
+        assertNotNull(text(activity.body, "Up to 100 files an hour"));
+        clickRow("Copy into main channel");
+        android.app.AlertDialog copyWarning =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        assertTrue(
+                Shadows.shadowOf(copyWarning)
+                        .getMessage()
+                        .toString()
+                        .contains("limited for a while"));
+        copyWarning.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
+        idle();
+        assertFalse("Not without a main channel", bridge.importOption("import"));
+        assertEquals("Choose your main channel first.", bridge.error);
+        org.drinkless.tdlib.TdApi.Chat library = new org.drinkless.tdlib.TdApi.Chat();
+        library.id = -500;
+        library.title = "My Library";
+        bridge.setMainChannel(library);
+        clickRow("Lossless only");
+        org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+                .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                .performClick();
+        idle();
+        assertTrue(bridge.importOption("losslessOnly"));
+        clickRow("Copy into main channel");
+        org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+                .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                .performClick();
+        idle();
+        assertTrue("On once there's a main channel", bridge.importOption("import"));
+        assertFalse("Other options stay off", bridge.importOption("sync"));
+        assertNull("No Open BitChord button", text(activity.body, "Open BitChord"));
         assertFalse("Sound check starts off", bridge.soundCheck());
         clickRow("Check matches by sound");
         android.app.AlertDialog warning =

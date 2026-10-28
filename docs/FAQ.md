@@ -105,6 +105,20 @@ Both take the chat's newest 1,000 music files. The menu shows how many songs tha
 
 Both use the saved index, so **Saved index** has to be on and done with that chat. Making the playlist sends nothing to Telegram. Each download fetches its file from Telegram, the same as playing it.
 
+## Can I collect music from other channels into my own?
+
+Yes, under **Main channel**. Choose a private channel you created as your main channel, add the community channels to copy from, and turn on **Copy into main channel**. Every option is off until you turn it on, and each one explains itself first.
+
+- Files are copied, not forwarded, so they show as your own posts without "Forwarded from". Telegram doesn't upload them again, and a copy stays in your channel even if the community channel deletes the original.
+- **Keep in sync** also copies new posts as the saved index finds them. Without it, the copy stops at what the channels had when it started.
+- **Lossless only** copies FLAC, ALAC, WAV and AIFF files and skips the rest.
+- **Skip duplicates** doesn't copy a file your main channel already has: the same Telegram file, or the same title, artist, length and format. Nothing is ever deleted.
+- The pace is 1 to 500 files an hour, and copying pauses whenever Telegram asks it to.
+
+The files come from the saved index, so **Saved index** has to be on; the community channels and your main channel are indexed too while copying is on. Only private channels you created can be the main channel, and channels with protected content can't be copied from.
+
+**This carries a risk to your account.** Telegram watches for accounts that copy many messages, and can limit or ban one that does it too fast. A slower pace is safer. You're also responsible for what you copy: only copy music you're allowed to keep.
+
 ## Can I rename the installed app?
 
 Yes. In Morphe, open **Install as Bitchord+ → Installation name** before patching. Leave it blank for **Bitchord+**. Changing the name does not create another separate installation or change your registered Telegram API app title.

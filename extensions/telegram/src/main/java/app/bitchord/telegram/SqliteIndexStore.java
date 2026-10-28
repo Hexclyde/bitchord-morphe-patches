@@ -153,6 +153,30 @@ final class SqliteIndexStore implements IndexStore {
     }
 
     @Override
+    public List<JSONObject> after(long chat, long message, int limit) throws Exception {
+        List<JSONObject> found = new ArrayList<>();
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT row FROM files WHERE chat = ? AND message > ? ORDER BY message"
+                                + " LIMIT "
+                                + Math.max(0, limit),
+                        new String[] {Long.toString(chat), Long.toString(message)})) {
+            while (c.moveToNext()) found.add(new JSONObject(c.getString(0)));
+        }
+        return found;
+    }
+
+    @Override
+    public int countAfter(long chat, long message) {
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT count(*) FROM files WHERE chat = ? AND message > ?",
+                        new String[] {Long.toString(chat), Long.toString(message)})) {
+            return c.moveToFirst() ? c.getInt(0) : 0;
+        }
+    }
+
+    @Override
     public void prune(long chat, long generation) {
         String[] args = {Long.toString(chat), Long.toString(generation)};
         db.beginTransaction();

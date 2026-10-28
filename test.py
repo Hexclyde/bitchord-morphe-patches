@@ -41,10 +41,12 @@ SOURCES = [
     "Downmix",
     "SmoothUpgrade",
     "LiveSearch",
+    "IndexStore",
     "TelegramIndex",
     "HostLibrary",
     "Fingerprint",
     "SoundCheck",
+    "MainChannel",
     "InternalAddon",
     "NativeAudio",
     "TelegramDataSource",
@@ -76,6 +78,7 @@ TESTS = [
     "HostLibraryTest",
     "FingerprintTest",
     "SoundCheckTest",
+    "MainChannelTest",
 ]
 
 subprocess.run(

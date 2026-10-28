@@ -30,12 +30,18 @@ public final class TelegramActivity extends Activity {
     ChannelView channelView;
     LinearLayout namesList;
     int namesRevision;
-    TextView indexLine;
+    TextView indexLine, importLine;
 
     /** Keeps the Saved index line counting while the page is open. */
     final Runnable indexTicker =
             new Runnable() {
                 public void run() {
+                    TextView copying = importLine;
+                    if (bridge != null
+                            && copying != null
+                            && bridge.importOption("import")
+                            && !bridge.importStatus().isEmpty())
+                        copying.setText(bridge.importStatus());
                     TextView line = indexLine;
                     if (bridge != null && line != null && bridge.searchIndex())
                         bridge.work.execute(
@@ -531,6 +537,7 @@ public final class TelegramActivity extends Activity {
                         + " the background and topped up every few hours. It answers when"
                         + " Telegram’s search is rate limited or busy, and the format legend uses"
                         + " it instead of searching Telegram. Turning it off deletes it.");
+        mainChannel();
         trackNames();
         trackDetails();
         LinearLayout playback = card("Playback");
@@ -547,7 +554,12 @@ public final class TelegramActivity extends Activity {
                 "A better copy fades in without a gap",
                 "BitChord switches copies with a short pause",
                 bridge.smoothUpgrades(),
-                bridge::setSmoothUpgrades);
+                bridge::setSmoothUpgrades,
+                null,
+                "When BitChord finds a better copy of the playing song, such as your Telegram FLAC"
+                    + " after it started from YouTube, it’s loaded in the background and faded in"
+                    + " at the same point. If that can’t happen, the switch happens the usual"
+                    + " way.");
         divider(playback);
         toggle(
                 playback,
@@ -555,7 +567,11 @@ public final class TelegramActivity extends Activity {
                 "5.1 and 7.1 files are mixed to stereo in BitChord",
                 "Android mixes surround files itself",
                 bridge.surroundAsStereo(),
-                bridge::setSurroundAsStereo);
+                bridge::setSurroundAsStereo,
+                null,
+                "Works for every song BitChord plays and doesn’t change the file. Centre and"
+                        + " surround channels are mixed in lower and the bass channel is left out,"
+                        + " as ffmpeg does. Starts with the next song.");
         divider(playback);
         toggle(
                 playback,
@@ -572,33 +588,9 @@ public final class TelegramActivity extends Activity {
                         + " plays.\n\nEach check downloads up to the first 45 seconds of the"
                         + " Telegram file, about 5 to 15 MB for a lossless file, and uses some"
                         + " battery for a few seconds. Nothing is uploaded or sent anywhere"
-                        + " else.");
-        paragraph(
-                playback,
-                "When BitChord finds a better copy of the playing song, for example your"
-                        + " Telegram FLAC after it started from YouTube, the smooth switch loads it"
-                        + " in the background and fades it in at the same point. If it can't, the"
-                        + " switch happens the usual way.");
-        paragraph(
-                playback,
-                "Play surround as stereo works for every song BitChord plays, not just Telegram"
-                    + " files. The file isn’t changed. Centre and surround channels are mixed in at"
-                    + " a lower level and the bass channel is left out, the same as converting with"
-                    + " ffmpeg. Starts with the next song.");
-        action(
-                playback,
-                "Open BitChord",
-                true,
-                () -> {
-                    startActivity(
-                            new Intent(Intent.ACTION_MAIN)
-                                    .setClassName(
-                                            getPackageName(), "com.music.bitchord.MainActivity")
-                                    .addFlags(
-                                            Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                                    | Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                    finish();
-                });
+                        + " else.",
+                "A file that’s the same recording is used the next time the song plays. Each"
+                        + " check downloads up to 15 MB of the Telegram file.");
         LinearLayout storage = card("Storage");
         paragraph(storage, "Telegram audio cache target");
         TextView cacheValue =
@@ -665,7 +657,10 @@ public final class TelegramActivity extends Activity {
                 "FLAC, WAV and ALAC count as lossless; others by bitrate",
                 "BitChord guesses from the file type",
                 bridge.reportQuality(),
-                bridge::setReportQuality);
+                bridge::setReportQuality,
+                null,
+                "BitChord uses this to choose between your file and other sources, so a"
+                        + " low-bitrate MP3 may lose to a better copy elsewhere.");
         divider(details);
         toggle(
                 details,
@@ -673,7 +668,9 @@ public final class TelegramActivity extends Activity {
                 "Uses the cover Telegram has for each file",
                 "No covers are downloaded",
                 bridge.showArtwork(),
-                bridge::setShowArtwork);
+                bridge::setShowArtwork,
+                null,
+                "Covers are saved on this phone.");
         divider(details);
         toggle(
                 details,
@@ -686,19 +683,213 @@ public final class TelegramActivity extends Activity {
         toggle(
                 details,
                 "Format legend",
-                "Shows the format next to song titles, like FLAC 24bit or MP3 320kbps. Your"
-                        + " searches also check the selected chats for a match",
+                "Shows the format next to song titles, like FLAC 24bit or MP3 320kbps",
                 "Titles only",
                 bridge.formatLegend(),
-                bridge::setFormatLegend);
+                bridge::setFormatLegend,
+                null,
+                "Your searches also check the selected chats for a match. To tell 16-bit from"
+                        + " 24-bit, the start of a few lossless files per search is downloaded.");
         paragraph(
                 details,
-                "BitChord uses the quality to choose between your Telegram file and other sources,"
-                    + " so a low-bitrate MP3 may lose to a better copy elsewhere. Covers are saved"
-                    + " on this phone. BitChord keeps search results for a few minutes, so changes"
-                    + " show up in new searches. To tell 16-bit from 24-bit, the start of a few"
-                    + " lossless files per search is downloaded.");
+                "BitChord keeps search results for a few minutes, so changes here show up in new"
+                        + " searches.");
         details.getChildAt(details.getChildCount() - 1).setPadding(0, style.dp(12), 0, style.dp(6));
+    }
+
+    /** Copying music from community channels into a private channel you own. */
+    void mainChannel() {
+        LinearLayout card = card("Main channel");
+        String main = bridge.mainChannel.mainTitle();
+        row(
+                card,
+                "Main channel",
+                main.isEmpty() ? "A private channel you own" : main,
+                "Choose",
+                this::chooseMainChannel);
+        divider(card);
+        int community = bridge.mainChannel.community().size();
+        row(
+                card,
+                "Community channels",
+                community == 0
+                        ? "Where music is copied from"
+                        : community + (community == 1 ? " channel" : " channels"),
+                "Choose",
+                this::chooseCommunity);
+        divider(card);
+        importLine =
+                toggle(
+                        card,
+                        "Copy into main channel",
+                        bridge.importStatus().isEmpty() ? "Starting…" : bridge.importStatus(),
+                        "Nothing is copied",
+                        bridge.importOption("import"),
+                        on -> bridge.setImportOption("import", on),
+                        "Music from your community channels is copied into your main channel, a few"
+                            + " files at a time, oldest post first. Copies show as your own posts,"
+                            + " without “Forwarded from”, and stay even if the community channel"
+                            + " deletes them.\n\n"
+                            + "Telegram watches for accounts that copy many messages. Going faster"
+                            + " than it likes can get your account limited for a while, or banned."
+                            + " The pace below never goes above 500 files an hour, and copying"
+                            + " pauses whenever Telegram asks.\n\n"
+                            + "You’re responsible for what you copy. Only copy music you’re allowed"
+                            + " to keep.",
+                        "The files come from the saved index, so it has to be on. Your main channel"
+                                + " has to stay private.");
+        divider(card);
+        toggle(
+                card,
+                "Keep in sync",
+                "New posts are copied as they’re found",
+                "Copies what the channels have when copying starts",
+                bridge.importOption("sync"),
+                on -> bridge.setImportOption("sync", on),
+                "Your community channels are checked for new posts every few hours while"
+                        + " BitChord is open, and new files are copied too. They count toward the"
+                        + " same hourly limit.");
+        divider(card);
+        toggle(
+                card,
+                "Lossless only",
+                "Only FLAC, ALAC, WAV and AIFF files are copied",
+                "All music files are copied",
+                bridge.importOption("losslessOnly"),
+                on -> bridge.setImportOption("losslessOnly", on),
+                "MP3, AAC, Opus and other lossy files in the community channels are skipped. A"
+                        + " file counts as lossless from its format, or for M4A files, from its"
+                        + " bitrate.");
+        divider(card);
+        toggle(
+                card,
+                "Skip duplicates",
+                "Songs your main channel already has aren’t copied again",
+                "Every file is copied, even if it’s already there",
+                bridge.importOption("skipDuplicates"),
+                on -> bridge.setImportOption("skipDuplicates", on),
+                "A file counts as already there when it’s the same Telegram file, or has the same"
+                        + " title, artist, length and format. Nothing in your main channel is"
+                        + " deleted. Copying waits until your main channel has been indexed.");
+        divider(card);
+        TextView pace =
+                style.text(
+                        "Up to " + bridge.importPerHour() + " files an hour",
+                        16,
+                        style.foreground,
+                        style.medium);
+        pace.setPadding(0, style.dp(8), 0, 0);
+        card.addView(pace);
+        SeekBar slider = new SeekBar(this);
+        slider.setMax(MainChannel.MAX_PER_HOUR - 1);
+        slider.setProgress(bridge.importPerHour() - 1);
+        slider.setContentDescription("Files copied an hour");
+        slider.setProgressTintList(android.content.res.ColorStateList.valueOf(style.foreground));
+        slider.setThumbTintList(android.content.res.ColorStateList.valueOf(style.foreground));
+        slider.setProgressBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(style.outline));
+        card.addView(slider, new LinearLayout.LayoutParams(-1, style.dp(48)));
+        slider.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener() {
+                    public void onStartTrackingTouch(SeekBar bar) {}
+
+                    public void onStopTrackingTouch(SeekBar bar) {
+                        int files = bar.getProgress() + 1;
+                        bridge.work.execute(
+                                () -> {
+                                    try {
+                                        bridge.setImportPerHour(files);
+                                    } catch (Exception e) {
+                                        bridge.fail(e);
+                                    }
+                                });
+                    }
+
+                    public void onProgressChanged(SeekBar bar, int value, boolean fromUser) {
+                        pace.setText("Up to " + (value + 1) + " files an hour");
+                    }
+                });
+        paragraph(card, "1 to 500 an hour. Slower is safer for your account.");
+    }
+
+    void chooseMainChannel() {
+        run(
+                () -> {
+                    List<TdApi.Chat> owned = bridge.ownedPrivateChannels();
+                    runOnUiThread(
+                            () -> {
+                                if (isFinishing() || isDestroyed()) return;
+                                if (owned.isEmpty()) {
+                                    confirm(
+                                            "Main channel",
+                                            "You don’t own a private channel yet. Create one in"
+                                                    + " Telegram, without a public link, and"
+                                                    + " come back.",
+                                            "Done",
+                                            () -> {});
+                                    return;
+                                }
+                                String[] names = new String[owned.size()];
+                                for (int i = 0; i < names.length; i++)
+                                    names[i] = owned.get(i).title;
+                                AlertDialog dialog =
+                                        new AlertDialog.Builder(this)
+                                                .setTitle("Main channel")
+                                                .setItems(
+                                                        names,
+                                                        (d, i) ->
+                                                                run(
+                                                                        () ->
+                                                                                bridge
+                                                                                        .setMainChannel(
+                                                                                                owned
+                                                                                                        .get(
+                                                                                                                i))))
+                                                .setNegativeButton("Cancel", null)
+                                                .create();
+                                secureWindow(dialog.getWindow());
+                                dialog.show();
+                                style.tuneDialog(dialog);
+                            });
+                });
+    }
+
+    void chooseCommunity() {
+        run(
+                () -> {
+                    List<TdApi.Chat> chats = bridge.communityChoices();
+                    List<Long> chosen = bridge.mainChannel.community();
+                    runOnUiThread(
+                            () -> {
+                                if (isFinishing() || isDestroyed()) return;
+                                String[] names = new String[chats.size()];
+                                boolean[] checked = new boolean[chats.size()];
+                                for (int i = 0; i < names.length; i++) {
+                                    names[i] = chats.get(i).title;
+                                    checked[i] = chosen.contains(chats.get(i).id);
+                                }
+                                AlertDialog dialog =
+                                        new AlertDialog.Builder(this)
+                                                .setTitle("Community channels")
+                                                .setMultiChoiceItems(
+                                                        names,
+                                                        checked,
+                                                        (d, i, value) -> checked[i] = value)
+                                                .setNegativeButton("Cancel", null)
+                                                .setPositiveButton(
+                                                        "Save",
+                                                        (d, w) ->
+                                                                run(
+                                                                        () ->
+                                                                                bridge.setCommunity(
+                                                                                        chats,
+                                                                                        checked)))
+                                                .create();
+                                secureWindow(dialog.getWindow());
+                                dialog.show();
+                                style.tuneDialog(dialog);
+                            });
+                });
     }
 
     void trackNames() {
@@ -1205,7 +1396,7 @@ public final class TelegramActivity extends Activity {
      */
     TextView toggle(
             LinearLayout p, String title, String on, String off, boolean value, Setting setting) {
-        return toggle(p, title, on, off, value, setting, null);
+        return toggle(p, title, on, off, value, setting, null, null);
     }
 
     /**
@@ -1219,6 +1410,22 @@ public final class TelegramActivity extends Activity {
             boolean value,
             Setting setting,
             String warning) {
+        return toggle(p, title, on, off, value, setting, warning, null);
+    }
+
+    /**
+     * As above, with {@code details} under the setting's own text, so an explanation lines up with
+     * the setting it's about.
+     */
+    TextView toggle(
+            LinearLayout p,
+            String title,
+            String on,
+            String off,
+            boolean value,
+            Setting setting,
+            String warning,
+            String details) {
         LinearLayout row = new LinearLayout(this);
         row.setGravity(Gravity.CENTER_VERTICAL);
         row.setMinimumHeight(style.dp(40));
@@ -1228,6 +1435,11 @@ public final class TelegramActivity extends Activity {
         TextView sub = style.text(value ? on : off, 14, style.secondary, style.regular);
         sub.setPadding(0, style.dp(4), 0, 0);
         labels.addView(sub);
+        if (details != null) {
+            TextView more = style.text(details, 13, style.secondary, style.regular);
+            more.setPadding(0, style.dp(6), 0, style.dp(4));
+            labels.addView(more);
+        }
         row.addView(labels, new LinearLayout.LayoutParams(0, -2, 1));
         TelegramSwitch toggle = new TelegramSwitch(this, style);
         toggle.setChecked(value);

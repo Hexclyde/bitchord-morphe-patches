@@ -28,6 +28,8 @@ for name in (
     "IndexStore.java",
     "SqliteIndexStore.java",
     "TelegramIndex.java",
+    "MainChannel.java",
+    "LiveSearch.java",
     "MediaPolicy.java",
     "ChannelSponsorship.java",
     "ChannelContent.java",

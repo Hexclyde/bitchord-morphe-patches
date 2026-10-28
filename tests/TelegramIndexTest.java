@@ -39,6 +39,18 @@ public final class TelegramIndexTest {
             found.messages = page.toArray(new TdApi.Message[0]);
             return found;
         }
+
+        @Override
+        public int count(long chat, int kind) {
+            return kind == 0 ? audio.size() : 0;
+        }
+
+        @Override
+        public int position(long chat, int kind, long messageId) {
+            int n = 0;
+            if (kind == 0) for (long id : audio.keySet()) if (id >= messageId) n++;
+            return n;
+        }
     }
 
     static int build(TelegramIndex index, Set<Long> chats) throws Exception {
@@ -67,11 +79,16 @@ public final class TelegramIndexTest {
         check(index.search(chats, "song", true) == null, "Not complete yet");
         check(index.search(chats, "song", false).size() == 99, "A partial index still answers");
         check(
-                index.status(chats).equals("Indexing: 100 files so far, of about 251"),
+                index.status(chats).equals("Indexing: 100 files found · 39%"),
                 "Progress against Telegram's count: " + index.status(chats));
+        clock.addAndGet(60_000);
+        check(index.step(chats), "Second page");
+        check(
+                index.status(chats).equals("Indexing: 200 files found · 79% · about 1 min left"),
+                "Time left from the pace so far: " + index.status(chats));
         int steps = build(index, chats);
         // Pages of 100, 100 and 51, an empty one to finish the audio, one for documents.
-        check(steps == 4 && chat.calls.get() == 5, "One page per step: " + chat.calls.get());
+        check(steps == 3 && chat.calls.get() == 5, "One page per step: " + chat.calls.get());
         check(index.status(chats).equals("251 files indexed from 1 chat"), index.status(chats));
         check(!index.step(chats), "Nothing to do once built");
 
@@ -169,6 +186,23 @@ public final class TelegramIndexTest {
                 "Newest three, in posting order: " + titles(newest));
         check(reopened.newest(-200, 3) == null, "Not for a chat that isn't indexed");
         check(reopened.count(-100) == 251, "Count, without the deleted file");
+
+        // A build that 1.0.8 started picks up its progress from where it had got to.
+        IndexStore.Memory old = new IndexStore.Memory();
+        old.save(
+                IndexStore.State.fromJson(
+                        -100,
+                        new JSONObject(
+                                "{\"cursor\":[151,0],\"complete\":[false,false],\"total\":[0,0],"
+                                        + "\"builtAt\":0,\"refreshed\":0}")));
+        TelegramIndex resumed = new TelegramIndex(old, chat, clock::get);
+        check(resumed.step(chats), "Carries on");
+        check(
+                resumed.status(chats).equals("Indexing: 100 files found · 80%"),
+                "Read count from the message position: " + resumed.status(chats));
+        check(TelegramIndex.timeLeft(100).equals("1 h 40 min"), "Hours");
+        check(TelegramIndex.timeLeft(3 * 1440).equals("3 days"), "Days");
+        check(TelegramIndex.timeLeft(0.2).equals("1 min"), "At least a minute");
 
         System.out.println(
                 "PASS: " + checks + " saved index build, top-up, rebuild and search checks.");

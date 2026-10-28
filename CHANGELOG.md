@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.10
+
+- **Main channel:** copy music from community channels into a private channel you own. Choose the main channel (only private channels you created) and the community channels under **Main channel**, then turn on **Copy into main channel**. Files are copied without "Forwarded from", oldest post first, and stay in your channel even if the original is deleted. **Keep in sync**, **Lossless only** and **Skip duplicates** can be turned on separately, and the pace is 1 to 500 files an hour. Everything is off by default, and each option shows a warning before it turns on: copying many messages can get a Telegram account limited.
+- The **Saved index** line shows how far it's got, from Telegram's own count of each chat's music and files, with the time left: "Indexing: 12,920 files found · 6% · about 1 h 40 min left". The second pass through a chat's files, which finds FLACs posted as files, reads as many messages as the first but finds less music, so the count of files grows slowly there while the percentage keeps moving. BitChord's log gets a progress line every 25 pages.
+- Each setting's explanation now sits under that setting, instead of in paragraphs after the last one.
+- The **Open BitChord** button is gone; Back does the same.
+
 ## 1.0.9
 
 - **Check matches by sound** (under **Playback**, off by default, with a warning when you turn it on). A Telegram file with the song's title but a length more than a few seconds off is usually another recording, but sometimes it's the same one with a longer fade or extra silence. With this on, the patch listens to the song's first 15 seconds as it plays, reads the start of the Telegram file and compares their audio fingerprints, the way Shazam does. When they're the same recording, starting at the same point, a message says so and the file plays from Telegram the next time the song does. Recordings that start at a different point are refused, so switching copies mid-song never jumps.

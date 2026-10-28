@@ -88,6 +88,7 @@ public final class TelegramBridge {
     final Map<Integer, TdApi.AccentColor> accentColors = new ConcurrentHashMap<>();
     final TelegramIndex index;
     final SoundCheck soundCheck;
+    final MainChannel mainChannel;
     private final ExecutorService soundWork =
             Executors.newSingleThreadExecutor(
                     r -> {
@@ -102,23 +103,26 @@ public final class TelegramBridge {
                         try {
                             return call(request, timeout);
                         } catch (TelegramFailure e) {
-                            if (e.code == 429) {
-                                java.util.regex.Matcher wait =
-                                        java.util.regex.Pattern.compile(
-                                                        "(?:retry after |FLOOD_WAIT_)([0-9]+)",
-                                                        java.util.regex.Pattern.CASE_INSENSITIVE)
-                                                .matcher(e.getMessage());
-                                int seconds = 60;
-                                if (wait.find())
-                                    try {
-                                        seconds = Integer.parseInt(wait.group(1));
-                                    } catch (NumberFormatException ignored) {
-                                    }
-                                throw new LiveSearch.RateLimited(seconds);
-                            }
-                            throw e;
+                            throw rateLimitOr(e);
                         }
                     });
+
+    /** Telegram's "wait N seconds" as a RateLimited; any other failure as it is. */
+    static Exception rateLimitOr(TelegramFailure e) {
+        if (e.code != 429) return e;
+        java.util.regex.Matcher wait =
+                java.util.regex.Pattern.compile(
+                                "(?:retry after |FLOOD_WAIT_)([0-9]+)",
+                                java.util.regex.Pattern.CASE_INSENSITIVE)
+                        .matcher(e.getMessage());
+        int seconds = 60;
+        if (wait.find())
+            try {
+                seconds = Integer.parseInt(wait.group(1));
+            } catch (NumberFormatException ignored) {
+            }
+        return new LiveSearch.RateLimited(seconds);
+    }
 
     private void showRateLimit(int seconds) {
         toast(LiveSearch.rateLimitNotice(seconds));
@@ -177,7 +181,53 @@ public final class TelegramBridge {
             throw new IOException("Cannot create private directory");
         credentialStore = new CredentialStore(context, home);
         remoteSearch.onRateLimited = this::showRateLimit;
-        index = new TelegramIndex(openIndex(), remoteSearch::page, System::currentTimeMillis);
+        index =
+                new TelegramIndex(
+                        openIndex(),
+                        new TelegramIndex.Pages() {
+                            @Override
+                            public TdApi.FoundChatMessages page(long chat, int kind, long from)
+                                    throws Exception {
+                                return remoteSearch.page(chat, kind, from);
+                            }
+
+                            @Override
+                            public int count(long chat, int kind) throws Exception {
+                                return call(
+                                                new TdApi.GetChatMessageCount(
+                                                        chat, null, LiveSearch.filter(kind), false),
+                                                15000)
+                                        .count;
+                            }
+
+                            @Override
+                            public int position(long chat, int kind, long message)
+                                    throws Exception {
+                                return call(
+                                                new TdApi.GetChatMessagePosition(
+                                                        chat,
+                                                        null,
+                                                        LiveSearch.filter(kind),
+                                                        message),
+                                                15000)
+                                        .count;
+                            }
+                        },
+                        System::currentTimeMillis);
+        mainChannel =
+                new MainChannel(
+                        new File(home, "main-channel.json"),
+                        (to, from, messages) -> {
+                            try {
+                                call(
+                                        new TdApi.ForwardMessages(
+                                                to, null, from, messages, null, true, false),
+                                        30000);
+                            } catch (TelegramFailure e) {
+                                throw rateLimitOr(e);
+                            }
+                        },
+                        System::currentTimeMillis);
         soundCheck =
                 new SoundCheck(
                         new File(home, "sound-checks.json"),
@@ -249,6 +299,10 @@ public final class TelegramBridge {
         indexing.setDaemon(true);
         indexing.setPriority(Thread.MIN_PRIORITY);
         indexing.start();
+        Thread importing = new Thread(this::runImport, "Telegram import");
+        importing.setDaemon(true);
+        importing.setPriority(Thread.MIN_PRIORITY);
+        importing.start();
         if (context instanceof Application) TelegramLifecycle.install((Application) context, this);
     }
 
@@ -383,7 +437,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.9"));
+                            "1.0.10"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -691,7 +745,7 @@ public final class TelegramBridge {
             try {
                 if (!ready() || !index.enabled) wait = 5000;
                 else if (!remoteSearch.idle()) wait = 1000;
-                else if (!index.step(new HashSet<>(selected))) wait = 60000;
+                else if (!index.step(indexedChats())) wait = 60000;
             } catch (LiveSearch.RateLimited e) {
                 wait = 1000L * e.retrySeconds + 1000;
             } catch (Exception e) {
@@ -703,6 +757,98 @@ public final class TelegramBridge {
                 return;
             }
         }
+    }
+
+    /** The music chats, and while importing, the main and community channels too. */
+    Set<Long> indexedChats() {
+        Set<Long> chats = new HashSet<>(selected);
+        if (mainChannel.option("import")) chats.addAll(mainChannel.indexed());
+        return chats;
+    }
+
+    /** Copies into the main channel at its own pace while the import is on. */
+    private void runImport() {
+        while (true) {
+            long wait = 60000;
+            try {
+                if (ready()) wait = mainChannel.step(index);
+            } catch (LiveSearch.RateLimited e) {
+                showRateLimit(e.retrySeconds);
+                wait = 1000L * e.retrySeconds + 5000;
+            } catch (Exception e) {
+                HostLog.d("Unofficial Telegram import stopped for a while: " + e.getMessage());
+                wait = 120000;
+            }
+            try {
+                Thread.sleep(Math.max(1000, wait));
+            } catch (InterruptedException e) {
+                return;
+            }
+        }
+    }
+
+    /** Private channels this account created: the only ones that can be the main channel. */
+    public List<TdApi.Chat> ownedPrivateChannels() throws Exception {
+        List<TdApi.Chat> owned = new ArrayList<>();
+        for (TdApi.Chat chat : chats()) {
+            if (!(chat.type instanceof TdApi.ChatTypeSupergroup)) continue;
+            TdApi.ChatTypeSupergroup type = (TdApi.ChatTypeSupergroup) chat.type;
+            if (!type.isChannel) continue;
+            TdApi.Supergroup group = call(new TdApi.GetSupergroup(type.supergroupId));
+            boolean isPublic =
+                    group.usernames != null
+                            && group.usernames.activeUsernames != null
+                            && group.usernames.activeUsernames.length > 0;
+            if (group.status instanceof TdApi.ChatMemberStatusCreator && !isPublic) owned.add(chat);
+        }
+        return owned;
+    }
+
+    /** Chats that can be imported from: readable, not protected, and not the main channel. */
+    public List<TdApi.Chat> communityChoices() throws Exception {
+        List<TdApi.Chat> chats = new ArrayList<>();
+        for (TdApi.Chat chat : chats()) if (chat.id != mainChannel.main()) chats.add(chat);
+        return chats;
+    }
+
+    public void setMainChannel(TdApi.Chat chat) throws Exception {
+        mainChannel.setMain(chat.id, chat.title);
+        List<Long> community = mainChannel.community();
+        community.remove(chat.id);
+        mainChannel.setCommunity(community);
+    }
+
+    public void setCommunity(List<TdApi.Chat> chats, boolean[] checked) throws Exception {
+        List<Long> ids = new ArrayList<>();
+        for (int i = 0; i < chats.size(); i++) if (checked[i]) ids.add(chats.get(i).id);
+        mainChannel.setCommunity(ids);
+    }
+
+    public boolean importOption(String name) {
+        return mainChannel.option(name);
+    }
+
+    public void setImportOption(String name, boolean on) throws Exception {
+        if (name.equals("import") && on) {
+            if (mainChannel.main() == 0) throw new IOException("Choose your main channel first.");
+            if (mainChannel.community().isEmpty())
+                throw new IOException("Choose at least one community channel first.");
+            if (!index.enabled)
+                throw new IOException("Turn on Saved index first. The files to copy come from it.");
+        }
+        mainChannel.setOption(name, on);
+    }
+
+    public int importPerHour() {
+        return mainChannel.perHour();
+    }
+
+    public void setImportPerHour(int files) throws Exception {
+        mainChannel.setPerHour(files);
+    }
+
+    public String importStatus() {
+        return mainChannel.status;
     }
 
     public boolean soundCheck() {
@@ -721,7 +867,7 @@ public final class TelegramBridge {
 
     public String indexStatus() {
         try {
-            return index.status(new HashSet<>(selected));
+            return index.status(indexedChats());
         } catch (Exception e) {
             return "The index can't be read right now";
         }
@@ -1216,6 +1362,7 @@ public final class TelegramBridge {
         remoteSearch.clear();
         index.clear();
         soundCheck.clear();
+        mainChannel.clear();
         names.clear();
         artwork.clear();
         formats.clear();
