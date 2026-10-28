@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.8
+
+- **A channel as a playlist:** under **Music library → Playlists and downloads**, pick a chat and **Save as playlist**. It appears in BitChord's Library, named after the chat, oldest post first, and plays from Telegram like a search result. Saving it again replaces it with the chat's current files.
+- **Download a whole channel:** **Download all** in the same place queues the files in BitChord's downloads. They're saved at BitChord's download quality, so set it to **Lossless** to keep FLAC files.
+- Both take a chat's newest 1,000 music files, and the menu shows the number of songs and the download size first. A channel of 200,000 files would otherwise make a playlist BitChord can't hold, and a download of several terabytes.
+- **The saved index handles large channels.** It's kept in a database now, instead of files that had to be read into memory and written out whole, which a channel of 200,000 files outgrew. A search takes a few hundredths of a second at that size. The index from 1.0.6 and 1.0.7 is deleted and built again.
+- The **Saved index** line keeps counting while the page is open, against Telegram's own count: "Indexing: 12,300 files so far, of about 223,776". A full rebuild, which drops deleted files, now happens monthly instead of weekly.
+- Once the saved index has every selected chat, BitChord's lookups are answered from it without asking Telegram. Telegram is only searched when the index has nothing, which also covers files posted since the last top-up. This keeps a channel download, or a long listening session, from adding up to a lot of searches.
+
 ## 1.0.7
 
 - **Fixed songs with a word like "You're" in the title playing from YouTube.** BitChord drops apostrophes before asking add-ons, so it looked for "Nobody Knows You When **Youre** Down and Out". Telegram's search matches whole words and found nothing, though the file was in the channel. When Telegram finds nothing now, the saved index is checked, and it treats "youre" and "You're" as the same word. Without the index, Telegram is searched again without such words (youre, dont, cant, aint, im and others), and the results are checked against the full title here.

@@ -20,6 +20,17 @@ public class VerifyApk {
     static final String NS = "http://schemas.android.com/apk/res/android";
     static int checks;
 
+    static final String SONG_CONSTRUCTOR =
+            "[Ljava/lang/String;, Ljava/lang/String;, Ljava/lang/String;, Ljava/lang/String;,"
+                    + " Ljava/lang/String;, Ljava/lang/String;, Ljava/util/List;,"
+                    + " Ljava/lang/String;, Ljava/lang/String;, Z, Z, Ljava/lang/String;,"
+                    + " Lcom/music/bitchord/data/model/QueueTier;, Ljava/lang/String;,"
+                    + " Ljava/lang/String;, Ljava/lang/String;, Ljava/lang/String;,"
+                    + " Ljava/lang/String;, Ljava/lang/Long;, Ljava/lang/Long;,"
+                    + " Ljava/lang/Integer;, Ljava/lang/String;, Z, Ljava/lang/Boolean;,"
+                    + " Ljava/lang/String;, Lcom/music/bitchord/data/model/PlaybackSourceType;,"
+                    + " Ljava/lang/String;]";
+
     static void check(boolean value, String name) {
         checks++;
         if (!value) throw new AssertionError(name);
@@ -235,6 +246,12 @@ public class VerifyApk {
         boolean hook = false,
                 iconPrefix = false,
                 publication = false,
+                songMaker = false,
+                playlistSave = false,
+                playlistFlow = false,
+                playlistId = false,
+                flowSwap = false,
+                downloadQueue = false,
                 version = false,
                 portal = false,
                 generic = false;
@@ -343,6 +360,16 @@ public class VerifyApk {
                 if (cls.getType().equals("Lcom/music/bitchord/playback/audio/PrecisionAudioSink;"))
                     downmixTarget =
                             cls.getInterfaces().contains("Lapp/bitchord/telegram/Downmix$Target;");
+                if (cls.getType().equals("Lcom/music/bitchord/data/spotify/LocalPlaylistStore;"))
+                    for (Field field : cls.getFields())
+                        if (field.getName().equals("_playlists")
+                                && field.getType()
+                                        .equals("Lkotlinx/coroutines/flow/StateFlowImpl;"))
+                            playlistFlow = true;
+                if (cls.getType().equals("Lcom/music/bitchord/data/spotify/LocalPlaylist;"))
+                    for (Field field : cls.getFields())
+                        if (field.getName().equals("id")
+                                && field.getType().equals("Ljava/lang/String;")) playlistId = true;
                 if (cls.getType().equals("Lapp/bitchord/telegram/TelegramBridge;"))
                     for (Field field : cls.getFields())
                         check(
@@ -360,6 +387,31 @@ public class VerifyApk {
                                 method.getImplementation() != null
                                         && method.getImplementation().getTryBlocks().isEmpty(),
                                 "Rewritten host bridge has no stale try blocks");
+                    String params = method.getParameterTypes().toString();
+                    boolean isStatic = (method.getAccessFlags() & 0x8) != 0;
+                    boolean isPublic = (method.getAccessFlags() & 0x1) != 0;
+                    if (cls.getType().equals("Lcom/music/bitchord/data/model/Song;")
+                            && method.getName().equals("<init>")
+                            && isPublic
+                            && params.equals(SONG_CONSTRUCTOR)) songMaker = true;
+                    if (cls.getType().equals("Lcom/music/bitchord/data/spotify/LocalPlaylistStore;")
+                            && method.getName().equals("savePlaylist")
+                            && isStatic
+                            && params.equals("[Ljava/lang/String;, Ljava/util/List;]"))
+                        playlistSave = true;
+                    if (cls.getType().equals("Lkotlinx/coroutines/flow/StateFlowImpl;")
+                            && (cls.getAccessFlags() & 0x1) != 0
+                            && method.getName().equals("compareAndSet")
+                            && isPublic
+                            && params.equals("[Ljava/lang/Object;, Ljava/lang/Object;]"))
+                        flowSwap = true;
+                    if (cls.getType().equals("Lcom/music/bitchord/download/Downloads;")
+                            && method.getName().equals("enqueue")
+                            && isStatic
+                            && params.equals(
+                                    "[Landroid/content/Context;,"
+                                            + " Lcom/music/bitchord/data/model/Song;,"
+                                            + " Ljava/lang/String;]")) downloadQueue = true;
                     if (cls.getType().equals("Lcom/music/bitchord/data/sources/SourceRegistry;")
                             && method.getName().equals("publish")
                             && method.getParameterTypes()
@@ -699,7 +751,7 @@ public class VerifyApk {
                                     check(
                                             !text.getString().contains("BitChord native test"),
                                             "Telegram application version is unbranded");
-                                    if (text.getString().equals("1.0.7")) version = true;
+                                    if (text.getString().equals("1.0.8")) version = true;
                                 }
                                 if (cls.getType()
                                         .equals("Lapp/bitchord/telegram/TelegramActivity;")) {
@@ -870,6 +922,11 @@ public class VerifyApk {
                     types.contains("Lorg/drinkless/tdlib/TdApi;"),
                     "Matching generated TDLib API included");
             check(publication, "Source registration method exists after R8");
+            check(songMaker, "Song constructor matches what channel playlists build");
+            check(
+                    playlistSave && playlistFlow && playlistId && flowSwap,
+                    "Playlist store can save and replace a channel playlist");
+            check(downloadQueue, "Downloads.enqueue takes a channel's songs");
             check(
                     app.getAttributeNS(NS, "extractNativeLibs").equals("true"),
                     "Native extraction enabled");

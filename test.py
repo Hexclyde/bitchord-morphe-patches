@@ -42,6 +42,7 @@ SOURCES = [
     "SmoothUpgrade",
     "LiveSearch",
     "TelegramIndex",
+    "HostLibrary",
     "InternalAddon",
     "NativeAudio",
     "TelegramDataSource",
@@ -70,6 +71,7 @@ TESTS = [
     "LegendMatchTest",
     "TelegramMatchTest",
     "TelegramIndexTest",
+    "HostLibraryTest",
 ]
 
 subprocess.run(

@@ -30,6 +30,27 @@ public final class TelegramActivity extends Activity {
     ChannelView channelView;
     LinearLayout namesList;
     int namesRevision;
+    TextView indexLine;
+
+    /** Keeps the Saved index line counting while the page is open. */
+    final Runnable indexTicker =
+            new Runnable() {
+                public void run() {
+                    TextView line = indexLine;
+                    if (bridge != null && line != null && bridge.searchIndex())
+                        bridge.work.execute(
+                                () -> {
+                                    String text = bridge.indexStatus();
+                                    runOnUiThread(
+                                            () -> {
+                                                if (line == indexLine && bridge.searchIndex())
+                                                    line.setText(text);
+                                            });
+                                });
+                    handler.postDelayed(this, 2000);
+                }
+            };
+
     final Runnable refresh =
             new Runnable() {
                 public void run() {
@@ -97,6 +118,8 @@ public final class TelegramActivity extends Activity {
         super.onResume();
         resumed = true;
         if (channelView != null) channelView.resume();
+        handler.removeCallbacks(indexTicker);
+        handler.postDelayed(indexTicker, 2000);
     }
 
     @Override
@@ -109,6 +132,7 @@ public final class TelegramActivity extends Activity {
     @Override
     protected void onPause() {
         resumed = false;
+        handler.removeCallbacks(indexTicker);
         if (channelView != null) channelView.pause();
         for (EditText field : secrets)
             field.setTransformationMethod(PasswordTransformationMethod.getInstance());
@@ -468,6 +492,13 @@ public final class TelegramActivity extends Activity {
                 "Browse",
                 this::chooseChannel);
         divider(music);
+        row(
+                music,
+                "Playlists and downloads",
+                "Save a chat’s music as a BitChord playlist, or download all of it.",
+                "Choose",
+                this::chooseCollection);
+        divider(music);
         EditText chat = input(music, "@channel or numeric chat ID", false);
         action(
                 music,
@@ -486,13 +517,14 @@ public final class TelegramActivity extends Activity {
                 "Each query shows up to 200 results across audio and music documents. Refine the"
                         + " title or artist for more specific matches.");
         divider(music);
-        toggle(
-                music,
-                "Saved index",
-                bridge.indexStatus(),
-                "Only Telegram’s own search is used",
-                bridge.searchIndex(),
-                bridge::setSearchIndex);
+        indexLine =
+                toggle(
+                        music,
+                        "Saved index",
+                        bridge.indexStatus(),
+                        "Only Telegram’s own search is used",
+                        bridge.searchIndex(),
+                        bridge::setSearchIndex);
         paragraph(
                 music,
                 "Keeps a list of the music in your selected chats on this phone, built slowly in"
@@ -888,6 +920,71 @@ public final class TelegramActivity extends Activity {
     }
 
     void chooseChannel() {
+        pickChat("Channel View", chat -> reopenChannel(chat.id));
+    }
+
+    /** A playlist or a download of a chat's newest music. */
+    void chooseCollection() {
+        pickChat(
+                "Playlists and downloads",
+                chat ->
+                        bridge.work.execute(
+                                () -> {
+                                    String[] labels;
+                                    try {
+                                        labels = bridge.collectionSummary(chat.id);
+                                    } catch (Exception e) {
+                                        bridge.fail(e);
+                                        runOnUiThread(this::updateStatus);
+                                        return;
+                                    }
+                                    runOnUiThread(() -> collectionActions(chat, labels));
+                                }));
+    }
+
+    /** The menu for one chat; {@code summary} is its song count and download size. */
+    void collectionActions(TdApi.Chat chat, String[] summary) {
+        if (isFinishing() || isDestroyed()) return;
+        String songs = summary[0], size = summary[1];
+        String[] labels = {
+            "Save as playlist (" + songs + ")", "Download all (" + songs + ", " + size + ")"
+        };
+        AlertDialog dialog =
+                new AlertDialog.Builder(this)
+                        .setTitle(chat.title)
+                        .setItems(
+                                labels,
+                                (d, which) -> {
+                                    if (which == 0)
+                                        run(() -> bridge.saveChannelPlaylist(chat.id, chat.title));
+                                    else
+                                        confirm(
+                                                "Download all",
+                                                Character.toUpperCase(songs.charAt(0))
+                                                        + songs.substring(1)
+                                                        + " from "
+                                                        + chat.title
+                                                        + ", "
+                                                        + size
+                                                        + ". They’re saved at BitChord’s download"
+                                                        + " quality, so set it to Lossless to keep"
+                                                        + " FLAC files.",
+                                                "Download",
+                                                () ->
+                                                        run(
+                                                                () ->
+                                                                        bridge.downloadChannel(
+                                                                                chat.id,
+                                                                                chat.title)));
+                                })
+                        .setNegativeButton("Cancel", null)
+                        .create();
+        secureWindow(dialog.getWindow());
+        dialog.show();
+    }
+
+    /** Asks which selected chat to use, then hands it on. */
+    void pickChat(String title, java.util.function.Consumer<TdApi.Chat> chosen) {
         run(
                 () -> {
                     List<TdApi.Chat> chats = new ArrayList<>();
@@ -912,11 +1009,11 @@ public final class TelegramActivity extends Activity {
                                     labels[i] = chats.get(i).title;
                                 AlertDialog dialog =
                                         new AlertDialog.Builder(this)
-                                                .setTitle("Channel View")
+                                                .setTitle(title)
                                                 .setItems(
                                                         labels,
                                                         (d, index) ->
-                                                                reopenChannel(chats.get(index).id))
+                                                                chosen.accept(chats.get(index)))
                                                 .setNegativeButton("Cancel", null)
                                                 .create();
                                 secureWindow(dialog.getWindow());
@@ -1089,7 +1186,7 @@ public final class TelegramActivity extends Activity {
      * A setting with a switch. Flipping it saves in the background without rebuilding the page, so
      * the screen stays where it is; if saving fails the switch flips back.
      */
-    void toggle(
+    TextView toggle(
             LinearLayout p, String title, String on, String off, boolean value, Setting setting) {
         LinearLayout row = new LinearLayout(this);
         row.setGravity(Gravity.CENTER_VERTICAL);
@@ -1129,6 +1226,7 @@ public final class TelegramActivity extends Activity {
         row.setClickable(true);
         row.setFocusable(true);
         p.addView(row);
+        return sub;
     }
 
     EditText input(LinearLayout p, String label, boolean secret) {

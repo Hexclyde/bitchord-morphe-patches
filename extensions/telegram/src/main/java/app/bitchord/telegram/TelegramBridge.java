@@ -165,9 +165,7 @@ public final class TelegramBridge {
             throw new IOException("Cannot create private directory");
         credentialStore = new CredentialStore(context, home);
         remoteSearch.onRateLimited = this::showRateLimit;
-        index =
-                new TelegramIndex(
-                        new File(home, "index"), remoteSearch::page, System::currentTimeMillis);
+        index = new TelegramIndex(openIndex(), remoteSearch::page, System::currentTimeMillis);
         names = new TrackNames(new File(home, "track-names.json"));
         artwork = new Artwork(new File(home, "artwork"));
         formats = new FormatProbe(new File(home, "formats.json"));
@@ -214,7 +212,7 @@ public final class TelegramBridge {
         Downmix.enabled = config.optBoolean("surroundAsStereo", Downmix.enabled);
         SmoothUpgrade.enabled = config.optBoolean("smoothUpgrades", SmoothUpgrade.enabled);
         FormatLegend.enabled = config.optBoolean("formatLegend", FormatLegend.enabled);
-        index.enabled = config.optBoolean("searchIndex", true);
+        index.enabled = !savedIndexBroken && config.optBoolean("searchIndex", true);
         JSONArray ids = config.optJSONArray("chats");
         if (ids != null) for (int i = 0; i < ids.length(); i++) selected.add(ids.getLong(i));
         // Legacy catalogue files are left on disk for rollback, but are no longer loaded or
@@ -361,7 +359,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.7"));
+                            "1.0.8"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -503,22 +501,23 @@ public final class TelegramBridge {
                             });
         if (session != generation) throw new IOException("Telegram session changed. Search again.");
         error = found.warning;
-        status = "Telegram returned " + rows.size() + " tracks. No history scan is required.";
+        status = "Found " + rows.size() + (rows.size() == 1 ? " track." : " tracks.");
         return rows;
     }
 
     /**
-     * A background search is answered by the index once it covers every selected chat, without
-     * asking Telegram. Anything else asks Telegram, and falls back to the index when Telegram can't
+     * Searches the index first and Telegram second, and falls back to the index when Telegram can't
      * answer: rate limited, busy or timed out.
      */
     private LiveSearch.Result search(String query, long session, boolean background)
             throws Exception {
         Set<Long> chats = new HashSet<>(selected);
-        if (background) {
-            List<JSONObject> saved = index.search(chats, query, true);
-            if (saved != null) return new LiveSearch.Result(saved, "");
-        }
+        // Once every selected chat is indexed, the index answers without asking Telegram. A
+        // background search takes its answer even when it's empty; anything else asks Telegram
+        // when the index has nothing, in case the file was posted since the last top-up.
+        List<JSONObject> indexed = index.search(chats, query, true);
+        if (indexed != null && (background || !indexed.isEmpty()))
+            return new LiveSearch.Result(indexed, "");
         LiveSearch.Result found;
         try {
             found = remoteSearch.search(chats, query, session, background);
@@ -567,6 +566,100 @@ public final class TelegramBridge {
         return new LiveSearch.Result(kept, again.warning);
     }
 
+    /** At most this many of a chat's newest files go into a playlist or a download. */
+    static final int COLLECTION_LIMIT = 1000;
+
+    /**
+     * A selected chat's newest music files, up to {@link #COLLECTION_LIMIT}, oldest post first,
+     * from the saved index and named the way search shows them.
+     */
+    public List<JSONObject> channelTracks(long chat) throws Exception {
+        if (!index.enabled)
+            throw new IOException("Turn on Saved index first. The songs come from it.");
+        List<JSONObject> rows = index.newest(chat, COLLECTION_LIMIT);
+        if (rows == null)
+            throw new IOException(
+                    "This chat is still being indexed. Try again when Saved index says it's done.");
+        List<JSONObject> named = new ArrayList<>();
+        for (JSONObject row : present(rows)) named.add(useTrackNames ? names.apply(row) : row);
+        if (named.isEmpty()) throw new IOException("There's no music in this chat yet.");
+        return named;
+    }
+
+    /**
+     * What a playlist or download of a chat would hold, for the menu: "newest 1,000 of 223,776
+     * songs" and the download size.
+     */
+    public String[] collectionSummary(long chat) throws Exception {
+        List<JSONObject> rows = channelTracks(chat);
+        int all = index.count(chat);
+        long bytes = 0;
+        for (JSONObject row : rows) bytes += Math.max(0, row.optLong("size"));
+        String songs =
+                rows.size() < all
+                        ? String.format(Locale.US, "newest %,d of %,d songs", rows.size(), all)
+                        : String.format(
+                                Locale.US,
+                                "%,d %s",
+                                rows.size(),
+                                rows.size() == 1 ? "song" : "songs");
+        return new String[] {songs, TrackDetails.size(bytes)};
+    }
+
+    /**
+     * Saves a chat's music as a playlist in BitChord's Library, named after the chat. Saving again
+     * replaces the playlist with the chat's current files.
+     */
+    public void saveChannelPlaylist(long chat, String title) throws Exception {
+        List<Object> songs = HostLibrary.songs(channelTracks(chat), showArtwork ? artwork : null);
+        JSONObject saved = config.optJSONObject("playlists");
+        if (saved == null) saved = new JSONObject();
+        String key = Long.toString(chat);
+        String id = HostLibrary.savePlaylist(title, songs, saved.optString(key, null));
+        saved.put(key, id);
+        config.put("playlists", saved);
+        saveConfig();
+        status =
+                String.format(
+                        Locale.US,
+                        "Saved %,d %s as the playlist “%s” in BitChord’s Library.",
+                        songs.size(),
+                        songs.size() == 1 ? "song" : "songs",
+                        title);
+    }
+
+    /** Queues a chat's newest music files in BitChord's downloads. */
+    public void downloadChannel(long chat, String title) throws Exception {
+        List<Object> songs = HostLibrary.songs(channelTracks(chat), showArtwork ? artwork : null);
+        HostLibrary.download(context, songs, title);
+        status =
+                String.format(
+                        Locale.US,
+                        "Queued %,d %s from %s in BitChord’s downloads.",
+                        songs.size(),
+                        songs.size() == 1 ? "song" : "songs",
+                        title);
+    }
+
+    /**
+     * The saved index's database. 1.0.6 and 1.0.7 kept it as JSON files in "index", which a large
+     * channel outgrows; those are deleted and the chats are indexed again.
+     */
+    private IndexStore openIndex() {
+        File[] old = new File(home, "index").listFiles();
+        if (old != null) for (File f : old) f.delete();
+        new File(home, "index").delete();
+        try {
+            return new SqliteIndexStore(new File(home, "index.db"));
+        } catch (RuntimeException e) {
+            HostLog.d("Unofficial Telegram index couldn't be opened: " + e.getMessage());
+            savedIndexBroken = true;
+            return new IndexStore.Memory();
+        }
+    }
+
+    private boolean savedIndexBroken;
+
     /** Builds and tops up the index a page at a time while nothing else is searching. */
     private void runIndex() {
         while (true) {
@@ -593,10 +686,16 @@ public final class TelegramBridge {
     }
 
     public String indexStatus() {
-        return index.status(new HashSet<>(selected));
+        try {
+            return index.status(new HashSet<>(selected));
+        } catch (Exception e) {
+            return "The index can't be read right now";
+        }
     }
 
     public void setSearchIndex(boolean on) throws Exception {
+        if (on && savedIndexBroken)
+            throw new IOException("The index's database couldn't be opened on this phone.");
         index.enabled = on;
         if (!on) index.clear();
         config.put("searchIndex", on);

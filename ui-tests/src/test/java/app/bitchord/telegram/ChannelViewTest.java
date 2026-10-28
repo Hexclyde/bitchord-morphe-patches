@@ -184,6 +184,51 @@ public class ChannelViewTest {
     }
 
     @Test
+    public void channelAsPlaylistOrDownload() throws Exception {
+        activity.chooseCollection();
+        drain();
+        android.app.AlertDialog chats =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        assertEquals("Playlists and downloads", Shadows.shadowOf(chats).getTitle().toString());
+        Shadows.shadowOf(chats).clickOnItem(0);
+        drain();
+        android.app.AlertDialog actions =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        assertEquals(
+                "Save as playlist (newest 1,000 of 223,776 songs)",
+                actions.getListView().getAdapter().getItem(0).toString());
+        assertEquals(
+                "Download all (newest 1,000 of 223,776 songs, 31.4 GB)",
+                actions.getListView().getAdapter().getItem(1).toString());
+        assertTrue(
+                (actions.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_SECURE)
+                        != 0);
+        Shadows.shadowOf(actions).clickOnItem(0);
+        drain();
+        String title = Shadows.shadowOf(actions).getTitle().toString();
+        assertEquals(java.util.List.of("playlist " + title), bridge.collections);
+
+        activity.chooseCollection();
+        drain();
+        Shadows.shadowOf(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+                .clickOnItem(0);
+        drain();
+        Shadows.shadowOf(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+                .clickOnItem(1);
+        android.app.AlertDialog confirm =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        assertEquals(1, bridge.collections.size());
+        assertTrue(
+                Shadows.shadowOf(confirm)
+                        .getMessage()
+                        .toString()
+                        .startsWith("Newest 1,000 of 223,776 songs from "));
+        confirm.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
+        drain();
+        assertEquals("download " + title, bridge.collections.get(1));
+    }
+
+    @Test
     public void impressionsRequireForegroundFocusDrawAndFullText() throws Exception {
         ChannelView view = open();
         controller.windowFocusChanged(true);

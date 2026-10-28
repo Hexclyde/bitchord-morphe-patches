@@ -62,6 +62,13 @@ public final class TrackDetails {
         return "";
     }
 
+    /** "850 MB", "31.4 GB": a download's size, as phones show storage. */
+    static String size(long bytes) {
+        if (bytes >= 1_000_000_000L)
+            return String.format(Locale.US, "%.1f GB", bytes / 1_000_000_000.0);
+        return Math.max(1, Math.round(bytes / 1_000_000.0)) + " MB";
+    }
+
     /** Average bitrate in kbps, or 0 when the size or length is unknown. */
     public static int kbps(long bytes, int seconds) {
         if (bytes <= 0 || seconds <= 0) return 0;

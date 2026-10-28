@@ -20,7 +20,9 @@ Yes, after its upload to Telegram has completed. The channel message and file mu
 
 You don't have to wait for anything. Search runs against your selected chats when you enter a query, and returns up to 200 tracks, so search by a specific title, artist or filename.
 
-With **Saved index** on (under **Music chats**), the patch also lists your selected chats' music in the background, slowly, so it never looks like a burst of searches. That list answers when Telegram's search is rate limited or busy, and the format legend uses it instead of searching Telegram. Turning it off deletes it.
+With **Saved index** on (under **Music chats**), the patch also lists your selected chats' music in the background, slowly, so it never looks like a burst of searches. Once it's built, lookups are answered from it, and Telegram is only searched when it has nothing. It also answers when Telegram's search is rate limited or busy. Turning it off deletes it.
+
+The **Saved index** line counts the files as they come in, against Telegram's own count for the chat. It goes through about 3,000 files a minute, so a channel of 200,000 files takes over an hour the first time, and uses about 150 MB of storage.
 
 ## Why does regular search still play from YouTube?
 
@@ -83,6 +85,17 @@ It opens the patch's own settings page, the same one as **Settings → Account &
 ## What is telegram.bitchord.invalid?
 
 It's the address BitChord uses to talk to the patch, and you'll see it in BitChord's log as `https://telegram.bitchord.invalid/***`. It never leaves your phone: the patch answers it inside the app, and there's no website or server behind it. Domains ending in `.invalid` are reserved and can't exist on the internet, so even if a request did get out, it couldn't reach anyone.
+
+## Can I play or download a whole channel?
+
+Yes. Under **Music library → Playlists and downloads**, pick a chat and choose:
+
+- **Save as playlist** makes a playlist named after the chat in BitChord's **Library**, oldest post first. Save it again later to bring it up to date; the old copy is replaced.
+- **Download all** puts the files in BitChord's downloads. They're saved at BitChord's download quality, so set **Download quality** to **Lossless** to keep FLAC files as FLAC.
+
+Both take the chat's newest 1,000 music files. The menu shows how many songs that is, and the download's size, before you confirm.
+
+Both use the saved index, so **Saved index** has to be on and done with that chat. Making the playlist sends nothing to Telegram. Each download fetches its file from Telegram, the same as playing it.
 
 ## Can I rename the installed app?
 

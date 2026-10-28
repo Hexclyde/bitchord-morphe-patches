@@ -55,6 +55,20 @@ public final class TelegramBridge {
 
     void probeLater(JSONObject row) {}
 
+    final List<String> collections = new ArrayList<>();
+
+    String[] collectionSummary(long chat) {
+        return new String[] {"newest 1,000 of 223,776 songs", "31.4 GB"};
+    }
+
+    void saveChannelPlaylist(long chat, String title) {
+        collections.add("playlist " + title);
+    }
+
+    void downloadChannel(long chat, String title) {
+        collections.add("download " + title);
+    }
+
     boolean searchIndex = true;
 
     boolean searchIndex() {

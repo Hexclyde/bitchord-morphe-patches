@@ -3,8 +3,6 @@ package app.bitchord.telegram;
 import org.drinkless.tdlib.TdApi;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -37,6 +35,7 @@ public final class TelegramIndexTest {
                 for (TdApi.Message m : audio.values())
                     if ((from == 0 || m.id < from) && page.size() < 100) page.add(m);
             TdApi.FoundChatMessages found = new TdApi.FoundChatMessages();
+            found.totalCount = kind == 0 ? audio.size() : 0;
             found.messages = page.toArray(new TdApi.Message[0]);
             return found;
         }
@@ -55,19 +54,21 @@ public final class TelegramIndexTest {
     }
 
     public static void main(String[] args) throws Exception {
-        File dir = Files.createTempDirectory("index").toFile();
+        IndexStore.Memory store = new IndexStore.Memory();
         AtomicLong clock = new AtomicLong(1_000_000);
         FakeChat chat = new FakeChat();
         for (long id = 1; id <= 250; id++) chat.add(id, "Song " + id);
         chat.add(300, "Nobody Knows You When You're Down and Out");
         Set<Long> chats = Collections.singleton(-100L);
-        TelegramIndex index = new TelegramIndex(dir, chat, clock::get);
+        TelegramIndex index = new TelegramIndex(store, chat, clock::get);
 
         check(index.search(chats, "song", false) == null, "Nothing to answer from yet");
         check(index.step(chats), "Starts building");
         check(index.search(chats, "song", true) == null, "Not complete yet");
         check(index.search(chats, "song", false).size() == 99, "A partial index still answers");
-        check(index.status(chats).equals("100 files so far, 0 of 1 chats done"), "Progress");
+        check(
+                index.status(chats).equals("Indexing: 100 files so far, of about 251"),
+                "Progress against Telegram's count: " + index.status(chats));
         int steps = build(index, chats);
         // Pages of 100, 100 and 51, an empty one to finish the audio, one for documents.
         check(steps == 4 && chat.calls.get() == 5, "One page per step: " + chat.calls.get());
@@ -96,8 +97,7 @@ public final class TelegramIndexTest {
                 TelegramIndex.withoutContractions("Don't Stop Me Now") == null,
                 "A query with its apostrophe is left alone");
         check(
-                TelegramIndex.looseWords("Ain’t No Sunshine")
-                        .containsAll(List.of("aint", "ain", "t")),
+                IndexStore.looseWords("Ain’t No Sunshine").containsAll(List.of("aint", "ain", "t")),
                 "Curly apostrophes too");
         check(index.search(chats, "artist nobody", true).size() == 1, "Artist words count");
         check(index.search(chats, "nobody cares", true).isEmpty(), "Every word must match");
@@ -117,12 +117,12 @@ public final class TelegramIndexTest {
         check(chat.calls.get() - before == 2, "One page per kind, stopping at a known post");
         check(index.search(chats, "new upload", true).size() == 1, "New post found");
 
-        // Saved: a new index answers straight away.
-        TelegramIndex reopened = new TelegramIndex(dir, chat, clock::get);
+        // Saved: a new index on the same store answers straight away.
+        TelegramIndex reopened = new TelegramIndex(store, chat, clock::get);
         check(reopened.search(chats, "new upload", true).size() == 1, "Loaded from disk");
         check(!reopened.step(chats), "Nothing to do after loading");
 
-        // A weekly rebuild drops files deleted from the chat, and answers meanwhile.
+        // A monthly rebuild drops files deleted from the chat, and answers meanwhile.
         chat.audio.remove(5L);
         clock.addAndGet(TelegramIndex.REBUILD_MILLIS + 1);
         check(reopened.step(chats), "Rebuild starts");
@@ -151,15 +151,24 @@ public final class TelegramIndexTest {
         check(!reopened.step(chats), "No work while off");
         check(reopened.search(chats, "nobody", false) == null, "No answers while off");
         reopened.clear();
-        check(Objects.requireNonNull(dir.listFiles()).length == 0, "Files deleted");
+        check(store.count(-100) == 0, "Files deleted");
         reopened.enabled = true;
         check(reopened.search(chats, "nobody", false) == null, "Starts again empty");
+        check(reopened.step(chats), "And builds again");
 
-        // A damaged file is rebuilt, not trusted.
-        Files.write(new File(dir, "-100.json").toPath(), "{".getBytes());
-        TelegramIndex damaged = new TelegramIndex(dir, chat, clock::get);
-        check(damaged.search(chats, "nobody", false) == null, "Damaged file ignored");
-        check(damaged.step(chats), "And rebuilt");
+        // Playlists and downloads take a chat's newest files, oldest first.
+        build(reopened, chats);
+        List<JSONObject> newest = reopened.newest(-100, 3);
+        check(
+                titles(newest)
+                        .equals(
+                                List.of(
+                                        "Song 250",
+                                        "Nobody Knows You When You're Down and Out",
+                                        "New Upload")),
+                "Newest three, in posting order: " + titles(newest));
+        check(reopened.newest(-200, 3) == null, "Not for a chat that isn't indexed");
+        check(reopened.count(-100) == 251, "Count, without the deleted file");
 
         System.out.println(
                 "PASS: " + checks + " saved index build, top-up, rebuild and search checks.");

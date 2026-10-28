@@ -1,0 +1,135 @@
+package app.bitchord.telegram;
+
+import static org.junit.Assert.*;
+
+import org.json.JSONObject;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
+
+import java.io.File;
+import java.util.*;
+
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = 34)
+public class SqliteIndexStoreTest {
+    static JSONObject row(long chat, long message, String title, String artist) throws Exception {
+        return new JSONObject()
+                .put("id", chat + "_" + message)
+                .put("chat", chat)
+                .put("message", message)
+                .put("title", title)
+                .put("artist", artist)
+                .put("fileName", title + ".flac");
+    }
+
+    static List<String> titles(List<JSONObject> rows) {
+        List<String> out = new ArrayList<>();
+        for (JSONObject row : rows) out.add(row.optString("title"));
+        return out;
+    }
+
+    SqliteIndexStore open() {
+        return new SqliteIndexStore(
+                new File(RuntimeEnvironment.getApplication().getFilesDir(), "test/index.db"));
+    }
+
+    @Test
+    public void storesSearchesAndPrunes() throws Exception {
+        SqliteIndexStore store = open();
+        store.put(
+                -100,
+                List.of(
+                        row(-100, 1, "Nobody Knows You When You're Down and Out", "Nina Simone"),
+                        row(-100, 2, "Nobody Home", "Pink Floyd"),
+                        row(-100, 3, "Ain’t No Sunshine", "Bill Withers")),
+                1);
+        store.put(-200, List.of(row(-200, 9, "Nobody Home", "Cover Band")), 1);
+
+        assertEquals(3, store.count(-100));
+        assertTrue(store.has(-100, 2));
+        assertFalse(store.has(-100, 4));
+        assertEquals(
+                List.of("Nobody Home", "Nobody Knows You When You're Down and Out"),
+                titles(store.search(List.of(-100L), TrackNames.words("nobody"), 200)));
+        assertEquals(
+                "BitChord's run-together contraction",
+                1,
+                store.search(List.of(-100L), TrackNames.words("nobody knows youre down"), 200)
+                        .size());
+        assertEquals(
+                "Curly apostrophe",
+                1,
+                store.search(List.of(-100L), TrackNames.words("aint no sunshine"), 200).size());
+        assertEquals(
+                "Words start words",
+                2,
+                store.search(List.of(-100L), TrackNames.words("nob"), 200).size());
+        assertEquals(
+                "Chats are kept apart",
+                List.of("Nobody Home", "Nobody Home"),
+                titles(store.search(List.of(-100L, -200L), TrackNames.words("home"), 200)));
+        assertEquals(1, store.search(List.of(-100L, -200L), TrackNames.words("nobody"), 1).size());
+        assertEquals(List.of("Ain’t No Sunshine", "Nobody Home"), titles(store.newest(-100, 2)));
+
+        // Updating a file keeps one copy; a rebuild drops what it didn't see.
+        store.put(-100, List.of(row(-100, 2, "Nobody Home (Remastered)", "Pink Floyd")), 2);
+        store.put(-100, List.of(row(-100, 3, "Ain’t No Sunshine", "Bill Withers")), 2);
+        store.prune(-100, 2);
+        assertEquals(2, store.count(-100));
+        assertEquals(
+                List.of("Nobody Home (Remastered)"),
+                titles(store.search(List.of(-100L), TrackNames.words("nobody"), 200)));
+        assertTrue(
+                "Its words went too",
+                store.search(List.of(-100L), TrackNames.words("knows"), 200).isEmpty());
+        assertEquals(1, store.count(-200));
+
+        IndexStore.State state = store.state(-100);
+        assertEquals(0, state.builtAt);
+        state.cursor[0] = 77;
+        state.total[0] = 223776;
+        state.builtAt = 5;
+        store.save(state);
+        IndexStore.State again = open().state(-100);
+        assertEquals(77, again.cursor[0]);
+        assertEquals(223776, again.total[0]);
+        assertEquals(5, again.builtAt);
+
+        store.clear();
+        assertEquals(0, store.count(-100));
+        assertEquals(0, store.state(-100).builtAt);
+    }
+
+    @Test
+    public void largeChatSearchesQuickly() throws Exception {
+        SqliteIndexStore store = open();
+        Random random = new Random(1);
+        String[] artists = {"Pink Floyd", "Nina Simone", "Dean Martin", "Ella Fitzgerald"};
+        for (int page = 0; page < 500; page++) {
+            List<JSONObject> rows = new ArrayList<>();
+            for (int i = 0; i < 100; i++) {
+                long message = page * 100L + i + 1;
+                rows.add(
+                        row(
+                                -100,
+                                message,
+                                "Track " + random.nextInt(100000) + " Take " + message,
+                                artists[random.nextInt(artists.length)]));
+            }
+            store.put(-100, rows, 1);
+        }
+        assertEquals(50000, store.count(-100));
+        long start = System.nanoTime();
+        List<JSONObject> found = store.search(List.of(-100L), TrackNames.words("take 4999"), 200);
+        List<JSONObject> common = store.search(List.of(-100L), TrackNames.words("track"), 200);
+        long millis = (System.nanoTime() - start) / 1_000_000;
+        assertFalse(found.isEmpty());
+        assertEquals(200, common.size());
+        assertEquals("Newest first", 50000, common.get(0).getLong("message"));
+        assertTrue("Searching 50,000 files took " + millis + " ms", millis < 1000);
+        store.clear();
+    }
+}
