@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.7
+
+- **Fixed songs with a word like "You're" in the title playing from YouTube.** BitChord drops apostrophes before asking add-ons, so it looked for "Nobody Knows You When **Youre** Down and Out". Telegram's search matches whole words and found nothing, though the file was in the channel. When Telegram finds nothing now, the saved index is checked, and it treats "youre" and "You're" as the same word. Without the index, Telegram is searched again without such words (youre, dont, cant, aint, im and others), and the results are checked against the full title here.
+
 ## 1.0.6
 
 - **Saved index:** the patch keeps a list of the music files in your selected chats on your phone. It's built slowly in the background, one page of 100 files every few seconds and only while nothing else is searching, so it doesn't add to Telegram's limits. It's topped up with new posts every few hours and rebuilt weekly, which drops deleted files. When Telegram's search is rate limited, busy or times out, BitChord's lookups are answered from it, so songs can still play from Telegram. The format legend and name suggestions search it instead of Telegram once it's built. It's on by default. Turn it off under **Music chats → Saved index**, which also deletes it. BitChord's log notes when a search was answered from the index.

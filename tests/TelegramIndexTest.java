@@ -79,6 +79,26 @@ public final class TelegramIndexTest {
                 titles(nobody).equals(List.of("Nobody Knows You When You're Down and Out")),
                 "Words match at their start: " + titles(nobody));
         check(index.search(chats, "you re down", true).size() == 1, "Apostrophes are ignored");
+        check(
+                index.search(chats, "nobody knows you when youre down out", true).size() == 1,
+                "BitChord's 'youre' matches 'You're'");
+        check(
+                TelegramIndex.withoutContractions(
+                                "nobody knows you when youre down out nina simone")
+                        .equals("nobody knows you when down out nina simone"),
+                "Run-together words dropped for Telegram");
+        check(TelegramIndex.withoutContractions("sway dean martin") == null, "Nothing to drop");
+        check(TelegramIndex.withoutContractions("youre") == null, "Nothing left");
+        check(
+                TelegramIndex.withoutContractions("dont stop me now").equals("stop me now"),
+                "Other run-together words too");
+        check(
+                TelegramIndex.withoutContractions("Don't Stop Me Now") == null,
+                "A query with its apostrophe is left alone");
+        check(
+                TelegramIndex.looseWords("Ain’t No Sunshine")
+                        .containsAll(List.of("aint", "ain", "t")),
+                "Curly apostrophes too");
         check(index.search(chats, "artist nobody", true).size() == 1, "Artist words count");
         check(index.search(chats, "nobody cares", true).isEmpty(), "Every word must match");
         check(index.search(chats, "song", true).size() == TelegramIndex.MAX_RESULTS, "Capped");

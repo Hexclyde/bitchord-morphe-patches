@@ -361,7 +361,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.6"));
+                            "1.0.7"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -519,8 +519,9 @@ public final class TelegramBridge {
             List<JSONObject> saved = index.search(chats, query, true);
             if (saved != null) return new LiveSearch.Result(saved, "");
         }
+        LiveSearch.Result found;
         try {
-            return remoteSearch.search(chats, query, session, background);
+            found = remoteSearch.search(chats, query, session, background);
         } catch (Exception e) {
             if (background) throw e;
             List<JSONObject> saved = index.search(chats, query, false);
@@ -535,6 +536,35 @@ public final class TelegramBridge {
                             + (saved.size() == 1 ? " file" : " files"));
             return new LiveSearch.Result(saved, "");
         }
+        if (background || !found.tracks.isEmpty()) return found;
+        // Nothing found. Telegram matches whole words, so a file it has can still be missed, as
+        // "You're" is for BitChord's "youre": try the saved index, then Telegram without those
+        // words.
+        List<JSONObject> saved = index.search(chats, query, false);
+        if (saved != null && !saved.isEmpty()) {
+            HostLog.d(
+                    "Unofficial Telegram search '"
+                            + query
+                            + "' found nothing on Telegram; the saved index has "
+                            + saved.size()
+                            + (saved.size() == 1 ? " file" : " files"));
+            return new LiveSearch.Result(saved, "");
+        }
+        String relaxed = TelegramIndex.withoutContractions(query);
+        if (relaxed == null) return found;
+        List<String> wanted = TrackNames.words(query);
+        List<JSONObject> kept = new ArrayList<>();
+        LiveSearch.Result again = remoteSearch.search(chats, relaxed, session, false);
+        for (JSONObject row : again.tracks) if (TelegramIndex.matches(row, wanted)) kept.add(row);
+        HostLog.d(
+                "Unofficial Telegram search '"
+                        + query
+                        + "' found nothing; searched again as '"
+                        + relaxed
+                        + "' and kept "
+                        + kept.size()
+                        + (kept.size() == 1 ? " file" : " files"));
+        return new LiveSearch.Result(kept, again.warning);
     }
 
     /** Builds and tops up the index a page at a time while nothing else is searching. */

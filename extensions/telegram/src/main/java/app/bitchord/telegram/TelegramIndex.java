@@ -211,7 +211,7 @@ final class TelegramIndex {
     static boolean matches(JSONObject row, List<String> wanted) {
         if (wanted.isEmpty()) return false;
         List<String> have =
-                TrackNames.words(
+                looseWords(
                         row.optString("title")
                                 + " "
                                 + row.optString("artist")
@@ -227,6 +227,72 @@ final class TelegramIndex {
             if (!hit) return false;
         }
         return true;
+    }
+
+    /**
+     * The words of a text both split at apostrophes and joined across them ("you re" and "youre"),
+     * since BitChord asks for "youre" when the file says "You're".
+     */
+    static List<String> looseWords(String text) {
+        Set<String> words = new LinkedHashSet<>(TrackNames.words(text));
+        words.addAll(TrackNames.words(text.replaceAll("['’ʼ`´]", "")));
+        return new ArrayList<>(words);
+    }
+
+    private static final Set<String> CONTRACTIONS =
+            new HashSet<>(
+                    Arrays.asList(
+                            "aint",
+                            "arent",
+                            "cant",
+                            "couldnt",
+                            "didnt",
+                            "doesnt",
+                            "dont",
+                            "hadnt",
+                            "hasnt",
+                            "havent",
+                            "hes",
+                            "hows",
+                            "id",
+                            "im",
+                            "isnt",
+                            "ive",
+                            "lets",
+                            "mustnt",
+                            "shes",
+                            "shouldnt",
+                            "thats",
+                            "theres",
+                            "theyd",
+                            "theyll",
+                            "theyre",
+                            "theyve",
+                            "wasnt",
+                            "weve",
+                            "werent",
+                            "whats",
+                            "wheres",
+                            "whos",
+                            "wont",
+                            "wouldnt",
+                            "yall",
+                            "youd",
+                            "youll",
+                            "youre",
+                            "youve"));
+
+    /**
+     * The query without words like "youre" that BitChord wrote without their apostrophe, which
+     * Telegram's search can't match to "You're"; null when there are none, or nothing else.
+     */
+    static String withoutContractions(String query) {
+        List<String> kept = new ArrayList<>();
+        boolean dropped = false;
+        for (String word : TrackNames.words(query))
+            if (CONTRACTIONS.contains(word)) dropped = true;
+            else kept.add(word);
+        return dropped && !kept.isEmpty() ? String.join(" ", kept) : null;
     }
 
     /** "1,234 files from 3 chats", with how far building has got. */
