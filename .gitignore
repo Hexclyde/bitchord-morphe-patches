@@ -16,6 +16,7 @@
 /ui-tests/src/test/java/app/bitchord/telegram/TrackMetadata.java
 /ui-tests/src/test/java/app/bitchord/telegram/TrackNames.java
 /ui-tests/src/test/java/app/bitchord/telegram/TrackDetails.java
+/ui-tests/src/test/java/app/bitchord/telegram/TelegramSwitch.java
 /ui-tests/src/test/java/app/bitchord/telegram/Artwork.java
 /ui-tests/src/test/java/app/bitchord/telegram/AudioHeader.java
 /ui-tests/src/test/java/app/bitchord/telegram/FormatProbe.java

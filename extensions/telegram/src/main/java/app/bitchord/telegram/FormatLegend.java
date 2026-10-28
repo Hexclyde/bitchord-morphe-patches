@@ -38,8 +38,16 @@ public final class FormatLegend {
                     bridge == null ? null : bridge.formats.get(id.substring(TELEGRAM.length()));
             if (header != null) return AudioHeader.label(header);
         }
+        TelegramBridge bridge = TelegramBridge.instance;
         StreamFormat format = NerdStats.declaredFormat(id);
-        return format == null ? "" : label(format.codec, format.bitDepth);
+        if (format != null) {
+            // What the stream in use says, lossy included, wins over anything remembered.
+            String label = label(format.codec, format.bitDepth);
+            if (bridge != null && bridge.legends.put(id, label))
+                bridge.work.execute(bridge.legends::save);
+            return label.isEmpty() || bridge == null ? label : bridge.legends.get(id);
+        }
+        return bridge == null ? "" : bridge.legends.get(id);
     }
 
     /** "FLAC 16bit" for a lossless codec, "" for anything else. */

@@ -12,6 +12,7 @@ SOURCES = HERE / "src/test/java"
 for name in (
     "TelegramActivity.java",
     "TelegramStyle.java",
+    "TelegramSwitch.java",
     "ApplicationCredentials.java",
     "CachePolicy.java",
     "InternalAddon.java",

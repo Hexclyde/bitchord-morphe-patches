@@ -13,6 +13,7 @@ This page covers the Telegram patch only. BitChord, Morphe and Telegram have the
 | Selected chats | Saved in the app's private settings |
 | Corrected track names and suggestions | Saved in the app's private storage; cleared when you sign out |
 | The last 200 songs that played from other sources (title, artist, length) | Saved in the app's private storage while a Track names option is on, to find BitChord's saved copy of a song you rename; cleared when you sign out |
+| Format legends of songs that played in a lossless format | Saved in the app's private storage; removed when you sign out |
 | File format details (bit depth, sample rate, channels) | Saved in the app's private storage for the format legend; removed when you sign out |
 | Album covers | Copied into the app's private storage while **Album covers** is on; removed when you turn it off or sign out |
 | Search results | Temporarily cached; BitChord also has its own search cache |

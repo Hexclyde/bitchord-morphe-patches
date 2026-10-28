@@ -54,11 +54,11 @@ Usually. With **Names from file names** on (under **Track details**), a file wit
 
 ## Can it play 5.1 or 7.1 files as stereo?
 
-Yes. With **Play surround as stereo** on (under **Playback**), surround files are mixed down to stereo inside BitChord's player: the centre and surround channels are mixed in 3 dB lower and the bass (LFE) channel is left out, the same mix as `ffmpeg -ac 2`. The file isn't converted or changed, so nothing extra is stored and there's no wait. It applies to every song BitChord plays and takes effect from the next song. With it off, Android does its own mix.
+Yes. Turn on **Play surround as stereo** (under **Playback**; it's off by default). With it on, surround files are mixed down to stereo inside BitChord's player: the centre and surround channels are mixed in 3 dB lower and the bass (LFE) channel is left out, the same mix as `ffmpeg -ac 2`. The file isn't converted or changed, so nothing extra is stored and there's no wait. It applies to every song BitChord plays and takes effect from the next song. With it off, Android does its own mix.
 
 ## What is the "FLAC 24bit" next to a title?
 
-The format legend, under **Track details**. For Telegram files it comes from the file itself: the patch reads the start of a few lossless files in each search (and of any file you play) to find the bit depth, and remembers it. For songs from other sources it shows what that source said it's sending. Lossy formats like MP3 or Opus get no legend. If a file was just found, its legend can take a later search to appear.
+The format legend, under **Track details**. For Telegram files it comes from the file itself: the patch reads the start of a few lossless files in each search (and of any file you play) to find the bit depth, and remembers it. For songs from other sources it shows what that source said it's sending, and once a song has played in a lossless format the legend is remembered, so it also shows in the main search, your library and the queue. Songs that have never played from a lossless copy can only show it in the **Addons** tab, because that's the only place BitChord lists your Telegram files directly. Lossy formats like MP3 or Opus get no legend. If a file was just found, its legend can take a later search to appear.
 
 ## A better copy started playing halfway through a song. Will I hear a gap?
 

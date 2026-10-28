@@ -93,7 +93,7 @@ public final class TelegramBridge {
 
     void decorate(List<JSONObject> rows) {}
 
-    boolean surroundAsStereo = true, smoothUpgrades = true;
+    boolean surroundAsStereo = false, smoothUpgrades = true;
 
     boolean smoothUpgrades() {
         return smoothUpgrades;

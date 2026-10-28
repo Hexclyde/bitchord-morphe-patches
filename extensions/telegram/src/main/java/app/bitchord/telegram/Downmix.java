@@ -26,7 +26,7 @@ public final class Downmix {
     static final int PCM_16BIT = 2, PCM_FLOAT = 4, PCM_24BIT = 21, PCM_32BIT = 22;
     private static final float HALF = 0.70710677f;
 
-    static volatile boolean enabled = true;
+    static volatile boolean enabled = false;
     private static final Map<Object, State> states =
             Collections.synchronizedMap(new WeakHashMap<>());
     private static final ThreadLocal<Object[]> configuring = new ThreadLocal<>();

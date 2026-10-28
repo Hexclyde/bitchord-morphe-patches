@@ -39,6 +39,7 @@ public final class TelegramBridge {
     private volatile boolean reportQuality, showArtwork, namesFromFiles;
     final Artwork artwork;
     final FormatProbe formats;
+    final LegendMemory legends;
     private volatile long lastSuggestionSearch;
     private final Map<String, Boolean> heard = new LinkedHashMap<>();
     private final ExecutorService recordWork =
@@ -150,6 +151,7 @@ public final class TelegramBridge {
         names = new TrackNames(new File(home, "track-names.json"));
         artwork = new Artwork(new File(home, "artwork"));
         formats = new FormatProbe(new File(home, "formats.json"));
+        legends = new LegendMemory(new File(home, "legends.json"));
         try {
             if (credentialStore.exists()) credentials = credentialStore.load();
             else
@@ -333,7 +335,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.0"));
+                            "1.0.1"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -948,6 +950,7 @@ public final class TelegramBridge {
         names.clear();
         artwork.clear();
         formats.clear();
+        legends.clear();
         synchronized (heard) {
             heard.clear();
         }

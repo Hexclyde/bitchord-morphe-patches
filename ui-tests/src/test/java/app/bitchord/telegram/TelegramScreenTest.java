@@ -95,6 +95,7 @@ public class TelegramScreenTest {
     }
 
     void idle() throws Exception {
+        activity.bridge.work.submit(() -> {}).get(10, java.util.concurrent.TimeUnit.SECONDS);
         for (int i = 0; i < 100 && activity.busy; i++) {
             Thread.sleep(10);
             Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
@@ -356,8 +357,7 @@ public class TelegramScreenTest {
         clickRow("Use corrected names");
         idle();
         assertFalse(bridge.useTrackNames());
-        assertNotNull(
-                text(activity.body, "Off · Files keep their Telegram names; corrections are kept"));
+        assertNotNull(text(activity.body, "Files keep their Telegram names; corrections are kept"));
         assertEquals("Ine More Light", bridge.searchTracks("light").get(0).getString("title"));
         assertEquals(1, bridge.names.corrections().size());
         clickRow("Use corrected names");
@@ -367,7 +367,7 @@ public class TelegramScreenTest {
         clickRow("Suggest fixes");
         idle();
         assertFalse(bridge.suggestTrackNames());
-        assertNotNull(text(activity.body, "Off · No background searches"));
+        assertNotNull(text(activity.body, "No background searches"));
 
         input("Search your music chats").setText("nothing here");
         click("Fix a track name");
@@ -393,25 +393,54 @@ public class TelegramScreenTest {
                 0, text(activity.body, "TRACK DETAILS").getTop() - activity.style.dp(8));
         screenshot("track-details");
 
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        activity.scroll.scrollTo(0, text(activity.body, "TRACK DETAILS").getTop());
+        int scrolled = activity.scroll.getScrollY();
+        assertTrue(scrolled > 0);
+        TelegramSwitch quality =
+                (TelegramSwitch)
+                        ((ViewGroup)
+                                        text(activity.body, "Report audio quality")
+                                                .getParent()
+                                                .getParent())
+                                .getChildAt(1);
+        assertTrue(quality.isChecked());
         clickRow("Report audio quality");
         idle();
         assertFalse(bridge.reportQuality());
-        assertNotNull(text(activity.body, "Off · BitChord guesses from the file type"));
+        assertFalse("The switch shows the new state", quality.isChecked());
+        assertEquals(
+                "Flipping a switch doesn't scroll the page",
+                scrolled,
+                activity.scroll.getScrollY());
+        activity.run(() -> {});
+        idle();
+        assertNotSame(
+                "An action rebuilds the page",
+                quality,
+                ((ViewGroup) text(activity.body, "Report audio quality").getParent().getParent())
+                        .getChildAt(1));
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        assertEquals(
+                "A rebuilt page keeps its scroll position", scrolled, activity.scroll.getScrollY());
+        assertNotNull(text(activity.body, "BitChord guesses from the file type"));
         clickRow("Album covers");
         idle();
         assertFalse(bridge.showArtwork());
-        assertNotNull(text(activity.body, "Off · No covers are downloaded"));
+        assertNotNull(text(activity.body, "No covers are downloaded"));
         clickRow("Names from file names");
         idle();
         assertFalse(bridge.namesFromFiles());
-        assertNotNull(text(activity.body, "Off · Untagged files show their file name"));
+        assertNotNull(text(activity.body, "Untagged files show their file name"));
         clickRow("Album covers");
         idle();
         assertTrue(bridge.showArtwork());
+        assertFalse("Surround mixing starts off", bridge.surroundAsStereo());
+        assertNotNull(text(activity.body, "Android mixes surround files itself"));
         clickRow("Play surround as stereo");
         idle();
-        assertFalse(bridge.surroundAsStereo());
-        assertNotNull(text(activity.body, "Off · Android mixes surround files itself"));
+        assertTrue(bridge.surroundAsStereo());
+        assertNotNull(text(activity.body, "5.1 and 7.1 files are mixed to stereo in BitChord"));
     }
 
     @Test

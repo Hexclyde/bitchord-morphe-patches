@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+- The Telegram page's options are switches now, and flipping one no longer jumps the page back to the top. Other actions on the page keep your place too.
+- **Play surround as stereo** is off by default. Android's own mixing is the default again; turn it on under **Playback** if you prefer the patch's mix.
+- The format legend remembers songs that have played in a lossless format, so it also shows in BitChord's main search, library and queue, not only in the Addons tab. While a song is playing from a lossy stream, it shows nothing.
+
 ## 1.0.0
 
 First release in [bitchord-morphe-patches](https://github.com/Hexclyde/bitchord-morphe-patches), which replaces bitchord-telegram-morphe and will hold all my BitChord add-ons. The patches are now **Unofficial Telegram music** and **Install as Bitchord+**, and the playback source is called **Unofficial Telegram**, as Telegram's API terms ask of unofficial apps. Your settings, sign-in and track names carry over when you patch with the same Morphe signing key.

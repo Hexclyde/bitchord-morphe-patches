@@ -131,6 +131,9 @@ public final class TelegramActivity extends Activity {
         if (Build.VERSION.SDK_INT >= 31) window.setHideOverlayWindows(true);
     }
 
+    /** The page last built, kept so a rebuild of the same page can restore its scroll. */
+    String shown = "";
+
     void render() {
         if (bridge != null && !bridge.ready()) channelId = 0;
         String state =
@@ -148,6 +151,31 @@ public final class TelegramActivity extends Activity {
             return;
         }
         screen = state;
+        // Rebuilding the same page (after an action) keeps the reader where they were.
+        final int keepY = state.equals(shown) && scroll != null ? scroll.getScrollY() : 0;
+        shown = state;
+        if (keepY > 0)
+            scroll.getViewTreeObserver()
+                    .addOnPreDrawListener(
+                            new android.view.ViewTreeObserver.OnPreDrawListener() {
+                                int frames;
+
+                                @Override
+                                public boolean onPreDraw() {
+                                    // Wait until the new page is laid out tall enough to hold
+                                    // the old position, or give up after a few frames.
+                                    View page = scroll.getChildAt(0);
+                                    boolean ready =
+                                            page != null
+                                                    && page.getHeight()
+                                                            >= keepY + scroll.getHeight();
+                                    if (ready || ++frames > 10) {
+                                        scroll.getViewTreeObserver().removeOnPreDrawListener(this);
+                                        scroll.scrollTo(0, keepY);
+                                    }
+                                    return true;
+                                }
+                            });
         if (channelView != null) {
             channelView.close();
             channelView = null;
@@ -235,8 +263,11 @@ public final class TelegramActivity extends Activity {
         error.setPadding(0, style.dp(8), 0, 0);
         connection.addView(error);
         updateStatus();
-        body.requestFocus();
-        scroll.post(() -> scroll.scrollTo(0, 0));
+        if (keepY == 0) {
+            // A different page starts at the top.
+            body.requestFocus();
+            scroll.post(() -> scroll.scrollTo(0, 0));
+        }
     }
 
     void credentialsForm() {
@@ -465,25 +496,21 @@ public final class TelegramActivity extends Activity {
                 "Repair",
                 () -> run(() -> bridge.registerSource()));
         divider(playback);
-        boolean smooth = bridge.smoothUpgrades();
-        row(
+        toggle(
                 playback,
                 "Smooth quality switch",
-                smooth
-                        ? "On · A better copy fades in without a gap"
-                        : "Off · BitChord switches copies with a short pause",
-                smooth ? "Turn off" : "Turn on",
-                () -> run(() -> bridge.setSmoothUpgrades(!smooth)));
+                "A better copy fades in without a gap",
+                "BitChord switches copies with a short pause",
+                bridge.smoothUpgrades(),
+                bridge::setSmoothUpgrades);
         divider(playback);
-        boolean stereo = bridge.surroundAsStereo();
-        row(
+        toggle(
                 playback,
                 "Play surround as stereo",
-                stereo
-                        ? "On · 5.1 and 7.1 files are mixed to stereo in BitChord"
-                        : "Off · Android mixes surround files itself",
-                stereo ? "Turn off" : "Turn on",
-                () -> run(() -> bridge.setSurroundAsStereo(!stereo)));
+                "5.1 and 7.1 files are mixed to stereo in BitChord",
+                "Android mixes surround files itself",
+                bridge.surroundAsStereo(),
+                bridge::setSurroundAsStereo);
         paragraph(
                 playback,
                 "When BitChord finds a better copy of the playing song, for example your"
@@ -570,45 +597,37 @@ public final class TelegramActivity extends Activity {
 
     void trackDetails() {
         LinearLayout details = card("Track details");
-        boolean quality = bridge.reportQuality();
-        row(
+        toggle(
                 details,
                 "Report audio quality",
-                quality
-                        ? "On · FLAC, WAV and ALAC count as lossless; others by bitrate"
-                        : "Off · BitChord guesses from the file type",
-                quality ? "Turn off" : "Turn on",
-                () -> run(() -> bridge.setReportQuality(!quality)));
+                "FLAC, WAV and ALAC count as lossless; others by bitrate",
+                "BitChord guesses from the file type",
+                bridge.reportQuality(),
+                bridge::setReportQuality);
         divider(details);
-        boolean covers = bridge.showArtwork();
-        row(
+        toggle(
                 details,
                 "Album covers",
-                covers
-                        ? "On · Uses the cover Telegram has for each file"
-                        : "Off · No covers are downloaded",
-                covers ? "Turn off" : "Turn on",
-                () -> run(() -> bridge.setShowArtwork(!covers)));
+                "Uses the cover Telegram has for each file",
+                "No covers are downloaded",
+                bridge.showArtwork(),
+                bridge::setShowArtwork);
         divider(details);
-        boolean files = bridge.namesFromFiles();
-        row(
+        toggle(
                 details,
                 "Names from file names",
-                files
-                        ? "On · Untagged files like “01 - Artist - Title.flac” get a proper name"
-                        : "Off · Untagged files show their file name",
-                files ? "Turn off" : "Turn on",
-                () -> run(() -> bridge.setNamesFromFiles(!files)));
+                "Untagged files like “01 - Artist - Title.flac” get a proper name",
+                "Untagged files show their file name",
+                bridge.namesFromFiles(),
+                bridge::setNamesFromFiles);
         divider(details);
-        boolean legend = bridge.formatLegend();
-        row(
+        toggle(
                 details,
                 "Format legend",
-                legend
-                        ? "On · Shows FLAC 16bit or FLAC 24bit next to song titles"
-                        : "Off · Titles only",
-                legend ? "Turn off" : "Turn on",
-                () -> run(() -> bridge.setFormatLegend(!legend)));
+                "Shows FLAC 16bit or FLAC 24bit next to song titles",
+                "Titles only",
+                bridge.formatLegend(),
+                bridge::setFormatLegend);
         paragraph(
                 details,
                 "BitChord uses the quality to choose between your Telegram file and other sources,"
@@ -670,25 +689,21 @@ public final class TelegramActivity extends Activity {
                 fixed.isEmpty() ? null : "Edit",
                 fixed.isEmpty() ? null : () -> listCorrections(fixed));
         divider(names);
-        boolean use = bridge.useTrackNames();
-        row(
+        toggle(
                 names,
                 "Use corrected names",
-                use
-                        ? "On · BitChord sees the corrected names"
-                        : "Off · Files keep their Telegram names; corrections are kept",
-                use ? "Turn off" : "Turn on",
-                () -> run(() -> bridge.setUseTrackNames(!use)));
+                "BitChord sees the corrected names",
+                "Files keep their Telegram names; corrections are kept",
+                bridge.useTrackNames(),
+                bridge::setUseTrackNames);
         divider(names);
-        boolean suggest = bridge.suggestTrackNames();
-        row(
+        toggle(
                 names,
                 "Suggest fixes",
-                suggest
-                        ? "On · Checks songs that play from other sources"
-                        : "Off · No background searches",
-                suggest ? "Turn off" : "Turn on",
-                () -> run(() -> bridge.setSuggestTrackNames(!suggest)));
+                "Checks songs that play from other sources",
+                "No background searches",
+                bridge.suggestTrackNames(),
+                bridge::setSuggestTrackNames);
         paragraph(
                 names,
                 "With suggestions on, when a song plays from another source the patch searches"
@@ -1049,6 +1064,56 @@ public final class TelegramActivity extends Activity {
             row.setClickable(true);
             row.setFocusable(true);
         }
+        p.addView(row);
+    }
+
+    interface Setting {
+        void set(boolean on) throws Exception;
+    }
+
+    /**
+     * A setting with a switch. Flipping it saves in the background without rebuilding the page, so
+     * the screen stays where it is; if saving fails the switch flips back.
+     */
+    void toggle(
+            LinearLayout p, String title, String on, String off, boolean value, Setting setting) {
+        LinearLayout row = new LinearLayout(this);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setMinimumHeight(style.dp(40));
+        LinearLayout labels = new LinearLayout(this);
+        labels.setOrientation(LinearLayout.VERTICAL);
+        labels.addView(style.text(title, 16, style.foreground, style.medium));
+        TextView sub = style.text(value ? on : off, 14, style.secondary, style.regular);
+        sub.setPadding(0, style.dp(4), 0, 0);
+        labels.addView(sub);
+        row.addView(labels, new LinearLayout.LayoutParams(0, -2, 1));
+        TelegramSwitch toggle = new TelegramSwitch(this, style);
+        toggle.setChecked(value);
+        toggle.setContentDescription(title);
+        toggle.setListener(
+                (button, checked) -> {
+                    sub.setText(checked ? on : off);
+                    bridge.work.execute(
+                            () -> {
+                                try {
+                                    setting.set(checked);
+                                } catch (Exception e) {
+                                    bridge.fail(e);
+                                    runOnUiThread(
+                                            () -> {
+                                                toggle.setChecked(!checked);
+                                                sub.setText(!checked ? on : off);
+                                                updateStatus();
+                                            });
+                                }
+                            });
+                });
+        LinearLayout.LayoutParams gap = new LinearLayout.LayoutParams(-2, -2);
+        gap.leftMargin = style.dp(16);
+        row.addView(toggle, gap);
+        row.setOnClickListener(v -> toggle.toggle());
+        row.setClickable(true);
+        row.setFocusable(true);
         p.addView(row);
     }
 
