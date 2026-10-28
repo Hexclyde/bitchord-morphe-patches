@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5
+
+- When Telegram limits your searches (a flood wait), a message says **Telegram API rate limited** and when searching starts again, so you know why songs are playing from other sources for a while. It appears once per pause, not once per search. [Troubleshooting](docs/TROUBLESHOOTING.md#telegram-api-rate-limited-appears) explains what to do.
+
 ## 1.0.4
 
 - **Fixed songs playing from YouTube when you have them on Telegram.** Since 1.0.2, the format legend and name suggestions run their own Telegram searches in the background. When they were running, BitChord's lookup for the song you were about to play was turned away with "Telegram search is busy", and BitChord fell back to YouTube or its cached copy. The patch only let two searches run at once and refused the rest straight away. Now BitChord's lookups wait up to 10 seconds for a free search, background searches step aside while BitChord is looking something up, and up to three searches can run at once. This was the patch's own limit, not Telegram's. When Telegram asks for a pause (a flood wait), no search is sent until the pause is over, as before.

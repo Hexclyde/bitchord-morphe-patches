@@ -179,13 +179,16 @@ public final class LiveSearchTest {
                         },
                         rateClock::get,
                         1000)) {
+            List<Integer> notices = Collections.synchronizedList(new ArrayList<>());
+            search.onRateLimited = notices::add;
             boolean denied = false;
             try {
-                search.search(chats(10), "a", 1);
+                search.search(chats(10, 11), "a", 1);
             } catch (LiveSearch.RateLimited e) {
                 denied = true;
             }
             check(denied, "Telegram rate limit surfaced");
+            check(notices.equals(List.of(60)), "One notice for a pause, not one per request");
             int before = rateCalls.get();
             try {
                 search.search(chats(10), "b", 1);
@@ -196,7 +199,19 @@ public final class LiveSearchTest {
             rateClock.addAndGet(60001);
             search.search(chats(10), "b", 1);
             check(rateCalls.get() > before, "Search resumes after cooldown");
+            check(notices.size() == 1, "No notice while searches work");
+            rateLimited.set(true);
+            try {
+                search.search(chats(10), "c", 1);
+            } catch (LiveSearch.RateLimited e) {
+            }
+            check(notices.size() == 2, "A later pause gets its own notice");
         }
+        check(
+                LiveSearch.rateLimitNotice(45)
+                        .equals("Telegram API rate limited. Searching again in 45 s."),
+                "Notice in seconds");
+        check(LiveSearch.rateLimitNotice(300).endsWith("in 5 min."), "Notice in minutes");
         try (LiveSearch search =
                 new LiveSearch(
                         (request, timeout) -> {

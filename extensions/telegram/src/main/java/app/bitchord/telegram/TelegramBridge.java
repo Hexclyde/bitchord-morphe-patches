@@ -110,6 +110,21 @@ public final class TelegramBridge {
                         }
                     });
 
+    private void showRateLimit(int seconds) {
+        String notice = LiveSearch.rateLimitNotice(seconds);
+        new Handler(Looper.getMainLooper())
+                .post(
+                        () -> {
+                            try {
+                                android.widget.Toast.makeText(
+                                                context, notice, android.widget.Toast.LENGTH_LONG)
+                                        .show();
+                            } catch (RuntimeException ignored) {
+                                // No toast, e.g. while the app is being closed.
+                            }
+                        });
+    }
+
     public static synchronized void init(Context context) {
         appContext = context.getApplicationContext();
         if (instance != null || !startupError.isEmpty()) return;
@@ -148,6 +163,7 @@ public final class TelegramBridge {
         if (!home.isDirectory() && !home.mkdirs())
             throw new IOException("Cannot create private directory");
         credentialStore = new CredentialStore(context, home);
+        remoteSearch.onRateLimited = this::showRateLimit;
         names = new TrackNames(new File(home, "track-names.json"));
         artwork = new Artwork(new File(home, "artwork"));
         formats = new FormatProbe(new File(home, "formats.json"));
@@ -336,7 +352,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.4"));
+                            "1.0.5"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {

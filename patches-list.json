@@ -1,6 +1,6 @@
 {
   "NOTE": "Generated from the verified MPP by tools/prepare_mobile_source.py; do not hand-edit.",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "patches": [
     {
       "name": "Install as Bitchord+",

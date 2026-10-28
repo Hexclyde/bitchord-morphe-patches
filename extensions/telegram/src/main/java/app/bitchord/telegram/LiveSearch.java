@@ -63,6 +63,9 @@ public final class LiveSearch implements AutoCloseable {
     /** How long a lookup for playback waits for a free search before giving up. */
     static final long WAIT_MILLIS = 10000;
 
+    /** Called with the wait in seconds when Telegram starts a new search pause. */
+    volatile java.util.function.IntConsumer onRateLimited;
+
     private final AtomicLong cooldownUntil = new AtomicLong(), epoch = new AtomicLong();
     private final ConcurrentHashMap<String, CompletableFuture<Result>> pending =
             new ConcurrentHashMap<>();
@@ -208,14 +211,7 @@ public final class LiveSearch implements AutoCloseable {
                                                             filter),
                                                     left);
                                         } catch (RateLimited e) {
-                                            HostLog.d(
-                                                    "Telegram asked to pause searches for "
-                                                            + e.retrySeconds
-                                                            + " s (flood wait); not searching"
-                                                            + " until then");
-                                            cooldownUntil.accumulateAndGet(
-                                                    clock.millis() + 1000L * e.retrySeconds,
-                                                    Math::max);
+                                            rateLimited(e.retrySeconds);
                                             throw e;
                                         }
                                     }));
@@ -261,6 +257,30 @@ public final class LiveSearch implements AutoCloseable {
                         : "Some Telegram searches did not finish. Results are partial; try again or"
                                 + " select fewer chats.";
         return new Result(new ArrayList<>(unique.values()), warning);
+    }
+
+    /** Starts or extends the pause; tells the listener once when a new pause begins. */
+    private void rateLimited(int seconds) {
+        long now = clock.millis();
+        long before = cooldownUntil.getAndAccumulate(now + 1000L * seconds, Math::max);
+        if (before > now) return;
+        HostLog.d(
+                "Telegram asked to pause searches for "
+                        + seconds
+                        + " s (flood wait); not searching until then");
+        java.util.function.IntConsumer listener = onRateLimited;
+        if (listener != null)
+            try {
+                listener.accept(seconds);
+            } catch (RuntimeException ignored) {
+                // A failed notice mustn't hide the rate limit from the search.
+            }
+    }
+
+    /** "Telegram API rate limited. Searching again in 45 s." */
+    static String rateLimitNotice(int seconds) {
+        String wait = seconds < 90 ? seconds + " s" : (seconds + 30) / 60 + " min";
+        return "Telegram API rate limited. Searching again in " + wait + ".";
     }
 
     static Exception cause(ExecutionException e) {
