@@ -65,7 +65,7 @@ public final class InternalAddon {
             return new JSONObject()
                     .put("id", "bitchord.telegram.native")
                     .put("name", "Unofficial Telegram")
-                    .put("version", "1.0.3")
+                    .put("version", "1.0.4")
                     .put("description", "Private on-device Telegram audio")
                     .put("allowDownloads", true)
                     .put("checkValidLossless", false)
@@ -86,6 +86,22 @@ public final class InternalAddon {
             JSONArray tracks = new JSONArray();
             List<JSONObject> rows = bridge.searchTracks(query);
             bridge.decorate(rows);
+            StringBuilder found = new StringBuilder();
+            for (int i = 0; i < Math.min(3, rows.size()); i++)
+                found.append(i == 0 ? ": " : "; ")
+                        .append(rows.get(i).optString("title"))
+                        .append(" — ")
+                        .append(rows.get(i).optString("artist"))
+                        .append(" (")
+                        .append(HostLog.length(rows.get(i).optInt("duration")))
+                        .append(")");
+            HostLog.d(
+                    "Unofficial Telegram search '"
+                            + query
+                            + "' found "
+                            + rows.size()
+                            + (rows.size() == 1 ? " file" : " files")
+                            + found);
             for (JSONObject row : rows) {
                 JSONObject track =
                         new JSONObject()

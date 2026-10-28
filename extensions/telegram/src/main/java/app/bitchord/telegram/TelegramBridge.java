@@ -336,7 +336,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.3"));
+                            "1.0.4"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -453,9 +453,15 @@ public final class TelegramBridge {
     }
 
     public List<JSONObject> searchTracks(String query) throws Exception {
+        return searchTracks(query, false);
+    }
+
+    /** As above; a background search gives way to BitChord's own lookups. */
+    public List<JSONObject> searchTracks(String query, boolean background) throws Exception {
         requireReady();
         long session = generation;
-        LiveSearch.Result found = remoteSearch.search(new HashSet<>(selected), query, session);
+        LiveSearch.Result found =
+                remoteSearch.search(new HashSet<>(selected), query, session, background);
         requireReady();
         if (session != generation) throw new IOException("Telegram session changed. Search again.");
         List<JSONObject> rows = present(found.tracks);
@@ -688,7 +694,8 @@ public final class TelegramBridge {
                                 remoteSearch.search(
                                         new HashSet<>(selected),
                                         TrackNames.primaryArtist(artist),
-                                        session);
+                                        session,
+                                        true);
                         if (session != generation) return;
                         List<JSONObject> rows = present(found.tracks);
                         int added = names.consider(title, artist, (int) (durationMs / 1000), rows);

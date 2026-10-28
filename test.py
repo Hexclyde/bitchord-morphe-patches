@@ -37,6 +37,7 @@ SOURCES = [
     "LegendMemory",
     "LegendMatch",
     "TelegramMatch",
+    "HostLog",
     "Downmix",
     "SmoothUpgrade",
     "LiveSearch",

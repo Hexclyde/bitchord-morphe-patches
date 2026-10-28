@@ -289,6 +289,45 @@ public final class LiveSearchTest {
                                 })
                         == null,
                 "Recheck selection after remote lookup");
+        // Searches for playback wait for a free slot; background searches give way.
+        CountDownLatch slowRelease = new CountDownLatch(1);
+        AtomicInteger slowStarted = new AtomicInteger();
+        ExecutorService pool = Executors.newFixedThreadPool(4);
+        try (LiveSearch search =
+                new LiveSearch(
+                        (request, timeout) -> {
+                            slowStarted.incrementAndGet();
+                            if (request.query.startsWith("slow"))
+                                slowRelease.await(10, TimeUnit.SECONDS);
+                            return found();
+                        },
+                        System::currentTimeMillis,
+                        12000)) {
+            List<Future<LiveSearch.Result>> slow = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                String q = "slow " + i;
+                slow.add(pool.submit(() -> search.search(chats(-100123), q, 1)));
+            }
+            while (slowStarted.get() < 4) Thread.sleep(5);
+            Future<LiveSearch.Result> waiting =
+                    pool.submit(() -> search.search(chats(-100123), "song for playback", 1));
+            Thread.sleep(200);
+            check(!waiting.isDone(), "A fourth search waits instead of failing");
+            try {
+                search.search(chats(-100123), "legend lookup", 1, true);
+                check(false, "Background search runs during a playback lookup");
+            } catch (java.io.IOException e) {
+                check(e.getMessage().equals(LiveSearch.BUSY), "Background search gives way");
+            }
+            slowRelease.countDown();
+            check(waiting.get(5, TimeUnit.SECONDS).tracks.isEmpty(), "Waiting search then runs");
+            for (Future<LiveSearch.Result> f : slow) f.get(5, TimeUnit.SECONDS);
+            check(
+                    search.search(chats(-100123), "idle legend lookup", 1, true).tracks.isEmpty(),
+                    "Background search runs when nothing else is");
+        } finally {
+            pool.shutdownNow();
+        }
         System.out.println(
                 "PASS: "
                         + checks

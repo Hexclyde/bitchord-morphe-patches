@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.4
+
+- **Fixed songs playing from YouTube when you have them on Telegram.** Since 1.0.2, the format legend and name suggestions run their own Telegram searches in the background. When they were running, BitChord's lookup for the song you were about to play was turned away with "Telegram search is busy", and BitChord fell back to YouTube or its cached copy. The patch only let two searches run at once and refused the rest straight away. Now BitChord's lookups wait up to 10 seconds for a free search, background searches step aside while BitChord is looking something up, and up to three searches can run at once. This was the patch's own limit, not Telegram's. When Telegram asks for a pause (a flood wait), no search is sent until the pause is over, as before.
+- BitChord's log (**Player ••• → Copy log**) now shows which files each Telegram search found, which ones were skipped as a different song, and when Telegram asked to pause searches. That makes reports like this easier to look into.
+
 ## 1.0.3
 
 - **Fixed a wrong song playing from Telegram.** BitChord accepts a file whose title only *contains* the song's title, so "How I'd Love To Love You" was played for "L-O-V-E". Telegram files now need the same title (brackets and punctuation aside) within 10 seconds of the song's length, or a containing title within 3 seconds. Other sources are matched as before.

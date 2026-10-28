@@ -99,7 +99,7 @@ public final class FormatLegend {
                 () -> {
                     try {
                         if (!bridge.ready() || bridge.selected.isEmpty()) return;
-                        List<JSONObject> rows = bridge.searchTracks(wanted);
+                        List<JSONObject> rows = bridge.searchTracks(wanted, true);
                         bridge.decorate(rows);
                         if (!wanted.equals(recentQuery)) return;
                         recent = rows;

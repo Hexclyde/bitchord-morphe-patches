@@ -54,7 +54,15 @@ public final class LiveSearch implements AutoCloseable {
                         t.setDaemon(true);
                         return t;
                     });
-    private final Semaphore searches = new Semaphore(2);
+    private final Semaphore searches = new Semaphore(3);
+    // BitChord's own lookups count here; background searches only run while there are none.
+    private final java.util.concurrent.atomic.AtomicInteger foreground =
+            new java.util.concurrent.atomic.AtomicInteger();
+    static final String BUSY = "Telegram search is busy. Try again shortly.";
+
+    /** How long a lookup for playback waits for a free search before giving up. */
+    static final long WAIT_MILLIS = 10000;
+
     private final AtomicLong cooldownUntil = new AtomicLong(), epoch = new AtomicLong();
     private final ConcurrentHashMap<String, CompletableFuture<Result>> pending =
             new ConcurrentHashMap<>();
@@ -89,6 +97,16 @@ public final class LiveSearch implements AutoCloseable {
     }
 
     public Result search(Set<Long> selected, String query, long session) throws Exception {
+        return search(selected, query, session, false);
+    }
+
+    /**
+     * Searches the selected chats. A background search (format legend, name suggestions) never
+     * waits and steps aside while BitChord is looking something up; anything else waits for a free
+     * search for up to {@link #WAIT_MILLIS}.
+     */
+    public Result search(Set<Long> selected, String query, long session, boolean background)
+            throws Exception {
         String q = query == null ? "" : query.trim();
         if (q.length() > 256) throw new IOException("Search text is too long.");
         List<Long> chats = new ArrayList<>(new TreeSet<>(selected));
@@ -114,10 +132,21 @@ public final class LiveSearch implements AutoCloseable {
                 throw cause(e);
             }
         }
-        boolean acquired = false;
+        boolean acquired = false, counted = false;
         try {
-            if (!(acquired = searches.tryAcquire()))
-                throw new IOException("Telegram search is busy. Try again shortly.");
+            if (background) {
+                if (foreground.get() > 0 || !(acquired = searches.tryAcquire()))
+                    throw new IOException(BUSY);
+            } else {
+                foreground.incrementAndGet();
+                counted = true;
+                if (!(acquired =
+                        searches.tryAcquire(
+                                Math.min(timeoutMillis, WAIT_MILLIS), TimeUnit.MILLISECONDS))) {
+                    HostLog.d("Telegram search for '" + q + "' waited too long for a free slot");
+                    throw new IOException(BUSY);
+                }
+            }
             Result result = fetch(chats, q);
             if (currentEpoch != epoch.get())
                 throw new IOException("Music-chat selection changed. Search again.");
@@ -134,6 +163,7 @@ public final class LiveSearch implements AutoCloseable {
             throw e;
         } finally {
             if (acquired) searches.release();
+            if (counted) foreground.decrementAndGet();
             pending.remove(key, own);
         }
     }
@@ -178,6 +208,11 @@ public final class LiveSearch implements AutoCloseable {
                                                             filter),
                                                     left);
                                         } catch (RateLimited e) {
+                                            HostLog.d(
+                                                    "Telegram asked to pause searches for "
+                                                            + e.retrySeconds
+                                                            + " s (flood wait); not searching"
+                                                            + " until then");
                                             cooldownUntil.accumulateAndGet(
                                                     clock.millis() + 1000L * e.retrySeconds,
                                                     Math::max);
@@ -209,7 +244,7 @@ public final class LiveSearch implements AutoCloseable {
                 }
             }
         } catch (RejectedExecutionException e) {
-            problem = new IOException("Telegram search is busy. Try again shortly.", e);
+            problem = new IOException(BUSY, e);
         } finally {
             for (Future<?> job : jobs) if (!job.isDone()) job.cancel(true);
             requests.purge();

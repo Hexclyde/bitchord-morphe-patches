@@ -36,6 +36,18 @@ public final class TelegramMatch {
                                         target.durationSec,
                                         song.title,
                                         LegendMatch.seconds(song.durationText));
+                if (!ok)
+                    HostLog.d(
+                            "Unofficial Telegram skipped '"
+                                    + song.title
+                                    + "' ("
+                                    + HostLog.length(LegendMatch.seconds(song.durationText))
+                                    + ") for '"
+                                    + target.title
+                                    + "' ("
+                                    + HostLog.length(
+                                            target.durationSec == null ? 0 : target.durationSec)
+                                    + "): the title or length doesn't match");
                 if (!ok && kept == null) kept = new ArrayList<>(candidates.subList(0, i));
                 if (ok && kept != null) kept.add(song);
             }
