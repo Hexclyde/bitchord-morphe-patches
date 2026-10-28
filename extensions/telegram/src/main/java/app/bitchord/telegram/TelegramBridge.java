@@ -151,6 +151,7 @@ public final class TelegramBridge {
         names = new TrackNames(new File(home, "track-names.json"));
         artwork = new Artwork(new File(home, "artwork"));
         formats = new FormatProbe(new File(home, "formats.json"));
+        formats.onChange = FormatLegend::changed;
         legends = new LegendMemory(new File(home, "legends.json"));
         try {
             if (credentialStore.exists()) credentials = credentialStore.load();
@@ -335,7 +336,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.1"));
+                            "1.0.2"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -527,6 +528,16 @@ public final class TelegramBridge {
         FormatProbe.await(probes, 1000 - (System.currentTimeMillis() - started));
         try {
             formats.annotate(rows);
+            boolean changed = false;
+            for (JSONObject row : rows)
+                changed |=
+                        legends.put(
+                                FormatLegend.TELEGRAM + row.optString("id"),
+                                LegendMatch.row(row, formats.get(row.optString("id"))));
+            if (changed) {
+                legends.save();
+                FormatLegend.changed();
+            }
         } catch (Exception ignored) {
             // Details are optional.
         }

@@ -624,7 +624,8 @@ public final class TelegramActivity extends Activity {
         toggle(
                 details,
                 "Format legend",
-                "Shows FLAC 16bit or FLAC 24bit next to song titles",
+                "Shows the format next to song titles, like FLAC 24bit or MP3 320kbps. Your"
+                        + " searches also check the selected chats for a match",
                 "Titles only",
                 bridge.formatLegend(),
                 bridge::setFormatLegend);

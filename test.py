@@ -35,6 +35,7 @@ SOURCES = [
     "AudioHeader",
     "FormatProbe",
     "LegendMemory",
+    "LegendMatch",
     "Downmix",
     "SmoothUpgrade",
     "LiveSearch",
@@ -63,6 +64,7 @@ TESTS = [
     "SmoothUpgradeTest",
     "AudioHeaderTest",
     "LegendMemoryTest",
+    "LegendMatchTest",
 ]
 
 subprocess.run(

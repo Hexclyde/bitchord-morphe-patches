@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+- **Format legend for every format:** besides FLAC 16bit and 24bit, songs now show MP3 320kbps, AAC 256kbps, OPUS 160kbps and so on. The legend is a small white label on a translucent grey chip.
+- **Legends in the main search:** when you search, the patch also searches your selected Telegram chats for the same words, once per search, and matches the results by title, artist and length. Songs you have on Telegram show their format right in the search results, and the legend appears on rows already on screen as soon as the match comes in.
+- The project has a website at [hexclyde.github.io/bitchord-morphe-patches](https://hexclyde.github.io/bitchord-morphe-patches/), so it can be found through Google.
+
 ## 1.0.1
 
 - The Telegram page's options are switches now, and flipping one no longer jumps the page back to the top. Other actions on the page keep your place too.

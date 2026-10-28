@@ -58,7 +58,13 @@ Yes. Turn on **Play surround as stereo** (under **Playback**; it's off by defaul
 
 ## What is the "FLAC 24bit" next to a title?
 
-The format legend, under **Track details**. For Telegram files it comes from the file itself: the patch reads the start of a few lossless files in each search (and of any file you play) to find the bit depth, and remembers it. For songs from other sources it shows what that source said it's sending, and once a song has played in a lossless format the legend is remembered, so it also shows in the main search, your library and the queue. Songs that have never played from a lossless copy can only show it in the **Addons** tab, because that's the only place BitChord lists your Telegram files directly. Lossy formats like MP3 or Opus get no legend. If a file was just found, its legend can take a later search to appear.
+The format legend, under **Track details**. It shows the format of the copy you'd hear: FLAC 16bit or 24bit, ALAC, WAV, or a lossy format with its bitrate, like MP3 320kbps or OPUS 160kbps.
+
+- **Addons tab:** Telegram files are labelled from the file itself. The patch reads the start of a few lossless files in each search (and of any file you play) to find the bit depth, and remembers it.
+- **Main search:** when you search, the patch searches your selected Telegram chats for the same words, once per search, and matches results by title, artist and length. Songs you have on Telegram get their legend as soon as that match comes in.
+- **Everywhere else:** songs show the format of the stream BitChord used the last time they played.
+
+Turning the legend off also stops the extra search.
 
 ## A better copy started playing halfway through a song. Will I hear a gap?
 

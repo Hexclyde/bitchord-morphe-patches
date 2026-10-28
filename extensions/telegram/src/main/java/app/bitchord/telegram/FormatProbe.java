@@ -22,6 +22,10 @@ final class FormatProbe {
     static final int MAX_KNOWN = 3000;
 
     private final File store;
+
+    /** Told when a header has been read, so legends on screen can update. */
+    volatile Runnable onChange;
+
     private final Map<String, JSONObject> known =
             new LinkedHashMap<String, JSONObject>(16, 0.75f, true) {
                 @Override
@@ -110,6 +114,8 @@ final class FormatProbe {
         if (header == null || id.isEmpty()) return;
         known.put(id, header);
         save();
+        Runnable listener = onChange;
+        if (listener != null) listener.run();
     }
 
     synchronized void clear() {

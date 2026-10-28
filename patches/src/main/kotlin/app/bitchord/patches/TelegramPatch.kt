@@ -715,6 +715,10 @@ private const val WEIGHT = "Landroidx/compose/foundation/layout/LayoutWeightElem
 /** 10.sp as Compose packs it: unit type SP in the high bits, the float's bits in the low ones. */
 private const val TEN_SP = 0x141200000L
 
+/** White, as Compose packs an sRGB colour. */
+private const val WHITE = -0x100000000L
+private const val LEGEND = "Lapp/bitchord/telegram/FormatLegend;"
+
 /**
  * Adds the "FLAC 24bit" legend after a song title. BitChord draws every song title (search rows,
  * mini player, queue) through one ExplicitSongTitle composable: its title Text is made to hug its
@@ -767,7 +771,10 @@ private fun BytecodePatchContext.addFormatLegend() {
         """
         invoke-static/range {p0 .. p0}, Lapp/bitchord/telegram/FormatLegend;->text($SONG)Ljava/lang/String;
         move-result-object v${slots[0]}
-        sget-object v${slots[1]}, Landroidx/compose/ui/Modifier${'$'}Companion;->${'$'}${'$'}INSTANCE:Landroidx/compose/ui/Modifier${'$'}Companion;
+        invoke-static {v${slots[0]}}, Lapp/bitchord/telegram/FormatLegend;->modifier(Ljava/lang/String;)Ljava/lang/Object;
+        move-result-object v${slots[1]}
+        check-cast v${slots[1]}, Landroidx/compose/ui/Modifier;
+        const-wide v${slots[2]}, -0x100000000L
         const-wide v${slots[3]}, 0x${TEN_SP.toString(16)}L
         const v${slots[slots.size - 3]}, 0x0
         const v${slots[slots.size - 2]}, 0x0
@@ -789,6 +796,15 @@ private fun BytecodePatchContext.addFormatLegend() {
     ) {
         "Format legend Text call wasn't added"
     }
+    check(
+        added.any {
+            it.opcode == Opcode.CONST_WIDE &&
+                (it as com.android.tools.smali.dexlib2.iface.instruction.WideLiteralInstruction)
+                    .wideLiteral == WHITE
+        } && added.count { it.methodRef()?.definingClass == LEGEND } == 2
+    ) {
+        "Format legend chip wasn't added"
+    }
 
     // weight(1f) → weight(1f, fill = false), so the legend sits right after the title.
     val weightIndex =
@@ -806,7 +822,117 @@ private fun BytecodePatchContext.addFormatLegend() {
     check(fillWrite?.narrowLiteral == 1 && fill < 16) { "Title weight fill changed" }
     songText.addInstructions(weightIndex, "const/4 v$fill, 0x0")
     songText.addInstructions(weightIndex + 2, "const/4 v$fill, 0x1")
+    linkLegendHelpers()
+    // A main search also looks for the query in the selected Telegram chats.
+    val request =
+        mutableClassDefBy("Lcom/music/bitchord/ui/MainViewModel\$SearchRequest;").methods.single {
+            it.name == "<init>" && it.parameterTypes.firstOrNull() == "Ljava/lang/String;"
+        }
+    request.addInstruction(
+        0,
+        "invoke-static/range {p1 .. p1}, $LEGEND->searching(Ljava/lang/String;)V",
+    )
     println("Added the format legend after song titles")
+}
+
+/**
+ * Fills FormatLegend's placeholders with calls to BitChord's own padding, background and
+ * rounded-shape functions, found by their signatures wherever R8 placed them.
+ */
+private fun BytecodePatchContext.linkLegendHelpers() {
+    val modifier = "Landroidx/compose/ui/Modifier;"
+    val shapeType = "Landroidx/compose/ui/graphics/Shape;"
+    var padding: MethodReference? = null
+    var background: MethodReference? = null
+    var shape: MethodReference? = null
+    classDefForEach { clazz ->
+        for (method in clazz.methods) {
+            val types = method.parameterTypes.map(CharSequence::toString)
+            val public =
+                method.accessFlags and com.android.tools.smali.dexlib2.AccessFlags.STATIC.value !=
+                    0 &&
+                    method.accessFlags and
+                        com.android.tools.smali.dexlib2.AccessFlags.PUBLIC.value != 0
+            if (!public) continue
+            if (
+                method.name.startsWith("padding-") &&
+                    types == listOf(modifier, "F", "F", "F", "F") &&
+                    method.returnType == modifier
+            )
+                padding = method
+            if (
+                method.name.startsWith("background-") &&
+                    types == listOf(modifier, "J", shapeType) &&
+                    method.returnType == modifier
+            )
+                background = method
+            if (
+                method.name.startsWith("RoundedCornerShape-") &&
+                    types == listOf("F") &&
+                    method.returnType == "Landroidx/compose/foundation/shape/RoundedCornerShape;"
+            )
+                shape = method
+        }
+    }
+    fun ref(m: MethodReference?, what: String): String {
+        m ?: throw PatchException("Compose $what function not found")
+        return "${m.definingClass}->${m.name}(${m.parameterTypes.joinToString("")})${m.returnType}"
+    }
+    val legend = mutableClassDefBy(LEGEND)
+    fun body(name: String, registers: Int, code: String) {
+        val original = legend.methods.single { it.name == name }
+        val replacement =
+            MutableMethod(
+                ImmutableMethod(
+                    original.definingClass,
+                    original.name,
+                    original.parameters,
+                    original.returnType,
+                    original.accessFlags,
+                    original.annotations,
+                    original.hiddenApiRestrictions,
+                    ImmutableMethodImplementation(
+                        registers,
+                        emptyList<Instruction>(),
+                        emptyList(),
+                        emptyList(),
+                    ),
+                )
+            )
+        replacement.addInstructions(0, code)
+        legend.methods.remove(original)
+        legend.methods.add(replacement)
+    }
+    body(
+        "hostPadding",
+        5,
+        """
+        check-cast p0, $modifier
+        invoke-static {p0, p1, p2, p3, p4}, ${ref(padding, "padding")}
+        move-result-object p0
+        return-object p0
+    """,
+    )
+    body(
+        "hostBackground",
+        4,
+        """
+        check-cast p0, $modifier
+        check-cast p3, $shapeType
+        invoke-static {p0, p1, p2, p3}, ${ref(background, "background")}
+        move-result-object p0
+        return-object p0
+    """,
+    )
+    body(
+        "hostShape",
+        1,
+        """
+        invoke-static {p0}, ${ref(shape, "rounded shape")}
+        move-result-object p0
+        return-object p0
+    """,
+    )
 }
 
 @Suppress("unused")
