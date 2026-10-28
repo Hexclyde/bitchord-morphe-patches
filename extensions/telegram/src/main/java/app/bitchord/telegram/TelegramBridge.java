@@ -87,6 +87,15 @@ public final class TelegramBridge {
     private final LinkedHashMap<String, Boolean> playbackRead = new LinkedHashMap<>();
     final Map<Integer, TdApi.AccentColor> accentColors = new ConcurrentHashMap<>();
     final TelegramIndex index;
+    final SoundCheck soundCheck;
+    private final ExecutorService soundWork =
+            Executors.newSingleThreadExecutor(
+                    r -> {
+                        Thread thread = new Thread(r, "Telegram sound check");
+                        thread.setDaemon(true);
+                        thread.setPriority(Thread.MIN_PRIORITY);
+                        return thread;
+                    });
     final LiveSearch remoteSearch =
             new LiveSearch(
                     (request, timeout) -> {
@@ -112,7 +121,10 @@ public final class TelegramBridge {
                     });
 
     private void showRateLimit(int seconds) {
-        String notice = LiveSearch.rateLimitNotice(seconds);
+        toast(LiveSearch.rateLimitNotice(seconds));
+    }
+
+    private void toast(String notice) {
         new Handler(Looper.getMainLooper())
                 .post(
                         () -> {
@@ -166,6 +178,17 @@ public final class TelegramBridge {
         credentialStore = new CredentialStore(context, home);
         remoteSearch.onRateLimited = this::showRateLimit;
         index = new TelegramIndex(openIndex(), remoteSearch::page, System::currentTimeMillis);
+        soundCheck =
+                new SoundCheck(
+                        new File(home, "sound-checks.json"),
+                        (id, seconds) -> AudioDecode.start(this, id, seconds),
+                        title ->
+                                toast(
+                                        "Telegram has the same recording of “"
+                                                + title
+                                                + "”. It’ll play from Telegram next time."),
+                        soundWork,
+                        System::currentTimeMillis);
         names = new TrackNames(new File(home, "track-names.json"));
         artwork = new Artwork(new File(home, "artwork"));
         formats = new FormatProbe(new File(home, "formats.json"));
@@ -213,6 +236,7 @@ public final class TelegramBridge {
         SmoothUpgrade.enabled = config.optBoolean("smoothUpgrades", SmoothUpgrade.enabled);
         FormatLegend.enabled = config.optBoolean("formatLegend", FormatLegend.enabled);
         index.enabled = !savedIndexBroken && config.optBoolean("searchIndex", true);
+        SoundCheck.active = config.optBoolean("soundCheck", false) ? soundCheck : null;
         JSONArray ids = config.optJSONArray("chats");
         if (ids != null) for (int i = 0; i < ids.length(); i++) selected.add(ids.getLong(i));
         // Legacy catalogue files are left on disk for rollback, but are no longer loaded or
@@ -359,7 +383,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.8"));
+                            "1.0.9"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -679,6 +703,16 @@ public final class TelegramBridge {
                 return;
             }
         }
+    }
+
+    public boolean soundCheck() {
+        return SoundCheck.active != null;
+    }
+
+    public void setSoundCheck(boolean on) throws Exception {
+        SoundCheck.active = on ? soundCheck : null;
+        config.put("soundCheck", on);
+        saveConfig();
     }
 
     public boolean searchIndex() {
@@ -1181,6 +1215,7 @@ public final class TelegramBridge {
         selected.clear();
         remoteSearch.clear();
         index.clear();
+        soundCheck.clear();
         names.clear();
         artwork.clear();
         formats.clear();

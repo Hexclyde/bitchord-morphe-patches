@@ -117,6 +117,14 @@ public final class Downmix {
         Object[] call = configuring.get();
         configuring.remove();
         if (call == null || format == null) return format;
+        try {
+            if ("audio/raw".equals(format.sampleMimeType))
+                SoundCheck.format(
+                        call[0], format.sampleRate, format.channelCount, format.pcmEncoding);
+            else SoundCheck.format(call[0], 0, 0, 0);
+        } catch (Throwable ignored) {
+            // Only the sound check reads it.
+        }
         State state;
         try {
             state =
@@ -150,6 +158,7 @@ public final class Downmix {
 
     public static boolean handleBuffer(Target sink, ByteBuffer buffer, long timeUs, int count)
             throws Exception {
+        SoundCheck.tap(sink, buffer, timeUs);
         State state = states.get(sink);
         if (state == null) return sink.originalHandleBuffer(buffer, timeUs, count);
         if (!state.pending) {

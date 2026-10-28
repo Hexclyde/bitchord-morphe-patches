@@ -86,6 +86,14 @@ It opens the patch's own settings page, the same one as **Settings → Account &
 
 It's the address BitChord uses to talk to the patch, and you'll see it in BitChord's log as `https://telegram.bitchord.invalid/***`. It never leaves your phone: the patch answers it inside the app, and there's no website or server behind it. Domains ending in `.invalid` are reserved and can't exist on the internet, so even if a request did get out, it couldn't reach anyone.
 
+## What does "Check matches by sound" do?
+
+BitChord only plays your Telegram file instead of a song when the file's length is within a few seconds of the song's. A file with the right title but a length further off is usually another recording, but sometimes it's the same one with a longer fade, a hidden track or extra silence.
+
+With **Check matches by sound** on (under **Playback**, off by default), the patch notes those files. The next time the song plays from its start, it listens to its first 15 seconds as BitChord plays them, reads the first 45 seconds of the Telegram file, and compares the two with audio fingerprints, the method Shazam uses. If they're the same recording, starting at the same point, a message says so and the file is used the next time the song plays.
+
+It compares recordings, not quality: a match means the same recording, not that the file is better. Each check downloads up to about 15 MB of the Telegram file. The song's audio is only used on your phone for the comparison and isn't kept or sent anywhere.
+
 ## Can I play or download a whole channel?
 
 Yes. Under **Music library → Playlists and downloads**, pick a chat and choose:

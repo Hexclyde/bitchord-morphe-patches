@@ -36,6 +36,20 @@ public final class TelegramMatch {
                                         target.durationSec,
                                         song.title,
                                         LegendMatch.seconds(song.durationText));
+                boolean checking = false;
+                if (!ok) {
+                    SoundCheck sound = SoundCheck.active;
+                    int gotSec = LegendMatch.seconds(song.durationText);
+                    if (sound != null
+                            && uncertain(target.title, target.durationSec, song.title, gotSec)) {
+                        sound.consider(
+                                target.title,
+                                target.artist,
+                                target.durationSec,
+                                song.videoId.substring(TELEGRAM.length()));
+                        checking = true;
+                    }
+                }
                 if (!ok)
                     HostLog.d(
                             "Unofficial Telegram skipped '"
@@ -47,7 +61,8 @@ public final class TelegramMatch {
                                     + "' ("
                                     + HostLog.length(
                                             target.durationSec == null ? 0 : target.durationSec)
-                                    + "): the title or length doesn't match");
+                                    + "): the title or length doesn't match"
+                                    + (checking ? "; it'll be checked by sound" : ""));
                 if (!ok && kept == null) kept = new ArrayList<>(candidates.subList(0, i));
                 if (ok && kept != null) kept.add(song);
             }
@@ -68,6 +83,23 @@ public final class TelegramMatch {
         if (same) return drift <= SAME_TITLE_SEC;
         boolean contained = contains(a, b) || contains(b, a);
         return contained && drift >= 0 && drift <= CONTAINED_TITLE_SEC;
+    }
+
+    /**
+     * Turned down only for its length: the same or a containing title, with a length that's off by
+     * more than {@link #accepts} allows but no more than a minute. Worth checking by sound.
+     */
+    static boolean uncertain(String wanted, Integer wantedSec, String got, int gotSec) {
+        if (wantedSec == null || wantedSec <= 0 || gotSec <= 0) return false;
+        if (accepts(wanted, wantedSec, got, gotSec)) return false;
+        List<String> a = TrackNames.words(core(wanted)), b = TrackNames.words(core(got));
+        if (a.isEmpty() || b.isEmpty()) return false;
+        boolean related =
+                a.equals(b)
+                        || String.join("", a).equals(String.join("", b))
+                        || contains(a, b)
+                        || contains(b, a);
+        return related && Math.abs(wantedSec - gotSec) <= SoundCheck.MAX_DRIFT_SEC;
     }
 
     /** The title without bracketed parts: "(Remastered 2009)", "[Live]". */

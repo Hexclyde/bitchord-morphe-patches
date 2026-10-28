@@ -4,7 +4,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.0.8). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.0.9). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > I've only been able to test it on an **arm64-v8a** phone. The armeabi-v7a and x86_64 builds pass the same automated checks, but I haven't run them on a real device. If you're on one of those, please give it a try and [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems. Hearing that it works is useful too.
 
@@ -32,6 +32,7 @@ More BitChord add-ons will be added to this repository over time.
 - Album covers from Telegram in search results
 - A saved index of your chats' music answers when Telegram's search is rate limited or busy
 - Save a channel as a BitChord playlist, or download all of it
+- Check by sound whether a Telegram file with a different length is the same recording as the song
 - Untagged files get their title and artist from the file name (`03 - Artist - Title.flac`)
 - 5.1 and 7.1 files play as proper stereo, mixed inside the player without converting the file
 - A small format legend next to song titles (FLAC 24bit, MP3 320kbps, …), in the main search too
@@ -41,7 +42,7 @@ More BitChord add-ons will be added to this repository over time.
 - Control the size of the Telegram audio cache
 - See the playing source and bitrate in **Show stats for nerds**
 
-Every extra (quality, covers, file names, format legend, smooth switching, surround mixing, the saved index, name fixes and suggestions) can be turned off in the app.
+Every extra (quality, covers, file names, format legend, smooth switching, surround mixing, sound checks, the saved index, name fixes and suggestions) can be turned off in the app.
 
 ## Requirements
 

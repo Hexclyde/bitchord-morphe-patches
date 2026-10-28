@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.9
+
+- **Check matches by sound** (under **Playback**, off by default, with a warning when you turn it on). A Telegram file with the song's title but a length more than a few seconds off is usually another recording, but sometimes it's the same one with a longer fade or extra silence. With this on, the patch listens to the song's first 15 seconds as it plays, reads the start of the Telegram file and compares their audio fingerprints, the way Shazam does. When they're the same recording, starting at the same point, a message says so and the file plays from Telegram the next time the song does. Recordings that start at a different point are refused, so switching copies mid-song never jumps.
+
 ## 1.0.8
 
 - **A channel as a playlist:** under **Music library → Playlists and downloads**, pick a chat and **Save as playlist**. It appears in BitChord's Library, named after the chat, oldest post first, and plays from Telegram like a search result. Saving it again replaces it with the chat's current files.

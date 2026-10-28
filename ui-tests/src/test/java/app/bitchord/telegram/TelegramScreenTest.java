@@ -444,6 +444,28 @@ public class TelegramScreenTest {
         assertNotNull(
                 "The index says how far it has got",
                 text(activity.body, "12 files indexed from 1 chat"));
+        assertFalse("Sound check starts off", bridge.soundCheck());
+        clickRow("Check matches by sound");
+        android.app.AlertDialog warning =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        assertTrue(
+                Shadows.shadowOf(warning)
+                        .getMessage()
+                        .toString()
+                        .contains("up to the first 45 seconds"));
+        warning.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).performClick();
+        idle();
+        assertFalse("Cancel leaves it off", bridge.soundCheck());
+        clickRow("Check matches by sound");
+        org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+                .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                .performClick();
+        idle();
+        assertTrue("Turn on turns it on", bridge.soundCheck());
+        assertNotNull(
+                text(
+                        activity.body,
+                        "Telegram files with another length are compared with the song"));
         clickRow("Saved index");
         idle();
         assertFalse(bridge.searchIndex());

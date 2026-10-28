@@ -69,6 +69,16 @@ public final class TelegramBridge {
         collections.add("download " + title);
     }
 
+    boolean soundCheck;
+
+    boolean soundCheck() {
+        return soundCheck;
+    }
+
+    void setSoundCheck(boolean on) {
+        soundCheck = on;
+    }
+
     boolean searchIndex = true;
 
     boolean searchIndex() {

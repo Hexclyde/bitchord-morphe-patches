@@ -37,6 +37,13 @@ public final class PlaybackPolicy {
             if (duration <= 0 && about.durationMs != null) duration = about.durationMs;
             if (duration > 0)
                 bridge.heard(text(about.title), text(about.artist), duration, item.mediaId);
+            SoundCheck sound = SoundCheck.active;
+            if (sound != null && duration > 0)
+                sound.playing(
+                        text(about.title),
+                        text(about.artist),
+                        duration,
+                        player.getCurrentPosition());
         }
     }
 

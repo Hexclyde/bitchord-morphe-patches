@@ -65,7 +65,7 @@ public final class InternalAddon {
             return new JSONObject()
                     .put("id", "bitchord.telegram.native")
                     .put("name", "Unofficial Telegram")
-                    .put("version", "1.0.8")
+                    .put("version", "1.0.9")
                     .put("description", "Private on-device Telegram audio")
                     .put("allowDownloads", true)
                     .put("checkValidLossless", false)
@@ -108,7 +108,7 @@ public final class InternalAddon {
                                 .put("id", row.getString("id"))
                                 .put("title", row.optString("title"))
                                 .put("artist", row.optString("artist"))
-                                .put("duration", row.optInt("duration"))
+                                .put("duration", duration(row, query))
                                 .put("format", row.optString("format"));
                 if (!row.optString("artworkURL").isEmpty())
                     track.put("artworkURL", row.getString("artworkURL"));
@@ -151,6 +151,16 @@ public final class InternalAddon {
             return stream.toString();
         }
         throw new IOException("Unknown internal Telegram operation");
+    }
+
+    /**
+     * A row's length, or the song's when the sound check found the file is that song's recording,
+     * so BitChord's length checks take it.
+     */
+    static int duration(JSONObject row, String query) {
+        SoundCheck sound = SoundCheck.active;
+        Integer song = sound == null ? null : sound.seconds(row.optString("id"), query);
+        return song != null ? song : row.optInt("duration");
     }
 
     static String quality(JSONObject row) {

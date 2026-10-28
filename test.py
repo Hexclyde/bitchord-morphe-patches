@@ -43,6 +43,8 @@ SOURCES = [
     "LiveSearch",
     "TelegramIndex",
     "HostLibrary",
+    "Fingerprint",
+    "SoundCheck",
     "InternalAddon",
     "NativeAudio",
     "TelegramDataSource",
@@ -72,6 +74,8 @@ TESTS = [
     "TelegramMatchTest",
     "TelegramIndexTest",
     "HostLibraryTest",
+    "FingerprintTest",
+    "SoundCheckTest",
 ]
 
 subprocess.run(

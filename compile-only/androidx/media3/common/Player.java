@@ -8,6 +8,8 @@ public interface Player {
 
     long getDuration();
 
+    long getCurrentPosition();
+
     void replaceMediaItem(int index, MediaItem mediaItem);
 
     void seekTo(int mediaItemIndex, long positionMs);

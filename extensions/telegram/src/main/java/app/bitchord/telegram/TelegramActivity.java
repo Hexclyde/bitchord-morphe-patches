@@ -556,6 +556,23 @@ public final class TelegramActivity extends Activity {
                 "Android mixes surround files itself",
                 bridge.surroundAsStereo(),
                 bridge::setSurroundAsStereo);
+        divider(playback);
+        toggle(
+                playback,
+                "Check matches by sound",
+                "Telegram files with another length are compared with the song",
+                "Files with another length aren’t used",
+                bridge.soundCheck(),
+                bridge::setSoundCheck,
+                "When your Telegram file has a song’s title but a different length, it’s usually"
+                        + " another recording, so BitChord plays the song from elsewhere. With"
+                        + " this on, the patch listens to the first 15 seconds of the song as it"
+                        + " plays and compares them with the start of the Telegram file. If"
+                        + " they’re the same recording, the file is used the next time the song"
+                        + " plays.\n\nEach check downloads up to the first 45 seconds of the"
+                        + " Telegram file, about 5 to 15 MB for a lossless file, and uses some"
+                        + " battery for a few seconds. Nothing is uploaded or sent anywhere"
+                        + " else.");
         paragraph(
                 playback,
                 "When BitChord finds a better copy of the playing song, for example your"
@@ -1188,6 +1205,20 @@ public final class TelegramActivity extends Activity {
      */
     TextView toggle(
             LinearLayout p, String title, String on, String off, boolean value, Setting setting) {
+        return toggle(p, title, on, off, value, setting, null);
+    }
+
+    /**
+     * As above; turning it on first shows {@code warning} and only goes ahead when the user agrees.
+     */
+    TextView toggle(
+            LinearLayout p,
+            String title,
+            String on,
+            String off,
+            boolean value,
+            Setting setting,
+            String warning) {
         LinearLayout row = new LinearLayout(this);
         row.setGravity(Gravity.CENTER_VERTICAL);
         row.setMinimumHeight(style.dp(40));
@@ -1201,8 +1232,29 @@ public final class TelegramActivity extends Activity {
         TelegramSwitch toggle = new TelegramSwitch(this, style);
         toggle.setChecked(value);
         toggle.setContentDescription(title);
+        Runnable[] apply = new Runnable[1];
         toggle.setListener(
                 (button, checked) -> {
+                    if (checked && warning != null) {
+                        AlertDialog dialog =
+                                new AlertDialog.Builder(this)
+                                        .setTitle(title)
+                                        .setMessage(warning)
+                                        .setNegativeButton(
+                                                "Cancel", (d, w) -> toggle.setChecked(false))
+                                        .setPositiveButton("Turn on", (d, w) -> apply[0].run())
+                                        .setOnCancelListener(d -> toggle.setChecked(false))
+                                        .create();
+                        secureWindow(dialog.getWindow());
+                        dialog.show();
+                        style.tuneDialog(dialog);
+                        return;
+                    }
+                    apply[0].run();
+                });
+        apply[0] =
+                () -> {
+                    boolean checked = toggle.isChecked();
                     sub.setText(checked ? on : off);
                     bridge.work.execute(
                             () -> {
@@ -1218,7 +1270,7 @@ public final class TelegramActivity extends Activity {
                                             });
                                 }
                             });
-                });
+                };
         LinearLayout.LayoutParams gap = new LinearLayout.LayoutParams(-2, -2);
         gap.leftMargin = style.dp(16);
         row.addView(toggle, gap);
