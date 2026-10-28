@@ -23,6 +23,8 @@
 /ui-tests/src/test/java/app/bitchord/telegram/TelegramIndex.java
 /ui-tests/src/test/java/app/bitchord/telegram/MainChannel.java
 /ui-tests/src/test/java/app/bitchord/telegram/LiveSearch.java
+/ui-tests/src/test/java/app/bitchord/telegram/ZipAlbums.java
+/ui-tests/src/test/java/app/bitchord/telegram/ZipDirectory.java
 /ui-tests/src/test/java/app/bitchord/telegram/AudioHeader.java
 /ui-tests/src/test/java/app/bitchord/telegram/FormatProbe.java
 /ui-tests/src/test/java/app/bitchord/telegram/MediaPolicy.java

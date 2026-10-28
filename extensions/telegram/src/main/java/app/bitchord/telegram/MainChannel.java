@@ -192,7 +192,7 @@ final class MainChannel {
                     count("duplicates");
                     continue;
                 }
-                picked.add(message);
+                if (!picked.contains(message)) picked.add(message); // songs of one zip share it
                 if (dedupe) owned.addAll(keys(row));
             }
             if (!picked.isEmpty()) {
@@ -316,7 +316,11 @@ final class MainChannel {
         Set<String> keys = new HashSet<>();
         String unique = row.optString("unique");
         if (!unique.isEmpty()) keys.add("u:" + unique);
-        if (row.optInt("file") != 0) keys.add("f:" + row.optInt("file"));
+        if (row.optInt("file") != 0)
+            keys.add(
+                    "f:"
+                            + row.optInt("file")
+                            + (row.optInt("entry") > 0 ? "/" + row.optInt("entry") : ""));
         List<String> title = TrackNames.words(row.optString("title"));
         if (!title.isEmpty() && row.optInt("duration") > 0)
             keys.add(

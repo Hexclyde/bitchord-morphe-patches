@@ -201,6 +201,12 @@ public final class TelegramBridge {
                             }
 
                             @Override
+                            public byte[] range(int file, long offset, int length)
+                                    throws Exception {
+                                return readRange(file, offset, length);
+                            }
+
+                            @Override
                             public int position(long chat, int kind, long message)
                                     throws Exception {
                                 return call(
@@ -437,7 +443,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.10"));
+                            "1.0.11"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -757,6 +763,34 @@ public final class TelegramBridge {
                 return;
             }
         }
+    }
+
+    /**
+     * Bytes of a Telegram file, downloading only that part: how zips are looked into without
+     * downloading them.
+     */
+    byte[] readRange(int file, long offset, int length) throws Exception {
+        TdApi.File info = call(new TdApi.GetFile(file), 15000);
+        if (offset < 0 || offset >= info.size) return new byte[0];
+        int wanted = (int) Math.min(length, info.size - offset);
+        long deadline = System.currentTimeMillis() + 60000;
+        long have = call(new TdApi.GetFileDownloadedPrefixSize(file, offset), 15000).size;
+        if (have < wanted) {
+            call(new TdApi.DownloadFile(file, 1, offset, wanted, false), 15000);
+            while ((have = call(new TdApi.GetFileDownloadedPrefixSize(file, offset), 15000).size)
+                    < wanted) {
+                if (System.currentTimeMillis() > deadline)
+                    throw new IOException("Telegram download timed out");
+                Thread.sleep(100);
+            }
+        }
+        String path = call(new TdApi.GetFile(file), 15000).local.path;
+        byte[] out = new byte[wanted];
+        try (RandomAccessFile input = new RandomAccessFile(path, "r")) {
+            input.seek(offset);
+            input.readFully(out);
+        }
+        return out;
     }
 
     /** The music chats, and while importing, the main and community channels too. */
@@ -1135,35 +1169,51 @@ public final class TelegramBridge {
         requireReady();
         long session = generation;
         JSONObject row =
-                TrackMetadata.resolve(
-                        id,
-                        selected,
-                        (chat, message) -> {
-                            TdApi.Chat source = call(new TdApi.GetChat(chat), 15000);
-                            if (!MediaPolicy.chatAllowed(source))
-                                throw new IOException(
-                                        "Telegram does not allow this channel's content to be saved"
-                                                + " by this player.");
-                            TdApi.Message found = call(new TdApi.GetMessage(chat, message), 15000);
-                            if (!MediaPolicy.savable(found)) return null;
-                            TdApi.MessageProperties properties =
-                                    call(new TdApi.GetMessageProperties(chat, message), 15000);
-                            if (properties == null
-                                    || !properties.canBeSaved
-                                    || properties.hasProtectedContentByCurrentUser
-                                    || properties.hasProtectedContentByOtherUser)
-                                throw new IOException(
-                                        "Telegram does not allow this message to be saved by this"
-                                                + " player.");
-                            return found;
-                        });
+                ZipAlbums.validId(id)
+                        ? zipSong(id)
+                        : TrackMetadata.resolve(id, selected, this::message);
         requireReady();
         if (session != generation) throw new IOException("Telegram session changed. Try again.");
         return row;
     }
 
+    /** A message the player may read: from an allowed chat, and allowed to be saved. */
+    TdApi.Message message(long chat, long message) throws Exception {
+        TdApi.Chat source = call(new TdApi.GetChat(chat), 15000);
+        if (!MediaPolicy.chatAllowed(source))
+            throw new IOException(
+                    "Telegram does not allow this channel's content to be saved by this player.");
+        TdApi.Message found = call(new TdApi.GetMessage(chat, message), 15000);
+        if (!MediaPolicy.savable(found)) return null;
+        TdApi.MessageProperties properties =
+                call(new TdApi.GetMessageProperties(chat, message), 15000);
+        if (properties == null
+                || !properties.canBeSaved
+                || properties.hasProtectedContentByCurrentUser
+                || properties.hasProtectedContentByOtherUser)
+            throw new IOException(
+                    "Telegram does not allow this message to be saved by this player.");
+        return found;
+    }
+
+    /**
+     * A song inside a zip post: what the saved index found in it, once the post is checked the same
+     * way any track is.
+     */
+    private JSONObject zipSong(String id) throws Exception {
+        long[] key = ZipAlbums.parse(id);
+        if (!selected.contains(key[0])) return null;
+        TdApi.Message found = message(key[0], key[1]);
+        JSONObject zip = ZipAlbums.descriptor(found);
+        JSONObject row = index.row(key[0], key[1], (int) key[2]);
+        if (zip == null || row == null || row.optInt("file") != zip.getInt("file")) return null;
+        return row;
+    }
+
     void verifyMedia(long chat, long message, int file) throws Exception {
-        JSONObject row = resolveTrack(chat + "_" + message);
+        TdApi.Message found = message(chat, message);
+        JSONObject row = found == null ? null : TrackMetadata.from(found);
+        if (row == null) row = ZipAlbums.descriptor(found);
         if (row == null || row.getInt("file") != file)
             throw new IOException("Telegram media changed or is no longer accessible.");
     }

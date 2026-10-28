@@ -65,7 +65,7 @@ public final class InternalAddon {
             return new JSONObject()
                     .put("id", "bitchord.telegram.native")
                     .put("name", "Unofficial Telegram")
-                    .put("version", "1.0.10")
+                    .put("version", "1.0.11")
                     .put("description", "Private on-device Telegram audio")
                     .put("allowDownloads", true)
                     .put("checkValidLossless", false)
@@ -178,7 +178,8 @@ public final class InternalAddon {
         if (uri.getRawQuery() != null || !path.startsWith("audio/"))
             throw new IOException("Invalid Telegram audio identifier");
         String id = path.substring(6);
-        if (!id.matches("-?(?:0|[1-9][0-9]*)_(?:[1-9][0-9]*)") || id.length() > 42)
+        if (!(id.matches("-?(?:0|[1-9][0-9]*)_(?:[1-9][0-9]*)") && id.length() <= 42)
+                && !ZipAlbums.validId(id))
             throw new IOException("Invalid Telegram track reference");
         return id;
     }

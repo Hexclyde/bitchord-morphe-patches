@@ -30,6 +30,8 @@ for name in (
     "TelegramIndex.java",
     "MainChannel.java",
     "LiveSearch.java",
+    "ZipAlbums.java",
+    "ZipDirectory.java",
     "MediaPolicy.java",
     "ChannelSponsorship.java",
     "ChannelContent.java",

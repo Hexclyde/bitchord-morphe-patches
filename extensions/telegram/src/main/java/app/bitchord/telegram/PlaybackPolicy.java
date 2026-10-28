@@ -12,6 +12,7 @@ public final class PlaybackPolicy {
         String prefix = "src:telegram-native::";
         if (mediaId == null || !mediaId.startsWith(prefix)) return null;
         String id = mediaId.substring(prefix.length());
+        if (ZipAlbums.validId(id)) return id;
         if (id.length() > 42 || !id.matches("-?[0-9]+_[0-9]+")) return null;
         int split = id.indexOf('_');
         try {

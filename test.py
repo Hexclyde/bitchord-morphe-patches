@@ -47,6 +47,8 @@ SOURCES = [
     "Fingerprint",
     "SoundCheck",
     "MainChannel",
+    "ZipDirectory",
+    "ZipAlbums",
     "InternalAddon",
     "NativeAudio",
     "TelegramDataSource",
@@ -79,6 +81,8 @@ TESTS = [
     "FingerprintTest",
     "SoundCheckTest",
     "MainChannelTest",
+    "ZipDirectoryTest",
+    "ZipAlbumsTest",
 ]
 
 subprocess.run(

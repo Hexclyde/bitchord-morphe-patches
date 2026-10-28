@@ -71,6 +71,11 @@ public final class MainChannelTest {
         }
 
         @Override
+        public byte[] range(int file, long offset, int length) {
+            return new byte[0];
+        }
+
+        @Override
         public int position(long chat, int kind, long messageId) {
             return 0;
         }

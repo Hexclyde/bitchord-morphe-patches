@@ -46,6 +46,11 @@ public final class TelegramIndexTest {
         }
 
         @Override
+        public byte[] range(int file, long offset, int length) {
+            return new byte[0];
+        }
+
+        @Override
         public int position(long chat, int kind, long messageId) {
             int n = 0;
             if (kind == 0) for (long id : audio.keySet()) if (id >= messageId) n++;

@@ -23,12 +23,45 @@ final class SqliteIndexStore implements IndexStore {
         db.enableWriteAheadLogging();
         db.execSQL(
                 "CREATE TABLE IF NOT EXISTS files (id INTEGER PRIMARY KEY, chat INTEGER NOT NULL,"
-                        + " message INTEGER NOT NULL, generation INTEGER NOT NULL, row TEXT NOT"
-                        + " NULL, UNIQUE (chat, message))");
+                        + " message INTEGER NOT NULL, entry INTEGER NOT NULL DEFAULT 0, generation"
+                        + " INTEGER NOT NULL, row TEXT NOT NULL, UNIQUE (chat, message, entry))");
+        upgrade();
         db.execSQL("CREATE VIRTUAL TABLE IF NOT EXISTS words USING fts4(text)");
+        db.execSQL(
+                "CREATE TABLE IF NOT EXISTS zips (chat INTEGER NOT NULL, message INTEGER NOT NULL,"
+                        + " row TEXT NOT NULL, done INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (chat,"
+                        + " message))");
         db.execSQL(
                 "CREATE TABLE IF NOT EXISTS chats (chat INTEGER PRIMARY KEY, state TEXT NOT"
                         + " NULL)");
+    }
+
+    /**
+     * 1.0.8 to 1.0.10 had one file per message. Songs in zips need an entry number, so the table is
+     * copied into the new layout once, keeping each file's id so the words still point at it.
+     */
+    private void upgrade() {
+        boolean hasEntry = false;
+        try (Cursor c = db.rawQuery("PRAGMA table_info(files)", null)) {
+            while (c.moveToNext()) if ("entry".equals(c.getString(1))) hasEntry = true;
+        }
+        if (hasEntry) return;
+        db.beginTransaction();
+        try {
+            db.execSQL(
+                    "CREATE TABLE files_new (id INTEGER PRIMARY KEY, chat INTEGER NOT NULL,"
+                            + " message INTEGER NOT NULL, entry INTEGER NOT NULL DEFAULT 0,"
+                            + " generation INTEGER NOT NULL, row TEXT NOT NULL, UNIQUE (chat,"
+                            + " message, entry))");
+            db.execSQL(
+                    "INSERT INTO files_new (id, chat, message, entry, generation, row) SELECT id,"
+                            + " chat, message, 0, generation, row FROM files");
+            db.execSQL("DROP TABLE files");
+            db.execSQL("ALTER TABLE files_new RENAME TO files");
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     @Override
@@ -57,11 +90,16 @@ final class SqliteIndexStore implements IndexStore {
         try {
             for (JSONObject row : rows) {
                 long message = row.optLong("message");
+                int entry = row.optInt("entry");
                 long id = -1;
                 try (Cursor c =
                         db.rawQuery(
-                                "SELECT id FROM files WHERE chat = ? AND message = ?",
-                                new String[] {Long.toString(chat), Long.toString(message)})) {
+                                "SELECT id FROM files WHERE chat = ? AND message = ? AND entry = ?",
+                                new String[] {
+                                    Long.toString(chat),
+                                    Long.toString(message),
+                                    Integer.toString(entry)
+                                })) {
                     if (c.moveToFirst()) id = c.getLong(0);
                 }
                 ContentValues file = new ContentValues();
@@ -75,6 +113,7 @@ final class SqliteIndexStore implements IndexStore {
                 } else {
                     file.put("chat", chat);
                     file.put("message", message);
+                    file.put("entry", entry);
                     id = db.insert("files", null, file);
                     words.put("docid", id);
                     db.insert("words", null, words);
@@ -131,7 +170,7 @@ final class SqliteIndexStore implements IndexStore {
                         "SELECT row FROM files WHERE id IN (SELECT docid FROM words WHERE text"
                                 + " MATCH ?) AND chat IN ("
                                 + in
-                                + ") ORDER BY message DESC LIMIT "
+                                + ") ORDER BY message DESC, entry LIMIT "
                                 + Math.max(0, limit),
                         args.toArray(new String[0]))) {
             while (c.moveToNext()) found.add(new JSONObject(c.getString(0)));
@@ -144,7 +183,7 @@ final class SqliteIndexStore implements IndexStore {
         List<JSONObject> found = new ArrayList<>();
         try (Cursor c =
                 db.rawQuery(
-                        "SELECT row FROM files WHERE chat = ? ORDER BY message DESC LIMIT "
+                        "SELECT row FROM files WHERE chat = ? ORDER BY message DESC, entry LIMIT "
                                 + Math.max(0, limit),
                         new String[] {Long.toString(chat)})) {
             while (c.moveToNext()) found.add(new JSONObject(c.getString(0)));
@@ -157,8 +196,8 @@ final class SqliteIndexStore implements IndexStore {
         List<JSONObject> found = new ArrayList<>();
         try (Cursor c =
                 db.rawQuery(
-                        "SELECT row FROM files WHERE chat = ? AND message > ? ORDER BY message"
-                                + " LIMIT "
+                        "SELECT row FROM files WHERE chat = ? AND message > ? ORDER BY message,"
+                                + " entry LIMIT "
                                 + Math.max(0, limit),
                         new String[] {Long.toString(chat), Long.toString(message)})) {
             while (c.moveToNext()) found.add(new JSONObject(c.getString(0)));
@@ -174,6 +213,90 @@ final class SqliteIndexStore implements IndexStore {
                         new String[] {Long.toString(chat), Long.toString(message)})) {
             return c.moveToFirst() ? c.getInt(0) : 0;
         }
+    }
+
+    @Override
+    public JSONObject row(long chat, long message, int entry) throws Exception {
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT row FROM files WHERE chat = ? AND message = ? AND entry = ?",
+                        new String[] {
+                            Long.toString(chat), Long.toString(message), Integer.toString(entry)
+                        })) {
+            return c.moveToFirst() ? new JSONObject(c.getString(0)) : null;
+        }
+    }
+
+    @Override
+    public void queueZips(long chat, List<JSONObject> zips, long generation) {
+        db.beginTransaction();
+        try {
+            for (JSONObject zip : zips) {
+                String[] key = {Long.toString(chat), Long.toString(zip.optLong("message"))};
+                boolean known;
+                try (Cursor c =
+                        db.rawQuery("SELECT 1 FROM zips WHERE chat = ? AND message = ?", key)) {
+                    known = c.moveToFirst();
+                }
+                if (!known) {
+                    ContentValues values = new ContentValues();
+                    values.put("chat", chat);
+                    values.put("message", zip.optLong("message"));
+                    values.put("row", zip.toString());
+                    db.insert("zips", null, values);
+                } else {
+                    ContentValues values = new ContentValues();
+                    values.put("generation", generation);
+                    db.update("files", values, "chat = ? AND message = ? AND entry > 0", key);
+                }
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    @Override
+    public JSONObject nextZip(Collection<Long> chats) throws Exception {
+        if (chats.isEmpty()) return null;
+        StringBuilder in = new StringBuilder();
+        List<String> args = new ArrayList<>();
+        for (long chat : chats) {
+            in.append(in.length() == 0 ? "?" : ", ?");
+            args.add(Long.toString(chat));
+        }
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT row FROM zips WHERE done = 0 AND chat IN ("
+                                + in
+                                + ") ORDER BY message DESC LIMIT 1",
+                        args.toArray(new String[0]))) {
+            return c.moveToFirst() ? new JSONObject(c.getString(0)) : null;
+        }
+    }
+
+    @Override
+    public void zipDone(long chat, long message) {
+        ContentValues values = new ContentValues();
+        values.put("done", 1);
+        db.update(
+                "zips",
+                values,
+                "chat = ? AND message = ?",
+                new String[] {Long.toString(chat), Long.toString(message)});
+    }
+
+    @Override
+    public int zipsWaiting(Collection<Long> chats) {
+        int n = 0;
+        for (long chat : chats)
+            try (Cursor c =
+                    db.rawQuery(
+                            "SELECT count(*) FROM zips WHERE done = 0 AND chat = ?",
+                            new String[] {Long.toString(chat)})) {
+                if (c.moveToFirst()) n += c.getInt(0);
+            }
+        return n;
     }
 
     @Override
@@ -199,6 +322,7 @@ final class SqliteIndexStore implements IndexStore {
             db.execSQL("DELETE FROM words");
             db.execSQL("DELETE FROM files");
             db.execSQL("DELETE FROM chats");
+            db.execSQL("DELETE FROM zips");
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();

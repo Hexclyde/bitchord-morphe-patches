@@ -55,6 +55,7 @@ final class FormatProbe {
     }
 
     static boolean probable(JSONObject row) {
+        if (row.has("zip")) return false; // its header was read when its zip was
         String format = row.optString("format").toLowerCase(Locale.ROOT);
         return format.equals("flac")
                 || format.equals("wav")
@@ -72,6 +73,9 @@ final class FormatProbe {
      */
     CountDownLatch probe(List<JSONObject> rows, Artwork.Download download, int max) {
         java.util.List<JSONObject> wanted = new java.util.ArrayList<>();
+        for (JSONObject row : rows)
+            if (row.has("zip") && row.optJSONObject("header") != null)
+                record(row.optString("id"), row.optJSONObject("header"));
         for (JSONObject row : rows)
             if (wanted.size() < max && probable(row) && get(row.optString("id")) == null)
                 wanted.add(row);

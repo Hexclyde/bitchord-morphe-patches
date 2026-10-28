@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.11
+
+- **Albums shared as zip files.** With **Saved index** on, every audio file inside a zip post becomes a song of its own: searchable by title, artist or album, playable, and usable in playlists, downloads and BitChord's matching. Only the end of the zip and the first few KB of each song are downloaded to find them; the length, bit depth and sample rate come from each song's header. Songs stored without compression, which is most of them, play and seek like any other file. Split and password-protected zips are skipped. The **Saved index** line counts the zips still to open.
+- With **Copy into main channel** on, zip posts are copied too, once each, and **Skip duplicates** knows a zip your main channel already has.
+- The saved index's database gains a column for songs inside zips; the files already indexed are kept.
+
 ## 1.0.10
 
 - **Main channel:** copy music from community channels into a private channel you own. Choose the main channel (only private channels you created) and the community channels under **Main channel**, then turn on **Copy into main channel**. Files are copied without "Forwarded from", oldest post first, and stay in your channel even if the original is deleted. **Keep in sync**, **Lossless only** and **Skip duplicates** can be turned on separately, and the pace is 1 to 500 files an hour. Everything is off by default, and each option shows a warning before it turns on: copying many messages can get a Telegram account limited.

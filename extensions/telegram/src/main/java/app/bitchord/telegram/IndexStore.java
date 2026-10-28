@@ -71,7 +71,10 @@ interface IndexStore {
 
     void save(State state) throws Exception;
 
-    /** Adds or updates files, marking them as part of this generation. */
+    /**
+     * Adds or updates files, marking them as part of this generation. A song inside a zip is one
+     * file of the zip's message, told apart by its "entry" (from 1; 0 for the message's own file).
+     */
     void put(long chat, List<JSONObject> rows, long generation) throws Exception;
 
     boolean has(long chat, long message) throws Exception;
@@ -90,6 +93,23 @@ interface IndexStore {
     /** How many of one chat's files were posted after {@code message}. */
     int countAfter(long chat, long message) throws Exception;
 
+    /** One file, or null. */
+    JSONObject row(long chat, long message, int entry) throws Exception;
+
+    /**
+     * Zip posts to look into. New ones wait their turn; ones already looked into have their songs
+     * marked as part of this generation, so a rebuild keeps them.
+     */
+    void queueZips(long chat, List<JSONObject> zips, long generation) throws Exception;
+
+    /** A zip waiting to be looked into in one of these chats, or null. */
+    JSONObject nextZip(Collection<Long> chats) throws Exception;
+
+    /** A zip has been looked into, or couldn't be. */
+    void zipDone(long chat, long message) throws Exception;
+
+    int zipsWaiting(Collection<Long> chats) throws Exception;
+
     /** Drops a chat's files from before this generation. */
     void prune(long chat, long generation) throws Exception;
 
@@ -105,7 +125,7 @@ interface IndexStore {
         return new ArrayList<>(words);
     }
 
-    /** What a file is searched by: its title, artist and file name. */
+    /** What a file is searched by: its title, artist, file name and, inside a zip, its album. */
     static String text(JSONObject row) {
         return String.join(
                 " ",
@@ -114,7 +134,9 @@ interface IndexStore {
                                 + " "
                                 + row.optString("artist")
                                 + " "
-                                + row.optString("fileName")));
+                                + row.optString("fileName")
+                                + " "
+                                + row.optString("album")));
     }
 
     /** True when every wanted word starts one of the words in {@code text}. */
@@ -147,7 +169,14 @@ interface IndexStore {
         }
 
         private final Map<Long, String> states = new HashMap<>();
+        // Keyed by message * 65536 + entry, which keeps posting order.
         private final Map<Long, TreeMap<Long, Entry>> files = new HashMap<>();
+        private final Map<Long, TreeMap<Long, String>> zips = new HashMap<>();
+        private final Set<String> zipsDone = new HashSet<>();
+
+        private static long key(long message, int entry) {
+            return message * 65536 + entry;
+        }
 
         @Override
         public synchronized State state(long chat) throws Exception {
@@ -165,12 +194,15 @@ interface IndexStore {
             TreeMap<Long, Entry> chatFiles = files.computeIfAbsent(chat, c -> new TreeMap<>());
             for (JSONObject row : rows)
                 chatFiles.put(
-                        row.optLong("message"), new Entry(row.toString(), text(row), generation));
+                        key(row.optLong("message"), row.optInt("entry")),
+                        new Entry(row.toString(), text(row), generation));
         }
 
         @Override
         public synchronized boolean has(long chat, long message) {
-            return files.getOrDefault(chat, new TreeMap<>()).containsKey(message);
+            return !files.getOrDefault(chat, new TreeMap<>())
+                    .subMap(key(message, 0), key(message + 1, 0))
+                    .isEmpty();
         }
 
         @Override
@@ -212,7 +244,9 @@ interface IndexStore {
                 throws Exception {
             List<JSONObject> found = new ArrayList<>();
             for (Entry e :
-                    files.getOrDefault(chat, new TreeMap<>()).tailMap(message, false).values()) {
+                    files.getOrDefault(chat, new TreeMap<>())
+                            .tailMap(key(message + 1, 0), true)
+                            .values()) {
                 if (found.size() >= limit) break;
                 found.add(new JSONObject(e.row));
             }
@@ -221,7 +255,55 @@ interface IndexStore {
 
         @Override
         public synchronized int countAfter(long chat, long message) {
-            return files.getOrDefault(chat, new TreeMap<>()).tailMap(message, false).size();
+            return files.getOrDefault(chat, new TreeMap<>())
+                    .tailMap(key(message + 1, 0), true)
+                    .size();
+        }
+
+        @Override
+        public synchronized JSONObject row(long chat, long message, int entry) throws Exception {
+            Entry e = files.getOrDefault(chat, new TreeMap<>()).get(key(message, entry));
+            return e == null ? null : new JSONObject(e.row);
+        }
+
+        @Override
+        public synchronized void queueZips(long chat, List<JSONObject> list, long generation) {
+            TreeMap<Long, String> chatZips = zips.computeIfAbsent(chat, c -> new TreeMap<>());
+            for (JSONObject zip : list) {
+                long message = zip.optLong("message");
+                if (!chatZips.containsKey(message)) chatZips.put(message, zip.toString());
+                else {
+                    TreeMap<Long, Entry> chatFiles = files.get(chat);
+                    if (chatFiles == null) continue;
+                    for (Map.Entry<Long, Entry> e :
+                            chatFiles.subMap(key(message, 1), key(message + 1, 0)).entrySet())
+                        e.setValue(new Entry(e.getValue().row, e.getValue().text, generation));
+                }
+            }
+        }
+
+        @Override
+        public synchronized JSONObject nextZip(Collection<Long> chats) throws Exception {
+            for (long chat : chats)
+                for (Map.Entry<Long, String> e :
+                        zips.getOrDefault(chat, new TreeMap<>()).descendingMap().entrySet())
+                    if (!zipsDone.contains(chat + "_" + e.getKey()))
+                        return new JSONObject(e.getValue());
+            return null;
+        }
+
+        @Override
+        public synchronized void zipDone(long chat, long message) {
+            zipsDone.add(chat + "_" + message);
+        }
+
+        @Override
+        public synchronized int zipsWaiting(Collection<Long> chats) {
+            int n = 0;
+            for (long chat : chats)
+                for (long message : zips.getOrDefault(chat, new TreeMap<>()).keySet())
+                    if (!zipsDone.contains(chat + "_" + message)) n++;
+            return n;
         }
 
         @Override
@@ -234,6 +316,8 @@ interface IndexStore {
         public synchronized void clear() {
             states.clear();
             files.clear();
+            zips.clear();
+            zipsDone.clear();
         }
     }
 }

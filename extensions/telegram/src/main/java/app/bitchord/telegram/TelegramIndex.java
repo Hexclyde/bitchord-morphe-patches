@@ -23,6 +23,9 @@ final class TelegramIndex {
 
         /** How many messages of one kind are newer than this one, plus one. */
         int position(long chat, int kind, long messageId) throws Exception;
+
+        /** Bytes of a file, downloading only that part: for reading inside zips. */
+        byte[] range(int file, long offset, int length) throws Exception;
     }
 
     /** A line in BitChord's log every this many pages, with how long they took. */
@@ -75,6 +78,10 @@ final class TelegramIndex {
      */
     synchronized boolean step(Collection<Long> selected) throws Exception {
         if (!enabled) return false;
+        // Zips found so far are looked into on every other step, so their songs show up while a
+        // large chat is still being gone through.
+        zipTurn = !zipTurn;
+        if (zipTurn && openZip(selected)) return true;
         for (long id : new TreeSet<>(selected)) {
             if (id == 0) continue;
             IndexStore.State chat = state(id);
@@ -98,7 +105,7 @@ final class TelegramIndex {
                 return true;
             }
         }
-        return false;
+        return openZip(selected);
     }
 
     private void build(IndexStore.State chat, int kind) throws Exception {
@@ -118,9 +125,10 @@ final class TelegramIndex {
         TdApi.FoundChatMessages found = pages.page(chat.chat, kind, chat.cursor[kind]);
         if (chat.total[kind] < 0 && found != null && found.totalCount >= 0)
             chat.total[kind] = found.totalCount;
-        List<JSONObject> rows = new ArrayList<>();
-        long oldest = read(chat.chat, found, rows);
+        List<JSONObject> rows = new ArrayList<>(), zips = new ArrayList<>();
+        long oldest = read(chat.chat, found, rows, zips);
         store.put(chat.chat, rows, chat.generation);
+        store.queueZips(chat.chat, zips, chat.generation);
         int messages = found == null || found.messages == null ? 0 : found.messages.length;
         chat.scanned[kind] += messages;
         progressed(messages);
@@ -159,6 +167,44 @@ final class TelegramIndex {
         store.save(chat);
     }
 
+    private boolean zipTurn;
+
+    /** Reads the list of songs in one waiting zip; false when none are waiting. */
+    private boolean openZip(Collection<Long> selected) throws Exception {
+        List<Long> chats = new ArrayList<>();
+        for (long id : selected) if (id != 0) chats.add(id);
+        JSONObject zip = store.nextZip(chats);
+        if (zip == null) return false;
+        long chat = zip.getLong("chat"), message = zip.getLong("message");
+        int file = zip.getInt("file");
+        try {
+            List<JSONObject> songs =
+                    ZipAlbums.songs(zip, (offset, length) -> pages.range(file, offset, length));
+            store.put(chat, songs, state(chat).generation);
+            HostLog.d(
+                    "Unofficial Telegram found "
+                            + songs.size()
+                            + (songs.size() == 1 ? " song" : " songs")
+                            + " in "
+                            + zip.optString("fileName"));
+        } catch (LiveSearch.RateLimited e) {
+            throw e;
+        } catch (Exception e) {
+            HostLog.d(
+                    "Unofficial Telegram couldn't look into "
+                            + zip.optString("fileName")
+                            + ": "
+                            + e.getMessage());
+        }
+        store.zipDone(chat, message);
+        return true;
+    }
+
+    /** One file of a chat, or null: a song inside a zip has an entry from 1. */
+    JSONObject row(long chat, long message, int entry) throws Exception {
+        return enabled ? store.row(chat, message, entry) : null;
+    }
+
     private synchronized void progressed(int messages) {
         long now = clock.millis();
         if (pace.isEmpty()) {
@@ -188,9 +234,10 @@ final class TelegramIndex {
             if (found != null && found.messages != null)
                 for (TdApi.Message m : found.messages)
                     if (m != null && store.has(chat.chat, m.id)) known = true;
-            List<JSONObject> rows = new ArrayList<>();
-            long oldest = read(chat.chat, found, rows);
+            List<JSONObject> rows = new ArrayList<>(), zips = new ArrayList<>();
+            long oldest = read(chat.chat, found, rows, zips);
             store.put(chat.chat, rows, chat.generation);
+            store.queueZips(chat.chat, zips, chat.generation);
             if (known || oldest == 0 || oldest == where[kind]) {
                 done[kind] = true;
                 where[kind] = 0;
@@ -209,7 +256,11 @@ final class TelegramIndex {
     }
 
     /** A page's music files; returns the oldest message id in it, or 0 when it was empty. */
-    private static long read(long chat, TdApi.FoundChatMessages found, List<JSONObject> rows) {
+    private static long read(
+            long chat,
+            TdApi.FoundChatMessages found,
+            List<JSONObject> rows,
+            List<JSONObject> zips) {
         long oldest = 0;
         if (found == null || found.messages == null) return 0;
         for (TdApi.Message m : found.messages) {
@@ -218,6 +269,8 @@ final class TelegramIndex {
             try {
                 JSONObject row = TrackMetadata.from(m);
                 if (row != null) rows.add(row);
+                JSONObject zip = row == null ? ZipAlbums.descriptor(m) : null;
+                if (zip != null) zips.add(zip);
             } catch (Exception e) {
                 // A post this can't read is left out, as search leaves it out.
             }
@@ -362,14 +415,17 @@ final class TelegramIndex {
             }
         }
         if (chats == 0) return "No music chats selected";
+        int zips = store.zipsWaiting(new TreeSet<>(selected));
+        String waiting = zips > 0 ? String.format(Locale.US, " · %,d zips to open", zips) : "";
         if (done == chats)
             return String.format(
-                    Locale.US,
-                    "%,d %s indexed from %d %s",
-                    files,
-                    files == 1 ? "file" : "files",
-                    chats,
-                    chats == 1 ? "chat" : "chats");
+                            Locale.US,
+                            "%,d %s indexed from %d %s",
+                            files,
+                            files == 1 ? "file" : "files",
+                            chats,
+                            chats == 1 ? "chat" : "chats")
+                    + waiting;
         StringBuilder text =
                 new StringBuilder(String.format(Locale.US, "Indexing: %,d files found", files));
         if (known && total > 0) {
@@ -380,7 +436,7 @@ final class TelegramIndex {
         }
         if (chats > 1)
             text.append(" (").append(done).append(" of ").append(chats).append(" chats done)");
-        return text.toString();
+        return text.append(waiting).toString();
     }
 
     /** "40 min", "1 h 40 min", "2 days". */

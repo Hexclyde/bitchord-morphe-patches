@@ -105,6 +105,14 @@ Both take the chat's newest 1,000 music files. The menu shows how many songs tha
 
 Both use the saved index, so **Saved index** has to be on and done with that chat. Making the playlist sends nothing to Telegram. Each download fetches its file from Telegram, the same as playing it.
 
+## Can it play albums shared as zip files?
+
+Yes, with **Saved index** on. When the index comes across a zip, it reads only the end of the zip, where the list of files is, and the first few KB of each song. Every audio file inside (FLAC, WAV, AIFF, ALAC, MP3 and the rest) becomes a song of its own: named from its file name, with its artist from the file name or the album's folder or zip name, and its length and format from its header. You can search for it by title, artist or album, play it, add it to playlists and download it, and BitChord can match it like any other Telegram file.
+
+Playing a song reads just that song's part of the zip. Most music zips are stored without compression, so these play and seek like any other file. A song that was compressed inside the zip plays too, but seeking far into it takes a moment, because it's decompressed from its start. Zips split into parts (`.z01`, `.zip.001`) and password-protected zips aren't supported. The **Saved index** line shows how many zips are still waiting to be opened.
+
+With **Copy into main channel** on, a zip is copied to your main channel once, like any other post.
+
 ## Can I collect music from other channels into my own?
 
 Yes, under **Main channel**. Choose a private channel you created as your main channel, add the community channels to copy from, and turn on **Copy into main channel**. Every option is off until you turn it on, and each one explains itself first.

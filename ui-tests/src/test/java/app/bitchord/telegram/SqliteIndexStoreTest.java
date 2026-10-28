@@ -104,6 +104,64 @@ public class SqliteIndexStoreTest {
     }
 
     @Test
+    public void upgradesAndHoldsZipSongs() throws Exception {
+        File file = new File(RuntimeEnvironment.getApplication().getFilesDir(), "old/index.db");
+        file.getParentFile().mkdirs();
+        // The layout 1.0.8 to 1.0.10 wrote: one file per message.
+        android.database.sqlite.SQLiteDatabase old =
+                android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(file, null);
+        old.execSQL(
+                "CREATE TABLE files (id INTEGER PRIMARY KEY, chat INTEGER NOT NULL, message INTEGER"
+                        + " NOT NULL, generation INTEGER NOT NULL, row TEXT NOT NULL, UNIQUE (chat,"
+                        + " message))");
+        old.execSQL("CREATE VIRTUAL TABLE words USING fts4(text)");
+        old.execSQL(
+                "INSERT INTO files VALUES (7, -100, 1, 1, '"
+                        + row(-100, 1, "Comfortably Numb", "Pink Floyd")
+                        + "')");
+        old.execSQL("INSERT INTO words (docid, text) VALUES (7, 'comfortably numb pink floyd')");
+        old.close();
+
+        SqliteIndexStore store = new SqliteIndexStore(file);
+        assertEquals("Kept through the upgrade", 1, store.count(-100));
+        assertEquals(
+                "Still searchable",
+                List.of("Comfortably Numb"),
+                titles(store.search(List.of(-100L), TrackNames.words("numb"), 200)));
+
+        // A zip's songs share its message, each with its own entry.
+        store.queueZips(-100, List.of(new JSONObject().put("chat", -100).put("message", 2)), 1);
+        store.zipDone(-100, 2);
+        List<JSONObject> songs = new ArrayList<>();
+        for (int entry = 1; entry <= 3; entry++)
+            songs.add(row(-100, 2, "Song " + entry, "Pink Floyd").put("entry", entry));
+        store.put(-100, songs, 1);
+        assertEquals(4, store.count(-100));
+        assertEquals("Song 2", store.row(-100, 2, 2).getString("title"));
+        assertNull(store.row(-100, 2, 9));
+        assertEquals(
+                "Newest message first, songs in zip order",
+                List.of("Song 1", "Song 2", "Song 3", "Comfortably Numb"),
+                titles(store.newest(-100, 10)));
+        assertEquals(3, store.after(-100, 1, 10).size());
+
+        // The queue of zips to open.
+        JSONObject zip = new JSONObject().put("chat", -100).put("message", 5).put("file", 9);
+        store.queueZips(-100, List.of(zip), 1);
+        store.queueZips(-100, List.of(zip), 1);
+        assertEquals(1, store.zipsWaiting(List.of(-100L)));
+        assertEquals(5, store.nextZip(List.of(-100L)).getLong("message"));
+        store.zipDone(-100, 5);
+        assertNull(store.nextZip(List.of(-100L)));
+        // Seen again in a rebuild: its songs join the new generation, so they aren't pruned.
+        store.queueZips(-100, List.of(new JSONObject().put("chat", -100).put("message", 2)), 2);
+        store.put(-100, List.of(row(-100, 1, "Comfortably Numb", "Pink Floyd")), 2);
+        store.prune(-100, 2);
+        assertEquals("Zip songs kept", 4, store.count(-100));
+        store.clear();
+    }
+
+    @Test
     public void largeChatSearchesQuickly() throws Exception {
         SqliteIndexStore store = open();
         Random random = new Random(1);

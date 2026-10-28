@@ -88,7 +88,8 @@ public final class TrackNames {
     }
 
     static boolean validId(String id) {
-        return id != null && id.length() <= 42 && id.matches("-?[0-9]+_[0-9]+");
+        return id != null
+                && (id.length() <= 42 && id.matches("-?[0-9]+_[0-9]+") || ZipAlbums.validId(id));
     }
 
     static boolean validMediaId(String id) {
