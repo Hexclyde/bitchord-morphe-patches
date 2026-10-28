@@ -1,0 +1,159 @@
+package app.bitchord.telegram;
+
+import org.json.*;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URLDecoder;
+import java.util.List;
+
+/** Compatibility identifiers for the host's addon models. Never sent over a network. */
+public final class InternalAddon {
+    public static final String ORIGIN = "https://telegram.bitchord.invalid/";
+
+    private InternalAddon() {}
+
+    public static boolean reserved(String value) {
+        try {
+            return "telegram.bitchord.invalid".equalsIgnoreCase(new URI(value).getHost());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    static URI checked(String value) throws IOException {
+        try {
+            URI uri = new URI(value);
+            if (!"https".equals(uri.getScheme())
+                    || !"telegram.bitchord.invalid".equals(uri.getRawAuthority())
+                    || uri.getRawFragment() != null)
+                throw new IOException("Invalid internal Telegram identifier");
+            return uri;
+        } catch (java.net.URISyntaxException e) {
+            throw new IOException("Invalid internal Telegram identifier", e);
+        }
+    }
+
+    static String route(TelegramBridge bridge, String value) throws IOException {
+        URI uri = checked(value);
+        String path = uri.getRawPath(), prefix = "/" + bridge.sessionTag + "/";
+        if (path == null || !path.startsWith(prefix))
+            throw new IOException("Telegram session changed. Search again.");
+        return path.substring(prefix.length());
+    }
+
+    static TelegramBridge bridge() throws IOException {
+        TelegramBridge bridge = TelegramBridge.instance;
+        if (bridge == null) throw new IOException("Telegram integration is unavailable");
+        return bridge;
+    }
+
+    /**
+     * Runs inside the original AddonClient Dispatchers.IO block; null leaves external addons
+     * untouched.
+     */
+    public static String bodyOrNull(String value) throws Exception {
+        return reserved(value) ? body(bridge(), value) : null;
+    }
+
+    static String body(TelegramBridge bridge, String value) throws Exception {
+        URI uri = checked(value);
+        long generation = bridge.generation;
+        String tag = bridge.sessionTag;
+        String path = route(bridge, value);
+        if (path.equals("manifest.json"))
+            return new JSONObject()
+                    .put("id", "bitchord.telegram.native")
+                    .put("name", "Unofficial Telegram")
+                    .put("version", "1.0.0")
+                    .put("description", "Private on-device Telegram audio")
+                    .put("allowDownloads", true)
+                    .put("checkValidLossless", false)
+                    .toString();
+        bridge.requireReady();
+        if (path.equals("search")) {
+            String query = "";
+            boolean seen = false;
+            if (uri.getRawQuery() != null)
+                for (String item : uri.getRawQuery().split("&")) {
+                    String[] kv = item.split("=", 2);
+                    if (kv[0].equals("q")) {
+                        if (seen) throw new IOException("Duplicate search query");
+                        seen = true;
+                        query = URLDecoder.decode(kv.length == 2 ? kv[1] : "", "UTF-8");
+                    }
+                }
+            JSONArray tracks = new JSONArray();
+            List<JSONObject> rows = bridge.searchTracks(query);
+            bridge.decorate(rows);
+            for (JSONObject row : rows) {
+                JSONObject track =
+                        new JSONObject()
+                                .put("id", row.getString("id"))
+                                .put("title", row.optString("title"))
+                                .put("artist", row.optString("artist"))
+                                .put("duration", row.optInt("duration"))
+                                .put("format", row.optString("format"));
+                if (!row.optString("artworkURL").isEmpty())
+                    track.put("artworkURL", row.getString("artworkURL"));
+                String quality = bridge.reportQuality() ? quality(row) : "";
+                if (!quality.isEmpty()) track.put("audioQuality", quality);
+                tracks.put(track);
+            }
+            bridge.requireReady();
+            if (generation != bridge.generation || !tag.equals(bridge.sessionTag))
+                throw new IOException("Telegram session changed");
+            return new JSONObject().put("tracks", tracks).toString();
+        }
+        if (path.startsWith("stream/")) {
+            String id = path.substring(7);
+            JSONObject row = bridge.resolveTrack(id);
+            if (row == null) throw new IOException("Telegram track is unavailable");
+            bridge.requireReady();
+            if (generation != bridge.generation
+                    || !tag.equals(bridge.sessionTag)
+                    || !bridge.selected.contains(row.getLong("chat")))
+                throw new IOException("Telegram selection changed");
+            JSONObject header = bridge.formats.get(row.getString("id"));
+            if (header == null) bridge.probeLater(row);
+            JSONObject stream =
+                    new JSONObject()
+                            .put("url", ORIGIN + tag + "/audio/" + row.getString("id"))
+                            .put("format", row.optString("format"))
+                            .put("mimeType", row.optString("mime"))
+                            .put("manifest", "none")
+                            .put("encrypted", false);
+            String quality = bridge.reportQuality() ? quality(row) : "";
+            if (!quality.isEmpty()) {
+                stream.put("audioQuality", quality);
+                int kbps = TrackDetails.kbps(row.optLong("size"), row.optInt("duration"));
+                if (kbps > 0) stream.put("bitrate", kbps);
+            }
+            if (header != null)
+                stream.put("bitDepth", header.optInt("bits"))
+                        .put("sampleRate", header.optInt("rate"));
+            return stream.toString();
+        }
+        throw new IOException("Unknown internal Telegram operation");
+    }
+
+    static String quality(JSONObject row) {
+        return TrackDetails.quality(
+                row.optString("format"),
+                row.optString("mime"),
+                row.optLong("size"),
+                row.optInt("duration"),
+                row.optInt("bits"));
+    }
+
+    static String audioId(TelegramBridge bridge, String value) throws IOException {
+        URI uri = checked(value);
+        String path = route(bridge, value);
+        if (uri.getRawQuery() != null || !path.startsWith("audio/"))
+            throw new IOException("Invalid Telegram audio identifier");
+        String id = path.substring(6);
+        if (!id.matches("-?(?:0|[1-9][0-9]*)_(?:[1-9][0-9]*)") || id.length() > 42)
+            throw new IOException("Invalid Telegram track reference");
+        return id;
+    }
+}
