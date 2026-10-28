@@ -178,6 +178,18 @@ public final class ZipAlbumsTest {
                 index.row(-100, 10, 1) != null && chat.read.get() == before,
                 "Kept through a rebuild");
         // Copying into a main channel: a zip goes over once, and not if the main channel has it.
+        // A zip sharing a song with another but holding a new one goes over whole.
+        ByteArrayOutputStream mixed = new ByteArrayOutputStream();
+        try (ZipOutputStream zip = new ZipOutputStream(mixed)) {
+            ZipDirectoryTest.add(zip, "Track 1.flac", flesh, true);
+            ZipDirectoryTest.add(
+                    zip,
+                    "Track 9.flac",
+                    ZipDirectoryTest.flac(44100, 16, 44100L * 150, 1000, 9),
+                    true);
+        }
+        chat.documents.add(zipPost(-100, 14, 504, "Pink Floyd - Mixed.zip", mixed.toByteArray()));
+        chat.files.put(504, mixed.toByteArray());
         chat.documents.add(zipPost(-1, 3, 501, "The Wall [FLAC].zip", wall));
         TelegramIndex both = new TelegramIndex(new IndexStore.Memory(), chat, clock::get);
         for (int i = 0; i < 40 && both.step(List.of(-100L, -1L)); i++) {}
@@ -197,8 +209,13 @@ public final class ZipAlbumsTest {
         channel.setOption("import", true);
         channel.step(both);
         check(
-                copies.equals(List.of("-100:5", "-100:11")),
-                "The FLAC post and the Animals zip, once; The Wall is already there: " + copies);
+                copies.equals(List.of("-100:5", "-100:11", "-100:14")),
+                "The FLAC post, Animals, and Mixed for its new song; The Wall is already there: "
+                        + copies);
+        check(
+                channel.progress(both)
+                        .startsWith("Copied 4 audio files in 3 posts · 1 duplicate skipped"),
+                "Only The Wall counts as skipped: " + channel.progress(both));
         System.out.println(
                 "PASS: "
                         + checks

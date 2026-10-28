@@ -147,9 +147,10 @@ public final class MainChannelTest {
         check(!copies.contains("-1<-20:5"), "Same title, artist, length and format: skipped");
         check(copies.contains("-1<-20:6"), "Second community channel too");
         check(copies.size() == 31, "30 FLACs from A and one from B: " + copies.size());
-        check(channel.status.startsWith("Done: 31 copied"), channel.status);
+        check(channel.status.startsWith("Done: 31 audio files copied"), channel.status);
         check(
-                channel.progress(index).equals("Copied 31 · 10 lossy and 2 duplicates skipped"),
+                channel.progress(index)
+                        .equals("Copied 31 audio files · 10 lossy and 2 duplicates skipped"),
                 channel.progress(index));
 
         // Without sync, later posts wait; with it, they're copied.

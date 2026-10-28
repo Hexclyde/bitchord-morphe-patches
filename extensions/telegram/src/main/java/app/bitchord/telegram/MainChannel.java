@@ -175,26 +175,46 @@ final class MainChannel {
             long cutoff = option("sync") ? Long.MAX_VALUE : state.optLong("cutoff");
             long after = state.optLong("after");
             List<Long> picked = new ArrayList<>();
-            List<JSONObject> rows = index.after(chat, after, LOOK_AHEAD);
+            int songs = 0; // audio files in the picked posts: one, or a zip's songs
+            // Whole posts at a time: the songs of a zip share its message and are judged together.
+            // The window holds the largest zip, so only a post cut off at its end waits for the
+            // next.
+            int limit = LOOK_AHEAD + ZipAlbums.MAX_SONGS;
+            List<JSONObject> rows = index.after(chat, after, limit);
+            List<List<JSONObject>> posts = new ArrayList<>();
             for (JSONObject row : rows) {
                 long message = row.optLong("message");
                 if (message > cutoff) break;
+                if (posts.isEmpty()
+                        || posts.get(posts.size() - 1).get(0).optLong("message") != message)
+                    posts.add(new ArrayList<>());
+                posts.get(posts.size() - 1).add(row);
+            }
+            boolean cutShort = rows.size() == limit;
+            if (cutShort && posts.size() > 1) posts.remove(posts.size() - 1);
+            for (List<JSONObject> post : posts) {
                 if (picked.size() >= batch) {
                     more = true;
                     break;
                 }
-                after = message;
-                if (option("losslessOnly") && !lossless(row)) {
-                    count("lossy");
+                after = post.get(0).optLong("message");
+                // Copied when any of its songs is wanted; a zip goes over whole, duplicates and
+                // all.
+                int lossy = 0, duplicates = 0;
+                boolean wanted = false;
+                for (JSONObject row : post)
+                    if (option("losslessOnly") && !lossless(row)) lossy++;
+                    else if (dedupe && !Collections.disjoint(keys(row), owned)) duplicates++;
+                    else wanted = true;
+                if (!wanted) {
+                    count(duplicates > 0 ? "duplicates" : "lossy");
                     continue;
                 }
-                if (dedupe && !Collections.disjoint(keys(row), owned)) {
-                    count("duplicates");
-                    continue;
-                }
-                if (!picked.contains(message)) picked.add(message); // songs of one zip share it
-                if (dedupe) owned.addAll(keys(row));
+                picked.add(after);
+                songs += post.size();
+                if (dedupe) for (JSONObject row : post) owned.addAll(keys(row));
             }
+            if (cutShort && !posts.isEmpty()) more = true;
             if (!picked.isEmpty()) {
                 long[] ids = new long[picked.size()];
                 for (int i = 0; i < ids.length; i++) ids[i] = picked.get(i);
@@ -215,8 +235,10 @@ final class MainChannel {
                                     + e.getMessage());
                     count("failed", ids.length);
                     ids = new long[0];
+                    songs = 0;
                 }
                 count("copied", ids.length);
+                count("songs", songs);
                 state.put("after", after);
                 nextAt = now + gapMillis(picked.size());
                 status = progress(index);
@@ -224,7 +246,6 @@ final class MainChannel {
                 return nextAt - now;
             }
             state.put("after", after);
-            if (!rows.isEmpty() && after < cutoff && rows.size() == LOOK_AHEAD) more = true;
         }
         save();
         status =
@@ -236,14 +257,26 @@ final class MainChannel {
 
     private String done() {
         return option("sync")
-                ? String.format(
-                        Locale.US,
-                        "Up to date: %,d copied. New posts are copied as they're indexed.",
-                        saved.optInt("copied"))
-                : String.format(Locale.US, "Done: %,d copied.", saved.optInt("copied"));
+                ? "Up to date: " + copied() + " copied. New posts are copied as they're indexed."
+                : "Done: " + copied() + " copied.";
     }
 
-    /** "Copied 1,234 · 56 lossy and 12 duplicates skipped · about 4,500 to go, up to 9 h". */
+    /** "2,140 audio files in 1,310 posts", or "31 audio files" when each post is one. */
+    private String copied() {
+        int posts = saved.optInt("copied"), songs = Math.max(posts, saved.optInt("songs"));
+        String files =
+                String.format(Locale.US, "%,d audio %s", songs, songs == 1 ? "file" : "files");
+        return songs == posts
+                ? files
+                : files
+                        + String.format(
+                                Locale.US, " in %,d %s", posts, posts == 1 ? "post" : "posts");
+    }
+
+    /**
+     * "Copied 2,140 audio files in 1,310 posts · 56 lossy and 12 duplicates skipped · about 4,500
+     * to go, up to 9 h".
+     */
     String progress(TelegramIndex index) {
         long left = 0;
         try {
@@ -255,8 +288,7 @@ final class MainChannel {
         } catch (Exception ignored) {
             // Shown without what's left.
         }
-        StringBuilder text =
-                new StringBuilder(String.format(Locale.US, "Copied %,d", saved.optInt("copied")));
+        StringBuilder text = new StringBuilder("Copied " + copied());
         int lossy = saved.optInt("lossy"), dupes = saved.optInt("duplicates");
         if (lossy > 0 || dupes > 0) {
             text.append(" · ");

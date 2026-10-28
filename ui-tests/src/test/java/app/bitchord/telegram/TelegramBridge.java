@@ -112,6 +112,16 @@ public final class TelegramBridge {
         return mainChannel.status;
     }
 
+    boolean hideDuplicates = true;
+
+    boolean hideDuplicates() {
+        return hideDuplicates;
+    }
+
+    void setHideDuplicates(boolean on) {
+        hideDuplicates = on;
+    }
+
     boolean soundCheck;
 
     boolean soundCheck() {

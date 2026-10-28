@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.12
+
+- **Hide duplicate songs** (under **Track details**, on by default): search results show each song once, as its best copy. Copies with the same title and artist and lengths within two seconds count as the same song; lossless beats lossy, then the higher bit depth, sample rate and bitrate win.
+- **Copy into main channel** counts audio files: "Copied 2,140 audio files in 1,310 posts", counting each song in a zip.
+- A zip is copied when any of its songs is new, and its songs are judged together even in a large zip. Songs that go over inside a copied zip no longer count as skipped duplicates.
+
 ## 1.0.11
 
 - **Albums shared as zip files.** With **Saved index** on, every audio file inside a zip post becomes a song of its own: searchable by title, artist or album, playable, and usable in playlists, downloads and BitChord's matching. Only the end of the zip and the first few KB of each song are downloaded to find them; the length, bit depth and sample rate come from each song's header. Songs stored without compression, which is most of them, play and seek like any other file. Split and password-protected zips are skipped. The **Saved index** line counts the zips still to open.

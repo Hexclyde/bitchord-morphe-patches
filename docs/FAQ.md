@@ -111,7 +111,11 @@ Yes, with **Saved index** on. When the index comes across a zip, it reads only t
 
 Playing a song reads just that song's part of the zip. Most music zips are stored without compression, so these play and seek like any other file. A song that was compressed inside the zip plays too, but seeking far into it takes a moment, because it's decompressed from its start. Zips split into parts (`.z01`, `.zip.001`) and password-protected zips aren't supported. The **Saved index** line shows how many zips are still waiting to be opened.
 
-With **Copy into main channel** on, a zip is copied to your main channel once, like any other post.
+With **Copy into main channel** on, a zip is copied to your main channel once, like any other post. Telegram copies whole posts, so a zip is copied when any song in it is new, even if some of its songs are already in your main channel.
+
+## Why does a song show only once when I have several copies?
+
+**Hide duplicate songs** (under **Track details**, on by default) shows each song once in search results: copies with the same title and artist and lengths within two seconds, such as a song posted twice or found in two zips. The best copy is the one shown and played: lossless over lossy, then the higher bit depth, sample rate and bitrate. Turn it off to see every copy.
 
 ## Can I collect music from other channels into my own?
 
@@ -120,7 +124,8 @@ Yes, under **Main channel**. Choose a private channel you created as your main c
 - Files are copied, not forwarded, so they show as your own posts without "Forwarded from". Telegram doesn't upload them again, and a copy stays in your channel even if the community channel deletes the original.
 - **Keep in sync** also copies new posts as the saved index finds them. Without it, the copy stops at what the channels had when it started.
 - **Lossless only** copies FLAC, ALAC, WAV and AIFF files and skips the rest.
-- **Skip duplicates** doesn't copy a file your main channel already has: the same Telegram file, or the same title, artist, length and format. Nothing is ever deleted.
+- **Skip duplicates** doesn't copy a file your main channel already has: the same Telegram file, or the same title, artist, length and format. Nothing is ever deleted. A zip is copied whole when any song in it is new.
+- The status line counts the audio files copied, counting each song in a zip: "Copied 2,140 audio files in 1,310 posts".
 - The pace is 1 to 500 files an hour, and copying pauses whenever Telegram asks it to.
 
 The files come from the saved index, so **Saved index** has to be on; the community channels and your main channel are indexed too while copying is on. Only private channels you created can be the main channel, and channels with protected content can't be copied from.

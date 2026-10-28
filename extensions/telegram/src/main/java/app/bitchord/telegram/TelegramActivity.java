@@ -690,6 +690,19 @@ public final class TelegramActivity extends Activity {
                 null,
                 "Your searches also check the selected chats for a match. To tell 16-bit from"
                         + " 24-bit, the start of a few lossless files per search is downloaded.");
+        divider(details);
+        toggle(
+                details,
+                "Hide duplicate songs",
+                "The same song shows once, as its best copy",
+                "Every copy of a song shows",
+                bridge.hideDuplicates(),
+                bridge::setHideDuplicates,
+                null,
+                "Copies with the same title and artist, and lengths within two seconds, count as"
+                    + " the same song, such as one posted twice or found in two zips. The best is"
+                    + " kept: lossless over lossy, then the higher bit depth, sample rate and"
+                    + " bitrate.");
         paragraph(
                 details,
                 "BitChord keeps search results for a few minutes, so changes here show up in new"

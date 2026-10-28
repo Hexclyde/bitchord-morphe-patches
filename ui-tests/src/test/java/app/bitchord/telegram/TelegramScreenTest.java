@@ -483,6 +483,11 @@ public class TelegramScreenTest {
         assertTrue("On once there's a main channel", bridge.importOption("import"));
         assertFalse("Other options stay off", bridge.importOption("sync"));
         assertNull("No Open BitChord button", text(activity.body, "Open BitChord"));
+        assertTrue("Duplicates are hidden unless turned off", bridge.hideDuplicates());
+        clickRow("Hide duplicate songs");
+        idle();
+        assertFalse(bridge.hideDuplicates());
+        assertNotNull(text(activity.body, "Every copy of a song shows"));
         assertFalse("Sound check starts off", bridge.soundCheck());
         clickRow("Check matches by sound");
         android.app.AlertDialog warning =

@@ -35,7 +35,7 @@ public final class TelegramBridge {
     public final Context context;
     final ExecutorService work = Executors.newSingleThreadExecutor();
     final TrackNames names;
-    private volatile boolean useTrackNames, suggestTrackNames;
+    private volatile boolean useTrackNames, suggestTrackNames, hideDuplicates;
     private volatile boolean reportQuality, showArtwork, namesFromFiles;
     final Artwork artwork;
     final FormatProbe formats;
@@ -292,6 +292,7 @@ public final class TelegramBridge {
         SmoothUpgrade.enabled = config.optBoolean("smoothUpgrades", SmoothUpgrade.enabled);
         FormatLegend.enabled = config.optBoolean("formatLegend", FormatLegend.enabled);
         index.enabled = !savedIndexBroken && config.optBoolean("searchIndex", true);
+        hideDuplicates = config.optBoolean("hideDuplicates", true);
         SoundCheck.active = config.optBoolean("soundCheck", false) ? soundCheck : null;
         JSONArray ids = config.optJSONArray("chats");
         if (ids != null) for (int i = 0; i < ids.length(); i++) selected.add(ids.getLong(i));
@@ -443,7 +444,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.11"));
+                            "1.0.12"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -584,6 +585,7 @@ public final class TelegramBridge {
                                 }
                             });
         if (session != generation) throw new IOException("Telegram session changed. Search again.");
+        if (hideDuplicates) rows = Duplicates.best(rows, formats::get);
         error = found.warning;
         status = "Found " + rows.size() + (rows.size() == 1 ? " track." : " tracks.");
         return rows;
@@ -883,6 +885,16 @@ public final class TelegramBridge {
 
     public String importStatus() {
         return mainChannel.status;
+    }
+
+    public boolean hideDuplicates() {
+        return hideDuplicates;
+    }
+
+    public void setHideDuplicates(boolean on) throws Exception {
+        hideDuplicates = on;
+        config.put("hideDuplicates", on);
+        saveConfig();
     }
 
     public boolean soundCheck() {

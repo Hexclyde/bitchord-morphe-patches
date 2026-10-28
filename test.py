@@ -49,6 +49,7 @@ SOURCES = [
     "MainChannel",
     "ZipDirectory",
     "ZipAlbums",
+    "Duplicates",
     "InternalAddon",
     "NativeAudio",
     "TelegramDataSource",
@@ -83,6 +84,7 @@ TESTS = [
     "MainChannelTest",
     "ZipDirectoryTest",
     "ZipAlbumsTest",
+    "DuplicatesTest",
 ]
 
 subprocess.run(
