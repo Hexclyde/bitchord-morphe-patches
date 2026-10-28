@@ -76,9 +76,13 @@ Not with **Smooth quality switch** on (under **Playback**). BitChord sometimes s
 
 Telegram only has a cover for files that were uploaded with one, or that it recognises. Covers are downloaded the first time a file shows up in a search, and BitChord keeps search results for a few minutes, so a new cover can take a later search to appear. Turn **Album covers** off under **Track details** to stop downloading them.
 
-## What does tapping Telegram under Sources do?
+## What does tapping Unofficial Telegram under Sources do?
 
-It opens the Unofficial Telegram settings page. Since 0.2.1 it no longer opens BitChord's add-on editor, which only showed an internal `https://telegram.bitchord.invalid/...` address. That address never leaves your phone: the patch handles it inside the app and there's no website or server behind it.
+It opens the patch's own settings page, the same one as **Settings → Account & integrations → Unofficial Telegram**. BitChord's add-on editor isn't used for it, because there's nothing to edit there.
+
+## What is telegram.bitchord.invalid?
+
+It's the address BitChord uses to talk to the patch, and you'll see it in BitChord's log as `https://telegram.bitchord.invalid/***`. It never leaves your phone: the patch answers it inside the app, and there's no website or server behind it. Domains ending in `.invalid` are reserved and can't exist on the internet, so even if a request did get out, it couldn't reach anyone.
 
 ## Can I rename the installed app?
 
