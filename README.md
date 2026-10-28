@@ -4,7 +4,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.0.2). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.0.3). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > I've only been able to test it on an **arm64-v8a** phone. The armeabi-v7a and x86_64 builds pass the same automated checks, but I haven't run them on a real device. If you're on one of those, please give it a try and [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems. Hearing that it works is useful too.
 
@@ -31,7 +31,7 @@ More BitChord add-ons will be added to this repository over time.
 - FLAC, WAV, AIFF and ALAC are reported to BitChord as lossless, so it can prefer them over lossy copies
 - Album covers from Telegram in search results
 - Untagged files get their title and artist from the file name (`03 - Artist - Title.flac`)
-- 5.1 and 7.1 files play as proper stereo, mixed inside the player (no conversion, no Termux)
+- 5.1 and 7.1 files play as proper stereo, mixed inside the player without converting the file
 - A small format legend next to song titles (FLAC 24bit, MP3 320kbps, …), in the main search too
 - When a better copy turns up mid-song, it fades in without a gap
 - Fix misnamed files on your phone, with suggestions, without uploading them again

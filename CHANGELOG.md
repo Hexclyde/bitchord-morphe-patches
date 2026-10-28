@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3
+
+- **Fixed a wrong song playing from Telegram.** BitChord accepts a file whose title only *contains* the song's title, so "How I'd Love To Love You" was played for "L-O-V-E". Telegram files now need the same title (brackets and punctuation aside) within 10 seconds of the song's length, or a containing title within 3 seconds. Other sources are matched as before.
+
 ## 1.0.2
 
 - **Format legend for every format:** besides FLAC 16bit and 24bit, songs now show MP3 320kbps, AAC 256kbps, OPUS 160kbps and so on. The legend is a small white label on a translucent grey chip.

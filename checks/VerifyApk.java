@@ -242,7 +242,7 @@ public class VerifyApk {
         int accountHooks = 0, sourceHooks = 0, sourceEditorHooks = 0;
         Set<String> downmixHooks = new TreeSet<>(), smoothHooks = new TreeSet<>();
         boolean smoothEntry = false;
-        int legendTexts = 0, legendCalls = 0, searchHooks = 0, legendLinks = 0;
+        int legendTexts = 0, legendCalls = 0, searchHooks = 0, legendLinks = 0, matchHooks = 0;
         boolean downmixTarget = false;
         boolean liveSearchCall = false, slider = false;
         int statsFormatHooks = 0, statsCaptureHooks = 0, statsMeasureHooks = 0;
@@ -260,6 +260,25 @@ public class VerifyApk {
                 if (cls.getType().equals("Lcom/music/bitchord/data/NerdStats$Snapshot;"))
                     for (Field field : cls.getFields())
                         hostStatsFields.add(field.getName() + ":" + field.getType());
+                if (cls.getType().equals("Lcom/music/bitchord/data/sources/TrackMatcher;"))
+                    for (Method method : cls.getMethods())
+                        if ((method.getName().equals("best") || method.getName().equals("ranked"))
+                                && method.getImplementation() != null) {
+                            com.android.tools.smali.dexlib2.iface.instruction.Instruction first =
+                                    method.getImplementation().getInstructions().iterator().next();
+                            if (first
+                                            instanceof
+                                            com.android.tools.smali.dexlib2.iface.instruction
+                                                    .ReferenceInstruction
+                                    && ((com.android.tools.smali.dexlib2.iface.instruction
+                                                            .ReferenceInstruction)
+                                                    first)
+                                            .getReference()
+                                            .toString()
+                                            .startsWith(
+                                                    "Lapp/bitchord/telegram/TelegramMatch;->filter"))
+                                matchHooks++;
+                        }
                 if (cls.getType().equals("Lcom/music/bitchord/ui/MainViewModel$SearchRequest;")
                         || cls.getType().equals("Lapp/bitchord/telegram/FormatLegend;"))
                     for (Method method : cls.getMethods())
@@ -680,7 +699,7 @@ public class VerifyApk {
                                     check(
                                             !text.getString().contains("BitChord native test"),
                                             "Telegram application version is unbranded");
-                                    if (text.getString().equals("1.0.2")) version = true;
+                                    if (text.getString().equals("1.0.3")) version = true;
                                 }
                                 if (cls.getType()
                                         .equals("Lapp/bitchord/telegram/TelegramActivity;")) {
@@ -799,6 +818,10 @@ public class VerifyApk {
                     "Runtime encrypted credential storage included");
             check(accountHooks == 1, "Exactly one Account & integrations setup entry");
             check(sourceHooks == 0, "Sources has no Telegram setup action");
+            check(
+                    matchHooks == 2,
+                    "Telegram files get the stricter title check first in TrackMatcher.best and"
+                            + " .ranked");
             check(
                     legendTexts == 2 && legendCalls == 2 && searchHooks == 1 && legendLinks == 3,
                     "Song titles draw the format legend: "

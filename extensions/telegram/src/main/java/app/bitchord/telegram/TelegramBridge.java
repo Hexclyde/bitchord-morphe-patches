@@ -336,7 +336,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.2"));
+                            "1.0.3"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {

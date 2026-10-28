@@ -935,6 +935,34 @@ private fun BytecodePatchContext.linkLegendHelpers() {
     )
 }
 
+/**
+ * Telegram files face a stricter title check before BitChord's matcher can pick one for a song: the
+ * candidate list is filtered first in TrackMatcher.best and .ranked, where its scoring was inlined.
+ */
+private fun BytecodePatchContext.addStricterTelegramMatch() {
+    val target = "Lcom/music/bitchord/data/sources/TrackMatcher\$Target;"
+    val matcher = mutableClassDefBy("Lcom/music/bitchord/data/sources/TrackMatcher;")
+    var hooked = 0
+    for (method in matcher.methods.toList()) {
+        if (method.name != "best" && method.name != "ranked") continue
+        check(
+            method.parameterTypes.map(CharSequence::toString) == listOf("Ljava/util/List;", target)
+        ) {
+            "TrackMatcher.${method.name} parameters changed"
+        }
+        method.addInstructions(
+            0,
+            """
+            invoke-static/range {p0 .. p1}, Lapp/bitchord/telegram/TelegramMatch;->filter(Ljava/util/List;$target)Ljava/util/List;
+            move-result-object p0
+        """,
+        )
+        hooked++
+    }
+    check(hooked == 2) { "TrackMatcher best/ranked not found" }
+    println("Added the stricter title check for Telegram files")
+}
+
 @Suppress("unused")
 val secondInstallationPatch =
     bytecodePatch(
@@ -1527,6 +1555,7 @@ val nativeTelegramPatch =
             addSurroundDownmix()
             addSmoothUpgrade()
             addFormatLegend()
+            addStricterTelegramMatch()
             val method = ApplicationCreate.method
             val implementation = method.implementation!!
             // After BitChord has finished initializing its own source registry.

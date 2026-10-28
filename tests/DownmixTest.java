@@ -92,7 +92,7 @@ public final class DownmixTest {
                         .order(ByteOrder.LITTLE_ENDIAN);
         check(mixed.getShort() <= Short.MAX_VALUE && loud.position() == 0, "Input isn't consumed");
 
-        // Buffer hand-off: the sink takes part of a buffer, then the rest on the next call.
+        // Partial writes: the sink takes part of a buffer, then the rest on the next call.
         FakeSink sink = new FakeSink();
         Downmix.handleBuffer(sink, pcm(Downmix.PCM_FLOAT, frame), 0, 1);
         check(sink.written.size() == 6, "Without a plan the original buffer passes through");
@@ -130,6 +130,6 @@ public final class DownmixTest {
         Downmix.handleBuffer(sink, pcm(Downmix.PCM_FLOAT, frame), 0, 1);
         check(sink.written.size() == 6, "Fallback configuration passes surround through");
 
-        System.out.println("PASS: " + checks + " surround downmix mix and buffer hand-off checks.");
+        System.out.println("PASS: " + checks + " surround downmix mix and partial-write checks.");
     }
 }
