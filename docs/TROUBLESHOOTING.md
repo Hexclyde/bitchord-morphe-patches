@@ -57,7 +57,7 @@ If **Unofficial Telegram** is missing from playback sources, tap **Playback → 
 
 Telegram has asked your account to pause searches for a while, usually after many searches in a short time. The message says when searching starts again. Until then, the patch sends no searches, because searching during the pause can make it longer. BitChord plays songs from its other sources in the meantime.
 
-Selecting fewer music chats helps, since each search covers every selected chat. You can also turn off **Format legend** under **Track details**, which searches Telegram while you use BitChord's main search.
+With **Saved index** on, searches are answered from it during the pause, once it has been built. Selecting fewer music chats helps, since each search covers every selected chat. You can also turn off **Format legend** under **Track details**, which searches Telegram while you use BitChord's main search.
 
 ## Search crashes, or playback or seeking stops
 

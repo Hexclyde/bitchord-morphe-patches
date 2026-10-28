@@ -62,7 +62,7 @@ Each listener needs their own account, API details and access to the channel. Se
 3. Search for a song title, artist or filename from your selected chats.
 4. Open a Telegram result and press **Play**.
 
-There is no separate indexing step. A search returns up to **200 tracks** across your selected chats, so use a specific query for large libraries. Files uploaded as documents may be easier to find by filename.
+You don't need to wait for an index. A search returns up to **200 tracks** across your selected chats, so use a specific query for large libraries. Files uploaded as documents may be easier to find by filename.
 
 The playback source **Unofficial Telegram** is added automatically. If it is missing, return to the Telegram page and tap **Playback → Telegram source → Repair**.
 

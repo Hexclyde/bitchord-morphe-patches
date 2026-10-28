@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.6
+
+- **Saved index:** the patch keeps a list of the music files in your selected chats on your phone. It's built slowly in the background, one page of 100 files every few seconds and only while nothing else is searching, so it doesn't add to Telegram's limits. It's topped up with new posts every few hours and rebuilt weekly, which drops deleted files. When Telegram's search is rate limited, busy or times out, BitChord's lookups are answered from it, so songs can still play from Telegram. The format legend and name suggestions search it instead of Telegram once it's built. It's on by default. Turn it off under **Music chats → Saved index**, which also deletes it. BitChord's log notes when a search was answered from the index.
+
 ## 1.0.5
 
 - When Telegram limits your searches (a flood wait), a message says **Telegram API rate limited** and when searching starts again, so you know why songs are playing from other sources for a while. It appears once per pause, not once per search. [Troubleshooting](docs/TROUBLESHOOTING.md#telegram-api-rate-limited-appears) explains what to do.

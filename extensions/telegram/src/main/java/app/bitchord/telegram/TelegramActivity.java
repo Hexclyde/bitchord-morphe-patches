@@ -480,12 +480,25 @@ public final class TelegramActivity extends Activity {
         paragraph(
                 music,
                 "Search your selected chats from BitChord’s Addons tab. Telegram searches the"
-                    + " channel history; no local indexing is required. Audio is downloaded when"
-                    + " played.");
+                        + " channel history. Audio is downloaded when played.");
         paragraph(
                 music,
                 "Each query shows up to 200 results across audio and music documents. Refine the"
                         + " title or artist for more specific matches.");
+        divider(music);
+        toggle(
+                music,
+                "Saved index",
+                bridge.indexStatus(),
+                "Only Telegram’s own search is used",
+                bridge.searchIndex(),
+                bridge::setSearchIndex);
+        paragraph(
+                music,
+                "Keeps a list of the music in your selected chats on this phone, built slowly in"
+                        + " the background and topped up every few hours. It answers when"
+                        + " Telegram’s search is rate limited or busy, and the format legend uses"
+                        + " it instead of searching Telegram. Turning it off deletes it.");
         trackNames();
         trackDetails();
         LinearLayout playback = card("Playback");

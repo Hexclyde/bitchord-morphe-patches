@@ -195,6 +195,13 @@ public final class LiveSearchTest {
             } catch (LiveSearch.RateLimited e) {
             }
             check(before == rateCalls.get(), "Cooldown prevents further Telegram requests");
+            try {
+                search.page(10, 0, 0);
+                check(false, "Index page sent during a pause");
+            } catch (LiveSearch.RateLimited e) {
+                check(before == rateCalls.get(), "Index pages wait out the pause too");
+            }
+            check(search.idle(), "Idle with nothing searching");
             rateLimited.set(false);
             rateClock.addAndGet(60001);
             search.search(chats(10), "b", 1);

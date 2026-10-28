@@ -441,6 +441,13 @@ public class TelegramScreenTest {
         idle();
         assertTrue(bridge.surroundAsStereo());
         assertNotNull(text(activity.body, "5.1 and 7.1 files are mixed to stereo in BitChord"));
+        assertNotNull(
+                "The index says how far it has got",
+                text(activity.body, "12 files indexed from 1 chat"));
+        clickRow("Saved index");
+        idle();
+        assertFalse(bridge.searchIndex());
+        assertNotNull(text(activity.body, "Only Telegram’s own search is used"));
     }
 
     @Test

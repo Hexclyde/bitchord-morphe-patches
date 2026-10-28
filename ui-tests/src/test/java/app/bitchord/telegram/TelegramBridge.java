@@ -55,6 +55,20 @@ public final class TelegramBridge {
 
     void probeLater(JSONObject row) {}
 
+    boolean searchIndex = true;
+
+    boolean searchIndex() {
+        return searchIndex;
+    }
+
+    String indexStatus() {
+        return "12 files indexed from 1 chat";
+    }
+
+    void setSearchIndex(boolean on) {
+        searchIndex = on;
+    }
+
     boolean formatLegend = true;
 
     boolean formatLegend() {

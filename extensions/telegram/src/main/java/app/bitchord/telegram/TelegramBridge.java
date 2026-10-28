@@ -86,6 +86,7 @@ public final class TelegramBridge {
     private volatile boolean foreground;
     private final LinkedHashMap<String, Boolean> playbackRead = new LinkedHashMap<>();
     final Map<Integer, TdApi.AccentColor> accentColors = new ConcurrentHashMap<>();
+    final TelegramIndex index;
     final LiveSearch remoteSearch =
             new LiveSearch(
                     (request, timeout) -> {
@@ -164,6 +165,9 @@ public final class TelegramBridge {
             throw new IOException("Cannot create private directory");
         credentialStore = new CredentialStore(context, home);
         remoteSearch.onRateLimited = this::showRateLimit;
+        index =
+                new TelegramIndex(
+                        new File(home, "index"), remoteSearch::page, System::currentTimeMillis);
         names = new TrackNames(new File(home, "track-names.json"));
         artwork = new Artwork(new File(home, "artwork"));
         formats = new FormatProbe(new File(home, "formats.json"));
@@ -210,6 +214,7 @@ public final class TelegramBridge {
         Downmix.enabled = config.optBoolean("surroundAsStereo", Downmix.enabled);
         SmoothUpgrade.enabled = config.optBoolean("smoothUpgrades", SmoothUpgrade.enabled);
         FormatLegend.enabled = config.optBoolean("formatLegend", FormatLegend.enabled);
+        index.enabled = config.optBoolean("searchIndex", true);
         JSONArray ids = config.optJSONArray("chats");
         if (ids != null) for (int i = 0; i < ids.length(); i++) selected.add(ids.getLong(i));
         // Legacy catalogue files are left on disk for rollback, but are no longer loaded or
@@ -218,6 +223,10 @@ public final class TelegramBridge {
         // No logs of phone numbers, codes, passwords or session data.
         Client.execute(new TdApi.SetLogVerbosityLevel(0));
         startClient();
+        Thread indexing = new Thread(this::runIndex, "Telegram index");
+        indexing.setDaemon(true);
+        indexing.setPriority(Thread.MIN_PRIORITY);
+        indexing.start();
         if (context instanceof Application) TelegramLifecycle.install((Application) context, this);
     }
 
@@ -352,7 +361,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.5"));
+                            "1.0.6"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -476,8 +485,7 @@ public final class TelegramBridge {
     public List<JSONObject> searchTracks(String query, boolean background) throws Exception {
         requireReady();
         long session = generation;
-        LiveSearch.Result found =
-                remoteSearch.search(new HashSet<>(selected), query, session, background);
+        LiveSearch.Result found = search(query, session, background);
         requireReady();
         if (session != generation) throw new IOException("Telegram session changed. Search again.");
         List<JSONObject> rows = present(found.tracks);
@@ -497,6 +505,72 @@ public final class TelegramBridge {
         error = found.warning;
         status = "Telegram returned " + rows.size() + " tracks. No history scan is required.";
         return rows;
+    }
+
+    /**
+     * A background search is answered by the index once it covers every selected chat, without
+     * asking Telegram. Anything else asks Telegram, and falls back to the index when Telegram can't
+     * answer: rate limited, busy or timed out.
+     */
+    private LiveSearch.Result search(String query, long session, boolean background)
+            throws Exception {
+        Set<Long> chats = new HashSet<>(selected);
+        if (background) {
+            List<JSONObject> saved = index.search(chats, query, true);
+            if (saved != null) return new LiveSearch.Result(saved, "");
+        }
+        try {
+            return remoteSearch.search(chats, query, session, background);
+        } catch (Exception e) {
+            if (background) throw e;
+            List<JSONObject> saved = index.search(chats, query, false);
+            if (saved == null) throw e;
+            HostLog.d(
+                    "Unofficial Telegram search '"
+                            + query
+                            + "' failed ("
+                            + e.getMessage()
+                            + "); answered from the saved index with "
+                            + saved.size()
+                            + (saved.size() == 1 ? " file" : " files"));
+            return new LiveSearch.Result(saved, "");
+        }
+    }
+
+    /** Builds and tops up the index a page at a time while nothing else is searching. */
+    private void runIndex() {
+        while (true) {
+            long wait = TelegramIndex.PACE_MILLIS;
+            try {
+                if (!ready() || !index.enabled) wait = 5000;
+                else if (!remoteSearch.idle()) wait = 1000;
+                else if (!index.step(new HashSet<>(selected))) wait = 60000;
+            } catch (LiveSearch.RateLimited e) {
+                wait = 1000L * e.retrySeconds + 1000;
+            } catch (Exception e) {
+                wait = 30000;
+            }
+            try {
+                Thread.sleep(wait);
+            } catch (InterruptedException e) {
+                return;
+            }
+        }
+    }
+
+    public boolean searchIndex() {
+        return index.enabled;
+    }
+
+    public String indexStatus() {
+        return index.status(new HashSet<>(selected));
+    }
+
+    public void setSearchIndex(boolean on) throws Exception {
+        index.enabled = on;
+        if (!on) index.clear();
+        config.put("searchIndex", on);
+        saveConfig();
     }
 
     /** Rows from the selected chats, as copies, with names from file names if that's on. */
@@ -707,11 +781,7 @@ public final class TelegramBridge {
                         if (session != generation || !ready() || !suggestTrackNames) return;
                         lastSuggestionSearch = System.currentTimeMillis();
                         LiveSearch.Result found =
-                                remoteSearch.search(
-                                        new HashSet<>(selected),
-                                        TrackNames.primaryArtist(artist),
-                                        session,
-                                        true);
+                                search(TrackNames.primaryArtist(artist), session, true);
                         if (session != generation) return;
                         List<JSONObject> rows = present(found.tracks);
                         int added = names.consider(title, artist, (int) (durationMs / 1000), rows);
@@ -981,6 +1051,7 @@ public final class TelegramBridge {
         auth = null;
         selected.clear();
         remoteSearch.clear();
+        index.clear();
         names.clear();
         artwork.clear();
         formats.clear();

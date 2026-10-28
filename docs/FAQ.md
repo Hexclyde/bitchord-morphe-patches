@@ -18,7 +18,9 @@ Yes, after its upload to Telegram has completed. The channel message and file mu
 
 ## Does it scan my whole channel first?
 
-No indexing step is needed. Search runs against your selected chats when you enter a query. A query returns up to 200 tracks, so search by a specific title, artist or filename.
+You don't have to wait for anything. Search runs against your selected chats when you enter a query, and returns up to 200 tracks, so search by a specific title, artist or filename.
+
+With **Saved index** on (under **Music chats**), the patch also lists your selected chats' music in the background, slowly, so it never looks like a burst of searches. That list answers when Telegram's search is rate limited or busy, and the format legend uses it instead of searching Telegram. Turning it off deletes it.
 
 ## Why does regular search still play from YouTube?
 

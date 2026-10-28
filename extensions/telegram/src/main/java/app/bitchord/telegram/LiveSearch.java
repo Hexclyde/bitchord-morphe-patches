@@ -54,7 +54,8 @@ public final class LiveSearch implements AutoCloseable {
                         t.setDaemon(true);
                         return t;
                     });
-    private final Semaphore searches = new Semaphore(3);
+    private static final int SLOTS = 3;
+    private final Semaphore searches = new Semaphore(SLOTS);
     // BitChord's own lookups count here; background searches only run while there are none.
     private final java.util.concurrent.atomic.AtomicInteger foreground =
             new java.util.concurrent.atomic.AtomicInteger();
@@ -257,6 +258,39 @@ public final class LiveSearch implements AutoCloseable {
                         : "Some Telegram searches did not finish. Results are partial; try again or"
                                 + " select fewer chats.";
         return new Result(new ArrayList<>(unique.values()), warning);
+    }
+
+    /**
+     * One page of a chat's music for the index: no query, up to 100 messages older than {@code
+     * fromMessageId}. Shares the rate-limit pause with searches.
+     */
+    TdApi.FoundChatMessages page(long chat, int kind, long fromMessageId) throws Exception {
+        long remaining = cooldownUntil.get() - clock.millis();
+        if (remaining > 0)
+            throw new RateLimited((int) Math.min(Integer.MAX_VALUE, (remaining + 999) / 1000));
+        try {
+            return gateway.search(
+                    new TdApi.SearchChatMessages(
+                            chat,
+                            null,
+                            "",
+                            null,
+                            fromMessageId,
+                            0,
+                            100,
+                            kind == 0
+                                    ? new TdApi.SearchMessagesFilterAudio()
+                                    : new TdApi.SearchMessagesFilterDocument()),
+                    timeoutMillis);
+        } catch (RateLimited e) {
+            rateLimited(e.retrySeconds);
+            throw e;
+        }
+    }
+
+    /** No search running or waiting, so the index can fetch a page without getting in the way. */
+    boolean idle() {
+        return foreground.get() == 0 && searches.availablePermits() == SLOTS;
     }
 
     /** Starts or extends the pause; tells the listener once when a new pause begins. */
