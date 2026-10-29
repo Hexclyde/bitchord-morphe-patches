@@ -88,6 +88,7 @@ public final class TelegramBridge {
     private final LinkedHashMap<String, Boolean> playbackRead = new LinkedHashMap<>();
     final Map<Integer, TdApi.AccentColor> accentColors = new ConcurrentHashMap<>();
     final TelegramIndex index;
+    final FileChecks checks;
     final SoundCheck soundCheck;
     final MainChannel mainChannel;
     private final ExecutorService soundWork =
@@ -235,6 +236,64 @@ public final class TelegramBridge {
                             }
                         },
                         System::currentTimeMillis);
+        checks =
+                new FileChecks(
+                        new File(home, "file-checks.json"),
+                        new File(home, "acoustid.json"),
+                        new FileChecks.Host() {
+                            @Override
+                            public boolean ready() {
+                                return TelegramBridge.this.ready();
+                            }
+
+                            @Override
+                            public String pause() {
+                                return indexPause();
+                            }
+
+                            @Override
+                            public Collection<Long> chats() {
+                                return indexedChats();
+                            }
+
+                            @Override
+                            public TelegramIndex index() {
+                                return index;
+                            }
+
+                            @Override
+                            public byte[] range(int file, long offset, int length)
+                                    throws Exception {
+                                return readRange(file, offset, length);
+                            }
+
+                            @Override
+                            public FileChecks.Audio decode(String id, int seconds)
+                                    throws Exception {
+                                SoundCheck.Pcm pcm =
+                                        AudioDecode.start(TelegramBridge.this, id, seconds, 30);
+                                return new FileChecks.Audio(pcm.samples, pcm.length, pcm.rate);
+                            }
+
+                            @Override
+                            public String lookup(String key, int seconds, String fingerprint)
+                                    throws Exception {
+                                return AcoustId.lookup(key, seconds, fingerprint);
+                            }
+
+                            @Override
+                            public void changed(JSONObject row) {
+                                String id = row.optString("id");
+                                if (legends.put(
+                                        FormatLegend.TELEGRAM + id,
+                                        LegendMatch.row(row, formats.get(id)))) {
+                                    legends.save();
+                                    FormatLegend.changed();
+                                }
+                            }
+                        },
+                        System::currentTimeMillis);
+        FileChecks.active = checks;
         soundCheck =
                 new SoundCheck(
                         new File(home, "sound-checks.json"),
@@ -292,6 +351,10 @@ public final class TelegramBridge {
         importing.setDaemon(true);
         importing.setPriority(Thread.MIN_PRIORITY);
         importing.start();
+        Thread checking = new Thread(this::runChecks, "Telegram file checks");
+        checking.setDaemon(true);
+        checking.setPriority(Thread.MIN_PRIORITY);
+        checking.start();
         if (context instanceof Application) TelegramLifecycle.install((Application) context, this);
     }
 
@@ -320,6 +383,10 @@ public final class TelegramBridge {
         indexChargingOnly = config.optBoolean("indexChargingOnly", false);
         SoundCheck.active = config.optBoolean("soundCheck", false) ? soundCheck : null;
         useSharedIndexes = config.optBoolean("useSharedIndexes", true);
+        checks.checkLossless = config.optBoolean("checkLossless", true);
+        LosslessCheck.enabled = checks.checkLossless;
+        checks.checkInBackground = config.optBoolean("checkInBackground", false);
+        checks.recognize = config.optBoolean("recognizeUntagged", false);
         JSONArray ids = config.optJSONArray("chats");
         selected.clear();
         if (ids != null) for (int i = 0; i < ids.length(); i++) selected.add(ids.getLong(i));
@@ -710,7 +777,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.15"));
+                            "1.0.16"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -1190,6 +1257,70 @@ public final class TelegramBridge {
         }
     }
 
+    /** Checks lossless files and names untagged ones, one file at a time. */
+    private void runChecks() {
+        while (true) {
+            long wait;
+            try {
+                wait = checks.step();
+            } catch (RuntimeException e) {
+                wait = 60000;
+            }
+            try {
+                Thread.sleep(Math.max(1000, wait));
+            } catch (InterruptedException e) {
+                return;
+            }
+        }
+    }
+
+    /**
+     * "checkLossless" (songs that play), "checkInBackground" (every lossless file in the chats) or
+     * "recognizeUntagged" (files without tags, by sound, with AcoustID).
+     */
+    public boolean checkOption(String name) {
+        switch (name) {
+            case "checkLossless":
+                return checks.checkLossless;
+            case "checkInBackground":
+                return checks.checkInBackground;
+            default:
+                return checks.recognize;
+        }
+    }
+
+    public void setCheckOption(String name, boolean on) throws Exception {
+        if (name.equals("recognizeUntagged") && on && !FileChecks.validKey(checks.key()))
+            throw new IOException("Enter your AcoustID application key first.");
+        switch (name) {
+            case "checkLossless":
+                checks.checkLossless = on;
+                LosslessCheck.enabled = on;
+                break;
+            case "checkInBackground":
+                checks.checkInBackground = on;
+                break;
+            default:
+                checks.recognize = on;
+        }
+        config.put(name, on);
+        saveConfig();
+    }
+
+    public String acoustIdKey() {
+        return checks.key();
+    }
+
+    public void setAcoustIdKey(String key) throws Exception {
+        checks.setKey(key);
+        if (key == null || key.trim().isEmpty()) setCheckOption("recognizeUntagged", false);
+    }
+
+    /** "Checked 1,234 files · 56 not really lossless · 12 named by sound", or "". */
+    public String checkStatus() {
+        return checks.status();
+    }
+
     /**
      * Private channels this account created: the only ones that can be the main channel. Telegram
      * says who created a channel in the account's own membership of it: "creator" is only ever the
@@ -1374,11 +1505,11 @@ public final class TelegramBridge {
     private List<JSONObject> present(List<JSONObject> found) throws Exception {
         List<JSONObject> rows = new ArrayList<>();
         for (JSONObject row : found)
-            if (selected.contains(row.getLong("chat")))
-                rows.add(
-                        namesFromFiles
-                                ? TrackDetails.withFileName(row)
-                                : new JSONObject(row.toString()));
+            if (selected.contains(row.getLong("chat"))) {
+                // What a check or a recognition found, for files Telegram's own search returned.
+                JSONObject known = index.withFound(new JSONObject(row.toString()));
+                rows.add(namesFromFiles ? TrackDetails.withFileName(known) : known);
+            }
         return rows;
     }
 
@@ -1636,7 +1767,7 @@ public final class TelegramBridge {
         }
         requireReady();
         if (session != generation) throw new IOException("Telegram session changed. Try again.");
-        return row;
+        return row == null ? null : index.withFound(row);
     }
 
     /** A message the player may read: from an allowed chat, and allowed to be saved. */
@@ -1886,6 +2017,7 @@ public final class TelegramBridge {
         remoteSearch.clear();
         index.clear();
         soundCheck.clear();
+        checks.clear();
         mainChannel.clear();
         names.clear();
         artwork.clear();

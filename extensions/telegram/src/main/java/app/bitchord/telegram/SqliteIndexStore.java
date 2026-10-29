@@ -34,6 +34,57 @@ final class SqliteIndexStore implements IndexStore {
         db.execSQL(
                 "CREATE TABLE IF NOT EXISTS chats (chat INTEGER PRIMARY KEY, state TEXT NOT"
                         + " NULL)");
+        db.execSQL(
+                "CREATE TABLE IF NOT EXISTS found (kind TEXT NOT NULL, key TEXT NOT NULL, value"
+                        + " TEXT NOT NULL, PRIMARY KEY (kind, key))");
+    }
+
+    @Override
+    public JSONObject found(String kind, String key) throws Exception {
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT value FROM found WHERE kind = ? AND key = ?",
+                        new String[] {kind, key})) {
+            return c.moveToFirst() ? new JSONObject(c.getString(0)) : null;
+        }
+    }
+
+    @Override
+    public void putFound(long chat, long message, String kind, String key, JSONObject value)
+            throws Exception {
+        ContentValues found = new ContentValues();
+        found.put("kind", kind);
+        found.put("key", key);
+        found.put("value", value.toString());
+        db.beginTransaction();
+        try {
+            db.insertWithOnConflict("found", null, found, SQLiteDatabase.CONFLICT_REPLACE);
+            List<long[]> ids = new ArrayList<>();
+            List<JSONObject> rows = new ArrayList<>();
+            try (Cursor c =
+                    db.rawQuery(
+                            "SELECT id, row FROM files WHERE chat = ? AND message = ?",
+                            new String[] {Long.toString(chat), Long.toString(message)})) {
+                while (c.moveToNext()) {
+                    JSONObject row = new JSONObject(c.getString(1));
+                    if (!IndexStore.belongs(row, kind, key)) continue;
+                    ids.add(new long[] {c.getLong(0)});
+                    rows.add(IndexStore.withFound(this, row, false));
+                }
+            }
+            for (int i = 0; i < rows.size(); i++) {
+                String id = Long.toString(ids.get(i)[0]);
+                ContentValues file = new ContentValues();
+                file.put("row", rows.get(i).toString());
+                db.update("files", file, "id = ?", new String[] {id});
+                ContentValues words = new ContentValues();
+                words.put("text", IndexStore.text(rows.get(i)));
+                db.update("words", words, "docid = ?", new String[] {id});
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     /**
@@ -85,10 +136,11 @@ final class SqliteIndexStore implements IndexStore {
     }
 
     @Override
-    public void put(long chat, List<JSONObject> rows, long generation) {
+    public void put(long chat, List<JSONObject> rows, long generation) throws Exception {
         db.beginTransaction();
         try {
             for (JSONObject row : rows) {
+                IndexStore.withFound(this, row, true);
                 long message = row.optLong("message");
                 int entry = row.optInt("entry");
                 long id = -1;
@@ -370,6 +422,7 @@ final class SqliteIndexStore implements IndexStore {
             db.execSQL("DELETE FROM files");
             db.execSQL("DELETE FROM chats");
             db.execSQL("DELETE FROM zips");
+            db.execSQL("DELETE FROM found");
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();

@@ -34,7 +34,21 @@ Regular BitChord search can choose another provider. Open **Search → Addons** 
 
 The patch reads the uploaded file without transcoding it. It does not turn a lossy recording into lossless audio or add bitrate controls. Increasing the cache only changes storage use.
 
-With **Report audio quality** on, the patch tells BitChord what each file is: FLAC, WAV, AIFF and ALAC count as lossless, and other files as high or low quality from their bitrate. BitChord uses that to choose between your file and its other sources, so a 128 kbps MP3 can lose to a better copy elsewhere. Turn it off to let BitChord judge from the file type alone.
+With **Report audio quality** on, the patch tells BitChord what each file is: FLAC, WAV, AIFF and ALAC count as lossless, and other files as high or low quality from their bitrate. BitChord uses that to choose between your file and its other sources, so a 128 kbps MP3 can lose to a better copy elsewhere. Turn it off to let BitChord judge from the file type alone. A FLAC file found to be made from an MP3 is reported as that MP3; see the next question.
+
+## How does it tell a fake FLAC?
+
+A lossy encoder throws away the top of the spectrum: a 128 kbps MP3 keeps nothing above about 16 kHz, a 192 kbps one nothing above about 19 kHz. Turning the MP3 into FLAC doesn't bring that back, so the cut-off stays, as a sudden drop of 15 dB or more within a few hundred hertz, well below the top of the band. With **Check lossless files** on (under **Track details**, on by default), a FLAC or WAV file that plays is checked a minute later: four stretches of eight seconds are decoded, their spectrum averaged and the edge looked for. How often the music reaches right up to the edge tells an encoder, which cuts some moments lower than others, from a recording that simply never had much up there.
+
+- **FLAC 16bit · from ≈128 kbps:** a clear lossy cut-off. The file is reported to BitChord as that MP3 would be, loses to a genuine copy under **Hide duplicate songs**, and isn't copied by **Lossless only**.
+- **· maybe lossy:** a cut-off that could be an encoder's, or an old master's filter. Nothing else changes.
+- **FLAC 24bit · from 44.1 kHz:** a hi-res file whose music stops at a CD's limit, made from a CD-quality master. It's reported as CD quality.
+- **FLAC 24bit · really 16bit:** a 24-bit file whose last 8 bits are always zero. This is also read from the first bytes of each file, with no extra download.
+- A file whose tags name a lossy encoder, such as LAME, shows **maybe lossy** too.
+
+The method follows [Spectra](https://github.com/aravindrejidev/Spectra). It can show a file looks lossy; it can't prove a file is genuine. 256 and 320 kbps MP3s cut at 19.5 to 20 kHz, where CD-era masters also stop, so they're called inconclusive rather than fake.
+
+**Check in the background** (off by default) also goes through every lossless file in your music chats, and in the community channels you copy from, newest first. About 4 MB of each file is downloaded, up to 1 GB a day, keeping to the **Index only on Wi-Fi** and **Index only while charging** switches under **Saved index**. What's found is kept in the saved index, survives its monthly rebuild and goes with it when you share it, so a friend's index can carry the checks they've done.
 
 ## What does the bitrate display mean?
 
@@ -56,7 +70,18 @@ You can turn off **Use corrected names** to see every file as uploaded, without 
 
 ## My files have no title tags. Will they still match?
 
-Usually. With **Names from file names** on (under **Track details**), a file without a title tag gets its name from the file name: `03 - Linkin Park - Numb (Official Audio).flac` becomes "Numb" by Linkin Park. Track numbers and tags like "(Official Audio)", "[HQ]" or "[320kbps]" are removed; "(Live)" and "(Remix)" are kept because they're a different recording. If a name still comes out wrong, fix it under **Track names**.
+Usually. With **Names from file names** on (under **Track details**), a file without a title tag gets its name from the file name: `03 - Linkin Park - Numb (Official Audio).flac` becomes "Numb" by Linkin Park. Track numbers and tags like "(Official Audio)", "[HQ]" or "[320kbps]" are removed; "(Live)" and "(Remix)" are kept because they're a different recording. If a name still comes out wrong, fix it under **Track names**, or let the patch name the file by sound.
+
+## Can it name files that have no tags and a useless file name?
+
+Yes, with **Name untagged files by sound** under **Track names** (off by default). It looks each untagged file up in [AcoustID](https://acoustid.org), the free database of recordings run by the MusicBrainz community, the same way Picard and beets do. You need your own AcoustID key, which is free:
+
+1. Open [acoustid.org/new-application](https://acoustid.org/new-application) and sign in.
+2. Register an application with any name and version, and copy its **API key**.
+3. On the Telegram page, tap **Track names → AcoustID key → Enter**, paste the key and tap **Save**.
+4. Turn on **Name untagged files by sound**.
+
+A song that plays is looked up a minute later. Your other untagged files are gone through in the background, up to 500 a day, keeping to the saved index's Wi-Fi and charging switches. For each file, the first two minutes are decoded on the phone into a Chromaprint fingerprint, and only that, the file's length and your key are sent; no audio leaves the phone. When AcoustID knows the recording, the file gets its title and artist, and search and BitChord's matching find it under them. A file it doesn't know is asked about again after a month. Songs in zips and cue albums are named from the zip or the cue sheet instead.
 
 ## Can it play 5.1 or 7.1 files as stereo?
 

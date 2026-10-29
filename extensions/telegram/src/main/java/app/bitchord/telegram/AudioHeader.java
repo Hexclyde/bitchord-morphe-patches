@@ -49,7 +49,10 @@ public final class AudioHeader {
                         | ((b[s + 5] & 0xff) << 16)
                         | ((b[s + 6] & 0xff) << 8)
                         | (b[s + 7] & 0xff);
-        return details("flac", bits, rate, channels, rate > 0 ? samples / (double) rate : 0);
+        JSONObject header =
+                details("flac", bits, rate, channels, rate > 0 ? samples / (double) rate : 0);
+        if (header != null) LosslessCheck.quick(b, length, at, header);
+        return header;
     }
 
     private static JSONObject wav(byte[] b, int length) {

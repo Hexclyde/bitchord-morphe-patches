@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.16
+
+- **Fake lossless check:** with **Check lossless files** on (under **Track details**, on by default), a FLAC or WAV file that plays is checked a minute later. A file made from an MP3 or AAC keeps that encoder's cut-off, and the check finds it in a few stretches of the file, much of which playing has already downloaded. What it finds:
+  - made from a lossy file: the legend shows **FLAC 16bit · from ≈128 kbps**, and the file is ranked as that MP3 by BitChord, by **Hide duplicate songs** and by **Lossless only** copying;
+  - a hint of a lossy source that isn't conclusive: **· maybe lossy**, with nothing else changed;
+  - hi-res made from a CD-quality master: **FLAC 24bit · from 44.1 kHz**, ranked as CD quality;
+  - a 24-bit file holding 16 bits: **FLAC 24bit · really 16bit**;
+  - a lossy encoder named in the file's tags, such as LAME.
+- **Check in the background** (off by default) goes through every lossless file in your music chats too, up to 1 GB a day, keeping to the saved index's Wi-Fi and charging switches. What's found is kept in the saved index, survives its monthly rebuild, and goes with it when you share it.
+- **Name untagged files by sound** (under **Track names**, off by default): files without tags are looked up in AcoustID, the free database run by the MusicBrainz community, with your own free AcoustID key. A fingerprint of the file's first two minutes is sent, not the audio. A file that's found gets its real title and artist, so search and BitChord's matching find it by them.
+
 ## 1.0.15
 
 - **Community channels** lists only channels, groups and bots. Chats with a person no longer show up there. If you picked one before, open **Community channels** and press **Save** to drop it.

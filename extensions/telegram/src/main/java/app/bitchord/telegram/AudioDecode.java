@@ -21,6 +21,15 @@ final class AudioDecode {
 
     static SoundCheck.Pcm start(TelegramBridge bridge, String telegramId, int seconds)
             throws Exception {
+        return start(bridge, telegramId, seconds, seconds);
+    }
+
+    /**
+     * As above; when reading takes too long, what was decoded is enough once it's {@code least}
+     * seconds.
+     */
+    static SoundCheck.Pcm start(TelegramBridge bridge, String telegramId, int seconds, int least)
+            throws Exception {
         long deadline = System.currentTimeMillis() + BUDGET_MILLIS;
         MediaExtractor extractor = new MediaExtractor();
         MediaCodec codec = null;
@@ -50,8 +59,10 @@ final class AudioDecode {
             boolean inputDone = false;
             MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
             while (length < mono.length) {
-                if (System.currentTimeMillis() > deadline)
+                if (System.currentTimeMillis() > deadline) {
+                    if (length >= (long) rate * least) break;
                     throw new IOException("Reading the file took too long");
+                }
                 if (!inputDone) {
                     int in = codec.dequeueInputBuffer(10_000);
                     if (in >= 0) {

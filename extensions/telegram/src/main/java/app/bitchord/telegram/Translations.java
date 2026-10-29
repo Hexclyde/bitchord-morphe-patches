@@ -1851,6 +1851,166 @@ final class Translations {
             "{0} \u00b7 {1} \u00b7 \u062a\u0628\u062f\u0648 \u0643\u0623\u063a\u0646\u064a\u0629"
                     + " \u0634\u064f\u063a\u0651\u0644\u062a \u0645\u0646 \u0645\u0635\u062f\u0631"
                     + " \u0622\u062e\u0631",
+            "Check lossless files",
+            "\u0641\u062d\u0635 \u0627\u0644\u0645\u0644\u0641\u0627\u062a \u0628\u0644\u0627"
+                    + " \u0641\u0642\u062f",
+            "FLAC and WAV files that play are checked for a lossy source",
+            "\u062a\u064f\u0641\u062d\u0635 \u0645\u0644\u0641\u0627\u062a FLAC \u0648WAV"
+                    + " \u0627\u0644\u062a\u064a \u062a\u064f\u0634\u063a\u064e\u0651\u0644"
+                    + " \u0628\u062d\u062b\u064b\u0627 \u0639\u0646 \u0645\u0635\u062f\u0631"
+                    + " \u0628\u0641\u0642\u062f",
+            "Files are taken at their word",
+            "\u062a\u064f\u0642\u0628\u0644 \u0627\u0644\u0645\u0644\u0641\u0627\u062a"
+                    + " \u0643\u0645\u0627 \u062a\u0635\u0641 \u0646\u0641\u0633\u0647\u0627",
+            "A file made from an MP3 keeps the MP3\u2019s cut-off, somewhere between 16 and 20 kHz."
+                + " A minute after a song starts, a few stretches of it are looked at. A fake shows"
+                + " as \u201cFLAC 16bit \u00b7 from \u2248128 kbps\u201d and is ranked as that MP3,"
+                + " and a hi-res file made from a CD as \u201cFLAC 24bit \u00b7 from 44.1"
+                + " kHz\u201d. A check can show a file looks lossy; it can\u2019t prove a file is"
+                + " genuine.",
+            "\u064a\u062d\u062a\u0641\u0638 \u0627\u0644\u0645\u0644\u0641"
+                + " \u0627\u0644\u0645\u0635\u0646\u0648\u0639 \u0645\u0646 MP3"
+                + " \u0628\u062d\u062f\u0651 \u0627\u0644\u0642\u0637\u0639"
+                + " \u0627\u0644\u062e\u0627\u0635 \u0628\u0640 MP3\u060c \u0641\u064a"
+                + " \u0645\u0643\u0627\u0646 \u0645\u0627 \u0628\u064a\u0646 16 \u064820 kHz."
+                + " \u0628\u0639\u062f \u062f\u0642\u064a\u0642\u0629 \u0645\u0646"
+                + " \u0628\u062f\u0621 \u0627\u0644\u0623\u063a\u0646\u064a\u0629\u060c"
+                + " \u062a\u064f\u0641\u062d\u0635 \u0628\u0636\u0639\u0629"
+                + " \u0645\u0642\u0627\u0637\u0639 \u0645\u0646\u0647\u0627."
+                + " \u064a\u0638\u0647\u0631 \u0627\u0644\u0645\u0644\u0641"
+                + " \u0627\u0644\u0645\u0632\u064a\u0651\u0641 \u0628\u0635\u064a\u063a\u0629"
+                + " \u00abFLAC 16bit \u00b7 \u0645\u0646 \u2248128 kbps\u00bb"
+                + " \u0648\u064a\u064f\u0635\u0646\u064e\u0651\u0641 \u0645\u062b\u0644"
+                + " \u0630\u0644\u0643 \u0627\u0644\u0640 MP3\u060c \u0648\u064a\u0638\u0647\u0631"
+                + " \u0627\u0644\u0645\u0644\u0641 \u0639\u0627\u0644\u064a"
+                + " \u0627\u0644\u062f\u0642\u0629 \u0627\u0644\u0645\u0635\u0646\u0648\u0639"
+                + " \u0645\u0646 \u0642\u0631\u0635 CD \u0628\u0635\u064a\u063a\u0629 \u00abFLAC"
+                + " 24bit \u00b7 \u0645\u0646 44.1 kHz\u00bb. \u064a\u0645\u0643\u0646"
+                + " \u0644\u0644\u0641\u062d\u0635 \u0623\u0646 \u064a\u0628\u064a\u0651\u0646"
+                + " \u0623\u0646 \u0627\u0644\u0645\u0644\u0641 \u064a\u0628\u062f\u0648"
+                + " \u0628\u0641\u0642\u062f\u060c \u0644\u0643\u0646\u0647 \u0644\u0627"
+                + " \u064a\u0633\u062a\u0637\u064a\u0639 \u0625\u062b\u0628\u0627\u062a"
+                + " \u0623\u0646 \u0627\u0644\u0645\u0644\u0641 \u0623\u0635\u0644\u064a.",
+            "Check in the background",
+            "\u0627\u0644\u0641\u062d\u0635 \u0641\u064a"
+                    + " \u0627\u0644\u062e\u0644\u0641\u064a\u0629",
+            "Every lossless file in your music chats, up to 1 GB a day",
+            "\u0643\u0644 \u0645\u0644\u0641 \u0628\u0644\u0627 \u0641\u0642\u062f \u0641\u064a"
+                + " \u0645\u062d\u0627\u062f\u062b\u0627\u062a"
+                + " \u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649\u060c \u062d\u062a\u0649 1 GB"
+                + " \u064a\u0648\u0645\u064a\u064b\u0627",
+            "Only songs that play are checked",
+            "\u062a\u064f\u0641\u062d\u0635 \u0627\u0644\u0623\u063a\u0627\u0646\u064a"
+                    + " \u0627\u0644\u062a\u064a \u062a\u064f\u0634\u063a\u064e\u0651\u0644"
+                    + " \u0641\u0642\u0637",
+            "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                + " under Saved index. What\u2019s found is kept in the saved index and goes with"
+                + " it when you share it.",
+            "\u064a\u064f\u0646\u0632\u064e\u0651\u0644 \u0646\u062d\u0648 4 MB \u0645\u0646"
+                + " \u0643\u0644 \u0645\u0644\u0641\u060c \u0645\u0639"
+                + " \u0627\u0644\u0627\u0644\u062a\u0632\u0627\u0645"
+                + " \u0628\u0645\u0641\u062a\u0627\u062d\u064e\u064a Wi-Fi"
+                + " \u0648\u0627\u0644\u0634\u062d\u0646 \u0641\u064a"
+                + " \u00ab\u0627\u0644\u0641\u0647\u0631\u0633"
+                + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638\u00bb."
+                + " \u062a\u064f\u062d\u0641\u0638 \u0627\u0644\u0646\u062a\u0627\u0626\u062c"
+                + " \u0641\u064a \u0627\u0644\u0641\u0647\u0631\u0633"
+                + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638 \u0648\u062a\u0646\u062a\u0642\u0644"
+                + " \u0645\u0639\u0647 \u0639\u0646\u062f"
+                + " \u0645\u0634\u0627\u0631\u0643\u062a\u0647.",
+            "Name untagged files by sound",
+            "\u062a\u0633\u0645\u064a\u0629 \u0627\u0644\u0645\u0644\u0641\u0627\u062a"
+                    + " \u063a\u064a\u0631 \u0627\u0644\u0645\u0648\u0633\u0648\u0645\u0629"
+                    + " \u062d\u0633\u0628 \u0627\u0644\u0635\u0648\u062a",
+            "Files without tags are looked up in AcoustID",
+            "\u064a\u064f\u0628\u062d\u062b \u0639\u0646 \u0627\u0644\u0645\u0644\u0641\u0627\u062a"
+                    + " \u063a\u064a\u0631 \u0627\u0644\u0645\u0648\u0633\u0648\u0645\u0629"
+                    + " \u0641\u064a AcoustID",
+            "Untagged files keep the name from the file",
+            "\u062a\u062d\u062a\u0641\u0638 \u0627\u0644\u0645\u0644\u0641\u0627\u062a"
+                + " \u063a\u064a\u0631 \u0627\u0644\u0645\u0648\u0633\u0648\u0645\u0629"
+                + " \u0628\u0627\u0644\u0627\u0633\u0645 \u0627\u0644\u0645\u0648\u062c\u0648\u062f"
+                + " \u0641\u064a \u0627\u0644\u0645\u0644\u0641",
+            "A fingerprint of the first two minutes of each untagged file, its length and your"
+                    + " AcoustID key are sent to AcoustID (acoustid.org), a free service run by the"
+                    + " MusicBrainz community. No audio is sent.",
+            "\u062a\u064f\u0631\u0633\u0644 \u0628\u0635\u0645\u0629 \u0644\u0623\u0648\u0644"
+                    + " \u062f\u0642\u064a\u0642\u062a\u064a\u0646 \u0645\u0646 \u0643\u0644"
+                    + " \u0645\u0644\u0641 \u063a\u064a\u0631 \u0645\u0648\u0633\u0648\u0645\u060c"
+                    + " \u0648\u0645\u062f\u062a\u0647\u060c \u0648\u0645\u0641\u062a\u0627\u062d"
+                    + " AcoustID \u0627\u0644\u062e\u0627\u0635 \u0628\u0643 \u0625\u0644\u0649"
+                    + " AcoustID (acoustid.org)\u060c \u0648\u0647\u064a \u062e\u062f\u0645\u0629"
+                    + " \u0645\u062c\u0627\u0646\u064a\u0629 \u064a\u062f\u064a\u0631\u0647\u0627"
+                    + " \u0645\u062c\u062a\u0645\u0639 MusicBrainz. \u0644\u0627"
+                    + " \u064a\u064f\u0631\u0633\u0644 \u0623\u064a \u0635\u0648\u062a.",
+            "Songs that play are looked up a minute later. Your other untagged files are gone"
+                + " through in the background, up to 500 a day, keeping to the Wi-Fi and charging"
+                + " switches under Saved index.",
+            "\u064a\u064f\u0628\u062d\u062b \u0639\u0646 \u0627\u0644\u0623\u063a\u0627\u0646\u064a"
+                + " \u0627\u0644\u062a\u064a \u062a\u064f\u0634\u063a\u064e\u0651\u0644"
+                + " \u0628\u0639\u062f \u062f\u0642\u064a\u0642\u0629."
+                + " \u0648\u062a\u064f\u0639\u0627\u0644\u062c \u0645\u0644\u0641\u0627\u062a\u0643"
+                + " \u0627\u0644\u0623\u062e\u0631\u0649 \u063a\u064a\u0631"
+                + " \u0627\u0644\u0645\u0648\u0633\u0648\u0645\u0629 \u0641\u064a"
+                + " \u0627\u0644\u062e\u0644\u0641\u064a\u0629\u060c \u062d\u062a\u0649 500"
+                + " \u064a\u0648\u0645\u064a\u064b\u0627\u060c \u0645\u0639"
+                + " \u0627\u0644\u0627\u0644\u062a\u0632\u0627\u0645"
+                + " \u0628\u0645\u0641\u062a\u0627\u062d\u064e\u064a Wi-Fi"
+                + " \u0648\u0627\u0644\u0634\u062d\u0646 \u0641\u064a"
+                + " \u00ab\u0627\u0644\u0641\u0647\u0631\u0633"
+                + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638\u00bb.",
+            "AcoustID key",
+            "\u0645\u0641\u062a\u0627\u062d AcoustID",
+            "Saved on this phone only",
+            "\u0645\u062d\u0641\u0648\u0638 \u0639\u0644\u0649 \u0647\u0630\u0627"
+                    + " \u0627\u0644\u0647\u0627\u062a\u0641 \u0641\u0642\u0637",
+            "Needed to name files by sound",
+            "\u0645\u0637\u0644\u0648\u0628 \u0644\u062a\u0633\u0645\u064a\u0629"
+                    + " \u0627\u0644\u0645\u0644\u0641\u0627\u062a \u062d\u0633\u0628"
+                    + " \u0627\u0644\u0635\u0648\u062a",
+            "Enter",
+            "\u0625\u062f\u062e\u0627\u0644",
+            "Sign in at acoustid.org, register an application (any name), and paste its API key"
+                    + " here. It\u2019s free.",
+            "\u0633\u062c\u0651\u0644 \u0627\u0644\u062f\u062e\u0648\u0644 \u0641\u064a"
+                + " acoustid.org\u060c \u0648\u0633\u062c\u0651\u0644"
+                + " \u062a\u0637\u0628\u064a\u0642\u064b\u0627 (\u0628\u0623\u064a"
+                + " \u0627\u0633\u0645)\u060c \u0648\u0627\u0644\u0635\u0642"
+                + " \u0645\u0641\u062a\u0627\u062d API \u0627\u0644\u062e\u0627\u0635 \u0628\u0647"
+                + " \u0647\u0646\u0627. \u0625\u0646\u0647 \u0645\u062c\u0627\u0646\u064a.",
+            "AcoustID application key",
+            "\u0645\u0641\u062a\u0627\u062d \u062a\u0637\u0628\u064a\u0642 AcoustID",
+            "Get an AcoustID key \u2197",
+            "\u0627\u062d\u0635\u0644 \u0639\u0644\u0649 \u0645\u0641\u062a\u0627\u062d AcoustID"
+                    + " \u2197",
+            "That doesn\u2019t look like an AcoustID application key.",
+            "\u0644\u0627 \u064a\u0628\u062f\u0648 \u0647\u0630\u0627"
+                    + " \u0645\u0641\u062a\u0627\u062d \u062a\u0637\u0628\u064a\u0642 AcoustID.",
+            "Enter your AcoustID application key first.",
+            "\u0623\u062f\u062e\u0644 \u0645\u0641\u062a\u0627\u062d \u062a\u0637\u0628\u064a\u0642"
+                    + " AcoustID \u0623\u0648\u0644\u064b\u0627.",
+            "Checked {0} file",
+            "\u062a\u0645 \u0641\u062d\u0635 {0} \u0645\u0644\u0641",
+            "Checked {0} files",
+            "\u062a\u0645 \u0641\u062d\u0635 {0} \u0645\u0644\u0641\u0627\u062a",
+            "{0} not really lossless",
+            "{0} \u0644\u064a\u0633\u062a \u0628\u0644\u0627 \u0641\u0642\u062f"
+                    + " \u0641\u0639\u0644\u064b\u0627",
+            "{0} named by sound",
+            "{0} \u0633\u064f\u0645\u0651\u064a\u062a \u062d\u0633\u0628"
+                    + " \u0627\u0644\u0635\u0648\u062a",
+            "AcoustID refused the key: {0}",
+            "\u0631\u0641\u0636 AcoustID \u0627\u0644\u0645\u0641\u062a\u0627\u062d: {0}",
+            "{0} \u00b7 from \u2248{1} kbps",
+            "{0} \u00b7 \u0645\u0646 \u2248{1} kbps",
+            "{0} \u00b7 from a lossy file",
+            "{0} \u00b7 \u0645\u0646 \u0645\u0644\u0641 \u0628\u0641\u0642\u062f",
+            "{0} \u00b7 maybe lossy",
+            "{0} \u00b7 \u0631\u0628\u0645\u0627 \u0628\u0641\u0642\u062f",
+            "{0} \u00b7 from {1}",
+            "{0} \u00b7 \u0645\u0646 {1}",
+            "{0} \u00b7 really {1}bit",
+            "{0} \u00b7 \u0641\u0639\u0644\u064a\u064b\u0627 {1}bit",
         };
     }
 
@@ -3859,6 +4019,182 @@ final class Translations {
                     + " \u0997\u09be\u09a8\u099f\u09bf \u0985\u09a8\u09cd\u09af"
                     + " \u09b8\u09cb\u09b0\u09cd\u09b8 \u09a5\u09c7\u0995\u09c7"
                     + " \u099a\u09b2\u09c7\u099b\u09bf\u09b2",
+            "Check lossless files",
+            "\u09b2\u09b8\u09b2\u09c7\u09b8 \u09ab\u09be\u0987\u09b2 \u09af\u09be\u099a\u09be\u0987"
+                    + " \u0995\u09b0\u09c1\u09a8",
+            "FLAC and WAV files that play are checked for a lossy source",
+            "\u099a\u09be\u09b2\u09be\u09a8\u09cb FLAC \u0986\u09b0 WAV"
+                    + " \u09ab\u09be\u0987\u09b2\u09c7\u09b0 \u0989\u09ce\u09b8 \u09b2\u09b8\u09bf"
+                    + " \u0995\u09bf \u09a8\u09be \u09af\u09be\u099a\u09be\u0987 \u0995\u09b0\u09be"
+                    + " \u09b9\u09af\u09bc",
+            "Files are taken at their word",
+            "\u09ab\u09be\u0987\u09b2 \u09af\u09c7\u09ae\u09a8 \u09ac\u09b2\u09c7,"
+                    + " \u09a4\u09c7\u09ae\u09a8\u0987 \u09a7\u09b0\u09be \u09b9\u09af\u09bc",
+            "A file made from an MP3 keeps the MP3\u2019s cut-off, somewhere between 16 and 20 kHz."
+                + " A minute after a song starts, a few stretches of it are looked at. A fake shows"
+                + " as \u201cFLAC 16bit \u00b7 from \u2248128 kbps\u201d and is ranked as that MP3,"
+                + " and a hi-res file made from a CD as \u201cFLAC 24bit \u00b7 from 44.1"
+                + " kHz\u201d. A check can show a file looks lossy; it can\u2019t prove a file is"
+                + " genuine.",
+            "MP3 \u09a5\u09c7\u0995\u09c7 \u09a4\u09c8\u09b0\u09bf \u09ab\u09be\u0987\u09b2\u09c7"
+                + " MP3-\u098f\u09b0 \u0995\u09be\u099f-\u0985\u09ab \u09a5\u09c7\u0995\u09c7"
+                + " \u09af\u09be\u09af\u09bc, 16 \u09a5\u09c7\u0995\u09c7 20 kHz-\u098f\u09b0"
+                + " \u09ae\u09a7\u09cd\u09af\u09c7 \u0995\u09cb\u09a5\u09be\u0993\u0964"
+                + " \u0997\u09be\u09a8 \u09b6\u09c1\u09b0\u09c1"
+                + " \u09b9\u0993\u09af\u09bc\u09be\u09b0 \u098f\u0995"
+                + " \u09ae\u09bf\u09a8\u09bf\u099f \u09aa\u09b0 \u098f\u09b0"
+                + " \u0995\u09af\u09bc\u09c7\u0995\u099f\u09bf \u0985\u0982\u09b6"
+                + " \u09a6\u09c7\u0996\u09be \u09b9\u09af\u09bc\u0964 \u09a8\u0995\u09b2"
+                + " \u09ab\u09be\u0987\u09b2 \u201cFLAC 16bit \u00b7 \u2248128 kbps"
+                + " \u09a5\u09c7\u0995\u09c7\u201d \u09b9\u09bf\u09b8\u09c7\u09ac\u09c7"
+                + " \u09a6\u09c7\u0996\u09be\u09af\u09bc \u098f\u09ac\u0982 \u09b8\u09c7\u0987 MP3"
+                + " \u09b9\u09bf\u09b8\u09c7\u09ac\u09c7\u0987"
+                + " \u09b0\u200d\u09cd\u09af\u09be\u0982\u0995 \u0995\u09b0\u09be"
+                + " \u09b9\u09af\u09bc, \u0986\u09b0 CD \u09a5\u09c7\u0995\u09c7"
+                + " \u09a4\u09c8\u09b0\u09bf \u09b9\u09be\u0987-\u09b0\u09c7\u099c"
+                + " \u09ab\u09be\u0987\u09b2 \u201cFLAC 24bit \u00b7 44.1 kHz"
+                + " \u09a5\u09c7\u0995\u09c7\u201d \u09b9\u09bf\u09b8\u09c7\u09ac\u09c7"
+                + " \u09a6\u09c7\u0996\u09be\u09af\u09bc\u0964"
+                + " \u09af\u09be\u099a\u09be\u0987\u09af\u09bc\u09c7 \u09ac\u09cb\u099d\u09be"
+                + " \u09af\u09c7\u09a4\u09c7 \u09aa\u09be\u09b0\u09c7 \u09af\u09c7"
+                + " \u09ab\u09be\u0987\u09b2\u099f\u09bf \u09b2\u09b8\u09bf \u09ae\u09a8\u09c7"
+                + " \u09b9\u099a\u09cd\u099b\u09c7; \u09ab\u09be\u0987\u09b2\u099f\u09bf"
+                + " \u0986\u09b8\u09b2 \u0995\u09bf \u09a8\u09be \u09a4\u09be"
+                + " \u09aa\u09cd\u09b0\u09ae\u09be\u09a3 \u0995\u09b0\u09be"
+                + " \u09af\u09be\u09af\u09bc \u09a8\u09be\u0964",
+            "Check in the background",
+            "\u09ac\u09cd\u09af\u09be\u0995\u0997\u09cd\u09b0\u09be\u0989\u09a8\u09cd\u09a1\u09c7"
+                    + " \u09af\u09be\u099a\u09be\u0987 \u0995\u09b0\u09c1\u09a8",
+            "Every lossless file in your music chats, up to 1 GB a day",
+            "\u0986\u09aa\u09a8\u09be\u09b0 \u09ae\u09bf\u0989\u099c\u09bf\u0995"
+                    + " \u099a\u09cd\u09af\u09be\u099f\u09c7\u09b0"
+                    + " \u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u09b2\u09b8\u09b2\u09c7\u09b8"
+                    + " \u09ab\u09be\u0987\u09b2, \u09a6\u09bf\u09a8\u09c7"
+                    + " \u09b8\u09b0\u09cd\u09ac\u09cb\u099a\u09cd\u099a 1 GB",
+            "Only songs that play are checked",
+            "\u09b6\u09c1\u09a7\u09c1 \u099a\u09be\u09b2\u09be\u09a8\u09cb \u0997\u09be\u09a8"
+                    + " \u09af\u09be\u099a\u09be\u0987 \u0995\u09b0\u09be \u09b9\u09af\u09bc",
+            "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                + " under Saved index. What\u2019s found is kept in the saved index and goes with"
+                + " it when you share it.",
+            "\u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u09ab\u09be\u0987\u09b2\u09c7\u09b0"
+                    + " \u09aa\u09cd\u09b0\u09be\u09af\u09bc 4 MB"
+                    + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u09b9\u09af\u09bc,"
+                    + " \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8-\u098f\u09b0 Wi-Fi \u0986\u09b0"
+                    + " \u099a\u09be\u09b0\u09cd\u099c\u09bf\u0982 \u09b8\u09c1\u0987\u099a"
+                    + " \u09ae\u09c7\u09a8\u09c7\u0964 \u09af\u09be"
+                    + " \u09aa\u09be\u0993\u09af\u09bc\u09be \u09af\u09be\u09af\u09bc \u09a4\u09be"
+                    + " \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8\u09c7 \u09b0\u09be\u0996\u09be"
+                    + " \u09b9\u09af\u09bc \u098f\u09ac\u0982 \u0986\u09aa\u09a8\u09bf"
+                    + " \u09b6\u09c7\u09af\u09bc\u09be\u09b0 \u0995\u09b0\u09b2\u09c7"
+                    + " \u09b8\u09c7\u099f\u09bf\u09b0 \u09b8\u0999\u09cd\u0997\u09c7"
+                    + " \u09af\u09be\u09af\u09bc\u0964",
+            "Name untagged files by sound",
+            "\u099f\u09cd\u09af\u09be\u0997 \u099b\u09be\u09a1\u09bc\u09be"
+                    + " \u09ab\u09be\u0987\u09b2\u09c7\u09b0 \u09a8\u09be\u09ae"
+                    + " \u09b6\u09ac\u09cd\u09a6 \u09a6\u09bf\u09af\u09bc\u09c7 \u09a6\u09bf\u09a8",
+            "Files without tags are looked up in AcoustID",
+            "\u099f\u09cd\u09af\u09be\u0997 \u099b\u09be\u09a1\u09bc\u09be \u09ab\u09be\u0987\u09b2"
+                    + " AcoustID-\u098f \u0996\u09cb\u0981\u099c\u09be \u09b9\u09af\u09bc",
+            "Untagged files keep the name from the file",
+            "\u099f\u09cd\u09af\u09be\u0997 \u099b\u09be\u09a1\u09bc\u09be \u09ab\u09be\u0987\u09b2"
+                    + " \u09ab\u09be\u0987\u09b2\u09c7\u09b0 \u09a8\u09be\u09ae\u0987"
+                    + " \u09b0\u09be\u0996\u09c7",
+            "A fingerprint of the first two minutes of each untagged file, its length and your"
+                    + " AcoustID key are sent to AcoustID (acoustid.org), a free service run by the"
+                    + " MusicBrainz community. No audio is sent.",
+            "\u099f\u09cd\u09af\u09be\u0997 \u099b\u09be\u09a1\u09bc\u09be"
+                + " \u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u09ab\u09be\u0987\u09b2\u09c7\u09b0"
+                + " \u09aa\u09cd\u09b0\u09a5\u09ae \u09a6\u09c1\u0987"
+                + " \u09ae\u09bf\u09a8\u09bf\u099f\u09c7\u09b0"
+                + " \u09ab\u09bf\u0999\u09cd\u0997\u09be\u09b0\u09aa\u09cd\u09b0\u09bf\u09a8\u09cd\u099f,"
+                + " \u09a6\u09c8\u09b0\u09cd\u0998\u09cd\u09af \u0986\u09b0"
+                + " \u0986\u09aa\u09a8\u09be\u09b0 AcoustID \u0995\u09c0 AcoustID-\u098f"
+                + " (acoustid.org) \u09aa\u09be\u09a0\u09be\u09a8\u09cb \u09b9\u09af\u09bc,"
+                + " \u09af\u09be MusicBrainz \u0995\u09ae\u09bf\u0989\u09a8\u09bf\u099f\u09bf\u09b0"
+                + " \u099a\u09be\u09b2\u09be\u09a8\u09cb \u098f\u0995\u099f\u09bf"
+                + " \u09ab\u09cd\u09b0\u09bf \u09b8\u09be\u09b0\u09cd\u09ad\u09bf\u09b8\u0964"
+                + " \u0995\u09cb\u09a8\u09cb \u0985\u09a1\u09bf\u0993"
+                + " \u09aa\u09be\u09a0\u09be\u09a8\u09cb \u09b9\u09af\u09bc \u09a8\u09be\u0964",
+            "Songs that play are looked up a minute later. Your other untagged files are gone"
+                + " through in the background, up to 500 a day, keeping to the Wi-Fi and charging"
+                + " switches under Saved index.",
+            "\u099a\u09be\u09b2\u09be\u09a8\u09cb \u0997\u09be\u09a8 \u098f\u0995"
+                + " \u09ae\u09bf\u09a8\u09bf\u099f \u09aa\u09b0\u09c7"
+                + " \u0996\u09cb\u0981\u099c\u09be \u09b9\u09af\u09bc\u0964"
+                + " \u0986\u09aa\u09a8\u09be\u09b0 \u0985\u09a8\u09cd\u09af"
+                + " \u099f\u09cd\u09af\u09be\u0997 \u099b\u09be\u09a1\u09bc\u09be"
+                + " \u09ab\u09be\u0987\u09b2\u0997\u09c1\u09b2\u09cb"
+                + " \u09ac\u09cd\u09af\u09be\u0995\u0997\u09cd\u09b0\u09be\u0989\u09a8\u09cd\u09a1\u09c7"
+                + " \u09a6\u09c7\u0996\u09be \u09b9\u09af\u09bc, \u09a6\u09bf\u09a8\u09c7"
+                + " \u09b8\u09b0\u09cd\u09ac\u09cb\u099a\u09cd\u099a 500\u099f\u09bf,"
+                + " \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
+                + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8-\u098f\u09b0 Wi-Fi \u0986\u09b0"
+                + " \u099a\u09be\u09b0\u09cd\u099c\u09bf\u0982 \u09b8\u09c1\u0987\u099a"
+                + " \u09ae\u09c7\u09a8\u09c7\u0964",
+            "AcoustID key",
+            "AcoustID \u0995\u09c0",
+            "Saved on this phone only",
+            "\u09b6\u09c1\u09a7\u09c1 \u098f\u0987 \u09ab\u09cb\u09a8\u09c7 \u09b8\u09c7\u09ad"
+                    + " \u0995\u09b0\u09be",
+            "Needed to name files by sound",
+            "\u09b6\u09ac\u09cd\u09a6 \u09a6\u09bf\u09af\u09bc\u09c7"
+                    + " \u09ab\u09be\u0987\u09b2\u09c7\u09b0 \u09a8\u09be\u09ae"
+                    + " \u09a6\u09bf\u09a4\u09c7 \u09a6\u09b0\u0995\u09be\u09b0",
+            "Enter",
+            "\u09b2\u09bf\u0996\u09c1\u09a8",
+            "Sign in at acoustid.org, register an application (any name), and paste its API key"
+                    + " here. It\u2019s free.",
+            "acoustid.org-\u098f \u09b8\u09be\u0987\u09a8 \u0987\u09a8 \u0995\u09b0\u09c1\u09a8,"
+                + " \u098f\u0995\u099f\u09bf"
+                + " \u0985\u09cd\u09af\u09be\u09aa\u09cd\u09b2\u09bf\u0995\u09c7\u09b6\u09a8"
+                + " \u09b0\u09c7\u099c\u09bf\u09b8\u09cd\u099f\u09be\u09b0 \u0995\u09b0\u09c1\u09a8"
+                + " (\u09af\u09c7\u0995\u09cb\u09a8\u09cb \u09a8\u09be\u09ae), \u0986\u09b0"
+                + " \u098f\u09b0 API \u0995\u09c0 \u098f\u0996\u09be\u09a8\u09c7"
+                + " \u09aa\u09c7\u09b8\u09cd\u099f \u0995\u09b0\u09c1\u09a8\u0964"
+                + " \u098f\u099f\u09bf \u09ab\u09cd\u09b0\u09bf\u0964",
+            "AcoustID application key",
+            "AcoustID \u0985\u09cd\u09af\u09be\u09aa\u09cd\u09b2\u09bf\u0995\u09c7\u09b6\u09a8"
+                    + " \u0995\u09c0",
+            "Get an AcoustID key \u2197",
+            "AcoustID \u0995\u09c0 \u09a8\u09bf\u09a8 \u2197",
+            "That doesn\u2019t look like an AcoustID application key.",
+            "\u098f\u099f\u09bf AcoustID"
+                    + " \u0985\u09cd\u09af\u09be\u09aa\u09cd\u09b2\u09bf\u0995\u09c7\u09b6\u09a8"
+                    + " \u0995\u09c0 \u09ae\u09a8\u09c7 \u09b9\u099a\u09cd\u099b\u09c7"
+                    + " \u09a8\u09be\u0964",
+            "Enter your AcoustID application key first.",
+            "\u0986\u0997\u09c7 \u0986\u09aa\u09a8\u09be\u09b0 AcoustID"
+                    + " \u0985\u09cd\u09af\u09be\u09aa\u09cd\u09b2\u09bf\u0995\u09c7\u09b6\u09a8"
+                    + " \u0995\u09c0 \u09a6\u09bf\u09a8\u0964",
+            "Checked {0} file",
+            "{0}\u099f\u09bf \u09ab\u09be\u0987\u09b2 \u09af\u09be\u099a\u09be\u0987"
+                    + " \u0995\u09b0\u09be \u09b9\u09af\u09bc\u09c7\u099b\u09c7",
+            "Checked {0} files",
+            "{0}\u099f\u09bf \u09ab\u09be\u0987\u09b2 \u09af\u09be\u099a\u09be\u0987"
+                    + " \u0995\u09b0\u09be \u09b9\u09af\u09bc\u09c7\u099b\u09c7",
+            "{0} not really lossless",
+            "{0}\u099f\u09bf \u0986\u09b8\u09b2\u09c7 \u09b2\u09b8\u09b2\u09c7\u09b8"
+                    + " \u09a8\u09af\u09bc",
+            "{0} named by sound",
+            "{0}\u099f\u09bf\u09b0 \u09a8\u09be\u09ae \u09b6\u09ac\u09cd\u09a6"
+                    + " \u09a6\u09bf\u09af\u09bc\u09c7 \u09a6\u09c7\u0993\u09af\u09bc\u09be"
+                    + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7",
+            "AcoustID refused the key: {0}",
+            "AcoustID \u0995\u09c0-\u099f\u09bf \u0997\u09cd\u09b0\u09b9\u09a3"
+                    + " \u0995\u09b0\u09c7\u09a8\u09bf: {0}",
+            "{0} \u00b7 from \u2248{1} kbps",
+            "{0} \u00b7 \u2248{1} kbps \u09a5\u09c7\u0995\u09c7",
+            "{0} \u00b7 from a lossy file",
+            "{0} \u00b7 \u09b2\u09b8\u09bf \u09ab\u09be\u0987\u09b2 \u09a5\u09c7\u0995\u09c7",
+            "{0} \u00b7 maybe lossy",
+            "{0} \u00b7 \u09b9\u09af\u09bc\u09a4\u09cb \u09b2\u09b8\u09bf",
+            "{0} \u00b7 from {1}",
+            "{0} \u00b7 {1} \u09a5\u09c7\u0995\u09c7",
+            "{0} \u00b7 really {1}bit",
+            "{0} \u00b7 \u0986\u09b8\u09b2\u09c7 {1}bit",
         };
     }
 
@@ -4880,6 +5216,97 @@ final class Translations {
             "{0} ZIPs zum \u00d6ffnen",
             "{0} \u00b7 {1} \u00b7 Looks like a song that played from another source",
             "{0} \u00b7 {1} \u00b7 Scheint ein Song zu sein, der aus einer anderen Quelle lief",
+            "Check lossless files",
+            "Verlustfreie Dateien pr\u00fcfen",
+            "FLAC and WAV files that play are checked for a lossy source",
+            "Abgespielte FLAC- und WAV-Dateien werden auf eine verlustbehaftete Quelle"
+                    + " gepr\u00fcft",
+            "Files are taken at their word",
+            "Dateien wird aufs Wort geglaubt",
+            "A file made from an MP3 keeps the MP3\u2019s cut-off, somewhere between 16 and 20 kHz."
+                + " A minute after a song starts, a few stretches of it are looked at. A fake shows"
+                + " as \u201cFLAC 16bit \u00b7 from \u2248128 kbps\u201d and is ranked as that MP3,"
+                + " and a hi-res file made from a CD as \u201cFLAC 24bit \u00b7 from 44.1"
+                + " kHz\u201d. A check can show a file looks lossy; it can\u2019t prove a file is"
+                + " genuine.",
+            "Eine aus einer MP3 erstellte Datei beh\u00e4lt die Grenzfrequenz der MP3, irgendwo"
+                + " zwischen 16 und 20 kHz. Eine Minute nach dem Start eines Songs werden einige"
+                + " Abschnitte davon untersucht. Eine F\u00e4lschung erscheint als \u201eFLAC 16bit"
+                + " \u00b7 aus \u2248128 kbps\u201c und wird wie diese MP3 eingestuft, eine"
+                + " Hi-Res-Datei aus einer CD als \u201eFLAC 24bit \u00b7 aus 44.1 kHz\u201c. Eine"
+                + " Pr\u00fcfung kann zeigen, dass eine Datei verlustbehaftet wirkt; sie kann nicht"
+                + " beweisen, dass eine Datei echt ist.",
+            "Check in the background",
+            "Im Hintergrund pr\u00fcfen",
+            "Every lossless file in your music chats, up to 1 GB a day",
+            "Jede verlustfreie Datei in deinen Musik-Chats, bis zu 1 GB pro Tag",
+            "Only songs that play are checked",
+            "Nur abgespielte Songs werden gepr\u00fcft",
+            "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                + " under Saved index. What\u2019s found is kept in the saved index and goes with"
+                + " it when you share it.",
+            "Von jeder Datei werden etwa 4 MB heruntergeladen, unter Beachtung der Schalter"
+                + " f\u00fcr Wi-Fi und Laden unter \u201eGespeicherter Index\u201c. Die Ergebnisse"
+                + " werden im gespeicherten Index aufbewahrt und gehen mit, wenn du ihn teilst.",
+            "Name untagged files by sound",
+            "Dateien ohne Tags am Klang benennen",
+            "Files without tags are looked up in AcoustID",
+            "Dateien ohne Tags werden in AcoustID nachgeschlagen",
+            "Untagged files keep the name from the file",
+            "Dateien ohne Tags behalten den Namen aus der Datei",
+            "A fingerprint of the first two minutes of each untagged file, its length and your"
+                    + " AcoustID key are sent to AcoustID (acoustid.org), a free service run by the"
+                    + " MusicBrainz community. No audio is sent.",
+            "Ein Fingerabdruck der ersten zwei Minuten jeder Datei ohne Tags, ihre L\u00e4nge und"
+                + " dein AcoustID-Schl\u00fcssel werden an AcoustID (acoustid.org) gesendet, einen"
+                + " kostenlosen Dienst der MusicBrainz-Community. Es wird kein Audio gesendet.",
+            "Songs that play are looked up a minute later. Your other untagged files are gone"
+                + " through in the background, up to 500 a day, keeping to the Wi-Fi and charging"
+                + " switches under Saved index.",
+            "Abgespielte Songs werden eine Minute sp\u00e4ter nachgeschlagen. Deine anderen Dateien"
+                    + " ohne Tags werden im Hintergrund abgearbeitet, bis zu 500 pro Tag, unter"
+                    + " Beachtung der Schalter f\u00fcr Wi-Fi und Laden unter \u201eGespeicherter"
+                    + " Index\u201c.",
+            "AcoustID key",
+            "AcoustID-Schl\u00fcssel",
+            "Saved on this phone only",
+            "Nur auf diesem Handy gespeichert",
+            "Needed to name files by sound",
+            "N\u00f6tig, um Dateien am Klang zu benennen",
+            "Enter",
+            "Eingeben",
+            "Sign in at acoustid.org, register an application (any name), and paste its API key"
+                    + " here. It\u2019s free.",
+            "Melde dich auf acoustid.org an, registriere eine Anwendung (beliebiger Name) und"
+                    + " f\u00fcge ihren API-Schl\u00fcssel hier ein. Das ist kostenlos.",
+            "AcoustID application key",
+            "AcoustID-Anwendungsschl\u00fcssel",
+            "Get an AcoustID key \u2197",
+            "AcoustID-Schl\u00fcssel holen \u2197",
+            "That doesn\u2019t look like an AcoustID application key.",
+            "Das sieht nicht wie ein AcoustID-Anwendungsschl\u00fcssel aus.",
+            "Enter your AcoustID application key first.",
+            "Gib zuerst deinen AcoustID-Anwendungsschl\u00fcssel ein.",
+            "Checked {0} file",
+            "{0} Datei gepr\u00fcft",
+            "Checked {0} files",
+            "{0} Dateien gepr\u00fcft",
+            "{0} not really lossless",
+            "{0} nicht wirklich verlustfrei",
+            "{0} named by sound",
+            "{0} am Klang benannt",
+            "AcoustID refused the key: {0}",
+            "AcoustID hat den Schl\u00fcssel abgelehnt: {0}",
+            "{0} \u00b7 from \u2248{1} kbps",
+            "{0} \u00b7 aus \u2248{1} kbps",
+            "{0} \u00b7 from a lossy file",
+            "{0} \u00b7 aus verlustbehafteter Datei",
+            "{0} \u00b7 maybe lossy",
+            "{0} \u00b7 vielleicht verlustbehaftet",
+            "{0} \u00b7 from {1}",
+            "{0} \u00b7 aus {1}",
+            "{0} \u00b7 really {1}bit",
+            "{0} \u00b7 eigentlich {1}bit",
         };
     }
 
@@ -5911,6 +6338,98 @@ final class Translations {
             "{0} zips por abrir",
             "{0} \u00b7 {1} \u00b7 Looks like a song that played from another source",
             "{0} \u00b7 {1} \u00b7 Parece una canci\u00f3n que son\u00f3 desde otra fuente",
+            "Check lossless files",
+            "Comprobar archivos sin p\u00e9rdida",
+            "FLAC and WAV files that play are checked for a lossy source",
+            "Se comprueba si los archivos FLAC y WAV que se reproducen vienen de una fuente con"
+                    + " p\u00e9rdida",
+            "Files are taken at their word",
+            "Se conf\u00eda en lo que indica cada archivo",
+            "A file made from an MP3 keeps the MP3\u2019s cut-off, somewhere between 16 and 20 kHz."
+                + " A minute after a song starts, a few stretches of it are looked at. A fake shows"
+                + " as \u201cFLAC 16bit \u00b7 from \u2248128 kbps\u201d and is ranked as that MP3,"
+                + " and a hi-res file made from a CD as \u201cFLAC 24bit \u00b7 from 44.1"
+                + " kHz\u201d. A check can show a file looks lossy; it can\u2019t prove a file is"
+                + " genuine.",
+            "Un archivo hecho a partir de un MP3 conserva el corte del MP3, en alg\u00fan punto"
+                + " entre 16 y 20 kHz. Un minuto despu\u00e9s de que empieza una canci\u00f3n, se"
+                + " analizan algunos fragmentos. Una falsificaci\u00f3n aparece como \u201cFLAC"
+                + " 16bit \u00b7 de \u2248128 kbps\u201d y se clasifica como ese MP3, y un archivo"
+                + " de alta resoluci\u00f3n hecho a partir de un CD, como \u201cFLAC 24bit \u00b7"
+                + " de 44.1 kHz\u201d. Una comprobaci\u00f3n puede mostrar que un archivo parece"
+                + " con p\u00e9rdida; no puede demostrar que sea aut\u00e9ntico.",
+            "Check in the background",
+            "Comprobar en segundo plano",
+            "Every lossless file in your music chats, up to 1 GB a day",
+            "Todos los archivos sin p\u00e9rdida de tus chats de m\u00fasica, hasta 1 GB al"
+                    + " d\u00eda",
+            "Only songs that play are checked",
+            "Solo se comprueban las canciones que se reproducen",
+            "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                + " under Saved index. What\u2019s found is kept in the saved index and goes with"
+                + " it when you share it.",
+            "Se descargan unos 4 MB de cada archivo, respetando los interruptores de Wi-Fi y carga"
+                    + " de \u00cdndice guardado. Lo que se encuentra se guarda en el \u00cdndice"
+                    + " guardado y va con \u00e9l cuando lo compartes.",
+            "Name untagged files by sound",
+            "Nombrar por sonido los archivos sin etiquetas",
+            "Files without tags are looked up in AcoustID",
+            "Los archivos sin etiquetas se buscan en AcoustID",
+            "Untagged files keep the name from the file",
+            "Los archivos sin etiquetas conservan el nombre del archivo",
+            "A fingerprint of the first two minutes of each untagged file, its length and your"
+                    + " AcoustID key are sent to AcoustID (acoustid.org), a free service run by the"
+                    + " MusicBrainz community. No audio is sent.",
+            "Se env\u00edan a AcoustID (acoustid.org), un servicio gratuito gestionado por la"
+                    + " comunidad de MusicBrainz, una huella de los dos primeros minutos de cada"
+                    + " archivo sin etiquetas, su duraci\u00f3n y tu clave de AcoustID. No se"
+                    + " env\u00eda audio.",
+            "Songs that play are looked up a minute later. Your other untagged files are gone"
+                + " through in the background, up to 500 a day, keeping to the Wi-Fi and charging"
+                + " switches under Saved index.",
+            "Las canciones que se reproducen se buscan un minuto despu\u00e9s. Tus otros archivos"
+                + " sin etiquetas se revisan en segundo plano, hasta 500 al d\u00eda, respetando"
+                + " los interruptores de Wi-Fi y carga de \u00cdndice guardado.",
+            "AcoustID key",
+            "Clave de AcoustID",
+            "Saved on this phone only",
+            "Guardada solo en este tel\u00e9fono",
+            "Needed to name files by sound",
+            "Necesaria para nombrar archivos por sonido",
+            "Enter",
+            "Ingresar",
+            "Sign in at acoustid.org, register an application (any name), and paste its API key"
+                    + " here. It\u2019s free.",
+            "Inicia sesi\u00f3n en acoustid.org, registra una aplicaci\u00f3n (con cualquier"
+                    + " nombre) y pega aqu\u00ed su clave de API. Es gratis.",
+            "AcoustID application key",
+            "Clave de aplicaci\u00f3n de AcoustID",
+            "Get an AcoustID key \u2197",
+            "Obt\u00e9n una clave de AcoustID \u2197",
+            "That doesn\u2019t look like an AcoustID application key.",
+            "Eso no parece una clave de aplicaci\u00f3n de AcoustID.",
+            "Enter your AcoustID application key first.",
+            "Primero ingresa tu clave de aplicaci\u00f3n de AcoustID.",
+            "Checked {0} file",
+            "Se comprob\u00f3 {0} archivo",
+            "Checked {0} files",
+            "Se comprobaron {0} archivos",
+            "{0} not really lossless",
+            "{0} no son realmente sin p\u00e9rdida",
+            "{0} named by sound",
+            "{0} nombrados por sonido",
+            "AcoustID refused the key: {0}",
+            "AcoustID rechaz\u00f3 la clave: {0}",
+            "{0} \u00b7 from \u2248{1} kbps",
+            "{0} \u00b7 de \u2248{1} kbps",
+            "{0} \u00b7 from a lossy file",
+            "{0} \u00b7 de archivo con p\u00e9rdida",
+            "{0} \u00b7 maybe lossy",
+            "{0} \u00b7 quiz\u00e1 con p\u00e9rdida",
+            "{0} \u00b7 from {1}",
+            "{0} \u00b7 de {1}",
+            "{0} \u00b7 really {1}bit",
+            "{0} \u00b7 realmente {1}bit",
         };
     }
 
@@ -6965,6 +7484,100 @@ final class Translations {
             "{0} zips \u00e0 ouvrir",
             "{0} \u00b7 {1} \u00b7 Looks like a song that played from another source",
             "{0} \u00b7 {1} \u00b7 Semble \u00eatre un morceau lu depuis une autre source",
+            "Check lossless files",
+            "V\u00e9rifier les fichiers sans perte",
+            "FLAC and WAV files that play are checked for a lossy source",
+            "Les fichiers FLAC et WAV lus sont v\u00e9rifi\u00e9s pour d\u00e9tecter une source"
+                    + " avec perte",
+            "Files are taken at their word",
+            "Les fichiers sont pris au mot",
+            "A file made from an MP3 keeps the MP3\u2019s cut-off, somewhere between 16 and 20 kHz."
+                + " A minute after a song starts, a few stretches of it are looked at. A fake shows"
+                + " as \u201cFLAC 16bit \u00b7 from \u2248128 kbps\u201d and is ranked as that MP3,"
+                + " and a hi-res file made from a CD as \u201cFLAC 24bit \u00b7 from 44.1"
+                + " kHz\u201d. A check can show a file looks lossy; it can\u2019t prove a file is"
+                + " genuine.",
+            "Un fichier cr\u00e9\u00e9 \u00e0 partir d\u2019un MP3 garde la coupure du MP3, quelque"
+                + " part entre 16 et 20 kHz. Une minute apr\u00e8s le d\u00e9but d\u2019un morceau,"
+                + " quelques passages sont analys\u00e9s. Un faux s\u2019affiche comme \u00ab FLAC"
+                + " 16bit \u00b7 issu de \u2248128 kbps \u00bb et est class\u00e9 comme ce MP3, et"
+                + " un fichier haute r\u00e9solution cr\u00e9\u00e9 \u00e0 partir d\u2019un CD"
+                + " comme \u00ab FLAC 24bit \u00b7 issu de 44.1 kHz \u00bb. Une v\u00e9rification"
+                + " peut montrer qu\u2019un fichier semble avec perte ; elle ne peut pas prouver"
+                + " qu\u2019un fichier est authentique.",
+            "Check in the background",
+            "V\u00e9rifier en arri\u00e8re-plan",
+            "Every lossless file in your music chats, up to 1 GB a day",
+            "Tous les fichiers sans perte de vos discussions musicales, jusqu\u2019\u00e0 1 GB par"
+                    + " jour",
+            "Only songs that play are checked",
+            "Seuls les morceaux lus sont v\u00e9rifi\u00e9s",
+            "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                + " under Saved index. What\u2019s found is kept in the saved index and goes with"
+                + " it when you share it.",
+            "Environ 4 MB de chaque fichier sont t\u00e9l\u00e9charg\u00e9s, en respectant les"
+                    + " options Wi-Fi et charge de \u00ab Index enregistr\u00e9 \u00bb. Les"
+                    + " r\u00e9sultats sont conserv\u00e9s dans l\u2019index enregistr\u00e9 et"
+                    + " l\u2019accompagnent quand vous le partagez.",
+            "Name untagged files by sound",
+            "Nommer les fichiers sans tags par le son",
+            "Files without tags are looked up in AcoustID",
+            "Les fichiers sans tags sont recherch\u00e9s dans AcoustID",
+            "Untagged files keep the name from the file",
+            "Les fichiers sans tags gardent le nom du fichier",
+            "A fingerprint of the first two minutes of each untagged file, its length and your"
+                    + " AcoustID key are sent to AcoustID (acoustid.org), a free service run by the"
+                    + " MusicBrainz community. No audio is sent.",
+            "Une empreinte des deux premi\u00e8res minutes de chaque fichier sans tags, sa"
+                    + " dur\u00e9e et votre cl\u00e9 AcoustID sont envoy\u00e9es \u00e0 AcoustID"
+                    + " (acoustid.org), un service gratuit g\u00e9r\u00e9 par la communaut\u00e9"
+                    + " MusicBrainz. Aucun audio n\u2019est envoy\u00e9.",
+            "Songs that play are looked up a minute later. Your other untagged files are gone"
+                + " through in the background, up to 500 a day, keeping to the Wi-Fi and charging"
+                + " switches under Saved index.",
+            "Les morceaux lus sont recherch\u00e9s une minute plus tard. Vos autres fichiers sans"
+                + " tags sont trait\u00e9s en arri\u00e8re-plan, jusqu\u2019\u00e0 500 par jour, en"
+                + " respectant les options Wi-Fi et charge de \u00ab Index enregistr\u00e9 \u00bb.",
+            "AcoustID key",
+            "Cl\u00e9 AcoustID",
+            "Saved on this phone only",
+            "Enregistr\u00e9e sur ce t\u00e9l\u00e9phone uniquement",
+            "Needed to name files by sound",
+            "N\u00e9cessaire pour nommer les fichiers par le son",
+            "Enter",
+            "Saisir",
+            "Sign in at acoustid.org, register an application (any name), and paste its API key"
+                    + " here. It\u2019s free.",
+            "Connectez-vous sur acoustid.org, enregistrez une application (n\u2019importe quel nom)"
+                    + " et collez sa cl\u00e9 API ici. C\u2019est gratuit.",
+            "AcoustID application key",
+            "Cl\u00e9 d\u2019application AcoustID",
+            "Get an AcoustID key \u2197",
+            "Obtenir une cl\u00e9 AcoustID \u2197",
+            "That doesn\u2019t look like an AcoustID application key.",
+            "Cela ne ressemble pas \u00e0 une cl\u00e9 d\u2019application AcoustID.",
+            "Enter your AcoustID application key first.",
+            "Saisissez d\u2019abord votre cl\u00e9 d\u2019application AcoustID.",
+            "Checked {0} file",
+            "{0} fichier v\u00e9rifi\u00e9",
+            "Checked {0} files",
+            "{0} fichiers v\u00e9rifi\u00e9s",
+            "{0} not really lossless",
+            "{0} pas vraiment sans perte",
+            "{0} named by sound",
+            "{0} nomm\u00e9s par le son",
+            "AcoustID refused the key: {0}",
+            "AcoustID a refus\u00e9 la cl\u00e9 : {0}",
+            "{0} \u00b7 from \u2248{1} kbps",
+            "{0} \u00b7 issu de \u2248{1} kbps",
+            "{0} \u00b7 from a lossy file",
+            "{0} \u00b7 issu d\u2019un fichier avec perte",
+            "{0} \u00b7 maybe lossy",
+            "{0} \u00b7 peut-\u00eatre avec perte",
+            "{0} \u00b7 from {1}",
+            "{0} \u00b7 issu de {1}",
+            "{0} \u00b7 really {1}bit",
+            "{0} \u00b7 en fait {1}bit",
         };
     }
 
@@ -8944,6 +9557,187 @@ final class Translations {
             "{0} \u00b7 {1} \u00b7 \u0932\u0917\u0924\u093e \u0939\u0948 \u092f\u0939"
                 + " \u0917\u093e\u0928\u093e \u0926\u0942\u0938\u0930\u0947"
                 + " \u0938\u094b\u0930\u094d\u0938 \u0938\u0947 \u091a\u0932\u093e \u0925\u093e",
+            "Check lossless files",
+            "\u0932\u0949\u0938\u0932\u0947\u0938 \u092b\u093c\u093e\u0907\u0932\u0947\u0902"
+                    + " \u091c\u093e\u0901\u091a\u0947\u0902",
+            "FLAC and WAV files that play are checked for a lossy source",
+            "\u091a\u0932\u0928\u0947 \u0935\u093e\u0932\u0940 FLAC \u0914\u0930 WAV"
+                    + " \u092b\u093c\u093e\u0907\u0932\u094b\u0902 \u0915\u0940"
+                    + " \u091c\u093e\u0901\u091a \u0939\u094b\u0924\u0940 \u0939\u0948 \u0915\u093f"
+                    + " \u0915\u0939\u0940\u0902 \u0909\u0928\u0915\u093e"
+                    + " \u0938\u094b\u0930\u094d\u0938 \u0932\u0949\u0938\u0940 \u0924\u094b"
+                    + " \u0928\u0939\u0940\u0902",
+            "Files are taken at their word",
+            "\u092b\u093c\u093e\u0907\u0932\u0947\u0902 \u091c\u0948\u0938\u0940"
+                    + " \u092c\u0924\u093e\u0908 \u0917\u0908 \u0939\u0948\u0902,"
+                    + " \u0935\u0948\u0938\u0940 \u0939\u0940 \u092e\u093e\u0928\u0940"
+                    + " \u091c\u093e\u0924\u0940 \u0939\u0948\u0902",
+            "A file made from an MP3 keeps the MP3\u2019s cut-off, somewhere between 16 and 20 kHz."
+                + " A minute after a song starts, a few stretches of it are looked at. A fake shows"
+                + " as \u201cFLAC 16bit \u00b7 from \u2248128 kbps\u201d and is ranked as that MP3,"
+                + " and a hi-res file made from a CD as \u201cFLAC 24bit \u00b7 from 44.1"
+                + " kHz\u201d. A check can show a file looks lossy; it can\u2019t prove a file is"
+                + " genuine.",
+            "MP3 \u0938\u0947 \u092c\u0928\u0940 \u092b\u093c\u093e\u0907\u0932 \u092e\u0947\u0902"
+                + " MP3 \u0915\u093e \u0915\u091f-\u0911\u092b\u093c \u092c\u0928\u093e"
+                + " \u0930\u0939\u0924\u093e \u0939\u0948, \u091c\u094b 16 \u0938\u0947 20 kHz"
+                + " \u0915\u0947 \u092c\u0940\u091a \u0915\u0939\u0940\u0902"
+                + " \u0939\u094b\u0924\u093e \u0939\u0948\u0964 \u0917\u093e\u0928\u093e"
+                + " \u0936\u0941\u0930\u0942 \u0939\u094b\u0928\u0947 \u0915\u0947 \u090f\u0915"
+                + " \u092e\u093f\u0928\u091f \u092c\u093e\u0926 \u0909\u0938\u0915\u0947"
+                + " \u0915\u0941\u091b \u0939\u093f\u0938\u094d\u0938\u0947"
+                + " \u0926\u0947\u0916\u0947 \u091c\u093e\u0924\u0947 \u0939\u0948\u0902\u0964"
+                + " \u0928\u0915\u0932\u0940 \u092b\u093c\u093e\u0907\u0932 \u201cFLAC 16bit \u00b7"
+                + " \u2248128 kbps \u0938\u0947 \u092c\u0928\u0940\u201d"
+                + " \u0926\u093f\u0916\u0924\u0940 \u0939\u0948 \u0914\u0930 \u0909\u0938\u0947"
+                + " \u0909\u0938\u0940 MP3 \u0915\u0940 \u0924\u0930\u0939 \u0930\u0948\u0902\u0915"
+                + " \u0915\u093f\u092f\u093e \u091c\u093e\u0924\u093e \u0939\u0948, \u0914\u0930 CD"
+                + " \u0938\u0947 \u092c\u0928\u0940 \u0939\u093e\u0908-\u0930\u0947\u091c\u093c"
+                + " \u092b\u093c\u093e\u0907\u0932 \u201cFLAC 24bit \u00b7 44.1 kHz \u0938\u0947"
+                + " \u092c\u0928\u0940\u201d \u0926\u093f\u0916\u0924\u0940 \u0939\u0948\u0964"
+                + " \u091c\u093e\u0901\u091a \u0938\u0947 \u092a\u0924\u093e \u091a\u0932"
+                + " \u0938\u0915\u0924\u093e \u0939\u0948 \u0915\u093f"
+                + " \u092b\u093c\u093e\u0907\u0932 \u0932\u0949\u0938\u0940"
+                + " \u0932\u0917\u0924\u0940 \u0939\u0948; \u0907\u0938\u0938\u0947 \u092f\u0939"
+                + " \u0938\u093e\u092c\u093f\u0924 \u0928\u0939\u0940\u0902 \u0939\u094b"
+                + " \u0938\u0915\u0924\u093e \u0915\u093f \u092b\u093c\u093e\u0907\u0932"
+                + " \u0905\u0938\u0932\u0940 \u0939\u0948\u0964",
+            "Check in the background",
+            "\u092c\u0948\u0915\u0917\u094d\u0930\u093e\u0909\u0902\u0921 \u092e\u0947\u0902"
+                    + " \u091c\u093e\u0901\u091a\u0947\u0902",
+            "Every lossless file in your music chats, up to 1 GB a day",
+            "\u0906\u092a\u0915\u0940 \u092e\u094d\u092f\u0942\u091c\u093c\u093f\u0915"
+                    + " \u091a\u0948\u091f \u0915\u0940 \u0939\u0930"
+                    + " \u0932\u0949\u0938\u0932\u0947\u0938 \u092b\u093c\u093e\u0907\u0932,"
+                    + " \u0930\u094b\u091c\u093c \u091c\u093c\u094d\u092f\u093e\u0926\u093e"
+                    + " \u0938\u0947 \u091c\u093c\u094d\u092f\u093e\u0926\u093e 1 GB",
+            "Only songs that play are checked",
+            "\u0938\u093f\u0930\u094d\u092b\u093c \u091a\u0932\u0928\u0947 \u0935\u093e\u0932\u0947"
+                    + " \u0917\u093e\u0928\u0947 \u091c\u093e\u0901\u091a\u0947"
+                    + " \u091c\u093e\u0924\u0947 \u0939\u0948\u0902",
+            "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                + " under Saved index. What\u2019s found is kept in the saved index and goes with"
+                + " it when you share it.",
+            "\u0939\u0930 \u092b\u093c\u093e\u0907\u0932 \u0915\u093e \u0932\u0917\u092d\u0917 4 MB"
+                + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0939\u094b\u0924\u093e"
+                + " \u0939\u0948, \u0914\u0930 \u0938\u0947\u0935 \u0915\u093f\u092f\u093e"
+                + " \u0917\u092f\u093e \u0907\u0902\u0921\u0947\u0915\u094d\u0938"
+                + " \u092e\u0947\u0902 \u0926\u093f\u090f Wi-Fi \u0914\u0930"
+                + " \u091a\u093e\u0930\u094d\u091c\u093f\u0902\u0917 \u0938\u094d\u0935\u093f\u091a"
+                + " \u0915\u093e \u092a\u093e\u0932\u0928 \u0939\u094b\u0924\u093e"
+                + " \u0939\u0948\u0964 \u091c\u094b \u092e\u093f\u0932\u0924\u093e \u0939\u0948,"
+                + " \u0935\u0939 \u0938\u0947\u0935 \u0915\u093f\u090f \u0917\u090f"
+                + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u092e\u0947\u0902"
+                + " \u0930\u0916\u093e \u091c\u093e\u0924\u093e \u0939\u0948 \u0914\u0930"
+                + " \u0909\u0938\u0947 \u0936\u0947\u092f\u0930 \u0915\u0930\u0928\u0947"
+                + " \u092a\u0930 \u0938\u093e\u0925 \u091c\u093e\u0924\u093e \u0939\u0948\u0964",
+            "Name untagged files by sound",
+            "\u092c\u093f\u0928\u093e \u091f\u0948\u0917 \u0935\u093e\u0932\u0940"
+                    + " \u092b\u093c\u093e\u0907\u0932\u094b\u0902 \u0915\u094b"
+                    + " \u0906\u0935\u093e\u091c\u093c \u0938\u0947 \u0928\u093e\u092e"
+                    + " \u0926\u0947\u0902",
+            "Files without tags are looked up in AcoustID",
+            "\u092c\u093f\u0928\u093e \u091f\u0948\u0917 \u0935\u093e\u0932\u0940"
+                    + " \u092b\u093c\u093e\u0907\u0932\u0947\u0902 AcoustID \u092e\u0947\u0902"
+                    + " \u0916\u094b\u091c\u0940 \u091c\u093e\u0924\u0940 \u0939\u0948\u0902",
+            "Untagged files keep the name from the file",
+            "\u092c\u093f\u0928\u093e \u091f\u0948\u0917 \u0935\u093e\u0932\u0940"
+                    + " \u092b\u093c\u093e\u0907\u0932\u094b\u0902 \u0915\u093e \u0928\u093e\u092e"
+                    + " \u092b\u093c\u093e\u0907\u0932 \u0938\u0947 \u0939\u0940"
+                    + " \u0930\u0939\u0924\u093e \u0939\u0948",
+            "A fingerprint of the first two minutes of each untagged file, its length and your"
+                    + " AcoustID key are sent to AcoustID (acoustid.org), a free service run by the"
+                    + " MusicBrainz community. No audio is sent.",
+            "\u0939\u0930 \u092c\u093f\u0928\u093e \u091f\u0948\u0917 \u0935\u093e\u0932\u0940"
+                + " \u092b\u093c\u093e\u0907\u0932 \u0915\u0947 \u092a\u0939\u0932\u0947"
+                + " \u0926\u094b \u092e\u093f\u0928\u091f \u0915\u093e"
+                + " \u092b\u093c\u093f\u0902\u0917\u0930\u092a\u094d\u0930\u093f\u0902\u091f,"
+                + " \u0909\u0938\u0915\u0940 \u0932\u0902\u092c\u093e\u0908 \u0914\u0930"
+                + " \u0906\u092a\u0915\u0940 AcoustID key, AcoustID (acoustid.org) \u0915\u094b"
+                + " \u092d\u0947\u091c\u0940 \u091c\u093e\u0924\u0940 \u0939\u0948, \u091c\u094b"
+                + " MusicBrainz \u0915\u092e\u094d\u092f\u0941\u0928\u093f\u091f\u0940 \u0915\u0940"
+                + " \u091a\u0932\u093e\u0908 \u091c\u093e\u0928\u0947 \u0935\u093e\u0932\u0940"
+                + " \u090f\u0915 \u092e\u0941\u092b\u093c\u094d\u0924"
+                + " \u0938\u0930\u094d\u0935\u093f\u0938 \u0939\u0948\u0964 \u0915\u094b\u0908"
+                + " \u0911\u0921\u093f\u092f\u094b \u0928\u0939\u0940\u0902"
+                + " \u092d\u0947\u091c\u093e \u091c\u093e\u0924\u093e\u0964",
+            "Songs that play are looked up a minute later. Your other untagged files are gone"
+                + " through in the background, up to 500 a day, keeping to the Wi-Fi and charging"
+                + " switches under Saved index.",
+            "\u091a\u0932\u0928\u0947 \u0935\u093e\u0932\u0947 \u0917\u093e\u0928\u0947"
+                + " \u090f\u0915 \u092e\u093f\u0928\u091f \u092c\u093e\u0926"
+                + " \u0916\u094b\u091c\u0947 \u091c\u093e\u0924\u0947 \u0939\u0948\u0902\u0964"
+                + " \u0906\u092a\u0915\u0940 \u092c\u093e\u0915\u0940 \u092c\u093f\u0928\u093e"
+                + " \u091f\u0948\u0917 \u0935\u093e\u0932\u0940"
+                + " \u092b\u093c\u093e\u0907\u0932\u0947\u0902"
+                + " \u092c\u0948\u0915\u0917\u094d\u0930\u093e\u0909\u0902\u0921 \u092e\u0947\u0902"
+                + " \u0926\u0947\u0916\u0940 \u091c\u093e\u0924\u0940 \u0939\u0948\u0902,"
+                + " \u0930\u094b\u091c\u093c \u091c\u093c\u094d\u092f\u093e\u0926\u093e"
+                + " \u0938\u0947 \u091c\u093c\u094d\u092f\u093e\u0926\u093e 500, \u0914\u0930"
+                + " \u0938\u0947\u0935 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"
+                + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u092e\u0947\u0902"
+                + " \u0926\u093f\u090f Wi-Fi \u0914\u0930"
+                + " \u091a\u093e\u0930\u094d\u091c\u093f\u0902\u0917 \u0938\u094d\u0935\u093f\u091a"
+                + " \u0915\u093e \u092a\u093e\u0932\u0928 \u0939\u094b\u0924\u093e"
+                + " \u0939\u0948\u0964",
+            "AcoustID key",
+            "AcoustID key",
+            "Saved on this phone only",
+            "\u0938\u093f\u0930\u094d\u092b\u093c \u0907\u0938 \u092b\u093c\u094b\u0928"
+                    + " \u092a\u0930 \u0938\u0947\u0935",
+            "Needed to name files by sound",
+            "\u0906\u0935\u093e\u091c\u093c \u0938\u0947 \u092b\u093c\u093e\u0907\u0932\u094b\u0902"
+                    + " \u0915\u094b \u0928\u093e\u092e \u0926\u0947\u0928\u0947 \u0915\u0947"
+                    + " \u0932\u093f\u090f \u091c\u093c\u0930\u0942\u0930\u0940",
+            "Enter",
+            "\u0921\u093e\u0932\u0947\u0902",
+            "Sign in at acoustid.org, register an application (any name), and paste its API key"
+                    + " here. It\u2019s free.",
+            "acoustid.org \u092a\u0930 \u0938\u093e\u0907\u0928 \u0907\u0928"
+                    + " \u0915\u0930\u0947\u0902, \u090f\u0915"
+                    + " \u0910\u092a\u094d\u0932\u093f\u0915\u0947\u0936\u0928"
+                    + " \u0930\u091c\u093f\u0938\u094d\u091f\u0930 \u0915\u0930\u0947\u0902"
+                    + " (\u0915\u094b\u0908 \u092d\u0940 \u0928\u093e\u092e), \u0914\u0930"
+                    + " \u0909\u0938\u0915\u0940 API key \u092f\u0939\u093e\u0901"
+                    + " \u092a\u0947\u0938\u094d\u091f \u0915\u0930\u0947\u0902\u0964 \u092f\u0939"
+                    + " \u092e\u0941\u092b\u093c\u094d\u0924 \u0939\u0948\u0964",
+            "AcoustID application key",
+            "AcoustID \u0910\u092a\u094d\u0932\u093f\u0915\u0947\u0936\u0928 key",
+            "Get an AcoustID key \u2197",
+            "AcoustID key \u092a\u093e\u090f\u0901 \u2197",
+            "That doesn\u2019t look like an AcoustID application key.",
+            "\u092f\u0939 AcoustID \u0910\u092a\u094d\u0932\u093f\u0915\u0947\u0936\u0928 key"
+                    + " \u091c\u0948\u0938\u0940 \u0928\u0939\u0940\u0902"
+                    + " \u0932\u0917\u0924\u0940\u0964",
+            "Enter your AcoustID application key first.",
+            "\u092a\u0939\u0932\u0947 \u0905\u092a\u0928\u0940 AcoustID"
+                    + " \u0910\u092a\u094d\u0932\u093f\u0915\u0947\u0936\u0928 key"
+                    + " \u0921\u093e\u0932\u0947\u0902\u0964",
+            "Checked {0} file",
+            "{0} \u092b\u093c\u093e\u0907\u0932 \u091c\u093e\u0901\u091a\u0940 \u0917\u0908",
+            "Checked {0} files",
+            "{0} \u092b\u093c\u093e\u0907\u0932\u0947\u0902 \u091c\u093e\u0901\u091a\u0940"
+                    + " \u0917\u0908\u0902",
+            "{0} not really lossless",
+            "{0} \u0905\u0938\u0932 \u092e\u0947\u0902 \u0932\u0949\u0938\u0932\u0947\u0938"
+                    + " \u0928\u0939\u0940\u0902",
+            "{0} named by sound",
+            "{0} \u0915\u094b \u0906\u0935\u093e\u091c\u093c \u0938\u0947 \u0928\u093e\u092e"
+                    + " \u0926\u093f\u092f\u093e \u0917\u092f\u093e",
+            "AcoustID refused the key: {0}",
+            "AcoustID \u0928\u0947 key \u0905\u0938\u094d\u0935\u0940\u0915\u093e\u0930"
+                    + " \u0915\u0930 \u0926\u0940: {0}",
+            "{0} \u00b7 from \u2248{1} kbps",
+            "{0} \u00b7 \u2248{1} kbps \u0938\u0947 \u092c\u0928\u0940",
+            "{0} \u00b7 from a lossy file",
+            "{0} \u00b7 \u0932\u0949\u0938\u0940 \u092b\u093c\u093e\u0907\u0932 \u0938\u0947"
+                    + " \u092c\u0928\u0940",
+            "{0} \u00b7 maybe lossy",
+            "{0} \u00b7 \u0936\u093e\u092f\u0926 \u0932\u0949\u0938\u0940",
+            "{0} \u00b7 from {1}",
+            "{0} \u00b7 {1} \u0938\u0947 \u092c\u0928\u0940",
+            "{0} \u00b7 really {1}bit",
+            "{0} \u00b7 \u0905\u0938\u0932 \u092e\u0947\u0902 {1}bit",
         };
     }
 
@@ -9935,6 +10729,94 @@ final class Translations {
             "{0} zip untuk dibuka",
             "{0} \u00b7 {1} \u00b7 Looks like a song that played from another source",
             "{0} \u00b7 {1} \u00b7 Sepertinya lagu yang diputar dari sumber lain",
+            "Check lossless files",
+            "Periksa file lossless",
+            "FLAC and WAV files that play are checked for a lossy source",
+            "File FLAC dan WAV yang diputar diperiksa apakah berasal dari sumber lossy",
+            "Files are taken at their word",
+            "File diterima apa adanya",
+            "A file made from an MP3 keeps the MP3\u2019s cut-off, somewhere between 16 and 20 kHz."
+                + " A minute after a song starts, a few stretches of it are looked at. A fake shows"
+                + " as \u201cFLAC 16bit \u00b7 from \u2248128 kbps\u201d and is ranked as that MP3,"
+                + " and a hi-res file made from a CD as \u201cFLAC 24bit \u00b7 from 44.1"
+                + " kHz\u201d. A check can show a file looks lossy; it can\u2019t prove a file is"
+                + " genuine.",
+            "File yang dibuat dari MP3 mempertahankan batas frekuensi MP3, di antara 16 dan 20 kHz."
+                + " Satu menit setelah lagu dimulai, beberapa bagiannya diperiksa. File palsu"
+                + " ditampilkan sebagai \u201cFLAC 16bit \u00b7 dari \u2248128 kbps\u201d dan"
+                + " diperingkat sebagai MP3 tersebut, dan file hi-res yang dibuat dari CD sebagai"
+                + " \u201cFLAC 24bit \u00b7 dari 44.1 kHz\u201d. Pemeriksaan bisa menunjukkan bahwa"
+                + " file tampak lossy; pemeriksaan tidak bisa membuktikan bahwa file itu asli.",
+            "Check in the background",
+            "Periksa di latar belakang",
+            "Every lossless file in your music chats, up to 1 GB a day",
+            "Setiap file lossless di chat musik Anda, hingga 1 GB per hari",
+            "Only songs that play are checked",
+            "Hanya lagu yang diputar yang diperiksa",
+            "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                + " under Saved index. What\u2019s found is kept in the saved index and goes with"
+                + " it when you share it.",
+            "Sekitar 4 MB dari setiap file diunduh, mengikuti tombol Wi-Fi dan pengisian daya di"
+                    + " Indeks tersimpan. Hasilnya disimpan di indeks tersimpan dan ikut terbagikan"
+                    + " saat Anda membagikannya.",
+            "Name untagged files by sound",
+            "Beri nama file tanpa tag berdasarkan suara",
+            "Files without tags are looked up in AcoustID",
+            "File tanpa tag dicari di AcoustID",
+            "Untagged files keep the name from the file",
+            "File tanpa tag tetap memakai nama dari file",
+            "A fingerprint of the first two minutes of each untagged file, its length and your"
+                    + " AcoustID key are sent to AcoustID (acoustid.org), a free service run by the"
+                    + " MusicBrainz community. No audio is sent.",
+            "Sidik jari dua menit pertama setiap file tanpa tag, durasinya, dan kunci AcoustID Anda"
+                    + " dikirim ke AcoustID (acoustid.org), layanan gratis yang dijalankan oleh"
+                    + " komunitas MusicBrainz. Tidak ada audio yang dikirim.",
+            "Songs that play are looked up a minute later. Your other untagged files are gone"
+                + " through in the background, up to 500 a day, keeping to the Wi-Fi and charging"
+                + " switches under Saved index.",
+            "Lagu yang diputar dicari satu menit kemudian. File tanpa tag Anda yang lain diproses"
+                + " di latar belakang, hingga 500 per hari, mengikuti tombol Wi-Fi dan pengisian"
+                + " daya di Indeks tersimpan.",
+            "AcoustID key",
+            "Kunci AcoustID",
+            "Saved on this phone only",
+            "Hanya disimpan di ponsel ini",
+            "Needed to name files by sound",
+            "Diperlukan untuk memberi nama file berdasarkan suara",
+            "Enter",
+            "Masukkan",
+            "Sign in at acoustid.org, register an application (any name), and paste its API key"
+                    + " here. It\u2019s free.",
+            "Masuk di acoustid.org, daftarkan aplikasi (nama apa saja), lalu tempel kunci API-nya"
+                    + " di sini. Gratis.",
+            "AcoustID application key",
+            "Kunci aplikasi AcoustID",
+            "Get an AcoustID key \u2197",
+            "Dapatkan kunci AcoustID \u2197",
+            "That doesn\u2019t look like an AcoustID application key.",
+            "Itu tidak tampak seperti kunci aplikasi AcoustID.",
+            "Enter your AcoustID application key first.",
+            "Masukkan kunci aplikasi AcoustID Anda terlebih dahulu.",
+            "Checked {0} file",
+            "{0} file diperiksa",
+            "Checked {0} files",
+            "{0} file diperiksa",
+            "{0} not really lossless",
+            "{0} tidak benar-benar lossless",
+            "{0} named by sound",
+            "{0} dinamai berdasarkan suara",
+            "AcoustID refused the key: {0}",
+            "AcoustID menolak kunci: {0}",
+            "{0} \u00b7 from \u2248{1} kbps",
+            "{0} \u00b7 dari \u2248{1} kbps",
+            "{0} \u00b7 from a lossy file",
+            "{0} \u00b7 dari file lossy",
+            "{0} \u00b7 maybe lossy",
+            "{0} \u00b7 mungkin lossy",
+            "{0} \u00b7 from {1}",
+            "{0} \u00b7 dari {1}",
+            "{0} \u00b7 really {1}bit",
+            "{0} \u00b7 sebenarnya {1}bit",
         };
     }
 
@@ -11044,6 +11926,111 @@ final class Translations {
             "{0} \u00b7 {1} \u00b7 Looks like a song that played from another source",
             "{0} \u00b7 {1} \u00b7"
                 + " \u4ed6\u306e\u30bd\u30fc\u30b9\u304b\u3089\u518d\u751f\u3055\u308c\u305f\u66f2\u306e\u3088\u3046\u3067\u3059",
+            "Check lossless files",
+            "\u30ed\u30b9\u30ec\u30b9\u30d5\u30a1\u30a4\u30eb\u3092\u30c1\u30a7\u30c3\u30af",
+            "FLAC and WAV files that play are checked for a lossy source",
+            "\u518d\u751f\u3057\u305f FLAC \u3068 WAV"
+                + " \u30d5\u30a1\u30a4\u30eb\u304c\u30ed\u30c3\u30b7\u30fc\u97f3\u6e90\u7531\u6765\u304b\u3069\u3046\u304b\u3092\u30c1\u30a7\u30c3\u30af\u3057\u307e\u3059",
+            "Files are taken at their word",
+            "\u30d5\u30a1\u30a4\u30eb\u306e\u8868\u8a18\u3069\u304a\u308a\u306b\u6271\u3044\u307e\u3059",
+            "A file made from an MP3 keeps the MP3\u2019s cut-off, somewhere between 16 and 20 kHz."
+                + " A minute after a song starts, a few stretches of it are looked at. A fake shows"
+                + " as \u201cFLAC 16bit \u00b7 from \u2248128 kbps\u201d and is ranked as that MP3,"
+                + " and a hi-res file made from a CD as \u201cFLAC 24bit \u00b7 from 44.1"
+                + " kHz\u201d. A check can show a file looks lossy; it can\u2019t prove a file is"
+                + " genuine.",
+            "MP3 \u304b\u3089\u4f5c\u3089\u308c\u305f\u30d5\u30a1\u30a4\u30eb\u306b\u306f\u3001MP3"
+                + " \u306e\u30ab\u30c3\u30c8\u30aa\u30d5\uff0816\u301c20 kHz"
+                + " \u306e\u3069\u3053\u304b\uff09\u304c\u6b8b\u308a\u307e\u3059\u3002\u66f2\u306e\u518d\u751f\u958b\u59cb\u304b\u3089"
+                + " 1 \u5206\u5f8c\u306b\u3001\u3044\u304f\u3064\u304b\u306e\u533a\u9593\u3092\u8abf\u3079\u307e\u3059\u3002\u507d\u7269\u306f\u300cFLAC"
+                + " 16bit \u00b7 \u2248128 kbps"
+                + " \u7531\u6765\u300d\u3068\u8868\u793a\u3055\u308c\u3001\u305d\u306e MP3"
+                + " \u3068\u3057\u3066\u9806\u4f4d\u4ed8\u3051\u3055\u308c\u307e\u3059\u3002CD"
+                + " \u304b\u3089\u4f5c\u3089\u308c\u305f\u30cf\u30a4\u30ec\u30be\u30d5\u30a1\u30a4\u30eb\u306f\u300cFLAC"
+                + " 24bit \u00b7 44.1 kHz"
+                + " \u7531\u6765\u300d\u3068\u8868\u793a\u3055\u308c\u307e\u3059\u3002\u30c1\u30a7\u30c3\u30af\u3067\u30d5\u30a1\u30a4\u30eb\u304c\u30ed\u30c3\u30b7\u30fc\u3089\u3057\u3044\u3053\u3068\u306f\u793a\u305b\u307e\u3059\u304c\u3001\u672c\u7269\u3067\u3042\u308b\u3053\u3068\u306f\u8a3c\u660e\u3067\u304d\u307e\u305b\u3093\u3002",
+            "Check in the background",
+            "\u30d0\u30c3\u30af\u30b0\u30e9\u30a6\u30f3\u30c9\u3067\u30c1\u30a7\u30c3\u30af",
+            "Every lossless file in your music chats, up to 1 GB a day",
+            "\u97f3\u697d\u30c1\u30e3\u30c3\u30c8\u5185\u306e\u3059\u3079\u3066\u306e\u30ed\u30b9\u30ec\u30b9\u30d5\u30a1\u30a4\u30eb\uff081"
+                + " \u65e5\u6700\u5927 1 GB\uff09",
+            "Only songs that play are checked",
+            "\u518d\u751f\u3057\u305f\u66f2\u306e\u307f\u30c1\u30a7\u30c3\u30af\u3057\u307e\u3059",
+            "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                + " under Saved index. What\u2019s found is kept in the saved index and goes with"
+                + " it when you share it.",
+            "\u5404\u30d5\u30a1\u30a4\u30eb\u304b\u3089\u7d04 4 MB"
+                + " \u3092\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3057\u3001\u300c\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u300d\u306e"
+                + " Wi-Fi"
+                + " \u3068\u5145\u96fb\u306e\u30b9\u30a4\u30c3\u30c1\u306b\u5f93\u3044\u307e\u3059\u3002\u7d50\u679c\u306f\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306b\u4fdd\u5b58\u3055\u308c\u3001\u5171\u6709\u3059\u308b\u3068\u304d\u306b\u4e00\u7dd2\u306b\u5171\u6709\u3055\u308c\u307e\u3059\u3002",
+            "Name untagged files by sound",
+            "\u30bf\u30b0\u306e\u306a\u3044\u30d5\u30a1\u30a4\u30eb\u306b\u97f3\u3067\u540d\u524d\u3092\u4ed8\u3051\u308b",
+            "Files without tags are looked up in AcoustID",
+            "\u30bf\u30b0\u306e\u306a\u3044\u30d5\u30a1\u30a4\u30eb\u3092 AcoustID"
+                    + " \u3067\u691c\u7d22\u3057\u307e\u3059",
+            "Untagged files keep the name from the file",
+            "\u30bf\u30b0\u306e\u306a\u3044\u30d5\u30a1\u30a4\u30eb\u306f\u30d5\u30a1\u30a4\u30eb\u5185\u306e\u540d\u524d\u306e\u307e\u307e\u3067\u3059",
+            "A fingerprint of the first two minutes of each untagged file, its length and your"
+                    + " AcoustID key are sent to AcoustID (acoustid.org), a free service run by the"
+                    + " MusicBrainz community. No audio is sent.",
+            "\u30bf\u30b0\u306e\u306a\u3044\u5404\u30d5\u30a1\u30a4\u30eb\u306e\u6700\u521d\u306e 2"
+                + " \u5206\u9593\u306e\u30d5\u30a3\u30f3\u30ac\u30fc\u30d7\u30ea\u30f3\u30c8\u3001\u9577\u3055\u3001AcoustID"
+                + " \u30ad\u30fc\u304c"
+                + " AcoustID\uff08acoustid.org\uff09\u306b\u9001\u4fe1\u3055\u308c\u307e\u3059\u3002AcoustID"
+                + " \u306f MusicBrainz"
+                + " \u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u304c\u904b\u55b6\u3059\u308b\u7121\u6599\u30b5\u30fc\u30d3\u30b9\u3067\u3059\u3002\u97f3\u58f0\u306f\u9001\u4fe1\u3055\u308c\u307e\u305b\u3093\u3002",
+            "Songs that play are looked up a minute later. Your other untagged files are gone"
+                + " through in the background, up to 500 a day, keeping to the Wi-Fi and charging"
+                + " switches under Saved index.",
+            "\u518d\u751f\u3057\u305f\u66f2\u306f 1"
+                + " \u5206\u5f8c\u306b\u691c\u7d22\u3055\u308c\u307e\u3059\u3002\u305d\u306e\u4ed6\u306e\u30bf\u30b0\u306e\u306a\u3044\u30d5\u30a1\u30a4\u30eb\u306f\u30d0\u30c3\u30af\u30b0\u30e9\u30a6\u30f3\u30c9\u3067\u9806\u306b\u51e6\u7406\u3055\u308c\uff081"
+                + " \u65e5\u6700\u5927 500"
+                + " \u4ef6\uff09\u3001\u300c\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u300d\u306e"
+                + " Wi-Fi"
+                + " \u3068\u5145\u96fb\u306e\u30b9\u30a4\u30c3\u30c1\u306b\u5f93\u3044\u307e\u3059\u3002",
+            "AcoustID key",
+            "AcoustID \u30ad\u30fc",
+            "Saved on this phone only",
+            "\u3053\u306e\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u306b\u306e\u307f\u4fdd\u5b58",
+            "Needed to name files by sound",
+            "\u97f3\u3067\u30d5\u30a1\u30a4\u30eb\u306b\u540d\u524d\u3092\u4ed8\u3051\u308b\u306e\u306b\u5fc5\u8981",
+            "Enter",
+            "\u5165\u529b",
+            "Sign in at acoustid.org, register an application (any name), and paste its API key"
+                    + " here. It\u2019s free.",
+            "acoustid.org"
+                + " \u306b\u30ed\u30b0\u30a4\u30f3\u3057\u3066\u30a2\u30d7\u30ea\u30b1\u30fc\u30b7\u30e7\u30f3\u3092\u767b\u9332\u3057\uff08\u540d\u524d\u306f\u81ea\u7531\uff09\u3001\u305d\u306e"
+                + " API \u30ad\u30fc\u3092\u3053\u3053\u306b\u8cbc\u308a\u4ed8\u3051\u3066\u304f\u3060\u3055\u3044\u3002\u7121\u6599\u3067\u3059\u3002",
+            "AcoustID application key",
+            "AcoustID \u30a2\u30d7\u30ea\u30b1\u30fc\u30b7\u30e7\u30f3\u30ad\u30fc",
+            "Get an AcoustID key \u2197",
+            "AcoustID \u30ad\u30fc\u3092\u53d6\u5f97 \u2197",
+            "That doesn\u2019t look like an AcoustID application key.",
+            "AcoustID"
+                + " \u30a2\u30d7\u30ea\u30b1\u30fc\u30b7\u30e7\u30f3\u30ad\u30fc\u3067\u306f\u306a\u3044\u3088\u3046\u3067\u3059\u3002",
+            "Enter your AcoustID application key first.",
+            "\u5148\u306b AcoustID"
+                + " \u30a2\u30d7\u30ea\u30b1\u30fc\u30b7\u30e7\u30f3\u30ad\u30fc\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Checked {0} file",
+            "{0} \u4ef6\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u30c1\u30a7\u30c3\u30af\u3057\u307e\u3057\u305f",
+            "Checked {0} files",
+            "{0} \u4ef6\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u30c1\u30a7\u30c3\u30af\u3057\u307e\u3057\u305f",
+            "{0} not really lossless",
+            "{0} \u4ef6\u306f\u5b9f\u969b\u306b\u306f\u30ed\u30b9\u30ec\u30b9\u3067\u306f\u3042\u308a\u307e\u305b\u3093",
+            "{0} named by sound",
+            "{0} \u4ef6\u306b\u97f3\u3067\u540d\u524d\u3092\u4ed8\u3051\u307e\u3057\u305f",
+            "AcoustID refused the key: {0}",
+            "AcoustID \u304c\u30ad\u30fc\u3092\u62d2\u5426\u3057\u307e\u3057\u305f\uff1a{0}",
+            "{0} \u00b7 from \u2248{1} kbps",
+            "{0} \u00b7 \u2248{1} kbps \u7531\u6765",
+            "{0} \u00b7 from a lossy file",
+            "{0} \u00b7 \u30ed\u30c3\u30b7\u30fc\u7531\u6765",
+            "{0} \u00b7 maybe lossy",
+            "{0} \u00b7 \u30ed\u30c3\u30b7\u30fc\u304b\u3082",
+            "{0} \u00b7 from {1}",
+            "{0} \u00b7 {1} \u7531\u6765",
+            "{0} \u00b7 really {1}bit",
+            "{0} \u00b7 \u5b9f\u969b\u306f {1}bit",
         };
     }
 
@@ -12306,6 +13293,120 @@ final class Translations {
             "{0} \u00b7 {1} \u00b7 Looks like a song that played from another source",
             "{0} \u00b7 {1} \u00b7 \ub2e4\ub978 \uc18c\uc2a4\uc5d0\uc11c \uc7ac\uc0dd\ub41c"
                     + " \ub178\ub798 \uac19\uc544\uc694",
+            "Check lossless files",
+            "\ubb34\uc190\uc2e4 \ud30c\uc77c \ud655\uc778",
+            "FLAC and WAV files that play are checked for a lossy source",
+            "\uc7ac\uc0dd\ud558\ub294 FLAC \ubc0f WAV \ud30c\uc77c\uc774 \uc190\uc2e4 \uc555\ucd95"
+                    + " \uc6d0\ubcf8\uc5d0\uc11c \ub9cc\ub4e4\uc5b4\uc84c\ub294\uc9c0"
+                    + " \ud655\uc778\ud574\uc694",
+            "Files are taken at their word",
+            "\ud30c\uc77c \uc815\ubcf4\ub97c \uadf8\ub300\ub85c \ubbff\uc5b4\uc694",
+            "A file made from an MP3 keeps the MP3\u2019s cut-off, somewhere between 16 and 20 kHz."
+                + " A minute after a song starts, a few stretches of it are looked at. A fake shows"
+                + " as \u201cFLAC 16bit \u00b7 from \u2248128 kbps\u201d and is ranked as that MP3,"
+                + " and a hi-res file made from a CD as \u201cFLAC 24bit \u00b7 from 44.1"
+                + " kHz\u201d. A check can show a file looks lossy; it can\u2019t prove a file is"
+                + " genuine.",
+            "MP3\ub85c \ub9cc\ub4e0 \ud30c\uc77c\uc5d0\ub294 MP3\uc758 \ucc28\ub2e8"
+                + " \uc8fc\ud30c\uc218\uac00 16~20 kHz \uc0ac\uc774 \uc5b4\ub518\uac00\uc5d0"
+                + " \ub0a8\uc544 \uc788\uc5b4\uc694. \ub178\ub798\uac00 \uc2dc\uc791\ub418\uace0"
+                + " 1\ubd84 \ud6c4\uc5d0 \uba87 \uad6c\uac04\uc744 \uc0b4\ud3b4\ubd10\uc694."
+                + " \uac00\uc9dc\ub294 \u201cFLAC 16bit \u00b7 \u2248128 kbps\uc5d0\uc11c"
+                + " \ubcc0\ud658\u201d\uc73c\ub85c \ud45c\uc2dc\ub418\uace0 \uadf8 MP3\ub85c"
+                + " \ucde8\uae09\ub418\uc5b4 \uc21c\uc704\uac00 \uc815\ud574\uc9c0\uba70, CD\ub85c"
+                + " \ub9cc\ub4e0 \uace0\ud574\uc0c1\ub3c4 \ud30c\uc77c\uc740 \u201cFLAC 24bit"
+                + " \u00b7 44.1 kHz\uc5d0\uc11c \ubcc0\ud658\u201d\uc73c\ub85c"
+                + " \ud45c\uc2dc\ub3fc\uc694. \ud655\uc778\uc73c\ub85c \ud30c\uc77c\uc774"
+                + " \uc190\uc2e4 \uc555\ucd95\ucc98\ub7fc \ubcf4\uc778\ub2e4\ub294 \uac83\uc740"
+                + " \uc54c \uc218 \uc788\uc9c0\ub9cc, \uc9c4\uc9dc\uc784\uc744 \uc99d\uba85\ud560"
+                + " \uc218\ub294 \uc5c6\uc5b4\uc694.",
+            "Check in the background",
+            "\ubc31\uadf8\ub77c\uc6b4\ub4dc\uc5d0\uc11c \ud655\uc778",
+            "Every lossless file in your music chats, up to 1 GB a day",
+            "\uc74c\uc545 \ucc44\ud305\uc758 \ubaa8\ub4e0 \ubb34\uc190\uc2e4 \ud30c\uc77c,"
+                    + " \ud558\ub8e8 \ucd5c\ub300 1 GB",
+            "Only songs that play are checked",
+            "\uc7ac\uc0dd\ud558\ub294 \ub178\ub798\ub9cc \ud655\uc778\ud574\uc694",
+            "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                + " under Saved index. What\u2019s found is kept in the saved index and goes with"
+                + " it when you share it.",
+            "\ud30c\uc77c\ub9c8\ub2e4 \uc57d 4 MB\ub97c \ub2e4\uc6b4\ub85c\ub4dc\ud558\uba70,"
+                    + " \uc800\uc7a5\ub41c \uc0c9\uc778\uc758 Wi-Fi \ubc0f \ucda9\uc804"
+                    + " \uc2a4\uc704\uce58 \uc124\uc815\uc744 \ub530\ub77c\uc694. \ud655\uc778"
+                    + " \uacb0\uacfc\ub294 \uc800\uc7a5\ub41c \uc0c9\uc778\uc5d0"
+                    + " \ubcf4\uad00\ub418\uace0, \uc0c9\uc778\uc744 \uacf5\uc720\ud560 \ub54c"
+                    + " \ud568\uaed8 \uacf5\uc720\ub3fc\uc694.",
+            "Name untagged files by sound",
+            "\ud0dc\uadf8 \uc5c6\ub294 \ud30c\uc77c \uc18c\ub9ac\ub85c \uc774\ub984"
+                    + " \ubd99\uc774\uae30",
+            "Files without tags are looked up in AcoustID",
+            "\ud0dc\uadf8 \uc5c6\ub294 \ud30c\uc77c\uc744 AcoustID\uc5d0\uc11c \ucc3e\uc544\uc694",
+            "Untagged files keep the name from the file",
+            "\ud0dc\uadf8 \uc5c6\ub294 \ud30c\uc77c\uc740 \ud30c\uc77c\uc758 \uc774\ub984\uc744"
+                    + " \uadf8\ub300\ub85c \uc0ac\uc6a9\ud574\uc694",
+            "A fingerprint of the first two minutes of each untagged file, its length and your"
+                    + " AcoustID key are sent to AcoustID (acoustid.org), a free service run by the"
+                    + " MusicBrainz community. No audio is sent.",
+            "\ud0dc\uadf8 \uc5c6\ub294 \uac01 \ud30c\uc77c\uc758 \ucc98\uc74c 2\ubd84 \uc9c0\ubb38,"
+                + " \uae38\uc774, AcoustID \ud0a4\uac00 MusicBrainz"
+                + " \ucee4\ubba4\ub2c8\ud2f0\uc5d0\uc11c \uc6b4\uc601\ud558\ub294 \ubb34\ub8cc"
+                + " \uc11c\ube44\uc2a4\uc778 AcoustID(acoustid.org)\ub85c \uc804\uc1a1\ub3fc\uc694."
+                + " \uc624\ub514\uc624\ub294 \uc804\uc1a1\ub418\uc9c0 \uc54a\uc544\uc694.",
+            "Songs that play are looked up a minute later. Your other untagged files are gone"
+                + " through in the background, up to 500 a day, keeping to the Wi-Fi and charging"
+                + " switches under Saved index.",
+            "\uc7ac\uc0dd\ud558\ub294 \ub178\ub798\ub294 1\ubd84 \ud6c4\uc5d0 \ucc3e\uc544\uc694."
+                + " \ub098\uba38\uc9c0 \ud0dc\uadf8 \uc5c6\ub294 \ud30c\uc77c\uc740"
+                + " \ubc31\uadf8\ub77c\uc6b4\ub4dc\uc5d0\uc11c \ud558\ub8e8 \ucd5c\ub300"
+                + " 500\uac1c\uc529 \ucc98\ub9ac\ud558\uba70, \uc800\uc7a5\ub41c \uc0c9\uc778\uc758"
+                + " Wi-Fi \ubc0f \ucda9\uc804 \uc2a4\uc704\uce58 \uc124\uc815\uc744"
+                + " \ub530\ub77c\uc694.",
+            "AcoustID key",
+            "AcoustID \ud0a4",
+            "Saved on this phone only",
+            "\uc774 \ud734\ub300\uc804\ud654\uc5d0\ub9cc \uc800\uc7a5\ub3fc\uc694",
+            "Needed to name files by sound",
+            "\uc18c\ub9ac\ub85c \ud30c\uc77c \uc774\ub984\uc744 \ubd99\uc774\ub294 \ub370"
+                    + " \ud544\uc694\ud574\uc694",
+            "Enter",
+            "\uc785\ub825",
+            "Sign in at acoustid.org, register an application (any name), and paste its API key"
+                    + " here. It\u2019s free.",
+            "acoustid.org\uc5d0 \ub85c\uadf8\uc778\ud574\uc11c"
+                    + " \uc560\ud50c\ub9ac\ucf00\uc774\uc158\uc744"
+                    + " \ub4f1\ub85d\ud558\uace0(\uc774\ub984\uc740 \uc790\uc720), API \ud0a4\ub97c"
+                    + " \uc5ec\uae30\uc5d0 \ubd99\uc5ec \ub123\uc73c\uc138\uc694."
+                    + " \ubb34\ub8cc\uc608\uc694.",
+            "AcoustID application key",
+            "AcoustID \uc560\ud50c\ub9ac\ucf00\uc774\uc158 \ud0a4",
+            "Get an AcoustID key \u2197",
+            "AcoustID \ud0a4 \ubc1b\uae30 \u2197",
+            "That doesn\u2019t look like an AcoustID application key.",
+            "AcoustID \uc560\ud50c\ub9ac\ucf00\uc774\uc158 \ud0a4\uac00 \uc544\ub2cc \uac83"
+                    + " \uac19\uc544\uc694.",
+            "Enter your AcoustID application key first.",
+            "\uba3c\uc800 AcoustID \uc560\ud50c\ub9ac\ucf00\uc774\uc158 \ud0a4\ub97c"
+                    + " \uc785\ub825\ud558\uc138\uc694.",
+            "Checked {0} file",
+            "\ud30c\uc77c {0}\uac1c \ud655\uc778\ud568",
+            "Checked {0} files",
+            "\ud30c\uc77c {0}\uac1c \ud655\uc778\ud568",
+            "{0} not really lossless",
+            "{0}\uac1c\ub294 \uc2e4\uc81c \ubb34\uc190\uc2e4\uc774 \uc544\ub2d8",
+            "{0} named by sound",
+            "{0}\uac1c \uc18c\ub9ac\ub85c \uc774\ub984 \ubd99\uc784",
+            "AcoustID refused the key: {0}",
+            "AcoustID\uc5d0\uc11c \ud0a4\ub97c \uac70\ubd80\ud588\uc5b4\uc694: {0}",
+            "{0} \u00b7 from \u2248{1} kbps",
+            "{0} \u00b7 \u2248{1} kbps\uc5d0\uc11c \ubcc0\ud658",
+            "{0} \u00b7 from a lossy file",
+            "{0} \u00b7 \uc190\uc2e4 \uc555\ucd95\uc5d0\uc11c \ubcc0\ud658",
+            "{0} \u00b7 maybe lossy",
+            "{0} \u00b7 \uc190\uc2e4 \uc555\ucd95\uc77c \uc218 \uc788\uc74c",
+            "{0} \u00b7 from {1}",
+            "{0} \u00b7 {1}\uc5d0\uc11c \ubcc0\ud658",
+            "{0} \u00b7 really {1}bit",
+            "{0} \u00b7 \uc2e4\uc81c {1}bit",
         };
     }
 
@@ -13332,6 +14433,96 @@ final class Translations {
             "{0} zips para abrir",
             "{0} \u00b7 {1} \u00b7 Looks like a song that played from another source",
             "{0} \u00b7 {1} \u00b7 Parece uma m\u00fasica que tocou de outra fonte",
+            "Check lossless files",
+            "Verificar arquivos sem perdas",
+            "FLAC and WAV files that play are checked for a lossy source",
+            "Arquivos FLAC e WAV que tocam s\u00e3o verificados em busca de uma fonte com perdas",
+            "Files are taken at their word",
+            "Vale o que o arquivo informa",
+            "A file made from an MP3 keeps the MP3\u2019s cut-off, somewhere between 16 and 20 kHz."
+                + " A minute after a song starts, a few stretches of it are looked at. A fake shows"
+                + " as \u201cFLAC 16bit \u00b7 from \u2248128 kbps\u201d and is ranked as that MP3,"
+                + " and a hi-res file made from a CD as \u201cFLAC 24bit \u00b7 from 44.1"
+                + " kHz\u201d. A check can show a file looks lossy; it can\u2019t prove a file is"
+                + " genuine.",
+            "Um arquivo feito a partir de um MP3 mant\u00e9m o corte do MP3, em algum ponto entre"
+                + " 16 e 20 kHz. Um minuto depois que uma m\u00fasica come\u00e7a, alguns trechos"
+                + " dela s\u00e3o analisados. Um falso aparece como \u201cFLAC 16bit \u00b7 de"
+                + " \u2248128 kbps\u201d e \u00e9 classificado como esse MP3, e um arquivo hi-res"
+                + " feito a partir de um CD, como \u201cFLAC 24bit \u00b7 de 44.1 kHz\u201d. Uma"
+                + " verifica\u00e7\u00e3o pode mostrar que um arquivo parece com perdas; ela"
+                + " n\u00e3o pode provar que um arquivo \u00e9 aut\u00eantico.",
+            "Check in the background",
+            "Verificar em segundo plano",
+            "Every lossless file in your music chats, up to 1 GB a day",
+            "Todos os arquivos sem perdas dos seus chats de m\u00fasica, at\u00e9 1 GB por dia",
+            "Only songs that play are checked",
+            "S\u00f3 as m\u00fasicas que tocam s\u00e3o verificadas",
+            "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                + " under Saved index. What\u2019s found is kept in the saved index and goes with"
+                + " it when you share it.",
+            "Cerca de 4 MB de cada arquivo s\u00e3o baixados, respeitando as chaves de Wi-Fi e"
+                    + " carregamento do \u00cdndice salvo. O que for encontrado fica no \u00cdndice"
+                    + " salvo e vai junto quando voc\u00ea o compartilha.",
+            "Name untagged files by sound",
+            "Nomear arquivos sem tags pelo som",
+            "Files without tags are looked up in AcoustID",
+            "Arquivos sem tags s\u00e3o procurados no AcoustID",
+            "Untagged files keep the name from the file",
+            "Arquivos sem tags mant\u00eam o nome do arquivo",
+            "A fingerprint of the first two minutes of each untagged file, its length and your"
+                    + " AcoustID key are sent to AcoustID (acoustid.org), a free service run by the"
+                    + " MusicBrainz community. No audio is sent.",
+            "Uma impress\u00e3o digital dos dois primeiros minutos de cada arquivo sem tags, a"
+                + " dura\u00e7\u00e3o dele e sua chave do AcoustID s\u00e3o enviadas ao AcoustID"
+                + " (acoustid.org), um servi\u00e7o gratuito mantido pela comunidade do"
+                + " MusicBrainz. Nenhum \u00e1udio \u00e9 enviado.",
+            "Songs that play are looked up a minute later. Your other untagged files are gone"
+                + " through in the background, up to 500 a day, keeping to the Wi-Fi and charging"
+                + " switches under Saved index.",
+            "As m\u00fasicas que tocam s\u00e3o procuradas um minuto depois. Seus outros arquivos"
+                    + " sem tags s\u00e3o analisados em segundo plano, at\u00e9 500 por dia,"
+                    + " respeitando as chaves de Wi-Fi e carregamento do \u00cdndice salvo.",
+            "AcoustID key",
+            "Chave do AcoustID",
+            "Saved on this phone only",
+            "Salva s\u00f3 neste celular",
+            "Needed to name files by sound",
+            "Necess\u00e1ria para nomear arquivos pelo som",
+            "Enter",
+            "Inserir",
+            "Sign in at acoustid.org, register an application (any name), and paste its API key"
+                    + " here. It\u2019s free.",
+            "Entre em acoustid.org, registre um aplicativo (qualquer nome) e cole a chave de API"
+                    + " dele aqui. \u00c9 gr\u00e1tis.",
+            "AcoustID application key",
+            "Chave de aplicativo do AcoustID",
+            "Get an AcoustID key \u2197",
+            "Obtenha uma chave do AcoustID \u2197",
+            "That doesn\u2019t look like an AcoustID application key.",
+            "Isso n\u00e3o parece uma chave de aplicativo do AcoustID.",
+            "Enter your AcoustID application key first.",
+            "Insira primeiro sua chave de aplicativo do AcoustID.",
+            "Checked {0} file",
+            "{0} arquivo verificado",
+            "Checked {0} files",
+            "{0} arquivos verificados",
+            "{0} not really lossless",
+            "{0} n\u00e3o s\u00e3o realmente sem perdas",
+            "{0} named by sound",
+            "{0} nomeados pelo som",
+            "AcoustID refused the key: {0}",
+            "O AcoustID recusou a chave: {0}",
+            "{0} \u00b7 from \u2248{1} kbps",
+            "{0} \u00b7 de \u2248{1} kbps",
+            "{0} \u00b7 from a lossy file",
+            "{0} \u00b7 de arquivo com perdas",
+            "{0} \u00b7 maybe lossy",
+            "{0} \u00b7 talvez com perdas",
+            "{0} \u00b7 from {1}",
+            "{0} \u00b7 de {1}",
+            "{0} \u00b7 really {1}bit",
+            "{0} \u00b7 na verdade {1}bit",
         };
     }
 
@@ -15487,6 +16678,192 @@ final class Translations {
                     + " \u0438\u0433\u0440\u0430\u043b\u0430 \u0438\u0437"
                     + " \u0434\u0440\u0443\u0433\u043e\u0433\u043e"
                     + " \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u0430",
+            "Check lossless files",
+            "\u041f\u0440\u043e\u0432\u0435\u0440\u044f\u0442\u044c \u0444\u0430\u0439\u043b\u044b"
+                    + " \u0431\u0435\u0437 \u043f\u043e\u0442\u0435\u0440\u044c",
+            "FLAC and WAV files that play are checked for a lossy source",
+            "\u0412\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u043c\u044b\u0435"
+                + " \u0444\u0430\u0439\u043b\u044b FLAC \u0438 WAV"
+                + " \u043f\u0440\u043e\u0432\u0435\u0440\u044f\u044e\u0442\u0441\u044f \u043d\u0430"
+                + " \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a \u0441"
+                + " \u043f\u043e\u0442\u0435\u0440\u044f\u043c\u0438",
+            "Files are taken at their word",
+            "\u0424\u0430\u0439\u043b\u0430\u043c \u0432\u0435\u0440\u044f\u0442 \u043d\u0430"
+                    + " \u0441\u043b\u043e\u0432\u043e",
+            "A file made from an MP3 keeps the MP3\u2019s cut-off, somewhere between 16 and 20 kHz."
+                + " A minute after a song starts, a few stretches of it are looked at. A fake shows"
+                + " as \u201cFLAC 16bit \u00b7 from \u2248128 kbps\u201d and is ranked as that MP3,"
+                + " and a hi-res file made from a CD as \u201cFLAC 24bit \u00b7 from 44.1"
+                + " kHz\u201d. A check can show a file looks lossy; it can\u2019t prove a file is"
+                + " genuine.",
+            "\u0424\u0430\u0439\u043b, \u0441\u0434\u0435\u043b\u0430\u043d\u043d\u044b\u0439"
+                + " \u0438\u0437 MP3, \u0441\u043e\u0445\u0440\u0430\u043d\u044f\u0435\u0442"
+                + " \u0441\u0440\u0435\u0437 \u0447\u0430\u0441\u0442\u043e\u0442 MP3"
+                + " \u0433\u0434\u0435-\u0442\u043e \u043c\u0435\u0436\u0434\u0443 16 \u0438 20"
+                + " kHz. \u0427\u0435\u0440\u0435\u0437 \u043c\u0438\u043d\u0443\u0442\u0443"
+                + " \u043f\u043e\u0441\u043b\u0435 \u043d\u0430\u0447\u0430\u043b\u0430"
+                + " \u043f\u0435\u0441\u043d\u0438"
+                + " \u0430\u043d\u0430\u043b\u0438\u0437\u0438\u0440\u0443\u044e\u0442\u0441\u044f"
+                + " \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u043e \u0435\u0451"
+                + " \u0444\u0440\u0430\u0433\u043c\u0435\u043d\u0442\u043e\u0432."
+                + " \u041f\u043e\u0434\u0434\u0435\u043b\u043a\u0430"
+                + " \u043e\u0442\u043e\u0431\u0440\u0430\u0436\u0430\u0435\u0442\u0441\u044f"
+                + " \u043a\u0430\u043a \u00abFLAC 16bit \u00b7 \u0438\u0437 \u2248128 kbps\u00bb"
+                + " \u0438 \u0440\u0430\u043d\u0436\u0438\u0440\u0443\u0435\u0442\u0441\u044f"
+                + " \u043a\u0430\u043a \u0442\u043e\u0442 MP3, \u0430"
+                + " hi-res-\u0444\u0430\u0439\u043b,"
+                + " \u0441\u0434\u0435\u043b\u0430\u043d\u043d\u044b\u0439 \u0438\u0437 CD, \u2014"
+                + " \u043a\u0430\u043a \u00abFLAC 24bit \u00b7 \u0438\u0437 44.1 kHz\u00bb."
+                + " \u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 \u043c\u043e\u0436\u0435\u0442"
+                + " \u043f\u043e\u043a\u0430\u0437\u0430\u0442\u044c, \u0447\u0442\u043e"
+                + " \u0444\u0430\u0439\u043b \u043f\u043e\u0445\u043e\u0436 \u043d\u0430"
+                + " \u0444\u0430\u0439\u043b \u0441"
+                + " \u043f\u043e\u0442\u0435\u0440\u044f\u043c\u0438, \u043d\u043e \u043d\u0435"
+                + " \u043c\u043e\u0436\u0435\u0442"
+                + " \u0434\u043e\u043a\u0430\u0437\u0430\u0442\u044c, \u0447\u0442\u043e"
+                + " \u0444\u0430\u0439\u043b"
+                + " \u043f\u043e\u0434\u043b\u0438\u043d\u043d\u044b\u0439.",
+            "Check in the background",
+            "\u041f\u0440\u043e\u0432\u0435\u0440\u044f\u0442\u044c \u0432"
+                    + " \u0444\u043e\u043d\u0435",
+            "Every lossless file in your music chats, up to 1 GB a day",
+            "\u0412\u0441\u0435 \u0444\u0430\u0439\u043b\u044b \u0431\u0435\u0437"
+                    + " \u043f\u043e\u0442\u0435\u0440\u044c \u0432"
+                    + " \u043c\u0443\u0437\u044b\u043a\u0430\u043b\u044c\u043d\u044b\u0445"
+                    + " \u0447\u0430\u0442\u0430\u0445, \u0434\u043e 1 GB \u0432"
+                    + " \u0434\u0435\u043d\u044c",
+            "Only songs that play are checked",
+            "\u041f\u0440\u043e\u0432\u0435\u0440\u044f\u044e\u0442\u0441\u044f"
+                + " \u0442\u043e\u043b\u044c\u043a\u043e"
+                + " \u0432\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u043c\u044b\u0435"
+                + " \u043f\u0435\u0441\u043d\u0438",
+            "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                + " under Saved index. What\u2019s found is kept in the saved index and goes with"
+                + " it when you share it.",
+            "\u0421 \u043a\u0430\u0436\u0434\u043e\u0433\u043e \u0444\u0430\u0439\u043b\u0430"
+                + " \u0437\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u0442\u0441\u044f"
+                + " \u043e\u043a\u043e\u043b\u043e 4 MB \u0441 \u0443\u0447\u0451\u0442\u043e\u043c"
+                + " \u043f\u0435\u0440\u0435\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u0435\u0439"
+                + " Wi-Fi \u0438 \u0437\u0430\u0440\u044f\u0434\u043a\u0438 \u0432"
+                + " \u0440\u0430\u0437\u0434\u0435\u043b\u0435"
+                + " \u00ab\u0421\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
+                + " \u0438\u043d\u0434\u0435\u043a\u0441\u00bb."
+                + " \u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b"
+                + " \u0445\u0440\u0430\u043d\u044f\u0442\u0441\u044f \u0432"
+                + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u043e\u043c"
+                + " \u0438\u043d\u0434\u0435\u043a\u0441\u0435 \u0438"
+                + " \u043f\u0435\u0440\u0435\u0434\u0430\u044e\u0442\u0441\u044f"
+                + " \u0432\u043c\u0435\u0441\u0442\u0435 \u0441 \u043d\u0438\u043c,"
+                + " \u043a\u043e\u0433\u0434\u0430 \u0432\u044b \u0438\u043c"
+                + " \u0434\u0435\u043b\u0438\u0442\u0435\u0441\u044c.",
+            "Name untagged files by sound",
+            "\u041d\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0444\u0430\u0439\u043b\u044b"
+                    + " \u0431\u0435\u0437 \u0442\u0435\u0433\u043e\u0432 \u043f\u043e"
+                    + " \u0437\u0432\u0443\u0447\u0430\u043d\u0438\u044e",
+            "Files without tags are looked up in AcoustID",
+            "\u0424\u0430\u0439\u043b\u044b \u0431\u0435\u0437 \u0442\u0435\u0433\u043e\u0432"
+                    + " \u0438\u0449\u0443\u0442\u0441\u044f \u0432 AcoustID",
+            "Untagged files keep the name from the file",
+            "\u0424\u0430\u0439\u043b\u044b \u0431\u0435\u0437 \u0442\u0435\u0433\u043e\u0432"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u044f\u044e\u0442 \u0438\u043c\u044f"
+                    + " \u0438\u0437 \u0444\u0430\u0439\u043b\u0430",
+            "A fingerprint of the first two minutes of each untagged file, its length and your"
+                    + " AcoustID key are sent to AcoustID (acoustid.org), a free service run by the"
+                    + " MusicBrainz community. No audio is sent.",
+            "\u041e\u0442\u043f\u0435\u0447\u0430\u0442\u043e\u043a"
+                + " \u043f\u0435\u0440\u0432\u044b\u0445 \u0434\u0432\u0443\u0445"
+                + " \u043c\u0438\u043d\u0443\u0442 \u043a\u0430\u0436\u0434\u043e\u0433\u043e"
+                + " \u0444\u0430\u0439\u043b\u0430 \u0431\u0435\u0437"
+                + " \u0442\u0435\u0433\u043e\u0432, \u0435\u0433\u043e"
+                + " \u0434\u043b\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u0438"
+                + " \u0432\u0430\u0448 \u043a\u043b\u044e\u0447 AcoustID"
+                + " \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u044e\u0442\u0441\u044f \u0432"
+                + " AcoustID (acoustid.org) \u2014"
+                + " \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u044b\u0439"
+                + " \u0441\u0435\u0440\u0432\u0438\u0441"
+                + " \u0441\u043e\u043e\u0431\u0449\u0435\u0441\u0442\u0432\u0430 MusicBrainz."
+                + " \u0410\u0443\u0434\u0438\u043e \u043d\u0435"
+                + " \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u0442\u0441\u044f.",
+            "Songs that play are looked up a minute later. Your other untagged files are gone"
+                + " through in the background, up to 500 a day, keeping to the Wi-Fi and charging"
+                + " switches under Saved index.",
+            "\u0412\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u043c\u044b\u0435"
+                + " \u043f\u0435\u0441\u043d\u0438 \u0438\u0449\u0443\u0442\u0441\u044f"
+                + " \u0447\u0435\u0440\u0435\u0437 \u043c\u0438\u043d\u0443\u0442\u0443."
+                + " \u041e\u0441\u0442\u0430\u043b\u044c\u043d\u044b\u0435"
+                + " \u0444\u0430\u0439\u043b\u044b \u0431\u0435\u0437"
+                + " \u0442\u0435\u0433\u043e\u0432"
+                + " \u043e\u0431\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u044e\u0442\u0441\u044f"
+                + " \u0432 \u0444\u043e\u043d\u0435, \u0434\u043e 500 \u0432"
+                + " \u0434\u0435\u043d\u044c, \u0441 \u0443\u0447\u0451\u0442\u043e\u043c"
+                + " \u043f\u0435\u0440\u0435\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u0435\u0439"
+                + " Wi-Fi \u0438 \u0437\u0430\u0440\u044f\u0434\u043a\u0438 \u0432"
+                + " \u0440\u0430\u0437\u0434\u0435\u043b\u0435"
+                + " \u00ab\u0421\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
+                + " \u0438\u043d\u0434\u0435\u043a\u0441\u00bb.",
+            "AcoustID key",
+            "\u041a\u043b\u044e\u0447 AcoustID",
+            "Saved on this phone only",
+            "\u0425\u0440\u0430\u043d\u0438\u0442\u0441\u044f \u0442\u043e\u043b\u044c\u043a\u043e"
+                    + " \u043d\u0430 \u044d\u0442\u043e\u043c"
+                    + " \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0435",
+            "Needed to name files by sound",
+            "\u041d\u0443\u0436\u0435\u043d, \u0447\u0442\u043e\u0431\u044b"
+                + " \u043d\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0444\u0430\u0439\u043b\u044b"
+                + " \u043f\u043e \u0437\u0432\u0443\u0447\u0430\u043d\u0438\u044e",
+            "Enter",
+            "\u0412\u0432\u0435\u0441\u0442\u0438",
+            "Sign in at acoustid.org, register an application (any name), and paste its API key"
+                    + " here. It\u2019s free.",
+            "\u0412\u043e\u0439\u0434\u0438\u0442\u0435 \u043d\u0430 acoustid.org,"
+                + " \u0437\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u0443\u0439\u0442\u0435"
+                + " \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435 (\u0441"
+                + " \u043b\u044e\u0431\u044b\u043c"
+                + " \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435\u043c) \u0438"
+                + " \u0432\u0441\u0442\u0430\u0432\u044c\u0442\u0435 \u0441\u044e\u0434\u0430"
+                + " \u0435\u0433\u043e API-\u043a\u043b\u044e\u0447. \u042d\u0442\u043e"
+                + " \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e.",
+            "AcoustID application key",
+            "\u041a\u043b\u044e\u0447 \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f"
+                    + " AcoustID",
+            "Get an AcoustID key \u2197",
+            "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u043a\u043b\u044e\u0447 AcoustID"
+                    + " \u2197",
+            "That doesn\u2019t look like an AcoustID application key.",
+            "\u042d\u0442\u043e \u043d\u0435 \u043f\u043e\u0445\u043e\u0436\u0435 \u043d\u0430"
+                    + " \u043a\u043b\u044e\u0447"
+                    + " \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f AcoustID.",
+            "Enter your AcoustID application key first.",
+            "\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u0432\u0432\u0435\u0434\u0438\u0442\u0435"
+                    + " \u043a\u043b\u044e\u0447"
+                    + " \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f AcoustID.",
+            "Checked {0} file",
+            "\u041f\u0440\u043e\u0432\u0435\u0440\u0435\u043d\u043e"
+                    + " \u0444\u0430\u0439\u043b\u043e\u0432: {0}",
+            "Checked {0} files",
+            "\u041f\u0440\u043e\u0432\u0435\u0440\u0435\u043d\u043e"
+                    + " \u0444\u0430\u0439\u043b\u043e\u0432: {0}",
+            "{0} not really lossless",
+            "\u043d\u0430 \u0434\u0435\u043b\u0435 \u043d\u0435 \u0431\u0435\u0437"
+                    + " \u043f\u043e\u0442\u0435\u0440\u044c: {0}",
+            "{0} named by sound",
+            "\u043d\u0430\u0437\u0432\u0430\u043d\u043e \u043f\u043e"
+                    + " \u0437\u0432\u0443\u0447\u0430\u043d\u0438\u044e: {0}",
+            "AcoustID refused the key: {0}",
+            "AcoustID \u043e\u0442\u043a\u043b\u043e\u043d\u0438\u043b \u043a\u043b\u044e\u0447:"
+                    + " {0}",
+            "{0} \u00b7 from \u2248{1} kbps",
+            "{0} \u00b7 \u0438\u0437 \u2248{1} kbps",
+            "{0} \u00b7 from a lossy file",
+            "{0} \u00b7 \u0438\u0437 \u0444\u0430\u0439\u043b\u0430 \u0441"
+                    + " \u043f\u043e\u0442\u0435\u0440\u044f\u043c\u0438",
+            "{0} \u00b7 maybe lossy",
+            "{0} \u00b7 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e, \u0441"
+                    + " \u043f\u043e\u0442\u0435\u0440\u044f\u043c\u0438",
+            "{0} \u00b7 from {1}",
+            "{0} \u00b7 \u0438\u0437 {1}",
+            "{0} \u00b7 really {1}bit",
+            "{0} \u00b7 \u043d\u0430 \u0434\u0435\u043b\u0435 {1}bit",
         };
     }
 
@@ -16566,6 +17943,103 @@ final class Translations {
             "{0} \u00b7 {1} \u00b7 Looks like a song that played from another source",
             "{0} \u00b7 {1} \u00b7 Ba\u015fka bir kaynaktan \u00e7alm\u0131\u015f bir"
                     + " \u015fark\u0131ya benziyor",
+            "Check lossless files",
+            "Kay\u0131ps\u0131z dosyalar\u0131 kontrol et",
+            "FLAC and WAV files that play are checked for a lossy source",
+            "\u00c7al\u0131nan FLAC ve WAV dosyalar\u0131n\u0131n kay\u0131pl\u0131 bir kaynaktan"
+                    + " gelip gelmedi\u011fi kontrol edilir",
+            "Files are taken at their word",
+            "Dosyalar\u0131n beyan\u0131na g\u00fcvenilir",
+            "A file made from an MP3 keeps the MP3\u2019s cut-off, somewhere between 16 and 20 kHz."
+                + " A minute after a song starts, a few stretches of it are looked at. A fake shows"
+                + " as \u201cFLAC 16bit \u00b7 from \u2248128 kbps\u201d and is ranked as that MP3,"
+                + " and a hi-res file made from a CD as \u201cFLAC 24bit \u00b7 from 44.1"
+                + " kHz\u201d. A check can show a file looks lossy; it can\u2019t prove a file is"
+                + " genuine.",
+            "MP3\u2019ten yap\u0131lan bir dosya, MP3\u2019\u00fcn 16 ile 20 kHz aras\u0131nda bir"
+                + " yerdeki kesimini korur. Bir \u015fark\u0131 ba\u015flad\u0131ktan bir dakika"
+                + " sonra \u015fark\u0131n\u0131n birka\u00e7 b\u00f6l\u00fcm\u00fcne"
+                + " bak\u0131l\u0131r. Sahte bir dosya \u201cFLAC 16bit \u00b7 kaynak \u2248128"
+                + " kbps\u201d olarak g\u00f6sterilir ve o MP3 gibi s\u0131ralan\u0131r;"
+                + " CD\u2019den yap\u0131lan hi-res bir dosya da \u201cFLAC 24bit \u00b7 kaynak"
+                + " 44.1 kHz\u201d olarak g\u00f6sterilir. Bir kontrol, bir dosyan\u0131n"
+                + " kay\u0131pl\u0131 g\u00f6r\u00fcnd\u00fc\u011f\u00fcn\u00fc g\u00f6sterebilir;"
+                + " bir dosyan\u0131n ger\u00e7ek oldu\u011funu kan\u0131tlayamaz.",
+            "Check in the background",
+            "Arka planda kontrol et",
+            "Every lossless file in your music chats, up to 1 GB a day",
+            "M\u00fczik sohbetlerinizdeki t\u00fcm kay\u0131ps\u0131z dosyalar, g\u00fcnde en fazla"
+                    + " 1 GB",
+            "Only songs that play are checked",
+            "Yaln\u0131zca \u00e7al\u0131nan \u015fark\u0131lar kontrol edilir",
+            "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                + " under Saved index. What\u2019s found is kept in the saved index and goes with"
+                + " it when you share it.",
+            "Kay\u0131tl\u0131 dizin b\u00f6l\u00fcm\u00fcndeki Wi-Fi ve \u015farj"
+                + " anahtarlar\u0131na uyularak her dosyan\u0131n yakla\u015f\u0131k 4"
+                + " MB\u2019\u0131 indirilir. Bulunanlar kay\u0131tl\u0131 dizinde saklan\u0131r ve"
+                + " onu payla\u015ft\u0131\u011f\u0131n\u0131zda onunla birlikte gider.",
+            "Name untagged files by sound",
+            "Etiketsiz dosyalar\u0131 sese g\u00f6re adland\u0131r",
+            "Files without tags are looked up in AcoustID",
+            "Etiketsiz dosyalar AcoustID\u2019de aran\u0131r",
+            "Untagged files keep the name from the file",
+            "Etiketsiz dosyalar dosyadaki ad\u0131 korur",
+            "A fingerprint of the first two minutes of each untagged file, its length and your"
+                    + " AcoustID key are sent to AcoustID (acoustid.org), a free service run by the"
+                    + " MusicBrainz community. No audio is sent.",
+            "Her etiketsiz dosyan\u0131n ilk iki dakikas\u0131n\u0131n parmak izi, uzunlu\u011fu ve"
+                    + " AcoustID anahtar\u0131n\u0131z, MusicBrainz toplulu\u011funun"
+                    + " y\u00fcr\u00fctt\u00fc\u011f\u00fc \u00fccretsiz bir hizmet olan"
+                    + " AcoustID\u2019ye (acoustid.org) g\u00f6nderilir. Ses g\u00f6nderilmez.",
+            "Songs that play are looked up a minute later. Your other untagged files are gone"
+                + " through in the background, up to 500 a day, keeping to the Wi-Fi and charging"
+                + " switches under Saved index.",
+            "\u00c7al\u0131nan \u015fark\u0131lar bir dakika sonra aran\u0131r. Di\u011fer"
+                + " etiketsiz dosyalar\u0131n\u0131z, Kay\u0131tl\u0131 dizin"
+                + " b\u00f6l\u00fcm\u00fcndeki Wi-Fi ve \u015farj anahtarlar\u0131na uyularak arka"
+                + " planda g\u00fcnde en fazla 500 tane i\u015flenir.",
+            "AcoustID key",
+            "AcoustID anahtar\u0131",
+            "Saved on this phone only",
+            "Yaln\u0131zca bu telefonda kaydedilir",
+            "Needed to name files by sound",
+            "Dosyalar\u0131 sese g\u00f6re adland\u0131rmak i\u00e7in gerekli",
+            "Enter",
+            "Gir",
+            "Sign in at acoustid.org, register an application (any name), and paste its API key"
+                    + " here. It\u2019s free.",
+            "acoustid.org\u2019da giri\u015f yap\u0131n, bir uygulama kaydedin (herhangi bir adla)"
+                    + " ve API anahtar\u0131n\u0131 buraya yap\u0131\u015ft\u0131r\u0131n."
+                    + " \u00dccretsizdir.",
+            "AcoustID application key",
+            "AcoustID uygulama anahtar\u0131",
+            "Get an AcoustID key \u2197",
+            "AcoustID anahtar\u0131 al\u0131n \u2197",
+            "That doesn\u2019t look like an AcoustID application key.",
+            "Bu bir AcoustID uygulama anahtar\u0131na benzemiyor.",
+            "Enter your AcoustID application key first.",
+            "\u00d6nce AcoustID uygulama anahtar\u0131n\u0131z\u0131 girin.",
+            "Checked {0} file",
+            "{0} dosya kontrol edildi",
+            "Checked {0} files",
+            "{0} dosya kontrol edildi",
+            "{0} not really lossless",
+            "{0} ger\u00e7ekte kay\u0131ps\u0131z de\u011fil",
+            "{0} named by sound",
+            "{0} sese g\u00f6re adland\u0131r\u0131ld\u0131",
+            "AcoustID refused the key: {0}",
+            "AcoustID anahtar\u0131 reddetti: {0}",
+            "{0} \u00b7 from \u2248{1} kbps",
+            "{0} \u00b7 kaynak \u2248{1} kbps",
+            "{0} \u00b7 from a lossy file",
+            "{0} \u00b7 kay\u0131pl\u0131 dosyadan",
+            "{0} \u00b7 maybe lossy",
+            "{0} \u00b7 kay\u0131pl\u0131 olabilir",
+            "{0} \u00b7 from {1}",
+            "{0} \u00b7 kaynak {1}",
+            "{0} \u00b7 really {1}bit",
+            "{0} \u00b7 asl\u0131nda {1}bit",
         };
     }
 
@@ -18496,6 +19970,186 @@ final class Translations {
             "{0} \u00b7 {1} \u00b7 \u0644\u06af\u062a\u0627 \u06c1\u06d2 \u06cc\u06c1"
                     + " \u06af\u0627\u0646\u0627 \u06a9\u0633\u06cc \u062f\u0648\u0633\u0631\u06d2"
                     + " \u0630\u0631\u06cc\u0639\u06d2 \u0633\u06d2 \u0686\u0644\u0627",
+            "Check lossless files",
+            "\u0644\u0627\u0633 \u0644\u06cc\u0633 \u0641\u0627\u0626\u0644\u06cc\u06ba"
+                    + " \u062c\u0627\u0646\u0686\u06cc\u06ba",
+            "FLAC and WAV files that play are checked for a lossy source",
+            "\u0686\u0644\u0646\u06d2 \u0648\u0627\u0644\u06cc FLAC \u0627\u0648\u0631 WAV"
+                    + " \u0641\u0627\u0626\u0644\u0648\u06ba \u06a9\u0648 \u0644\u0627\u0633\u06cc"
+                    + " \u0630\u0631\u06cc\u0639\u06d2 \u06a9\u06d2 \u0644\u06cc\u06d2"
+                    + " \u062c\u0627\u0646\u0686\u0627 \u062c\u0627\u062a\u0627 \u06c1\u06d2",
+            "Files are taken at their word",
+            "\u0641\u0627\u0626\u0644\u0648\u06ba \u06a9\u0648 \u062c\u06cc\u0633\u0627"
+                    + " \u0648\u06c1 \u0628\u062a\u0627\u062a\u06cc \u06c1\u06cc\u06ba"
+                    + " \u0648\u06cc\u0633\u0627 \u06c1\u06cc \u0645\u0627\u0646\u0627"
+                    + " \u062c\u0627\u062a\u0627 \u06c1\u06d2",
+            "A file made from an MP3 keeps the MP3\u2019s cut-off, somewhere between 16 and 20 kHz."
+                + " A minute after a song starts, a few stretches of it are looked at. A fake shows"
+                + " as \u201cFLAC 16bit \u00b7 from \u2248128 kbps\u201d and is ranked as that MP3,"
+                + " and a hi-res file made from a CD as \u201cFLAC 24bit \u00b7 from 44.1"
+                + " kHz\u201d. A check can show a file looks lossy; it can\u2019t prove a file is"
+                + " genuine.",
+            "MP3 \u0633\u06d2 \u0628\u0646\u06cc \u0641\u0627\u0626\u0644 \u0645\u06cc\u06ba MP3"
+                + " \u06a9\u0627 \u06a9\u0679 \u0622\u0641 \u0628\u0631\u0642\u0631\u0627\u0631"
+                + " \u0631\u06c1\u062a\u0627 \u06c1\u06d2\u060c \u062c\u0648 16 \u0627\u0648\u0631"
+                + " 20 kHz \u06a9\u06d2 \u062f\u0631\u0645\u06cc\u0627\u0646"
+                + " \u06a9\u06c1\u06cc\u06ba \u06c1\u0648\u062a\u0627 \u06c1\u06d2\u06d4"
+                + " \u06af\u0627\u0646\u0627 \u0634\u0631\u0648\u0639 \u06c1\u0648\u0646\u06d2"
+                + " \u06a9\u06d2 \u0627\u06cc\u06a9 \u0645\u0646\u0679 \u0628\u0639\u062f"
+                + " \u0627\u0633 \u06a9\u06d2 \u0686\u0646\u062f \u062d\u0635\u06d2"
+                + " \u062f\u06cc\u06a9\u06be\u06d2 \u062c\u0627\u062a\u06d2"
+                + " \u06c1\u06cc\u06ba\u06d4 \u0646\u0642\u0644\u06cc \u0641\u0627\u0626\u0644"
+                + " \u201cFLAC 16bit \u00b7 \u2248128 kbps \u0633\u06d2\u201d \u06a9\u06d2"
+                + " \u0637\u0648\u0631 \u067e\u0631 \u062f\u06a9\u06be\u062a\u06cc \u06c1\u06d2"
+                + " \u0627\u0648\u0631 \u0627\u0633\u06d2 \u0627\u0633\u06cc MP3 \u06a9\u06cc"
+                + " \u0637\u0631\u062d \u062f\u0631\u062c\u06c1 \u062f\u06cc\u0627"
+                + " \u062c\u0627\u062a\u0627 \u06c1\u06d2\u060c \u0627\u0648\u0631 CD \u0633\u06d2"
+                + " \u0628\u0646\u06cc \u06c1\u0627\u0626\u06cc \u0631\u06cc\u0632"
+                + " \u0641\u0627\u0626\u0644 \u201cFLAC 24bit \u00b7 44.1 kHz \u0633\u06d2\u201d"
+                + " \u06a9\u06d2 \u0637\u0648\u0631 \u067e\u0631\u06d4 \u062c\u0627\u0646\u0686"
+                + " \u06cc\u06c1 \u062f\u06a9\u06be\u0627 \u0633\u06a9\u062a\u06cc \u06c1\u06d2"
+                + " \u06a9\u06c1 \u0641\u0627\u0626\u0644 \u0644\u0627\u0633\u06cc"
+                + " \u0644\u06af\u062a\u06cc \u06c1\u06d2\u061b \u06cc\u06c1"
+                + " \u062b\u0627\u0628\u062a \u0646\u06c1\u06cc\u06ba \u06a9\u0631"
+                + " \u0633\u06a9\u062a\u06cc \u06a9\u06c1 \u0641\u0627\u0626\u0644"
+                + " \u0627\u0635\u0644\u06cc \u06c1\u06d2\u06d4",
+            "Check in the background",
+            "\u067e\u0633 \u0645\u0646\u0638\u0631 \u0645\u06cc\u06ba"
+                    + " \u062c\u0627\u0646\u0686\u06cc\u06ba",
+            "Every lossless file in your music chats, up to 1 GB a day",
+            "\u0622\u067e \u06a9\u06cc \u0645\u06cc\u0648\u0632\u06a9 \u0686\u06cc\u0679\u0633"
+                + " \u06a9\u06cc \u06c1\u0631 \u0644\u0627\u0633 \u0644\u06cc\u0633"
+                + " \u0641\u0627\u0626\u0644\u060c \u0631\u0648\u0632\u0627\u0646\u06c1"
+                + " \u0632\u06cc\u0627\u062f\u06c1 \u0633\u06d2 \u0632\u06cc\u0627\u062f\u06c1 1"
+                + " GB",
+            "Only songs that play are checked",
+            "\u0635\u0631\u0641 \u0686\u0644\u0646\u06d2 \u0648\u0627\u0644\u06d2"
+                    + " \u06af\u0627\u0646\u06d2 \u062c\u0627\u0646\u0686\u06d2"
+                    + " \u062c\u0627\u062a\u06d2 \u06c1\u06cc\u06ba",
+            "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                + " under Saved index. What\u2019s found is kept in the saved index and goes with"
+                + " it when you share it.",
+            "\u06c1\u0631 \u0641\u0627\u0626\u0644 \u06a9\u0627"
+                    + " \u062a\u0642\u0631\u06cc\u0628\u0627\u064b 4 MB \u0688\u0627\u0624\u0646"
+                    + " \u0644\u0648\u0688 \u06c1\u0648\u062a\u0627 \u06c1\u06d2\u060c"
+                    + " \u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                    + " \u06a9\u06d2 Wi-Fi \u0627\u0648\u0631 \u0686\u0627\u0631\u062c\u0646\u06af"
+                    + " \u0633\u0648\u0626\u0686\u0632 \u06a9\u06d2"
+                    + " \u0645\u0637\u0627\u0628\u0642\u06d4 \u062c\u0648 \u0645\u0644\u062a\u0627"
+                    + " \u06c1\u06d2 \u0648\u06c1 \u0645\u062d\u0641\u0648\u0638"
+                    + " \u0627\u0646\u0688\u06cc\u06a9\u0633 \u0645\u06cc\u06ba"
+                    + " \u0631\u06a9\u06be\u0627 \u062c\u0627\u062a\u0627 \u06c1\u06d2"
+                    + " \u0627\u0648\u0631 \u062c\u0628 \u0622\u067e \u0627\u0633\u06d2"
+                    + " \u0634\u06cc\u0626\u0631 \u06a9\u0631\u06cc\u06ba \u062a\u0648 \u0627\u0633"
+                    + " \u06a9\u06d2 \u0633\u0627\u062a\u06be \u062c\u0627\u062a\u0627"
+                    + " \u06c1\u06d2\u06d4",
+            "Name untagged files by sound",
+            "\u0628\u063a\u06cc\u0631 \u0679\u06cc\u06af \u0648\u0627\u0644\u06cc"
+                    + " \u0641\u0627\u0626\u0644\u0648\u06ba \u06a9\u0648 \u0622\u0648\u0627\u0632"
+                    + " \u0633\u06d2 \u0646\u0627\u0645 \u062f\u06cc\u06ba",
+            "Files without tags are looked up in AcoustID",
+            "\u0628\u063a\u06cc\u0631 \u0679\u06cc\u06af \u0648\u0627\u0644\u06cc"
+                    + " \u0641\u0627\u0626\u0644\u06cc\u06ba AcoustID \u0645\u06cc\u06ba"
+                    + " \u062a\u0644\u0627\u0634 \u06a9\u06cc \u062c\u0627\u062a\u06cc"
+                    + " \u06c1\u06cc\u06ba",
+            "Untagged files keep the name from the file",
+            "\u0628\u063a\u06cc\u0631 \u0679\u06cc\u06af \u0648\u0627\u0644\u06cc"
+                    + " \u0641\u0627\u0626\u0644\u06cc\u06ba \u0641\u0627\u0626\u0644"
+                    + " \u0648\u0627\u0644\u0627 \u0646\u0627\u0645 \u0631\u06a9\u06be\u062a\u06cc"
+                    + " \u06c1\u06cc\u06ba",
+            "A fingerprint of the first two minutes of each untagged file, its length and your"
+                    + " AcoustID key are sent to AcoustID (acoustid.org), a free service run by the"
+                    + " MusicBrainz community. No audio is sent.",
+            "\u06c1\u0631 \u0628\u063a\u06cc\u0631 \u0679\u06cc\u06af \u0648\u0627\u0644\u06cc"
+                    + " \u0641\u0627\u0626\u0644 \u06a9\u06d2 \u067e\u06c1\u0644\u06d2 \u062f\u0648"
+                    + " \u0645\u0646\u0679 \u06a9\u0627"
+                    + " \u0641\u0646\u06af\u0631\u067e\u0631\u0646\u0679\u060c \u0627\u0633"
+                    + " \u06a9\u0627 \u062f\u0648\u0631\u0627\u0646\u06cc\u06c1 \u0627\u0648\u0631"
+                    + " \u0622\u067e \u06a9\u06cc AcoustID \u06a9\u0644\u06cc\u062f AcoustID"
+                    + " (acoustid.org) \u06a9\u0648 \u0628\u06be\u06cc\u062c\u06cc"
+                    + " \u062c\u0627\u062a\u06cc \u06c1\u06d2\u060c \u062c\u0648 MusicBrainz"
+                    + " \u06a9\u0645\u06cc\u0648\u0646\u0679\u06cc \u06a9\u06cc"
+                    + " \u0686\u0644\u0627\u0626\u06cc \u062c\u0627\u0646\u06d2"
+                    + " \u0648\u0627\u0644\u06cc \u0627\u06cc\u06a9 \u0645\u0641\u062a"
+                    + " \u0633\u0631\u0648\u0633 \u06c1\u06d2\u06d4 \u06a9\u0648\u0626\u06cc"
+                    + " \u0622\u0688\u06cc\u0648 \u0646\u06c1\u06cc\u06ba"
+                    + " \u0628\u06be\u06cc\u062c\u06cc \u062c\u0627\u062a\u06cc\u06d4",
+            "Songs that play are looked up a minute later. Your other untagged files are gone"
+                + " through in the background, up to 500 a day, keeping to the Wi-Fi and charging"
+                + " switches under Saved index.",
+            "\u0686\u0644\u0646\u06d2 \u0648\u0627\u0644\u06d2 \u06af\u0627\u0646\u06d2"
+                + " \u0627\u06cc\u06a9 \u0645\u0646\u0679 \u0628\u0639\u062f"
+                + " \u062a\u0644\u0627\u0634 \u06a9\u06cc\u06d2 \u062c\u0627\u062a\u06d2"
+                + " \u06c1\u06cc\u06ba\u06d4 \u0622\u067e \u06a9\u06cc \u0628\u0627\u0642\u06cc"
+                + " \u0628\u063a\u06cc\u0631 \u0679\u06cc\u06af \u0648\u0627\u0644\u06cc"
+                + " \u0641\u0627\u0626\u0644\u06cc\u06ba \u067e\u0633 \u0645\u0646\u0638\u0631"
+                + " \u0645\u06cc\u06ba \u062f\u06cc\u06a9\u06be\u06cc \u062c\u0627\u062a\u06cc"
+                + " \u06c1\u06cc\u06ba\u060c \u0631\u0648\u0632\u0627\u0646\u06c1"
+                + " \u0632\u06cc\u0627\u062f\u06c1 \u0633\u06d2 \u0632\u06cc\u0627\u062f\u06c1"
+                + " 500\u060c \u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                + " \u06a9\u06d2 Wi-Fi \u0627\u0648\u0631 \u0686\u0627\u0631\u062c\u0646\u06af"
+                + " \u0633\u0648\u0626\u0686\u0632 \u06a9\u06d2"
+                + " \u0645\u0637\u0627\u0628\u0642\u06d4",
+            "AcoustID key",
+            "AcoustID \u06a9\u0644\u06cc\u062f",
+            "Saved on this phone only",
+            "\u0635\u0631\u0641 \u0627\u0633 \u0641\u0648\u0646 \u067e\u0631"
+                    + " \u0645\u062d\u0641\u0648\u0638",
+            "Needed to name files by sound",
+            "\u0622\u0648\u0627\u0632 \u0633\u06d2 \u0641\u0627\u0626\u0644\u0648\u06ba"
+                    + " \u06a9\u0648 \u0646\u0627\u0645 \u062f\u06cc\u0646\u06d2 \u06a9\u06d2"
+                    + " \u0644\u06cc\u06d2 \u0636\u0631\u0648\u0631\u06cc",
+            "Enter",
+            "\u062f\u0631\u062c \u06a9\u0631\u06cc\u06ba",
+            "Sign in at acoustid.org, register an application (any name), and paste its API key"
+                    + " here. It\u2019s free.",
+            "acoustid.org \u067e\u0631 \u0633\u0627\u0626\u0646 \u0627\u0646"
+                    + " \u06a9\u0631\u06cc\u06ba\u060c \u0627\u06cc\u06a9"
+                    + " \u0627\u06cc\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646"
+                    + " \u0631\u062c\u0633\u0679\u0631 \u06a9\u0631\u06cc\u06ba"
+                    + " (\u06a9\u0648\u0626\u06cc \u0628\u06be\u06cc \u0646\u0627\u0645)\u060c"
+                    + " \u0627\u0648\u0631 \u0627\u0633 \u06a9\u06cc API \u06a9\u0644\u06cc\u062f"
+                    + " \u06cc\u06c1\u0627\u06ba \u067e\u06cc\u0633\u0679"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4 \u06cc\u06c1 \u0645\u0641\u062a"
+                    + " \u06c1\u06d2\u06d4",
+            "AcoustID application key",
+            "AcoustID \u0627\u06cc\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646"
+                    + " \u06a9\u0644\u06cc\u062f",
+            "Get an AcoustID key \u2197",
+            "AcoustID \u06a9\u0644\u06cc\u062f \u062d\u0627\u0635\u0644 \u06a9\u0631\u06cc\u06ba"
+                    + " \u2197",
+            "That doesn\u2019t look like an AcoustID application key.",
+            "\u06cc\u06c1 AcoustID \u0627\u06cc\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646"
+                    + " \u06a9\u0644\u06cc\u062f \u0646\u06c1\u06cc\u06ba"
+                    + " \u0644\u06af\u062a\u06cc\u06d4",
+            "Enter your AcoustID application key first.",
+            "\u067e\u06c1\u0644\u06d2 \u0627\u067e\u0646\u06cc AcoustID"
+                + " \u0627\u06cc\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646 \u06a9\u0644\u06cc\u062f"
+                + " \u062f\u0631\u062c \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Checked {0} file",
+            "{0} \u0641\u0627\u0626\u0644 \u062c\u0627\u0646\u0686\u06cc \u06af\u0626\u06cc",
+            "Checked {0} files",
+            "{0} \u0641\u0627\u0626\u0644\u06cc\u06ba \u062c\u0627\u0646\u0686\u06cc"
+                    + " \u06af\u0626\u06cc\u06ba",
+            "{0} not really lossless",
+            "{0} \u062d\u0642\u06cc\u0642\u062a \u0645\u06cc\u06ba \u0644\u0627\u0633"
+                    + " \u0644\u06cc\u0633 \u0646\u06c1\u06cc\u06ba",
+            "{0} named by sound",
+            "{0} \u06a9\u0648 \u0622\u0648\u0627\u0632 \u0633\u06d2 \u0646\u0627\u0645"
+                    + " \u062f\u06cc\u0627 \u06af\u06cc\u0627",
+            "AcoustID refused the key: {0}",
+            "AcoustID \u0646\u06d2 \u06a9\u0644\u06cc\u062f \u0645\u0633\u062a\u0631\u062f"
+                    + " \u06a9\u0631 \u062f\u06cc: {0}",
+            "{0} \u00b7 from \u2248{1} kbps",
+            "{0} \u00b7 \u2248{1} kbps \u0633\u06d2",
+            "{0} \u00b7 from a lossy file",
+            "{0} \u00b7 \u0644\u0627\u0633\u06cc \u0641\u0627\u0626\u0644 \u0633\u06d2",
+            "{0} \u00b7 maybe lossy",
+            "{0} \u00b7 \u0634\u0627\u06cc\u062f \u0644\u0627\u0633\u06cc",
+            "{0} \u00b7 from {1}",
+            "{0} \u00b7 {1} \u0633\u06d2",
+            "{0} \u00b7 really {1}bit",
+            "{0} \u00b7 \u0627\u0635\u0644 \u0645\u06cc\u06ba {1}bit",
         };
     }
 
@@ -19541,6 +21195,101 @@ final class Translations {
             "{0} \u00b7 {1} \u00b7 Looks like a song that played from another source",
             "{0} \u00b7 {1} \u00b7"
                 + " \u770b\u8d77\u6765\u662f\u4ece\u5176\u4ed6\u6765\u6e90\u64ad\u653e\u7684\u6b4c\u66f2",
+            "Check lossless files",
+            "\u68c0\u67e5\u65e0\u635f\u6587\u4ef6",
+            "FLAC and WAV files that play are checked for a lossy source",
+            "\u64ad\u653e\u7684 FLAC \u548c WAV"
+                + " \u6587\u4ef6\u4f1a\u68c0\u67e5\u662f\u5426\u6765\u81ea\u6709\u635f\u97f3\u6e90",
+            "Files are taken at their word",
+            "\u76f4\u63a5\u91c7\u4fe1\u6587\u4ef6\u6807\u660e\u7684\u683c\u5f0f",
+            "A file made from an MP3 keeps the MP3\u2019s cut-off, somewhere between 16 and 20 kHz."
+                + " A minute after a song starts, a few stretches of it are looked at. A fake shows"
+                + " as \u201cFLAC 16bit \u00b7 from \u2248128 kbps\u201d and is ranked as that MP3,"
+                + " and a hi-res file made from a CD as \u201cFLAC 24bit \u00b7 from 44.1"
+                + " kHz\u201d. A check can show a file looks lossy; it can\u2019t prove a file is"
+                + " genuine.",
+            "\u7531 MP3 \u5236\u4f5c\u7684\u6587\u4ef6\u4f1a\u4fdd\u7559 MP3"
+                + " \u7684\u622a\u6b62\u9891\u7387\uff0c\u5927\u7ea6\u5728 16 \u5230 20 kHz"
+                + " \u4e4b\u95f4\u3002\u6b4c\u66f2\u5f00\u59cb\u64ad\u653e\u4e00\u5206\u949f\u540e\uff0c\u4f1a\u68c0\u67e5\u5176\u4e2d\u51e0\u6bb5\u3002\u5047\u65e0\u635f\u4f1a\u663e\u793a\u4e3a\u201cFLAC"
+                + " 16bit \u00b7 \u6e90\u81ea \u2248128 kbps\u201d\uff0c\u5e76\u6309\u8be5 MP3"
+                + " \u6392\u5e8f\uff1b\u7531 CD"
+                + " \u5236\u4f5c\u7684\u9ad8\u89e3\u6790\u5ea6\u6587\u4ef6\u5219\u663e\u793a\u4e3a\u201cFLAC"
+                + " 24bit \u00b7 \u6e90\u81ea 44.1"
+                + " kHz\u201d\u3002\u68c0\u67e5\u53ef\u4ee5\u8868\u660e\u6587\u4ef6\u770b\u8d77\u6765\u662f\u6709\u635f\u7684\uff0c\u4f46\u65e0\u6cd5\u8bc1\u660e\u6587\u4ef6\u662f\u771f\u7684\u3002",
+            "Check in the background",
+            "\u5728\u540e\u53f0\u68c0\u67e5",
+            "Every lossless file in your music chats, up to 1 GB a day",
+            "\u97f3\u4e50\u804a\u5929\u4e2d\u7684\u6bcf\u4e2a\u65e0\u635f\u6587\u4ef6\uff0c\u6bcf\u5929\u6700\u591a"
+                + " 1 GB",
+            "Only songs that play are checked",
+            "\u4ec5\u68c0\u67e5\u64ad\u653e\u7684\u6b4c\u66f2",
+            "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                + " under Saved index. What\u2019s found is kept in the saved index and goes with"
+                + " it when you share it.",
+            "\u6bcf\u4e2a\u6587\u4ef6\u7ea6\u4e0b\u8f7d 4"
+                + " MB\uff0c\u5e76\u9075\u5faa\u300c\u5df2\u4fdd\u5b58\u7d22\u5f15\u300d\u4e2d\u7684"
+                + " Wi-Fi"
+                + " \u548c\u5145\u7535\u5f00\u5173\u3002\u68c0\u67e5\u7ed3\u679c\u4f1a\u4fdd\u5b58\u5728\u5df2\u4fdd\u5b58\u7d22\u5f15\u4e2d\uff0c\u5206\u4eab\u65f6\u4f1a\u4e00\u5e76\u5206\u4eab\u3002",
+            "Name untagged files by sound",
+            "\u6309\u58f0\u97f3\u4e3a\u65e0\u6807\u7b7e\u6587\u4ef6\u547d\u540d",
+            "Files without tags are looked up in AcoustID",
+            "\u5728 AcoustID \u4e2d\u67e5\u627e\u6ca1\u6709\u6807\u7b7e\u7684\u6587\u4ef6",
+            "Untagged files keep the name from the file",
+            "\u65e0\u6807\u7b7e\u6587\u4ef6\u4fdd\u7559\u6587\u4ef6\u4e2d\u7684\u540d\u79f0",
+            "A fingerprint of the first two minutes of each untagged file, its length and your"
+                    + " AcoustID key are sent to AcoustID (acoustid.org), a free service run by the"
+                    + " MusicBrainz community. No audio is sent.",
+            "\u6bcf\u4e2a\u65e0\u6807\u7b7e\u6587\u4ef6\u524d\u4e24\u5206\u949f\u7684\u6307\u7eb9\u3001\u65f6\u957f\u548c\u4f60\u7684"
+                + " AcoustID \u5bc6\u94a5\u4f1a\u53d1\u9001\u5230"
+                + " AcoustID\uff08acoustid.org\uff09\uff0c\u8fd9\u662f\u7531 MusicBrainz"
+                + " \u793e\u533a\u8fd0\u8425\u7684\u514d\u8d39\u670d\u52a1\u3002\u4e0d\u4f1a\u53d1\u9001\u4efb\u4f55\u97f3\u9891\u3002",
+            "Songs that play are looked up a minute later. Your other untagged files are gone"
+                + " through in the background, up to 500 a day, keeping to the Wi-Fi and charging"
+                + " switches under Saved index.",
+            "\u64ad\u653e\u7684\u6b4c\u66f2\u4f1a\u5728\u4e00\u5206\u949f\u540e\u67e5\u627e\u3002\u4f60\u7684\u5176\u4ed6\u65e0\u6807\u7b7e\u6587\u4ef6\u4f1a\u5728\u540e\u53f0\u9010\u4e00\u5904\u7406\uff0c\u6bcf\u5929\u6700\u591a"
+                + " 500 \u4e2a\uff0c\u5e76\u9075\u5faa\u300c\u5df2\u4fdd\u5b58\u7d22\u5f15\u300d\u4e2d\u7684"
+                + " Wi-Fi \u548c\u5145\u7535\u5f00\u5173\u3002",
+            "AcoustID key",
+            "AcoustID \u5bc6\u94a5",
+            "Saved on this phone only",
+            "\u4ec5\u4fdd\u5b58\u5728\u8fd9\u90e8\u624b\u673a\u4e0a",
+            "Needed to name files by sound",
+            "\u6309\u58f0\u97f3\u547d\u540d\u6587\u4ef6\u65f6\u9700\u8981",
+            "Enter",
+            "\u8f93\u5165",
+            "Sign in at acoustid.org, register an application (any name), and paste its API key"
+                    + " here. It\u2019s free.",
+            "\u767b\u5f55"
+                + " acoustid.org\uff0c\u6ce8\u518c\u4e00\u4e2a\u5e94\u7528\uff08\u540d\u79f0\u968f\u610f\uff09\uff0c\u7136\u540e\u5c06\u5176"
+                + " API \u5bc6\u94a5\u7c98\u8d34\u5230\u8fd9\u91cc\u3002\u514d\u8d39\u3002",
+            "AcoustID application key",
+            "AcoustID \u5e94\u7528\u5bc6\u94a5",
+            "Get an AcoustID key \u2197",
+            "\u83b7\u53d6 AcoustID \u5bc6\u94a5 \u2197",
+            "That doesn\u2019t look like an AcoustID application key.",
+            "\u8fd9\u770b\u8d77\u6765\u4e0d\u50cf AcoustID \u5e94\u7528\u5bc6\u94a5\u3002",
+            "Enter your AcoustID application key first.",
+            "\u8bf7\u5148\u8f93\u5165\u4f60\u7684 AcoustID \u5e94\u7528\u5bc6\u94a5\u3002",
+            "Checked {0} file",
+            "\u5df2\u68c0\u67e5 {0} \u4e2a\u6587\u4ef6",
+            "Checked {0} files",
+            "\u5df2\u68c0\u67e5 {0} \u4e2a\u6587\u4ef6",
+            "{0} not really lossless",
+            "{0} \u4e2a\u5e76\u975e\u771f\u6b63\u65e0\u635f",
+            "{0} named by sound",
+            "{0} \u4e2a\u5df2\u6309\u58f0\u97f3\u547d\u540d",
+            "AcoustID refused the key: {0}",
+            "AcoustID \u62d2\u7edd\u4e86\u8be5\u5bc6\u94a5\uff1a{0}",
+            "{0} \u00b7 from \u2248{1} kbps",
+            "{0} \u00b7 \u6e90\u81ea \u2248{1} kbps",
+            "{0} \u00b7 from a lossy file",
+            "{0} \u00b7 \u6e90\u81ea\u6709\u635f\u6587\u4ef6",
+            "{0} \u00b7 maybe lossy",
+            "{0} \u00b7 \u53ef\u80fd\u6709\u635f",
+            "{0} \u00b7 from {1}",
+            "{0} \u00b7 \u6e90\u81ea {1}",
+            "{0} \u00b7 really {1}bit",
+            "{0} \u00b7 \u5b9e\u4e3a {1}bit",
         };
     }
 }

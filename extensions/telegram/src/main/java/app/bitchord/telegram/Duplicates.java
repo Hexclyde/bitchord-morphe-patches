@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * One copy of each song in search results. The same song posted twice, or in two zips, shows once,
  * as its best-sounding copy: lossless over lossy, then the higher bit depth, sample rate and
- * bitrate.
+ * bitrate. A file checked and found not to be what it claims counts as what it really is.
  */
 final class Duplicates {
     private Duplicates() {}
@@ -66,18 +66,24 @@ final class Duplicates {
         String format = DolbyHeader.dolby(codec) ? codec : row.optString("format");
         int bits = header != null ? header.optInt("bits") : row.optInt("bits");
         int rate = header != null ? header.optInt("rate") : row.optInt("rate");
+        JSONObject verdict = LosslessCheck.of(row, header);
         String quality =
-                TrackDetails.quality(
-                        format,
-                        row.optString("mime"),
-                        row.optLong("size"),
-                        row.optInt("duration"),
-                        bits);
-        return new long[] {
-            quality.contains("LOSSLESS") ? 1 : 0,
-            bits,
-            rate,
-            TrackDetails.kbps(row.optLong("size"), row.optInt("duration"))
-        };
+                LosslessCheck.quality(
+                        TrackDetails.quality(
+                                format,
+                                row.optString("mime"),
+                                row.optLong("size"),
+                                row.optInt("duration"),
+                                bits),
+                        verdict);
+        int kbps = TrackDetails.kbps(row.optLong("size"), row.optInt("duration"));
+        // A file made from an MP3 counts as that MP3; a hi-res one made from a CD as the CD.
+        if (LosslessCheck.fake(verdict)) {
+            bits = 0;
+            kbps = verdict.optInt("kbps");
+        } else bits = LosslessCheck.bits(bits, verdict);
+        if (verdict != null && verdict.optString("verdict").equals("upsampled"))
+            rate = verdict.optInt("from", rate);
+        return new long[] {quality.contains("LOSSLESS") ? 1 : 0, bits, rate, kbps};
     }
 }

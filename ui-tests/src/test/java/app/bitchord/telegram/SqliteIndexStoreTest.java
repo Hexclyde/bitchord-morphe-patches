@@ -37,6 +37,41 @@ public class SqliteIndexStoreTest {
     }
 
     @Test
+    public void keepsWhatListeningFound() throws Exception {
+        SqliteIndexStore store = open();
+        JSONObject fake = row(-300, 1, "Song", "Artist").put("format", "flac");
+        JSONObject untagged =
+                row(-300, 2, "audio_2024", "").put("format", "mp3").put("tagged", false);
+        store.put(-300, List.of(fake, untagged), 1);
+        JSONObject check = new JSONObject().put("verdict", "lossy").put("kbps", 128);
+        store.putFound(-300, 1, "check", "-300_1", check);
+        store.putFound(
+                -300,
+                2,
+                "names",
+                "-300_2",
+                new JSONObject().put("title", "Real Title").put("artist", "Real Artist"));
+        assertEquals("lossy", store.row(-300, 1, 0).getJSONObject("check").getString("verdict"));
+        assertEquals("Real Title", store.row(-300, 2, 0).getString("title"));
+        assertEquals(
+                "Searchable by the recognised name",
+                1,
+                store.search(List.of(-300L), TrackNames.words("real artist"), 10).size());
+        // Read from Telegram again, as a rebuild does: what was found stays.
+        store.put(
+                -300,
+                List.of(
+                        row(-300, 1, "Song", "Artist").put("format", "flac"),
+                        row(-300, 2, "audio_2024", "").put("format", "mp3").put("tagged", false)),
+                2);
+        store.prune(-300, 2);
+        assertEquals(128, store.row(-300, 1, 0).getJSONObject("check").getInt("kbps"));
+        assertEquals("Real Artist", store.row(-300, 2, 0).getString("artist"));
+        assertEquals("lossy", store.found("check", "-300_1").getString("verdict"));
+        assertNull(store.found("check", "-300_9"));
+    }
+
+    @Test
     public void storesSearchesAndPrunes() throws Exception {
         SqliteIndexStore store = open();
         store.put(

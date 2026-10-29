@@ -141,6 +141,8 @@ final class IndexTransfer {
         "title", "artist", "format", "mime", "fileName", "unique", "coverKey", "album"
     };
     private static final String[] NUMBERS = {"size", "duration", "track", "mediaAlbum"};
+    private static final Set<String> CHECK_VERDICTS =
+            new HashSet<>(Arrays.asList("ok", "lossy", "suspect", "upsampled", "unknown"));
 
     /**
      * A file's row with only known fields, in the given chat, without Telegram's file numbers; null
@@ -199,6 +201,41 @@ final class IndexTransfer {
                 if (!source.equals("flac") && !source.equals("wav")) return null;
                 cue.put("source", source);
                 out.put("cue", cue);
+            }
+            // What a check of the file found, and names it was recognised by.
+            JSONObject check =
+                    numbers(
+                            row.optJSONObject("check"),
+                            "v",
+                            "cutoff",
+                            "kbps",
+                            "from",
+                            "bits",
+                            "declared",
+                            "score");
+            if (check != null) {
+                String verdict = row.getJSONObject("check").optString("verdict");
+                if (CHECK_VERDICTS.contains(verdict)) {
+                    check.put("verdict", verdict);
+                    JSONObject from = row.getJSONObject("check");
+                    if (from.has("encoder"))
+                        check.put("encoder", text(from.optString("encoder"), 64));
+                    for (String key : new String[] {"strength", "lock"}) {
+                        double v = from.optDouble(key, 0);
+                        if (from.has(key) && Double.isFinite(v))
+                            check.put(key, Math.max(0, Math.min(200, v)));
+                    }
+                    out.put("check", check);
+                }
+            }
+            JSONObject names = row.optJSONObject("recognized");
+            if (names != null && !names.optString("title").isEmpty()) {
+                JSONObject kept = new JSONObject();
+                for (String key : new String[] {"title", "artist", "id", "by"})
+                    kept.put(key, text(names.optString(key), 512));
+                double score = names.optDouble("score", 0);
+                kept.put("score", Double.isFinite(score) ? Math.max(0, Math.min(1, score)) : 0);
+                out.put("recognized", kept);
             }
             return out;
         } catch (Exception e) {

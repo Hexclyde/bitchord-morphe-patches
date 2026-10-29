@@ -30,7 +30,7 @@ public final class TelegramActivity extends Activity {
     ChannelView channelView;
     LinearLayout namesList;
     int namesRevision;
-    TextView indexLine, importLine;
+    TextView indexLine, importLine, checkLine;
 
     /** Keeps the Saved index line counting while the page is open. */
     final Runnable indexTicker =
@@ -42,6 +42,12 @@ public final class TelegramActivity extends Activity {
                             && bridge.importOption("import")
                             && !bridge.importStatus().isEmpty())
                         copying.setText(bridge.importStatus());
+                    TextView checked = checkLine;
+                    if (bridge != null && checked != null) {
+                        String text = bridge.checkStatus();
+                        checked.setText(text);
+                        checked.setVisibility(text.isEmpty() ? View.GONE : View.VISIBLE);
+                    }
                     TextView line = indexLine;
                     if (bridge != null && line != null && bridge.searchIndex())
                         bridge.work.execute(
@@ -924,6 +930,37 @@ public final class TelegramActivity extends Activity {
         divider(details);
         toggle(
                 details,
+                "Check lossless files",
+                "FLAC and WAV files that play are checked for a lossy source",
+                "Files are taken at their word",
+                bridge.checkOption("checkLossless"),
+                on -> bridge.setCheckOption("checkLossless", on),
+                null,
+                "A file made from an MP3 keeps the MP3’s cut-off, somewhere between 16 and 20"
+                        + " kHz. A minute after a song starts, a few stretches of it are looked"
+                        + " at. A fake shows as “FLAC 16bit · from ≈128 kbps” and is ranked as"
+                        + " that MP3, and a hi-res file made from a CD as “FLAC 24bit · from 44.1"
+                        + " kHz”. A check can show a file looks lossy; it can’t prove a file is"
+                        + " genuine.");
+        divider(details);
+        toggle(
+                details,
+                "Check in the background",
+                "Every lossless file in your music chats, up to 1 GB a day",
+                "Only songs that play are checked",
+                bridge.checkOption("checkInBackground"),
+                on -> bridge.setCheckOption("checkInBackground", on),
+                null,
+                "About 4 MB of each file is downloaded, keeping to the Wi-Fi and charging switches"
+                        + " under Saved index. What’s found is kept in the saved index and goes"
+                        + " with it when you share it.");
+        checkLine = style.text(bridge.checkStatus(), 13, style.secondary, style.regular);
+        checkLine.setPadding(0, style.dp(8), 0, 0);
+        checkLine.setVisibility(bridge.checkStatus().isEmpty() ? View.GONE : View.VISIBLE);
+        details.addView(checkLine);
+        divider(details);
+        toggle(
+                details,
                 "Album covers",
                 "Uses the cover Telegram has for each file",
                 "No covers are downloaded",
@@ -1197,6 +1234,71 @@ public final class TelegramActivity extends Activity {
         fillTrackNames();
         EditText find = input(names, "Search your music chats", false);
         action(names, "Fix a track name", false, () -> pickTrack(find.getText().toString()));
+        divider(names);
+        toggle(
+                names,
+                "Name untagged files by sound",
+                "Files without tags are looked up in AcoustID",
+                "Untagged files keep the name from the file",
+                bridge.checkOption("recognizeUntagged"),
+                on -> bridge.setCheckOption("recognizeUntagged", on),
+                "A fingerprint of the first two minutes of each untagged file, its length and your"
+                        + " AcoustID key are sent to AcoustID (acoustid.org), a free service run"
+                        + " by the MusicBrainz community. No audio is sent.",
+                "Songs that play are looked up a minute later. Your other untagged files are"
+                        + " gone through in the background, up to 500 a day, keeping to the Wi-Fi"
+                        + " and charging switches under Saved index.");
+        divider(names);
+        boolean hasKey = !bridge.acoustIdKey().isEmpty();
+        row(
+                names,
+                "AcoustID key",
+                hasKey ? "Saved on this phone only" : "Needed to name files by sound",
+                hasKey ? "Change" : "Enter",
+                this::editAcoustIdKey);
+    }
+
+    /** The user's own AcoustID application key, from acoustid.org. */
+    void editAcoustIdKey() {
+        LinearLayout form = new LinearLayout(this);
+        form.setOrientation(LinearLayout.VERTICAL);
+        form.setPadding(style.dp(24), style.dp(8), style.dp(24), 0);
+        form.addView(
+                style.text(
+                        Strings.t(
+                                "Sign in at acoustid.org, register an application (any name), and"
+                                        + " paste its API key here. It’s free."),
+                        14,
+                        style.secondary,
+                        style.regular));
+        EditText key = dialogField(form, "AcoustID application key", bridge.acoustIdKey());
+        key.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        TextView help =
+                style.text(Strings.t("Get an AcoustID key ↗"), 14, style.secondary, style.regular);
+        help.setPadding(0, style.dp(14), 0, style.dp(6));
+        help.setOnClickListener(
+                v ->
+                        startActivity(
+                                new Intent(
+                                        Intent.ACTION_VIEW,
+                                        android.net.Uri.parse(
+                                                "https://acoustid.org/new-application"))));
+        form.addView(help);
+        AlertDialog d =
+                new AlertDialog.Builder(this)
+                        .setTitle(Strings.t("AcoustID key"))
+                        .setView(form)
+                        .setPositiveButton(
+                                Strings.t("Save"),
+                                (x, y) -> {
+                                    String value = key.getText().toString();
+                                    run(() -> bridge.setAcoustIdKey(value));
+                                })
+                        .setNegativeButton(Strings.t("Cancel"), null)
+                        .create();
+        secureWindow(d.getWindow());
+        d.show();
+        style.tuneDialog(d);
     }
 
     /** The part of the Track names card that changes; refreshed in place as names change. */

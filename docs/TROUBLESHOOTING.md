@@ -69,6 +69,14 @@ Telegram has asked your account to pause searches for a while, usually after man
 
 With **Saved index** on, searches are answered from it during the pause, once it has been built. Selecting fewer music chats helps, since each search covers every selected chat. You can also turn off **Format legend** under **Track details**, which searches Telegram while you use BitChord's main search.
 
+## A file I trust shows "maybe lossy" or "from ≈… kbps"
+
+**maybe lossy** only means a cut-off that an encoder or an old master's filter could both have left; nothing else changes. **from ≈128 kbps** means a clear encoder cut-off in four stretches of the file, which a genuine CD rip doesn't have. To take every file at its word, turn off **Check lossless files** under **Track details**; what was found is kept, and used again if you turn it back on.
+
+## "AcoustID refused the key" appears
+
+The key under **Track names → AcoustID key** isn't an application key AcoustID knows. Copy the **API key** of an application from [acoustid.org/applications](https://acoustid.org/applications), not your user key, and save it again. Lookups start again with the new key.
+
 ## Search crashes, or playback or seeking stops
 
 Confirm you are using the newest source version, original BitChord **1.8.1** and both patches. Try a small file you are allowed to use that plays in the official Telegram app. Check your connection and whether the message still exists.

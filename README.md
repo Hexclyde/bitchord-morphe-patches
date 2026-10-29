@@ -4,7 +4,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.0.15). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.0.16). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > I've only been able to test it on an **arm64-v8a** phone. The armeabi-v7a and x86_64 builds pass the same automated checks, but I haven't run them on a real device. If you're on one of those, please give it a try and [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems. Hearing that it works is useful too.
 
@@ -30,6 +30,7 @@ More BitChord add-ons will be added to this repository over time.
 - Search your selected Telegram channels by title, artist or file name, from BitChord's **Addons** tab, picking them from any folder or your archive
 - Stream and seek through the original files, with no transcoding
 - FLAC, WAV, AIFF and ALAC are reported to BitChord as lossless, so it can prefer them over lossy copies
+- Fake lossless files are caught: a FLAC made from an MP3 shows as **FLAC 16bit · from ≈128 kbps** and is ranked as that MP3, and upsampled or padded hi-res files show what they really are
 - Album covers from Telegram in search results
 - A saved index of your chats' music answers when Telegram's search is rate limited or busy
 - Save a channel as a BitChord playlist, or download all of it
@@ -39,7 +40,7 @@ More BitChord add-ons will be added to this repository over time.
 - Back up and restore your settings, and share a chat's index so friends in the same channel can skip indexing it
 - Check by sound whether a Telegram file with a different length is the same recording as the song
 - Copy music from community channels into a private channel you own, at a pace you set, with lossless-only and duplicate filters
-- Untagged files get their title and artist from the file name (`03 - Artist - Title.flac`)
+- Untagged files get their title and artist from the file name (`03 - Artist - Title.flac`), or, with your free AcoustID key, by sound
 - 5.1 and 7.1 files play as proper stereo, mixed inside the player without converting the file
 - A small format legend next to song titles (FLAC 24bit, Dolby Atmos, DD+ 5.1, MP3 320kbps, …), in the main search too
 - Dolby Digital, Dolby Digital Plus and Dolby Atmos files, with Atmos passed on to BitChord as Atmos
@@ -50,7 +51,7 @@ More BitChord add-ons will be added to this repository over time.
 - See the playing source and bitrate in **Show stats for nerds**
 - The Telegram page in 14 languages, following your phone: Spanish, Portuguese, French, German, Russian, Turkish, Arabic, Urdu, Hindi, Bengali, Chinese, Japanese, Korean and Indonesian
 
-Every extra (quality, covers, file names, format legend, smooth switching, surround mixing, sound checks, the saved index, the main channel copy, name fixes and suggestions) can be turned off in the app.
+Every extra (quality, fake lossless checks, covers, file names, naming by sound, format legend, smooth switching, surround mixing, sound checks, the saved index, the main channel copy, name fixes and suggestions) can be turned off in the app.
 
 ## Requirements
 

@@ -132,6 +132,59 @@ interface IndexStore {
     /** Drops a chat's files from before this generation. */
     void prune(long chat, long generation) throws Exception;
 
+    /**
+     * What listening to a file found: whether it's really lossless ({@link LosslessCheck}, by
+     * {@link LosslessCheck#key}), or, for a file without tags, its title and artist recognised by
+     * sound (by its id). Kept apart from the files, so a rebuild doesn't lose them. Null when
+     * nothing is known.
+     */
+    JSONObject found(String kind, String key) throws Exception;
+
+    /**
+     * Remembers what listening to a file found, and adds it to the file's rows already saved.
+     * {@code kind} is "check" or "names".
+     */
+    void putFound(long chat, long message, String kind, String key, JSONObject value)
+            throws Exception;
+
+    /**
+     * The row with what's known about its file: a check result, and recognised names for a file
+     * without tags. What a shared index brings is remembered, unless this phone already knows.
+     */
+    static JSONObject withFound(IndexStore store, JSONObject row, boolean remember)
+            throws Exception {
+        String checkKey = LosslessCheck.key(row), id = row.optString("id");
+        JSONObject check = store.found("check", checkKey);
+        if (check == null && remember && row.optJSONObject("check") != null) {
+            check = row.getJSONObject("check");
+            store.putFound(row.optLong("chat"), row.optLong("message"), "check", checkKey, check);
+        }
+        if (check != null) row.put("check", check);
+        JSONObject names = id.isEmpty() ? null : store.found("names", id);
+        if (names == null && remember && row.optJSONObject("recognized") != null) {
+            names = row.getJSONObject("recognized");
+            store.putFound(row.optLong("chat"), row.optLong("message"), "names", id, names);
+        }
+        if (names != null) named(row, names);
+        return row;
+    }
+
+    /** A file without tags, with the title and artist it was recognised as. */
+    static JSONObject named(JSONObject row, JSONObject names) throws Exception {
+        if (names.optString("title").isEmpty()) return row;
+        return row.put("title", names.optString("title"))
+                .put("artist", names.optString("artist"))
+                .put("tagged", true)
+                .put("recognized", names);
+    }
+
+    /** Whether a found value belongs to this row. */
+    static boolean belongs(JSONObject row, String kind, String key) {
+        return kind.equals("check")
+                ? LosslessCheck.key(row).equals(key)
+                : row.optString("id").equals(key);
+    }
+
     void clear() throws Exception;
 
     /**
@@ -192,6 +245,7 @@ interface IndexStore {
         private final Map<Long, TreeMap<Long, Entry>> files = new HashMap<>();
         private final Map<Long, TreeMap<Long, String>> zips = new HashMap<>();
         private final Set<String> zipsDone = new HashSet<>(), zipsDeferred = new HashSet<>();
+        private final Map<String, String> found = new HashMap<>();
 
         private static long key(long message, int entry) {
             return message * 65536 + entry;
@@ -209,12 +263,37 @@ interface IndexStore {
         }
 
         @Override
-        public synchronized void put(long chat, List<JSONObject> rows, long generation) {
+        public synchronized void put(long chat, List<JSONObject> rows, long generation)
+                throws Exception {
             TreeMap<Long, Entry> chatFiles = files.computeIfAbsent(chat, c -> new TreeMap<>());
-            for (JSONObject row : rows)
+            for (JSONObject row : rows) {
+                withFound(this, row, true);
                 chatFiles.put(
                         key(row.optLong("message"), row.optInt("entry")),
                         new Entry(row.toString(), text(row), generation));
+            }
+        }
+
+        @Override
+        public synchronized JSONObject found(String kind, String key) throws Exception {
+            String value = found.get(kind + ":" + key);
+            return value == null ? null : new JSONObject(value);
+        }
+
+        @Override
+        public synchronized void putFound(
+                long chat, long message, String kind, String key, JSONObject value)
+                throws Exception {
+            found.put(kind + ":" + key, value.toString());
+            TreeMap<Long, Entry> chatFiles = files.get(chat);
+            if (chatFiles == null) return;
+            for (Map.Entry<Long, Entry> e :
+                    chatFiles.subMap(key(message, 0), key(message + 1, 0)).entrySet()) {
+                JSONObject row = new JSONObject(e.getValue().row);
+                if (!belongs(row, kind, key)) continue;
+                withFound(this, row, false);
+                e.setValue(new Entry(row.toString(), text(row), e.getValue().generation));
+            }
         }
 
         @Override
@@ -285,10 +364,9 @@ interface IndexStore {
             List<JSONObject> found = new ArrayList<>();
             // Newest post first, and within a post (a zip), its songs in order.
             TreeMap<Long, List<Entry>> posts = new TreeMap<>(Comparator.reverseOrder());
+            long end = message >= Long.MAX_VALUE / 65536 ? Long.MAX_VALUE : key(message, 0);
             for (Map.Entry<Long, Entry> e :
-                    files.getOrDefault(chat, new TreeMap<>())
-                            .headMap(key(message, 0), false)
-                            .entrySet())
+                    files.getOrDefault(chat, new TreeMap<>()).headMap(end, false).entrySet())
                 posts.computeIfAbsent(e.getKey() / 65536, m -> new ArrayList<>()).add(e.getValue());
             for (List<Entry> post : posts.values())
                 for (Entry e : post) {
@@ -378,6 +456,7 @@ interface IndexStore {
             zips.clear();
             zipsDone.clear();
             zipsDeferred.clear();
+            found.clear();
         }
     }
 }

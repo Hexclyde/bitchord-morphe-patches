@@ -403,6 +403,33 @@ public final class TelegramBridge {
         else chargingOnly = on;
     }
 
+    final Map<String, Boolean> checkOptions = new HashMap<>();
+    String acoustIdKey = "", checkStatus = "Checked 12 files · 2 not really lossless";
+
+    boolean checkOption(String name) {
+        return checkOptions.getOrDefault(name, name.equals("checkLossless"));
+    }
+
+    void setCheckOption(String name, boolean on) throws Exception {
+        if (name.equals("recognizeUntagged") && on && acoustIdKey.isEmpty())
+            throw new java.io.IOException("Enter your AcoustID application key first.");
+        checkOptions.put(name, on);
+    }
+
+    String acoustIdKey() {
+        return acoustIdKey;
+    }
+
+    void setAcoustIdKey(String key) throws Exception {
+        if (!key.isEmpty() && !FileChecks.validKey(key))
+            throw new java.io.IOException("That doesn’t look like an AcoustID application key.");
+        acoustIdKey = key;
+    }
+
+    String checkStatus() {
+        return checkStatus;
+    }
+
     boolean useSharedIndexes() {
         return sharedIndexes;
     }

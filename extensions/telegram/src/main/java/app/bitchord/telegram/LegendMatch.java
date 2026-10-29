@@ -77,8 +77,15 @@ final class LegendMatch {
         return kbps != null && kbps > 0 ? name + " " + kbps + "kbps" : name;
     }
 
-    /** The legend for a Telegram search row; the header, when read, gives the bit depth. */
+    /**
+     * The legend for a Telegram search row; the header, when read, gives the bit depth, and a check
+     * of the file says when it isn't what it claims ("FLAC 16bit · from ≈128 kbps").
+     */
     static String row(JSONObject row, JSONObject header) {
+        return LosslessCheck.legend(format(row, header), LosslessCheck.of(row, header));
+    }
+
+    private static String format(JSONObject row, JSONObject header) {
         if (header != null) return AudioHeader.label(header);
         String format = row.optString("format").toLowerCase(Locale.ROOT);
         int kbps = TrackDetails.kbps(row.optLong("size"), row.optInt("duration"));

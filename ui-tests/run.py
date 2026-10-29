@@ -47,6 +47,11 @@ for name in (
     "PlaybackPolicy.java",
     "Strings.java",
     "Translations.java",
+    "LosslessCheck.java",
+    "FileChecks.java",
+    "Chromaprint.java",
+    "AcoustId.java",
+    "Fingerprint.java",
 ):
     dest = SOURCES / "app/bitchord/telegram" / name
     dest.parent.mkdir(parents=True, exist_ok=True)

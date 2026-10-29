@@ -13,13 +13,19 @@ final class TestFlac {
 
     /** A FLAC file of these samples ({@code pcm[channel][sample]}). */
     static byte[] encode(int[][] pcm, int rate, int bits, String vorbisCueSheet) {
+        return withComment(
+                pcm, rate, bits, vorbisCueSheet == null ? null : "CUESHEET=" + vorbisCueSheet);
+    }
+
+    /** As above, with one Vorbis comment such as "ENCODER=LAME3.100". */
+    static byte[] withComment(int[][] pcm, int rate, int bits, String comment) {
         int channels = pcm.length, samples = pcm[0].length;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         out.write('f');
         out.write('L');
         out.write('a');
         out.write('C');
-        byte[] comments = vorbisCueSheet == null ? null : comments("CUESHEET=" + vorbisCueSheet);
+        byte[] comments = comment == null ? null : comments(comment);
         // STREAMINFO
         out.write(comments == null ? 0x80 : 0x00);
         write(out, 34, 3);

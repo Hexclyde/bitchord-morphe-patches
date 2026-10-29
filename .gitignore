@@ -69,3 +69,8 @@ __pycache__/
 /ui-tests/src/test/java/app/bitchord/telegram/CueSheet.java
 /ui-tests/src/test/java/app/bitchord/telegram/FlacDecoder.java
 /ui-tests/src/test/java/app/bitchord/telegram/AlbumList.java
+/ui-tests/src/test/java/app/bitchord/telegram/LosslessCheck.java
+/ui-tests/src/test/java/app/bitchord/telegram/FileChecks.java
+/ui-tests/src/test/java/app/bitchord/telegram/Chromaprint.java
+/ui-tests/src/test/java/app/bitchord/telegram/AcoustId.java
+/ui-tests/src/test/java/app/bitchord/telegram/Fingerprint.java

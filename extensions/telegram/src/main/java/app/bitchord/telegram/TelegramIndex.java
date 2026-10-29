@@ -457,6 +457,30 @@ final class TelegramIndex {
         return enabled ? store.before(chat, message, limit) : new ArrayList<>();
     }
 
+    /** The row with what listening to its file found: a check, or names recognised by sound. */
+    JSONObject withFound(JSONObject row) {
+        try {
+            return IndexStore.withFound(store, row, false);
+        } catch (Exception e) {
+            return row;
+        }
+    }
+
+    /** What listening to a file found ("check" or "names"), or null. */
+    JSONObject found(String kind, String key) {
+        try {
+            return store.found(kind, key);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /** Remembers what listening to a file found, for its rows too. */
+    void putFound(JSONObject row, String kind, JSONObject value) throws Exception {
+        String key = kind.equals("check") ? LosslessCheck.key(row) : row.optString("id");
+        store.putFound(row.optLong("chat"), row.optLong("message"), kind, key, value);
+    }
+
     int countBefore(long chat, long message) throws Exception {
         return store.countBefore(chat, message);
     }

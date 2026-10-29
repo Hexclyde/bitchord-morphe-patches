@@ -496,6 +496,63 @@ public class TelegramScreenTest {
     }
 
     @Test
+    public void fakeLosslessChecksAndNamingBySound() throws Exception {
+        TelegramBridge bridge = activity.bridge;
+        signedIn();
+        openTab("Advanced");
+        assertTrue("Songs that play are checked", bridge.checkOption("checkLossless"));
+        assertNotNull(
+                text(activity.body, "FLAC and WAV files that play are checked for a lossy source"));
+        assertNotNull(text(activity.body, "Checked 12 files · 2 not really lossless"));
+        assertFalse("The background starts off", bridge.checkOption("checkInBackground"));
+        clickRow("Check in the background");
+        idle();
+        assertTrue(bridge.checkOption("checkInBackground"));
+        assertNotNull(
+                text(activity.body, "Every lossless file in your music chats, up to 1 GB a day"));
+        clickRow("Check lossless files");
+        idle();
+        assertFalse(bridge.checkOption("checkLossless"));
+        assertNotNull(text(activity.body, "Files are taken at their word"));
+
+        openTab("Basic");
+        assertNotNull(text(activity.body, "Needed to name files by sound"));
+        clickRow("Name untagged files by sound");
+        android.app.AlertDialog warning =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        assertTrue(Shadows.shadowOf(warning).getMessage().toString().contains("No audio is sent"));
+        warning.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
+        idle();
+        assertFalse("Not without a key", bridge.checkOption("recognizeUntagged"));
+        assertEquals("Enter your AcoustID application key first.", bridge.error);
+
+        clickRow("AcoustID key");
+        android.app.AlertDialog keyDialog =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        EditText key = dialogInput(keyDialog.getWindow().getDecorView(), "");
+        assertNotNull(key);
+        key.setText("not a key");
+        keyDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
+        idle();
+        assertEquals("", bridge.acoustIdKey());
+        assertEquals("That doesn’t look like an AcoustID application key.", bridge.error);
+        clickRow("AcoustID key");
+        keyDialog = org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        dialogInput(keyDialog.getWindow().getDecorView(), "").setText("Key12345");
+        keyDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
+        idle();
+        assertEquals("Key12345", bridge.acoustIdKey());
+        assertNotNull(text(activity.body, "Saved on this phone only"));
+        clickRow("Name untagged files by sound");
+        org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+                .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                .performClick();
+        idle();
+        assertTrue(bridge.checkOption("recognizeUntagged"));
+        assertNotNull(text(activity.body, "Files without tags are looked up in AcoustID"));
+    }
+
+    @Test
     public void trackDetailsToggles() throws Exception {
         TelegramBridge bridge = activity.bridge;
         signedIn();

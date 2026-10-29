@@ -65,7 +65,7 @@ public final class InternalAddon {
             return new JSONObject()
                     .put("id", "bitchord.telegram.native")
                     .put("name", "Unofficial Telegram")
-                    .put("version", "1.0.15")
+                    .put("version", "1.0.16")
                     .put("description", "Private on-device Telegram audio")
                     .put("allowDownloads", true)
                     .put("checkValidLossless", false)
@@ -151,8 +151,13 @@ public final class InternalAddon {
                 if (kbps > 0) stream.put("bitrate", kbps);
             }
             if (header != null && header.optInt("bits") > 0)
-                stream.put("bitDepth", header.optInt("bits"))
+                stream.put(
+                                "bitDepth",
+                                LosslessCheck.bits(
+                                        header.optInt("bits"), LosslessCheck.of(row, header)))
                         .put("sampleRate", header.optInt("rate"));
+            FileChecks checks = FileChecks.active;
+            if (checks != null) checks.played(row);
             return stream.toString();
         }
         throw new IOException("Unknown internal Telegram operation");
@@ -174,16 +179,19 @@ public final class InternalAddon {
 
     /**
      * As above; a header read from the file says what's inside an .m4a or .mka, so Dolby Digital
-     * Plus in an .m4a isn't taken for ALAC from its bitrate, and Dolby TrueHD counts as lossless.
+     * Plus in an .m4a isn't taken for ALAC from its bitrate, and Dolby TrueHD counts as lossless. A
+     * FLAC file made from an MP3 is ranked as that MP3.
      */
     static String quality(JSONObject row, JSONObject header) {
         String codec = header == null ? "" : header.optString("codec");
-        return TrackDetails.quality(
-                codec.isEmpty() ? row.optString("format") : codec,
-                row.optString("mime"),
-                row.optLong("size"),
-                row.optInt("duration"),
-                row.optInt("bits"));
+        return LosslessCheck.quality(
+                TrackDetails.quality(
+                        codec.isEmpty() ? row.optString("format") : codec,
+                        row.optString("mime"),
+                        row.optLong("size"),
+                        row.optInt("duration"),
+                        row.optInt("bits")),
+                LosslessCheck.of(row, header));
     }
 
     /** A Dolby Atmos file BitChord will play as Atmos; otherwise it goes as Dolby Digital Plus. */

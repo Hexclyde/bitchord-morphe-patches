@@ -58,6 +58,10 @@ SOURCES = [
     "CueAlbums",
     "AlbumList",
     "IndexTransfer",
+    "LosslessCheck",
+    "Chromaprint",
+    "AcoustId",
+    "FileChecks",
     "Strings",
     "Translations",
     "InternalAddon",
@@ -99,6 +103,9 @@ TESTS = [
     "CueTest",
     "AlbumListTest",
     "IndexTransferTest",
+    "LosslessCheckTest",
+    "ChromaprintTest",
+    "FileChecksTest",
 ]
 
 subprocess.run(
