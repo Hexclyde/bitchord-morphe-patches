@@ -20,6 +20,7 @@ More BitChord add-ons will be added to this repository over time.
 <p>
   <img src="docs/screenshots/application-setup.png" width="200" alt="API credentials screen">
   <img src="docs/screenshots/connected-library.png" width="200" alt="Connected library">
+  <img src="docs/screenshots/advanced-settings.png" width="200" alt="Advanced settings">
   <img src="docs/screenshots/track-details.png" width="200" alt="Track details settings">
   <img src="docs/screenshots/track-names.png" width="200" alt="Track names">
 </p>

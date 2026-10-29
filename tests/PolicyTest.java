@@ -240,7 +240,9 @@ public final class PolicyTest {
         check(MediaPolicy.communityAllowed(chat, false), "basic group can be a community channel");
         chat.type = new TdApi.ChatTypePrivate(1);
         check(MediaPolicy.chatAllowed(chat), "chat with a person allowed as a music chat");
-        check(!MediaPolicy.communityAllowed(chat, false), "chat with a person isn't a community channel");
+        check(
+                !MediaPolicy.communityAllowed(chat, false),
+                "chat with a person isn't a community channel");
         check(MediaPolicy.communityAllowed(chat, true), "bot can be a community channel");
         chat.type = new TdApi.ChatTypeSupergroup(1, true);
         chat.hasProtectedContent = true;

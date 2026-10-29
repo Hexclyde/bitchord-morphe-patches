@@ -220,6 +220,7 @@ public class TelegramScreenTest {
         screenshot("connected-library");
         assertNull("Storage is on the Advanced tab", slider(activity.body));
         openTab("Advanced");
+        screenshot("advanced-settings");
         SeekBar cacheSlider = slider(activity.body);
         assertNotNull(cacheSlider);
         assertEquals(CachePolicy.indexOf(CachePolicy.DEFAULT_BYTES), cacheSlider.getProgress());
