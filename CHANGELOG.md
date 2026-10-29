@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.19
+
+- **The switch to Telegram is now lined up by the waveform:** after the loudness curves find the offset to a few milliseconds, the two waveforms below 3 kHz are compared within that, which finds it to a fraction of a millisecond, even when the stream and the file have different sample rates.
+- **No more small repeat at the crossfade:** the Telegram copy took a moment to start after BitChord moved it to the stream's position, so it began a little behind, often by tens of milliseconds. Before the crossfade, while it's still silent, the patch now compares what the two players are playing at that moment and has the Telegram copy leave out exactly the audio it's behind by. Its player is told its position with that audio counted, so lyrics and the progress bar stay on the song. When it's more than 150 ms off, or ahead, it's moved again first. BitChord's wait before the crossfade can now take up to 2.6 seconds for this; the stream keeps playing meanwhile.
+- Fixed the offset being measured as if at 1x when a playback speed is set.
+
 ## 1.0.18
 
 - **No more repeat when a song switches to Telegram:** BitChord starts the new copy at the same position as the YouTube stream, but two uploads rarely start at the same instant, so the switch repeated or skipped a little. The patch now compares the last seven seconds heard with the same part of the Telegram file, finds the offset to within a few milliseconds, and starts the Telegram copy that much earlier or later.

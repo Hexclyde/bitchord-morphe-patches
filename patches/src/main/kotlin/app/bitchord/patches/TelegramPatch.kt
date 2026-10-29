@@ -18,6 +18,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.WideLiteralInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
@@ -756,11 +757,51 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
     val result = (read[asked + 1] as OneRegisterInstruction).registerA
     val self = position.implementation!!.registerCount - 2
     check(result < 15 && self < 16) { "Audio sink position registers out of range" }
-    position.addInstruction(
+    position.addInstructions(
         asked + 2,
-        "invoke-static {v$self, v$result, v${result + 1}}, $ALIGN->position(Ljava/lang/Object;J)V",
+        """
+        invoke-static {v$self, v$result, v${result + 1}}, $ALIGN->position(Ljava/lang/Object;J)J
+        move-result-wide v$result
+    """,
     )
     println("Lined up quality upgrades with the copy they replace")
+
+    // 6. Before the crossfade, BitChord waits up to 300 ms for the new copy to be ready. That
+    // wait is held until it plays in step with the old one, for up to 2.6 seconds.
+    val swapClass = mutableClassDefBy(VERSION_SWAP)
+    val run = swapClass.methods.single { it.name == "invokeSuspend" }
+    val body = run.implementation!!.instructions.toList()
+    val waits =
+        body.indices.filter {
+            body[it].opcode == Opcode.CONST_WIDE_16 &&
+                (body[it] as WideLiteralInstruction).wideLiteral == 300L
+        }
+    check(waits.size == 1) { "Version swap wait changed" }
+    val wait = waits.single()
+    val state =
+        (wait until body.size).firstOrNull {
+            body[it].methodRef()?.let { m ->
+                m.definingClass == PLAYER && m.name == "getPlaybackState"
+            } == true
+        } ?: throw PatchException("Version swap readiness check not found")
+    val asks = body[state]
+    val player =
+        when (asks) {
+            is RegisterRangeInstruction -> {
+                check(asks.registerCount == 1) { "Version swap readiness check changed" }
+                asks.startRegister
+            }
+            is FiveRegisterInstruction -> asks.registerC
+            else -> throw PatchException("Version swap readiness check changed")
+        }
+    check(body[state + 1].opcode == Opcode.MOVE_RESULT) { "Version swap readiness check changed" }
+    run.replaceInstruction(
+        state,
+        "invoke-static/range {v$player .. v$player}, $SMOOTH->settled($PLAYER)I",
+    )
+    val waitRegister = (body[wait] as OneRegisterInstruction).registerA
+    run.replaceInstruction(wait, "const-wide/16 v$waitRegister, 0xa28")
+    println("Held the upgrade's crossfade until the new copy plays in step")
 }
 
 private const val ALIGN = "Lapp/bitchord/telegram/VersionAlign;"

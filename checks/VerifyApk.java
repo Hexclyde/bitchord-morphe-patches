@@ -262,6 +262,7 @@ public class VerifyApk {
         int accountHooks = 0, sourceHooks = 0, sourceEditorHooks = 0;
         Set<String> downmixHooks = new TreeSet<>(), smoothHooks = new TreeSet<>();
         Set<String> alignHooks = new TreeSet<>();
+        int[] settleWaits = new int[2]; // BitChord's 300 ms wait before the crossfade; ours
         boolean smoothEntry = false;
         int legendTexts = 0, legendCalls = 0, searchHooks = 0, legendLinks = 0, matchHooks = 0;
         boolean downmixTarget = false;
@@ -449,6 +450,15 @@ public class VerifyApk {
                     method.getImplementation().getInstructions().forEach(instructions::add);
                     for (int index = 0; index < instructions.size(); index++) {
                         Instruction instruction = instructions.get(index);
+                        if (cls.getType()
+                                        .equals(
+                                                "Lcom/music/bitchord/playback/PlaybackService$smoothSwapCurrentTrackVersion$1;")
+                                && method.getName().equals("invokeSuspend")
+                                && instruction.getOpcode() == Opcode.CONST_WIDE_16) {
+                            long wait = ((WideLiteralInstruction) instruction).getWideLiteral();
+                            if (wait == 300) settleWaits[0]++;
+                            if (wait == 2600) settleWaits[1]++;
+                        }
                         if (instruction instanceof ReferenceInstruction reference) {
                             if (reference.getReference() instanceof MethodReference target) {
                                 if (cls.getType().startsWith("Lapp/bitchord/telegram/")
@@ -787,7 +797,7 @@ public class VerifyApk {
                                     check(
                                             !text.getString().contains("BitChord native test"),
                                             "Telegram application version is unbranded");
-                                    if (text.getString().equals("1.0.18")) version = true;
+                                    if (text.getString().equals("1.0.19")) version = true;
                                 }
                                 if (cls.getType()
                                         .equals("Lapp/bitchord/telegram/TelegramActivity;")) {
@@ -929,8 +939,13 @@ public class VerifyApk {
                                                     "Lcom/music/bitchord/playback/PlaybackService;>alignedOffset",
                                                     "Lcom/music/bitchord/playback/PlaybackService$swapIn$6;>prepare",
                                                     "Lcom/music/bitchord/playback/PlaybackService$swapIn$6;>replace",
+                                                    "Lcom/music/bitchord/playback/PlaybackService$smoothSwapCurrentTrackVersion$1;>settled",
                                                     "Lcom/music/bitchord/playback/PlaybackService$swapIn$6;>seekTo"))),
                     "Quality upgrades go through the two-player swap: " + smoothHooks);
+            check(
+                    settleWaits[0] == 0 && settleWaits[1] == 1,
+                    "The swap waits for the new copy to play in step before the crossfade: "
+                            + Arrays.toString(settleWaits));
             check(
                     alignHooks.equals(
                             new TreeSet<>(

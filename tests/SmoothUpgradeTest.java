@@ -27,6 +27,8 @@ public final class SmoothUpgradeTest {
                                             return System.identityHashCode(proxy);
                                         case "equals":
                                             return proxy == arguments[0];
+                                        case "getPlaybackState":
+                                            return Player.STATE_READY;
                                         default:
                                             // Reading the player changes nothing.
                                             if (!method.getName().startsWith("get"))
@@ -43,6 +45,9 @@ public final class SmoothUpgradeTest {
         check(
                 calls.equals(List.of("replaceMediaItem", "seekTo", "prepare")),
                 "Declined swap falls back to the original calls: " + calls);
+        check(
+                SmoothUpgrade.settled(player) == Player.STATE_READY,
+                "No swap of ours waiting: BitChord's own swaps see the real state");
         calls.clear();
         SmoothUpgrade.enabled = false;
         SmoothUpgrade.replace(new Object(), player, 0, null);

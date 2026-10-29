@@ -154,12 +154,14 @@ public final class Downmix {
     public static void flush(Object sink) {
         State state = states.get(sink);
         if (state != null) state.pending = false;
+        VersionAlign.flushed(sink);
     }
 
     public static boolean handleBuffer(Target sink, ByteBuffer buffer, long timeUs, int count)
             throws Exception {
         SoundCheck.tap(sink, buffer, timeUs);
         VersionAlign.tap(sink, buffer, timeUs);
+        if (VersionAlign.drop(sink, buffer, timeUs)) return true;
         State state = states.get(sink);
         if (state == null) return sink.originalHandleBuffer(buffer, timeUs, count);
         if (!state.pending) {

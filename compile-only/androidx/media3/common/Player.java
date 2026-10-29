@@ -2,6 +2,9 @@ package androidx.media3.common;
 
 /** Compile-only host signatures; verified against every patched APK. */
 public interface Player {
+    int STATE_BUFFERING = 2;
+    int STATE_READY = 3;
+
     MediaItem getCurrentMediaItem();
 
     boolean isPlaying();
@@ -21,4 +24,6 @@ public interface Player {
     android.os.Looper getApplicationLooper();
 
     PlaybackParameters getPlaybackParameters();
+
+    int getPlaybackState();
 }
