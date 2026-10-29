@@ -128,9 +128,21 @@ Yes, under **Main channel**. Choose a private channel you created as your main c
 - The status line counts the audio files copied, counting each song in a zip: "Copied 2,140 audio files in 1,310 posts".
 - The pace is 1 to 500 files an hour, and copying pauses whenever Telegram asks it to.
 
-The files come from the saved index, so **Saved index** has to be on; the community channels and your main channel are indexed too while copying is on. Only private channels you created can be the main channel, and channels with protected content can't be copied from.
+The files come from the saved index, so **Saved index** has to be on; your main channel is indexed as soon as you choose it, and the community channels while copying is on. Copying from a community channel starts once that channel has been indexed all the way back to its first post, since copies go oldest post first. Your main channel is indexed before anything else, and the other chats take turns a page at a time, so a channel with 200,000 files doesn't hold up a small one. Until then the status line says which channels it's waiting for and how far their indexing has got. A copy Telegram refuses is tried again three times, ten minutes apart, before it's skipped, and the status line says why.
+
+Only private channels you created can be the main channel. Telegram tells each account what it is in a channel, and only the person who created it (or was handed ownership) is "creator"; admins aren't. A channel with a public @username isn't private. Your own private channels aren't offered as community channels, and channels with protected content can't be copied from.
 
 **This carries a risk to your account.** Telegram watches for accounts that copy many messages, and can limit or ban one that does it too fast. A slower pace is safer. You're also responsible for what you copy: only copy music you're allowed to keep.
+
+## Does it play Dolby Atmos?
+
+Yes. Dolby Digital (.ac3), Dolby Digital Plus (.ec3, .eac3), and Dolby files in .m4a, .mp4 and .mka are treated like any other music file. Telegram only knows a file's name and type, which can't tell Dolby Atmos from plain Dolby Digital Plus, so the patch reads the first 64 KB of a few files per search, as it does to tell 16-bit FLAC from 24-bit. Dolby Atmos is marked in the file's first frame (and in the track's description in an .m4a); the format legend then shows **Dolby Atmos**, and BitChord gets the file as Atmos and shows its own badge.
+
+BitChord has its own decoder for Dolby Digital, Dolby Digital Plus and Dolby TrueHD, so they play on any phone. Dolby Atmos plays as its 5.1 or 7.1 mix, or with its height sound on a phone or speaker that supports Dolby Atmos. With **Play surround as stereo** on, it's mixed to stereo like any surround file. Dolby AC-4 needs a decoder in the phone itself, and **Hide Dolby files this phone can't play** keeps those files out of search on phones without one. Dolby Atmos in TrueHD shows as TrueHD, since telling the two apart needs more of the file.
+
+## Can the Telegram page be in my language?
+
+Yes. It follows your phone's language, in Spanish, Portuguese, French, German, Russian, Turkish, Arabic, Urdu, Hindi, Bengali, Chinese (Simplified), Japanese, Korean and Indonesian, and in English otherwise. Arabic and Urdu are laid out right to left. Names of BitChord's own screens, such as **Addons**, stay as BitChord shows them. To fix a translation, edit that language's file in `translations/`.
 
 ## Can I rename the installed app?
 

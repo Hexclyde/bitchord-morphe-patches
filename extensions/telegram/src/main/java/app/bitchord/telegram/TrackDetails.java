@@ -16,13 +16,13 @@ public final class TrackDetails {
     static final int ALAC_KBPS = 500;
 
     private static final Pattern LOSSLESS_FORMAT =
-            Pattern.compile("flac|wav|wave|aiff?|alac|ape|wv");
+            Pattern.compile("flac|wav|wave|aiff?|alac|ape|wv|truehd");
     private static final Pattern LOSSLESS_MIME =
-            Pattern.compile("audio/(x-)?(flac|wav|wave|aiff|alac|ape|wavpack)");
+            Pattern.compile("audio/(x-)?(flac|wav|wave|aiff|alac|ape|wavpack|true-hd)");
     private static final Pattern CONTAINER = Pattern.compile("m4a|mp4|caf");
     private static final Pattern EXTENSION =
             Pattern.compile(
-                    "\\.(flac|mp3|m4a|aac|ogg|opus|wav|alac|aiff?|ape|wv)$",
+                    "\\.(flac|mp3|m4a|aac|ogg|opus|wav|alac|aiff?|ape|wv|ac3|eac3|ec3|ac4|mka)$",
                     Pattern.CASE_INSENSITIVE);
     // "01 - ", "1. ", "03 ", "12)" in front of a title. A bare "7 Rings" or "1979" is left alone.
     private static final Pattern TRACK_NUMBER =
@@ -52,7 +52,10 @@ public final class TrackDetails {
         boolean lossless =
                 LOSSLESS_FORMAT.matcher(format).matches()
                         || LOSSLESS_MIME.matcher(mime).matches()
-                        || (CONTAINER.matcher(format).matches() && kbps >= ALAC_KBPS);
+                        || (CONTAINER.matcher(format).matches()
+                                && kbps >= ALAC_KBPS
+                                && !mime.contains("ac3")
+                                && !mime.contains("ac-3"));
         if (lossless) {
             if (bits > 0) return bits > 16 ? "HI_RES_LOSSLESS" : "LOSSLESS";
             return kbps >= HI_RES_KBPS ? "HI_RES_LOSSLESS" : "LOSSLESS";

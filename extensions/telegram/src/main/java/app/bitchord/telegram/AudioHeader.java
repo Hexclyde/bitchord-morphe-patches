@@ -4,12 +4,13 @@ import org.json.JSONObject;
 
 /**
  * Reads codec, bit depth, sample rate, channels and, where the header says, the length in seconds
- * from the first bytes of a lossless file.
+ * from the first bytes of a lossless file. Dolby files and ALAC in .m4a are read by {@link
+ * DolbyHeader}.
  */
 public final class AudioHeader {
     private AudioHeader() {}
 
-    /** What a header says, or null when it isn't FLAC, WAV or AIFF or is cut short. */
+    /** What a header says, or null when it isn't a format read here or is cut short. */
     public static JSONObject parse(byte[] head, int length) {
         try {
             int start = id3Size(head, length);
@@ -19,15 +20,17 @@ public final class AudioHeader {
             if (matches(head, length, 0, "FORM")
                     && (matches(head, length, 8, "AIFF") || matches(head, length, 8, "AIFC")))
                 return aiff(head, length);
+            return DolbyHeader.parse(head, length, start);
         } catch (RuntimeException e) {
             // A truncated or odd header just means no details.
         }
         return null;
     }
 
-    /** The legend for a parsed header, such as "FLAC 24bit". */
+    /** The legend for a parsed header, such as "FLAC 24bit" or "Dolby Atmos". */
     public static String label(JSONObject header) {
         if (header == null) return "";
+        if (DolbyHeader.dolby(header.optString("codec"))) return DolbyHeader.label(header);
         String codec = header.optString("codec").toUpperCase(java.util.Locale.ROOT);
         int bits = header.optInt("bits");
         return codec.isEmpty() ? "" : bits > 0 ? codec + " " + bits + "bit" : codec;
@@ -90,8 +93,7 @@ public final class AudioHeader {
         return null;
     }
 
-    private static JSONObject details(
-            String codec, int bits, int rate, int channels, double seconds) {
+    static JSONObject details(String codec, int bits, int rate, int channels, double seconds) {
         if (bits < 4 || bits > 64 || rate < 1000 || rate > 1_000_000 || channels < 1) return null;
         try {
             JSONObject header =

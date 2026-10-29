@@ -62,11 +62,13 @@ final class Duplicates {
     static long[] rank(JSONObject row, Headers headers) {
         JSONObject header = headers == null ? null : headers.get(row.optString("id"));
         if (header == null) header = row.optJSONObject("header");
+        String codec = header != null ? header.optString("codec") : "";
+        String format = DolbyHeader.dolby(codec) ? codec : row.optString("format");
         int bits = header != null ? header.optInt("bits") : row.optInt("bits");
         int rate = header != null ? header.optInt("rate") : row.optInt("rate");
         String quality =
                 TrackDetails.quality(
-                        row.optString("format"),
+                        format,
                         row.optString("mime"),
                         row.optLong("size"),
                         row.optInt("duration"),

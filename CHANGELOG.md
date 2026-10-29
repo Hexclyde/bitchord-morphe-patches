@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.13
+
+- **Dolby audio:** Dolby Digital (.ac3), Dolby Digital Plus (.ec3, .eac3) and Dolby files in .m4a, .mp4 and .mka are found and played like any other music file. The patch reads the start of each file to tell what's inside:
+  - the format legend shows **Dolby Atmos**, **DD+ 5.1**, **DD 2.0**, **TrueHD 7.1** or **AC-4**;
+  - a Dolby Atmos file is passed to BitChord as Atmos, so it gets BitChord's own Dolby Atmos badge and ranking;
+  - Dolby Digital Plus in an .m4a is no longer mistaken for ALAC from its bitrate, and Dolby TrueHD counts as lossless;
+  - ALAC in an .m4a now shows its real bit depth, such as ALAC 24bit.
+- BitChord's own decoder plays Dolby Digital, Dolby Digital Plus and Dolby TrueHD on any phone; Dolby Atmos plays as 5.1 or 7.1, or with its height sound where the phone or speaker supports it. **Hide Dolby files this phone can't play** (under **Track details**, on by default) hides Dolby AC-4 files on phones without an AC-4 decoder.
+- **The Telegram page in 14 languages:** Spanish, Portuguese, French, German, Russian, Turkish, Arabic, Urdu, Hindi, Bengali, Chinese (Simplified), Japanese, Korean and Indonesian. It follows the phone's language, and Arabic and Urdu read right to left. Anything not translated shows in English.
+- **Fixed Copy into main channel waiting for hours with nothing to show.** The saved index went through one chat at a time, so the community channels and the main channel waited behind any large music chat, and copying waits for a channel to be indexed. Now the main channel is indexed first and the other chats take turns a page at a time. Copying starts from each community channel as soon as it's indexed, and the status line says which channels it's still waiting for and how far they've got.
+- A copy Telegram refuses is tried again three times, ten minutes apart, with the reason on the status line, instead of being skipped straight away. Refused copies are counted, and a song is only counted as in your main channel once it's really been copied.
+- **Community channels** no longer lists private channels you own.
+- Your main channel is indexed as soon as you choose it, not only while copying is on.
+
 ## 1.0.12
 
 - **Hide duplicate songs** (under **Track details**, on by default): search results show each song once, as its best copy. Copies with the same title and artist and lengths within two seconds count as the same song; lossless beats lossy, then the higher bit depth, sample rate and bitrate win.

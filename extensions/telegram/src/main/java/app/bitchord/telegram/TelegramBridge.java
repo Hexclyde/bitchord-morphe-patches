@@ -35,7 +35,7 @@ public final class TelegramBridge {
     public final Context context;
     final ExecutorService work = Executors.newSingleThreadExecutor();
     final TrackNames names;
-    private volatile boolean useTrackNames, suggestTrackNames, hideDuplicates;
+    private volatile boolean useTrackNames, suggestTrackNames, hideDuplicates, hideUnplayable;
     private volatile boolean reportQuality, showArtwork, namesFromFiles;
     final Artwork artwork;
     final FormatProbe formats;
@@ -153,7 +153,7 @@ public final class TelegramBridge {
             System.loadLibrary("tdjni");
             instance = new TelegramBridge(context.getApplicationContext());
         } catch (Throwable t) {
-            startupError = "Native extension could not start: " + t;
+            startupError = Strings.f("Native extension could not start: {0}", t);
         }
     }
 
@@ -240,9 +240,10 @@ public final class TelegramBridge {
                         (id, seconds) -> AudioDecode.start(this, id, seconds),
                         title ->
                                 toast(
-                                        "Telegram has the same recording of “"
-                                                + title
-                                                + "”. It’ll play from Telegram next time."),
+                                        Strings.f(
+                                                "Telegram has the same recording of “{0}”. It’ll"
+                                                        + " play from Telegram next time.",
+                                                title)),
                         soundWork,
                         System::currentTimeMillis);
         names = new TrackNames(new File(home, "track-names.json"));
@@ -293,6 +294,7 @@ public final class TelegramBridge {
         FormatLegend.enabled = config.optBoolean("formatLegend", FormatLegend.enabled);
         index.enabled = !savedIndexBroken && config.optBoolean("searchIndex", true);
         hideDuplicates = config.optBoolean("hideDuplicates", true);
+        hideUnplayable = config.optBoolean("hideUnplayableDolby", true);
         SoundCheck.active = config.optBoolean("soundCheck", false) ? soundCheck : null;
         JSONArray ids = config.optJSONArray("chats");
         if (ids != null) for (int i = 0; i < ids.length(); i++) selected.add(ids.getLong(i));
@@ -444,7 +446,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.12"));
+                            "1.0.13"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -539,7 +541,7 @@ public final class TelegramBridge {
         selected.add(chat.id);
         remoteSearch.clear();
         saveConfig();
-        status = "Selected " + chat.title + ". Search in BitChord → Addons.";
+        status = Strings.f("Selected {0}. Search in BitChord → Addons.", chat.title);
     }
 
     public void toggle(long id, boolean checked) throws Exception {
@@ -557,7 +559,9 @@ public final class TelegramBridge {
         }
         remoteSearch.clear();
         saveConfig();
-        status = "Selected " + selected.size() + " music chats. Search in BitChord → Addons.";
+        status =
+                Strings.f(
+                        "Selected {0} music chats. Search in BitChord → Addons.", selected.size());
     }
 
     public List<JSONObject> searchTracks(String query) throws Exception {
@@ -585,9 +589,11 @@ public final class TelegramBridge {
                                 }
                             });
         if (session != generation) throw new IOException("Telegram session changed. Search again.");
+        if (hideUnplayable) rows = DolbySupport.playable(rows, formats::get);
         if (hideDuplicates) rows = Duplicates.best(rows, formats::get);
         error = found.warning;
-        status = "Found " + rows.size() + (rows.size() == 1 ? " track." : " tracks.");
+        status =
+                Strings.f(rows.size() == 1 ? "Found {0} track." : "Found {0} tracks.", rows.size());
         return rows;
     }
 
@@ -683,12 +689,12 @@ public final class TelegramBridge {
         for (JSONObject row : rows) bytes += Math.max(0, row.optLong("size"));
         String songs =
                 rows.size() < all
-                        ? String.format(Locale.US, "newest %,d of %,d songs", rows.size(), all)
-                        : String.format(
-                                Locale.US,
-                                "%,d %s",
-                                rows.size(),
-                                rows.size() == 1 ? "song" : "songs");
+                        ? Strings.f(
+                                "newest {0} of {1} songs",
+                                Strings.number(rows.size()), Strings.number(all))
+                        : Strings.f(
+                                rows.size() == 1 ? "{0} song" : "{0} songs",
+                                Strings.number(rows.size()));
         return new String[] {songs, TrackDetails.size(bytes)};
     }
 
@@ -706,11 +712,11 @@ public final class TelegramBridge {
         config.put("playlists", saved);
         saveConfig();
         status =
-                String.format(
-                        Locale.US,
-                        "Saved %,d %s as the playlist “%s” in BitChord’s Library.",
-                        songs.size(),
-                        songs.size() == 1 ? "song" : "songs",
+                Strings.f(
+                        songs.size() == 1
+                                ? "Saved {0} song as the playlist “{1}” in BitChord’s Library."
+                                : "Saved {0} songs as the playlist “{1}” in BitChord’s Library.",
+                        Strings.number(songs.size()),
                         title);
     }
 
@@ -719,11 +725,11 @@ public final class TelegramBridge {
         List<Object> songs = HostLibrary.songs(channelTracks(chat), showArtwork ? artwork : null);
         HostLibrary.download(context, songs, title);
         status =
-                String.format(
-                        Locale.US,
-                        "Queued %,d %s from %s in BitChord’s downloads.",
-                        songs.size(),
-                        songs.size() == 1 ? "song" : "songs",
+                Strings.f(
+                        songs.size() == 1
+                                ? "Queued {0} song from {1} in BitChord’s downloads."
+                                : "Queued {0} songs from {1} in BitChord’s downloads.",
+                        Strings.number(songs.size()),
                         title);
     }
 
@@ -753,7 +759,7 @@ public final class TelegramBridge {
             try {
                 if (!ready() || !index.enabled) wait = 5000;
                 else if (!remoteSearch.idle()) wait = 1000;
-                else if (!index.step(indexedChats())) wait = 60000;
+                else if (!index.step(indexedChats(), mainChannel.main())) wait = 60000;
             } catch (LiveSearch.RateLimited e) {
                 wait = 1000L * e.retrySeconds + 1000;
             } catch (Exception e) {
@@ -795,9 +801,13 @@ public final class TelegramBridge {
         return out;
     }
 
-    /** The music chats, and while importing, the main and community channels too. */
+    /**
+     * The music chats and your main channel, once you've chosen one, and while copying, the
+     * community channels too.
+     */
     Set<Long> indexedChats() {
         Set<Long> chats = new HashSet<>(selected);
+        if (mainChannel.main() != 0) chats.add(mainChannel.main());
         if (mainChannel.option("import")) chats.addAll(mainChannel.indexed());
         return chats;
     }
@@ -823,27 +833,39 @@ public final class TelegramBridge {
         }
     }
 
-    /** Private channels this account created: the only ones that can be the main channel. */
+    /**
+     * Private channels this account created: the only ones that can be the main channel. Telegram
+     * says who created a channel in the account's own membership of it: "creator" is only ever the
+     * person who made it (or was handed ownership), not an admin. A channel with a public
+     *
+     * @username isn't private.
+     */
     public List<TdApi.Chat> ownedPrivateChannels() throws Exception {
         List<TdApi.Chat> owned = new ArrayList<>();
-        for (TdApi.Chat chat : chats()) {
-            if (!(chat.type instanceof TdApi.ChatTypeSupergroup)) continue;
-            TdApi.ChatTypeSupergroup type = (TdApi.ChatTypeSupergroup) chat.type;
-            if (!type.isChannel) continue;
-            TdApi.Supergroup group = call(new TdApi.GetSupergroup(type.supergroupId));
-            boolean isPublic =
-                    group.usernames != null
-                            && group.usernames.activeUsernames != null
-                            && group.usernames.activeUsernames.length > 0;
-            if (group.status instanceof TdApi.ChatMemberStatusCreator && !isPublic) owned.add(chat);
-        }
+        for (TdApi.Chat chat : chats()) if (ownChannel(chat) == Boolean.FALSE) owned.add(chat);
         return owned;
     }
 
-    /** Chats that can be imported from: readable, not protected, and not the main channel. */
+    /** Null when the chat isn't a channel this account created; otherwise whether it's public. */
+    private Boolean ownChannel(TdApi.Chat chat) throws Exception {
+        if (!(chat.type instanceof TdApi.ChatTypeSupergroup)) return null;
+        TdApi.ChatTypeSupergroup type = (TdApi.ChatTypeSupergroup) chat.type;
+        if (!type.isChannel) return null;
+        TdApi.Supergroup group = call(new TdApi.GetSupergroup(type.supergroupId));
+        if (!(group.status instanceof TdApi.ChatMemberStatusCreator)) return null;
+        return group.usernames != null
+                && group.usernames.activeUsernames != null
+                && group.usernames.activeUsernames.length > 0;
+    }
+
+    /**
+     * Chats that can be imported from: readable, not protected, and not a private channel of your
+     * own, which is where copies go rather than where they come from.
+     */
     public List<TdApi.Chat> communityChoices() throws Exception {
         List<TdApi.Chat> chats = new ArrayList<>();
-        for (TdApi.Chat chat : chats()) if (chat.id != mainChannel.main()) chats.add(chat);
+        for (TdApi.Chat chat : chats())
+            if (chat.id != mainChannel.main() && ownChannel(chat) != Boolean.FALSE) chats.add(chat);
         return chats;
     }
 
@@ -885,6 +907,16 @@ public final class TelegramBridge {
 
     public String importStatus() {
         return mainChannel.status;
+    }
+
+    public boolean hideUnplayableDolby() {
+        return hideUnplayable;
+    }
+
+    public void setHideUnplayableDolby(boolean on) throws Exception {
+        hideUnplayable = on;
+        config.put("hideUnplayableDolby", on);
+        saveConfig();
     }
 
     public boolean hideDuplicates() {
@@ -1169,12 +1201,12 @@ public final class TelegramBridge {
         if (!useTrackNames) return;
         int removed = SavedCopies.forget(names.playedAs(title, artist));
         status =
-                removed > 0
-                        ? "Saved “"
-                                + TrackNames.clean(title)
-                                + "”. Removed BitChord’s saved copy;"
-                                + " play it again to use your Telegram file."
-                        : "Saved “" + TrackNames.clean(title) + "”.";
+                Strings.f(
+                        removed > 0
+                                ? "Saved “{0}”. Removed BitChord’s saved copy; play it again to use"
+                                        + " your Telegram file."
+                                : "Saved “{0}”.",
+                        TrackNames.clean(title));
     }
 
     public JSONObject resolveTrack(String id) throws Exception {
@@ -1384,11 +1416,12 @@ public final class TelegramBridge {
         }
         boolean applied = audio.applyCacheLimit();
         status =
-                "Telegram cache target saved: "
-                        + CachePolicy.label(bytes)
-                        + (applied
-                                ? "."
-                                : ". Cleanup will apply before the next playback session.");
+                Strings.f(
+                        applied
+                                ? "Telegram cache target saved: {0}."
+                                : "Telegram cache target saved: {0}. Cleanup will apply before the"
+                                        + " next playback session.",
+                        CachePolicy.label(bytes));
     }
 
     public void clearCache() throws Exception {

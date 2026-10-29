@@ -55,13 +55,21 @@ final class LegendMatch {
                 name = "OGG";
                 break;
             case "ac3":
+                name = "DD";
+                break;
             case "eac3":
             case "ec-3":
-                name = "DOLBY";
+            case "ec3":
+                name = "DD+";
                 break;
             case "eac3-joc":
-                name = "ATMOS";
-                break;
+            case "ec3-joc":
+                return "Dolby Atmos";
+            case "truehd":
+                return "TrueHD";
+            case "ac4":
+            case "ac-4":
+                return "AC-4";
             default:
                 return "";
         }

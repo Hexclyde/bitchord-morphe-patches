@@ -53,6 +53,12 @@ Recently uploaded files can take time to appear. BitChord can reuse the same sea
 
 If **Unofficial Telegram** is missing from playback sources, tap **Playback → Telegram source → Repair** on the Telegram page. Check that the source is enabled.
 
+## Copy into main channel shows no progress
+
+Copying from a community channel starts once the saved index has been through it, oldest post first. The line under **Copy into main channel** says which channels it's waiting for and how far their indexing has got; the **Saved index** line shows the time left. Your main channel is indexed first, and with **Skip duplicates** on, copying waits for it too.
+
+If the line says **Couldn't copy**, Telegram refused the copy and the reason follows. It's tried again three times, ten minutes apart, then skipped. Check that your account can still post in your main channel. BitChord's log has a line for each refused copy.
+
 ## "Telegram API rate limited" appears
 
 Telegram has asked your account to pause searches for a while, usually after many searches in a short time. The message says when searching starts again. Until then, the patch sends no searches, because searching during the pause can make it longer. BitChord plays songs from its other sources in the meantime.

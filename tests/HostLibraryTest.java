@@ -70,6 +70,6 @@ public final class HostLibraryTest {
         check(HostLibrary.tier("HI_RES_LOSSLESS").equals("LOSSLESS"), "Hi-res tier");
         check(HostLibrary.tier("") == null, "Unknown quality");
         check("61:01".equals(HostLibrary.durationText(3661)), "Long tracks in minutes");
-        System.out.println("PASS: " + checks + " BitChord playlist and download handoff checks.");
+        System.out.println("PASS: " + checks + " BitChord playlist and download checks.");
     }
 }

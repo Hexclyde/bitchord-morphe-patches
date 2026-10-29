@@ -252,6 +252,9 @@ public class VerifyApk {
                 playlistId = false,
                 flowSwap = false,
                 downloadQueue = false,
+                atmosDecoder = false,
+                atmosSetting = false,
+                ffmpegRenderer = false,
                 version = false,
                 portal = false,
                 generic = false;
@@ -366,6 +369,13 @@ public class VerifyApk {
                                 && field.getType()
                                         .equals("Lkotlinx/coroutines/flow/StateFlowImpl;"))
                             playlistFlow = true;
+                if (cls.getType().equals("Lcom/music/bitchord/data/settings/AppSettings;"))
+                    for (Field field : cls.getFields())
+                        if (field.getName().equals("dolbyAtmos")
+                                && (field.getAccessFlags() & 0x8) != 0
+                                && field.getType()
+                                        .equals("Lkotlinx/coroutines/flow/StateFlowImpl;"))
+                            atmosSetting = true;
                 if (cls.getType().equals("Lcom/music/bitchord/data/spotify/LocalPlaylist;"))
                     for (Field field : cls.getFields())
                         if (field.getName().equals("id")
@@ -405,6 +415,22 @@ public class VerifyApk {
                             && isPublic
                             && params.equals("[Ljava/lang/Object;, Ljava/lang/Object;]"))
                         flowSwap = true;
+                    if (cls.getType().equals("Lcom/music/bitchord/data/sources/DeviceCodecs;")
+                            && method.getName().equals("getPlaysDolbyAtmos")
+                            && isStatic
+                            && isPublic
+                            && params.equals("[]")) atmosDecoder = true;
+                    if (cls.getType().startsWith("Lcom/music/bitchord/playback/PlaybackService")
+                            && method.getName().equals("buildAudioRenderers")
+                            && method.getImplementation() != null)
+                        for (Instruction i : method.getImplementation().getInstructions())
+                            if (i instanceof ReferenceInstruction r
+                                    && r.getReference()
+                                            .toString()
+                                            .startsWith(
+                                                    "Landroidx/media3/decoder/ffmpeg/"
+                                                            + "FfmpegAudioRenderer;-><init>"))
+                                ffmpegRenderer = true;
                     if (cls.getType().equals("Lcom/music/bitchord/download/Downloads;")
                             && method.getName().equals("enqueue")
                             && isStatic
@@ -751,7 +777,7 @@ public class VerifyApk {
                                     check(
                                             !text.getString().contains("BitChord native test"),
                                             "Telegram application version is unbranded");
-                                    if (text.getString().equals("1.0.12")) version = true;
+                                    if (text.getString().equals("1.0.13")) version = true;
                                 }
                                 if (cls.getType()
                                         .equals("Lapp/bitchord/telegram/TelegramActivity;")) {
@@ -928,8 +954,16 @@ public class VerifyApk {
                     "Playlist store can save and replace a channel playlist");
             check(downloadQueue, "Downloads.enqueue takes a channel's songs");
             check(
+                    atmosDecoder && atmosSetting,
+                    "BitChord's Dolby Atmos decoder check and setting are where the patch reads"
+                            + " them");
+            check(ffmpegRenderer, "BitChord's player decodes Dolby with its own FFmpeg decoder");
+            check(
                     app.getAttributeNS(NS, "extractNativeLibs").equals("true"),
                     "Native extraction enabled");
+            check(
+                    app.getAttributeNS(NS, "supportsRtl").equals("true"),
+                    "Right-to-left layouts enabled, for the Arabic and Urdu pages");
         }
         System.out.println(
                 "PASS: "

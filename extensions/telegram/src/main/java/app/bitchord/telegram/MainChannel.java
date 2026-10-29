@@ -27,7 +27,9 @@ final class MainChannel {
     }
 
     static final int MAX_PER_HOUR = 500, DEFAULT_PER_HOUR = 100, MAX_BATCH = 10;
-    private static final int LOOK_AHEAD = 50;
+    private static final int LOOK_AHEAD = 50, RETRIES = 3;
+    private static final long RETRY_MILLIS = 10 * 60_000L;
+    private int failures;
 
     private final File file;
     private final Telegram telegram;
@@ -67,7 +69,8 @@ final class MainChannel {
     synchronized void setMain(long chat, String title) throws Exception {
         if (chat != main()) {
             saved.put("main", chat).put("mainTitle", title).remove("chats");
-            saved.put("copied", 0).put("lossy", 0).put("duplicates", 0);
+            saved.put("copied", 0).put("songs", 0).put("lossy", 0).put("duplicates", 0);
+            saved.put("failed", 0);
             owned = null;
         }
         save();
@@ -144,14 +147,23 @@ final class MainChannel {
             return 60_000;
         }
         if (!index.enabled) {
-            status = "Waiting for Saved index to be turned on";
+            status = Strings.t("Waiting for Saved index to be turned on");
             return 60_000;
         }
         if (now < nextAt) return nextAt - now;
         boolean dedupe = option("skipDuplicates");
         if (dedupe && owned == null) {
             if (!index.built(main)) {
-                status = "Waiting for the main channel to be indexed";
+                String p = index.progress(main);
+                status =
+                        p.isEmpty()
+                                ? Strings.t(
+                                        "Waiting for the main channel to be indexed, so duplicates"
+                                                + " can be skipped")
+                                : Strings.f(
+                                        "Waiting for the main channel to be indexed ({0}), so"
+                                                + " duplicates can be skipped",
+                                        p);
                 return 30_000;
             }
             owned = new HashSet<>();
@@ -164,17 +176,18 @@ final class MainChannel {
                 }
         }
         int batch = batch();
-        boolean waiting = false, more = false;
+        List<String> waiting = new ArrayList<>();
+        for (long chat : sources) if (!index.built(chat)) waiting.add(index.progress(chat));
+        String later = waiting.isEmpty() ? "" : " · " + waiting(waiting, sources.size());
+        boolean more = false;
         for (long chat : sources) {
-            if (!index.built(chat)) {
-                waiting = true;
-                continue;
-            }
+            if (!index.built(chat)) continue;
             JSONObject state = chatState(chat);
             if (!state.has("cutoff")) state.put("cutoff", newest(index, chat));
             long cutoff = option("sync") ? Long.MAX_VALUE : state.optLong("cutoff");
             long after = state.optLong("after");
             List<Long> picked = new ArrayList<>();
+            Set<String> picking = new HashSet<>(); // what the picked posts add to the main channel
             int songs = 0; // audio files in the picked posts: one, or a zip's songs
             // Whole posts at a time: the songs of a zip share its message and are judged together.
             // The window holds the largest zip, so only a post cut off at its end waits for the
@@ -204,7 +217,9 @@ final class MainChannel {
                 boolean wanted = false;
                 for (JSONObject row : post)
                     if (option("losslessOnly") && !lossless(row)) lossy++;
-                    else if (dedupe && !Collections.disjoint(keys(row), owned)) duplicates++;
+                    else if (dedupe
+                            && (!Collections.disjoint(keys(row), owned)
+                                    || !Collections.disjoint(keys(row), picking))) duplicates++;
                     else wanted = true;
                 if (!wanted) {
                     count(duplicates > 0 ? "duplicates" : "lossy");
@@ -212,7 +227,7 @@ final class MainChannel {
                 }
                 picked.add(after);
                 songs += post.size();
-                if (dedupe) for (JSONObject row : post) owned.addAll(keys(row));
+                if (dedupe) for (JSONObject row : post) picking.addAll(keys(row));
             }
             if (cutShort && !posts.isEmpty()) more = true;
             if (!picked.isEmpty()) {
@@ -222,55 +237,98 @@ final class MainChannel {
                     telegram.copy(main, chat, ids);
                 } catch (LiveSearch.RateLimited e) {
                     nextAt = now + 1000L * e.retrySeconds + 5000;
-                    status = "Telegram asked for a pause; carrying on in " + e.retrySeconds + " s";
+                    status =
+                            Strings.f(
+                                    "Telegram asked for a pause; carrying on in {0} s",
+                                    e.retrySeconds);
                     save();
                     throw e;
                 } catch (Exception e) {
                     HostLog.d(
                             "Unofficial Telegram couldn't copy "
                                     + ids.length
-                                    + " files from chat "
+                                    + " posts from chat "
                                     + chat
+                                    + " to "
+                                    + main
                                     + ": "
                                     + e.getMessage());
+                    // Tried again a few times first: when it's the main channel that's refusing
+                    // (no right to post, say), skipping would quietly pass over everything.
+                    if (++failures < RETRIES) {
+                        nextAt = now + RETRY_MILLIS;
+                        status =
+                                Strings.f(
+                                        "Couldn't copy: {0}. Trying again in {1} min.",
+                                        e.getMessage(), RETRY_MILLIS / 60_000);
+                        save();
+                        return RETRY_MILLIS;
+                    }
                     count("failed", ids.length);
                     ids = new long[0];
                     songs = 0;
                 }
+                failures = 0;
+                if (dedupe && ids.length > 0) owned.addAll(picking);
                 count("copied", ids.length);
                 count("songs", songs);
                 state.put("after", after);
                 nextAt = now + gapMillis(picked.size());
-                status = progress(index);
+                status = progress(index) + later;
                 save();
                 return nextAt - now;
             }
             state.put("after", after);
         }
         save();
-        status =
-                waiting
-                        ? "Waiting for the community channels to be indexed. " + progress(index)
-                        : more ? progress(index) : done();
+        status = !waiting.isEmpty() || more ? progress(index) + later : done();
         return more ? 1000 : option("sync") ? 600_000 : 60_000;
+    }
+
+    /**
+     * "Waiting for a community channel to be indexed (34%). Copying from it starts once it's done,
+     * oldest post first."
+     */
+    private static String waiting(List<String> percents, int of) {
+        StringBuilder known = new StringBuilder();
+        for (String p : percents)
+            if (!p.isEmpty()) known.append(known.length() == 0 ? "" : ", ").append(p);
+        String text =
+                percents.size() > 1
+                        ? Strings.f(
+                                "Waiting for {0} community channels to be indexed", percents.size())
+                        : Strings.t(
+                                of == 1
+                                        ? "Waiting for the community channel to be indexed"
+                                        : "Waiting for a community channel to be indexed");
+        if (known.length() > 0) text += " (" + known + ")";
+        return text
+                + ". "
+                + Strings.t(
+                        percents.size() == 1
+                                ? "Copying from it starts once it's done, oldest post first."
+                                : "Copying from each starts once it's done, oldest post first.");
     }
 
     private String done() {
         return option("sync")
-                ? "Up to date: " + copied() + " copied. New posts are copied as they're indexed."
-                : "Done: " + copied() + " copied.";
+                ? Strings.f(
+                        "Up to date: {0} copied. New posts are copied as they're indexed.",
+                        copied())
+                : Strings.f("Done: {0} copied.", copied());
     }
 
     /** "2,140 audio files in 1,310 posts", or "31 audio files" when each post is one. */
     private String copied() {
         int posts = saved.optInt("copied"), songs = Math.max(posts, saved.optInt("songs"));
         String files =
-                String.format(Locale.US, "%,d audio %s", songs, songs == 1 ? "file" : "files");
+                Strings.f(songs == 1 ? "{0} audio file" : "{0} audio files", Strings.number(songs));
         return songs == posts
                 ? files
                 : files
-                        + String.format(
-                                Locale.US, " in %,d %s", posts, posts == 1 ? "post" : "posts");
+                        + " "
+                        + Strings.f(
+                                posts == 1 ? "in {0} post" : "in {0} posts", Strings.number(posts));
     }
 
     /**
@@ -288,28 +346,29 @@ final class MainChannel {
         } catch (Exception ignored) {
             // Shown without what's left.
         }
-        StringBuilder text = new StringBuilder("Copied " + copied());
+        StringBuilder text = new StringBuilder(Strings.f("Copied {0}", copied()));
         int lossy = saved.optInt("lossy"), dupes = saved.optInt("duplicates");
-        if (lossy > 0 || dupes > 0) {
-            text.append(" · ");
-            if (lossy > 0) text.append(String.format(Locale.US, "%,d lossy", lossy));
-            if (lossy > 0 && dupes > 0) text.append(" and ");
-            if (dupes > 0)
-                text.append(
-                        String.format(
-                                Locale.US,
-                                "%,d %s",
-                                dupes,
-                                dupes == 1 ? "duplicate" : "duplicates"));
-            text.append(" skipped");
-        }
+        String lossyText = Strings.f("{0} lossy", Strings.number(lossy));
+        String dupesText =
+                Strings.f(dupes == 1 ? "{0} duplicate" : "{0} duplicates", Strings.number(dupes));
+        if (lossy > 0 && dupes > 0)
+            text.append(" · ").append(Strings.f("{0} and {1} skipped", lossyText, dupesText));
+        else if (lossy > 0 || dupes > 0)
+            text.append(" · ").append(Strings.f("{0} skipped", lossy > 0 ? lossyText : dupesText));
+        int failed = saved.optInt("failed");
+        if (failed > 0)
+            text.append(" · ")
+                    .append(
+                            Strings.f(
+                                    "{0} couldn't be copied (BitChord's log says why)",
+                                    Strings.number(failed)));
         if (left > 0)
-            text.append(
-                    String.format(
-                            Locale.US,
-                            " · about %,d to go, up to %s",
-                            left,
-                            TelegramIndex.timeLeft(left * 60.0 / perHour())));
+            text.append(" · ")
+                    .append(
+                            Strings.f(
+                                    "about {0} to go, up to {1}",
+                                    Strings.number(left),
+                                    TelegramIndex.timeLeft(left * 60.0 / perHour())));
         return text.toString();
     }
 

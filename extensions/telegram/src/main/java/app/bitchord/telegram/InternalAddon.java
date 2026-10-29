@@ -65,7 +65,7 @@ public final class InternalAddon {
             return new JSONObject()
                     .put("id", "bitchord.telegram.native")
                     .put("name", "Unofficial Telegram")
-                    .put("version", "1.0.12")
+                    .put("version", "1.0.13")
                     .put("description", "Private on-device Telegram audio")
                     .put("allowDownloads", true)
                     .put("checkValidLossless", false)
@@ -103,16 +103,19 @@ public final class InternalAddon {
                             + (rows.size() == 1 ? " file" : " files")
                             + found);
             for (JSONObject row : rows) {
+                JSONObject header = bridge.formats.get(row.getString("id"));
                 JSONObject track =
                         new JSONObject()
                                 .put("id", row.getString("id"))
                                 .put("title", row.optString("title"))
                                 .put("artist", row.optString("artist"))
                                 .put("duration", duration(row, query))
-                                .put("format", row.optString("format"));
+                                .put("format", format(row));
                 if (!row.optString("artworkURL").isEmpty())
                     track.put("artworkURL", row.getString("artworkURL"));
-                String quality = bridge.reportQuality() ? quality(row) : "";
+                // BitChord shows its own Dolby Atmos badge and ranks those copies for it.
+                if (atmos(header)) track.put("atmos", true);
+                String quality = bridge.reportQuality() ? quality(row, header) : "";
                 if (!quality.isEmpty()) track.put("audioQuality", quality);
                 tracks.put(track);
             }
@@ -135,17 +138,19 @@ public final class InternalAddon {
             JSONObject stream =
                     new JSONObject()
                             .put("url", ORIGIN + tag + "/audio/" + row.getString("id"))
-                            .put("format", row.optString("format"))
+                            .put("format", format(row))
                             .put("mimeType", row.optString("mime"))
                             .put("manifest", "none")
                             .put("encrypted", false);
-            String quality = bridge.reportQuality() ? quality(row) : "";
+            String codec = header == null ? "" : header.optString("codec");
+            if (DolbyHeader.dolby(codec)) stream.put("codec", atmos(header) ? "eac3-joc" : codec);
+            String quality = bridge.reportQuality() ? quality(row, header) : "";
             if (!quality.isEmpty()) {
                 stream.put("audioQuality", quality);
                 int kbps = TrackDetails.kbps(row.optLong("size"), row.optInt("duration"));
                 if (kbps > 0) stream.put("bitrate", kbps);
             }
-            if (header != null)
+            if (header != null && header.optInt("bits") > 0)
                 stream.put("bitDepth", header.optInt("bits"))
                         .put("sampleRate", header.optInt("rate"));
             return stream.toString();
@@ -164,12 +169,35 @@ public final class InternalAddon {
     }
 
     static String quality(JSONObject row) {
+        return quality(row, null);
+    }
+
+    /**
+     * As above; a header read from the file says what's inside an .m4a or .mka, so Dolby Digital
+     * Plus in an .m4a isn't taken for ALAC from its bitrate, and Dolby TrueHD counts as lossless.
+     */
+    static String quality(JSONObject row, JSONObject header) {
+        String codec = header == null ? "" : header.optString("codec");
         return TrackDetails.quality(
-                row.optString("format"),
+                codec.isEmpty() ? row.optString("format") : codec,
                 row.optString("mime"),
                 row.optLong("size"),
                 row.optInt("duration"),
                 row.optInt("bits"));
+    }
+
+    /** A Dolby Atmos file BitChord will play as Atmos; otherwise it goes as Dolby Digital Plus. */
+    static boolean atmos(JSONObject header) {
+        return header != null && header.optBoolean("atmos") && DolbySupport.atmosAccepted();
+    }
+
+    /**
+     * The file's type for BitChord. A .ec3 file is reported as "eac3": BitChord takes "ec3" in a
+     * track's type for Dolby Atmos, which only the file's header can tell.
+     */
+    static String format(JSONObject row) {
+        String format = row.optString("format");
+        return format.equalsIgnoreCase("ec3") ? "eac3" : format;
     }
 
     static String audioId(TelegramBridge bridge, String value) throws IOException {

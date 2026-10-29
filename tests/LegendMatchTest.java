@@ -32,7 +32,9 @@ public final class LegendMatchTest {
         check(LegendMatch.label("opus", null, 160).equals("OPUS 160kbps"), "YouTube Opus");
         check(LegendMatch.label("mp4a", 16, 256).equals("AAC 256kbps"), "AAC ignores bits");
         check(LegendMatch.label("aac", null, null).equals("AAC"), "Lossy without bitrate");
-        check(LegendMatch.label("eac3-joc", null, 768).equals("ATMOS 768kbps"), "Atmos");
+        check(LegendMatch.label("eac3-joc", null, 768).equals("Dolby Atmos"), "Atmos");
+        check(LegendMatch.label("eac3", null, 640).equals("DD+ 640kbps"), "Dolby Digital Plus");
+        check(LegendMatch.label("ac3", null, 448).equals("DD 448kbps"), "Dolby Digital");
         check(
                 LegendMatch.label("xyz", 16, 100).isEmpty()
                         && LegendMatch.label(null, 1, 1).isEmpty(),

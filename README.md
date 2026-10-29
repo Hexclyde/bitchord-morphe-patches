@@ -4,7 +4,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.0.12). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.0.13). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > I've only been able to test it on an **arm64-v8a** phone. The armeabi-v7a and x86_64 builds pass the same automated checks, but I haven't run them on a real device. If you're on one of those, please give it a try and [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems. Hearing that it works is useful too.
 
@@ -37,12 +37,14 @@ More BitChord add-ons will be added to this repository over time.
 - Copy music from community channels into a private channel you own, at a pace you set, with lossless-only and duplicate filters
 - Untagged files get their title and artist from the file name (`03 - Artist - Title.flac`)
 - 5.1 and 7.1 files play as proper stereo, mixed inside the player without converting the file
-- A small format legend next to song titles (FLAC 24bit, MP3 320kbps, …), in the main search too
+- A small format legend next to song titles (FLAC 24bit, Dolby Atmos, DD+ 5.1, MP3 320kbps, …), in the main search too
+- Dolby Digital, Dolby Digital Plus and Dolby Atmos files, with Atmos passed on to BitChord as Atmos
 - When a better copy turns up mid-song, it fades in without a gap
 - Fix misnamed files on your phone, with suggestions, without uploading them again
 - Browse channel posts in Channel View
 - Control the size of the Telegram audio cache
 - See the playing source and bitrate in **Show stats for nerds**
+- The Telegram page in 14 languages, following your phone: Spanish, Portuguese, French, German, Russian, Turkish, Arabic, Urdu, Hindi, Bengali, Chinese, Japanese, Korean and Indonesian
 
 Every extra (quality, covers, file names, format legend, smooth switching, surround mixing, sound checks, the saved index, the main channel copy, name fixes and suggestions) can be turned off in the app.
 
@@ -86,7 +88,7 @@ This is an independent project and isn't affiliated with BitChord, Telegram or M
 
 ## Contributing
 
-Bug reports and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) first. If you want to build from source, see [docs/BUILDING.md](docs/BUILDING.md).
+Bug reports and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) first. Translation fixes go in `translations/<language>.json`; `python3 tools/translations.py` rebuilds the table the add-on reads. If you want to build from source, see [docs/BUILDING.md](docs/BUILDING.md).
 
 ## License
 

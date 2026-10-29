@@ -73,19 +73,30 @@ final class TelegramIndex {
     }
 
     /**
-     * Fetches one page for the first selected chat that needs it. False when every selected chat is
-     * up to date.
+     * Fetches one page for a selected chat that needs it. False when every selected chat is up to
+     * date.
      */
     synchronized boolean step(Collection<Long> selected) throws Exception {
+        return step(selected, 0);
+    }
+
+    /**
+     * As above, with {@code first} built before the others. Chats being built take turns a page at
+     * a time, so a small chat isn't stuck behind one with 200,000 files, and chats already built
+     * are topped up in between.
+     */
+    synchronized boolean step(Collection<Long> selected, long first) throws Exception {
         if (!enabled) return false;
         // Zips found so far are looked into on every other step, so their songs show up while a
         // large chat is still being gone through.
         zipTurn = !zipTurn;
         if (zipTurn && openZip(selected)) return true;
+        List<IndexStore.State> building = new ArrayList<>();
+        IndexStore.State due = null;
+        long now = clock.millis();
         for (long id : new TreeSet<>(selected)) {
             if (id == 0) continue;
             IndexStore.State chat = state(id);
-            long now = clock.millis();
             if (chat.built() && now - chat.builtAt > REBUILD_MILLIS) {
                 Arrays.fill(chat.cursor, 0);
                 Arrays.fill(chat.complete, false);
@@ -95,17 +106,46 @@ final class TelegramIndex {
                 chat.rebuilding = true;
                 store.save(chat);
             }
-            for (int kind = 0; kind < KINDS; kind++)
-                if (!chat.complete[kind]) {
-                    build(chat, kind);
-                    return true;
-                }
-            if (now - chat.refreshed > REFRESH_MILLIS) {
-                topUp(chat);
-                return true;
-            }
+            if (!chat.built()) building.add(chat);
+            else if (due == null && now - chat.refreshed > REFRESH_MILLIS) due = chat;
         }
-        return openZip(selected);
+        if (due != null) {
+            topUp(due);
+            return true;
+        }
+        if (building.isEmpty()) return openZip(selected);
+        IndexStore.State next = null;
+        for (IndexStore.State chat : building) if (chat.chat == first) next = chat;
+        if (next == null) {
+            next = building.get(0);
+            for (IndexStore.State chat : building)
+                if (chat.chat > turn) {
+                    next = chat;
+                    break;
+                }
+            turn = next.chat;
+        }
+        for (int kind = 0; kind < KINDS; kind++)
+            if (!next.complete[kind]) {
+                build(next, kind);
+                break;
+            }
+        return true;
+    }
+
+    private long turn = Long.MIN_VALUE;
+
+    /** How far a chat's first build has got, as "34%", or "" before that's known. */
+    String progress(long chat) throws Exception {
+        IndexStore.State state = state(chat);
+        long total = 0, scanned = 0;
+        for (int k = 0; k < KINDS; k++) {
+            if (state.total[k] < 0 && !state.complete[k]) return "";
+            long all = Math.max(state.total[k], state.scanned[k]);
+            total += all;
+            scanned += state.complete[k] ? all : state.scanned[k];
+        }
+        return total == 0 ? "" : (int) (100 * scanned / total) + "%";
     }
 
     private void build(IndexStore.State chat, int kind) throws Exception {
@@ -414,37 +454,49 @@ final class TelegramIndex {
                 scanned += chat.complete[k] ? all : chat.scanned[k];
             }
         }
-        if (chats == 0) return "No music chats selected";
+        if (chats == 0) return Strings.t("No music chats selected");
         int zips = store.zipsWaiting(new TreeSet<>(selected));
-        String waiting = zips > 0 ? String.format(Locale.US, " · %,d zips to open", zips) : "";
+        String waiting =
+                zips > 0
+                        ? " · "
+                                + Strings.f(
+                                        zips == 1 ? "{0} zip to open" : "{0} zips to open",
+                                        Strings.number(zips))
+                        : "";
         if (done == chats)
-            return String.format(
-                            Locale.US,
-                            "%,d %s indexed from %d %s",
-                            files,
-                            files == 1 ? "file" : "files",
-                            chats,
-                            chats == 1 ? "chat" : "chats")
+            return Strings.f(
+                            files == 1
+                                    ? chats == 1
+                                            ? "{0} file indexed from {1} chat"
+                                            : "{0} file indexed from {1} chats"
+                                    : chats == 1
+                                            ? "{0} files indexed from {1} chat"
+                                            : "{0} files indexed from {1} chats",
+                            Strings.number(files),
+                            chats)
                     + waiting;
         StringBuilder text =
-                new StringBuilder(String.format(Locale.US, "Indexing: %,d files found", files));
+                new StringBuilder(Strings.f("Indexing: {0} files found", Strings.number(files)));
         if (known && total > 0) {
-            text.append(String.format(Locale.US, " · %d%%", (int) (100 * scanned / total)));
+            text.append(" · ").append((int) (100 * scanned / total)).append('%');
             double rate = perMinute();
             if (rate > 0)
-                text.append(" · about ").append(timeLeft((total - scanned) / rate)).append(" left");
+                text.append(" · ")
+                        .append(Strings.f("about {0} left", timeLeft((total - scanned) / rate)));
         }
-        if (chats > 1)
-            text.append(" (").append(done).append(" of ").append(chats).append(" chats done)");
+        if (chats > 1) text.append(" ").append(Strings.f("({0} of {1} chats done)", done, chats));
         return text.append(waiting).toString();
     }
 
     /** "40 min", "1 h 40 min", "2 days". */
     static String timeLeft(double minutes) {
         long m = Math.max(1, Math.round(minutes));
-        if (m < 60) return m + " min";
-        if (m < 48 * 60) return m / 60 + " h" + (m % 60 == 0 ? "" : " " + m % 60 + " min");
-        return Math.round(m / 1440.0) + " days";
+        if (m < 60) return Strings.f("{0} min", m);
+        if (m < 48 * 60)
+            return m % 60 == 0
+                    ? Strings.f("{0} h", m / 60)
+                    : Strings.f("{0} h {1} min", m / 60, m % 60);
+        return Strings.f("{0} days", Math.round(m / 1440.0));
     }
 
     /** Forgets everything, on disk too: when it's turned off or you sign out. */

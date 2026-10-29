@@ -32,11 +32,15 @@ for name in (
     "LiveSearch.java",
     "ZipAlbums.java",
     "ZipDirectory.java",
+    "DolbyHeader.java",
+    "DolbySupport.java",
     "MediaPolicy.java",
     "ChannelSponsorship.java",
     "ChannelContent.java",
     "ChannelView.java",
     "PlaybackPolicy.java",
+    "Strings.java",
+    "Translations.java",
 ):
     dest = SOURCES / "app/bitchord/telegram" / name
     dest.parent.mkdir(parents=True, exist_ok=True)

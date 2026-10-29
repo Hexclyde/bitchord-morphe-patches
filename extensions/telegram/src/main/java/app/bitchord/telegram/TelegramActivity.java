@@ -106,6 +106,9 @@ public final class TelegramActivity extends Activity {
         body.setFocusableInTouchMode(true);
         body.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
         scroll.addView(body);
+        // Arabic and Urdu read right to left, whether or not BitChord itself is set up for it.
+        scroll.setLayoutDirection(
+                Strings.rightToLeft() ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
         setContentView(scroll);
         scroll.setOnApplyWindowInsetsListener(
                 (view, insets) -> {
@@ -142,7 +145,7 @@ public final class TelegramActivity extends Activity {
         if (channelView != null) channelView.pause();
         for (EditText field : secrets)
             field.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        if (hashVisibility != null) hashVisibility.setText("Show hash");
+        if (hashVisibility != null) hashVisibility.setText(Strings.t("Show hash"));
         super.onPause();
     }
 
@@ -236,9 +239,12 @@ public final class TelegramActivity extends Activity {
         top.addView(back, new LinearLayout.LayoutParams(style.dp(48), style.dp(48)));
         TextView title =
                 style.text(
-                        channelId != 0
-                                ? "Channel View"
-                                : editCredentials ? "Application setup" : "Unofficial Telegram",
+                        Strings.t(
+                                channelId != 0
+                                        ? "Channel View"
+                                        : editCredentials
+                                                ? "Application setup"
+                                                : "Unofficial Telegram"),
                         34,
                         style.foreground,
                         style.heavy);
@@ -248,8 +254,9 @@ public final class TelegramActivity extends Activity {
         top.addView(title, tl);
         TextView subtitle =
                 style.text(
-                        "An unofficial client using the Telegram API. Your account, inside"
-                                + " BitChord.",
+                        Strings.t(
+                                "An unofficial client using the Telegram API. Your account, inside"
+                                        + " BitChord."),
                         14,
                         style.secondary,
                         style.regular);
@@ -315,7 +322,7 @@ public final class TelegramActivity extends Activity {
         LinearLayout toggle = new LinearLayout(this);
         toggle.setGravity(Gravity.END);
         app.addView(toggle);
-        TextView show = style.text("Show hash", 13, style.foreground, style.semibold);
+        TextView show = style.text(Strings.t("Show hash"), 13, style.foreground, style.semibold);
         show.setPadding(style.dp(10), style.dp(10), 0, style.dp(10));
         hashVisibility = show;
         show.setOnClickListener(
@@ -324,7 +331,7 @@ public final class TelegramActivity extends Activity {
                     hash.setTransformationMethod(
                             hidden ? null : PasswordTransformationMethod.getInstance());
                     hash.setSelection(hash.length());
-                    show.setText(hidden ? "Hide hash" : "Show hash");
+                    show.setText(Strings.t(hidden ? "Hide hash" : "Show hash"));
                 });
         toggle.addView(show);
         action(
@@ -372,7 +379,7 @@ public final class TelegramActivity extends Activity {
                         + " alerts.");
         TextView help =
                 style.text(
-                        "Create your Telegram API credentials ↗",
+                        Strings.t("Create your Telegram API credentials ↗"),
                         14,
                         style.secondary,
                         style.regular);
@@ -487,7 +494,7 @@ public final class TelegramActivity extends Activity {
         row(
                 music,
                 "Music chats",
-                bridge.selected.size() + " selected · Live Telegram search",
+                Strings.f("{0} selected · Live Telegram search", bridge.selected.size()),
                 "Choose",
                 this::chooseChats);
         divider(music);
@@ -603,7 +610,7 @@ public final class TelegramActivity extends Activity {
         SeekBar cacheSlider = new SeekBar(this);
         cacheSlider.setMax(CachePolicy.count() - 1);
         cacheSlider.setProgress(CachePolicy.indexOf(bridge.cacheLimitBytes()));
-        cacheSlider.setContentDescription("Telegram audio cache target");
+        cacheSlider.setContentDescription(Strings.t("Telegram audio cache target"));
         cacheSlider.setProgressTintList(
                 android.content.res.ColorStateList.valueOf(style.foreground));
         cacheSlider.setThumbTintList(android.content.res.ColorStateList.valueOf(style.foreground));
@@ -683,13 +690,15 @@ public final class TelegramActivity extends Activity {
         toggle(
                 details,
                 "Format legend",
-                "Shows the format next to song titles, like FLAC 24bit or MP3 320kbps",
+                "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3"
+                        + " 320kbps",
                 "Titles only",
                 bridge.formatLegend(),
                 bridge::setFormatLegend,
                 null,
                 "Your searches also check the selected chats for a match. To tell 16-bit from"
-                        + " 24-bit, the start of a few lossless files per search is downloaded.");
+                        + " 24-bit, or Dolby Atmos from other Dolby files, the start of a few files"
+                        + " per search is downloaded.");
         divider(details);
         toggle(
                 details,
@@ -703,6 +712,18 @@ public final class TelegramActivity extends Activity {
                     + " the same song, such as one posted twice or found in two zips. The best is"
                     + " kept: lossless over lossy, then the higher bit depth, sample rate and"
                     + " bitrate.");
+        divider(details);
+        toggle(
+                details,
+                "Hide Dolby files this phone can’t play",
+                "Dolby AC-4 files show only if this phone has a decoder",
+                "Every Dolby file shows",
+                bridge.hideUnplayableDolby(),
+                bridge::setHideUnplayableDolby,
+                null,
+                "BitChord plays Dolby Digital, Dolby Digital Plus and Dolby TrueHD on any phone."
+                        + " Dolby Atmos plays as 5.1 or 7.1, or with its height sound on a phone"
+                        + " or speaker that supports it. Dolby AC-4 needs a decoder in the phone.");
         paragraph(
                 details,
                 "BitChord keeps search results for a few minutes, so changes here show up in new"
@@ -727,7 +748,7 @@ public final class TelegramActivity extends Activity {
                 "Community channels",
                 community == 0
                         ? "Where music is copied from"
-                        : community + (community == 1 ? " channel" : " channels"),
+                        : Strings.f(community == 1 ? "{0} channel" : "{0} channels", community),
                 "Choose",
                 this::chooseCommunity);
         divider(card);
@@ -787,7 +808,7 @@ public final class TelegramActivity extends Activity {
         divider(card);
         TextView pace =
                 style.text(
-                        "Up to " + bridge.importPerHour() + " files an hour",
+                        Strings.f("Up to {0} files an hour", bridge.importPerHour()),
                         16,
                         style.foreground,
                         style.medium);
@@ -796,7 +817,7 @@ public final class TelegramActivity extends Activity {
         SeekBar slider = new SeekBar(this);
         slider.setMax(MainChannel.MAX_PER_HOUR - 1);
         slider.setProgress(bridge.importPerHour() - 1);
-        slider.setContentDescription("Files copied an hour");
+        slider.setContentDescription(Strings.t("Files copied an hour"));
         slider.setProgressTintList(android.content.res.ColorStateList.valueOf(style.foreground));
         slider.setThumbTintList(android.content.res.ColorStateList.valueOf(style.foreground));
         slider.setProgressBackgroundTintList(
@@ -819,7 +840,7 @@ public final class TelegramActivity extends Activity {
                     }
 
                     public void onProgressChanged(SeekBar bar, int value, boolean fromUser) {
-                        pace.setText("Up to " + (value + 1) + " files an hour");
+                        pace.setText(Strings.f("Up to {0} files an hour", value + 1));
                     }
                 });
         paragraph(card, "1 to 500 an hour. Slower is safer for your account.");
@@ -847,7 +868,7 @@ public final class TelegramActivity extends Activity {
                                     names[i] = owned.get(i).title;
                                 AlertDialog dialog =
                                         new AlertDialog.Builder(this)
-                                                .setTitle("Main channel")
+                                                .setTitle(Strings.t("Main channel"))
                                                 .setItems(
                                                         names,
                                                         (d, i) ->
@@ -858,7 +879,7 @@ public final class TelegramActivity extends Activity {
                                                                                                 owned
                                                                                                         .get(
                                                                                                                 i))))
-                                                .setNegativeButton("Cancel", null)
+                                                .setNegativeButton(Strings.t("Cancel"), null)
                                                 .create();
                                 secureWindow(dialog.getWindow());
                                 dialog.show();
@@ -883,14 +904,14 @@ public final class TelegramActivity extends Activity {
                                 }
                                 AlertDialog dialog =
                                         new AlertDialog.Builder(this)
-                                                .setTitle("Community channels")
+                                                .setTitle(Strings.t("Community channels"))
                                                 .setMultiChoiceItems(
                                                         names,
                                                         checked,
                                                         (d, i, value) -> checked[i] = value)
-                                                .setNegativeButton("Cancel", null)
+                                                .setNegativeButton(Strings.t("Cancel"), null)
                                                 .setPositiveButton(
-                                                        "Save",
+                                                        Strings.t("Save"),
                                                         (d, w) ->
                                                                 run(
                                                                         () ->
@@ -938,10 +959,9 @@ public final class TelegramActivity extends Activity {
                             + "” → “"
                             + suggestion.optString("title")
                             + "”",
-                    suggestion.optString("artist")
-                            + " · "
-                            + length(suggestion.optInt("duration"))
-                            + " · Looks like a song that played from another source",
+                    Strings.f(
+                            "{0} · {1} · Looks like a song that played from another source",
+                            suggestion.optString("artist"), length(suggestion.optInt("duration"))),
                     "Review",
                     () -> reviewSuggestion(suggestion));
             divider(names);
@@ -952,7 +972,7 @@ public final class TelegramActivity extends Activity {
                 "Corrected names",
                 fixed.isEmpty()
                         ? "None yet"
-                        : fixed.size() + (fixed.size() == 1 ? " track" : " tracks"),
+                        : Strings.f(fixed.size() == 1 ? "{0} track" : "{0} tracks", fixed.size()),
                 fixed.isEmpty() ? null : "Edit",
                 fixed.isEmpty() ? null : () -> listCorrections(fixed));
         divider(names);
@@ -983,7 +1003,7 @@ public final class TelegramActivity extends Activity {
 
     static String length(int seconds) {
         return seconds <= 0
-                ? "unknown length"
+                ? Strings.t("unknown length")
                 : String.format(Locale.ROOT, "%d:%02d", seconds / 60, seconds % 60);
     }
 
@@ -991,23 +1011,22 @@ public final class TelegramActivity extends Activity {
         String id = suggestion.optString("id");
         AlertDialog d =
                 new AlertDialog.Builder(this)
-                        .setTitle("Use this name?")
+                        .setTitle(Strings.t("Use this name?"))
                         .setMessage(
-                                "On Telegram: “"
-                                        + suggestion.optString("fileTitle")
-                                        + "” by "
-                                        + suggestion.optString("fileArtist")
-                                        + " ("
-                                        + length(suggestion.optInt("duration"))
-                                        + ")\n\nNew name: “"
-                                        + suggestion.optString("title")
-                                        + "” by "
-                                        + suggestion.optString("artist")
-                                        + "\n\nThe file on Telegram isn’t changed.")
+                                Strings.f(
+                                        "On Telegram: “{0}” by {1} ({2})\n\nNew name: “{3}” by"
+                                                + " {4}\n\nThe file on Telegram isn’t changed.",
+                                        suggestion.optString("fileTitle"),
+                                        suggestion.optString("fileArtist"),
+                                        length(suggestion.optInt("duration")),
+                                        suggestion.optString("title"),
+                                        suggestion.optString("artist")))
                         .setPositiveButton(
-                                "Use name", (x, y) -> run(() -> bridge.acceptSuggestion(id)))
-                        .setNeutralButton("Dismiss", (x, y) -> run(() -> bridge.names.dismiss(id)))
-                        .setNegativeButton("Cancel", null)
+                                Strings.t("Use name"),
+                                (x, y) -> run(() -> bridge.acceptSuggestion(id)))
+                        .setNeutralButton(
+                                Strings.t("Dismiss"), (x, y) -> run(() -> bridge.names.dismiss(id)))
+                        .setNegativeButton(Strings.t("Cancel"), null)
                         .create();
         secureWindow(d.getWindow());
         d.show();
@@ -1025,9 +1044,9 @@ public final class TelegramActivity extends Activity {
                             + "”";
         AlertDialog d =
                 new AlertDialog.Builder(this)
-                        .setTitle("Corrected names")
+                        .setTitle(Strings.t("Corrected names"))
                         .setItems(labels, (x, index) -> editName(corrections.get(index)))
-                        .setNegativeButton("Close", null)
+                        .setNegativeButton(Strings.t("Close"), null)
                         .create();
         secureWindow(d.getWindow());
         d.show();
@@ -1052,9 +1071,9 @@ public final class TelegramActivity extends Activity {
                                 if (rows.isEmpty()) {
                                     confirm(
                                             "No tracks found",
-                                            "Nothing in your selected chats matches “"
-                                                    + query.trim()
-                                                    + "”.",
+                                            Strings.f(
+                                                    "Nothing in your selected chats matches “{0}”.",
+                                                    query.trim()),
                                             "OK",
                                             () -> {});
                                     return;
@@ -1069,11 +1088,11 @@ public final class TelegramActivity extends Activity {
                                                     + length(rows.get(i).optInt("duration"));
                                 AlertDialog d =
                                         new AlertDialog.Builder(this)
-                                                .setTitle("Choose a track")
+                                                .setTitle(Strings.t("Choose a track"))
                                                 .setItems(
                                                         labels,
                                                         (x, index) -> editName(rows.get(index)))
-                                                .setNegativeButton("Cancel", null)
+                                                .setNegativeButton(Strings.t("Cancel"), null)
                                                 .create();
                                 secureWindow(d.getWindow());
                                 d.show();
@@ -1088,10 +1107,10 @@ public final class TelegramActivity extends Activity {
         form.setPadding(style.dp(24), style.dp(8), style.dp(24), 0);
         TextView file =
                 style.text(
-                        "On Telegram: “"
-                                + row.optString(corrected ? "fileTitle" : "title")
-                                + "” by "
-                                + row.optString(corrected ? "fileArtist" : "artist"),
+                        Strings.f(
+                                "On Telegram: “{0}” by {1}",
+                                row.optString(corrected ? "fileTitle" : "title"),
+                                row.optString(corrected ? "fileArtist" : "artist")),
                         14,
                         style.secondary,
                         style.regular);
@@ -1100,19 +1119,20 @@ public final class TelegramActivity extends Activity {
         EditText artist = dialogField(form, "Artist", row.optString("artist"));
         AlertDialog.Builder builder =
                 new AlertDialog.Builder(this)
-                        .setTitle("Track name")
+                        .setTitle(Strings.t("Track name"))
                         .setView(form)
                         .setPositiveButton(
-                                "Save",
+                                Strings.t("Save"),
                                 (x, y) -> {
                                     String newTitle = title.getText().toString(),
                                             newArtist = artist.getText().toString();
                                     run(() -> bridge.rename(row, newTitle, newArtist));
                                 })
-                        .setNegativeButton("Cancel", null);
+                        .setNegativeButton(Strings.t("Cancel"), null);
         if (corrected)
             builder.setNeutralButton(
-                    "Use original", (x, y) -> run(() -> bridge.names.remove(row.optString("id"))));
+                    Strings.t("Use original"),
+                    (x, y) -> run(() -> bridge.names.remove(row.optString("id"))));
         AlertDialog d = builder.create();
         secureWindow(d.getWindow());
         d.show();
@@ -1120,7 +1140,7 @@ public final class TelegramActivity extends Activity {
     }
 
     EditText dialogField(LinearLayout form, String label, String value) {
-        TextView caption = style.text(label, 12, style.secondary, style.semibold);
+        TextView caption = style.text(Strings.t(label), 12, style.secondary, style.semibold);
         caption.setPadding(0, style.dp(14), 0, style.dp(6));
         form.addView(caption);
         EditText field = new EditText(this);
@@ -1168,7 +1188,8 @@ public final class TelegramActivity extends Activity {
         if (isFinishing() || isDestroyed()) return;
         String songs = summary[0], size = summary[1];
         String[] labels = {
-            "Save as playlist (" + songs + ")", "Download all (" + songs + ", " + size + ")"
+            Strings.f("Save as playlist ({0})", songs),
+            Strings.f("Download all ({0}, {1})", songs, size)
         };
         AlertDialog dialog =
                 new AlertDialog.Builder(this)
@@ -1181,15 +1202,15 @@ public final class TelegramActivity extends Activity {
                                     else
                                         confirm(
                                                 "Download all",
-                                                Character.toUpperCase(songs.charAt(0))
-                                                        + songs.substring(1)
-                                                        + " from "
-                                                        + chat.title
-                                                        + ", "
-                                                        + size
-                                                        + ". They’re saved at BitChord’s download"
-                                                        + " quality, so set it to Lossless to keep"
-                                                        + " FLAC files.",
+                                                Strings.f(
+                                                        "{0} from {1}, {2}. They’re saved at"
+                                                                + " BitChord’s download quality, so"
+                                                                + " set it to Lossless to keep FLAC"
+                                                                + " files.",
+                                                        Character.toUpperCase(songs.charAt(0))
+                                                                + songs.substring(1),
+                                                        chat.title,
+                                                        size),
                                                 "Download",
                                                 () ->
                                                         run(
@@ -1198,7 +1219,7 @@ public final class TelegramActivity extends Activity {
                                                                                 chat.id,
                                                                                 chat.title)));
                                 })
-                        .setNegativeButton("Cancel", null)
+                        .setNegativeButton(Strings.t("Cancel"), null)
                         .create();
         secureWindow(dialog.getWindow());
         dialog.show();
@@ -1230,12 +1251,12 @@ public final class TelegramActivity extends Activity {
                                     labels[i] = chats.get(i).title;
                                 AlertDialog dialog =
                                         new AlertDialog.Builder(this)
-                                                .setTitle(title)
+                                                .setTitle(Strings.t(title))
                                                 .setItems(
                                                         labels,
                                                         (d, index) ->
                                                                 chosen.accept(chats.get(index)))
-                                                .setNegativeButton("Cancel", null)
+                                                .setNegativeButton(Strings.t("Cancel"), null)
                                                 .create();
                                 secureWindow(dialog.getWindow());
                                 dialog.show();
@@ -1316,15 +1337,15 @@ public final class TelegramActivity extends Activity {
                                 }
                                 AlertDialog dialog =
                                         new AlertDialog.Builder(this)
-                                                .setTitle("Music chats")
+                                                .setTitle(Strings.t("Music chats"))
                                                 .setMultiChoiceItems(
                                                         names,
                                                         selected,
                                                         (d, index, value) ->
                                                                 selected[index] = value)
-                                                .setNegativeButton("Cancel", null)
+                                                .setNegativeButton(Strings.t("Cancel"), null)
                                                 .setPositiveButton(
-                                                        "Save",
+                                                        Strings.t("Save"),
                                                         (d, w) ->
                                                                 run(
                                                                         () ->
@@ -1340,9 +1361,14 @@ public final class TelegramActivity extends Activity {
     }
 
     LinearLayout card(String title) {
+        title = Strings.t(title);
         if (title != null) {
             TextView label =
-                    style.text(title.toUpperCase(Locale.ROOT), 11, style.secondary, style.semibold);
+                    style.text(
+                            title.toUpperCase(Locale.getDefault()),
+                            11,
+                            style.secondary,
+                            style.semibold);
             LinearLayout.LayoutParams ll = new LinearLayout.LayoutParams(-1, -2);
             ll.setMargins(style.dp(20), style.dp(24), style.dp(20), style.dp(8));
             body.addView(label, ll);
@@ -1358,7 +1384,7 @@ public final class TelegramActivity extends Activity {
     }
 
     void paragraph(LinearLayout p, String value) {
-        TextView t = style.text(value, 14, style.secondary, style.regular);
+        TextView t = style.text(Strings.t(value), 14, style.secondary, style.regular);
         t.setLineSpacing(style.dp(3), 1);
         t.setPadding(0, 0, 0, style.dp(6));
         p.addView(t);
@@ -1372,7 +1398,11 @@ public final class TelegramActivity extends Activity {
         p.addView(line, lp);
     }
 
+    /** Fixed text is translated here; a chat's own name passed in is left as it is. */
     void row(LinearLayout p, String title, String subtitle, String more, Runnable click) {
+        title = Strings.t(title);
+        subtitle = Strings.t(subtitle);
+        more = Strings.t(more);
         LinearLayout row = new LinearLayout(this);
         row.setGravity(Gravity.CENTER_VERTICAL);
         row.setMinimumHeight(style.dp(40));
@@ -1439,6 +1469,19 @@ public final class TelegramActivity extends Activity {
             Setting setting,
             String warning,
             String details) {
+        String name = Strings.t(title), yes = Strings.t(on), no = Strings.t(off);
+        return toggleRow(p, name, yes, no, value, setting, Strings.t(warning), Strings.t(details));
+    }
+
+    private TextView toggleRow(
+            LinearLayout p,
+            String title,
+            String on,
+            String off,
+            boolean value,
+            Setting setting,
+            String warning,
+            String details) {
         LinearLayout row = new LinearLayout(this);
         row.setGravity(Gravity.CENTER_VERTICAL);
         row.setMinimumHeight(style.dp(40));
@@ -1466,8 +1509,10 @@ public final class TelegramActivity extends Activity {
                                         .setTitle(title)
                                         .setMessage(warning)
                                         .setNegativeButton(
-                                                "Cancel", (d, w) -> toggle.setChecked(false))
-                                        .setPositiveButton("Turn on", (d, w) -> apply[0].run())
+                                                Strings.t("Cancel"),
+                                                (d, w) -> toggle.setChecked(false))
+                                        .setPositiveButton(
+                                                Strings.t("Turn on"), (d, w) -> apply[0].run())
                                         .setOnCancelListener(d -> toggle.setChecked(false))
                                         .create();
                         secureWindow(dialog.getWindow());
@@ -1507,6 +1552,7 @@ public final class TelegramActivity extends Activity {
     }
 
     EditText input(LinearLayout p, String label, boolean secret) {
+        label = Strings.t(label);
         TextView title = style.text(label, 12, style.secondary, style.semibold);
         title.setPadding(0, style.dp(14), 0, style.dp(7));
         p.addView(title);
@@ -1539,7 +1585,7 @@ public final class TelegramActivity extends Activity {
     void action(LinearLayout p, String title, boolean primary, Runnable click) {
         TextView b =
                 style.button(
-                        title,
+                        Strings.t(title),
                         primary,
                         () -> {
                             if (!busy) click.run();
@@ -1553,10 +1599,10 @@ public final class TelegramActivity extends Activity {
     void confirm(String title, String message, String positive, Runnable action) {
         AlertDialog d =
                 new AlertDialog.Builder(this)
-                        .setTitle(title)
-                        .setMessage(message)
-                        .setNegativeButton("Cancel", null)
-                        .setPositiveButton(positive, (dialog, which) -> action.run())
+                        .setTitle(Strings.t(title))
+                        .setMessage(Strings.t(message))
+                        .setNegativeButton(Strings.t("Cancel"), null)
+                        .setPositiveButton(Strings.t(positive), (dialog, which) -> action.run())
                         .create();
         secureWindow(d.getWindow());
         d.show();
@@ -1567,8 +1613,8 @@ public final class TelegramActivity extends Activity {
         if (bridge == null || status == null) return;
         if (namesList != null && !busy && bridge.names.revision() != namesRevision)
             fillTrackNames();
-        status.setText((busy ? "Working…\n" : "") + bridge.status);
-        error.setText(bridge.error);
+        status.setText((busy ? Strings.t("Working…") + "\n" : "") + Strings.t(bridge.status));
+        error.setText(Strings.t(bridge.error));
         error.setVisibility(bridge.error.isEmpty() ? View.GONE : View.VISIBLE);
         for (View v : actions) {
             v.setEnabled(!busy);

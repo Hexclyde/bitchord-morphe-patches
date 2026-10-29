@@ -88,7 +88,7 @@ final class ChannelView extends LinearLayout {
         revision = bridge.mediaRevision;
         setOrientation(VERTICAL);
         setPadding(style.dp(16), 0, style.dp(16), style.dp(20));
-        addText(this, "Loading channel…", 14);
+        addText(this, Strings.t("Loading channel…"), 14);
         getViewTreeObserver()
                 .addOnDrawListener(
                         () -> {
@@ -204,7 +204,7 @@ final class ChannelView extends LinearLayout {
 
     private String safeError(Exception e) {
         String text = e.getMessage();
-        if (text == null) return "Channel request failed";
+        if (text == null) return Strings.t("Channel request failed");
         String hash = bridge.credentials().apiHash;
         return hash.isEmpty() ? text : text.replace(hash, "[hidden]");
     }
@@ -224,21 +224,21 @@ final class ChannelView extends LinearLayout {
         removeAllViews();
         drawn = false;
         if (chat != null) addText(this, chat.title, 24);
-        addText(this, "Read-only channel view · Your Telegram account", 12)
+        addText(this, Strings.t("Read-only channel view · Your Telegram account"), 12)
                 .setTextColor(style.secondary);
         if (!historyError.isEmpty()) {
             addText(this, historyError, 14);
-            button(this, "Retry channel", false, () -> owner.reopenChannel(chatId));
+            button(this, Strings.t("Retry channel"), false, () -> owner.reopenChannel(chatId));
             return;
         }
         if (chat == null) {
-            addText(this, "Loading channel…", 14);
+            addText(this, Strings.t("Loading channel…"), 14);
             return;
         }
         if (!atStart) {
             button(
                     this,
-                    olderBusy ? "Loading older posts…" : "Load older posts",
+                    Strings.t(olderBusy ? "Loading older posts…" : "Load older posts"),
                     false,
                     () -> {
                         if (!olderBusy) loadOlder();
@@ -255,7 +255,8 @@ final class ChannelView extends LinearLayout {
                             row,
                             allowed
                                     ? ChannelContent.description(message)
-                                    : "Protected or unavailable message · open in Telegram",
+                                    : Strings.t(
+                                            "Protected or unavailable message · open in Telegram"),
                             15);
             addText(
                             row,
@@ -263,7 +264,7 @@ final class ChannelView extends LinearLayout {
                                     .format(new Date(1000L * message.date)),
                             11)
                     .setTextColor(style.secondary);
-            button(row, "Open message in Telegram", false, () -> openMessage(message));
+            button(row, Strings.t("Open message in Telegram"), false, () -> openMessage(message));
             if (allowed) watched.add(new Watched(text, message.id, false));
             if (between > 0 && ++count >= between && index < ads.size()) {
                 sponsorCardSafe(ads.get(index++));
@@ -271,19 +272,22 @@ final class ChannelView extends LinearLayout {
             }
         }
         if (posts.isEmpty())
-            addText(this, "No posts returned. Open this chat in Telegram to check access.", 14);
+            addText(
+                    this,
+                    Strings.t("No posts returned. Open this chat in Telegram to check access."),
+                    14);
         if (between == 0 && !ads.isEmpty()) {
-            addText(this, "End of latest posts", 11).setTextColor(style.secondary);
+            addText(this, Strings.t("End of latest posts"), 11).setTextColor(style.secondary);
             sponsorCardSafe(ads.get(0));
         } else if (between > 0 && index == 0 && !ads.isEmpty() && posts.isEmpty())
-            addText(this, "Sponsored messages are available after channel posts.", 12);
-        if (sponsorBusy) addText(this, "Loading official sponsored messages…", 12);
+            addText(this, Strings.t("Sponsored messages are available after channel posts."), 12);
+        if (sponsorBusy) addText(this, Strings.t("Loading official sponsored messages…"), 12);
         if (!sponsorError.isEmpty()) {
             addText(this, sponsorError, 13);
-            button(this, "Retry sponsored messages", false, this::loadSponsors);
+            button(this, Strings.t("Retry sponsored messages"), false, this::loadSponsors);
         }
         if (snapshot != null && ads.isEmpty())
-            addText(this, "Telegram returned no sponsored messages for this view.", 12)
+            addText(this, Strings.t("Telegram returned no sponsored messages for this view."), 12)
                     .setTextColor(style.secondary);
     }
 
@@ -291,8 +295,9 @@ final class ChannelView extends LinearLayout {
         if (posts.size() >= 150) {
             addText(
                     this,
-                    "Use Telegram to browse further history. Live audio search remains available in"
-                            + " BitChord.",
+                    Strings.t(
+                            "Use Telegram to browse further history. Live audio search remains"
+                                    + " available in BitChord."),
                     13);
             return;
         }
@@ -395,9 +400,10 @@ final class ChannelView extends LinearLayout {
                                                 snapshot = null;
                                                 sponsorBusy = false;
                                                 sponsorError =
-                                                        "Official sponsored messages could not be"
-                                                                + " displayed: "
-                                                                + safeError(e);
+                                                        Strings.f(
+                                                                "Official sponsored messages could"
+                                                                        + " not be displayed: {0}",
+                                                                safeError(e));
                                                 rebuild();
                                             }
                                         });
@@ -413,10 +419,13 @@ final class ChannelView extends LinearLayout {
             while (getChildCount() > before) removeViewAt(before);
             brokenSponsors.add(message.messageId);
             LinearLayout row = card();
-            addText(row, "This official sponsored message could not be displayed completely.", 14);
+            addText(
+                    row,
+                    Strings.t("This official sponsored message could not be displayed completely."),
+                    14);
             button(
                     row,
-                    "Retry sponsored messages",
+                    Strings.t("Retry sponsored messages"),
                     false,
                     () -> {
                         brokenSponsors.remove(message.messageId);
@@ -435,7 +444,7 @@ final class ChannelView extends LinearLayout {
         row.addView(label);
         TextView tag =
                 style.text(
-                        message.isRecommended ? "Recommended" : "Sponsored",
+                        Strings.t(message.isRecommended ? "Recommended" : "Sponsored"),
                         12,
                         style.secondary,
                         style.regular);
@@ -487,7 +496,7 @@ final class ChannelView extends LinearLayout {
         button(
                 row,
                 ChannelContent.value(message.buttonText).isEmpty()
-                        ? "Open sponsor"
+                        ? Strings.t("Open sponsor")
                         : message.buttonText,
                 true,
                 () -> destination(message, message.sponsor.url, false, false));
@@ -562,7 +571,11 @@ final class ChannelView extends LinearLayout {
                         return true;
                     });
             if (media.kind.equals("video"))
-                button(row, "View video fullscreen", false, () -> fullscreen(message, path, sound));
+                button(
+                        row,
+                        Strings.t("View video fullscreen"),
+                        false,
+                        () -> fullscreen(message, path, sound));
         }
     }
 
@@ -623,10 +636,10 @@ final class ChannelView extends LinearLayout {
                     });
         button(
                 layout,
-                message.buttonText == null ? "Open sponsor" : message.buttonText,
+                message.buttonText == null ? Strings.t("Open sponsor") : message.buttonText,
                 true,
                 () -> destination(message, message.sponsor.url, false, true));
-        button(layout, "Close video", false, dialog::dismiss);
+        button(layout, Strings.t("Close video"), false, dialog::dismiss);
         dialog.setContentView(layout);
         owner.secureWindow(dialog.getWindow());
         dialog.setOnDismissListener(
@@ -639,11 +652,11 @@ final class ChannelView extends LinearLayout {
 
     void sponsorMenu(TdApi.SponsoredMessage message) {
         List<String> options = new ArrayList<>();
-        options.add("Sponsor information");
-        if (message.canBeReported) options.add("Report sponsored message");
+        options.add(Strings.t("Sponsor information"));
+        if (message.canBeReported) options.add(Strings.t("Report sponsored message"));
         AlertDialog dialog =
                 new AlertDialog.Builder(owner)
-                        .setTitle(message.isRecommended ? "Recommended" : "Sponsored")
+                        .setTitle(Strings.t(message.isRecommended ? "Recommended" : "Sponsored"))
                         .setItems(
                                 options.toArray(new String[0]),
                                 (d, index) -> {
@@ -660,7 +673,7 @@ final class ChannelView extends LinearLayout {
                                                 () -> {});
                                     else report(message, new byte[0]);
                                 })
-                        .setNegativeButton("Close", null)
+                        .setNegativeButton(Strings.t("Close"), null)
                         .create();
         owner.secureWindow(dialog.getWindow());
         dialog.show();
@@ -697,7 +710,8 @@ final class ChannelView extends LinearLayout {
                                                                                         choice.options[
                                                                                                 index]
                                                                                                 .id))
-                                                                .setNegativeButton("Cancel", null)
+                                                                .setNegativeButton(
+                                                                        Strings.t("Cancel"), null)
                                                                 .create();
                                                 owner.secureWindow(dialog.getWindow());
                                                 dialog.show();
@@ -792,7 +806,9 @@ final class ChannelView extends LinearLayout {
                                 .appendQueryParameter("channel", parts[1])
                                 .appendQueryParameter("post", parts[2])
                                 .build();
-            else throw new IOException("Open this Telegram link in the official client: " + uri);
+            else
+                throw new IOException(
+                        Strings.f("Open this Telegram link in the official client: {0}", uri));
         }
         owner.startActivity(new Intent(Intent.ACTION_VIEW, target));
     }
@@ -880,7 +896,7 @@ final class ChannelView extends LinearLayout {
     void checkVisible() {
         if (!valid()) {
             if (session != bridge.generation) {
-                sponsorError = "Telegram account changed. Reopen the channel.";
+                sponsorError = Strings.t("Telegram account changed. Reopen the channel.");
                 pause();
             }
             return;
@@ -891,7 +907,9 @@ final class ChannelView extends LinearLayout {
             posts.clear();
             snapshot = null;
             historyError =
-                    "Channel content or permissions changed. Reopen to refresh before reading.";
+                    Strings.t(
+                            "Channel content or permissions changed. Reopen to refresh before"
+                                    + " reading.");
             rebuild();
             return;
         }

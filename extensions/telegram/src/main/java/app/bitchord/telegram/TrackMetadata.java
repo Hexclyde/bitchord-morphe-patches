@@ -49,7 +49,9 @@ public final class TrackMetadata {
             title = "";
             cover = d.thumbnail;
             if (!name.toLowerCase(Locale.ROOT)
-                    .matches(".*\\.(flac|mp3|m4a|aac|ogg|opus|wav|alac|aiff)$")) return null;
+                    .matches(
+                            ".*\\.(flac|mp3|m4a|aac|ogg|opus|wav|alac|aiff|ac3|eac3|ec3|ac4|mka)$"))
+                return null;
         } else return null;
         if (file == null) return null;
         if (title.isEmpty()) title = name;

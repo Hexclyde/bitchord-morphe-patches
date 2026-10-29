@@ -196,6 +196,57 @@ public final class MainChannelTest {
                                 .put("size", 7_000_000)
                                 .put("duration", 180)),
                 "MP3");
+        // A refused copy is tried again before it's skipped, and the reason is shown.
+        chats.add(post(b, 8, "Refused", true, null));
+        index.clear();
+        index(index, List.of(main, a, b));
+        MainChannel refusing =
+                new MainChannel(
+                        file,
+                        (to, from, messages) -> {
+                            throw new java.io.IOException("CHAT_WRITE_FORBIDDEN");
+                        },
+                        clock::get);
+        clock.addAndGet(700_000);
+        check(refusing.step(index) == 600_000, "Waits 10 minutes to try again");
+        check(refusing.status.contains("CHAT_WRITE_FORBIDDEN"), refusing.status);
+        clock.addAndGet(600_000);
+        refusing.step(index);
+        clock.addAndGet(600_000);
+        refusing.step(index);
+        check(
+                refusing.progress(index).contains("1 couldn't be copied"),
+                "Skipped after the third try: " + refusing.progress(index));
+
+        // A large community channel doesn't hold up a small one, and the main channel goes first.
+        long big = -5, small = -30, mine = -40;
+        Chats more = new Chats();
+        for (long id = 1; id <= 2000; id++) more.add(post(big, id, "Big " + id, true, null));
+        for (long id = 1; id <= 150; id++) more.add(post(small, id, "Small " + id, true, null));
+        for (long id = 1; id <= 150; id++) more.add(post(mine, id, "Mine " + id, true, null));
+        TelegramIndex turns = new TelegramIndex(new IndexStore.Memory(), more, clock::get);
+        List<Long> all = List.of(big, small, mine);
+        for (int i = 0; i < 4; i++) turns.step(all, mine);
+        check(turns.built(mine) && !turns.built(small), "Main channel first");
+        for (int i = 0; i < 8; i++) turns.step(all, mine); // four pages each, taking turns
+        check(turns.built(small) && !turns.built(big), "Small one doesn't wait for the big one");
+        check(turns.progress(big).matches("[0-9]+%"), "Big one's progress: " + turns.progress(big));
+        MainChannel waits = new MainChannel(null, telegram, clock::get);
+        waits.setMain(mine, "Mine");
+        waits.setCommunity(List.of(big, small));
+        waits.setPerHour(500);
+        waits.setOption("import", true);
+        int was = copies.size();
+        waits.step(turns);
+        check(copies.size() > was, "Copies from the small one meanwhile");
+        check(
+                waits.status.contains(" · Waiting for a community channel to be indexed ("),
+                "Says what it's waiting for while copying: " + waits.status);
+        for (int i = 0; i < 40; i++, clock.addAndGet(120_000)) waits.step(turns);
+        check(
+                waits.status.startsWith("Copied 150 audio files · Waiting for a community"),
+                waits.status);
+
         restarted.clear();
         check(!file.exists() && restarted.main() == 0, "Sign-out forgets it");
         System.out.println(

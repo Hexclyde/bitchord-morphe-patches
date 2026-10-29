@@ -23,7 +23,7 @@ public final class LiveSearch implements AutoCloseable {
         public final int retrySeconds;
 
         public RateLimited(int seconds) {
-            super("Telegram search rate limit. Retry in " + seconds + " seconds.");
+            super(Strings.f("Telegram search rate limit. Retry in {0} seconds.", seconds));
             retrySeconds = Math.max(1, seconds);
         }
     }
@@ -311,8 +311,11 @@ public final class LiveSearch implements AutoCloseable {
 
     /** "Telegram API rate limited. Searching again in 45 s." */
     static String rateLimitNotice(int seconds) {
-        String wait = seconds < 90 ? seconds + " s" : (seconds + 30) / 60 + " min";
-        return "Telegram API rate limited. Searching again in " + wait + ".";
+        String wait =
+                seconds < 90
+                        ? Strings.f("{0} s", seconds)
+                        : Strings.f("{0} min", (seconds + 30) / 60);
+        return Strings.f("Telegram API rate limited. Searching again in {0}.", wait);
     }
 
     static Exception cause(ExecutionException e) {

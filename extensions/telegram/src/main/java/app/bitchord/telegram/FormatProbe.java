@@ -56,11 +56,13 @@ final class FormatProbe {
 
     static boolean probable(JSONObject row) {
         if (row.has("zip")) return false; // its header was read when its zip was
-        String format = row.optString("format").toLowerCase(Locale.ROOT);
-        return format.equals("flac")
-                || format.equals("wav")
-                || format.equals("aif")
-                || format.equals("aiff");
+        // Also the containers and Dolby files whose header says what the name can't: Atmos,
+        // the channels, ALAC's bit depth.
+        return format(row).matches("flac|wav|aiff?|m4a|mp4|ac3|eac3|ec3|ac4|mka");
+    }
+
+    static String format(JSONObject row) {
+        return row.optString("format").toLowerCase(Locale.ROOT);
     }
 
     synchronized JSONObject get(String id) {
@@ -103,6 +105,9 @@ final class FormatProbe {
             row.put("bits", header.optInt("bits"))
                     .put("rate", header.optInt("rate"))
                     .put("channels", header.optInt("channels"));
+            if (DolbyHeader.dolby(header.optString("codec")))
+                row.put("codec", header.optString("codec"))
+                        .put("atmos", header.optBoolean("atmos"));
         }
     }
 

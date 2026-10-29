@@ -50,6 +50,10 @@ SOURCES = [
     "ZipDirectory",
     "ZipAlbums",
     "Duplicates",
+    "DolbyHeader",
+    "DolbySupport",
+    "Strings",
+    "Translations",
     "InternalAddon",
     "NativeAudio",
     "TelegramDataSource",
@@ -85,6 +89,7 @@ TESTS = [
     "ZipDirectoryTest",
     "ZipAlbumsTest",
     "DuplicatesTest",
+    "DolbyHeaderTest",
 ]
 
 subprocess.run(

@@ -30,7 +30,7 @@ public final class TelegramUi {
     public static void accountSection(ComposerImpl composer) {
         hostGroup(
                 "Unofficial Telegram",
-                "An unofficial client using the Telegram API.",
+                Strings.t("An unofficial client using the Telegram API."),
                 26f,
                 GROUP_CONTENT,
                 composer,
@@ -44,7 +44,7 @@ public final class TelegramUi {
         SettingsSheetKt.SettingsRow(
                 null,
                 title,
-                "Sign in, search music chats and manage cache",
+                Strings.t("Sign in, search music chats and manage cache"),
                 null,
                 null,
                 null,

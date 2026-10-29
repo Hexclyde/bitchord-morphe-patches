@@ -118,7 +118,7 @@ public final class ChannelSponsorship {
         snapshot.viewed.add(id);
     }
 
-    /** The UI invokes this only after a user-initiated destination handoff succeeds. */
+    /** The UI calls this only after a link the user tapped has opened. */
     public synchronized void clicked(Snapshot snapshot, long id, boolean media, boolean fullscreen)
             throws Exception {
         current(snapshot, id);

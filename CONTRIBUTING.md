@@ -17,4 +17,6 @@ Don't post your API hash, login codes, session files or private channel links. R
 
 See [docs/BUILDING.md](docs/BUILDING.md) for how to build and test. Keep each pull request to a single change and describe how you tested it. Don't commit APKs, `.mpp` files, audio, keystores or credentials.
 
+To fix or add a translation, edit `translations/<language>.json` (every phrase in `translations/source.json` maps to its translation, with `{0}`, `{1}` kept), then run `python3 tools/translations.py --strict` and `python3 -m unittest tests.test_translations`.
+
 Contributions are licensed under GPL-3.0-or-later.
