@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.14
+
+- **Basic and Advanced tabs** on the Telegram page. **Basic** has your API details, your account, your music chats, the saved index and track names; **Advanced** has the main channel, track details, playback, storage, and backup and sharing.
+- **Chats in folders and the archive:** **Music chats → Choose** first asks where to pick from, **All chats**, one of your Telegram folders, or **Archived chats**, and lists every chat there, not just the first 100. The main channel and community channel pickers include archived chats too.
+- **Albums with a cue sheet:** an album kept as one FLAC or WAV file becomes one song per track, named from its cue sheet: a `.cue` file posted in the same chat, a `.cue` in the same zip, or the FLAC file's own. Each track plays exactly its part of the file, decoded on the phone and handed to BitChord losslessly.
+- **Albums** in **Playlists and downloads**: a chat's albums (songs Telegram posted together, zips and cue sheet albums), each to save as a playlist or download.
+- **Backup and restore:** settings, music chats, corrected names and the main channel setup, and the saved index if you like, to a file you choose. API details and the Telegram session are never in it.
+- **Sharing an index:** post a chat's saved index in Telegram (Saved Messages, your main channel, or the chat itself if you can post there) or save it as a file. With **Use shared indexes** on, a chat with an index file there is indexed from it in a minute, then topped up from Telegram. Each song from a shared index is checked against its post when it plays.
+- **Newest first** under **Main channel**: copying starts with each community channel's newest post while it's still being indexed.
+- **Index only on Wi-Fi** and **Index only while charging** under **Saved index**.
+- The saved index goes faster while Telegram answers without asking for a pause, up to about 8,000 files a minute, and slows down when it asks.
+- **TrueHD Atmos** is recognised in .mka files.
+- Chats indexed by an earlier version are indexed again once, in the background, to find cue sheets and albums; their current index keeps answering meanwhile.
+
 ## 1.0.13
 
 - **Dolby audio:** Dolby Digital (.ac3), Dolby Digital Plus (.ec3, .eac3) and Dolby files in .m4a, .mp4 and .mka are found and played like any other music file. The patch reads the start of each file to tell what's inside:

@@ -373,10 +373,32 @@ final class DolbyHeader {
                 }
                 // Matroska gives a count but not which: six and eight are 5.1 and 7.1.
                 int lfe = channels == 6 || channels == 8 ? 1 : 0;
-                return details(codec[1], 0, lfe, channels, false);
+                boolean atmos = codec[1].equals("truehd") && trueHdAtmos(b, length, at);
+                return details(codec[1], 0, lfe, channels, atmos);
             }
         }
         return null;
+    }
+
+    /**
+     * Dolby Atmos in Dolby TrueHD: the first frame's major sync says the stream has four substreams
+     * and sets the top bit of its substream info, the fourth carrying the Atmos objects. This is
+     * the test ffmpeg's TrueHD decoder makes.
+     */
+    static boolean trueHdAtmos(byte[] b, int length, int from) {
+        for (int at = from; at + 18 <= length; at++)
+            if ((b[at] & 0xff) == 0xf8
+                    && (b[at + 1] & 0xff) == 0x72
+                    && (b[at + 2] & 0xff) == 0x6f
+                    && (b[at + 3] & 0xff) == 0xba) {
+                // After the sync: 32 bits of rates and channel layouts, 48 skipped, then the
+                // variable-rate flag and peak rate (16), substream count (4), 2 skipped, the
+                // extended info (2) and the substream info (8).
+                int substreams = (b[at + 16] & 0xff) >> 4;
+                int info = b[at + 17] & 0xff;
+                return substreams == 4 && info >> 7 == 1;
+            }
+        return false;
     }
 
     /**
@@ -431,10 +453,11 @@ final class DolbyHeader {
                 || codec.equals("ac4");
     }
 
-    /** "Dolby Atmos", "DD+ 5.1", "DD 2.0", "TrueHD 7.1", "AC-4". */
+    /** "Dolby Atmos", "TrueHD Atmos", "DD+ 5.1", "DD 2.0", "TrueHD 7.1", "AC-4". */
     static String label(JSONObject header) {
         String codec = header.optString("codec");
-        if (header.optBoolean("atmos")) return "Dolby Atmos";
+        if (header.optBoolean("atmos"))
+            return codec.equals("truehd") ? "TrueHD Atmos" : "Dolby Atmos";
         String layout = layout(header);
         String name =
                 codec.equals("eac3")

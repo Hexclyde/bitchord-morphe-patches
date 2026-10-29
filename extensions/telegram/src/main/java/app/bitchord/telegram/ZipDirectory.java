@@ -24,6 +24,14 @@ final class ZipDirectory {
         byte[] read(long offset, int length) throws Exception;
     }
 
+    /** What the player reads a song from when it isn't a file of its own: in a zip, or a track. */
+    interface Source {
+        /** Up to {@code length} bytes at {@code position}; -1 at the end. */
+        int read(long position, byte[] buffer, int offset, int length) throws Exception;
+
+        void close();
+    }
+
     static final int STORED = 0, DEFLATED = 8;
 
     /** The end record and its comment always fit in the last 64 KB and 22 bytes. */
@@ -210,7 +218,7 @@ final class ZipDirectory {
      * Reads an entry's uncompressed bytes from {@code position}: stored entries straight from the
      * zip, deflated ones decompressed from the entry's start.
      */
-    static final class EntryReader {
+    static final class EntryReader implements Source {
         final Range range;
         final long data, compressedSize, size;
         final int method;
@@ -226,8 +234,8 @@ final class ZipDirectory {
             this.size = size;
         }
 
-        /** Up to {@code length} bytes at {@code position}; -1 at the end. */
-        int read(long position, byte[] buffer, int offset, int length) throws Exception {
+        @Override
+        public int read(long position, byte[] buffer, int offset, int length) throws Exception {
             if (position >= size) return -1;
             int wanted = (int) Math.min(length, size - position);
             if (method == STORED) {
@@ -274,7 +282,8 @@ final class ZipDirectory {
             }
         }
 
-        void close() {
+        @Override
+        public void close() {
             if (inflater != null) inflater.end();
             inflater = null;
         }

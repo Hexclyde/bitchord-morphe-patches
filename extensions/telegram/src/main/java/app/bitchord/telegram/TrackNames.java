@@ -46,6 +46,20 @@ public final class TrackNames {
     /** Reads saved names from file; null keeps them in memory only. */
     public TrackNames(File file) {
         this.file = file;
+        read();
+    }
+
+    /** Reads the names again from the file: after a restore. */
+    synchronized void reload() {
+        corrections.clear();
+        suggestions.clear();
+        dismissed.clear();
+        plays.clear();
+        read();
+        revision++;
+    }
+
+    private void read() {
         if (file == null || !file.isFile()) return;
         try {
             JSONObject saved =

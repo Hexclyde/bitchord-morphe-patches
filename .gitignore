@@ -63,3 +63,9 @@ __pycache__/
 /dex-control-flow-*.txt
 /native-check-log.txt
 .DS_Store
+/ui-tests/src/test/java/app/bitchord/telegram/IndexTransfer.java
+/ui-tests/src/test/java/app/bitchord/telegram/CueAudio.java
+/ui-tests/src/test/java/app/bitchord/telegram/CueAlbums.java
+/ui-tests/src/test/java/app/bitchord/telegram/CueSheet.java
+/ui-tests/src/test/java/app/bitchord/telegram/FlacDecoder.java
+/ui-tests/src/test/java/app/bitchord/telegram/AlbumList.java

@@ -36,6 +36,7 @@ public final class TelegramBridge {
     final ExecutorService work = Executors.newSingleThreadExecutor();
     final TrackNames names;
     private volatile boolean useTrackNames, suggestTrackNames, hideDuplicates, hideUnplayable;
+    private volatile boolean indexWifiOnly, indexChargingOnly;
     private volatile boolean reportQuality, showArtwork, namesFromFiles;
     final Artwork artwork;
     final FormatProbe formats;
@@ -276,6 +277,26 @@ public final class TelegramBridge {
                             + " settings.";
         }
         config = readJson(new File(home, "config.json"));
+        applyConfig();
+        // Legacy catalogue files are left on disk for rollback, but are no longer loaded or
+        // required.
+        saveConfig();
+        // No logs of phone numbers, codes, passwords or session data.
+        Client.execute(new TdApi.SetLogVerbosityLevel(0));
+        startClient();
+        Thread indexing = new Thread(this::runIndex, "Telegram index");
+        indexing.setDaemon(true);
+        indexing.setPriority(Thread.MIN_PRIORITY);
+        indexing.start();
+        Thread importing = new Thread(this::runImport, "Telegram import");
+        importing.setDaemon(true);
+        importing.setPriority(Thread.MIN_PRIORITY);
+        importing.start();
+        if (context instanceof Application) TelegramLifecycle.install((Application) context, this);
+    }
+
+    /** Takes the settings from {@link #config}: at start, and after a restore. */
+    private void applyConfig() throws Exception {
         cacheLimitBytes =
                 CachePolicy.validOrDefault(
                         config.optLong("audioCacheBytes", CachePolicy.DEFAULT_BYTES));
@@ -295,24 +316,264 @@ public final class TelegramBridge {
         index.enabled = !savedIndexBroken && config.optBoolean("searchIndex", true);
         hideDuplicates = config.optBoolean("hideDuplicates", true);
         hideUnplayable = config.optBoolean("hideUnplayableDolby", true);
+        indexWifiOnly = config.optBoolean("indexWifiOnly", false);
+        indexChargingOnly = config.optBoolean("indexChargingOnly", false);
         SoundCheck.active = config.optBoolean("soundCheck", false) ? soundCheck : null;
+        useSharedIndexes = config.optBoolean("useSharedIndexes", true);
         JSONArray ids = config.optJSONArray("chats");
+        selected.clear();
         if (ids != null) for (int i = 0; i < ids.length(); i++) selected.add(ids.getLong(i));
-        // Legacy catalogue files are left on disk for rollback, but are no longer loaded or
-        // required.
+    }
+
+    // ── Backup, restore and sharing the saved index ─────────────────────────
+
+    private volatile boolean useSharedIndexes;
+
+    public boolean useSharedIndexes() {
+        return useSharedIndexes;
+    }
+
+    public void setUseSharedIndexes(boolean on) throws Exception {
+        useSharedIndexes = on;
+        config.put("useSharedIndexes", on);
         saveConfig();
-        // No logs of phone numbers, codes, passwords or session data.
-        Client.execute(new TdApi.SetLogVerbosityLevel(0));
-        startClient();
-        Thread indexing = new Thread(this::runIndex, "Telegram index");
-        indexing.setDaemon(true);
-        indexing.setPriority(Thread.MIN_PRIORITY);
-        indexing.start();
-        Thread importing = new Thread(this::runImport, "Telegram import");
-        importing.setDaemon(true);
-        importing.setPriority(Thread.MIN_PRIORITY);
-        importing.start();
-        if (context instanceof Application) TelegramLifecycle.install((Application) context, this);
+    }
+
+    static String today() {
+        return new java.text.SimpleDateFormat("yyyyMMdd", Locale.ROOT).format(new Date());
+    }
+
+    /**
+     * Writes a backup: the settings, corrected names and main channel setup, and with {@code
+     * withIndex}, the saved index of every chat it covers. The app's API details and the Telegram
+     * session are never in it.
+     */
+    public void backup(OutputStream out, boolean withIndex) throws Exception {
+        JSONObject settings =
+                new JSONObject()
+                        .put("config", new JSONObject(config.toString()))
+                        .put("trackNames", readJson(new File(home, "track-names.json")))
+                        .put("mainChannel", readJson(new File(home, "main-channel.json")));
+        JSONObject header =
+                new JSONObject()
+                        .put("format", IndexTransfer.BACKUP)
+                        .put("version", IndexTransfer.VERSION)
+                        .put("created", today())
+                        .put("settings", settings);
+        List<IndexTransfer.Section> sections = new ArrayList<>();
+        if (withIndex && index.enabled)
+            for (long chat : indexedChats()) sections.add(index.section(chat, title(chat)));
+        IndexTransfer.write(out, header, sections, index::exportRows);
+        status = Strings.t("Backup saved.");
+    }
+
+    /**
+     * Restores a backup, or adds an index file someone shared: its settings replace these, and its
+     * index is added to this one.
+     */
+    public void restore(InputStream in) throws Exception {
+        IndexTransfer.Contents contents = IndexTransfer.read(in);
+        JSONObject settings = contents.header.optJSONObject("settings");
+        if (settings != null) {
+            JSONObject restored = settings.optJSONObject("config");
+            if (restored != null) {
+                config = restored;
+                applyConfig();
+                saveConfig();
+                remoteSearch.clear();
+            }
+            JSONObject trackNames = settings.optJSONObject("trackNames");
+            if (trackNames != null) {
+                writeJson(new File(home, "track-names.json"), trackNames);
+                names.reload();
+            }
+            JSONObject main = settings.optJSONObject("mainChannel");
+            if (main != null) {
+                writeJson(new File(home, "main-channel.json"), main);
+                mainChannel.reload();
+            }
+        }
+        int files = 0;
+        for (IndexTransfer.Section section : contents.sections)
+            files += index.importSection(section);
+        status =
+                settings != null
+                        ? Strings.f(
+                                "Restored. {0} files added to the saved index.",
+                                Strings.number(files))
+                        : Strings.f("{0} files added to the saved index.", Strings.number(files));
+    }
+
+    /** A chat's saved index as a file in the app's cache, named for the chat. */
+    File indexFile(long chat) throws Exception {
+        if (!index.enabled)
+            throw new IOException("Turn on Saved index first. The songs come from it.");
+        if (index.count(chat) == 0) throw new IOException("There's no music in this chat yet.");
+        File folder = new File(context.getCacheDir(), "shared-index");
+        folder.mkdirs();
+        File file = new File(folder, IndexTransfer.fileName(chat, today()));
+        try (OutputStream out = new FileOutputStream(file)) {
+            IndexTransfer.write(
+                    out,
+                    new JSONObject()
+                            .put("format", IndexTransfer.INDEX)
+                            .put("version", IndexTransfer.VERSION),
+                    Collections.singletonList(index.section(chat, title(chat))),
+                    index::exportRows);
+        }
+        return file;
+    }
+
+    /** Writes a chat's saved index to a file the user picked. */
+    public void exportIndex(long chat, OutputStream out) throws Exception {
+        File file = indexFile(chat);
+        try (InputStream in = new FileInputStream(file)) {
+            byte[] buffer = new byte[64 * 1024];
+            int n;
+            while ((n = in.read(buffer)) > 0) out.write(buffer, 0, n);
+        }
+        file.delete();
+        status = Strings.t("Index file saved.");
+    }
+
+    /** Where a chat's index can be posted: {name, chat id}. */
+    public List<Object[]> shareTargets(long chat) throws Exception {
+        List<Object[]> targets = new ArrayList<>();
+        long me = call(new TdApi.GetMe()).id;
+        targets.add(
+                new Object[] {
+                    Strings.t("Saved Messages"), call(new TdApi.CreatePrivateChat(me, true)).id
+                });
+        if (mainChannel.main() != 0)
+            targets.add(new Object[] {mainChannel.mainTitle(), mainChannel.main()});
+        if (canPost(chat) && chat != mainChannel.main())
+            targets.add(new Object[] {title(chat), chat});
+        return targets;
+    }
+
+    /** Whether this account can post in a channel: its creator, or an admin allowed to post. */
+    private boolean canPost(long chat) {
+        try {
+            TdApi.Chat c = call(new TdApi.GetChat(chat));
+            if (!(c.type instanceof TdApi.ChatTypeSupergroup)) return false;
+            TdApi.Supergroup group =
+                    call(new TdApi.GetSupergroup(((TdApi.ChatTypeSupergroup) c.type).supergroupId));
+            if (group.status instanceof TdApi.ChatMemberStatusCreator) return true;
+            return group.status instanceof TdApi.ChatMemberStatusAdministrator
+                    && ((TdApi.ChatMemberStatusAdministrator) group.status).rights.canPostMessages;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Posts a chat's saved index as a file. Anyone with the patch who can see it there, in that
+     * chat itself, gets the index from it instead of reading the chat from Telegram.
+     */
+    public void shareIndex(long chat, long target) throws Exception {
+        File file = indexFile(chat);
+        TdApi.FormattedText caption =
+                new TdApi.FormattedText(
+                        Strings.f("BitChord saved index of {0}", title(chat)),
+                        new TdApi.TextEntity[0]);
+        call(
+                new TdApi.SendMessage(
+                        target,
+                        null,
+                        null,
+                        null,
+                        null,
+                        new TdApi.InputMessageDocument(
+                                new TdApi.InputDocument(
+                                        new TdApi.InputFileLocal(file.getAbsolutePath()),
+                                        null,
+                                        true),
+                                caption)),
+                30000);
+        status = Strings.f("Posted the index of {0}.", title(chat));
+    }
+
+    private String title(long chat) {
+        try {
+            return call(new TdApi.GetChat(chat)).title;
+        } catch (Exception e) {
+            return Long.toString(chat);
+        }
+    }
+
+    /** Chats already looked in for a shared index this session, so each is looked in once. */
+    private final Set<Long> sharedChecked = ConcurrentHashMap.newKeySet();
+
+    /** No index file bigger than this is downloaded. */
+    static final long MAX_SHARED_BYTES = 512L * 1024 * 1024;
+
+    /**
+     * Before a chat is read from Telegram the first time, looks for an index file of it: posted in
+     * the chat itself (only its admins can post in a channel), in Saved Messages, or in the main
+     * channel. The newest is added, and the chat is then only topped up.
+     */
+    private boolean importShared() {
+        if (!useSharedIndexes || !index.enabled) return false;
+        for (long chat : indexedChats()) {
+            try {
+                if (index.built(chat) || index.count(chat) > 0 || !sharedChecked.add(chat))
+                    continue;
+                List<Long> places = new ArrayList<>();
+                places.add(chat);
+                places.add(call(new TdApi.CreatePrivateChat(call(new TdApi.GetMe()).id, true)).id);
+                if (mainChannel.main() != 0) places.add(mainChannel.main());
+                TdApi.Document newest = null;
+                long newestDate = 0;
+                for (long place : places) {
+                    TdApi.FoundChatMessages found =
+                            call(
+                                    new TdApi.SearchChatMessages(
+                                            place,
+                                            null,
+                                            "bitchord-index",
+                                            null,
+                                            0,
+                                            0,
+                                            20,
+                                            new TdApi.SearchMessagesFilterDocument()),
+                                    15000);
+                    if (found == null || found.messages == null) continue;
+                    for (TdApi.Message m : found.messages) {
+                        if (!(m.content instanceof TdApi.MessageDocument)) continue;
+                        TdApi.Document d = ((TdApi.MessageDocument) m.content).document;
+                        if (d == null
+                                || !IndexTransfer.forChat(d.fileName, chat)
+                                || d.document.size > MAX_SHARED_BYTES) continue;
+                        if (m.date > newestDate) {
+                            newest = d;
+                            newestDate = m.date;
+                        }
+                    }
+                }
+                if (newest == null) continue;
+                TdApi.File file =
+                        call(new TdApi.DownloadFile(newest.document.id, 1, 0, 0, true), 600000);
+                if (file.local == null || !file.local.isDownloadingCompleted) continue;
+                int added = 0;
+                try (InputStream in = new FileInputStream(file.local.path)) {
+                    for (IndexTransfer.Section section : IndexTransfer.read(in).sections)
+                        if (section.chat == chat) added += index.importSection(section);
+                }
+                HostLog.d(
+                        "Unofficial Telegram used a shared index for chat "
+                                + chat
+                                + ": "
+                                + added
+                                + " files");
+                return true;
+            } catch (LiveSearch.RateLimited e) {
+                sharedChecked.remove(chat);
+                return false;
+            } catch (Exception e) {
+                HostLog.d("Unofficial Telegram couldn't use a shared index: " + e.getMessage());
+            }
+        }
+        return false;
     }
 
     private void startClient() throws Exception {
@@ -392,6 +653,9 @@ public final class TelegramBridge {
                 || obj instanceof TdApi.UpdateDeleteMessages) {
             mediaRevision++;
             remoteSearch.clear();
+        } else if (obj instanceof TdApi.UpdateChatFolders) {
+            TdApi.ChatFolderInfo[] list = ((TdApi.UpdateChatFolders) obj).chatFolders;
+            folders = list == null ? new TdApi.ChatFolderInfo[0] : list;
         } else if (obj instanceof TdApi.UpdateAccentColors) {
             accentColors.clear();
             TdApi.AccentColor[] colors = ((TdApi.UpdateAccentColors) obj).colors;
@@ -446,7 +710,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.13"));
+                            "1.0.14"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -512,20 +776,60 @@ public final class TelegramBridge {
                             + " account.");
     }
 
+    /** The account's chat folders, as Telegram last sent them. */
+    private volatile TdApi.ChatFolderInfo[] folders = new TdApi.ChatFolderInfo[0];
+
+    /** At most this many chats are read from one list. */
+    static final int MAX_CHATS = 2000;
+
+    /** Every chat: the main list, then archived chats. Folders only hold chats from these two. */
     public List<TdApi.Chat> chats() throws Exception {
         requireReady();
-        try {
-            call(new TdApi.LoadChats(new TdApi.ChatListMain(), 100));
-        } catch (IOException e) {
-            if (!e.getMessage().contains("404")) throw e;
-        }
-        long[] ids = call(new TdApi.GetChats(new TdApi.ChatListMain(), 100)).chatIds;
+        Map<Long, TdApi.Chat> chats = new LinkedHashMap<>();
+        for (TdApi.ChatList list :
+                new TdApi.ChatList[] {new TdApi.ChatListMain(), new TdApi.ChatListArchive()})
+            for (TdApi.Chat chat : chats(list)) chats.putIfAbsent(chat.id, chat);
+        return new ArrayList<>(chats.values());
+    }
+
+    /** The chats of one list, all of them rather than the first page. */
+    List<TdApi.Chat> chats(TdApi.ChatList list) throws Exception {
+        requireReady();
+        // Telegram sends a list a page at a time; it answers 404 once there's no more.
+        for (int page = 0; page < MAX_CHATS / 100; page++)
+            try {
+                call(new TdApi.LoadChats(list, 100));
+            } catch (IOException e) {
+                if (!e.getMessage().contains("404")) throw e;
+                break;
+            }
+        long[] ids = call(new TdApi.GetChats(list, MAX_CHATS)).chatIds;
         List<TdApi.Chat> chats = new ArrayList<>();
         for (long id : ids) {
             TdApi.Chat chat = call(new TdApi.GetChat(id));
             if (MediaPolicy.chatAllowed(chat)) chats.add(chat);
         }
         return chats;
+    }
+
+    /**
+     * Where music chats can be picked from: all chats, each of the account's folders, and archived
+     * chats. Each is {name, list}.
+     */
+    public List<Object[]> chatLists() {
+        List<Object[]> lists = new ArrayList<>();
+        lists.add(new Object[] {Strings.t("All chats"), null});
+        for (TdApi.ChatFolderInfo folder : folders) {
+            String name =
+                    folder.name != null && folder.name.text != null ? folder.name.text.text : "";
+            lists.add(
+                    new Object[] {
+                        name.isEmpty() ? Strings.t("Folder") : name,
+                        new TdApi.ChatListFolder(folder.id)
+                    });
+        }
+        lists.add(new Object[] {Strings.t("Archived chats"), new TdApi.ChatListArchive()});
+        return lists;
     }
 
     public void addChat(String text) throws Exception {
@@ -703,10 +1007,17 @@ public final class TelegramBridge {
      * replaces the playlist with the chat's current files.
      */
     public void saveChannelPlaylist(long chat, String title) throws Exception {
-        List<Object> songs = HostLibrary.songs(channelTracks(chat), showArtwork ? artwork : null);
+        savePlaylist(Long.toString(chat), title, channelTracks(chat));
+    }
+
+    /**
+     * Saves songs as a playlist in BitChord's Library. Saving under the same key again replaces
+     * that playlist.
+     */
+    private void savePlaylist(String key, String title, List<JSONObject> tracks) throws Exception {
+        List<Object> songs = HostLibrary.songs(tracks, showArtwork ? artwork : null);
         JSONObject saved = config.optJSONObject("playlists");
         if (saved == null) saved = new JSONObject();
-        String key = Long.toString(chat);
         String id = HostLibrary.savePlaylist(title, songs, saved.optString(key, null));
         saved.put(key, id);
         config.put("playlists", saved);
@@ -722,7 +1033,41 @@ public final class TelegramBridge {
 
     /** Queues a chat's newest music files in BitChord's downloads. */
     public void downloadChannel(long chat, String title) throws Exception {
-        List<Object> songs = HostLibrary.songs(channelTracks(chat), showArtwork ? artwork : null);
+        download(title, channelTracks(chat));
+    }
+
+    /** A chat's albums, newest first, from its newest files in the saved index. */
+    public List<JSONObject> albums(long chat) throws Exception {
+        if (!index.enabled)
+            throw new IOException("Turn on Saved index first. The songs come from it.");
+        List<JSONObject> albums =
+                AlbumList.albums(index.before(chat, Long.MAX_VALUE, AlbumList.LOOK_AT));
+        if (albums.isEmpty()) throw new IOException("No albums found in this chat yet.");
+        return albums;
+    }
+
+    /** An album's songs as search shows them. */
+    private List<JSONObject> albumTracks(JSONObject album) throws Exception {
+        List<JSONObject> rows = new ArrayList<>();
+        org.json.JSONArray songs = album.getJSONArray("songs");
+        for (int i = 0; i < songs.length(); i++) rows.add(songs.getJSONObject(i));
+        List<JSONObject> named = new ArrayList<>();
+        for (JSONObject row : present(rows)) named.add(useTrackNames ? names.apply(row) : row);
+        if (named.isEmpty()) throw new IOException("There's no music in this chat yet.");
+        return named;
+    }
+
+    public void saveAlbumPlaylist(long chat, JSONObject album) throws Exception {
+        savePlaylist(
+                chat + ":" + album.getString("key"), album.getString("title"), albumTracks(album));
+    }
+
+    public void downloadAlbum(JSONObject album) throws Exception {
+        download(album.getString("title"), albumTracks(album));
+    }
+
+    private void download(String title, List<JSONObject> tracks) throws Exception {
+        List<Object> songs = HostLibrary.songs(tracks, showArtwork ? artwork : null);
         HostLibrary.download(context, songs, title);
         status =
                 Strings.f(
@@ -752,15 +1097,27 @@ public final class TelegramBridge {
 
     private boolean savedIndexBroken;
 
+    /**
+     * The pause between index pages. It shortens while Telegram answers without asking for a pause,
+     * down to {@link #FASTEST_PACE}, and doubles when Telegram asks for one.
+     */
+    private long pace = TelegramIndex.PACE_MILLIS;
+
+    static final long FASTEST_PACE = 700, SLOWEST_PACE = 8000;
+
     /** Builds and tops up the index a page at a time while nothing else is searching. */
     private void runIndex() {
         while (true) {
-            long wait = TelegramIndex.PACE_MILLIS;
+            long wait = pace;
             try {
                 if (!ready() || !index.enabled) wait = 5000;
+                else if (!indexPause().isEmpty()) wait = 30000;
                 else if (!remoteSearch.idle()) wait = 1000;
+                else if (importShared()) wait = 1000;
                 else if (!index.step(indexedChats(), mainChannel.main())) wait = 60000;
+                else pace = Math.max(FASTEST_PACE, pace * 9 / 10);
             } catch (LiveSearch.RateLimited e) {
+                pace = Math.min(SLOWEST_PACE, pace * 2);
                 wait = 1000L * e.retrySeconds + 1000;
             } catch (Exception e) {
                 wait = 30000;
@@ -943,8 +1300,51 @@ public final class TelegramBridge {
         return index.enabled;
     }
 
+    /** Why indexing is paused for now ("Waiting for Wi-Fi"), or "" when it can go on. */
+    String indexPause() {
+        try {
+            if (indexWifiOnly) {
+                android.net.ConnectivityManager connectivity =
+                        (android.net.ConnectivityManager)
+                                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                android.net.NetworkCapabilities network =
+                        connectivity.getNetworkCapabilities(connectivity.getActiveNetwork());
+                if (network == null
+                        || !network.hasCapability(
+                                android.net.NetworkCapabilities.NET_CAPABILITY_NOT_METERED))
+                    return Strings.t("Paused until this phone is on Wi-Fi");
+            }
+            if (indexChargingOnly) {
+                Intent battery =
+                        context.registerReceiver(
+                                null,
+                                new android.content.IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+                if (battery == null
+                        || battery.getIntExtra(android.os.BatteryManager.EXTRA_PLUGGED, 0) == 0)
+                    return Strings.t("Paused until this phone is charging");
+            }
+        } catch (RuntimeException e) {
+            // Can't tell: go on indexing.
+        }
+        return "";
+    }
+
+    public boolean indexOption(String name) {
+        return name.equals("wifi") ? indexWifiOnly : indexChargingOnly;
+    }
+
+    public void setIndexOption(String name, boolean on) throws Exception {
+        if (name.equals("wifi")) indexWifiOnly = on;
+        else indexChargingOnly = on;
+        config.put(name.equals("wifi") ? "indexWifiOnly" : "indexChargingOnly", on);
+        saveConfig();
+    }
+
     public String indexStatus() {
         try {
+            String paused = indexPause();
+            if (!paused.isEmpty() && !index.allBuilt(indexedChats()))
+                return paused + " · " + index.status(indexedChats());
             return index.status(indexedChats());
         } catch (Exception e) {
             return "The index can't be read right now";
@@ -1216,6 +1616,14 @@ public final class TelegramBridge {
                 ZipAlbums.validId(id)
                         ? zipSong(id)
                         : TrackMetadata.resolve(id, selected, this::message);
+        if (row != null && !ZipAlbums.validId(id)) {
+            // A song from a shared index must be the file actually in that post.
+            JSONObject indexed = index.row(row.getLong("chat"), row.getLong("message"), 0);
+            if (indexed != null && indexed.optInt("file") == 0) {
+                if (!indexed.optString("unique").equals(row.optString("unique"))) return null;
+                index.fileFound(indexed, row.getInt("file"));
+            }
+        }
         requireReady();
         if (session != generation) throw new IOException("Telegram session changed. Try again.");
         return row;
@@ -1248,9 +1656,24 @@ public final class TelegramBridge {
         long[] key = ZipAlbums.parse(id);
         if (!selected.contains(key[0])) return null;
         TdApi.Message found = message(key[0], key[1]);
-        JSONObject zip = ZipAlbums.descriptor(found);
+        // The post's file as it is now: a zip, or the album file a cue sheet's track is part of.
+        JSONObject post =
+                CueAlbums.isTrack(key[2]) && CueAlbums.albumEntry(key[2]) == 0
+                        ? TrackMetadata.from(found)
+                        : ZipAlbums.descriptor(found);
         JSONObject row = index.row(key[0], key[1], (int) key[2]);
-        if (zip == null || row == null || row.optInt("file") != zip.getInt("file")) return null;
+        if (post == null || row == null) return null;
+        int file = post.getInt("file");
+        if (row.optInt("file") != file) {
+            // An index shared by someone else has their phone's file numbers, or none: the post's
+            // own is used once it's known to be the same file.
+            String unique = post.optString("unique");
+            String own = row.optString("unique");
+            if (unique.isEmpty() || !(own.startsWith(unique + "/") || own.startsWith(unique + "#")))
+                return null;
+            row.put("file", file);
+            index.fileFound(new JSONObject(row.toString()), file);
+        }
         return row;
     }
 

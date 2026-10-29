@@ -61,9 +61,10 @@ final class NativeAudio {
             fileId = row.getInt("file");
             long chat = row.getLong("chat");
             TdApi.File file = bridge.call(new TdApi.GetFile(fileId));
-            // A song inside a zip is read from its place in the zip, in its own positions.
-            JSONObject zip = row.optJSONObject("zip");
-            long size = zip == null ? file.size : row.getLong("size");
+            // A song inside a zip is read from its place in the zip, in its own positions; a track
+            // of a cue sheet is read as a WAV file of just that track.
+            JSONObject zip = row.optJSONObject("zip"), cue = row.optJSONObject("cue");
+            long size = zip == null && cue == null ? file.size : row.getLong("size");
             if (zip != null && zip.getLong("data") + zip.getLong("compressed") > file.size)
                 throw new IOException("Damaged zip");
             if (size < 0 || position > size)
@@ -94,7 +95,19 @@ final class NativeAudio {
                             size,
                             row.optString("mime"),
                             lease);
-            if (zip != null)
+            if (cue != null)
+                reader.entry =
+                        new CueAudio(
+                                zip == null
+                                        ? reader::readRange
+                                        : ZipAlbums.entryRange(
+                                                reader::readRange,
+                                                zip.getLong("data"),
+                                                zip.getInt("method"),
+                                                zip.getLong("compressed"),
+                                                cue.getLong("total")),
+                                cue);
+            else if (zip != null)
                 reader.entry =
                         new ZipDirectory.EntryReader(
                                 reader::readRange,
@@ -150,7 +163,7 @@ final class NativeAudio {
         boolean released;
         Runnable cancellation = () -> {};
         // Set for a song inside a zip: positions are the song's, read through the zip.
-        ZipDirectory.EntryReader entry;
+        ZipDirectory.Source entry;
         long fileSize;
 
         Reader(

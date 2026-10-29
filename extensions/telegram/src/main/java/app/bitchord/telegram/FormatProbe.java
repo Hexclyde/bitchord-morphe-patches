@@ -55,7 +55,10 @@ final class FormatProbe {
     }
 
     static boolean probable(JSONObject row) {
-        if (row.has("zip")) return false; // its header was read when its zip was
+        // Its header was read when its zip or cue sheet was.
+        if (row.has("zip") || row.has("cue")) return false;
+        // From a shared index, not yet played on this phone: no file to read yet.
+        if (row.optInt("file") == 0) return false;
         // Also the containers and Dolby files whose header says what the name can't: Atmos,
         // the channels, ALAC's bit depth.
         return format(row).matches("flac|wav|aiff?|m4a|mp4|ac3|eac3|ec3|ac4|mka");
@@ -76,7 +79,7 @@ final class FormatProbe {
     CountDownLatch probe(List<JSONObject> rows, Artwork.Download download, int max) {
         java.util.List<JSONObject> wanted = new java.util.ArrayList<>();
         for (JSONObject row : rows)
-            if (row.has("zip") && row.optJSONObject("header") != null)
+            if ((row.has("zip") || row.has("cue")) && row.optJSONObject("header") != null)
                 record(row.optString("id"), row.optJSONObject("header"));
         for (JSONObject row : rows)
             if (wanted.size() < max && probable(row) && get(row.optString("id")) == null)

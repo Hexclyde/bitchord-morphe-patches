@@ -218,6 +218,8 @@ public class TelegramScreenTest {
         assertNull(text(activity.body, "Index newest messages"));
         assertNull(text(activity.body, "Load older messages"));
         screenshot("connected-library");
+        assertNull("Storage is on the Advanced tab", slider(activity.body));
+        openTab("Advanced");
         SeekBar cacheSlider = slider(activity.body);
         assertNotNull(cacheSlider);
         assertEquals(CachePolicy.indexOf(CachePolicy.DEFAULT_BYTES), cacheSlider.getProgress());
@@ -229,6 +231,13 @@ public class TelegramScreenTest {
         assertEquals(7, slider(activity.body).getProgress());
         activity.scroll.scrollTo(0, ((View) slider(activity.body).getParent()).getTop());
         screenshot("cache-settings");
+    }
+
+    /** Opens the Basic or Advanced tab. */
+    void openTab(String name) {
+        click(name);
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        assertTrue(name + " tab open", text(activity.body, name).isSelected());
     }
 
     void signedIn() {
@@ -386,9 +395,111 @@ public class TelegramScreenTest {
     }
 
     @Test
+    public void foldersBackupSharingAndAlbums() throws Exception {
+        TelegramBridge bridge = activity.bridge;
+        signedIn();
+
+        // Music chats: where to pick from comes first, folders and archived chats included.
+        clickRow("Music chats");
+        android.app.AlertDialog lists =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        java.util.List<String> names = new java.util.ArrayList<>();
+        android.widget.ListView view = lists.getListView();
+        for (int i = 0; i < view.getAdapter().getCount(); i++)
+            names.add(view.getAdapter().getItem(i).toString());
+        assertEquals(java.util.Arrays.asList("All chats", "Music", "Archived chats"), names);
+        lists.dismiss();
+
+        // Indexing only on Wi-Fi.
+        clickRow("Index only on Wi-Fi");
+        idle();
+        assertTrue(bridge.indexOption("wifi"));
+
+        // A backup goes to a file the user picks, with the index unless unticked.
+        openTab("Advanced");
+        clickRow("Back up");
+        android.app.AlertDialog ask =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        ask.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        android.content.Intent save =
+                Shadows.shadowOf(activity).getNextStartedActivityForResult().intent;
+        assertEquals(android.content.Intent.ACTION_CREATE_DOCUMENT, save.getAction());
+        assertTrue(
+                save.getStringExtra(android.content.Intent.EXTRA_TITLE)
+                        .startsWith("bitchord-telegram-backup-"));
+        android.net.Uri file = android.net.Uri.parse("content://test/backup.gz");
+        java.io.ByteArrayOutputStream written = new java.io.ByteArrayOutputStream();
+        Shadows.shadowOf(activity.getContentResolver()).registerOutputStream(file, written);
+        Shadows.shadowOf(activity)
+                .receiveResult(
+                        save,
+                        android.app.Activity.RESULT_OK,
+                        new android.content.Intent().setData(file));
+        idle();
+        assertEquals(java.util.Arrays.asList("backup true"), bridge.backups);
+        assertEquals(1, written.size());
+
+        // Restoring reads the file picked.
+        clickRow("Restore");
+        android.content.Intent open =
+                Shadows.shadowOf(activity).getNextStartedActivityForResult().intent;
+        assertEquals(android.content.Intent.ACTION_OPEN_DOCUMENT, open.getAction());
+        android.net.Uri picked = android.net.Uri.parse("content://test/picked.gz");
+        Shadows.shadowOf(activity.getContentResolver())
+                .registerInputStream(picked, new java.io.ByteArrayInputStream(new byte[1]));
+        Shadows.shadowOf(activity)
+                .receiveResult(
+                        open,
+                        android.app.Activity.RESULT_OK,
+                        new android.content.Intent().setData(picked));
+        idle();
+        assertEquals("restore", bridge.backups.get(1));
+
+        // Sharing a chat's index: posted after asking.
+        bridge.selected.add(10L);
+        clickRow("Share a chat’s index");
+        idle();
+        Shadows.shadowOf(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+                .clickOnItem(0);
+        idle();
+        android.app.AlertDialog where =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        assertEquals("Post in Saved Messages", where.getListView().getAdapter().getItem(0));
+        Shadows.shadowOf(where).clickOnItem(0);
+        org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+                .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                .performClick();
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        idle();
+        assertTrue(bridge.backups.get(2).startsWith("share 10 to 1"));
+
+        // A chat's albums, saved as a playlist.
+        openTab("Basic");
+        clickRow("Playlists and downloads");
+        idle();
+        Shadows.shadowOf(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+                .clickOnItem(0);
+        idle();
+        Shadows.shadowOf(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+                .clickOnItem(2);
+        idle();
+        android.app.AlertDialog albums =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        assertEquals("Night Sessions · 2 songs", albums.getListView().getAdapter().getItem(0));
+        Shadows.shadowOf(albums).clickOnItem(0);
+        Shadows.shadowOf(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+                .clickOnItem(0);
+        idle();
+        assertTrue(bridge.collections.contains("album playlist Night Sessions"));
+    }
+
+    @Test
     public void trackDetailsToggles() throws Exception {
         TelegramBridge bridge = activity.bridge;
         signedIn();
+        assertNull("Track details are on the Advanced tab", text(activity.body, "TRACK DETAILS"));
+        openTab("Advanced");
         assertNotNull(text(activity.body, "TRACK DETAILS"));
         View root = activity.getWindow().getDecorView();
         root.measure(
@@ -447,9 +558,11 @@ public class TelegramScreenTest {
         idle();
         assertTrue(bridge.surroundAsStereo());
         assertNotNull(text(activity.body, "5.1 and 7.1 files are mixed to stereo in BitChord"));
+        openTab("Basic");
         assertNotNull(
                 "The index says how far it has got",
                 text(activity.body, "12 files indexed from 1 chat"));
+        openTab("Advanced");
         for (String option : new String[] {"import", "sync", "losslessOnly", "skipDuplicates"})
             assertFalse(option + " starts off", bridge.importOption(option));
         assertNotNull(text(activity.body, "Up to 100 files an hour"));
@@ -510,6 +623,7 @@ public class TelegramScreenTest {
                 text(
                         activity.body,
                         "Telegram files with another length are compared with the song"));
+        openTab("Basic");
         clickRow("Saved index");
         idle();
         assertFalse(bridge.searchIndex());

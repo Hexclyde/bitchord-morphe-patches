@@ -81,6 +81,12 @@ final class Translations {
                     + " \u0627\u0644\u0623\u0641\u0636\u0644"
                     + " \u062a\u062f\u0631\u064a\u062c\u064a\u064b\u0627 \u062f\u0648\u0646"
                     + " \u0627\u0646\u0642\u0637\u0627\u0639",
+            "A chat\u2019s index comes from a shared index file when there is one",
+            "\u064a\u0623\u062a\u064a \u0641\u0647\u0631\u0633"
+                    + " \u0627\u0644\u0645\u062d\u0627\u062f\u062b\u0629 \u0645\u0646"
+                    + " \u0645\u0644\u0641 \u0641\u0647\u0631\u0633"
+                    + " \u0645\u064f\u0634\u0627\u0631\u064e\u0643 \u0625\u0646"
+                    + " \u0648\u064f\u062c\u062f",
             "A file counts as already there when it\u2019s the same Telegram file, or has the same"
                     + " title, artist, length and format. Nothing in your main channel is deleted."
                     + " Copying waits until your main channel has been indexed.",
@@ -129,8 +135,14 @@ final class Translations {
             "Added automatically to BitChord.",
             "\u062a\u064f\u0636\u0627\u0641 \u062a\u0644\u0642\u0627\u0626\u064a\u064b\u0627"
                     + " \u0625\u0644\u0649 BitChord.",
+            "Advanced",
+            "\u0645\u062a\u0642\u062f\u0645",
             "Album covers",
             "\u0623\u063a\u0644\u0641\u0629 \u0627\u0644\u0623\u0644\u0628\u0648\u0645\u0627\u062a",
+            "Albums",
+            "\u0627\u0644\u0623\u0644\u0628\u0648\u0645\u0627\u062a",
+            "All chats",
+            "\u0643\u0644 \u0627\u0644\u0645\u062d\u0627\u062f\u062b\u0627\u062a",
             "All music files are copied",
             "\u062a\u064f\u0646\u0633\u062e \u0643\u0644 \u0645\u0644\u0641\u0627\u062a"
                     + " \u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649",
@@ -186,10 +198,59 @@ final class Translations {
             "\u062a\u0637\u0628\u064a\u0642 \u062d\u062c\u0645"
                     + " \u0627\u0644\u0630\u0627\u0643\u0631\u0629"
                     + " \u0627\u0644\u0645\u0624\u0642\u062a\u0629",
+            "Archived chats",
+            "\u0627\u0644\u0645\u062d\u0627\u062f\u062b\u0627\u062a"
+                    + " \u0627\u0644\u0645\u0624\u0631\u0634\u0641\u0629",
             "Artist",
             "\u0627\u0644\u0641\u0646\u0627\u0646",
             "Back",
             "\u0631\u062c\u0648\u0639",
+            "Back up",
+            "\u0646\u0633\u062e \u0627\u062d\u062a\u064a\u0627\u0637\u064a",
+            "Backup and sharing",
+            "\u0627\u0644\u0646\u0633\u062e \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a"
+                    + " \u0648\u0627\u0644\u0645\u0634\u0627\u0631\u0643\u0629",
+            "Backup saved.",
+            "\u062a\u0645 \u062d\u0641\u0638 \u0627\u0644\u0646\u0633\u062e\u0629"
+                    + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629.",
+            "Backups and index files never hold your API details or your Telegram session. An index"
+                + " file lists the music in a chat, so anyone you share it with sees that list.",
+            "\u0644\u0627 \u062a\u062d\u062a\u0648\u064a \u0627\u0644\u0646\u0633\u062e"
+                + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
+                + " \u0648\u0645\u0644\u0641\u0627\u062a \u0627\u0644\u0641\u0647\u0631\u0633"
+                + " \u0623\u0628\u062f\u064b\u0627 \u0639\u0644\u0649"
+                + " \u062a\u0641\u0627\u0635\u064a\u0644 API \u0623\u0648 \u062c\u0644\u0633\u0629"
+                + " Telegram. \u064a\u0633\u0631\u062f \u0645\u0644\u0641"
+                + " \u0627\u0644\u0641\u0647\u0631\u0633"
+                + " \u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649 \u0641\u064a"
+                + " \u0645\u062d\u0627\u062f\u062b\u0629\u060c \u0644\u0630\u0627"
+                + " \u064a\u0631\u0649 \u0647\u0630\u0647"
+                + " \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0643\u0644 \u0645\u0646"
+                + " \u062a\u0634\u0627\u0631\u0643\u0647 \u0645\u0639\u0647.",
+            "Basic",
+            "\u0623\u0633\u0627\u0633\u064a",
+            "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
+                + " the chat itself (in a channel, only its admins can post), in your Saved"
+                + " Messages or in your main channel, and then only reads what\u2019s been posted"
+                + " since. Each song is checked against its post when it plays.",
+            "\u0642\u0628\u0644 \u0642\u0631\u0627\u0621\u0629 \u0645\u062d\u0627\u062f\u062b\u0629"
+                    + " \u0645\u0646 Telegram\u060c \u064a\u0628\u062d\u062b"
+                    + " \u0627\u0644\u062a\u0639\u062f\u064a\u0644 \u0639\u0646 \u0645\u0644\u0641"
+                    + " \u0641\u0647\u0631\u0633 \u0644\u0647\u0627 \u0645\u0646\u0634\u0648\u0631"
+                    + " \u0641\u064a \u0627\u0644\u0645\u062d\u0627\u062f\u062b\u0629"
+                    + " \u0646\u0641\u0633\u0647\u0627 (\u0641\u064a"
+                    + " \u0627\u0644\u0642\u0646\u0627\u0629\u060c \u064a\u0645\u0643\u0646"
+                    + " \u0644\u0645\u0634\u0631\u0641\u064a\u0647\u0627 \u0641\u0642\u0637"
+                    + " \u0627\u0644\u0646\u0634\u0631)\u060c \u0623\u0648 \u0641\u064a"
+                    + " \u00ab\u0627\u0644\u0631\u0633\u0627\u0626\u0644"
+                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638\u0629\u00bb\u060c \u0623\u0648"
+                    + " \u0641\u064a \u0642\u0646\u0627\u062a\u0643"
+                    + " \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629\u060c \u062b\u0645"
+                    + " \u064a\u0642\u0631\u0623 \u0641\u0642\u0637 \u0645\u0627"
+                    + " \u0646\u064f\u0634\u0631 \u0628\u0639\u062f\u0647."
+                    + " \u062a\u064f\u0641\u062d\u0635 \u0643\u0644 \u0623\u063a\u0646\u064a\u0629"
+                    + " \u0645\u0642\u0627\u0628\u0644 \u0645\u0646\u0634\u0648\u0631\u0647\u0627"
+                    + " \u0639\u0646\u062f \u062a\u0634\u063a\u064a\u0644\u0647\u0627.",
             "BitChord guesses from the file type",
             "\u064a\u062e\u0645\u0651\u0646 BitChord \u0645\u0646 \u0646\u0648\u0639"
                     + " \u0627\u0644\u0645\u0644\u0641",
@@ -215,6 +276,9 @@ final class Translations {
                     + " \u0641\u064a\u062d\u062a\u0627\u062c \u0625\u0644\u0649"
                     + " \u0645\u0641\u0643\u0643 \u062a\u0631\u0645\u064a\u0632 \u0641\u064a"
                     + " \u0627\u0644\u0647\u0627\u062a\u0641.",
+            "BitChord saved index of {0}",
+            "\u0627\u0644\u0641\u0647\u0631\u0633 \u0627\u0644\u0645\u062d\u0641\u0648\u0638"
+                    + " \u0641\u064a BitChord \u0644\u0640 {0}",
             "BitChord sees the corrected names",
             "\u064a\u0631\u0649 BitChord \u0627\u0644\u0623\u0633\u0645\u0627\u0621"
                     + " \u0627\u0644\u0645\u0635\u062d\u0651\u062d\u0629",
@@ -378,6 +442,8 @@ final class Translations {
                 + " \u0627\u0644\u0627\u0633\u0645 \u0641\u064a"
                 + " \u062a\u0646\u0628\u064a\u0647\u0627\u062a \u062a\u0633\u062c\u064a\u0644"
                 + " \u0627\u0644\u062f\u062e\u0648\u0644.",
+            "Damaged index file",
+            "\u0645\u0644\u0641 \u0641\u0647\u0631\u0633 \u062a\u0627\u0644\u0641",
             "Dismiss",
             "\u062a\u062c\u0627\u0647\u0644",
             "Dolby AC-4 files show only if this phone has a decoder",
@@ -446,6 +512,9 @@ final class Translations {
                     + " \u062d\u0633\u0627\u0628 Telegram.",
             "Every Dolby file shows",
             "\u062a\u0638\u0647\u0631 \u0643\u0644 \u0645\u0644\u0641\u0627\u062a Dolby",
+            "Every chat is read from Telegram",
+            "\u062a\u064f\u0642\u0631\u0623 \u0643\u0644 \u0645\u062d\u0627\u062f\u062b\u0629"
+                    + " \u0645\u0646 Telegram",
             "Every copy of a song shows",
             "\u062a\u0638\u0647\u0631 \u0643\u0644 \u0646\u0633\u062e"
                     + " \u0627\u0644\u0623\u063a\u0646\u064a\u0629",
@@ -454,6 +523,10 @@ final class Translations {
                     + " \u062d\u062a\u0649 \u0644\u0648 \u0643\u0627\u0646"
                     + " \u0645\u0648\u062c\u0648\u062f\u064b\u0627"
                     + " \u0645\u0633\u0628\u0642\u064b\u0627",
+            "Everyone who can see {0} can see the list of music in {1}.",
+            "\u064a\u0645\u0643\u0646 \u0644\u0643\u0644 \u0645\u0646 \u064a\u0631\u0649 {0}"
+                    + " \u0631\u0624\u064a\u0629 \u0642\u0627\u0626\u0645\u0629"
+                    + " \u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649 \u0641\u064a {1}.",
             "FLAC, WAV and ALAC count as lossless; others by bitrate",
             "\u062a\u064f\u0639\u062f FLAC \u0648WAV \u0648ALAC \u0628\u0644\u0627"
                     + " \u0641\u0642\u062f\u061b \u0648\u0627\u0644\u0628\u0642\u064a\u0629"
@@ -484,6 +557,8 @@ final class Translations {
                     + " \u0627\u0644\u0645\u0635\u062d\u0651\u062d.",
             "Fix a track name",
             "\u062a\u0635\u062d\u064a\u062d \u0627\u0633\u0645 \u0645\u0642\u0637\u0639",
+            "Folder",
+            "\u0645\u062c\u0644\u062f",
             "Format legend",
             "\u062f\u0644\u064a\u0644 \u0627\u0644\u0635\u064a\u063a",
             "Found {0} track.",
@@ -497,6 +572,11 @@ final class Translations {
                     + " \u0628\u0645\u0633\u0624\u0648\u0644\u064a\u0629: \u0623\u0646\u062a"
                     + " \u0645\u0633\u0624\u0648\u0644 \u0639\u0646 \u062d\u0633\u0627\u0628\u0643"
                     + " \u0639\u0644\u0649 Telegram \u0648\u0642\u0646\u0648\u0627\u062a\u0643.",
+            "From a backup, or add an index file someone shared",
+            "\u0645\u0646 \u0646\u0633\u062e\u0629"
+                    + " \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629\u060c \u0623\u0648"
+                    + " \u0623\u0636\u0641 \u0645\u0644\u0641 \u0641\u0647\u0631\u0633"
+                    + " \u0634\u0627\u0631\u0643\u0647 \u0623\u062d\u062f\u0647\u0645",
             "Hide Dolby files this phone can\u2019t play",
             "\u0625\u062e\u0641\u0627\u0621 \u0645\u0644\u0641\u0627\u062a Dolby"
                     + " \u0627\u0644\u062a\u064a \u0644\u0627 \u064a\u0633\u062a\u0637\u064a\u0639"
@@ -507,10 +587,26 @@ final class Translations {
                     + " \u0627\u0644\u0645\u0643\u0631\u0631\u0629",
             "Hide hash",
             "\u0625\u062e\u0641\u0627\u0621 \u0627\u0644\u0640 hash",
+            "Include the saved index (larger file)",
+            "\u062a\u0636\u0645\u064a\u0646 \u0627\u0644\u0641\u0647\u0631\u0633"
+                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638 (\u0645\u0644\u0641"
+                    + " \u0623\u0643\u0628\u0631)",
             "Incomplete sponsored-message response",
             "\u0627\u0633\u062a\u062c\u0627\u0628\u0629 \u063a\u064a\u0631"
                 + " \u0645\u0643\u062a\u0645\u0644\u0629 \u0644\u0644\u0631\u0633\u0627\u0626\u0644"
                 + " \u0627\u0644\u0645\u0645\u0648\u0651\u0644\u0629",
+            "Index file saved.",
+            "\u062a\u0645 \u062d\u0641\u0638 \u0645\u0644\u0641"
+                    + " \u0627\u0644\u0641\u0647\u0631\u0633.",
+            "Index file too large",
+            "\u0645\u0644\u0641 \u0627\u0644\u0641\u0647\u0631\u0633 \u0643\u0628\u064a\u0631"
+                    + " \u062c\u062f\u064b\u0627",
+            "Index only on Wi-Fi",
+            "\u0627\u0644\u0641\u0647\u0631\u0633\u0629 \u0639\u0628\u0631 Wi-Fi"
+                    + " \u0641\u0642\u0637",
+            "Index only while charging",
+            "\u0627\u0644\u0641\u0647\u0631\u0633\u0629 \u0623\u062b\u0646\u0627\u0621"
+                    + " \u0627\u0644\u0634\u062d\u0646 \u0641\u0642\u0637",
             "Indexing: {0} files found",
             "\u062c\u0627\u0631\u064d \u0627\u0644\u0641\u0647\u0631\u0633\u0629:"
                 + " \u0639\u064f\u062b\u0631 \u0639\u0644\u0649 {0} \u0645\u0644\u0641\u0627\u062a",
@@ -594,8 +690,8 @@ final class Translations {
             "\u0645\u062d\u0627\u062f\u062b\u0627\u062a"
                     + " \u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649",
             "Music from your community channels is copied into your main channel, a few files at a"
-                + " time, oldest post first. Copies show as your own posts, without \u201cForwarded"
-                + " from\u201d, and stay even if the community channel deletes them.\n\n"
+                + " time. Copies show as your own posts, without \u201cForwarded from\u201d, and"
+                + " stay even if the community channel deletes them.\n\n"
                 + "Telegram watches for accounts that copy many messages. Going faster than it"
                 + " likes can get your account limited for a while, or banned. The pace below never"
                 + " goes above 500 files an hour, and copying pauses whenever Telegram asks.\n\n"
@@ -606,33 +702,31 @@ final class Translations {
                 + " \u0627\u0644\u0645\u062c\u062a\u0645\u0639 \u0625\u0644\u0649"
                 + " \u0642\u0646\u0627\u062a\u0643"
                 + " \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629\u060c \u0628\u0636\u0639\u0629"
-                + " \u0645\u0644\u0641\u0627\u062a \u0641\u064a \u0643\u0644"
-                + " \u0645\u0631\u0629\u060c \u0628\u062f\u0621\u064b\u0627 \u0645\u0646"
-                + " \u0623\u0642\u062f\u0645 \u0645\u0646\u0634\u0648\u0631."
+                + " \u0645\u0644\u0641\u0627\u062a \u0641\u064a \u0643\u0644 \u0645\u0631\u0629."
                 + " \u062a\u0638\u0647\u0631 \u0627\u0644\u0646\u0633\u062e"
                 + " \u0643\u0645\u0646\u0634\u0648\u0631\u0627\u062a \u062e\u0627\u0635\u0629"
-                + " \u0628\u0643\u060c \u062f\u0648\u0646 \u00ab\u062a\u0645\u062a"
-                + " \u0625\u0639\u0627\u062f\u0629 \u0627\u0644\u062a\u0648\u062c\u064a\u0647"
-                + " \u0645\u0646\u00bb\u060c \u0648\u062a\u0628\u0642\u0649 \u062d\u062a\u0649"
-                + " \u0644\u0648 \u062d\u0630\u0641\u062a\u0647\u0627 \u0642\u0646\u0627\u0629"
+                + " \u0628\u0643\u060c \u062f\u0648\u0646 \u00abForwarded from\u00bb\u060c"
+                + " \u0648\u062a\u0628\u0642\u0649 \u062d\u062a\u0649 \u0644\u0648"
+                + " \u062d\u0630\u0641\u062a\u0647\u0627 \u0642\u0646\u0627\u0629"
                 + " \u0627\u0644\u0645\u062c\u062a\u0645\u0639.\n\n"
                 + "\u064a\u0631\u0627\u0642\u0628 Telegram"
                 + " \u0627\u0644\u062d\u0633\u0627\u0628\u0627\u062a \u0627\u0644\u062a\u064a"
                 + " \u062a\u0646\u0633\u062e \u0631\u0633\u0627\u0626\u0644"
-                + " \u0643\u062b\u064a\u0631\u0629. \u062a\u062c\u0627\u0648\u0632"
-                + " \u0627\u0644\u0633\u0631\u0639\u0629 \u0627\u0644\u062a\u064a"
-                + " \u064a\u0642\u0628\u0644\u0647\u0627 \u0642\u062f \u064a\u0624\u062f\u064a"
+                + " \u0643\u062b\u064a\u0631\u0629. \u0642\u062f \u064a\u0624\u062f\u064a"
+                + " \u062a\u062c\u0627\u0648\u0632 \u0627\u0644\u0633\u0631\u0639\u0629"
+                + " \u0627\u0644\u062a\u064a \u064a\u0642\u0628\u0644\u0647\u0627"
                 + " \u0625\u0644\u0649 \u062a\u0642\u064a\u064a\u062f"
                 + " \u062d\u0633\u0627\u0628\u0643 \u0644\u0641\u062a\u0631\u0629\u060c"
                 + " \u0623\u0648 \u062d\u0638\u0631\u0647. \u0644\u0627"
                 + " \u062a\u062a\u062c\u0627\u0648\u0632 \u0627\u0644\u0633\u0631\u0639\u0629"
-                + " \u0623\u062f\u0646\u0627\u0647 500 \u0645\u0644\u0641 \u0641\u064a"
-                + " \u0627\u0644\u0633\u0627\u0639\u0629\u060c \u0648\u064a\u062a\u0648\u0642\u0641"
-                + " \u0627\u0644\u0646\u0633\u062e \u0645\u0624\u0642\u062a\u064b\u0627"
-                + " \u0643\u0644\u0645\u0627 \u0637\u0644\u0628 Telegram \u0630\u0644\u0643.\n\n"
-                + "\u0623\u0646\u062a \u0645\u0633\u0624\u0648\u0644 \u0639\u0645\u0651\u0627"
-                + " \u062a\u0646\u0633\u062e\u0647. \u0644\u0627 \u062a\u0646\u0633\u062e"
-                + " \u0625\u0644\u0627 \u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649"
+                + " \u0623\u062f\u0646\u0627\u0647 \u0623\u0628\u062f\u064b\u0627 500"
+                + " \u0645\u0644\u0641 \u0641\u064a \u0627\u0644\u0633\u0627\u0639\u0629\u060c"
+                + " \u0648\u064a\u062a\u0648\u0642\u0641 \u0627\u0644\u0646\u0633\u062e"
+                + " \u0645\u0624\u0642\u062a\u064b\u0627 \u0643\u0644\u0645\u0627"
+                + " \u0637\u0644\u0628 Telegram \u0630\u0644\u0643.\n\n"
+                + "\u0623\u0646\u062a \u0645\u0633\u0624\u0648\u0644 \u0639\u0645\u0627"
+                + " \u062a\u0646\u0633\u062e\u0647. \u0627\u0646\u0633\u062e \u0641\u0642\u0637"
+                + " \u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649"
                 + " \u0627\u0644\u0645\u0633\u0645\u0648\u062d \u0644\u0643"
                 + " \u0628\u0627\u0644\u0627\u062d\u062a\u0641\u0627\u0638 \u0628\u0647\u0627.",
             "Music library",
@@ -653,6 +747,12 @@ final class Translations {
             "\u062a\u064f\u0646\u0633\u062e \u0627\u0644\u0645\u0646\u0634\u0648\u0631\u0627\u062a"
                     + " \u0627\u0644\u062c\u062f\u064a\u062f\u0629 \u0641\u0648\u0631"
                     + " \u0627\u0644\u0639\u062b\u0648\u0631 \u0639\u0644\u064a\u0647\u0627",
+            "Newest first",
+            "\u0627\u0644\u0623\u062d\u062f\u062b \u0623\u0648\u0644\u064b\u0627",
+            "No albums found in this chat yet.",
+            "\u0644\u0645 \u064a\u064f\u0639\u062b\u0631 \u0639\u0644\u0649"
+                    + " \u0623\u0644\u0628\u0648\u0645\u0627\u062a \u0641\u064a \u0647\u0630\u0647"
+                    + " \u0627\u0644\u0645\u062d\u0627\u062f\u062b\u0629 \u0628\u0639\u062f.",
             "No background searches",
             "\u0644\u0627 \u0639\u0645\u0644\u064a\u0627\u062a \u0628\u062d\u062b \u0641\u064a"
                     + " \u0627\u0644\u062e\u0644\u0641\u064a\u0629",
@@ -689,6 +789,10 @@ final class Translations {
                     + " \u0627\u0644\u0631\u0633\u0627\u0626\u0644"
                     + " \u0627\u0644\u0645\u0645\u0648\u0651\u0644\u0629"
                     + " \u0627\u0644\u0631\u0633\u0645\u064a\u0629: {0}",
+            "Oldest post first, once each channel has been indexed",
+            "\u0627\u0644\u0623\u0642\u062f\u0645 \u0623\u0648\u0644\u064b\u0627\u060c"
+                    + " \u0628\u0639\u062f \u0641\u0647\u0631\u0633\u0629 \u0643\u0644"
+                    + " \u0642\u0646\u0627\u0629",
             "On Telegram: \u201c{0}\u201d by {1}",
             "\u0639\u0644\u0649 Telegram: \u00ab{0}\u00bb \u0644\u0640 {1}",
             "On Telegram: \u201c{0}\u201d by {1} ({2})\n\n"
@@ -725,6 +829,14 @@ final class Translations {
             "\u0627\u0641\u062a\u062d \u0631\u0627\u0628\u0637 Telegram \u0647\u0630\u0627"
                     + " \u0641\u064a \u0627\u0644\u062a\u0637\u0628\u064a\u0642"
                     + " \u0627\u0644\u0631\u0633\u0645\u064a: {0}",
+            "Paused until this phone is charging",
+            "\u0645\u062a\u0648\u0642\u0641 \u0645\u0624\u0642\u062a\u064b\u0627 \u062d\u062a\u0649"
+                    + " \u064a\u064f\u0634\u062d\u0646 \u0647\u0630\u0627"
+                    + " \u0627\u0644\u0647\u0627\u062a\u0641",
+            "Paused until this phone is on Wi-Fi",
+            "\u0645\u062a\u0648\u0642\u0641 \u0645\u0624\u0642\u062a\u064b\u0627 \u062d\u062a\u0649"
+                    + " \u064a\u062a\u0635\u0644 \u0647\u0630\u0627"
+                    + " \u0627\u0644\u0647\u0627\u062a\u0641 \u0628\u0640 Wi-Fi",
             "Phone number",
             "\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062a\u0641",
             "Play surround as stereo",
@@ -736,6 +848,17 @@ final class Translations {
             "Playlists and downloads",
             "\u0642\u0648\u0627\u0626\u0645 \u0627\u0644\u062a\u0634\u063a\u064a\u0644"
                     + " \u0648\u0627\u0644\u062a\u0646\u0632\u064a\u0644\u0627\u062a",
+            "Post",
+            "\u0646\u0634\u0631",
+            "Post in {0}",
+            "\u0646\u0634\u0631 \u0641\u064a {0}",
+            "Post in {0}?",
+            "\u0627\u0644\u0646\u0634\u0631 \u0641\u064a {0}\u061f",
+            "Post it in Telegram, or save it as a file",
+            "\u0627\u0646\u0634\u0631\u0647 \u0641\u064a Telegram\u060c \u0623\u0648"
+                    + " \u0627\u062d\u0641\u0638\u0647 \u0643\u0645\u0644\u0641",
+            "Posted the index of {0}.",
+            "\u062a\u0645 \u0646\u0634\u0631 \u0641\u0647\u0631\u0633 {0}.",
             "Privacy and your account",
             "\u0627\u0644\u062e\u0635\u0648\u0635\u064a\u0629 \u0648\u062d\u0633\u0627\u0628\u0643",
             "Protected content and secret chats are not supported by this cached audio player.",
@@ -792,6 +915,13 @@ final class Translations {
             "Report sponsored message",
             "\u0627\u0644\u0625\u0628\u0644\u0627\u063a \u0639\u0646 \u0631\u0633\u0627\u0644\u0629"
                     + " \u0645\u0645\u0648\u0651\u0644\u0629",
+            "Restore",
+            "\u0627\u0633\u062a\u0639\u0627\u062f\u0629",
+            "Restored. {0} files added to the saved index.",
+            "\u062a\u0645\u062a \u0627\u0644\u0627\u0633\u062a\u0639\u0627\u062f\u0629."
+                    + " \u0623\u064f\u0636\u064a\u0641 {0} \u0645\u0644\u0641 \u0625\u0644\u0649"
+                    + " \u0627\u0644\u0641\u0647\u0631\u0633"
+                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638.",
             "Retry channel",
             "\u0625\u0639\u0627\u062f\u0629 \u0645\u062d\u0627\u0648\u0644\u0629"
                     + " \u0627\u0644\u0642\u0646\u0627\u0629",
@@ -813,9 +943,17 @@ final class Translations {
                     + " \u0646\u0632\u0651\u0644\u0647\u0627 \u0643\u0644\u0647\u0627.",
             "Save and continue",
             "\u062d\u0641\u0638 \u0648\u0645\u062a\u0627\u0628\u0639\u0629",
+            "Save as a file",
+            "\u062d\u0641\u0638 \u0643\u0645\u0644\u0641",
+            "Save as playlist",
+            "\u062d\u0641\u0638 \u0643\u0642\u0627\u0626\u0645\u0629"
+                    + " \u062a\u0634\u063a\u064a\u0644",
             "Save as playlist ({0})",
             "\u062d\u0641\u0638 \u0643\u0642\u0627\u0626\u0645\u0629 \u062a\u0634\u063a\u064a\u0644"
                     + " ({0})",
+            "Saved Messages",
+            "\u0627\u0644\u0631\u0633\u0627\u0626\u0644"
+                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638\u0629",
             "Saved index",
             "\u0627\u0644\u0641\u0647\u0631\u0633 \u0627\u0644\u0645\u062d\u0641\u0648\u0638",
             "Saved {0} song as the playlist \u201c{1}\u201d in BitChord\u2019s Library.",
@@ -836,6 +974,14 @@ final class Translations {
                 + " \u0634\u063a\u0651\u0644\u0647\u0627 \u0645\u0631\u0629"
                 + " \u0623\u062e\u0631\u0649 \u0644\u0627\u0633\u062a\u062e\u062f\u0627\u0645"
                 + " \u0645\u0644\u0641\u0643 \u0639\u0644\u0649 Telegram.",
+            "Search and playback still use mobile data; only the background indexing waits.",
+            "\u0644\u0627 \u064a\u0632\u0627\u0644 \u0627\u0644\u0628\u062d\u062b"
+                + " \u0648\u0627\u0644\u062a\u0634\u063a\u064a\u0644"
+                + " \u064a\u0633\u062a\u062e\u062f\u0645\u0627\u0646"
+                + " \u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u062c\u0648\u0627\u0644\u061b"
+                + " \u0627\u0644\u0641\u0647\u0631\u0633\u0629 \u0641\u064a"
+                + " \u0627\u0644\u062e\u0644\u0641\u064a\u0629 \u0641\u0642\u0637 \u0647\u064a"
+                + " \u0627\u0644\u062a\u064a \u062a\u0646\u062a\u0638\u0631.",
             "Search first",
             "\u0627\u0628\u062d\u062b \u0623\u0648\u0644\u064b\u0627",
             "Search text is too long.",
@@ -883,6 +1029,18 @@ final class Translations {
                     + " \u062c\u062f\u064a\u062f\u0629",
             "Set up application",
             "\u0625\u0639\u062f\u0627\u062f \u0627\u0644\u062a\u0637\u0628\u064a\u0642",
+            "Settings, corrected names and main channel, and the saved index if you like",
+            "\u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a"
+                    + " \u0648\u0627\u0644\u0623\u0633\u0645\u0627\u0621"
+                    + " \u0627\u0644\u0645\u0635\u062d\u0651\u062d\u0629"
+                    + " \u0648\u0627\u0644\u0642\u0646\u0627\u0629"
+                    + " \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629\u060c"
+                    + " \u0648\u0627\u0644\u0641\u0647\u0631\u0633"
+                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638 \u0625\u0646"
+                    + " \u0623\u0631\u062f\u062a",
+            "Share a chat\u2019s index",
+            "\u0645\u0634\u0627\u0631\u0643\u0629 \u0641\u0647\u0631\u0633"
+                    + " \u0645\u062d\u0627\u062f\u062b\u0629",
             "Show hash",
             "\u0625\u0638\u0647\u0627\u0631 \u0627\u0644\u0640 hash",
             "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3 320kbps",
@@ -987,6 +1145,10 @@ final class Translations {
             "\u062c\u0627\u0631\u064d \u062a\u0634\u063a\u064a\u0644 Telegram\u2026",
             "Starting\u2026",
             "\u062c\u0627\u0631\u064d \u0627\u0644\u0628\u062f\u0621\u2026",
+            "Starts with each channel\u2019s newest post, while it\u2019s still being indexed",
+            "\u064a\u0628\u062f\u0623 \u0628\u0623\u062d\u062f\u062b \u0645\u0646\u0634\u0648\u0631"
+                    + " \u0641\u064a \u0643\u0644 \u0642\u0646\u0627\u0629\u060c"
+                    + " \u0623\u062b\u0646\u0627\u0621 \u0641\u0647\u0631\u0633\u062a\u0647\u0627",
             "Stop playback before changing the application configuration.",
             "\u0623\u0648\u0642\u0641 \u0627\u0644\u062a\u0634\u063a\u064a\u0644 \u0642\u0628\u0644"
                     + " \u062a\u063a\u064a\u064a\u0631 \u0625\u0639\u062f\u0627\u062f\u0627\u062a"
@@ -1205,9 +1367,24 @@ final class Translations {
                     + " \u0645\u0641\u0639\u0651\u0644\u064b\u0627. \u0648\u064a\u062c\u0628"
                     + " \u0623\u0646 \u062a\u0628\u0642\u0649 \u0642\u0646\u0627\u062a\u0643"
                     + " \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629 \u062e\u0627\u0635\u0629.",
+            "The index also runs on battery",
+            "\u062a\u0639\u0645\u0644 \u0627\u0644\u0641\u0647\u0631\u0633\u0629"
+                    + " \u0623\u064a\u0636\u064b\u0627 \u0639\u0644\u0649"
+                    + " \u0627\u0644\u0628\u0637\u0627\u0631\u064a\u0629",
+            "The index also uses mobile data",
+            "\u062a\u0633\u062a\u062e\u062f\u0645 \u0627\u0644\u0641\u0647\u0631\u0633\u0629"
+                    + " \u0623\u064a\u0636\u064b\u0627 \u0628\u064a\u0627\u0646\u0627\u062a"
+                    + " \u0627\u0644\u062c\u0648\u0627\u0644",
             "The index can't be read right now",
             "\u0644\u0627 \u064a\u0645\u0643\u0646 \u0642\u0631\u0627\u0621\u0629"
                     + " \u0627\u0644\u0641\u0647\u0631\u0633 \u0627\u0644\u0622\u0646",
+            "The index waits for Wi-Fi to read your chats",
+            "\u062a\u0646\u062a\u0638\u0631 \u0627\u0644\u0641\u0647\u0631\u0633\u0629"
+                    + " \u0627\u062a\u0635\u0627\u0644 Wi-Fi \u0644\u0642\u0631\u0627\u0621\u0629"
+                    + " \u0645\u062d\u0627\u062f\u062b\u0627\u062a\u0643",
+            "The index waits for a charger",
+            "\u062a\u0646\u062a\u0638\u0631 \u0627\u0644\u0641\u0647\u0631\u0633\u0629"
+                    + " \u062a\u0648\u0635\u064a\u0644 \u0627\u0644\u0634\u0627\u062d\u0646",
             "The index's database couldn't be opened on this phone.",
             "\u062a\u0639\u0630\u0651\u0631 \u0641\u062a\u062d \u0642\u0627\u0639\u062f\u0629"
                 + " \u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0641\u0647\u0631\u0633"
@@ -1241,6 +1418,15 @@ final class Translations {
                     + " \u062a\u0631\u0645\u064a\u0632 \u0627\u0644\u0631\u0633\u0648\u0645"
                     + " \u0627\u0644\u0645\u062a\u062d\u0631\u0643\u0629"
                     + " \u0627\u0644\u0645\u0645\u0648\u0651\u0644\u0629",
+            "This file is from a newer version of the patch. Update first.",
+            "\u0647\u0630\u0627 \u0627\u0644\u0645\u0644\u0641 \u0645\u0646"
+                    + " \u0625\u0635\u062f\u0627\u0631 \u0623\u062d\u062f\u062b \u0645\u0646"
+                    + " \u0627\u0644\u062a\u0639\u062f\u064a\u0644. \u062d\u062f\u0651\u062b"
+                    + " \u0623\u0648\u0644\u064b\u0627.",
+            "This isn't a BitChord index or backup file.",
+            "\u0647\u0630\u0627 \u0644\u064a\u0633 \u0645\u0644\u0641 \u0641\u0647\u0631\u0633"
+                    + " \u0623\u0648 \u0646\u0633\u062e\u0629"
+                    + " \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629 \u0645\u0646 BitChord.",
             "This login step isn't supported here. Sign in with an existing Telegram account.",
             "\u062e\u0637\u0648\u0629 \u062a\u0633\u062c\u064a\u0644"
                     + " \u0627\u0644\u062f\u062e\u0648\u0644 \u0647\u0630\u0647 \u063a\u064a\u0631"
@@ -1332,6 +1518,9 @@ final class Translations {
             "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0627\u0644\u0627\u0633\u0645",
             "Use original",
             "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0627\u0644\u0623\u0635\u0644\u064a",
+            "Use shared indexes",
+            "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0627\u0644\u0641\u0647\u0627\u0631\u0633"
+                    + " \u0627\u0644\u0645\u064f\u0634\u0627\u0631\u064e\u0643\u0629",
             "Use this name?",
             "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0647\u0630\u0627"
                     + " \u0627\u0644\u0627\u0633\u0645\u061f",
@@ -1503,6 +1692,17 @@ final class Translations {
                 + " \u0627\u0644\u062c\u062f\u064a\u062f\u0629 \u0623\u064a\u0636\u064b\u0627."
                 + " \u0648\u0647\u064a \u062a\u064f\u062d\u062a\u0633\u0628 \u0636\u0645\u0646"
                 + " \u062d\u062f \u0627\u0644\u0633\u0627\u0639\u0629 \u0646\u0641\u0633\u0647.",
+            "Your main channel then lists the music in the opposite order to the community channel."
+                    + " Applies to channels copying hasn\u2019t started from yet.",
+            "\u0639\u0646\u062f\u0647\u0627 \u062a\u0633\u0631\u062f \u0642\u0646\u0627\u062a\u0643"
+                    + " \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629"
+                    + " \u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649"
+                    + " \u0628\u062a\u0631\u062a\u064a\u0628 \u0645\u0639\u0627\u0643\u0633"
+                    + " \u0644\u0642\u0646\u0627\u0629 \u0627\u0644\u0645\u062c\u062a\u0645\u0639."
+                    + " \u064a\u0646\u0637\u0628\u0642 \u0639\u0644\u0649"
+                    + " \u0627\u0644\u0642\u0646\u0648\u0627\u062a \u0627\u0644\u062a\u064a"
+                    + " \u0644\u0645 \u064a\u0628\u062f\u0623 \u0627\u0644\u0646\u0633\u062e"
+                    + " \u0645\u0646\u0647\u0627 \u0628\u0639\u062f.",
             "Your phone talks to Telegram directly. Your API details are encrypted on this phone"
                 + " and your Telegram session is stored privately. The session is a normal Telegram"
                 + " login, so it can reach your whole account, not just music. Audio BitChord has"
@@ -1602,6 +1802,10 @@ final class Translations {
             "{0} file indexed from {1} chats",
             "{0} \u0645\u0644\u0641 \u0645\u0641\u0647\u0631\u0633 \u0645\u0646 {1}"
                     + " \u0645\u062d\u0627\u062f\u062b\u0627\u062a",
+            "{0} files added to the saved index.",
+            "\u0623\u064f\u0636\u064a\u0641 {0} \u0645\u0644\u0641 \u0625\u0644\u0649"
+                    + " \u0627\u0644\u0641\u0647\u0631\u0633"
+                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638.",
             "{0} files indexed from {1} chat",
             "{0} \u0645\u0644\u0641\u0627\u062a \u0645\u0641\u0647\u0631\u0633\u0629 \u0645\u0646"
                     + " {1} \u0645\u062d\u0627\u062f\u062b\u0629",
@@ -1693,6 +1897,12 @@ final class Translations {
                     + " \u09ac\u09bf\u09b0\u09a4\u09bf \u099b\u09be\u09a1\u09bc\u09be\u0987"
                     + " \u09a7\u09c0\u09b0\u09c7 \u09a7\u09c0\u09b0\u09c7 \u09b6\u09c1\u09b0\u09c1"
                     + " \u09b9\u09af\u09bc",
+            "A chat\u2019s index comes from a shared index file when there is one",
+            "\u09b6\u09c7\u09af\u09bc\u09be\u09b0 \u0995\u09b0\u09be"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09ab\u09be\u0987\u09b2"
+                    + " \u09a5\u09be\u0995\u09b2\u09c7 \u099a\u09cd\u09af\u09be\u099f\u09c7\u09b0"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09b8\u09c7\u0996\u09be\u09a8"
+                    + " \u09a5\u09c7\u0995\u09c7\u0987 \u0986\u09b8\u09c7",
             "A file counts as already there when it\u2019s the same Telegram file, or has the same"
                     + " title, artist, length and format. Nothing in your main channel is deleted."
                     + " Copying waits until your main channel has been indexed.",
@@ -1750,8 +1960,14 @@ final class Translations {
             "Added automatically to BitChord.",
             "BitChord-\u098f \u09a8\u09bf\u099c\u09c7 \u09a5\u09c7\u0995\u09c7\u0987"
                     + " \u09af\u09cb\u0997 \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964",
+            "Advanced",
+            "\u0985\u09cd\u09af\u09be\u09a1\u09ad\u09be\u09a8\u09cd\u09b8\u09a1",
             "Album covers",
             "\u0985\u09cd\u09af\u09be\u09b2\u09ac\u09be\u09ae \u0995\u09ad\u09be\u09b0",
+            "Albums",
+            "\u0985\u09cd\u09af\u09be\u09b2\u09ac\u09be\u09ae",
+            "All chats",
+            "\u09b8\u09ac \u099a\u09cd\u09af\u09be\u099f",
             "All music files are copied",
             "\u09b8\u09ac \u09ae\u09bf\u0989\u099c\u09bf\u0995 \u09ab\u09be\u0987\u09b2"
                     + " \u0995\u09aa\u09bf \u09b9\u09af\u09bc",
@@ -1819,10 +2035,64 @@ final class Translations {
             "Apply cache size",
             "\u0995\u09cd\u09af\u09be\u09b6 \u09b8\u09be\u0987\u099c"
                     + " \u09aa\u09cd\u09b0\u09af\u09bc\u09cb\u0997 \u0995\u09b0\u09c1\u09a8",
+            "Archived chats",
+            "\u0986\u09b0\u09cd\u0995\u09be\u0987\u09ad \u0995\u09b0\u09be"
+                    + " \u099a\u09cd\u09af\u09be\u099f",
             "Artist",
             "\u09b6\u09bf\u09b2\u09cd\u09aa\u09c0",
             "Back",
             "\u09ab\u09bf\u09b0\u09c7 \u09af\u09be\u09a8",
+            "Back up",
+            "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09a8\u09bf\u09a8",
+            "Backup and sharing",
+            "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u0986\u09b0"
+                    + " \u09b6\u09c7\u09af\u09bc\u09be\u09b0\u09bf\u0982",
+            "Backup saved.",
+            "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09b8\u09c7\u09ad"
+                    + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964",
+            "Backups and index files never hold your API details or your Telegram session. An index"
+                + " file lists the music in a chat, so anyone you share it with sees that list.",
+            "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u0986\u09b0"
+                + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09ab\u09be\u0987\u09b2\u09c7"
+                + " \u0995\u0996\u09a8\u09cb \u0986\u09aa\u09a8\u09be\u09b0 API"
+                + " \u09a4\u09a5\u09cd\u09af \u09ac\u09be \u0986\u09aa\u09a8\u09be\u09b0 Telegram"
+                + " \u09b8\u09c7\u09b6\u09a8 \u09a5\u09be\u0995\u09c7 \u09a8\u09be\u0964"
+                + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09ab\u09be\u0987\u09b2\u09c7"
+                + " \u098f\u0995\u099f\u09bf \u099a\u09cd\u09af\u09be\u099f\u09c7\u09b0"
+                + " \u09ae\u09bf\u0989\u099c\u09bf\u0995\u09c7\u09b0"
+                + " \u09a4\u09be\u09b2\u09bf\u0995\u09be \u09a5\u09be\u0995\u09c7,"
+                + " \u09a4\u09be\u0987 \u0986\u09aa\u09a8\u09bf \u09af\u09be\u09b0"
+                + " \u09b8\u0999\u09cd\u0997\u09c7 \u098f\u099f\u09bf"
+                + " \u09b6\u09c7\u09af\u09bc\u09be\u09b0 \u0995\u09b0\u09ac\u09c7\u09a8"
+                + " \u09b8\u09c7-\u0987 \u09b8\u09c7\u0987 \u09a4\u09be\u09b2\u09bf\u0995\u09be"
+                + " \u09a6\u09c7\u0996\u09a4\u09c7 \u09aa\u09be\u09ac\u09c7\u0964",
+            "Basic",
+            "\u09ac\u09c7\u09b8\u09bf\u0995",
+            "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
+                + " the chat itself (in a channel, only its admins can post), in your Saved"
+                + " Messages or in your main channel, and then only reads what\u2019s been posted"
+                + " since. Each song is checked against its post when it plays.",
+            "Telegram \u09a5\u09c7\u0995\u09c7 \u0995\u09cb\u09a8\u09cb"
+                + " \u099a\u09cd\u09af\u09be\u099f \u09aa\u09a1\u09bc\u09be\u09b0"
+                + " \u0986\u0997\u09c7, \u09aa\u09cd\u09af\u09be\u099a \u09b8\u09c7\u0987"
+                + " \u099a\u09cd\u09af\u09be\u099f\u09c7\u09b0\u0987"
+                + " (\u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7 \u09b6\u09c1\u09a7\u09c1"
+                + " \u098f\u09b0 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8\u09b0\u09be"
+                + " \u09aa\u09cb\u09b8\u09cd\u099f \u0995\u09b0\u09a4\u09c7"
+                + " \u09aa\u09be\u09b0\u09c7\u09a8), \u0986\u09aa\u09a8\u09be\u09b0 Saved"
+                + " Messages-\u098f \u09ac\u09be \u0986\u09aa\u09a8\u09be\u09b0 \u09ae\u09c2\u09b2"
+                + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7 \u09aa\u09cb\u09b8\u09cd\u099f"
+                + " \u0995\u09b0\u09be \u09a4\u09be\u09b0"
+                + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09ab\u09be\u0987\u09b2"
+                + " \u0996\u09cb\u0981\u099c\u09c7, \u0986\u09b0 \u09a4\u09be\u09b0\u09aa\u09b0"
+                + " \u09b6\u09c1\u09a7\u09c1 \u09a4\u09be\u09b0 \u09aa\u09b0\u09c7"
+                + " \u09aa\u09cb\u09b8\u09cd\u099f \u09b9\u0993\u09af\u09bc\u09be"
+                + " \u099c\u09bf\u09a8\u09bf\u09b8 \u09aa\u09a1\u09bc\u09c7\u0964"
+                + " \u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u0997\u09be\u09a8"
+                + " \u099a\u09be\u09b2\u09be\u09a8\u09cb\u09b0 \u09b8\u09ae\u09af\u09bc"
+                + " \u09a4\u09be\u09b0 \u09aa\u09cb\u09b8\u09cd\u099f\u09c7\u09b0"
+                + " \u09b8\u0999\u09cd\u0997\u09c7 \u09af\u09be\u099a\u09be\u0987"
+                + " \u0995\u09b0\u09be \u09b9\u09af\u09bc\u0964",
             "BitChord guesses from the file type",
             "BitChord \u09ab\u09be\u0987\u09b2\u09c7\u09b0 \u09a7\u09b0\u09a8"
                     + " \u09a6\u09c7\u0996\u09c7 \u0985\u09a8\u09c1\u09ae\u09be\u09a8"
@@ -1849,6 +2119,9 @@ final class Translations {
                 + " \u09b8\u09be\u0989\u09a8\u09cd\u09a1\u09b8\u09b9\u0964 Dolby AC-4-\u098f\u09b0"
                 + " \u099c\u09a8\u09cd\u09af \u09ab\u09cb\u09a8\u09c7"
                 + " \u09a1\u09bf\u0995\u09cb\u09a1\u09be\u09b0 \u09b2\u09be\u0997\u09c7\u0964",
+            "BitChord saved index of {0}",
+            "{0}-\u098f\u09b0 BitChord \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8",
             "BitChord sees the corrected names",
             "BitChord \u09b8\u0982\u09b6\u09cb\u09a7\u09bf\u09a4 \u09a8\u09be\u09ae"
                     + " \u09a6\u09c7\u0996\u09c7",
@@ -2026,6 +2299,9 @@ final class Translations {
                 + " \u09b8\u09a4\u09b0\u09cd\u0995\u09ac\u09be\u09b0\u09cd\u09a4\u09be\u09af\u09bc"
                 + " \u098f\u0987 \u09a8\u09be\u09ae \u09a6\u09c7\u0996\u09be\u09a4\u09c7"
                 + " \u09aa\u09be\u09b0\u09c7\u0964",
+            "Damaged index file",
+            "\u09a8\u09b7\u09cd\u099f \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
+                    + " \u09ab\u09be\u0987\u09b2",
             "Dismiss",
             "\u09ac\u09be\u09a6 \u09a6\u09bf\u09a8",
             "Dolby AC-4 files show only if this phone has a decoder",
@@ -2101,6 +2377,9 @@ final class Translations {
                     + " \u09a6\u09bf\u09a8\u0964",
             "Every Dolby file shows",
             "\u09b8\u09ac Dolby \u09ab\u09be\u0987\u09b2 \u09a6\u09c7\u0996\u09be\u09af\u09bc",
+            "Every chat is read from Telegram",
+            "\u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u099a\u09cd\u09af\u09be\u099f Telegram"
+                    + " \u09a5\u09c7\u0995\u09c7 \u09aa\u09a1\u09bc\u09be \u09b9\u09af\u09bc",
             "Every copy of a song shows",
             "\u0997\u09be\u09a8\u09c7\u09b0 \u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf"
                     + " \u0995\u09aa\u09bf \u09a6\u09c7\u0996\u09be\u09af\u09bc",
@@ -2108,6 +2387,12 @@ final class Translations {
             "\u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u09ab\u09be\u0987\u09b2 \u0995\u09aa\u09bf"
                     + " \u09b9\u09af\u09bc, \u0986\u0997\u09c7 \u09a5\u09c7\u0995\u09c7"
                     + " \u09a5\u09be\u0995\u09b2\u09c7\u0993",
+            "Everyone who can see {0} can see the list of music in {1}.",
+            "{0} \u09af\u09be\u09b0\u09be \u09a6\u09c7\u0996\u09a4\u09c7 \u09aa\u09be\u09af\u09bc,"
+                    + " \u09a4\u09be\u09b0\u09be \u09b8\u09ac\u09be\u0987 {1}-\u098f\u09b0"
+                    + " \u09ae\u09bf\u0989\u099c\u09bf\u0995\u09c7\u09b0"
+                    + " \u09a4\u09be\u09b2\u09bf\u0995\u09be \u09a6\u09c7\u0996\u09a4\u09c7"
+                    + " \u09aa\u09be\u09af\u09bc\u0964",
             "FLAC, WAV and ALAC count as lossless; others by bitrate",
             "FLAC, WAV \u0986\u09b0 ALAC \u09b2\u09b8\u09b2\u09c7\u09b8 \u09a7\u09b0\u09be"
                     + " \u09b9\u09af\u09bc; \u09ac\u09be\u0995\u09bf\u0997\u09c1\u09b2\u09cb"
@@ -2137,6 +2422,8 @@ final class Translations {
             "Fix a track name",
             "\u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995\u09c7\u09b0 \u09a8\u09be\u09ae"
                     + " \u09a0\u09bf\u0995 \u0995\u09b0\u09c1\u09a8",
+            "Folder",
+            "\u09ab\u09cb\u09b2\u09cd\u09a1\u09be\u09b0",
             "Format legend",
             "\u09ab\u09b0\u09ae\u09cd\u09af\u09be\u099f \u09b2\u09c7\u09ac\u09c7\u09b2",
             "Found {0} track.",
@@ -2158,6 +2445,12 @@ final class Translations {
                 + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7\u09b0"
                 + " \u09a6\u09be\u09af\u09bc\u09bf\u09a4\u09cd\u09ac"
                 + " \u0986\u09aa\u09a8\u09be\u09b0\u0964",
+            "From a backup, or add an index file someone shared",
+            "\u0995\u09cb\u09a8\u09cb \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa"
+                    + " \u09a5\u09c7\u0995\u09c7, \u09ac\u09be \u0995\u09be\u09b0\u0993"
+                    + " \u09b6\u09c7\u09af\u09bc\u09be\u09b0 \u0995\u09b0\u09be"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09ab\u09be\u0987\u09b2"
+                    + " \u09af\u09cb\u0997 \u0995\u09b0\u09c1\u09a8",
             "Hide Dolby files this phone can\u2019t play",
             "\u09af\u09c7 Dolby \u09ab\u09be\u0987\u09b2 \u098f\u0987 \u09ab\u09cb\u09a8"
                     + " \u099a\u09be\u09b2\u09be\u09a4\u09c7 \u09aa\u09be\u09b0\u09c7 \u09a8\u09be"
@@ -2167,10 +2460,26 @@ final class Translations {
                     + " \u09b2\u09c1\u0995\u09be\u09a8",
             "Hide hash",
             "hash \u09b2\u09c1\u0995\u09be\u09a8",
+            "Include the saved index (larger file)",
+            "\u09b8\u09c7\u09ad \u0995\u09b0\u09be \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8\u0993"
+                + " \u09b0\u09be\u0996\u09c1\u09a8 (\u09ac\u09a1\u09bc \u09ab\u09be\u0987\u09b2)",
             "Incomplete sponsored-message response",
             "\u09b8\u09cd\u09aa\u09a8\u09b8\u09b0\u09cd\u09a1"
                     + " \u09ae\u09c7\u09b8\u09c7\u099c\u09c7\u09b0 \u0989\u09a4\u09cd\u09a4\u09b0"
                     + " \u0985\u09b8\u09ae\u09cd\u09aa\u09c2\u09b0\u09cd\u09a3",
+            "Index file saved.",
+            "\u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09ab\u09be\u0987\u09b2 \u09b8\u09c7\u09ad"
+                    + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964",
+            "Index file too large",
+            "\u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09ab\u09be\u0987\u09b2 \u0996\u09c1\u09ac"
+                    + " \u09ac\u09a1\u09bc",
+            "Index only on Wi-Fi",
+            "\u09b6\u09c1\u09a7\u09c1 Wi-Fi-\u09a4\u09c7 \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
+                    + " \u0995\u09b0\u09c1\u09a8",
+            "Index only while charging",
+            "\u09b6\u09c1\u09a7\u09c1 \u099a\u09be\u09b0\u09cd\u099c"
+                    + " \u09b9\u0993\u09af\u09bc\u09be\u09b0 \u09b8\u09ae\u09af\u09bc"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u0995\u09b0\u09c1\u09a8",
             "Indexing: {0} files found",
             "\u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09b9\u099a\u09cd\u099b\u09c7:"
                 + " {0}\u099f\u09bf \u09ab\u09be\u0987\u09b2 \u09aa\u09be\u0993\u09af\u09bc\u09be"
@@ -2255,8 +2564,8 @@ final class Translations {
             "Music chats",
             "\u09ae\u09bf\u0989\u099c\u09bf\u0995 \u099a\u09cd\u09af\u09be\u099f",
             "Music from your community channels is copied into your main channel, a few files at a"
-                + " time, oldest post first. Copies show as your own posts, without \u201cForwarded"
-                + " from\u201d, and stay even if the community channel deletes them.\n\n"
+                + " time. Copies show as your own posts, without \u201cForwarded from\u201d, and"
+                + " stay even if the community channel deletes them.\n\n"
                 + "Telegram watches for accounts that copy many messages. Going faster than it"
                 + " likes can get your account limited for a while, or banned. The pace below never"
                 + " goes above 500 files an hour, and copying pauses whenever Telegram asks.\n\n"
@@ -2268,9 +2577,7 @@ final class Translations {
                 + " \u09ae\u09c2\u09b2 \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7"
                 + " \u0995\u09aa\u09bf \u09b9\u09af\u09bc, \u098f\u0995\u09ac\u09be\u09b0\u09c7"
                 + " \u0995\u09af\u09bc\u09c7\u0995\u099f\u09bf \u09ab\u09be\u0987\u09b2"
-                + " \u0995\u09b0\u09c7, \u09b8\u09ac\u099a\u09c7\u09af\u09bc\u09c7"
-                + " \u09aa\u09c1\u09b0\u09cb\u09a8\u09cb \u09aa\u09cb\u09b8\u09cd\u099f"
-                + " \u0986\u0997\u09c7\u0964 \u0995\u09aa\u09bf\u0997\u09c1\u09b2\u09cb"
+                + " \u0995\u09b0\u09c7\u0964 \u0995\u09aa\u09bf\u0997\u09c1\u09b2\u09cb"
                 + " \u0986\u09aa\u09a8\u09be\u09b0 \u09a8\u09bf\u099c\u09c7\u09b0"
                 + " \u09aa\u09cb\u09b8\u09cd\u099f \u09b9\u09bf\u09b8\u09c7\u09ac\u09c7"
                 + " \u09a6\u09c7\u0996\u09be\u09af\u09bc, \u201cForwarded from\u201d"
@@ -2279,22 +2586,20 @@ final class Translations {
                 + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2 \u09b8\u09c7\u0997\u09c1\u09b2\u09cb"
                 + " \u09ae\u09c1\u099b\u09c7 \u09a6\u09bf\u09b2\u09c7\u0993"
                 + " \u09a5\u09c7\u0995\u09c7 \u09af\u09be\u09af\u09bc\u0964\n\n"
-                + "\u09af\u09c7\u09b8\u09ac"
-                + " \u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f"
-                + " \u0985\u09a8\u09c7\u0995 \u09ae\u09c7\u09b8\u09c7\u099c \u0995\u09aa\u09bf"
-                + " \u0995\u09b0\u09c7, Telegram \u09b8\u09c7\u0997\u09c1\u09b2\u09cb\u09b0"
-                + " \u0993\u09aa\u09b0 \u09a8\u099c\u09b0 \u09b0\u09be\u0996\u09c7\u0964 Telegram"
-                + " \u09af\u09a4\u099f\u09be \u09aa\u099b\u09a8\u09cd\u09a6 \u0995\u09b0\u09c7"
-                + " \u09a4\u09be\u09b0 \u099a\u09c7\u09af\u09bc\u09c7"
-                + " \u09a6\u09cd\u09b0\u09c1\u09a4 \u0995\u09b0\u09b2\u09c7"
-                + " \u0986\u09aa\u09a8\u09be\u09b0"
+                + "Telegram \u0985\u09a8\u09c7\u0995 \u09ae\u09c7\u09b8\u09c7\u099c"
+                + " \u0995\u09aa\u09bf \u0995\u09b0\u09be"
+                + " \u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f\u09c7\u09b0"
+                + " \u0993\u09aa\u09b0 \u09a8\u099c\u09b0 \u09b0\u09be\u0996\u09c7\u0964"
+                + " \u0993\u09b0 \u09aa\u099b\u09a8\u09cd\u09a6\u09c7\u09b0"
+                + " \u099a\u09c7\u09af\u09bc\u09c7 \u09a6\u09cd\u09b0\u09c1\u09a4"
+                + " \u0995\u09aa\u09bf \u0995\u09b0\u09b2\u09c7 \u0986\u09aa\u09a8\u09be\u09b0"
                 + " \u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f"
                 + " \u0995\u09bf\u099b\u09c1 \u09b8\u09ae\u09af\u09bc\u09c7\u09b0"
-                + " \u099c\u09a8\u09cd\u09af \u09b8\u09c0\u09ae\u09bf\u09a4 \u09b9\u09a4\u09c7"
-                + " \u09aa\u09be\u09b0\u09c7, \u09ac\u09be \u09ac\u09cd\u09af\u09be\u09a8"
-                + " \u09b9\u09a4\u09c7 \u09aa\u09be\u09b0\u09c7\u0964"
-                + " \u09a8\u09bf\u099a\u09c7\u09b0 \u0997\u09a4\u09bf \u0995\u0996\u09a8\u09cb"
-                + " \u0998\u09a3\u09cd\u099f\u09be\u09af\u09bc 500"
+                + " \u099c\u09a8\u09cd\u09af \u09b8\u09c0\u09ae\u09bf\u09a4 \u09ac\u09be"
+                + " \u09ac\u09cd\u09af\u09be\u09a8 \u09b9\u09a4\u09c7"
+                + " \u09aa\u09be\u09b0\u09c7\u0964 \u09a8\u09bf\u099a\u09c7\u09b0"
+                + " \u0997\u09a4\u09bf \u0995\u0996\u09a8\u09cb"
+                + " \u0998\u09a3\u09cd\u099f\u09be\u09af\u09bc 500\u099f\u09bf"
                 + " \u09ab\u09be\u0987\u09b2\u09c7\u09b0 \u09ac\u09c7\u09b6\u09bf"
                 + " \u09b9\u09af\u09bc \u09a8\u09be, \u0986\u09b0 Telegram"
                 + " \u09ac\u09b2\u09b2\u09c7\u0987 \u0995\u09aa\u09bf \u0995\u09b0\u09be"
@@ -2326,6 +2631,14 @@ final class Translations {
             "\u09a8\u09a4\u09c1\u09a8 \u09aa\u09cb\u09b8\u09cd\u099f"
                     + " \u09aa\u09be\u0993\u09af\u09bc\u09be\u09ae\u09be\u09a4\u09cd\u09b0"
                     + " \u0995\u09aa\u09bf \u09b9\u09af\u09bc",
+            "Newest first",
+            "\u09b8\u09ac\u099a\u09c7\u09af\u09bc\u09c7 \u09a8\u09a4\u09c1\u09a8"
+                    + " \u0986\u0997\u09c7",
+            "No albums found in this chat yet.",
+            "\u098f\u0987 \u099a\u09cd\u09af\u09be\u099f\u09c7 \u098f\u0996\u09a8\u09cb"
+                    + " \u0995\u09cb\u09a8\u09cb \u0985\u09cd\u09af\u09be\u09b2\u09ac\u09be\u09ae"
+                    + " \u09aa\u09be\u0993\u09af\u09bc\u09be"
+                    + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964",
             "No background searches",
             "\u0995\u09cb\u09a8\u09cb"
                 + " \u09ac\u09cd\u09af\u09be\u0995\u0997\u09cd\u09b0\u09be\u0989\u09a8\u09cd\u09a1"
@@ -2363,6 +2676,12 @@ final class Translations {
             "\u0985\u09ab\u09bf\u09b6\u09bf\u09af\u09bc\u09be\u09b2"
                 + " \u09b8\u09cd\u09aa\u09a8\u09b8\u09b0\u09cd\u09a1 \u09ae\u09c7\u09b8\u09c7\u099c"
                 + " \u09a6\u09c7\u0996\u09be\u09a8\u09cb \u09af\u09be\u09af\u09bc\u09a8\u09bf: {0}",
+            "Oldest post first, once each channel has been indexed",
+            "\u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2"
+                + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09b9\u0993\u09af\u09bc\u09be\u09b0"
+                + " \u09aa\u09b0, \u09b8\u09ac\u099a\u09c7\u09af\u09bc\u09c7"
+                + " \u09aa\u09c1\u09b0\u09cb\u09a8\u09cb \u09aa\u09cb\u09b8\u09cd\u099f"
+                + " \u0986\u0997\u09c7",
             "On Telegram: \u201c{0}\u201d by {1}",
             "Telegram-\u098f: {1}-\u098f\u09b0 \u201c{0}\u201d",
             "On Telegram: \u201c{0}\u201d by {1} ({2})\n\n"
@@ -2404,6 +2723,14 @@ final class Translations {
                     + " \u0985\u09ab\u09bf\u09b6\u09bf\u09af\u09bc\u09be\u09b2"
                     + " \u0995\u09cd\u09b2\u09be\u09af\u09bc\u09c7\u09a8\u09cd\u099f\u09c7"
                     + " \u0996\u09c1\u09b2\u09c1\u09a8: {0}",
+            "Paused until this phone is charging",
+            "\u09ab\u09cb\u09a8 \u099a\u09be\u09b0\u09cd\u099c \u09a8\u09be"
+                    + " \u09b9\u0993\u09af\u09bc\u09be \u09aa\u09b0\u09cd\u09af\u09a8\u09cd\u09a4"
+                    + " \u09a5\u09c7\u09ae\u09c7 \u0986\u099b\u09c7",
+            "Paused until this phone is on Wi-Fi",
+            "\u09ab\u09cb\u09a8 Wi-Fi-\u09a4\u09c7 \u09a8\u09be \u0986\u09b8\u09be"
+                    + " \u09aa\u09b0\u09cd\u09af\u09a8\u09cd\u09a4 \u09a5\u09c7\u09ae\u09c7"
+                    + " \u0986\u099b\u09c7",
             "Phone number",
             "\u09ab\u09cb\u09a8 \u09a8\u09ae\u09cd\u09ac\u09b0",
             "Play surround as stereo",
@@ -2415,6 +2742,21 @@ final class Translations {
             "Playlists and downloads",
             "\u09aa\u09cd\u09b2\u09c7\u09b2\u09bf\u09b8\u09cd\u099f \u0986\u09b0"
                     + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1",
+            "Post",
+            "\u09aa\u09cb\u09b8\u09cd\u099f \u0995\u09b0\u09c1\u09a8",
+            "Post in {0}",
+            "{0}-\u098f \u09aa\u09cb\u09b8\u09cd\u099f \u0995\u09b0\u09c1\u09a8",
+            "Post in {0}?",
+            "{0}-\u098f \u09aa\u09cb\u09b8\u09cd\u099f \u0995\u09b0\u09ac\u09c7\u09a8?",
+            "Post it in Telegram, or save it as a file",
+            "\u098f\u099f\u09bf Telegram-\u098f \u09aa\u09cb\u09b8\u09cd\u099f"
+                    + " \u0995\u09b0\u09c1\u09a8, \u09ac\u09be \u09ab\u09be\u0987\u09b2"
+                    + " \u09b9\u09bf\u09b8\u09c7\u09ac\u09c7 \u09b8\u09c7\u09ad"
+                    + " \u0995\u09b0\u09c1\u09a8",
+            "Posted the index of {0}.",
+            "{0}-\u098f\u09b0 \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
+                    + " \u09aa\u09cb\u09b8\u09cd\u099f \u0995\u09b0\u09be"
+                    + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964",
             "Privacy and your account",
             "\u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u09b8\u09bf \u0986\u09b0"
                     + " \u0986\u09aa\u09a8\u09be\u09b0"
@@ -2480,6 +2822,14 @@ final class Translations {
             "Report sponsored message",
             "\u09b8\u09cd\u09aa\u09a8\u09b8\u09b0\u09cd\u09a1 \u09ae\u09c7\u09b8\u09c7\u099c"
                     + " \u09b0\u09bf\u09aa\u09cb\u09b0\u09cd\u099f \u0995\u09b0\u09c1\u09a8",
+            "Restore",
+            "\u09b0\u09bf\u09b8\u09cd\u099f\u09cb\u09b0 \u0995\u09b0\u09c1\u09a8",
+            "Restored. {0} files added to the saved index.",
+            "\u09b0\u09bf\u09b8\u09cd\u099f\u09cb\u09b0 \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964"
+                    + " \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8\u09c7 {0}\u099f\u09bf"
+                    + " \u09ab\u09be\u0987\u09b2 \u09af\u09cb\u0997"
+                    + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964",
             "Retry channel",
             "\u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2 \u0986\u09ac\u09be\u09b0"
                     + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8",
@@ -2504,10 +2854,19 @@ final class Translations {
             "Save and continue",
             "\u09b8\u09c7\u09ad \u0995\u09b0\u09c7 \u099a\u09be\u09b2\u09bf\u09af\u09bc\u09c7"
                     + " \u09af\u09be\u09a8",
+            "Save as a file",
+            "\u09ab\u09be\u0987\u09b2 \u09b9\u09bf\u09b8\u09c7\u09ac\u09c7 \u09b8\u09c7\u09ad"
+                    + " \u0995\u09b0\u09c1\u09a8",
+            "Save as playlist",
+            "\u09aa\u09cd\u09b2\u09c7\u09b2\u09bf\u09b8\u09cd\u099f"
+                    + " \u09b9\u09bf\u09b8\u09c7\u09ac\u09c7 \u09b8\u09c7\u09ad"
+                    + " \u0995\u09b0\u09c1\u09a8",
             "Save as playlist ({0})",
             "\u09aa\u09cd\u09b2\u09c7\u09b2\u09bf\u09b8\u09cd\u099f"
                     + " \u09b9\u09bf\u09b8\u09c7\u09ac\u09c7 \u09b8\u09c7\u09ad"
                     + " \u0995\u09b0\u09c1\u09a8 ({0})",
+            "Saved Messages",
+            "Saved Messages",
             "Saved index",
             "\u09b8\u09c7\u09ad \u0995\u09b0\u09be \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8",
             "Saved {0} song as the playlist \u201c{1}\u201d in BitChord\u2019s Library.",
@@ -2531,6 +2890,15 @@ final class Translations {
                 + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09a4\u09c7"
                 + " \u098f\u099f\u09bf \u0986\u09ac\u09be\u09b0"
                 + " \u099a\u09be\u09b2\u09be\u09a8\u0964",
+            "Search and playback still use mobile data; only the background indexing waits.",
+            "\u09b8\u09be\u09b0\u09cd\u099a \u0986\u09b0"
+                + " \u09aa\u09cd\u09b2\u09c7\u09ac\u09cd\u09af\u09be\u0995 \u09a4\u0996\u09a8\u0993"
+                + " \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u09a1\u09c7\u099f\u09be"
+                + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09c7;"
+                + " \u09b6\u09c1\u09a7\u09c1"
+                + " \u09ac\u09cd\u09af\u09be\u0995\u0997\u09cd\u09b0\u09be\u0989\u09a8\u09cd\u09a1\u09c7\u09b0"
+                + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8\u09bf\u0982"
+                + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be \u0995\u09b0\u09c7\u0964",
             "Search first",
             "\u0986\u0997\u09c7 \u09b8\u09be\u09b0\u09cd\u099a \u0995\u09b0\u09c1\u09a8",
             "Search text is too long.",
@@ -2584,6 +2952,15 @@ final class Translations {
             "Set up application",
             "\u0985\u09cd\u09af\u09be\u09aa\u09cd\u09b2\u09bf\u0995\u09c7\u09b6\u09a8"
                     + " \u09b8\u09c7\u099f \u0986\u09aa \u0995\u09b0\u09c1\u09a8",
+            "Settings, corrected names and main channel, and the saved index if you like",
+            "\u09b8\u09c7\u099f\u09bf\u0982\u09b8, \u09a0\u09bf\u0995 \u0995\u09b0\u09be"
+                    + " \u09a8\u09be\u09ae \u0986\u09b0 \u09ae\u09c2\u09b2"
+                    + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2, \u0986\u09b0"
+                    + " \u099a\u09be\u0987\u09b2\u09c7 \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8",
+            "Share a chat\u2019s index",
+            "\u099a\u09cd\u09af\u09be\u099f\u09c7\u09b0 \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
+                    + " \u09b6\u09c7\u09af\u09bc\u09be\u09b0 \u0995\u09b0\u09c1\u09a8",
             "Show hash",
             "hash \u09a6\u09c7\u0996\u09be\u09a8",
             "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3 320kbps",
@@ -2689,6 +3066,14 @@ final class Translations {
             "Telegram \u099a\u09be\u09b2\u09c1 \u09b9\u099a\u09cd\u099b\u09c7\u2026",
             "Starting\u2026",
             "\u099a\u09be\u09b2\u09c1 \u09b9\u099a\u09cd\u099b\u09c7\u2026",
+            "Starts with each channel\u2019s newest post, while it\u2019s still being indexed",
+            "\u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf"
+                    + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7\u09b0"
+                    + " \u09b8\u09ac\u099a\u09c7\u09af\u09bc\u09c7 \u09a8\u09a4\u09c1\u09a8"
+                    + " \u09aa\u09cb\u09b8\u09cd\u099f \u09a5\u09c7\u0995\u09c7"
+                    + " \u09b6\u09c1\u09b0\u09c1 \u09b9\u09af\u09bc,"
+                    + " \u09af\u09a4\u0995\u09cd\u09b7\u09a3 \u09b8\u09c7\u099f\u09bf"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09b9\u099a\u09cd\u099b\u09c7",
             "Stop playback before changing the application configuration.",
             "\u0985\u09cd\u09af\u09be\u09aa\u09cd\u09b2\u09bf\u0995\u09c7\u09b6\u09a8"
                     + " \u0995\u09a8\u09ab\u09bf\u0997\u09be\u09b0\u09c7\u09b6\u09a8"
@@ -2930,9 +3315,26 @@ final class Translations {
                 + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2"
                 + " \u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u099f \u09b0\u09be\u0996\u09a4\u09c7"
                 + " \u09b9\u09ac\u09c7\u0964",
+            "The index also runs on battery",
+            "\u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
+                    + " \u09ac\u09cd\u09af\u09be\u099f\u09be\u09b0\u09bf\u09a4\u09c7\u0993"
+                    + " \u099a\u09b2\u09c7",
+            "The index also uses mobile data",
+            "\u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09ae\u09cb\u09ac\u09be\u0987\u09b2"
+                    + " \u09a1\u09c7\u099f\u09be\u0993 \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0"
+                    + " \u0995\u09b0\u09c7",
             "The index can't be read right now",
             "\u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u098f\u0996\u09a8 \u09aa\u09a1\u09bc\u09be"
                     + " \u09af\u09be\u099a\u09cd\u099b\u09c7 \u09a8\u09be",
+            "The index waits for Wi-Fi to read your chats",
+            "\u0986\u09aa\u09a8\u09be\u09b0 \u099a\u09cd\u09af\u09be\u099f"
+                    + " \u09aa\u09a1\u09bc\u09a4\u09c7 \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
+                    + " Wi-Fi-\u098f\u09b0 \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be"
+                    + " \u0995\u09b0\u09c7",
+            "The index waits for a charger",
+            "\u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
+                    + " \u099a\u09be\u09b0\u09cd\u099c\u09be\u09b0\u09c7\u09b0"
+                    + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be \u0995\u09b0\u09c7",
             "The index's database couldn't be opened on this phone.",
             "\u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8\u09c7\u09b0"
                     + " \u09a1\u09c7\u099f\u09be\u09ac\u09c7\u09b8 \u098f\u0987"
@@ -2965,6 +3367,15 @@ final class Translations {
                     + " \u0985\u09cd\u09af\u09be\u09a8\u09bf\u09ae\u09c7\u09b6\u09a8"
                     + " \u09a1\u09bf\u0995\u09cb\u09a1 \u0995\u09b0\u09a4\u09c7"
                     + " \u09aa\u09be\u09b0\u09c7\u09a8\u09bf",
+            "This file is from a newer version of the patch. Update first.",
+            "\u098f\u0987 \u09ab\u09be\u0987\u09b2\u099f\u09bf"
+                    + " \u09aa\u09cd\u09af\u09be\u099a\u09c7\u09b0 \u09a8\u09a4\u09c1\u09a8"
+                    + " \u09ad\u09be\u09b0\u09cd\u09b8\u09a8\u09c7\u09b0\u0964 \u0986\u0997\u09c7"
+                    + " \u0986\u09aa\u09a1\u09c7\u099f \u0995\u09b0\u09c1\u09a8\u0964",
+            "This isn't a BitChord index or backup file.",
+            "\u098f\u099f\u09bf BitChord-\u098f\u09b0 \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
+                    + " \u09ac\u09be \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa"
+                    + " \u09ab\u09be\u0987\u09b2 \u09a8\u09af\u09bc\u0964",
             "This login step isn't supported here. Sign in with an existing Telegram account.",
             "\u098f\u0987 \u09b2\u0997\u0987\u09a8 \u09a7\u09be\u09aa"
                     + " \u098f\u0996\u09be\u09a8\u09c7 \u09b8\u09be\u09aa\u09cb\u09b0\u09cd\u099f"
@@ -3063,6 +3474,10 @@ final class Translations {
             "Use original",
             "\u0986\u09b8\u09b2\u099f\u09bf \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0"
                     + " \u0995\u09b0\u09c1\u09a8",
+            "Use shared indexes",
+            "\u09b6\u09c7\u09af\u09bc\u09be\u09b0 \u0995\u09b0\u09be"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09c1\u09a8",
             "Use this name?",
             "\u098f\u0987 \u09a8\u09be\u09ae \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0"
                     + " \u0995\u09b0\u09ac\u09c7\u09a8?",
@@ -3256,6 +3671,20 @@ final class Translations {
                     + " \u0998\u09a3\u09cd\u099f\u09be\u09b0 \u09b8\u09c0\u09ae\u09be\u09b0"
                     + " \u09ae\u09a7\u09cd\u09af\u09c7 \u0997\u09cb\u09a8\u09be"
                     + " \u09b9\u09af\u09bc\u0964",
+            "Your main channel then lists the music in the opposite order to the community channel."
+                    + " Applies to channels copying hasn\u2019t started from yet.",
+            "\u09a4\u0996\u09a8 \u0986\u09aa\u09a8\u09be\u09b0 \u09ae\u09c2\u09b2"
+                    + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7"
+                    + " \u09ae\u09bf\u0989\u099c\u09bf\u0995"
+                    + " \u0995\u09ae\u09bf\u0989\u09a8\u09bf\u099f\u09bf"
+                    + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7\u09b0"
+                    + " \u0989\u09b2\u09cd\u099f\u09cb \u0995\u09cd\u09b0\u09ae\u09c7"
+                    + " \u09a6\u09c7\u0996\u09be\u09af\u09bc\u0964 \u09af\u09c7\u09b8\u09ac"
+                    + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2 \u09a5\u09c7\u0995\u09c7"
+                    + " \u098f\u0996\u09a8\u09cb \u0995\u09aa\u09bf \u09b6\u09c1\u09b0\u09c1"
+                    + " \u09b9\u09af\u09bc\u09a8\u09bf \u09b8\u09c7\u0997\u09c1\u09b2\u09cb\u09b0"
+                    + " \u0995\u09cd\u09b7\u09c7\u09a4\u09cd\u09b0\u09c7"
+                    + " \u09aa\u09cd\u09b0\u09af\u09cb\u099c\u09cd\u09af\u0964",
             "Your phone talks to Telegram directly. Your API details are encrypted on this phone"
                 + " and your Telegram session is stored privately. The session is a normal Telegram"
                 + " login, so it can reach your whole account, not just music. Audio BitChord has"
@@ -3375,6 +3804,10 @@ final class Translations {
                     + " {0}\u099f\u09bf \u09ab\u09be\u0987\u09b2"
                     + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
                     + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7",
+            "{0} files added to the saved index.",
+            "\u09b8\u09c7\u09ad \u0995\u09b0\u09be \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8\u09c7"
+                    + " {0}\u099f\u09bf \u09ab\u09be\u0987\u09b2 \u09af\u09cb\u0997"
+                    + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964",
             "{0} files indexed from {1} chat",
             "{1}\u099f\u09bf \u099a\u09cd\u09af\u09be\u099f \u09a5\u09c7\u0995\u09c7"
                     + " {0}\u099f\u09bf \u09ab\u09be\u0987\u09b2"
@@ -3449,6 +3882,8 @@ final class Translations {
                     + " \u201eTitelnamen\u201c.",
             "A better copy fades in without a gap",
             "Eine bessere Kopie wird ohne L\u00fccke eingeblendet",
+            "A chat\u2019s index comes from a shared index file when there is one",
+            "Der Index eines Chats stammt aus einer geteilten Indexdatei, falls es eine gibt",
             "A file counts as already there when it\u2019s the same Telegram file, or has the same"
                     + " title, artist, length and format. Nothing in your main channel is deleted."
                     + " Copying waits until your main channel has been indexed.",
@@ -3475,8 +3910,14 @@ final class Translations {
             "F\u00fcge die Zugangsdaten deiner Anwendung hinzu, um dich zu verbinden.",
             "Added automatically to BitChord.",
             "Automatisch zu BitChord hinzugef\u00fcgt.",
+            "Advanced",
+            "Erweitert",
             "Album covers",
             "Albumcover",
+            "Albums",
+            "Alben",
+            "All chats",
+            "Alle Chats",
             "All music files are copied",
             "Alle Musikdateien werden kopiert",
             "An unofficial add-on that uses the Telegram API with your own account. It isn\u2019t"
@@ -3510,10 +3951,34 @@ final class Translations {
             "Einrichtung der Anwendung",
             "Apply cache size",
             "Cache-Gr\u00f6\u00dfe \u00fcbernehmen",
+            "Archived chats",
+            "Archivierte Chats",
             "Artist",
             "Interpret",
             "Back",
             "Zur\u00fcck",
+            "Back up",
+            "Sichern",
+            "Backup and sharing",
+            "Sicherung und Teilen",
+            "Backup saved.",
+            "Sicherung gespeichert.",
+            "Backups and index files never hold your API details or your Telegram session. An index"
+                + " file lists the music in a chat, so anyone you share it with sees that list.",
+            "Sicherungen und Indexdateien enthalten nie deine API-Daten oder deine"
+                    + " Telegram-Sitzung. Eine Indexdatei listet die Musik in einem Chat auf, daher"
+                    + " sieht jeder, mit dem du sie teilst, diese Liste.",
+            "Basic",
+            "Einfach",
+            "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
+                + " the chat itself (in a channel, only its admins can post), in your Saved"
+                + " Messages or in your main channel, and then only reads what\u2019s been posted"
+                + " since. Each song is checked against its post when it plays.",
+            "Bevor ein Chat von Telegram gelesen wird, sucht der Patch nach einer Indexdatei davon,"
+                + " die im Chat selbst (in einem Kanal k\u00f6nnen nur seine Admins posten), in"
+                + " deinen Gespeicherten Nachrichten oder in deinem Hauptkanal gepostet wurde, und"
+                + " liest dann nur, was seitdem gepostet wurde. Jeder Song wird beim Abspielen mit"
+                + " seinem Beitrag abgeglichen.",
             "BitChord guesses from the file type",
             "BitChord sch\u00e4tzt anhand des Dateityps",
             "BitChord keeps search results for a few minutes, so changes here show up in new"
@@ -3527,6 +3992,8 @@ final class Translations {
                     + " Dolby Atmos l\u00e4uft als 5.1 oder 7.1, oder mit H\u00f6henklang auf einem"
                     + " Handy oder Lautsprecher, der das unterst\u00fctzt. Dolby AC-4 braucht einen"
                     + " Decoder im Handy.",
+            "BitChord saved index of {0}",
+            "Gespeicherter BitChord-Index von {0}",
             "BitChord sees the corrected names",
             "BitChord sieht die korrigierten Namen",
             "BitChord switches copies with a short pause",
@@ -3621,6 +4088,8 @@ final class Translations {
             "Erstelle deine eigene Anwendung mit einem allgemeinen, beschreibenden Namen, z. B. My"
                     + " Client (Kurzname: myclient). Telegram kann diesen Namen in Anmeldehinweisen"
                     + " anzeigen.",
+            "Damaged index file",
+            "Besch\u00e4digte Indexdatei",
             "Dismiss",
             "Ausblenden",
             "Dolby AC-4 files show only if this phone has a decoder",
@@ -3664,10 +4133,14 @@ final class Translations {
             "Gib das Passwort deines Telegram-Kontos ein.",
             "Every Dolby file shows",
             "Alle Dolby-Dateien werden angezeigt",
+            "Every chat is read from Telegram",
+            "Jeder Chat wird von Telegram gelesen",
             "Every copy of a song shows",
             "Jede Kopie eines Songs wird angezeigt",
             "Every file is copied, even if it\u2019s already there",
             "Jede Datei wird kopiert, auch wenn sie schon da ist",
+            "Everyone who can see {0} can see the list of music in {1}.",
+            "Jeder, der {0} sehen kann, kann die Musikliste von {1} sehen.",
             "FLAC, WAV and ALAC count as lossless; others by bitrate",
             "FLAC, WAV und ALAC gelten als verlustfrei, andere nach Bitrate",
             "Files copied an hour",
@@ -3683,6 +4156,8 @@ final class Translations {
                 + " Namen.",
             "Fix a track name",
             "Einen Titelnamen korrigieren",
+            "Folder",
+            "Ordner",
             "Format legend",
             "Formatlegende",
             "Found {0} track.",
@@ -3693,14 +4168,26 @@ final class Translations {
                     + " account and channels.",
             "Kostenlos und ohne Gew\u00e4hr. Nutze es verantwortungsvoll: Du bist f\u00fcr dein"
                     + " Telegram-Konto und deine Kan\u00e4le verantwortlich.",
+            "From a backup, or add an index file someone shared",
+            "Aus einer Sicherung, oder f\u00fcge eine geteilte Indexdatei hinzu",
             "Hide Dolby files this phone can\u2019t play",
             "Dolby-Dateien ausblenden, die dieses Handy nicht abspielen kann",
             "Hide duplicate songs",
             "Doppelte Songs ausblenden",
             "Hide hash",
             "Hash ausblenden",
+            "Include the saved index (larger file)",
+            "Gespeicherten Index einschlie\u00dfen (gr\u00f6\u00dfere Datei)",
             "Incomplete sponsored-message response",
             "Unvollst\u00e4ndige Antwort zu gesponserten Nachrichten",
+            "Index file saved.",
+            "Indexdatei gespeichert.",
+            "Index file too large",
+            "Indexdatei zu gro\u00df",
+            "Index only on Wi-Fi",
+            "Nur im Wi-Fi indexieren",
+            "Index only while charging",
+            "Nur beim Laden indexieren",
             "Indexing: {0} files found",
             "Indexierung: {0} Dateien gefunden",
             "Invalid cache-size choice",
@@ -3745,21 +4232,21 @@ final class Translations {
             "Music chats",
             "Musik-Chats",
             "Music from your community channels is copied into your main channel, a few files at a"
-                + " time, oldest post first. Copies show as your own posts, without \u201cForwarded"
-                + " from\u201d, and stay even if the community channel deletes them.\n\n"
+                + " time. Copies show as your own posts, without \u201cForwarded from\u201d, and"
+                + " stay even if the community channel deletes them.\n\n"
                 + "Telegram watches for accounts that copy many messages. Going faster than it"
                 + " likes can get your account limited for a while, or banned. The pace below never"
                 + " goes above 500 files an hour, and copying pauses whenever Telegram asks.\n\n"
                 + "You\u2019re responsible for what you copy. Only copy music you\u2019re allowed"
                 + " to keep.",
-            "Musik aus deinen Community-Kan\u00e4len wird in deinen Hauptkanal kopiert, ein paar"
-                + " Dateien auf einmal, \u00e4ltester Beitrag zuerst. Kopien erscheinen als deine"
-                + " eigenen Beitr\u00e4ge, ohne \u201eWeitergeleitet von\u201c, und bleiben, auch"
-                + " wenn der Community-Kanal sie l\u00f6scht.\n\n"
-                + "Telegram achtet auf Konten, die viele Nachrichten kopieren. Bist du schneller,"
-                + " als Telegram es mag, kann dein Konto eine Zeit lang eingeschr\u00e4nkt oder"
-                + " sogar gesperrt werden. Das Tempo unten liegt nie \u00fcber 500 Dateien pro"
-                + " Stunde, und das Kopieren pausiert, sobald Telegram darum bittet.\n\n"
+            "Musik aus deinen Community-Kan\u00e4len wird in deinen Hauptkanal kopiert, jeweils ein"
+                + " paar Dateien. Kopien erscheinen als deine eigenen Beitr\u00e4ge, ohne"
+                + " \u201eWeitergeleitet von\u201c, und bleiben erhalten, auch wenn der"
+                + " Community-Kanal sie l\u00f6scht.\n\n"
+                + "Telegram achtet auf Konten, die viele Nachrichten kopieren. Wer schneller ist,"
+                + " als Telegram es mag, riskiert eine zeitweise Einschr\u00e4nkung oder Sperre des"
+                + " Kontos. Das Tempo unten liegt nie \u00fcber 500 Dateien pro Stunde, und das"
+                + " Kopieren pausiert, sobald Telegram es verlangt.\n\n"
                 + "Du bist f\u00fcr das verantwortlich, was du kopierst. Kopiere nur Musik, die du"
                 + " behalten darfst.",
             "Music library",
@@ -3772,6 +4259,10 @@ final class Translations {
             "Native Erweiterung konnte nicht starten: {0}",
             "New posts are copied as they\u2019re found",
             "Neue Beitr\u00e4ge werden kopiert, sobald sie gefunden werden",
+            "Newest first",
+            "Neueste zuerst",
+            "No albums found in this chat yet.",
+            "In diesem Chat wurden noch keine Alben gefunden.",
             "No background searches",
             "Keine Suchen im Hintergrund",
             "No covers are downloaded",
@@ -3793,6 +4284,8 @@ final class Translations {
             "Es wird nichts kopiert",
             "Official sponsored messages could not be displayed: {0}",
             "Offizielle gesponserte Nachrichten konnten nicht angezeigt werden: {0}",
+            "Oldest post first, once each channel has been indexed",
+            "\u00c4ltester Beitrag zuerst, sobald jeder Kanal indexiert ist",
             "On Telegram: \u201c{0}\u201d by {1}",
             "Auf Telegram: \u201e{0}\u201c von {1}",
             "On Telegram: \u201c{0}\u201d by {1} ({2})\n\n"
@@ -3819,6 +4312,10 @@ final class Translations {
             "Sponsor \u00f6ffnen",
             "Open this Telegram link in the official client: {0}",
             "\u00d6ffne diesen Telegram-Link im offiziellen Client: {0}",
+            "Paused until this phone is charging",
+            "Pausiert, bis dieses Handy l\u00e4dt",
+            "Paused until this phone is on Wi-Fi",
+            "Pausiert, bis dieses Handy im Wi-Fi ist",
             "Phone number",
             "Telefonnummer",
             "Play surround as stereo",
@@ -3827,6 +4324,16 @@ final class Translations {
             "Wiedergabe",
             "Playlists and downloads",
             "Playlists und Downloads",
+            "Post",
+            "Posten",
+            "Post in {0}",
+            "In {0} posten",
+            "Post in {0}?",
+            "In {0} posten?",
+            "Post it in Telegram, or save it as a file",
+            "Poste sie in Telegram oder speichere sie als Datei",
+            "Posted the index of {0}.",
+            "Index von {0} gepostet.",
             "Privacy and your account",
             "Datenschutz und dein Konto",
             "Protected content and secret chats are not supported by this cached audio player.",
@@ -3860,6 +4367,10 @@ final class Translations {
             "Audioqualit\u00e4t angeben",
             "Report sponsored message",
             "Gesponserte Nachricht melden",
+            "Restore",
+            "Wiederherstellen",
+            "Restored. {0} files added to the saved index.",
+            "Wiederhergestellt. {0} Dateien zum gespeicherten Index hinzugef\u00fcgt.",
             "Retry channel",
             "Kanal erneut laden",
             "Retry connection",
@@ -3874,8 +4385,14 @@ final class Translations {
             "Speichere die Musik eines Chats als BitChord-Playlist oder lade alles herunter.",
             "Save and continue",
             "Speichern und weiter",
+            "Save as a file",
+            "Als Datei speichern",
+            "Save as playlist",
+            "Als Playlist speichern",
             "Save as playlist ({0})",
             "Als Playlist speichern ({0})",
+            "Saved Messages",
+            "Gespeicherte Nachrichten",
             "Saved index",
             "Gespeicherter Index",
             "Saved {0} song as the playlist \u201c{1}\u201d in BitChord\u2019s Library.",
@@ -3888,6 +4405,9 @@ final class Translations {
                     + " Telegram file.",
             "\u201e{0}\u201c gespeichert. BitChords gespeicherte Kopie wurde entfernt; spiel den"
                     + " Song erneut ab, um deine Telegram-Datei zu nutzen.",
+            "Search and playback still use mobile data; only the background indexing waits.",
+            "Suche und Wiedergabe nutzen weiterhin mobile Daten; nur die Indexierung im Hintergrund"
+                    + " wartet.",
             "Search first",
             "Zuerst suchen",
             "Search text is too long.",
@@ -3913,6 +4433,11 @@ final class Translations {
                     + " bevor du eine neue Sitzung erstellst",
             "Set up application",
             "Anwendung einrichten",
+            "Settings, corrected names and main channel, and the saved index if you like",
+            "Einstellungen, korrigierte Namen und Hauptkanal, und auf Wunsch der gespeicherte"
+                    + " Index",
+            "Share a chat\u2019s index",
+            "Index eines Chats teilen",
             "Show hash",
             "Hash anzeigen",
             "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3 320kbps",
@@ -3968,6 +4493,8 @@ final class Translations {
             "Telegram wird gestartet\u2026",
             "Starting\u2026",
             "Wird gestartet\u2026",
+            "Starts with each channel\u2019s newest post, while it\u2019s still being indexed",
+            "Beginnt mit dem neuesten Beitrag jedes Kanals, w\u00e4hrend er noch indexiert wird",
             "Stop playback before changing the application configuration.",
             "Stoppe die Wiedergabe, bevor du die Anwendungskonfiguration \u00e4nderst.",
             "Stop playback before clearing the cache",
@@ -4082,8 +4609,16 @@ final class Translations {
                     + " private.",
             "Die Dateien stammen aus dem gespeicherten Index, daher muss er aktiviert sein. Dein"
                     + " Hauptkanal muss privat bleiben.",
+            "The index also runs on battery",
+            "Der Index l\u00e4uft auch im Akkubetrieb",
+            "The index also uses mobile data",
+            "Der Index nutzt auch mobile Daten",
             "The index can't be read right now",
             "Der Index kann gerade nicht gelesen werden",
+            "The index waits for Wi-Fi to read your chats",
+            "Der Index wartet auf Wi-Fi, um deine Chats zu lesen",
+            "The index waits for a charger",
+            "Der Index wartet auf ein Ladeger\u00e4t",
             "The index's database couldn't be opened on this phone.",
             "Die Datenbank des Index konnte auf diesem Handy nicht ge\u00f6ffnet werden.",
             "The same song shows once, as its best copy",
@@ -4097,6 +4632,10 @@ final class Translations {
                     + " Index\u201c ihn als fertig anzeigt.",
             "This device could not decode the sponsored animation",
             "Dieses Ger\u00e4t konnte die gesponserte Animation nicht dekodieren",
+            "This file is from a newer version of the patch. Update first.",
+            "Diese Datei stammt aus einer neueren Version des Patches. Aktualisiere zuerst.",
+            "This isn't a BitChord index or backup file.",
+            "Das ist keine BitChord-Index- oder Sicherungsdatei.",
             "This login step isn't supported here. Sign in with an existing Telegram account.",
             "Dieser Anmeldeschritt wird hier nicht unterst\u00fctzt. Melde dich mit einem"
                     + " bestehenden Telegram-Konto an.",
@@ -4151,6 +4690,8 @@ final class Translations {
             "Namen verwenden",
             "Use original",
             "Original verwenden",
+            "Use shared indexes",
+            "Geteilte Indizes nutzen",
             "Use this name?",
             "Diesen Namen verwenden?",
             "Uses the cover Telegram has for each file",
@@ -4236,6 +4777,10 @@ final class Translations {
             "Deine Community-Kan\u00e4le werden alle paar Stunden auf neue Beitr\u00e4ge"
                     + " gepr\u00fcft, solange BitChord ge\u00f6ffnet ist, und neue Dateien werden"
                     + " ebenfalls kopiert. Sie z\u00e4hlen zum selben Stundenlimit.",
+            "Your main channel then lists the music in the opposite order to the community channel."
+                    + " Applies to channels copying hasn\u2019t started from yet.",
+            "Dein Hauptkanal listet die Musik dann in umgekehrter Reihenfolge zum Community-Kanal."
+                    + " Gilt f\u00fcr Kan\u00e4le, aus denen noch nicht kopiert wurde.",
             "Your phone talks to Telegram directly. Your API details are encrypted on this phone"
                 + " and your Telegram session is stored privately. The session is a normal Telegram"
                 + " login, so it can reach your whole account, not just music. Audio BitChord has"
@@ -4297,6 +4842,8 @@ final class Translations {
             "{0} Datei aus {1} Chat indexiert",
             "{0} file indexed from {1} chats",
             "{0} Datei aus {1} Chats indexiert",
+            "{0} files added to the saved index.",
+            "{0} Dateien zum gespeicherten Index hinzugef\u00fcgt.",
             "{0} files indexed from {1} chat",
             "{0} Dateien aus {1} Chat indexiert",
             "{0} files indexed from {1} chats",
@@ -4356,6 +4903,8 @@ final class Translations {
                     + " de pistas.",
             "A better copy fades in without a gap",
             "Una copia mejor entra con fundido, sin cortes",
+            "A chat\u2019s index comes from a shared index file when there is one",
+            "El \u00edndice de un chat sale de un archivo de \u00edndice compartido cuando lo hay",
             "A file counts as already there when it\u2019s the same Telegram file, or has the same"
                     + " title, artist, length and format. Nothing in your main channel is deleted."
                     + " Copying waits until your main channel has been indexed.",
@@ -4381,8 +4930,14 @@ final class Translations {
             "Agrega las credenciales de tu aplicaci\u00f3n para conectarte.",
             "Added automatically to BitChord.",
             "Se agrega autom\u00e1ticamente a BitChord.",
+            "Advanced",
+            "Avanzado",
             "Album covers",
             "Portadas de \u00e1lbumes",
+            "Albums",
+            "\u00c1lbumes",
+            "All chats",
+            "Todos los chats",
             "All music files are copied",
             "Se copian todos los archivos de m\u00fasica",
             "An unofficial add-on that uses the Telegram API with your own account. It isn\u2019t"
@@ -4416,10 +4971,35 @@ final class Translations {
             "Configuraci\u00f3n de la aplicaci\u00f3n",
             "Apply cache size",
             "Aplicar tama\u00f1o de cach\u00e9",
+            "Archived chats",
+            "Chats archivados",
             "Artist",
             "Artista",
             "Back",
             "Atr\u00e1s",
+            "Back up",
+            "Hacer copia de seguridad",
+            "Backup and sharing",
+            "Copia de seguridad y compartir",
+            "Backup saved.",
+            "Copia de seguridad guardada.",
+            "Backups and index files never hold your API details or your Telegram session. An index"
+                + " file lists the music in a chat, so anyone you share it with sees that list.",
+            "Las copias de seguridad y los archivos de \u00edndice nunca contienen tus datos de la"
+                + " API ni tu sesi\u00f3n de Telegram. Un archivo de \u00edndice enumera la"
+                + " m\u00fasica de un chat, as\u00ed que cualquiera con quien lo compartas ve esa"
+                + " lista.",
+            "Basic",
+            "B\u00e1sico",
+            "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
+                + " the chat itself (in a channel, only its admins can post), in your Saved"
+                + " Messages or in your main channel, and then only reads what\u2019s been posted"
+                + " since. Each song is checked against its post when it plays.",
+            "Antes de leer un chat desde Telegram, el parche busca un archivo de \u00edndice de ese"
+                + " chat publicado en el propio chat (en un canal, solo sus administradores pueden"
+                + " publicar), en tus Mensajes guardados o en tu canal principal, y luego solo lee"
+                + " lo publicado desde entonces. Cada canci\u00f3n se comprueba con su"
+                + " publicaci\u00f3n cuando suena.",
             "BitChord guesses from the file type",
             "BitChord lo deduce del tipo de archivo",
             "BitChord keeps search results for a few minutes, so changes here show up in new"
@@ -4433,6 +5013,8 @@ final class Translations {
                 + " tel\u00e9fono. Dolby Atmos se reproduce en 5.1 o 7.1, o con su sonido de altura"
                 + " en un tel\u00e9fono o altavoz compatible. Dolby AC-4 necesita un decodificador"
                 + " en el tel\u00e9fono.",
+            "BitChord saved index of {0}",
+            "\u00cdndice guardado de BitChord de {0}",
             "BitChord sees the corrected names",
             "BitChord ve los nombres corregidos",
             "BitChord switches copies with a short pause",
@@ -4529,6 +5111,8 @@ final class Translations {
             "Crea tu propia aplicaci\u00f3n con un nombre gen\u00e9rico y descriptivo, como My"
                     + " Client (nombre corto: myclient). Telegram puede mostrar ese nombre en las"
                     + " alertas de inicio de sesi\u00f3n.",
+            "Damaged index file",
+            "Archivo de \u00edndice da\u00f1ado",
             "Dismiss",
             "Descartar",
             "Dolby AC-4 files show only if this phone has a decoder",
@@ -4573,10 +5157,14 @@ final class Translations {
             "Ingresa la contrase\u00f1a de tu cuenta de Telegram.",
             "Every Dolby file shows",
             "Se muestran todos los archivos Dolby",
+            "Every chat is read from Telegram",
+            "Todos los chats se leen desde Telegram",
             "Every copy of a song shows",
             "Se muestran todas las copias de una canci\u00f3n",
             "Every file is copied, even if it\u2019s already there",
             "Se copian todos los archivos, aunque ya est\u00e9n",
+            "Everyone who can see {0} can see the list of music in {1}.",
+            "Todos los que pueden ver {0} pueden ver la lista de m\u00fasica de {1}.",
             "FLAC, WAV and ALAC count as lossless; others by bitrate",
             "FLAC, WAV y ALAC cuentan como sin p\u00e9rdida; los dem\u00e1s, seg\u00fan su tasa de"
                     + " bits",
@@ -4593,6 +5181,8 @@ final class Translations {
                     + " nombre corregido.",
             "Fix a track name",
             "Corregir un nombre de pista",
+            "Folder",
+            "Carpeta",
             "Format legend",
             "Leyenda de formato",
             "Found {0} track.",
@@ -4603,14 +5193,27 @@ final class Translations {
                     + " account and channels.",
             "Gratis y proporcionado tal cual. \u00dasalo con responsabilidad: eres responsable de"
                     + " tu cuenta y tus canales de Telegram.",
+            "From a backup, or add an index file someone shared",
+            "Desde una copia de seguridad, o agrega un archivo de \u00edndice que alguien"
+                    + " comparti\u00f3",
             "Hide Dolby files this phone can\u2019t play",
             "Ocultar archivos Dolby que este tel\u00e9fono no puede reproducir",
             "Hide duplicate songs",
             "Ocultar canciones duplicadas",
             "Hide hash",
             "Ocultar hash",
+            "Include the saved index (larger file)",
+            "Incluir el \u00cdndice guardado (archivo m\u00e1s grande)",
             "Incomplete sponsored-message response",
             "Respuesta de mensaje patrocinado incompleta",
+            "Index file saved.",
+            "Archivo de \u00edndice guardado.",
+            "Index file too large",
+            "Archivo de \u00edndice demasiado grande",
+            "Index only on Wi-Fi",
+            "Indexar solo con Wi-Fi",
+            "Index only while charging",
+            "Indexar solo mientras se carga",
             "Indexing: {0} files found",
             "Indexando: {0} archivos encontrados",
             "Invalid cache-size choice",
@@ -4655,21 +5258,21 @@ final class Translations {
             "Music chats",
             "Chats de m\u00fasica",
             "Music from your community channels is copied into your main channel, a few files at a"
-                + " time, oldest post first. Copies show as your own posts, without \u201cForwarded"
-                + " from\u201d, and stay even if the community channel deletes them.\n\n"
+                + " time. Copies show as your own posts, without \u201cForwarded from\u201d, and"
+                + " stay even if the community channel deletes them.\n\n"
                 + "Telegram watches for accounts that copy many messages. Going faster than it"
                 + " likes can get your account limited for a while, or banned. The pace below never"
                 + " goes above 500 files an hour, and copying pauses whenever Telegram asks.\n\n"
                 + "You\u2019re responsible for what you copy. Only copy music you\u2019re allowed"
                 + " to keep.",
             "La m\u00fasica de tus canales de la comunidad se copia a tu canal principal, unos"
-                + " pocos archivos a la vez, empezando por la publicaci\u00f3n m\u00e1s antigua."
-                + " Las copias aparecen como publicaciones tuyas, sin \u201cReenviado de\u201d, y"
-                + " se quedan aunque el canal de la comunidad las borre.\n\n"
+                + " pocos archivos a la vez. Las copias aparecen como publicaciones tuyas, sin"
+                + " \u201cReenviado de\u201d, y se conservan aunque el canal de la comunidad las"
+                + " borre.\n\n"
                 + "Telegram vigila las cuentas que copian muchos mensajes. Ir m\u00e1s r\u00e1pido"
-                + " de lo que le parece bien puede hacer que limite tu cuenta durante un tiempo o"
-                + " que la bloquee. El ritmo de abajo nunca supera los 500 archivos por hora, y la"
-                + " copia se pausa cada vez que Telegram lo pide.\n\n"
+                + " de lo que permite puede hacer que tu cuenta quede limitada por un tiempo, o"
+                + " bloqueada. El ritmo de abajo nunca supera los 500 archivos por hora, y la copia"
+                + " se pausa cada vez que Telegram lo pide.\n\n"
                 + "Eres responsable de lo que copias. Copia solo m\u00fasica que tengas permiso"
                 + " para conservar.",
             "Music library",
@@ -4682,6 +5285,10 @@ final class Translations {
             "No se pudo iniciar la extensi\u00f3n nativa: {0}",
             "New posts are copied as they\u2019re found",
             "Las publicaciones nuevas se copian a medida que aparecen",
+            "Newest first",
+            "M\u00e1s recientes primero",
+            "No albums found in this chat yet.",
+            "Todav\u00eda no se encontraron \u00e1lbumes en este chat.",
             "No background searches",
             "Sin b\u00fasquedas en segundo plano",
             "No covers are downloaded",
@@ -4702,6 +5309,8 @@ final class Translations {
             "No se copia nada",
             "Official sponsored messages could not be displayed: {0}",
             "No se pudieron mostrar los mensajes patrocinados oficiales: {0}",
+            "Oldest post first, once each channel has been indexed",
+            "Primero la publicaci\u00f3n m\u00e1s antigua, una vez indexado cada canal",
             "On Telegram: \u201c{0}\u201d by {1}",
             "En Telegram: \u201c{0}\u201d de {1}",
             "On Telegram: \u201c{0}\u201d by {1} ({2})\n\n"
@@ -4728,6 +5337,10 @@ final class Translations {
             "Abrir patrocinador",
             "Open this Telegram link in the official client: {0}",
             "Abre este enlace de Telegram en la app oficial: {0}",
+            "Paused until this phone is charging",
+            "En pausa hasta que el tel\u00e9fono se est\u00e9 cargando",
+            "Paused until this phone is on Wi-Fi",
+            "En pausa hasta que el tel\u00e9fono tenga Wi-Fi",
             "Phone number",
             "N\u00famero de tel\u00e9fono",
             "Play surround as stereo",
@@ -4736,6 +5349,16 @@ final class Translations {
             "Reproducci\u00f3n",
             "Playlists and downloads",
             "Listas de reproducci\u00f3n y descargas",
+            "Post",
+            "Publicar",
+            "Post in {0}",
+            "Publicar en {0}",
+            "Post in {0}?",
+            "\u00bfPublicar en {0}?",
+            "Post it in Telegram, or save it as a file",
+            "Publ\u00edcalo en Telegram o gu\u00e1rdalo como archivo",
+            "Posted the index of {0}.",
+            "Se public\u00f3 el \u00edndice de {0}.",
             "Privacy and your account",
             "Privacidad y tu cuenta",
             "Protected content and secret chats are not supported by this cached audio player.",
@@ -4769,6 +5392,10 @@ final class Translations {
             "Informar calidad de audio",
             "Report sponsored message",
             "Reportar mensaje patrocinado",
+            "Restore",
+            "Restaurar",
+            "Restored. {0} files added to the saved index.",
+            "Restaurado. Se agregaron {0} archivos al \u00cdndice guardado.",
             "Retry channel",
             "Reintentar canal",
             "Retry connection",
@@ -4784,8 +5411,14 @@ final class Translations {
                     + " desc\u00e1rgala toda.",
             "Save and continue",
             "Guardar y continuar",
+            "Save as a file",
+            "Guardar como archivo",
+            "Save as playlist",
+            "Guardar como lista",
             "Save as playlist ({0})",
             "Guardar como lista ({0})",
+            "Saved Messages",
+            "Mensajes guardados",
             "Saved index",
             "\u00cdndice guardado",
             "Saved {0} song as the playlist \u201c{1}\u201d in BitChord\u2019s Library.",
@@ -4800,6 +5433,9 @@ final class Translations {
                     + " Telegram file.",
             "Se guard\u00f3 \u201c{0}\u201d. Se elimin\u00f3 la copia guardada de BitChord; vuelve"
                     + " a reproducirla para usar tu archivo de Telegram.",
+            "Search and playback still use mobile data; only the background indexing waits.",
+            "La b\u00fasqueda y la reproducci\u00f3n siguen usando datos m\u00f3viles; solo la"
+                    + " indexaci\u00f3n en segundo plano espera.",
             "Search first",
             "Busca primero",
             "Search text is too long.",
@@ -4825,6 +5461,10 @@ final class Translations {
                     + " antes de crear una sesi\u00f3n nueva",
             "Set up application",
             "Configurar aplicaci\u00f3n",
+            "Settings, corrected names and main channel, and the saved index if you like",
+            "Ajustes, nombres corregidos y canal principal, y el \u00cdndice guardado si quieres",
+            "Share a chat\u2019s index",
+            "Compartir el \u00edndice de un chat",
             "Show hash",
             "Mostrar hash",
             "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3 320kbps",
@@ -4882,6 +5522,9 @@ final class Translations {
             "Iniciando Telegram\u2026",
             "Starting\u2026",
             "Iniciando\u2026",
+            "Starts with each channel\u2019s newest post, while it\u2019s still being indexed",
+            "Empieza por la publicaci\u00f3n m\u00e1s reciente de cada canal, mientras a\u00fan se"
+                    + " indexa",
             "Stop playback before changing the application configuration.",
             "Det\u00e9n la reproducci\u00f3n antes de cambiar la configuraci\u00f3n de la"
                     + " aplicaci\u00f3n.",
@@ -5001,8 +5644,16 @@ final class Translations {
                     + " private.",
             "Los archivos vienen del \u00cdndice guardado, as\u00ed que debe estar activado. Tu"
                     + " canal principal debe seguir siendo privado.",
+            "The index also runs on battery",
+            "El \u00edndice tambi\u00e9n funciona con bater\u00eda",
+            "The index also uses mobile data",
+            "El \u00edndice tambi\u00e9n usa datos m\u00f3viles",
             "The index can't be read right now",
             "El \u00edndice no se puede leer en este momento",
+            "The index waits for Wi-Fi to read your chats",
+            "El \u00edndice espera una red Wi-Fi para leer tus chats",
+            "The index waits for a charger",
+            "El \u00edndice espera a que conectes el cargador",
             "The index's database couldn't be opened on this phone.",
             "No se pudo abrir la base de datos del \u00edndice en este tel\u00e9fono.",
             "The same song shows once, as its best copy",
@@ -5016,6 +5667,10 @@ final class Translations {
                     + " guardado indique que termin\u00f3.",
             "This device could not decode the sponsored animation",
             "Este dispositivo no pudo decodificar la animaci\u00f3n patrocinada",
+            "This file is from a newer version of the patch. Update first.",
+            "Este archivo es de una versi\u00f3n m\u00e1s nueva del parche. Actualiza primero.",
+            "This isn't a BitChord index or backup file.",
+            "Este no es un archivo de \u00edndice ni de copia de seguridad de BitChord.",
             "This login step isn't supported here. Sign in with an existing Telegram account.",
             "Este paso de inicio de sesi\u00f3n no se admite aqu\u00ed. Inicia sesi\u00f3n con una"
                     + " cuenta de Telegram existente.",
@@ -5069,6 +5724,8 @@ final class Translations {
             "Usar nombre",
             "Use original",
             "Usar original",
+            "Use shared indexes",
+            "Usar \u00edndices compartidos",
             "Use this name?",
             "\u00bfUsar este nombre?",
             "Uses the cover Telegram has for each file",
@@ -5151,6 +5808,11 @@ final class Translations {
             "Mientras BitChord est\u00e1 abierto, se revisa cada pocas horas si tus canales de la"
                 + " comunidad tienen publicaciones nuevas, y los archivos nuevos tambi\u00e9n se"
                 + " copian. Cuentan para el mismo l\u00edmite por hora.",
+            "Your main channel then lists the music in the opposite order to the community channel."
+                    + " Applies to channels copying hasn\u2019t started from yet.",
+            "As\u00ed, tu canal principal muestra la m\u00fasica en orden inverso al del canal de"
+                    + " la comunidad. Se aplica a los canales de los que a\u00fan no ha empezado la"
+                    + " copia.",
             "Your phone talks to Telegram directly. Your API details are encrypted on this phone"
                 + " and your Telegram session is stored privately. The session is a normal Telegram"
                 + " login, so it can reach your whole account, not just music. Audio BitChord has"
@@ -5211,6 +5873,8 @@ final class Translations {
             "{0} archivo indexado de {1} chat",
             "{0} file indexed from {1} chats",
             "{0} archivo indexado de {1} chats",
+            "{0} files added to the saved index.",
+            "Se agregaron {0} archivos al \u00cdndice guardado.",
             "{0} files indexed from {1} chat",
             "{0} archivos indexados de {1} chat",
             "{0} files indexed from {1} chats",
@@ -5270,6 +5934,9 @@ final class Translations {
                     + " Noms des titres \u00bb.",
             "A better copy fades in without a gap",
             "Une meilleure copie arrive en fondu, sans coupure",
+            "A chat\u2019s index comes from a shared index file when there is one",
+            "L\u2019index d\u2019une discussion provient d\u2019un fichier d\u2019index"
+                    + " partag\u00e9 s\u2019il en existe un",
             "A file counts as already there when it\u2019s the same Telegram file, or has the same"
                     + " title, artist, length and format. Nothing in your main channel is deleted."
                     + " Copying waits until your main channel has been indexed.",
@@ -5296,8 +5963,14 @@ final class Translations {
             "Ajoutez les identifiants de votre application pour vous connecter.",
             "Added automatically to BitChord.",
             "Ajout\u00e9 automatiquement \u00e0 BitChord.",
+            "Advanced",
+            "Avanc\u00e9",
             "Album covers",
             "Pochettes d\u2019album",
+            "Albums",
+            "Albums",
+            "All chats",
+            "Toutes les discussions",
             "All music files are copied",
             "Tous les fichiers musicaux sont copi\u00e9s",
             "An unofficial add-on that uses the Telegram API with your own account. It isn\u2019t"
@@ -5331,10 +6004,35 @@ final class Translations {
             "Configuration de l\u2019application",
             "Apply cache size",
             "Appliquer la taille du cache",
+            "Archived chats",
+            "Discussions archiv\u00e9es",
             "Artist",
             "Artiste",
             "Back",
             "Retour",
+            "Back up",
+            "Sauvegarder",
+            "Backup and sharing",
+            "Sauvegarde et partage",
+            "Backup saved.",
+            "Sauvegarde enregistr\u00e9e.",
+            "Backups and index files never hold your API details or your Telegram session. An index"
+                + " file lists the music in a chat, so anyone you share it with sees that list.",
+            "Les sauvegardes et fichiers d\u2019index ne contiennent jamais vos identifiants API ni"
+                    + " votre session Telegram. Un fichier d\u2019index liste la musique d\u2019une"
+                    + " discussion : toute personne avec qui vous le partagez voit cette liste.",
+            "Basic",
+            "Basique",
+            "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
+                + " the chat itself (in a channel, only its admins can post), in your Saved"
+                + " Messages or in your main channel, and then only reads what\u2019s been posted"
+                + " since. Each song is checked against its post when it plays.",
+            "Avant de lire une discussion depuis Telegram, le patch cherche un fichier d\u2019index"
+                + " de celle-ci publi\u00e9 dans la discussion elle-m\u00eame (dans un canal, seuls"
+                + " ses administrateurs peuvent publier), dans vos Messages enregistr\u00e9s ou"
+                + " dans votre canal principal, puis ne lit que ce qui a \u00e9t\u00e9 publi\u00e9"
+                + " depuis. Chaque morceau est v\u00e9rifi\u00e9 par rapport \u00e0 sa publication"
+                + " lors de sa lecture.",
             "BitChord guesses from the file type",
             "BitChord devine d\u2019apr\u00e8s le type de fichier",
             "BitChord keeps search results for a few minutes, so changes here show up in new"
@@ -5348,6 +6046,8 @@ final class Translations {
                 + " t\u00e9l\u00e9phones. Le Dolby Atmos est lu en 5.1 ou 7.1, ou avec son effet de"
                 + " hauteur sur un t\u00e9l\u00e9phone ou une enceinte compatible. Le Dolby AC-4"
                 + " n\u00e9cessite un d\u00e9codeur dans le t\u00e9l\u00e9phone.",
+            "BitChord saved index of {0}",
+            "Index enregistr\u00e9 BitChord de {0}",
             "BitChord sees the corrected names",
             "BitChord voit les noms corrig\u00e9s",
             "BitChord switches copies with a short pause",
@@ -5447,6 +6147,8 @@ final class Translations {
             "Cr\u00e9ez votre propre application avec un nom g\u00e9n\u00e9rique et descriptif,"
                 + " comme My Client (nom court : myclient). Telegram peut afficher ce nom dans les"
                 + " alertes de connexion.",
+            "Damaged index file",
+            "Fichier d\u2019index endommag\u00e9",
             "Dismiss",
             "Ignorer",
             "Dolby AC-4 files show only if this phone has a decoder",
@@ -5492,10 +6194,14 @@ final class Translations {
             "Saisissez le mot de passe de votre compte Telegram.",
             "Every Dolby file shows",
             "Tous les fichiers Dolby apparaissent",
+            "Every chat is read from Telegram",
+            "Chaque discussion est lue depuis Telegram",
             "Every copy of a song shows",
             "Chaque copie d\u2019un morceau s\u2019affiche",
             "Every file is copied, even if it\u2019s already there",
             "Chaque fichier est copi\u00e9, m\u00eame s\u2019il est d\u00e9j\u00e0 pr\u00e9sent",
+            "Everyone who can see {0} can see the list of music in {1}.",
+            "Toute personne qui voit {0} peut voir la liste de la musique de {1}.",
             "FLAC, WAV and ALAC count as lossless; others by bitrate",
             "FLAC, WAV et ALAC sont sans perte ; les autres selon le d\u00e9bit",
             "Files copied an hour",
@@ -5511,6 +6217,8 @@ final class Translations {
                 + " fichier sous le nom corrig\u00e9.",
             "Fix a track name",
             "Corriger un nom de titre",
+            "Folder",
+            "Dossier",
             "Format legend",
             "L\u00e9gende du format",
             "Found {0} track.",
@@ -5521,14 +6229,27 @@ final class Translations {
                     + " account and channels.",
             "Gratuit et fourni tel quel. Utilisez-le de fa\u00e7on responsable : vous \u00eates"
                     + " responsable de votre compte et de vos canaux Telegram.",
+            "From a backup, or add an index file someone shared",
+            "Depuis une sauvegarde, ou ajoutez un fichier d\u2019index partag\u00e9 par"
+                    + " quelqu\u2019un",
             "Hide Dolby files this phone can\u2019t play",
             "Masquer les fichiers Dolby illisibles sur ce t\u00e9l\u00e9phone",
             "Hide duplicate songs",
             "Masquer les doublons",
             "Hide hash",
             "Masquer le hash",
+            "Include the saved index (larger file)",
+            "Inclure l\u2019index enregistr\u00e9 (fichier plus lourd)",
             "Incomplete sponsored-message response",
             "R\u00e9ponse de message sponsoris\u00e9 incompl\u00e8te",
+            "Index file saved.",
+            "Fichier d\u2019index enregistr\u00e9.",
+            "Index file too large",
+            "Fichier d\u2019index trop volumineux",
+            "Index only on Wi-Fi",
+            "Indexer uniquement en Wi-Fi",
+            "Index only while charging",
+            "Indexer uniquement pendant la charge",
             "Indexing: {0} files found",
             "Indexation : {0} fichiers trouv\u00e9s",
             "Invalid cache-size choice",
@@ -5574,22 +6295,21 @@ final class Translations {
             "Music chats",
             "Discussions musicales",
             "Music from your community channels is copied into your main channel, a few files at a"
-                + " time, oldest post first. Copies show as your own posts, without \u201cForwarded"
-                + " from\u201d, and stay even if the community channel deletes them.\n\n"
+                + " time. Copies show as your own posts, without \u201cForwarded from\u201d, and"
+                + " stay even if the community channel deletes them.\n\n"
                 + "Telegram watches for accounts that copy many messages. Going faster than it"
                 + " likes can get your account limited for a while, or banned. The pace below never"
                 + " goes above 500 files an hour, and copying pauses whenever Telegram asks.\n\n"
                 + "You\u2019re responsible for what you copy. Only copy music you\u2019re allowed"
                 + " to keep.",
             "La musique de vos canaux communautaires est copi\u00e9e dans votre canal principal,"
-                + " quelques fichiers \u00e0 la fois, en commen\u00e7ant par la publication la plus"
-                + " ancienne. Les copies apparaissent comme vos propres publications, sans \u00ab"
-                + " Transf\u00e9r\u00e9 de \u00bb, et restent m\u00eame si le canal communautaire"
-                + " les supprime.\n\n"
+                + " quelques fichiers \u00e0 la fois. Les copies apparaissent comme vos propres"
+                + " publications, sans \u00ab Transf\u00e9r\u00e9 de \u00bb, et restent m\u00eame"
+                + " si le canal communautaire les supprime.\n\n"
                 + "Telegram surveille les comptes qui copient beaucoup de messages. Aller plus vite"
                 + " qu\u2019il ne le tol\u00e8re peut faire limiter votre compte pendant un temps,"
                 + " voire le faire bannir. Le rythme ci-dessous ne d\u00e9passe jamais 500 fichiers"
-                + " par heure, et la copie se met en pause chaque fois que Telegram le demande.\n\n"
+                + " par heure, et la copie s\u2019interrompt d\u00e8s que Telegram le demande.\n\n"
                 + "Vous \u00eates responsable de ce que vous copiez. Ne copiez que de la musique"
                 + " que vous avez le droit de conserver.",
             "Music library",
@@ -5603,6 +6323,10 @@ final class Translations {
             "New posts are copied as they\u2019re found",
             "Les nouvelles publications sont copi\u00e9es d\u00e8s qu\u2019elles sont"
                     + " trouv\u00e9es",
+            "Newest first",
+            "Plus r\u00e9centes d\u2019abord",
+            "No albums found in this chat yet.",
+            "Aucun album trouv\u00e9 dans cette discussion pour l\u2019instant.",
             "No background searches",
             "Aucune recherche en arri\u00e8re-plan",
             "No covers are downloaded",
@@ -5625,6 +6349,8 @@ final class Translations {
             "Rien n\u2019est copi\u00e9",
             "Official sponsored messages could not be displayed: {0}",
             "Impossible d\u2019afficher les messages sponsoris\u00e9s officiels : {0}",
+            "Oldest post first, once each channel has been indexed",
+            "Publication la plus ancienne d\u2019abord, une fois chaque canal index\u00e9",
             "On Telegram: \u201c{0}\u201d by {1}",
             "Sur Telegram : \u00ab {0} \u00bb par {1}",
             "On Telegram: \u201c{0}\u201d by {1} ({2})\n\n"
@@ -5651,6 +6377,10 @@ final class Translations {
             "Ouvrir le sponsor",
             "Open this Telegram link in the official client: {0}",
             "Ouvrez ce lien Telegram dans le client officiel : {0}",
+            "Paused until this phone is charging",
+            "En pause jusqu\u2019\u00e0 ce que ce t\u00e9l\u00e9phone soit en charge",
+            "Paused until this phone is on Wi-Fi",
+            "En pause jusqu\u2019\u00e0 ce que ce t\u00e9l\u00e9phone soit en Wi-Fi",
             "Phone number",
             "Num\u00e9ro de t\u00e9l\u00e9phone",
             "Play surround as stereo",
@@ -5659,6 +6389,16 @@ final class Translations {
             "Lecture",
             "Playlists and downloads",
             "Playlists et t\u00e9l\u00e9chargements",
+            "Post",
+            "Publier",
+            "Post in {0}",
+            "Publier dans {0}",
+            "Post in {0}?",
+            "Publier dans {0} ?",
+            "Post it in Telegram, or save it as a file",
+            "Publiez-le dans Telegram, ou enregistrez-le comme fichier",
+            "Posted the index of {0}.",
+            "Index de {0} publi\u00e9.",
             "Privacy and your account",
             "Confidentialit\u00e9 et compte",
             "Protected content and secret chats are not supported by this cached audio player.",
@@ -5693,6 +6433,10 @@ final class Translations {
             "Indiquer la qualit\u00e9 audio",
             "Report sponsored message",
             "Signaler le message sponsoris\u00e9",
+            "Restore",
+            "Restaurer",
+            "Restored. {0} files added to the saved index.",
+            "Restaur\u00e9. {0} fichiers ajout\u00e9s \u00e0 l\u2019index enregistr\u00e9.",
             "Retry channel",
             "R\u00e9essayer le canal",
             "Retry connection",
@@ -5708,8 +6452,14 @@ final class Translations {
                     + " t\u00e9l\u00e9chargez-la en entier.",
             "Save and continue",
             "Enregistrer et continuer",
+            "Save as a file",
+            "Enregistrer comme fichier",
+            "Save as playlist",
+            "Enregistrer comme playlist",
             "Save as playlist ({0})",
             "Enregistrer comme playlist ({0})",
+            "Saved Messages",
+            "Messages enregistr\u00e9s",
             "Saved index",
             "Index enregistr\u00e9",
             "Saved {0} song as the playlist \u201c{1}\u201d in BitChord\u2019s Library.",
@@ -5725,6 +6475,9 @@ final class Translations {
             "\u00ab {0} \u00bb enregistr\u00e9. La copie enregistr\u00e9e par BitChord a"
                 + " \u00e9t\u00e9 supprim\u00e9e ; relancez la lecture pour utiliser votre fichier"
                 + " Telegram.",
+            "Search and playback still use mobile data; only the background indexing waits.",
+            "La recherche et la lecture utilisent toujours les donn\u00e9es mobiles ; seule"
+                    + " l\u2019indexation en arri\u00e8re-plan attend.",
             "Search first",
             "Recherchez d\u2019abord",
             "Search text is too long.",
@@ -5753,6 +6506,11 @@ final class Translations {
                     + " donn\u00e9es de l\u2019app avant de cr\u00e9er une session",
             "Set up application",
             "Configurer l\u2019application",
+            "Settings, corrected names and main channel, and the saved index if you like",
+            "Param\u00e8tres, noms corrig\u00e9s et canal principal, et l\u2019index"
+                    + " enregistr\u00e9 si vous le souhaitez",
+            "Share a chat\u2019s index",
+            "Partager l\u2019index d\u2019une discussion",
             "Show hash",
             "Afficher le hash",
             "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3 320kbps",
@@ -5810,6 +6568,9 @@ final class Translations {
             "D\u00e9marrage de Telegram\u2026",
             "Starting\u2026",
             "D\u00e9marrage\u2026",
+            "Starts with each channel\u2019s newest post, while it\u2019s still being indexed",
+            "Commence par la publication la plus r\u00e9cente de chaque canal, pendant son"
+                    + " indexation",
             "Stop playback before changing the application configuration.",
             "Arr\u00eatez la lecture avant de modifier la configuration de l\u2019application.",
             "Stop playback before clearing the cache",
@@ -5925,8 +6686,16 @@ final class Translations {
                     + " private.",
             "Les fichiers viennent de l\u2019index enregistr\u00e9, il doit donc \u00eatre"
                     + " activ\u00e9. Votre canal principal doit rester priv\u00e9.",
+            "The index also runs on battery",
+            "L\u2019index fonctionne aussi sur batterie",
+            "The index also uses mobile data",
+            "L\u2019index utilise aussi les donn\u00e9es mobiles",
             "The index can't be read right now",
             "L\u2019index est illisible pour le moment",
+            "The index waits for Wi-Fi to read your chats",
+            "L\u2019index attend le Wi-Fi pour lire vos discussions",
+            "The index waits for a charger",
+            "L\u2019index attend un chargeur",
             "The index's database couldn't be opened on this phone.",
             "Impossible d\u2019ouvrir la base de donn\u00e9es de l\u2019index sur ce"
                     + " t\u00e9l\u00e9phone.",
@@ -5941,6 +6710,11 @@ final class Translations {
                     + " Index enregistr\u00e9 \u00bb indique que c\u2019est termin\u00e9.",
             "This device could not decode the sponsored animation",
             "Cet appareil n\u2019a pas pu d\u00e9coder l\u2019animation sponsoris\u00e9e",
+            "This file is from a newer version of the patch. Update first.",
+            "Ce fichier provient d\u2019une version plus r\u00e9cente du patch. Mettez d\u2019abord"
+                    + " \u00e0 jour.",
+            "This isn't a BitChord index or backup file.",
+            "Ce n\u2019est pas un fichier d\u2019index ou de sauvegarde BitChord.",
             "This login step isn't supported here. Sign in with an existing Telegram account.",
             "Cette \u00e9tape de connexion n\u2019est pas prise en charge ici. Connectez-vous avec"
                     + " un compte Telegram existant.",
@@ -5997,6 +6771,8 @@ final class Translations {
             "Utiliser ce nom",
             "Use original",
             "Utiliser l\u2019original",
+            "Use shared indexes",
+            "Utiliser les index partag\u00e9s",
             "Use this name?",
             "Utiliser ce nom ?",
             "Uses the cover Telegram has for each file",
@@ -6082,6 +6858,11 @@ final class Translations {
                 + " recherche de nouvelles publications pendant que BitChord est ouvert, et les"
                 + " nouveaux fichiers sont aussi copi\u00e9s. Ils comptent dans la m\u00eame limite"
                 + " horaire.",
+            "Your main channel then lists the music in the opposite order to the community channel."
+                    + " Applies to channels copying hasn\u2019t started from yet.",
+            "Votre canal principal liste alors la musique dans l\u2019ordre inverse du canal"
+                    + " communautaire. S\u2019applique aux canaux dont la copie n\u2019a pas encore"
+                    + " commenc\u00e9.",
             "Your phone talks to Telegram directly. Your API details are encrypted on this phone"
                 + " and your Telegram session is stored privately. The session is a normal Telegram"
                 + " login, so it can reach your whole account, not just music. Audio BitChord has"
@@ -6145,6 +6926,8 @@ final class Translations {
             "{0} fichier index\u00e9 dans {1} discussion",
             "{0} file indexed from {1} chats",
             "{0} fichier index\u00e9 dans {1} discussions",
+            "{0} files added to the saved index.",
+            "{0} fichiers ajout\u00e9s \u00e0 l\u2019index enregistr\u00e9.",
             "{0} files indexed from {1} chat",
             "{0} fichiers index\u00e9s dans {1} discussion",
             "{0} files indexed from {1} chats",
@@ -6229,6 +7012,12 @@ final class Translations {
                     + " \u0930\u0941\u0915\u093e\u0935\u091f \u0915\u0947"
                     + " \u0927\u0940\u0930\u0947-\u0938\u0947 \u0936\u0941\u0930\u0942"
                     + " \u0939\u094b\u0924\u0940 \u0939\u0948",
+            "A chat\u2019s index comes from a shared index file when there is one",
+            "\u0936\u0947\u092f\u0930 \u0915\u0940 \u0917\u0908"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u092b\u093c\u093e\u0907\u0932"
+                    + " \u0939\u094b\u0928\u0947 \u092a\u0930 \u091a\u0948\u091f \u0915\u093e"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0909\u0938\u0940 \u0938\u0947"
+                    + " \u0906\u0924\u093e \u0939\u0948",
             "A file counts as already there when it\u2019s the same Telegram file, or has the same"
                     + " title, artist, length and format. Nothing in your main channel is deleted."
                     + " Copying waits until your main channel has been indexed.",
@@ -6286,8 +7075,14 @@ final class Translations {
             "Added automatically to BitChord.",
             "BitChord \u092e\u0947\u0902 \u0905\u092a\u0928\u0947-\u0906\u092a"
                     + " \u091c\u0941\u0921\u093c \u0917\u092f\u093e\u0964",
+            "Advanced",
+            "\u090f\u0921\u0935\u093e\u0902\u0938\u094d\u0921",
             "Album covers",
             "\u090f\u0932\u094d\u092c\u092e \u0915\u0935\u0930",
+            "Albums",
+            "\u090f\u0932\u094d\u092c\u092e",
+            "All chats",
+            "\u0938\u092d\u0940 \u091a\u0948\u091f",
             "All music files are copied",
             "\u0938\u092d\u0940 \u092e\u094d\u092f\u0942\u091c\u093c\u093f\u0915"
                     + " \u092b\u093c\u093e\u0907\u0932\u0947\u0902 \u0915\u0949\u092a\u0940"
@@ -6353,10 +7148,65 @@ final class Translations {
             "Apply cache size",
             "\u0915\u0948\u0936 \u0938\u093e\u0907\u091c\u093c \u0932\u093e\u0917\u0942"
                     + " \u0915\u0930\u0947\u0902",
+            "Archived chats",
+            "\u0906\u0930\u094d\u0915\u093e\u0907\u0935 \u0915\u0940 \u0917\u0908"
+                    + " \u091a\u0948\u091f",
             "Artist",
             "\u0906\u0930\u094d\u091f\u093f\u0938\u094d\u091f",
             "Back",
             "\u0935\u093e\u092a\u0938",
+            "Back up",
+            "\u092c\u0948\u0915\u0905\u092a \u0932\u0947\u0902",
+            "Backup and sharing",
+            "\u092c\u0948\u0915\u0905\u092a \u0914\u0930"
+                    + " \u0936\u0947\u092f\u0930\u093f\u0902\u0917",
+            "Backup saved.",
+            "\u092c\u0948\u0915\u0905\u092a \u0938\u0947\u0935 \u0939\u094b"
+                    + " \u0917\u092f\u093e\u0964",
+            "Backups and index files never hold your API details or your Telegram session. An index"
+                + " file lists the music in a chat, so anyone you share it with sees that list.",
+            "\u092c\u0948\u0915\u0905\u092a \u0914\u0930 \u0907\u0902\u0921\u0947\u0915\u094d\u0938"
+                    + " \u092b\u093c\u093e\u0907\u0932\u094b\u0902 \u092e\u0947\u0902"
+                    + " \u0915\u092d\u0940 \u0906\u092a\u0915\u0940 API"
+                    + " \u091c\u093e\u0928\u0915\u093e\u0930\u0940 \u092f\u093e"
+                    + " \u0906\u092a\u0915\u093e Telegram \u0938\u0947\u0936\u0928"
+                    + " \u0928\u0939\u0940\u0902 \u0939\u094b\u0924\u093e\u0964"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u092b\u093c\u093e\u0907\u0932"
+                    + " \u092e\u0947\u0902 \u0915\u093f\u0938\u0940 \u091a\u0948\u091f \u0915\u0947"
+                    + " \u092e\u094d\u092f\u0942\u091c\u093c\u093f\u0915 \u0915\u0940"
+                    + " \u0938\u0942\u091a\u0940 \u0939\u094b\u0924\u0940 \u0939\u0948,"
+                    + " \u0907\u0938\u0932\u093f\u090f \u091c\u093f\u0938\u0915\u0947"
+                    + " \u0938\u093e\u0925 \u092d\u0940 \u0906\u092a \u0907\u0938\u0947"
+                    + " \u0936\u0947\u092f\u0930 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902,"
+                    + " \u0935\u0939 \u092f\u0939 \u0938\u0942\u091a\u0940 \u0926\u0947\u0916"
+                    + " \u0938\u0915\u0924\u093e \u0939\u0948\u0964",
+            "Basic",
+            "\u092c\u0947\u0938\u093f\u0915",
+            "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
+                + " the chat itself (in a channel, only its admins can post), in your Saved"
+                + " Messages or in your main channel, and then only reads what\u2019s been posted"
+                + " since. Each song is checked against its post when it plays.",
+            "Telegram \u0938\u0947 \u0915\u094b\u0908 \u091a\u0948\u091f"
+                + " \u092a\u0922\u093c\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947,"
+                + " \u092a\u0948\u091a \u0909\u0938\u0915\u0940"
+                + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u092b\u093c\u093e\u0907\u0932"
+                + " \u0916\u094b\u091c\u0924\u093e \u0939\u0948 \u091c\u094b \u0916\u0941\u0926"
+                + " \u0909\u0938 \u091a\u0948\u091f \u092e\u0947\u0902 (\u091a\u0948\u0928\u0932"
+                + " \u092e\u0947\u0902 \u0938\u093f\u0930\u094d\u092b\u093c"
+                + " \u0909\u0938\u0915\u0947 \u090f\u0921\u092e\u093f\u0928"
+                + " \u092a\u094b\u0938\u094d\u091f \u0915\u0930 \u0938\u0915\u0924\u0947"
+                + " \u0939\u0948\u0902), \u0906\u092a\u0915\u0947 \u0938\u0947\u0935"
+                + " \u0915\u093f\u090f \u0917\u090f \u092e\u0948\u0938\u0947\u091c"
+                + " \u092e\u0947\u0902 \u092f\u093e \u0906\u092a\u0915\u0947"
+                + " \u092e\u0941\u0916\u094d\u092f \u091a\u0948\u0928\u0932 \u092e\u0947\u0902"
+                + " \u092a\u094b\u0938\u094d\u091f \u0915\u0940 \u0917\u0908 \u0939\u094b,"
+                + " \u0914\u0930 \u092b\u093f\u0930 \u0938\u093f\u0930\u094d\u092b\u093c"
+                + " \u0909\u0938\u0915\u0947 \u092c\u093e\u0926 \u0915\u0940"
+                + " \u092a\u094b\u0938\u094d\u091f \u092a\u0922\u093c\u0924\u093e"
+                + " \u0939\u0948\u0964 \u0939\u0930 \u0917\u093e\u0928\u093e"
+                + " \u091a\u0932\u0928\u0947 \u092a\u0930 \u0909\u0938\u0915\u0940"
+                + " \u092a\u094b\u0938\u094d\u091f \u0938\u0947 \u091c\u093e\u0901\u091a\u093e"
+                + " \u091c\u093e\u0924\u093e \u0939\u0948\u0964",
             "BitChord guesses from the file type",
             "BitChord \u092b\u093c\u093e\u0907\u0932 \u091f\u093e\u0907\u092a \u0938\u0947"
                     + " \u0905\u0902\u0926\u093e\u091c\u093c\u093e \u0932\u0917\u093e\u0924\u093e"
@@ -6384,6 +7234,9 @@ final class Translations {
                 + " \u0915\u0947 \u0932\u093f\u090f \u092b\u093c\u094b\u0928 \u092e\u0947\u0902"
                 + " \u0921\u093f\u0915\u094b\u0921\u0930 \u091c\u093c\u0930\u0942\u0930\u0940"
                 + " \u0939\u0948\u0964",
+            "BitChord saved index of {0}",
+            "{0} \u0915\u093e BitChord \u0938\u0947\u0935 \u0915\u093f\u092f\u093e"
+                    + " \u0917\u092f\u093e \u0907\u0902\u0921\u0947\u0915\u094d\u0938",
             "BitChord sees the corrected names",
             "BitChord \u0915\u094b \u0938\u0941\u0927\u0930\u0947 \u0939\u0941\u090f"
                     + " \u0928\u093e\u092e \u0926\u093f\u0916\u0924\u0947 \u0939\u0948\u0902",
@@ -6548,6 +7401,9 @@ final class Translations {
                     + " \u0938\u093e\u0907\u0928-\u0907\u0928 \u0905\u0932\u0930\u094d\u091f"
                     + " \u092e\u0947\u0902 \u092f\u0939 \u0928\u093e\u092e \u0926\u093f\u0916\u093e"
                     + " \u0938\u0915\u0924\u093e \u0939\u0948\u0964",
+            "Damaged index file",
+            "\u0916\u0930\u093e\u092c \u0907\u0902\u0921\u0947\u0915\u094d\u0938"
+                    + " \u092b\u093c\u093e\u0907\u0932",
             "Dismiss",
             "\u0939\u091f\u093e\u090f\u0901",
             "Dolby AC-4 files show only if this phone has a decoder",
@@ -6621,6 +7477,9 @@ final class Translations {
             "Every Dolby file shows",
             "\u0938\u092d\u0940 Dolby \u092b\u093c\u093e\u0907\u0932\u0947\u0902"
                     + " \u0926\u093f\u0916\u0924\u0940 \u0939\u0948\u0902",
+            "Every chat is read from Telegram",
+            "\u0939\u0930 \u091a\u0948\u091f Telegram \u0938\u0947 \u092a\u0922\u093c\u0940"
+                    + " \u091c\u093e\u0924\u0940 \u0939\u0948",
             "Every copy of a song shows",
             "\u0917\u093e\u0928\u0947 \u0915\u0940 \u0939\u0930 \u0915\u0949\u092a\u0940"
                     + " \u0926\u093f\u0916\u0924\u0940 \u0939\u0948",
@@ -6629,6 +7488,12 @@ final class Translations {
                     + " \u0939\u094b\u0924\u0940 \u0939\u0948, \u092d\u0932\u0947 \u0939\u0940"
                     + " \u0935\u0939 \u092a\u0939\u0932\u0947 \u0938\u0947"
                     + " \u092e\u094c\u091c\u0942\u0926 \u0939\u094b",
+            "Everyone who can see {0} can see the list of music in {1}.",
+            "{0} \u0915\u094b \u0926\u0947\u0916\u0928\u0947 \u0935\u093e\u0932\u093e \u0939\u0930"
+                    + " \u0935\u094d\u092f\u0915\u094d\u0924\u093f {1} \u0915\u0947"
+                    + " \u092e\u094d\u092f\u0942\u091c\u093c\u093f\u0915 \u0915\u0940"
+                    + " \u0938\u0942\u091a\u0940 \u0926\u0947\u0916 \u0938\u0915\u0924\u093e"
+                    + " \u0939\u0948\u0964",
             "FLAC, WAV and ALAC count as lossless; others by bitrate",
             "FLAC, WAV \u0914\u0930 ALAC \u0932\u0949\u0938\u0932\u0947\u0938"
                     + " \u092e\u093e\u0928\u0947 \u091c\u093e\u0924\u0947 \u0939\u0948\u0902;"
@@ -6663,6 +7528,8 @@ final class Translations {
             "Fix a track name",
             "\u091f\u094d\u0930\u0948\u0915 \u0915\u093e \u0928\u093e\u092e \u0920\u0940\u0915"
                     + " \u0915\u0930\u0947\u0902",
+            "Folder",
+            "\u092b\u093c\u094b\u0932\u094d\u0921\u0930",
             "Format legend",
             "\u092b\u093c\u0949\u0930\u094d\u092e\u0948\u091f \u0932\u0947\u092c\u0932",
             "Found {0} track.",
@@ -6681,6 +7548,11 @@ final class Translations {
                 + " \u0914\u0930 \u091a\u0948\u0928\u0932\u094b\u0902 \u0915\u0940"
                 + " \u091c\u093c\u093f\u092e\u094d\u092e\u0947\u0926\u093e\u0930\u0940"
                 + " \u0906\u092a\u0915\u0940 \u0939\u0948\u0964",
+            "From a backup, or add an index file someone shared",
+            "\u0915\u093f\u0938\u0940 \u092c\u0948\u0915\u0905\u092a \u0938\u0947, \u092f\u093e"
+                    + " \u0915\u093f\u0938\u0940 \u0915\u0940 \u0936\u0947\u092f\u0930 \u0915\u0940"
+                    + " \u0917\u0908 \u0907\u0902\u0921\u0947\u0915\u094d\u0938"
+                    + " \u092b\u093c\u093e\u0907\u0932 \u091c\u094b\u0921\u093c\u0947\u0902",
             "Hide Dolby files this phone can\u2019t play",
             "\u0935\u0947 Dolby \u092b\u093c\u093e\u0907\u0932\u0947\u0902"
                     + " \u091b\u093f\u092a\u093e\u090f\u0901 \u091c\u094b \u092f\u0939"
@@ -6691,10 +7563,28 @@ final class Translations {
                     + " \u091b\u093f\u092a\u093e\u090f\u0901",
             "Hide hash",
             "hash \u091b\u093f\u092a\u093e\u090f\u0901",
+            "Include the saved index (larger file)",
+            "\u0938\u0947\u0935 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u092d\u0940"
+                    + " \u0936\u093e\u092e\u093f\u0932 \u0915\u0930\u0947\u0902"
+                    + " (\u092c\u0921\u093c\u0940 \u092b\u093c\u093e\u0907\u0932)",
             "Incomplete sponsored-message response",
             "\u0938\u094d\u092a\u0949\u0928\u094d\u0938\u0930\u094d\u0921"
                     + " \u092e\u0948\u0938\u0947\u091c \u0915\u093e \u091c\u0935\u093e\u092c"
                     + " \u0905\u0927\u0942\u0930\u093e \u0939\u0948",
+            "Index file saved.",
+            "\u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u092b\u093c\u093e\u0907\u0932"
+                    + " \u0938\u0947\u0935 \u0939\u094b \u0917\u0908\u0964",
+            "Index file too large",
+            "\u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u092b\u093c\u093e\u0907\u0932"
+                    + " \u092c\u0939\u0941\u0924 \u092c\u0921\u093c\u0940 \u0939\u0948",
+            "Index only on Wi-Fi",
+            "\u0938\u093f\u0930\u094d\u092b\u093c Wi-Fi \u092a\u0930"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0915\u0930\u0947\u0902",
+            "Index only while charging",
+            "\u0938\u093f\u0930\u094d\u092b\u093c \u091a\u093e\u0930\u094d\u091c\u093f\u0902\u0917"
+                    + " \u0915\u0947 \u0926\u094c\u0930\u093e\u0928"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0915\u0930\u0947\u0902",
             "Indexing: {0} files found",
             "\u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0939\u094b \u0930\u0939\u093e"
                     + " \u0939\u0948: {0} \u092b\u093c\u093e\u0907\u0932\u0947\u0902"
@@ -6781,8 +7671,8 @@ final class Translations {
             "Music chats",
             "\u092e\u094d\u092f\u0942\u091c\u093c\u093f\u0915 \u091a\u0948\u091f",
             "Music from your community channels is copied into your main channel, a few files at a"
-                + " time, oldest post first. Copies show as your own posts, without \u201cForwarded"
-                + " from\u201d, and stay even if the community channel deletes them.\n\n"
+                + " time. Copies show as your own posts, without \u201cForwarded from\u201d, and"
+                + " stay even if the community channel deletes them.\n\n"
                 + "Telegram watches for accounts that copy many messages. Going faster than it"
                 + " likes can get your account limited for a while, or banned. The pace below never"
                 + " goes above 500 files an hour, and copying pauses whenever Telegram asks.\n\n"
@@ -6794,41 +7684,39 @@ final class Translations {
                 + " \u092e\u0941\u0916\u094d\u092f \u091a\u0948\u0928\u0932 \u092e\u0947\u0902"
                 + " \u0915\u0949\u092a\u0940 \u0939\u094b\u0924\u093e \u0939\u0948, \u090f\u0915"
                 + " \u092c\u093e\u0930 \u092e\u0947\u0902 \u0915\u0941\u091b"
-                + " \u092b\u093c\u093e\u0907\u0932\u0947\u0902, \u0938\u092c\u0938\u0947"
-                + " \u092a\u0941\u0930\u093e\u0928\u0940 \u092a\u094b\u0938\u094d\u091f"
-                + " \u092a\u0939\u0932\u0947\u0964 \u0915\u0949\u092a\u0940"
-                + " \u0906\u092a\u0915\u0940 \u0905\u092a\u0928\u0940"
-                + " \u092a\u094b\u0938\u094d\u091f \u0915\u0947 \u0930\u0942\u092a"
-                + " \u092e\u0947\u0902 \u0926\u093f\u0916\u0924\u0940 \u0939\u0948\u0902,"
-                + " \u201cForwarded from\u201d \u0915\u0947 \u092c\u093f\u0928\u093e, \u0914\u0930"
+                + " \u092b\u093c\u093e\u0907\u0932\u0947\u0902\u0964"
+                + " \u0915\u0949\u092a\u093f\u092f\u093e\u0901 \u0906\u092a\u0915\u0940"
+                + " \u0905\u092a\u0928\u0940 \u092a\u094b\u0938\u094d\u091f \u0915\u0947"
+                + " \u0930\u0942\u092a \u092e\u0947\u0902 \u0926\u093f\u0916\u0924\u0940"
+                + " \u0939\u0948\u0902, \u201cForwarded from\u201d \u0915\u0947"
+                + " \u092c\u093f\u0928\u093e, \u0914\u0930"
                 + " \u0915\u092e\u094d\u092f\u0941\u0928\u093f\u091f\u0940 \u091a\u0948\u0928\u0932"
                 + " \u0915\u0947 \u0909\u0928\u094d\u0939\u0947\u0902"
                 + " \u0921\u093f\u0932\u0940\u091f \u0915\u0930\u0928\u0947 \u092a\u0930"
                 + " \u092d\u0940 \u092c\u0928\u0940 \u0930\u0939\u0924\u0940"
                 + " \u0939\u0948\u0902\u0964\n\n"
-                + "Telegram \u0909\u0928 \u0905\u0915\u093e\u0909\u0902\u091f \u092a\u0930"
-                + " \u0928\u091c\u093c\u0930 \u0930\u0916\u0924\u093e \u0939\u0948 \u091c\u094b"
-                + " \u092c\u0939\u0941\u0924 \u0938\u093e\u0930\u0947"
+                + "Telegram \u092c\u0939\u0941\u0924 \u0938\u093e\u0930\u0947"
                 + " \u092e\u0948\u0938\u0947\u091c \u0915\u0949\u092a\u0940"
-                + " \u0915\u0930\u0924\u0947 \u0939\u0948\u0902\u0964 \u0909\u0938\u0915\u0940"
+                + " \u0915\u0930\u0928\u0947 \u0935\u093e\u0932\u0947"
+                + " \u0905\u0915\u093e\u0909\u0902\u091f \u092a\u0930 \u0928\u091c\u093c\u0930"
+                + " \u0930\u0916\u0924\u093e \u0939\u0948\u0964 \u0909\u0938\u0915\u0940"
                 + " \u092a\u0938\u0902\u0926 \u0938\u0947"
                 + " \u091c\u093c\u094d\u092f\u093e\u0926\u093e \u0924\u0947\u091c\u093c\u0940"
                 + " \u0938\u0947 \u0915\u0949\u092a\u0940 \u0915\u0930\u0928\u0947 \u092a\u0930"
                 + " \u0906\u092a\u0915\u093e \u0905\u0915\u093e\u0909\u0902\u091f"
                 + " \u0915\u0941\u091b \u0938\u092e\u092f \u0915\u0947 \u0932\u093f\u090f"
-                + " \u0938\u0940\u092e\u093f\u0924 \u0915\u093f\u092f\u093e \u091c\u093e"
-                + " \u0938\u0915\u0924\u093e \u0939\u0948, \u092f\u093e \u092c\u0948\u0928"
-                + " \u0939\u094b \u0938\u0915\u0924\u093e \u0939\u0948\u0964"
-                + " \u0928\u0940\u091a\u0947 \u0926\u0940 \u0917\u0908"
-                + " \u0930\u092b\u093c\u094d\u0924\u093e\u0930 \u0915\u092d\u0940 \u092d\u0940"
-                + " \u090f\u0915 \u0918\u0902\u091f\u0947 \u092e\u0947\u0902 500"
-                + " \u092b\u093c\u093e\u0907\u0932\u094b\u0902 \u0938\u0947 \u090a\u092a\u0930"
-                + " \u0928\u0939\u0940\u0902 \u091c\u093e\u0924\u0940, \u0914\u0930 \u091c\u092c"
-                + " \u092d\u0940 Telegram \u0915\u0939\u0947, \u0915\u0949\u092a\u0940"
+                + " \u0938\u0940\u092e\u093f\u0924 \u092f\u093e \u092c\u0948\u0928 \u0939\u094b"
+                + " \u0938\u0915\u0924\u093e \u0939\u0948\u0964 \u0928\u0940\u091a\u0947"
+                + " \u0926\u0940 \u0917\u0908 \u0930\u092b\u093c\u094d\u0924\u093e\u0930"
+                + " \u0915\u092d\u0940 \u090f\u0915 \u0918\u0902\u091f\u0947 \u092e\u0947\u0902 500"
+                + " \u092b\u093c\u093e\u0907\u0932\u094b\u0902 \u0938\u0947"
+                + " \u091c\u093c\u094d\u092f\u093e\u0926\u093e \u0928\u0939\u0940\u0902"
+                + " \u0939\u094b\u0924\u0940, \u0914\u0930 Telegram \u0915\u0947"
+                + " \u0915\u0939\u0928\u0947 \u092a\u0930 \u0915\u0949\u092a\u0940"
                 + " \u0915\u0930\u0928\u093e \u0930\u0941\u0915 \u091c\u093e\u0924\u093e"
                 + " \u0939\u0948\u0964\n\n"
                 + "\u0906\u092a \u091c\u094b \u0915\u0949\u092a\u0940 \u0915\u0930\u0924\u0947"
-                + " \u0939\u0948\u0902 \u0909\u0938\u0915\u0940"
+                + " \u0939\u0948\u0902, \u0909\u0938\u0915\u0940"
                 + " \u091c\u093c\u093f\u092e\u094d\u092e\u0947\u0926\u093e\u0930\u0940"
                 + " \u0906\u092a\u0915\u0940 \u0939\u0948\u0964"
                 + " \u0938\u093f\u0930\u094d\u092b\u093c \u0935\u0939\u0940"
@@ -6854,6 +7742,12 @@ final class Translations {
             "\u0928\u0908 \u092a\u094b\u0938\u094d\u091f \u092e\u093f\u0932\u0924\u0947"
                     + " \u0939\u0940 \u0915\u0949\u092a\u0940 \u0939\u094b\u0924\u0940"
                     + " \u0939\u0948\u0902",
+            "Newest first",
+            "\u0938\u092c\u0938\u0947 \u0928\u0908 \u092a\u0939\u0932\u0947",
+            "No albums found in this chat yet.",
+            "\u0907\u0938 \u091a\u0948\u091f \u092e\u0947\u0902 \u0905\u092d\u0940"
+                    + " \u0915\u094b\u0908 \u090f\u0932\u094d\u092c\u092e \u0928\u0939\u0940\u0902"
+                    + " \u092e\u093f\u0932\u093e\u0964",
             "No background searches",
             "\u0915\u094b\u0908 \u092c\u0948\u0915\u0917\u094d\u0930\u093e\u0909\u0902\u0921"
                     + " \u0916\u094b\u091c \u0928\u0939\u0940\u0902",
@@ -6889,6 +7783,12 @@ final class Translations {
                     + " \u0938\u094d\u092a\u0949\u0928\u094d\u0938\u0930\u094d\u0921"
                     + " \u092e\u0948\u0938\u0947\u091c \u0928\u0939\u0940\u0902"
                     + " \u0926\u093f\u0916\u093e\u090f \u091c\u093e \u0938\u0915\u0947: {0}",
+            "Oldest post first, once each channel has been indexed",
+            "\u0939\u0930 \u091a\u0948\u0928\u0932 \u0915\u0947"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0939\u094b\u0928\u0947"
+                    + " \u0915\u0947 \u092c\u093e\u0926, \u0938\u092c\u0938\u0947"
+                    + " \u092a\u0941\u0930\u093e\u0928\u0940 \u092a\u094b\u0938\u094d\u091f"
+                    + " \u092a\u0939\u0932\u0947",
             "On Telegram: \u201c{0}\u201d by {1}",
             "Telegram \u092a\u0930: {1} \u0915\u093e \u201c{0}\u201d",
             "On Telegram: \u201c{0}\u201d by {1} ({2})\n\n"
@@ -6930,6 +7830,12 @@ final class Translations {
                     + " \u0906\u0927\u093f\u0915\u093e\u0930\u093f\u0915"
                     + " \u0915\u094d\u0932\u093e\u0907\u0902\u091f \u092e\u0947\u0902"
                     + " \u0916\u094b\u0932\u0947\u0902: {0}",
+            "Paused until this phone is charging",
+            "\u092b\u093c\u094b\u0928 \u091a\u093e\u0930\u094d\u091c \u0939\u094b\u0928\u0947"
+                    + " \u0924\u0915 \u0930\u0941\u0915\u093e \u0939\u0948",
+            "Paused until this phone is on Wi-Fi",
+            "\u092b\u093c\u094b\u0928 \u0915\u0947 Wi-Fi \u092a\u0930 \u0906\u0928\u0947"
+                    + " \u0924\u0915 \u0930\u0941\u0915\u093e \u0939\u0948",
             "Phone number",
             "\u092b\u093c\u094b\u0928 \u0928\u0902\u092c\u0930",
             "Play surround as stereo",
@@ -6941,6 +7847,21 @@ final class Translations {
             "Playlists and downloads",
             "\u092a\u094d\u0932\u0947\u0932\u093f\u0938\u094d\u091f \u0914\u0930"
                     + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921",
+            "Post",
+            "\u092a\u094b\u0938\u094d\u091f \u0915\u0930\u0947\u0902",
+            "Post in {0}",
+            "{0} \u092e\u0947\u0902 \u092a\u094b\u0938\u094d\u091f \u0915\u0930\u0947\u0902",
+            "Post in {0}?",
+            "{0} \u092e\u0947\u0902 \u092a\u094b\u0938\u094d\u091f \u0915\u0930\u0947\u0902?",
+            "Post it in Telegram, or save it as a file",
+            "\u0907\u0938\u0947 Telegram \u092e\u0947\u0902 \u092a\u094b\u0938\u094d\u091f"
+                    + " \u0915\u0930\u0947\u0902, \u092f\u093e \u092b\u093c\u093e\u0907\u0932"
+                    + " \u0915\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 \u0938\u0947\u0935"
+                    + " \u0915\u0930\u0947\u0902",
+            "Posted the index of {0}.",
+            "{0} \u0915\u093e \u0907\u0902\u0921\u0947\u0915\u094d\u0938"
+                    + " \u092a\u094b\u0938\u094d\u091f \u0915\u093f\u092f\u093e"
+                    + " \u0917\u092f\u093e\u0964",
             "Privacy and your account",
             "\u092a\u094d\u0930\u093e\u0907\u0935\u0947\u0938\u0940 \u0914\u0930"
                     + " \u0906\u092a\u0915\u093e \u0905\u0915\u093e\u0909\u0902\u091f",
@@ -7003,6 +7924,14 @@ final class Translations {
             "\u0938\u094d\u092a\u0949\u0928\u094d\u0938\u0930\u094d\u0921"
                     + " \u092e\u0948\u0938\u0947\u091c \u0915\u0940"
                     + " \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u0915\u0930\u0947\u0902",
+            "Restore",
+            "\u0930\u0940\u0938\u094d\u091f\u094b\u0930 \u0915\u0930\u0947\u0902",
+            "Restored. {0} files added to the saved index.",
+            "\u0930\u0940\u0938\u094d\u091f\u094b\u0930 \u0939\u094b \u0917\u092f\u093e\u0964"
+                    + " \u0938\u0947\u0935 \u0915\u093f\u090f \u0917\u090f"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u092e\u0947\u0902 {0}"
+                    + " \u092b\u093c\u093e\u0907\u0932\u0947\u0902 \u091c\u094b\u0921\u093c\u0940"
+                    + " \u0917\u0908\u0902\u0964",
             "Retry channel",
             "\u091a\u0948\u0928\u0932 \u092b\u093f\u0930 \u0938\u0947"
                     + " \u0906\u091c\u093c\u092e\u093e\u090f\u0901",
@@ -7027,9 +7956,17 @@ final class Translations {
             "Save and continue",
             "\u0938\u0947\u0935 \u0915\u0930\u0947\u0902 \u0914\u0930 \u091c\u093e\u0930\u0940"
                     + " \u0930\u0916\u0947\u0902",
+            "Save as a file",
+            "\u092b\u093c\u093e\u0907\u0932 \u0915\u0947 \u0930\u0942\u092a \u092e\u0947\u0902"
+                    + " \u0938\u0947\u0935 \u0915\u0930\u0947\u0902",
+            "Save as playlist",
+            "\u092a\u094d\u0932\u0947\u0932\u093f\u0938\u094d\u091f \u0915\u0947 \u0930\u0942\u092a"
+                    + " \u092e\u0947\u0902 \u0938\u0947\u0935 \u0915\u0930\u0947\u0902",
             "Save as playlist ({0})",
             "\u092a\u094d\u0932\u0947\u0932\u093f\u0938\u094d\u091f \u0915\u0947 \u0930\u0942\u092a"
                     + " \u092e\u0947\u0902 \u0938\u0947\u0935 \u0915\u0930\u0947\u0902 ({0})",
+            "Saved Messages",
+            "\u0938\u0947\u0935 \u0915\u093f\u090f \u0917\u090f \u092e\u0948\u0938\u0947\u091c",
             "Saved index",
             "\u0938\u0947\u0935 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"
                     + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938",
@@ -7053,6 +7990,16 @@ final class Translations {
                 + " \u092b\u093c\u093e\u0907\u0932 \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932"
                 + " \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0907\u0938\u0947"
                 + " \u092b\u093f\u0930 \u0938\u0947 \u091a\u0932\u093e\u090f\u0901\u0964",
+            "Search and playback still use mobile data; only the background indexing waits.",
+            "\u0916\u094b\u091c \u0914\u0930 \u092a\u094d\u0932\u0947\u092c\u0948\u0915"
+                    + " \u0905\u092c \u092d\u0940 \u092e\u094b\u092c\u093e\u0907\u0932"
+                    + " \u0921\u0947\u091f\u093e \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932"
+                    + " \u0915\u0930\u0924\u0947 \u0939\u0948\u0902;"
+                    + " \u0938\u093f\u0930\u094d\u092b\u093c"
+                    + " \u092c\u0948\u0915\u0917\u094d\u0930\u093e\u0909\u0902\u0921"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938\u093f\u0902\u0917"
+                    + " \u0907\u0902\u0924\u091c\u093c\u093e\u0930 \u0915\u0930\u0924\u0940"
+                    + " \u0939\u0948\u0964",
             "Search first",
             "\u092a\u0939\u0932\u0947 \u0916\u094b\u091c\u0947\u0902",
             "Search text is too long.",
@@ -7103,6 +8050,15 @@ final class Translations {
             "Set up application",
             "\u0910\u092a\u094d\u0932\u093f\u0915\u0947\u0936\u0928 \u0938\u0947\u091f \u0905\u092a"
                     + " \u0915\u0930\u0947\u0902",
+            "Settings, corrected names and main channel, and the saved index if you like",
+            "\u0938\u0947\u091f\u093f\u0902\u0917, \u0920\u0940\u0915 \u0915\u093f\u090f"
+                    + " \u0917\u090f \u0928\u093e\u092e \u0914\u0930 \u092e\u0941\u0916\u094d\u092f"
+                    + " \u091a\u0948\u0928\u0932, \u0914\u0930 \u091a\u093e\u0939\u0947\u0902"
+                    + " \u0924\u094b \u0938\u0947\u0935 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938",
+            "Share a chat\u2019s index",
+            "\u091a\u0948\u091f \u0915\u093e \u0907\u0902\u0921\u0947\u0915\u094d\u0938"
+                    + " \u0936\u0947\u092f\u0930 \u0915\u0930\u0947\u0902",
             "Show hash",
             "hash \u0926\u093f\u0916\u093e\u090f\u0901",
             "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3 320kbps",
@@ -7209,6 +8165,13 @@ final class Translations {
             "Telegram \u0936\u0941\u0930\u0942 \u0939\u094b \u0930\u0939\u093e \u0939\u0948\u2026",
             "Starting\u2026",
             "\u0936\u0941\u0930\u0942 \u0939\u094b \u0930\u0939\u093e \u0939\u0948\u2026",
+            "Starts with each channel\u2019s newest post, while it\u2019s still being indexed",
+            "\u0939\u0930 \u091a\u0948\u0928\u0932 \u0915\u0940 \u0938\u092c\u0938\u0947"
+                + " \u0928\u0908 \u092a\u094b\u0938\u094d\u091f \u0938\u0947"
+                + " \u0936\u0941\u0930\u0942 \u0939\u094b\u0924\u093e \u0939\u0948, \u091c\u092c"
+                + " \u0924\u0915 \u0935\u0939 \u0905\u092d\u0940"
+                + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0939\u094b \u0930\u0939\u093e"
+                + " \u0939\u094b",
             "Stop playback before changing the application configuration.",
             "\u0910\u092a\u094d\u0932\u093f\u0915\u0947\u0936\u0928"
                     + " \u0915\u0949\u0928\u094d\u092b\u093c\u093f\u0917\u0930\u0947\u0936\u0928"
@@ -7441,9 +8404,26 @@ final class Translations {
                     + " \u0906\u092a\u0915\u093e \u092e\u0941\u0916\u094d\u092f"
                     + " \u091a\u0948\u0928\u0932 \u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f"
                     + " \u0939\u0940 \u0930\u0939\u0928\u093e \u091a\u093e\u0939\u093f\u090f\u0964",
+            "The index also runs on battery",
+            "\u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u092c\u0948\u091f\u0930\u0940 \u092a\u0930"
+                    + " \u092d\u0940 \u091a\u0932\u0924\u093e \u0939\u0948",
+            "The index also uses mobile data",
+            "\u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u092e\u094b\u092c\u093e\u0907\u0932"
+                    + " \u0921\u0947\u091f\u093e \u092d\u0940"
+                    + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0924\u093e"
+                    + " \u0939\u0948",
             "The index can't be read right now",
             "\u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0905\u092d\u0940 \u092a\u0922\u093c\u093e"
                     + " \u0928\u0939\u0940\u0902 \u091c\u093e \u0938\u0915\u0924\u093e",
+            "The index waits for Wi-Fi to read your chats",
+            "\u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0906\u092a\u0915\u0940 \u091a\u0948\u091f"
+                    + " \u092a\u0922\u093c\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f Wi-Fi"
+                    + " \u0915\u093e \u0907\u0902\u0924\u091c\u093c\u093e\u0930"
+                    + " \u0915\u0930\u0924\u093e \u0939\u0948",
+            "The index waits for a charger",
+            "\u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u091a\u093e\u0930\u094d\u091c\u0930"
+                    + " \u0915\u093e \u0907\u0902\u0924\u091c\u093c\u093e\u0930"
+                    + " \u0915\u0930\u0924\u093e \u0939\u0948",
             "The index's database couldn't be opened on this phone.",
             "\u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0915\u093e"
                     + " \u0921\u0947\u091f\u093e\u092c\u0947\u0938 \u0907\u0938"
@@ -7476,6 +8456,15 @@ final class Translations {
                     + " \u0938\u094d\u092a\u0949\u0928\u094d\u0938\u0930\u094d\u0921"
                     + " \u0910\u0928\u093f\u092e\u0947\u0936\u0928 \u0921\u093f\u0915\u094b\u0921"
                     + " \u0928\u0939\u0940\u0902 \u0915\u0930 \u0938\u0915\u093e",
+            "This file is from a newer version of the patch. Update first.",
+            "\u092f\u0939 \u092b\u093c\u093e\u0907\u0932 \u092a\u0948\u091a \u0915\u0947"
+                    + " \u0928\u090f \u0935\u0930\u094d\u091c\u093c\u0928 \u0915\u0940"
+                    + " \u0939\u0948\u0964 \u092a\u0939\u0932\u0947 \u0905\u092a\u0921\u0947\u091f"
+                    + " \u0915\u0930\u0947\u0902\u0964",
+            "This isn't a BitChord index or backup file.",
+            "\u092f\u0939 BitChord \u0915\u0940 \u0907\u0902\u0921\u0947\u0915\u094d\u0938"
+                    + " \u092f\u093e \u092c\u0948\u0915\u0905\u092a \u092b\u093c\u093e\u0907\u0932"
+                    + " \u0928\u0939\u0940\u0902 \u0939\u0948\u0964",
             "This login step isn't supported here. Sign in with an existing Telegram account.",
             "\u092f\u0939 \u0932\u0949\u0917\u093f\u0928 \u0938\u094d\u091f\u0947\u092a"
                     + " \u092f\u0939\u093e\u0901 \u0938\u092a\u094b\u0930\u094d\u091f"
@@ -7576,6 +8565,10 @@ final class Translations {
                     + " \u0915\u0930\u0947\u0902",
             "Use original",
             "\u0913\u0930\u093f\u091c\u093f\u0928\u0932"
+                    + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0947\u0902",
+            "Use shared indexes",
+            "\u0936\u0947\u092f\u0930 \u0915\u093f\u090f \u0917\u090f"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938"
                     + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0947\u0902",
             "Use this name?",
             "\u092f\u0939 \u0928\u093e\u092e \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932"
@@ -7772,6 +8765,19 @@ final class Translations {
                 + " \u092f\u0947 \u092d\u0940 \u0909\u0938\u0940 \u0918\u0902\u091f\u0947"
                 + " \u0935\u093e\u0932\u0940 \u0938\u0940\u092e\u093e \u092e\u0947\u0902"
                 + " \u0917\u093f\u0928\u0940 \u091c\u093e\u0924\u0940 \u0939\u0948\u0902\u0964",
+            "Your main channel then lists the music in the opposite order to the community channel."
+                    + " Applies to channels copying hasn\u2019t started from yet.",
+            "\u0924\u092c \u0906\u092a\u0915\u093e \u092e\u0941\u0916\u094d\u092f"
+                    + " \u091a\u0948\u0928\u0932 \u092e\u094d\u092f\u0942\u091c\u093c\u093f\u0915"
+                    + " \u0915\u094b \u0915\u092e\u094d\u092f\u0941\u0928\u093f\u091f\u0940"
+                    + " \u091a\u0948\u0928\u0932 \u0915\u0947 \u0909\u0932\u094d\u091f\u0947"
+                    + " \u0915\u094d\u0930\u092e \u092e\u0947\u0902"
+                    + " \u0926\u093f\u0916\u093e\u0924\u093e \u0939\u0948\u0964 \u092f\u0939"
+                    + " \u0909\u0928 \u091a\u0948\u0928\u0932\u094b\u0902 \u092a\u0930"
+                    + " \u0932\u093e\u0917\u0942 \u0939\u094b\u0924\u093e \u0939\u0948"
+                    + " \u091c\u093f\u0928\u0938\u0947 \u0915\u0949\u092a\u0940"
+                    + " \u0915\u0930\u0928\u093e \u0905\u092d\u0940 \u0936\u0941\u0930\u0942"
+                    + " \u0928\u0939\u0940\u0902 \u0939\u0941\u0906 \u0939\u0948\u0964",
             "Your phone talks to Telegram directly. Your API details are encrypted on this phone"
                 + " and your Telegram session is stored privately. The session is a normal Telegram"
                 + " login, so it can reach your whole account, not just music. Audio BitChord has"
@@ -7887,6 +8893,11 @@ final class Translations {
             "{0} file indexed from {1} chats",
             "{1} \u091a\u0948\u091f \u0938\u0947 {0} \u092b\u093c\u093e\u0907\u0932"
                     + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0939\u0941\u0908",
+            "{0} files added to the saved index.",
+            "\u0938\u0947\u0935 \u0915\u093f\u090f \u0917\u090f"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u092e\u0947\u0902 {0}"
+                    + " \u092b\u093c\u093e\u0907\u0932\u0947\u0902 \u091c\u094b\u0921\u093c\u0940"
+                    + " \u0917\u0908\u0902\u0964",
             "{0} files indexed from {1} chat",
             "{1} \u091a\u0948\u091f \u0938\u0947 {0} \u092b\u093c\u093e\u0907\u0932\u0947\u0902"
                     + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0939\u0941\u0908\u0902",
@@ -7955,6 +8966,8 @@ final class Translations {
             "Nama file Telegram mungkin salah. Periksa di Nama trek.",
             "A better copy fades in without a gap",
             "Salinan yang lebih baik masuk perlahan tanpa jeda",
+            "A chat\u2019s index comes from a shared index file when there is one",
+            "Indeks chat diambil dari file indeks bersama jika ada",
             "A file counts as already there when it\u2019s the same Telegram file, or has the same"
                     + " title, artist, length and format. Nothing in your main channel is deleted."
                     + " Copying waits until your main channel has been indexed.",
@@ -7979,8 +8992,14 @@ final class Translations {
             "Tambahkan kredensial aplikasi Anda untuk menghubungkan.",
             "Added automatically to BitChord.",
             "Ditambahkan otomatis ke BitChord.",
+            "Advanced",
+            "Lanjutan",
             "Album covers",
             "Sampul album",
+            "Albums",
+            "Album",
+            "All chats",
+            "Semua chat",
             "All music files are copied",
             "Semua file musik disalin",
             "An unofficial add-on that uses the Telegram API with your own account. It isn\u2019t"
@@ -8013,10 +9032,33 @@ final class Translations {
             "Penyiapan aplikasi",
             "Apply cache size",
             "Terapkan ukuran cache",
+            "Archived chats",
+            "Chat yang diarsipkan",
             "Artist",
             "Artis",
             "Back",
             "Kembali",
+            "Back up",
+            "Cadangkan",
+            "Backup and sharing",
+            "Cadangan dan berbagi",
+            "Backup saved.",
+            "Cadangan disimpan.",
+            "Backups and index files never hold your API details or your Telegram session. An index"
+                + " file lists the music in a chat, so anyone you share it with sees that list.",
+            "Cadangan dan file indeks tidak pernah menyimpan detail API atau sesi Telegram Anda."
+                    + " File indeks berisi daftar musik di sebuah chat, jadi siapa pun yang Anda"
+                    + " bagikan file itu dapat melihat daftar tersebut.",
+            "Basic",
+            "Dasar",
+            "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
+                + " the chat itself (in a channel, only its admins can post), in your Saved"
+                + " Messages or in your main channel, and then only reads what\u2019s been posted"
+                + " since. Each song is checked against its post when it plays.",
+            "Sebelum membaca chat dari Telegram, patch mencari file indeks chat itu yang diposting"
+                    + " di chat itu sendiri (di kanal, hanya admin yang bisa memposting), di Pesan"
+                    + " Tersimpan, atau di kanal utama Anda, lalu hanya membaca yang diposting"
+                    + " setelahnya. Setiap lagu dicocokkan dengan postingannya saat diputar.",
             "BitChord guesses from the file type",
             "BitChord menebak dari jenis file",
             "BitChord keeps search results for a few minutes, so changes here show up in new"
@@ -8030,6 +9072,8 @@ final class Translations {
                 + " pun. Dolby Atmos diputar sebagai 5.1 atau 7.1, atau dengan suara ketinggian di"
                 + " ponsel atau speaker yang mendukungnya. Dolby AC-4 memerlukan dekoder di"
                 + " ponsel.",
+            "BitChord saved index of {0}",
+            "Indeks tersimpan BitChord dari {0}",
             "BitChord sees the corrected names",
             "BitChord melihat nama yang sudah diperbaiki",
             "BitChord switches copies with a short pause",
@@ -8121,6 +9165,8 @@ final class Translations {
                     + " name: myclient). Telegram may show that name in sign-in alerts.",
             "Buat aplikasi Anda sendiri dengan nama umum yang deskriptif, misalnya My Client (nama"
                 + " pendek: myclient). Telegram mungkin menampilkan nama itu di notifikasi masuk.",
+            "Damaged index file",
+            "File indeks rusak",
             "Dismiss",
             "Tutup",
             "Dolby AC-4 files show only if this phone has a decoder",
@@ -8164,10 +9210,14 @@ final class Translations {
             "Masukkan kata sandi akun Telegram Anda.",
             "Every Dolby file shows",
             "Semua file Dolby ditampilkan",
+            "Every chat is read from Telegram",
+            "Setiap chat dibaca dari Telegram",
             "Every copy of a song shows",
             "Setiap salinan lagu ditampilkan",
             "Every file is copied, even if it\u2019s already there",
             "Setiap file disalin, meskipun sudah ada",
+            "Everyone who can see {0} can see the list of music in {1}.",
+            "Semua yang dapat melihat {0} dapat melihat daftar musik di {1}.",
             "FLAC, WAV and ALAC count as lossless; others by bitrate",
             "FLAC, WAV, dan ALAC dianggap lossless; lainnya menurut bitrate",
             "Files copied an hour",
@@ -8182,6 +9232,8 @@ final class Translations {
                     + " BitChord lalu menemukan dan mencocokkan file dengan nama yang diperbaiki.",
             "Fix a track name",
             "Perbaiki nama trek",
+            "Folder",
+            "Folder",
             "Format legend",
             "Keterangan format",
             "Found {0} track.",
@@ -8192,14 +9244,26 @@ final class Translations {
                     + " account and channels.",
             "Gratis dan disediakan apa adanya. Gunakan dengan bertanggung jawab: Anda bertanggung"
                     + " jawab atas akun dan kanal Telegram Anda.",
+            "From a backup, or add an index file someone shared",
+            "Dari cadangan, atau tambahkan file indeks yang dibagikan orang lain",
             "Hide Dolby files this phone can\u2019t play",
             "Sembunyikan file Dolby yang tidak bisa diputar ponsel ini",
             "Hide duplicate songs",
             "Sembunyikan lagu duplikat",
             "Hide hash",
             "Sembunyikan hash",
+            "Include the saved index (larger file)",
+            "Sertakan Indeks tersimpan (file lebih besar)",
             "Incomplete sponsored-message response",
             "Respons pesan bersponsor tidak lengkap",
+            "Index file saved.",
+            "File indeks disimpan.",
+            "Index file too large",
+            "File indeks terlalu besar",
+            "Index only on Wi-Fi",
+            "Indeks hanya saat Wi-Fi",
+            "Index only while charging",
+            "Indeks hanya saat mengisi daya",
             "Indexing: {0} files found",
             "Mengindeks: {0} file ditemukan",
             "Invalid cache-size choice",
@@ -8241,21 +9305,20 @@ final class Translations {
             "Music chats",
             "Chat musik",
             "Music from your community channels is copied into your main channel, a few files at a"
-                + " time, oldest post first. Copies show as your own posts, without \u201cForwarded"
-                + " from\u201d, and stay even if the community channel deletes them.\n\n"
+                + " time. Copies show as your own posts, without \u201cForwarded from\u201d, and"
+                + " stay even if the community channel deletes them.\n\n"
                 + "Telegram watches for accounts that copy many messages. Going faster than it"
                 + " likes can get your account limited for a while, or banned. The pace below never"
                 + " goes above 500 files an hour, and copying pauses whenever Telegram asks.\n\n"
                 + "You\u2019re responsible for what you copy. Only copy music you\u2019re allowed"
                 + " to keep.",
-            "Musik dari kanal komunitas Anda disalin ke kanal utama Anda, beberapa file sekaligus,"
-                + " dari postingan terlama. Salinan tampil sebagai postingan Anda sendiri, tanpa"
-                + " \u201cDiteruskan dari\u201d, dan tetap ada meskipun kanal komunitas"
-                + " menghapusnya.\n\n"
-                + "Telegram mengawasi akun yang menyalin banyak pesan. Menyalin lebih cepat dari"
-                + " yang diizinkan Telegram bisa membuat akun Anda dibatasi untuk sementara, atau"
-                + " diblokir. Kecepatan di bawah ini tidak pernah lebih dari 500 file per jam, dan"
-                + " penyalinan dijeda setiap kali Telegram meminta.\n\n"
+            "Musik dari kanal komunitas Anda disalin ke kanal utama Anda, beberapa file sekaligus."
+                + " Salinan tampil sebagai postingan Anda sendiri, tanpa \u201cDiteruskan"
+                + " dari\u201d, dan tetap ada meskipun kanal komunitas menghapusnya.\n\n"
+                + "Telegram mengawasi akun yang menyalin banyak pesan. Menyalin terlalu cepat dapat"
+                + " membuat akun Anda dibatasi untuk sementara, atau diblokir. Kecepatan di bawah"
+                + " tidak pernah melebihi 500 file per jam, dan penyalinan dijeda setiap kali"
+                + " Telegram memintanya.\n\n"
                 + "Anda bertanggung jawab atas apa yang Anda salin. Salin hanya musik yang boleh"
                 + " Anda simpan.",
             "Music library",
@@ -8268,6 +9331,10 @@ final class Translations {
             "Ekstensi native tidak dapat dimulai: {0}",
             "New posts are copied as they\u2019re found",
             "Postingan baru disalin begitu ditemukan",
+            "Newest first",
+            "Terbaru dulu",
+            "No albums found in this chat yet.",
+            "Belum ada album yang ditemukan di chat ini.",
             "No background searches",
             "Tanpa pencarian di latar belakang",
             "No covers are downloaded",
@@ -8288,6 +9355,8 @@ final class Translations {
             "Tidak ada yang disalin",
             "Official sponsored messages could not be displayed: {0}",
             "Pesan bersponsor resmi tidak dapat ditampilkan: {0}",
+            "Oldest post first, once each channel has been indexed",
+            "Postingan terlama dulu, setelah setiap kanal selesai diindeks",
             "On Telegram: \u201c{0}\u201d by {1}",
             "Di Telegram: \u201c{0}\u201d oleh {1}",
             "On Telegram: \u201c{0}\u201d by {1} ({2})\n\n"
@@ -8314,6 +9383,10 @@ final class Translations {
             "Buka sponsor",
             "Open this Telegram link in the official client: {0}",
             "Buka tautan Telegram ini di klien resmi: {0}",
+            "Paused until this phone is charging",
+            "Dijeda sampai ponsel ini diisi daya",
+            "Paused until this phone is on Wi-Fi",
+            "Dijeda sampai ponsel ini terhubung ke Wi-Fi",
             "Phone number",
             "Nomor telepon",
             "Play surround as stereo",
@@ -8322,6 +9395,16 @@ final class Translations {
             "Pemutaran",
             "Playlists and downloads",
             "Playlist dan unduhan",
+            "Post",
+            "Posting",
+            "Post in {0}",
+            "Posting di {0}",
+            "Post in {0}?",
+            "Posting di {0}?",
+            "Post it in Telegram, or save it as a file",
+            "Posting di Telegram, atau simpan sebagai file",
+            "Posted the index of {0}.",
+            "Indeks {0} telah diposting.",
             "Privacy and your account",
             "Privasi dan akun Anda",
             "Protected content and secret chats are not supported by this cached audio player.",
@@ -8354,6 +9437,10 @@ final class Translations {
             "Laporkan kualitas audio",
             "Report sponsored message",
             "Laporkan pesan bersponsor",
+            "Restore",
+            "Pulihkan",
+            "Restored. {0} files added to the saved index.",
+            "Dipulihkan. {0} file ditambahkan ke Indeks tersimpan.",
             "Retry channel",
             "Coba lagi kanal",
             "Retry connection",
@@ -8368,8 +9455,14 @@ final class Translations {
             "Simpan musik chat sebagai playlist BitChord, atau unduh semuanya.",
             "Save and continue",
             "Simpan dan lanjutkan",
+            "Save as a file",
+            "Simpan sebagai file",
+            "Save as playlist",
+            "Simpan sebagai playlist",
             "Save as playlist ({0})",
             "Simpan sebagai playlist ({0})",
+            "Saved Messages",
+            "Pesan Tersimpan",
             "Saved index",
             "Indeks tersimpan",
             "Saved {0} song as the playlist \u201c{1}\u201d in BitChord\u2019s Library.",
@@ -8382,6 +9475,9 @@ final class Translations {
                     + " Telegram file.",
             "\u201c{0}\u201d disimpan. Salinan tersimpan BitChord dihapus; putar lagi untuk memakai"
                     + " file Telegram Anda.",
+            "Search and playback still use mobile data; only the background indexing waits.",
+            "Pencarian dan pemutaran tetap memakai data seluler; hanya pengindeksan di latar"
+                    + " belakang yang menunggu.",
             "Search first",
             "Cari dulu",
             "Search text is too long.",
@@ -8406,6 +9502,11 @@ final class Translations {
             "Kunci sesi tidak ada; keluar/reset data aplikasi sebelum membuat sesi baru",
             "Set up application",
             "Siapkan aplikasi",
+            "Settings, corrected names and main channel, and the saved index if you like",
+            "Pengaturan, nama yang diperbaiki, dan kanal utama, serta Indeks tersimpan jika Anda"
+                    + " mau",
+            "Share a chat\u2019s index",
+            "Bagikan indeks chat",
             "Show hash",
             "Tampilkan hash",
             "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3 320kbps",
@@ -8461,6 +9562,8 @@ final class Translations {
             "Memulai Telegram\u2026",
             "Starting\u2026",
             "Memulai\u2026",
+            "Starts with each channel\u2019s newest post, while it\u2019s still being indexed",
+            "Dimulai dari postingan terbaru setiap kanal, selagi masih diindeks",
             "Stop playback before changing the application configuration.",
             "Hentikan pemutaran sebelum mengubah konfigurasi aplikasi.",
             "Stop playback before clearing the cache",
@@ -8574,8 +9677,16 @@ final class Translations {
                     + " private.",
             "File diambil dari Indeks tersimpan, jadi Indeks tersimpan harus aktif. Kanal utama"
                     + " Anda harus tetap pribadi.",
+            "The index also runs on battery",
+            "Indeks juga berjalan saat memakai baterai",
+            "The index also uses mobile data",
+            "Indeks juga memakai data seluler",
             "The index can't be read right now",
             "Indeks tidak dapat dibaca saat ini",
+            "The index waits for Wi-Fi to read your chats",
+            "Indeks menunggu Wi-Fi untuk membaca chat Anda",
+            "The index waits for a charger",
+            "Indeks menunggu pengisi daya",
             "The index's database couldn't be opened on this phone.",
             "Database indeks tidak dapat dibuka di ponsel ini.",
             "The same song shows once, as its best copy",
@@ -8588,6 +9699,10 @@ final class Translations {
             "Chat ini masih diindeks. Coba lagi saat Indeks tersimpan menyatakan selesai.",
             "This device could not decode the sponsored animation",
             "Perangkat ini tidak dapat mendekode animasi bersponsor",
+            "This file is from a newer version of the patch. Update first.",
+            "File ini berasal dari versi patch yang lebih baru. Perbarui terlebih dahulu.",
+            "This isn't a BitChord index or backup file.",
+            "Ini bukan file indeks atau cadangan BitChord.",
             "This login step isn't supported here. Sign in with an existing Telegram account.",
             "Langkah masuk ini tidak didukung di sini. Masuk dengan akun Telegram yang sudah ada.",
             "This official sponsored message could not be displayed completely.",
@@ -8638,6 +9753,8 @@ final class Translations {
             "Gunakan nama",
             "Use original",
             "Gunakan yang asli",
+            "Use shared indexes",
+            "Gunakan indeks bersama",
             "Use this name?",
             "Gunakan nama ini?",
             "Uses the cover Telegram has for each file",
@@ -8717,6 +9834,10 @@ final class Translations {
             "Kanal komunitas Anda diperiksa untuk postingan baru setiap beberapa jam selama"
                 + " BitChord terbuka, dan file baru juga disalin. File ini dihitung dalam batas per"
                 + " jam yang sama.",
+            "Your main channel then lists the music in the opposite order to the community channel."
+                    + " Applies to channels copying hasn\u2019t started from yet.",
+            "Kanal utama Anda lalu menampilkan musik dengan urutan terbalik dari kanal komunitas."
+                    + " Berlaku untuk kanal yang belum mulai disalin.",
             "Your phone talks to Telegram directly. Your API details are encrypted on this phone"
                 + " and your Telegram session is stored privately. The session is a normal Telegram"
                 + " login, so it can reach your whole account, not just music. Audio BitChord has"
@@ -8776,6 +9897,8 @@ final class Translations {
             "{0} file diindeks dari {1} chat",
             "{0} file indexed from {1} chats",
             "{0} file diindeks dari {1} chat",
+            "{0} files added to the saved index.",
+            "{0} file ditambahkan ke Indeks tersimpan.",
             "{0} files indexed from {1} chat",
             "{0} file diindeks dari {1} chat",
             "{0} files indexed from {1} chats",
@@ -8839,6 +9962,8 @@ final class Translations {
                 + " \u306e\u30d5\u30a1\u30a4\u30eb\u540d\u304c\u9593\u9055\u3063\u3066\u3044\u308b\u53ef\u80fd\u6027\u304c\u3042\u308a\u307e\u3059\u3002\u300c\u30c8\u30e9\u30c3\u30af\u540d\u300d\u3067\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "A better copy fades in without a gap",
             "\u3088\u308a\u826f\u3044\u30b3\u30d4\u30fc\u306b\u9014\u5207\u308c\u305a\u30d5\u30a7\u30fc\u30c9\u30a4\u30f3",
+            "A chat\u2019s index comes from a shared index file when there is one",
+            "\u5171\u6709\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u30d5\u30a1\u30a4\u30eb\u304c\u3042\u308b\u5834\u5408\u3001\u30c1\u30e3\u30c3\u30c8\u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306f\u305d\u3053\u304b\u3089\u53d6\u5f97\u3055\u308c\u307e\u3059",
             "A file counts as already there when it\u2019s the same Telegram file, or has the same"
                     + " title, artist, length and format. Nothing in your main channel is deleted."
                     + " Copying waits until your main channel has been indexed.",
@@ -8863,8 +9988,14 @@ final class Translations {
             "\u63a5\u7d9a\u3059\u308b\u306b\u306f\u3001\u30a2\u30d7\u30ea\u306e\u8a8d\u8a3c\u60c5\u5831\u3092\u8ffd\u52a0\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "Added automatically to BitChord.",
             "BitChord \u306b\u81ea\u52d5\u3067\u8ffd\u52a0\u3055\u308c\u307e\u3057\u305f\u3002",
+            "Advanced",
+            "\u8a73\u7d30",
             "Album covers",
             "\u30a2\u30eb\u30d0\u30e0\u30ab\u30d0\u30fc",
+            "Albums",
+            "\u30a2\u30eb\u30d0\u30e0",
+            "All chats",
+            "\u3059\u3079\u3066\u306e\u30c1\u30e3\u30c3\u30c8",
             "All music files are copied",
             "\u3059\u3079\u3066\u306e\u97f3\u697d\u30d5\u30a1\u30a4\u30eb\u3092\u30b3\u30d4\u30fc",
             "An unofficial add-on that uses the Telegram API with your own account. It isn\u2019t"
@@ -8906,10 +10037,31 @@ final class Translations {
             "\u30a2\u30d7\u30ea\u306e\u8a2d\u5b9a",
             "Apply cache size",
             "\u30ad\u30e3\u30c3\u30b7\u30e5\u30b5\u30a4\u30ba\u3092\u9069\u7528",
+            "Archived chats",
+            "\u30a2\u30fc\u30ab\u30a4\u30d6\u6e08\u307f\u30c1\u30e3\u30c3\u30c8",
             "Artist",
             "\u30a2\u30fc\u30c6\u30a3\u30b9\u30c8",
             "Back",
             "\u623b\u308b",
+            "Back up",
+            "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7",
+            "Backup and sharing",
+            "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3068\u5171\u6709",
+            "Backup saved.",
+            "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3092\u4fdd\u5b58\u3057\u307e\u3057\u305f\u3002",
+            "Backups and index files never hold your API details or your Telegram session. An index"
+                + " file lists the music in a chat, so anyone you share it with sees that list.",
+            "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3084\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u30d5\u30a1\u30a4\u30eb\u306b"
+                + " API \u306e\u60c5\u5831\u3084 Telegram"
+                + " \u306e\u30bb\u30c3\u30b7\u30e7\u30f3\u304c\u542b\u307e\u308c\u308b\u3053\u3068\u306f\u3042\u308a\u307e\u305b\u3093\u3002\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u30d5\u30a1\u30a4\u30eb\u306b\u306f\u30c1\u30e3\u30c3\u30c8\u5185\u306e\u97f3\u697d\u304c\u4e00\u89a7\u306b\u306a\u3063\u3066\u3044\u308b\u305f\u3081\u3001\u5171\u6709\u3057\u305f\u76f8\u624b\u306f\u305d\u306e\u4e00\u89a7\u3092\u898b\u3089\u308c\u307e\u3059\u3002",
+            "Basic",
+            "\u57fa\u672c",
+            "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
+                + " the chat itself (in a channel, only its admins can post), in your Saved"
+                + " Messages or in your main channel, and then only reads what\u2019s been posted"
+                + " since. Each song is checked against its post when it plays.",
+            "Telegram"
+                + " \u304b\u3089\u30c1\u30e3\u30c3\u30c8\u3092\u8aad\u307f\u8fbc\u3080\u524d\u306b\u3001\u30d1\u30c3\u30c1\u306f\u30c1\u30e3\u30c3\u30c8\u81ea\u4f53\uff08\u30c1\u30e3\u30f3\u30cd\u30eb\u3067\u306f\u7ba1\u7406\u8005\u306e\u307f\u6295\u7a3f\u53ef\u80fd\uff09\u3001\u4fdd\u5b58\u6e08\u307f\u30e1\u30c3\u30bb\u30fc\u30b8\u3001\u307e\u305f\u306f\u30e1\u30a4\u30f3\u30c1\u30e3\u30f3\u30cd\u30eb\u306b\u6295\u7a3f\u3055\u308c\u305f\u305d\u306e\u30c1\u30e3\u30c3\u30c8\u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u30d5\u30a1\u30a4\u30eb\u3092\u63a2\u3057\u3001\u305d\u306e\u5f8c\u306b\u6295\u7a3f\u3055\u308c\u305f\u5206\u3060\u3051\u3092\u8aad\u307f\u8fbc\u307f\u307e\u3059\u3002\u5404\u66f2\u306f\u518d\u751f\u6642\u306b\u5143\u306e\u6295\u7a3f\u3068\u7167\u5408\u3055\u308c\u307e\u3059\u3002",
             "BitChord guesses from the file type",
             "BitChord \u304c\u30d5\u30a1\u30a4\u30eb\u5f62\u5f0f\u304b\u3089\u63a8\u6e2c",
             "BitChord keeps search results for a few minutes, so changes here show up in new"
@@ -8925,6 +10077,8 @@ final class Translations {
                 + " \u3067\u518d\u751f\u3055\u308c\u3001\u5bfe\u5fdc\u3059\u308b\u30b9\u30de\u30db\u3084\u30b9\u30d4\u30fc\u30ab\u30fc\u3067\u306f\u9ad8\u3055\u65b9\u5411\u306e\u97f3\u3082\u51fa\u307e\u3059\u3002Dolby"
                 + " AC-4"
                 + " \u306b\u306f\u30b9\u30de\u30db\u5074\u306e\u30c7\u30b3\u30fc\u30c0\u30fc\u304c\u5fc5\u8981\u3067\u3059\u3002",
+            "BitChord saved index of {0}",
+            "{0} \u306e BitChord \u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9",
             "BitChord sees the corrected names",
             "BitChord \u306b\u306f\u4fee\u6b63\u5f8c\u306e\u540d\u524d\u3067\u8868\u793a",
             "BitChord switches copies with a short pause",
@@ -9023,6 +10177,8 @@ final class Translations {
             "Create your own application with a generic, descriptive name, such as My Client (short"
                     + " name: myclient). Telegram may show that name in sign-in alerts.",
             "My Client\uff08\u77ed\u3044\u540d\u524d\uff1amyclient\uff09\u306e\u3088\u3046\u306a\u3001\u4e00\u822c\u7684\u3067\u308f\u304b\u308a\u3084\u3059\u3044\u540d\u524d\u3067\u81ea\u5206\u306e\u30a2\u30d7\u30ea\u3092\u4f5c\u6210\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u305d\u306e\u540d\u524d\u306f\u30ed\u30b0\u30a4\u30f3\u901a\u77e5\u306b\u8868\u793a\u3055\u308c\u308b\u3053\u3068\u304c\u3042\u308a\u307e\u3059\u3002",
+            "Damaged index file",
+            "\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u30d5\u30a1\u30a4\u30eb\u304c\u7834\u640d\u3057\u3066\u3044\u307e\u3059",
             "Dismiss",
             "\u9589\u3058\u308b",
             "Dolby AC-4 files show only if this phone has a decoder",
@@ -9073,10 +10229,16 @@ final class Translations {
                 + " \u30a2\u30ab\u30a6\u30f3\u30c8\u306e\u30d1\u30b9\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "Every Dolby file shows",
             "\u3059\u3079\u3066\u306e Dolby \u30d5\u30a1\u30a4\u30eb\u3092\u8868\u793a",
+            "Every chat is read from Telegram",
+            "\u3059\u3079\u3066\u306e\u30c1\u30e3\u30c3\u30c8\u3092 Telegram"
+                    + " \u304b\u3089\u8aad\u307f\u8fbc\u3080",
             "Every copy of a song shows",
             "\u66f2\u306e\u3059\u3079\u3066\u306e\u30b3\u30d4\u30fc\u3092\u8868\u793a",
             "Every file is copied, even if it\u2019s already there",
             "\u65e2\u306b\u3042\u308b\u30d5\u30a1\u30a4\u30eb\u3082\u542b\u3081\u3001\u3059\u3079\u3066\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u30b3\u30d4\u30fc",
+            "Everyone who can see {0} can see the list of music in {1}.",
+            "{0} \u3092\u898b\u3089\u308c\u308b\u4eba\u306f\u5168\u54e1\u3001{1}"
+                + " \u306e\u97f3\u697d\u306e\u4e00\u89a7\u3092\u898b\u3089\u308c\u307e\u3059\u3002",
             "FLAC, WAV and ALAC count as lossless; others by bitrate",
             "FLAC\u3001WAV\u3001ALAC"
                 + " \u306f\u30ed\u30b9\u30ec\u30b9\u3001\u305d\u306e\u4ed6\u306f\u30d3\u30c3\u30c8\u30ec\u30fc\u30c8\u3067\u5224\u65ad",
@@ -9094,6 +10256,8 @@ final class Translations {
                 + " \u306f\u4fee\u6b63\u5f8c\u306e\u540d\u524d\u3067\u30d5\u30a1\u30a4\u30eb\u3092\u691c\u7d22\u3057\u3066\u7167\u5408\u3057\u307e\u3059\u3002",
             "Fix a track name",
             "\u30c8\u30e9\u30c3\u30af\u540d\u3092\u4fee\u6b63",
+            "Folder",
+            "\u30d5\u30a9\u30eb\u30c0",
             "Format legend",
             "\u30d5\u30a9\u30fc\u30de\u30c3\u30c8\u8868\u793a",
             "Found {0} track.",
@@ -9105,6 +10269,8 @@ final class Translations {
             "\u7121\u6599\u3067\u3001\u73fe\u72b6\u306e\u307e\u307e\u63d0\u4f9b\u3055\u308c\u307e\u3059\u3002\u8cac\u4efb\u3092\u6301\u3063\u3066\u3054\u4f7f\u7528\u304f\u3060\u3055\u3044\uff1a\u3054\u81ea\u8eab\u306e"
                 + " Telegram"
                 + " \u30a2\u30ab\u30a6\u30f3\u30c8\u3068\u30c1\u30e3\u30f3\u30cd\u30eb\u306b\u3064\u3044\u3066\u306f\u3001\u3054\u81ea\u8eab\u306e\u8cac\u4efb\u3068\u306a\u308a\u307e\u3059\u3002",
+            "From a backup, or add an index file someone shared",
+            "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u304b\u3089\u3001\u307e\u305f\u306f\u5171\u6709\u3055\u308c\u305f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u30d5\u30a1\u30a4\u30eb\u3092\u8ffd\u52a0",
             "Hide Dolby files this phone can\u2019t play",
             "\u3053\u306e\u30b9\u30de\u30db\u3067\u518d\u751f\u3067\u304d\u306a\u3044 Dolby"
                     + " \u30d5\u30a1\u30a4\u30eb\u3092\u96a0\u3059",
@@ -9112,8 +10278,18 @@ final class Translations {
             "\u91cd\u8907\u3057\u305f\u66f2\u3092\u96a0\u3059",
             "Hide hash",
             "hash \u3092\u96a0\u3059",
+            "Include the saved index (larger file)",
+            "\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u3092\u542b\u3081\u308b\uff08\u30d5\u30a1\u30a4\u30eb\u304c\u5927\u304d\u304f\u306a\u308a\u307e\u3059\uff09",
             "Incomplete sponsored-message response",
             "\u30b9\u30dd\u30f3\u30b5\u30fc\u30e1\u30c3\u30bb\u30fc\u30b8\u306e\u5fdc\u7b54\u304c\u4e0d\u5b8c\u5168\u3067\u3059",
+            "Index file saved.",
+            "\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u30d5\u30a1\u30a4\u30eb\u3092\u4fdd\u5b58\u3057\u307e\u3057\u305f\u3002",
+            "Index file too large",
+            "\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u30d5\u30a1\u30a4\u30eb\u304c\u5927\u304d\u3059\u304e\u307e\u3059",
+            "Index only on Wi-Fi",
+            "Wi-Fi \u63a5\u7d9a\u6642\u306e\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210",
+            "Index only while charging",
+            "\u5145\u96fb\u4e2d\u306e\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210",
             "Indexing: {0} files found",
             "\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u4e2d\uff1a{0}"
                 + " \u4ef6\u306e\u30d5\u30a1\u30a4\u30eb\u304c\u898b\u3064\u304b\u308a\u307e\u3057\u305f",
@@ -9158,21 +10334,20 @@ final class Translations {
             "Music chats",
             "\u97f3\u697d\u30c1\u30e3\u30c3\u30c8",
             "Music from your community channels is copied into your main channel, a few files at a"
-                + " time, oldest post first. Copies show as your own posts, without \u201cForwarded"
-                + " from\u201d, and stay even if the community channel deletes them.\n\n"
+                + " time. Copies show as your own posts, without \u201cForwarded from\u201d, and"
+                + " stay even if the community channel deletes them.\n\n"
                 + "Telegram watches for accounts that copy many messages. Going faster than it"
                 + " likes can get your account limited for a while, or banned. The pace below never"
                 + " goes above 500 files an hour, and copying pauses whenever Telegram asks.\n\n"
                 + "You\u2019re responsible for what you copy. Only copy music you\u2019re allowed"
                 + " to keep.",
-            "\u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30c1\u30e3\u30f3\u30cd\u30eb\u306e\u97f3\u697d\u304c\u3001\u53e4\u3044\u6295\u7a3f\u304b\u3089\u9806\u306b\u3001\u6570\u30d5\u30a1\u30a4\u30eb\u305a\u3064\u30e1\u30a4\u30f3\u30c1\u30e3\u30f3\u30cd\u30eb\u306b\u30b3\u30d4\u30fc\u3055\u308c\u307e\u3059\u3002\u30b3\u30d4\u30fc\u306f\u300c\u8ee2\u9001\u5143\u300d\u306a\u3057\u3067\u81ea\u5206\u306e\u6295\u7a3f\u3068\u3057\u3066\u8868\u793a\u3055\u308c\u3001\u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30c1\u30e3\u30f3\u30cd\u30eb\u3067\u524a\u9664\u3055\u308c\u3066\u3082\u6b8b\u308a\u307e\u3059\u3002\n\n"
+            "\u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30c1\u30e3\u30f3\u30cd\u30eb\u306e\u97f3\u697d\u306f\u3001\u6570\u30d5\u30a1\u30a4\u30eb\u305a\u3064\u30e1\u30a4\u30f3\u30c1\u30e3\u30f3\u30cd\u30eb\u306b\u30b3\u30d4\u30fc\u3055\u308c\u307e\u3059\u3002\u30b3\u30d4\u30fc\u306f\u300c\u8ee2\u9001\u5143\u300d\u306a\u3057\u3067\u81ea\u5206\u306e\u6295\u7a3f\u3068\u3057\u3066\u8868\u793a\u3055\u308c\u3001\u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30c1\u30e3\u30f3\u30cd\u30eb\u3067\u524a\u9664\u3055\u308c\u3066\u3082\u6b8b\u308a\u307e\u3059\u3002\n\n"
                 + "Telegram"
-                + " \u306f\u5927\u91cf\u306e\u30e1\u30c3\u30bb\u30fc\u30b8\u3092\u30b3\u30d4\u30fc\u3059\u308b\u30a2\u30ab\u30a6\u30f3\u30c8\u3092\u76e3\u8996\u3057\u3066\u3044\u307e\u3059\u3002\u8a31\u5bb9\u3055\u308c\u308b\u901f\u5ea6\u3092\u8d85\u3048\u308b\u3068\u3001\u30a2\u30ab\u30a6\u30f3\u30c8\u304c\u4e00\u5b9a\u671f\u9593\u5236\u9650\u3055\u308c\u305f\u308a\u3001BAN"
-                + " \u3055\u308c\u305f\u308a\u3059\u308b\u3053\u3068\u304c\u3042\u308a\u307e\u3059\u3002\u4e0b\u8a18\u306e\u30da\u30fc\u30b9\u306f"
-                + " 1 \u6642\u9593\u306b 500"
+                + " \u306f\u5927\u91cf\u306e\u30e1\u30c3\u30bb\u30fc\u30b8\u3092\u30b3\u30d4\u30fc\u3059\u308b\u30a2\u30ab\u30a6\u30f3\u30c8\u3092\u76e3\u8996\u3057\u3066\u3044\u307e\u3059\u3002\u8a31\u5bb9\u3055\u308c\u308b\u901f\u5ea6\u3092\u8d85\u3048\u308b\u3068\u3001\u30a2\u30ab\u30a6\u30f3\u30c8\u304c\u4e00\u6642\u7684\u306b\u5236\u9650\u3055\u308c\u305f\u308a\u3001\u51cd\u7d50\u3055\u308c\u305f\u308a\u3059\u308b\u3053\u3068\u304c\u3042\u308a\u307e\u3059\u3002\u4ee5\u4e0b\u306e\u30da\u30fc\u30b9\u306f"
+                + " 1 \u6642\u9593\u3042\u305f\u308a 500"
                 + " \u30d5\u30a1\u30a4\u30eb\u3092\u8d85\u3048\u308b\u3053\u3068\u306f\u306a\u304f\u3001Telegram"
-                + " \u304b\u3089\u6c42\u3081\u3089\u308c\u308b\u305f\u3073\u306b\u30b3\u30d4\u30fc\u306f\u4e00\u6642\u505c\u6b62\u3057\u307e\u3059\u3002\n\n"
-                + "\u30b3\u30d4\u30fc\u3059\u308b\u5185\u5bb9\u306f\u3054\u81ea\u8eab\u306e\u8cac\u4efb\u3068\u306a\u308a\u307e\u3059\u3002\u4fdd\u5b58\u304c\u8a31\u53ef\u3055\u308c\u3066\u3044\u308b\u97f3\u697d\u306e\u307f\u3092\u30b3\u30d4\u30fc\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+                + " \u304b\u3089\u8981\u6c42\u304c\u3042\u308b\u305f\u3073\u306b\u30b3\u30d4\u30fc\u306f\u4e00\u6642\u505c\u6b62\u3057\u307e\u3059\u3002\n\n"
+                + "\u30b3\u30d4\u30fc\u3059\u308b\u5185\u5bb9\u306e\u8cac\u4efb\u306f\u3054\u81ea\u8eab\u306b\u3042\u308a\u307e\u3059\u3002\u4fdd\u6301\u304c\u8a31\u53ef\u3055\u308c\u3066\u3044\u308b\u97f3\u697d\u306e\u307f\u30b3\u30d4\u30fc\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "Music library",
             "\u97f3\u697d\u30e9\u30a4\u30d6\u30e9\u30ea",
             "Music-chat selection changed. Search again.",
@@ -9183,6 +10358,10 @@ final class Translations {
             "\u30cd\u30a4\u30c6\u30a3\u30d6\u62e1\u5f35\u6a5f\u80fd\u3092\u958b\u59cb\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\uff1a{0}",
             "New posts are copied as they\u2019re found",
             "\u65b0\u3057\u3044\u6295\u7a3f\u306f\u898b\u3064\u304b\u308a\u6b21\u7b2c\u30b3\u30d4\u30fc",
+            "Newest first",
+            "\u65b0\u3057\u3044\u9806",
+            "No albums found in this chat yet.",
+            "\u3053\u306e\u30c1\u30e3\u30c3\u30c8\u3067\u306f\u307e\u3060\u30a2\u30eb\u30d0\u30e0\u304c\u898b\u3064\u304b\u3063\u3066\u3044\u307e\u305b\u3093\u3002",
             "No background searches",
             "\u30d0\u30c3\u30af\u30b0\u30e9\u30a6\u30f3\u30c9\u691c\u7d22\u306a\u3057",
             "No covers are downloaded",
@@ -9204,6 +10383,8 @@ final class Translations {
             "\u4f55\u3082\u30b3\u30d4\u30fc\u3057\u306a\u3044",
             "Official sponsored messages could not be displayed: {0}",
             "\u516c\u5f0f\u30b9\u30dd\u30f3\u30b5\u30fc\u30e1\u30c3\u30bb\u30fc\u30b8\u3092\u8868\u793a\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\uff1a{0}",
+            "Oldest post first, once each channel has been indexed",
+            "\u5404\u30c1\u30e3\u30f3\u30cd\u30eb\u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u5f8c\u3001\u53e4\u3044\u6295\u7a3f\u304b\u3089",
             "On Telegram: \u201c{0}\u201d by {1}",
             "Telegram \u4e0a\uff1a{1} \u306e\u300c{0}\u300d",
             "On Telegram: \u201c{0}\u201d by {1} ({2})\n\n"
@@ -9233,6 +10414,11 @@ final class Translations {
             "Open this Telegram link in the official client: {0}",
             "\u3053\u306e Telegram"
                 + " \u30ea\u30f3\u30af\u3092\u516c\u5f0f\u30af\u30e9\u30a4\u30a2\u30f3\u30c8\u3067\u958b\u3044\u3066\u304f\u3060\u3055\u3044\uff1a{0}",
+            "Paused until this phone is charging",
+            "\u3053\u306e\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u304c\u5145\u96fb\u3055\u308c\u308b\u307e\u3067\u4e00\u6642\u505c\u6b62\u4e2d",
+            "Paused until this phone is on Wi-Fi",
+            "\u3053\u306e\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u304c Wi-Fi"
+                + " \u306b\u63a5\u7d9a\u3055\u308c\u308b\u307e\u3067\u4e00\u6642\u505c\u6b62\u4e2d",
             "Phone number",
             "\u96fb\u8a71\u756a\u53f7",
             "Play surround as stereo",
@@ -9241,6 +10427,17 @@ final class Translations {
             "\u518d\u751f",
             "Playlists and downloads",
             "\u30d7\u30ec\u30a4\u30ea\u30b9\u30c8\u3068\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9",
+            "Post",
+            "\u6295\u7a3f",
+            "Post in {0}",
+            "{0} \u306b\u6295\u7a3f",
+            "Post in {0}?",
+            "{0} \u306b\u6295\u7a3f\u3057\u307e\u3059\u304b\uff1f",
+            "Post it in Telegram, or save it as a file",
+            "Telegram"
+                + " \u306b\u6295\u7a3f\u3059\u308b\u304b\u3001\u30d5\u30a1\u30a4\u30eb\u3068\u3057\u3066\u4fdd\u5b58",
+            "Posted the index of {0}.",
+            "{0} \u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u3092\u6295\u7a3f\u3057\u307e\u3057\u305f\u3002",
             "Privacy and your account",
             "\u30d7\u30e9\u30a4\u30d0\u30b7\u30fc\u3068\u30a2\u30ab\u30a6\u30f3\u30c8",
             "Protected content and secret chats are not supported by this cached audio player.",
@@ -9277,6 +10474,11 @@ final class Translations {
             "\u97f3\u8cea\u3092\u5831\u544a",
             "Report sponsored message",
             "\u30b9\u30dd\u30f3\u30b5\u30fc\u30e1\u30c3\u30bb\u30fc\u30b8\u3092\u5831\u544a",
+            "Restore",
+            "\u5fa9\u5143",
+            "Restored. {0} files added to the saved index.",
+            "\u5fa9\u5143\u3057\u307e\u3057\u305f\u3002\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306b"
+                + " {0} \u4ef6\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u8ffd\u52a0\u3057\u307e\u3057\u305f\u3002",
             "Retry channel",
             "\u30c1\u30e3\u30f3\u30cd\u30eb\u3092\u518d\u8a66\u884c",
             "Retry connection",
@@ -9292,8 +10494,14 @@ final class Translations {
                 + " \u306e\u30d7\u30ec\u30a4\u30ea\u30b9\u30c8\u3068\u3057\u3066\u4fdd\u5b58\u3059\u308b\u304b\u3001\u3059\u3079\u3066\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3057\u307e\u3059\u3002",
             "Save and continue",
             "\u4fdd\u5b58\u3057\u3066\u7d9a\u3051\u308b",
+            "Save as a file",
+            "\u30d5\u30a1\u30a4\u30eb\u3068\u3057\u3066\u4fdd\u5b58",
+            "Save as playlist",
+            "\u30d7\u30ec\u30a4\u30ea\u30b9\u30c8\u3068\u3057\u3066\u4fdd\u5b58",
             "Save as playlist ({0})",
             "\u30d7\u30ec\u30a4\u30ea\u30b9\u30c8\u3068\u3057\u3066\u4fdd\u5b58\uff08{0}\uff09",
+            "Saved Messages",
+            "\u4fdd\u5b58\u6e08\u307f\u30e1\u30c3\u30bb\u30fc\u30b8",
             "Saved index",
             "\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9",
             "Saved {0} song as the playlist \u201c{1}\u201d in BitChord\u2019s Library.",
@@ -9310,6 +10518,8 @@ final class Translations {
                 + " \u306e\u4fdd\u5b58\u6e08\u307f\u30b3\u30d4\u30fc\u3092\u524a\u9664\u3057\u307e\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u518d\u751f\u3059\u308b\u3068"
                 + " Telegram"
                 + " \u306e\u30d5\u30a1\u30a4\u30eb\u304c\u4f7f\u308f\u308c\u307e\u3059\u3002",
+            "Search and playback still use mobile data; only the background indexing waits.",
+            "\u691c\u7d22\u3068\u518d\u751f\u306b\u306f\u5f15\u304d\u7d9a\u304d\u30e2\u30d0\u30a4\u30eb\u30c7\u30fc\u30bf\u304c\u4f7f\u308f\u308c\u307e\u3059\u3002\u5f85\u6a5f\u3059\u308b\u306e\u306f\u30d0\u30c3\u30af\u30b0\u30e9\u30a6\u30f3\u30c9\u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u306e\u307f\u3067\u3059\u3002",
             "Search first",
             "\u5148\u306b\u691c\u7d22",
             "Search text is too long.",
@@ -9338,6 +10548,10 @@ final class Translations {
             "\u30bb\u30c3\u30b7\u30e7\u30f3\u30ad\u30fc\u304c\u3042\u308a\u307e\u305b\u3093\u3002\u65b0\u3057\u3044\u30bb\u30c3\u30b7\u30e7\u30f3\u3092\u4f5c\u6210\u3059\u308b\u524d\u306b\u3001\u30ed\u30b0\u30a2\u30a6\u30c8\u3059\u308b\u304b\u30a2\u30d7\u30ea\u30c7\u30fc\u30bf\u3092\u30ea\u30bb\u30c3\u30c8\u3057\u3066\u304f\u3060\u3055\u3044",
             "Set up application",
             "\u30a2\u30d7\u30ea\u3092\u8a2d\u5b9a",
+            "Settings, corrected names and main channel, and the saved index if you like",
+            "\u8a2d\u5b9a\u3001\u4fee\u6b63\u3057\u305f\u540d\u524d\u3001\u30e1\u30a4\u30f3\u30c1\u30e3\u30f3\u30cd\u30eb\u3001\u5fc5\u8981\u306b\u5fdc\u3058\u3066\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9",
+            "Share a chat\u2019s index",
+            "\u30c1\u30e3\u30c3\u30c8\u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u3092\u5171\u6709",
             "Show hash",
             "hash \u3092\u8868\u793a",
             "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3 320kbps",
@@ -9396,6 +10610,8 @@ final class Translations {
             "Telegram \u3092\u8d77\u52d5\u3057\u3066\u3044\u307e\u3059\u2026",
             "Starting\u2026",
             "\u8d77\u52d5\u3057\u3066\u3044\u307e\u3059\u2026",
+            "Starts with each channel\u2019s newest post, while it\u2019s still being indexed",
+            "\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u4e2d\u3082\u3001\u5404\u30c1\u30e3\u30f3\u30cd\u30eb\u306e\u6700\u65b0\u306e\u6295\u7a3f\u304b\u3089\u958b\u59cb",
             "Stop playback before changing the application configuration.",
             "\u30a2\u30d7\u30ea\u306e\u8a2d\u5b9a\u3092\u5909\u66f4\u3059\u308b\u524d\u306b\u518d\u751f\u3092\u505c\u6b62\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "Stop playback before clearing the cache",
@@ -9545,8 +10761,17 @@ final class Translations {
             "The files come from the saved index, so it has to be on. Your main channel has to stay"
                     + " private.",
             "\u30d5\u30a1\u30a4\u30eb\u306f\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u304b\u3089\u53d6\u5f97\u3059\u308b\u305f\u3081\u3001\u30aa\u30f3\u306b\u3057\u3066\u304a\u304f\u5fc5\u8981\u304c\u3042\u308a\u307e\u3059\u3002\u30e1\u30a4\u30f3\u30c1\u30e3\u30f3\u30cd\u30eb\u306f\u975e\u516c\u958b\u306e\u307e\u307e\u306b\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "The index also runs on battery",
+            "\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u306f\u30d0\u30c3\u30c6\u30ea\u30fc\u4f7f\u7528\u6642\u306b\u3082\u5b9f\u884c",
+            "The index also uses mobile data",
+            "\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u306b\u30e2\u30d0\u30a4\u30eb\u30c7\u30fc\u30bf\u3082\u4f7f\u7528",
             "The index can't be read right now",
             "\u73fe\u5728\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u3092\u8aad\u307f\u53d6\u308c\u307e\u305b\u3093",
+            "The index waits for Wi-Fi to read your chats",
+            "\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u306f Wi-Fi"
+                + " \u306b\u63a5\u7d9a\u3059\u308b\u307e\u3067\u30c1\u30e3\u30c3\u30c8\u3092\u8aad\u307f\u8fbc\u307f\u307e\u305b\u3093",
+            "The index waits for a charger",
+            "\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u306f\u5145\u96fb\u5668\u306b\u63a5\u7d9a\u3059\u308b\u307e\u3067\u5f85\u6a5f\u3057\u307e\u3059",
             "The index's database couldn't be opened on this phone.",
             "\u3053\u306e\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u3067\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306e\u30c7\u30fc\u30bf\u30d9\u30fc\u30b9\u3092\u958b\u3051\u307e\u305b\u3093\u3067\u3057\u305f\u3002",
             "The same song shows once, as its best copy",
@@ -9561,6 +10786,11 @@ final class Translations {
             "\u3053\u306e\u30c1\u30e3\u30c3\u30c8\u306f\u307e\u3060\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u4e2d\u3067\u3059\u3002\u300c\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u300d\u3067\u5b8c\u4e86\u3068\u8868\u793a\u3055\u308c\u3066\u304b\u3089\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
             "This device could not decode the sponsored animation",
             "\u3053\u306e\u30c7\u30d0\u30a4\u30b9\u3067\u306f\u30b9\u30dd\u30f3\u30b5\u30fc\u30a2\u30cb\u30e1\u30fc\u30b7\u30e7\u30f3\u3092\u30c7\u30b3\u30fc\u30c9\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f",
+            "This file is from a newer version of the patch. Update first.",
+            "\u3053\u306e\u30d5\u30a1\u30a4\u30eb\u306f\u65b0\u3057\u3044\u30d0\u30fc\u30b8\u30e7\u30f3\u306e\u30d1\u30c3\u30c1\u306e\u3082\u306e\u3067\u3059\u3002\u5148\u306b\u30a2\u30c3\u30d7\u30c7\u30fc\u30c8\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "This isn't a BitChord index or backup file.",
+            "BitChord"
+                + " \u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u307e\u305f\u306f\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u30d5\u30a1\u30a4\u30eb\u3067\u306f\u3042\u308a\u307e\u305b\u3093\u3002",
             "This login step isn't supported here. Sign in with an existing Telegram account.",
             "\u3053\u306e\u30ed\u30b0\u30a4\u30f3\u624b\u9806\u306f\u3053\u3053\u3067\u306f\u5bfe\u5fdc\u3057\u3066\u3044\u307e\u305b\u3093\u3002\u65e2\u5b58\u306e"
                 + " Telegram"
@@ -9617,6 +10847,8 @@ final class Translations {
             "\u3053\u306e\u540d\u524d\u3092\u4f7f\u7528",
             "Use original",
             "\u5143\u306e\u540d\u524d\u3092\u4f7f\u7528",
+            "Use shared indexes",
+            "\u5171\u6709\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u3092\u4f7f\u7528",
             "Use this name?",
             "\u3053\u306e\u540d\u524d\u3092\u4f7f\u7528\u3057\u307e\u3059\u304b\uff1f",
             "Uses the cover Telegram has for each file",
@@ -9701,6 +10933,9 @@ final class Translations {
             "BitChord"
                 + " \u304c\u958b\u3044\u3066\u3044\u308b\u9593\u3001\u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30c1\u30e3\u30f3\u30cd\u30eb\u306e\u65b0\u3057\u3044\u6295\u7a3f\u304c\u6570\u6642\u9593\u3054\u3068\u306b\u78ba\u8a8d\u3055\u308c\u3001\u65b0\u3057\u3044\u30d5\u30a1\u30a4\u30eb\u3082\u30b3\u30d4\u30fc\u3055\u308c\u307e\u3059\u3002\u3053\u308c\u3089\u3082\u540c\u3058"
                 + " 1 \u6642\u9593\u3042\u305f\u308a\u306e\u4e0a\u9650\u306b\u542b\u307e\u308c\u307e\u3059\u3002",
+            "Your main channel then lists the music in the opposite order to the community channel."
+                    + " Applies to channels copying hasn\u2019t started from yet.",
+            "\u305d\u306e\u5834\u5408\u3001\u30e1\u30a4\u30f3\u30c1\u30e3\u30f3\u30cd\u30eb\u306e\u97f3\u697d\u306f\u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30c1\u30e3\u30f3\u30cd\u30eb\u3068\u9006\u306e\u9806\u306b\u4e26\u3073\u307e\u3059\u3002\u307e\u3060\u30b3\u30d4\u30fc\u304c\u59cb\u307e\u3063\u3066\u3044\u306a\u3044\u30c1\u30e3\u30f3\u30cd\u30eb\u306b\u9069\u7528\u3055\u308c\u307e\u3059\u3002",
             "Your phone talks to Telegram directly. Your API details are encrypted on this phone"
                 + " and your Telegram session is stored privately. The session is a normal Telegram"
                 + " login, so it can reach your whole account, not just music. Audio BitChord has"
@@ -9765,6 +11000,9 @@ final class Translations {
             "{0} file indexed from {1} chats",
             "{1} \u4ef6\u306e\u30c1\u30e3\u30c3\u30c8\u304b\u3089 {0}"
                 + " \u4ef6\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u6e08\u307f",
+            "{0} files added to the saved index.",
+            "\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306b {0}"
+                + " \u4ef6\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u8ffd\u52a0\u3057\u307e\u3057\u305f\u3002",
             "{0} files indexed from {1} chat",
             "{1} \u4ef6\u306e\u30c1\u30e3\u30c3\u30c8\u304b\u3089 {0}"
                 + " \u4ef6\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u6e08\u307f",
@@ -9836,6 +11074,10 @@ final class Translations {
             "A better copy fades in without a gap",
             "\ub354 \uc88b\uc740 \ubc84\uc804\uc774 \ub04a\uae40 \uc5c6\uc774"
                     + " \ud398\uc774\ub4dc\uc778\ub3fc\uc694",
+            "A chat\u2019s index comes from a shared index file when there is one",
+            "\uacf5\uc720\ub41c \uc0c9\uc778 \ud30c\uc77c\uc774 \uc788\uc73c\uba74"
+                    + " \ucc44\ud305\uc758 \uc0c9\uc778\uc744 \uac70\uae30\uc11c"
+                    + " \uac00\uc838\uc640\uc694",
             "A file counts as already there when it\u2019s the same Telegram file, or has the same"
                     + " title, artist, length and format. Nothing in your main channel is deleted."
                     + " Copying waits until your main channel has been indexed.",
@@ -9867,8 +11109,14 @@ final class Translations {
                     + " \uc815\ubcf4\ub97c \ucd94\uac00\ud558\uc138\uc694.",
             "Added automatically to BitChord.",
             "BitChord\uc5d0 \uc790\ub3d9\uc73c\ub85c \ucd94\uac00\ub410\uc5b4\uc694.",
+            "Advanced",
+            "\uace0\uae09",
             "Album covers",
             "\uc568\ubc94 \ucee4\ubc84",
+            "Albums",
+            "\uc568\ubc94",
+            "All chats",
+            "\ubaa8\ub4e0 \ucc44\ud305",
             "All music files are copied",
             "\ubaa8\ub4e0 \uc74c\uc545 \ud30c\uc77c\uc744 \ubcf5\uc0ac\ud574\uc694",
             "An unofficial add-on that uses the Telegram API with your own account. It isn\u2019t"
@@ -9910,10 +11158,41 @@ final class Translations {
             "\uc560\ud50c\ub9ac\ucf00\uc774\uc158 \uc124\uc815",
             "Apply cache size",
             "\uce90\uc2dc \ud06c\uae30 \uc801\uc6a9",
+            "Archived chats",
+            "\ubcf4\uad00\ub41c \ucc44\ud305",
             "Artist",
             "\uc544\ud2f0\uc2a4\ud2b8",
             "Back",
             "\ub4a4\ub85c",
+            "Back up",
+            "\ubc31\uc5c5",
+            "Backup and sharing",
+            "\ubc31\uc5c5 \ubc0f \uacf5\uc720",
+            "Backup saved.",
+            "\ubc31\uc5c5\uc744 \uc800\uc7a5\ud588\uc5b4\uc694.",
+            "Backups and index files never hold your API details or your Telegram session. An index"
+                + " file lists the music in a chat, so anyone you share it with sees that list.",
+            "\ubc31\uc5c5\uacfc \uc0c9\uc778 \ud30c\uc77c\uc5d0\ub294 API \uc815\ubcf4\ub098"
+                + " Telegram \uc138\uc158\uc774 \uc808\ub300 \ub2f4\uae30\uc9c0 \uc54a\uc544\uc694."
+                + " \uc0c9\uc778 \ud30c\uc77c\uc5d0\ub294 \ucc44\ud305\uc758 \uc74c\uc545"
+                + " \ubaa9\ub85d\uc774 \ub4e4\uc5b4 \uc788\uc5b4\uc11c, \uacf5\uc720\ubc1b\uc740"
+                + " \uc0ac\ub78c\uc740 \ub204\uad6c\ub098 \uadf8 \ubaa9\ub85d\uc744 \ubcfc \uc218"
+                + " \uc788\uc5b4\uc694.",
+            "Basic",
+            "\uae30\ubcf8",
+            "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
+                + " the chat itself (in a channel, only its admins can post), in your Saved"
+                + " Messages or in your main channel, and then only reads what\u2019s been posted"
+                + " since. Each song is checked against its post when it plays.",
+            "Telegram\uc5d0\uc11c \ucc44\ud305\uc744 \uc77d\uae30 \uc804\uc5d0, \ud328\uce58\ub294"
+                + " \ucc44\ud305 \uc790\uccb4(\ucc44\ub110\uc5d0\uc11c\ub294"
+                + " \uad00\ub9ac\uc790\ub9cc \uac8c\uc2dc\ud560 \uc218 \uc788\uc5b4\uc694),"
+                + " \uc800\uc7a5\ud55c \uba54\uc2dc\uc9c0 \ub610\ub294 \uba54\uc778"
+                + " \ucc44\ub110\uc5d0 \uac8c\uc2dc\ub41c \ud574\ub2f9 \ucc44\ud305\uc758"
+                + " \uc0c9\uc778 \ud30c\uc77c\uc744 \ucc3e\uace0, \uadf8 \uc774\ud6c4\uc5d0"
+                + " \uac8c\uc2dc\ub41c \uac83\ub9cc \uc77d\uc5b4\uc694. \uac01 \ub178\ub798\ub294"
+                + " \uc7ac\uc0dd\ud560 \ub54c \ud574\ub2f9 \uac8c\uc2dc\ubb3c\uacfc"
+                + " \ub300\uc870\ud574 \ud655\uc778\ud574\uc694.",
             "BitChord guesses from the file type",
             "BitChord\uac00 \ud30c\uc77c \ud615\uc2dd\uc73c\ub85c \ucd94\uce21\ud574\uc694",
             "BitChord keeps search results for a few minutes, so changes here show up in new"
@@ -9932,6 +11211,8 @@ final class Translations {
                 + " \ub192\uc774 \uc0ac\uc6b4\ub4dc\ub3c4 \ub098\uc640\uc694. Dolby AC-4\ub294"
                 + " \ud734\ub300\ud3f0\uc5d0 \ub514\ucf54\ub354\uac00 \uc788\uc5b4\uc57c"
                 + " \ud574\uc694.",
+            "BitChord saved index of {0}",
+            "{0}\uc758 BitChord \uc800\uc7a5\ub41c \uc0c9\uc778",
             "BitChord sees the corrected names",
             "BitChord\uac00 \uc218\uc815\ub41c \uc774\ub984\uc744 \uc778\uc2dd\ud574\uc694",
             "BitChord switches copies with a short pause",
@@ -10047,6 +11328,8 @@ final class Translations {
                 + " \uc560\ud50c\ub9ac\ucf00\uc774\uc158\uc744 \ub9cc\ub4dc\uc138\uc694."
                 + " Telegram\uc774 \ub85c\uadf8\uc778 \uc54c\ub9bc\uc5d0 \uadf8 \uc774\ub984\uc744"
                 + " \ud45c\uc2dc\ud560 \uc218 \uc788\uc5b4\uc694.",
+            "Damaged index file",
+            "\uc190\uc0c1\ub41c \uc0c9\uc778 \ud30c\uc77c",
             "Dismiss",
             "\ub2eb\uae30",
             "Dolby AC-4 files show only if this phone has a decoder",
@@ -10098,11 +11381,16 @@ final class Translations {
             "Telegram \uacc4\uc815 \ube44\ubc00\ubc88\ud638\ub97c \uc785\ub825\ud558\uc138\uc694.",
             "Every Dolby file shows",
             "\ubaa8\ub4e0 Dolby \ud30c\uc77c\uc774 \ud45c\uc2dc\ub3fc\uc694",
+            "Every chat is read from Telegram",
+            "\ubaa8\ub4e0 \ucc44\ud305\uc744 Telegram\uc5d0\uc11c \uc77d\uc5b4\uc694",
             "Every copy of a song shows",
             "\ub178\ub798\uc758 \ubaa8\ub4e0 \ubc84\uc804\uc774 \ud45c\uc2dc\ub3fc\uc694",
             "Every file is copied, even if it\u2019s already there",
             "\uc774\ubbf8 \uc788\uc5b4\ub3c4 \ubaa8\ub4e0 \ud30c\uc77c\uc744"
                     + " \ubcf5\uc0ac\ud574\uc694",
+            "Everyone who can see {0} can see the list of music in {1}.",
+            "{0}\uc744(\ub97c) \ubcfc \uc218 \uc788\ub294 \ubaa8\ub4e0 \uc0ac\ub78c\uc774 {1}\uc758"
+                    + " \uc74c\uc545 \ubaa9\ub85d\uc744 \ubcfc \uc218 \uc788\uc5b4\uc694.",
             "FLAC, WAV and ALAC count as lossless; others by bitrate",
             "FLAC, WAV, ALAC\ub294 \ubb34\uc190\uc2e4, \ub098\uba38\uc9c0\ub294"
                     + " \ube44\ud2b8\ub808\uc774\ud2b8\ub85c \ud310\ub2e8\ud574\uc694",
@@ -10124,6 +11412,8 @@ final class Translations {
                     + " \ub9e4\uce6d\ud574\uc694.",
             "Fix a track name",
             "\ud2b8\ub799 \uc774\ub984 \uc218\uc815",
+            "Folder",
+            "\ud3f4\ub354",
             "Format legend",
             "\ud3ec\ub9f7 \ud45c\uc2dc",
             "Found {0} track.",
@@ -10136,6 +11426,9 @@ final class Translations {
                     + " \ucc45\uc784\uac10 \uc788\uac8c \uc0ac\uc6a9\ud558\uc138\uc694. Telegram"
                     + " \uacc4\uc815\uacfc \ucc44\ub110\uc5d0 \ub300\ud55c \ucc45\uc784\uc740"
                     + " \ubcf8\uc778\uc5d0\uac8c \uc788\uc5b4\uc694.",
+            "From a backup, or add an index file someone shared",
+            "\ubc31\uc5c5\uc5d0\uc11c \ubcf5\uc6d0\ud558\uac70\ub098, \ub2e4\ub978"
+                + " \uc0ac\ub78c\uc774 \uacf5\uc720\ud55c \uc0c9\uc778 \ud30c\uc77c \ucd94\uac00",
             "Hide Dolby files this phone can\u2019t play",
             "\uc774 \ud734\ub300\ud3f0\uc5d0\uc11c \uc7ac\uc0dd\ud560 \uc218 \uc5c6\ub294 Dolby"
                     + " \ud30c\uc77c \uc228\uae30\uae30",
@@ -10143,8 +11436,19 @@ final class Translations {
             "\uc911\ubcf5 \ub178\ub798 \uc228\uae30\uae30",
             "Hide hash",
             "\ud574\uc2dc \uc228\uae30\uae30",
+            "Include the saved index (larger file)",
+            "\uc800\uc7a5\ub41c \uc0c9\uc778 \ud3ec\ud568(\ud30c\uc77c\uc774 \ub354"
+                    + " \ucee4\uc838\uc694)",
             "Incomplete sponsored-message response",
             "\uc2a4\ud3f0\uc11c \uba54\uc2dc\uc9c0 \uc751\ub2f5\uc774 \ubd88\uc644\uc804\ud568",
+            "Index file saved.",
+            "\uc0c9\uc778 \ud30c\uc77c\uc744 \uc800\uc7a5\ud588\uc5b4\uc694.",
+            "Index file too large",
+            "\uc0c9\uc778 \ud30c\uc77c\uc774 \ub108\ubb34 \ucee4\uc694",
+            "Index only on Wi-Fi",
+            "Wi-Fi\uc5d0\uc11c\ub9cc \uc0c9\uc778",
+            "Index only while charging",
+            "\ucda9\uc804 \uc911\uc5d0\ub9cc \uc0c9\uc778",
             "Indexing: {0} files found",
             "\uc0c9\uc778 \uc911: \ud30c\uc77c {0}\uac1c \ucc3e\uc74c",
             "Invalid cache-size choice",
@@ -10197,31 +11501,31 @@ final class Translations {
             "Music chats",
             "\uc74c\uc545 \ucc44\ud305",
             "Music from your community channels is copied into your main channel, a few files at a"
-                + " time, oldest post first. Copies show as your own posts, without \u201cForwarded"
-                + " from\u201d, and stay even if the community channel deletes them.\n\n"
+                + " time. Copies show as your own posts, without \u201cForwarded from\u201d, and"
+                + " stay even if the community channel deletes them.\n\n"
                 + "Telegram watches for accounts that copy many messages. Going faster than it"
                 + " likes can get your account limited for a while, or banned. The pace below never"
                 + " goes above 500 files an hour, and copying pauses whenever Telegram asks.\n\n"
                 + "You\u2019re responsible for what you copy. Only copy music you\u2019re allowed"
                 + " to keep.",
-            "\ucee4\ubba4\ub2c8\ud2f0 \ucc44\ub110\uc758 \uc74c\uc545\uc744 \uc624\ub798\ub41c"
-                + " \uac8c\uc2dc\ubb3c\ubd80\ud130 \uba87 \uac1c\uc529 \uba54\uc778"
-                + " \ucc44\ub110\ub85c \ubcf5\uc0ac\ud574\uc694. \ubcf5\uc0ac\ubcf8\uc740"
-                + " \u201c\uc804\ub2ec\ub428\u201d \ud45c\uc2dc \uc5c6\uc774 \ub0b4"
-                + " \uac8c\uc2dc\ubb3c\ub85c \ubcf4\uc774\uba70, \ucee4\ubba4\ub2c8\ud2f0"
-                + " \ucc44\ub110\uc5d0\uc11c \uc0ad\uc81c\ud574\ub3c4 \ub0a8\uc544"
-                + " \uc788\uc5b4\uc694.\n\n"
+            "\ucee4\ubba4\ub2c8\ud2f0 \ucc44\ub110\uc758 \uc74c\uc545\uc744 \ud55c \ubc88\uc5d0"
+                + " \uba87 \uac1c\uc529 \uba54\uc778 \ucc44\ub110\ub85c \ubcf5\uc0ac\ud574\uc694."
+                + " \ubcf5\uc0ac\ubcf8\uc740 \u201c\uc804\ub2ec\ub428\u201d \ud45c\uc2dc"
+                + " \uc5c6\uc774 \ub0b4 \uac8c\uc2dc\ubb3c\ub85c \ud45c\uc2dc\ub418\uace0,"
+                + " \ucee4\ubba4\ub2c8\ud2f0 \ucc44\ub110\uc5d0\uc11c \uc0ad\uc81c\ud574\ub3c4"
+                + " \ub0a8\uc544 \uc788\uc5b4\uc694.\n\n"
                 + "Telegram\uc740 \uba54\uc2dc\uc9c0\ub97c \ub9ce\uc774 \ubcf5\uc0ac\ud558\ub294"
-                + " \uacc4\uc815\uc744 \uac10\uc2dc\ud574\uc694. Telegram\uc774"
-                + " \ud5c8\uc6a9\ud558\ub294 \uac83\ubcf4\ub2e4 \ube60\ub974\uac8c"
+                + " \uacc4\uc815\uc744 \uac10\uc2dc\ud574\uc694. \ub108\ubb34 \ube60\ub974\uac8c"
                 + " \ubcf5\uc0ac\ud558\uba74 \uacc4\uc815\uc774 \ud55c\ub3d9\uc548"
                 + " \uc81c\ud55c\ub418\uac70\ub098 \ucc28\ub2e8\ub420 \uc218 \uc788\uc5b4\uc694."
-                + " \uc544\ub798 \uc18d\ub3c4\ub294 \uc2dc\uac04\ub2f9 500\uac1c\ub97c \ub118\uc9c0"
-                + " \uc54a\uc73c\uba70, Telegram\uc774 \uc694\uccad\ud560 \ub54c\ub9c8\ub2e4"
-                + " \ubcf5\uc0ac\ub97c \uc77c\uc2dc \uc911\uc9c0\ud574\uc694.\n\n"
-                + "\ubcf5\uc0ac\ud558\ub294 \ub0b4\uc6a9\uc5d0 \ub300\ud55c \ucc45\uc784\uc740"
-                + " \ubcf8\uc778\uc5d0\uac8c \uc788\uc5b4\uc694. \ubcf4\uad00\uc774"
-                + " \ud5c8\uc6a9\ub41c \uc74c\uc545\ub9cc \ubcf5\uc0ac\ud558\uc138\uc694.",
+                + " \uc544\ub798 \uc18d\ub3c4\ub294 \uc2dc\uac04\ub2f9 500\uac1c \ud30c\uc77c\uc744"
+                + " \ub118\uc9c0 \uc54a\uc73c\uba70, Telegram\uc774 \uc694\uccad\ud558\uba74"
+                + " \uc5b8\uc81c\ub4e0 \ubcf5\uc0ac\ub97c \uc77c\uc2dc"
+                + " \uc911\uc9c0\ud574\uc694.\n\n"
+                + "\ubcf5\uc0ac\ud558\ub294 \ucf58\ud150\uce20\uc5d0 \ub300\ud55c"
+                + " \ucc45\uc784\uc740 \ubcf8\uc778\uc5d0\uac8c \uc788\uc5b4\uc694."
+                + " \ubcf4\uad00\uc774 \ud5c8\uc6a9\ub41c \uc74c\uc545\ub9cc"
+                + " \ubcf5\uc0ac\ud558\uc138\uc694.",
             "Music library",
             "\uc74c\uc545 \ubcf4\uad00\ud568",
             "Music-chat selection changed. Search again.",
@@ -10235,6 +11539,11 @@ final class Translations {
             "New posts are copied as they\u2019re found",
             "\uc0c8 \uac8c\uc2dc\ubb3c\uc740 \ubc1c\uacac\ub418\ub294 \ub300\ub85c"
                     + " \ubcf5\uc0ac\ud574\uc694",
+            "Newest first",
+            "\ucd5c\uc2e0\uc21c",
+            "No albums found in this chat yet.",
+            "\uc774 \ucc44\ud305\uc5d0\uc11c \uc544\uc9c1 \uc568\ubc94\uc744 \ucc3e\uc9c0"
+                    + " \ubabb\ud588\uc5b4\uc694.",
             "No background searches",
             "\ubc31\uadf8\ub77c\uc6b4\ub4dc \uac80\uc0c9 \uc5c6\uc74c",
             "No covers are downloaded",
@@ -10259,6 +11568,9 @@ final class Translations {
             "Official sponsored messages could not be displayed: {0}",
             "\uacf5\uc2dd \uc2a4\ud3f0\uc11c \uba54\uc2dc\uc9c0\ub97c \ud45c\uc2dc\ud560 \uc218"
                     + " \uc5c6\uc5b4\uc694: {0}",
+            "Oldest post first, once each channel has been indexed",
+            "\uac01 \ucc44\ub110\uc758 \uc0c9\uc778\uc774 \ub05d\ub098\uba74 \uc624\ub798\ub41c"
+                    + " \uac8c\uc2dc\ubb3c\ubd80\ud130",
             "On Telegram: \u201c{0}\u201d by {1}",
             "Telegram: {1}\uc758 \u201c{0}\u201d",
             "On Telegram: \u201c{0}\u201d by {1} ({2})\n\n"
@@ -10287,6 +11599,12 @@ final class Translations {
             "Open this Telegram link in the official client: {0}",
             "\uacf5\uc2dd \ud074\ub77c\uc774\uc5b8\ud2b8\uc5d0\uc11c \uc774 Telegram"
                     + " \ub9c1\ud06c\ub97c \uc5ec\uc138\uc694: {0}",
+            "Paused until this phone is charging",
+            "\uc774 \ud734\ub300\uc804\ud654\uac00 \ucda9\uc804\ub420 \ub54c\uae4c\uc9c0"
+                    + " \uc77c\uc2dc \uc911\uc9c0\ub428",
+            "Paused until this phone is on Wi-Fi",
+            "\uc774 \ud734\ub300\uc804\ud654\uac00 Wi-Fi\uc5d0 \uc5f0\uacb0\ub420"
+                    + " \ub54c\uae4c\uc9c0 \uc77c\uc2dc \uc911\uc9c0\ub428",
             "Phone number",
             "\uc804\ud654\ubc88\ud638",
             "Play surround as stereo",
@@ -10295,6 +11613,17 @@ final class Translations {
             "\uc7ac\uc0dd",
             "Playlists and downloads",
             "\uc7ac\uc0dd\ubaa9\ub85d \ubc0f \ub2e4\uc6b4\ub85c\ub4dc",
+            "Post",
+            "\uac8c\uc2dc",
+            "Post in {0}",
+            "{0}\uc5d0 \uac8c\uc2dc",
+            "Post in {0}?",
+            "{0}\uc5d0 \uac8c\uc2dc\ud560\uae4c\uc694?",
+            "Post it in Telegram, or save it as a file",
+            "Telegram\uc5d0 \uac8c\uc2dc\ud558\uac70\ub098 \ud30c\uc77c\ub85c"
+                    + " \uc800\uc7a5\ud558\uc138\uc694",
+            "Posted the index of {0}.",
+            "{0}\uc758 \uc0c9\uc778\uc744 \uac8c\uc2dc\ud588\uc5b4\uc694.",
             "Privacy and your account",
             "\uac1c\uc778\uc815\ubcf4 \ubcf4\ud638 \ubc0f \uacc4\uc815",
             "Protected content and secret chats are not supported by this cached audio player.",
@@ -10335,6 +11664,11 @@ final class Translations {
             "\uc624\ub514\uc624 \ud488\uc9c8 \uc54c\ub9ac\uae30",
             "Report sponsored message",
             "\uc2a4\ud3f0\uc11c \uba54\uc2dc\uc9c0 \uc2e0\uace0",
+            "Restore",
+            "\ubcf5\uc6d0",
+            "Restored. {0} files added to the saved index.",
+            "\ubcf5\uc6d0\ud588\uc5b4\uc694. \uc800\uc7a5\ub41c \uc0c9\uc778\uc5d0 \ud30c\uc77c"
+                    + " {0}\uac1c\ub97c \ucd94\uac00\ud588\uc5b4\uc694.",
             "Retry channel",
             "\ucc44\ub110 \ub2e4\uc2dc \uc2dc\ub3c4",
             "Retry connection",
@@ -10351,8 +11685,14 @@ final class Translations {
                     + " \ub2e4\uc6b4\ub85c\ub4dc\ud558\uc138\uc694.",
             "Save and continue",
             "\uc800\uc7a5\ud558\uace0 \uacc4\uc18d",
+            "Save as a file",
+            "\ud30c\uc77c\ub85c \uc800\uc7a5",
+            "Save as playlist",
+            "\uc7ac\uc0dd\ubaa9\ub85d\uc73c\ub85c \uc800\uc7a5",
             "Save as playlist ({0})",
             "\uc7ac\uc0dd\ubaa9\ub85d\uc73c\ub85c \uc800\uc7a5({0})",
+            "Saved Messages",
+            "\uc800\uc7a5\ud55c \uba54\uc2dc\uc9c0",
             "Saved index",
             "\uc800\uc7a5\ub41c \uc0c9\uc778",
             "Saved {0} song as the playlist \u201c{1}\u201d in BitChord\u2019s Library.",
@@ -10368,6 +11708,10 @@ final class Translations {
             "\u201c{0}\u201d \uc800\uc7a5 \uc644\ub8cc. BitChord\uc5d0 \uc800\uc7a5\ub41c"
                 + " \uc0ac\ubcf8\uc744 \uc0ad\uc81c\ud588\uc5b4\uc694. \ub2e4\uc2dc"
                 + " \uc7ac\uc0dd\ud558\uba74 Telegram \ud30c\uc77c\uc744 \uc0ac\uc6a9\ud574\uc694.",
+            "Search and playback still use mobile data; only the background indexing waits.",
+            "\uac80\uc0c9\uacfc \uc7ac\uc0dd\uc740 \uacc4\uc18d \ubaa8\ubc14\uc77c"
+                + " \ub370\uc774\ud130\ub97c \uc0ac\uc6a9\ud574\uc694."
+                + " \ubc31\uadf8\ub77c\uc6b4\ub4dc \uc0c9\uc778\ub9cc \uae30\ub2e4\ub824\uc694.",
             "Search first",
             "\uba3c\uc800 \uac80\uc0c9\ud558\uc138\uc694",
             "Search text is too long.",
@@ -10400,6 +11744,11 @@ final class Translations {
                     + " \uc571 \ub370\uc774\ud130\ub97c \ucd08\uae30\ud654\ud558\uc138\uc694",
             "Set up application",
             "\uc560\ud50c\ub9ac\ucf00\uc774\uc158 \uc124\uc815\ud558\uae30",
+            "Settings, corrected names and main channel, and the saved index if you like",
+            "\uc124\uc815, \uc218\uc815\ub41c \uc774\ub984, \uba54\uc778 \ucc44\ub110,"
+                    + " \uc6d0\ud558\uba74 \uc800\uc7a5\ub41c \uc0c9\uc778\uae4c\uc9c0",
+            "Share a chat\u2019s index",
+            "\ucc44\ud305 \uc0c9\uc778 \uacf5\uc720",
             "Show hash",
             "\ud574\uc2dc \ud45c\uc2dc",
             "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3 320kbps",
@@ -10469,6 +11818,9 @@ final class Translations {
             "Telegram \uc2dc\uc791 \uc911\u2026",
             "Starting\u2026",
             "\uc2dc\uc791 \uc911\u2026",
+            "Starts with each channel\u2019s newest post, while it\u2019s still being indexed",
+            "\uc0c9\uc778 \uc911\uc5d0\ub3c4 \uac01 \ucc44\ub110\uc758 \ucd5c\uc2e0"
+                    + " \uac8c\uc2dc\ubb3c\ubd80\ud130 \uc2dc\uc791\ud574\uc694",
             "Stop playback before changing the application configuration.",
             "\uc560\ud50c\ub9ac\ucf00\uc774\uc158 \uad6c\uc131\uc744 \ubcc0\uacbd\ud558\uae30"
                     + " \uc804\uc5d0 \uc7ac\uc0dd\uc744 \uc911\uc9c0\ud558\uc138\uc694.",
@@ -10620,8 +11972,17 @@ final class Translations {
                 + " \uac00\uc838\uc624\ubbc0\ub85c \uc800\uc7a5\ub41c \uc0c9\uc778\uc774"
                 + " \ucf1c\uc838 \uc788\uc5b4\uc57c \ud574\uc694. \uba54\uc778 \ucc44\ub110\uc740"
                 + " \ube44\uacf5\uac1c\ub85c \uc720\uc9c0\ud574\uc57c \ud574\uc694.",
+            "The index also runs on battery",
+            "\ubc30\ud130\ub9ac \uc0ac\uc6a9 \uc911\uc5d0\ub3c4 \uc0c9\uc778\ud574\uc694",
+            "The index also uses mobile data",
+            "\ubaa8\ubc14\uc77c \ub370\uc774\ud130\ub85c\ub3c4 \uc0c9\uc778\ud574\uc694",
             "The index can't be read right now",
             "\uc9c0\uae08\uc740 \uc0c9\uc778\uc744 \uc77d\uc744 \uc218 \uc5c6\uc5b4\uc694",
+            "The index waits for Wi-Fi to read your chats",
+            "\uc0c9\uc778\uc774 \ucc44\ud305\uc744 \uc77d\uae30 \uc704\ud574 Wi-Fi\ub97c"
+                    + " \uae30\ub2e4\ub824\uc694",
+            "The index waits for a charger",
+            "\uc0c9\uc778\uc774 \ucda9\uc804\uc744 \uae30\ub2e4\ub824\uc694",
             "The index's database couldn't be opened on this phone.",
             "\uc774 \ud734\ub300\uc804\ud654\uc5d0\uc11c \uc0c9\uc778"
                 + " \ub370\uc774\ud130\ubca0\uc774\uc2a4\ub97c \uc5f4 \uc218 \uc5c6\uc5b4\uc694.",
@@ -10641,6 +12002,13 @@ final class Translations {
             "\uc774 \uae30\uae30\uc5d0\uc11c \uc2a4\ud3f0\uc11c"
                     + " \uc560\ub2c8\uba54\uc774\uc158\uc744 \ub514\ucf54\ub529\ud560 \uc218"
                     + " \uc5c6\uc5b4\uc694",
+            "This file is from a newer version of the patch. Update first.",
+            "\uc774 \ud30c\uc77c\uc740 \ub354 \ucd5c\uc2e0 \ubc84\uc804\uc758"
+                    + " \ud328\uce58\uc5d0\uc11c \ub9cc\ub4e4\uc5b4\uc84c\uc5b4\uc694. \uba3c\uc800"
+                    + " \uc5c5\ub370\uc774\ud2b8\ud558\uc138\uc694.",
+            "This isn't a BitChord index or backup file.",
+            "BitChord \uc0c9\uc778 \ud30c\uc77c\uc774\ub098 \ubc31\uc5c5 \ud30c\uc77c\uc774"
+                    + " \uc544\ub2c8\uc5d0\uc694.",
             "This login step isn't supported here. Sign in with an existing Telegram account.",
             "\uc774 \ub85c\uadf8\uc778 \ub2e8\uacc4\ub294 \uc5ec\uae30\uc11c"
                     + " \uc9c0\uc6d0\ub418\uc9c0 \uc54a\uc544\uc694. \uae30\uc874 Telegram"
@@ -10706,6 +12074,8 @@ final class Translations {
             "\uc774\ub984 \uc0ac\uc6a9",
             "Use original",
             "\uc6d0\ub798 \uc774\ub984 \uc0ac\uc6a9",
+            "Use shared indexes",
+            "\uacf5\uc720\ub41c \uc0c9\uc778 \uc0ac\uc6a9",
             "Use this name?",
             "\uc774 \uc774\ub984\uc744 \uc0ac\uc6a9\ud560\uae4c\uc694?",
             "Uses the cover Telegram has for each file",
@@ -10815,6 +12185,12 @@ final class Translations {
                 + " \ud655\uc778\ud558\uace0, \uc0c8 \ud30c\uc77c\ub3c4 \ubcf5\uc0ac\ud574\uc694."
                 + " \uc774 \ud30c\uc77c\ub3c4 \uac19\uc740 \uc2dc\uac04\ub2f9 \ud55c\ub3c4\uc5d0"
                 + " \ud3ec\ud568\ub3fc\uc694.",
+            "Your main channel then lists the music in the opposite order to the community channel."
+                    + " Applies to channels copying hasn\u2019t started from yet.",
+            "\uadf8\ub7ec\uba74 \uba54\uc778 \ucc44\ub110\uc758 \uc74c\uc545 \uc21c\uc11c\uac00"
+                + " \ucee4\ubba4\ub2c8\ud2f0 \ucc44\ub110\uacfc \ubc18\ub300\uac00 \ub3fc\uc694."
+                + " \uc544\uc9c1 \ubcf5\uc0ac\ub97c \uc2dc\uc791\ud558\uc9c0 \uc54a\uc740"
+                + " \ucc44\ub110\uc5d0 \uc801\uc6a9\ub3fc\uc694.",
             "Your phone talks to Telegram directly. Your API details are encrypted on this phone"
                 + " and your Telegram session is stored privately. The session is a normal Telegram"
                 + " login, so it can reach your whole account, not just music. Audio BitChord has"
@@ -10889,6 +12265,9 @@ final class Translations {
             "\ucc44\ud305 {1}\uac1c\uc5d0\uc11c \ud30c\uc77c {0}\uac1c \uc0c9\uc778\ub428",
             "{0} file indexed from {1} chats",
             "\ucc44\ud305 {1}\uac1c\uc5d0\uc11c \ud30c\uc77c {0}\uac1c \uc0c9\uc778\ub428",
+            "{0} files added to the saved index.",
+            "\uc800\uc7a5\ub41c \uc0c9\uc778\uc5d0 \ud30c\uc77c {0}\uac1c\ub97c"
+                    + " \ucd94\uac00\ud588\uc5b4\uc694.",
             "{0} files indexed from {1} chat",
             "\ucc44\ud305 {1}\uac1c\uc5d0\uc11c \ud30c\uc77c {0}\uac1c \uc0c9\uc778\ub428",
             "{0} files indexed from {1} chats",
@@ -10949,6 +12328,9 @@ final class Translations {
             "Um arquivo do Telegram pode estar com o nome errado. Revise em Nomes das faixas.",
             "A better copy fades in without a gap",
             "Uma c\u00f3pia melhor entra com fade, sem pausa",
+            "A chat\u2019s index comes from a shared index file when there is one",
+            "O \u00edndice de um chat vem de um arquivo de \u00edndice compartilhado, quando"
+                    + " houver",
             "A file counts as already there when it\u2019s the same Telegram file, or has the same"
                     + " title, artist, length and format. Nothing in your main channel is deleted."
                     + " Copying waits until your main channel has been indexed.",
@@ -10975,8 +12357,14 @@ final class Translations {
             "Adicione as credenciais do seu aplicativo para conectar.",
             "Added automatically to BitChord.",
             "Adicionado automaticamente ao BitChord.",
+            "Advanced",
+            "Avan\u00e7ado",
             "Album covers",
             "Capas de \u00e1lbuns",
+            "Albums",
+            "\u00c1lbuns",
+            "All chats",
+            "Todos os chats",
             "All music files are copied",
             "Todos os arquivos de m\u00fasica s\u00e3o copiados",
             "An unofficial add-on that uses the Telegram API with your own account. It isn\u2019t"
@@ -11011,10 +12399,34 @@ final class Translations {
             "Configura\u00e7\u00e3o do aplicativo",
             "Apply cache size",
             "Aplicar tamanho do cache",
+            "Archived chats",
+            "Chats arquivados",
             "Artist",
             "Artista",
             "Back",
             "Voltar",
+            "Back up",
+            "Fazer backup",
+            "Backup and sharing",
+            "Backup e compartilhamento",
+            "Backup saved.",
+            "Backup salvo.",
+            "Backups and index files never hold your API details or your Telegram session. An index"
+                + " file lists the music in a chat, so anyone you share it with sees that list.",
+            "Backups e arquivos de \u00edndice nunca guardam seus dados da API nem sua sess\u00e3o"
+                    + " do Telegram. Um arquivo de \u00edndice lista as m\u00fasicas de um chat,"
+                    + " ent\u00e3o quem receber o arquivo v\u00ea essa lista.",
+            "Basic",
+            "B\u00e1sico",
+            "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
+                + " the chat itself (in a channel, only its admins can post), in your Saved"
+                + " Messages or in your main channel, and then only reads what\u2019s been posted"
+                + " since. Each song is checked against its post when it plays.",
+            "Antes de ler um chat do Telegram, o patch procura um arquivo de \u00edndice dele"
+                + " postado no pr\u00f3prio chat (em um canal, s\u00f3 os administradores podem"
+                + " postar), nas suas Mensagens Salvas ou no seu canal principal, e depois s\u00f3"
+                + " l\u00ea o que foi postado desde ent\u00e3o. Cada m\u00fasica \u00e9 conferida"
+                + " com a postagem dela quando toca.",
             "BitChord guesses from the file type",
             "O BitChord deduz pelo tipo de arquivo",
             "BitChord keeps search results for a few minutes, so changes here show up in new"
@@ -11028,6 +12440,8 @@ final class Translations {
                 + " celular. Dolby Atmos toca em 5.1 ou 7.1, ou com o som de altura em um celular"
                 + " ou alto-falante compat\u00edvel. Dolby AC-4 precisa de um decodificador no"
                 + " celular.",
+            "BitChord saved index of {0}",
+            "\u00cdndice salvo do BitChord de {0}",
             "BitChord sees the corrected names",
             "O BitChord v\u00ea os nomes corrigidos",
             "BitChord switches copies with a short pause",
@@ -11124,6 +12538,8 @@ final class Translations {
             "Crie seu pr\u00f3prio aplicativo com um nome gen\u00e9rico e descritivo, como My"
                 + " Client (nome curto: myclient). O Telegram pode mostrar esse nome nos alertas de"
                 + " login.",
+            "Damaged index file",
+            "Arquivo de \u00edndice danificado",
             "Dismiss",
             "Dispensar",
             "Dolby AC-4 files show only if this phone has a decoder",
@@ -11168,10 +12584,14 @@ final class Translations {
             "Digite a senha da sua conta do Telegram.",
             "Every Dolby file shows",
             "Todos os arquivos Dolby aparecem",
+            "Every chat is read from Telegram",
+            "Todos os chats s\u00e3o lidos do Telegram",
             "Every copy of a song shows",
             "Todas as c\u00f3pias de uma m\u00fasica aparecem",
             "Every file is copied, even if it\u2019s already there",
             "Todos os arquivos s\u00e3o copiados, mesmo que j\u00e1 existam",
+            "Everyone who can see {0} can see the list of music in {1}.",
+            "Todos que podem ver {0} podem ver a lista de m\u00fasicas de {1}.",
             "FLAC, WAV and ALAC count as lossless; others by bitrate",
             "FLAC, WAV e ALAC contam como sem perdas; os outros, pela taxa de bits",
             "Files copied an hour",
@@ -11188,6 +12608,8 @@ final class Translations {
                     + " nome corrigido.",
             "Fix a track name",
             "Corrigir nome de faixa",
+            "Folder",
+            "Pasta",
             "Format legend",
             "Legenda de formato",
             "Found {0} track.",
@@ -11198,14 +12620,26 @@ final class Translations {
                     + " account and channels.",
             "Gratuito e fornecido como est\u00e1. Use com responsabilidade: voc\u00ea \u00e9"
                     + " respons\u00e1vel pela sua conta e pelos seus canais do Telegram.",
+            "From a backup, or add an index file someone shared",
+            "De um backup, ou adicione um arquivo de \u00edndice que algu\u00e9m compartilhou",
             "Hide Dolby files this phone can\u2019t play",
             "Ocultar arquivos Dolby que este celular n\u00e3o reproduz",
             "Hide duplicate songs",
             "Ocultar m\u00fasicas duplicadas",
             "Hide hash",
             "Ocultar hash",
+            "Include the saved index (larger file)",
+            "Incluir o \u00cdndice salvo (arquivo maior)",
             "Incomplete sponsored-message response",
             "Resposta incompleta da mensagem patrocinada",
+            "Index file saved.",
+            "Arquivo de \u00edndice salvo.",
+            "Index file too large",
+            "Arquivo de \u00edndice grande demais",
+            "Index only on Wi-Fi",
+            "Indexar s\u00f3 no Wi-Fi",
+            "Index only while charging",
+            "Indexar s\u00f3 durante o carregamento",
             "Indexing: {0} files found",
             "Indexando: {0} arquivos encontrados",
             "Invalid cache-size choice",
@@ -11249,23 +12683,23 @@ final class Translations {
             "Music chats",
             "Chats de m\u00fasica",
             "Music from your community channels is copied into your main channel, a few files at a"
-                + " time, oldest post first. Copies show as your own posts, without \u201cForwarded"
-                + " from\u201d, and stay even if the community channel deletes them.\n\n"
+                + " time. Copies show as your own posts, without \u201cForwarded from\u201d, and"
+                + " stay even if the community channel deletes them.\n\n"
                 + "Telegram watches for accounts that copy many messages. Going faster than it"
                 + " likes can get your account limited for a while, or banned. The pace below never"
                 + " goes above 500 files an hour, and copying pauses whenever Telegram asks.\n\n"
                 + "You\u2019re responsible for what you copy. Only copy music you\u2019re allowed"
                 + " to keep.",
             "As m\u00fasicas dos seus canais da comunidade s\u00e3o copiadas para o seu canal"
-                + " principal, alguns arquivos por vez, a partir da postagem mais antiga. As"
-                + " c\u00f3pias aparecem como postagens suas, sem \u201cEncaminhada de\u201d, e"
-                + " permanecem mesmo que o canal da comunidade as apague.\n\n"
+                + " principal, alguns arquivos por vez. As c\u00f3pias aparecem como postagens"
+                + " suas, sem \u201cEncaminhada de\u201d, e continuam l\u00e1 mesmo se o canal da"
+                + " comunidade apag\u00e1-las.\n\n"
                 + "O Telegram monitora contas que copiam muitas mensagens. Ir mais r\u00e1pido do"
-                + " que ele aceita pode fazer sua conta ser limitada por um tempo, ou banida. O"
-                + " ritmo abaixo nunca passa de 500 arquivos por hora, e a c\u00f3pia pausa sempre"
-                + " que o Telegram pede.\n\n"
-                + "Voc\u00ea \u00e9 respons\u00e1vel pelo que copia. S\u00f3 copie m\u00fasicas que"
-                + " voc\u00ea tem permiss\u00e3o para manter.",
+                + " que ele permite pode deixar sua conta limitada por um tempo, ou banida. O ritmo"
+                + " abaixo nunca passa de 500 arquivos por hora, e a c\u00f3pia pausa sempre que o"
+                + " Telegram pede.\n\n"
+                + "Voc\u00ea \u00e9 respons\u00e1vel pelo que copia. Copie s\u00f3 m\u00fasicas que"
+                + " voc\u00ea tem permiss\u00e3o para guardar.",
             "Music library",
             "Biblioteca de m\u00fasicas",
             "Music-chat selection changed. Search again.",
@@ -11276,6 +12710,10 @@ final class Translations {
             "N\u00e3o foi poss\u00edvel iniciar a extens\u00e3o nativa: {0}",
             "New posts are copied as they\u2019re found",
             "Novas postagens s\u00e3o copiadas \u00e0 medida que s\u00e3o encontradas",
+            "Newest first",
+            "Mais recentes primeiro",
+            "No albums found in this chat yet.",
+            "Nenhum \u00e1lbum encontrado neste chat ainda.",
             "No background searches",
             "Nenhuma busca em segundo plano",
             "No covers are downloaded",
@@ -11296,6 +12734,8 @@ final class Translations {
             "Nada \u00e9 copiado",
             "Official sponsored messages could not be displayed: {0}",
             "N\u00e3o foi poss\u00edvel exibir as mensagens patrocinadas oficiais: {0}",
+            "Oldest post first, once each channel has been indexed",
+            "Postagem mais antiga primeiro, depois que cada canal for indexado",
             "On Telegram: \u201c{0}\u201d by {1}",
             "No Telegram: \u201c{0}\u201d de {1}",
             "On Telegram: \u201c{0}\u201d by {1} ({2})\n\n"
@@ -11322,6 +12762,10 @@ final class Translations {
             "Abrir patrocinador",
             "Open this Telegram link in the official client: {0}",
             "Abra este link do Telegram no app oficial: {0}",
+            "Paused until this phone is charging",
+            "Pausado at\u00e9 o celular estar carregando",
+            "Paused until this phone is on Wi-Fi",
+            "Pausado at\u00e9 o celular estar no Wi-Fi",
             "Phone number",
             "N\u00famero de telefone",
             "Play surround as stereo",
@@ -11330,6 +12774,16 @@ final class Translations {
             "Reprodu\u00e7\u00e3o",
             "Playlists and downloads",
             "Playlists e downloads",
+            "Post",
+            "Postar",
+            "Post in {0}",
+            "Postar em {0}",
+            "Post in {0}?",
+            "Postar em {0}?",
+            "Post it in Telegram, or save it as a file",
+            "Poste no Telegram ou salve como arquivo",
+            "Posted the index of {0}.",
+            "\u00cdndice de {0} postado.",
             "Privacy and your account",
             "Privacidade e sua conta",
             "Protected content and secret chats are not supported by this cached audio player.",
@@ -11363,6 +12817,10 @@ final class Translations {
             "Informar qualidade do \u00e1udio",
             "Report sponsored message",
             "Denunciar mensagem patrocinada",
+            "Restore",
+            "Restaurar",
+            "Restored. {0} files added to the saved index.",
+            "Restaurado. {0} arquivos adicionados ao \u00cdndice salvo.",
             "Retry channel",
             "Tentar canal de novo",
             "Retry connection",
@@ -11377,8 +12835,14 @@ final class Translations {
             "Salve as m\u00fasicas de um chat como uma playlist do BitChord ou baixe todas.",
             "Save and continue",
             "Salvar e continuar",
+            "Save as a file",
+            "Salvar como arquivo",
+            "Save as playlist",
+            "Salvar como playlist",
             "Save as playlist ({0})",
             "Salvar como playlist ({0})",
+            "Saved Messages",
+            "Mensagens Salvas",
             "Saved index",
             "\u00cdndice salvo",
             "Saved {0} song as the playlist \u201c{1}\u201d in BitChord\u2019s Library.",
@@ -11391,6 +12855,9 @@ final class Translations {
                     + " Telegram file.",
             "\u201c{0}\u201d salvo. A c\u00f3pia salva do BitChord foi removida; toque de novo para"
                     + " usar seu arquivo do Telegram.",
+            "Search and playback still use mobile data; only the background indexing waits.",
+            "A busca e a reprodu\u00e7\u00e3o continuam usando dados m\u00f3veis; s\u00f3 a"
+                    + " indexa\u00e7\u00e3o em segundo plano espera.",
             "Search first",
             "Busque primeiro",
             "Search text is too long.",
@@ -11416,6 +12883,11 @@ final class Translations {
                     + " sess\u00e3o",
             "Set up application",
             "Configurar aplicativo",
+            "Settings, corrected names and main channel, and the saved index if you like",
+            "Configura\u00e7\u00f5es, nomes corrigidos e canal principal, e o \u00cdndice salvo se"
+                    + " quiser",
+            "Share a chat\u2019s index",
+            "Compartilhar o \u00edndice de um chat",
             "Show hash",
             "Mostrar hash",
             "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3 320kbps",
@@ -11472,6 +12944,9 @@ final class Translations {
             "Iniciando o Telegram\u2026",
             "Starting\u2026",
             "Iniciando\u2026",
+            "Starts with each channel\u2019s newest post, while it\u2019s still being indexed",
+            "Come\u00e7a pela postagem mais recente de cada canal, enquanto ele ainda est\u00e1"
+                    + " sendo indexado",
             "Stop playback before changing the application configuration.",
             "Pare a reprodu\u00e7\u00e3o antes de alterar a configura\u00e7\u00e3o do aplicativo.",
             "Stop playback before clearing the cache",
@@ -11588,8 +13063,16 @@ final class Translations {
                     + " private.",
             "Os arquivos v\u00eam do \u00cdndice salvo, ent\u00e3o ele precisa estar ativado. Seu"
                     + " canal principal precisa continuar privado.",
+            "The index also runs on battery",
+            "O \u00edndice tamb\u00e9m roda na bateria",
+            "The index also uses mobile data",
+            "O \u00edndice tamb\u00e9m usa dados m\u00f3veis",
             "The index can't be read right now",
             "O \u00edndice n\u00e3o pode ser lido agora",
+            "The index waits for Wi-Fi to read your chats",
+            "O \u00edndice espera o Wi-Fi para ler seus chats",
+            "The index waits for a charger",
+            "O \u00edndice espera o carregador",
             "The index's database couldn't be opened on this phone.",
             "N\u00e3o foi poss\u00edvel abrir o banco de dados do \u00edndice neste celular.",
             "The same song shows once, as its best copy",
@@ -11603,6 +13086,10 @@ final class Translations {
                     + " indicar que terminou.",
             "This device could not decode the sponsored animation",
             "Este dispositivo n\u00e3o conseguiu decodificar a anima\u00e7\u00e3o patrocinada",
+            "This file is from a newer version of the patch. Update first.",
+            "Este arquivo \u00e9 de uma vers\u00e3o mais nova do patch. Atualize primeiro.",
+            "This isn't a BitChord index or backup file.",
+            "Este n\u00e3o \u00e9 um arquivo de \u00edndice ou de backup do BitChord.",
             "This login step isn't supported here. Sign in with an existing Telegram account.",
             "Esta etapa de login n\u00e3o \u00e9 compat\u00edvel aqui. Entre com uma conta do"
                     + " Telegram existente.",
@@ -11656,6 +13143,8 @@ final class Translations {
             "Usar nome",
             "Use original",
             "Usar original",
+            "Use shared indexes",
+            "Usar \u00edndices compartilhados",
             "Use this name?",
             "Usar este nome?",
             "Uses the cover Telegram has for each file",
@@ -11740,6 +13229,10 @@ final class Translations {
             "Seus canais da comunidade s\u00e3o verificados a cada poucas horas em busca de novas"
                 + " postagens enquanto o BitChord est\u00e1 aberto, e os novos arquivos tamb\u00e9m"
                 + " s\u00e3o copiados. Eles contam para o mesmo limite por hora.",
+            "Your main channel then lists the music in the opposite order to the community channel."
+                    + " Applies to channels copying hasn\u2019t started from yet.",
+            "Assim, seu canal principal lista as m\u00fasicas na ordem inversa \u00e0 do canal da"
+                + " comunidade. Vale para os canais cuja c\u00f3pia ainda n\u00e3o come\u00e7ou.",
             "Your phone talks to Telegram directly. Your API details are encrypted on this phone"
                 + " and your Telegram session is stored privately. The session is a normal Telegram"
                 + " login, so it can reach your whole account, not just music. Audio BitChord has"
@@ -11801,6 +13294,8 @@ final class Translations {
             "{0} arquivo indexado de {1} chat",
             "{0} file indexed from {1} chats",
             "{0} arquivo indexado de {1} chats",
+            "{0} files added to the saved index.",
+            "{0} arquivos adicionados ao \u00cdndice salvo.",
             "{0} files indexed from {1} chat",
             "{0} arquivos indexados de {1} chat",
             "{0} files indexed from {1} chats",
@@ -11885,6 +13380,13 @@ final class Translations {
                     + " \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0430\u0435\u0442\u0441\u044f"
                     + " \u043f\u043b\u0430\u0432\u043d\u043e, \u0431\u0435\u0437"
                     + " \u043f\u0430\u0443\u0437\u044b",
+            "A chat\u2019s index comes from a shared index file when there is one",
+            "\u0418\u043d\u0434\u0435\u043a\u0441 \u0447\u0430\u0442\u0430"
+                    + " \u0431\u0435\u0440\u0451\u0442\u0441\u044f \u0438\u0437"
+                    + " \u043e\u0431\u0449\u0435\u0433\u043e"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441\u043d\u043e\u0433\u043e"
+                    + " \u0444\u0430\u0439\u043b\u0430, \u0435\u0441\u043b\u0438 \u043e\u043d"
+                    + " \u0435\u0441\u0442\u044c",
             "A file counts as already there when it\u2019s the same Telegram file, or has the same"
                     + " title, artist, length and format. Nothing in your main channel is deleted."
                     + " Copying waits until your main channel has been indexed.",
@@ -11938,9 +13440,15 @@ final class Translations {
             "Added automatically to BitChord.",
             "\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d \u0432 BitChord"
                 + " \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438.",
+            "Advanced",
+            "\u0414\u043e\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0435",
             "Album covers",
             "\u041e\u0431\u043b\u043e\u0436\u043a\u0438"
                     + " \u0430\u043b\u044c\u0431\u043e\u043c\u043e\u0432",
+            "Albums",
+            "\u0410\u043b\u044c\u0431\u043e\u043c\u044b",
+            "All chats",
+            "\u0412\u0441\u0435 \u0447\u0430\u0442\u044b",
             "All music files are copied",
             "\u041a\u043e\u043f\u0438\u0440\u0443\u044e\u0442\u0441\u044f \u0432\u0441\u0435"
                     + " \u043c\u0443\u0437\u044b\u043a\u0430\u043b\u044c\u043d\u044b\u0435"
@@ -12007,10 +13515,64 @@ final class Translations {
             "Apply cache size",
             "\u041f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u044c"
                     + " \u0440\u0430\u0437\u043c\u0435\u0440 \u043a\u0435\u0448\u0430",
+            "Archived chats",
+            "\u0410\u0440\u0445\u0438\u0432",
             "Artist",
             "\u0418\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c",
             "Back",
             "\u041d\u0430\u0437\u0430\u0434",
+            "Back up",
+            "\u0421\u043e\u0437\u0434\u0430\u0442\u044c \u043a\u043e\u043f\u0438\u044e",
+            "Backup and sharing",
+            "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u044b\u0435 \u043a\u043e\u043f\u0438\u0438"
+                    + " \u0438 \u043e\u0431\u043c\u0435\u043d",
+            "Backup saved.",
+            "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u0430\u044f \u043a\u043e\u043f\u0438\u044f"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0430.",
+            "Backups and index files never hold your API details or your Telegram session. An index"
+                + " file lists the music in a chat, so anyone you share it with sees that list.",
+            "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u044b\u0435 \u043a\u043e\u043f\u0438\u0438"
+                + " \u0438 \u0438\u043d\u0434\u0435\u043a\u0441\u043d\u044b\u0435"
+                + " \u0444\u0430\u0439\u043b\u044b \u043d\u0438\u043a\u043e\u0433\u0434\u0430"
+                + " \u043d\u0435 \u0441\u043e\u0434\u0435\u0440\u0436\u0430\u0442"
+                + " \u0434\u0430\u043d\u043d\u044b\u0435 API \u0438 \u0441\u0435\u0430\u043d\u0441"
+                + " Telegram. \u0418\u043d\u0434\u0435\u043a\u0441\u043d\u044b\u0439"
+                + " \u0444\u0430\u0439\u043b \u0441\u043e\u0434\u0435\u0440\u0436\u0438\u0442"
+                + " \u0441\u043f\u0438\u0441\u043e\u043a \u043c\u0443\u0437\u044b\u043a\u0438"
+                + " \u0432 \u0447\u0430\u0442\u0435, \u043f\u043e\u044d\u0442\u043e\u043c\u0443"
+                + " \u0435\u0433\u043e \u0443\u0432\u0438\u0434\u0438\u0442"
+                + " \u043b\u044e\u0431\u043e\u0439, \u0441 \u043a\u0435\u043c \u0432\u044b"
+                + " \u0438\u043c \u043f\u043e\u0434\u0435\u043b\u0438\u0442\u0435\u0441\u044c.",
+            "Basic",
+            "\u041e\u0441\u043d\u043e\u0432\u043d\u044b\u0435",
+            "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
+                + " the chat itself (in a channel, only its admins can post), in your Saved"
+                + " Messages or in your main channel, and then only reads what\u2019s been posted"
+                + " since. Each song is checked against its post when it plays.",
+            "\u041f\u0440\u0435\u0436\u0434\u0435 \u0447\u0435\u043c"
+                + " \u0447\u0438\u0442\u0430\u0442\u044c \u0447\u0430\u0442 \u0438\u0437 Telegram,"
+                + " \u043f\u0430\u0442\u0447 \u0438\u0449\u0435\u0442 \u0435\u0433\u043e"
+                + " \u0438\u043d\u0434\u0435\u043a\u0441\u043d\u044b\u0439"
+                + " \u0444\u0430\u0439\u043b,"
+                + " \u043e\u043f\u0443\u0431\u043b\u0438\u043a\u043e\u0432\u0430\u043d\u043d\u044b\u0439"
+                + " \u0432 \u0441\u0430\u043c\u043e\u043c \u0447\u0430\u0442\u0435 (\u0432"
+                + " \u043a\u0430\u043d\u0430\u043b\u0435"
+                + " \u043f\u0443\u0431\u043b\u0438\u043a\u043e\u0432\u0430\u0442\u044c"
+                + " \u043c\u043e\u0433\u0443\u0442 \u0442\u043e\u043b\u044c\u043a\u043e"
+                + " \u0435\u0433\u043e"
+                + " \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440\u044b),"
+                + " \u0432 \u0418\u0437\u0431\u0440\u0430\u043d\u043d\u043e\u043c"
+                + " \u0438\u043b\u0438 \u0432 \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u043c"
+                + " \u043a\u0430\u043d\u0430\u043b\u0435, \u0430 \u0437\u0430\u0442\u0435\u043c"
+                + " \u0447\u0438\u0442\u0430\u0435\u0442 \u0442\u043e\u043b\u044c\u043a\u043e"
+                + " \u0442\u043e, \u0447\u0442\u043e"
+                + " \u043e\u043f\u0443\u0431\u043b\u0438\u043a\u043e\u0432\u0430\u043d\u043e"
+                + " \u043f\u043e\u0441\u043b\u0435 \u043d\u0435\u0433\u043e."
+                + " \u041a\u0430\u0436\u0434\u0430\u044f \u043f\u0435\u0441\u043d\u044f"
+                + " \u0441\u0432\u0435\u0440\u044f\u0435\u0442\u0441\u044f \u0441\u043e"
+                + " \u0441\u0432\u043e\u0438\u043c \u043f\u043e\u0441\u0442\u043e\u043c"
+                + " \u043f\u0440\u0438"
+                + " \u0432\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u0435\u0434\u0435\u043d\u0438\u0438.",
             "BitChord guesses from the file type",
             "BitChord \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u044f\u0435\u0442 \u043f\u043e"
                     + " \u0442\u0438\u043f\u0443 \u0444\u0430\u0439\u043b\u0430",
@@ -12041,6 +13603,9 @@ final class Translations {
                 + " \u043a\u0430\u043d\u0430\u043b\u0430\u043c\u0438. \u0414\u043b\u044f Dolby AC-4"
                 + " \u043d\u0443\u0436\u0435\u043d \u0434\u0435\u043a\u043e\u0434\u0435\u0440"
                 + " \u0432 \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0435.",
+            "BitChord saved index of {0}",
+            "\u0421\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441 BitChord \u0434\u043b\u044f {0}",
             "BitChord sees the corrected names",
             "BitChord \u0432\u0438\u0434\u0438\u0442"
                     + " \u0438\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0435"
@@ -12239,6 +13804,10 @@ final class Translations {
                 + " \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u0432"
                 + " \u0443\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u044f\u0445 \u043e"
                 + " \u0432\u0445\u043e\u0434\u0435.",
+            "Damaged index file",
+            "\u041f\u043e\u0432\u0440\u0435\u0436\u0434\u0451\u043d\u043d\u044b\u0439"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441\u043d\u044b\u0439"
+                    + " \u0444\u0430\u0439\u043b",
             "Dismiss",
             "\u0421\u043a\u0440\u044b\u0442\u044c",
             "Dolby AC-4 files show only if this phone has a decoder",
@@ -12318,6 +13887,9 @@ final class Translations {
             "Every Dolby file shows",
             "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u044e\u0442\u0441\u044f"
                     + " \u0432\u0441\u0435 \u0444\u0430\u0439\u043b\u044b Dolby",
+            "Every chat is read from Telegram",
+            "\u041a\u0430\u0436\u0434\u044b\u0439 \u0447\u0430\u0442"
+                    + " \u0447\u0438\u0442\u0430\u0435\u0442\u0441\u044f \u0438\u0437 Telegram",
             "Every copy of a song shows",
             "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u044e\u0442\u0441\u044f"
                     + " \u0432\u0441\u0435 \u043a\u043e\u043f\u0438\u0438"
@@ -12327,6 +13899,11 @@ final class Translations {
                     + " \u043a\u0430\u0436\u0434\u044b\u0439 \u0444\u0430\u0439\u043b,"
                     + " \u0434\u0430\u0436\u0435 \u0435\u0441\u043b\u0438 \u043e\u043d"
                     + " \u0443\u0436\u0435 \u0435\u0441\u0442\u044c",
+            "Everyone who can see {0} can see the list of music in {1}.",
+            "\u0412\u0441\u0435, \u043a\u0442\u043e \u0432\u0438\u0434\u0438\u0442 {0},"
+                    + " \u043c\u043e\u0433\u0443\u0442 \u0443\u0432\u0438\u0434\u0435\u0442\u044c"
+                    + " \u0441\u043f\u0438\u0441\u043e\u043a \u043c\u0443\u0437\u044b\u043a\u0438"
+                    + " \u0432 {1}.",
             "FLAC, WAV and ALAC count as lossless; others by bitrate",
             "FLAC, WAV \u0438 ALAC \u0441\u0447\u0438\u0442\u0430\u044e\u0442\u0441\u044f"
                     + " \u0444\u043e\u0440\u043c\u0430\u0442\u0430\u043c\u0438 \u0431\u0435\u0437"
@@ -12364,6 +13941,8 @@ final class Translations {
             "\u0418\u0441\u043f\u0440\u0430\u0432\u0438\u0442\u044c"
                     + " \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435"
                     + " \u0442\u0440\u0435\u043a\u0430",
+            "Folder",
+            "\u041f\u0430\u043f\u043a\u0430",
             "Format legend",
             "\u041c\u0435\u0442\u043a\u0438 \u0444\u043e\u0440\u043c\u0430\u0442\u0430",
             "Found {0} track.",
@@ -12380,6 +13959,13 @@ final class Translations {
                     + " \u0437\u0430 \u0441\u0432\u043e\u0439"
                     + " \u0430\u043a\u043a\u0430\u0443\u043d\u0442 \u0438"
                     + " \u043a\u0430\u043d\u0430\u043b\u044b Telegram.",
+            "From a backup, or add an index file someone shared",
+            "\u0418\u0437 \u0440\u0435\u0437\u0435\u0440\u0432\u043d\u043e\u0439"
+                    + " \u043a\u043e\u043f\u0438\u0438 \u0438\u043b\u0438"
+                    + " \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441\u043d\u044b\u0439"
+                    + " \u0444\u0430\u0439\u043b, \u043a\u043e\u0442\u043e\u0440\u044b\u043c"
+                    + " \u043f\u043e\u0434\u0435\u043b\u0438\u043b\u0438\u0441\u044c",
             "Hide Dolby files this phone can\u2019t play",
             "\u0421\u043a\u0440\u044b\u0432\u0430\u0442\u044c \u0444\u0430\u0439\u043b\u044b Dolby,"
                 + " \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u044d\u0442\u043e\u0442"
@@ -12391,11 +13977,30 @@ final class Translations {
                     + " \u043f\u0435\u0441\u0435\u043d",
             "Hide hash",
             "\u0421\u043a\u0440\u044b\u0442\u044c hash",
+            "Include the saved index (larger file)",
+            "\u0412\u043a\u043b\u044e\u0447\u0438\u0442\u044c"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441 (\u0444\u0430\u0439\u043b"
+                    + " \u0431\u043e\u043b\u044c\u0448\u0435)",
             "Incomplete sponsored-message response",
             "\u041d\u0435\u043f\u043e\u043b\u043d\u044b\u0439 \u043e\u0442\u0432\u0435\u0442"
                     + " \u0441\u043e"
                     + " \u0441\u043f\u043e\u043d\u0441\u043e\u0440\u0441\u043a\u0438\u043c\u0438"
                     + " \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u044f\u043c\u0438",
+            "Index file saved.",
+            "\u0418\u043d\u0434\u0435\u043a\u0441\u043d\u044b\u0439 \u0444\u0430\u0439\u043b"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d.",
+            "Index file too large",
+            "\u0418\u043d\u0434\u0435\u043a\u0441\u043d\u044b\u0439 \u0444\u0430\u0439\u043b"
+                    + " \u0441\u043b\u0438\u0448\u043a\u043e\u043c"
+                    + " \u0431\u043e\u043b\u044c\u0448\u043e\u0439",
+            "Index only on Wi-Fi",
+            "\u0418\u043d\u0434\u0435\u043a\u0441\u0438\u0440\u043e\u0432\u0430\u0442\u044c"
+                    + " \u0442\u043e\u043b\u044c\u043a\u043e \u043f\u043e Wi-Fi",
+            "Index only while charging",
+            "\u0418\u043d\u0434\u0435\u043a\u0441\u0438\u0440\u043e\u0432\u0430\u0442\u044c"
+                    + " \u0442\u043e\u043b\u044c\u043a\u043e \u043f\u0440\u0438"
+                    + " \u0437\u0430\u0440\u044f\u0434\u043a\u0435",
             "Indexing: {0} files found",
             "\u0418\u043d\u0434\u0435\u043a\u0441\u0430\u0446\u0438\u044f:"
                     + " \u043d\u0430\u0439\u0434\u0435\u043d\u043e"
@@ -12489,8 +14094,8 @@ final class Translations {
             "\u041c\u0443\u0437\u044b\u043a\u0430\u043b\u044c\u043d\u044b\u0435"
                     + " \u0447\u0430\u0442\u044b",
             "Music from your community channels is copied into your main channel, a few files at a"
-                + " time, oldest post first. Copies show as your own posts, without \u201cForwarded"
-                + " from\u201d, and stay even if the community channel deletes them.\n\n"
+                + " time. Copies show as your own posts, without \u201cForwarded from\u201d, and"
+                + " stay even if the community channel deletes them.\n\n"
                 + "Telegram watches for accounts that copy many messages. Going faster than it"
                 + " likes can get your account limited for a while, or banned. The pace below never"
                 + " goes above 500 files an hour, and copying pauses whenever Telegram asks.\n\n"
@@ -12500,15 +14105,11 @@ final class Translations {
                 + " \u043a\u0430\u043d\u0430\u043b\u043e\u0432"
                 + " \u0441\u043e\u043e\u0431\u0449\u0435\u0441\u0442\u0432\u0430"
                 + " \u043a\u043e\u043f\u0438\u0440\u0443\u0435\u0442\u0441\u044f \u0432"
-                + " \u0432\u0430\u0448 \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439"
-                + " \u043a\u0430\u043d\u0430\u043b \u043f\u043e"
-                + " \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u043e"
-                + " \u0444\u0430\u0439\u043b\u043e\u0432,"
-                + " \u043d\u0430\u0447\u0438\u043d\u0430\u044f \u0441"
-                + " \u0441\u0430\u043c\u044b\u0445 \u0441\u0442\u0430\u0440\u044b\u0445"
-                + " \u043f\u043e\u0441\u0442\u043e\u0432. \u041a\u043e\u043f\u0438\u0438"
-                + " \u0432\u044b\u0433\u043b\u044f\u0434\u044f\u0442 \u043a\u0430\u043a"
-                + " \u0432\u0430\u0448\u0438"
+                + " \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u043a\u0430\u043d\u0430\u043b"
+                + " \u043f\u043e \u043d\u0435\u0441\u043a\u043e\u043b\u044c\u043a\u043e"
+                + " \u0444\u0430\u0439\u043b\u043e\u0432 \u0437\u0430 \u0440\u0430\u0437."
+                + " \u041a\u043e\u043f\u0438\u0438 \u0432\u044b\u0433\u043b\u044f\u0434\u044f\u0442"
+                + " \u043a\u0430\u043a \u0432\u0430\u0448\u0438"
                 + " \u0441\u043e\u0431\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0435"
                 + " \u043f\u043e\u0441\u0442\u044b, \u0431\u0435\u0437"
                 + " \u00ab\u041f\u0435\u0440\u0435\u0441\u043b\u0430\u043d\u043e"
@@ -12527,13 +14128,13 @@ final class Translations {
                 + " \u0431\u044b\u0441\u0442\u0440\u0435\u0435, \u0447\u0435\u043c"
                 + " \u0435\u043c\u0443 \u043d\u0440\u0430\u0432\u0438\u0442\u0441\u044f,"
                 + " \u0430\u043a\u043a\u0430\u0443\u043d\u0442 \u043c\u043e\u0433\u0443\u0442"
-                + " \u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e"
+                + " \u043d\u0430 \u0432\u0440\u0435\u043c\u044f"
                 + " \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0438\u0442\u044c \u0438\u043b\u0438"
                 + " \u0437\u0430\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u0442\u044c."
-                + " \u0422\u0435\u043c\u043f \u043d\u0438\u0436\u0435"
+                + " \u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u043d\u0438\u0436\u0435"
                 + " \u043d\u0438\u043a\u043e\u0433\u0434\u0430 \u043d\u0435"
                 + " \u043f\u0440\u0435\u0432\u044b\u0448\u0430\u0435\u0442 500"
-                + " \u0444\u0430\u0439\u043b\u043e\u0432 \u0432 \u0447\u0430\u0441, \u0438"
+                + " \u0444\u0430\u0439\u043b\u043e\u0432 \u0432 \u0447\u0430\u0441, \u0430"
                 + " \u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435"
                 + " \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u0430\u0432\u043b\u0438\u0432\u0430\u0435\u0442\u0441\u044f"
                 + " \u043a\u0430\u0436\u0434\u044b\u0439 \u0440\u0430\u0437,"
@@ -12543,7 +14144,8 @@ final class Translations {
                 + " \u0442\u043e, \u0447\u0442\u043e"
                 + " \u043a\u043e\u043f\u0438\u0440\u0443\u0435\u0442\u0435."
                 + " \u041a\u043e\u043f\u0438\u0440\u0443\u0439\u0442\u0435"
-                + " \u0442\u043e\u043b\u044c\u043a\u043e \u043c\u0443\u0437\u044b\u043a\u0443,"
+                + " \u0442\u043e\u043b\u044c\u043a\u043e \u0442\u0443"
+                + " \u043c\u0443\u0437\u044b\u043a\u0443,"
                 + " \u043a\u043e\u0442\u043e\u0440\u0443\u044e \u0432\u0430\u043c"
                 + " \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043d\u043e"
                 + " \u0445\u0440\u0430\u043d\u0438\u0442\u044c.",
@@ -12570,6 +14172,12 @@ final class Translations {
                     + " \u043a\u043e\u043f\u0438\u0440\u0443\u044e\u0442\u0441\u044f \u043f\u043e"
                     + " \u043c\u0435\u0440\u0435"
                     + " \u043e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d\u0438\u044f",
+            "Newest first",
+            "\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u043d\u043e\u0432\u044b\u0435",
+            "No albums found in this chat yet.",
+            "\u0412 \u044d\u0442\u043e\u043c \u0447\u0430\u0442\u0435 \u043f\u043e\u043a\u0430"
+                    + " \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e"
+                    + " \u0430\u043b\u044c\u0431\u043e\u043c\u043e\u0432.",
             "No background searches",
             "\u0411\u0435\u0437 \u0444\u043e\u043d\u043e\u0432\u044b\u0445"
                     + " \u043f\u043e\u0438\u0441\u043a\u043e\u0432",
@@ -12607,6 +14215,13 @@ final class Translations {
                     + " \u043e\u0444\u0438\u0446\u0438\u0430\u043b\u044c\u043d\u044b\u0435"
                     + " \u0441\u043f\u043e\u043d\u0441\u043e\u0440\u0441\u043a\u0438\u0435"
                     + " \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u044f: {0}",
+            "Oldest post first, once each channel has been indexed",
+            "\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u0441\u0430\u043c\u044b\u0435"
+                    + " \u0441\u0442\u0430\u0440\u044b\u0435 \u043f\u043e\u0441\u0442\u044b,"
+                    + " \u043f\u043e\u0441\u043b\u0435"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441\u0430\u0446\u0438\u0438"
+                    + " \u043a\u0430\u0436\u0434\u043e\u0433\u043e"
+                    + " \u043a\u0430\u043d\u0430\u043b\u0430",
             "On Telegram: \u201c{0}\u201d by {1}",
             "\u0412 Telegram: \u00ab{0}\u00bb, {1}",
             "On Telegram: \u201c{0}\u201d by {1} ({2})\n\n"
@@ -12648,6 +14263,14 @@ final class Translations {
                     + " \u0441\u0441\u044b\u043b\u043a\u0443 Telegram \u0432"
                     + " \u043e\u0444\u0438\u0446\u0438\u0430\u043b\u044c\u043d\u043e\u043c"
                     + " \u043a\u043b\u0438\u0435\u043d\u0442\u0435: {0}",
+            "Paused until this phone is charging",
+            "\u041f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u043e"
+                    + " \u0434\u043e \u0437\u0430\u0440\u044f\u0434\u043a\u0438"
+                    + " \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430",
+            "Paused until this phone is on Wi-Fi",
+            "\u041f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u043e"
+                + " \u0434\u043e \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f"
+                + " \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430 \u043a Wi-Fi",
             "Phone number",
             "\u041d\u043e\u043c\u0435\u0440 \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430",
             "Play surround as stereo",
@@ -12659,6 +14282,20 @@ final class Translations {
             "Playlists and downloads",
             "\u041f\u043b\u0435\u0439\u043b\u0438\u0441\u0442\u044b \u0438"
                     + " \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438",
+            "Post",
+            "\u041e\u043f\u0443\u0431\u043b\u0438\u043a\u043e\u0432\u0430\u0442\u044c",
+            "Post in {0}",
+            "\u041e\u043f\u0443\u0431\u043b\u0438\u043a\u043e\u0432\u0430\u0442\u044c \u0432 {0}",
+            "Post in {0}?",
+            "\u041e\u043f\u0443\u0431\u043b\u0438\u043a\u043e\u0432\u0430\u0442\u044c \u0432 {0}?",
+            "Post it in Telegram, or save it as a file",
+            "\u041e\u043f\u0443\u0431\u043b\u0438\u043a\u0443\u0439\u0442\u0435 \u0435\u0433\u043e"
+                    + " \u0432 Telegram \u0438\u043b\u0438"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u0435 \u043a\u0430\u043a"
+                    + " \u0444\u0430\u0439\u043b",
+            "Posted the index of {0}.",
+            "\u0418\u043d\u0434\u0435\u043a\u0441 {0}"
+                    + " \u043e\u043f\u0443\u0431\u043b\u0438\u043a\u043e\u0432\u0430\u043d.",
             "Privacy and your account",
             "\u041a\u043e\u043d\u0444\u0438\u0434\u0435\u043d\u0446\u0438\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c"
                 + " \u0438 \u0430\u043a\u043a\u0430\u0443\u043d\u0442",
@@ -12726,6 +14363,14 @@ final class Translations {
             "\u041f\u043e\u0436\u0430\u043b\u043e\u0432\u0430\u0442\u044c\u0441\u044f \u043d\u0430"
                     + " \u0441\u043f\u043e\u043d\u0441\u043e\u0440\u0441\u043a\u043e\u0435"
                     + " \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435",
+            "Restore",
+            "\u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c",
+            "Restored. {0} files added to the saved index.",
+            "\u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u043e."
+                    + " \u0424\u0430\u0439\u043b\u043e\u0432"
+                    + " \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e \u0432"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441: {0}.",
             "Retry channel",
             "\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c"
                     + " \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0443"
@@ -12751,9 +14396,17 @@ final class Translations {
             "Save and continue",
             "\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0438"
                     + " \u043f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c",
+            "Save as a file",
+            "\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u043a\u0430\u043a"
+                    + " \u0444\u0430\u0439\u043b",
+            "Save as playlist",
+            "\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u043a\u0430\u043a"
+                    + " \u043f\u043b\u0435\u0439\u043b\u0438\u0441\u0442",
             "Save as playlist ({0})",
             "\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u043a\u0430\u043a"
                     + " \u043f\u043b\u0435\u0439\u043b\u0438\u0441\u0442 ({0})",
+            "Saved Messages",
+            "\u0418\u0437\u0431\u0440\u0430\u043d\u043d\u043e\u0435",
             "Saved index",
             "\u0421\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
                     + " \u0438\u043d\u0434\u0435\u043a\u0441",
@@ -12777,6 +14430,15 @@ final class Translations {
                 + " \u0441\u043d\u043e\u0432\u0430, \u0447\u0442\u043e\u0431\u044b"
                 + " \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"
                 + " \u0444\u0430\u0439\u043b \u0438\u0437 Telegram.",
+            "Search and playback still use mobile data; only the background indexing waits.",
+            "\u041f\u043e\u0438\u0441\u043a \u0438"
+                + " \u0432\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u0435\u0434\u0435\u043d\u0438\u0435"
+                + " \u043f\u043e-\u043f\u0440\u0435\u0436\u043d\u0435\u043c\u0443"
+                + " \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u044e\u0442"
+                + " \u043c\u043e\u0431\u0438\u043b\u044c\u043d\u044b\u0435"
+                + " \u0434\u0430\u043d\u043d\u044b\u0435; \u0436\u0434\u0451\u0442"
+                + " \u0442\u043e\u043b\u044c\u043a\u043e \u0444\u043e\u043d\u043e\u0432\u0430\u044f"
+                + " \u0438\u043d\u0434\u0435\u043a\u0441\u0430\u0446\u0438\u044f.",
             "Search first",
             "\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u043f\u043e\u0438\u0441\u043a",
             "Search text is too long.",
@@ -12833,6 +14495,18 @@ final class Translations {
             "Set up application",
             "\u041d\u0430\u0441\u0442\u0440\u043e\u0438\u0442\u044c"
                     + " \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435",
+            "Settings, corrected names and main channel, and the saved index if you like",
+            "\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438,"
+                    + " \u0438\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0435"
+                    + " \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044f \u0438"
+                    + " \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439"
+                    + " \u043a\u0430\u043d\u0430\u043b, \u0430 \u043f\u0440\u0438"
+                    + " \u0436\u0435\u043b\u0430\u043d\u0438\u0438 \u0438"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441",
+            "Share a chat\u2019s index",
+            "\u041f\u043e\u0434\u0435\u043b\u0438\u0442\u044c\u0441\u044f"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441\u043e\u043c \u0447\u0430\u0442\u0430",
             "Show hash",
             "\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c hash",
             "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3 320kbps",
@@ -12952,6 +14626,13 @@ final class Translations {
             "\u0417\u0430\u043f\u0443\u0441\u043a Telegram\u2026",
             "Starting\u2026",
             "\u0417\u0430\u043f\u0443\u0441\u043a\u2026",
+            "Starts with each channel\u2019s newest post, while it\u2019s still being indexed",
+            "\u041d\u0430\u0447\u0438\u043d\u0430\u0435\u0442\u0441\u044f \u0441"
+                + " \u0441\u0430\u043c\u043e\u0433\u043e \u043d\u043e\u0432\u043e\u0433\u043e"
+                + " \u043f\u043e\u0441\u0442\u0430 \u043a\u0430\u0436\u0434\u043e\u0433\u043e"
+                + " \u043a\u0430\u043d\u0430\u043b\u0430, \u043f\u043e\u043a\u0430 \u043e\u043d"
+                + " \u0435\u0449\u0451"
+                + " \u0438\u043d\u0434\u0435\u043a\u0441\u0438\u0440\u0443\u0435\u0442\u0441\u044f",
             "Stop playback before changing the application configuration.",
             "\u041e\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u0435"
                 + " \u0432\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u0435\u0434\u0435\u043d\u0438\u0435"
@@ -13211,10 +14892,26 @@ final class Translations {
                 + " \u0434\u043e\u043b\u0436\u0435\u043d"
                 + " \u043e\u0441\u0442\u0430\u0432\u0430\u0442\u044c\u0441\u044f"
                 + " \u043f\u0440\u0438\u0432\u0430\u0442\u043d\u044b\u043c.",
+            "The index also runs on battery",
+            "\u0418\u043d\u0434\u0435\u043a\u0441 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442"
+                    + " \u0438 \u043e\u0442 \u0431\u0430\u0442\u0430\u0440\u0435\u0438",
+            "The index also uses mobile data",
+            "\u0418\u043d\u0434\u0435\u043a\u0441"
+                    + " \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442 \u0438"
+                    + " \u043c\u043e\u0431\u0438\u043b\u044c\u043d\u044b\u0435"
+                    + " \u0434\u0430\u043d\u043d\u044b\u0435",
             "The index can't be read right now",
             "\u0418\u043d\u0434\u0435\u043a\u0441 \u0441\u0435\u0439\u0447\u0430\u0441"
                     + " \u043d\u0435\u043b\u044c\u0437\u044f"
                     + " \u043f\u0440\u043e\u0447\u0438\u0442\u0430\u0442\u044c",
+            "The index waits for Wi-Fi to read your chats",
+            "\u0418\u043d\u0434\u0435\u043a\u0441 \u0436\u0434\u0451\u0442 Wi-Fi,"
+                    + " \u0447\u0442\u043e\u0431\u044b"
+                    + " \u043f\u0440\u043e\u0447\u0438\u0442\u0430\u0442\u044c"
+                    + " \u0447\u0430\u0442\u044b",
+            "The index waits for a charger",
+            "\u0418\u043d\u0434\u0435\u043a\u0441 \u0436\u0434\u0451\u0442"
+                    + " \u0437\u0430\u0440\u044f\u0434\u043a\u0438",
             "The index's database couldn't be opened on this phone.",
             "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
                 + " \u043e\u0442\u043a\u0440\u044b\u0442\u044c \u0431\u0430\u0437\u0443"
@@ -13249,6 +14946,17 @@ final class Translations {
                     + " \u0434\u0435\u043a\u043e\u0434\u0438\u0440\u043e\u0432\u0430\u0442\u044c"
                     + " \u0441\u043f\u043e\u043d\u0441\u043e\u0440\u0441\u043a\u0443\u044e"
                     + " \u0430\u043d\u0438\u043c\u0430\u0446\u0438\u044e",
+            "This file is from a newer version of the patch. Update first.",
+            "\u042d\u0442\u043e\u0442 \u0444\u0430\u0439\u043b \u0438\u0437"
+                    + " \u0431\u043e\u043b\u0435\u0435 \u043d\u043e\u0432\u043e\u0439"
+                    + " \u0432\u0435\u0440\u0441\u0438\u0438 \u043f\u0430\u0442\u0447\u0430."
+                    + " \u0421\u043d\u0430\u0447\u0430\u043b\u0430"
+                    + " \u043e\u0431\u043d\u043e\u0432\u0438\u0442\u0435\u0441\u044c.",
+            "This isn't a BitChord index or backup file.",
+            "\u042d\u0442\u043e \u043d\u0435 \u0438\u043d\u0434\u0435\u043a\u0441\u043d\u044b\u0439"
+                    + " \u0444\u0430\u0439\u043b \u0438 \u043d\u0435"
+                    + " \u0440\u0435\u0437\u0435\u0440\u0432\u043d\u0430\u044f"
+                    + " \u043a\u043e\u043f\u0438\u044f BitChord.",
             "This login step isn't supported here. Sign in with an existing Telegram account.",
             "\u042d\u0442\u043e\u0442 \u0448\u0430\u0433 \u0432\u0445\u043e\u0434\u0430"
                 + " \u0437\u0434\u0435\u0441\u044c \u043d\u0435"
@@ -13357,6 +15065,9 @@ final class Translations {
             "Use original",
             "\u041e\u0441\u0442\u0430\u0432\u0438\u0442\u044c"
                     + " \u0438\u0441\u0445\u043e\u0434\u043d\u043e\u0435",
+            "Use shared indexes",
+            "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"
+                    + " \u043e\u0431\u0449\u0438\u0435 \u0438\u043d\u0434\u0435\u043a\u0441\u044b",
             "Use this name?",
             "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"
                     + " \u044d\u0442\u043e \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435?",
@@ -13580,6 +15291,21 @@ final class Translations {
                 + " \u0443\u0447\u0438\u0442\u044b\u0432\u0430\u044e\u0442\u0441\u044f \u0432"
                 + " \u0442\u043e\u043c \u0436\u0435 \u0447\u0430\u0441\u043e\u0432\u043e\u043c"
                 + " \u043b\u0438\u043c\u0438\u0442\u0435.",
+            "Your main channel then lists the music in the opposite order to the community channel."
+                    + " Applies to channels copying hasn\u2019t started from yet.",
+            "\u0422\u043e\u0433\u0434\u0430 \u0432 \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u043c"
+                + " \u043a\u0430\u043d\u0430\u043b\u0435 \u043c\u0443\u0437\u044b\u043a\u0430"
+                + " \u0431\u0443\u0434\u0435\u0442 \u0438\u0434\u0442\u0438 \u0432"
+                + " \u043e\u0431\u0440\u0430\u0442\u043d\u043e\u043c"
+                + " \u043f\u043e\u0440\u044f\u0434\u043a\u0435 \u043f\u043e"
+                + " \u0441\u0440\u0430\u0432\u043d\u0435\u043d\u0438\u044e \u0441"
+                + " \u043a\u0430\u043d\u0430\u043b\u043e\u043c"
+                + " \u0441\u043e\u043e\u0431\u0449\u0435\u0441\u0442\u0432\u0430."
+                + " \u041f\u0440\u0438\u043c\u0435\u043d\u044f\u0435\u0442\u0441\u044f \u043a"
+                + " \u043a\u0430\u043d\u0430\u043b\u0430\u043c,"
+                + " \u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0438\u0437"
+                + " \u043a\u043e\u0442\u043e\u0440\u044b\u0445 \u0435\u0449\u0451 \u043d\u0435"
+                + " \u043d\u0430\u0447\u0430\u043b\u043e\u0441\u044c.",
             "Your phone talks to Telegram directly. Your API details are encrypted on this phone"
                 + " and your Telegram session is stored privately. The session is a normal Telegram"
                 + " login, so it can reach your whole account, not just music. Audio BitChord has"
@@ -13703,6 +15429,11 @@ final class Translations {
             "{0} file indexed from {1} chats",
             "\u041f\u0440\u043e\u0438\u043d\u0434\u0435\u043a\u0441\u0438\u0440\u043e\u0432\u0430\u043d\u043e"
                 + " \u0444\u0430\u0439\u043b\u043e\u0432: {0}, \u0447\u0430\u0442\u043e\u0432: {1}",
+            "{0} files added to the saved index.",
+            "\u0424\u0430\u0439\u043b\u043e\u0432"
+                    + " \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e \u0432"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441: {0}.",
             "{0} files indexed from {1} chat",
             "\u041f\u0440\u043e\u0438\u043d\u0434\u0435\u043a\u0441\u0438\u0440\u043e\u0432\u0430\u043d\u043e"
                 + " \u0444\u0430\u0439\u043b\u043e\u0432: {0}, \u0447\u0430\u0442\u043e\u0432: {1}",
@@ -13781,6 +15512,8 @@ final class Translations {
                     + " adlar\u0131 b\u00f6l\u00fcm\u00fcnden kontrol edin.",
             "A better copy fades in without a gap",
             "Daha iyi kopya kesinti olmadan yumu\u015fak\u00e7a ge\u00e7er",
+            "A chat\u2019s index comes from a shared index file when there is one",
+            "Payla\u015f\u0131lan bir dizin dosyas\u0131 varsa sohbetin dizini oradan gelir",
             "A file counts as already there when it\u2019s the same Telegram file, or has the same"
                     + " title, artist, length and format. Nothing in your main channel is deleted."
                     + " Copying waits until your main channel has been indexed.",
@@ -13807,8 +15540,14 @@ final class Translations {
             "Ba\u011flanmak i\u00e7in uygulama kimlik bilgilerinizi ekleyin.",
             "Added automatically to BitChord.",
             "BitChord\u2019a otomatik olarak eklendi.",
+            "Advanced",
+            "Geli\u015fmi\u015f",
             "Album covers",
             "Alb\u00fcm kapaklar\u0131",
+            "Albums",
+            "Alb\u00fcmler",
+            "All chats",
+            "T\u00fcm sohbetler",
             "All music files are copied",
             "T\u00fcm m\u00fczik dosyalar\u0131 kopyalan\u0131r",
             "An unofficial add-on that uses the Telegram API with your own account. It isn\u2019t"
@@ -13845,10 +15584,37 @@ final class Translations {
             "Uygulama kurulumu",
             "Apply cache size",
             "\u00d6nbellek boyutunu uygula",
+            "Archived chats",
+            "Ar\u015fivlenmi\u015f sohbetler",
             "Artist",
             "Sanat\u00e7\u0131",
             "Back",
             "Geri",
+            "Back up",
+            "Yedekle",
+            "Backup and sharing",
+            "Yedekleme ve payla\u015f\u0131m",
+            "Backup saved.",
+            "Yedek kaydedildi.",
+            "Backups and index files never hold your API details or your Telegram session. An index"
+                + " file lists the music in a chat, so anyone you share it with sees that list.",
+            "Yedekler ve dizin dosyalar\u0131 API bilgilerinizi veya Telegram oturumunuzu asla"
+                + " i\u00e7ermez. Dizin dosyas\u0131 bir sohbetteki m\u00fcziklerin listesini"
+                + " i\u00e7erir; bu y\u00fczden payla\u015ft\u0131\u011f\u0131n\u0131z herkes bu"
+                + " listeyi g\u00f6r\u00fcr.",
+            "Basic",
+            "Temel",
+            "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
+                + " the chat itself (in a channel, only its admins can post), in your Saved"
+                + " Messages or in your main channel, and then only reads what\u2019s been posted"
+                + " since. Each song is checked against its post when it plays.",
+            "Yama, bir sohbeti Telegram\u2019dan okumadan \u00f6nce o sohbetin"
+                + " payla\u015f\u0131lm\u0131\u015f dizin dosyas\u0131n\u0131 sohbetin kendisinde"
+                + " (kanallarda yaln\u0131zca y\u00f6neticiler payla\u015fabilir),"
+                + " Kay\u0131tl\u0131 Mesajlar\u2019\u0131n\u0131zda veya ana kanal\u0131n\u0131zda"
+                + " arar ve ard\u0131ndan yaln\u0131zca o zamandan beri"
+                + " payla\u015f\u0131lanlar\u0131 okur. Her \u015fark\u0131 \u00e7alarken kendi"
+                + " g\u00f6nderisiyle kar\u015f\u0131la\u015ft\u0131r\u0131l\u0131r.",
             "BitChord guesses from the file type",
             "BitChord dosya t\u00fcr\u00fcne g\u00f6re tahmin eder",
             "BitChord keeps search results for a few minutes, so changes here show up in new"
@@ -13862,6 +15628,8 @@ final class Translations {
                 + " telefonda \u00e7alar. Dolby Atmos 5.1 veya 7.1 olarak, destekleyen bir telefon"
                 + " ya da hoparl\u00f6rde ise y\u00fckseklik sesiyle \u00e7alar. Dolby AC-4"
                 + " i\u00e7in telefonda kod \u00e7\u00f6z\u00fcc\u00fc gerekir.",
+            "BitChord saved index of {0}",
+            "{0} i\u00e7in BitChord kay\u0131tl\u0131 dizini",
             "BitChord sees the corrected names",
             "BitChord d\u00fczeltilmi\u015f adlar\u0131 g\u00f6r\u00fcr",
             "BitChord switches copies with a short pause",
@@ -13959,6 +15727,8 @@ final class Translations {
             "Genel ve a\u00e7\u0131klay\u0131c\u0131 bir adla kendi uygulaman\u0131z\u0131"
                 + " olu\u015fturun, \u00f6rne\u011fin My Client (k\u0131sa ad: myclient). Telegram"
                 + " bu ad\u0131 giri\u015f uyar\u0131lar\u0131nda g\u00f6sterebilir.",
+            "Damaged index file",
+            "Hasarl\u0131 dizin dosyas\u0131",
             "Dismiss",
             "Yok say",
             "Dolby AC-4 files show only if this phone has a decoder",
@@ -14005,10 +15775,15 @@ final class Translations {
             "Telegram hesab\u0131n\u0131z\u0131n \u015fifresini girin.",
             "Every Dolby file shows",
             "T\u00fcm Dolby dosyalar\u0131 g\u00f6r\u00fcn\u00fcr",
+            "Every chat is read from Telegram",
+            "Her sohbet Telegram\u2019dan okunur",
             "Every copy of a song shows",
             "Bir \u015fark\u0131n\u0131n her kopyas\u0131 g\u00f6sterilir",
             "Every file is copied, even if it\u2019s already there",
             "Zaten olsa bile her dosya kopyalan\u0131r",
+            "Everyone who can see {0} can see the list of music in {1}.",
+            "{0} sohbetini g\u00f6rebilen herkes {1} i\u00e7indeki m\u00fczik listesini"
+                    + " g\u00f6rebilir.",
             "FLAC, WAV and ALAC count as lossless; others by bitrate",
             "FLAC, WAV ve ALAC kay\u0131ps\u0131z say\u0131l\u0131r; di\u011ferleri bit"
                     + " h\u0131z\u0131na g\u00f6re",
@@ -14026,6 +15801,8 @@ final class Translations {
                     + " e\u015fle\u015ftirir.",
             "Fix a track name",
             "Par\u00e7a ad\u0131n\u0131 d\u00fczelt",
+            "Folder",
+            "Klas\u00f6r",
             "Format legend",
             "Format etiketi",
             "Found {0} track.",
@@ -14036,14 +15813,27 @@ final class Translations {
                     + " account and channels.",
             "\u00dccretsizdir ve oldu\u011fu gibi sunulur. Sorumlu kullan\u0131n: Telegram"
                     + " hesab\u0131n\u0131zdan ve kanallar\u0131n\u0131zdan siz sorumlusunuz.",
+            "From a backup, or add an index file someone shared",
+            "Bir yedekten veya birinin payla\u015ft\u0131\u011f\u0131 bir dizin dosyas\u0131n\u0131"
+                    + " ekleyin",
             "Hide Dolby files this phone can\u2019t play",
             "Bu telefonun \u00e7alamad\u0131\u011f\u0131 Dolby dosyalar\u0131n\u0131 gizle",
             "Hide duplicate songs",
             "Yinelenen \u015fark\u0131lar\u0131 gizle",
             "Hide hash",
             "Hash\u2019i gizle",
+            "Include the saved index (larger file)",
+            "Kay\u0131tl\u0131 dizini dahil et (daha b\u00fcy\u00fck dosya)",
             "Incomplete sponsored-message response",
             "Eksik sponsorlu mesaj yan\u0131t\u0131",
+            "Index file saved.",
+            "Dizin dosyas\u0131 kaydedildi.",
+            "Index file too large",
+            "Dizin dosyas\u0131 \u00e7ok b\u00fcy\u00fck",
+            "Index only on Wi-Fi",
+            "Yaln\u0131zca Wi-Fi\u2019dayken dizine ekle",
+            "Index only while charging",
+            "Yaln\u0131zca \u015farj olurken dizine ekle",
             "Indexing: {0} files found",
             "Dizine ekleniyor: {0} dosya bulundu",
             "Invalid cache-size choice",
@@ -14090,23 +15880,24 @@ final class Translations {
             "Music chats",
             "M\u00fczik sohbetleri",
             "Music from your community channels is copied into your main channel, a few files at a"
-                + " time, oldest post first. Copies show as your own posts, without \u201cForwarded"
-                + " from\u201d, and stay even if the community channel deletes them.\n\n"
+                + " time. Copies show as your own posts, without \u201cForwarded from\u201d, and"
+                + " stay even if the community channel deletes them.\n\n"
                 + "Telegram watches for accounts that copy many messages. Going faster than it"
                 + " likes can get your account limited for a while, or banned. The pace below never"
                 + " goes above 500 files an hour, and copying pauses whenever Telegram asks.\n\n"
                 + "You\u2019re responsible for what you copy. Only copy music you\u2019re allowed"
                 + " to keep.",
             "Topluluk kanallar\u0131n\u0131zdaki m\u00fczikler, her seferinde birka\u00e7 dosya"
-                + " olmak \u00fczere, en eski g\u00f6nderiden ba\u015flayarak ana"
-                + " kanal\u0131n\u0131za kopyalan\u0131r. Kopyalar \u201c\u015euradan"
-                + " iletildi\u201d olmadan kendi g\u00f6nderileriniz olarak g\u00f6r\u00fcn\u00fcr"
-                + " ve topluluk kanal\u0131 onlar\u0131 silse bile kal\u0131r.\n\n"
+                + " olmak \u00fczere ana kanal\u0131n\u0131za kopyalan\u0131r. Kopyalar"
+                + " \u201c\u0130letildi\u201d etiketi olmadan sizin kendi g\u00f6nderileriniz"
+                + " olarak g\u00f6r\u00fcn\u00fcr ve topluluk kanal\u0131 onlar\u0131 silse bile"
+                + " kal\u0131r.\n\n"
                 + "Telegram \u00e7ok say\u0131da mesaj kopyalayan hesaplar\u0131 izler. Onun"
-                + " istedi\u011finden h\u0131zl\u0131 gitmek hesab\u0131n\u0131z\u0131n bir"
-                + " s\u00fcre k\u0131s\u0131tlanmas\u0131na veya yasaklanmas\u0131na yol"
-                + " a\u00e7abilir. A\u015fa\u011f\u0131daki h\u0131z asla saatte 500 dosyay\u0131"
-                + " ge\u00e7mez ve Telegram istedi\u011finde kopyalama duraklat\u0131l\u0131r.\n\n"
+                + " ho\u015fland\u0131\u011f\u0131ndan daha h\u0131zl\u0131 gitmek"
+                + " hesab\u0131n\u0131z\u0131n bir s\u00fcreli\u011fine"
+                + " k\u0131s\u0131tlanmas\u0131na veya yasaklanmas\u0131na yol a\u00e7abilir."
+                + " A\u015fa\u011f\u0131daki h\u0131z asla saatte 500 dosyay\u0131 a\u015fmaz ve"
+                + " Telegram istedi\u011finde kopyalama duraklar.\n\n"
                 + "Kopyalad\u0131klar\u0131n\u0131zdan siz sorumlusunuz. Yaln\u0131zca"
                 + " saklaman\u0131za izin verilen m\u00fczikleri kopyalay\u0131n.",
             "Music library",
@@ -14119,6 +15910,10 @@ final class Translations {
             "Yerel eklenti ba\u015flat\u0131lamad\u0131: {0}",
             "New posts are copied as they\u2019re found",
             "Yeni g\u00f6nderiler bulunduk\u00e7a kopyalan\u0131r",
+            "Newest first",
+            "\u00d6nce en yeni",
+            "No albums found in this chat yet.",
+            "Bu sohbette hen\u00fcz alb\u00fcm bulunamad\u0131.",
             "No background searches",
             "Arka planda arama yok",
             "No covers are downloaded",
@@ -14141,6 +15936,8 @@ final class Translations {
             "Hi\u00e7bir \u015fey kopyalanmaz",
             "Official sponsored messages could not be displayed: {0}",
             "Resmi sponsorlu mesajlar g\u00f6sterilemedi: {0}",
+            "Oldest post first, once each channel has been indexed",
+            "Her kanal dizine eklendikten sonra en eski g\u00f6nderiden ba\u015flar",
             "On Telegram: \u201c{0}\u201d by {1}",
             "Telegram\u2019da: \u201c{0}\u201d \u00b7 {1}",
             "On Telegram: \u201c{0}\u201d by {1} ({2})\n\n"
@@ -14167,6 +15964,10 @@ final class Translations {
             "Sponsoru a\u00e7",
             "Open this Telegram link in the official client: {0}",
             "Bu Telegram ba\u011flant\u0131s\u0131n\u0131 resmi istemcide a\u00e7\u0131n: {0}",
+            "Paused until this phone is charging",
+            "Bu telefon \u015farj olana kadar duraklat\u0131ld\u0131",
+            "Paused until this phone is on Wi-Fi",
+            "Bu telefon Wi-Fi\u2019a ba\u011flanana kadar duraklat\u0131ld\u0131",
             "Phone number",
             "Telefon numaras\u0131",
             "Play surround as stereo",
@@ -14175,6 +15976,16 @@ final class Translations {
             "Oynatma",
             "Playlists and downloads",
             "\u00c7alma listeleri ve indirmeler",
+            "Post",
+            "Payla\u015f",
+            "Post in {0}",
+            "{0} sohbetinde payla\u015f",
+            "Post in {0}?",
+            "{0} sohbetinde payla\u015f\u0131ls\u0131n m\u0131?",
+            "Post it in Telegram, or save it as a file",
+            "Telegram\u2019da payla\u015f\u0131n veya dosya olarak kaydedin",
+            "Posted the index of {0}.",
+            "{0} dizini payla\u015f\u0131ld\u0131.",
             "Privacy and your account",
             "Gizlilik ve hesab\u0131n\u0131z",
             "Protected content and secret chats are not supported by this cached audio player.",
@@ -14208,6 +16019,10 @@ final class Translations {
             "Ses kalitesini bildir",
             "Report sponsored message",
             "Sponsorlu mesaj\u0131 bildir",
+            "Restore",
+            "Geri y\u00fckle",
+            "Restored. {0} files added to the saved index.",
+            "Geri y\u00fcklendi. Kay\u0131tl\u0131 dizine {0} dosya eklendi.",
             "Retry channel",
             "Kanal\u0131 yeniden dene",
             "Retry connection",
@@ -14223,8 +16038,14 @@ final class Translations {
                     + " t\u00fcm\u00fcn\u00fc indirin.",
             "Save and continue",
             "Kaydet ve devam et",
+            "Save as a file",
+            "Dosya olarak kaydet",
+            "Save as playlist",
+            "\u00c7alma listesi olarak kaydet",
             "Save as playlist ({0})",
             "\u00c7alma listesi olarak kaydet ({0})",
+            "Saved Messages",
+            "Kay\u0131tl\u0131 Mesajlar",
             "Saved index",
             "Kay\u0131tl\u0131 dizin",
             "Saved {0} song as the playlist \u201c{1}\u201d in BitChord\u2019s Library.",
@@ -14240,6 +16061,9 @@ final class Translations {
             "Kaydedildi: \u201c{0}\u201d. BitChord\u2019un kay\u0131tl\u0131 kopyas\u0131"
                     + " kald\u0131r\u0131ld\u0131; Telegram dosyan\u0131z\u0131 kullanmak i\u00e7in"
                     + " yeniden \u00e7al\u0131n.",
+            "Search and playback still use mobile data; only the background indexing waits.",
+            "Arama ve oynatma yine mobil veri kullan\u0131r; yaln\u0131zca arka plandaki dizine"
+                    + " ekleme bekler.",
             "Search first",
             "\u00d6nce aray\u0131n",
             "Search text is too long.",
@@ -14267,6 +16091,11 @@ final class Translations {
                     + " s\u0131f\u0131rlay\u0131n",
             "Set up application",
             "Uygulamay\u0131 kur",
+            "Settings, corrected names and main channel, and the saved index if you like",
+            "Ayarlar, d\u00fczeltilmi\u015f adlar ve ana kanal; isterseniz kay\u0131tl\u0131 dizin"
+                    + " de",
+            "Share a chat\u2019s index",
+            "Bir sohbetin dizinini payla\u015f",
             "Show hash",
             "Hash\u2019i g\u00f6ster",
             "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3 320kbps",
@@ -14325,6 +16154,8 @@ final class Translations {
             "Telegram ba\u015flat\u0131l\u0131yor\u2026",
             "Starting\u2026",
             "Ba\u015flat\u0131l\u0131yor\u2026",
+            "Starts with each channel\u2019s newest post, while it\u2019s still being indexed",
+            "Her kanal h\u00e2l\u00e2 dizine eklenirken en yeni g\u00f6nderisinden ba\u015flar",
             "Stop playback before changing the application configuration.",
             "Uygulama yap\u0131land\u0131rmas\u0131n\u0131 de\u011fi\u015ftirmeden \u00f6nce"
                     + " oynatmay\u0131 durdurun.",
@@ -14448,8 +16279,16 @@ final class Translations {
                     + " private.",
             "Dosyalar kay\u0131tl\u0131 dizinden gelir, bu y\u00fczden a\u00e7\u0131k olmas\u0131"
                     + " gerekir. Ana kanal\u0131n\u0131z gizli kalmal\u0131d\u0131r.",
+            "The index also runs on battery",
+            "Dizin pildeyken de \u00e7al\u0131\u015f\u0131r",
+            "The index also uses mobile data",
+            "Dizin mobil veri de kullan\u0131r",
             "The index can't be read right now",
             "Dizin \u015fu anda okunam\u0131yor",
+            "The index waits for Wi-Fi to read your chats",
+            "Dizin, sohbetlerinizi okumak i\u00e7in Wi-Fi bekler",
+            "The index waits for a charger",
+            "Dizin \u015farj cihaz\u0131 bekler",
             "The index's database couldn't be opened on this phone.",
             "Dizin veritaban\u0131 bu telefonda a\u00e7\u0131lamad\u0131.",
             "The same song shows once, as its best copy",
@@ -14463,6 +16302,11 @@ final class Translations {
                     + " g\u00f6sterdi\u011finde yeniden deneyin.",
             "This device could not decode the sponsored animation",
             "Bu cihaz sponsorlu animasyonu \u00e7\u00f6zemedi",
+            "This file is from a newer version of the patch. Update first.",
+            "Bu dosya yaman\u0131n daha yeni bir s\u00fcr\u00fcm\u00fcnden. \u00d6nce"
+                    + " g\u00fcncelleyin.",
+            "This isn't a BitChord index or backup file.",
+            "Bu bir BitChord dizin veya yedek dosyas\u0131 de\u011fil.",
             "This login step isn't supported here. Sign in with an existing Telegram account.",
             "Bu giri\u015f ad\u0131m\u0131 burada desteklenmiyor. Mevcut bir Telegram"
                     + " hesab\u0131yla giri\u015f yap\u0131n.",
@@ -14519,6 +16363,8 @@ final class Translations {
             "Ad\u0131 kullan",
             "Use original",
             "Orijinali kullan",
+            "Use shared indexes",
+            "Payla\u015f\u0131lan dizinleri kullan",
             "Use this name?",
             "Bu ad kullan\u0131ls\u0131n m\u0131?",
             "Uses the cover Telegram has for each file",
@@ -14612,6 +16458,11 @@ final class Translations {
             "BitChord a\u00e7\u0131kken topluluk kanallar\u0131n\u0131z birka\u00e7 saatte bir yeni"
                 + " g\u00f6nderiler i\u00e7in kontrol edilir ve yeni dosyalar da kopyalan\u0131r."
                 + " Bunlar ayn\u0131 saatlik s\u0131n\u0131ra dahildir.",
+            "Your main channel then lists the music in the opposite order to the community channel."
+                    + " Applies to channels copying hasn\u2019t started from yet.",
+            "Bu durumda ana kanal\u0131n\u0131z m\u00fczikleri topluluk kanal\u0131n\u0131n tersi"
+                    + " s\u0131rayla listeler. Kopyalaman\u0131n hen\u00fcz"
+                    + " ba\u015flamad\u0131\u011f\u0131 kanallar i\u00e7in ge\u00e7erlidir.",
             "Your phone talks to Telegram directly. Your API details are encrypted on this phone"
                 + " and your Telegram session is stored privately. The session is a normal Telegram"
                 + " login, so it can reach your whole account, not just music. Audio BitChord has"
@@ -14676,6 +16527,8 @@ final class Translations {
             "{1} sohbetten {0} dosya dizine eklendi",
             "{0} file indexed from {1} chats",
             "{1} sohbetten {0} dosya dizine eklendi",
+            "{0} files added to the saved index.",
+            "Kay\u0131tl\u0131 dizine {0} dosya eklendi.",
             "{0} files indexed from {1} chat",
             "{1} sohbetten {0} dosya dizine eklendi",
             "{0} files indexed from {1} chats",
@@ -14758,6 +16611,12 @@ final class Translations {
             "\u0628\u06c1\u062a\u0631 \u06a9\u0627\u067e\u06cc \u0628\u063a\u06cc\u0631"
                 + " \u0648\u0642\u0641\u06d2 \u06a9\u06d2 \u0622\u06c1\u0633\u062a\u06c1"
                 + " \u0633\u06d2 \u0634\u0631\u0648\u0639 \u06c1\u0648\u062a\u06cc \u06c1\u06d2",
+            "A chat\u2019s index comes from a shared index file when there is one",
+            "\u0627\u06af\u0631 \u0634\u06cc\u0626\u0631 \u06a9\u06cc \u06af\u0626\u06cc"
+                    + " \u0627\u0646\u0688\u06cc\u06a9\u0633 \u0641\u0627\u0626\u0644"
+                    + " \u0645\u0648\u062c\u0648\u062f \u06c1\u0648 \u062a\u0648 \u0686\u06cc\u0679"
+                    + " \u06a9\u0627 \u0627\u0646\u0688\u06cc\u06a9\u0633 \u0627\u0633\u06cc"
+                    + " \u0633\u06d2 \u0622\u062a\u0627 \u06c1\u06d2",
             "A file counts as already there when it\u2019s the same Telegram file, or has the same"
                     + " title, artist, length and format. Nothing in your main channel is deleted."
                     + " Copying waits until your main channel has been indexed.",
@@ -14812,8 +16671,14 @@ final class Translations {
             "Added automatically to BitChord.",
             "BitChord \u0645\u06cc\u06ba \u062e\u0648\u062f\u0628\u062e\u0648\u062f"
                     + " \u0634\u0627\u0645\u0644 \u06c1\u0648 \u06af\u06cc\u0627\u06d4",
+            "Advanced",
+            "\u0627\u06cc\u0688\u0648\u0627\u0646\u0633\u0688",
             "Album covers",
             "\u0627\u0644\u0628\u0645 \u06a9\u0648\u0631\u0632",
+            "Albums",
+            "\u0627\u0644\u0628\u0645\u0632",
+            "All chats",
+            "\u062a\u0645\u0627\u0645 \u0686\u06cc\u0679\u0633",
             "All music files are copied",
             "\u062a\u0645\u0627\u0645 \u0645\u06cc\u0648\u0632\u06a9"
                     + " \u0641\u0627\u0626\u0644\u06cc\u06ba \u06a9\u0627\u067e\u06cc"
@@ -14879,10 +16744,61 @@ final class Translations {
             "Apply cache size",
             "\u06a9\u06cc\u0634 \u06a9\u0627 \u0633\u0627\u0626\u0632 \u0644\u0627\u06af\u0648"
                     + " \u06a9\u0631\u06cc\u06ba",
+            "Archived chats",
+            "\u0622\u0631\u06a9\u0627\u0626\u06cc\u0648 \u0634\u062f\u06c1"
+                    + " \u0686\u06cc\u0679\u0633",
             "Artist",
             "\u0622\u0631\u0679\u0633\u0679",
             "Back",
             "\u0648\u0627\u067e\u0633",
+            "Back up",
+            "\u0628\u06cc\u06a9 \u0627\u067e \u0644\u06cc\u06ba",
+            "Backup and sharing",
+            "\u0628\u06cc\u06a9 \u0627\u067e \u0627\u0648\u0631"
+                    + " \u0634\u06cc\u0626\u0631\u0646\u06af",
+            "Backup saved.",
+            "\u0628\u06cc\u06a9 \u0627\u067e \u0645\u062d\u0641\u0648\u0638 \u06c1\u0648"
+                    + " \u06af\u06cc\u0627\u06d4",
+            "Backups and index files never hold your API details or your Telegram session. An index"
+                + " file lists the music in a chat, so anyone you share it with sees that list.",
+            "\u0628\u06cc\u06a9 \u0627\u067e\u0633 \u0627\u0648\u0631"
+                + " \u0627\u0646\u0688\u06cc\u06a9\u0633 \u0641\u0627\u0626\u0644\u0648\u06ba"
+                + " \u0645\u06cc\u06ba \u06a9\u0628\u06be\u06cc \u0622\u067e \u06a9\u06cc API"
+                + " \u062a\u0641\u0635\u06cc\u0644\u0627\u062a \u06cc\u0627 \u0622\u067e"
+                + " \u06a9\u0627 Telegram \u0633\u06cc\u0634\u0646 \u0646\u06c1\u06cc\u06ba"
+                + " \u06c1\u0648\u062a\u0627\u06d4 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                + " \u0641\u0627\u0626\u0644 \u0645\u06cc\u06ba \u06a9\u0633\u06cc"
+                + " \u0686\u06cc\u0679 \u06a9\u06cc \u0645\u0648\u0633\u06cc\u0642\u06cc"
+                + " \u06a9\u06cc \u0641\u06c1\u0631\u0633\u062a \u06c1\u0648\u062a\u06cc"
+                + " \u06c1\u06d2\u060c \u0627\u0633 \u0644\u06cc\u06d2 \u0622\u067e \u062c\u0633"
+                + " \u06a9\u06d2 \u0633\u0627\u062a\u06be \u0627\u0633\u06d2"
+                + " \u0634\u06cc\u0626\u0631 \u06a9\u0631\u06cc\u06ba \u0648\u06c1 \u06cc\u06c1"
+                + " \u0641\u06c1\u0631\u0633\u062a \u062f\u06cc\u06a9\u06be"
+                + " \u0633\u06a9\u062a\u0627 \u06c1\u06d2\u06d4",
+            "Basic",
+            "\u0628\u0646\u06cc\u0627\u062f\u06cc",
+            "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
+                + " the chat itself (in a channel, only its admins can post), in your Saved"
+                + " Messages or in your main channel, and then only reads what\u2019s been posted"
+                + " since. Each song is checked against its post when it plays.",
+            "Telegram \u0633\u06d2 \u06a9\u0648\u0626\u06cc \u0686\u06cc\u0679"
+                + " \u067e\u0691\u06be\u0646\u06d2 \u0633\u06d2 \u067e\u06c1\u0644\u06d2\u060c"
+                + " \u067e\u06cc\u0686 \u0627\u0633 \u06a9\u06cc"
+                + " \u0627\u0646\u0688\u06cc\u06a9\u0633 \u0641\u0627\u0626\u0644"
+                + " \u062e\u0648\u062f \u0627\u0633\u06cc \u0686\u06cc\u0679 \u0645\u06cc\u06ba"
+                + " (\u0686\u06cc\u0646\u0644 \u0645\u06cc\u06ba \u0635\u0631\u0641 \u0627\u0633"
+                + " \u06a9\u06d2 \u0627\u06cc\u0688\u0645\u0646\u0632 \u067e\u0648\u0633\u0679"
+                + " \u06a9\u0631 \u0633\u06a9\u062a\u06d2 \u06c1\u06cc\u06ba)\u060c \u0622\u067e"
+                + " \u06a9\u06d2 Saved Messages \u0645\u06cc\u06ba \u06cc\u0627 \u0622\u067e"
+                + " \u06a9\u06d2 \u0645\u06cc\u0646 \u0686\u06cc\u0646\u0644 \u0645\u06cc\u06ba"
+                + " \u062a\u0644\u0627\u0634 \u06a9\u0631\u062a\u0627 \u06c1\u06d2\u060c"
+                + " \u0627\u0648\u0631 \u067e\u06be\u0631 \u0635\u0631\u0641 \u0648\u06c1\u06cc"
+                + " \u067e\u0691\u06be\u062a\u0627 \u06c1\u06d2 \u062c\u0648 \u0627\u0633"
+                + " \u06a9\u06d2 \u0628\u0639\u062f \u067e\u0648\u0633\u0679 \u06c1\u0648\u0627"
+                + " \u06c1\u0648\u06d4 \u06c1\u0631 \u06af\u0627\u0646\u0627"
+                + " \u0686\u0644\u062a\u06d2 \u0648\u0642\u062a \u0627\u0633 \u06a9\u06cc"
+                + " \u067e\u0648\u0633\u0679 \u0633\u06d2 \u062c\u0627\u0646\u0686\u0627"
+                + " \u062c\u0627\u062a\u0627 \u06c1\u06d2\u06d4",
             "BitChord guesses from the file type",
             "BitChord \u0641\u0627\u0626\u0644 \u06a9\u06cc \u0642\u0633\u0645 \u0633\u06d2"
                     + " \u0627\u0646\u062f\u0627\u0632\u06c1 \u0644\u06af\u0627\u062a\u0627"
@@ -14911,6 +16827,9 @@ final class Translations {
                 + " \u06a9\u06d2 \u0644\u06cc\u06d2 \u0641\u0648\u0646 \u0645\u06cc\u06ba"
                 + " \u0688\u06cc\u06a9\u0648\u0688\u0631 \u0636\u0631\u0648\u0631\u06cc"
                 + " \u06c1\u06d2\u06d4",
+            "BitChord saved index of {0}",
+            "{0} \u06a9\u0627 BitChord \u0645\u062d\u0641\u0648\u0638"
+                    + " \u0627\u0646\u0688\u06cc\u06a9\u0633",
             "BitChord sees the corrected names",
             "BitChord \u062f\u0631\u0633\u062a \u06a9\u06cc\u06d2 \u06af\u0626\u06d2"
                     + " \u0646\u0627\u0645 \u062f\u06cc\u06a9\u06be\u062a\u0627 \u06c1\u06d2",
@@ -15082,6 +17001,9 @@ final class Translations {
                 + " \u06cc\u06c1 \u0646\u0627\u0645 \u0633\u0627\u0626\u0646 \u0627\u0646"
                 + " \u0627\u0644\u0631\u0679\u0633 \u0645\u06cc\u06ba \u062f\u06a9\u06be\u0627"
                 + " \u0633\u06a9\u062a\u0627 \u06c1\u06d2\u06d4",
+            "Damaged index file",
+            "\u062e\u0631\u0627\u0628 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                    + " \u0641\u0627\u0626\u0644",
             "Dismiss",
             "\u062e\u0627\u0631\u062c \u06a9\u0631\u06cc\u06ba",
             "Dolby AC-4 files show only if this phone has a decoder",
@@ -15154,6 +17076,9 @@ final class Translations {
             "Every Dolby file shows",
             "\u062a\u0645\u0627\u0645 Dolby \u0641\u0627\u0626\u0644\u06cc\u06ba"
                     + " \u062f\u06a9\u06be\u062a\u06cc \u06c1\u06cc\u06ba",
+            "Every chat is read from Telegram",
+            "\u06c1\u0631 \u0686\u06cc\u0679 Telegram \u0633\u06d2 \u067e\u0691\u06be\u06cc"
+                    + " \u062c\u0627\u062a\u06cc \u06c1\u06d2",
             "Every copy of a song shows",
             "\u06af\u0627\u0646\u06d2 \u06a9\u06cc \u06c1\u0631 \u06a9\u0627\u067e\u06cc"
                     + " \u062f\u06a9\u06be\u0627\u0626\u06cc \u062f\u06cc\u062a\u06cc \u06c1\u06d2",
@@ -15162,6 +17087,12 @@ final class Translations {
                     + " \u06c1\u0648\u062a\u06cc \u06c1\u06d2\u060c \u0686\u0627\u06c1\u06d2"
                     + " \u0648\u06c1 \u067e\u06c1\u0644\u06d2 \u0633\u06d2"
                     + " \u0645\u0648\u062c\u0648\u062f \u06c1\u0648",
+            "Everyone who can see {0} can see the list of music in {1}.",
+            "\u062c\u0648 \u0628\u06be\u06cc {0} \u062f\u06cc\u06a9\u06be \u0633\u06a9\u062a\u0627"
+                    + " \u06c1\u06d2 \u0648\u06c1 {1} \u0645\u06cc\u06ba"
+                    + " \u0645\u0648\u0633\u06cc\u0642\u06cc \u06a9\u06cc"
+                    + " \u0641\u06c1\u0631\u0633\u062a \u062f\u06cc\u06a9\u06be"
+                    + " \u0633\u06a9\u062a\u0627 \u06c1\u06d2\u06d4",
             "FLAC, WAV and ALAC count as lossless; others by bitrate",
             "FLAC\u060c WAV \u0627\u0648\u0631 ALAC \u0644\u0627\u0633 \u0644\u06cc\u0633"
                     + " \u0645\u0627\u0646\u06cc \u062c\u0627\u062a\u06cc \u06c1\u06cc\u06ba\u061b"
@@ -15196,6 +17127,8 @@ final class Translations {
             "Fix a track name",
             "\u0679\u0631\u06cc\u06a9 \u06a9\u0627 \u0646\u0627\u0645 \u062f\u0631\u0633\u062a"
                     + " \u06a9\u0631\u06cc\u06ba",
+            "Folder",
+            "\u0641\u0648\u0644\u0688\u0631",
             "Format legend",
             "\u0641\u0627\u0631\u0645\u06cc\u0679 \u0644\u06cc\u062c\u0646\u0688",
             "Found {0} track.",
@@ -15213,6 +17146,11 @@ final class Translations {
                     + " \u0627\u0648\u0631 \u0686\u06cc\u0646\u0644\u0632 \u06a9\u06d2"
                     + " \u0630\u0645\u06c1 \u062f\u0627\u0631 \u0622\u067e \u062e\u0648\u062f"
                     + " \u06c1\u06cc\u06ba\u06d4",
+            "From a backup, or add an index file someone shared",
+            "\u06a9\u0633\u06cc \u0628\u06cc\u06a9 \u0627\u067e \u0633\u06d2\u060c \u06cc\u0627"
+                    + " \u06a9\u0633\u06cc \u06a9\u06cc \u0634\u06cc\u0626\u0631 \u06a9\u06cc"
+                    + " \u06c1\u0648\u0626\u06cc \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                    + " \u0641\u0627\u0626\u0644 \u0634\u0627\u0645\u0644 \u06a9\u0631\u06cc\u06ba",
             "Hide Dolby files this phone can\u2019t play",
             "\u0648\u06c1 Dolby \u0641\u0627\u0626\u0644\u06cc\u06ba"
                     + " \u0686\u06be\u067e\u0627\u0626\u06cc\u06ba \u062c\u0648 \u06cc\u06c1"
@@ -15223,9 +17161,26 @@ final class Translations {
                     + " \u0686\u06be\u067e\u0627\u0626\u06cc\u06ba",
             "Hide hash",
             "hash \u0686\u06be\u067e\u0627\u0626\u06cc\u06ba",
+            "Include the saved index (larger file)",
+            "\u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                    + " \u0634\u0627\u0645\u0644 \u06a9\u0631\u06cc\u06ba (\u0628\u0691\u06cc"
+                    + " \u0641\u0627\u0626\u0644)",
             "Incomplete sponsored-message response",
             "\u0627\u0633\u067e\u0627\u0646\u0633\u0631\u0688 \u067e\u06cc\u063a\u0627\u0645"
                     + " \u06a9\u0627 \u0646\u0627\u0645\u06a9\u0645\u0644 \u062c\u0648\u0627\u0628",
+            "Index file saved.",
+            "\u0627\u0646\u0688\u06cc\u06a9\u0633 \u0641\u0627\u0626\u0644"
+                    + " \u0645\u062d\u0641\u0648\u0638 \u06c1\u0648 \u06af\u0626\u06cc\u06d4",
+            "Index file too large",
+            "\u0627\u0646\u0688\u06cc\u06a9\u0633 \u0641\u0627\u0626\u0644 \u0628\u06c1\u062a"
+                    + " \u0628\u0691\u06cc \u06c1\u06d2",
+            "Index only on Wi-Fi",
+            "\u0635\u0631\u0641 Wi-Fi \u067e\u0631 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                    + " \u06a9\u0631\u06cc\u06ba",
+            "Index only while charging",
+            "\u0635\u0631\u0641 \u0686\u0627\u0631\u062c\u0646\u06af \u06a9\u06d2"
+                    + " \u062f\u0648\u0631\u0627\u0646 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                    + " \u06a9\u0631\u06cc\u06ba",
             "Indexing: {0} files found",
             "\u0627\u0646\u0688\u06cc\u06a9\u0633\u0646\u06af: {0}"
                     + " \u0641\u0627\u0626\u0644\u06cc\u06ba \u0645\u0644\u06cc\u06ba",
@@ -15304,47 +17259,44 @@ final class Translations {
             "Music chats",
             "\u0645\u06cc\u0648\u0632\u06a9 \u0686\u06cc\u0679\u0633",
             "Music from your community channels is copied into your main channel, a few files at a"
-                + " time, oldest post first. Copies show as your own posts, without \u201cForwarded"
-                + " from\u201d, and stay even if the community channel deletes them.\n\n"
+                + " time. Copies show as your own posts, without \u201cForwarded from\u201d, and"
+                + " stay even if the community channel deletes them.\n\n"
                 + "Telegram watches for accounts that copy many messages. Going faster than it"
                 + " likes can get your account limited for a while, or banned. The pace below never"
                 + " goes above 500 files an hour, and copying pauses whenever Telegram asks.\n\n"
                 + "You\u2019re responsible for what you copy. Only copy music you\u2019re allowed"
                 + " to keep.",
             "\u0622\u067e \u06a9\u06d2 \u06a9\u0645\u06cc\u0648\u0646\u0679\u06cc"
-                + " \u0686\u06cc\u0646\u0644\u0632 \u0633\u06d2"
+                + " \u0686\u06cc\u0646\u0644\u0632 \u06a9\u06cc"
                 + " \u0645\u0648\u0633\u06cc\u0642\u06cc \u0622\u067e \u06a9\u06d2"
                 + " \u0645\u06cc\u0646 \u0686\u06cc\u0646\u0644 \u0645\u06cc\u06ba"
                 + " \u06a9\u0627\u067e\u06cc \u06c1\u0648\u062a\u06cc \u06c1\u06d2\u060c"
                 + " \u0627\u06cc\u06a9 \u0648\u0642\u062a \u0645\u06cc\u06ba \u0686\u0646\u062f"
-                + " \u0641\u0627\u0626\u0644\u06cc\u06ba\u060c \u0633\u0628 \u0633\u06d2"
-                + " \u067e\u0631\u0627\u0646\u06cc \u067e\u0648\u0633\u0679"
-                + " \u067e\u06c1\u0644\u06d2\u06d4 \u06a9\u0627\u067e\u06cc\u0627\u06ba"
+                + " \u0641\u0627\u0626\u0644\u06cc\u06ba\u06d4 \u06a9\u0627\u067e\u06cc\u0627\u06ba"
                 + " \u0622\u067e \u06a9\u06cc \u0627\u067e\u0646\u06cc"
                 + " \u067e\u0648\u0633\u0679\u0633 \u06a9\u06d2 \u0637\u0648\u0631 \u067e\u0631"
-                + " \u062f\u06a9\u06be\u0627\u0626\u06cc \u062f\u06cc\u062a\u06cc"
-                + " \u06c1\u06cc\u06ba\u060c \u201cForwarded from\u201d \u06a9\u06d2"
-                + " \u0628\u063a\u06cc\u0631\u060c \u0627\u0648\u0631"
+                + " \u0646\u0638\u0631 \u0622\u062a\u06cc \u06c1\u06cc\u06ba\u060c \u201cForwarded"
+                + " from\u201d \u06a9\u06d2 \u0628\u063a\u06cc\u0631\u060c \u0627\u0648\u0631"
                 + " \u06a9\u0645\u06cc\u0648\u0646\u0679\u06cc \u0686\u06cc\u0646\u0644"
-                + " \u06a9\u06d2 \u0627\u0646\u06c1\u06cc\u06ba \u062d\u0630\u0641"
-                + " \u06a9\u0631\u0646\u06d2 \u067e\u0631 \u0628\u06be\u06cc"
-                + " \u0628\u0627\u0642\u06cc \u0631\u06c1\u062a\u06cc \u06c1\u06cc\u06ba\u06d4\n\n"
-                + "Telegram \u0627\u0646 \u0627\u06a9\u0627\u0624\u0646\u0679\u0633 \u067e\u0631"
-                + " \u0646\u0638\u0631 \u0631\u06a9\u06be\u062a\u0627 \u06c1\u06d2 \u062c\u0648"
-                + " \u0628\u06c1\u062a \u0633\u06d2 \u067e\u06cc\u063a\u0627\u0645\u0627\u062a"
-                + " \u06a9\u0627\u067e\u06cc \u06a9\u0631\u062a\u06d2 \u06c1\u06cc\u06ba\u06d4"
-                + " \u0627\u0633 \u06a9\u06cc \u067e\u0633\u0646\u062f \u0633\u06d2"
-                + " \u0632\u06cc\u0627\u062f\u06c1 \u062a\u06cc\u0632\u06cc"
-                + " \u06a9\u0631\u0646\u06d2 \u067e\u0631 \u0622\u067e \u06a9\u0627"
-                + " \u0627\u06a9\u0627\u0624\u0646\u0679 \u06a9\u0686\u06be"
+                + " \u06a9\u06d2 \u062d\u0630\u0641 \u06a9\u0631\u0646\u06d2 \u067e\u0631"
+                + " \u0628\u06be\u06cc \u0628\u0627\u0642\u06cc \u0631\u06c1\u062a\u06cc"
+                + " \u06c1\u06cc\u06ba\u06d4\n\n"
+                + "Telegram \u0628\u06c1\u062a \u0633\u06d2"
+                + " \u067e\u06cc\u063a\u0627\u0645\u0627\u062a \u06a9\u0627\u067e\u06cc"
+                + " \u06a9\u0631\u0646\u06d2 \u0648\u0627\u0644\u06d2"
+                + " \u0627\u06a9\u0627\u0624\u0646\u0679\u0633 \u067e\u0631 \u0646\u0638\u0631"
+                + " \u0631\u06a9\u06be\u062a\u0627 \u06c1\u06d2\u06d4 \u0627\u0633 \u06a9\u06cc"
+                + " \u067e\u0633\u0646\u062f \u0633\u06d2 \u0632\u06cc\u0627\u062f\u06c1"
+                + " \u062a\u06cc\u0632\u06cc \u0622\u067e \u06a9\u06d2"
+                + " \u0627\u06a9\u0627\u0624\u0646\u0679 \u06a9\u0648 \u06a9\u0686\u06be"
                 + " \u0639\u0631\u0635\u06d2 \u06a9\u06d2 \u0644\u06cc\u06d2"
-                + " \u0645\u062d\u062f\u0648\u062f\u060c \u06cc\u0627 \u0628\u06cc\u0646"
-                + " \u06c1\u0648 \u0633\u06a9\u062a\u0627 \u06c1\u06d2\u06d4"
+                + " \u0645\u062d\u062f\u0648\u062f \u06cc\u0627 \u0628\u06cc\u0646"
+                + " \u06a9\u0631\u0648\u0627 \u0633\u06a9\u062a\u06cc \u06c1\u06d2\u06d4"
                 + " \u0646\u06cc\u0686\u06d2 \u062f\u06cc \u06af\u0626\u06cc"
                 + " \u0631\u0641\u062a\u0627\u0631 \u06a9\u0628\u06be\u06cc 500"
                 + " \u0641\u0627\u0626\u0644\u06cc\u06ba \u0641\u06cc"
-                + " \u06af\u06be\u0646\u0679\u06c1 \u0633\u06d2 \u0627\u0648\u067e\u0631"
-                + " \u0646\u06c1\u06cc\u06ba \u062c\u0627\u062a\u06cc\u060c \u0627\u0648\u0631"
+                + " \u06af\u06be\u0646\u0679\u06c1 \u0633\u06d2 \u0632\u06cc\u0627\u062f\u06c1"
+                + " \u0646\u06c1\u06cc\u06ba \u06c1\u0648\u062a\u06cc\u060c \u0627\u0648\u0631"
                 + " \u062c\u0628 \u0628\u06be\u06cc Telegram \u06a9\u06c1\u06d2"
                 + " \u06a9\u0627\u067e\u06cc \u06a9\u0631\u0646\u0627 \u0631\u06a9"
                 + " \u062c\u0627\u062a\u0627 \u06c1\u06d2\u06d4\n\n"
@@ -15373,6 +17325,12 @@ final class Translations {
             "\u0646\u0626\u06cc \u067e\u0648\u0633\u0679\u0633 \u0645\u0644\u062a\u06d2"
                     + " \u06c1\u06cc \u06a9\u0627\u067e\u06cc \u06c1\u0648\u062a\u06cc"
                     + " \u06c1\u06cc\u06ba",
+            "Newest first",
+            "\u062a\u0627\u0632\u06c1 \u062a\u0631\u06cc\u0646 \u067e\u06c1\u0644\u06d2",
+            "No albums found in this chat yet.",
+            "\u0627\u0633 \u0686\u06cc\u0679 \u0645\u06cc\u06ba \u0627\u0628\u06be\u06cc"
+                    + " \u062a\u06a9 \u06a9\u0648\u0626\u06cc \u0627\u0644\u0628\u0645"
+                    + " \u0646\u06c1\u06cc\u06ba \u0645\u0644\u0627\u06d4",
             "No background searches",
             "\u067e\u0633 \u0645\u0646\u0638\u0631 \u0645\u06cc\u06ba \u06a9\u0648\u0626\u06cc"
                     + " \u062a\u0644\u0627\u0634 \u0646\u06c1\u06cc\u06ba",
@@ -15407,6 +17365,11 @@ final class Translations {
             "\u0633\u0631\u06a9\u0627\u0631\u06cc \u0627\u0633\u067e\u0627\u0646\u0633\u0631\u0688"
                 + " \u067e\u06cc\u063a\u0627\u0645\u0627\u062a \u062f\u06a9\u06be\u0627\u0626\u06d2"
                 + " \u0646\u06c1\u06cc\u06ba \u062c\u0627 \u0633\u06a9\u06d2: {0}",
+            "Oldest post first, once each channel has been indexed",
+            "\u0633\u0628 \u0633\u06d2 \u067e\u0631\u0627\u0646\u06cc \u067e\u0648\u0633\u0679"
+                    + " \u067e\u06c1\u0644\u06d2\u060c \u062c\u0628 \u06c1\u0631"
+                    + " \u0686\u06cc\u0646\u0644 \u0627\u0646\u0688\u06cc\u06a9\u0633 \u06c1\u0648"
+                    + " \u062c\u0627\u0626\u06d2",
             "On Telegram: \u201c{0}\u201d by {1}",
             "Telegram \u067e\u0631: \u201c{0}\u201d \u0627\u0632 {1}",
             "On Telegram: \u201c{0}\u201d by {1} ({2})\n\n"
@@ -15447,6 +17410,12 @@ final class Translations {
             "\u06cc\u06c1 Telegram \u0644\u0646\u06a9 \u0633\u0631\u06a9\u0627\u0631\u06cc"
                     + " \u06a9\u0644\u0627\u0626\u0646\u0679 \u0645\u06cc\u06ba"
                     + " \u06a9\u06be\u0648\u0644\u06cc\u06ba: {0}",
+            "Paused until this phone is charging",
+            "\u0641\u0648\u0646 \u0686\u0627\u0631\u062c \u06c1\u0648\u0646\u06d2 \u062a\u06a9"
+                    + " \u0631\u06a9\u0627 \u06c1\u0648\u0627 \u06c1\u06d2",
+            "Paused until this phone is on Wi-Fi",
+            "\u0641\u0648\u0646 Wi-Fi \u067e\u0631 \u0622\u0646\u06d2 \u062a\u06a9"
+                    + " \u0631\u06a9\u0627 \u06c1\u0648\u0627 \u06c1\u06d2",
             "Phone number",
             "\u0641\u0648\u0646 \u0646\u0645\u0628\u0631",
             "Play surround as stereo",
@@ -15458,6 +17427,20 @@ final class Translations {
             "Playlists and downloads",
             "\u067e\u0644\u06d2 \u0644\u0633\u0679\u0633 \u0627\u0648\u0631"
                     + " \u0688\u0627\u0624\u0646 \u0644\u0648\u0688\u0632",
+            "Post",
+            "\u067e\u0648\u0633\u0679 \u06a9\u0631\u06cc\u06ba",
+            "Post in {0}",
+            "{0} \u0645\u06cc\u06ba \u067e\u0648\u0633\u0679 \u06a9\u0631\u06cc\u06ba",
+            "Post in {0}?",
+            "{0} \u0645\u06cc\u06ba \u067e\u0648\u0633\u0679 \u06a9\u0631\u06cc\u06ba\u061f",
+            "Post it in Telegram, or save it as a file",
+            "\u0627\u0633\u06d2 Telegram \u0645\u06cc\u06ba \u067e\u0648\u0633\u0679"
+                    + " \u06a9\u0631\u06cc\u06ba\u060c \u06cc\u0627 \u0641\u0627\u0626\u0644"
+                    + " \u06a9\u06d2 \u0637\u0648\u0631 \u067e\u0631 \u0645\u062d\u0641\u0648\u0638"
+                    + " \u06a9\u0631\u06cc\u06ba",
+            "Posted the index of {0}.",
+            "{0} \u06a9\u0627 \u0627\u0646\u0688\u06cc\u06a9\u0633 \u067e\u0648\u0633\u0679"
+                    + " \u06c1\u0648 \u06af\u06cc\u0627\u06d4",
             "Privacy and your account",
             "\u0631\u0627\u0632\u062f\u0627\u0631\u06cc \u0627\u0648\u0631 \u0622\u067e"
                     + " \u06a9\u0627 \u0627\u06a9\u0627\u0624\u0646\u0679",
@@ -15518,6 +17501,13 @@ final class Translations {
             "Report sponsored message",
             "\u0627\u0633\u067e\u0627\u0646\u0633\u0631\u0688 \u067e\u06cc\u063a\u0627\u0645"
                     + " \u06a9\u06cc \u0631\u067e\u0648\u0631\u0679 \u06a9\u0631\u06cc\u06ba",
+            "Restore",
+            "\u0628\u062d\u0627\u0644 \u06a9\u0631\u06cc\u06ba",
+            "Restored. {0} files added to the saved index.",
+            "\u0628\u062d\u0627\u0644 \u06c1\u0648 \u06af\u06cc\u0627\u06d4"
+                    + " \u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                    + " \u0645\u06cc\u06ba {0} \u0641\u0627\u0626\u0644\u06cc\u06ba"
+                    + " \u0634\u0627\u0645\u0644 \u06c1\u0648 \u06af\u0626\u06cc\u06ba\u06d4",
             "Retry channel",
             "\u0686\u06cc\u0646\u0644 \u062f\u0648\u0628\u0627\u0631\u06c1"
                     + " \u0622\u0632\u0645\u0627\u0626\u06cc\u06ba",
@@ -15542,9 +17532,17 @@ final class Translations {
             "Save and continue",
             "\u0645\u062d\u0641\u0648\u0638 \u06a9\u0631\u06cc\u06ba \u0627\u0648\u0631"
                     + " \u062c\u0627\u0631\u06cc \u0631\u06a9\u06be\u06cc\u06ba",
+            "Save as a file",
+            "\u0641\u0627\u0626\u0644 \u06a9\u06d2 \u0637\u0648\u0631 \u067e\u0631"
+                    + " \u0645\u062d\u0641\u0648\u0638 \u06a9\u0631\u06cc\u06ba",
+            "Save as playlist",
+            "\u067e\u0644\u06d2 \u0644\u0633\u0679 \u06a9\u06d2 \u0637\u0648\u0631 \u067e\u0631"
+                    + " \u0645\u062d\u0641\u0648\u0638 \u06a9\u0631\u06cc\u06ba",
             "Save as playlist ({0})",
             "\u067e\u0644\u06d2 \u0644\u0633\u0679 \u06a9\u06d2 \u0637\u0648\u0631 \u067e\u0631"
                     + " \u0645\u062d\u0641\u0648\u0638 \u06a9\u0631\u06cc\u06ba ({0})",
+            "Saved Messages",
+            "Saved Messages",
             "Saved index",
             "\u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633",
             "Saved {0} song as the playlist \u201c{1}\u201d in BitChord\u2019s Library.",
@@ -15569,6 +17567,15 @@ final class Translations {
                 + " \u06a9\u06d2 \u0644\u06cc\u06d2 \u0627\u0633\u06d2"
                 + " \u062f\u0648\u0628\u0627\u0631\u06c1"
                 + " \u0686\u0644\u0627\u0626\u06cc\u06ba\u06d4",
+            "Search and playback still use mobile data; only the background indexing waits.",
+            "\u062a\u0644\u0627\u0634 \u0627\u0648\u0631 \u067e\u0644\u06d2 \u0628\u06cc\u06a9"
+                    + " \u0627\u0628 \u0628\u06be\u06cc \u0645\u0648\u0628\u0627\u0626\u0644"
+                    + " \u0688\u06cc\u0679\u0627 \u0627\u0633\u062a\u0639\u0645\u0627\u0644"
+                    + " \u06a9\u0631\u062a\u06d2 \u06c1\u06cc\u06ba\u061b \u0635\u0631\u0641"
+                    + " \u0628\u06cc\u06a9 \u06af\u0631\u0627\u0624\u0646\u0688"
+                    + " \u0627\u0646\u0688\u06cc\u06a9\u0633\u0646\u06af"
+                    + " \u0627\u0646\u062a\u0638\u0627\u0631 \u06a9\u0631\u062a\u06cc"
+                    + " \u06c1\u06d2\u06d4",
             "Search first",
             "\u067e\u06c1\u0644\u06d2 \u062a\u0644\u0627\u0634 \u06a9\u0631\u06cc\u06ba",
             "Search text is too long.",
@@ -15618,6 +17625,15 @@ final class Translations {
             "Set up application",
             "\u0627\u06cc\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646 \u0633\u06cc\u0679 \u0627\u067e"
                     + " \u06a9\u0631\u06cc\u06ba",
+            "Settings, corrected names and main channel, and the saved index if you like",
+            "\u062a\u0631\u062a\u06cc\u0628\u0627\u062a\u060c \u062f\u0631\u0633\u062a"
+                    + " \u06a9\u06cc\u06d2 \u06af\u0626\u06d2 \u0646\u0627\u0645 \u0627\u0648\u0631"
+                    + " \u0645\u06cc\u0646 \u0686\u06cc\u0646\u0644\u060c \u0627\u0648\u0631"
+                    + " \u0686\u0627\u06c1\u06cc\u06ba \u062a\u0648 \u0645\u062d\u0641\u0648\u0638"
+                    + " \u0627\u0646\u0688\u06cc\u06a9\u0633 \u0628\u06be\u06cc",
+            "Share a chat\u2019s index",
+            "\u0686\u06cc\u0679 \u06a9\u0627 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                    + " \u0634\u06cc\u0626\u0631 \u06a9\u0631\u06cc\u06ba",
             "Show hash",
             "hash \u062f\u06a9\u06be\u0627\u0626\u06cc\u06ba",
             "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3 320kbps",
@@ -15721,6 +17737,13 @@ final class Translations {
             "Telegram \u0634\u0631\u0648\u0639 \u06c1\u0648 \u0631\u06c1\u0627 \u06c1\u06d2\u2026",
             "Starting\u2026",
             "\u0634\u0631\u0648\u0639 \u06c1\u0648 \u0631\u06c1\u0627 \u06c1\u06d2\u2026",
+            "Starts with each channel\u2019s newest post, while it\u2019s still being indexed",
+            "\u06c1\u0631 \u0686\u06cc\u0646\u0644 \u06a9\u06cc \u062a\u0627\u0632\u06c1"
+                    + " \u062a\u0631\u06cc\u0646 \u067e\u0648\u0633\u0679 \u0633\u06d2"
+                    + " \u0634\u0631\u0648\u0639 \u06c1\u0648\u062a\u0627 \u06c1\u06d2\u060c"
+                    + " \u062c\u0628 \u0648\u06c1 \u0627\u0628\u06be\u06cc"
+                    + " \u0627\u0646\u0688\u06cc\u06a9\u0633 \u06c1\u0648 \u0631\u06c1\u0627"
+                    + " \u06c1\u0648",
             "Stop playback before changing the application configuration.",
             "\u0627\u06cc\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646 \u06a9\u06cc"
                     + " \u06a9\u0646\u0641\u06cc\u06af\u0631\u06cc\u0634\u0646"
@@ -15954,9 +17977,25 @@ final class Translations {
                     + " \u0622\u067e \u06a9\u06d2 \u0645\u06cc\u0646 \u0686\u06cc\u0646\u0644"
                     + " \u06a9\u0648 \u0646\u062c\u06cc \u0631\u06c1\u0646\u0627 \u06c1\u0648"
                     + " \u06af\u0627\u06d4",
+            "The index also runs on battery",
+            "\u0627\u0646\u0688\u06cc\u06a9\u0633 \u0628\u06cc\u0679\u0631\u06cc \u067e\u0631"
+                    + " \u0628\u06be\u06cc \u0686\u0644\u062a\u0627 \u06c1\u06d2",
+            "The index also uses mobile data",
+            "\u0627\u0646\u0688\u06cc\u06a9\u0633 \u0645\u0648\u0628\u0627\u0626\u0644"
+                    + " \u0688\u06cc\u0679\u0627 \u0628\u06be\u06cc"
+                    + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0631\u062a\u0627"
+                    + " \u06c1\u06d2",
             "The index can't be read right now",
             "\u0627\u0646\u0688\u06cc\u06a9\u0633 \u0627\u0628\u06be\u06cc \u067e\u0691\u06be\u0627"
                     + " \u0646\u06c1\u06cc\u06ba \u062c\u0627 \u0633\u06a9\u062a\u0627",
+            "The index waits for Wi-Fi to read your chats",
+            "\u0627\u0646\u0688\u06cc\u06a9\u0633 \u0622\u067e \u06a9\u06cc"
+                    + " \u0686\u06cc\u0679\u0633 \u067e\u0691\u06be\u0646\u06d2 \u06a9\u06d2"
+                    + " \u0644\u06cc\u06d2 Wi-Fi \u06a9\u0627 \u0627\u0646\u062a\u0638\u0627\u0631"
+                    + " \u06a9\u0631\u062a\u0627 \u06c1\u06d2",
+            "The index waits for a charger",
+            "\u0627\u0646\u0688\u06cc\u06a9\u0633 \u0686\u0627\u0631\u062c\u0631 \u06a9\u0627"
+                    + " \u0627\u0646\u062a\u0638\u0627\u0631 \u06a9\u0631\u062a\u0627 \u06c1\u06d2",
             "The index's database couldn't be opened on this phone.",
             "\u0627\u0633 \u0641\u0648\u0646 \u067e\u0631 \u0627\u0646\u0688\u06cc\u06a9\u0633"
                     + " \u06a9\u0627 \u0688\u06cc\u0679\u0627 \u0628\u06cc\u0633"
@@ -15988,6 +18027,15 @@ final class Translations {
                 + " \u0627\u0633\u067e\u0627\u0646\u0633\u0631\u0688"
                 + " \u0627\u06cc\u0646\u06cc\u0645\u06cc\u0634\u0646 \u0688\u06cc"
                 + " \u06a9\u0648\u0688 \u0646\u06c1\u06cc\u06ba \u06a9\u0631 \u0633\u06a9\u06cc",
+            "This file is from a newer version of the patch. Update first.",
+            "\u06cc\u06c1 \u0641\u0627\u0626\u0644 \u067e\u06cc\u0686 \u06a9\u06d2"
+                    + " \u0646\u0626\u06d2 \u0648\u0631\u0698\u0646 \u06a9\u06cc \u06c1\u06d2\u06d4"
+                    + " \u067e\u06c1\u0644\u06d2 \u0627\u067e \u0688\u06cc\u0679"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "This isn't a BitChord index or backup file.",
+            "\u06cc\u06c1 BitChord \u06a9\u06cc \u0627\u0646\u0688\u06cc\u06a9\u0633 \u06cc\u0627"
+                    + " \u0628\u06cc\u06a9 \u0627\u067e \u0641\u0627\u0626\u0644"
+                    + " \u0646\u06c1\u06cc\u06ba \u06c1\u06d2\u06d4",
             "This login step isn't supported here. Sign in with an existing Telegram account.",
             "\u0644\u0627\u06af \u0627\u0646 \u06a9\u0627 \u06cc\u06c1"
                     + " \u0645\u0631\u062d\u0644\u06c1 \u06cc\u06c1\u0627\u06ba"
@@ -16084,6 +18132,10 @@ final class Translations {
             "Use original",
             "\u0627\u0635\u0644 \u0627\u0633\u062a\u0639\u0645\u0627\u0644"
                     + " \u06a9\u0631\u06cc\u06ba",
+            "Use shared indexes",
+            "\u0634\u06cc\u0626\u0631 \u06a9\u06cc\u06d2 \u06af\u0626\u06d2"
+                + " \u0627\u0646\u0688\u06cc\u06a9\u0633 \u0627\u0633\u062a\u0639\u0645\u0627\u0644"
+                + " \u06a9\u0631\u06cc\u06ba",
             "Use this name?",
             "\u06cc\u06c1 \u0646\u0627\u0645 \u0627\u0633\u062a\u0639\u0645\u0627\u0644"
                     + " \u06a9\u0631\u06cc\u06ba\u061f",
@@ -16270,6 +18322,18 @@ final class Translations {
                     + " \u06cc\u06c1 \u0627\u0633\u06cc \u0641\u06cc \u06af\u06be\u0646\u0679\u06c1"
                     + " \u062d\u062f \u0645\u06cc\u06ba \u0634\u0645\u0627\u0631"
                     + " \u06c1\u0648\u062a\u06cc \u06c1\u06cc\u06ba\u06d4",
+            "Your main channel then lists the music in the opposite order to the community channel."
+                    + " Applies to channels copying hasn\u2019t started from yet.",
+            "\u067e\u06be\u0631 \u0622\u067e \u06a9\u0627 \u0645\u06cc\u0646"
+                    + " \u0686\u06cc\u0646\u0644 \u0645\u0648\u0633\u06cc\u0642\u06cc \u06a9\u0648"
+                    + " \u06a9\u0645\u06cc\u0648\u0646\u0679\u06cc \u0686\u06cc\u0646\u0644"
+                    + " \u06a9\u06d2 \u0627\u0644\u0679 \u062a\u0631\u062a\u06cc\u0628"
+                    + " \u0645\u06cc\u06ba \u062f\u06a9\u06be\u0627\u062a\u0627 \u06c1\u06d2\u06d4"
+                    + " \u0627\u0646 \u0686\u06cc\u0646\u0644\u0632 \u067e\u0631"
+                    + " \u0644\u0627\u06af\u0648 \u06c1\u0648\u062a\u0627 \u06c1\u06d2 \u062c\u0646"
+                    + " \u0633\u06d2 \u06a9\u0627\u067e\u06cc \u06a9\u0631\u0646\u0627"
+                    + " \u0627\u0628\u06be\u06cc \u0634\u0631\u0648\u0639 \u0646\u06c1\u06cc\u06ba"
+                    + " \u06c1\u0648\u0627\u06d4",
             "Your phone talks to Telegram directly. Your API details are encrypted on this phone"
                 + " and your Telegram session is stored privately. The session is a normal Telegram"
                 + " login, so it can reach your whole account, not just music. Audio BitChord has"
@@ -16381,6 +18445,10 @@ final class Translations {
             "{0} file indexed from {1} chats",
             "{1} \u0686\u06cc\u0679\u0633 \u0633\u06d2 {0} \u0641\u0627\u0626\u0644"
                     + " \u0627\u0646\u0688\u06cc\u06a9\u0633 \u06c1\u0648\u0626\u06cc",
+            "{0} files added to the saved index.",
+            "\u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633 \u0645\u06cc\u06ba"
+                + " {0} \u0641\u0627\u0626\u0644\u06cc\u06ba \u0634\u0627\u0645\u0644 \u06c1\u0648"
+                + " \u06af\u0626\u06cc\u06ba\u06d4",
             "{0} files indexed from {1} chat",
             "{1} \u0686\u06cc\u0679 \u0633\u06d2 {0} \u0641\u0627\u0626\u0644\u06cc\u06ba"
                     + " \u0627\u0646\u0688\u06cc\u06a9\u0633 \u06c1\u0648\u0626\u06cc\u06ba",
@@ -16453,6 +18521,8 @@ final class Translations {
                 + " \u6587\u4ef6\u7684\u540d\u79f0\u53ef\u80fd\u6709\u8bef\u3002\u8bf7\u5728\u300c\u66f2\u76ee\u540d\u79f0\u300d\u4e2d\u67e5\u770b\u3002",
             "A better copy fades in without a gap",
             "\u66f4\u597d\u7684\u7248\u672c\u65e0\u7f1d\u6de1\u5165",
+            "A chat\u2019s index comes from a shared index file when there is one",
+            "\u6709\u5171\u4eab\u7d22\u5f15\u6587\u4ef6\u65f6\uff0c\u804a\u5929\u7684\u7d22\u5f15\u4f1a\u4ece\u4e2d\u83b7\u53d6",
             "A file counts as already there when it\u2019s the same Telegram file, or has the same"
                     + " title, artist, length and format. Nothing in your main channel is deleted."
                     + " Copying waits until your main channel has been indexed.",
@@ -16476,8 +18546,14 @@ final class Translations {
             "\u6dfb\u52a0\u4f60\u7684\u5e94\u7528\u51ed\u636e\u4ee5\u8fdb\u884c\u8fde\u63a5\u3002",
             "Added automatically to BitChord.",
             "\u5df2\u81ea\u52a8\u6dfb\u52a0\u5230 BitChord\u3002",
+            "Advanced",
+            "\u9ad8\u7ea7",
             "Album covers",
             "\u4e13\u8f91\u5c01\u9762",
+            "Albums",
+            "\u4e13\u8f91",
+            "All chats",
+            "\u6240\u6709\u804a\u5929",
             "All music files are copied",
             "\u590d\u5236\u6240\u6709\u97f3\u4e50\u6587\u4ef6",
             "An unofficial add-on that uses the Telegram API with your own account. It isn\u2019t"
@@ -16515,10 +18591,31 @@ final class Translations {
             "\u5e94\u7528\u8bbe\u7f6e",
             "Apply cache size",
             "\u5e94\u7528\u7f13\u5b58\u5927\u5c0f",
+            "Archived chats",
+            "\u5df2\u5f52\u6863\u804a\u5929",
             "Artist",
             "\u827a\u672f\u5bb6",
             "Back",
             "\u8fd4\u56de",
+            "Back up",
+            "\u5907\u4efd",
+            "Backup and sharing",
+            "\u5907\u4efd\u4e0e\u5206\u4eab",
+            "Backup saved.",
+            "\u5907\u4efd\u5df2\u4fdd\u5b58\u3002",
+            "Backups and index files never hold your API details or your Telegram session. An index"
+                + " file lists the music in a chat, so anyone you share it with sees that list.",
+            "\u5907\u4efd\u548c\u7d22\u5f15\u6587\u4ef6\u7edd\u4e0d\u4f1a\u5305\u542b\u4f60\u7684"
+                + " API \u4fe1\u606f\u6216 Telegram"
+                + " \u4f1a\u8bdd\u3002\u7d22\u5f15\u6587\u4ef6\u5217\u51fa\u4e86\u804a\u5929\u4e2d\u7684\u97f3\u4e50\uff0c\u56e0\u6b64\u4f60\u5206\u4eab\u7ed9\u7684\u4efb\u4f55\u4eba\u90fd\u80fd\u770b\u5230\u8be5\u5217\u8868\u3002",
+            "Basic",
+            "\u57fa\u672c",
+            "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
+                + " the chat itself (in a channel, only its admins can post), in your Saved"
+                + " Messages or in your main channel, and then only reads what\u2019s been posted"
+                + " since. Each song is checked against its post when it plays.",
+            "\u4ece Telegram"
+                + " \u8bfb\u53d6\u804a\u5929\u524d\uff0c\u8865\u4e01\u4f1a\u5148\u5728\u804a\u5929\u672c\u8eab\uff08\u9891\u9053\u4e2d\u53ea\u6709\u7ba1\u7406\u5458\u53ef\u4ee5\u53d1\u5e03\uff09\u3001\u4f60\u7684\u6536\u85cf\u5939\u6216\u4e3b\u9891\u9053\u4e2d\u67e5\u627e\u8be5\u804a\u5929\u7684\u7d22\u5f15\u6587\u4ef6\uff0c\u7136\u540e\u53ea\u8bfb\u53d6\u4e4b\u540e\u53d1\u5e03\u7684\u5185\u5bb9\u3002\u6bcf\u9996\u6b4c\u66f2\u64ad\u653e\u65f6\u90fd\u4f1a\u4e0e\u5176\u5e16\u5b50\u6838\u5bf9\u3002",
             "BitChord guesses from the file type",
             "BitChord \u6839\u636e\u6587\u4ef6\u7c7b\u578b\u5224\u65ad",
             "BitChord keeps search results for a few minutes, so changes here show up in new"
@@ -16533,6 +18630,8 @@ final class Translations {
                 + " \u6216 7.1"
                 + " \u64ad\u653e\uff1b\u5728\u652f\u6301\u5b83\u7684\u624b\u673a\u6216\u97f3\u7bb1\u4e0a\u8fd8\u4f1a\u6709\u9ad8\u5ea6\u58f0\u9053\u3002Dolby"
                 + " AC-4 \u9700\u8981\u624b\u673a\u81ea\u5e26\u89e3\u7801\u5668\u3002",
+            "BitChord saved index of {0}",
+            "{0} \u7684 BitChord \u5df2\u4fdd\u5b58\u7d22\u5f15",
             "BitChord sees the corrected names",
             "BitChord \u770b\u5230\u7684\u662f\u66f4\u6b63\u540e\u7684\u540d\u79f0",
             "BitChord switches copies with a short pause",
@@ -16628,6 +18727,8 @@ final class Translations {
             "\u7528\u4e00\u4e2a\u901a\u7528\u7684\u63cf\u8ff0\u6027\u540d\u79f0\u521b\u5efa\u4f60\u81ea\u5df1\u7684\u5e94\u7528\uff0c\u4f8b\u5982"
                 + " My Client\uff08\u7b80\u79f0\uff1amyclient\uff09\u3002Telegram"
                 + " \u53ef\u80fd\u4f1a\u5728\u767b\u5f55\u63d0\u9192\u4e2d\u663e\u793a\u8be5\u540d\u79f0\u3002",
+            "Damaged index file",
+            "\u7d22\u5f15\u6587\u4ef6\u5df2\u635f\u574f",
             "Dismiss",
             "\u5173\u95ed",
             "Dolby AC-4 files show only if this phone has a decoder",
@@ -16674,10 +18775,15 @@ final class Translations {
             "\u8f93\u5165\u4f60\u7684 Telegram \u8d26\u53f7\u5bc6\u7801\u3002",
             "Every Dolby file shows",
             "\u663e\u793a\u6240\u6709 Dolby \u6587\u4ef6",
+            "Every chat is read from Telegram",
+            "\u6bcf\u4e2a\u804a\u5929\u90fd\u4ece Telegram \u8bfb\u53d6",
             "Every copy of a song shows",
             "\u663e\u793a\u4e00\u9996\u6b4c\u7684\u6bcf\u4e2a\u7248\u672c",
             "Every file is copied, even if it\u2019s already there",
             "\u590d\u5236\u6bcf\u4e2a\u6587\u4ef6\uff0c\u5373\u4f7f\u5df2\u7ecf\u5b58\u5728",
+            "Everyone who can see {0} can see the list of music in {1}.",
+            "\u6240\u6709\u80fd\u770b\u5230 {0} \u7684\u4eba\u90fd\u80fd\u770b\u5230 {1}"
+                    + " \u4e2d\u7684\u97f3\u4e50\u5217\u8868\u3002",
             "FLAC, WAV and ALAC count as lossless; others by bitrate",
             "FLAC\u3001WAV \u548c ALAC"
                     + " \u89c6\u4e3a\u65e0\u635f\uff1b\u5176\u4ed6\u6309\u7801\u7387\u5224\u65ad",
@@ -16696,6 +18802,8 @@ final class Translations {
                 + " \u4f1a\u6309\u66f4\u6b63\u540e\u7684\u540d\u79f0\u67e5\u627e\u5e76\u5339\u914d\u8be5\u6587\u4ef6\u3002",
             "Fix a track name",
             "\u4fee\u6b63\u66f2\u76ee\u540d\u79f0",
+            "Folder",
+            "\u6587\u4ef6\u5939",
             "Format legend",
             "\u683c\u5f0f\u6807\u6ce8",
             "Found {0} track.",
@@ -16706,14 +18814,26 @@ final class Translations {
                     + " account and channels.",
             "\u514d\u8d39\uff0c\u6309\u539f\u6837\u63d0\u4f9b\u3002\u8bf7\u8d1f\u8d23\u4efb\u5730\u4f7f\u7528\uff1a\u4f60\u9700\u8981\u5bf9\u81ea\u5df1\u7684"
                 + " Telegram \u8d26\u53f7\u548c\u9891\u9053\u8d1f\u8d23\u3002",
+            "From a backup, or add an index file someone shared",
+            "\u4ece\u5907\u4efd\u6062\u590d\uff0c\u6216\u6dfb\u52a0\u4ed6\u4eba\u5206\u4eab\u7684\u7d22\u5f15\u6587\u4ef6",
             "Hide Dolby files this phone can\u2019t play",
             "\u9690\u85cf\u6b64\u624b\u673a\u65e0\u6cd5\u64ad\u653e\u7684 Dolby \u6587\u4ef6",
             "Hide duplicate songs",
             "\u9690\u85cf\u91cd\u590d\u6b4c\u66f2",
             "Hide hash",
             "\u9690\u85cf hash",
+            "Include the saved index (larger file)",
+            "\u5305\u542b\u5df2\u4fdd\u5b58\u7d22\u5f15\uff08\u6587\u4ef6\u66f4\u5927\uff09",
             "Incomplete sponsored-message response",
             "\u8d5e\u52a9\u6d88\u606f\u54cd\u5e94\u4e0d\u5b8c\u6574",
+            "Index file saved.",
+            "\u7d22\u5f15\u6587\u4ef6\u5df2\u4fdd\u5b58\u3002",
+            "Index file too large",
+            "\u7d22\u5f15\u6587\u4ef6\u8fc7\u5927",
+            "Index only on Wi-Fi",
+            "\u4ec5\u5728 Wi-Fi \u4e0b\u7d22\u5f15",
+            "Index only while charging",
+            "\u4ec5\u5728\u5145\u7535\u65f6\u7d22\u5f15",
             "Indexing: {0} files found",
             "\u6b63\u5728\u7d22\u5f15\uff1a\u5df2\u627e\u5230 {0} \u4e2a\u6587\u4ef6",
             "Invalid cache-size choice",
@@ -16756,19 +18876,19 @@ final class Translations {
             "Music chats",
             "\u97f3\u4e50\u804a\u5929",
             "Music from your community channels is copied into your main channel, a few files at a"
-                + " time, oldest post first. Copies show as your own posts, without \u201cForwarded"
-                + " from\u201d, and stay even if the community channel deletes them.\n\n"
+                + " time. Copies show as your own posts, without \u201cForwarded from\u201d, and"
+                + " stay even if the community channel deletes them.\n\n"
                 + "Telegram watches for accounts that copy many messages. Going faster than it"
                 + " likes can get your account limited for a while, or banned. The pace below never"
                 + " goes above 500 files an hour, and copying pauses whenever Telegram asks.\n\n"
                 + "You\u2019re responsible for what you copy. Only copy music you\u2019re allowed"
                 + " to keep.",
-            "\u793e\u533a\u9891\u9053\u4e2d\u7684\u97f3\u4e50\u4f1a\u88ab\u590d\u5236\u5230\u4f60\u7684\u4e3b\u9891\u9053\uff0c\u6bcf\u6b21\u51e0\u4e2a\u6587\u4ef6\uff0c\u4ece\u6700\u65e9\u7684\u5e16\u5b50\u5f00\u59cb\u3002\u526f\u672c\u4f1a\u663e\u793a\u4e3a\u4f60\u81ea\u5df1\u7684\u5e16\u5b50\uff0c\u4e0d\u5e26\u201c\u8f6c\u53d1\u81ea\u201d\uff0c\u5373\u4f7f\u793e\u533a\u9891\u9053\u5220\u9664\u4e86\u5b83\u4eec\u4e5f\u4f1a\u4fdd\u7559\u3002\n\n"
+            "\u793e\u533a\u9891\u9053\u4e2d\u7684\u97f3\u4e50\u4f1a\u88ab\u590d\u5236\u5230\u4f60\u7684\u4e3b\u9891\u9053\uff0c\u6bcf\u6b21\u590d\u5236\u51e0\u4e2a\u6587\u4ef6\u3002\u526f\u672c\u663e\u793a\u4e3a\u4f60\u81ea\u5df1\u7684\u5e16\u5b50\uff0c\u6ca1\u6709\u201c\u8f6c\u53d1\u81ea\u201d\uff0c\u5373\u4f7f\u793e\u533a\u9891\u9053\u5220\u9664\u4e86\u5b83\u4eec\u4e5f\u4f1a\u4fdd\u7559\u3002\n\n"
                 + "Telegram"
-                + " \u4f1a\u7559\u610f\u590d\u5236\u5927\u91cf\u6d88\u606f\u7684\u8d26\u53f7\u3002\u901f\u5ea6\u8d85\u51fa\u5b83\u5141\u8bb8\u7684\u8303\u56f4\uff0c\u53ef\u80fd\u4f1a\u5bfc\u81f4\u4f60\u7684\u8d26\u53f7\u88ab\u6682\u65f6\u9650\u5236\uff0c\u751a\u81f3\u88ab\u5c01\u7981\u3002\u4e0b\u9762\u7684\u901f\u5ea6\u6c38\u8fdc\u4e0d\u4f1a\u8d85\u8fc7\u6bcf\u5c0f\u65f6"
-                + " 500 \u4e2a\u6587\u4ef6\uff0c\u5e76\u4e14\u53ea\u8981 Telegram"
-                + " \u8981\u6c42\uff0c\u590d\u5236\u5c31\u4f1a\u6682\u505c\u3002\n\n"
-                + "\u4f60\u9700\u8981\u5bf9\u81ea\u5df1\u590d\u5236\u7684\u5185\u5bb9\u8d1f\u8d23\u3002\u53ea\u590d\u5236\u4f60\u6709\u6743\u4fdd\u7559\u7684\u97f3\u4e50\u3002",
+                + " \u4f1a\u76d1\u63a7\u590d\u5236\u5927\u91cf\u6d88\u606f\u7684\u8d26\u53f7\u3002\u901f\u5ea6\u8d85\u8fc7\u5176\u5bb9\u5fcd\u8303\u56f4\u53ef\u80fd\u5bfc\u81f4\u4f60\u7684\u8d26\u53f7\u88ab\u6682\u65f6\u9650\u5236\uff0c\u751a\u81f3\u88ab\u5c01\u7981\u3002\u4e0b\u9762\u7684\u901f\u5ea6\u7edd\u4e0d\u4f1a\u8d85\u8fc7\u6bcf\u5c0f\u65f6"
+                + " 500 \u4e2a\u6587\u4ef6\uff0c\u5e76\u4e14\u6bcf\u5f53 Telegram"
+                + " \u8981\u6c42\u65f6\u590d\u5236\u90fd\u4f1a\u6682\u505c\u3002\n\n"
+                + "\u4f60\u9700\u8981\u5bf9\u6240\u590d\u5236\u7684\u5185\u5bb9\u8d1f\u8d23\u3002\u53ea\u590d\u5236\u4f60\u6709\u6743\u4fdd\u7559\u7684\u97f3\u4e50\u3002",
             "Music library",
             "\u97f3\u4e50\u5e93",
             "Music-chat selection changed. Search again.",
@@ -16779,6 +18899,10 @@ final class Translations {
             "\u539f\u751f\u6269\u5c55\u65e0\u6cd5\u542f\u52a8\uff1a{0}",
             "New posts are copied as they\u2019re found",
             "\u53d1\u73b0\u65b0\u5e16\u5b50\u65f6\u5373\u590d\u5236",
+            "Newest first",
+            "\u6700\u65b0\u7684\u4f18\u5148",
+            "No albums found in this chat yet.",
+            "\u6b64\u804a\u5929\u4e2d\u5c1a\u672a\u627e\u5230\u4e13\u8f91\u3002",
             "No background searches",
             "\u4e0d\u8fdb\u884c\u540e\u53f0\u641c\u7d22",
             "No covers are downloaded",
@@ -16800,6 +18924,8 @@ final class Translations {
             "\u4e0d\u590d\u5236\u4efb\u4f55\u5185\u5bb9",
             "Official sponsored messages could not be displayed: {0}",
             "\u65e0\u6cd5\u663e\u793a\u5b98\u65b9\u8d5e\u52a9\u6d88\u606f\uff1a{0}",
+            "Oldest post first, once each channel has been indexed",
+            "\u6bcf\u4e2a\u9891\u9053\u5b8c\u6210\u7d22\u5f15\u540e\uff0c\u4ece\u6700\u65e9\u7684\u5e16\u5b50\u5f00\u59cb",
             "On Telegram: \u201c{0}\u201d by {1}",
             "Telegram \u4e0a\uff1a{1} \u7684\u201c{0}\u201d",
             "On Telegram: \u201c{0}\u201d by {1} ({2})\n\n"
@@ -16827,6 +18953,10 @@ final class Translations {
             "Open this Telegram link in the official client: {0}",
             "\u5728\u5b98\u65b9\u5ba2\u6237\u7aef\u4e2d\u6253\u5f00\u6b64 Telegram"
                     + " \u94fe\u63a5\uff1a{0}",
+            "Paused until this phone is charging",
+            "\u5df2\u6682\u505c\uff0c\u76f4\u5230\u8fd9\u90e8\u624b\u673a\u5f00\u59cb\u5145\u7535",
+            "Paused until this phone is on Wi-Fi",
+            "\u5df2\u6682\u505c\uff0c\u76f4\u5230\u8fd9\u90e8\u624b\u673a\u8fde\u63a5 Wi-Fi",
             "Phone number",
             "\u624b\u673a\u53f7\u7801",
             "Play surround as stereo",
@@ -16835,6 +18965,16 @@ final class Translations {
             "\u64ad\u653e",
             "Playlists and downloads",
             "\u64ad\u653e\u5217\u8868\u548c\u4e0b\u8f7d",
+            "Post",
+            "\u53d1\u5e03",
+            "Post in {0}",
+            "\u53d1\u5e03\u5230 {0}",
+            "Post in {0}?",
+            "\u53d1\u5e03\u5230 {0}\uff1f",
+            "Post it in Telegram, or save it as a file",
+            "\u53d1\u5e03\u5230 Telegram\uff0c\u6216\u4fdd\u5b58\u4e3a\u6587\u4ef6",
+            "Posted the index of {0}.",
+            "\u5df2\u53d1\u5e03 {0} \u7684\u7d22\u5f15\u3002",
             "Privacy and your account",
             "\u9690\u79c1\u4e0e\u4f60\u7684\u8d26\u53f7",
             "Protected content and secret chats are not supported by this cached audio player.",
@@ -16870,6 +19010,11 @@ final class Translations {
             "\u62a5\u544a\u97f3\u8d28",
             "Report sponsored message",
             "\u4e3e\u62a5\u8d5e\u52a9\u6d88\u606f",
+            "Restore",
+            "\u6062\u590d",
+            "Restored. {0} files added to the saved index.",
+            "\u5df2\u6062\u590d\u3002\u5df2\u5411\u5df2\u4fdd\u5b58\u7d22\u5f15\u6dfb\u52a0 {0}"
+                    + " \u4e2a\u6587\u4ef6\u3002",
             "Retry channel",
             "\u91cd\u8bd5\u9891\u9053",
             "Retry connection",
@@ -16885,8 +19030,14 @@ final class Translations {
                     + " \u64ad\u653e\u5217\u8868\uff0c\u6216\u5168\u90e8\u4e0b\u8f7d\u3002",
             "Save and continue",
             "\u4fdd\u5b58\u5e76\u7ee7\u7eed",
+            "Save as a file",
+            "\u4fdd\u5b58\u4e3a\u6587\u4ef6",
+            "Save as playlist",
+            "\u4fdd\u5b58\u4e3a\u64ad\u653e\u5217\u8868",
             "Save as playlist ({0})",
             "\u4fdd\u5b58\u4e3a\u64ad\u653e\u5217\u8868\uff08{0}\uff09",
+            "Saved Messages",
+            "\u6536\u85cf\u5939",
             "Saved index",
             "\u5df2\u4fdd\u5b58\u7d22\u5f15",
             "Saved {0} song as the playlist \u201c{1}\u201d in BitChord\u2019s Library.",
@@ -16902,6 +19053,8 @@ final class Translations {
             "\u5df2\u4fdd\u5b58\u201c{0}\u201d\u3002\u5df2\u79fb\u9664 BitChord"
                 + " \u4fdd\u5b58\u7684\u526f\u672c\uff1b\u518d\u6b21\u64ad\u653e\u5373\u53ef\u4f7f\u7528\u4f60\u7684"
                 + " Telegram \u6587\u4ef6\u3002",
+            "Search and playback still use mobile data; only the background indexing waits.",
+            "\u641c\u7d22\u548c\u64ad\u653e\u4ecd\u4f1a\u4f7f\u7528\u79fb\u52a8\u6570\u636e\uff1b\u53ea\u6709\u540e\u53f0\u7d22\u5f15\u4f1a\u7b49\u5f85\u3002",
             "Search first",
             "\u5148\u641c\u7d22",
             "Search text is too long.",
@@ -16929,6 +19082,10 @@ final class Translations {
             "\u7f3a\u5c11\u4f1a\u8bdd\u5bc6\u94a5\uff1b\u521b\u5efa\u65b0\u4f1a\u8bdd\u524d\u8bf7\u5148\u9000\u51fa\u767b\u5f55\u6216\u91cd\u7f6e\u5e94\u7528\u6570\u636e",
             "Set up application",
             "\u8bbe\u7f6e\u5e94\u7528",
+            "Settings, corrected names and main channel, and the saved index if you like",
+            "\u8bbe\u7f6e\u3001\u66f4\u6b63\u7684\u540d\u79f0\u548c\u4e3b\u9891\u9053\uff0c\u4ee5\u53ca\u53ef\u9009\u7684\u5df2\u4fdd\u5b58\u7d22\u5f15",
+            "Share a chat\u2019s index",
+            "\u5206\u4eab\u804a\u5929\u7684\u7d22\u5f15",
             "Show hash",
             "\u663e\u793a hash",
             "Shows the format next to song titles, like FLAC 24bit, Dolby Atmos or MP3 320kbps",
@@ -16986,6 +19143,8 @@ final class Translations {
             "\u6b63\u5728\u542f\u52a8 Telegram\u2026",
             "Starting\u2026",
             "\u6b63\u5728\u542f\u52a8\u2026",
+            "Starts with each channel\u2019s newest post, while it\u2019s still being indexed",
+            "\u5728\u9891\u9053\u4ecd\u5728\u7d22\u5f15\u65f6\uff0c\u4ece\u6bcf\u4e2a\u9891\u9053\u6700\u65b0\u7684\u5e16\u5b50\u5f00\u59cb",
             "Stop playback before changing the application configuration.",
             "\u66f4\u6539\u5e94\u7528\u914d\u7f6e\u524d\u8bf7\u5148\u505c\u6b62\u64ad\u653e\u3002",
             "Stop playback before clearing the cache",
@@ -17113,8 +19272,16 @@ final class Translations {
             "The files come from the saved index, so it has to be on. Your main channel has to stay"
                     + " private.",
             "\u6587\u4ef6\u6765\u81ea\u5df2\u4fdd\u5b58\u7d22\u5f15\uff0c\u56e0\u6b64\u5fc5\u987b\u4fdd\u6301\u5f00\u542f\u3002\u4f60\u7684\u4e3b\u9891\u9053\u5fc5\u987b\u4fdd\u6301\u79c1\u6709\u3002",
+            "The index also runs on battery",
+            "\u7d22\u5f15\u4e5f\u4f1a\u5728\u4f7f\u7528\u7535\u6c60\u65f6\u8fd0\u884c",
+            "The index also uses mobile data",
+            "\u7d22\u5f15\u4e5f\u4f1a\u4f7f\u7528\u79fb\u52a8\u6570\u636e",
             "The index can't be read right now",
             "\u6682\u65f6\u65e0\u6cd5\u8bfb\u53d6\u7d22\u5f15",
+            "The index waits for Wi-Fi to read your chats",
+            "\u7d22\u5f15\u4f1a\u7b49\u5f85 Wi-Fi \u540e\u518d\u8bfb\u53d6\u4f60\u7684\u804a\u5929",
+            "The index waits for a charger",
+            "\u7d22\u5f15\u4f1a\u7b49\u5f85\u8fde\u63a5\u5145\u7535\u5668",
             "The index's database couldn't be opened on this phone.",
             "\u65e0\u6cd5\u5728\u8fd9\u90e8\u624b\u673a\u4e0a\u6253\u5f00\u7d22\u5f15\u6570\u636e\u5e93\u3002",
             "The same song shows once, as its best copy",
@@ -17128,6 +19295,10 @@ final class Translations {
             "\u6b64\u804a\u5929\u4ecd\u5728\u7d22\u5f15\u4e2d\u3002\u8bf7\u5728\u300c\u5df2\u4fdd\u5b58\u7d22\u5f15\u300d\u663e\u793a\u5b8c\u6210\u540e\u91cd\u8bd5\u3002",
             "This device could not decode the sponsored animation",
             "\u6b64\u8bbe\u5907\u65e0\u6cd5\u89e3\u7801\u8d5e\u52a9\u52a8\u753b",
+            "This file is from a newer version of the patch. Update first.",
+            "\u6b64\u6587\u4ef6\u6765\u81ea\u66f4\u65b0\u7248\u672c\u7684\u8865\u4e01\u3002\u8bf7\u5148\u66f4\u65b0\u3002",
+            "This isn't a BitChord index or backup file.",
+            "\u8fd9\u4e0d\u662f BitChord \u7d22\u5f15\u6216\u5907\u4efd\u6587\u4ef6\u3002",
             "This login step isn't supported here. Sign in with an existing Telegram account.",
             "\u6b64\u5904\u4e0d\u652f\u6301\u6b64\u767b\u5f55\u6b65\u9aa4\u3002\u8bf7\u4f7f\u7528\u5df2\u6709\u7684"
                 + " Telegram \u8d26\u53f7\u767b\u5f55\u3002",
@@ -17183,6 +19354,8 @@ final class Translations {
             "\u4f7f\u7528\u6b64\u540d\u79f0",
             "Use original",
             "\u4f7f\u7528\u539f\u540d\u79f0",
+            "Use shared indexes",
+            "\u4f7f\u7528\u5171\u4eab\u7d22\u5f15",
             "Use this name?",
             "\u4f7f\u7528\u8fd9\u4e2a\u540d\u79f0\u5417\uff1f",
             "Uses the cover Telegram has for each file",
@@ -17263,6 +19436,9 @@ final class Translations {
                 + " open, and new files are copied too. They count toward the same hourly limit.",
             "BitChord"
                 + " \u6253\u5f00\u65f6\uff0c\u6bcf\u9694\u51e0\u5c0f\u65f6\u4f1a\u68c0\u67e5\u4f60\u7684\u793e\u533a\u9891\u9053\u662f\u5426\u6709\u65b0\u5e16\u5b50\uff0c\u65b0\u6587\u4ef6\u4e5f\u4f1a\u88ab\u590d\u5236\u3002\u5b83\u4eec\u8ba1\u5165\u540c\u4e00\u4e2a\u6bcf\u5c0f\u65f6\u4e0a\u9650\u3002",
+            "Your main channel then lists the music in the opposite order to the community channel."
+                    + " Applies to channels copying hasn\u2019t started from yet.",
+            "\u8fd9\u6837\u4f60\u7684\u4e3b\u9891\u9053\u4e2d\u97f3\u4e50\u7684\u987a\u5e8f\u4f1a\u4e0e\u793e\u533a\u9891\u9053\u76f8\u53cd\u3002\u9002\u7528\u4e8e\u5c1a\u672a\u5f00\u59cb\u590d\u5236\u7684\u9891\u9053\u3002",
             "Your phone talks to Telegram directly. Your API details are encrypted on this phone"
                 + " and your Telegram session is stored privately. The session is a normal Telegram"
                 + " login, so it can reach your whole account, not just music. Audio BitChord has"
@@ -17325,6 +19501,8 @@ final class Translations {
             "\u5df2\u4ece {1} \u4e2a\u804a\u5929\u7d22\u5f15 {0} \u4e2a\u6587\u4ef6",
             "{0} file indexed from {1} chats",
             "\u5df2\u4ece {1} \u4e2a\u804a\u5929\u7d22\u5f15 {0} \u4e2a\u6587\u4ef6",
+            "{0} files added to the saved index.",
+            "\u5df2\u5411\u5df2\u4fdd\u5b58\u7d22\u5f15\u6dfb\u52a0 {0} \u4e2a\u6587\u4ef6\u3002",
             "{0} files indexed from {1} chat",
             "\u5df2\u4ece {1} \u4e2a\u804a\u5929\u7d22\u5f15 {0} \u4e2a\u6587\u4ef6",
             "{0} files indexed from {1} chats",

@@ -73,6 +73,8 @@ public final class TrackMetadata {
                         .put("mime", mime)
                         .put("fileName", name)
                         .put("tagged", tagged);
+        // Songs Telegram posted together as one album share this.
+        if (m.mediaAlbumId != 0) row.put("mediaAlbum", m.mediaAlbumId);
         // The same for every copy of the file, in any chat: what duplicates are told apart by.
         String unique = file.remote == null ? "" : text(file.remote.uniqueId);
         if (!unique.isEmpty()) row.put("unique", unique);

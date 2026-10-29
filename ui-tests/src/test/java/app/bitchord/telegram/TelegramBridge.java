@@ -291,6 +291,12 @@ public final class TelegramBridge {
     }
 
     public TdApi.Chat channel(long id) throws Exception {
+        if (backend == null) {
+            TdApi.Chat chat = new TdApi.Chat();
+            chat.id = id;
+            chat.title = "Lossless";
+            return chat;
+        }
         return call(new TdApi.GetChat(id));
     }
 
@@ -372,6 +378,84 @@ public final class TelegramBridge {
 
     public List<TdApi.Chat> chats() {
         return new ArrayList<>();
+    }
+
+    List<TdApi.Chat> chats(TdApi.ChatList list) {
+        return chats();
+    }
+
+    List<Object[]> chatLists() {
+        List<Object[]> lists = new ArrayList<>();
+        lists.add(new Object[] {"All chats", null});
+        lists.add(new Object[] {"Music", new TdApi.ChatListFolder(1)});
+        lists.add(new Object[] {"Archived chats", new TdApi.ChatListArchive()});
+        return lists;
+    }
+
+    boolean wifiOnly, chargingOnly, sharedIndexes = true;
+
+    boolean indexOption(String name) {
+        return name.equals("wifi") ? wifiOnly : chargingOnly;
+    }
+
+    void setIndexOption(String name, boolean on) {
+        if (name.equals("wifi")) wifiOnly = on;
+        else chargingOnly = on;
+    }
+
+    boolean useSharedIndexes() {
+        return sharedIndexes;
+    }
+
+    void setUseSharedIndexes(boolean on) {
+        sharedIndexes = on;
+    }
+
+    List<JSONObject> albums(long chat) throws Exception {
+        List<JSONObject> albums = new ArrayList<>();
+        albums.add(
+                new JSONObject()
+                        .put("key", "zip:5")
+                        .put("title", "Night Sessions")
+                        .put("songs", new org.json.JSONArray().put(1).put(2)));
+        return albums;
+    }
+
+    void saveAlbumPlaylist(long chat, JSONObject album) {
+        collections.add("album playlist " + album.optString("title"));
+    }
+
+    void downloadAlbum(JSONObject album) {
+        collections.add("album download " + album.optString("title"));
+    }
+
+    final List<String> backups = new ArrayList<>();
+
+    void backup(java.io.OutputStream out, boolean withIndex) throws Exception {
+        out.write(new byte[] {1});
+        backups.add("backup " + withIndex);
+    }
+
+    void restore(java.io.InputStream in) {
+        backups.add("restore");
+    }
+
+    void exportIndex(long chat, java.io.OutputStream out) {
+        backups.add("export " + chat);
+    }
+
+    List<Object[]> shareTargets(long chat) {
+        List<Object[]> targets = new ArrayList<>();
+        targets.add(new Object[] {"Saved Messages", 1L});
+        return targets;
+    }
+
+    void shareIndex(long chat, long target) {
+        backups.add("share " + chat + " to " + target);
+    }
+
+    static String today() {
+        return "20261029";
     }
 
     public void selectChats(List<TdApi.Chat> chats, boolean[] values) {}

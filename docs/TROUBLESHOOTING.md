@@ -42,6 +42,10 @@ Check your existing Telegram app for the verification code and follow the step s
 
 You need an existing Telegram account. Account registration and some purchase- or passkey-dependent login flows are not supported. Never give another person your code, password or session files to troubleshoot a login.
 
+## A channel in a folder or in my archive isn't listed
+
+**Music chats → Choose** first asks where to pick from, **All chats**, one of your folders, or **Archived chats**, and lists every chat there.
+
 ## A channel or track is missing
 
 1. Check that the same account can access the channel and open the file in the official Telegram app.
@@ -55,7 +59,7 @@ If **Unofficial Telegram** is missing from playback sources, tap **Playback → 
 
 ## Copy into main channel shows no progress
 
-Copying from a community channel starts once the saved index has been through it, oldest post first. The line under **Copy into main channel** says which channels it's waiting for and how far their indexing has got; the **Saved index** line shows the time left. Your main channel is indexed first, and with **Skip duplicates** on, copying waits for it too.
+Copying from a community channel starts once the saved index has been through it, oldest post first; with **Newest first** on, it starts straight away. The line under **Copy into main channel** says which channels it's waiting for and how far their indexing has got; the **Saved index** line shows the time left. Your main channel is indexed first, and with **Skip duplicates** on, copying waits for it too.
 
 If the line says **Couldn't copy**, Telegram refused the copy and the reason follows. It's tried again three times, ten minutes apart, then skipped. Check that your account can still post in your main channel. BitChord's log has a line for each refused copy.
 

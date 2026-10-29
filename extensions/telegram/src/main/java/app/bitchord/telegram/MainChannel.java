@@ -56,6 +56,24 @@ final class MainChannel {
         }
     }
 
+    /** Reads the settings again from the file: after a restore. */
+    synchronized void reload() {
+        try {
+            saved =
+                    file != null && file.isFile()
+                            ? new JSONObject(
+                                    new String(
+                                            Files.readAllBytes(file.toPath()),
+                                            StandardCharsets.UTF_8))
+                            : new JSONObject();
+        } catch (Exception e) {
+            saved = new JSONObject();
+        }
+        owned = null;
+        nextAt = 0;
+        status = "";
+    }
+
     // ── Settings ────────────────────────────────────────────────────────────
 
     synchronized long main() {
@@ -176,41 +194,59 @@ final class MainChannel {
                 }
         }
         int batch = batch();
+        boolean newestFirst = option("newestFirst");
         List<String> waiting = new ArrayList<>();
-        for (long chat : sources) if (!index.built(chat)) waiting.add(index.progress(chat));
+        for (long chat : sources)
+            if (!index.built(chat) && !newest(chatState(chat), newestFirst))
+                waiting.add(index.progress(chat));
         String later = waiting.isEmpty() ? "" : " · " + waiting(waiting, sources.size());
         boolean more = false;
         for (long chat : sources) {
-            if (!index.built(chat)) continue;
             JSONObject state = chatState(chat);
-            if (!state.has("cutoff")) state.put("cutoff", newest(index, chat));
-            long cutoff = option("sync") ? Long.MAX_VALUE : state.optLong("cutoff");
-            long after = state.optLong("after");
-            List<Long> picked = new ArrayList<>();
-            Set<String> picking = new HashSet<>(); // what the picked posts add to the main channel
-            int songs = 0; // audio files in the picked posts: one, or a zip's songs
+            boolean newest = newest(state, newestFirst);
+            if (!newest && !index.built(chat)) continue;
             // Whole posts at a time: the songs of a zip share its message and are judged together.
             // The window holds the largest zip, so only a post cut off at its end waits for the
             // next.
             int limit = LOOK_AHEAD + ZipAlbums.MAX_SONGS;
-            List<JSONObject> rows = index.after(chat, after, limit);
-            List<List<JSONObject>> posts = new ArrayList<>();
-            for (JSONObject row : rows) {
-                long message = row.optLong("message");
-                if (message > cutoff) break;
-                if (posts.isEmpty()
-                        || posts.get(posts.size() - 1).get(0).optLong("message") != message)
-                    posts.add(new ArrayList<>());
-                posts.get(posts.size() - 1).add(row);
+            List<List<JSONObject>> posts;
+            boolean cutShort, upward = true;
+            if (!newest) {
+                if (!state.has("cutoff")) state.put("cutoff", newest(index, chat));
+                long cutoff = option("sync") ? Long.MAX_VALUE : state.optLong("cutoff");
+                List<JSONObject> rows = index.after(chat, state.optLong("after"), limit);
+                posts = posts(rows, cutoff);
+                cutShort = rows.size() == limit;
+            } else {
+                // Newest first: from the newest post at the start downwards, as far as the index
+                // has got, then, with sync on, anything posted since, oldest of those first.
+                if (!state.has("top")) {
+                    long top = index.newestMessage(chat);
+                    if (top == 0) continue;
+                    state.put("top", top).put("below", top + 1);
+                }
+                List<JSONObject> rows =
+                        option("sync")
+                                ? index.afterAny(chat, state.getLong("top"), limit)
+                                : Collections.emptyList();
+                if (rows.isEmpty()) {
+                    upward = false;
+                    rows = index.before(chat, state.getLong("below"), limit);
+                }
+                posts = posts(rows, Long.MAX_VALUE);
+                cutShort = rows.size() == limit;
             }
-            boolean cutShort = rows.size() == limit;
             if (cutShort && posts.size() > 1) posts.remove(posts.size() - 1);
+            List<Long> picked = new ArrayList<>();
+            Set<String> picking = new HashSet<>(); // what the picked posts add to the main channel
+            int songs = 0; // audio files in the picked posts: one, or a zip's songs
+            long reached = 0; // the last post looked at, picked or skipped
             for (List<JSONObject> post : posts) {
                 if (picked.size() >= batch) {
                     more = true;
                     break;
                 }
-                after = post.get(0).optLong("message");
+                reached = post.get(0).optLong("message");
                 // Copied when any of its songs is wanted; a zip goes over whole, duplicates and
                 // all.
                 int lossy = 0, duplicates = 0;
@@ -225,7 +261,7 @@ final class MainChannel {
                     count(duplicates > 0 ? "duplicates" : "lossy");
                     continue;
                 }
-                picked.add(after);
+                picked.add(reached);
                 songs += post.size();
                 if (dedupe) for (JSONObject row : post) picking.addAll(keys(row));
             }
@@ -272,17 +308,47 @@ final class MainChannel {
                 if (dedupe && ids.length > 0) owned.addAll(picking);
                 count("copied", ids.length);
                 count("songs", songs);
-                state.put("after", after);
+                advance(state, newest, upward, reached);
                 nextAt = now + gapMillis(picked.size());
                 status = progress(index) + later;
                 save();
                 return nextAt - now;
             }
-            state.put("after", after);
+            if (reached != 0) advance(state, newest, upward, reached);
         }
         save();
         status = !waiting.isEmpty() || more ? progress(index) + later : done();
         return more ? 1000 : option("sync") ? 600_000 : 60_000;
+    }
+
+    /** Whether a chat is copied newest first: decided when copying from it starts. */
+    private boolean newest(JSONObject state, boolean newestFirst) throws Exception {
+        if (!state.has("order")) {
+            if (state.has("after") || state.has("cutoff")) state.put("order", "oldest");
+            else return newestFirst;
+        }
+        return state.optString("order").equals("newest");
+    }
+
+    /** Moves a chat's place on past the posts just looked at. */
+    private void advance(JSONObject state, boolean newest, boolean upward, long reached)
+            throws Exception {
+        if (!newest) state.put("order", "oldest").put("after", reached);
+        else if (upward) state.put("order", "newest").put("top", reached);
+        else state.put("order", "newest").put("below", reached);
+    }
+
+    /** Rows grouped into posts, in the order given, up to a message. */
+    private static List<List<JSONObject>> posts(List<JSONObject> rows, long cutoff) {
+        List<List<JSONObject>> posts = new ArrayList<>();
+        for (JSONObject row : rows) {
+            long message = row.optLong("message");
+            if (message > cutoff) break;
+            if (posts.isEmpty() || posts.get(posts.size() - 1).get(0).optLong("message") != message)
+                posts.add(new ArrayList<>());
+            posts.get(posts.size() - 1).add(row);
+        }
+        return posts;
     }
 
     /**
@@ -339,9 +405,12 @@ final class MainChannel {
         long left = 0;
         try {
             for (long chat : community()) {
-                if (!index.built(chat)) continue;
                 JSONObject state = chatState(chat);
-                left += index.countAfter(chat, state.optLong("after"));
+                if (state.optString("order").equals("newest")) {
+                    left += index.countBefore(chat, state.optLong("below"));
+                    if (option("sync")) left += index.countAfter(chat, state.optLong("top"));
+                } else if (index.built(chat))
+                    left += index.countAfter(chat, state.optLong("after"));
             }
         } catch (Exception ignored) {
             // Shown without what's left.

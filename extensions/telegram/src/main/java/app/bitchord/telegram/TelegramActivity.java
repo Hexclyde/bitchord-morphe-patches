@@ -178,7 +178,8 @@ public final class TelegramActivity extends Activity {
                                         ? "credentials"
                                         : bridge.auth == null
                                                 ? "starting"
-                                                : bridge.auth.getClass().getSimpleName();
+                                                : bridge.auth.getClass().getSimpleName()
+                                                        + (advanced ? ":advanced" : "");
         if (state.equals(screen)) {
             updateStatus();
             return;
@@ -273,7 +274,11 @@ public final class TelegramActivity extends Activity {
             body.addView(channelView);
             if (resumed) channelView.resume();
         } else if (editCredentials) credentialsForm();
-        else {
+        else if (bridge.ready() && advanced) {
+            tabs();
+            advancedPage();
+        } else {
+            if (bridge.ready()) tabs();
             LinearLayout app = card("Application");
             row(
                     app,
@@ -290,9 +295,13 @@ public final class TelegramActivity extends Activity {
             divider(app);
             row(app, "App API hash", "••••••••••••••••", null, null);
             account();
-            if (bridge.ready()) library();
+            if (bridge.ready()) {
+                library();
+                trackNames();
+                session();
+            }
         }
-        if (channelId == 0) about();
+        if (channelId == 0 && !(advanced && bridge != null && bridge.ready())) about();
         LinearLayout connection = card(null);
         status = style.text("", 14, style.secondary, style.regular);
         connection.addView(status);
@@ -305,6 +314,37 @@ public final class TelegramActivity extends Activity {
             body.requestFocus();
             scroll.post(() -> scroll.scrollTo(0, 0));
         }
+    }
+
+    /** Which tab is open: Basic (false) or Advanced. */
+    boolean advanced;
+
+    /** Basic and Advanced: the everyday settings, and the rest. */
+    void tabs() {
+        LinearLayout bar = new LinearLayout(this);
+        bar.setOrientation(LinearLayout.HORIZONTAL);
+        String[] names = {"Basic", "Advanced"};
+        for (int i = 0; i < 2; i++) {
+            boolean open = (i == 1) == advanced, toAdvanced = i == 1;
+            TextView tab =
+                    style.button(
+                            Strings.t(names[i]),
+                            open,
+                            () -> {
+                                if (busy || advanced == toAdvanced) return;
+                                advanced = toAdvanced;
+                                screen = "";
+                                render();
+                            });
+            tab.setContentDescription(Strings.t(names[i]));
+            tab.setSelected(open);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, -2, 1);
+            if (i == 1) lp.leftMargin = style.dp(8);
+            bar.addView(tab, lp);
+        }
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
+        lp.setMargins(style.dp(16), style.dp(4), style.dp(16), style.dp(4));
+        body.addView(bar, lp);
     }
 
     void credentialsForm() {
@@ -544,8 +584,29 @@ public final class TelegramActivity extends Activity {
                         + " the background and topped up every few hours. It answers when"
                         + " Telegram’s search is rate limited or busy, and the format legend uses"
                         + " it instead of searching Telegram. Turning it off deletes it.");
+        divider(music);
+        toggle(
+                music,
+                "Index only on Wi-Fi",
+                "The index waits for Wi-Fi to read your chats",
+                "The index also uses mobile data",
+                bridge.indexOption("wifi"),
+                on -> bridge.setIndexOption("wifi", on),
+                null,
+                "Search and playback still use mobile data; only the background indexing waits.");
+        divider(music);
+        toggle(
+                music,
+                "Index only while charging",
+                "The index waits for a charger",
+                "The index also runs on battery",
+                bridge.indexOption("charging"),
+                on -> bridge.setIndexOption("charging", on));
+    }
+
+    /** The Advanced tab: copying into a main channel, track details, playback, storage, backups. */
+    void advancedPage() {
         mainChannel();
-        trackNames();
         trackDetails();
         LinearLayout playback = card("Playback");
         row(
@@ -643,6 +704,10 @@ public final class TelegramActivity extends Activity {
                                         bridge.setCacheLimitBytes(
                                                 CachePolicy.bytesAt(cacheSlider.getProgress()))));
         action(storage, "Clear Telegram audio cache", false, () -> run(() -> bridge.clearCache()));
+        backupAndSharing();
+    }
+
+    void session() {
         LinearLayout session = card("Session");
         action(
                 session,
@@ -654,6 +719,194 @@ public final class TelegramActivity extends Activity {
                                 "This signs you out of Telegram on this phone.",
                                 "Sign out",
                                 () -> run(() -> bridge.logout())));
+    }
+
+    static final int BACKUP = 41, RESTORE = 42, EXPORT_INDEX = 43;
+    boolean backupWithIndex = true;
+    long exportChat;
+
+    /** Backing up and restoring settings, and sharing a chat's saved index. */
+    void backupAndSharing() {
+        LinearLayout card = card("Backup and sharing");
+        row(
+                card,
+                "Back up",
+                "Settings, corrected names and main channel, and the saved index if you like",
+                "Back up",
+                this::startBackup);
+        divider(card);
+        row(
+                card,
+                "Restore",
+                "From a backup, or add an index file someone shared",
+                "Choose",
+                () -> {
+                    Intent pick = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    pick.addCategory(Intent.CATEGORY_OPENABLE);
+                    pick.setType("*/*");
+                    startActivityForResult(pick, RESTORE);
+                });
+        divider(card);
+        row(
+                card,
+                "Share a chat’s index",
+                "Post it in Telegram, or save it as a file",
+                "Choose",
+                () -> pickChat("Share a chat’s index", this::chooseShareTarget));
+        divider(card);
+        toggle(
+                card,
+                "Use shared indexes",
+                "A chat’s index comes from a shared index file when there is one",
+                "Every chat is read from Telegram",
+                bridge.useSharedIndexes(),
+                bridge::setUseSharedIndexes,
+                null,
+                "Before reading a chat from Telegram, the patch looks for an index file of it"
+                    + " posted in the chat itself (in a channel, only its admins can post), in your"
+                    + " Saved Messages or in your main channel, and then only reads what’s been"
+                    + " posted since. Each song is checked against its post when it plays.");
+        paragraph(
+                card,
+                "Backups and index files never hold your API details or your Telegram session. An"
+                        + " index file lists the music in a chat, so anyone you share it with sees"
+                        + " that list.");
+    }
+
+    void startBackup() {
+        boolean[] withIndex = {true};
+        AlertDialog dialog =
+                new AlertDialog.Builder(this)
+                        .setTitle(Strings.t("Back up"))
+                        .setMultiChoiceItems(
+                                new String[] {Strings.t("Include the saved index (larger file)")},
+                                withIndex,
+                                (d, i, on) -> withIndex[0] = on)
+                        .setNegativeButton(Strings.t("Cancel"), null)
+                        .setPositiveButton(
+                                Strings.t("Back up"),
+                                (d, w) -> {
+                                    backupWithIndex = withIndex[0];
+                                    Intent save = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                                    save.addCategory(Intent.CATEGORY_OPENABLE);
+                                    save.setType("application/gzip");
+                                    save.putExtra(
+                                            Intent.EXTRA_TITLE,
+                                            "bitchord-telegram-backup-"
+                                                    + TelegramBridge.today()
+                                                    + ".gz");
+                                    startActivityForResult(save, BACKUP);
+                                })
+                        .create();
+        secureWindow(dialog.getWindow());
+        dialog.show();
+        style.tuneDialog(dialog);
+    }
+
+    void chooseShareTarget(TdApi.Chat chat) {
+        bridge.work.execute(
+                () -> {
+                    List<Object[]> targets;
+                    try {
+                        targets = bridge.shareTargets(chat.id);
+                    } catch (Exception e) {
+                        bridge.fail(e);
+                        runOnUiThread(this::updateStatus);
+                        return;
+                    }
+                    runOnUiThread(
+                            () -> {
+                                if (isFinishing() || isDestroyed()) return;
+                                String[] labels = new String[targets.size() + 1];
+                                for (int i = 0; i < targets.size(); i++)
+                                    labels[i] =
+                                            Strings.f("Post in {0}", (String) targets.get(i)[0]);
+                                labels[targets.size()] = Strings.t("Save as a file");
+                                AlertDialog dialog =
+                                        new AlertDialog.Builder(this)
+                                                .setTitle(chat.title)
+                                                .setItems(
+                                                        labels,
+                                                        (d, i) -> {
+                                                            if (i == targets.size()) {
+                                                                exportChat = chat.id;
+                                                                Intent save =
+                                                                        new Intent(
+                                                                                Intent
+                                                                                        .ACTION_CREATE_DOCUMENT);
+                                                                save.addCategory(
+                                                                        Intent.CATEGORY_OPENABLE);
+                                                                save.setType("application/gzip");
+                                                                save.putExtra(
+                                                                        Intent.EXTRA_TITLE,
+                                                                        IndexTransfer.fileName(
+                                                                                chat.id,
+                                                                                TelegramBridge
+                                                                                        .today()));
+                                                                startActivityForResult(
+                                                                        save, EXPORT_INDEX);
+                                                                return;
+                                                            }
+                                                            String where =
+                                                                    (String) targets.get(i)[0];
+                                                            long target = (Long) targets.get(i)[1];
+                                                            confirm(
+                                                                    Strings.f(
+                                                                            "Post in {0}?", where),
+                                                                    Strings.f(
+                                                                            "Everyone who can see"
+                                                                                + " {0} can see the"
+                                                                                + " list of music"
+                                                                                + " in {1}.",
+                                                                            where, chat.title),
+                                                                    "Post",
+                                                                    () ->
+                                                                            run(
+                                                                                    false,
+                                                                                    () ->
+                                                                                            bridge
+                                                                                                    .shareIndex(
+                                                                                                            chat.id,
+                                                                                                            target)));
+                                                        })
+                                                .setNegativeButton(Strings.t("Cancel"), null)
+                                                .create();
+                                secureWindow(dialog.getWindow());
+                                dialog.show();
+                            });
+                });
+    }
+
+    @Override
+    protected void onActivityResult(int request, int result, Intent data) {
+        super.onActivityResult(request, result, data);
+        if (result != RESULT_OK || data == null || data.getData() == null || bridge == null) return;
+        android.net.Uri uri = data.getData();
+        if (request == BACKUP)
+            run(
+                    false,
+                    () -> {
+                        try (java.io.OutputStream out =
+                                getContentResolver().openOutputStream(uri, "wt")) {
+                            bridge.backup(out, backupWithIndex);
+                        }
+                    });
+        else if (request == EXPORT_INDEX)
+            run(
+                    false,
+                    () -> {
+                        try (java.io.OutputStream out =
+                                getContentResolver().openOutputStream(uri, "wt")) {
+                            bridge.exportIndex(exportChat, out);
+                        }
+                    });
+        else if (request == RESTORE)
+            run(
+                    () -> {
+                        try (java.io.InputStream in = getContentResolver().openInputStream(uri)) {
+                            bridge.restore(in);
+                        }
+                    });
     }
 
     void trackDetails() {
@@ -761,9 +1014,8 @@ public final class TelegramActivity extends Activity {
                         bridge.importOption("import"),
                         on -> bridge.setImportOption("import", on),
                         "Music from your community channels is copied into your main channel, a few"
-                            + " files at a time, oldest post first. Copies show as your own posts,"
-                            + " without “Forwarded from”, and stay even if the community channel"
-                            + " deletes them.\n\n"
+                            + " files at a time. Copies show as your own posts, without “Forwarded"
+                            + " from”, and stay even if the community channel deletes them.\n\n"
                             + "Telegram watches for accounts that copy many messages. Going faster"
                             + " than it likes can get your account limited for a while, or banned."
                             + " The pace below never goes above 500 files an hour, and copying"
@@ -783,6 +1035,17 @@ public final class TelegramActivity extends Activity {
                 "Your community channels are checked for new posts every few hours while"
                         + " BitChord is open, and new files are copied too. They count toward the"
                         + " same hourly limit.");
+        divider(card);
+        toggle(
+                card,
+                "Newest first",
+                "Starts with each channel’s newest post, while it’s still being indexed",
+                "Oldest post first, once each channel has been indexed",
+                bridge.importOption("newestFirst"),
+                on -> bridge.setImportOption("newestFirst", on),
+                null,
+                "Your main channel then lists the music in the opposite order to the community"
+                        + " channel. Applies to channels copying hasn’t started from yet.");
         divider(card);
         toggle(
                 card,
@@ -1189,7 +1452,8 @@ public final class TelegramActivity extends Activity {
         String songs = summary[0], size = summary[1];
         String[] labels = {
             Strings.f("Save as playlist ({0})", songs),
-            Strings.f("Download all ({0}, {1})", songs, size)
+            Strings.f("Download all ({0}, {1})", songs, size),
+            Strings.t("Albums")
         };
         AlertDialog dialog =
                 new AlertDialog.Builder(this)
@@ -1199,6 +1463,7 @@ public final class TelegramActivity extends Activity {
                                 (d, which) -> {
                                     if (which == 0)
                                         run(() -> bridge.saveChannelPlaylist(chat.id, chat.title));
+                                    else if (which == 2) chooseAlbum(chat);
                                     else
                                         confirm(
                                                 "Download all",
@@ -1218,6 +1483,61 @@ public final class TelegramActivity extends Activity {
                                                                         bridge.downloadChannel(
                                                                                 chat.id,
                                                                                 chat.title)));
+                                })
+                        .setNegativeButton(Strings.t("Cancel"), null)
+                        .create();
+        secureWindow(dialog.getWindow());
+        dialog.show();
+    }
+
+    /** A chat's albums, then what to do with the one picked. */
+    void chooseAlbum(TdApi.Chat chat) {
+        bridge.work.execute(
+                () -> {
+                    List<JSONObject> albums;
+                    try {
+                        albums = bridge.albums(chat.id);
+                    } catch (Exception e) {
+                        bridge.fail(e);
+                        runOnUiThread(this::updateStatus);
+                        return;
+                    }
+                    runOnUiThread(
+                            () -> {
+                                if (isFinishing() || isDestroyed()) return;
+                                String[] labels = new String[albums.size()];
+                                for (int i = 0; i < labels.length; i++) {
+                                    int count = albums.get(i).optJSONArray("songs").length();
+                                    labels[i] =
+                                            albums.get(i).optString("title")
+                                                    + " · "
+                                                    + Strings.f("{0} songs", count);
+                                }
+                                AlertDialog dialog =
+                                        new AlertDialog.Builder(this)
+                                                .setTitle(Strings.t("Albums"))
+                                                .setItems(
+                                                        labels,
+                                                        (d, i) -> albumActions(chat, albums.get(i)))
+                                                .setNegativeButton(Strings.t("Cancel"), null)
+                                                .create();
+                                secureWindow(dialog.getWindow());
+                                dialog.show();
+                            });
+                });
+    }
+
+    void albumActions(TdApi.Chat chat, JSONObject album) {
+        String[] labels = {Strings.t("Save as playlist"), Strings.t("Download")};
+        AlertDialog dialog =
+                new AlertDialog.Builder(this)
+                        .setTitle(album.optString("title"))
+                        .setItems(
+                                labels,
+                                (d, which) -> {
+                                    if (which == 0)
+                                        run(() -> bridge.saveAlbumPlaylist(chat.id, album));
+                                    else run(() -> bridge.downloadAlbum(album));
                                 })
                         .setNegativeButton(Strings.t("Cancel"), null)
                         .create();
@@ -1323,10 +1643,26 @@ public final class TelegramActivity extends Activity {
                         + " account and channels.");
     }
 
+    /** Asks where to pick from first: all chats, a folder, or archived chats. */
     void chooseChats() {
+        List<Object[]> lists = bridge.chatLists();
+        String[] names = new String[lists.size()];
+        for (int i = 0; i < names.length; i++) names[i] = (String) lists.get(i)[0];
+        AlertDialog dialog =
+                new AlertDialog.Builder(this)
+                        .setTitle(Strings.t("Music chats"))
+                        .setItems(names, (d, i) -> chooseChats((TdApi.ChatList) lists.get(i)[1]))
+                        .setNegativeButton(Strings.t("Cancel"), null)
+                        .create();
+        secureWindow(dialog.getWindow());
+        dialog.show();
+    }
+
+    /** Picks music chats from one list; chats outside it keep their choice. */
+    void chooseChats(TdApi.ChatList list) {
         run(
                 () -> {
-                    List<TdApi.Chat> chats = bridge.chats();
+                    List<TdApi.Chat> chats = list == null ? bridge.chats() : bridge.chats(list);
                     runOnUiThread(
                             () -> {
                                 String[] names = new String[chats.size()];

@@ -45,6 +45,9 @@ final class TelegramIndex {
 
     static final long REFRESH_MILLIS = 6 * 3600 * 1000L;
 
+    /** What a chat's index holds; a chat built by an older version is built again once. */
+    static final int VERSION = 2;
+
     /**
      * Rebuilt from scratch once a month, which drops files deleted from the chat. A large channel
      * takes an hour or more to go through, so this isn't done more often.
@@ -97,7 +100,9 @@ final class TelegramIndex {
         for (long id : new TreeSet<>(selected)) {
             if (id == 0) continue;
             IndexStore.State chat = state(id);
-            if (chat.built() && now - chat.builtAt > REBUILD_MILLIS) {
+            // Rebuilt monthly, and once after an update that reads more of each post (1.0.14:
+            // cue sheets and albums).
+            if (chat.built() && (now - chat.builtAt > REBUILD_MILLIS || chat.version < VERSION)) {
                 Arrays.fill(chat.cursor, 0);
                 Arrays.fill(chat.complete, false);
                 Arrays.fill(chat.total, -1);
@@ -195,6 +200,9 @@ final class TelegramIndex {
                 if (chat.rebuilding) store.prune(chat.chat, chat.generation);
                 chat.rebuilding = false;
                 chat.builtAt = chat.refreshed = clock.millis();
+                chat.version = VERSION;
+                // Cue sheets whose album wasn't found yet: the whole chat is here now.
+                store.wakeZips(chat.chat);
                 HostLog.d(
                         "Unofficial Telegram index has "
                                 + store.count(chat.chat)
@@ -209,7 +217,10 @@ final class TelegramIndex {
 
     private boolean zipTurn;
 
-    /** Reads the list of songs in one waiting zip; false when none are waiting. */
+    /**
+     * Looks into one waiting post: a zip's songs, a cue sheet's tracks, or a long FLAC file's own
+     * cue sheet. False when none are waiting.
+     */
     private boolean openZip(Collection<Long> selected) throws Exception {
         List<Long> chats = new ArrayList<>();
         for (long id : selected) if (id != 0) chats.add(id);
@@ -217,9 +228,34 @@ final class TelegramIndex {
         if (zip == null) return false;
         long chat = zip.getLong("chat"), message = zip.getLong("message");
         int file = zip.getInt("file");
+        ZipDirectory.Range range = (offset, length) -> pages.range(file, offset, length);
         try {
-            List<JSONObject> songs =
-                    ZipAlbums.songs(zip, (offset, length) -> pages.range(file, offset, length));
+            String kind = zip.optString("kind", "zip");
+            List<JSONObject> songs;
+            if (kind.equals("cue")) {
+                songs = cueFile(zip, range);
+                if (songs == null) {
+                    // Its album isn't indexed yet: set aside until the chat has been gone through.
+                    if (!state(chat).built()) {
+                        store.deferZip(chat, message);
+                        return true;
+                    }
+                    songs = new ArrayList<>();
+                }
+            } else if (kind.equals("embedded")) {
+                JSONObject audio = zip.getJSONObject("audio");
+                CueAlbums.Media media = CueAlbums.media(range, zip.getLong("size"));
+                CueSheet sheet = media == null ? null : CueAlbums.embeddedSheet(media.flac);
+                songs =
+                        sheet == null
+                                ? new ArrayList<>()
+                                : CueAlbums.tracks(
+                                        sheet,
+                                        media,
+                                        audio,
+                                        0,
+                                        CueAlbums.base(audio.optString("fileName")));
+            } else songs = ZipAlbums.songs(zip, range);
             store.put(chat, songs, state(chat).generation);
             HostLog.d(
                     "Unofficial Telegram found "
@@ -238,6 +274,38 @@ final class TelegramIndex {
         }
         store.zipDone(chat, message);
         return true;
+    }
+
+    /**
+     * The tracks a .cue post describes, or null when the album file it names isn't in the index.
+     * The album is a FLAC or WAV post in the same chat with the name the sheet gives, or the
+     * sheet's own name; the one posted nearest the sheet wins.
+     */
+    private List<JSONObject> cueFile(JSONObject job, ZipDirectory.Range range) throws Exception {
+        long chat = job.getLong("chat"), message = job.getLong("message");
+        CueSheet sheet = CueSheet.parse(CueSheet.text(range.read(0, (int) job.getLong("size"))));
+        if (sheet == null) return new ArrayList<>();
+        JSONObject album = null;
+        for (String name : new String[] {sheet.file, job.optString("fileName")}) {
+            String base = CueAlbums.base(name);
+            if (base.isEmpty()) continue;
+            for (JSONObject row :
+                    store.search(Collections.singleton(chat), TrackNames.words(base), 50))
+                if (row.optInt("entry") == 0
+                        && CueAlbums.albumFile(row.optString("fileName"))
+                        && CueAlbums.base(row.optString("fileName")).equals(base)
+                        && (album == null
+                                || Math.abs(row.optLong("message") - message)
+                                        < Math.abs(album.optLong("message") - message)))
+                    album = row;
+            if (album != null) break;
+        }
+        if (album == null) return null;
+        int file = album.getInt("file");
+        CueAlbums.Media media =
+                CueAlbums.media((o, n) -> pages.range(file, o, n), album.getLong("size"));
+        if (media == null) return new ArrayList<>();
+        return CueAlbums.tracks(sheet, media, album, 0, CueAlbums.base(job.optString("fileName")));
     }
 
     /** One file of a chat, or null: a song inside a zip has an entry from 1. */
@@ -309,8 +377,15 @@ final class TelegramIndex {
             try {
                 JSONObject row = TrackMetadata.from(m);
                 if (row != null) rows.add(row);
-                JSONObject zip = row == null ? ZipAlbums.descriptor(m) : null;
-                if (zip != null) zips.add(zip);
+                // Posts looked into later: zips, cue sheets, and long FLAC files that may carry
+                // a cue sheet of their own.
+                JSONObject later =
+                        row != null
+                                ? CueAlbums.embedded(row)
+                                : ZipAlbums.descriptor(m) != null
+                                        ? ZipAlbums.descriptor(m)
+                                        : CueAlbums.descriptor(m);
+                if (later != null) zips.add(later);
             } catch (Exception e) {
                 // A post this can't read is left out, as search leaves it out.
             }
@@ -360,6 +435,95 @@ final class TelegramIndex {
 
     int countAfter(long chat, long message) throws Exception {
         return store.countAfter(chat, message);
+    }
+
+    /**
+     * The newest message indexed in a chat so far, built or not, or 0. Copying newest first starts
+     * here while the rest of the chat is still being indexed.
+     */
+    long newestMessage(long chat) throws Exception {
+        if (!enabled) return 0;
+        List<JSONObject> rows = store.newest(chat, 1);
+        return rows.isEmpty() ? 0 : rows.get(0).optLong("message");
+    }
+
+    /** Files after a message, oldest first, whether or not the chat has been built. */
+    List<JSONObject> afterAny(long chat, long message, int limit) throws Exception {
+        return enabled ? store.after(chat, message, limit) : new ArrayList<>();
+    }
+
+    /** Files before a message, newest first, as far as the index has got. */
+    List<JSONObject> before(long chat, long message, int limit) throws Exception {
+        return enabled ? store.before(chat, message, limit) : new ArrayList<>();
+    }
+
+    int countBefore(long chat, long message) throws Exception {
+        return store.countBefore(chat, message);
+    }
+
+    /** A chat's part of an index file: its files, and how far its index has got. */
+    IndexTransfer.Section section(long chat, String title) throws Exception {
+        IndexTransfer.Section s = new IndexTransfer.Section();
+        s.chat = chat;
+        s.title = title == null ? "" : title;
+        s.newest = newestMessage(chat);
+        s.complete = state(chat).builtAt > 0;
+        return s;
+    }
+
+    /** One chat's files after a message, oldest first, for writing an index file. */
+    List<JSONObject> exportRows(long chat, long message, int limit) throws Exception {
+        return store.after(chat, message, limit);
+    }
+
+    /**
+     * Adds an index file's part for a chat. Files the index already has keep its own details. A
+     * chat not built yet counts as built from the file when the file had all of it, and is topped
+     * up with posts since; otherwise its own build goes on as usual. Returns the files added.
+     */
+    synchronized int importSection(IndexTransfer.Section section) throws Exception {
+        if (!enabled) return 0;
+        long chat = section.chat;
+        IndexStore.State state = state(chat);
+        List<JSONObject> fresh = new ArrayList<>();
+        for (JSONObject row : section.rows)
+            if (store.row(chat, row.getLong("message"), row.getInt("entry")) == null)
+                fresh.add(row);
+        for (int i = 0; i < fresh.size(); i += 1000)
+            store.put(chat, fresh.subList(i, Math.min(fresh.size(), i + 1000)), state.generation);
+        if (section.complete && state.builtAt == 0) {
+            Arrays.fill(state.complete, true);
+            Arrays.fill(state.cursor, 0);
+            state.builtAt = clock.millis();
+            state.refreshed = 0; // topped up next, with what's been posted since
+            state.version = VERSION;
+            state.rebuilding = false;
+            store.save(state);
+        }
+        HostLog.d(
+                "Unofficial Telegram imported "
+                        + fresh.size()
+                        + " files for chat "
+                        + chat
+                        + " from an index file");
+        return fresh.size();
+    }
+
+    /**
+     * A file from a shared index has been matched to its post on this phone: its file number is
+     * kept, so its format can be read like any other's.
+     */
+    void fileFound(JSONObject row, int file) throws Exception {
+        if (!enabled || file == 0) return;
+        long chat = row.getLong("chat");
+        row.put("file", file);
+        store.put(chat, Collections.singletonList(row), state(chat).generation);
+    }
+
+    /** Whether every one of these chats has been built at least once. */
+    boolean allBuilt(Collection<Long> chats) throws Exception {
+        for (long id : chats) if (id != 0 && state(id).builtAt == 0) return false;
+        return true;
     }
 
     boolean built(long chat) throws Exception {

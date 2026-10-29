@@ -216,6 +216,30 @@ final class SqliteIndexStore implements IndexStore {
     }
 
     @Override
+    public List<JSONObject> before(long chat, long message, int limit) throws Exception {
+        List<JSONObject> found = new ArrayList<>();
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT row FROM files WHERE chat = ? AND message < ? ORDER BY message"
+                                + " DESC, entry LIMIT "
+                                + Math.max(0, limit),
+                        new String[] {Long.toString(chat), Long.toString(message)})) {
+            while (c.moveToNext()) found.add(new JSONObject(c.getString(0)));
+        }
+        return found;
+    }
+
+    @Override
+    public int countBefore(long chat, long message) {
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT count(*) FROM files WHERE chat = ? AND message < ?",
+                        new String[] {Long.toString(chat), Long.toString(message)})) {
+            return c.moveToFirst() ? c.getInt(0) : 0;
+        }
+    }
+
+    @Override
     public JSONObject row(long chat, long message, int entry) throws Exception {
         try (Cursor c =
                 db.rawQuery(
@@ -244,6 +268,11 @@ final class SqliteIndexStore implements IndexStore {
                     values.put("message", zip.optLong("message"));
                     values.put("row", zip.toString());
                     db.insert("zips", null, values);
+                } else if (zip.optString("kind").equals("cue")) {
+                    // A cue sheet's tracks are filed under its album's post: read it again.
+                    ContentValues values = new ContentValues();
+                    values.put("done", 0);
+                    db.update("zips", values, "chat = ? AND message = ?", key);
                 } else {
                     ContentValues values = new ContentValues();
                     values.put("generation", generation);
@@ -284,6 +313,24 @@ final class SqliteIndexStore implements IndexStore {
                 values,
                 "chat = ? AND message = ?",
                 new String[] {Long.toString(chat), Long.toString(message)});
+    }
+
+    @Override
+    public void deferZip(long chat, long message) {
+        ContentValues values = new ContentValues();
+        values.put("done", 2);
+        db.update(
+                "zips",
+                values,
+                "chat = ? AND message = ?",
+                new String[] {Long.toString(chat), Long.toString(message)});
+    }
+
+    @Override
+    public void wakeZips(long chat) {
+        ContentValues values = new ContentValues();
+        values.put("done", 0);
+        db.update("zips", values, "chat = ? AND done = 2", new String[] {Long.toString(chat)});
     }
 
     @Override

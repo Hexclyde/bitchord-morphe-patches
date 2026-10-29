@@ -43,15 +43,18 @@ Screenshots and screen recording are blocked on this page because it contains ac
 
 Do not share verification codes, passwords or session files. If Telegram asks you to wait before requesting another code, wait for that period. Account creation and some login flows are not supported yet; see [Troubleshooting](TROUBLESHOOTING.md).
 
+Once you're signed in, the Telegram page has two tabs. **Basic** has your API details, your account, your music chats, the saved index and track names. **Advanced** has the main channel, track details, playback, storage, and backup and sharing.
+
 ## 4. Choose your music channels
 
 Check in the official Telegram app that your account can open the channel and play its audio. Join private channels there first through their normal invitation process.
 
 1. In Bitchord+'s Telegram page, open **Music library → Music chats → Choose**.
-2. Select the chats containing your audio, then tap **Save**. You can select more than one.
-3. If a channel is missing, enter its `@username` or numeric chat ID in **@channel or numeric chat ID**, then tap **Add chat**. Invite links do not work in this field.
+2. Pick where to choose from: **All chats**, one of your Telegram folders, or **Archived chats**.
+3. Select the chats containing your audio, then tap **Save**. You can select more than one, and from more than one folder.
+4. If a channel is missing, enter its `@username` or numeric chat ID in **@channel or numeric chat ID**, then tap **Add chat**. Invite links do not work in this field.
 
-The picker shows the first 100 chats from your main chat list. Archived chats and additional channels may need the username or numeric ID option.
+The picker lists every chat in your chat list and your archive, up to 2,000 in each.
 
 Each listener needs their own account, API details and access to the channel. Selecting a channel in your app does not grant access to anyone else.
 
@@ -80,7 +83,7 @@ Channel View currently opens selected, accessible, unprotected channels. Other s
 
 ## Manage storage
 
-On the Telegram page, adjust **Storage → Telegram audio cache target**, then tap **Apply cache size**. The range is **64 MiB to 16 GiB**, with a default of **256 MiB**.
+On the Telegram page's **Advanced** tab, adjust **Storage → Telegram audio cache target**, then tap **Apply cache size**. The range is **64 MiB to 16 GiB**, with a default of **256 MiB**.
 
 This setting controls retained Telegram audio. It does not reserve space or download your entire channel. Active files can temporarily exceed the target. Increasing it does not improve audio quality.
 
@@ -88,6 +91,6 @@ To free space, stop playback and tap **Clear Telegram audio cache**. BitChord al
 
 ## Sign out or revoke access
 
-Use **Session → Sign out** on the Telegram page. You can also revoke this session in the official Telegram app under **Settings → Devices**.
+Use **Session → Sign out** on the Telegram page's **Basic** tab. You can also revoke this session in the official Telegram app under **Settings → Devices**.
 
 Signing out does not delete audio already saved in BitChord's cache or downloads. See [Privacy](../PRIVACY.md) for account access and storage details.

@@ -247,6 +247,41 @@ public final class MainChannelTest {
                 waits.status.startsWith("Copied 150 audio files · Waiting for a community"),
                 waits.status);
 
+        // Newest first: copying starts while the channel is still being indexed.
+        long fresh = -50, mine2 = -60;
+        Chats growing = new Chats();
+        for (long id = 1; id <= 300; id++) growing.add(post(fresh, id, "New " + id, true, null));
+        growing.add(post(mine2, 1, "Mine", true, null));
+        TelegramIndex partial = new TelegramIndex(new IndexStore.Memory(), growing, clock::get);
+        for (int i = 0; i < 6; i++) partial.step(List.of(fresh, mine2), mine2);
+        check(!partial.built(fresh) && partial.count(fresh) > 0, "Still indexing");
+        List<String> order = new ArrayList<>();
+        MainChannel newest =
+                new MainChannel(
+                        null,
+                        (to, from, ids) -> {
+                            for (long id : ids) order.add(from + ":" + id);
+                        },
+                        clock::get);
+        newest.setMain(mine2, "Mine");
+        newest.setCommunity(List.of(fresh));
+        newest.setPerHour(500);
+        newest.setOption("newestFirst", true);
+        newest.setOption("import", true);
+        newest.step(partial);
+        check(
+                order.size() == 9
+                        && order.get(0).equals("-50:300")
+                        && order.get(8).equals("-50:292"),
+                "Newest posts first, before indexing ends: " + order);
+        for (int i = 0; i < 100; i++, clock.addAndGet(120_000)) {
+            newest.step(partial);
+            partial.step(List.of(fresh, mine2), mine2);
+        }
+        check(order.size() == 300, "All 300 once indexing caught up: " + order.size());
+        check(order.get(299).equals("-50:1"), "Ending with the oldest");
+        check(new HashSet<>(order).size() == 300, "Each once");
+
         restarted.clear();
         check(!file.exists() && restarted.main() == 0, "Sign-out forgets it");
         System.out.println(

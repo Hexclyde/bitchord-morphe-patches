@@ -162,6 +162,38 @@ public class SqliteIndexStoreTest {
     }
 
     @Test
+    public void newestFirstAndCueSheetsSetAside() throws Exception {
+        SqliteIndexStore store = open();
+        List<JSONObject> rows = new java.util.ArrayList<>();
+        for (int m = 1; m <= 5; m++) rows.add(row(-100, m, "Song " + m, "Artist"));
+        rows.add(row(-100, 4, "Zip song", "Artist").put("entry", 2));
+        store.put(-100, rows, 1);
+        List<JSONObject> before = store.before(-100, 5, 10);
+        assertEquals("Newest first, a post's songs in order", 4, before.get(0).getLong("message"));
+        assertEquals(0, before.get(0).optInt("entry"));
+        assertEquals(2, before.get(1).optInt("entry"));
+        assertEquals(5, before.size());
+        assertEquals(5, store.countBefore(-100, 5));
+
+        JSONObject cue = new JSONObject().put("kind", "cue").put("chat", -100).put("message", 9);
+        store.queueZips(-100, List.of(cue), 1);
+        assertEquals(9, store.nextZip(List.of(-100L)).getLong("message"));
+        store.deferZip(-100, 9);
+        assertNull("Set aside", store.nextZip(List.of(-100L)));
+        assertEquals(0, store.zipsWaiting(List.of(-100L)));
+        store.wakeZips(-100);
+        assertEquals(
+                "Back once the chat is in", 9, store.nextZip(List.of(-100L)).getLong("message"));
+        store.zipDone(-100, 9);
+        assertNull(store.nextZip(List.of(-100L)));
+        store.queueZips(-100, List.of(cue), 2);
+        assertEquals(
+                "A rebuild reads a cue sheet again",
+                9,
+                store.nextZip(List.of(-100L)).getLong("message"));
+    }
+
+    @Test
     public void largeChatSearchesQuickly() throws Exception {
         SqliteIndexStore store = open();
         Random random = new Random(1);

@@ -20,9 +20,11 @@ Yes, after its upload to Telegram has completed. The channel message and file mu
 
 You don't have to wait for anything. Search runs against your selected chats when you enter a query, and returns up to 200 tracks, so search by a specific title, artist or filename.
 
-With **Saved index** on (under **Music chats**), the patch also lists your selected chats' music in the background, slowly, so it never looks like a burst of searches. Once it's built, lookups are answered from it, and Telegram is only searched when it has nothing. It also answers when Telegram's search is rate limited or busy. Turning it off deletes it.
+With **Saved index** on (under **Music library**), the patch also lists your selected chats' music in the background, slowly, so it never looks like a burst of searches. Once it's built, lookups are answered from it, and Telegram is only searched when it has nothing. It also answers when Telegram's search is rate limited or busy. Turning it off deletes it.
 
-The **Saved index** line counts the files as they come in, against Telegram's own count for the chat. It goes through about 3,000 files a minute, so a channel of 200,000 files takes over an hour the first time, and uses about 150 MB of storage.
+The **Saved index** line counts the files as they come in, against Telegram's own count for the chat. It speeds up while Telegram answers without asking for a pause, up to about 8,000 files a minute, and slows down when Telegram asks. A channel of 200,000 files takes about an hour the first time, and uses about 150 MB of storage. **Index only on Wi-Fi** and **Index only while charging** hold it back until then; search and playback aren't affected.
+
+If someone in the same chat has shared its index, the patch can use theirs instead of reading the chat itself; see below.
 
 ## Why does regular search still play from YouTube?
 
@@ -101,6 +103,8 @@ Yes. Under **Music library → Playlists and downloads**, pick a chat and choose
 - **Save as playlist** makes a playlist named after the chat in BitChord's **Library**, oldest post first. Save it again later to bring it up to date; the old copy is replaced.
 - **Download all** puts the files in BitChord's downloads. They're saved at BitChord's download quality, so set **Download quality** to **Lossless** to keep FLAC files as FLAC.
 
+**Albums** in the same menu lists the chat's albums: songs Telegram posted together as one album, zips, and albums with a cue sheet. Each album can be saved as a playlist named after it, or downloaded.
+
 Both take the chat's newest 1,000 music files. The menu shows how many songs that is, and the download's size, before you confirm.
 
 Both use the saved index, so **Saved index** has to be on and done with that chat. Making the playlist sends nothing to Telegram. Each download fetches its file from Telegram, the same as playing it.
@@ -113,22 +117,29 @@ Playing a song reads just that song's part of the zip. Most music zips are store
 
 With **Copy into main channel** on, a zip is copied to your main channel once, like any other post. Telegram copies whole posts, so a zip is copied when any song in it is new, even if some of its songs are already in your main channel.
 
+## Can it play albums kept as one FLAC file with a cue sheet?
+
+Yes, with **Saved index** on. Each track of the album becomes a song of its own, named from the cue sheet, and plays only its part of the file, starting and ending exactly where the sheet says. The sheet can be a `.cue` file posted in the same chat, a `.cue` file in the same zip, or the FLAC file's own. WAV albums work the same way.
+
+A track is decoded on the phone as it plays and handed to BitChord as uncompressed audio, so it stays lossless. Only the parts of the album file around what's playing are downloaded. Seeking reads a few small pieces of the file to find the spot.
+
 ## Why does a song show only once when I have several copies?
 
 **Hide duplicate songs** (under **Track details**, on by default) shows each song once in search results: copies with the same title and artist and lengths within two seconds, such as a song posted twice or found in two zips. The best copy is the one shown and played: lossless over lossy, then the higher bit depth, sample rate and bitrate. Turn it off to see every copy.
 
 ## Can I collect music from other channels into my own?
 
-Yes, under **Main channel**. Choose a private channel you created as your main channel, add the community channels to copy from, and turn on **Copy into main channel**. Every option is off until you turn it on, and each one explains itself first.
+Yes, under **Main channel** on the **Advanced** tab. Choose a private channel you created as your main channel, add the community channels to copy from, and turn on **Copy into main channel**. Every option is off until you turn it on, and each one explains itself first.
 
 - Files are copied, not forwarded, so they show as your own posts without "Forwarded from". Telegram doesn't upload them again, and a copy stays in your channel even if the community channel deletes the original.
+- **Newest first** starts with each channel's newest post while the channel is still being indexed, instead of waiting for all of it and starting with the oldest. Your main channel then lists the music in the opposite order.
 - **Keep in sync** also copies new posts as the saved index finds them. Without it, the copy stops at what the channels had when it started.
 - **Lossless only** copies FLAC, ALAC, WAV and AIFF files and skips the rest.
 - **Skip duplicates** doesn't copy a file your main channel already has: the same Telegram file, or the same title, artist, length and format. Nothing is ever deleted. A zip is copied whole when any song in it is new.
 - The status line counts the audio files copied, counting each song in a zip: "Copied 2,140 audio files in 1,310 posts".
 - The pace is 1 to 500 files an hour, and copying pauses whenever Telegram asks it to.
 
-The files come from the saved index, so **Saved index** has to be on; your main channel is indexed as soon as you choose it, and the community channels while copying is on. Copying from a community channel starts once that channel has been indexed all the way back to its first post, since copies go oldest post first. Your main channel is indexed before anything else, and the other chats take turns a page at a time, so a channel with 200,000 files doesn't hold up a small one. Until then the status line says which channels it's waiting for and how far their indexing has got. A copy Telegram refuses is tried again three times, ten minutes apart, before it's skipped, and the status line says why.
+The files come from the saved index, so **Saved index** has to be on; your main channel is indexed as soon as you choose it, and the community channels while copying is on. Copying from a community channel starts once that channel has been indexed all the way back to its first post, since copies go oldest post first, unless **Newest first** is on. Your main channel is indexed before anything else, and the other chats take turns a page at a time, so a channel with 200,000 files doesn't hold up a small one. Until then the status line says which channels it's waiting for and how far their indexing has got. A copy Telegram refuses is tried again three times, ten minutes apart, before it's skipped, and the status line says why.
 
 Only private channels you created can be the main channel. Telegram tells each account what it is in a channel, and only the person who created it (or was handed ownership) is "creator"; admins aren't. A channel with a public @username isn't private. Your own private channels aren't offered as community channels, and channels with protected content can't be copied from.
 
@@ -138,7 +149,21 @@ Only private channels you created can be the main channel. Telegram tells each a
 
 Yes. Dolby Digital (.ac3), Dolby Digital Plus (.ec3, .eac3), and Dolby files in .m4a, .mp4 and .mka are treated like any other music file. Telegram only knows a file's name and type, which can't tell Dolby Atmos from plain Dolby Digital Plus, so the patch reads the first 64 KB of a few files per search, as it does to tell 16-bit FLAC from 24-bit. Dolby Atmos is marked in the file's first frame (and in the track's description in an .m4a); the format legend then shows **Dolby Atmos**, and BitChord gets the file as Atmos and shows its own badge.
 
-BitChord has its own decoder for Dolby Digital, Dolby Digital Plus and Dolby TrueHD, so they play on any phone. Dolby Atmos plays as its 5.1 or 7.1 mix, or with its height sound on a phone or speaker that supports Dolby Atmos. With **Play surround as stereo** on, it's mixed to stereo like any surround file. Dolby AC-4 needs a decoder in the phone itself, and **Hide Dolby files this phone can't play** keeps those files out of search on phones without one. Dolby Atmos in TrueHD shows as TrueHD, since telling the two apart needs more of the file.
+BitChord has its own decoder for Dolby Digital, Dolby Digital Plus and Dolby TrueHD, so they play on any phone. Dolby Atmos plays as its 5.1 or 7.1 mix, or with its height sound on a phone or speaker that supports Dolby Atmos. With **Play surround as stereo** on, it's mixed to stereo like any surround file. Dolby AC-4 needs a decoder in the phone itself, and **Hide Dolby files this phone can't play** keeps those files out of search on phones without one. Dolby TrueHD in an .mka with Atmos shows as **TrueHD Atmos**.
+
+## Where are Main channel, Track details and Storage?
+
+On the **Advanced** tab of the Telegram page. **Basic** has what most people need: your API details, your account, your music chats, the saved index and track names.
+
+## Can I back up my settings or move them to another phone?
+
+Yes. On the **Advanced** tab, **Backup and sharing → Back up** saves a file wherever you choose: your settings, your music chats, your corrected names, your main channel setup, and the saved index too if you leave **Include the saved index** ticked. **Restore** reads it back. A backup never holds your API details or your Telegram session, so on a new phone you enter the API details and sign in first, then restore.
+
+## Can my friends use my index of a channel we're both in?
+
+Yes. **Backup and sharing → Share a chat's index** makes a file of one chat's saved index and posts it in your Saved Messages, your main channel, or the chat itself if you can post there, or saves it as a file. With **Use shared indexes** on (the default), the patch looks for an index file of a chat before reading the chat from Telegram: in the chat itself, where only a channel's admins can post, in your Saved Messages, and in your main channel. If there's one, the chat's index comes from it in a minute instead of an hour, and only what's been posted since is read from Telegram. A file you've been sent elsewhere can be added with **Restore**.
+
+An index file lists the music in a chat, so anyone who can see it sees that list. It doesn't hold anyone's account details or Telegram's own file numbers; each song is checked against its post when it plays, and a file that doesn't match isn't played.
 
 ## Can the Telegram page be in my language?
 

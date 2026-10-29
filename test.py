@@ -52,6 +52,12 @@ SOURCES = [
     "Duplicates",
     "DolbyHeader",
     "DolbySupport",
+    "FlacDecoder",
+    "CueAudio",
+    "CueSheet",
+    "CueAlbums",
+    "AlbumList",
+    "IndexTransfer",
     "Strings",
     "Translations",
     "InternalAddon",
@@ -90,6 +96,9 @@ TESTS = [
     "ZipAlbumsTest",
     "DuplicatesTest",
     "DolbyHeaderTest",
+    "CueTest",
+    "AlbumListTest",
+    "IndexTransferTest",
 ]
 
 subprocess.run(

@@ -90,7 +90,108 @@ final class ZipAlbums {
             if (zip.has("unique")) row.put("unique", zip.getString("unique") + "/" + e.index);
             rows.add(row);
         }
+        rows.addAll(cueTracks(zip, range, entries, rows));
         return rows;
+    }
+
+    /**
+     * Tracks of albums in the zip kept as one FLAC or WAV file: from a .cue file beside it in the
+     * zip, or the FLAC file's own cue sheet. A sheet that can't be read is passed over.
+     */
+    static List<JSONObject> cueTracks(
+            JSONObject zip,
+            ZipDirectory.Range range,
+            List<ZipDirectory.Entry> entries,
+            List<JSONObject> songs) {
+        List<JSONObject> tracks = new ArrayList<>();
+        Map<String, JSONObject> albums = new HashMap<>();
+        for (JSONObject song : songs)
+            if (CueAlbums.albumFile(song.optString("fileName")))
+                albums.put(CueAlbums.base(song.optString("fileName")), song);
+        Set<Integer> done = new HashSet<>();
+        for (ZipDirectory.Entry e : entries) {
+            if (!e.extension().equals("cue") || e.size <= 0 || e.size > CueAlbums.MAX_SHEET)
+                continue;
+            try {
+                byte[] local =
+                        range.read(e.localOffset, (int) Math.min(30 + 2048, zip.getLong("size")));
+                long data = ZipDirectory.dataOffset(local, e);
+                ZipDirectory.Range text =
+                        entryRange(range, data, e.method, e.compressedSize, e.size);
+                CueSheet sheet = CueSheet.parse(CueSheet.text(text.read(0, (int) e.size)));
+                if (sheet == null) continue;
+                JSONObject album = albums.get(CueAlbums.base(sheet.file));
+                if (album == null) album = albums.get(CueAlbums.base(e.baseName()));
+                if (album == null || done.contains(album.getInt("entry"))) continue;
+                tracks.addAll(tracks(range, sheet, album));
+                done.add(album.getInt("entry"));
+            } catch (Exception ex) {
+                // A sheet that can't be read leaves the album as one file.
+            }
+        }
+        for (JSONObject album : albums.values()) {
+            if (done.contains(album.optInt("entry"))
+                    || !album.optString("format").equals("flac")
+                    || album.optInt("duration") < CueAlbums.ALBUM_SECONDS) continue;
+            try {
+                JSONObject part = album.getJSONObject("zip");
+                CueAlbums.Media media =
+                        CueAlbums.media(
+                                entryRange(
+                                        range,
+                                        part.getLong("data"),
+                                        part.getInt("method"),
+                                        part.getLong("compressed"),
+                                        album.getLong("size")),
+                                album.getLong("size"));
+                CueSheet sheet = media == null ? null : CueAlbums.embeddedSheet(media.flac);
+                if (sheet != null)
+                    tracks.addAll(
+                            CueAlbums.tracks(
+                                    sheet,
+                                    media,
+                                    album,
+                                    album.getInt("entry"),
+                                    album.optString("album")));
+            } catch (Exception ex) {
+                // No sheet of its own.
+            }
+        }
+        return tracks;
+    }
+
+    private static List<JSONObject> tracks(
+            ZipDirectory.Range range, CueSheet sheet, JSONObject album) throws Exception {
+        JSONObject part = album.getJSONObject("zip");
+        CueAlbums.Media media =
+                CueAlbums.media(
+                        entryRange(
+                                range,
+                                part.getLong("data"),
+                                part.getInt("method"),
+                                part.getLong("compressed"),
+                                album.getLong("size")),
+                        album.getLong("size"));
+        if (media == null) return new ArrayList<>();
+        return CueAlbums.tracks(
+                sheet, media, album, album.getInt("entry"), album.optString("album"));
+    }
+
+    /** A file in a zip read as a range of its own bytes, decompressing as needed. */
+    static ZipDirectory.Range entryRange(
+            ZipDirectory.Range zip, long data, int method, long compressed, long size) {
+        ZipDirectory.EntryReader reader =
+                new ZipDirectory.EntryReader(zip, data, method, compressed, size);
+        return (offset, length) -> {
+            byte[] out = new byte[(int) Math.max(0, Math.min(length, size - offset))];
+            int n = 0;
+            while (n < out.length) {
+                int got = reader.read(offset + n, out, n, out.length - n);
+                if (got <= 0) break;
+                n += got;
+            }
+            return n == out.length ? out : Arrays.copyOf(out, n);
+        };
     }
 
     /** The first bytes of a song, decompressed if it was deflated. */
@@ -144,7 +245,7 @@ final class ZipAlbums {
     static boolean validId(String id) {
         return id != null
                 && id.length() <= 48
-                && id.matches("-?[1-9][0-9]*_[1-9][0-9]*_[1-9][0-9]{0,4}");
+                && id.matches("-?[1-9][0-9]*_[1-9][0-9]*_[1-9][0-9]{0,8}");
     }
 
     /** {chat, message, entry} of a zip song's id. */
