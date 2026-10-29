@@ -2098,8 +2098,8 @@ final class Translations {
             "Unofficial Telegram (\u0646\u0633\u062e\u0629 \u0645\u062d\u0641\u0648\u0638\u0629)",
             "Saved copy",
             "\u0646\u0633\u062e\u0629 \u0645\u062d\u0641\u0648\u0638\u0629",
-            "Added by the Playback extras patch.",
-            "\u0623\u0636\u0627\u0641\u062a\u0647 \u0631\u0642\u0639\u0629 Playback extras.",
+            "Added by the Playback extras patches.",
+            "\u0623\u0636\u0627\u0641\u062a\u0647\u0627 \u0631\u0642\u0639 Playback extras.",
             "Battery saver",
             "\u062a\u0648\u0641\u064a\u0631 \u0627\u0644\u0628\u0637\u0627\u0631\u064a\u0629",
             "BitChord decodes every song",
@@ -2216,12 +2216,10 @@ final class Translations {
             "\u00ab\u063a\u0646\u0650\u0651\u00bb \u0645\u0646\u0642\u0648\u0644\u0629 \u0645\u0646"
                     + " Auris \u0644\u0640 OreoMuncher45\u060c \u0648\u0647\u0648"
                     + " \u062a\u0641\u0631\u0651\u0639 \u0645\u0646 BitChord.",
-            "Sing, pitch, loudness level, sleep fade and battery saver",
-            "\u0627\u0644\u063a\u0646\u0627\u0621 \u0648\u0637\u0628\u0642\u0629"
-                    + " \u0627\u0644\u0635\u0648\u062a \u0648\u0645\u0633\u062a\u0648\u0649"
-                    + " \u0627\u0644\u0635\u0648\u062a \u0648\u062e\u0641\u0648\u062a"
-                    + " \u0627\u0644\u0646\u0648\u0645 \u0648\u062a\u0648\u0641\u064a\u0631"
-                    + " \u0627\u0644\u0628\u0637\u0627\u0631\u064a\u0629",
+            "Sound settings from the patches you added",
+            "\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0627\u0644\u0635\u0648\u062a \u0645\u0646"
+                    + " \u0627\u0644\u0631\u0642\u0639 \u0627\u0644\u062a\u064a"
+                    + " \u0623\u0636\u0641\u062a\u0647\u0627",
             "The cleaner choice for older recordings.",
             "\u0627\u0644\u062e\u064a\u0627\u0631 \u0627\u0644\u0623\u0646\u0638\u0641"
                     + " \u0644\u0644\u062a\u0633\u062c\u064a\u0644\u0627\u062a"
@@ -4530,9 +4528,9 @@ final class Translations {
                     + " \u0995\u09aa\u09bf)",
             "Saved copy",
             "\u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09bf\u09a4 \u0995\u09aa\u09bf",
-            "Added by the Playback extras patch.",
-            "Playback extras \u09aa\u09cd\u09af\u09be\u099a \u09af\u09cb\u0997"
-                    + " \u0995\u09b0\u09c7\u099b\u09c7\u0964",
+            "Added by the Playback extras patches.",
+            "Playback extras \u09aa\u09cd\u09af\u09be\u099a\u0997\u09c1\u09b2\u09cb"
+                    + " \u09af\u09cb\u0997 \u0995\u09b0\u09c7\u099b\u09c7\u0964",
             "Battery saver",
             "\u09ac\u09cd\u09af\u09be\u099f\u09be\u09b0\u09bf \u09b8\u09c7\u09ad\u09be\u09b0",
             "BitChord decodes every song",
@@ -4646,12 +4644,10 @@ final class Translations {
             "\u0997\u09be\u09a8 \u0997\u09be\u0993 \u098f\u09b8\u09c7\u099b\u09c7"
                 + " OreoMuncher45-\u098f\u09b0 Auris \u09a5\u09c7\u0995\u09c7, \u09af\u09be"
                 + " BitChord-\u098f\u09b0 \u098f\u0995\u099f\u09bf \u09ab\u09b0\u09cd\u0995\u0964",
-            "Sing, pitch, loudness level, sleep fade and battery saver",
-            "\u0997\u09be\u09a8 \u0997\u09be\u0993, \u09b8\u09c1\u09b0,"
-                    + " \u09b2\u09be\u0989\u09a1\u09a8\u09c7\u09b8 \u09b8\u09cd\u09a4\u09b0,"
-                    + " \u09b8\u09cd\u09b2\u09bf\u09aa \u09ab\u09c7\u09a1 \u0993"
-                    + " \u09ac\u09cd\u09af\u09be\u099f\u09be\u09b0\u09bf"
-                    + " \u09b8\u09c7\u09ad\u09be\u09b0",
+            "Sound settings from the patches you added",
+            "\u0986\u09aa\u09a8\u09be\u09b0 \u09af\u09cb\u0997 \u0995\u09b0\u09be"
+                    + " \u09aa\u09cd\u09af\u09be\u099a\u0997\u09c1\u09b2\u09cb\u09b0"
+                    + " \u09b8\u09be\u0989\u09a8\u09cd\u09a1 \u09b8\u09c7\u099f\u09bf\u0982\u09b8",
             "The cleaner choice for older recordings.",
             "\u09aa\u09c1\u09b0\u09cb\u09a8\u09cb"
                     + " \u09b0\u09c7\u0995\u09b0\u09cd\u09a1\u09bf\u0982\u09af\u09bc\u09c7\u09b0"
@@ -5852,8 +5848,8 @@ final class Translations {
             "Unofficial Telegram (gespeicherte Kopie)",
             "Saved copy",
             "Gespeicherte Kopie",
-            "Added by the Playback extras patch.",
-            "Hinzugef\u00fcgt vom Patch Playback extras.",
+            "Added by the Playback extras patches.",
+            "Hinzugef\u00fcgt von den Playback-extras-Patches.",
             "Battery saver",
             "Akkusparmodus",
             "BitChord decodes every song",
@@ -5914,8 +5910,8 @@ final class Translations {
             "Mitsingen",
             "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
             "Mitsingen stammt aus Auris von OreoMuncher45, einem Fork von BitChord.",
-            "Sing, pitch, loudness level, sleep fade and battery saver",
-            "Mitsingen, Tonh\u00f6he, Lautst\u00e4rkepegel, Sleep-Ausblenden und Akkusparmodus",
+            "Sound settings from the patches you added",
+            "Klangeinstellungen der Patches, die du hinzugef\u00fcgt hast",
             "The cleaner choice for older recordings.",
             "Die sauberere Wahl f\u00fcr \u00e4ltere Aufnahmen.",
             "The phone\u2019s audio chip plays songs it can decode",
@@ -7111,8 +7107,8 @@ final class Translations {
             "Unofficial Telegram (copia guardada)",
             "Saved copy",
             "Copia guardada",
-            "Added by the Playback extras patch.",
-            "A\u00f1adido por el parche Playback extras.",
+            "Added by the Playback extras patches.",
+            "A\u00f1adido por los parches Playback extras.",
             "Battery saver",
             "Ahorro de bater\u00eda",
             "BitChord decodes every song",
@@ -7174,8 +7170,8 @@ final class Translations {
             "Cantar",
             "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
             "Cantar procede de Auris, de OreoMuncher45, una bifurcaci\u00f3n de BitChord.",
-            "Sing, pitch, loudness level, sleep fade and battery saver",
-            "Cantar, tono, nivel de volumen, fundido al dormir y ahorro de bater\u00eda",
+            "Sound settings from the patches you added",
+            "Ajustes de sonido de los parches que a\u00f1adiste",
             "The cleaner choice for older recordings.",
             "La opci\u00f3n m\u00e1s limpia para grabaciones antiguas.",
             "The phone\u2019s audio chip plays songs it can decode",
@@ -8394,8 +8390,8 @@ final class Translations {
             "Unofficial Telegram (copie enregistr\u00e9e)",
             "Saved copy",
             "Copie enregistr\u00e9e",
-            "Added by the Playback extras patch.",
-            "Ajout\u00e9 par le patch Playback extras.",
+            "Added by the Playback extras patches.",
+            "Ajout\u00e9 par les patchs Playback extras.",
             "Battery saver",
             "\u00c9conomie de batterie",
             "BitChord decodes every song",
@@ -8457,9 +8453,8 @@ final class Translations {
             "Chanter",
             "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
             "Chanter provient d\u2019Auris, par OreoMuncher45, un fork de BitChord.",
-            "Sing, pitch, loudness level, sleep fade and battery saver",
-            "Chanter, tonalit\u00e9, niveau de volume, fondu de veille et \u00e9conomie de"
-                    + " batterie",
+            "Sound settings from the patches you added",
+            "R\u00e9glages du son des patchs que vous avez ajout\u00e9s",
             "The cleaner choice for older recordings.",
             "Le choix le plus propre pour les enregistrements anciens.",
             "The phone\u2019s audio chip plays songs it can decode",
@@ -10727,7 +10722,7 @@ final class Translations {
                     + " \u0915\u0949\u092a\u0940)",
             "Saved copy",
             "\u0938\u0939\u0947\u091c\u0940 \u0917\u0908 \u0915\u0949\u092a\u0940",
-            "Added by the Playback extras patch.",
+            "Added by the Playback extras patches.",
             "Playback extras \u092a\u0948\u091a \u0928\u0947 \u091c\u094b\u0921\u093c\u093e\u0964",
             "Battery saver",
             "\u092c\u0948\u091f\u0930\u0940 \u0938\u0947\u0935\u0930",
@@ -10848,11 +10843,10 @@ final class Translations {
             "\u0917\u093e\u090f\u0901, OreoMuncher45 \u0915\u0947 Auris \u0938\u0947"
                 + " \u0932\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u0948, \u091c\u094b BitChord"
                 + " \u0915\u093e \u092b\u093c\u094b\u0930\u094d\u0915 \u0939\u0948\u0964",
-            "Sing, pitch, loudness level, sleep fade and battery saver",
-            "\u0917\u093e\u090f\u0901, \u0938\u094d\u0935\u0930,"
-                    + " \u0932\u093e\u0909\u0921\u0928\u0947\u0938 \u0938\u094d\u0924\u0930,"
-                    + " \u0938\u094d\u0932\u0940\u092a \u092b\u093c\u0947\u0921 \u0914\u0930"
-                    + " \u092c\u0948\u091f\u0930\u0940 \u0938\u0947\u0935\u0930",
+            "Sound settings from the patches you added",
+            "\u0906\u092a\u0915\u0947 \u091c\u094b\u0921\u093c\u0947 \u0917\u090f"
+                    + " \u092a\u0948\u091a \u0915\u0940 \u0938\u093e\u0909\u0902\u0921"
+                    + " \u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938",
             "The cleaner choice for older recordings.",
             "\u092a\u0941\u0930\u093e\u0928\u0940"
                     + " \u0930\u093f\u0915\u0949\u0930\u094d\u0921\u093f\u0902\u0917 \u0915\u0947"
@@ -12018,7 +12012,7 @@ final class Translations {
             "Unofficial Telegram (salinan tersimpan)",
             "Saved copy",
             "Salinan tersimpan",
-            "Added by the Playback extras patch.",
+            "Added by the Playback extras patches.",
             "Ditambahkan oleh patch Playback extras.",
             "Battery saver",
             "Penghemat baterai",
@@ -12079,8 +12073,8 @@ final class Translations {
             "Bernyanyi",
             "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
             "Bernyanyi diambil dari Auris karya OreoMuncher45, fork dari BitChord.",
-            "Sing, pitch, loudness level, sleep fade and battery saver",
-            "Bernyanyi, nada, level kenyaringan, pelan saat tidur, dan penghemat baterai",
+            "Sound settings from the patches you added",
+            "Pengaturan suara dari patch yang Anda tambahkan",
             "The cleaner choice for older recordings.",
             "Pilihan yang lebih bersih untuk rekaman lama.",
             "The phone\u2019s audio chip plays songs it can decode",
@@ -13371,7 +13365,7 @@ final class Translations {
             "Unofficial Telegram\uff08\u4fdd\u5b58\u6e08\u307f\u306e\u30b3\u30d4\u30fc\uff09",
             "Saved copy",
             "\u4fdd\u5b58\u6e08\u307f\u306e\u30b3\u30d4\u30fc",
-            "Added by the Playback extras patch.",
+            "Added by the Playback extras patches.",
             "Playback extras"
                     + " \u30d1\u30c3\u30c1\u3067\u8ffd\u52a0\u3055\u308c\u307e\u3057\u305f\u3002",
             "Battery saver",
@@ -13442,8 +13436,8 @@ final class Translations {
             "\u300c\u6b4c\u3046\u300d\u306f BitChord"
                     + " \u306e\u30d5\u30a9\u30fc\u30af\u3067\u3042\u308b OreoMuncher45 \u306e Auris"
                     + " \u304b\u3089\u79fb\u690d\u3057\u307e\u3057\u305f\u3002",
-            "Sing, pitch, loudness level, sleep fade and battery saver",
-            "\u6b4c\u3046\u3001\u30d4\u30c3\u30c1\u3001\u30e9\u30a6\u30c9\u30cd\u30b9\u30ec\u30d9\u30eb\u3001\u30b9\u30ea\u30fc\u30d7\u306e\u30d5\u30a7\u30fc\u30c9\u3001\u30d0\u30c3\u30c6\u30ea\u30fc\u30bb\u30fc\u30d0\u30fc",
+            "Sound settings from the patches you added",
+            "\u8ffd\u52a0\u3057\u305f\u30d1\u30c3\u30c1\u306e\u30b5\u30a6\u30f3\u30c9\u8a2d\u5b9a",
             "The cleaner choice for older recordings.",
             "\u53e4\u3044\u9332\u97f3\u3067\u306f\u3053\u3061\u3089\u306e\u307b\u3046\u304c\u304d\u308c\u3044\u3067\u3059\u3002",
             "The phone\u2019s audio chip plays songs it can decode",
@@ -14898,7 +14892,7 @@ final class Translations {
             "Unofficial Telegram (\uc800\uc7a5\ub41c \uc0ac\ubcf8)",
             "Saved copy",
             "\uc800\uc7a5\ub41c \uc0ac\ubcf8",
-            "Added by the Playback extras patch.",
+            "Added by the Playback extras patches.",
             "Playback extras \ud328\uce58\ub85c \ucd94\uac00\ub418\uc5c8\uc2b5\ub2c8\ub2e4.",
             "Battery saver",
             "\ubc30\ud130\ub9ac \uc808\uc57d",
@@ -14979,9 +14973,8 @@ final class Translations {
             "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
             "\ub530\ub77c \ubd80\ub974\uae30\ub294 BitChord\uc758 \ud3ec\ud06c\uc778"
                 + " OreoMuncher45\uc758 Auris\uc5d0\uc11c \uac00\uc838\uc654\uc2b5\ub2c8\ub2e4.",
-            "Sing, pitch, loudness level, sleep fade and battery saver",
-            "\ub530\ub77c \ubd80\ub974\uae30, \uc74c\ub192\uc774, \uc74c\ub7c9 \ub808\ubca8,"
-                    + " \uc218\uba74 \ud398\uc774\ub4dc, \ubc30\ud130\ub9ac \uc808\uc57d",
+            "Sound settings from the patches you added",
+            "\ucd94\uac00\ud55c \ud328\uce58\uc758 \uc0ac\uc6b4\ub4dc \uc124\uc815",
             "The cleaner choice for older recordings.",
             "\uc624\ub798\ub41c \ub179\uc74c\uc5d0 \ub354 \uae54\ub054\ud55c"
                     + " \uc120\ud0dd\uc785\ub2c8\ub2e4.",
@@ -16171,8 +16164,8 @@ final class Translations {
             "Unofficial Telegram (c\u00f3pia salva)",
             "Saved copy",
             "C\u00f3pia salva",
-            "Added by the Playback extras patch.",
-            "Adicionado pelo patch Playback extras.",
+            "Added by the Playback extras patches.",
+            "Adicionado pelos patches Playback extras.",
             "Battery saver",
             "Economia de bateria",
             "BitChord decodes every song",
@@ -16234,8 +16227,8 @@ final class Translations {
             "Cantar",
             "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
             "Cantar vem do Auris, de OreoMuncher45, um fork do BitChord.",
-            "Sing, pitch, loudness level, sleep fade and battery saver",
-            "Cantar, tom, n\u00edvel de volume, fade do timer e economia de bateria",
+            "Sound settings from the patches you added",
+            "Ajustes de som dos patches que voc\u00ea adicionou",
             "The cleaner choice for older recordings.",
             "A op\u00e7\u00e3o mais limpa para grava\u00e7\u00f5es antigas.",
             "The phone\u2019s audio chip plays songs it can decode",
@@ -18698,9 +18691,9 @@ final class Translations {
             "Saved copy",
             "\u0421\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u0430\u044f"
                     + " \u043a\u043e\u043f\u0438\u044f",
-            "Added by the Playback extras patch.",
+            "Added by the Playback extras patches.",
             "\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e"
-                    + " \u043f\u0430\u0442\u0447\u0435\u043c Playback extras.",
+                    + " \u043f\u0430\u0442\u0447\u0430\u043c\u0438 Playback extras.",
             "Battery saver",
             "\u042d\u043a\u043e\u043d\u043e\u043c\u0438\u044f"
                     + " \u0431\u0430\u0442\u0430\u0440\u0435\u0438",
@@ -18832,13 +18825,10 @@ final class Translations {
             "\u00ab\u041f\u0435\u0442\u044c\u00bb"
                 + " \u043f\u0435\u0440\u0435\u043d\u0435\u0441\u0435\u043d\u043e \u0438\u0437 Auris"
                 + " \u043e\u0442 OreoMuncher45, \u0444\u043e\u0440\u043a\u0430 BitChord.",
-            "Sing, pitch, loudness level, sleep fade and battery saver",
-            "\u00ab\u041f\u0435\u0442\u044c\u00bb, \u0432\u044b\u0441\u043e\u0442\u0430"
-                    + " \u0442\u043e\u043d\u0430, \u0443\u0440\u043e\u0432\u0435\u043d\u044c"
-                    + " \u0433\u0440\u043e\u043c\u043a\u043e\u0441\u0442\u0438,"
-                    + " \u0437\u0430\u0442\u0443\u0445\u0430\u043d\u0438\u0435 \u0441\u043d\u0430"
-                    + " \u0438 \u044d\u043a\u043e\u043d\u043e\u043c\u0438\u044f"
-                    + " \u0431\u0430\u0442\u0430\u0440\u0435\u0438",
+            "Sound settings from the patches you added",
+            "\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438 \u0437\u0432\u0443\u043a\u0430"
+                + " \u0438\u0437 \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0445"
+                + " \u0432\u0430\u043c\u0438 \u043f\u0430\u0442\u0447\u0435\u0439",
             "The cleaner choice for older recordings.",
             "\u0411\u043e\u043b\u0435\u0435 \u0447\u0438\u0441\u0442\u044b\u0439"
                     + " \u0432\u0430\u0440\u0438\u0430\u043d\u0442 \u0434\u043b\u044f"
@@ -20110,8 +20100,8 @@ final class Translations {
             "Unofficial Telegram (kay\u0131tl\u0131 kopya)",
             "Saved copy",
             "Kay\u0131tl\u0131 kopya",
-            "Added by the Playback extras patch.",
-            "Playback extras yamas\u0131yla eklendi.",
+            "Added by the Playback extras patches.",
+            "Playback extras yamalar\u0131yla eklendi.",
             "Battery saver",
             "Pil tasarrufu",
             "BitChord decodes every song",
@@ -20177,9 +20167,8 @@ final class Translations {
             "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
             "\u015eark\u0131 s\u00f6yle, BitChord\u2019un bir \u00e7atal\u0131 olan,"
                     + " OreoMuncher45\u2019in Auris uygulamas\u0131ndan aktar\u0131ld\u0131.",
-            "Sing, pitch, loudness level, sleep fade and battery saver",
-            "\u015eark\u0131 s\u00f6yle, ton, ses seviyesi, uyku k\u0131smas\u0131 ve pil"
-                    + " tasarrufu",
+            "Sound settings from the patches you added",
+            "Ekledi\u011finiz yamalar\u0131n ses ayarlar\u0131",
             "The cleaner choice for older recordings.",
             "Eski kay\u0131tlar i\u00e7in daha temiz se\u00e7enek.",
             "The phone\u2019s audio chip plays songs it can decode",
@@ -22399,8 +22388,8 @@ final class Translations {
             "Unofficial Telegram (\u0645\u062d\u0641\u0648\u0638 \u06a9\u0627\u067e\u06cc)",
             "Saved copy",
             "\u0645\u062d\u0641\u0648\u0638 \u06a9\u0627\u067e\u06cc",
-            "Added by the Playback extras patch.",
-            "Playback extras \u067e\u06cc\u0686 \u06a9\u06d2 \u0630\u0631\u06cc\u0639\u06d2"
+            "Added by the Playback extras patches.",
+            "Playback extras \u067e\u06cc\u0686\u0632 \u06a9\u06d2 \u0630\u0631\u06cc\u0639\u06d2"
                     + " \u0634\u0627\u0645\u0644 \u06a9\u06cc\u0627 \u06af\u06cc\u0627\u06d4",
             "Battery saver",
             "\u0628\u06cc\u0679\u0631\u06cc \u06a9\u06cc \u0628\u0686\u062a",
@@ -22520,11 +22509,10 @@ final class Translations {
             "\u06af\u0627\u0626\u06cc\u06ba\u060c OreoMuncher45 \u06a9\u06cc Auris \u0633\u06d2"
                 + " \u0644\u06cc\u0627 \u06af\u06cc\u0627 \u06c1\u06d2\u060c \u062c\u0648 BitChord"
                 + " \u06a9\u0627 \u0641\u0648\u0631\u06a9 \u06c1\u06d2\u06d4",
-            "Sing, pitch, loudness level, sleep fade and battery saver",
-            "\u06af\u0627\u0626\u06cc\u06ba\u060c \u0633\u064f\u0631\u060c \u0622\u0648\u0627\u0632"
-                    + " \u06a9\u06cc \u0633\u0637\u062d\u060c \u0633\u0644\u06cc\u067e"
-                    + " \u0641\u06cc\u0688 \u0627\u0648\u0631 \u0628\u06cc\u0679\u0631\u06cc"
-                    + " \u06a9\u06cc \u0628\u0686\u062a",
+            "Sound settings from the patches you added",
+            "\u0622\u067e \u06a9\u06d2 \u0634\u0627\u0645\u0644 \u06a9\u06cc\u06d2"
+                    + " \u06af\u0626\u06d2 \u067e\u06cc\u0686\u0632 \u06a9\u06cc"
+                    + " \u0622\u0648\u0627\u0632 \u06a9\u06cc \u0633\u06cc\u0679\u0646\u06af\u0632",
             "The cleaner choice for older recordings.",
             "\u067e\u0631\u0627\u0646\u06cc \u0631\u06cc\u06a9\u0627\u0631\u0688\u0646\u06af\u0632"
                     + " \u06a9\u06d2 \u0644\u06cc\u06d2 \u0632\u06cc\u0627\u062f\u06c1"
@@ -23750,7 +23738,7 @@ final class Translations {
             "Unofficial Telegram\uff08\u5df2\u4fdd\u5b58\u7684\u526f\u672c\uff09",
             "Saved copy",
             "\u5df2\u4fdd\u5b58\u7684\u526f\u672c",
-            "Added by the Playback extras patch.",
+            "Added by the Playback extras patches.",
             "\u7531 Playback extras \u8865\u4e01\u6dfb\u52a0\u3002",
             "Battery saver",
             "\u7701\u7535\u6a21\u5f0f",
@@ -23814,8 +23802,8 @@ final class Translations {
             "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
             "\u8ddf\u5531\u79fb\u690d\u81ea OreoMuncher45 \u7684 Auris\uff0c\u5b83\u662f BitChord"
                     + " \u7684\u4e00\u4e2a\u5206\u652f\u3002",
-            "Sing, pitch, loudness level, sleep fade and battery saver",
-            "\u8ddf\u5531\u3001\u97f3\u8c03\u3001\u54cd\u5ea6\u6807\u51c6\u3001\u7761\u7720\u6de1\u51fa\u548c\u7701\u7535\u6a21\u5f0f",
+            "Sound settings from the patches you added",
+            "\u4f60\u6dfb\u52a0\u7684\u8865\u4e01\u7684\u58f0\u97f3\u8bbe\u7f6e",
             "The cleaner choice for older recordings.",
             "\u8001\u5f55\u97f3\u7684\u66f4\u5e72\u51c0\u9009\u62e9\u3002",
             "The phone\u2019s audio chip plays songs it can decode",

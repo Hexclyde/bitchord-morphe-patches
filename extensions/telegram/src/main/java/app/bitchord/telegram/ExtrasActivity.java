@@ -87,104 +87,121 @@ public final class ExtrasActivity extends Activity {
         top.addView(style.text(Strings.t("Playback extras"), 34, style.foreground, style.heavy));
         body.addView(top);
 
-        LinearLayout sing = card(Strings.t("Sing"));
-        paragraph(
-                sing,
-                Strings.t(
-                        "Turns the singer down so you can sing over the song. Works best on studio"
-                                + " recordings with the voice in the middle."));
-        slider(
-                sing,
-                Strings.t("Voice"),
-                0,
-                100,
-                10,
-                SoundExtras.singLevel,
-                level ->
-                        level == 0
-                                ? Strings.t("Off")
-                                : Strings.f("{0}% quieter", String.valueOf(level)),
-                SoundExtras::setSingLevel);
-        divider(sing);
-        toggle(
-                sing,
-                Strings.t("Whole centre"),
-                Strings.t("Removes everything in the middle, drums included"),
-                Strings.t("Only the voice range, and only while someone sings"),
-                SoundExtras.singMethod == VocalCut.CENTRE,
-                on -> SoundExtras.setSingMethod(on ? VocalCut.CENTRE : VocalCut.VOICE_GATE),
-                Strings.t("The cleaner choice for older recordings."));
-        paragraph(
-                sing, Strings.t("Sing is ported from Auris by OreoMuncher45, a fork of BitChord."));
+        // Only the parts whose patch was added.
+        if (SoundExtras.singApplied()) {
+            LinearLayout sing = card(Strings.t("Sing"));
+            paragraph(
+                    sing,
+                    Strings.t(
+                            "Turns the singer down so you can sing over the song. Works best on"
+                                    + " studio recordings with the voice in the middle."));
+            slider(
+                    sing,
+                    Strings.t("Voice"),
+                    0,
+                    100,
+                    10,
+                    SoundExtras.singLevel,
+                    level ->
+                            level == 0
+                                    ? Strings.t("Off")
+                                    : Strings.f("{0}% quieter", String.valueOf(level)),
+                    SoundExtras::setSingLevel);
+            divider(sing);
+            toggle(
+                    sing,
+                    Strings.t("Whole centre"),
+                    Strings.t("Removes everything in the middle, drums included"),
+                    Strings.t("Only the voice range, and only while someone sings"),
+                    SoundExtras.singMethod == VocalCut.CENTRE,
+                    on -> SoundExtras.setSingMethod(on ? VocalCut.CENTRE : VocalCut.VOICE_GATE),
+                    Strings.t("The cleaner choice for older recordings."));
+            paragraph(
+                    sing,
+                    Strings.t("Sing is ported from Auris by OreoMuncher45, a fork of BitChord."));
+        }
 
-        LinearLayout pitch = card(Strings.t("Pitch"));
-        paragraph(
-                pitch,
-                Strings.t(
-                        "Changes the key without changing the speed. BitChord’s speed setting keeps"
-                                + " the pitch you set here."));
-        slider(
-                pitch,
-                Strings.t("Pitch"),
-                SoundExtras.MIN_PITCH,
-                SoundExtras.MAX_PITCH,
-                1,
-                SoundExtras.pitchSemitones,
-                SoundExtras::semitones,
-                SoundExtras::setPitch);
+        if (SoundExtras.pitchApplied()) {
+            LinearLayout pitch = card(Strings.t("Pitch"));
+            paragraph(
+                    pitch,
+                    Strings.t(
+                            "Changes the key without changing the speed. BitChord’s speed setting"
+                                    + " keeps the pitch you set here."));
+            slider(
+                    pitch,
+                    Strings.t("Pitch"),
+                    SoundExtras.MIN_PITCH,
+                    SoundExtras.MAX_PITCH,
+                    1,
+                    SoundExtras.pitchSemitones,
+                    SoundExtras::semitones,
+                    SoundExtras::setPitch);
+        }
 
-        LinearLayout loudness = card(Strings.t("Loudness level"));
-        paragraph(
-                loudness,
-                Strings.t(
-                        "How loud songs play when BitChord’s loudness normalisation is on."
-                            + " BitChord’s own level is -14 LUFS, as on YouTube and Spotify. Lower"
-                            + " is quieter with more room for peaks; higher is louder."));
-        slider(
-                loudness,
-                Strings.t("Level"),
-                SoundExtras.MIN_TARGET_LUFS,
-                SoundExtras.MAX_TARGET_LUFS,
-                1,
-                SoundExtras.targetLufs,
-                SoundExtras::lufs,
-                SoundExtras::setTargetLufs);
+        if (SoundExtras.loudnessApplied()) {
+            LinearLayout loudness = card(Strings.t("Loudness level"));
+            paragraph(
+                    loudness,
+                    Strings.t(
+                            "How loud songs play when BitChord’s loudness normalisation is on."
+                                + " BitChord’s own level is -14 LUFS, as on YouTube and Spotify."
+                                + " Lower is quieter with more room for peaks; higher is louder."));
+            slider(
+                    loudness,
+                    Strings.t("Level"),
+                    SoundExtras.MIN_TARGET_LUFS,
+                    SoundExtras.MAX_TARGET_LUFS,
+                    1,
+                    SoundExtras.targetLufs,
+                    SoundExtras::lufs,
+                    SoundExtras::setTargetLufs);
+        }
 
-        LinearLayout other = card(Strings.t("Other"));
-        toggle(
-                other,
-                Strings.t("Fade out at the sleep timer"),
-                Strings.t("The song fades out over 10 seconds, then pauses"),
-                Strings.t("The song pauses straight away"),
-                SoundExtras.sleepFade,
-                SoundExtras::setSleepFade,
-                null);
-        divider(other);
-        toggle(
-                other,
-                Strings.t("Battery saver"),
-                Strings.t("The phone’s audio chip plays songs it can decode"),
-                Strings.t("BitChord decodes every song"),
-                SoundExtras.batterySaver,
-                SoundExtras::setBatterySaver,
-                Strings.t(
-                        "Saves battery on long listens. While a song plays this way, BitChord’s"
-                            + " equaliser, loudness normalisation, Sing, spatial audio and"
-                            + " crossfade don’t work on it. Android decides which songs and devices"
-                            + " can; the rest play as before."));
-        divider(other);
-        toggle(
-                other,
-                Strings.t("Lossless addons over Bluetooth"),
-                Strings.t("Lossless addons are used over Bluetooth too"),
-                Strings.t("Lossless addons wait for wired or USB audio"),
-                SoundExtras.losslessOverBluetooth,
-                SoundExtras::setLosslessOverBluetooth,
-                Strings.t(
-                        "Bluetooth can’t carry lossless audio on most phones, so BitChord normally"
-                            + " skips lossless addons there. With this on they’re used anyway, and"
-                            + " the phone sends them with its best Bluetooth codec, such as LDAC or"
-                            + " aptX. Starts with the next song."));
+        LinearLayout other = null;
+        if (SoundExtras.sleepFadeApplied()) {
+            other = card(Strings.t("Other"));
+            toggle(
+                    other,
+                    Strings.t("Fade out at the sleep timer"),
+                    Strings.t("The song fades out over 10 seconds, then pauses"),
+                    Strings.t("The song pauses straight away"),
+                    SoundExtras.sleepFade,
+                    SoundExtras::setSleepFade,
+                    null);
+        }
+        if (SoundExtras.batterySaverApplied()) {
+            if (other == null) other = card(Strings.t("Other"));
+            else divider(other);
+            toggle(
+                    other,
+                    Strings.t("Battery saver"),
+                    Strings.t("The phone’s audio chip plays songs it can decode"),
+                    Strings.t("BitChord decodes every song"),
+                    SoundExtras.batterySaver,
+                    SoundExtras::setBatterySaver,
+                    Strings.t(
+                            "Saves battery on long listens. While a song plays this way, BitChord’s"
+                                    + " equaliser, loudness normalisation, Sing, spatial audio and"
+                                    + " crossfade don’t work on it. Android decides which songs and"
+                                    + " devices can; the rest play as before."));
+        }
+        if (SoundExtras.losslessBluetoothApplied()) {
+            if (other == null) other = card(Strings.t("Other"));
+            else divider(other);
+            toggle(
+                    other,
+                    Strings.t("Lossless addons over Bluetooth"),
+                    Strings.t("Lossless addons are used over Bluetooth too"),
+                    Strings.t("Lossless addons wait for wired or USB audio"),
+                    SoundExtras.losslessOverBluetooth,
+                    SoundExtras::setLosslessOverBluetooth,
+                    Strings.t(
+                            "Bluetooth can’t carry lossless audio on most phones, so BitChord"
+                                + " normally skips lossless addons there. With this on they’re used"
+                                + " anyway, and the phone sends them with its best Bluetooth codec,"
+                                + " such as LDAC or aptX. Starts with the next song."));
+        }
     }
 
     private LinearLayout card(String title) {

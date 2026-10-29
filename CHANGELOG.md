@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.0-beta.2
+
+A testing build, on the `testing` branch only.
+
+- **Fixed a cover playing instead of the song:** a Telegram file with the song's title, artist and length was trusted without being listened to, so a cover tagged as the original could replace it, as happened with "Enter Sandman". Before switching, the patch now always compares the Telegram copy with what's playing. When the song has only just started, it listens for a few seconds first. If the two don't sound alike, the stream keeps playing; a file that sounds different at two switches isn't used for that song again.
+- **The playback features are now six separate patches,** all off by default: **Sing**, **Pitch control**, **Loudness level**, **Sleep timer fade-out**, **Battery saver** and **Lossless addons over Bluetooth**. Turn on only the ones you want in Morphe. The Playback extras page shows the settings of the ones you added.
+- **Fixed Sign in with MicroG not being offered** on Android 11 and newer: Android hides other apps' account types from an app unless it declares them, so BitChord couldn't tell MicroG RE was installed and opened Google's sign-in page. It's now declared. When the offer is skipped, the log says why.
+- **Install as Bitchord+** now says what went wrong when a patch from another source has already changed BitChord's package name.
+
 ## 1.1.0-beta.1
 
 A testing build. It's only on the `testing` branch; see Testing builds in the README.

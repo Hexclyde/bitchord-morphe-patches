@@ -55,6 +55,15 @@ final class SoundCheck {
     /** Set while the option is on; the player's hooks do nothing while it's null. */
     static volatile SoundCheck active;
 
+    /**
+     * Where results are kept, whether or not checking by sound is on: a file that sounded different
+     * at an upgrade is remembered here too.
+     */
+    static volatile SoundCheck recordings;
+
+    /** How many upgrades a file must sound different at before it's no longer used for a song. */
+    static final int STRIKES = 2;
+
     static final int CAPTURE_SECONDS = 15, REFERENCE_SECONDS = 45, MAX_DRIFT_SEC = 60;
 
     /** Only songs heard from their first few seconds are compared. */
@@ -327,6 +336,59 @@ final class SoundCheck {
         return !wanted.isEmpty() && TrackNames.words(query).containsAll(wanted)
                 ? r.optInt("seconds")
                 : null;
+    }
+
+    /**
+     * At an upgrade, the Telegram copy didn't line up with what was playing: most likely another
+     * recording under the same name, such as a cover with the same tags. After {@link #STRIKES}
+     * upgrades like this it's no longer used for the song. True when that's now the case. A file
+     * the sound check found to be the song is left alone.
+     */
+    synchronized boolean soundedDifferent(
+            String telegramId, String title, int seconds, double match) {
+        try {
+            String key = key(title, seconds);
+            JSONObject r = results.optJSONObject(telegramId);
+            if (r != null && r.optBoolean("same") && sameSong(r, title, seconds)) return false;
+            int strikes =
+                    r != null && r.optInt("strikes") > 0 && sameSong(r, title, seconds)
+                            ? r.optInt("strikes")
+                            : 0;
+            strikes++;
+            JSONObject result =
+                    new JSONObject()
+                            .put("key", key)
+                            .put("title", title)
+                            .put("seconds", seconds)
+                            .put("at", clock.millis())
+                            .put("strikes", strikes)
+                            .put("match", match);
+            if (strikes >= STRIKES) result.put("same", false);
+            results.put(telegramId, result);
+            save();
+            return strikes >= STRIKES;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /** Whether the file was found not to be this song's recording, by sound or at upgrades. */
+    synchronized boolean rejected(String telegramId, String title, Integer seconds) {
+        JSONObject r = results.optJSONObject(telegramId);
+        return r != null
+                && r.has("same")
+                && !r.optBoolean("same")
+                && seconds != null
+                && sameSong(r, title, seconds);
+    }
+
+    /** The result is about this song: the same title words, within two seconds. */
+    private static boolean sameSong(JSONObject r, String title, int seconds) {
+        String[] parts = r.optString("key").split("\\|", 2);
+        String words = String.join(" ", TrackNames.words(TelegramMatch.core(title)));
+        return parts.length == 2
+                && parts[0].equals(words)
+                && Math.abs(r.optInt("seconds", -100) - seconds) <= 2;
     }
 
     synchronized int confirmed() {

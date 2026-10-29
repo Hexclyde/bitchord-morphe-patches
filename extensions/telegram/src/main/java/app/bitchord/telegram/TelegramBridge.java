@@ -321,6 +321,7 @@ public final class TelegramBridge {
                                                 title)),
                         soundWork,
                         System::currentTimeMillis);
+        SoundCheck.recordings = soundCheck;
         names = new TrackNames(new File(home, "track-names.json"));
         artwork = new Artwork(new File(home, "artwork"));
         formats = new FormatProbe(new File(home, "formats.json"));
@@ -792,7 +793,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.1.0-beta.1"));
+                            "1.1.0-beta.2"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {

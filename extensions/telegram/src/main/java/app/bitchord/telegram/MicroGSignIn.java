@@ -58,10 +58,20 @@ public final class MicroGSignIn {
         return link != null && link.startsWith("https://") && !link.contains("WILL_NOT_SIGN_IN");
     }
 
+    /** MicroG RE's package. */
+    static final String PACKAGE = ACCOUNT_TYPE + ".android.gms";
+
     /** Replaces BitChord's sign-in WebView loading its first page. */
     public static void load(WebView view, String url) {
         Activity activity = activityOf(view.getContext());
-        if (!isSignIn(url) || activity == null || !installed(activity)) {
+        String skip =
+                !isSignIn(url)
+                        ? null // Changing channel: YouTube Music itself, nothing to say.
+                        : activity == null
+                                ? "the sign-in page isn't in an activity"
+                                : !installed(activity) ? "MicroG RE isn't installed" : "";
+        if (skip == null || !skip.isEmpty()) {
+            if (skip != null) HostLog.d("MicroG sign-in not offered: " + skip);
             view.loadUrl(url);
             return;
         }
@@ -136,16 +146,30 @@ public final class MicroGSignIn {
         }
     }
 
-    /** Whether MicroG RE's account type is on this phone. */
+    /** Whether MicroG RE and its account type are on this phone. */
     static boolean installed(Context context) {
+        boolean app = false, accounts = false;
+        try {
+            context.getPackageManager().getPackageInfo(PACKAGE, 0);
+            app = true;
+        } catch (Exception ignored) {
+            // Not installed, or hidden from BitChord.
+        }
         try {
             for (AuthenticatorDescription type :
                     AccountManager.get(context).getAuthenticatorTypes())
-                if (ACCOUNT_TYPE.equals(type.type)) return true;
+                if (ACCOUNT_TYPE.equals(type.type)) accounts = true;
         } catch (RuntimeException ignored) {
-            // No account service: treat as not installed.
+            // No account service.
         }
-        return false;
+        if (app != accounts)
+            HostLog.d(
+                    "MicroG sign-in: MicroG RE "
+                            + (app
+                                    ? "is installed but its accounts aren't visible"
+                                    : "isn't visible as an app")
+                            + (accounts ? ", though its account type is" : ""));
+        return accounts;
     }
 
     private static Activity activityOf(Context context) {

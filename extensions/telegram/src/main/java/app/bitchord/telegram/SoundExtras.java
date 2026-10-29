@@ -22,9 +22,9 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
- * The Playback extras patch: Sing, pitch, loudness level, sleep-timer fade, battery saver and
- * lossless addons over Bluetooth. Each is called from one place in BitChord's playback code and
- * leaves it exactly as it was while its setting is at the default.
+ * The Playback extras patches, each added on its own: Sing, Pitch control, Loudness level, Sleep
+ * timer fade-out, Battery saver and Lossless addons over Bluetooth. Each is called from one place
+ * in BitChord's playback code and leaves it exactly as it was while its setting is at the default.
  *
  * <p>Sing is ported from Auris by OreoMuncher45 (see {@link VocalCut}). The pitch, loudness level
  * and battery saver settings follow ideas from Auris, Prism by Yigder and Stash by Rawnald Clark;
@@ -54,6 +54,34 @@ public final class SoundExtras {
     private static final List<WeakReference<Player>> players = new ArrayList<>();
     private static final Map<Object, VocalCut> singers =
             Collections.synchronizedMap(new WeakHashMap<>());
+
+    // ── Which patches were added ─────────────────────────────────────────────
+
+    // Each answers true once its patch is added; the patch replaces the body.
+
+    public static boolean singApplied() {
+        return false;
+    }
+
+    public static boolean pitchApplied() {
+        return false;
+    }
+
+    public static boolean loudnessApplied() {
+        return false;
+    }
+
+    public static boolean sleepFadeApplied() {
+        return false;
+    }
+
+    public static boolean batterySaverApplied() {
+        return false;
+    }
+
+    public static boolean losslessBluetoothApplied() {
+        return false;
+    }
 
     // ── Settings ─────────────────────────────────────────────────────────────
 
@@ -265,8 +293,8 @@ public final class SoundExtras {
             players.removeIf(reference -> reference.get() == null);
             players.add(new WeakReference<>(player));
         }
-        applyPitch(player);
-        applyOffload(player);
+        if (pitchApplied()) applyPitch(player);
+        if (batterySaverApplied()) applyOffload(player);
     }
 
     private interface Change {

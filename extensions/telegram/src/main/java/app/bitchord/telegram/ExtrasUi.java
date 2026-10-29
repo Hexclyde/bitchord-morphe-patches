@@ -24,7 +24,7 @@ public final class ExtrasUi {
                 SettingsSheetKt.SettingsRow(
                         null,
                         Strings.t("Playback extras"),
-                        Strings.t("Sing, pitch, loudness level, sleep fade and battery saver"),
+                        Strings.t("Sound settings from the patches you added"),
                         null,
                         null,
                         null,
@@ -47,7 +47,7 @@ public final class ExtrasUi {
     public static void soundSection(ComposerImpl composer) {
         hostGroup(
                 Strings.t("Playback extras"),
-                Strings.t("Added by the Playback extras patch."),
+                Strings.t("Added by the Playback extras patches."),
                 26f,
                 GROUP_CONTENT,
                 composer,

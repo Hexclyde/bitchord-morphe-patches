@@ -132,6 +132,30 @@ public final class SoundCheckTest {
         again.consider(title, "", 187, "-100_9");
         check(again.pendingCount() == 1, "An unreadable file is tried again later");
 
+        // A cover with the original's name and tags: it sounds different at two upgrades.
+        String sandman = "Enter Sandman";
+        check(!again.rejected("-100_20", sandman, 331), "Not rejected before any upgrade");
+        check(
+                !again.soundedDifferent("-100_20", sandman, 332, 0.21),
+                "One upgrade that didn't line up is given another chance");
+        check(!again.rejected("-100_20", sandman, 331), "Still used after one");
+        check(again.soundedDifferent("-100_20", sandman, 331, 0.18), "Dropped after two");
+        check(again.rejected("-100_20", sandman, 331), "Rejected for the song");
+        check(again.rejected("-100_20", "Enter Sandman (Remastered)", 333), "Brackets aside");
+        check(!again.rejected("-100_20", sandman, 400), "Not for another length");
+        check(!again.rejected("-100_20", "Sad But True", 331), "Not for another song");
+        check(!again.rejected("-100_20", sandman, null), "Not without a length");
+        check(
+                !again.soundedDifferent("-100_7", title, 187, 0.3)
+                        && !again.rejected("-100_7", title, 187),
+                "A file the sound check found to be the song is left alone");
+        int queued = again.pendingCount();
+        again.consider(sandman, "", 331, "-100_20");
+        check(again.pendingCount() == queued, "A rejected file isn't queued for a sound check");
+        SoundCheck reopened =
+                new SoundCheck(store, reference, notices::add, Runnable::run, clock::get);
+        check(reopened.rejected("-100_20", sandman, 331), "Kept across restarts");
+
         // Off: the player's hooks do nothing, and the add-on reports real lengths.
         SoundCheck.active = null;
         check(

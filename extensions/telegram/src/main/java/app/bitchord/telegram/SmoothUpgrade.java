@@ -21,6 +21,10 @@ import java.util.WeakHashMap;
  * copies of the same song as zero. For a Telegram copy, {@link VersionAlign} measures it first, and
  * the swap starts the new copy that much later or earlier, so nothing repeats or is skipped.
  *
+ * <p>The comparison is also a check that it's the same recording: when the copies don't line up,
+ * the stream keeps playing, and a file that fails at two upgrades isn't used for the song again.
+ * When the song has only just started, the switch waits for a few seconds of it to compare.
+ *
  * <p>Starting the new copy still takes a moment, so before the crossfade it's held back until it
  * plays in step with the old one (see {@link #settled}).
  */
@@ -42,47 +46,121 @@ public final class SmoothUpgrade {
 
     private static volatile Settling settling;
 
+    /** How long to wait for enough of the song to compare, in seconds of it playing. */
+    static final int LISTEN_SECONDS = 25;
+
     /** Replaces the upgrade's replaceMediaItem call. */
     public static void replace(Object service, Player player, int index, MediaItem item) {
         handedOver.remove(player);
-        if (enabled) {
-            String playing = mediaId(player.getCurrentMediaItem());
-            boolean measuring = false;
-            try {
-                measuring =
-                        VersionAlign.measure(
-                                player,
-                                item,
-                                offset -> {
-                                    // The song may have changed while it was measured.
-                                    if (player.getCurrentMediaItemIndex() != index
-                                            || !Objects.equals(
-                                                    playing, mediaId(player.getCurrentMediaItem())))
-                                        return;
-                                    aligned =
-                                            offset == null
-                                                    ? null
-                                                    : new double[] {
-                                                        offset, System.currentTimeMillis()
-                                                    };
-                                    if (swap(service, player, index, item)) return;
-                                    aligned = null;
-                                    long at =
-                                            player.getCurrentPosition()
-                                                    + (offset == null ? 0 : Math.round(offset));
-                                    player.replaceMediaItem(index, item);
-                                    player.seekTo(index, Math.max(0, at));
-                                    player.prepare();
-                                });
-            } catch (Throwable ignored) {
-                // Not measured: swapped as before.
-            }
-            if (measuring || swap(service, player, index, item)) {
-                handedOver.add(player);
-                return;
-            }
+        if (enabled && start(service, player, index, item, 0, 0)) {
+            handedOver.add(player);
+            return;
         }
         player.replaceMediaItem(index, item);
+    }
+
+    /**
+     * Compares the Telegram copy with what's playing before switching, waiting for the first few
+     * seconds of the song when it has only just started. True when this takes the switch over.
+     */
+    private static boolean start(
+            Object service, Player player, int index, MediaItem item, int played, int polls) {
+        String playing = mediaId(player.getCurrentMediaItem());
+        int status;
+        try {
+            status =
+                    VersionAlign.measure(
+                            player,
+                            item,
+                            (found, telegramId) -> {
+                                // The song may have changed while it was measured.
+                                if (!still(player, index, playing)) return;
+                                measured(service, player, index, item, found, telegramId);
+                            });
+        } catch (Throwable ignored) {
+            status = VersionAlign.CANT; // Not measured: swapped as before.
+        }
+        if (status == VersionAlign.MEASURING) return true;
+        if (status == VersionAlign.WAIT && played < LISTEN_SECONDS && polls < 3600) {
+            if (polls == 0)
+                HostLog.d(
+                        "Unofficial Telegram is listening to the song for a few seconds before"
+                                + " switching, to check the Telegram copy is the same recording");
+            new android.os.Handler(player.getApplicationLooper())
+                    .postDelayed(
+                            () -> {
+                                if (!still(player, index, playing)) return;
+                                int next = player.isPlaying() ? played + 1 : played;
+                                if (!start(service, player, index, item, next, polls + 1))
+                                    go(service, player, index, item, null);
+                            },
+                            1000);
+            return true;
+        }
+        if (polls == 0) return swap(service, player, index, item);
+        HostLog.d("Unofficial Telegram couldn't compare the copies; switching anyway");
+        return false;
+    }
+
+    private static boolean still(Player player, int index, String playing) {
+        return player.getCurrentMediaItemIndex() == index
+                && Objects.equals(playing, mediaId(player.getCurrentMediaItem()));
+    }
+
+    /**
+     * The comparison is in. When the copies line up, the switch goes ahead from where the Telegram
+     * copy has the same moment; when they don't, it's most likely another recording under the same
+     * name, such as a cover with the original's tags, and the stream keeps playing.
+     */
+    private static void measured(
+            Object service,
+            Player player,
+            int index,
+            MediaItem item,
+            double[] found,
+            String telegramId) {
+        if (found != null && !VersionAlign.clear(found)) {
+            CharSequence title =
+                    player.getCurrentMediaItem() == null
+                                    || player.getCurrentMediaItem().mediaMetadata == null
+                            ? null
+                            : player.getCurrentMediaItem().mediaMetadata.title;
+            long duration = player.getDuration();
+            SoundCheck recordings = SoundCheck.recordings;
+            boolean dropped =
+                    title != null
+                            && duration > 0
+                            && recordings != null
+                            && recordings.soundedDifferent(
+                                    telegramId,
+                                    title.toString(),
+                                    (int) Math.round(duration / 1000.0),
+                                    found[1]);
+            HostLog.d(
+                    String.format(
+                            java.util.Locale.US,
+                            "Unofficial Telegram kept the stream: the Telegram copy doesn't sound"
+                                    + " like what's playing (loudness match %.2f), so it's"
+                                    + " probably another recording%s",
+                            found[1],
+                            dropped
+                                    ? "; it won't be used for this song again"
+                                    : "; it'll be compared again next time"));
+            return;
+        }
+        go(service, player, index, item, VersionAlign.clear(found) ? found[0] : null);
+    }
+
+    /** Switches, starting the new copy {@code offset} ms later than the old one's position. */
+    private static void go(
+            Object service, Player player, int index, MediaItem item, Double offset) {
+        aligned = offset == null ? null : new double[] {offset, System.currentTimeMillis()};
+        if (swap(service, player, index, item)) return;
+        aligned = null;
+        long at = player.getCurrentPosition() + (offset == null ? 0 : Math.round(offset));
+        player.replaceMediaItem(index, item);
+        player.seekTo(index, Math.max(0, at));
+        player.prepare();
     }
 
     private static boolean swap(Object service, Player player, int index, MediaItem item) {

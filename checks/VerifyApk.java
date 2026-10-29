@@ -839,7 +839,7 @@ public class VerifyApk {
                                     check(
                                             !text.getString().contains("BitChord native test"),
                                             "Telegram application version is unbranded");
-                                    if (text.getString().equals("1.1.0-beta.1")) version = true;
+                                    if (text.getString().equals("1.1.0-beta.2")) version = true;
                                 }
                                 if (cls.getType()
                                         .equals("Lapp/bitchord/telegram/TelegramActivity;")) {
@@ -950,6 +950,14 @@ public class VerifyApk {
                                             metaData.get(
                                                     "app.revanced.android.gms.SPOOFED_PACKAGE_SIGNATURE")),
                     "MicroG RE is told to treat BitChord as YouTube Music");
+            boolean seesMicroG = false;
+            var queried = after.getElementsByTagName("package");
+            for (int i = 0; i < queried.getLength(); i++)
+                if (queried.item(i).getParentNode().getNodeName().equals("queries")
+                        && "app.revanced.android.gms"
+                                .equals(((Element) queried.item(i)).getAttributeNS(NS, "name")))
+                    seesMicroG = true;
+            check(seesMicroG, "BitChord may see MicroG RE and its accounts (Android 11 and up)");
             check(
                     statsFormatHooks == 1 && statsCaptureHooks == 1 && statsMeasureHooks == 1,
                     "Exactly one of each stats hook");

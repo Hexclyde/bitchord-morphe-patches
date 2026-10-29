@@ -16,7 +16,12 @@ PATCHES = [
     "Unofficial Telegram music",
     "Install as Bitchord+",
     "Sign in with MicroG",
-    "Playback extras",
+    "Sing",
+    "Pitch control",
+    "Loudness level",
+    "Sleep timer fade-out",
+    "Battery saver",
+    "Lossless addons over Bluetooth",
 ]
 
 TOOLS = Path(os.environ.get("MORPHE_TOOLS", ROOT / ".deps/tools"))

@@ -1,7 +1,34 @@
 {
   "NOTE": "Generated from the verified MPP by tools/prepare_mobile_source.py; do not hand-edit.",
-  "version": "1.1.0-beta.1",
+  "version": "1.1.0-beta.2",
   "patches": [
+    {
+      "name": "Battery saver",
+      "description": "Lets the phone's audio chip decode songs, so long listens use less battery. BitChord's effects don't run on songs played this way. Inspired by Auris, Prism and Stash. Settings are at the end of the Equalizer page.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.8.1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
     {
       "name": "Install as Bitchord+",
       "description": "Installs next to your regular BitChord as Bitchord+, or under a name you choose.",
@@ -40,9 +67,63 @@
       ]
     },
     {
-      "name": "Playback extras",
-      "description": "Adds Sing (turns the singer down, from Auris), pitch separate from speed, a loudness level, a sleep-timer fade, battery saver and lossless addons over Bluetooth. Settings are at the end of the Equalizer page.",
-      "default": true,
+      "name": "Lossless addons over Bluetooth",
+      "description": "Keeps addons marked lossless in use over Bluetooth, where BitChord normally skips them. Settings are at the end of the Equalizer page.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.8.1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Loudness level",
+      "description": "Sets how loud loudness normalisation plays songs, from -23 to -8 LUFS instead of -14. Inspired by Auris, Prism and Stash. Settings are at the end of the Equalizer page.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.8.1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Pitch control",
+      "description": "Moves the key up or down by up to 12 semitones without changing the speed. Inspired by Auris, Prism and Stash. Settings are at the end of the Equalizer page.",
+      "default": false,
       "category": null,
       "compatiblePackages": [
         {
@@ -70,6 +151,60 @@
       "name": "Sign in with MicroG",
       "description": "Offers to sign in to YouTube Music with an account that's already in MicroG RE, instead of Google's sign-in page.",
       "default": true,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.8.1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Sing",
+      "description": "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord. Settings are at the end of the Equalizer page.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.8.1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Sleep timer fade-out",
+      "description": "Fades the song out over 10 seconds before the sleep timer pauses it. Settings are at the end of the Equalizer page.",
+      "default": false,
       "category": null,
       "compatiblePackages": [
         {

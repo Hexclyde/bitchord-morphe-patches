@@ -36,6 +36,23 @@ public final class TelegramMatch {
                                         target.durationSec,
                                         song.title,
                                         LegendMatch.seconds(song.durationText));
+                SoundCheck recordings = SoundCheck.recordings;
+                if (ok
+                        && telegram
+                        && recordings != null
+                        && recordings.rejected(
+                                song.videoId.substring(TELEGRAM.length()),
+                                target.title,
+                                target.durationSec)) {
+                    HostLog.d(
+                            "Unofficial Telegram skipped '"
+                                    + song.title
+                                    + "' for '"
+                                    + target.title
+                                    + "': it's another recording, found by how it sounds");
+                    if (kept == null) kept = new ArrayList<>(candidates.subList(0, i));
+                    continue;
+                }
                 boolean checking = false;
                 if (!ok) {
                     SoundCheck sound = SoundCheck.active;

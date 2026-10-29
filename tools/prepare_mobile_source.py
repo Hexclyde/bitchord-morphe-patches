@@ -19,6 +19,21 @@ from bootstrap_from_release import download, verify_bundle
 
 ROOT = Path(__file__).resolve().parents[1]
 
+# The public patches. The playback patches are off until chosen in Morphe.
+ON_BY_DEFAULT = {
+    "Unofficial Telegram music",
+    "Install as Bitchord+",
+    "Sign in with MicroG",
+}
+OFF_BY_DEFAULT = {
+    "Sing",
+    "Pitch control",
+    "Loudness level",
+    "Sleep timer fade-out",
+    "Battery saver",
+    "Lossless addons over Bluetooth",
+}
+
 
 def load_config():
     source = json.loads((ROOT / "distribution/source.json").read_text())
@@ -99,15 +114,14 @@ def validate_metadata(manifest, patches, source, provenance):
     ):
         raise ValueError("Source description or unsigned-bundle declaration differs")
     names = {patch["name"] for patch in patches["patches"]}
-    if len(patches["patches"]) != 4 or names != {
-        "Unofficial Telegram music",
-        "Install as Bitchord+",
-        "Sign in with MicroG",
-        "Playback extras",
-    }:
+    expected = ON_BY_DEFAULT | OFF_BY_DEFAULT
+    if len(patches["patches"]) != len(expected) or names != expected:
         raise ValueError("Unexpected public patch list")
     for patch in patches["patches"]:
-        if not patch["default"] or len(patch["compatiblePackages"]) != 1:
+        if (
+            patch["default"] != (patch["name"] in ON_BY_DEFAULT)
+            or len(patch["compatiblePackages"]) != 1
+        ):
             raise ValueError("Patch default or compatibility changed")
         app = patch["compatiblePackages"][0]
         if app["packageName"] != "com.music.bitchord" or app["apkFileType"] != "APK":
@@ -125,9 +139,7 @@ def validate_metadata(manifest, patches, source, provenance):
                 "telegramApplicationHash",
             },
             "Install as Bitchord+": {"installationName"},
-            "Sign in with MicroG": set(),
-            "Playback extras": set(),
-        }[patch["name"]]
+        }.get(patch["name"], set())
         if {option["key"] for option in patch["options"]} != expected_keys or len(
             patch["options"]
         ) != len(expected_keys):

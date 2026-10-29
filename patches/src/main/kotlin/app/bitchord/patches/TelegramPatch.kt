@@ -216,7 +216,11 @@ private val cloneResources = resourcePatch {
     execute {
         document("AndroidManifest.xml").use { doc ->
             val manifest = doc.documentElement
-            check(manifest.getAttribute("package") == ORIGINAL) { "Unexpected original package" }
+            check(manifest.getAttribute("package") == ORIGINAL) {
+                "BitChord's package is ${manifest.getAttribute("package")}, not $ORIGINAL: a patch " +
+                    "from another source changed it first. Patch BitChord with only this " +
+                    "source's patches, with the other sources turned off."
+            }
             check(!manifest.hasAttributeNS(ANDROID, "sharedUserId")) {
                 "Shared UID apps are unsupported"
             }
@@ -1677,6 +1681,9 @@ private const val YOUTUBE_MUSIC_SIGNATURE = "afb0fed5eeaebdd86f56a97742f4b6b33ef
 /** MicroG RE reads these to treat an app as the Google app it stands in for. */
 private const val MICROG_SPOOF = "app.revanced.android.gms.SPOOFED_PACKAGE_"
 
+/** MicroG RE's own package. */
+private const val MICROG_PACKAGE = "app.revanced.android.gms"
+
 private val microGResources = resourcePatch {
     execute {
         document("AndroidManifest.xml").use { doc ->
@@ -1691,6 +1698,18 @@ private val microGResources = resourcePatch {
                 meta.setAttributeNS(ANDROID, "android:value", value)
                 app.appendChild(meta)
             }
+            // Since Android 11 an app only sees the account types of apps it declares here, so
+            // without this BitChord can't tell MicroG RE is installed.
+            val queries = doc.createElement("queries")
+            val gms = doc.createElement("package")
+            gms.setAttributeNS(ANDROID, "android:name", MICROG_PACKAGE)
+            queries.appendChild(gms)
+            val intent = doc.createElement("intent")
+            val action = doc.createElement("action")
+            action.setAttributeNS(ANDROID, "android:name", "android.accounts.AccountAuthenticator")
+            intent.appendChild(action)
+            queries.appendChild(intent)
+            doc.documentElement.insertBefore(queries, app)
         }
     }
 }
@@ -2052,25 +2071,106 @@ private fun BytecodePatchContext.addExtrasSettings() {
     println("Added the Playback extras settings to the Equalizer page")
 }
 
-@Suppress("unused")
-val playbackExtrasPatch =
-    bytecodePatch(
-        name = "Playback extras",
-        description =
-            "Adds Sing (turns the singer down, from Auris), pitch separate from speed, a " +
-                "loudness level, a sleep-timer fade, battery saver and lossless addons over " +
-                "Bluetooth. Settings are at the end of the Equalizer page.",
-        default = true,
-    ) {
-        compatibleWith(target)
-        dependsOn(extrasResources)
-        extendWith("extensions/telegram.mpe")
-        execute {
-            addSing()
-            addLoudnessLevel()
-            addPlayerSettings()
-            addSleepFade()
-            addLosslessOverBluetooth()
-            addExtrasSettings()
+/** Makes SoundExtras.[name] answer true: the settings page shows that patch's part. */
+private fun BytecodePatchContext.markApplied(name: String) {
+    val method =
+        mutableClassDefBy(EXTRAS).methods.single {
+            it.name == name && it.parameterTypes.isEmpty() && it.returnType == "Z"
         }
+    method.addInstructions(0, "const/4 v0, 0x1\nreturn v0")
+}
+
+/** The Playback extras page and its entry on the Equalizer page, shared by the patches below. */
+private val extrasSettingsPatch = bytecodePatch {
+    dependsOn(extrasResources)
+    extendWith("extensions/telegram.mpe")
+    execute { addExtrasSettings() }
+}
+
+/** Each player BitChord builds, for the pitch and battery saver patches. */
+private val extrasPlayersPatch = bytecodePatch {
+    dependsOn(extrasSettingsPatch)
+    execute { addPlayerSettings() }
+}
+
+private fun extrasPatch(
+    name: String,
+    description: String,
+    vararg needs: Patch<*>,
+    apply: BytecodePatchContext.() -> Unit,
+) =
+    bytecodePatch(name = name, description = description, default = false) {
+        compatibleWith(target)
+        dependsOn(extrasSettingsPatch, *needs)
+        extendWith("extensions/telegram.mpe")
+        execute { apply() }
+    }
+
+@Suppress("unused")
+val singPatch =
+    extrasPatch(
+        "Sing",
+        "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover " +
+            "in Auris by OreoMuncher45, a fork of BitChord. Settings are at the end of the " +
+            "Equalizer page.",
+    ) {
+        addSing()
+        markApplied("singApplied")
+    }
+
+@Suppress("unused")
+val pitchPatch =
+    extrasPatch(
+        "Pitch control",
+        "Moves the key up or down by up to 12 semitones without changing the speed. Inspired " +
+            "by Auris, Prism and Stash. Settings are at the end of the Equalizer page.",
+        extrasPlayersPatch,
+    ) {
+        markApplied("pitchApplied")
+    }
+
+@Suppress("unused")
+val loudnessLevelPatch =
+    extrasPatch(
+        "Loudness level",
+        "Sets how loud loudness normalisation plays songs, from -23 to -8 LUFS instead of " +
+            "-14. Inspired by Auris, Prism and Stash. Settings are at the end of the Equalizer " +
+            "page.",
+    ) {
+        addLoudnessLevel()
+        markApplied("loudnessApplied")
+    }
+
+@Suppress("unused")
+val sleepFadePatch =
+    extrasPatch(
+        "Sleep timer fade-out",
+        "Fades the song out over 10 seconds before the sleep timer pauses it. Settings are at " +
+            "the end of the Equalizer page.",
+    ) {
+        addSleepFade()
+        markApplied("sleepFadeApplied")
+    }
+
+@Suppress("unused")
+val batterySaverPatch =
+    extrasPatch(
+        "Battery saver",
+        "Lets the phone's audio chip decode songs, so long listens use less battery. " +
+            "BitChord's effects don't run on songs played this way. Inspired by Auris, Prism " +
+            "and Stash. Settings are at the end of the Equalizer page.",
+        extrasPlayersPatch,
+    ) {
+        markApplied("batterySaverApplied")
+    }
+
+@Suppress("unused")
+val losslessBluetoothPatch =
+    extrasPatch(
+        "Lossless addons over Bluetooth",
+        "Keeps addons marked lossless in use over Bluetooth, where BitChord normally skips " +
+            "them. Settings are at the end of the Equalizer page.",
+    ) {
+        addLosslessOverBluetooth()
+        markApplied("losslessBluetoothApplied")
     }

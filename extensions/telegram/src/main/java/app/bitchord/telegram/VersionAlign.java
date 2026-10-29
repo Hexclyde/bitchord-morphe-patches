@@ -58,6 +58,9 @@ public final class VersionAlign {
     /** How clearly the best loudness shift must win, and how well the waveforms must agree. */
     static final double MIN_MATCH = 0.5, MIN_MARGIN = 0.1, MIN_WAVE = 0.5, MIN_WAVE_MARGIN = 0.05;
 
+    /** The least loudness change ({@link #shape}, log10 squared) that counts as music moving. */
+    static final double MOVING = 2e-3;
+
     /** Measuring gives up after this long, and the swap goes ahead unaligned. */
     static final long BUDGET_MS = 8000;
 
@@ -634,35 +637,42 @@ public final class VersionAlign {
 
     static volatile Decoder decoder;
 
+    /** What {@link #measure} did. */
+    static final int CANT = 0, MEASURING = 1, WAIT = 2;
+
+    /** Called with the measurement: {@link #align}'s result, or null; and the Telegram file. */
+    interface Measured {
+        void done(double[] found, String telegramId);
+    }
+
     /**
      * Measures how far the Telegram copy {@code item} is from what {@code player} is playing, then
-     * calls {@code then} on the player's thread with the offset in milliseconds, or null. False
-     * when it can't be measured at all (not a Telegram copy, too little heard yet), and nothing is
-     * called.
+     * calls {@code then} on the player's thread. {@link #CANT} when it can't be measured at all
+     * (not a Telegram copy) and {@link #WAIT} when too little has been heard yet, or only silence;
+     * then nothing is called.
      */
-    static boolean measure(
-            Player player, MediaItem item, java.util.function.Consumer<Double> then) {
+    static int measure(Player player, MediaItem item, Measured then) {
         Decoder decode = decoder;
         TelegramBridge bridge = TelegramBridge.instance;
         if (decode == null || bridge == null || item == null || item.localConfiguration == null)
-            return false;
+            return CANT;
         android.os.Looper looper = player.getApplicationLooper();
-        if (looper == null) return false;
+        if (looper == null) return CANT;
         String id;
         try {
             id = InternalAddon.audioId(bridge, item.localConfiguration.uri.toString());
         } catch (Exception e) {
-            return false;
+            return CANT;
         }
         long positionMs = player.getCurrentPosition();
         float speed = player.getPlaybackParameters().speed;
         Series[] heard = recent(positionMs, speed);
-        if (heard == null) return false;
+        if (heard == null || !moving(heard[0])) return WAIT;
         android.os.Handler handler = new android.os.Handler(looper);
         long started = System.currentTimeMillis();
         work.execute(
                 () -> {
-                    Double offset = null;
+                    double[] result = null;
                     try {
                         long fromMs = Math.max(0, (long) heard[0].startMs - SEARCH_MS);
                         long toMs = (long) heard[0].endMs() + SEARCH_MS;
@@ -676,7 +686,7 @@ public final class VersionAlign {
                                             of(pcm.samples, pcm.length, pcm.rate, pcm.startUs),
                                             0,
                                             SEARCH_MS);
-                            if (clear(found)) offset = found[0];
+                            result = found;
                             HostLog.d(
                                     found == null
                                             ? "Unofficial Telegram couldn't line up the upgrade:"
@@ -691,16 +701,31 @@ public final class VersionAlign {
                                                     found[1],
                                                     found[2],
                                                     found[3],
-                                                    offset == null ? "; not used" : ""));
+                                                    clear(found) ? "" : "; not used"));
                         }
                     } catch (Exception e) {
                         HostLog.d(
                                 "Unofficial Telegram couldn't line up the upgrade: "
                                         + e.getMessage());
                     }
-                    Double result = offset;
-                    handler.post(() -> then.accept(result));
+                    double[] measured = result;
+                    handler.post(() -> then.done(measured, id));
                 });
-        return true;
+        return MEASURING;
+    }
+
+    /**
+     * Whether the music moves enough to compare: not silence or a held tone, whose loudness looks
+     * alike at every offset.
+     */
+    static boolean moving(Series frames) {
+        float[] v = shape(frames).values;
+        double sum = 0, squares = 0;
+        for (float x : v) {
+            sum += x;
+            squares += x * x;
+        }
+        double mean = sum / Math.max(1, v.length);
+        return v.length > 0 && squares / v.length - mean * mean > MOVING;
     }
 }

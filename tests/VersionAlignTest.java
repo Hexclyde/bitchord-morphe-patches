@@ -189,6 +189,27 @@ public final class VersionAlignTest {
                 VersionAlign.position(new Object(), 1234) == 1234,
                 "a sink never heard is told its own position");
         SmoothUpgrade.enabled = true;
+        // Silence or a held tone can't be compared; music can.
+        VersionAlign.Series[] music = VersionAlign.of(song, 2 * 44_100, 44_100, 0);
+        check(VersionAlign.moving(music[0]), "music moves");
+        float[] hush = new float[3 * 44_100];
+        check(
+                !VersionAlign.moving(VersionAlign.of(hush, hush.length, 44_100, 0)[0]),
+                "silence doesn't");
+        float[] tone = new float[3 * 44_100];
+        for (int i = 0; i < tone.length; i++) tone[i] = (float) (0.3 * Math.sin(i * 0.05));
+        check(
+                !VersionAlign.moving(VersionAlign.of(tone, tone.length, 44_100, 0)[0]),
+                "nor a held tone");
+        java.util.Random hiss = new java.util.Random(3);
+        float[] noise = new float[3 * 44_100];
+        for (int i = 0; i < noise.length; i++) noise[i] = (float) (0.001 * hiss.nextGaussian());
+        check(!VersionAlign.moving(VersionAlign.of(noise, noise.length, 44_100, 0)[0]), "nor hiss");
+        float[] soft = new float[3 * 44_100];
+        for (int i = 0; i < soft.length; i++) soft[i] = song[i] * 0.01f;
+        check(
+                VersionAlign.moving(VersionAlign.of(soft, soft.length, 44_100, 0)[0]),
+                "quiet music does");
         System.out.println("PASS: " + checks + " upgrade alignment checks.");
     }
 
