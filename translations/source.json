@@ -462,7 +462,6 @@
   "MicroG couldn’t sign in ({0}). Opening Google’s sign-in page instead.",
   "Unofficial Telegram (saved copy)",
   "Saved copy",
-  "Added by the Playback extras patches.",
   "Battery saver",
   "BitChord decodes every song",
   "Bluetooth can’t carry lossless audio on most phones, so BitChord normally skips lossless addons there. With this on they’re used anyway, and the phone sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the next song.",
@@ -479,12 +478,10 @@
   "Original key",
   "Other",
   "Pitch",
-  "Playback extras",
   "Removes everything in the middle, drums included",
   "Saves battery on long listens. While a song plays this way, BitChord’s equaliser, loudness normalisation, Sing, spatial audio and crossfade don’t work on it. Android decides which songs and devices can; the rest play as before.",
   "Sing",
   "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
-  "Sound settings from the patches you added",
   "The cleaner choice for older recordings.",
   "The phone’s audio chip plays songs it can decode",
   "The song fades out over 10 seconds, then pauses",
@@ -495,5 +492,8 @@
   "{0} (BitChord’s level)",
   "{0} semitone",
   "{0} semitones",
-  "{0}% quieter"
+  "{0}% quieter",
+  "Added to BitChord by patches.",
+  "Settings of the patches you added",
+  "Tweaks & patches"
 ]

@@ -2013,27 +2013,30 @@ private fun BytecodePatchContext.addLosslessOverBluetooth() {
     println("Added lossless addons over Bluetooth")
 }
 
-/** The Playback extras group at the end of BitChord's Equalizer page. */
+/** The Tweaks & patches group in BitChord's Settings, after its first group. */
 private fun BytecodePatchContext.addExtrasSettings() {
-    val screen = mutableClassDefBy("Lcom/music/bitchord/ui/screens/EqualizerScreenKt;")
-    val method = screen.methods.single { it.name == "EqualizerScreen" }
+    val screen = mutableClassDefBy("Lcom/music/bitchord/ui/screens/SettingsSheetKt;")
+    val method = screen.methods.single { it.name.startsWith("SettingsScreen-") }
     val code = method.implementation!!.instructions.toList()
     val groups =
         code.indices.filter { i ->
             code[i].methodRef()?.let {
                 it.definingClass == "Lcom/music/bitchord/ui/screens/SettingsSheetKt;" &&
-                    it.name.startsWith("SettingsGroup-") &&
-                    it.parameterTypes.joinToString("") == SETTINGS_GROUP_PARAMETERS
+                    it.name.startsWith("SearchableSettingsGroup-")
             } == true
         }
-    check(groups.size >= 2) { "Equalizer settings groups not found" }
-    val last = groups.last()
-    val composer = argumentRegisters(code[last])[4]
+    check(groups.size >= 3) { "Settings groups not found" }
+    val first = groups.first()
+    val composer = argumentRegisters(code[first])[4]
     method.addInstruction(
-        last + 1,
-        "invoke-static/range {v$composer .. v$composer}, $EXTRAS_UI->soundSection(Landroidx/compose/runtime/ComposerImpl;)V",
+        first + 1,
+        "invoke-static/range {v$composer .. v$composer}, $EXTRAS_UI->tweaksSection(Landroidx/compose/runtime/ComposerImpl;)V",
     )
-    val group = code[last].methodRef()!!
+    val group =
+        screen.methods.single {
+            it.name.startsWith("SettingsGroup-") &&
+                it.parameterTypes.joinToString("") == SETTINGS_GROUP_PARAMETERS
+        }
     val ui = mutableClassDefBy(EXTRAS_UI)
     val original = ui.methods.single { it.name == "hostGroup" }
     val replacement =
@@ -2068,7 +2071,7 @@ private fun BytecodePatchContext.addExtrasSettings() {
         index,
         "invoke-static/range {p0 .. p0}, $EXTRAS_UI->start(Landroid/content/Context;)V",
     )
-    println("Added the Playback extras settings to the Equalizer page")
+    println("Added Tweaks & patches to BitChord's Settings")
 }
 
 /** Makes SoundExtras.[name] answer true: the settings page shows that patch's part. */
@@ -2080,7 +2083,7 @@ private fun BytecodePatchContext.markApplied(name: String) {
     method.addInstructions(0, "const/4 v0, 0x1\nreturn v0")
 }
 
-/** The Playback extras page and its entry on the Equalizer page, shared by the patches below. */
+/** The Tweaks & patches page and its entry in Settings, shared by the patches below. */
 private val extrasSettingsPatch = bytecodePatch {
     dependsOn(extrasResources)
     extendWith("extensions/telegram.mpe")
@@ -2106,13 +2109,15 @@ private fun extrasPatch(
         execute { apply() }
     }
 
+private const val WHERE = " Settings are in Settings, Tweaks & patches."
+
 @Suppress("unused")
 val singPatch =
     extrasPatch(
         "Sing",
         "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover " +
-            "in Auris by OreoMuncher45, a fork of BitChord. Settings are at the end of the " +
-            "Equalizer page.",
+            "in Auris by OreoMuncher45, a fork of BitChord." +
+            WHERE,
     ) {
         addSing()
         markApplied("singApplied")
@@ -2122,8 +2127,9 @@ val singPatch =
 val pitchPatch =
     extrasPatch(
         "Pitch control",
-        "Moves the key up or down by up to 12 semitones without changing the speed. Inspired " +
-            "by Auris, Prism and Stash. Settings are at the end of the Equalizer page.",
+        "Moves the key up or down by up to 12 semitones without changing the speed. From Prism " +
+            "by Yigder." +
+            WHERE,
         extrasPlayersPatch,
     ) {
         markApplied("pitchApplied")
@@ -2134,8 +2140,8 @@ val loudnessLevelPatch =
     extrasPatch(
         "Loudness level",
         "Sets how loud loudness normalisation plays songs, from -23 to -8 LUFS instead of " +
-            "-14. Inspired by Auris, Prism and Stash. Settings are at the end of the Equalizer " +
-            "page.",
+            "-14. From Prism by Yigder." +
+            WHERE,
     ) {
         addLoudnessLevel()
         markApplied("loudnessApplied")
@@ -2145,8 +2151,9 @@ val loudnessLevelPatch =
 val sleepFadePatch =
     extrasPatch(
         "Sleep timer fade-out",
-        "Fades the song out over 10 seconds before the sleep timer pauses it. Settings are at " +
-            "the end of the Equalizer page.",
+        "Fades the song out over 10 seconds before the sleep timer pauses it. From Prism by " +
+            "Yigder." +
+            WHERE,
     ) {
         addSleepFade()
         markApplied("sleepFadeApplied")
@@ -2157,8 +2164,8 @@ val batterySaverPatch =
     extrasPatch(
         "Battery saver",
         "Lets the phone's audio chip decode songs, so long listens use less battery. " +
-            "BitChord's effects don't run on songs played this way. Inspired by Auris, Prism " +
-            "and Stash. Settings are at the end of the Equalizer page.",
+            "BitChord's effects don't run on songs played this way." +
+            WHERE,
         extrasPlayersPatch,
     ) {
         markApplied("batterySaverApplied")
@@ -2169,7 +2176,8 @@ val losslessBluetoothPatch =
     extrasPatch(
         "Lossless addons over Bluetooth",
         "Keeps addons marked lossless in use over Bluetooth, where BitChord normally skips " +
-            "them. Settings are at the end of the Equalizer page.",
+            "them. Lossless-first, as in Auris by OreoMuncher45." +
+            WHERE,
     ) {
         addLosslessOverBluetooth()
         markApplied("losslessBluetoothApplied")

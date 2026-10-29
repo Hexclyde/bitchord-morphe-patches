@@ -146,6 +146,7 @@ public final class TelegramBridge {
 
     public static synchronized void init(Context context) {
         appContext = context.getApplicationContext();
+        Strings.init(appContext);
         if (instance != null || !startupError.isEmpty()) return;
         try {
             // Explicit ordering also resolves the dynamic OpenSSL and C++ dependencies.
@@ -793,7 +794,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.1.0-beta.2"));
+                            "1.1.0-beta.3"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {

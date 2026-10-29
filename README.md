@@ -4,7 +4,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.2, a testing build). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.3, a testing build). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > I've only been able to test it on an **arm64-v8a** phone. The armeabi-v7a and x86_64 builds pass the same automated checks, but I haven't run them on a real device. If you're on one of those, please give it a try and [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems. Hearing that it works is useful too.
 
@@ -60,9 +60,10 @@ More BitChord add-ons will be added to this repository over time.
 
 Every extra (quality, fake lossless checks, covers, file names, naming by sound, format legend, smooth switching, surround mixing, sound checks, the saved index, the main channel copy, name fixes and suggestions) can be turned off in the app.
 
-## Playback extras
+## Tweaks & patches
 
-Six separate patches, each off by default. Turn on the ones you want in Morphe. Any of them adds a **Playback extras** page at the bottom of BitChord's **Settings → Equalizer** page, showing the settings of the ones you added:
+Six separate patches, each off by default. Turn on the ones you want in Morphe. Any of them adds a **Tweaks & patches** group near the top of BitChord's **Settings**, and its page shows the settings of the ones you added:
+
 
 - **Sing:** turns the lead vocal down so you can sing over the song, from a little to all of it. By default only the voice range is cut, only while someone is singing, and drum hits are left alone; **Whole centre** removes everything in the middle instead, which suits older recordings. Ported from [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45.
 - **Pitch:** up or down by up to 12 semitones without changing the speed. BitChord's speed setting keeps the pitch you set.
@@ -83,7 +84,7 @@ Everything is at BitChord's own behaviour until you change it, and none of them 
 ## Quick start
 
 1. [Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord). On the source card, enable **Experimental app versions**.
-2. Patch BitChord 1.8.1 with **Unofficial Telegram music**, **Install as Bitchord+** and, if you like, **Sign in with MicroG** and any of the [playback patches](#playback-extras). Leave the API ID at `0` and the API hash empty.
+2. Patch BitChord 1.8.1 with **Unofficial Telegram music**, **Install as Bitchord+** and, if you like, **Sign in with MicroG** and any of the [tweaks](#tweaks--patches). Leave the API ID at `0` and the API hash empty.
 3. Install the patched app and open **Settings → Account & integrations → Unofficial Telegram**.
 4. Enter your API ID and hash, sign in, and pick your music chats.
 5. Go to **Search → Addons** to find and play your audio.

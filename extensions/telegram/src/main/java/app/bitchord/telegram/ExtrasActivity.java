@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-/** The Playback extras page, opened from BitChord's Equalizer page. */
+/** The Tweaks & patches page, opened from BitChord's Settings: one section per patch added. */
 public final class ExtrasActivity extends Activity {
     private TelegramStyle style;
     private LinearLayout body;
@@ -78,13 +78,22 @@ public final class ExtrasActivity extends Activity {
         render();
     }
 
+    /** Builds the page again, keeping where it was scrolled to. */
+    private void refresh() {
+        ScrollView scroll = (ScrollView) body.getParent();
+        int y = scroll.getScrollY();
+        body.removeAllViews();
+        render();
+        scroll.post(() -> scroll.scrollTo(0, y));
+    }
+
     private void render() {
         LinearLayout top = new LinearLayout(this);
         top.setOrientation(LinearLayout.VERTICAL);
         top.setPadding(style.dp(20), style.dp(16), style.dp(20), style.dp(18));
         ImageButton back = style.backButton(this::finish);
         top.addView(back, new LinearLayout.LayoutParams(style.dp(48), style.dp(48)));
-        top.addView(style.text(Strings.t("Playback extras"), 34, style.foreground, style.heavy));
+        top.addView(style.text(Strings.t("Tweaks & patches"), 34, style.foreground, style.heavy));
         body.addView(top);
 
         // Only the parts whose patch was added.

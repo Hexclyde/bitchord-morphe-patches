@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.0-beta.3
+
+A testing build, on the `testing` branch only.
+
+- **Tweaks & patches:** the settings of the playback patches moved from the end of the Equalizer page to their own **Tweaks & patches** group near the top of **Settings**.
+- **Credits corrected:** Battery saver isn't from Auris, Prism or Stash, so it no longer says so. Pitch control, Loudness level and Sleep timer fade-out now credit Prism by Yigder.
+- **Patch pages follow BitChord's own language:** the language picked in BitChord's settings is used, not just the phone's.
+- **Fixed Telegram songs failing partway and falling back to YouTube** ("open failed: ENOENT" for a file in `temp`, reported with "Faint"). TDLib moves a file out of its temp folder when its download completes, and deletes cached files to free space; when that happened between finding the file and opening it, playback failed and BitChord gave up on the Telegram copy for that song. The patch now asks TDLib where the file is again, downloading the part again if it was deleted. The same failure made background file checks skip files ("couldn't look into …").
+- **Fixed "Invalid request" after signing in with MicroG:** MicroG RE's one-time sign-in link was opened next to the cookies Google's sign-in page had left, and Google turned it down. Google's and YouTube's cookies in the sign-in page are now cleared first, as MicroG RE does in its own pages. Other sites' cookies stay. The log shows where MicroG RE's link goes, without the link's secret parts.
+
 ## 1.1.0-beta.2
 
 A testing build, on the `testing` branch only.

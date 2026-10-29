@@ -52,7 +52,7 @@
     }
   ],
   "generated_tdapi_sha256": "11155fabc41ca2a6d91bbde4fdf683603d60b50ed51cafab0068728aa7d8d74f",
-  "patch_bundle_version": "1.1.0-beta.2",
+  "patch_bundle_version": "1.1.0-beta.3",
   "native_sha256": {
     "lib/arm64-v8a/libc++_shared.so": "7466ed097631a564ed6bff0b47768caa76bf03270d2047b5a65c03f497b824df",
     "lib/arm64-v8a/libcryptox.so": "9fdc85415c999a2c7383817a204d822f0e509515016b8fee14c45d5a1c40e4d6",
@@ -89,5 +89,5 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "e21a72d57a508064ae946574c02d7ca2059c860f46d825b06167248d81fdd7b5"
+  "patch_bundle_sha256": "04b790ff3cf61a4b41bd4acb9ccb66f2f235d0c62ac9b2adbd548c75bb25ecbb"
 }

@@ -7,9 +7,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.widget.Toast;
 
@@ -64,6 +66,7 @@ public final class MicroGSignIn {
     /** Replaces BitChord's sign-in WebView loading its first page. */
     public static void load(WebView view, String url) {
         Activity activity = activityOf(view.getContext());
+        Strings.init(view.getContext());
         String skip =
                 !isSignIn(url)
                         ? null // Changing channel: YouTube Music itself, nothing to say.
@@ -136,13 +139,87 @@ public final class MicroGSignIn {
                         }
                         // The link works once. Don't let Android hand the same one out again.
                         accounts.invalidateAuthToken(ACCOUNT_TYPE, link);
-                        HostLog.d("MicroG sign-in: opening the link MicroG RE gave");
-                        view.loadUrl(link);
+                        HostLog.d(
+                                "MicroG sign-in: opening the link MicroG RE gave: " + shape(link));
+                        // Google turns the link down ("Invalid request") next to the cookies its
+                        // sign-in page left, so they go first, as MicroG RE does in its own pages.
+                        String open = link;
+                        clearSignInCookies(() -> view.loadUrl(open));
                     },
                     new Handler(Looper.getMainLooper()));
         } catch (RuntimeException e) {
             HostLog.d("MicroG sign-in failed: " + e);
             view.loadUrl(url);
+        }
+    }
+
+    /** Sites whose cookies are cleared before MicroG RE's link is opened. */
+    static final String[] SIGN_IN_SITES = {
+        "https://accounts.google.com/",
+        "https://www.google.com/",
+        "https://google.com/",
+        "https://music.youtube.com/",
+        "https://www.youtube.com/",
+        "https://youtube.com/"
+    };
+
+    /**
+     * Expires every cookie the WebView holds for Google's and YouTube's sign-in, then runs {@code
+     * then}. Other sites' cookies stay.
+     */
+    static void clearSignInCookies(Runnable then) {
+        try {
+            CookieManager cookies = CookieManager.getInstance();
+            for (String site : SIGN_IN_SITES) {
+                String held = cookies.getCookie(site);
+                if (held == null) continue;
+                String host = Uri.parse(site).getHost();
+                for (String expired : expiries(held, host)) cookies.setCookie(site, expired);
+            }
+            cookies.flush();
+        } catch (RuntimeException e) {
+            HostLog.d("MicroG sign-in couldn't clear the old sign-in cookies: " + e);
+        }
+        then.run();
+    }
+
+    /**
+     * Set-Cookie values that expire each cookie in a Cookie header, wherever it was set: on the
+     * host itself, or on its parent domain.
+     */
+    static java.util.List<String> expiries(String header, String host) {
+        java.util.List<String> out = new java.util.ArrayList<>();
+        String parent = host.startsWith("www.") ? host.substring(4) : host;
+        if (parent.equals("accounts.google.com")) parent = "google.com";
+        if (parent.equals("music.youtube.com")) parent = "youtube.com";
+        for (String part : header.split(";")) {
+            int eq = part.indexOf('=');
+            String name = (eq < 0 ? part : part.substring(0, eq)).trim();
+            if (name.isEmpty()) continue;
+            String gone = name + "=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/";
+            out.add(gone + "; Secure");
+            // A __Host- cookie can only be on the host itself.
+            if (!name.startsWith("__Host-")) out.add(gone + "; Domain=." + parent + "; Secure");
+            if (!name.startsWith("__Host-") && !name.startsWith("__Secure-")) {
+                out.add(gone);
+                out.add(gone + "; Domain=." + parent);
+            }
+        }
+        return out;
+    }
+
+    /** The link without its secrets: where it goes, and the names of what it carries. */
+    static String shape(String link) {
+        try {
+            Uri uri = Uri.parse(link);
+            return uri.getScheme()
+                    + "://"
+                    + uri.getHost()
+                    + uri.getPath()
+                    + " "
+                    + new java.util.TreeSet<>(uri.getQueryParameterNames());
+        } catch (RuntimeException e) {
+            return "(unreadable)";
         }
     }
 

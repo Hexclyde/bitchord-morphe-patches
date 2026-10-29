@@ -12,7 +12,7 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function2;
 
-/** The Playback extras entry at the end of BitChord's Equalizer page. */
+/** The Tweaks & patches entry in BitChord's Settings. */
 public final class ExtrasUi {
     private static final Function0<Unit> OPEN =
             () -> {
@@ -23,8 +23,8 @@ public final class ExtrasUi {
             (composer, flags) -> {
                 SettingsSheetKt.SettingsRow(
                         null,
-                        Strings.t("Playback extras"),
-                        Strings.t("Sound settings from the patches you added"),
+                        Strings.t("Tweaks & patches"),
+                        Strings.t("Settings of the patches you added"),
                         null,
                         null,
                         null,
@@ -44,10 +44,10 @@ public final class ExtrasUi {
 
     private ExtrasUi() {}
 
-    public static void soundSection(ComposerImpl composer) {
+    public static void tweaksSection(ComposerImpl composer) {
         hostGroup(
-                Strings.t("Playback extras"),
-                Strings.t("Added by the Playback extras patches."),
+                Strings.t("Tweaks & patches"),
+                Strings.t("Added to BitChord by patches."),
                 26f,
                 GROUP_CONTENT,
                 composer,
@@ -68,6 +68,7 @@ public final class ExtrasUi {
     /** The app, kept from BitChord's start for opening the page. */
     public static void start(Context app) {
         context = app.getApplicationContext();
+        Strings.init(context);
         SoundExtras.init(app);
     }
 

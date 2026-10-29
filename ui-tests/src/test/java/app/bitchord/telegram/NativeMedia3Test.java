@@ -86,13 +86,42 @@ public class NativeMedia3Test {
         url = bridge.url() + "/audio/10_20";
     }
 
+    // Where GetFile last said the file was, and how many more times it says so after a move.
+    String stalePath;
+    int staleAnswers;
+
     TdApi.File nativeFile() {
         TdApi.File f = new TdApi.File();
         f.id = 7;
         f.size = total;
         f.local = new TdApi.LocalFile();
         f.local.path = file.getAbsolutePath();
+        if (staleAnswers > 0) {
+            staleAnswers--;
+            f.local.path = stalePath;
+        }
         return f;
+    }
+
+    @Test
+    public void aFileMovedWhileReadIsFoundAgain() throws Exception {
+        DataSource source = TelegramDataSource.wrap(spy());
+        assertEquals(100_000, source.open(spec(url, 0, 100_000)));
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] b = new byte[4093];
+        while (out.size() < 70_000) out.write(b, 0, source.read(b, 0, b.length));
+        // TDLib finishes the download and moves the file out of its temp folder; the next
+        // GetFile still names the old place twice.
+        File moved = new File(file.getParentFile(), file.getName() + ".done");
+        stalePath = file.getAbsolutePath();
+        Files.move(file.toPath(), moved.toPath());
+        file = moved;
+        staleAnswers = 2;
+        int n;
+        while ((n = source.read(b, 0, b.length)) != -1) out.write(b, 0, n);
+        source.close();
+        content(out.toByteArray(), 0, 100_000);
+        assertEquals(0, staleAnswers);
     }
 
     @After

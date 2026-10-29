@@ -1,10 +1,10 @@
 {
   "NOTE": "Generated from the verified MPP by tools/prepare_mobile_source.py; do not hand-edit.",
-  "version": "1.1.0-beta.2",
+  "version": "1.1.0-beta.3",
   "patches": [
     {
       "name": "Battery saver",
-      "description": "Lets the phone's audio chip decode songs, so long listens use less battery. BitChord's effects don't run on songs played this way. Inspired by Auris, Prism and Stash. Settings are at the end of the Equalizer page.",
+      "description": "Lets the phone's audio chip decode songs, so long listens use less battery. BitChord's effects don't run on songs played this way. Settings are in Settings, Tweaks & patches.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -68,7 +68,7 @@
     },
     {
       "name": "Lossless addons over Bluetooth",
-      "description": "Keeps addons marked lossless in use over Bluetooth, where BitChord normally skips them. Settings are at the end of the Equalizer page.",
+      "description": "Keeps addons marked lossless in use over Bluetooth, where BitChord normally skips them. Lossless-first, as in Auris by OreoMuncher45. Settings are in Settings, Tweaks & patches.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -95,7 +95,7 @@
     },
     {
       "name": "Loudness level",
-      "description": "Sets how loud loudness normalisation plays songs, from -23 to -8 LUFS instead of -14. Inspired by Auris, Prism and Stash. Settings are at the end of the Equalizer page.",
+      "description": "Sets how loud loudness normalisation plays songs, from -23 to -8 LUFS instead of -14. From Prism by Yigder. Settings are in Settings, Tweaks & patches.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -122,7 +122,7 @@
     },
     {
       "name": "Pitch control",
-      "description": "Moves the key up or down by up to 12 semitones without changing the speed. Inspired by Auris, Prism and Stash. Settings are at the end of the Equalizer page.",
+      "description": "Moves the key up or down by up to 12 semitones without changing the speed. From Prism by Yigder. Settings are in Settings, Tweaks & patches.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -176,7 +176,7 @@
     },
     {
       "name": "Sing",
-      "description": "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord. Settings are at the end of the Equalizer page.",
+      "description": "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord. Settings are in Settings, Tweaks & patches.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -203,7 +203,7 @@
     },
     {
       "name": "Sleep timer fade-out",
-      "description": "Fades the song out over 10 seconds before the sleep timer pauses it. Settings are at the end of the Equalizer page.",
+      "description": "Fades the song out over 10 seconds before the sleep timer pauses it. From Prism by Yigder. Settings are in Settings, Tweaks & patches.",
       "default": false,
       "category": null,
       "compatiblePackages": [

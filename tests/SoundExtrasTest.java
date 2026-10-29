@@ -214,6 +214,15 @@ public final class SoundExtrasTest {
         check(SoundExtras.semitones(-1).equals("−1 semitone"), SoundExtras.semitones(-1));
         check(SoundExtras.lufs(-14).equals("−14 LUFS (BitChord’s level)"), SoundExtras.lufs(-14));
         check(SoundExtras.lufs(-9).equals("−9 LUFS"), SoundExtras.lufs(-9));
+        // The patch's pages follow BitChord's own language choice, saved by AndroidX.
+        check(
+                Strings.recorded(
+                                "<?xml version='1.0' ?><locales application_locales=\"fr-CA,en\"/>")
+                        .getLanguage()
+                        .equals("fr"),
+                "the first language picked in BitChord");
+        check(Strings.recorded("<locales application_locales=\"\"/>") == null, "none picked");
+        check(Strings.recorded("not that file") == null, "something else");
         System.out.println("PASS: " + checks + " playback extras checks.");
     }
 }
