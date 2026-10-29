@@ -79,12 +79,6 @@ Channel View supports selected, accessible, unprotected channels. It does not op
 
 Telegram may return no sponsored messages. If a sponsored card reports a loading or media error, try its retry action. See [Known limitations](KNOWN_LIMITATIONS.md) for unsupported link and media cases.
 
-## There are two icons for the patched app
-
-0.2.0 added a separate "Unofficial Telegram setup" icon. Update to 0.2.1 or later: patch the original BitChord APK again and install it over your existing app with the same Morphe signing key. Telegram setup is under **Settings → Account & integrations → Unofficial Telegram**.
-
-If an old shortcut stays on your home screen after updating, just remove the shortcut. Don't uninstall the app, or you'll lose your settings and Telegram session.
-
 ## Storage is too high
 
 Stop playback before clearing **Storage → Clear Telegram audio cache** on the Telegram page. Check BitChord's song cache and downloads separately. The cache target can be exceeded by active files, and signing out does not erase saved copies.
