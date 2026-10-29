@@ -35,7 +35,7 @@ import java.util.concurrent.Executors;
  * Heard#catchUp}). Its player is told its position with the cut added back, so its clock stays on
  * the song.
  */
-final class VersionAlign {
+public final class VersionAlign {
     private VersionAlign() {}
 
     /** Loudness every 5 ms; the waveform at 8 kHz. */

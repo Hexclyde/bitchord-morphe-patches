@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.20
+
+- **Fixed a crash when a song starts playing** (1.0.18 and 1.0.19). The patch's audio sink hook called code that Android doesn't let BitChord's player reach, so playback stopped with an error. The release checks now catch this.
+
 ## 1.0.19
 
 - **The switch to Telegram is now lined up by the waveform:** after the loudness curves find the offset to a few milliseconds, the two waveforms below 3 kHz are compared within that, which finds it to a fraction of a millisecond, even when the stream and the file have different sample rates.

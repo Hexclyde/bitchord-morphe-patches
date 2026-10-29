@@ -263,6 +263,8 @@ public class VerifyApk {
         Set<String> downmixHooks = new TreeSet<>(), smoothHooks = new TreeSet<>();
         Set<String> alignHooks = new TreeSet<>();
         int[] settleWaits = new int[2]; // BitChord's 300 ms wait before the crossfade; ours
+        // Extension methods BitChord's own classes call that ART wouldn't let them reach.
+        Set<String> unreachable = new TreeSet<>(), reached = new TreeSet<>();
         boolean smoothEntry = false;
         int legendTexts = 0, legendCalls = 0, searchHooks = 0, legendLinks = 0, matchHooks = 0;
         boolean downmixTarget = false;
@@ -460,6 +462,28 @@ public class VerifyApk {
                             if (wait == 2600) settleWaits[1]++;
                         }
                         if (instruction instanceof ReferenceInstruction reference) {
+                            if (reference.getReference() instanceof MethodReference target
+                                    && target.getDefiningClass()
+                                            .startsWith("Lapp/bitchord/telegram/")
+                                    && !cls.getType().startsWith("Lapp/bitchord/telegram/")) {
+                                String name = target.getDefiningClass() + "->" + target.getName();
+                                reached.add(name);
+                                ClassDef owner = definitions.get(target.getDefiningClass());
+                                boolean open = owner != null && (owner.getAccessFlags() & 0x1) != 0;
+                                if (open) {
+                                    open = false;
+                                    for (Method m : owner.getMethods())
+                                        if (m.getName().equals(target.getName())
+                                                && m.getParameterTypes()
+                                                        .toString()
+                                                        .equals(
+                                                                target.getParameterTypes()
+                                                                        .toString())
+                                                && m.getReturnType().equals(target.getReturnType()))
+                                            open = (m.getAccessFlags() & 0x1) != 0;
+                                }
+                                if (!open) unreachable.add(cls.getType() + " calls " + name);
+                            }
                             if (reference.getReference() instanceof MethodReference target) {
                                 if (cls.getType().startsWith("Lapp/bitchord/telegram/")
                                         && target.getDefiningClass()
@@ -797,7 +821,7 @@ public class VerifyApk {
                                     check(
                                             !text.getString().contains("BitChord native test"),
                                             "Telegram application version is unbranded");
-                                    if (text.getString().equals("1.0.19")) version = true;
+                                    if (text.getString().equals("1.0.20")) version = true;
                                 }
                                 if (cls.getType()
                                         .equals("Lapp/bitchord/telegram/TelegramActivity;")) {
@@ -942,6 +966,10 @@ public class VerifyApk {
                                                     "Lcom/music/bitchord/playback/PlaybackService$smoothSwapCurrentTrackVersion$1;>settled",
                                                     "Lcom/music/bitchord/playback/PlaybackService$swapIn$6;>seekTo"))),
                     "Quality upgrades go through the two-player swap: " + smoothHooks);
+            check(
+                    unreachable.isEmpty() && reached.size() > 10,
+                    "BitChord's classes call only public extension classes and methods: "
+                            + unreachable);
             check(
                     settleWaits[0] == 0 && settleWaits[1] == 1,
                     "The swap waits for the new copy to play in step before the crossfade: "
