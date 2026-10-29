@@ -22,6 +22,17 @@ public final class MediaPolicy {
                 && !(chat.type instanceof TdApi.ChatTypeSecret);
     }
 
+    /**
+     * Whether a chat can be a community channel: a channel, a group or a bot, not a chat with a
+     * person. {@code bot} says whether a one-to-one chat's other side is a bot.
+     */
+    public static boolean communityAllowed(TdApi.Chat chat, boolean bot) {
+        if (!chatAllowed(chat)) return false;
+        if (chat.type instanceof TdApi.ChatTypePrivate) return bot;
+        return chat.type instanceof TdApi.ChatTypeSupergroup
+                || chat.type instanceof TdApi.ChatTypeBasicGroup;
+    }
+
     public static boolean wholeView(
             boolean foreground,
             boolean focused,

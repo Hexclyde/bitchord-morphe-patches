@@ -710,7 +710,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.14"));
+                            "1.0.15"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -1216,14 +1216,24 @@ public final class TelegramBridge {
     }
 
     /**
-     * Chats that can be imported from: readable, not protected, and not a private channel of your
-     * own, which is where copies go rather than where they come from.
+     * Chats that can be imported from: channels, groups and bots that aren't protected, other than
+     * a private channel of your own, which is where copies go rather than where they come from.
+     * Chats with a person aren't offered.
      */
     public List<TdApi.Chat> communityChoices() throws Exception {
         List<TdApi.Chat> chats = new ArrayList<>();
         for (TdApi.Chat chat : chats())
-            if (chat.id != mainChannel.main() && ownChannel(chat) != Boolean.FALSE) chats.add(chat);
+            if (chat.id != mainChannel.main()
+                    && MediaPolicy.communityAllowed(chat, isBot(chat))
+                    && ownChannel(chat) != Boolean.FALSE) chats.add(chat);
         return chats;
+    }
+
+    /** Whether a chat is one with a bot. */
+    private boolean isBot(TdApi.Chat chat) throws Exception {
+        if (!(chat.type instanceof TdApi.ChatTypePrivate)) return false;
+        TdApi.User user = call(new TdApi.GetUser(((TdApi.ChatTypePrivate) chat.type).userId));
+        return user.type instanceof TdApi.UserTypeBot;
     }
 
     public void setMainChannel(TdApi.Chat chat) throws Exception {
@@ -1730,11 +1740,7 @@ public final class TelegramBridge {
     public boolean hasSponsoredMessages(TdApi.Chat chat) throws Exception {
         if (chat.type instanceof TdApi.ChatTypeSupergroup)
             return ((TdApi.ChatTypeSupergroup) chat.type).isChannel;
-        if (chat.type instanceof TdApi.ChatTypePrivate) {
-            TdApi.User user = call(new TdApi.GetUser(((TdApi.ChatTypePrivate) chat.type).userId));
-            return user.type instanceof TdApi.UserTypeBot;
-        }
-        return false;
+        return isBot(chat);
     }
 
     public void openChannel(long chat) throws Exception {

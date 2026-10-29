@@ -233,6 +233,16 @@ public final class PolicyTest {
         TdApi.Chat chat = new TdApi.Chat();
         chat.type = new TdApi.ChatTypeSupergroup(1, true);
         check(MediaPolicy.chatAllowed(chat), "ordinary channel allowed");
+        check(MediaPolicy.communityAllowed(chat, false), "channel can be a community channel");
+        chat.type = new TdApi.ChatTypeSupergroup(1, false);
+        check(MediaPolicy.communityAllowed(chat, false), "group can be a community channel");
+        chat.type = new TdApi.ChatTypeBasicGroup(1);
+        check(MediaPolicy.communityAllowed(chat, false), "basic group can be a community channel");
+        chat.type = new TdApi.ChatTypePrivate(1);
+        check(MediaPolicy.chatAllowed(chat), "chat with a person allowed as a music chat");
+        check(!MediaPolicy.communityAllowed(chat, false), "chat with a person isn't a community channel");
+        check(MediaPolicy.communityAllowed(chat, true), "bot can be a community channel");
+        chat.type = new TdApi.ChatTypeSupergroup(1, true);
         chat.hasProtectedContent = true;
         check(!MediaPolicy.chatAllowed(chat), "protected channel denied");
         chat.hasProtectedContent = false;

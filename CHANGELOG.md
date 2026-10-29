@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.15
+
+- **Community channels** lists only channels, groups and bots. Chats with a person no longer show up there. If you picked one before, open **Community channels** and press **Save** to drop it.
+
 ## 1.0.14
 
 - **Basic and Advanced tabs** on the Telegram page. **Basic** has your API details, your account, your music chats, the saved index and track names; **Advanced** has the main channel, track details, playback, storage, and backup and sharing.
