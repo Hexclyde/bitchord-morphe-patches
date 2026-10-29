@@ -65,7 +65,7 @@ public final class InternalAddon {
             return new JSONObject()
                     .put("id", "bitchord.telegram.native")
                     .put("name", "Unofficial Telegram")
-                    .put("version", "1.0.17")
+                    .put("version", "1.0.18")
                     .put("description", "Private on-device Telegram audio")
                     .put("allowDownloads", true)
                     .put("checkValidLossless", false)
@@ -148,7 +148,9 @@ public final class InternalAddon {
             if (!quality.isEmpty()) {
                 stream.put("audioQuality", quality);
                 int kbps = TrackDetails.kbps(row.optLong("size"), row.optInt("duration"));
-                if (kbps > 0) stream.put("bitrate", kbps);
+                // In bits a second: BitChord takes a value over 3,000 as that and divides it by
+                // 1,000, so a hi-res FLAC's 5,000 kbps sent as kbps showed as "5 kbps".
+                if (kbps > 0) stream.put("bitrate", kbps * 1000L);
             }
             if (header != null && header.optInt("bits") > 0)
                 stream.put(

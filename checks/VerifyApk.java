@@ -261,6 +261,7 @@ public class VerifyApk {
         Set<String> uiDefinitions = new HashSet<>(), uiReferences = new HashSet<>();
         int accountHooks = 0, sourceHooks = 0, sourceEditorHooks = 0;
         Set<String> downmixHooks = new TreeSet<>(), smoothHooks = new TreeSet<>();
+        Set<String> alignHooks = new TreeSet<>();
         boolean smoothEntry = false;
         int legendTexts = 0, legendCalls = 0, searchHooks = 0, legendLinks = 0, matchHooks = 0;
         boolean downmixTarget = false;
@@ -580,6 +581,15 @@ public class VerifyApk {
                                         && !cls.getType().startsWith("Lapp/bitchord/telegram/"))
                                     smoothHooks.add(cls.getType() + ">" + target.getName());
                                 if (target.getDefiningClass()
+                                                .equals("Lapp/bitchord/telegram/VersionAlign;")
+                                        && !cls.getType().startsWith("Lapp/bitchord/telegram/"))
+                                    alignHooks.add(
+                                            cls.getType()
+                                                    + ">"
+                                                    + method.getName()
+                                                    + ">"
+                                                    + target.getName());
+                                if (target.getDefiningClass()
                                                 .equals("Lapp/bitchord/telegram/Downmix;")
                                         && !cls.getType().startsWith("Lapp/bitchord/telegram/")) {
                                     check(
@@ -777,7 +787,7 @@ public class VerifyApk {
                                     check(
                                             !text.getString().contains("BitChord native test"),
                                             "Telegram application version is unbranded");
-                                    if (text.getString().equals("1.0.17")) version = true;
+                                    if (text.getString().equals("1.0.18")) version = true;
                                 }
                                 if (cls.getType()
                                         .equals("Lapp/bitchord/telegram/TelegramActivity;")) {
@@ -916,10 +926,17 @@ public class VerifyApk {
                             && smoothHooks.equals(
                                     new TreeSet<>(
                                             List.of(
+                                                    "Lcom/music/bitchord/playback/PlaybackService;>alignedOffset",
                                                     "Lcom/music/bitchord/playback/PlaybackService$swapIn$6;>prepare",
                                                     "Lcom/music/bitchord/playback/PlaybackService$swapIn$6;>replace",
                                                     "Lcom/music/bitchord/playback/PlaybackService$swapIn$6;>seekTo"))),
                     "Quality upgrades go through the two-player swap: " + smoothHooks);
+            check(
+                    alignHooks.equals(
+                            new TreeSet<>(
+                                    List.of(
+                                            "Lcom/music/bitchord/playback/audio/PrecisionAudioSink;>getCurrentPositionUs>position"))),
+                    "Upgrades are lined up from the audio sink's position: " + alignHooks);
             check(
                     downmixTarget
                             && downmixHooks.equals(

@@ -101,6 +101,8 @@ Turning the legend off also stops the extra search.
 
 Not with **Smooth quality switch** on (under **Playback**). BitChord sometimes starts a song from YouTube and finds a better copy, such as your Telegram FLAC, a few seconds later. The patch has BitChord load that copy on its standby player while the current one keeps playing, then crossfades between them at the same point. If the standby player isn't free, for example during an Automix transition, the switch happens BitChord's usual way, with a short pause. The crossfade mixes decoded audio, so that half second isn't bit-perfect.
 
+Two uploads of a song rarely start at exactly the same instant: one may have a few hundred milliseconds more silence at the start. So before switching, the patch compares the last seven seconds you heard with the same part of the Telegram file and finds how far apart they are, to within a few milliseconds, and the Telegram copy starts that much earlier or later. Nothing repeats and nothing is skipped. This takes a second or two, during which the stream keeps playing. When the two don't clearly match, the switch happens without a shift, as before.
+
 ## Why don't I see album covers?
 
 Telegram only has a cover for files that were uploaded with one, or that it recognises. Covers are downloaded the first time a file shows up in a search, and BitChord keeps search results for a few minutes, so a new cover can take a later search to appear. Turn **Album covers** off under **Track details** to stop downloading them.

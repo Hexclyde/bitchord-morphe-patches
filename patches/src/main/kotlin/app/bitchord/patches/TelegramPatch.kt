@@ -706,7 +706,64 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
         "invoke-static {v${owner.registerB}, v${r.registerC}, v${r.registerD}, v${r.registerE}}, $SMOOTH->replace(Ljava/lang/Object;${PLAYER}I$MEDIA_ITEM)V",
     )
     println("Routed quality upgrades through BitChord's two-player version swap")
+
+    // 4. The offset between the two copies: BitChord takes it as zero for the same song, so the
+    // one measured for this upgrade is handed over first.
+    val alignment =
+        service.methods.singleOrNull {
+            it.name == "access\$prepareVersionAlignment" &&
+                it.parameterTypes.map(CharSequence::toString) ==
+                    listOf(
+                        SERVICE,
+                        "Lcom/music/bitchord/data/model/Song;",
+                        "Lcom/music/bitchord/data/model/Song;",
+                        "J",
+                        "Lkotlin/coroutines/jvm/internal/ContinuationImpl;",
+                    )
+        } ?: throw PatchException("Version alignment not found")
+    check(alignment.implementation!!.registerCount - 6 >= 1) { "Version alignment has no locals" }
+    alignment.addInstructionsWithLabels(
+        0,
+        """
+        invoke-static {}, $SMOOTH->alignedOffset()Ljava/lang/Long;
+        move-result-object v0
+        if-eqz v0, :measure
+        return-object v0
+        :measure
+        nop
+    """,
+    )
+
+    // 5. The sink's playing position, so the audio heard can be put on the song's timeline.
+    val sink = mutableClassDefBy("Lcom/music/bitchord/playback/audio/PrecisionAudioSink;")
+    val position =
+        sink.methods.single {
+            it.name == "getCurrentPositionUs" &&
+                it.parameterTypes.map(CharSequence::toString) == listOf("Z") &&
+                it.returnType == "J"
+        }
+    val read = position.implementation!!.instructions.toList()
+    val asked =
+        read.indexOfFirst {
+            it.methodRef()?.let { m ->
+                m.definingClass == "Landroidx/media3/exoplayer/audio/DefaultAudioSink;" &&
+                    m.name == "getCurrentPositionUs"
+            } == true
+        }
+    check(asked >= 0 && read[asked + 1].opcode == Opcode.MOVE_RESULT_WIDE) {
+        "Audio sink position read changed"
+    }
+    val result = (read[asked + 1] as OneRegisterInstruction).registerA
+    val self = position.implementation!!.registerCount - 2
+    check(result < 15 && self < 16) { "Audio sink position registers out of range" }
+    position.addInstruction(
+        asked + 2,
+        "invoke-static {v$self, v$result, v${result + 1}}, $ALIGN->position(Ljava/lang/Object;J)V",
+    )
+    println("Lined up quality upgrades with the copy they replace")
 }
+
+private const val ALIGN = "Lapp/bitchord/telegram/VersionAlign;"
 
 private const val SONG = "Lcom/music/bitchord/data/model/Song;"
 private const val TEXT_KT = "Landroidx/compose/material3/TextKt;"

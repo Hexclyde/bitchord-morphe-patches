@@ -15,4 +15,10 @@ public interface Player {
     void seekTo(int mediaItemIndex, long positionMs);
 
     void prepare();
+
+    int getCurrentMediaItemIndex();
+
+    android.os.Looper getApplicationLooper();
+
+    PlaybackParameters getPlaybackParameters();
 }

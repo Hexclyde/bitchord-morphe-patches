@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.18
+
+- **No more repeat when a song switches to Telegram:** BitChord starts the new copy at the same position as the YouTube stream, but two uploads rarely start at the same instant, so the switch repeated or skipped a little. The patch now compares the last seven seconds heard with the same part of the Telegram file, finds the offset to within a few milliseconds, and starts the Telegram copy that much earlier or later.
+- **Fixed hi-res files showing "5 kbps":** BitChord reads a bitrate above 3,000 as bits a second, so a 24-bit 192 kHz FLAC's 5,000 kbps showed as 5 kbps. The bitrate is now sent in bits a second.
+
 ## 1.0.17
 
 - **Back up and sign out:** **Session → Sign out** now offers to back up first. The backup holds your music chats, settings, corrected names, main channel setup and the saved index, with its fake lossless checks and names found by sound. You're signed out only once it's saved. After you sign in again, a **Welcome back** card restores it all in one tap, without indexing your chats again. **Start fresh** forgets it instead, and the file stays where you saved it.

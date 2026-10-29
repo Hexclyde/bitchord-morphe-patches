@@ -25,11 +25,18 @@ final class SoundCheck {
     static final class Pcm {
         final float[] samples;
         final int length, rate;
+        // Where in the file the first sample is.
+        final long startUs;
 
         Pcm(float[] samples, int length, int rate) {
+            this(samples, length, rate, 0);
+        }
+
+        Pcm(float[] samples, int length, int rate, long startUs) {
             this.samples = samples;
             this.length = length;
             this.rate = rate;
+            this.startUs = startUs;
         }
     }
 
@@ -160,6 +167,11 @@ final class SoundCheck {
         if (rate > 0 && channels > 0 && Downmix.bytesPerSample(encoding) > 0)
             formats.put(sink, new int[] {rate, channels, encoding});
         else formats.remove(sink);
+    }
+
+    /** The PCM format a sink was set up for: {rate, channels, encoding}, or null. */
+    static int[] formatOf(Object sink) {
+        return formats.get(sink);
     }
 
     /** Every buffer the player hands its audio sink. Cheap unless a capture is running. */

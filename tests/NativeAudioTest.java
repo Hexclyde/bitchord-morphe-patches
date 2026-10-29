@@ -56,7 +56,7 @@ public final class NativeAudioTest {
             check(
                     new JSONObject(InternalAddon.body(bridge, bridge.url() + "/manifest.json"))
                             .getString("version")
-                            .equals("1.0.17"),
+                            .equals("1.0.18"),
                     "Native manifest");
             check(
                     new JSONObject(InternalAddon.body(bridge, bridge.url() + "/search?q=Test"))
@@ -106,8 +106,8 @@ public final class NativeAudioTest {
                                     bridge, bridge.url() + "/stream/10_20?quality=LOSSLESS"));
             check(
                     streamed.getString("audioQuality").equals("LOSSLESS")
-                            && streamed.getInt("bitrate") == 139,
-                    "Stream reports quality and bitrate");
+                            && streamed.getInt("bitrate") == 139_000,
+                    "Stream reports quality and bitrate, in bits a second as BitChord reads it");
             check(
                     new JSONObject(
                                             InternalAddon.body(

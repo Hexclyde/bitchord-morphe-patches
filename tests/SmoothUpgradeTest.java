@@ -28,7 +28,9 @@ public final class SmoothUpgradeTest {
                                         case "equals":
                                             return proxy == arguments[0];
                                         default:
-                                            calls.add(method.getName());
+                                            // Reading the player changes nothing.
+                                            if (!method.getName().startsWith("get"))
+                                                calls.add(method.getName());
                                             return null;
                                     }
                                 });

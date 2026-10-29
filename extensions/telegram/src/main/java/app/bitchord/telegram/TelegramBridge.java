@@ -294,6 +294,9 @@ public final class TelegramBridge {
                         },
                         System::currentTimeMillis);
         FileChecks.active = checks;
+        VersionAlign.decoder =
+                (id, fromMs, seconds) ->
+                        AudioDecode.decode(this, id, fromMs, seconds, 5, VersionAlign.BUDGET_MS);
         soundCheck =
                 new SoundCheck(
                         new File(home, "sound-checks.json"),
@@ -777,7 +780,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.17"));
+                            "1.0.18"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {

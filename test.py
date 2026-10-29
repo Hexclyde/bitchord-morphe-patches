@@ -62,6 +62,7 @@ SOURCES = [
     "Chromaprint",
     "AcoustId",
     "FileChecks",
+    "VersionAlign",
     "Strings",
     "Translations",
     "InternalAddon",
@@ -106,6 +107,7 @@ TESTS = [
     "LosslessCheckTest",
     "ChromaprintTest",
     "FileChecksTest",
+    "VersionAlignTest",
 ]
 
 subprocess.run(
