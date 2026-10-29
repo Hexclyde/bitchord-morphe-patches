@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.21
+
+- **Sign in with MicroG:** a new optional patch. With [MicroG RE](https://github.com/MorpheApp/MicroG-RE) installed, signing in to YouTube Music asks whether to use an account that's already in MicroG, instead of typing it into Google's sign-in page. You pick the account, allow BitChord once in MicroG RE, and BitChord carries on to its usual channel choice. Without MicroG RE nothing changes. If MicroG can't sign you in, Google's page opens.
+- **Fixed zips not being opened after signing in again:** Telegram numbers files afresh after you sign in again or restore a backup, and every zip still waiting to be opened failed with "Telegram 404" and was given up on. The patch now asks Telegram for the post again and uses the file's new number. Zips that were given up on this way are opened again once, and the background fake lossless check recovers the same way.
+- **Fixed "YouTube" shown for a FLAC under Stats for nerds:** a Telegram copy that BitChord plays again from its song cache keeps the song's YouTube source. YouTube never sends lossless or Dolby audio, so it now shows as **Unofficial Telegram (saved copy)**.
+
 ## 1.0.20
 
 - **Fixed a crash when a song starts playing** (1.0.18 and 1.0.19). The patch's audio sink hook called code that Android doesn't let BitChord's player reach, so playback stopped with an error. The release checks now catch this.

@@ -33,6 +33,11 @@ final class FileChecks {
         /** Part of a Telegram file, downloading only that part. */
         byte[] range(int file, long offset, int length) throws Exception;
 
+        /** See {@link TelegramIndex.Pages#currentFile}. */
+        default int currentFile(long chat, long message, String unique) throws Exception {
+            return 0;
+        }
+
         /** The start of a file, decoded to mono. */
         Audio decode(String id, int seconds) throws Exception;
 
@@ -279,17 +284,20 @@ final class FileChecks {
 
     private void check(JSONObject row, boolean background) {
         String key = LosslessCheck.key(row);
-        int file = row.optInt("file");
         long[] read = {0};
         try {
-            JSONObject verdict =
-                    LosslessCheck.check(
-                            row,
-                            (offset, length) -> {
-                                byte[] bytes = host.range(file, offset, length);
-                                read[0] += bytes.length;
-                                return bytes;
-                            });
+            JSONObject verdict;
+            try {
+                verdict = checkFile(row, read);
+            } catch (Exception e) {
+                // After signing in again Telegram knows the file by another number: ask the post.
+                if (TelegramIndex.telegramCode(e) != 404) throw e;
+                String unique = row.optString("unique").split("[/#]", 2)[0];
+                int file = host.currentFile(row.optLong("chat"), row.optLong("message"), unique);
+                if (file == 0 || file == row.optInt("file")) throw e;
+                host.index().fileFound(row, file);
+                verdict = checkFile(row, read);
+            }
             if (verdict == null)
                 verdict =
                         new JSONObject().put("v", LosslessCheck.VERSION).put("verdict", "unknown");
@@ -318,6 +326,17 @@ final class FileChecks {
         } finally {
             if (background) spend("bytes", read[0]);
         }
+    }
+
+    private JSONObject checkFile(JSONObject row, long[] read) throws Exception {
+        int file = row.optInt("file");
+        return LosslessCheck.check(
+                row,
+                (offset, length) -> {
+                    byte[] bytes = host.range(file, offset, length);
+                    read[0] += bytes.length;
+                    return bytes;
+                });
     }
 
     private void name(JSONObject row, boolean background) {

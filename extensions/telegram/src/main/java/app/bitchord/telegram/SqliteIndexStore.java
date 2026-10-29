@@ -37,6 +37,25 @@ final class SqliteIndexStore implements IndexStore {
         db.execSQL(
                 "CREATE TABLE IF NOT EXISTS found (kind TEXT NOT NULL, key TEXT NOT NULL, value"
                         + " TEXT NOT NULL, PRIMARY KEY (kind, key))");
+        retryLostZips();
+    }
+
+    /**
+     * Up to 1.0.20, a zip whose file Telegram no longer knew by its old number (after signing in
+     * again, or restoring a backup) was given up on. Once, every zip marked done that gave no songs
+     * is looked into again.
+     */
+    private void retryLostZips() {
+        int version;
+        try (Cursor c = db.rawQuery("PRAGMA user_version", null)) {
+            version = c.moveToFirst() ? c.getInt(0) : 0;
+        }
+        if (version >= 1) return;
+        db.execSQL(
+                "UPDATE zips SET done = 0 WHERE done = 1 AND NOT EXISTS (SELECT 1 FROM files WHERE"
+                        + " files.chat = zips.chat AND files.message = zips.message AND"
+                        + " files.entry > 0)");
+        db.execSQL("PRAGMA user_version = 1");
     }
 
     @Override

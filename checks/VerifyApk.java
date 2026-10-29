@@ -265,6 +265,7 @@ public class VerifyApk {
         int[] settleWaits = new int[2]; // BitChord's 300 ms wait before the crossfade; ours
         // Extension methods BitChord's own classes call that ART wouldn't let them reach.
         Set<String> unreachable = new TreeSet<>(), reached = new TreeSet<>();
+        int microGHooks = 0, signInLoads = 0; // MicroG RE sign-in hook; Google's sign-in page loads
         boolean smoothEntry = false;
         int legendTexts = 0, legendCalls = 0, searchHooks = 0, legendLinks = 0, matchHooks = 0;
         boolean downmixTarget = false;
@@ -483,6 +484,23 @@ public class VerifyApk {
                                             open = (m.getAccessFlags() & 0x1) != 0;
                                 }
                                 if (!open) unreachable.add(cls.getType() + " calls " + name);
+                                if (name.equals("Lapp/bitchord/telegram/MicroGSignIn;->load"))
+                                    microGHooks++;
+                            }
+                            if (reference.getReference() instanceof StringReference text
+                                    && text.getString()
+                                            .startsWith(
+                                                    "https://accounts.google.com/ServiceLogin?ltmpl=music")) {
+                                for (int next = index + 1;
+                                        next < Math.min(index + 8, instructions.size());
+                                        next++) {
+                                    MethodReference following = call(instructions.get(next));
+                                    if (following != null
+                                            && following
+                                                    .getDefiningClass()
+                                                    .equals("Landroid/webkit/WebView;")
+                                            && following.getName().equals("loadUrl")) signInLoads++;
+                                }
                             }
                             if (reference.getReference() instanceof MethodReference target) {
                                 if (cls.getType().startsWith("Lapp/bitchord/telegram/")
@@ -821,7 +839,7 @@ public class VerifyApk {
                                     check(
                                             !text.getString().contains("BitChord native test"),
                                             "Telegram application version is unbranded");
-                                    if (text.getString().equals("1.0.20")) version = true;
+                                    if (text.getString().equals("1.0.21")) version = true;
                                 }
                                 if (cls.getType()
                                         .equals("Lapp/bitchord/telegram/TelegramActivity;")) {
@@ -909,6 +927,29 @@ public class VerifyApk {
                         .equals("android.permission.HIDE_OVERLAY_WINDOWS"))
                     overlayPermission = true;
             check(overlayPermission, "Android 12+ overlay suppression permission declared");
+            Map<String, String> metaData = new HashMap<>();
+            var metas = app.getElementsByTagName("meta-data");
+            for (int i = 0; i < metas.getLength(); i++)
+                metaData.put(
+                        ((Element) metas.item(i)).getAttributeNS(NS, "name"),
+                        ((Element) metas.item(i)).getAttributeNS(NS, "value"));
+            check(
+                    microGHooks == 1 && signInLoads == 0,
+                    "The YouTube Music sign-in page offers MicroG RE first: "
+                            + microGHooks
+                            + " hooks, "
+                            + signInLoads
+                            + " direct loads");
+            check(
+                    "com.google.android.apps.youtube.music"
+                                    .equals(
+                                            metaData.get(
+                                                    "app.revanced.android.gms.SPOOFED_PACKAGE_NAME"))
+                            && "afb0fed5eeaebdd86f56a97742f4b6b33ef59875"
+                                    .equals(
+                                            metaData.get(
+                                                    "app.revanced.android.gms.SPOOFED_PACKAGE_SIGNATURE")),
+                    "MicroG RE is told to treat BitChord as YouTube Music");
             check(
                     statsFormatHooks == 1 && statsCaptureHooks == 1 && statsMeasureHooks == 1,
                     "Exactly one of each stats hook");

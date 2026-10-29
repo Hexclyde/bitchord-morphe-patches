@@ -63,6 +63,7 @@ SOURCES = [
     "AcoustId",
     "FileChecks",
     "VersionAlign",
+    "MicroGSignIn",
     "Strings",
     "Translations",
     "InternalAddon",
@@ -108,6 +109,7 @@ TESTS = [
     "ChromaprintTest",
     "FileChecksTest",
     "VersionAlignTest",
+    "MicroGSignInTest",
 ]
 
 subprocess.run(

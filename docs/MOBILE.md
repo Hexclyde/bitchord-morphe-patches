@@ -53,10 +53,11 @@ See [source download problems](TROUBLESHOOTING.md#the-source-shows-unnamed-or-me
 ## 3. Select the APK and patches
 
 1. In Morphe, open **Apps**, choose BitChord and select the original **1.8.1** APK from Downloads when asked. If you need to select a local APK manually, enable **Expert mode** in **Settings → Advanced → Expert settings**.
-2. Choose this project's source and keep both patches selected:
+2. Choose this project's source and keep these patches selected:
 
    - **Unofficial Telegram music**
    - **Install as Bitchord+**
+   - **Sign in with MicroG**, if you use MicroG RE. It's harmless without it: the option just doesn't show.
 
 3. Leave **Telegram application API ID** at **0** and **Telegram application API hash** empty. Enter your personal details in BitChord after installation.
 4. Open **Install as Bitchord+ → Installation name** to choose an app name. Leave it empty for **Bitchord+**. Names can contain up to 80 characters and must fit on one line. A name containing Telegram must include **Unofficial Telegram**.
@@ -79,7 +80,7 @@ Keep your Morphe signing key. Android needs the same key to install an update ov
 When a new patch version is available:
 
 1. Update this source in Morphe. For a Local source, download the new `.mpp`, tap **Update** on its card and select the file.
-2. Stop playback and patch the supported original BitChord APK again, using both patches and your existing signing key.
+2. Stop playback and patch the supported original BitChord APK again, using the same patches and your existing signing key.
 3. Install the result over Bitchord+.
 
 Installing an update with the same package and key keeps the app's existing data. Uninstalling removes its private settings and session. Read each release's notes for changes to the supported BitChord version or setup.

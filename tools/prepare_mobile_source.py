@@ -99,9 +99,10 @@ def validate_metadata(manifest, patches, source, provenance):
     ):
         raise ValueError("Source description or unsigned-bundle declaration differs")
     names = {patch["name"] for patch in patches["patches"]}
-    if len(patches["patches"]) != 2 or names != {
+    if len(patches["patches"]) != 3 or names != {
         "Unofficial Telegram music",
         "Install as Bitchord+",
+        "Sign in with MicroG",
     }:
         raise ValueError("Unexpected public patch list")
     for patch in patches["patches"]:
@@ -117,11 +118,14 @@ def validate_metadata(manifest, patches, source, provenance):
             or not app["targets"][0]["isExperimental"]
         ):
             raise ValueError("Review changed mobile compatibility before releasing")
-        expected_keys = (
-            {"telegramApplicationId", "telegramApplicationHash"}
-            if patch["name"] == "Unofficial Telegram music"
-            else {"installationName"}
-        )
+        expected_keys = {
+            "Unofficial Telegram music": {
+                "telegramApplicationId",
+                "telegramApplicationHash",
+            },
+            "Install as Bitchord+": {"installationName"},
+            "Sign in with MicroG": set(),
+        }[patch["name"]]
         if {option["key"] for option in patch["options"]} != expected_keys or len(
             patch["options"]
         ) != len(expected_keys):

@@ -1,6 +1,6 @@
 {
   "NOTE": "Generated from the verified MPP by tools/prepare_mobile_source.py; do not hand-edit.",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "patches": [
     {
       "name": "Install as Bitchord+",
@@ -38,6 +38,33 @@
           "values": null
         }
       ]
+    },
+    {
+      "name": "Sign in with MicroG",
+      "description": "Offers to sign in to YouTube Music with an account that's already in MicroG RE, instead of Google's sign-in page.",
+      "default": true,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.8.1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
     },
     {
       "name": "Unofficial Telegram music",

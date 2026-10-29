@@ -23,7 +23,7 @@ For a Local source, select the `.mpp` file, not the source-code ZIP or an APK.
 
 ## Patching or installation fails
 
-- Select the original BitChord **1.8.1** Android APK for your phone's architecture. Use both patches from this source.
+- Select the original BitChord **1.8.1** Android APK for your phone's architecture. Use **Unofficial Telegram music** and **Install as Bitchord+** from this source.
 - If Morphe reports an API option error, set the patch's API ID to **0** and API hash to **empty**. Enter your actual credentials after installation.
 - Check free space and Android's installer error. Updates need the same Morphe signing key as the installed app.
 - Open **Bitchord+**, or the name you chose, after installing. Your original BitChord has separate settings.
@@ -79,7 +79,7 @@ The key under **Track names → AcoustID key** isn't an application key AcoustID
 
 ## Search crashes, or playback or seeking stops
 
-Confirm you are using the newest source version, original BitChord **1.8.1** and both patches. Try a small file you are allowed to use that plays in the official Telegram app. Check your connection and whether the message still exists.
+Confirm you are using the newest source version, original BitChord **1.8.1**, **Unofficial Telegram music** and **Install as Bitchord+**. Try a small file you are allowed to use that plays in the official Telegram app. Check your connection and whether the message still exists.
 
 For background interruptions, check Android's battery and notification settings for Bitchord+. File extensions alone do not guarantee that your device can decode a file.
 

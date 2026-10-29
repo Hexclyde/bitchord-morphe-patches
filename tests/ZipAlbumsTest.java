@@ -28,7 +28,7 @@ public final class ZipAlbumsTest {
     }
 
     /** A chat with one audio post and two zips posted as files. */
-    static final class Chat implements TelegramIndex.Pages {
+    static class Chat implements TelegramIndex.Pages {
         final List<TdApi.Message> audio = new ArrayList<>(), documents = new ArrayList<>();
         final Map<Integer, byte[]> files = new HashMap<>();
         final AtomicLong read = new AtomicLong();
@@ -216,6 +216,38 @@ public final class ZipAlbumsTest {
                 channel.progress(both)
                         .startsWith("Copied 4 audio files in 3 posts · 1 duplicate skipped"),
                 "Only The Wall counts as skipped: " + channel.progress(both));
+        // Signed in again: Telegram knows the files by new numbers and answers 404 to the old
+        // ones. The post is asked for again and read by its new number; a deleted post is let go.
+        Chat again =
+                new Chat() {
+                    @Override
+                    public byte[] range(int file, long offset, int length) {
+                        if (!files.containsKey(file))
+                            throw new IllegalStateException("Telegram 404: Not Found");
+                        return super.range(file, offset, length);
+                    }
+
+                    @Override
+                    public int currentFile(long chat, long message, String unique) {
+                        return message == 20 && unique.equals("ZIP601") ? 701 : 0;
+                    }
+                };
+        again.documents.add(zipPost(-200, 20, 601, "The Wall [FLAC].zip", wall));
+        again.documents.add(zipPost(-200, 21, 602, "Gone.zip", wall));
+        again.files.put(701, wall);
+        TelegramIndex renumbered = new TelegramIndex(new IndexStore.Memory(), again, clock::get);
+        Set<Long> one = Collections.singleton(-200L);
+        for (int i = 0; i < 40 && renumbered.step(one); i++) {}
+        check(
+                renumbered.row(-200, 20, 1) != null
+                        && renumbered.row(-200, 20, 1).getInt("file") == 701,
+                "Read by the file's new number: " + renumbered.row(-200, 20, 1));
+        check(renumbered.row(-200, 21, 1) == null, "A deleted post is let go");
+        check(
+                !renumbered.status(one).contains("zips to open"),
+                "Nothing left waiting: " + renumbered.status(one));
+        check(TelegramIndex.telegramCode(new Exception("Telegram 404: Not Found")) == 404, "404");
+        check(TelegramIndex.telegramCode(new Exception("Read timed out")) == 0, "Not Telegram's");
         System.out.println(
                 "PASS: "
                         + checks

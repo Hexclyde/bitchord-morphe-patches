@@ -105,6 +105,14 @@ Two uploads of a song rarely start at exactly the same instant: one may have a f
 
 Starting the Telegram copy at that point still takes a moment, so it begins a little behind. While it's still silent, the patch compares what the two players are playing at that moment, and the Telegram copy leaves out exactly the audio it's behind by, to the sample, before the crossfade starts. Its player is told its position with that audio counted, so lyrics and the progress bar stay on the song. If it's more than 150 ms off, or ahead, it's moved again first. This adds up to about a second, at most 2.6 seconds, before the crossfade. If the two still can't be lined up, the crossfade goes ahead as it is.
 
+## Can I sign in to YouTube Music with MicroG instead of Google's page?
+
+Yes, with the **Sign in with MicroG** patch and [MicroG RE](https://github.com/MorpheApp/MicroG-RE) installed and signed in. When you sign in to YouTube Music in BitChord, it asks whether to use MicroG or Google's sign-in page. With MicroG, you pick an account that's already in MicroG RE (or add one), allow BitChord once on MicroG RE's consent screen, and you're signed in without typing your password. BitChord then asks which channel to use, as usual.
+
+MicroG RE gets a one-time link from Google that signs BitChord's sign-in page in to that account. The patch tells MicroG RE that BitChord is YouTube Music, the way patched YouTube Music apps do, because Google only gives those links to its own apps. Nothing else about how BitChord talks to YouTube Music changes, and no password or token is stored by the patch.
+
+If MicroG RE isn't installed, the question doesn't appear. If MicroG can't sign you in, Google's sign-in page opens instead, and the reason is in BitChord's log.
+
 ## Why don't I see album covers?
 
 Telegram only has a cover for files that were uploaded with one, or that it recognises. Covers are downloaded the first time a file shows up in a search, and BitChord keeps search results for a few minutes, so a new cover can take a later search to appear. Turn **Album covers** off under **Track details** to stop downloading them.

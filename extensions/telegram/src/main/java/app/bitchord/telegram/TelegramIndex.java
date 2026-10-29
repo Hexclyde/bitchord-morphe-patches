@@ -26,6 +26,15 @@ final class TelegramIndex {
 
         /** Bytes of a file, downloading only that part: for reading inside zips. */
         byte[] range(int file, long offset, int length) throws Exception;
+
+        /**
+         * The number this phone's Telegram gives a post's file now, or 0 when the post is gone or
+         * holds another file than {@code unique}. A file's number only lasts as long as Telegram's
+         * database on the phone: after signing in again it's a new one.
+         */
+        default int currentFile(long chat, long message, String unique) throws Exception {
+            return 0;
+        }
     }
 
     /** A line in BitChord's log every this many pages, with how long they took. */
@@ -227,19 +236,82 @@ final class TelegramIndex {
         JSONObject zip = store.nextZip(chats);
         if (zip == null) return false;
         long chat = zip.getLong("chat"), message = zip.getLong("message");
+        try {
+            List<JSONObject> songs;
+            try {
+                songs = look(zip);
+            } catch (Exception e) {
+                if (telegramCode(e) != 404) throw e;
+                // Telegram doesn't know the file by that number any more: ask for the post again.
+                int file = pages.currentFile(chat, message, zip.optString("unique"));
+                if (file == 0 || file == zip.getInt("file")) {
+                    HostLog.d(
+                            "Unofficial Telegram couldn't look into "
+                                    + zip.optString("fileName")
+                                    + ": it's no longer on Telegram");
+                    store.zipDone(chat, message);
+                    return true;
+                }
+                zip.put("file", file);
+                songs = look(zip);
+            }
+            if (songs == null) {
+                store.deferZip(chat, message);
+                return true;
+            }
+            store.put(chat, songs, state(chat).generation);
+            HostLog.d(
+                    "Unofficial Telegram found "
+                            + songs.size()
+                            + (songs.size() == 1 ? " song" : " songs")
+                            + " in "
+                            + zip.optString("fileName"));
+        } catch (LiveSearch.RateLimited e) {
+            throw e;
+        } catch (Exception e) {
+            HostLog.d(
+                    "Unofficial Telegram couldn't look into "
+                            + zip.optString("fileName")
+                            + ": "
+                            + e.getMessage());
+            if (telegramCode(e) > 0) {
+                // Telegram had a problem, not the zip: try again after the chat's next pass.
+                store.deferZip(chat, message);
+                return true;
+            }
+        }
+        store.zipDone(chat, message);
+        return true;
+    }
+
+    /** The code of a Telegram error ("Telegram 404: Not Found"), or 0 for any other failure. */
+    static int telegramCode(Throwable e) {
+        String text = e == null ? null : e.getMessage();
+        if (text == null || !text.startsWith("Telegram ")) return 0;
+        int end = text.indexOf(':');
+        try {
+            return end > 9 ? Integer.parseInt(text.substring(9, end)) : 0;
+        } catch (NumberFormatException ignored) {
+            return 0;
+        }
+    }
+
+    /**
+     * The songs in one waiting post, or null when it has to wait until its chat has been gone
+     * through.
+     */
+    private List<JSONObject> look(JSONObject zip) throws Exception {
+        long chat = zip.getLong("chat"), message = zip.getLong("message");
         int file = zip.getInt("file");
         ZipDirectory.Range range = (offset, length) -> pages.range(file, offset, length);
-        try {
+        {
             String kind = zip.optString("kind", "zip");
             List<JSONObject> songs;
             if (kind.equals("cue")) {
                 songs = cueFile(zip, range);
                 if (songs == null) {
                     // Its album isn't indexed yet: set aside until the chat has been gone through.
-                    if (!state(chat).built()) {
-                        store.deferZip(chat, message);
-                        return true;
-                    }
+                    if (!state(chat).built()) return null;
                     songs = new ArrayList<>();
                 }
             } else if (kind.equals("embedded")) {
@@ -256,24 +328,8 @@ final class TelegramIndex {
                                         0,
                                         CueAlbums.base(audio.optString("fileName")));
             } else songs = ZipAlbums.songs(zip, range);
-            store.put(chat, songs, state(chat).generation);
-            HostLog.d(
-                    "Unofficial Telegram found "
-                            + songs.size()
-                            + (songs.size() == 1 ? " song" : " songs")
-                            + " in "
-                            + zip.optString("fileName"));
-        } catch (LiveSearch.RateLimited e) {
-            throw e;
-        } catch (Exception e) {
-            HostLog.d(
-                    "Unofficial Telegram couldn't look into "
-                            + zip.optString("fileName")
-                            + ": "
-                            + e.getMessage());
+            return songs;
         }
-        store.zipDone(chat, message);
-        return true;
     }
 
     /**

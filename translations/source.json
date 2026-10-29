@@ -454,5 +454,12 @@
   "Start fresh",
   "The backup file stays where you saved it",
   "Forget",
-  "That backup can’t be opened any more. Pick it under Backup and sharing → Restore."
+  "That backup can’t be opened any more. Pick it under Backup and sharing → Restore.",
+  "Sign in to YouTube Music",
+  "MicroG RE is on this phone. Sign in with a Google account that’s already in MicroG, or use Google’s sign-in page.",
+  "Use MicroG",
+  "Google sign-in page",
+  "MicroG couldn’t sign in ({0}). Opening Google’s sign-in page instead.",
+  "Unofficial Telegram (saved copy)",
+  "Saved copy"
 ]

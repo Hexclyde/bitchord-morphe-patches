@@ -4,7 +4,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.0.20). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.0.21). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > I've only been able to test it on an **arm64-v8a** phone. The armeabi-v7a and x86_64 builds pass the same automated checks, but I haven't run them on a real device. If you're on one of those, please give it a try and [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems. Hearing that it works is useful too.
 
@@ -14,6 +14,7 @@
 | --- | --- |
 | **Unofficial Telegram music** | Search and play audio from your own Telegram channels and chats through TDLib, using your own account. Android 8 or newer. |
 | **Install as Bitchord+** | Installs next to your regular BitChord as **Bitchord+**, or under a name you choose. |
+| **Sign in with MicroG** | Signs in to YouTube Music with an account that’s already in [MicroG RE](https://github.com/MorpheApp/MicroG-RE), instead of Google’s sign-in page. Only shows when MicroG RE is installed. |
 
 More BitChord add-ons will be added to this repository over time.
 
@@ -63,7 +64,7 @@ Every extra (quality, fake lossless checks, covers, file names, naming by sound,
 ## Quick start
 
 1. [Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord). On the source card, enable **Pre-release patches** and **Experimental app versions**.
-2. Patch BitChord 1.8.1 with **Unofficial Telegram music** and **Install as Bitchord+**. Leave the API ID at `0` and the API hash empty.
+2. Patch BitChord 1.8.1 with **Unofficial Telegram music**, **Install as Bitchord+** and, if you like, **Sign in with MicroG**. Leave the API ID at `0` and the API hash empty.
 3. Install the patched app and open **Settings → Account & integrations → Unofficial Telegram**.
 4. Enter your API ID and hash, sign in, and pick your music chats.
 5. Go to **Search → Addons** to find and play your audio.

@@ -1669,3 +1669,92 @@ val nativeTelegramPatch =
             )
         }
     }
+
+/** YouTube Music's package, and the SHA-1 of the certificate it's signed with. */
+private const val YOUTUBE_MUSIC = "com.google.android.apps.youtube.music"
+private const val YOUTUBE_MUSIC_SIGNATURE = "afb0fed5eeaebdd86f56a97742f4b6b33ef59875"
+
+/** MicroG RE reads these to treat an app as the Google app it stands in for. */
+private const val MICROG_SPOOF = "app.revanced.android.gms.SPOOFED_PACKAGE_"
+
+private val microGResources = resourcePatch {
+    execute {
+        document("AndroidManifest.xml").use { doc ->
+            val app = doc.getElementsByTagName("application").item(0) as org.w3c.dom.Element
+            for ((name, value) in
+                listOf(
+                    MICROG_SPOOF + "NAME" to YOUTUBE_MUSIC,
+                    MICROG_SPOOF + "SIGNATURE" to YOUTUBE_MUSIC_SIGNATURE,
+                )) {
+                val meta = doc.createElement("meta-data")
+                meta.setAttributeNS(ANDROID, "android:name", name)
+                meta.setAttributeNS(ANDROID, "android:value", value)
+                app.appendChild(meta)
+            }
+        }
+    }
+}
+
+@Suppress("unused")
+val microGSignInPatch =
+    bytecodePatch(
+        name = "Sign in with MicroG",
+        description =
+            "Offers to sign in to YouTube Music with an account that's already in MicroG RE, " +
+                "instead of Google's sign-in page.",
+        default = true,
+    ) {
+        compatibleWith(target)
+        dependsOn(microGResources)
+        extendWith("extensions/telegram.mpe")
+        execute {
+            // The sign-in WebView loads Google's sign-in page, or YouTube Music when changing
+            // channel, with one loadUrl right after the two URLs.
+            val login =
+                "https://accounts.google.com/ServiceLogin?ltmpl=music&service=youtube" +
+                    "&prompt=select_account&continue=https%3A%2F%2Fmusic.youtube.com%2F"
+            var hooked = 0
+            for (original in getAllClassesWithStrings()) {
+                val methods =
+                    original.methods.filter { method ->
+                        method.implementation?.instructions?.any {
+                            ((it as? ReferenceInstruction)?.reference as? StringReference)
+                                ?.string == login
+                        } == true
+                    }
+                if (methods.isEmpty()) continue
+                val clazz = mutableClassDefBy(original)
+                for (found in methods) {
+                    val method =
+                        clazz.methods.single {
+                            it.name == found.name && it.parameterTypes == found.parameterTypes
+                        }
+                    val steps = method.implementation!!.instructions.toList()
+                    val url =
+                        steps.indexOfFirst {
+                            ((it as? ReferenceInstruction)?.reference as? StringReference)
+                                ?.string == login
+                        }
+                    val load =
+                        (url until minOf(url + 8, steps.size)).single { index ->
+                            steps[index].methodRef()?.let {
+                                it.definingClass == "Landroid/webkit/WebView;" &&
+                                    it.name == "loadUrl" &&
+                                    it.parameterTypes.map(CharSequence::toString) ==
+                                        listOf("Ljava/lang/String;")
+                            } == true
+                        }
+                    val call = steps[load] as FiveRegisterInstruction
+                    check(call.registerCount == 2) { "Sign-in loadUrl call changed" }
+                    method.replaceInstruction(
+                        load,
+                        "invoke-static {v${call.registerC}, v${call.registerD}}, " +
+                            "Lapp/bitchord/telegram/MicroGSignIn;->load(Landroid/webkit/WebView;Ljava/lang/String;)V",
+                    )
+                    hooked++
+                }
+            }
+            check(hooked == 1) { "YouTube Music sign-in page not found ($hooked)" }
+            println("Offered MicroG RE sign-in on the YouTube Music sign-in page")
+        }
+    }

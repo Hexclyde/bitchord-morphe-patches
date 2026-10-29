@@ -2069,6 +2069,35 @@ final class Translations {
                     + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a"
                     + " \u0648\u0627\u0644\u0645\u0634\u0627\u0631\u0643\u0629 \u2192"
                     + " \u0627\u0633\u062a\u0639\u0627\u062f\u0629\u00bb.",
+            "Sign in to YouTube Music",
+            "\u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644 \u0625\u0644\u0649"
+                    + " YouTube Music",
+            "MicroG RE is on this phone. Sign in with a Google account that\u2019s already in"
+                    + " MicroG, or use Google\u2019s sign-in page.",
+            "\u062a\u0637\u0628\u064a\u0642 MicroG RE \u0645\u0648\u062c\u0648\u062f"
+                    + " \u0639\u0644\u0649 \u0647\u0630\u0627 \u0627\u0644\u0647\u0627\u062a\u0641."
+                    + " \u0633\u062c\u0651\u0644 \u0627\u0644\u062f\u062e\u0648\u0644"
+                    + " \u0628\u062d\u0633\u0627\u0628 Google \u0645\u0648\u062c\u0648\u062f"
+                    + " \u0628\u0627\u0644\u0641\u0639\u0644 \u0641\u064a MicroG\u060c \u0623\u0648"
+                    + " \u0627\u0633\u062a\u062e\u062f\u0645 \u0635\u0641\u062d\u0629"
+                    + " \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644"
+                    + " \u0645\u0646 Google.",
+            "Use MicroG",
+            "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 MicroG",
+            "Google sign-in page",
+            "\u0635\u0641\u062d\u0629 \u062a\u0633\u062c\u064a\u0644"
+                    + " \u0627\u0644\u062f\u062e\u0648\u0644 \u0645\u0646 Google",
+            "MicroG couldn\u2019t sign in ({0}). Opening Google\u2019s sign-in page instead.",
+            "\u062a\u0639\u0630\u0651\u0631 \u0639\u0644\u0649 MicroG"
+                    + " \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644 ({0})."
+                    + " \u0633\u064a\u062a\u0645 \u0641\u062a\u062d \u0635\u0641\u062d\u0629"
+                    + " \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644"
+                    + " \u0645\u0646 Google \u0628\u062f\u0644\u0627\u064b \u0645\u0646"
+                    + " \u0630\u0644\u0643.",
+            "Unofficial Telegram (saved copy)",
+            "Unofficial Telegram (\u0646\u0633\u062e\u0629 \u0645\u062d\u0641\u0648\u0638\u0629)",
+            "Saved copy",
+            "\u0646\u0633\u062e\u0629 \u0645\u062d\u0641\u0648\u0638\u0629",
         };
     }
 
@@ -4309,6 +4338,33 @@ final class Translations {
                     + " \u09b0\u09bf\u09b8\u09cd\u099f\u09cb\u09b0 \u0995\u09b0\u09c1\u09a8"
                     + " \u09a5\u09c7\u0995\u09c7 \u09b8\u09c7\u099f\u09bf \u09ac\u09c7\u099b\u09c7"
                     + " \u09a8\u09bf\u09a8\u0964",
+            "Sign in to YouTube Music",
+            "YouTube Music-\u098f \u09b8\u09be\u0987\u09a8 \u0987\u09a8 \u0995\u09b0\u09c1\u09a8",
+            "MicroG RE is on this phone. Sign in with a Google account that\u2019s already in"
+                    + " MicroG, or use Google\u2019s sign-in page.",
+            "\u098f\u0987 \u09ab\u09cb\u09a8\u09c7 MicroG RE \u0986\u099b\u09c7\u0964 MicroG-\u098f"
+                    + " \u0986\u0997\u09c7 \u09a5\u09c7\u0995\u09c7 \u09a5\u09be\u0995\u09be"
+                    + " \u098f\u0995\u099f\u09bf Google"
+                    + " \u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f"
+                    + " \u09a6\u09bf\u09af\u09bc\u09c7 \u09b8\u09be\u0987\u09a8 \u0987\u09a8"
+                    + " \u0995\u09b0\u09c1\u09a8, \u0985\u09a5\u09ac\u09be Google-\u098f\u09b0"
+                    + " \u09b8\u09be\u0987\u09a8-\u0987\u09a8 \u09aa\u09c7\u099c"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09c1\u09a8\u0964",
+            "Use MicroG",
+            "MicroG \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09c1\u09a8",
+            "Google sign-in page",
+            "Google-\u098f\u09b0 \u09b8\u09be\u0987\u09a8-\u0987\u09a8 \u09aa\u09c7\u099c",
+            "MicroG couldn\u2019t sign in ({0}). Opening Google\u2019s sign-in page instead.",
+            "MicroG \u09b8\u09be\u0987\u09a8 \u0987\u09a8 \u0995\u09b0\u09a4\u09c7"
+                    + " \u09aa\u09be\u09b0\u09c7\u09a8\u09bf ({0})\u0964 \u098f\u09b0"
+                    + " \u09ac\u09a6\u09b2\u09c7 Google-\u098f\u09b0"
+                    + " \u09b8\u09be\u0987\u09a8-\u0987\u09a8 \u09aa\u09c7\u099c"
+                    + " \u0996\u09cb\u09b2\u09be \u09b9\u099a\u09cd\u099b\u09c7\u0964",
+            "Unofficial Telegram (saved copy)",
+            "Unofficial Telegram (\u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09bf\u09a4"
+                    + " \u0995\u09aa\u09bf)",
+            "Saved copy",
+            "\u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09bf\u09a4 \u0995\u09aa\u09bf",
         };
     }
 
@@ -5450,6 +5506,22 @@ final class Translations {
                     + " Restore.",
             "Diese Sicherung l\u00e4sst sich nicht mehr \u00f6ffnen. W\u00e4hle sie unter"
                     + " \u201eSicherung und Teilen \u2192 Wiederherstellen\u201c aus.",
+            "Sign in to YouTube Music",
+            "Bei YouTube Music anmelden",
+            "MicroG RE is on this phone. Sign in with a Google account that\u2019s already in"
+                    + " MicroG, or use Google\u2019s sign-in page.",
+            "MicroG RE ist auf diesem Telefon installiert. Melde dich mit einem Google-Konto an,"
+                    + " das bereits in MicroG ist, oder nutze die Anmeldeseite von Google.",
+            "Use MicroG",
+            "MicroG verwenden",
+            "Google sign-in page",
+            "Google-Anmeldeseite",
+            "MicroG couldn\u2019t sign in ({0}). Opening Google\u2019s sign-in page instead.",
+            "MicroG konnte dich nicht anmelden ({0}). Die Google-Anmeldeseite wird ge\u00f6ffnet.",
+            "Unofficial Telegram (saved copy)",
+            "Unofficial Telegram (gespeicherte Kopie)",
+            "Saved copy",
+            "Gespeicherte Kopie",
         };
     }
 
@@ -6603,6 +6675,24 @@ final class Translations {
                     + " Restore.",
             "Ya no se puede abrir esa copia de seguridad. El\u00edgela en Copia de seguridad y"
                     + " compartir \u2192 Restaurar.",
+            "Sign in to YouTube Music",
+            "Iniciar sesi\u00f3n en YouTube Music",
+            "MicroG RE is on this phone. Sign in with a Google account that\u2019s already in"
+                    + " MicroG, or use Google\u2019s sign-in page.",
+            "MicroG RE est\u00e1 en este tel\u00e9fono. Inicia sesi\u00f3n con una cuenta de Google"
+                    + " que ya est\u00e9 en MicroG o usa la p\u00e1gina de inicio de sesi\u00f3n de"
+                    + " Google.",
+            "Use MicroG",
+            "Usar MicroG",
+            "Google sign-in page",
+            "P\u00e1gina de inicio de sesi\u00f3n de Google",
+            "MicroG couldn\u2019t sign in ({0}). Opening Google\u2019s sign-in page instead.",
+            "MicroG no pudo iniciar sesi\u00f3n ({0}). Se abrir\u00e1 la p\u00e1gina de inicio de"
+                    + " sesi\u00f3n de Google.",
+            "Unofficial Telegram (saved copy)",
+            "Unofficial Telegram (copia guardada)",
+            "Saved copy",
+            "Copia guardada",
         };
     }
 
@@ -7780,6 +7870,23 @@ final class Translations {
                     + " Restore.",
             "Cette sauvegarde ne peut plus \u00eatre ouverte. Choisissez-la dans \u00ab Sauvegarde"
                     + " et partage \u2192 Restaurer \u00bb.",
+            "Sign in to YouTube Music",
+            "Se connecter \u00e0 YouTube Music",
+            "MicroG RE is on this phone. Sign in with a Google account that\u2019s already in"
+                    + " MicroG, or use Google\u2019s sign-in page.",
+            "MicroG RE est install\u00e9 sur ce t\u00e9l\u00e9phone. Connectez-vous avec un compte"
+                    + " Google d\u00e9j\u00e0 pr\u00e9sent dans MicroG, ou utilisez la page de"
+                    + " connexion de Google.",
+            "Use MicroG",
+            "Utiliser MicroG",
+            "Google sign-in page",
+            "Page de connexion Google",
+            "MicroG couldn\u2019t sign in ({0}). Opening Google\u2019s sign-in page instead.",
+            "MicroG n'a pas pu se connecter ({0}). Ouverture de la page de connexion Google.",
+            "Unofficial Telegram (saved copy)",
+            "Unofficial Telegram (copie enregistr\u00e9e)",
+            "Saved copy",
+            "Copie enregistr\u00e9e",
         };
     }
 
@@ -9996,6 +10103,33 @@ final class Translations {
                     + " \u0936\u0947\u092f\u0930\u093f\u0902\u0917 \u2192"
                     + " \u0930\u0940\u0938\u094d\u091f\u094b\u0930 \u0915\u0930\u0947\u0902"
                     + " \u092e\u0947\u0902 \u091a\u0941\u0928\u0947\u0902\u0964",
+            "Sign in to YouTube Music",
+            "YouTube Music \u092e\u0947\u0902 \u0938\u093e\u0907\u0928 \u0907\u0928"
+                    + " \u0915\u0930\u0947\u0902",
+            "MicroG RE is on this phone. Sign in with a Google account that\u2019s already in"
+                    + " MicroG, or use Google\u2019s sign-in page.",
+            "\u0907\u0938 \u092b\u093c\u094b\u0928 \u092a\u0930 MicroG RE \u0939\u0948\u0964 MicroG"
+                + " \u092e\u0947\u0902 \u092a\u0939\u0932\u0947 \u0938\u0947"
+                + " \u092e\u094c\u091c\u0942\u0926 Google \u0916\u093e\u0924\u0947 \u0938\u0947"
+                + " \u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902, \u092f\u093e"
+                + " Google \u0915\u093e \u0938\u093e\u0907\u0928-\u0907\u0928 \u092a\u0947\u091c"
+                + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932"
+                + " \u0915\u0930\u0947\u0902\u0964",
+            "Use MicroG",
+            "MicroG \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0947\u0902",
+            "Google sign-in page",
+            "Google \u0915\u093e \u0938\u093e\u0907\u0928-\u0907\u0928 \u092a\u0947\u091c",
+            "MicroG couldn\u2019t sign in ({0}). Opening Google\u2019s sign-in page instead.",
+            "MicroG \u0938\u093e\u0907\u0928 \u0907\u0928 \u0928\u0939\u0940\u0902 \u0915\u0930"
+                + " \u0938\u0915\u093e ({0})\u0964 \u0907\u0938\u0915\u0947"
+                + " \u092c\u091c\u093e\u092f Google \u0915\u093e"
+                + " \u0938\u093e\u0907\u0928-\u0907\u0928 \u092a\u0947\u091c"
+                + " \u0916\u094b\u0932\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948\u0964",
+            "Unofficial Telegram (saved copy)",
+            "Unofficial Telegram (\u0938\u0939\u0947\u091c\u0940 \u0917\u0908"
+                    + " \u0915\u0949\u092a\u0940)",
+            "Saved copy",
+            "\u0938\u0939\u0947\u091c\u0940 \u0917\u0908 \u0915\u0949\u092a\u0940",
         };
     }
 
@@ -11102,6 +11236,22 @@ final class Translations {
             "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
                     + " Restore.",
             "Cadangan itu tidak bisa dibuka lagi. Pilih di Cadangan dan berbagi \u2192 Pulihkan.",
+            "Sign in to YouTube Music",
+            "Masuk ke YouTube Music",
+            "MicroG RE is on this phone. Sign in with a Google account that\u2019s already in"
+                    + " MicroG, or use Google\u2019s sign-in page.",
+            "MicroG RE ada di ponsel ini. Masuk dengan akun Google yang sudah ada di MicroG, atau"
+                    + " gunakan halaman masuk Google.",
+            "Use MicroG",
+            "Gunakan MicroG",
+            "Google sign-in page",
+            "Halaman masuk Google",
+            "MicroG couldn\u2019t sign in ({0}). Opening Google\u2019s sign-in page instead.",
+            "MicroG tidak dapat masuk ({0}). Membuka halaman masuk Google sebagai gantinya.",
+            "Unofficial Telegram (saved copy)",
+            "Unofficial Telegram (salinan tersimpan)",
+            "Saved copy",
+            "Salinan tersimpan",
         };
     }
 
@@ -12346,6 +12496,28 @@ final class Translations {
             "\u3053\u306e\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u306f\u3082\u3046\u958b\u3051\u307e\u305b\u3093\u3002\u300c\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3068\u5171\u6709"
                 + " \u2192"
                 + " \u5fa9\u5143\u300d\u3067\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Sign in to YouTube Music",
+            "YouTube Music \u306b\u30ed\u30b0\u30a4\u30f3",
+            "MicroG RE is on this phone. Sign in with a Google account that\u2019s already in"
+                    + " MicroG, or use Google\u2019s sign-in page.",
+            "\u3053\u306e\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u306b\u306f MicroG RE"
+                + " \u304c\u3042\u308a\u307e\u3059\u3002MicroG \u306b\u8ffd\u52a0\u6e08\u307f\u306e"
+                + " Google"
+                + " \u30a2\u30ab\u30a6\u30f3\u30c8\u3067\u30ed\u30b0\u30a4\u30f3\u3059\u308b\u304b\u3001Google"
+                + " \u306e\u30ed\u30b0\u30a4\u30f3\u30da\u30fc\u30b8\u3092\u4f7f\u3063\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Use MicroG",
+            "MicroG \u3092\u4f7f\u3046",
+            "Google sign-in page",
+            "Google \u306e\u30ed\u30b0\u30a4\u30f3\u30da\u30fc\u30b8",
+            "MicroG couldn\u2019t sign in ({0}). Opening Google\u2019s sign-in page instead.",
+            "MicroG"
+                + " \u3067\u30ed\u30b0\u30a4\u30f3\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\uff08{0}\uff09\u3002\u4ee3\u308f\u308a\u306b"
+                + " Google"
+                + " \u306e\u30ed\u30b0\u30a4\u30f3\u30da\u30fc\u30b8\u3092\u958b\u304d\u307e\u3059\u3002",
+            "Unofficial Telegram (saved copy)",
+            "Unofficial Telegram\uff08\u4fdd\u5b58\u6e08\u307f\u306e\u30b3\u30d4\u30fc\uff09",
+            "Saved copy",
+            "\u4fdd\u5b58\u6e08\u307f\u306e\u30b3\u30d4\u30fc",
         };
     }
 
@@ -13756,6 +13928,26 @@ final class Translations {
             "\uadf8 \ubc31\uc5c5\uc744 \ub354 \uc774\uc0c1 \uc5f4 \uc218 \uc5c6\uc5b4\uc694."
                     + " \ubc31\uc5c5 \ubc0f \uacf5\uc720 \u2192 \ubcf5\uc6d0\uc5d0\uc11c"
                     + " \uc120\ud0dd\ud558\uc138\uc694.",
+            "Sign in to YouTube Music",
+            "YouTube Music\uc5d0 \ub85c\uadf8\uc778",
+            "MicroG RE is on this phone. Sign in with a Google account that\u2019s already in"
+                    + " MicroG, or use Google\u2019s sign-in page.",
+            "\uc774 \ud734\ub300\uc804\ud654\uc5d0 MicroG RE\uac00 \uc788\uc2b5\ub2c8\ub2e4."
+                    + " MicroG\uc5d0 \uc774\ubbf8 \uc788\ub294 Google \uacc4\uc815\uc73c\ub85c"
+                    + " \ub85c\uadf8\uc778\ud558\uac70\ub098 Google \ub85c\uadf8\uc778"
+                    + " \ud398\uc774\uc9c0\ub97c \uc0ac\uc6a9\ud558\uc138\uc694.",
+            "Use MicroG",
+            "MicroG \uc0ac\uc6a9",
+            "Google sign-in page",
+            "Google \ub85c\uadf8\uc778 \ud398\uc774\uc9c0",
+            "MicroG couldn\u2019t sign in ({0}). Opening Google\u2019s sign-in page instead.",
+            "MicroG\uc5d0\uc11c \ub85c\uadf8\uc778\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4({0})."
+                    + " \ub300\uc2e0 Google \ub85c\uadf8\uc778 \ud398\uc774\uc9c0\ub97c"
+                    + " \uc5fd\ub2c8\ub2e4.",
+            "Unofficial Telegram (saved copy)",
+            "Unofficial Telegram (\uc800\uc7a5\ub41c \uc0ac\ubcf8)",
+            "Saved copy",
+            "\uc800\uc7a5\ub41c \uc0ac\ubcf8",
         };
     }
 
@@ -14900,6 +15092,22 @@ final class Translations {
                     + " Restore.",
             "N\u00e3o \u00e9 mais poss\u00edvel abrir esse backup. Escolha-o em Backup e"
                     + " compartilhamento \u2192 Restaurar.",
+            "Sign in to YouTube Music",
+            "Entrar no YouTube Music",
+            "MicroG RE is on this phone. Sign in with a Google account that\u2019s already in"
+                    + " MicroG, or use Google\u2019s sign-in page.",
+            "O MicroG RE est\u00e1 neste telefone. Entre com uma conta do Google que j\u00e1"
+                    + " est\u00e1 no MicroG ou use a p\u00e1gina de login do Google.",
+            "Use MicroG",
+            "Usar o MicroG",
+            "Google sign-in page",
+            "P\u00e1gina de login do Google",
+            "MicroG couldn\u2019t sign in ({0}). Opening Google\u2019s sign-in page instead.",
+            "O MicroG n\u00e3o conseguiu entrar ({0}). Abrindo a p\u00e1gina de login do Google.",
+            "Unofficial Telegram (saved copy)",
+            "Unofficial Telegram (c\u00f3pia salva)",
+            "Saved copy",
+            "C\u00f3pia salva",
         };
     }
 
@@ -17307,6 +17515,37 @@ final class Translations {
                 + " \u00ab\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u044b\u0435"
                 + " \u043a\u043e\u043f\u0438\u0438 \u0438 \u043e\u0431\u043c\u0435\u043d \u2192"
                 + " \u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c\u00bb.",
+            "Sign in to YouTube Music",
+            "\u0412\u0445\u043e\u0434 \u0432 YouTube Music",
+            "MicroG RE is on this phone. Sign in with a Google account that\u2019s already in"
+                    + " MicroG, or use Google\u2019s sign-in page.",
+            "\u041d\u0430 \u044d\u0442\u043e\u043c \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0435"
+                + " \u0435\u0441\u0442\u044c MicroG RE. \u0412\u043e\u0439\u0434\u0438\u0442\u0435"
+                + " \u0441 \u0430\u043a\u043a\u0430\u0443\u043d\u0442\u043e\u043c Google,"
+                + " \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u0443\u0436\u0435"
+                + " \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d \u0432 MicroG,"
+                + " \u0438\u043b\u0438"
+                + " \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0439\u0442\u0435"
+                + " \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0443 \u0432\u0445\u043e\u0434\u0430"
+                + " Google.",
+            "Use MicroG",
+            "\u0427\u0435\u0440\u0435\u0437 MicroG",
+            "Google sign-in page",
+            "\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u0432\u0445\u043e\u0434\u0430"
+                    + " Google",
+            "MicroG couldn\u2019t sign in ({0}). Opening Google\u2019s sign-in page instead.",
+            "MicroG \u043d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                + " \u0432\u044b\u043f\u043e\u043b\u043d\u0438\u0442\u044c \u0432\u0445\u043e\u0434"
+                + " ({0}). \u041e\u0442\u043a\u0440\u044b\u0432\u0430\u0435\u043c"
+                + " \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0443 \u0432\u0445\u043e\u0434\u0430"
+                + " Google.",
+            "Unofficial Telegram (saved copy)",
+            "Unofficial Telegram"
+                    + " (\u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u0430\u044f"
+                    + " \u043a\u043e\u043f\u0438\u044f)",
+            "Saved copy",
+            "\u0421\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u0430\u044f"
+                    + " \u043a\u043e\u043f\u0438\u044f",
         };
     }
 
@@ -18514,6 +18753,24 @@ final class Translations {
             "Bu yedek art\u0131k a\u00e7\u0131lam\u0131yor. Yede\u011fi Yedekleme ve"
                     + " payla\u015f\u0131m \u2192 Geri y\u00fckle b\u00f6l\u00fcm\u00fcnden"
                     + " se\u00e7in.",
+            "Sign in to YouTube Music",
+            "YouTube Music'te oturum a\u00e7",
+            "MicroG RE is on this phone. Sign in with a Google account that\u2019s already in"
+                    + " MicroG, or use Google\u2019s sign-in page.",
+            "Bu telefonda MicroG RE var. MicroG'de zaten bulunan bir Google hesab\u0131yla oturum"
+                    + " a\u00e7\u0131n veya Google'\u0131n oturum a\u00e7ma sayfas\u0131n\u0131"
+                    + " kullan\u0131n.",
+            "Use MicroG",
+            "MicroG kullan",
+            "Google sign-in page",
+            "Google oturum a\u00e7ma sayfas\u0131",
+            "MicroG couldn\u2019t sign in ({0}). Opening Google\u2019s sign-in page instead.",
+            "MicroG oturum a\u00e7amad\u0131 ({0}). Bunun yerine Google'\u0131n oturum a\u00e7ma"
+                    + " sayfas\u0131 a\u00e7\u0131l\u0131yor.",
+            "Unofficial Telegram (saved copy)",
+            "Unofficial Telegram (kay\u0131tl\u0131 kopya)",
+            "Saved copy",
+            "Kay\u0131tl\u0131 kopya",
         };
     }
 
@@ -20681,6 +20938,32 @@ final class Translations {
                     + " \u0634\u06cc\u0626\u0631\u0646\u06af \u2192 \u0628\u062d\u0627\u0644"
                     + " \u06a9\u0631\u06cc\u06ba\u201d \u0645\u06cc\u06ba"
                     + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Sign in to YouTube Music",
+            "YouTube Music \u0645\u06cc\u06ba \u0633\u0627\u0626\u0646 \u0627\u0646"
+                    + " \u06a9\u0631\u06cc\u06ba",
+            "MicroG RE is on this phone. Sign in with a Google account that\u2019s already in"
+                    + " MicroG, or use Google\u2019s sign-in page.",
+            "\u0627\u0633 \u0641\u0648\u0646 \u067e\u0631 MicroG RE \u0645\u0648\u062c\u0648\u062f"
+                + " \u06c1\u06d2\u06d4 MicroG \u0645\u06cc\u06ba \u067e\u06c1\u0644\u06d2"
+                + " \u0633\u06d2 \u0645\u0648\u062c\u0648\u062f Google"
+                + " \u0627\u06a9\u0627\u0624\u0646\u0679 \u0633\u06d2 \u0633\u0627\u0626\u0646"
+                + " \u0627\u0646 \u06a9\u0631\u06cc\u06ba\u060c \u06cc\u0627 Google \u06a9\u0627"
+                + " \u0633\u0627\u0626\u0646 \u0627\u0646 \u0635\u0641\u062d\u06c1"
+                + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Use MicroG",
+            "MicroG \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0631\u06cc\u06ba",
+            "Google sign-in page",
+            "Google \u06a9\u0627 \u0633\u0627\u0626\u0646 \u0627\u0646 \u0635\u0641\u062d\u06c1",
+            "MicroG couldn\u2019t sign in ({0}). Opening Google\u2019s sign-in page instead.",
+            "MicroG \u0633\u0627\u0626\u0646 \u0627\u0646 \u0646\u06c1\u06cc\u06ba \u06a9\u0631"
+                    + " \u0633\u06a9\u0627 ({0})\u06d4 \u0627\u0633 \u06a9\u06d2"
+                    + " \u0628\u062c\u0627\u0626\u06d2 Google \u06a9\u0627 \u0633\u0627\u0626\u0646"
+                    + " \u0627\u0646 \u0635\u0641\u062d\u06c1 \u06a9\u06be\u0648\u0644\u0627"
+                    + " \u062c\u0627 \u0631\u06c1\u0627 \u06c1\u06d2\u06d4",
+            "Unofficial Telegram (saved copy)",
+            "Unofficial Telegram (\u0645\u062d\u0641\u0648\u0638 \u06a9\u0627\u067e\u06cc)",
+            "Saved copy",
+            "\u0645\u062d\u0641\u0648\u0638 \u06a9\u0627\u067e\u06cc",
         };
     }
 
@@ -21848,6 +22131,25 @@ final class Translations {
                     + " Restore.",
             "\u65e0\u6cd5\u518d\u6253\u5f00\u8be5\u5907\u4efd\u3002\u8bf7\u5728\u300c\u5907\u4efd\u4e0e\u5206\u4eab"
                 + " \u2192 \u6062\u590d\u300d\u4e2d\u9009\u62e9\u5b83\u3002",
+            "Sign in to YouTube Music",
+            "\u767b\u5f55 YouTube Music",
+            "MicroG RE is on this phone. Sign in with a Google account that\u2019s already in"
+                    + " MicroG, or use Google\u2019s sign-in page.",
+            "\u6b64\u624b\u673a\u4e0a\u88c5\u6709 MicroG RE\u3002\u53ef\u4f7f\u7528 MicroG"
+                    + " \u4e2d\u5df2\u6709\u7684 Google"
+                    + " \u8d26\u53f7\u767b\u5f55\uff0c\u6216\u4f7f\u7528 Google"
+                    + " \u7684\u767b\u5f55\u9875\u9762\u3002",
+            "Use MicroG",
+            "\u4f7f\u7528 MicroG",
+            "Google sign-in page",
+            "Google \u767b\u5f55\u9875\u9762",
+            "MicroG couldn\u2019t sign in ({0}). Opening Google\u2019s sign-in page instead.",
+            "MicroG \u65e0\u6cd5\u767b\u5f55\uff08{0}\uff09\u3002\u5c06\u6539\u4e3a\u6253\u5f00"
+                    + " Google \u7684\u767b\u5f55\u9875\u9762\u3002",
+            "Unofficial Telegram (saved copy)",
+            "Unofficial Telegram\uff08\u5df2\u4fdd\u5b58\u7684\u526f\u672c\uff09",
+            "Saved copy",
+            "\u5df2\u4fdd\u5b58\u7684\u526f\u672c",
         };
     }
 }

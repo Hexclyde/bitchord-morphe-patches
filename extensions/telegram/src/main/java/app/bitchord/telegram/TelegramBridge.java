@@ -209,6 +209,12 @@ public final class TelegramBridge {
                             }
 
                             @Override
+                            public int currentFile(long chat, long message, String unique)
+                                    throws Exception {
+                                return postFile(chat, message, unique);
+                            }
+
+                            @Override
                             public int position(long chat, int kind, long message)
                                     throws Exception {
                                 return call(
@@ -265,6 +271,12 @@ public final class TelegramBridge {
                             public byte[] range(int file, long offset, int length)
                                     throws Exception {
                                 return readRange(file, offset, length);
+                            }
+
+                            @Override
+                            public int currentFile(long chat, long message, String unique)
+                                    throws Exception {
+                                return postFile(chat, message, unique);
                             }
 
                             @Override
@@ -780,7 +792,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.20"));
+                            "1.0.21"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -1790,6 +1802,31 @@ public final class TelegramBridge {
             throw new IOException(
                     "Telegram does not allow this message to be saved by this player.");
         return found;
+    }
+
+    /**
+     * The number of a post's file on this phone now, checked the way the player checks it, or 0
+     * when the post is gone, can't be read, or holds a different file than {@code unique}.
+     */
+    int postFile(long chat, long message, String unique) throws Exception {
+        TdApi.Message found;
+        try {
+            found = message(chat, message);
+        } catch (TelegramFailure e) {
+            if (e.code == 404 || e.code == 400) return 0;
+            throw e;
+        }
+        if (found == null) return 0;
+        TdApi.File file = null;
+        if (found.content instanceof TdApi.MessageDocument)
+            file = ((TdApi.MessageDocument) found.content).document.document;
+        else if (found.content instanceof TdApi.MessageAudio)
+            file = ((TdApi.MessageAudio) found.content).audio.audio;
+        if (file == null) return 0;
+        if (unique != null
+                && !unique.isEmpty()
+                && (file.remote == null || !unique.equals(file.remote.uniqueId))) return 0;
+        return file.id;
     }
 
     /**

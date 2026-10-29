@@ -50,10 +50,43 @@ public final class PlaybackStats {
                     format.append(part);
                 }
             }
-        String source = sourceLabel(snapshot.sourceName);
+        String source = sourceLabel(sourceOf(snapshot.sourceName, snapshot.mimeType));
         String rate =
                 bitrateLabel(snapshot.bitrateKbps, snapshot.mimeType, provenance.get(snapshot));
         return (format.length() == 0 ? "" : format + "\n") + source + " · " + rate;
+    }
+
+    /**
+     * YouTube never sends lossless or Dolby audio. When BitChord labels one "YouTube", it's a
+     * better copy that replaced the stream, played again from BitChord's song cache, which keeps
+     * the song's YouTube source: the Telegram copy, when Telegram is set up.
+     */
+    static String sourceOf(String source, String mime) {
+        if (source == null || !source.trim().equalsIgnoreCase("YouTube") || !notFromYouTube(mime))
+            return source;
+        return TelegramBridge.instance != null
+                ? Strings.t("Unofficial Telegram (saved copy)")
+                : Strings.t("Saved copy");
+    }
+
+    static boolean notFromYouTube(String mime) {
+        if (mime == null) return false;
+        switch (mime.toLowerCase(java.util.Locale.ROOT)) {
+            case "audio/flac":
+            case "audio/x-flac":
+            case "audio/alac":
+            case "audio/raw":
+            case "audio/wav":
+            case "audio/x-wav":
+            case "audio/ac3":
+            case "audio/eac3":
+            case "audio/eac3-joc":
+            case "audio/ac4":
+            case "audio/true-hd":
+                return true;
+            default:
+                return false;
+        }
     }
 
     static String sourceLabel(String source) {

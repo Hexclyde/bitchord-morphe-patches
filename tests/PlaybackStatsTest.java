@@ -114,6 +114,25 @@ public final class PlaybackStatsTest {
         check(
                 PlaybackStats.decorate(format, later).endsWith("≈723 kbps avg"),
                 "Concurrent capture preserves snapshot identity");
+        // A substituted FLAC played again from BitChord's song cache keeps its YouTube label.
+        TelegramBridge.instance = null;
+        check(
+                PlaybackStats.sourceOf("YouTube", "audio/flac").equals("Saved copy"),
+                "YouTube never sends FLAC");
+        check(PlaybackStats.sourceOf("YouTube", "audio/opus").equals("YouTube"), "Opus is");
+        check(
+                PlaybackStats.sourceOf("Local files", "audio/flac").equals("Local files"),
+                "Other sources stay as they are");
+        check(
+                PlaybackStats.decorate(
+                                "FLAC · 24-bit · 96.0 kHz · Stereo",
+                                snapshot(
+                                        "audio/flac",
+                                        2862,
+                                        "YouTube",
+                                        TelemetryProvenance.MEASURED))
+                        .contains("Saved copy · ≈2862 kbps avg"),
+                "The stats line says so");
         System.out.println(
                 "PASS: " + checks + " playback source/bitrate provenance and formatting checks.");
     }
