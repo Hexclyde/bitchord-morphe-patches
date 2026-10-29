@@ -4,7 +4,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.0.16). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.0.17). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > I've only been able to test it on an **arm64-v8a** phone. The armeabi-v7a and x86_64 builds pass the same automated checks, but I haven't run them on a real device. If you're on one of those, please give it a try and [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems. Hearing that it works is useful too.
 
@@ -37,7 +37,7 @@ More BitChord add-ons will be added to this repository over time.
 - Albums shared as zip files: every song inside is found, played and matched like any other file, without downloading the zip
 - Albums kept as one FLAC or WAV file with a cue sheet: each track becomes its own song, played exactly from its start to its end
 - A chat's albums, each to save as a playlist or download
-- Back up and restore your settings, and share a chat's index so friends in the same channel can skip indexing it
+- Back up and restore your settings, back up as you sign out and restore in one tap when you're back, and share a chat's index so friends in the same channel can skip indexing it
 - Check by sound whether a Telegram file with a different length is the same recording as the song
 - Copy music from community channels into a private channel you own, at a pace you set, with lossless-only and duplicate filters
 - Untagged files get their title and artist from the file name (`03 - Artist - Title.flac`), or, with your free AcoustID key, by sound

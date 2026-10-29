@@ -17,7 +17,8 @@ This page covers the Telegram patch only. BitChord, Morphe and Telegram have the
 | File format details (bit depth, sample rate, channels) | Saved in the app's private storage for the format legend; removed when you sign out |
 | The saved index: title, artist, length, file name and format of the music files in your selected chats | Saved in the app's private storage while **Saved index** is on; deleted when you turn it off or sign out |
 | Fake lossless check results, and titles and artists recognised by sound | Saved in the saved index on your phone, kept through its rebuilds; deleted when you turn it off or sign out. Included in index files you share |
-| Your AcoustID key | Saved in the app's private storage, apart from your settings; never in backups or index files; removed when you sign out |
+| Your AcoustID key | Saved in the app's private storage, apart from your settings; never in backups or index files; kept when you sign out, removed when you clear it |
+| The backup made with **Back up and sign out** | The file is wherever you saved it. The app keeps a link to it and permission to read it, to offer restoring it after you sign in again, until you restore it, tap **Start fresh**, or sign out without a backup |
 | Sound check results: which Telegram files are the same recording as which songs | Saved in the app's private storage while **Check matches by sound** is on; removed when you sign out. The song's audio that's compared is held in memory for the comparison only |
 | Main channel settings and copy progress: which channels, which files have been copied | Saved in the app's private storage; removed when you sign out |
 | Album covers | Copied into the app's private storage while **Album covers** is on; removed when you turn it off or sign out |
@@ -46,7 +47,7 @@ Your regular BitChord installation has separate private data. The Telegram setup
 
 - Stop playback and use **Clear Telegram audio cache** on the Telegram page to clear that cache.
 - Manage BitChord's song cache and downloads separately.
-- Use **Session → Sign out** to sign out of the integration.
+- Use **Session → Sign out** to sign out of the integration. **Back up and sign out** keeps a backup file where you choose; delete that file too if you don't want it.
 - To revoke the session, open the official Telegram app and go to **Settings → Devices**.
 
 Signing out, deselecting a chat or revoking access does not erase audio already saved by BitChord. Uninstalling removes the app's private data; files exported to shared storage can remain.

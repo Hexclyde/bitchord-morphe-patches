@@ -506,6 +506,26 @@ public final class TelegramBridge {
 
     public void logout() {
         auth = new TdApi.AuthorizationStateWaitPhoneNumber();
+        lastBackup = null;
+        backups.add("logout");
+    }
+
+    JSONObject lastBackup;
+
+    int indexedFiles() {
+        return 223776;
+    }
+
+    void rememberBackup(String uri) throws Exception {
+        lastBackup = new JSONObject().put("uri", uri).put("at", 1_761_700_000_000L);
+    }
+
+    JSONObject lastBackup() {
+        return lastBackup;
+    }
+
+    void forgetBackup() {
+        lastBackup = null;
     }
 
     public void fail(Exception e) {

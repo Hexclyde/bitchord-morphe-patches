@@ -2011,6 +2011,64 @@ final class Translations {
             "{0} \u00b7 \u0645\u0646 {1}",
             "{0} \u00b7 really {1}bit",
             "{0} \u00b7 \u0641\u0639\u0644\u064a\u064b\u0627 {1}bit",
+            "Signing out removes your music chats, saved index, corrected names and main channel"
+                    + " setup from this phone.",
+            "\u064a\u0624\u062f\u064a \u062a\u0633\u062c\u064a\u0644"
+                    + " \u0627\u0644\u062e\u0631\u0648\u062c \u0625\u0644\u0649"
+                    + " \u0625\u0632\u0627\u0644\u0629 \u0645\u062d\u0627\u062f\u062b\u0627\u062a"
+                    + " \u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649"
+                    + " \u0648\u0627\u0644\u0641\u0647\u0631\u0633"
+                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638"
+                    + " \u0648\u0627\u0644\u0623\u0633\u0645\u0627\u0621"
+                    + " \u0627\u0644\u0645\u0635\u062d\u0651\u062d\u0629"
+                    + " \u0648\u0625\u0639\u062f\u0627\u062f \u0627\u0644\u0642\u0646\u0627\u0629"
+                    + " \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629 \u0645\u0646"
+                    + " \u0647\u0630\u0627 \u0627\u0644\u0647\u0627\u062a\u0641.",
+            "Back up first and they come back in a minute when you sign in again, without indexing"
+                    + " {0} files again.",
+            "\u062e\u0630 \u0646\u0633\u062e\u0629 \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
+                    + " \u0623\u0648\u0644\u064b\u0627 \u0648\u0633\u062a\u0639\u0648\u062f"
+                    + " \u062e\u0644\u0627\u0644 \u062f\u0642\u064a\u0642\u0629 \u0639\u0646\u062f"
+                    + " \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644"
+                    + " \u0645\u062c\u062f\u062f\u064b\u0627\u060c \u062f\u0648\u0646"
+                    + " \u0641\u0647\u0631\u0633\u0629 {0} \u0645\u0644\u0641 \u0645\u0646"
+                    + " \u062c\u062f\u064a\u062f.",
+            "Back up first and they come back in a minute when you sign in again.",
+            "\u062e\u0630 \u0646\u0633\u062e\u0629 \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
+                    + " \u0623\u0648\u0644\u064b\u0627 \u0648\u0633\u062a\u0639\u0648\u062f"
+                    + " \u062e\u0644\u0627\u0644 \u062f\u0642\u064a\u0642\u0629 \u0639\u0646\u062f"
+                    + " \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644"
+                    + " \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "Back up and sign out",
+            "\u0646\u0633\u062e \u0627\u062d\u062a\u064a\u0627\u0637\u064a"
+                    + " \u0648\u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062e\u0631\u0648\u062c",
+            "Welcome back",
+            "\u0645\u0631\u062d\u0628\u064b\u0627 \u0628\u0639\u0648\u062f\u062a\u0643",
+            "Restore what you had before signing out",
+            "\u0627\u0633\u062a\u0639\u0627\u062f\u0629 \u0645\u0627 \u0643\u0627\u0646"
+                    + " \u0644\u062f\u064a\u0643 \u0642\u0628\u0644 \u062a\u0633\u062c\u064a\u0644"
+                    + " \u0627\u0644\u062e\u0631\u0648\u062c",
+            "Backup from {0}",
+            "\u0646\u0633\u062e\u0629 \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629 \u0645\u0646"
+                    + " {0}",
+            "Start fresh",
+            "\u0627\u0644\u0628\u062f\u0621 \u0645\u0646 \u062c\u062f\u064a\u062f",
+            "The backup file stays where you saved it",
+            "\u064a\u0628\u0642\u0649 \u0645\u0644\u0641 \u0627\u0644\u0646\u0633\u062e\u0629"
+                + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629 \u062d\u064a\u062b"
+                + " \u062d\u0641\u0638\u062a\u0647",
+            "Forget",
+            "\u062a\u062c\u0627\u0647\u0644",
+            "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
+                    + " Restore.",
+            "\u0644\u0645 \u064a\u0639\u062f \u0645\u0646 \u0627\u0644\u0645\u0645\u0643\u0646"
+                    + " \u0641\u062a\u062d \u062a\u0644\u0643 \u0627\u0644\u0646\u0633\u062e\u0629"
+                    + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629."
+                    + " \u0627\u062e\u062a\u0631\u0647\u0627 \u0645\u0646"
+                    + " \u00ab\u0627\u0644\u0646\u0633\u062e"
+                    + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a"
+                    + " \u0648\u0627\u0644\u0645\u0634\u0627\u0631\u0643\u0629 \u2192"
+                    + " \u0627\u0633\u062a\u0639\u0627\u062f\u0629\u00bb.",
         };
     }
 
@@ -4195,6 +4253,62 @@ final class Translations {
             "{0} \u00b7 {1} \u09a5\u09c7\u0995\u09c7",
             "{0} \u00b7 really {1}bit",
             "{0} \u00b7 \u0986\u09b8\u09b2\u09c7 {1}bit",
+            "Signing out removes your music chats, saved index, corrected names and main channel"
+                    + " setup from this phone.",
+            "\u09b8\u09be\u0987\u09a8 \u0986\u0989\u099f \u0995\u09b0\u09b2\u09c7 \u098f\u0987"
+                    + " \u09ab\u09cb\u09a8 \u09a5\u09c7\u0995\u09c7 \u0986\u09aa\u09a8\u09be\u09b0"
+                    + " \u09ae\u09bf\u0989\u099c\u09bf\u0995 \u099a\u09cd\u09af\u09be\u099f,"
+                    + " \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8, \u09a0\u09bf\u0995"
+                    + " \u0995\u09b0\u09be \u09a8\u09be\u09ae \u0986\u09b0 \u09ae\u09c2\u09b2"
+                    + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7\u09b0"
+                    + " \u09b8\u09c7\u099f\u0986\u09aa \u09b8\u09b0\u09c7"
+                    + " \u09af\u09be\u09af\u09bc\u0964",
+            "Back up first and they come back in a minute when you sign in again, without indexing"
+                    + " {0} files again.",
+            "\u0986\u0997\u09c7 \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09a8\u09bf\u09a8,"
+                + " \u09a4\u09be\u09b9\u09b2\u09c7 \u0986\u09ac\u09be\u09b0"
+                + " \u09b8\u09be\u0987\u09a8 \u0987\u09a8 \u0995\u09b0\u09b2\u09c7 {0}\u099f\u09bf"
+                + " \u09ab\u09be\u0987\u09b2 \u0986\u09ac\u09be\u09b0"
+                + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09a8\u09be"
+                + " \u0995\u09b0\u09c7\u0987 \u098f\u0995 \u09ae\u09bf\u09a8\u09bf\u099f\u09c7"
+                + " \u09b8\u09ac \u09ab\u09bf\u09b0\u09c7 \u0986\u09b8\u09ac\u09c7\u0964",
+            "Back up first and they come back in a minute when you sign in again.",
+            "\u0986\u0997\u09c7 \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09a8\u09bf\u09a8,"
+                    + " \u09a4\u09be\u09b9\u09b2\u09c7 \u0986\u09ac\u09be\u09b0"
+                    + " \u09b8\u09be\u0987\u09a8 \u0987\u09a8 \u0995\u09b0\u09b2\u09c7 \u098f\u0995"
+                    + " \u09ae\u09bf\u09a8\u09bf\u099f\u09c7 \u09b8\u09ac \u09ab\u09bf\u09b0\u09c7"
+                    + " \u0986\u09b8\u09ac\u09c7\u0964",
+            "Back up and sign out",
+            "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09a8\u09bf\u09af\u09bc\u09c7"
+                    + " \u09b8\u09be\u0987\u09a8 \u0986\u0989\u099f",
+            "Welcome back",
+            "\u0986\u09ac\u09be\u09b0 \u09b8\u09cd\u09ac\u09be\u0997\u09a4\u09ae",
+            "Restore what you had before signing out",
+            "\u09b8\u09be\u0987\u09a8 \u0986\u0989\u099f\u09c7\u09b0 \u0986\u0997\u09c7"
+                    + " \u09af\u09be \u099b\u09bf\u09b2 \u09a4\u09be"
+                    + " \u09b0\u09bf\u09b8\u09cd\u099f\u09cb\u09b0 \u0995\u09b0\u09c1\u09a8",
+            "Backup from {0}",
+            "{0}-\u098f\u09b0 \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa",
+            "Start fresh",
+            "\u09a8\u09a4\u09c1\u09a8 \u0995\u09b0\u09c7 \u09b6\u09c1\u09b0\u09c1"
+                    + " \u0995\u09b0\u09c1\u09a8",
+            "The backup file stays where you saved it",
+            "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09ab\u09be\u0987\u09b2\u099f\u09bf"
+                + " \u09af\u09c7\u0996\u09be\u09a8\u09c7 \u09b8\u09c7\u09ad"
+                + " \u0995\u09b0\u09c7\u099b\u09c7\u09a8 \u09b8\u09c7\u0996\u09be\u09a8\u09c7\u0987"
+                + " \u09a5\u09be\u0995\u09c7",
+            "Forget",
+            "\u09ad\u09c1\u09b2\u09c7 \u09af\u09be\u09a8",
+            "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
+                    + " Restore.",
+            "\u0993\u0987 \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa\u099f\u09bf \u0986\u09b0"
+                    + " \u0996\u09cb\u09b2\u09be \u09af\u09be\u099a\u09cd\u099b\u09c7"
+                    + " \u09a8\u09be\u0964 \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u0986\u09b0"
+                    + " \u09b6\u09c7\u09af\u09bc\u09be\u09b0\u09bf\u0982 \u2192"
+                    + " \u09b0\u09bf\u09b8\u09cd\u099f\u09cb\u09b0 \u0995\u09b0\u09c1\u09a8"
+                    + " \u09a5\u09c7\u0995\u09c7 \u09b8\u09c7\u099f\u09bf \u09ac\u09c7\u099b\u09c7"
+                    + " \u09a8\u09bf\u09a8\u0964",
         };
     }
 
@@ -5307,6 +5421,35 @@ final class Translations {
             "{0} \u00b7 aus {1}",
             "{0} \u00b7 really {1}bit",
             "{0} \u00b7 eigentlich {1}bit",
+            "Signing out removes your music chats, saved index, corrected names and main channel"
+                    + " setup from this phone.",
+            "Beim Abmelden werden deine Musik-Chats, der gespeicherte Index, die korrigierten Namen"
+                    + " und die Einrichtung des Hauptkanals von diesem Handy entfernt.",
+            "Back up first and they come back in a minute when you sign in again, without indexing"
+                    + " {0} files again.",
+            "Sichere zuerst, dann ist alles in einer Minute zur\u00fcck, wenn du dich wieder"
+                    + " anmeldest, ohne {0} Dateien neu zu indexieren.",
+            "Back up first and they come back in a minute when you sign in again.",
+            "Sichere zuerst, dann ist alles in einer Minute zur\u00fcck, wenn du dich wieder"
+                    + " anmeldest.",
+            "Back up and sign out",
+            "Sichern und abmelden",
+            "Welcome back",
+            "Willkommen zur\u00fcck",
+            "Restore what you had before signing out",
+            "Wiederherstellen, was du vor dem Abmelden hattest",
+            "Backup from {0}",
+            "Sicherung vom {0}",
+            "Start fresh",
+            "Neu anfangen",
+            "The backup file stays where you saved it",
+            "Die Sicherungsdatei bleibt dort, wo du sie gespeichert hast",
+            "Forget",
+            "Vergessen",
+            "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
+                    + " Restore.",
+            "Diese Sicherung l\u00e4sst sich nicht mehr \u00f6ffnen. W\u00e4hle sie unter"
+                    + " \u201eSicherung und Teilen \u2192 Wiederherstellen\u201c aus.",
         };
     }
 
@@ -6430,6 +6573,36 @@ final class Translations {
             "{0} \u00b7 de {1}",
             "{0} \u00b7 really {1}bit",
             "{0} \u00b7 realmente {1}bit",
+            "Signing out removes your music chats, saved index, corrected names and main channel"
+                    + " setup from this phone.",
+            "Al cerrar sesi\u00f3n se eliminan de este tel\u00e9fono tus chats de m\u00fasica, el"
+                + " \u00cdndice guardado, los nombres corregidos y la configuraci\u00f3n del canal"
+                + " principal.",
+            "Back up first and they come back in a minute when you sign in again, without indexing"
+                    + " {0} files again.",
+            "Haz primero una copia de seguridad y volver\u00e1n en un minuto cuando vuelvas a"
+                    + " iniciar sesi\u00f3n, sin indexar de nuevo {0} archivos.",
+            "Back up first and they come back in a minute when you sign in again.",
+            "Haz primero una copia de seguridad y volver\u00e1n en un minuto cuando vuelvas a"
+                    + " iniciar sesi\u00f3n.",
+            "Back up and sign out",
+            "Hacer copia de seguridad y cerrar sesi\u00f3n",
+            "Welcome back",
+            "Hola de nuevo",
+            "Restore what you had before signing out",
+            "Restaurar lo que ten\u00edas antes de cerrar sesi\u00f3n",
+            "Backup from {0}",
+            "Copia de seguridad del {0}",
+            "Start fresh",
+            "Empezar de cero",
+            "The backup file stays where you saved it",
+            "El archivo de copia de seguridad se queda donde lo guardaste",
+            "Forget",
+            "Olvidar",
+            "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
+                    + " Restore.",
+            "Ya no se puede abrir esa copia de seguridad. El\u00edgela en Copia de seguridad y"
+                    + " compartir \u2192 Restaurar.",
         };
     }
 
@@ -7578,6 +7751,35 @@ final class Translations {
             "{0} \u00b7 issu de {1}",
             "{0} \u00b7 really {1}bit",
             "{0} \u00b7 en fait {1}bit",
+            "Signing out removes your music chats, saved index, corrected names and main channel"
+                    + " setup from this phone.",
+            "Se d\u00e9connecter supprime de ce t\u00e9l\u00e9phone vos discussions musicales,"
+                    + " l\u2019index enregistr\u00e9, les noms corrig\u00e9s et la configuration du"
+                    + " canal principal.",
+            "Back up first and they come back in a minute when you sign in again, without indexing"
+                    + " {0} files again.",
+            "Sauvegardez d\u2019abord et tout revient en une minute quand vous vous reconnectez,"
+                    + " sans r\u00e9indexer {0} fichiers.",
+            "Back up first and they come back in a minute when you sign in again.",
+            "Sauvegardez d\u2019abord et tout revient en une minute quand vous vous reconnectez.",
+            "Back up and sign out",
+            "Sauvegarder et se d\u00e9connecter",
+            "Welcome back",
+            "Bon retour",
+            "Restore what you had before signing out",
+            "Restaurer ce que vous aviez avant de vous d\u00e9connecter",
+            "Backup from {0}",
+            "Sauvegarde du {0}",
+            "Start fresh",
+            "Repartir de z\u00e9ro",
+            "The backup file stays where you saved it",
+            "Le fichier de sauvegarde reste l\u00e0 o\u00f9 vous l\u2019avez enregistr\u00e9",
+            "Forget",
+            "Oublier",
+            "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
+                    + " Restore.",
+            "Cette sauvegarde ne peut plus \u00eatre ouverte. Choisissez-la dans \u00ab Sauvegarde"
+                    + " et partage \u2192 Restaurer \u00bb.",
         };
     }
 
@@ -9738,6 +9940,62 @@ final class Translations {
             "{0} \u00b7 {1} \u0938\u0947 \u092c\u0928\u0940",
             "{0} \u00b7 really {1}bit",
             "{0} \u00b7 \u0905\u0938\u0932 \u092e\u0947\u0902 {1}bit",
+            "Signing out removes your music chats, saved index, corrected names and main channel"
+                    + " setup from this phone.",
+            "\u0938\u093e\u0907\u0928 \u0906\u0909\u091f \u0915\u0930\u0928\u0947 \u092a\u0930"
+                    + " \u0906\u092a\u0915\u0940 \u092e\u094d\u092f\u0942\u091c\u093c\u093f\u0915"
+                    + " \u091a\u0948\u091f, \u0938\u0947\u0935 \u0915\u093f\u092f\u093e"
+                    + " \u0917\u092f\u093e \u0907\u0902\u0921\u0947\u0915\u094d\u0938,"
+                    + " \u0920\u0940\u0915 \u0915\u093f\u090f \u0917\u090f \u0928\u093e\u092e"
+                    + " \u0914\u0930 \u092e\u0941\u0916\u094d\u092f \u091a\u0948\u0928\u0932"
+                    + " \u0915\u093e \u0938\u0947\u091f\u0905\u092a \u0907\u0938"
+                    + " \u092b\u093c\u094b\u0928 \u0938\u0947 \u0939\u091f \u091c\u093e\u0924\u0947"
+                    + " \u0939\u0948\u0902\u0964",
+            "Back up first and they come back in a minute when you sign in again, without indexing"
+                    + " {0} files again.",
+            "\u092a\u0939\u0932\u0947 \u092c\u0948\u0915\u0905\u092a \u0932\u0947\u0902,"
+                + " \u0924\u094b \u0926\u094b\u092c\u093e\u0930\u093e \u0938\u093e\u0907\u0928"
+                + " \u0907\u0928 \u0915\u0930\u0928\u0947 \u092a\u0930 \u092f\u0947 \u090f\u0915"
+                + " \u092e\u093f\u0928\u091f \u092e\u0947\u0902 \u0935\u093e\u092a\u0938 \u0906"
+                + " \u091c\u093e\u090f\u0901\u0917\u0947, {0}"
+                + " \u092b\u093c\u093e\u0907\u0932\u0947\u0902 \u092b\u093f\u0930 \u0938\u0947"
+                + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0915\u093f\u090f"
+                + " \u092c\u093f\u0928\u093e\u0964",
+            "Back up first and they come back in a minute when you sign in again.",
+            "\u092a\u0939\u0932\u0947 \u092c\u0948\u0915\u0905\u092a \u0932\u0947\u0902,"
+                + " \u0924\u094b \u0926\u094b\u092c\u093e\u0930\u093e \u0938\u093e\u0907\u0928"
+                + " \u0907\u0928 \u0915\u0930\u0928\u0947 \u092a\u0930 \u092f\u0947 \u090f\u0915"
+                + " \u092e\u093f\u0928\u091f \u092e\u0947\u0902 \u0935\u093e\u092a\u0938 \u0906"
+                + " \u091c\u093e\u090f\u0901\u0917\u0947\u0964",
+            "Back up and sign out",
+            "\u092c\u0948\u0915\u0905\u092a \u0932\u0947\u0902 \u0914\u0930"
+                    + " \u0938\u093e\u0907\u0928 \u0906\u0909\u091f \u0915\u0930\u0947\u0902",
+            "Welcome back",
+            "\u092b\u093f\u0930 \u0938\u0947 \u0938\u094d\u0935\u093e\u0917\u0924 \u0939\u0948",
+            "Restore what you had before signing out",
+            "\u0938\u093e\u0907\u0928 \u0906\u0909\u091f \u0938\u0947 \u092a\u0939\u0932\u0947"
+                    + " \u0915\u093e \u0938\u092c \u0915\u0941\u091b"
+                    + " \u0930\u0940\u0938\u094d\u091f\u094b\u0930 \u0915\u0930\u0947\u0902",
+            "Backup from {0}",
+            "{0} \u0915\u093e \u092c\u0948\u0915\u0905\u092a",
+            "Start fresh",
+            "\u0928\u090f \u0938\u093f\u0930\u0947 \u0938\u0947 \u0936\u0941\u0930\u0942"
+                    + " \u0915\u0930\u0947\u0902",
+            "The backup file stays where you saved it",
+            "\u092c\u0948\u0915\u0905\u092a \u092b\u093c\u093e\u0907\u0932 \u0935\u0939\u0940\u0902"
+                    + " \u0930\u0939\u0924\u0940 \u0939\u0948 \u091c\u0939\u093e\u0901"
+                    + " \u0906\u092a\u0928\u0947 \u0909\u0938\u0947 \u0938\u0947\u0935"
+                    + " \u0915\u093f\u092f\u093e \u0925\u093e",
+            "Forget",
+            "\u092d\u0942\u0932 \u091c\u093e\u090f\u0901",
+            "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
+                    + " Restore.",
+            "\u0935\u0939 \u092c\u0948\u0915\u0905\u092a \u0905\u092c \u0928\u0939\u0940\u0902"
+                    + " \u0916\u0941\u0932 \u0938\u0915\u0924\u093e\u0964 \u0909\u0938\u0947"
+                    + " \u092c\u0948\u0915\u0905\u092a \u0914\u0930"
+                    + " \u0936\u0947\u092f\u0930\u093f\u0902\u0917 \u2192"
+                    + " \u0930\u0940\u0938\u094d\u091f\u094b\u0930 \u0915\u0930\u0947\u0902"
+                    + " \u092e\u0947\u0902 \u091a\u0941\u0928\u0947\u0902\u0964",
         };
     }
 
@@ -10817,6 +11075,33 @@ final class Translations {
             "{0} \u00b7 dari {1}",
             "{0} \u00b7 really {1}bit",
             "{0} \u00b7 sebenarnya {1}bit",
+            "Signing out removes your music chats, saved index, corrected names and main channel"
+                    + " setup from this phone.",
+            "Keluar akan menghapus chat musik, Indeks tersimpan, nama yang diperbaiki, dan"
+                    + " pengaturan kanal utama Anda dari ponsel ini.",
+            "Back up first and they come back in a minute when you sign in again, without indexing"
+                    + " {0} files again.",
+            "Cadangkan dulu, lalu semuanya kembali dalam semenit saat Anda masuk lagi, tanpa"
+                    + " mengindeks ulang {0} file.",
+            "Back up first and they come back in a minute when you sign in again.",
+            "Cadangkan dulu, lalu semuanya kembali dalam semenit saat Anda masuk lagi.",
+            "Back up and sign out",
+            "Cadangkan dan keluar",
+            "Welcome back",
+            "Selamat datang kembali",
+            "Restore what you had before signing out",
+            "Pulihkan yang Anda miliki sebelum keluar",
+            "Backup from {0}",
+            "Cadangan dari {0}",
+            "Start fresh",
+            "Mulai dari awal",
+            "The backup file stays where you saved it",
+            "File cadangan tetap berada di tempat Anda menyimpannya",
+            "Forget",
+            "Lupakan",
+            "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
+                    + " Restore.",
+            "Cadangan itu tidak bisa dibuka lagi. Pilih di Cadangan dan berbagi \u2192 Pulihkan.",
         };
     }
 
@@ -12031,6 +12316,36 @@ final class Translations {
             "{0} \u00b7 {1} \u7531\u6765",
             "{0} \u00b7 really {1}bit",
             "{0} \u00b7 \u5b9f\u969b\u306f {1}bit",
+            "Signing out removes your music chats, saved index, corrected names and main channel"
+                    + " setup from this phone.",
+            "\u30ed\u30b0\u30a2\u30a6\u30c8\u3059\u308b\u3068\u3001\u97f3\u697d\u30c1\u30e3\u30c3\u30c8\u3001\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u3001\u4fee\u6b63\u3057\u305f\u540d\u524d\u3001\u30e1\u30a4\u30f3\u30c1\u30e3\u30f3\u30cd\u30eb\u306e\u8a2d\u5b9a\u304c\u3053\u306e\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u304b\u3089\u524a\u9664\u3055\u308c\u307e\u3059\u3002",
+            "Back up first and they come back in a minute when you sign in again, without indexing"
+                    + " {0} files again.",
+            "\u5148\u306b\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3057\u3066\u304a\u3051\u3070\u3001\u518d\u30ed\u30b0\u30a4\u30f3\u6642\u306b"
+                + " {0} \u4ef6\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u518d\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u305b\u305a\u306b"
+                + " 1 \u5206\u3067\u5143\u306b\u623b\u308a\u307e\u3059\u3002",
+            "Back up first and they come back in a minute when you sign in again.",
+            "\u5148\u306b\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3057\u3066\u304a\u3051\u3070\u3001\u518d\u30ed\u30b0\u30a4\u30f3\u6642\u306b"
+                + " 1 \u5206\u3067\u5143\u306b\u623b\u308a\u307e\u3059\u3002",
+            "Back up and sign out",
+            "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3057\u3066\u30ed\u30b0\u30a2\u30a6\u30c8",
+            "Welcome back",
+            "\u304a\u304b\u3048\u308a\u306a\u3055\u3044",
+            "Restore what you had before signing out",
+            "\u30ed\u30b0\u30a2\u30a6\u30c8\u524d\u306e\u72b6\u614b\u3092\u5fa9\u5143",
+            "Backup from {0}",
+            "{0} \u306e\u30d0\u30c3\u30af\u30a2\u30c3\u30d7",
+            "Start fresh",
+            "\u6700\u521d\u304b\u3089\u59cb\u3081\u308b",
+            "The backup file stays where you saved it",
+            "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u30d5\u30a1\u30a4\u30eb\u306f\u4fdd\u5b58\u3057\u305f\u5834\u6240\u306b\u6b8b\u308a\u307e\u3059",
+            "Forget",
+            "\u5fd8\u308c\u308b",
+            "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
+                    + " Restore.",
+            "\u3053\u306e\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u306f\u3082\u3046\u958b\u3051\u307e\u305b\u3093\u3002\u300c\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3068\u5171\u6709"
+                + " \u2192"
+                + " \u5fa9\u5143\u300d\u3067\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
         };
     }
 
@@ -13407,6 +13722,40 @@ final class Translations {
             "{0} \u00b7 {1}\uc5d0\uc11c \ubcc0\ud658",
             "{0} \u00b7 really {1}bit",
             "{0} \u00b7 \uc2e4\uc81c {1}bit",
+            "Signing out removes your music chats, saved index, corrected names and main channel"
+                    + " setup from this phone.",
+            "\ub85c\uadf8\uc544\uc6c3\ud558\uba74 \uc774 \ud734\ub300\uc804\ud654\uc5d0\uc11c"
+                + " \uc74c\uc545 \ucc44\ud305, \uc800\uc7a5\ub41c \uc0c9\uc778, \uc218\uc815\ub41c"
+                + " \uc774\ub984, \uba54\uc778 \ucc44\ub110 \uc124\uc815\uc774"
+                + " \uc0ad\uc81c\ub3fc\uc694.",
+            "Back up first and they come back in a minute when you sign in again, without indexing"
+                    + " {0} files again.",
+            "\uba3c\uc800 \ubc31\uc5c5\ud558\uba74 \ub2e4\uc2dc \ub85c\uadf8\uc778\ud560 \ub54c"
+                + " \ud30c\uc77c {0}\uac1c\ub97c \ub2e4\uc2dc \uc0c9\uc778\ud558\uc9c0 \uc54a\uace0"
+                + " 1\ubd84 \ub9cc\uc5d0 \ub3cc\uc544\uc640\uc694.",
+            "Back up first and they come back in a minute when you sign in again.",
+            "\uba3c\uc800 \ubc31\uc5c5\ud558\uba74 \ub2e4\uc2dc \ub85c\uadf8\uc778\ud560 \ub54c"
+                    + " 1\ubd84 \ub9cc\uc5d0 \ub3cc\uc544\uc640\uc694.",
+            "Back up and sign out",
+            "\ubc31\uc5c5 \ud6c4 \ub85c\uadf8\uc544\uc6c3",
+            "Welcome back",
+            "\ub2e4\uc2dc \uc624\uc168\ub124\uc694",
+            "Restore what you had before signing out",
+            "\ub85c\uadf8\uc544\uc6c3 \uc804 \uc0c1\ud0dc \ubcf5\uc6d0",
+            "Backup from {0}",
+            "{0} \ubc31\uc5c5",
+            "Start fresh",
+            "\uc0c8\ub85c \uc2dc\uc791",
+            "The backup file stays where you saved it",
+            "\ubc31\uc5c5 \ud30c\uc77c\uc740 \uc800\uc7a5\ud55c \uc704\uce58\uc5d0"
+                    + " \uadf8\ub300\ub85c \ub0a8\uc544\uc694",
+            "Forget",
+            "\uc78a\uae30",
+            "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
+                    + " Restore.",
+            "\uadf8 \ubc31\uc5c5\uc744 \ub354 \uc774\uc0c1 \uc5f4 \uc218 \uc5c6\uc5b4\uc694."
+                    + " \ubc31\uc5c5 \ubc0f \uacf5\uc720 \u2192 \ubcf5\uc6d0\uc5d0\uc11c"
+                    + " \uc120\ud0dd\ud558\uc138\uc694.",
         };
     }
 
@@ -14523,6 +14872,34 @@ final class Translations {
             "{0} \u00b7 de {1}",
             "{0} \u00b7 really {1}bit",
             "{0} \u00b7 na verdade {1}bit",
+            "Signing out removes your music chats, saved index, corrected names and main channel"
+                    + " setup from this phone.",
+            "Sair remove deste celular seus chats de m\u00fasica, o \u00cdndice salvo, os nomes"
+                    + " corrigidos e a configura\u00e7\u00e3o do canal principal.",
+            "Back up first and they come back in a minute when you sign in again, without indexing"
+                    + " {0} files again.",
+            "Fa\u00e7a backup antes e tudo volta em um minuto quando voc\u00ea entrar de novo, sem"
+                    + " indexar {0} arquivos de novo.",
+            "Back up first and they come back in a minute when you sign in again.",
+            "Fa\u00e7a backup antes e tudo volta em um minuto quando voc\u00ea entrar de novo.",
+            "Back up and sign out",
+            "Fazer backup e sair",
+            "Welcome back",
+            "Ol\u00e1 de novo",
+            "Restore what you had before signing out",
+            "Restaurar o que voc\u00ea tinha antes de sair",
+            "Backup from {0}",
+            "Backup de {0}",
+            "Start fresh",
+            "Come\u00e7ar do zero",
+            "The backup file stays where you saved it",
+            "O arquivo de backup fica onde voc\u00ea o salvou",
+            "Forget",
+            "Esquecer",
+            "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
+                    + " Restore.",
+            "N\u00e3o \u00e9 mais poss\u00edvel abrir esse backup. Escolha-o em Backup e"
+                    + " compartilhamento \u2192 Restaurar.",
         };
     }
 
@@ -16864,6 +17241,72 @@ final class Translations {
             "{0} \u00b7 \u0438\u0437 {1}",
             "{0} \u00b7 really {1}bit",
             "{0} \u00b7 \u043d\u0430 \u0434\u0435\u043b\u0435 {1}bit",
+            "Signing out removes your music chats, saved index, corrected names and main channel"
+                    + " setup from this phone.",
+            "\u041f\u0440\u0438 \u0432\u044b\u0445\u043e\u0434\u0435 \u0441"
+                + " \u044d\u0442\u043e\u0433\u043e \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430"
+                + " \u0443\u0434\u0430\u043b\u044f\u044e\u0442\u0441\u044f"
+                + " \u043c\u0443\u0437\u044b\u043a\u0430\u043b\u044c\u043d\u044b\u0435"
+                + " \u0447\u0430\u0442\u044b,"
+                + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
+                + " \u0438\u043d\u0434\u0435\u043a\u0441,"
+                + " \u0438\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0435"
+                + " \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044f \u0438"
+                + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430"
+                + " \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0433\u043e"
+                + " \u043a\u0430\u043d\u0430\u043b\u0430.",
+            "Back up first and they come back in a minute when you sign in again, without indexing"
+                    + " {0} files again.",
+            "\u0421\u043d\u0430\u0447\u0430\u043b\u0430"
+                    + " \u0441\u043e\u0437\u0434\u0430\u0439\u0442\u0435"
+                    + " \u043a\u043e\u043f\u0438\u044e, \u0438 \u043f\u043e\u0441\u043b\u0435"
+                    + " \u043f\u043e\u0432\u0442\u043e\u0440\u043d\u043e\u0433\u043e"
+                    + " \u0432\u0445\u043e\u0434\u0430 \u0432\u0441\u0451"
+                    + " \u0432\u0435\u0440\u043d\u0451\u0442\u0441\u044f \u0437\u0430"
+                    + " \u043c\u0438\u043d\u0443\u0442\u0443 \u0431\u0435\u0437"
+                    + " \u043f\u043e\u0432\u0442\u043e\u0440\u043d\u043e\u0439"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441\u0430\u0446\u0438\u0438"
+                    + " (\u0444\u0430\u0439\u043b\u043e\u0432: {0}).",
+            "Back up first and they come back in a minute when you sign in again.",
+            "\u0421\u043d\u0430\u0447\u0430\u043b\u0430"
+                    + " \u0441\u043e\u0437\u0434\u0430\u0439\u0442\u0435"
+                    + " \u043a\u043e\u043f\u0438\u044e, \u0438 \u043f\u043e\u0441\u043b\u0435"
+                    + " \u043f\u043e\u0432\u0442\u043e\u0440\u043d\u043e\u0433\u043e"
+                    + " \u0432\u0445\u043e\u0434\u0430 \u0432\u0441\u0451"
+                    + " \u0432\u0435\u0440\u043d\u0451\u0442\u0441\u044f \u0437\u0430"
+                    + " \u043c\u0438\u043d\u0443\u0442\u0443.",
+            "Back up and sign out",
+            "\u0421\u043e\u0437\u0434\u0430\u0442\u044c \u043a\u043e\u043f\u0438\u044e \u0438"
+                    + " \u0432\u044b\u0439\u0442\u0438",
+            "Welcome back",
+            "\u0421 \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0435\u043d\u0438\u0435\u043c",
+            "Restore what you had before signing out",
+            "\u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c \u0442\u043e,"
+                    + " \u0447\u0442\u043e \u0431\u044b\u043b\u043e \u0434\u043e"
+                    + " \u0432\u044b\u0445\u043e\u0434\u0430",
+            "Backup from {0}",
+            "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u0430\u044f \u043a\u043e\u043f\u0438\u044f"
+                    + " \u043e\u0442 {0}",
+            "Start fresh",
+            "\u041d\u0430\u0447\u0430\u0442\u044c \u0437\u0430\u043d\u043e\u0432\u043e",
+            "The backup file stays where you saved it",
+            "\u0424\u0430\u0439\u043b \u0440\u0435\u0437\u0435\u0440\u0432\u043d\u043e\u0439"
+                + " \u043a\u043e\u043f\u0438\u0438 \u043e\u0441\u0442\u0430\u0451\u0442\u0441\u044f"
+                + " \u0442\u0430\u043c, \u0433\u0434\u0435 \u0432\u044b \u0435\u0433\u043e"
+                + " \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u043b\u0438",
+            "Forget",
+            "\u0417\u0430\u0431\u044b\u0442\u044c",
+            "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
+                    + " Restore.",
+            "\u042d\u0442\u0443 \u0440\u0435\u0437\u0435\u0440\u0432\u043d\u0443\u044e"
+                + " \u043a\u043e\u043f\u0438\u044e \u0431\u043e\u043b\u044c\u0448\u0435"
+                + " \u043d\u0435\u043b\u044c\u0437\u044f"
+                + " \u043e\u0442\u043a\u0440\u044b\u0442\u044c."
+                + " \u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0435\u0451 \u0432"
+                + " \u0440\u0430\u0437\u0434\u0435\u043b\u0435"
+                + " \u00ab\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u044b\u0435"
+                + " \u043a\u043e\u043f\u0438\u0438 \u0438 \u043e\u0431\u043c\u0435\u043d \u2192"
+                + " \u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c\u00bb.",
         };
     }
 
@@ -18040,6 +18483,37 @@ final class Translations {
             "{0} \u00b7 kaynak {1}",
             "{0} \u00b7 really {1}bit",
             "{0} \u00b7 asl\u0131nda {1}bit",
+            "Signing out removes your music chats, saved index, corrected names and main channel"
+                    + " setup from this phone.",
+            "\u00c7\u0131k\u0131\u015f yapmak m\u00fczik sohbetlerinizi, kay\u0131tl\u0131 dizini,"
+                + " d\u00fczeltilmi\u015f adlar\u0131 ve ana kanal ayar\u0131n\u0131 bu telefondan"
+                + " kald\u0131r\u0131r.",
+            "Back up first and they come back in a minute when you sign in again, without indexing"
+                    + " {0} files again.",
+            "\u00d6nce yedekleyin; tekrar giri\u015f yapt\u0131\u011f\u0131n\u0131zda {0}"
+                    + " dosyay\u0131 yeniden dizine eklemeden bir dakikada geri gelirler.",
+            "Back up first and they come back in a minute when you sign in again.",
+            "\u00d6nce yedekleyin; tekrar giri\u015f yapt\u0131\u011f\u0131n\u0131zda bir dakikada"
+                    + " geri gelirler.",
+            "Back up and sign out",
+            "Yedekle ve \u00e7\u0131k\u0131\u015f yap",
+            "Welcome back",
+            "Tekrar ho\u015f geldiniz",
+            "Restore what you had before signing out",
+            "\u00c7\u0131k\u0131\u015f yapmadan \u00f6nceki her \u015feyi geri y\u00fckle",
+            "Backup from {0}",
+            "{0} tarihli yedek",
+            "Start fresh",
+            "S\u0131f\u0131rdan ba\u015fla",
+            "The backup file stays where you saved it",
+            "Yedek dosyas\u0131 kaydetti\u011finiz yerde kal\u0131r",
+            "Forget",
+            "Unut",
+            "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
+                    + " Restore.",
+            "Bu yedek art\u0131k a\u00e7\u0131lam\u0131yor. Yede\u011fi Yedekleme ve"
+                    + " payla\u015f\u0131m \u2192 Geri y\u00fckle b\u00f6l\u00fcm\u00fcnden"
+                    + " se\u00e7in.",
         };
     }
 
@@ -20150,6 +20624,63 @@ final class Translations {
             "{0} \u00b7 {1} \u0633\u06d2",
             "{0} \u00b7 really {1}bit",
             "{0} \u00b7 \u0627\u0635\u0644 \u0645\u06cc\u06ba {1}bit",
+            "Signing out removes your music chats, saved index, corrected names and main channel"
+                    + " setup from this phone.",
+            "\u0633\u0627\u0626\u0646 \u0622\u0624\u0679 \u06a9\u0631\u0646\u06d2 \u0633\u06d2"
+                    + " \u0622\u067e \u06a9\u06cc \u0645\u06cc\u0648\u0632\u06a9"
+                    + " \u0686\u06cc\u0679\u0633\u060c \u0645\u062d\u0641\u0648\u0638"
+                    + " \u0627\u0646\u0688\u06cc\u06a9\u0633\u060c \u062f\u0631\u0633\u062a"
+                    + " \u06a9\u06cc\u06d2 \u06af\u0626\u06d2 \u0646\u0627\u0645 \u0627\u0648\u0631"
+                    + " \u0645\u06cc\u0646 \u0686\u06cc\u0646\u0644 \u06a9\u0627 \u0633\u06cc\u0679"
+                    + " \u0627\u067e \u0627\u0633 \u0641\u0648\u0646 \u0633\u06d2 \u06c1\u0679"
+                    + " \u062c\u0627\u062a\u06d2 \u06c1\u06cc\u06ba\u06d4",
+            "Back up first and they come back in a minute when you sign in again, without indexing"
+                    + " {0} files again.",
+            "\u067e\u06c1\u0644\u06d2 \u0628\u06cc\u06a9 \u0627\u067e \u0644\u06cc\u06ba"
+                    + " \u062a\u0648 \u062f\u0648\u0628\u0627\u0631\u06c1 \u0633\u0627\u0626\u0646"
+                    + " \u0627\u0646 \u06a9\u0631\u0646\u06d2 \u067e\u0631 \u06cc\u06c1"
+                    + " \u0627\u06cc\u06a9 \u0645\u0646\u0679 \u0645\u06cc\u06ba"
+                    + " \u0648\u0627\u067e\u0633 \u0622 \u062c\u0627\u0626\u06cc\u06ba"
+                    + " \u06af\u06d2\u060c {0} \u0641\u0627\u0626\u0644\u06cc\u06ba"
+                    + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                    + " \u06a9\u06cc\u06d2 \u0628\u063a\u06cc\u0631\u06d4",
+            "Back up first and they come back in a minute when you sign in again.",
+            "\u067e\u06c1\u0644\u06d2 \u0628\u06cc\u06a9 \u0627\u067e \u0644\u06cc\u06ba"
+                    + " \u062a\u0648 \u062f\u0648\u0628\u0627\u0631\u06c1 \u0633\u0627\u0626\u0646"
+                    + " \u0627\u0646 \u06a9\u0631\u0646\u06d2 \u067e\u0631 \u06cc\u06c1"
+                    + " \u0627\u06cc\u06a9 \u0645\u0646\u0679 \u0645\u06cc\u06ba"
+                    + " \u0648\u0627\u067e\u0633 \u0622 \u062c\u0627\u0626\u06cc\u06ba"
+                    + " \u06af\u06d2\u06d4",
+            "Back up and sign out",
+            "\u0628\u06cc\u06a9 \u0627\u067e \u0644\u06cc\u06ba \u0627\u0648\u0631"
+                    + " \u0633\u0627\u0626\u0646 \u0622\u0624\u0679 \u06a9\u0631\u06cc\u06ba",
+            "Welcome back",
+            "\u062f\u0648\u0628\u0627\u0631\u06c1 \u062e\u0648\u0634"
+                    + " \u0622\u0645\u062f\u06cc\u062f",
+            "Restore what you had before signing out",
+            "\u0633\u0627\u0626\u0646 \u0622\u0624\u0679 \u0633\u06d2 \u067e\u06c1\u0644\u06d2"
+                    + " \u0648\u0627\u0644\u06cc \u0686\u06cc\u0632\u06cc\u06ba"
+                    + " \u0628\u062d\u0627\u0644 \u06a9\u0631\u06cc\u06ba",
+            "Backup from {0}",
+            "{0} \u06a9\u0627 \u0628\u06cc\u06a9 \u0627\u067e",
+            "Start fresh",
+            "\u0646\u0626\u06d2 \u0633\u0631\u06d2 \u0633\u06d2 \u0634\u0631\u0648\u0639"
+                    + " \u06a9\u0631\u06cc\u06ba",
+            "The backup file stays where you saved it",
+            "\u0628\u06cc\u06a9 \u0627\u067e \u0641\u0627\u0626\u0644 \u0648\u06c1\u06cc\u06ba"
+                    + " \u0631\u06c1\u062a\u06cc \u06c1\u06d2 \u062c\u06c1\u0627\u06ba \u0622\u067e"
+                    + " \u0646\u06d2 \u0627\u0633\u06d2 \u0645\u062d\u0641\u0648\u0638"
+                    + " \u06a9\u06cc\u0627",
+            "Forget",
+            "\u0628\u06be\u0648\u0644 \u062c\u0627\u0626\u06cc\u06ba",
+            "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
+                    + " Restore.",
+            "\u0648\u06c1 \u0628\u06cc\u06a9 \u0627\u067e \u0627\u0628 \u0646\u06c1\u06cc\u06ba"
+                    + " \u06a9\u06be\u0644 \u0633\u06a9\u062a\u0627\u06d4 \u0627\u0633\u06d2"
+                    + " \u201c\u0628\u06cc\u06a9 \u0627\u067e \u0627\u0648\u0631"
+                    + " \u0634\u06cc\u0626\u0631\u0646\u06af \u2192 \u0628\u062d\u0627\u0644"
+                    + " \u06a9\u0631\u06cc\u06ba\u201d \u0645\u06cc\u06ba"
+                    + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba\u06d4",
         };
     }
 
@@ -21290,6 +21821,33 @@ final class Translations {
             "{0} \u00b7 \u6e90\u81ea {1}",
             "{0} \u00b7 really {1}bit",
             "{0} \u00b7 \u5b9e\u4e3a {1}bit",
+            "Signing out removes your music chats, saved index, corrected names and main channel"
+                    + " setup from this phone.",
+            "\u9000\u51fa\u767b\u5f55\u4f1a\u4ece\u8fd9\u90e8\u624b\u673a\u4e0a\u79fb\u9664\u4f60\u7684\u97f3\u4e50\u804a\u5929\u3001\u5df2\u4fdd\u5b58\u7d22\u5f15\u3001\u66f4\u6b63\u7684\u540d\u79f0\u548c\u4e3b\u9891\u9053\u8bbe\u7f6e\u3002",
+            "Back up first and they come back in a minute when you sign in again, without indexing"
+                    + " {0} files again.",
+            "\u5148\u5907\u4efd\uff0c\u91cd\u65b0\u767b\u5f55\u540e\u4e00\u5206\u949f\u5185\u5c31\u80fd\u6062\u590d\uff0c\u65e0\u9700\u91cd\u65b0\u7d22\u5f15"
+                + " {0} \u4e2a\u6587\u4ef6\u3002",
+            "Back up first and they come back in a minute when you sign in again.",
+            "\u5148\u5907\u4efd\uff0c\u91cd\u65b0\u767b\u5f55\u540e\u4e00\u5206\u949f\u5185\u5c31\u80fd\u6062\u590d\u3002",
+            "Back up and sign out",
+            "\u5907\u4efd\u5e76\u9000\u51fa\u767b\u5f55",
+            "Welcome back",
+            "\u6b22\u8fce\u56de\u6765",
+            "Restore what you had before signing out",
+            "\u6062\u590d\u9000\u51fa\u767b\u5f55\u524d\u7684\u5185\u5bb9",
+            "Backup from {0}",
+            "{0} \u7684\u5907\u4efd",
+            "Start fresh",
+            "\u91cd\u65b0\u5f00\u59cb",
+            "The backup file stays where you saved it",
+            "\u5907\u4efd\u6587\u4ef6\u4ecd\u4fdd\u7559\u5728\u4f60\u4fdd\u5b58\u7684\u4f4d\u7f6e",
+            "Forget",
+            "\u5ffd\u7565",
+            "That backup can\u2019t be opened any more. Pick it under Backup and sharing \u2192"
+                    + " Restore.",
+            "\u65e0\u6cd5\u518d\u6253\u5f00\u8be5\u5907\u4efd\u3002\u8bf7\u5728\u300c\u5907\u4efd\u4e0e\u5206\u4eab"
+                + " \u2192 \u6062\u590d\u300d\u4e2d\u9009\u62e9\u5b83\u3002",
         };
     }
 }

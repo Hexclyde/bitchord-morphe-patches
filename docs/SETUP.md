@@ -91,6 +91,6 @@ To free space, stop playback and tap **Clear Telegram audio cache**. BitChord al
 
 ## Sign out or revoke access
 
-Use **Session → Sign out** on the Telegram page's **Basic** tab. You can also revoke this session in the official Telegram app under **Settings → Devices**.
+Use **Session → Sign out** on the Telegram page's **Basic** tab. Signing out removes your music chats, saved index and other settings from the phone, so it offers **Back up and sign out** first; after you sign in again, **Welcome back** restores everything in one tap. You can also revoke this session in the official Telegram app under **Settings → Devices**.
 
 Signing out does not delete audio already saved in BitChord's cache or downloads. See [Privacy](../PRIVACY.md) for account access and storage details.

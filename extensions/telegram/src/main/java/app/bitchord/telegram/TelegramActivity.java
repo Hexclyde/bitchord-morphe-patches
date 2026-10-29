@@ -284,7 +284,10 @@ public final class TelegramActivity extends Activity {
             tabs();
             advancedPage();
         } else {
-            if (bridge.ready()) tabs();
+            if (bridge.ready()) {
+                tabs();
+                comeBack();
+            }
             LinearLayout app = card("Application");
             row(
                     app,
@@ -715,20 +718,122 @@ public final class TelegramActivity extends Activity {
 
     void session() {
         LinearLayout session = card("Session");
-        action(
-                session,
-                "Sign out",
-                false,
+        action(session, "Sign out", false, this::askSignOut);
+    }
+
+    /**
+     * Signing out removes this phone's music chats, saved index and the rest, so it offers a backup
+     * first, which can be restored in one tap after signing in again.
+     */
+    void askSignOut() {
+        bridge.work.execute(
+                () -> {
+                    int files = bridge.indexedFiles();
+                    runOnUiThread(
+                            () -> {
+                                if (isFinishing() || isDestroyed()) return;
+                                String message =
+                                        Strings.t(
+                                                        "Signing out removes your music chats,"
+                                                            + " saved index, corrected names and"
+                                                            + " main channel setup from this"
+                                                            + " phone.")
+                                                + "\n\n"
+                                                + (files > 0
+                                                        ? Strings.f(
+                                                                "Back up first and they come back"
+                                                                    + " in a minute when you sign"
+                                                                    + " in again, without indexing"
+                                                                    + " {0} files again.",
+                                                                Strings.number(files))
+                                                        : Strings.t(
+                                                                "Back up first and they come back"
+                                                                    + " in a minute when you sign"
+                                                                    + " in again."));
+                                AlertDialog dialog =
+                                        new AlertDialog.Builder(this)
+                                                .setTitle(Strings.t("Sign out?"))
+                                                .setMessage(message)
+                                                .setPositiveButton(
+                                                        Strings.t("Back up and sign out"),
+                                                        (d, w) -> {
+                                                            backupWithIndex = true;
+                                                            signOutAfterBackup = true;
+                                                            startActivityForResult(
+                                                                    backupFile(true), BACKUP);
+                                                        })
+                                                .setNeutralButton(
+                                                        Strings.t("Sign out"),
+                                                        (d, w) -> run(() -> bridge.logout()))
+                                                .setNegativeButton(Strings.t("Cancel"), null)
+                                                .create();
+                                secureWindow(dialog.getWindow());
+                                dialog.show();
+                                style.tuneDialog(dialog);
+                            });
+                });
+    }
+
+    /** Asks where to save a backup; one made at sign-out stays readable for restoring later. */
+    Intent backupFile(boolean keep) {
+        Intent save = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        save.addCategory(Intent.CATEGORY_OPENABLE);
+        save.setType("application/gzip");
+        save.putExtra(
+                Intent.EXTRA_TITLE, "bitchord-telegram-backup-" + TelegramBridge.today() + ".gz");
+        if (keep)
+            save.addFlags(
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                            | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                            | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        return save;
+    }
+
+    /** After signing in again: the backup made at sign-out, to restore in one tap. */
+    void comeBack() {
+        JSONObject last = bridge.lastBackup();
+        if (last == null) return;
+        LinearLayout card = card("Welcome back");
+        String when =
+                java.text.DateFormat.getDateTimeInstance(
+                                java.text.DateFormat.MEDIUM, java.text.DateFormat.SHORT)
+                        .format(new java.util.Date(last.optLong("at")));
+        row(
+                card,
+                "Restore what you had before signing out",
+                Strings.f("Backup from {0}", when),
+                "Restore",
                 () ->
-                        confirm(
-                                "Sign out?",
-                                "This signs you out of Telegram on this phone.",
-                                "Sign out",
-                                () -> run(() -> bridge.logout())));
+                        run(
+                                () -> {
+                                    android.net.Uri uri =
+                                            android.net.Uri.parse(last.optString("uri"));
+                                    java.io.InputStream in;
+                                    try {
+                                        in = getContentResolver().openInputStream(uri);
+                                    } catch (Exception e) {
+                                        in = null;
+                                    }
+                                    if (in == null)
+                                        throw new java.io.IOException(
+                                                "That backup can’t be opened any more. Pick it"
+                                                        + " under Backup and sharing → Restore.");
+                                    try (java.io.InputStream file = in) {
+                                        bridge.restore(file);
+                                    }
+                                    bridge.forgetBackup();
+                                }));
+        divider(card);
+        row(
+                card,
+                "Start fresh",
+                "The backup file stays where you saved it",
+                "Forget",
+                () -> run(() -> bridge.forgetBackup()));
     }
 
     static final int BACKUP = 41, RESTORE = 42, EXPORT_INDEX = 43;
-    boolean backupWithIndex = true;
+    boolean backupWithIndex = true, signOutAfterBackup;
     long exportChat;
 
     /** Backing up and restoring settings, and sharing a chat's saved index. */
@@ -793,15 +898,8 @@ public final class TelegramActivity extends Activity {
                                 Strings.t("Back up"),
                                 (d, w) -> {
                                     backupWithIndex = withIndex[0];
-                                    Intent save = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                                    save.addCategory(Intent.CATEGORY_OPENABLE);
-                                    save.setType("application/gzip");
-                                    save.putExtra(
-                                            Intent.EXTRA_TITLE,
-                                            "bitchord-telegram-backup-"
-                                                    + TelegramBridge.today()
-                                                    + ".gz");
-                                    startActivityForResult(save, BACKUP);
+                                    signOutAfterBackup = false;
+                                    startActivityForResult(backupFile(false), BACKUP);
                                 })
                         .create();
         secureWindow(dialog.getWindow());
@@ -886,15 +984,29 @@ public final class TelegramActivity extends Activity {
     @Override
     protected void onActivityResult(int request, int result, Intent data) {
         super.onActivityResult(request, result, data);
+        boolean signOut = request == BACKUP && signOutAfterBackup;
+        if (request == BACKUP) signOutAfterBackup = false;
         if (result != RESULT_OK || data == null || data.getData() == null || bridge == null) return;
         android.net.Uri uri = data.getData();
         if (request == BACKUP)
             run(
-                    false,
+                    signOut,
                     () -> {
                         try (java.io.OutputStream out =
                                 getContentResolver().openOutputStream(uri, "wt")) {
                             bridge.backup(out, backupWithIndex);
+                        }
+                        // Only once the backup is safely written.
+                        if (signOut) {
+                            try {
+                                getContentResolver()
+                                        .takePersistableUriPermission(
+                                                uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            } catch (RuntimeException e) {
+                                // Still offered while this page can read it.
+                            }
+                            bridge.logout();
+                            bridge.rememberBackup(uri.toString());
                         }
                     });
         else if (request == EXPORT_INDEX)

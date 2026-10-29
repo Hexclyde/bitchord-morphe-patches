@@ -496,6 +496,86 @@ public class TelegramScreenTest {
     }
 
     @Test
+    public void signOutWithBackupAndComeBack() throws Exception {
+        TelegramBridge bridge = activity.bridge;
+        signedIn();
+        assertNull("Nothing to restore yet", text(activity.body, "WELCOME BACK"));
+        click("Sign out");
+        idle();
+        android.app.AlertDialog ask =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        assertTrue(
+                Shadows.shadowOf(ask)
+                        .getMessage()
+                        .toString()
+                        .contains("without indexing 223,776 files again"));
+        // Cancelling the file picker signs nobody out.
+        ask.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        android.content.Intent save =
+                Shadows.shadowOf(activity).getNextStartedActivityForResult().intent;
+        assertEquals(android.content.Intent.ACTION_CREATE_DOCUMENT, save.getAction());
+        assertTrue(
+                (save.getFlags() & android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+                        != 0);
+        Shadows.shadowOf(activity).receiveResult(save, android.app.Activity.RESULT_CANCELED, null);
+        idle();
+        assertTrue("Still signed in", bridge.ready());
+        assertTrue(bridge.backups.isEmpty());
+
+        click("Sign out");
+        idle();
+        org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+                .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                .performClick();
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        save = Shadows.shadowOf(activity).getNextStartedActivityForResult().intent;
+        android.net.Uri file = android.net.Uri.parse("content://test/signout.gz");
+        java.io.ByteArrayOutputStream written = new java.io.ByteArrayOutputStream();
+        Shadows.shadowOf(activity.getContentResolver()).registerOutputStream(file, written);
+        Shadows.shadowOf(activity)
+                .receiveResult(
+                        save,
+                        android.app.Activity.RESULT_OK,
+                        new android.content.Intent().setData(file));
+        idle();
+        assertEquals(
+                "Backed up with the index, then signed out",
+                java.util.Arrays.asList("backup true", "logout"),
+                bridge.backups);
+        assertEquals(1, written.size());
+        assertFalse(bridge.ready());
+        assertEquals("content://test/signout.gz", bridge.lastBackup().getString("uri"));
+
+        // Signed in again: one tap brings it all back.
+        signedIn();
+        assertNotNull(text(activity.body, "WELCOME BACK"));
+        Shadows.shadowOf(activity.getContentResolver())
+                .registerInputStream(file, new java.io.ByteArrayInputStream(new byte[1]));
+        clickRow("Restore what you had before signing out");
+        idle();
+        assertEquals("restore", bridge.backups.get(2));
+        assertNull("Offered once", bridge.lastBackup());
+        assertNull(text(activity.body, "WELCOME BACK"));
+
+        // Or start fresh; signing out without a backup offers nothing later.
+        bridge.rememberBackup("content://test/old.gz");
+        activity.screen = "";
+        activity.render();
+        clickRow("Start fresh");
+        idle();
+        assertNull(bridge.lastBackup());
+        click("Sign out");
+        idle();
+        org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+                .getButton(android.app.AlertDialog.BUTTON_NEUTRAL)
+                .performClick();
+        idle();
+        assertFalse(bridge.ready());
+        assertEquals("logout", bridge.backups.get(bridge.backups.size() - 1));
+    }
+
+    @Test
     public void fakeLosslessChecksAndNamingBySound() throws Exception {
         TelegramBridge bridge = activity.bridge;
         signedIn();

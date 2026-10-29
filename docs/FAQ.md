@@ -81,7 +81,7 @@ Yes, with **Name untagged files by sound** under **Track names** (off by default
 3. On the Telegram page, tap **Track names → AcoustID key → Enter**, paste the key and tap **Save**.
 4. Turn on **Name untagged files by sound**.
 
-A song that plays is looked up a minute later. Your other untagged files are gone through in the background, up to 500 a day, keeping to the saved index's Wi-Fi and charging switches. For each file, the first two minutes are decoded on the phone into a Chromaprint fingerprint, and only that, the file's length and your key are sent; no audio leaves the phone. When AcoustID knows the recording, the file gets its title and artist, and search and BitChord's matching find it under them. A file it doesn't know is asked about again after a month. Songs in zips and cue albums are named from the zip or the cue sheet instead.
+A song that plays is looked up a minute later. Your other untagged files are gone through in the background, up to 500 a day, keeping to the saved index's Wi-Fi and charging switches. For each file, the first two minutes are decoded on the phone into a Chromaprint fingerprint, and only that, the file's length and your key are sent; no audio leaves the phone. When AcoustID knows the recording, the file gets its title and artist, and search and BitChord's matching find it under them. A file it doesn't know is asked about again after a month. Songs in zips and cue albums are named from the zip or the cue sheet instead. The key stays on your phone when you sign out, and is never put in backups or index files.
 
 ## Can it play 5.1 or 7.1 files as stereo?
 
@@ -183,6 +183,8 @@ On the **Advanced** tab of the Telegram page. **Basic** has what most people nee
 ## Can I back up my settings or move them to another phone?
 
 Yes. On the **Advanced** tab, **Backup and sharing → Back up** saves a file wherever you choose: your settings, your music chats, your corrected names, your main channel setup, and the saved index too if you leave **Include the saved index** ticked. **Restore** reads it back. A backup never holds your API details or your Telegram session, so on a new phone you enter the API details and sign in first, then restore.
+
+Signing out removes your music chats, the saved index, corrected names and main channel setup from the phone, so **Session → Sign out** offers **Back up and sign out** first. You're signed out only once the backup is saved. When you sign in again on the same phone, the **Basic** tab shows **Welcome back → Restore what you had before signing out**, and one tap brings everything back, with the index and its checks, without reading your chats from Telegram again. **Start fresh** stops offering it; the file stays where you saved it, and **Restore** can still read it later.
 
 ## Can my friends use my index of a channel we're both in?
 

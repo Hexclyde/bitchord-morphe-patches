@@ -443,5 +443,16 @@
   "{0} · from a lossy file",
   "{0} · maybe lossy",
   "{0} · from {1}",
-  "{0} · really {1}bit"
+  "{0} · really {1}bit",
+  "Signing out removes your music chats, saved index, corrected names and main channel setup from this phone.",
+  "Back up first and they come back in a minute when you sign in again, without indexing {0} files again.",
+  "Back up first and they come back in a minute when you sign in again.",
+  "Back up and sign out",
+  "Welcome back",
+  "Restore what you had before signing out",
+  "Backup from {0}",
+  "Start fresh",
+  "The backup file stays where you saved it",
+  "Forget",
+  "That backup can’t be opened any more. Pick it under Backup and sharing → Restore."
 ]

@@ -262,7 +262,8 @@ public final class FileChecksTest {
                 outName.getJSONObject("recognized").optString("title").equals("Real Title"),
                 "names kept");
         checks.clear();
-        check(checks.key().isEmpty() && checks.status().isEmpty(), "signing out clears");
+        check(checks.status().isEmpty(), "signing out clears the counts");
+        check(checks.key().equals("Key12345"), "the AcoustID key isn't Telegram's, and stays");
         store.clear();
         check(store.found("check", "-100_2") == null, "clearing the index clears what was found");
         System.out.println("PASS: " + passed + " file check, recognition and saved-result checks.");

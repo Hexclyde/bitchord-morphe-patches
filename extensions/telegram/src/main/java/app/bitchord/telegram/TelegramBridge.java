@@ -777,7 +777,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.0.16"));
+                            "1.0.17"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -2009,6 +2009,46 @@ public final class TelegramBridge {
                         0));
     }
 
+    // ── Signing out with a backup ───────────────────────────────────────────
+
+    private File lastBackupFile() {
+        return new File(home, "last-backup.json");
+    }
+
+    /** Files in the saved index of the chats a backup would include. */
+    public int indexedFiles() {
+        int files = 0;
+        if (!index.enabled) return 0;
+        for (long chat : indexedChats())
+            try {
+                files += index.count(chat);
+            } catch (Exception ignored) {
+                // Counted without it.
+            }
+        return files;
+    }
+
+    /** The backup made when signing out, offered for restoring after signing in again. */
+    public void rememberBackup(String uri) throws Exception {
+        writeJson(
+                lastBackupFile(),
+                new JSONObject().put("uri", uri).put("at", System.currentTimeMillis()));
+    }
+
+    /** {uri, at}, or null. */
+    public JSONObject lastBackup() {
+        try {
+            File file = lastBackupFile();
+            return file.isFile() ? readJson(file) : null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void forgetBackup() {
+        lastBackupFile().delete();
+    }
+
     public void logout() throws Exception {
         if (audio.active()) throw new IOException("Stop playback before signing out");
         call(new TdApi.LogOut());
@@ -2018,6 +2058,8 @@ public final class TelegramBridge {
         index.clear();
         soundCheck.clear();
         checks.clear();
+        // An older backup isn't offered after a sign-out without one.
+        forgetBackup();
         mainChannel.clear();
         names.clear();
         artwork.clear();

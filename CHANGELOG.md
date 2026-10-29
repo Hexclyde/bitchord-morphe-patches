@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.17
+
+- **Back up and sign out:** **Session → Sign out** now offers to back up first. The backup holds your music chats, settings, corrected names, main channel setup and the saved index, with its fake lossless checks and names found by sound. You're signed out only once it's saved. After you sign in again, a **Welcome back** card restores it all in one tap, without indexing your chats again. **Start fresh** forgets it instead, and the file stays where you saved it.
+- Your AcoustID key stays on the phone when you sign out. It's still never in backups.
+
 ## 1.0.16
 
 - **Fake lossless check:** with **Check lossless files** on (under **Track details**, on by default), a FLAC or WAV file that plays is checked a minute later. A file made from an MP3 or AAC keeps that encoder's cut-off, and the check finds it in a few stretches of the file, much of which playing has already downloaded. What it finds:

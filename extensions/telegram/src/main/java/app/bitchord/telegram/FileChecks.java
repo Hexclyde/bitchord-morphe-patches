@@ -152,15 +152,15 @@ final class FileChecks {
         write(keyFile, new JSONObject().put("acoustid", value));
     }
 
-    /** Signing out: counts, the key and the songs waiting go. */
+    /**
+     * Signing out: counts and the songs waiting go. The AcoustID key isn't Telegram's, and stays.
+     */
     synchronized void clear() {
         saved = new JSONObject();
-        key = "";
         keyProblem = "";
         played.clear();
         failed.clear();
         if (file != null) file.delete();
-        if (keyFile != null) keyFile.delete();
     }
 
     // ── What to check ───────────────────────────────────────────────────────
