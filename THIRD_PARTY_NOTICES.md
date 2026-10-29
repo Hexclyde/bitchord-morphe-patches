@@ -17,6 +17,14 @@ The native libraries are shipped unchanged. They were built from these source co
 - tdlib/td: [`ea3f69c`](https://github.com/tdlib/td/tree/ea3f69ce11aef458bfbb09869b809ede4447486f)
 - OpenSSL: [`45e844f`](https://github.com/openssl/openssl/tree/45e844fa2a14ec92d146bd8f5778ac130b6625fb)
 
+## Code ported from other projects
+
+| Project | What | License |
+| --- | --- | --- |
+| [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45 and the BitChord contributors, a fork of [BitChord](https://github.com/kushagrasinghx/BitChord) by kushagra | Sing (`VocalCut.java`), from `VocalCutDsp.kt` and `VocalCutOriginal.kt` at [`4c07477`](https://github.com/OreoMuncher45/Auris/tree/4c07477533d8ce9fb0f2ba7f5cc33e070e4d8f1f), translated to Java | [GPL-3.0](licenses/GPL-3.0.txt) |
+
+The pitch, loudness level and battery saver settings in Playback extras follow features of Auris, [Prism](https://github.com/Yigder/Prism) by Yigder (GPL-3.0-or-later) and [Stash](https://github.com/rawnaldclark/Stash) by Rawnald Clark (GPL-3.0-or-later). Their code is written for BitChord; nothing was copied from Prism or Stash.
+
 ## Not bundled
 
 [BitChord](https://github.com/kushagrasinghx/BitChord) is a separate GPL-3.0 app (patched against [`7d956f2`](https://github.com/kushagrasinghx/BitChord/tree/7d956f211b8a46a87184fd3ff87432b51a111dfa)). This repository doesn't distribute it. If you redistribute a patched APK, BitChord's own license obligations apply.

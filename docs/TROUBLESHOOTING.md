@@ -17,7 +17,7 @@ Morphe has saved a source entry but could not load its details or patch bundle.
 
 ## BitChord or the patches do not appear
 
-Expand this source's card. Enable **Pre-release patches**, then **Experimental app versions**, and keep BitChord selected under **Apps**. Check that the source shows the newest version. An **Update Morphe** badge means you need a newer Morphe Manager.
+Expand this source's card. Enable **Experimental app versions** and keep BitChord selected under **Apps**. Check that the source shows the newest version. An **Update Morphe** badge means you need a newer Morphe Manager.
 
 For a Local source, select the `.mpp` file, not the source-code ZIP or an APK.
 

@@ -12,7 +12,12 @@ VERSION = PROVENANCE["patch_bundle_version"]
 PATCHER_VERSION = PROVENANCE["patcher_version"]
 APP_VERSION = PROVENANCE["app_version"]
 BUNDLE_NAME = f"bitchord-patches-{VERSION}.mpp"
-PATCHES = ["Unofficial Telegram music", "Install as Bitchord+", "Sign in with MicroG"]
+PATCHES = [
+    "Unofficial Telegram music",
+    "Install as Bitchord+",
+    "Sign in with MicroG",
+    "Playback extras",
+]
 
 TOOLS = Path(os.environ.get("MORPHE_TOOLS", ROOT / ".deps/tools"))
 TDLIB = Path(os.environ.get("TDLIB_ANDROID", ROOT / ".deps/tdlib"))

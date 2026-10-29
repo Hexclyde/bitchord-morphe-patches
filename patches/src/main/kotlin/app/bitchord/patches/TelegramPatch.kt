@@ -1758,3 +1758,319 @@ val microGSignInPatch =
             println("Offered MicroG RE sign-in on the YouTube Music sign-in page")
         }
     }
+
+private const val EXTRAS = "Lapp/bitchord/telegram/SoundExtras;"
+private const val EXTRAS_UI = "Lapp/bitchord/telegram/ExtrasUi;"
+private const val SINK = "Lcom/music/bitchord/playback/audio/PrecisionAudioSink;"
+private const val SETTINGS_GROUP_PARAMETERS =
+    "Ljava/lang/String;Ljava/lang/String;FLandroidx/compose/runtime/internal/ComposableLambdaImpl;Landroidx/compose/runtime/ComposerImpl;II"
+
+private val extrasResources = resourcePatch {
+    execute {
+        document("AndroidManifest.xml").use { doc ->
+            val app = doc.getElementsByTagName("application").item(0) as org.w3c.dom.Element
+            val activity = doc.createElement("activity")
+            activity.setAttributeNS(ANDROID, "android:name", "app.bitchord.telegram.ExtrasActivity")
+            activity.setAttributeNS(ANDROID, "android:exported", "false")
+            activity.setAttributeNS(ANDROID, "android:label", "Playback extras")
+            activity.setAttributeNS(
+                ANDROID,
+                "android:theme",
+                "@android:style/Theme.Material.NoActionBar",
+            )
+            app.appendChild(activity)
+        }
+    }
+}
+
+/** Sing: each decoded block goes through the vocal cut before BitChord's equaliser and effects. */
+private fun BytecodePatchContext.addSing() {
+    val sink = mutableClassDefBy(SINK)
+    fun Instruction.readsField(name: String) =
+        opcode == Opcode.IGET_OBJECT &&
+            fieldRef()?.let { it.definingClass == SINK && it.name == name } == true
+    // The audio chain starts where the sink reads its effects chain, then the block it fills.
+    val found =
+        sink.methods.mapNotNull { method ->
+            val code = method.implementation?.instructions?.toList() ?: return@mapNotNull null
+            val at =
+                code.indices.filter { i ->
+                    code[i].readsField("dspChain") &&
+                        i + 1 < code.size &&
+                        code[i + 1].readsField("audioBlock")
+                }
+            if (at.isEmpty()) null else method to at
+        }
+    check(found.size == 1 && found[0].second.size == 1) { "Audio chain entry not unique" }
+    val (method, at) = found[0]
+    val code = method.implementation!!.instructions.toList()
+    val chainRead = code[at[0]] as TwoRegisterInstruction
+    val blockRead = code[at[0] + 1] as TwoRegisterInstruction
+    val sinkRegister = chainRead.registerB
+    val blockRegister = blockRead.registerA
+    check(blockRead.registerB == sinkRegister) { "Audio block read changed" }
+    // BitChord checks the block isn't null, then reads its frame count into a scratch register.
+    val nullCheck =
+        (at[0] + 2 until minOf(at[0] + 6, code.size)).single {
+            code[it].methodRef()?.name == "checkNotNullParameter"
+        }
+    val next = code[nullCheck + 1] as TwoRegisterInstruction
+    check(next.opcode == Opcode.IGET && next.registerB == blockRegister) {
+        "Audio block frame count read changed"
+    }
+    val scratch = next.registerA
+    check(maxOf(sinkRegister, blockRegister, scratch) < 16) { "Audio chain registers out of range" }
+    check(sink.fields.any { it.name == "configuredSampleRate" && it.type == "I" }) {
+        "Audio sink sample rate field changed"
+    }
+    method.addInstructions(
+        nullCheck + 1,
+        """
+        iget v$scratch, v$sinkRegister, $SINK->configuredSampleRate:I
+        invoke-static {v$sinkRegister, v$blockRegister, v$scratch}, $EXTRAS->process(Ljava/lang/Object;Ljava/lang/Object;I)V
+    """,
+    )
+    for (name in listOf("flush", "reset")) sink.methods
+        .single { it.name == name && it.parameterTypes.isEmpty() && it.returnType == "V" }
+        .addInstruction(0, "invoke-static/range {p0 .. p0}, $EXTRAS->flush(Ljava/lang/Object;)V")
+    // BitChord's usual mode plays through Android's media player, with its effects as audio
+    // processors; the sink above only runs its own chain in its precision mode. Sing then works on
+    // what the equaliser has just written, a 16-bit block.
+    val equaliserType = "Lcom/music/bitchord/playback/EqualizerProcessor;"
+    val equaliser = mutableClassDefBy(equaliserType)
+    for (field in listOf("channelCount", "sampleRate")) check(
+        equaliser.fields.any { it.name == field && it.type == "I" }
+    ) {
+        "Equaliser field changed: $field"
+    }
+    val queue =
+        equaliser.methods.single {
+            it.name == "queueInput" &&
+                it.parameterTypes == listOf("Ljava/nio/ByteBuffer;") &&
+                it.returnType == "V"
+        }
+    val steps = queue.implementation!!.instructions.toList()
+    val targets =
+        steps
+            .filterIsInstance<com.android.tools.smali.dexlib2.builder.BuilderOffsetInstruction>()
+            .map { it.target.location.index }
+            .toSet()
+    val written =
+        steps.indices.filter { i ->
+            steps[i].methodRef()?.let {
+                it.definingClass == "Ljava/nio/ByteBuffer;" && it.name == "flip"
+            } == true && steps.getOrNull(i + 1)?.opcode == Opcode.RETURN_VOID
+        }
+    check(written.size == 2) { "Equaliser output not found (${written.size})" }
+    for (i in written.reversed()) {
+        check(i + 1 !in targets) { "Equaliser return is a branch target" }
+        val out = (steps[i] as FiveRegisterInstruction).registerC
+        val (channels, rate) = (0 until 16).filter { it != out }.take(2)
+        check(out < 16 && queue.implementation!!.registerCount - 2 > maxOf(channels, rate)) {
+            "Equaliser registers changed"
+        }
+        queue.addInstructions(
+            i + 1,
+            """
+            iget v$channels, p0, $equaliserType->channelCount:I
+            iget v$rate, p0, $equaliserType->sampleRate:I
+            invoke-static {p0, v$out, v$channels, v$rate}, $EXTRAS->processPcm16(Ljava/lang/Object;Ljava/nio/ByteBuffer;II)V
+        """,
+        )
+    }
+    for (name in listOf("onFlush", "onReset")) equaliser.methods
+        .single { it.name == name && it.parameterTypes.isEmpty() && it.returnType == "V" }
+        .addInstruction(0, "invoke-static/range {p0 .. p0}, $EXTRAS->flush(Ljava/lang/Object;)V")
+    println("Added Sing to the audio chain")
+}
+
+/** The loudness gain BitChord works out for a song, moved to the chosen level. */
+private fun BytecodePatchContext.addLoudnessLevel() {
+    val method =
+        mutableClassDefBy(SERVICE).methods.single {
+            it.name == "loudnessGainMb" &&
+                it.parameterTypes == listOf("Ljava/lang/String;") &&
+                it.returnType == "Ljava/lang/Integer;"
+        }
+    val code = method.implementation!!.instructions.toList()
+    // Only the computed gain: it's boxed and returned straight away. Other returns are null.
+    val boxed =
+        code.indices.filter { i ->
+            code[i].methodRef()?.let {
+                it.definingClass == "Ljava/lang/Integer;" && it.name == "valueOf"
+            } == true &&
+                code[i + 1].opcode == Opcode.MOVE_RESULT_OBJECT &&
+                code[i + 2].opcode == Opcode.RETURN_OBJECT
+        }
+    check(boxed.size == 1) { "Loudness gain return changed" }
+    val register = (code[boxed[0] + 1] as OneRegisterInstruction).registerA
+    method.addInstructions(
+        boxed[0] + 2,
+        """
+        invoke-static/range {v$register .. v$register}, $EXTRAS->loudness(Ljava/lang/Integer;)Ljava/lang/Integer;
+        move-result-object v$register
+    """,
+    )
+    println("Added the loudness level")
+}
+
+/** Pitch and battery saver are set on each player BitChord builds. */
+private fun BytecodePatchContext.addPlayerSettings() {
+    var hooked = 0
+    for (type in listOf(SERVICE, "Lcom/music/bitchord/playback/PlaybackService\$onCreate\$2;")) {
+        val clazz = mutableClassDefBy(type)
+        for (method in clazz.methods) {
+            val code = method.implementation?.instructions?.toList() ?: continue
+            val calls =
+                code.indices.filter { i ->
+                    code[i].methodRef()?.let {
+                        it.definingClass == SERVICE && it.name == "buildPlayer"
+                    } == true
+                }
+            for (i in calls.reversed()) {
+                val result = code[i + 1]
+                check(result.opcode == Opcode.MOVE_RESULT_OBJECT) { "Player build result changed" }
+                val register = (result as OneRegisterInstruction).registerA
+                method.addInstruction(
+                    i + 2,
+                    "invoke-static/range {v$register .. v$register}, $EXTRAS->player(Landroidx/media3/common/Player;)V",
+                )
+                hooked++
+            }
+        }
+    }
+    // The main and spare players, at start and when the output changes.
+    check(hooked == 4) { "BitChord's players not found ($hooked)" }
+    println("Added pitch and battery saver to BitChord's $hooked players")
+}
+
+/** The sleep timer's pause at the end of its time becomes a fade, then the pause. */
+private fun BytecodePatchContext.addSleepFade() {
+    val method =
+        mutableClassDefBy("Lcom/music/bitchord/playback/PlaybackService\$reportProgress\$1;")
+            .methods
+            .single { it.name == "invokeSuspend" }
+    val code = method.implementation!!.instructions.toList()
+    val pauses =
+        code.indices.filter { i ->
+            code[i].opcode == Opcode.INVOKE_INTERFACE &&
+                code[i].methodRef()?.let { it.definingClass == PLAYER && it.name == "pause" } ==
+                    true &&
+                code.getOrNull(i + 1)?.methodRef()?.let {
+                    it.definingClass == "Lcom/music/bitchord/playback/SleepTimer;" &&
+                        it.name == "cancel"
+                } == true
+        }
+    check(pauses.size == 1) { "Sleep timer pause not found (${pauses.size})" }
+    val player = (code[pauses[0]] as FiveRegisterInstruction).registerC
+    method.replaceInstruction(
+        pauses[0],
+        "invoke-static {v$player}, $EXTRAS->sleepPause(Landroidx/media3/common/Player;)V",
+    )
+    println("Added the sleep-timer fade")
+}
+
+/** BitChord leaves lossless addons out while it can't play lossless; this keeps them in. */
+private fun BytecodePatchContext.addLosslessOverBluetooth() {
+    val method =
+        mutableClassDefBy("Lcom/music/bitchord/data/sources/SourceConfig;").methods.single {
+            it.name == "getAwaitsLosslessOutput" &&
+                it.parameterTypes.isEmpty() &&
+                it.returnType == "Z"
+        }
+    val implementation = method.implementation!!
+    check(implementation.registerCount >= 2) { "Lossless addon check has no free register" }
+    method.addInstructionsWithLabels(
+        0,
+        """
+        invoke-static {}, $EXTRAS->losslessAnywhere()Z
+        move-result v0
+        if-eqz v0, :original
+        const/4 v0, 0x0
+        return v0
+    """,
+        ExternalLabel("original", implementation.instructions.first()),
+    )
+    println("Added lossless addons over Bluetooth")
+}
+
+/** The Playback extras group at the end of BitChord's Equalizer page. */
+private fun BytecodePatchContext.addExtrasSettings() {
+    val screen = mutableClassDefBy("Lcom/music/bitchord/ui/screens/EqualizerScreenKt;")
+    val method = screen.methods.single { it.name == "EqualizerScreen" }
+    val code = method.implementation!!.instructions.toList()
+    val groups =
+        code.indices.filter { i ->
+            code[i].methodRef()?.let {
+                it.definingClass == "Lcom/music/bitchord/ui/screens/SettingsSheetKt;" &&
+                    it.name.startsWith("SettingsGroup-") &&
+                    it.parameterTypes.joinToString("") == SETTINGS_GROUP_PARAMETERS
+            } == true
+        }
+    check(groups.size >= 2) { "Equalizer settings groups not found" }
+    val last = groups.last()
+    val composer = argumentRegisters(code[last])[4]
+    method.addInstruction(
+        last + 1,
+        "invoke-static/range {v$composer .. v$composer}, $EXTRAS_UI->soundSection(Landroidx/compose/runtime/ComposerImpl;)V",
+    )
+    val group = code[last].methodRef()!!
+    val ui = mutableClassDefBy(EXTRAS_UI)
+    val original = ui.methods.single { it.name == "hostGroup" }
+    val replacement =
+        MutableMethod(
+            ImmutableMethod(
+                original.definingClass,
+                original.name,
+                original.parameters,
+                original.returnType,
+                original.accessFlags,
+                original.annotations,
+                original.hiddenApiRestrictions,
+                ImmutableMethodImplementation(8, emptyList<Instruction>(), emptyList(), emptyList()),
+            )
+        )
+    replacement.addInstructions(
+        0,
+        "invoke-static/range {p0 .. p6}, ${group.definingClass}->${group.name}($SETTINGS_GROUP_PARAMETERS)V\nreturn-void",
+    )
+    ui.methods.remove(original)
+    ui.methods.add(replacement)
+
+    val start = ApplicationCreate.method
+    val returns =
+        start.implementation!!
+            .instructions
+            .withIndex()
+            .filter { it.value.opcode == Opcode.RETURN_VOID }
+            .map { it.index }
+    check(returns.isNotEmpty()) { "Application startup hook not found" }
+    for (index in returns.reversed()) start.addInstruction(
+        index,
+        "invoke-static/range {p0 .. p0}, $EXTRAS_UI->start(Landroid/content/Context;)V",
+    )
+    println("Added the Playback extras settings to the Equalizer page")
+}
+
+@Suppress("unused")
+val playbackExtrasPatch =
+    bytecodePatch(
+        name = "Playback extras",
+        description =
+            "Adds Sing (turns the singer down, from Auris), pitch separate from speed, a " +
+                "loudness level, a sleep-timer fade, battery saver and lossless addons over " +
+                "Bluetooth. Settings are at the end of the Equalizer page.",
+        default = true,
+    ) {
+        compatibleWith(target)
+        dependsOn(extrasResources)
+        extendWith("extensions/telegram.mpe")
+        execute {
+            addSing()
+            addLoudnessLevel()
+            addPlayerSettings()
+            addSleepFade()
+            addLosslessOverBluetooth()
+            addExtrasSettings()
+        }
+    }

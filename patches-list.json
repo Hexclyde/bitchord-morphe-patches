@@ -1,6 +1,6 @@
 {
   "NOTE": "Generated from the verified MPP by tools/prepare_mobile_source.py; do not hand-edit.",
-  "version": "1.0.21",
+  "version": "1.1.0-beta.1",
   "patches": [
     {
       "name": "Install as Bitchord+",
@@ -38,6 +38,33 @@
           "values": null
         }
       ]
+    },
+    {
+      "name": "Playback extras",
+      "description": "Adds Sing (turns the singer down, from Auris), pitch separate from speed, a loudness level, a sleep-timer fade, battery saver and lossless addons over Bluetooth. Settings are at the end of the Equalizer page.",
+      "default": true,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.8.1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
     },
     {
       "name": "Sign in with MicroG",

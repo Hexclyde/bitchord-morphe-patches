@@ -26,4 +26,12 @@ public interface Player {
     PlaybackParameters getPlaybackParameters();
 
     int getPlaybackState();
+
+    void setPlaybackParameters(PlaybackParameters playbackParameters);
+
+    void pause();
+
+    float getVolume();
+
+    void setVolume(float volume);
 }

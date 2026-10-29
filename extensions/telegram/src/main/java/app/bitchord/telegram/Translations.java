@@ -2098,6 +2098,171 @@ final class Translations {
             "Unofficial Telegram (\u0646\u0633\u062e\u0629 \u0645\u062d\u0641\u0648\u0638\u0629)",
             "Saved copy",
             "\u0646\u0633\u062e\u0629 \u0645\u062d\u0641\u0648\u0638\u0629",
+            "Added by the Playback extras patch.",
+            "\u0623\u0636\u0627\u0641\u062a\u0647 \u0631\u0642\u0639\u0629 Playback extras.",
+            "Battery saver",
+            "\u062a\u0648\u0641\u064a\u0631 \u0627\u0644\u0628\u0637\u0627\u0631\u064a\u0629",
+            "BitChord decodes every song",
+            "\u064a\u0641\u0643 BitChord \u062a\u0631\u0645\u064a\u0632 \u0643\u0644"
+                    + " \u0623\u063a\u0646\u064a\u0629",
+            "Bluetooth can\u2019t carry lossless audio on most phones, so BitChord normally skips"
+                + " lossless addons there. With this on they\u2019re used anyway, and the phone"
+                + " sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the"
+                + " next song.",
+            "\u0644\u0627 \u062a\u0633\u062a\u0637\u064a\u0639 \u0645\u0639\u0638\u0645"
+                + " \u0627\u0644\u0647\u0648\u0627\u062a\u0641 \u0646\u0642\u0644"
+                + " \u0627\u0644\u0635\u0648\u062a \u063a\u064a\u0631"
+                + " \u0627\u0644\u0645\u0636\u063a\u0648\u0637 \u0639\u0628\u0631"
+                + " \u0627\u0644\u0628\u0644\u0648\u062a\u0648\u062b\u060c \u0644\u0630\u0644\u0643"
+                + " \u064a\u062a\u062e\u0637\u0649 BitChord \u0639\u0627\u062f\u0629\u064b"
+                + " \u0627\u0644\u0625\u0636\u0627\u0641\u0627\u062a \u063a\u064a\u0631"
+                + " \u0627\u0644\u0645\u0636\u063a\u0648\u0637\u0629 \u0647\u0646\u0627\u0643."
+                + " \u0639\u0646\u062f \u062a\u0641\u0639\u064a\u0644 \u0647\u0630\u0627"
+                + " \u062a\u064f\u0633\u062a\u062e\u062f\u0645 \u0639\u0644\u0649 \u0623\u064a"
+                + " \u062d\u0627\u0644\u060c \u0648\u064a\u0631\u0633\u0644\u0647\u0627"
+                + " \u0627\u0644\u0647\u0627\u062a\u0641 \u0628\u0623\u0641\u0636\u0644"
+                + " \u062a\u0631\u0645\u064a\u0632 \u0628\u0644\u0648\u062a\u0648\u062b"
+                + " \u0644\u062f\u064a\u0647 \u0645\u062b\u0644 LDAC \u0623\u0648 aptX."
+                + " \u064a\u0628\u062f\u0623 \u0645\u0639"
+                + " \u0627\u0644\u0623\u063a\u0646\u064a\u0629"
+                + " \u0627\u0644\u062a\u0627\u0644\u064a\u0629.",
+            "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
+                    + " pitch you set here.",
+            "\u064a\u063a\u064a\u0651\u0631 \u0637\u0628\u0642\u0629 \u0627\u0644\u0635\u0648\u062a"
+                    + " \u062f\u0648\u0646 \u062a\u063a\u064a\u064a\u0631"
+                    + " \u0627\u0644\u0633\u0631\u0639\u0629. \u064a\u062d\u062a\u0641\u0638"
+                    + " \u0625\u0639\u062f\u0627\u062f \u0627\u0644\u0633\u0631\u0639\u0629"
+                    + " \u0641\u064a BitChord \u0628\u0627\u0644\u0637\u0628\u0642\u0629"
+                    + " \u0627\u0644\u062a\u064a \u062a\u062d\u062f\u062f\u0647\u0627"
+                    + " \u0647\u0646\u0627.",
+            "Fade out at the sleep timer",
+            "\u062e\u0641\u0648\u062a \u0639\u0646\u062f \u0627\u0646\u062a\u0647\u0627\u0621"
+                    + " \u0645\u0624\u0642\u062a \u0627\u0644\u0646\u0648\u0645",
+            "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
+                + " own level is -14 LUFS, as on YouTube and Spotify. Lower is quieter with more"
+                + " room for peaks; higher is louder.",
+            "\u0645\u062f\u0649 \u0627\u0631\u062a\u0641\u0627\u0639 \u0635\u0648\u062a"
+                + " \u0627\u0644\u0623\u063a\u0627\u0646\u064a \u0639\u0646\u062f"
+                + " \u062a\u0641\u0639\u064a\u0644 \u062a\u0648\u062d\u064a\u062f"
+                + " \u0645\u0633\u062a\u0648\u0649 \u0627\u0644\u0635\u0648\u062a \u0641\u064a"
+                + " BitChord. \u0645\u0633\u062a\u0648\u0649 BitChord"
+                + " \u0627\u0644\u062e\u0627\u0635 \u0647\u0648 -14 LUFS\u060c \u0643\u0645\u0627"
+                + " \u0641\u064a YouTube \u0648Spotify. \u0627\u0644\u0623\u0642\u0644"
+                + " \u0623\u0647\u062f\u0623 \u0645\u0639 \u0645\u0633\u0627\u062d\u0629"
+                + " \u0623\u0643\u0628\u0631 \u0644\u0644\u0630\u0631\u0648\u0627\u062a\u061b"
+                + " \u0648\u0627\u0644\u0623\u0639\u0644\u0649 \u0623\u0639\u0644\u0649"
+                + " \u0635\u0648\u062a\u064b\u0627.",
+            "Level",
+            "\u0627\u0644\u0645\u0633\u062a\u0648\u0649",
+            "Lossless addons are used over Bluetooth too",
+            "\u062a\u064f\u0633\u062a\u062e\u062f\u0645"
+                    + " \u0627\u0644\u0625\u0636\u0627\u0641\u0627\u062a \u063a\u064a\u0631"
+                    + " \u0627\u0644\u0645\u0636\u063a\u0648\u0637\u0629 \u0639\u0628\u0631"
+                    + " \u0627\u0644\u0628\u0644\u0648\u062a\u0648\u062b"
+                    + " \u0623\u064a\u0636\u064b\u0627",
+            "Lossless addons over Bluetooth",
+            "\u0627\u0644\u0625\u0636\u0627\u0641\u0627\u062a \u063a\u064a\u0631"
+                    + " \u0627\u0644\u0645\u0636\u063a\u0648\u0637\u0629 \u0639\u0628\u0631"
+                    + " \u0627\u0644\u0628\u0644\u0648\u062a\u0648\u062b",
+            "Lossless addons wait for wired or USB audio",
+            "\u062a\u0646\u062a\u0638\u0631 \u0627\u0644\u0625\u0636\u0627\u0641\u0627\u062a"
+                    + " \u063a\u064a\u0631 \u0627\u0644\u0645\u0636\u063a\u0648\u0637\u0629"
+                    + " \u0635\u0648\u062a\u064b\u0627 \u0633\u0644\u0643\u064a\u064b\u0627"
+                    + " \u0623\u0648 \u0639\u0628\u0631 USB",
+            "Loudness level",
+            "\u0645\u0633\u062a\u0648\u0649 \u0627\u0644\u0635\u0648\u062a",
+            "Off",
+            "\u0645\u062a\u0648\u0642\u0641",
+            "Only the voice range, and only while someone sings",
+            "\u0646\u0637\u0627\u0642 \u0627\u0644\u0635\u0648\u062a"
+                    + " \u0627\u0644\u0628\u0634\u0631\u064a \u0641\u0642\u0637\u060c"
+                    + " \u0648\u0641\u0642\u0637 \u0623\u062b\u0646\u0627\u0621"
+                    + " \u0627\u0644\u063a\u0646\u0627\u0621",
+            "Original key",
+            "\u0627\u0644\u0637\u0628\u0642\u0629 \u0627\u0644\u0623\u0635\u0644\u064a\u0629",
+            "Other",
+            "\u0623\u062e\u0631\u0649",
+            "Pitch",
+            "\u0637\u0628\u0642\u0629 \u0627\u0644\u0635\u0648\u062a",
+            "Playback extras",
+            "Playback extras",
+            "Removes everything in the middle, drums included",
+            "\u064a\u0632\u064a\u0644 \u0643\u0644 \u0645\u0627 \u0641\u064a"
+                    + " \u0627\u0644\u0645\u0646\u062a\u0635\u0641\u060c \u0628\u0645\u0627"
+                    + " \u0641\u064a \u0630\u0644\u0643 \u0627\u0644\u0637\u0628\u0648\u0644",
+            "Saves battery on long listens. While a song plays this way, BitChord\u2019s equaliser,"
+                + " loudness normalisation, Sing, spatial audio and crossfade don\u2019t work on"
+                + " it. Android decides which songs and devices can; the rest play as before.",
+            "\u064a\u0648\u0641\u0651\u0631 \u0627\u0644\u0628\u0637\u0627\u0631\u064a\u0629"
+                + " \u0623\u062b\u0646\u0627\u0621 \u0627\u0644\u0627\u0633\u062a\u0645\u0627\u0639"
+                + " \u0627\u0644\u0637\u0648\u064a\u0644. \u0623\u062b\u0646\u0627\u0621"
+                + " \u062a\u0634\u063a\u064a\u0644 \u0623\u063a\u0646\u064a\u0629"
+                + " \u0628\u0647\u0630\u0647 \u0627\u0644\u0637\u0631\u064a\u0642\u0629\u060c"
+                + " \u0644\u0627 \u064a\u0639\u0645\u0644 \u0639\u0644\u064a\u0647\u0627"
+                + " \u0627\u0644\u0645\u0639\u0627\u062f\u0644 \u0648\u062a\u0648\u062d\u064a\u062f"
+                + " \u0645\u0633\u062a\u0648\u0649 \u0627\u0644\u0635\u0648\u062a"
+                + " \u0648\u0627\u0644\u063a\u0646\u0627\u0621 \u0648\u0627\u0644\u0635\u0648\u062a"
+                + " \u0627\u0644\u0645\u0643\u0627\u0646\u064a"
+                + " \u0648\u0627\u0644\u062a\u0644\u0627\u0634\u064a"
+                + " \u0627\u0644\u0645\u062a\u062f\u0627\u062e\u0644 \u0641\u064a BitChord."
+                + " \u064a\u0642\u0631\u0631 Android \u0627\u0644\u0623\u063a\u0627\u0646\u064a"
+                + " \u0648\u0627\u0644\u0623\u062c\u0647\u0632\u0629 \u0627\u0644\u062a\u064a"
+                + " \u064a\u0645\u0643\u0646\u0647\u0627 \u0630\u0644\u0643\u061b"
+                + " \u0648\u064a\u064f\u0634\u063a\u064e\u0651\u0644"
+                + " \u0627\u0644\u0628\u0627\u0642\u064a \u0643\u0645\u0627 \u0643\u0627\u0646.",
+            "Sing",
+            "\u063a\u0646\u0650\u0651",
+            "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
+            "\u00ab\u063a\u0646\u0650\u0651\u00bb \u0645\u0646\u0642\u0648\u0644\u0629 \u0645\u0646"
+                    + " Auris \u0644\u0640 OreoMuncher45\u060c \u0648\u0647\u0648"
+                    + " \u062a\u0641\u0631\u0651\u0639 \u0645\u0646 BitChord.",
+            "Sing, pitch, loudness level, sleep fade and battery saver",
+            "\u0627\u0644\u063a\u0646\u0627\u0621 \u0648\u0637\u0628\u0642\u0629"
+                    + " \u0627\u0644\u0635\u0648\u062a \u0648\u0645\u0633\u062a\u0648\u0649"
+                    + " \u0627\u0644\u0635\u0648\u062a \u0648\u062e\u0641\u0648\u062a"
+                    + " \u0627\u0644\u0646\u0648\u0645 \u0648\u062a\u0648\u0641\u064a\u0631"
+                    + " \u0627\u0644\u0628\u0637\u0627\u0631\u064a\u0629",
+            "The cleaner choice for older recordings.",
+            "\u0627\u0644\u062e\u064a\u0627\u0631 \u0627\u0644\u0623\u0646\u0638\u0641"
+                    + " \u0644\u0644\u062a\u0633\u062c\u064a\u0644\u0627\u062a"
+                    + " \u0627\u0644\u0642\u062f\u064a\u0645\u0629.",
+            "The phone\u2019s audio chip plays songs it can decode",
+            "\u062a\u0634\u063a\u0651\u0644 \u0634\u0631\u064a\u062d\u0629"
+                + " \u0627\u0644\u0635\u0648\u062a \u0641\u064a"
+                + " \u0627\u0644\u0647\u0627\u062a\u0641 \u0627\u0644\u0623\u063a\u0627\u0646\u064a"
+                + " \u0627\u0644\u062a\u064a \u062a\u0633\u062a\u0637\u064a\u0639 \u0641\u0643"
+                + " \u062a\u0631\u0645\u064a\u0632\u0647\u0627",
+            "The song fades out over 10 seconds, then pauses",
+            "\u062a\u062e\u0641\u062a \u0627\u0644\u0623\u063a\u0646\u064a\u0629"
+                    + " \u062e\u0644\u0627\u0644 10 \u062b\u0648\u0627\u0646\u064d \u062b\u0645"
+                    + " \u062a\u062a\u0648\u0642\u0641 \u0645\u0624\u0642\u062a\u064b\u0627",
+            "The song pauses straight away",
+            "\u062a\u062a\u0648\u0642\u0641 \u0627\u0644\u0623\u063a\u0646\u064a\u0629"
+                    + " \u0645\u0624\u0642\u062a\u064b\u0627 \u0641\u0648\u0631\u064b\u0627",
+            "Turns the singer down so you can sing over the song. Works best on studio recordings"
+                    + " with the voice in the middle.",
+            "\u064a\u062e\u0641\u0636 \u0627\u0644\u0635\u0648\u062a"
+                + " \u0627\u0644\u0631\u0626\u064a\u0633\u064a \u0644\u062a\u062a\u0645\u0643\u0646"
+                + " \u0645\u0646 \u0627\u0644\u063a\u0646\u0627\u0621 \u0645\u0639"
+                + " \u0627\u0644\u0623\u063a\u0646\u064a\u0629. \u064a\u0639\u0645\u0644"
+                + " \u0628\u0623\u0641\u0636\u0644 \u0634\u0643\u0644 \u0645\u0639"
+                + " \u062a\u0633\u062c\u064a\u0644\u0627\u062a"
+                + " \u0627\u0644\u0627\u0633\u062a\u0648\u062f\u064a\u0648 \u0627\u0644\u062a\u064a"
+                + " \u064a\u0643\u0648\u0646 \u0641\u064a\u0647\u0627"
+                + " \u0627\u0644\u0635\u0648\u062a \u0641\u064a"
+                + " \u0627\u0644\u0645\u0646\u062a\u0635\u0641.",
+            "Voice",
+            "\u0627\u0644\u0635\u0648\u062a",
+            "Whole centre",
+            "\u0627\u0644\u0645\u0646\u062a\u0635\u0641 \u0643\u0644\u0647",
+            "{0} (BitChord\u2019s level)",
+            "{0} (\u0645\u0633\u062a\u0648\u0649 BitChord)",
+            "{0} semitone",
+            "{0} \u0646\u0635\u0641 \u062f\u0631\u062c\u0629",
+            "{0} semitones",
+            "{0} \u0623\u0646\u0635\u0627\u0641 \u062f\u0631\u062c\u0627\u062a",
+            "{0}% quieter",
+            "\u0623\u062e\u0641\u0636 \u0628\u0646\u0633\u0628\u0629 {0}%",
         };
     }
 
@@ -4365,6 +4530,171 @@ final class Translations {
                     + " \u0995\u09aa\u09bf)",
             "Saved copy",
             "\u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09bf\u09a4 \u0995\u09aa\u09bf",
+            "Added by the Playback extras patch.",
+            "Playback extras \u09aa\u09cd\u09af\u09be\u099a \u09af\u09cb\u0997"
+                    + " \u0995\u09b0\u09c7\u099b\u09c7\u0964",
+            "Battery saver",
+            "\u09ac\u09cd\u09af\u09be\u099f\u09be\u09b0\u09bf \u09b8\u09c7\u09ad\u09be\u09b0",
+            "BitChord decodes every song",
+            "BitChord \u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u0997\u09be\u09a8"
+                    + " \u09a8\u09bf\u099c\u09c7 \u09a1\u09bf\u0995\u09cb\u09a1 \u0995\u09b0\u09c7",
+            "Bluetooth can\u2019t carry lossless audio on most phones, so BitChord normally skips"
+                + " lossless addons there. With this on they\u2019re used anyway, and the phone"
+                + " sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the"
+                + " next song.",
+            "\u09ac\u09c7\u09b6\u09bf\u09b0\u09ad\u09be\u0997 \u09ab\u09cb\u09a8"
+                + " \u09ac\u09cd\u09b2\u09c1\u099f\u09c1\u09a5\u09c7 \u09b2\u09b8\u09b2\u09c7\u09b8"
+                + " \u0985\u09a1\u09bf\u0993 \u09aa\u09be\u09a0\u09be\u09a4\u09c7"
+                + " \u09aa\u09be\u09b0\u09c7 \u09a8\u09be, \u09a4\u09be\u0987 BitChord"
+                + " \u09b8\u09be\u09a7\u09be\u09b0\u09a3\u09a4 \u09b8\u09c7\u0996\u09be\u09a8\u09c7"
+                + " \u09b2\u09b8\u09b2\u09c7\u09b8 \u0985\u09cd\u09af\u09be\u09a1\u0985\u09a8"
+                + " \u09ac\u09be\u09a6 \u09a6\u09c7\u09af\u09bc\u0964 \u098f\u099f\u09bf"
+                + " \u099a\u09be\u09b2\u09c1 \u09a5\u09be\u0995\u09b2\u09c7"
+                + " \u09b8\u09c7\u0997\u09c1\u09b2\u09cb \u09a4\u09ac\u09c1\u0993"
+                + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u09b9\u09af\u09bc,"
+                + " \u098f\u09ac\u0982 \u09ab\u09cb\u09a8 \u09b8\u09c7\u0997\u09c1\u09b2\u09cb"
+                + " \u09a4\u09be\u09b0 \u09b8\u09c7\u09b0\u09be"
+                + " \u09ac\u09cd\u09b2\u09c1\u099f\u09c1\u09a5 \u0995\u09cb\u09a1\u09c7\u0995,"
+                + " \u09af\u09c7\u09ae\u09a8 LDAC \u09ac\u09be aptX \u09a6\u09bf\u09af\u09bc\u09c7"
+                + " \u09aa\u09be\u09a0\u09be\u09af\u09bc\u0964 \u09aa\u09b0\u09c7\u09b0"
+                + " \u0997\u09be\u09a8 \u09a5\u09c7\u0995\u09c7 \u09b6\u09c1\u09b0\u09c1"
+                + " \u09b9\u09af\u09bc\u0964",
+            "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
+                    + " pitch you set here.",
+            "\u0997\u09a4\u09bf \u09a8\u09be \u09ac\u09a6\u09b2\u09c7 \u09b8\u09c1\u09b0"
+                    + " \u09ac\u09a6\u09b2\u09be\u09af\u09bc\u0964 BitChord-\u098f\u09b0"
+                    + " \u0997\u09a4\u09bf\u09b0 \u09b8\u09c7\u099f\u09bf\u0982"
+                    + " \u098f\u0996\u09be\u09a8\u09c7 \u09ac\u09c7\u099b\u09c7"
+                    + " \u09a8\u09c7\u0993\u09af\u09bc\u09be \u09b8\u09c1\u09b0"
+                    + " \u09ac\u099c\u09be\u09af\u09bc \u09b0\u09be\u0996\u09c7\u0964",
+            "Fade out at the sleep timer",
+            "\u09b8\u09cd\u09b2\u09bf\u09aa \u099f\u09be\u0987\u09ae\u09be\u09b0\u09c7"
+                    + " \u09a7\u09c0\u09b0\u09c7 \u09a7\u09c0\u09b0\u09c7 \u09b6\u09ac\u09cd\u09a6"
+                    + " \u0995\u09ae\u09be\u09a8",
+            "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
+                + " own level is -14 LUFS, as on YouTube and Spotify. Lower is quieter with more"
+                + " room for peaks; higher is louder.",
+            "BitChord-\u098f\u09b0 \u09b2\u09be\u0989\u09a1\u09a8\u09c7\u09b8"
+                + " \u09a8\u09b0\u09cd\u09ae\u09be\u09b2\u09be\u0987\u099c\u09c7\u09b6\u09a8"
+                + " \u099a\u09be\u09b2\u09c1 \u09a5\u09be\u0995\u09b2\u09c7 \u0997\u09be\u09a8"
+                + " \u0995\u09a4\u099f\u09be \u099c\u09cb\u09b0\u09c7"
+                + " \u09ac\u09be\u099c\u09ac\u09c7\u0964 BitChord-\u098f\u09b0"
+                + " \u09a8\u09bf\u099c\u09b8\u09cd\u09ac \u09b8\u09cd\u09a4\u09b0 -14 LUFS, YouTube"
+                + " \u0993 Spotify-\u098f\u09b0 \u09ae\u09a4\u09cb\u0964 \u0995\u09ae"
+                + " \u09ae\u09be\u09a8\u09c7 \u0986\u09b8\u09cd\u09a4\u09c7 \u098f\u09ac\u0982"
+                + " \u09aa\u09bf\u0995\u09c7\u09b0 \u099c\u09a8\u09cd\u09af"
+                + " \u09ac\u09c7\u09b6\u09bf \u099c\u09be\u09af\u09bc\u0997\u09be;"
+                + " \u09ac\u09c7\u09b6\u09bf \u09ae\u09be\u09a8\u09c7"
+                + " \u099c\u09cb\u09b0\u09c7\u0964",
+            "Level",
+            "\u09b8\u09cd\u09a4\u09b0",
+            "Lossless addons are used over Bluetooth too",
+            "\u09b2\u09b8\u09b2\u09c7\u09b8 \u0985\u09cd\u09af\u09be\u09a1\u0985\u09a8"
+                    + " \u09ac\u09cd\u09b2\u09c1\u099f\u09c1\u09a5\u09c7\u0993"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u09b9\u09af\u09bc",
+            "Lossless addons over Bluetooth",
+            "\u09ac\u09cd\u09b2\u09c1\u099f\u09c1\u09a5\u09c7 \u09b2\u09b8\u09b2\u09c7\u09b8"
+                    + " \u0985\u09cd\u09af\u09be\u09a1\u0985\u09a8",
+            "Lossless addons wait for wired or USB audio",
+            "\u09b2\u09b8\u09b2\u09c7\u09b8 \u0985\u09cd\u09af\u09be\u09a1\u0985\u09a8"
+                    + " \u09a4\u09be\u09b0\u09af\u09c1\u0995\u09cd\u09a4 \u09ac\u09be USB"
+                    + " \u0985\u09a1\u09bf\u0993\u09b0 \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be"
+                    + " \u0995\u09b0\u09c7",
+            "Loudness level",
+            "\u09b2\u09be\u0989\u09a1\u09a8\u09c7\u09b8 \u09b8\u09cd\u09a4\u09b0",
+            "Off",
+            "\u09ac\u09a8\u09cd\u09a7",
+            "Only the voice range, and only while someone sings",
+            "\u09b6\u09c1\u09a7\u09c1 \u0995\u09a3\u09cd\u09a0\u09c7\u09b0"
+                    + " \u09aa\u09b0\u09bf\u09b8\u09b0, \u098f\u09ac\u0982 \u09b6\u09c1\u09a7\u09c1"
+                    + " \u09af\u0996\u09a8 \u0995\u09c7\u0989 \u0997\u09be\u0987\u099b\u09c7",
+            "Original key",
+            "\u09ae\u09c2\u09b2 \u09b8\u09c1\u09b0",
+            "Other",
+            "\u0985\u09a8\u09cd\u09af\u09be\u09a8\u09cd\u09af",
+            "Pitch",
+            "\u09b8\u09c1\u09b0",
+            "Playback extras",
+            "Playback extras",
+            "Removes everything in the middle, drums included",
+            "\u09ae\u09be\u099d\u0996\u09be\u09a8\u09c7\u09b0 \u09b8\u09ac\u0995\u09bf\u099b\u09c1"
+                    + " \u09b8\u09b0\u09bf\u09af\u09bc\u09c7 \u09a6\u09c7\u09af\u09bc,"
+                    + " \u09a1\u09cd\u09b0\u09be\u09ae\u09b8\u09b9",
+            "Saves battery on long listens. While a song plays this way, BitChord\u2019s equaliser,"
+                + " loudness normalisation, Sing, spatial audio and crossfade don\u2019t work on"
+                + " it. Android decides which songs and devices can; the rest play as before.",
+            "\u09a6\u09c0\u09b0\u09cd\u0998 \u09b8\u09ae\u09af\u09bc \u09b6\u09cb\u09a8\u09be\u09b0"
+                    + " \u09b8\u09ae\u09af\u09bc \u09ac\u09cd\u09af\u09be\u099f\u09be\u09b0\u09bf"
+                    + " \u09ac\u09be\u0981\u099a\u09be\u09af\u09bc\u0964 \u0995\u09cb\u09a8\u09cb"
+                    + " \u0997\u09be\u09a8 \u098f\u09ad\u09be\u09ac\u09c7"
+                    + " \u09ac\u09be\u099c\u09b2\u09c7 BitChord-\u098f\u09b0"
+                    + " \u0987\u0995\u09c1\u09af\u09bc\u09be\u09b2\u09be\u0987\u099c\u09be\u09b0,"
+                    + " \u09b2\u09be\u0989\u09a1\u09a8\u09c7\u09b8"
+                    + " \u09a8\u09b0\u09cd\u09ae\u09be\u09b2\u09be\u0987\u099c\u09c7\u09b6\u09a8,"
+                    + " \u0997\u09be\u09a8 \u0997\u09be\u0993,"
+                    + " \u09b8\u09cd\u09aa\u09c7\u09b6\u09bf\u09af\u09bc\u09be\u09b2"
+                    + " \u0985\u09a1\u09bf\u0993 \u0993 \u0995\u09cd\u09b0\u09b8\u09ab\u09c7\u09a1"
+                    + " \u09a4\u09be\u09a4\u09c7 \u0995\u09be\u099c \u0995\u09b0\u09c7"
+                    + " \u09a8\u09be\u0964 \u0995\u09cb\u09a8 \u0997\u09be\u09a8 \u0993"
+                    + " \u09a1\u09bf\u09ad\u09be\u0987\u09b8 \u098f\u099f\u09bf"
+                    + " \u09aa\u09be\u09b0\u09c7 \u09a4\u09be Android \u09a0\u09bf\u0995"
+                    + " \u0995\u09b0\u09c7; \u09ac\u09be\u0995\u09bf\u0997\u09c1\u09b2\u09cb"
+                    + " \u0986\u0997\u09c7\u09b0 \u09ae\u09a4\u09cb \u09ac\u09be\u099c\u09c7\u0964",
+            "Sing",
+            "\u0997\u09be\u09a8 \u0997\u09be\u0993",
+            "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
+            "\u0997\u09be\u09a8 \u0997\u09be\u0993 \u098f\u09b8\u09c7\u099b\u09c7"
+                + " OreoMuncher45-\u098f\u09b0 Auris \u09a5\u09c7\u0995\u09c7, \u09af\u09be"
+                + " BitChord-\u098f\u09b0 \u098f\u0995\u099f\u09bf \u09ab\u09b0\u09cd\u0995\u0964",
+            "Sing, pitch, loudness level, sleep fade and battery saver",
+            "\u0997\u09be\u09a8 \u0997\u09be\u0993, \u09b8\u09c1\u09b0,"
+                    + " \u09b2\u09be\u0989\u09a1\u09a8\u09c7\u09b8 \u09b8\u09cd\u09a4\u09b0,"
+                    + " \u09b8\u09cd\u09b2\u09bf\u09aa \u09ab\u09c7\u09a1 \u0993"
+                    + " \u09ac\u09cd\u09af\u09be\u099f\u09be\u09b0\u09bf"
+                    + " \u09b8\u09c7\u09ad\u09be\u09b0",
+            "The cleaner choice for older recordings.",
+            "\u09aa\u09c1\u09b0\u09cb\u09a8\u09cb"
+                    + " \u09b0\u09c7\u0995\u09b0\u09cd\u09a1\u09bf\u0982\u09af\u09bc\u09c7\u09b0"
+                    + " \u099c\u09a8\u09cd\u09af \u09ac\u09c7\u09b6\u09bf"
+                    + " \u09aa\u09b0\u09bf\u09b7\u09cd\u0995\u09be\u09b0"
+                    + " \u09ac\u09bf\u0995\u09b2\u09cd\u09aa\u0964",
+            "The phone\u2019s audio chip plays songs it can decode",
+            "\u09ab\u09cb\u09a8\u09c7\u09b0 \u0985\u09a1\u09bf\u0993 \u099a\u09bf\u09aa"
+                    + " \u09af\u09c7 \u0997\u09be\u09a8\u0997\u09c1\u09b2\u09cb"
+                    + " \u09a1\u09bf\u0995\u09cb\u09a1 \u0995\u09b0\u09a4\u09c7"
+                    + " \u09aa\u09be\u09b0\u09c7 \u09b8\u09c7\u0997\u09c1\u09b2\u09cb"
+                    + " \u09ac\u09be\u099c\u09be\u09af\u09bc",
+            "The song fades out over 10 seconds, then pauses",
+            "\u0997\u09be\u09a8 10 \u09b8\u09c7\u0995\u09c7\u09a8\u09cd\u09a1\u09c7"
+                    + " \u09a7\u09c0\u09b0\u09c7 \u09ae\u09bf\u09b2\u09bf\u09af\u09bc\u09c7"
+                    + " \u09af\u09be\u09af\u09bc, \u09a4\u09be\u09b0\u09aa\u09b0"
+                    + " \u09a5\u09be\u09ae\u09c7",
+            "The song pauses straight away",
+            "\u0997\u09be\u09a8 \u09b8\u0999\u09cd\u0997\u09c7 \u09b8\u0999\u09cd\u0997\u09c7"
+                    + " \u09a5\u09be\u09ae\u09c7",
+            "Turns the singer down so you can sing over the song. Works best on studio recordings"
+                    + " with the voice in the middle.",
+            "\u09ae\u09c2\u09b2 \u0995\u09a3\u09cd\u09a0 \u0995\u09ae\u09bf\u09af\u09bc\u09c7"
+                    + " \u09a6\u09c7\u09af\u09bc \u09af\u09be\u09a4\u09c7 \u0986\u09aa\u09a8\u09bf"
+                    + " \u0997\u09be\u09a8\u09c7\u09b0 \u09b8\u0999\u09cd\u0997\u09c7"
+                    + " \u0997\u09be\u0987\u09a4\u09c7 \u09aa\u09be\u09b0\u09c7\u09a8\u0964"
+                    + " \u0995\u09a3\u09cd\u09a0 \u09ae\u09be\u099d\u0996\u09be\u09a8\u09c7"
+                    + " \u09a5\u09be\u0995\u09be \u09b8\u09cd\u099f\u09c1\u09a1\u09bf\u0993"
+                    + " \u09b0\u09c7\u0995\u09b0\u09cd\u09a1\u09bf\u0982\u09af\u09bc\u09c7"
+                    + " \u09b8\u09ac\u099a\u09c7\u09af\u09bc\u09c7 \u09ad\u09be\u09b2\u09cb"
+                    + " \u0995\u09be\u099c \u0995\u09b0\u09c7\u0964",
+            "Voice",
+            "\u0995\u09a3\u09cd\u09a0",
+            "Whole centre",
+            "\u09aa\u09c1\u09b0\u09cb \u09ae\u09be\u099d\u0996\u09be\u09a8",
+            "{0} (BitChord\u2019s level)",
+            "{0} (BitChord-\u098f\u09b0 \u09b8\u09cd\u09a4\u09b0)",
+            "{0} semitone",
+            "{0} \u09b8\u09c7\u09ae\u09bf\u099f\u09cb\u09a8",
+            "{0} semitones",
+            "{0} \u09b8\u09c7\u09ae\u09bf\u099f\u09cb\u09a8",
+            "{0}% quieter",
+            "{0}% \u0995\u09ae",
         };
     }
 
@@ -5522,6 +5852,94 @@ final class Translations {
             "Unofficial Telegram (gespeicherte Kopie)",
             "Saved copy",
             "Gespeicherte Kopie",
+            "Added by the Playback extras patch.",
+            "Hinzugef\u00fcgt vom Patch Playback extras.",
+            "Battery saver",
+            "Akkusparmodus",
+            "BitChord decodes every song",
+            "BitChord dekodiert jeden Song",
+            "Bluetooth can\u2019t carry lossless audio on most phones, so BitChord normally skips"
+                + " lossless addons there. With this on they\u2019re used anyway, and the phone"
+                + " sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the"
+                + " next song.",
+            "Die meisten Handys k\u00f6nnen \u00fcber Bluetooth kein verlustfreies Audio"
+                + " \u00fcbertragen, daher \u00fcberspringt BitChord dort normalerweise"
+                + " verlustfreie Add-ons. Ist dies an, werden sie trotzdem genutzt, und das Handy"
+                + " sendet sie mit seinem besten Bluetooth-Codec, etwa LDAC oder aptX. Gilt ab dem"
+                + " n\u00e4chsten Song.",
+            "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
+                    + " pitch you set here.",
+            "\u00c4ndert die Tonart, ohne das Tempo zu \u00e4ndern. BitChords Tempo-Einstellung"
+                    + " beh\u00e4lt die hier gew\u00e4hlte Tonh\u00f6he.",
+            "Fade out at the sleep timer",
+            "Beim Sleep-Timer ausblenden",
+            "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
+                + " own level is -14 LUFS, as on YouTube and Spotify. Lower is quieter with more"
+                + " room for peaks; higher is louder.",
+            "Wie laut Songs spielen, wenn BitChords Lautst\u00e4rkenormalisierung an ist. BitChords"
+                + " eigener Pegel ist -14 LUFS, wie bei YouTube und Spotify. Niedriger ist leiser"
+                + " mit mehr Raum f\u00fcr Spitzen; h\u00f6her ist lauter.",
+            "Level",
+            "Pegel",
+            "Lossless addons are used over Bluetooth too",
+            "Verlustfreie Add-ons werden auch \u00fcber Bluetooth genutzt",
+            "Lossless addons over Bluetooth",
+            "Verlustfreie Add-ons \u00fcber Bluetooth",
+            "Lossless addons wait for wired or USB audio",
+            "Verlustfreie Add-ons warten auf kabelgebundenes oder USB-Audio",
+            "Loudness level",
+            "Lautst\u00e4rkepegel",
+            "Off",
+            "Aus",
+            "Only the voice range, and only while someone sings",
+            "Nur der Stimmbereich, und nur w\u00e4hrend jemand singt",
+            "Original key",
+            "Originaltonart",
+            "Other",
+            "Sonstiges",
+            "Pitch",
+            "Tonh\u00f6he",
+            "Playback extras",
+            "Playback extras",
+            "Removes everything in the middle, drums included",
+            "Entfernt alles in der Mitte, auch das Schlagzeug",
+            "Saves battery on long listens. While a song plays this way, BitChord\u2019s equaliser,"
+                + " loudness normalisation, Sing, spatial audio and crossfade don\u2019t work on"
+                + " it. Android decides which songs and devices can; the rest play as before.",
+            "Spart Akku bei langem H\u00f6ren. Solange ein Song so spielt, wirken BitChords"
+                + " Equalizer, Lautst\u00e4rkenormalisierung, Mitsingen, r\u00e4umliches Audio und"
+                + " \u00dcberblendung nicht darauf. Android entscheidet, welche Songs und"
+                + " Ger\u00e4te das k\u00f6nnen; der Rest spielt wie bisher.",
+            "Sing",
+            "Mitsingen",
+            "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
+            "Mitsingen stammt aus Auris von OreoMuncher45, einem Fork von BitChord.",
+            "Sing, pitch, loudness level, sleep fade and battery saver",
+            "Mitsingen, Tonh\u00f6he, Lautst\u00e4rkepegel, Sleep-Ausblenden und Akkusparmodus",
+            "The cleaner choice for older recordings.",
+            "Die sauberere Wahl f\u00fcr \u00e4ltere Aufnahmen.",
+            "The phone\u2019s audio chip plays songs it can decode",
+            "Der Audiochip des Handys spielt Songs, die er dekodieren kann",
+            "The song fades out over 10 seconds, then pauses",
+            "Der Song wird \u00fcber 10 Sekunden ausgeblendet und dann pausiert",
+            "The song pauses straight away",
+            "Der Song pausiert sofort",
+            "Turns the singer down so you can sing over the song. Works best on studio recordings"
+                    + " with the voice in the middle.",
+            "Dreht die Hauptstimme leiser, damit du mitsingen kannst. Klappt am besten bei"
+                    + " Studioaufnahmen mit der Stimme in der Mitte.",
+            "Voice",
+            "Stimme",
+            "Whole centre",
+            "Ganze Mitte",
+            "{0} (BitChord\u2019s level)",
+            "{0} (BitChords Pegel)",
+            "{0} semitone",
+            "{0} Halbton",
+            "{0} semitones",
+            "{0} Halbt\u00f6ne",
+            "{0}% quieter",
+            "{0} % leiser",
         };
     }
 
@@ -6693,6 +7111,95 @@ final class Translations {
             "Unofficial Telegram (copia guardada)",
             "Saved copy",
             "Copia guardada",
+            "Added by the Playback extras patch.",
+            "A\u00f1adido por el parche Playback extras.",
+            "Battery saver",
+            "Ahorro de bater\u00eda",
+            "BitChord decodes every song",
+            "BitChord decodifica todas las canciones",
+            "Bluetooth can\u2019t carry lossless audio on most phones, so BitChord normally skips"
+                + " lossless addons there. With this on they\u2019re used anyway, and the phone"
+                + " sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the"
+                + " next song.",
+            "La mayor\u00eda de los tel\u00e9fonos no pueden enviar audio sin p\u00e9rdida por"
+                + " Bluetooth, as\u00ed que BitChord suele omitir ah\u00ed los complementos sin"
+                + " p\u00e9rdida. Con esto activado se usan igualmente, y el tel\u00e9fono los"
+                + " env\u00eda con su mejor c\u00f3dec Bluetooth, como LDAC o aptX. Empieza con la"
+                + " siguiente canci\u00f3n.",
+            "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
+                    + " pitch you set here.",
+            "Cambia el tono sin cambiar la velocidad. El ajuste de velocidad de BitChord mantiene"
+                    + " el tono que elijas aqu\u00ed.",
+            "Fade out at the sleep timer",
+            "Desvanecer al terminar el temporizador",
+            "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
+                + " own level is -14 LUFS, as on YouTube and Spotify. Lower is quieter with more"
+                + " room for peaks; higher is louder.",
+            "Volumen de las canciones con la normalizaci\u00f3n de volumen de BitChord activada. El"
+                + " nivel propio de BitChord es -14 LUFS, como en YouTube y Spotify. M\u00e1s bajo"
+                + " es m\u00e1s silencioso y deja m\u00e1s margen para los picos; m\u00e1s alto es"
+                + " m\u00e1s fuerte.",
+            "Level",
+            "Nivel",
+            "Lossless addons are used over Bluetooth too",
+            "Los complementos sin p\u00e9rdida tambi\u00e9n se usan por Bluetooth",
+            "Lossless addons over Bluetooth",
+            "Complementos sin p\u00e9rdida por Bluetooth",
+            "Lossless addons wait for wired or USB audio",
+            "Los complementos sin p\u00e9rdida esperan audio por cable o USB",
+            "Loudness level",
+            "Nivel de volumen",
+            "Off",
+            "Desactivado",
+            "Only the voice range, and only while someone sings",
+            "Solo el rango de la voz, y solo mientras alguien canta",
+            "Original key",
+            "Tono original",
+            "Other",
+            "Otros",
+            "Pitch",
+            "Tono",
+            "Playback extras",
+            "Playback extras",
+            "Removes everything in the middle, drums included",
+            "Quita todo lo que est\u00e1 en el centro, bater\u00eda incluida",
+            "Saves battery on long listens. While a song plays this way, BitChord\u2019s equaliser,"
+                + " loudness normalisation, Sing, spatial audio and crossfade don\u2019t work on"
+                + " it. Android decides which songs and devices can; the rest play as before.",
+            "Ahorra bater\u00eda en escuchas largas. Mientras una canci\u00f3n suena as\u00ed, el"
+                + " ecualizador, la normalizaci\u00f3n de volumen, Cantar, el audio espacial y el"
+                + " fundido de BitChord no act\u00faan sobre ella. Android decide qu\u00e9"
+                + " canciones y dispositivos pueden; el resto suena como antes.",
+            "Sing",
+            "Cantar",
+            "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
+            "Cantar procede de Auris, de OreoMuncher45, una bifurcaci\u00f3n de BitChord.",
+            "Sing, pitch, loudness level, sleep fade and battery saver",
+            "Cantar, tono, nivel de volumen, fundido al dormir y ahorro de bater\u00eda",
+            "The cleaner choice for older recordings.",
+            "La opci\u00f3n m\u00e1s limpia para grabaciones antiguas.",
+            "The phone\u2019s audio chip plays songs it can decode",
+            "El chip de audio del tel\u00e9fono reproduce las canciones que puede decodificar",
+            "The song fades out over 10 seconds, then pauses",
+            "La canci\u00f3n se desvanece durante 10 segundos y luego se pausa",
+            "The song pauses straight away",
+            "La canci\u00f3n se pausa al instante",
+            "Turns the singer down so you can sing over the song. Works best on studio recordings"
+                    + " with the voice in the middle.",
+            "Baja la voz principal para que puedas cantar encima. Funciona mejor en grabaciones de"
+                    + " estudio con la voz en el centro.",
+            "Voice",
+            "Voz",
+            "Whole centre",
+            "Todo el centro",
+            "{0} (BitChord\u2019s level)",
+            "{0} (nivel de BitChord)",
+            "{0} semitone",
+            "{0} semitono",
+            "{0} semitones",
+            "{0} semitonos",
+            "{0}% quieter",
+            "{0}% m\u00e1s baja",
         };
     }
 
@@ -7887,6 +8394,96 @@ final class Translations {
             "Unofficial Telegram (copie enregistr\u00e9e)",
             "Saved copy",
             "Copie enregistr\u00e9e",
+            "Added by the Playback extras patch.",
+            "Ajout\u00e9 par le patch Playback extras.",
+            "Battery saver",
+            "\u00c9conomie de batterie",
+            "BitChord decodes every song",
+            "BitChord d\u00e9code chaque morceau",
+            "Bluetooth can\u2019t carry lossless audio on most phones, so BitChord normally skips"
+                + " lossless addons there. With this on they\u2019re used anyway, and the phone"
+                + " sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the"
+                + " next song.",
+            "La plupart des t\u00e9l\u00e9phones ne peuvent pas transmettre l\u2019audio sans perte"
+                + " en Bluetooth, donc BitChord ignore d\u2019habitude les extensions sans perte"
+                + " dans ce cas. Avec cette option, elles sont utilis\u00e9es quand m\u00eame, et"
+                + " le t\u00e9l\u00e9phone les envoie avec son meilleur codec Bluetooth, comme LDAC"
+                + " ou aptX. Prend effet au morceau suivant.",
+            "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
+                    + " pitch you set here.",
+            "Change la tonalit\u00e9 sans changer la vitesse. Le r\u00e9glage de vitesse de"
+                    + " BitChord garde la tonalit\u00e9 choisie ici.",
+            "Fade out at the sleep timer",
+            "Fondu \u00e0 la fin de la minuterie de veille",
+            "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
+                + " own level is -14 LUFS, as on YouTube and Spotify. Lower is quieter with more"
+                + " room for peaks; higher is louder.",
+            "Le volume des morceaux quand la normalisation du volume de BitChord est activ\u00e9e."
+                + " Le niveau de BitChord est -14 LUFS, comme sur YouTube et Spotify. Plus bas est"
+                + " plus doux avec plus de marge pour les cr\u00eates ; plus haut est plus fort.",
+            "Level",
+            "Niveau",
+            "Lossless addons are used over Bluetooth too",
+            "Les extensions sans perte sont aussi utilis\u00e9es en Bluetooth",
+            "Lossless addons over Bluetooth",
+            "Extensions sans perte en Bluetooth",
+            "Lossless addons wait for wired or USB audio",
+            "Les extensions sans perte attendent une sortie filaire ou USB",
+            "Loudness level",
+            "Niveau de volume",
+            "Off",
+            "D\u00e9sactiv\u00e9",
+            "Only the voice range, and only while someone sings",
+            "Seulement la plage de la voix, et seulement quand quelqu\u2019un chante",
+            "Original key",
+            "Tonalit\u00e9 d\u2019origine",
+            "Other",
+            "Autres",
+            "Pitch",
+            "Tonalit\u00e9",
+            "Playback extras",
+            "Playback extras",
+            "Removes everything in the middle, drums included",
+            "Retire tout ce qui est au centre, batterie comprise",
+            "Saves battery on long listens. While a song plays this way, BitChord\u2019s equaliser,"
+                + " loudness normalisation, Sing, spatial audio and crossfade don\u2019t work on"
+                + " it. Android decides which songs and devices can; the rest play as before.",
+            "\u00c9conomise la batterie lors des longues \u00e9coutes. Pendant qu\u2019un morceau"
+                + " est lu ainsi, l\u2019\u00e9galiseur, la normalisation du volume, Chanter,"
+                + " l\u2019audio spatial et le fondu encha\u00een\u00e9 de BitChord ne s\u2019y"
+                + " appliquent pas. Android d\u00e9cide quels morceaux et appareils le peuvent ;"
+                + " les autres sont lus comme avant.",
+            "Sing",
+            "Chanter",
+            "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
+            "Chanter provient d\u2019Auris, par OreoMuncher45, un fork de BitChord.",
+            "Sing, pitch, loudness level, sleep fade and battery saver",
+            "Chanter, tonalit\u00e9, niveau de volume, fondu de veille et \u00e9conomie de"
+                    + " batterie",
+            "The cleaner choice for older recordings.",
+            "Le choix le plus propre pour les enregistrements anciens.",
+            "The phone\u2019s audio chip plays songs it can decode",
+            "La puce audio du t\u00e9l\u00e9phone lit les morceaux qu\u2019elle sait d\u00e9coder",
+            "The song fades out over 10 seconds, then pauses",
+            "Le morceau s\u2019estompe pendant 10 secondes, puis se met en pause",
+            "The song pauses straight away",
+            "Le morceau se met en pause aussit\u00f4t",
+            "Turns the singer down so you can sing over the song. Works best on studio recordings"
+                    + " with the voice in the middle.",
+            "Baisse la voix principale pour que vous puissiez chanter par-dessus. Fonctionne le"
+                    + " mieux sur les enregistrements studio avec la voix au centre.",
+            "Voice",
+            "Voix",
+            "Whole centre",
+            "Tout le centre",
+            "{0} (BitChord\u2019s level)",
+            "{0} (niveau de BitChord)",
+            "{0} semitone",
+            "{0} demi-ton",
+            "{0} semitones",
+            "{0} demi-tons",
+            "{0}% quieter",
+            "{0} % plus bas",
         };
     }
 
@@ -10130,6 +10727,175 @@ final class Translations {
                     + " \u0915\u0949\u092a\u0940)",
             "Saved copy",
             "\u0938\u0939\u0947\u091c\u0940 \u0917\u0908 \u0915\u0949\u092a\u0940",
+            "Added by the Playback extras patch.",
+            "Playback extras \u092a\u0948\u091a \u0928\u0947 \u091c\u094b\u0921\u093c\u093e\u0964",
+            "Battery saver",
+            "\u092c\u0948\u091f\u0930\u0940 \u0938\u0947\u0935\u0930",
+            "BitChord decodes every song",
+            "BitChord \u0939\u0930 \u0917\u093e\u0928\u093e \u0916\u0941\u0926"
+                    + " \u0921\u093f\u0915\u094b\u0921 \u0915\u0930\u0924\u093e \u0939\u0948",
+            "Bluetooth can\u2019t carry lossless audio on most phones, so BitChord normally skips"
+                + " lossless addons there. With this on they\u2019re used anyway, and the phone"
+                + " sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the"
+                + " next song.",
+            "\u091c\u093c\u094d\u092f\u093e\u0926\u093e\u0924\u0930 \u092b\u093c\u094b\u0928"
+                    + " \u092c\u094d\u0932\u0942\u091f\u0942\u0925 \u092a\u0930"
+                    + " \u0932\u0949\u0938\u0932\u0947\u0938 \u0911\u0921\u093f\u092f\u094b"
+                    + " \u0928\u0939\u0940\u0902 \u092d\u0947\u091c \u0938\u0915\u0924\u0947,"
+                    + " \u0907\u0938\u0932\u093f\u090f BitChord \u0935\u0939\u093e\u0901"
+                    + " \u0906\u092e\u0924\u094c\u0930 \u092a\u0930"
+                    + " \u0932\u0949\u0938\u0932\u0947\u0938 \u0910\u0921-\u0911\u0928"
+                    + " \u091b\u094b\u0921\u093c \u0926\u0947\u0924\u093e \u0939\u0948\u0964"
+                    + " \u0907\u0938\u0947 \u091a\u093e\u0932\u0942 \u0915\u0930\u0928\u0947"
+                    + " \u092a\u0930 \u0935\u0947 \u092b\u093f\u0930 \u092d\u0940"
+                    + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0939\u094b\u0924\u0947"
+                    + " \u0939\u0948\u0902, \u0914\u0930 \u092b\u093c\u094b\u0928"
+                    + " \u0909\u0928\u094d\u0939\u0947\u0902 \u0905\u092a\u0928\u0947"
+                    + " \u0938\u092c\u0938\u0947 \u0905\u091a\u094d\u091b\u0947"
+                    + " \u092c\u094d\u0932\u0942\u091f\u0942\u0925 \u0915\u094b\u0921\u0947\u0915,"
+                    + " \u091c\u0948\u0938\u0947 LDAC \u092f\u093e aptX, \u0938\u0947"
+                    + " \u092d\u0947\u091c\u0924\u093e \u0939\u0948\u0964 \u0905\u0917\u0932\u0947"
+                    + " \u0917\u093e\u0928\u0947 \u0938\u0947 \u0932\u093e\u0917\u0942"
+                    + " \u0939\u094b\u0924\u093e \u0939\u0948\u0964",
+            "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
+                    + " pitch you set here.",
+            "\u0917\u0924\u093f \u092c\u0926\u0932\u0947 \u092c\u093f\u0928\u093e"
+                + " \u0938\u094d\u0935\u0930 \u092c\u0926\u0932\u0924\u093e \u0939\u0948\u0964"
+                + " BitChord \u0915\u0940 \u0917\u0924\u093f \u0938\u0947\u091f\u093f\u0902\u0917"
+                + " \u092f\u0939\u093e\u0901 \u091a\u0941\u0928\u093e \u0917\u092f\u093e"
+                + " \u0938\u094d\u0935\u0930 \u092c\u0928\u093e\u090f \u0930\u0916\u0924\u0940"
+                + " \u0939\u0948\u0964",
+            "Fade out at the sleep timer",
+            "\u0938\u094d\u0932\u0940\u092a \u091f\u093e\u0907\u092e\u0930 \u092a\u0930"
+                    + " \u0927\u0940\u0930\u0947-\u0927\u0940\u0930\u0947"
+                    + " \u0906\u0935\u093e\u091c\u093c \u0915\u092e \u0915\u0930\u0947\u0902",
+            "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
+                + " own level is -14 LUFS, as on YouTube and Spotify. Lower is quieter with more"
+                + " room for peaks; higher is louder.",
+            "BitChord \u0915\u093e \u0932\u093e\u0909\u0921\u0928\u0947\u0938"
+                + " \u0928\u0949\u0930\u094d\u092e\u0932\u093e\u0907\u091c\u093c\u0947\u0936\u0928"
+                + " \u091a\u093e\u0932\u0942 \u0939\u094b\u0928\u0947 \u092a\u0930"
+                + " \u0917\u093e\u0928\u0947 \u0915\u093f\u0924\u0928\u0940"
+                + " \u0924\u0947\u091c\u093c \u092c\u091c\u0947\u0902\u0964 BitChord \u0915\u093e"
+                + " \u0905\u092a\u0928\u093e \u0938\u094d\u0924\u0930 -14 LUFS \u0939\u0948,"
+                + " \u091c\u0948\u0938\u093e YouTube \u0914\u0930 Spotify \u092a\u0930\u0964"
+                + " \u0915\u092e \u0915\u093e \u092e\u0924\u0932\u092c \u0927\u0940\u092e\u093e"
+                + " \u0914\u0930 \u092a\u0940\u0915 \u0915\u0947 \u0932\u093f\u090f"
+                + " \u091c\u093c\u094d\u092f\u093e\u0926\u093e \u091c\u0917\u0939;"
+                + " \u091c\u093c\u094d\u092f\u093e\u0926\u093e \u0915\u093e"
+                + " \u092e\u0924\u0932\u092c \u0924\u0947\u091c\u093c\u0964",
+            "Level",
+            "\u0938\u094d\u0924\u0930",
+            "Lossless addons are used over Bluetooth too",
+            "\u0932\u0949\u0938\u0932\u0947\u0938 \u0910\u0921-\u0911\u0928"
+                    + " \u092c\u094d\u0932\u0942\u091f\u0942\u0925 \u092a\u0930 \u092d\u0940"
+                    + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0939\u094b\u0924\u0947"
+                    + " \u0939\u0948\u0902",
+            "Lossless addons over Bluetooth",
+            "\u092c\u094d\u0932\u0942\u091f\u0942\u0925 \u092a\u0930"
+                    + " \u0932\u0949\u0938\u0932\u0947\u0938 \u0910\u0921-\u0911\u0928",
+            "Lossless addons wait for wired or USB audio",
+            "\u0932\u0949\u0938\u0932\u0947\u0938 \u0910\u0921-\u0911\u0928"
+                    + " \u0935\u093e\u092f\u0930\u094d\u0921 \u092f\u093e USB"
+                    + " \u0911\u0921\u093f\u092f\u094b \u0915\u093e"
+                    + " \u0907\u0902\u0924\u091c\u093c\u093e\u0930 \u0915\u0930\u0924\u0947"
+                    + " \u0939\u0948\u0902",
+            "Loudness level",
+            "\u0932\u093e\u0909\u0921\u0928\u0947\u0938 \u0938\u094d\u0924\u0930",
+            "Off",
+            "\u092c\u0902\u0926",
+            "Only the voice range, and only while someone sings",
+            "\u0938\u093f\u0930\u094d\u092b\u093c \u0906\u0935\u093e\u091c\u093c \u0915\u0940"
+                + " \u0930\u0947\u0902\u091c, \u0914\u0930 \u0938\u093f\u0930\u094d\u092b\u093c"
+                + " \u091c\u092c \u0915\u094b\u0908 \u0917\u093e \u0930\u0939\u093e \u0939\u094b",
+            "Original key",
+            "\u092e\u0942\u0932 \u0938\u094d\u0935\u0930",
+            "Other",
+            "\u0905\u0928\u094d\u092f",
+            "Pitch",
+            "\u0938\u094d\u0935\u0930",
+            "Playback extras",
+            "Playback extras",
+            "Removes everything in the middle, drums included",
+            "\u092c\u0940\u091a \u0915\u0940 \u0939\u0930 \u091a\u0940\u091c\u093c"
+                    + " \u0939\u091f\u093e \u0926\u0947\u0924\u093e \u0939\u0948,"
+                    + " \u0921\u094d\u0930\u092e \u0938\u092e\u0947\u0924",
+            "Saves battery on long listens. While a song plays this way, BitChord\u2019s equaliser,"
+                + " loudness normalisation, Sing, spatial audio and crossfade don\u2019t work on"
+                + " it. Android decides which songs and devices can; the rest play as before.",
+            "\u0932\u0902\u092c\u0947 \u0938\u092e\u092f \u0924\u0915"
+                + " \u0938\u0941\u0928\u0928\u0947 \u092e\u0947\u0902"
+                + " \u092c\u0948\u091f\u0930\u0940 \u092c\u091a\u093e\u0924\u093e"
+                + " \u0939\u0948\u0964 \u091c\u092c \u0915\u094b\u0908 \u0917\u093e\u0928\u093e"
+                + " \u0907\u0938 \u0924\u0930\u0939 \u092c\u091c\u0924\u093e \u0939\u0948,"
+                + " \u0924\u094b BitChord \u0915\u093e"
+                + " \u0907\u0915\u094d\u0935\u0932\u093e\u0907\u091c\u093c\u0930,"
+                + " \u0932\u093e\u0909\u0921\u0928\u0947\u0938"
+                + " \u0928\u0949\u0930\u094d\u092e\u0932\u093e\u0907\u091c\u093c\u0947\u0936\u0928,"
+                + " \u0917\u093e\u090f\u0901, \u0938\u094d\u092a\u0947\u0936\u093f\u092f\u0932"
+                + " \u0911\u0921\u093f\u092f\u094b \u0914\u0930"
+                + " \u0915\u094d\u0930\u0949\u0938\u092b\u093c\u0947\u0921 \u0909\u0938"
+                + " \u092a\u0930 \u0915\u093e\u092e \u0928\u0939\u0940\u0902"
+                + " \u0915\u0930\u0924\u0947\u0964 \u0915\u094c\u0928-\u0938\u0947"
+                + " \u0917\u093e\u0928\u0947 \u0914\u0930 \u0921\u093f\u0935\u093e\u0907\u0938"
+                + " \u0910\u0938\u093e \u0915\u0930 \u0938\u0915\u0924\u0947 \u0939\u0948\u0902,"
+                + " \u092f\u0939 Android \u0924\u092f \u0915\u0930\u0924\u093e \u0939\u0948;"
+                + " \u092c\u093e\u0915\u0940 \u092a\u0939\u0932\u0947 \u0915\u0940"
+                + " \u0924\u0930\u0939 \u092c\u091c\u0924\u0947 \u0939\u0948\u0902\u0964",
+            "Sing",
+            "\u0917\u093e\u090f\u0901",
+            "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
+            "\u0917\u093e\u090f\u0901, OreoMuncher45 \u0915\u0947 Auris \u0938\u0947"
+                + " \u0932\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u0948, \u091c\u094b BitChord"
+                + " \u0915\u093e \u092b\u093c\u094b\u0930\u094d\u0915 \u0939\u0948\u0964",
+            "Sing, pitch, loudness level, sleep fade and battery saver",
+            "\u0917\u093e\u090f\u0901, \u0938\u094d\u0935\u0930,"
+                    + " \u0932\u093e\u0909\u0921\u0928\u0947\u0938 \u0938\u094d\u0924\u0930,"
+                    + " \u0938\u094d\u0932\u0940\u092a \u092b\u093c\u0947\u0921 \u0914\u0930"
+                    + " \u092c\u0948\u091f\u0930\u0940 \u0938\u0947\u0935\u0930",
+            "The cleaner choice for older recordings.",
+            "\u092a\u0941\u0930\u093e\u0928\u0940"
+                    + " \u0930\u093f\u0915\u0949\u0930\u094d\u0921\u093f\u0902\u0917 \u0915\u0947"
+                    + " \u0932\u093f\u090f \u091c\u093c\u094d\u092f\u093e\u0926\u093e"
+                    + " \u0938\u093e\u092b\u093c \u0935\u093f\u0915\u0932\u094d\u092a\u0964",
+            "The phone\u2019s audio chip plays songs it can decode",
+            "\u092b\u093c\u094b\u0928 \u0915\u0940 \u0911\u0921\u093f\u092f\u094b"
+                    + " \u091a\u093f\u092a \u0935\u0947 \u0917\u093e\u0928\u0947"
+                    + " \u092c\u091c\u093e\u0924\u0940 \u0939\u0948"
+                    + " \u091c\u093f\u0928\u094d\u0939\u0947\u0902 \u0935\u0939"
+                    + " \u0921\u093f\u0915\u094b\u0921 \u0915\u0930 \u0938\u0915\u0924\u0940"
+                    + " \u0939\u0948",
+            "The song fades out over 10 seconds, then pauses",
+            "\u0917\u093e\u0928\u093e 10 \u0938\u0947\u0915\u0902\u0921 \u092e\u0947\u0902"
+                + " \u0927\u0940\u092e\u093e \u0939\u094b\u0924\u093e \u0939\u0948,"
+                + " \u092b\u093f\u0930 \u0930\u0941\u0915 \u091c\u093e\u0924\u093e \u0939\u0948",
+            "The song pauses straight away",
+            "\u0917\u093e\u0928\u093e \u0924\u0941\u0930\u0902\u0924 \u0930\u0941\u0915"
+                    + " \u091c\u093e\u0924\u093e \u0939\u0948",
+            "Turns the singer down so you can sing over the song. Works best on studio recordings"
+                    + " with the voice in the middle.",
+            "\u092e\u0941\u0916\u094d\u092f \u0906\u0935\u093e\u091c\u093c \u0927\u0940\u092e\u0940"
+                + " \u0915\u0930\u0924\u093e \u0939\u0948 \u0924\u093e\u0915\u093f \u0906\u092a"
+                + " \u0917\u093e\u0928\u0947 \u0915\u0947 \u0938\u093e\u0925 \u0917\u093e"
+                + " \u0938\u0915\u0947\u0902\u0964 \u0938\u094d\u091f\u0942\u0921\u093f\u092f\u094b"
+                + " \u0930\u093f\u0915\u0949\u0930\u094d\u0921\u093f\u0902\u0917 \u092a\u0930"
+                + " \u0938\u092c\u0938\u0947 \u0905\u091a\u094d\u091b\u093e \u0915\u093e\u092e"
+                + " \u0915\u0930\u0924\u093e \u0939\u0948 \u091c\u093f\u0928\u092e\u0947\u0902"
+                + " \u0906\u0935\u093e\u091c\u093c \u092c\u0940\u091a \u092e\u0947\u0902"
+                + " \u0939\u094b\u0964",
+            "Voice",
+            "\u0906\u0935\u093e\u091c\u093c",
+            "Whole centre",
+            "\u092a\u0942\u0930\u093e \u092c\u0940\u091a \u0915\u093e"
+                    + " \u0939\u093f\u0938\u094d\u0938\u093e",
+            "{0} (BitChord\u2019s level)",
+            "{0} (BitChord \u0915\u093e \u0938\u094d\u0924\u0930)",
+            "{0} semitone",
+            "{0} \u0938\u0947\u092e\u0940\u091f\u094b\u0928",
+            "{0} semitones",
+            "{0} \u0938\u0947\u092e\u0940\u091f\u094b\u0928",
+            "{0}% quieter",
+            "{0}% \u0927\u0940\u092e\u0940",
         };
     }
 
@@ -11252,6 +12018,93 @@ final class Translations {
             "Unofficial Telegram (salinan tersimpan)",
             "Saved copy",
             "Salinan tersimpan",
+            "Added by the Playback extras patch.",
+            "Ditambahkan oleh patch Playback extras.",
+            "Battery saver",
+            "Penghemat baterai",
+            "BitChord decodes every song",
+            "BitChord mendekode setiap lagu",
+            "Bluetooth can\u2019t carry lossless audio on most phones, so BitChord normally skips"
+                + " lossless addons there. With this on they\u2019re used anyway, and the phone"
+                + " sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the"
+                + " next song.",
+            "Sebagian besar ponsel tidak bisa mengirim audio lossless lewat Bluetooth, jadi"
+                + " BitChord biasanya melewati add-on lossless di sana. Jika ini aktif, add-on itu"
+                + " tetap dipakai, dan ponsel mengirimnya dengan codec Bluetooth terbaiknya,"
+                + " seperti LDAC atau aptX. Mulai dari lagu berikutnya.",
+            "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
+                    + " pitch you set here.",
+            "Mengubah nada tanpa mengubah kecepatan. Pengaturan kecepatan BitChord mempertahankan"
+                    + " nada yang Anda atur di sini.",
+            "Fade out at the sleep timer",
+            "Pelankan di akhir pewaktu tidur",
+            "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
+                + " own level is -14 LUFS, as on YouTube and Spotify. Lower is quieter with more"
+                + " room for peaks; higher is louder.",
+            "Seberapa keras lagu diputar saat normalisasi kenyaringan BitChord aktif. Level"
+                + " BitChord sendiri -14 LUFS, seperti di YouTube dan Spotify. Lebih rendah lebih"
+                + " pelan dengan ruang lebih untuk puncak; lebih tinggi lebih keras.",
+            "Level",
+            "Level",
+            "Lossless addons are used over Bluetooth too",
+            "Add-on lossless juga dipakai lewat Bluetooth",
+            "Lossless addons over Bluetooth",
+            "Add-on lossless lewat Bluetooth",
+            "Lossless addons wait for wired or USB audio",
+            "Add-on lossless menunggu audio kabel atau USB",
+            "Loudness level",
+            "Level kenyaringan",
+            "Off",
+            "Mati",
+            "Only the voice range, and only while someone sings",
+            "Hanya rentang suara, dan hanya saat ada yang bernyanyi",
+            "Original key",
+            "Nada asli",
+            "Other",
+            "Lainnya",
+            "Pitch",
+            "Nada",
+            "Playback extras",
+            "Playback extras",
+            "Removes everything in the middle, drums included",
+            "Menghapus semua yang di tengah, termasuk drum",
+            "Saves battery on long listens. While a song plays this way, BitChord\u2019s equaliser,"
+                + " loudness normalisation, Sing, spatial audio and crossfade don\u2019t work on"
+                + " it. Android decides which songs and devices can; the rest play as before.",
+            "Menghemat baterai saat mendengarkan lama. Selama lagu diputar dengan cara ini,"
+                + " equalizer, normalisasi kenyaringan, Bernyanyi, audio spasial, dan crossfade"
+                + " BitChord tidak bekerja padanya. Android yang menentukan lagu dan perangkat mana"
+                + " yang bisa; sisanya diputar seperti biasa.",
+            "Sing",
+            "Bernyanyi",
+            "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
+            "Bernyanyi diambil dari Auris karya OreoMuncher45, fork dari BitChord.",
+            "Sing, pitch, loudness level, sleep fade and battery saver",
+            "Bernyanyi, nada, level kenyaringan, pelan saat tidur, dan penghemat baterai",
+            "The cleaner choice for older recordings.",
+            "Pilihan yang lebih bersih untuk rekaman lama.",
+            "The phone\u2019s audio chip plays songs it can decode",
+            "Chip audio ponsel memutar lagu yang bisa didekodenya",
+            "The song fades out over 10 seconds, then pauses",
+            "Lagu memelan selama 10 detik, lalu dijeda",
+            "The song pauses straight away",
+            "Lagu langsung dijeda",
+            "Turns the singer down so you can sing over the song. Works best on studio recordings"
+                    + " with the voice in the middle.",
+            "Mengecilkan vokal utama agar Anda bisa bernyanyi bersama lagu. Paling baik pada"
+                    + " rekaman studio dengan vokal di tengah.",
+            "Voice",
+            "Vokal",
+            "Whole centre",
+            "Seluruh tengah",
+            "{0} (BitChord\u2019s level)",
+            "{0} (level BitChord)",
+            "{0} semitone",
+            "{0} semitone",
+            "{0} semitones",
+            "{0} semitone",
+            "{0}% quieter",
+            "{0}% lebih pelan",
         };
     }
 
@@ -12518,6 +13371,103 @@ final class Translations {
             "Unofficial Telegram\uff08\u4fdd\u5b58\u6e08\u307f\u306e\u30b3\u30d4\u30fc\uff09",
             "Saved copy",
             "\u4fdd\u5b58\u6e08\u307f\u306e\u30b3\u30d4\u30fc",
+            "Added by the Playback extras patch.",
+            "Playback extras"
+                    + " \u30d1\u30c3\u30c1\u3067\u8ffd\u52a0\u3055\u308c\u307e\u3057\u305f\u3002",
+            "Battery saver",
+            "\u30d0\u30c3\u30c6\u30ea\u30fc\u30bb\u30fc\u30d0\u30fc",
+            "BitChord decodes every song",
+            "BitChord"
+                + " \u304c\u3059\u3079\u3066\u306e\u66f2\u3092\u30c7\u30b3\u30fc\u30c9\u3057\u307e\u3059",
+            "Bluetooth can\u2019t carry lossless audio on most phones, so BitChord normally skips"
+                + " lossless addons there. With this on they\u2019re used anyway, and the phone"
+                + " sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the"
+                + " next song.",
+            "\u307b\u3068\u3093\u3069\u306e\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u306f"
+                + " Bluetooth"
+                + " \u3067\u30ed\u30b9\u30ec\u30b9\u97f3\u58f0\u3092\u9001\u308c\u306a\u3044\u305f\u3081\u3001BitChord"
+                + " \u306f\u901a\u5e38\u305d\u3053\u3067\u30ed\u30b9\u30ec\u30b9\u306e\u30a2\u30c9\u30aa\u30f3\u3092\u30b9\u30ad\u30c3\u30d7\u3057\u307e\u3059\u3002\u30aa\u30f3\u306b\u3059\u308b\u3068\u3001\u305d\u308c\u3067\u3082\u4f7f\u308f\u308c\u3001\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u306f"
+                + " LDAC \u3084 aptX \u306a\u3069\u306e\u6700\u826f\u306e Bluetooth"
+                + " \u30b3\u30fc\u30c7\u30c3\u30af\u3067\u9001\u308a\u307e\u3059\u3002\u6b21\u306e\u66f2\u304b\u3089\u6709\u52b9\u3067\u3059\u3002",
+            "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
+                    + " pitch you set here.",
+            "\u901f\u5ea6\u3092\u5909\u3048\u305a\u306b\u30ad\u30fc\u3092\u5909\u3048\u307e\u3059\u3002BitChord"
+                + " \u306e\u901f\u5ea6\u8a2d\u5b9a\u306f\u3001\u3053\u3053\u3067\u8a2d\u5b9a\u3057\u305f\u30d4\u30c3\u30c1\u3092\u4fdd\u3061\u307e\u3059\u3002",
+            "Fade out at the sleep timer",
+            "\u30b9\u30ea\u30fc\u30d7\u30bf\u30a4\u30de\u30fc\u3067\u30d5\u30a7\u30fc\u30c9\u30a2\u30a6\u30c8",
+            "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
+                + " own level is -14 LUFS, as on YouTube and Spotify. Lower is quieter with more"
+                + " room for peaks; higher is louder.",
+            "BitChord"
+                + " \u306e\u30e9\u30a6\u30c9\u30cd\u30b9\u6b63\u898f\u5316\u304c\u30aa\u30f3\u306e\u3068\u304d\u306e\u66f2\u306e\u97f3\u91cf\u3067\u3059\u3002BitChord"
+                + " \u81ea\u4f53\u306e\u57fa\u6e96\u306f YouTube \u3084 Spotify \u3068\u540c\u3058"
+                + " -14 LUFS"
+                + " \u3067\u3059\u3002\u4f4e\u3044\u307b\u3069\u9759\u304b\u3067\u30d4\u30fc\u30af\u306b\u4f59\u88d5\u304c\u3042\u308a\u3001\u9ad8\u3044\u307b\u3069\u5927\u304d\u304f\u306a\u308a\u307e\u3059\u3002",
+            "Level",
+            "\u30ec\u30d9\u30eb",
+            "Lossless addons are used over Bluetooth too",
+            "\u30ed\u30b9\u30ec\u30b9\u306e\u30a2\u30c9\u30aa\u30f3\u3092 Bluetooth"
+                    + " \u3067\u3082\u4f7f\u3044\u307e\u3059",
+            "Lossless addons over Bluetooth",
+            "Bluetooth \u3067\u30ed\u30b9\u30ec\u30b9\u306e\u30a2\u30c9\u30aa\u30f3",
+            "Lossless addons wait for wired or USB audio",
+            "\u30ed\u30b9\u30ec\u30b9\u306e\u30a2\u30c9\u30aa\u30f3\u306f\u6709\u7dda\u307e\u305f\u306f"
+                + " USB \u30aa\u30fc\u30c7\u30a3\u30aa\u3092\u5f85\u3061\u307e\u3059",
+            "Loudness level",
+            "\u30e9\u30a6\u30c9\u30cd\u30b9\u30ec\u30d9\u30eb",
+            "Off",
+            "\u30aa\u30d5",
+            "Only the voice range, and only while someone sings",
+            "\u58f0\u306e\u5e2f\u57df\u3060\u3051\u3092\u3001\u8ab0\u304b\u304c\u6b4c\u3063\u3066\u3044\u308b\u9593\u3060\u3051",
+            "Original key",
+            "\u539f\u66f2\u306e\u30ad\u30fc",
+            "Other",
+            "\u305d\u306e\u4ed6",
+            "Pitch",
+            "\u30d4\u30c3\u30c1",
+            "Playback extras",
+            "Playback extras",
+            "Removes everything in the middle, drums included",
+            "\u4e2d\u592e\u306b\u3042\u308b\u3082\u306e\u3059\u3079\u3066\u3092\u9664\u304d\u307e\u3059\u3002\u30c9\u30e9\u30e0\u3082\u542b\u307f\u307e\u3059",
+            "Saves battery on long listens. While a song plays this way, BitChord\u2019s equaliser,"
+                + " loudness normalisation, Sing, spatial audio and crossfade don\u2019t work on"
+                + " it. Android decides which songs and devices can; the rest play as before.",
+            "\u9577\u6642\u9593\u306e\u518d\u751f\u3067\u30d0\u30c3\u30c6\u30ea\u30fc\u3092\u7bc0\u7d04\u3057\u307e\u3059\u3002\u3053\u306e\u65b9\u6cd5\u3067\u518d\u751f\u4e2d\u306e\u66f2\u306b\u306f\u3001BitChord"
+                + " \u306e\u30a4\u30b3\u30e9\u30a4\u30b6\u30fc\u3001\u30e9\u30a6\u30c9\u30cd\u30b9\u6b63\u898f\u5316\u3001\u6b4c\u3046\u3001\u7a7a\u9593\u30aa\u30fc\u30c7\u30a3\u30aa\u3001\u30af\u30ed\u30b9\u30d5\u30a7\u30fc\u30c9\u304c\u52b9\u304d\u307e\u305b\u3093\u3002\u3069\u306e\u66f2\u3084\u6a5f\u5668\u3067\u4f7f\u3048\u308b\u304b\u306f"
+                + " Android"
+                + " \u304c\u6c7a\u3081\u3001\u305d\u308c\u4ee5\u5916\u306f\u4eca\u307e\u3067\u3069\u304a\u308a\u518d\u751f\u3055\u308c\u307e\u3059\u3002",
+            "Sing",
+            "\u6b4c\u3046",
+            "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
+            "\u300c\u6b4c\u3046\u300d\u306f BitChord"
+                    + " \u306e\u30d5\u30a9\u30fc\u30af\u3067\u3042\u308b OreoMuncher45 \u306e Auris"
+                    + " \u304b\u3089\u79fb\u690d\u3057\u307e\u3057\u305f\u3002",
+            "Sing, pitch, loudness level, sleep fade and battery saver",
+            "\u6b4c\u3046\u3001\u30d4\u30c3\u30c1\u3001\u30e9\u30a6\u30c9\u30cd\u30b9\u30ec\u30d9\u30eb\u3001\u30b9\u30ea\u30fc\u30d7\u306e\u30d5\u30a7\u30fc\u30c9\u3001\u30d0\u30c3\u30c6\u30ea\u30fc\u30bb\u30fc\u30d0\u30fc",
+            "The cleaner choice for older recordings.",
+            "\u53e4\u3044\u9332\u97f3\u3067\u306f\u3053\u3061\u3089\u306e\u307b\u3046\u304c\u304d\u308c\u3044\u3067\u3059\u3002",
+            "The phone\u2019s audio chip plays songs it can decode",
+            "\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u306e\u30aa\u30fc\u30c7\u30a3\u30aa\u30c1\u30c3\u30d7\u304c\u3001\u30c7\u30b3\u30fc\u30c9\u3067\u304d\u308b\u66f2\u3092\u518d\u751f\u3057\u307e\u3059",
+            "The song fades out over 10 seconds, then pauses",
+            "\u66f2\u304c 10"
+                + " \u79d2\u304b\u3051\u3066\u30d5\u30a7\u30fc\u30c9\u30a2\u30a6\u30c8\u3057\u3001\u4e00\u6642\u505c\u6b62\u3057\u307e\u3059",
+            "The song pauses straight away",
+            "\u66f2\u304c\u3059\u3050\u306b\u4e00\u6642\u505c\u6b62\u3057\u307e\u3059",
+            "Turns the singer down so you can sing over the song. Works best on studio recordings"
+                    + " with the voice in the middle.",
+            "\u30e1\u30a4\u30f3\u30dc\u30fc\u30ab\u30eb\u3092\u4e0b\u3052\u3066\u3001\u66f2\u306b\u5408\u308f\u305b\u3066\u6b4c\u3048\u308b\u3088\u3046\u306b\u3057\u307e\u3059\u3002\u30dc\u30fc\u30ab\u30eb\u304c\u4e2d\u592e\u306b\u3042\u308b\u30b9\u30bf\u30b8\u30aa\u9332\u97f3\u3067\u6700\u3082\u3088\u304f\u52b9\u304d\u307e\u3059\u3002",
+            "Voice",
+            "\u30dc\u30fc\u30ab\u30eb",
+            "Whole centre",
+            "\u4e2d\u592e\u3059\u3079\u3066",
+            "{0} (BitChord\u2019s level)",
+            "{0}\uff08BitChord \u306e\u57fa\u6e96\uff09",
+            "{0} semitone",
+            "{0} \u534a\u97f3",
+            "{0} semitones",
+            "{0} \u534a\u97f3",
+            "{0}% quieter",
+            "{0}% \u5c0f\u3055\u304f",
         };
     }
 
@@ -13948,6 +14898,119 @@ final class Translations {
             "Unofficial Telegram (\uc800\uc7a5\ub41c \uc0ac\ubcf8)",
             "Saved copy",
             "\uc800\uc7a5\ub41c \uc0ac\ubcf8",
+            "Added by the Playback extras patch.",
+            "Playback extras \ud328\uce58\ub85c \ucd94\uac00\ub418\uc5c8\uc2b5\ub2c8\ub2e4.",
+            "Battery saver",
+            "\ubc30\ud130\ub9ac \uc808\uc57d",
+            "BitChord decodes every song",
+            "BitChord\uac00 \ubaa8\ub4e0 \uace1\uc744 \uc9c1\uc811"
+                    + " \ub514\ucf54\ub529\ud569\ub2c8\ub2e4",
+            "Bluetooth can\u2019t carry lossless audio on most phones, so BitChord normally skips"
+                + " lossless addons there. With this on they\u2019re used anyway, and the phone"
+                + " sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the"
+                + " next song.",
+            "\ub300\ubd80\ubd84\uc758 \ud734\ub300\ud3f0\uc740 \ube14\ub8e8\ud22c\uc2a4\ub85c"
+                + " \ubb34\uc190\uc2e4 \uc624\ub514\uc624\ub97c \ubcf4\ub0bc \uc218"
+                + " \uc5c6\uc5b4\uc11c BitChord\ub294 \ubcf4\ud1b5 \uadf8\ub54c \ubb34\uc190\uc2e4"
+                + " \uc560\ub4dc\uc628\uc744 \uac74\ub108\ub701\ub2c8\ub2e4. \uc774"
+                + " \uc635\uc158\uc744 \ucf1c\uba74 \uadf8\ub798\ub3c4 \uc0ac\uc6a9\ub418\uba70,"
+                + " \ud734\ub300\ud3f0\uc740 LDAC\ub098 aptX \uac19\uc740 \ucd5c\uc0c1\uc758"
+                + " \ube14\ub8e8\ud22c\uc2a4 \ucf54\ub371\uc73c\ub85c \ubcf4\ub0c5\ub2c8\ub2e4."
+                + " \ub2e4\uc74c \uace1\ubd80\ud130 \uc801\uc6a9\ub429\ub2c8\ub2e4.",
+            "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
+                    + " pitch you set here.",
+            "\uc18d\ub3c4\ub97c \ubc14\uafb8\uc9c0 \uc54a\uace0 \ud0a4\ub97c"
+                    + " \ubc14\uafc9\ub2c8\ub2e4. BitChord\uc758 \uc18d\ub3c4 \uc124\uc815\uc740"
+                    + " \uc5ec\uae30\uc11c \uc815\ud55c \uc74c\ub192\uc774\ub97c"
+                    + " \uc720\uc9c0\ud569\ub2c8\ub2e4.",
+            "Fade out at the sleep timer",
+            "\uc218\uba74 \ud0c0\uc774\uba38\uc5d0\uc11c \ud398\uc774\ub4dc \uc544\uc6c3",
+            "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
+                + " own level is -14 LUFS, as on YouTube and Spotify. Lower is quieter with more"
+                + " room for peaks; higher is louder.",
+            "BitChord\uc758 \uc74c\ub7c9 \ud3c9\uc900\ud654\uac00 \ucf1c\uc838 \uc788\uc744 \ub54c"
+                + " \uace1\uc774 \uc7ac\uc0dd\ub418\ub294 \ud06c\uae30\uc785\ub2c8\ub2e4. BitChord"
+                + " \uc790\uccb4 \uae30\uc900\uc740 YouTube, Spotify\uc640 \uac19\uc740 -14"
+                + " LUFS\uc785\ub2c8\ub2e4. \ub0ae\uc744\uc218\ub85d \uc870\uc6a9\ud558\uace0"
+                + " \ud53c\ud06c \uc5ec\uc720\uac00 \ud06c\uba70, \ub192\uc744\uc218\ub85d"
+                + " \ucee4\uc9d1\ub2c8\ub2e4.",
+            "Level",
+            "\ub808\ubca8",
+            "Lossless addons are used over Bluetooth too",
+            "\ube14\ub8e8\ud22c\uc2a4\uc5d0\uc11c\ub3c4 \ubb34\uc190\uc2e4 \uc560\ub4dc\uc628\uc744"
+                    + " \uc0ac\uc6a9\ud569\ub2c8\ub2e4",
+            "Lossless addons over Bluetooth",
+            "\ube14\ub8e8\ud22c\uc2a4\uc5d0\uc11c \ubb34\uc190\uc2e4 \uc560\ub4dc\uc628",
+            "Lossless addons wait for wired or USB audio",
+            "\ubb34\uc190\uc2e4 \uc560\ub4dc\uc628\uc740 \uc720\uc120 \ub610\ub294 USB"
+                    + " \uc624\ub514\uc624\ub97c \uae30\ub2e4\ub9bd\ub2c8\ub2e4",
+            "Loudness level",
+            "\uc74c\ub7c9 \ub808\ubca8",
+            "Off",
+            "\ub054",
+            "Only the voice range, and only while someone sings",
+            "\ubaa9\uc18c\ub9ac \ub300\uc5ed\ub9cc, \ub204\uad70\uac00 \ub178\ub798\ud558\ub294"
+                    + " \ub3d9\uc548\uc5d0\ub9cc",
+            "Original key",
+            "\uc6d0\ub798 \ud0a4",
+            "Other",
+            "\uae30\ud0c0",
+            "Pitch",
+            "\uc74c\ub192\uc774",
+            "Playback extras",
+            "Playback extras",
+            "Removes everything in the middle, drums included",
+            "\uac00\uc6b4\ub370 \uc788\ub294 \ubaa8\ub4e0 \uac83\uc744 \uc5c6\uc571\ub2c8\ub2e4."
+                    + " \ub4dc\ub7fc\ub3c4 \ud3ec\ud568\ub429\ub2c8\ub2e4",
+            "Saves battery on long listens. While a song plays this way, BitChord\u2019s equaliser,"
+                + " loudness normalisation, Sing, spatial audio and crossfade don\u2019t work on"
+                + " it. Android decides which songs and devices can; the rest play as before.",
+            "\uc624\ub798 \ub4e4\uc744 \ub54c \ubc30\ud130\ub9ac\ub97c \uc544\ub08d\ub2c8\ub2e4."
+                + " \uace1\uc774 \uc774\ub807\uac8c \uc7ac\uc0dd\ub418\ub294"
+                + " \ub3d9\uc548\uc5d0\ub294 BitChord\uc758 \uc774\ud004\ub77c\uc774\uc800,"
+                + " \uc74c\ub7c9 \ud3c9\uc900\ud654, \ub530\ub77c \ubd80\ub974\uae30, \uacf5\uac04"
+                + " \uc74c\ud5a5, \ud06c\ub85c\uc2a4\ud398\uc774\ub4dc\uac00"
+                + " \uc801\uc6a9\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc5b4\ub5a4 \uace1\uacfc"
+                + " \uae30\uae30\uac00 \uac00\ub2a5\ud55c\uc9c0\ub294 Android\uac00"
+                + " \uc815\ud558\uba70, \ub098\uba38\uc9c0\ub294 \uc804\ucc98\ub7fc"
+                + " \uc7ac\uc0dd\ub429\ub2c8\ub2e4.",
+            "Sing",
+            "\ub530\ub77c \ubd80\ub974\uae30",
+            "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
+            "\ub530\ub77c \ubd80\ub974\uae30\ub294 BitChord\uc758 \ud3ec\ud06c\uc778"
+                + " OreoMuncher45\uc758 Auris\uc5d0\uc11c \uac00\uc838\uc654\uc2b5\ub2c8\ub2e4.",
+            "Sing, pitch, loudness level, sleep fade and battery saver",
+            "\ub530\ub77c \ubd80\ub974\uae30, \uc74c\ub192\uc774, \uc74c\ub7c9 \ub808\ubca8,"
+                    + " \uc218\uba74 \ud398\uc774\ub4dc, \ubc30\ud130\ub9ac \uc808\uc57d",
+            "The cleaner choice for older recordings.",
+            "\uc624\ub798\ub41c \ub179\uc74c\uc5d0 \ub354 \uae54\ub054\ud55c"
+                    + " \uc120\ud0dd\uc785\ub2c8\ub2e4.",
+            "The phone\u2019s audio chip plays songs it can decode",
+            "\ud734\ub300\ud3f0\uc758 \uc624\ub514\uc624 \uce69\uc774 \ub514\ucf54\ub529\ud560"
+                    + " \uc218 \uc788\ub294 \uace1\uc744 \uc7ac\uc0dd\ud569\ub2c8\ub2e4",
+            "The song fades out over 10 seconds, then pauses",
+            "\uace1\uc774 10\ucd08 \ub3d9\uc548 \uc791\uc544\uc9c4 \ub4a4"
+                    + " \uc77c\uc2dc\uc815\uc9c0\ub429\ub2c8\ub2e4",
+            "The song pauses straight away",
+            "\uace1\uc774 \ubc14\ub85c \uc77c\uc2dc\uc815\uc9c0\ub429\ub2c8\ub2e4",
+            "Turns the singer down so you can sing over the song. Works best on studio recordings"
+                    + " with the voice in the middle.",
+            "\ub9ac\ub4dc \ubcf4\uceec\uc744 \uc904\uc5ec \uace1\uc5d0 \ub9de\ucdb0"
+                + " \ub178\ub798\ud560 \uc218 \uc788\uac8c \ud569\ub2c8\ub2e4. \ubcf4\uceec\uc774"
+                + " \uac00\uc6b4\ub370 \uc788\ub294 \uc2a4\ud29c\ub514\uc624"
+                + " \ub179\uc74c\uc5d0\uc11c \uac00\uc7a5 \uc798 \ub429\ub2c8\ub2e4.",
+            "Voice",
+            "\ubcf4\uceec",
+            "Whole centre",
+            "\uac00\uc6b4\ub370 \uc804\uccb4",
+            "{0} (BitChord\u2019s level)",
+            "{0} (BitChord \uae30\uc900)",
+            "{0} semitone",
+            "{0} \ubc18\uc74c",
+            "{0} semitones",
+            "{0} \ubc18\uc74c",
+            "{0}% quieter",
+            "{0}% \uc791\uac8c",
         };
     }
 
@@ -15108,6 +16171,95 @@ final class Translations {
             "Unofficial Telegram (c\u00f3pia salva)",
             "Saved copy",
             "C\u00f3pia salva",
+            "Added by the Playback extras patch.",
+            "Adicionado pelo patch Playback extras.",
+            "Battery saver",
+            "Economia de bateria",
+            "BitChord decodes every song",
+            "O BitChord decodifica todas as m\u00fasicas",
+            "Bluetooth can\u2019t carry lossless audio on most phones, so BitChord normally skips"
+                + " lossless addons there. With this on they\u2019re used anyway, and the phone"
+                + " sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the"
+                + " next song.",
+            "A maioria dos celulares n\u00e3o consegue enviar \u00e1udio sem perdas por Bluetooth,"
+                + " ent\u00e3o o BitChord normalmente ignora os complementos sem perdas nesse caso."
+                + " Com isto ativado, eles s\u00e3o usados mesmo assim, e o celular os envia com"
+                + " seu melhor codec Bluetooth, como LDAC ou aptX. Come\u00e7a na pr\u00f3xima"
+                + " m\u00fasica.",
+            "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
+                    + " pitch you set here.",
+            "Muda o tom sem mudar a velocidade. A configura\u00e7\u00e3o de velocidade do BitChord"
+                    + " mant\u00e9m o tom definido aqui.",
+            "Fade out at the sleep timer",
+            "Diminuir aos poucos no timer de sono",
+            "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
+                + " own level is -14 LUFS, as on YouTube and Spotify. Lower is quieter with more"
+                + " room for peaks; higher is louder.",
+            "O volume das m\u00fasicas com a normaliza\u00e7\u00e3o de volume do BitChord ativada."
+                + " O n\u00edvel do pr\u00f3prio BitChord \u00e9 -14 LUFS, como no YouTube e no"
+                + " Spotify. Mais baixo \u00e9 mais silencioso, com mais espa\u00e7o para picos;"
+                + " mais alto \u00e9 mais forte.",
+            "Level",
+            "N\u00edvel",
+            "Lossless addons are used over Bluetooth too",
+            "Complementos sem perdas tamb\u00e9m s\u00e3o usados por Bluetooth",
+            "Lossless addons over Bluetooth",
+            "Complementos sem perdas por Bluetooth",
+            "Lossless addons wait for wired or USB audio",
+            "Complementos sem perdas esperam \u00e1udio com fio ou USB",
+            "Loudness level",
+            "N\u00edvel de volume",
+            "Off",
+            "Desativado",
+            "Only the voice range, and only while someone sings",
+            "S\u00f3 a faixa da voz, e s\u00f3 enquanto algu\u00e9m canta",
+            "Original key",
+            "Tom original",
+            "Other",
+            "Outros",
+            "Pitch",
+            "Tom",
+            "Playback extras",
+            "Playback extras",
+            "Removes everything in the middle, drums included",
+            "Remove tudo o que est\u00e1 no centro, bateria inclusive",
+            "Saves battery on long listens. While a song plays this way, BitChord\u2019s equaliser,"
+                + " loudness normalisation, Sing, spatial audio and crossfade don\u2019t work on"
+                + " it. Android decides which songs and devices can; the rest play as before.",
+            "Economiza bateria em audi\u00e7\u00f5es longas. Enquanto uma m\u00fasica toca assim, o"
+                + " equalizador, a normaliza\u00e7\u00e3o de volume, Cantar, o \u00e1udio espacial"
+                + " e o crossfade do BitChord n\u00e3o agem sobre ela. O Android decide quais"
+                + " m\u00fasicas e aparelhos podem; o resto toca como antes.",
+            "Sing",
+            "Cantar",
+            "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
+            "Cantar vem do Auris, de OreoMuncher45, um fork do BitChord.",
+            "Sing, pitch, loudness level, sleep fade and battery saver",
+            "Cantar, tom, n\u00edvel de volume, fade do timer e economia de bateria",
+            "The cleaner choice for older recordings.",
+            "A op\u00e7\u00e3o mais limpa para grava\u00e7\u00f5es antigas.",
+            "The phone\u2019s audio chip plays songs it can decode",
+            "O chip de \u00e1udio do celular toca as m\u00fasicas que consegue decodificar",
+            "The song fades out over 10 seconds, then pauses",
+            "A m\u00fasica diminui por 10 segundos e depois pausa",
+            "The song pauses straight away",
+            "A m\u00fasica pausa na hora",
+            "Turns the singer down so you can sing over the song. Works best on studio recordings"
+                    + " with the voice in the middle.",
+            "Abaixa a voz principal para voc\u00ea cantar junto. Funciona melhor em"
+                    + " grava\u00e7\u00f5es de est\u00fadio com a voz no centro.",
+            "Voice",
+            "Voz",
+            "Whole centre",
+            "Centro inteiro",
+            "{0} (BitChord\u2019s level)",
+            "{0} (n\u00edvel do BitChord)",
+            "{0} semitone",
+            "{0} semitom",
+            "{0} semitones",
+            "{0} semitons",
+            "{0}% quieter",
+            "{0}% mais baixa",
         };
     }
 
@@ -17546,6 +18698,193 @@ final class Translations {
             "Saved copy",
             "\u0421\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u0430\u044f"
                     + " \u043a\u043e\u043f\u0438\u044f",
+            "Added by the Playback extras patch.",
+            "\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e"
+                    + " \u043f\u0430\u0442\u0447\u0435\u043c Playback extras.",
+            "Battery saver",
+            "\u042d\u043a\u043e\u043d\u043e\u043c\u0438\u044f"
+                    + " \u0431\u0430\u0442\u0430\u0440\u0435\u0438",
+            "BitChord decodes every song",
+            "BitChord \u0434\u0435\u043a\u043e\u0434\u0438\u0440\u0443\u0435\u0442"
+                    + " \u043a\u0430\u0436\u0434\u0443\u044e \u043f\u0435\u0441\u043d\u044e",
+            "Bluetooth can\u2019t carry lossless audio on most phones, so BitChord normally skips"
+                + " lossless addons there. With this on they\u2019re used anyway, and the phone"
+                + " sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the"
+                + " next song.",
+            "\u0411\u043e\u043b\u044c\u0448\u0438\u043d\u0441\u0442\u0432\u043e"
+                + " \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u043e\u0432 \u043d\u0435"
+                + " \u043c\u043e\u0433\u0443\u0442"
+                + " \u043f\u0435\u0440\u0435\u0434\u0430\u0432\u0430\u0442\u044c"
+                + " \u0437\u0432\u0443\u043a \u0431\u0435\u0437"
+                + " \u043f\u043e\u0442\u0435\u0440\u044c \u043f\u043e Bluetooth,"
+                + " \u043f\u043e\u044d\u0442\u043e\u043c\u0443 BitChord"
+                + " \u043e\u0431\u044b\u0447\u043d\u043e"
+                + " \u043f\u0440\u043e\u043f\u0443\u0441\u043a\u0430\u0435\u0442 \u0442\u0430\u043c"
+                + " \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u044f \u0431\u0435\u0437"
+                + " \u043f\u043e\u0442\u0435\u0440\u044c. \u0415\u0441\u043b\u0438"
+                + " \u0432\u043a\u043b\u044e\u0447\u0438\u0442\u044c, \u043e\u043d\u0438"
+                + " \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u044e\u0442\u0441\u044f"
+                + " \u0432\u0441\u0451 \u0440\u0430\u0432\u043d\u043e, \u0438"
+                + " \u0442\u0435\u043b\u0435\u0444\u043e\u043d"
+                + " \u043f\u0435\u0440\u0435\u0434\u0430\u0451\u0442 \u0438\u0445"
+                + " \u0441\u0432\u043e\u0438\u043c \u043b\u0443\u0447\u0448\u0438\u043c"
+                + " \u043a\u043e\u0434\u0435\u043a\u043e\u043c Bluetooth,"
+                + " \u043d\u0430\u043f\u0440\u0438\u043c\u0435\u0440 LDAC \u0438\u043b\u0438 aptX."
+                + " \u041d\u0430\u0447\u0438\u043d\u0430\u0435\u0442"
+                + " \u0434\u0435\u0439\u0441\u0442\u0432\u043e\u0432\u0430\u0442\u044c \u0441\u043e"
+                + " \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0435\u0439"
+                + " \u043f\u0435\u0441\u043d\u0438.",
+            "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
+                    + " pitch you set here.",
+            "\u041c\u0435\u043d\u044f\u0435\u0442"
+                + " \u0442\u043e\u043d\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c,"
+                + " \u043d\u0435 \u043c\u0435\u043d\u044f\u044f"
+                + " \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u044c."
+                + " \u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430"
+                + " \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438 \u0432 BitChord"
+                + " \u0441\u043e\u0445\u0440\u0430\u043d\u044f\u0435\u0442"
+                + " \u0437\u0430\u0434\u0430\u043d\u043d\u0443\u044e \u0437\u0434\u0435\u0441\u044c"
+                + " \u0432\u044b\u0441\u043e\u0442\u0443.",
+            "Fade out at the sleep timer",
+            "\u0417\u0430\u0442\u0443\u0445\u0430\u043d\u0438\u0435 \u043f\u043e"
+                    + " \u0442\u0430\u0439\u043c\u0435\u0440\u0443 \u0441\u043d\u0430",
+            "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
+                + " own level is -14 LUFS, as on YouTube and Spotify. Lower is quieter with more"
+                + " room for peaks; higher is louder.",
+            "\u0413\u0440\u043e\u043c\u043a\u043e\u0441\u0442\u044c \u043f\u0435\u0441\u0435\u043d"
+                + " \u043f\u0440\u0438 \u0432\u043a\u043b\u044e\u0447\u0451\u043d\u043d\u043e\u0439"
+                + " \u043d\u043e\u0440\u043c\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u0438"
+                + " \u0433\u0440\u043e\u043c\u043a\u043e\u0441\u0442\u0438 BitChord."
+                + " \u0421\u043e\u0431\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439"
+                + " \u0443\u0440\u043e\u0432\u0435\u043d\u044c BitChord \u2014 -14 LUFS,"
+                + " \u043a\u0430\u043a \u043d\u0430 YouTube \u0438 Spotify."
+                + " \u041d\u0438\u0436\u0435 \u2014 \u0442\u0438\u0448\u0435 \u0438"
+                + " \u0431\u043e\u043b\u044c\u0448\u0435 \u0437\u0430\u043f\u0430\u0441\u0430"
+                + " \u0434\u043b\u044f \u043f\u0438\u043a\u043e\u0432; \u0432\u044b\u0448\u0435"
+                + " \u2014 \u0433\u0440\u043e\u043c\u0447\u0435.",
+            "Level",
+            "\u0423\u0440\u043e\u0432\u0435\u043d\u044c",
+            "Lossless addons are used over Bluetooth too",
+            "\u0414\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u044f \u0431\u0435\u0437"
+                + " \u043f\u043e\u0442\u0435\u0440\u044c"
+                + " \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u044e\u0442\u0441\u044f \u0438"
+                + " \u043f\u043e Bluetooth",
+            "Lossless addons over Bluetooth",
+            "\u0414\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u044f \u0431\u0435\u0437"
+                    + " \u043f\u043e\u0442\u0435\u0440\u044c \u043f\u043e Bluetooth",
+            "Lossless addons wait for wired or USB audio",
+            "\u0414\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u044f \u0431\u0435\u0437"
+                    + " \u043f\u043e\u0442\u0435\u0440\u044c \u0436\u0434\u0443\u0442"
+                    + " \u043f\u0440\u043e\u0432\u043e\u0434\u043d\u043e\u0439 \u0438\u043b\u0438"
+                    + " USB-\u0432\u044b\u0445\u043e\u0434",
+            "Loudness level",
+            "\u0423\u0440\u043e\u0432\u0435\u043d\u044c"
+                    + " \u0433\u0440\u043e\u043c\u043a\u043e\u0441\u0442\u0438",
+            "Off",
+            "\u0412\u044b\u043a\u043b.",
+            "Only the voice range, and only while someone sings",
+            "\u0422\u043e\u043b\u044c\u043a\u043e \u0434\u0438\u0430\u043f\u0430\u0437\u043e\u043d"
+                    + " \u0433\u043e\u043b\u043e\u0441\u0430 \u0438"
+                    + " \u0442\u043e\u043b\u044c\u043a\u043e \u043f\u043e\u043a\u0430"
+                    + " \u043a\u0442\u043e-\u0442\u043e \u043f\u043e\u0451\u0442",
+            "Original key",
+            "\u0418\u0441\u0445\u043e\u0434\u043d\u0430\u044f"
+                    + " \u0442\u043e\u043d\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c",
+            "Other",
+            "\u0414\u0440\u0443\u0433\u043e\u0435",
+            "Pitch",
+            "\u0412\u044b\u0441\u043e\u0442\u0430 \u0442\u043e\u043d\u0430",
+            "Playback extras",
+            "Playback extras",
+            "Removes everything in the middle, drums included",
+            "\u0423\u0431\u0438\u0440\u0430\u0435\u0442 \u0432\u0441\u0451, \u0447\u0442\u043e"
+                    + " \u0432 \u0446\u0435\u043d\u0442\u0440\u0435,"
+                    + " \u0432\u043a\u043b\u044e\u0447\u0430\u044f"
+                    + " \u0443\u0434\u0430\u0440\u043d\u044b\u0435",
+            "Saves battery on long listens. While a song plays this way, BitChord\u2019s equaliser,"
+                + " loudness normalisation, Sing, spatial audio and crossfade don\u2019t work on"
+                + " it. Android decides which songs and devices can; the rest play as before.",
+            "\u042d\u043a\u043e\u043d\u043e\u043c\u0438\u0442"
+                + " \u0431\u0430\u0442\u0430\u0440\u0435\u044e \u043f\u0440\u0438"
+                + " \u0434\u043e\u043b\u0433\u043e\u043c"
+                + " \u043f\u0440\u043e\u0441\u043b\u0443\u0448\u0438\u0432\u0430\u043d\u0438\u0438."
+                + " \u041f\u043e\u043a\u0430 \u043f\u0435\u0441\u043d\u044f"
+                + " \u0438\u0433\u0440\u0430\u0435\u0442 \u0442\u0430\u043a,"
+                + " \u044d\u043a\u0432\u0430\u043b\u0430\u0439\u0437\u0435\u0440,"
+                + " \u043d\u043e\u0440\u043c\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u044f"
+                + " \u0433\u0440\u043e\u043c\u043a\u043e\u0441\u0442\u0438,"
+                + " \u00ab\u041f\u0435\u0442\u044c\u00bb,"
+                + " \u043f\u0440\u043e\u0441\u0442\u0440\u0430\u043d\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439"
+                + " \u0437\u0432\u0443\u043a \u0438"
+                + " \u043a\u0440\u043e\u0441\u0441\u0444\u0435\u0439\u0434 BitChord \u043d\u0430"
+                + " \u043d\u0435\u0451 \u043d\u0435"
+                + " \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u044e\u0442."
+                + " \u041a\u0430\u043a\u0438\u0435 \u043f\u0435\u0441\u043d\u0438 \u0438"
+                + " \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430 \u044d\u0442\u043e"
+                + " \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u044e\u0442,"
+                + " \u0440\u0435\u0448\u0430\u0435\u0442 Android;"
+                + " \u043e\u0441\u0442\u0430\u043b\u044c\u043d\u044b\u0435"
+                + " \u0438\u0433\u0440\u0430\u044e\u0442 \u043a\u0430\u043a"
+                + " \u0440\u0430\u043d\u044c\u0448\u0435.",
+            "Sing",
+            "\u041f\u0435\u0442\u044c",
+            "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
+            "\u00ab\u041f\u0435\u0442\u044c\u00bb"
+                + " \u043f\u0435\u0440\u0435\u043d\u0435\u0441\u0435\u043d\u043e \u0438\u0437 Auris"
+                + " \u043e\u0442 OreoMuncher45, \u0444\u043e\u0440\u043a\u0430 BitChord.",
+            "Sing, pitch, loudness level, sleep fade and battery saver",
+            "\u00ab\u041f\u0435\u0442\u044c\u00bb, \u0432\u044b\u0441\u043e\u0442\u0430"
+                    + " \u0442\u043e\u043d\u0430, \u0443\u0440\u043e\u0432\u0435\u043d\u044c"
+                    + " \u0433\u0440\u043e\u043c\u043a\u043e\u0441\u0442\u0438,"
+                    + " \u0437\u0430\u0442\u0443\u0445\u0430\u043d\u0438\u0435 \u0441\u043d\u0430"
+                    + " \u0438 \u044d\u043a\u043e\u043d\u043e\u043c\u0438\u044f"
+                    + " \u0431\u0430\u0442\u0430\u0440\u0435\u0438",
+            "The cleaner choice for older recordings.",
+            "\u0411\u043e\u043b\u0435\u0435 \u0447\u0438\u0441\u0442\u044b\u0439"
+                    + " \u0432\u0430\u0440\u0438\u0430\u043d\u0442 \u0434\u043b\u044f"
+                    + " \u0441\u0442\u0430\u0440\u044b\u0445"
+                    + " \u0437\u0430\u043f\u0438\u0441\u0435\u0439.",
+            "The phone\u2019s audio chip plays songs it can decode",
+            "\u0410\u0443\u0434\u0438\u043e\u0447\u0438\u043f"
+                + " \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430"
+                + " \u0432\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442"
+                + " \u043f\u0435\u0441\u043d\u0438, \u043a\u043e\u0442\u043e\u0440\u044b\u0435"
+                + " \u0443\u043c\u0435\u0435\u0442"
+                + " \u0434\u0435\u043a\u043e\u0434\u0438\u0440\u043e\u0432\u0430\u0442\u044c",
+            "The song fades out over 10 seconds, then pauses",
+            "\u041f\u0435\u0441\u043d\u044f \u0437\u0430\u0442\u0443\u0445\u0430\u0435\u0442 10"
+                    + " \u0441\u0435\u043a\u0443\u043d\u0434, \u0437\u0430\u0442\u0435\u043c"
+                    + " \u0441\u0442\u0430\u0432\u0438\u0442\u0441\u044f \u043d\u0430"
+                    + " \u043f\u0430\u0443\u0437\u0443",
+            "The song pauses straight away",
+            "\u041f\u0435\u0441\u043d\u044f \u0441\u0440\u0430\u0437\u0443"
+                    + " \u0441\u0442\u0430\u0432\u0438\u0442\u0441\u044f \u043d\u0430"
+                    + " \u043f\u0430\u0443\u0437\u0443",
+            "Turns the singer down so you can sing over the song. Works best on studio recordings"
+                    + " with the voice in the middle.",
+            "\u041f\u0440\u0438\u0433\u043b\u0443\u0448\u0430\u0435\u0442"
+                    + " \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439"
+                    + " \u0432\u043e\u043a\u0430\u043b, \u0447\u0442\u043e\u0431\u044b \u0432\u044b"
+                    + " \u043c\u043e\u0433\u043b\u0438 \u043f\u0435\u0442\u044c"
+                    + " \u043f\u043e\u0432\u0435\u0440\u0445 \u043f\u0435\u0441\u043d\u0438."
+                    + " \u041b\u0443\u0447\u0448\u0435 \u0432\u0441\u0435\u0433\u043e"
+                    + " \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u043d\u0430"
+                    + " \u0441\u0442\u0443\u0434\u0438\u0439\u043d\u044b\u0445"
+                    + " \u0437\u0430\u043f\u0438\u0441\u044f\u0445 \u0441"
+                    + " \u0433\u043e\u043b\u043e\u0441\u043e\u043c \u043f\u043e"
+                    + " \u0446\u0435\u043d\u0442\u0440\u0443.",
+            "Voice",
+            "\u0413\u043e\u043b\u043e\u0441",
+            "Whole centre",
+            "\u0412\u0435\u0441\u044c \u0446\u0435\u043d\u0442\u0440",
+            "{0} (BitChord\u2019s level)",
+            "{0} (\u0443\u0440\u043e\u0432\u0435\u043d\u044c BitChord)",
+            "{0} semitone",
+            "{0} \u043f\u043e\u043b\u0443\u0442\u043e\u043d",
+            "{0} semitones",
+            "{0} \u043f\u043e\u043b\u0443\u0442\u043e\u043d\u0430",
+            "{0}% quieter",
+            "\u043d\u0430 {0}% \u0442\u0438\u0448\u0435",
         };
     }
 
@@ -18771,6 +20110,102 @@ final class Translations {
             "Unofficial Telegram (kay\u0131tl\u0131 kopya)",
             "Saved copy",
             "Kay\u0131tl\u0131 kopya",
+            "Added by the Playback extras patch.",
+            "Playback extras yamas\u0131yla eklendi.",
+            "Battery saver",
+            "Pil tasarrufu",
+            "BitChord decodes every song",
+            "BitChord her \u015fark\u0131y\u0131 kendisi \u00e7\u00f6zer",
+            "Bluetooth can\u2019t carry lossless audio on most phones, so BitChord normally skips"
+                + " lossless addons there. With this on they\u2019re used anyway, and the phone"
+                + " sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the"
+                + " next song.",
+            "\u00c7o\u011fu telefon Bluetooth \u00fczerinden kay\u0131ps\u0131z ses"
+                + " g\u00f6nderemez, bu y\u00fczden BitChord orada kay\u0131ps\u0131z eklentileri"
+                + " normalde atlar. Bu a\u00e7\u0131kken yine de kullan\u0131l\u0131rlar ve telefon"
+                + " onlar\u0131 LDAC veya aptX gibi en iyi Bluetooth kodekiyle g\u00f6nderir."
+                + " Sonraki \u015fark\u0131dan itibaren ge\u00e7erlidir.",
+            "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
+                    + " pitch you set here.",
+            "H\u0131z\u0131 de\u011fi\u015ftirmeden tonu de\u011fi\u015ftirir. BitChord\u2019un"
+                    + " h\u0131z ayar\u0131 burada se\u00e7ti\u011finiz tonu korur.",
+            "Fade out at the sleep timer",
+            "Uyku zamanlay\u0131c\u0131s\u0131nda sesi k\u0131s",
+            "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
+                + " own level is -14 LUFS, as on YouTube and Spotify. Lower is quieter with more"
+                + " room for peaks; higher is louder.",
+            "BitChord\u2019un ses normalle\u015ftirmesi a\u00e7\u0131kken \u015fark\u0131lar\u0131n"
+                + " ne kadar y\u00fcksek \u00e7alaca\u011f\u0131. BitChord\u2019un kendi seviyesi"
+                + " YouTube ve Spotify\u2019daki gibi -14 LUFS\u2019tur. D\u00fc\u015f\u00fck daha"
+                + " sessizdir ve tepeler i\u00e7in daha fazla pay b\u0131rak\u0131r; y\u00fcksek"
+                + " daha g\u00fcrd\u00fcr.",
+            "Level",
+            "Seviye",
+            "Lossless addons are used over Bluetooth too",
+            "Kay\u0131ps\u0131z eklentiler Bluetooth\u2019ta da kullan\u0131l\u0131r",
+            "Lossless addons over Bluetooth",
+            "Bluetooth\u2019ta kay\u0131ps\u0131z eklentiler",
+            "Lossless addons wait for wired or USB audio",
+            "Kay\u0131ps\u0131z eklentiler kablolu veya USB ses bekler",
+            "Loudness level",
+            "Ses seviyesi",
+            "Off",
+            "Kapal\u0131",
+            "Only the voice range, and only while someone sings",
+            "Yaln\u0131zca ses aral\u0131\u011f\u0131 ve yaln\u0131zca biri \u015fark\u0131"
+                    + " s\u00f6ylerken",
+            "Original key",
+            "Orijinal ton",
+            "Other",
+            "Di\u011fer",
+            "Pitch",
+            "Ton",
+            "Playback extras",
+            "Playback extras",
+            "Removes everything in the middle, drums included",
+            "Ortadaki her \u015feyi kald\u0131r\u0131r, davullar dahil",
+            "Saves battery on long listens. While a song plays this way, BitChord\u2019s equaliser,"
+                + " loudness normalisation, Sing, spatial audio and crossfade don\u2019t work on"
+                + " it. Android decides which songs and devices can; the rest play as before.",
+            "Uzun dinlemelerde pil tasarrufu sa\u011flar. Bir \u015fark\u0131 bu \u015fekilde"
+                + " \u00e7alarken BitChord\u2019un ekolayz\u0131r\u0131, ses normalle\u015ftirmesi,"
+                + " \u015eark\u0131 s\u00f6yle, uzamsal ses ve ge\u00e7i\u015f efekti onu"
+                + " etkilemez. Hangi \u015fark\u0131 ve cihazlar\u0131n bunu yapabilece\u011fine"
+                + " Android karar verir; di\u011ferleri eskisi gibi \u00e7alar.",
+            "Sing",
+            "\u015eark\u0131 s\u00f6yle",
+            "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
+            "\u015eark\u0131 s\u00f6yle, BitChord\u2019un bir \u00e7atal\u0131 olan,"
+                    + " OreoMuncher45\u2019in Auris uygulamas\u0131ndan aktar\u0131ld\u0131.",
+            "Sing, pitch, loudness level, sleep fade and battery saver",
+            "\u015eark\u0131 s\u00f6yle, ton, ses seviyesi, uyku k\u0131smas\u0131 ve pil"
+                    + " tasarrufu",
+            "The cleaner choice for older recordings.",
+            "Eski kay\u0131tlar i\u00e7in daha temiz se\u00e7enek.",
+            "The phone\u2019s audio chip plays songs it can decode",
+            "Telefonun ses \u00e7ipi \u00e7\u00f6zebildi\u011fi \u015fark\u0131lar\u0131"
+                    + " \u00e7alar",
+            "The song fades out over 10 seconds, then pauses",
+            "\u015eark\u0131 10 saniyede k\u0131s\u0131l\u0131r, sonra durur",
+            "The song pauses straight away",
+            "\u015eark\u0131 hemen durur",
+            "Turns the singer down so you can sing over the song. Works best on studio recordings"
+                    + " with the voice in the middle.",
+            "\u015eark\u0131n\u0131n \u00fczerine s\u00f6yleyebilmeniz i\u00e7in solo vokali"
+                    + " k\u0131sar. En iyi, vokalin ortada oldu\u011fu st\u00fcdyo"
+                    + " kay\u0131tlar\u0131nda \u00e7al\u0131\u015f\u0131r.",
+            "Voice",
+            "Vokal",
+            "Whole centre",
+            "T\u00fcm orta",
+            "{0} (BitChord\u2019s level)",
+            "{0} (BitChord\u2019un seviyesi)",
+            "{0} semitone",
+            "{0} yar\u0131m ton",
+            "{0} semitones",
+            "{0} yar\u0131m ton",
+            "{0}% quieter",
+            "%{0} daha k\u0131s\u0131k",
         };
     }
 
@@ -20964,6 +22399,171 @@ final class Translations {
             "Unofficial Telegram (\u0645\u062d\u0641\u0648\u0638 \u06a9\u0627\u067e\u06cc)",
             "Saved copy",
             "\u0645\u062d\u0641\u0648\u0638 \u06a9\u0627\u067e\u06cc",
+            "Added by the Playback extras patch.",
+            "Playback extras \u067e\u06cc\u0686 \u06a9\u06d2 \u0630\u0631\u06cc\u0639\u06d2"
+                    + " \u0634\u0627\u0645\u0644 \u06a9\u06cc\u0627 \u06af\u06cc\u0627\u06d4",
+            "Battery saver",
+            "\u0628\u06cc\u0679\u0631\u06cc \u06a9\u06cc \u0628\u0686\u062a",
+            "BitChord decodes every song",
+            "BitChord \u06c1\u0631 \u06af\u0627\u0646\u0627 \u062e\u0648\u062f \u0688\u06cc"
+                    + " \u06a9\u0648\u0688 \u06a9\u0631\u062a\u0627 \u06c1\u06d2",
+            "Bluetooth can\u2019t carry lossless audio on most phones, so BitChord normally skips"
+                + " lossless addons there. With this on they\u2019re used anyway, and the phone"
+                + " sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the"
+                + " next song.",
+            "\u0632\u06cc\u0627\u062f\u06c1 \u062a\u0631 \u0641\u0648\u0646"
+                + " \u0628\u0644\u0648\u0679\u0648\u062a\u06be \u067e\u0631 \u0644\u0627\u0633"
+                + " \u0644\u06cc\u0633 \u0622\u0688\u06cc\u0648 \u0646\u06c1\u06cc\u06ba"
+                + " \u0628\u06be\u06cc\u062c \u0633\u06a9\u062a\u06d2\u060c \u0627\u0633"
+                + " \u0644\u06cc\u06d2 BitChord \u0639\u0627\u0645 \u0637\u0648\u0631 \u067e\u0631"
+                + " \u0648\u06c1\u0627\u06ba \u0644\u0627\u0633 \u0644\u06cc\u0633"
+                + " \u0627\u06cc\u0688 \u0622\u0646\u0632 \u0686\u06be\u0648\u0691"
+                + " \u062f\u06cc\u062a\u0627 \u06c1\u06d2\u06d4 \u0627\u0633\u06d2 \u0622\u0646"
+                + " \u06a9\u0631\u0646\u06d2 \u067e\u0631 \u0648\u06c1 \u067e\u06be\u0631"
+                + " \u0628\u06be\u06cc \u0627\u0633\u062a\u0639\u0645\u0627\u0644"
+                + " \u06c1\u0648\u062a\u06d2 \u06c1\u06cc\u06ba\u060c \u0627\u0648\u0631"
+                + " \u0641\u0648\u0646 \u0627\u0646\u06c1\u06cc\u06ba \u0627\u067e\u0646\u06d2"
+                + " \u0628\u06c1\u062a\u0631\u06cc\u0646 \u0628\u0644\u0648\u0679\u0648\u062a\u06be"
+                + " \u06a9\u0648\u0688\u06cc\u06a9 \u062c\u06cc\u0633\u06d2 LDAC \u06cc\u0627 aptX"
+                + " \u0633\u06d2 \u0628\u06be\u06cc\u062c\u062a\u0627 \u06c1\u06d2\u06d4"
+                + " \u0627\u06af\u0644\u06d2 \u06af\u0627\u0646\u06d2 \u0633\u06d2"
+                + " \u0634\u0631\u0648\u0639 \u06c1\u0648\u062a\u0627 \u06c1\u06d2\u06d4",
+            "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
+                    + " pitch you set here.",
+            "\u0631\u0641\u062a\u0627\u0631 \u0628\u062f\u0644\u06d2 \u0628\u063a\u06cc\u0631"
+                + " \u0633\u064f\u0631 \u0628\u062f\u0644\u062a\u0627 \u06c1\u06d2\u06d4 BitChord"
+                + " \u06a9\u06cc \u0631\u0641\u062a\u0627\u0631 \u06a9\u06cc"
+                + " \u0633\u06cc\u0679\u0646\u06af \u06cc\u06c1\u0627\u06ba"
+                + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u06cc\u0627 \u06af\u06cc\u0627"
+                + " \u0633\u064f\u0631 \u0628\u0631\u0642\u0631\u0627\u0631"
+                + " \u0631\u06a9\u06be\u062a\u06cc \u06c1\u06d2\u06d4",
+            "Fade out at the sleep timer",
+            "\u0633\u0644\u06cc\u067e \u0679\u0627\u0626\u0645\u0631 \u067e\u0631"
+                    + " \u0622\u0648\u0627\u0632 \u0622\u06c1\u0633\u062a\u06c1 \u06a9\u0645"
+                    + " \u06a9\u0631\u06cc\u06ba",
+            "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
+                + " own level is -14 LUFS, as on YouTube and Spotify. Lower is quieter with more"
+                + " room for peaks; higher is louder.",
+            "BitChord \u06a9\u06cc \u0622\u0648\u0627\u0632 \u06a9\u06cc"
+                + " \u0646\u0627\u0631\u0645\u0644\u0627\u0626\u0632\u06cc\u0634\u0646 \u0622\u0646"
+                + " \u06c1\u0648\u0646\u06d2 \u067e\u0631 \u06af\u0627\u0646\u06d2"
+                + " \u06a9\u062a\u0646\u06cc \u0627\u0648\u0646\u0686\u06cc"
+                + " \u0622\u0648\u0627\u0632 \u0645\u06cc\u06ba \u0686\u0644\u06cc\u06ba\u06d4"
+                + " BitChord \u06a9\u06cc \u0627\u067e\u0646\u06cc \u0633\u0637\u062d -14 LUFS"
+                + " \u06c1\u06d2\u060c \u062c\u06cc\u0633\u06d2 YouTube \u0627\u0648\u0631 Spotify"
+                + " \u067e\u0631\u06d4 \u06a9\u0645 \u06c1\u0644\u06a9\u06cc \u06c1\u06d2"
+                + " \u0627\u0648\u0631 \u0686\u0648\u0679\u06cc\u0648\u06ba \u06a9\u06d2"
+                + " \u0644\u06cc\u06d2 \u0632\u06cc\u0627\u062f\u06c1"
+                + " \u06af\u0646\u062c\u0627\u0626\u0634 \u062f\u06cc\u062a\u06cc"
+                + " \u06c1\u06d2\u061b \u0632\u06cc\u0627\u062f\u06c1"
+                + " \u0627\u0648\u0646\u0686\u06cc \u06c1\u06d2\u06d4",
+            "Level",
+            "\u0633\u0637\u062d",
+            "Lossless addons are used over Bluetooth too",
+            "\u0644\u0627\u0633 \u0644\u06cc\u0633 \u0627\u06cc\u0688 \u0622\u0646\u0632"
+                    + " \u0628\u0644\u0648\u0679\u0648\u062a\u06be \u067e\u0631 \u0628\u06be\u06cc"
+                    + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06c1\u0648\u062a\u06d2"
+                    + " \u06c1\u06cc\u06ba",
+            "Lossless addons over Bluetooth",
+            "\u0628\u0644\u0648\u0679\u0648\u062a\u06be \u067e\u0631 \u0644\u0627\u0633"
+                    + " \u0644\u06cc\u0633 \u0627\u06cc\u0688 \u0622\u0646\u0632",
+            "Lossless addons wait for wired or USB audio",
+            "\u0644\u0627\u0633 \u0644\u06cc\u0633 \u0627\u06cc\u0688 \u0622\u0646\u0632"
+                    + " \u0648\u0627\u0626\u0631\u0688 \u06cc\u0627 USB \u0622\u0688\u06cc\u0648"
+                    + " \u06a9\u0627 \u0627\u0646\u062a\u0638\u0627\u0631 \u06a9\u0631\u062a\u06d2"
+                    + " \u06c1\u06cc\u06ba",
+            "Loudness level",
+            "\u0622\u0648\u0627\u0632 \u06a9\u06cc \u0633\u0637\u062d",
+            "Off",
+            "\u0628\u0646\u062f",
+            "Only the voice range, and only while someone sings",
+            "\u0635\u0631\u0641 \u0622\u0648\u0627\u0632 \u06a9\u06cc"
+                    + " \u0631\u06cc\u0646\u062c\u060c \u0627\u0648\u0631 \u0635\u0631\u0641"
+                    + " \u062c\u0628 \u06a9\u0648\u0626\u06cc \u06af\u0627 \u0631\u06c1\u0627"
+                    + " \u06c1\u0648",
+            "Original key",
+            "\u0627\u0635\u0644 \u0633\u064f\u0631",
+            "Other",
+            "\u062f\u06cc\u06af\u0631",
+            "Pitch",
+            "\u0633\u064f\u0631",
+            "Playback extras",
+            "Playback extras",
+            "Removes everything in the middle, drums included",
+            "\u062f\u0631\u0645\u06cc\u0627\u0646 \u06a9\u06cc \u06c1\u0631 \u0686\u06cc\u0632"
+                    + " \u06c1\u0679\u0627 \u062f\u06cc\u062a\u0627 \u06c1\u06d2\u060c"
+                    + " \u0688\u0631\u0645\u0632 \u0633\u0645\u06cc\u062a",
+            "Saves battery on long listens. While a song plays this way, BitChord\u2019s equaliser,"
+                + " loudness normalisation, Sing, spatial audio and crossfade don\u2019t work on"
+                + " it. Android decides which songs and devices can; the rest play as before.",
+            "\u0644\u0645\u0628\u06cc \u0633\u0645\u0627\u0639\u062a \u0645\u06cc\u06ba"
+                    + " \u0628\u06cc\u0679\u0631\u06cc \u0628\u0686\u0627\u062a\u0627"
+                    + " \u06c1\u06d2\u06d4 \u062c\u0628 \u06a9\u0648\u0626\u06cc"
+                    + " \u06af\u0627\u0646\u0627 \u0627\u0633 \u0637\u0631\u062d"
+                    + " \u0686\u0644\u062a\u0627 \u06c1\u06d2 \u062a\u0648 BitChord \u06a9\u0627"
+                    + " \u0627\u06cc\u06a9\u0648\u0644\u0627\u0626\u0632\u0631\u060c"
+                    + " \u0622\u0648\u0627\u0632 \u06a9\u06cc"
+                    + " \u0646\u0627\u0631\u0645\u0644\u0627\u0626\u0632\u06cc\u0634\u0646\u060c"
+                    + " \u06af\u0627\u0626\u06cc\u06ba\u060c \u0627\u0633\u067e\u06cc\u0634\u0644"
+                    + " \u0622\u0688\u06cc\u0648 \u0627\u0648\u0631 \u06a9\u0631\u0627\u0633"
+                    + " \u0641\u06cc\u0688 \u0627\u0633 \u067e\u0631 \u06a9\u0627\u0645"
+                    + " \u0646\u06c1\u06cc\u06ba \u06a9\u0631\u062a\u06d2\u06d4 \u06a9\u0648\u0646"
+                    + " \u0633\u06d2 \u06af\u0627\u0646\u06d2 \u0627\u0648\u0631"
+                    + " \u0688\u06cc\u0648\u0627\u0626\u0633\u0632 \u06cc\u06c1 \u06a9\u0631"
+                    + " \u0633\u06a9\u062a\u06d2 \u06c1\u06cc\u06ba\u060c Android \u0637\u06d2"
+                    + " \u06a9\u0631\u062a\u0627 \u06c1\u06d2\u061b \u0628\u0627\u0642\u06cc"
+                    + " \u067e\u06c1\u0644\u06d2 \u06a9\u06cc \u0637\u0631\u062d"
+                    + " \u0686\u0644\u062a\u06d2 \u06c1\u06cc\u06ba\u06d4",
+            "Sing",
+            "\u06af\u0627\u0626\u06cc\u06ba",
+            "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
+            "\u06af\u0627\u0626\u06cc\u06ba\u060c OreoMuncher45 \u06a9\u06cc Auris \u0633\u06d2"
+                + " \u0644\u06cc\u0627 \u06af\u06cc\u0627 \u06c1\u06d2\u060c \u062c\u0648 BitChord"
+                + " \u06a9\u0627 \u0641\u0648\u0631\u06a9 \u06c1\u06d2\u06d4",
+            "Sing, pitch, loudness level, sleep fade and battery saver",
+            "\u06af\u0627\u0626\u06cc\u06ba\u060c \u0633\u064f\u0631\u060c \u0622\u0648\u0627\u0632"
+                    + " \u06a9\u06cc \u0633\u0637\u062d\u060c \u0633\u0644\u06cc\u067e"
+                    + " \u0641\u06cc\u0688 \u0627\u0648\u0631 \u0628\u06cc\u0679\u0631\u06cc"
+                    + " \u06a9\u06cc \u0628\u0686\u062a",
+            "The cleaner choice for older recordings.",
+            "\u067e\u0631\u0627\u0646\u06cc \u0631\u06cc\u06a9\u0627\u0631\u0688\u0646\u06af\u0632"
+                    + " \u06a9\u06d2 \u0644\u06cc\u06d2 \u0632\u06cc\u0627\u062f\u06c1"
+                    + " \u0635\u0627\u0641 \u0627\u0646\u062a\u062e\u0627\u0628\u06d4",
+            "The phone\u2019s audio chip plays songs it can decode",
+            "\u0641\u0648\u0646 \u06a9\u06cc \u0622\u0688\u06cc\u0648 \u0686\u0650\u067e"
+                    + " \u0648\u06c1 \u06af\u0627\u0646\u06d2 \u0686\u0644\u0627\u062a\u06cc"
+                    + " \u06c1\u06d2 \u062c\u0646\u06c1\u06cc\u06ba \u0648\u06c1 \u0688\u06cc"
+                    + " \u06a9\u0648\u0688 \u06a9\u0631 \u0633\u06a9\u062a\u06cc \u06c1\u06d2",
+            "The song fades out over 10 seconds, then pauses",
+            "\u06af\u0627\u0646\u0627 10 \u0633\u06cc\u06a9\u0646\u0688 \u0645\u06cc\u06ba"
+                    + " \u062f\u06be\u06cc\u0645\u0627 \u06c1\u0648\u062a\u0627 \u06c1\u06d2\u060c"
+                    + " \u067e\u06be\u0631 \u0631\u06a9 \u062c\u0627\u062a\u0627 \u06c1\u06d2",
+            "The song pauses straight away",
+            "\u06af\u0627\u0646\u0627 \u0641\u0648\u0631\u0627\u064b \u0631\u06a9"
+                    + " \u062c\u0627\u062a\u0627 \u06c1\u06d2",
+            "Turns the singer down so you can sing over the song. Works best on studio recordings"
+                    + " with the voice in the middle.",
+            "\u0645\u0631\u06a9\u0632\u06cc \u0622\u0648\u0627\u0632 \u06a9\u0645"
+                    + " \u06a9\u0631\u062a\u0627 \u06c1\u06d2 \u062a\u0627\u06a9\u06c1 \u0622\u067e"
+                    + " \u06af\u0627\u0646\u06d2 \u06a9\u06d2 \u0633\u0627\u062a\u06be \u06af\u0627"
+                    + " \u0633\u06a9\u06cc\u06ba\u06d4 \u0627\u0633\u0679\u0648\u0688\u06cc\u0648"
+                    + " \u0631\u06cc\u06a9\u0627\u0631\u0688\u0646\u06af\u0632 \u067e\u0631"
+                    + " \u0628\u06c1\u062a\u0631\u06cc\u0646 \u06a9\u0627\u0645"
+                    + " \u06a9\u0631\u062a\u0627 \u06c1\u06d2 \u062c\u0646 \u0645\u06cc\u06ba"
+                    + " \u0622\u0648\u0627\u0632 \u062f\u0631\u0645\u06cc\u0627\u0646"
+                    + " \u0645\u06cc\u06ba \u06c1\u0648\u06d4",
+            "Voice",
+            "\u0622\u0648\u0627\u0632",
+            "Whole centre",
+            "\u067e\u0648\u0631\u0627 \u062f\u0631\u0645\u06cc\u0627\u0646",
+            "{0} (BitChord\u2019s level)",
+            "{0} (BitChord \u06a9\u06cc \u0633\u0637\u062d)",
+            "{0} semitone",
+            "{0} \u0633\u06cc\u0645\u06cc \u0679\u0648\u0646",
+            "{0} semitones",
+            "{0} \u0633\u06cc\u0645\u06cc \u0679\u0648\u0646\u0632",
+            "{0}% quieter",
+            "{0}% \u062f\u06be\u06cc\u0645\u06cc",
         };
     }
 
@@ -22150,6 +23750,95 @@ final class Translations {
             "Unofficial Telegram\uff08\u5df2\u4fdd\u5b58\u7684\u526f\u672c\uff09",
             "Saved copy",
             "\u5df2\u4fdd\u5b58\u7684\u526f\u672c",
+            "Added by the Playback extras patch.",
+            "\u7531 Playback extras \u8865\u4e01\u6dfb\u52a0\u3002",
+            "Battery saver",
+            "\u7701\u7535\u6a21\u5f0f",
+            "BitChord decodes every song",
+            "BitChord \u81ea\u5df1\u89e3\u7801\u6bcf\u9996\u6b4c",
+            "Bluetooth can\u2019t carry lossless audio on most phones, so BitChord normally skips"
+                + " lossless addons there. With this on they\u2019re used anyway, and the phone"
+                + " sends them with its best Bluetooth codec, such as LDAC or aptX. Starts with the"
+                + " next song.",
+            "\u5927\u591a\u6570\u624b\u673a\u65e0\u6cd5\u901a\u8fc7\u84dd\u7259\u4f20\u8f93\u65e0\u635f\u97f3\u9891\uff0c\u6240\u4ee5"
+                + " BitChord"
+                + " \u901a\u5e38\u4f1a\u5728\u84dd\u7259\u4e0b\u8df3\u8fc7\u65e0\u635f\u63d2\u4ef6\u3002\u5f00\u542f\u540e\u4ecd\u4f1a\u4f7f\u7528\u5b83\u4eec\uff0c\u624b\u673a\u4f1a\u7528\u6700\u597d\u7684\u84dd\u7259\u7f16\u7801\uff08\u5982"
+                + " LDAC \u6216"
+                + " aptX\uff09\u4f20\u8f93\u3002\u4ece\u4e0b\u4e00\u9996\u6b4c\u5f00\u59cb\u751f\u6548\u3002",
+            "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
+                    + " pitch you set here.",
+            "\u6539\u53d8\u97f3\u8c03\u800c\u4e0d\u6539\u53d8\u901f\u5ea6\u3002BitChord"
+                + " \u7684\u901f\u5ea6\u8bbe\u7f6e\u4f1a\u4fdd\u7559\u4f60\u5728\u8fd9\u91cc\u8bbe\u7f6e\u7684\u97f3\u8c03\u3002",
+            "Fade out at the sleep timer",
+            "\u7761\u7720\u5b9a\u65f6\u5668\u7ed3\u675f\u65f6\u6de1\u51fa",
+            "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
+                + " own level is -14 LUFS, as on YouTube and Spotify. Lower is quieter with more"
+                + " room for peaks; higher is louder.",
+            "\u5f00\u542f BitChord"
+                + " \u54cd\u5ea6\u6807\u51c6\u5316\u65f6\u6b4c\u66f2\u7684\u64ad\u653e\u54cd\u5ea6\u3002BitChord"
+                + " \u81ea\u8eab\u7684\u6807\u51c6\u662f -14 LUFS\uff0c\u4e0e YouTube \u548c"
+                + " Spotify"
+                + " \u76f8\u540c\u3002\u8d8a\u4f4e\u8d8a\u5b89\u9759\uff0c\u5cf0\u503c\u4f59\u91cf\u8d8a\u5927\uff1b\u8d8a\u9ad8\u8d8a\u54cd\u3002",
+            "Level",
+            "\u7535\u5e73",
+            "Lossless addons are used over Bluetooth too",
+            "\u84dd\u7259\u4e0b\u4e5f\u4f7f\u7528\u65e0\u635f\u63d2\u4ef6",
+            "Lossless addons over Bluetooth",
+            "\u84dd\u7259\u4e0b\u4f7f\u7528\u65e0\u635f\u63d2\u4ef6",
+            "Lossless addons wait for wired or USB audio",
+            "\u65e0\u635f\u63d2\u4ef6\u7b49\u5f85\u6709\u7ebf\u6216 USB \u97f3\u9891",
+            "Loudness level",
+            "\u54cd\u5ea6\u6807\u51c6",
+            "Off",
+            "\u5173\u95ed",
+            "Only the voice range, and only while someone sings",
+            "\u53ea\u5904\u7406\u4eba\u58f0\u9891\u6bb5\uff0c\u4e14\u53ea\u5728\u6709\u4eba\u5531\u6b4c\u65f6",
+            "Original key",
+            "\u539f\u8c03",
+            "Other",
+            "\u5176\u4ed6",
+            "Pitch",
+            "\u97f3\u8c03",
+            "Playback extras",
+            "Playback extras",
+            "Removes everything in the middle, drums included",
+            "\u53bb\u9664\u4e2d\u95f4\u7684\u4e00\u5207\uff0c\u5305\u62ec\u9f13\u58f0",
+            "Saves battery on long listens. While a song plays this way, BitChord\u2019s equaliser,"
+                + " loudness normalisation, Sing, spatial audio and crossfade don\u2019t work on"
+                + " it. Android decides which songs and devices can; the rest play as before.",
+            "\u957f\u65f6\u95f4\u6536\u542c\u65f6\u66f4\u7701\u7535\u3002\u4ee5\u8fd9\u79cd\u65b9\u5f0f\u64ad\u653e\u6b4c\u66f2\u65f6\uff0cBitChord"
+                + " \u7684\u5747\u8861\u5668\u3001\u54cd\u5ea6\u6807\u51c6\u5316\u3001\u8ddf\u5531\u3001\u7a7a\u95f4\u97f3\u9891\u548c\u4ea4\u53c9\u6de1\u5165\u6de1\u51fa\u90fd\u4e0d\u4f1a\u4f5c\u7528\u4e8e\u5b83\u3002\u54ea\u4e9b\u6b4c\u66f2\u548c\u8bbe\u5907\u53ef\u4ee5\u8fd9\u6837\u64ad\u653e\u7531"
+                + " Android \u51b3\u5b9a\uff1b\u5176\u4f59\u7167\u5e38\u64ad\u653e\u3002",
+            "Sing",
+            "\u8ddf\u5531",
+            "Sing is ported from Auris by OreoMuncher45, a fork of BitChord.",
+            "\u8ddf\u5531\u79fb\u690d\u81ea OreoMuncher45 \u7684 Auris\uff0c\u5b83\u662f BitChord"
+                    + " \u7684\u4e00\u4e2a\u5206\u652f\u3002",
+            "Sing, pitch, loudness level, sleep fade and battery saver",
+            "\u8ddf\u5531\u3001\u97f3\u8c03\u3001\u54cd\u5ea6\u6807\u51c6\u3001\u7761\u7720\u6de1\u51fa\u548c\u7701\u7535\u6a21\u5f0f",
+            "The cleaner choice for older recordings.",
+            "\u8001\u5f55\u97f3\u7684\u66f4\u5e72\u51c0\u9009\u62e9\u3002",
+            "The phone\u2019s audio chip plays songs it can decode",
+            "\u624b\u673a\u7684\u97f3\u9891\u82af\u7247\u64ad\u653e\u5b83\u80fd\u89e3\u7801\u7684\u6b4c\u66f2",
+            "The song fades out over 10 seconds, then pauses",
+            "\u6b4c\u66f2\u5728 10 \u79d2\u5185\u6de1\u51fa\uff0c\u7136\u540e\u6682\u505c",
+            "The song pauses straight away",
+            "\u6b4c\u66f2\u7acb\u5373\u6682\u505c",
+            "Turns the singer down so you can sing over the song. Works best on studio recordings"
+                    + " with the voice in the middle.",
+            "\u964d\u4f4e\u4e3b\u5531\u4eba\u58f0\uff0c\u8ba9\u4f60\u53ef\u4ee5\u8ddf\u7740\u5531\u3002\u5bf9\u4eba\u58f0\u5c45\u4e2d\u7684\u5f55\u97f3\u5ba4\u5f55\u97f3\u6548\u679c\u6700\u597d\u3002",
+            "Voice",
+            "\u4eba\u58f0",
+            "Whole centre",
+            "\u6574\u4e2a\u4e2d\u95f4",
+            "{0} (BitChord\u2019s level)",
+            "{0}\uff08BitChord \u7684\u6807\u51c6\uff09",
+            "{0} semitone",
+            "{0} \u4e2a\u534a\u97f3",
+            "{0} semitones",
+            "{0} \u4e2a\u534a\u97f3",
+            "{0}% quieter",
+            "\u964d\u4f4e {0}%",
         };
     }
 }

@@ -33,9 +33,8 @@ https://github.com/Hexclyde/bitchord-morphe-patches
 Expand the source card and:
 
 1. Check that the latest version has loaded (see the [releases page](https://github.com/Hexclyde/bitchord-morphe-patches/releases)).
-2. Turn on **Pre-release patches**.
-3. Turn on **Experimental app versions**.
-4. Open the source's **Apps** list and keep **BitChord** selected.
+2. Turn on **Experimental app versions**.
+3. Open the source's **Apps** list and keep **BitChord** selected.
 
 If you see **Update Morphe**, update Morphe Manager before continuing.
 
@@ -58,6 +57,7 @@ See [source download problems](TROUBLESHOOTING.md#the-source-shows-unnamed-or-me
    - **Unofficial Telegram music**
    - **Install as Bitchord+**
    - **Sign in with MicroG**, if you use MicroG RE. It's harmless without it: the option just doesn't show.
+   - **Playback extras**, for Sing, pitch, the loudness level, the sleep-timer fade, battery saver and lossless addons over Bluetooth. Its settings are at the end of **Settings → Equalizer**, and nothing changes until you use them.
 
 3. Leave **Telegram application API ID** at **0** and **Telegram application API hash** empty. Enter your personal details in BitChord after installation.
 4. Open **Install as Bitchord+ → Installation name** to choose an app name. Leave it empty for **Bitchord+**. Names can contain up to 80 characters and must fit on one line. A name containing Telegram must include **Unofficial Telegram**.
@@ -84,3 +84,7 @@ When a new patch version is available:
 3. Install the result over Bitchord+.
 
 Installing an update with the same package and key keeps the app's existing data. Uninstalling removes its private settings and session. Read each release's notes for changes to the supported BitChord version or setup.
+
+## Testing builds
+
+New versions are tried out on a separate `testing` branch before they reach this source. To help test one, add `https://github.com/Hexclyde/bitchord-morphe-patches/tree/testing` as a second source in Morphe and turn on **Experimental app versions** on it. Patch from that source with the normal one turned off, and keep using the same signing key. When the version is released, the normal source offers it as an update. The README's [Testing builds](../README.md#testing-builds) section has more.

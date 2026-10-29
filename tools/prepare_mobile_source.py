@@ -99,10 +99,11 @@ def validate_metadata(manifest, patches, source, provenance):
     ):
         raise ValueError("Source description or unsigned-bundle declaration differs")
     names = {patch["name"] for patch in patches["patches"]}
-    if len(patches["patches"]) != 3 or names != {
+    if len(patches["patches"]) != 4 or names != {
         "Unofficial Telegram music",
         "Install as Bitchord+",
         "Sign in with MicroG",
+        "Playback extras",
     }:
         raise ValueError("Unexpected public patch list")
     for patch in patches["patches"]:
@@ -125,6 +126,7 @@ def validate_metadata(manifest, patches, source, provenance):
             },
             "Install as Bitchord+": {"installationName"},
             "Sign in with MicroG": set(),
+            "Playback extras": set(),
         }[patch["name"]]
         if {option["key"] for option in patch["options"]} != expected_keys or len(
             patch["options"]

@@ -4,7 +4,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.0.21). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.1, a testing build). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > I've only been able to test it on an **arm64-v8a** phone. The armeabi-v7a and x86_64 builds pass the same automated checks, but I haven't run them on a real device. If you're on one of those, please give it a try and [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems. Hearing that it works is useful too.
 
@@ -15,6 +15,7 @@
 | **Unofficial Telegram music** | Search and play audio from your own Telegram channels and chats through TDLib, using your own account. Android 8 or newer. |
 | **Install as Bitchord+** | Installs next to your regular BitChord as **Bitchord+**, or under a name you choose. |
 | **Sign in with MicroG** | Signs in to YouTube Music with an account that’s already in [MicroG RE](https://github.com/MorpheApp/MicroG-RE), instead of Google’s sign-in page. Only shows when MicroG RE is installed. |
+| **Playback extras** | Sing (turns the singer down), pitch separate from speed, a loudness level, a sleep-timer fade, battery saver and lossless addons over Bluetooth. Works with or without the Telegram patch. |
 
 More BitChord add-ons will be added to this repository over time.
 
@@ -54,6 +55,19 @@ More BitChord add-ons will be added to this repository over time.
 
 Every extra (quality, fake lossless checks, covers, file names, naming by sound, format legend, smooth switching, surround mixing, sound checks, the saved index, the main channel copy, name fixes and suggestions) can be turned off in the app.
 
+## Playback extras
+
+The **Playback extras** patch adds a **Playback extras** page at the bottom of BitChord's **Settings → Equalizer** page:
+
+- **Sing:** turns the lead vocal down so you can sing over the song, from a little to all of it. By default only the voice range is cut, only while someone is singing, and drum hits are left alone; **Whole centre** removes everything in the middle instead, which suits older recordings. Ported from [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45.
+- **Pitch:** up or down by up to 12 semitones without changing the speed. BitChord's speed setting keeps the pitch you set.
+- **Loudness level:** how loud songs play with BitChord's loudness normalisation on, from -23 to -8 LUFS. BitChord's own level is -14 LUFS. It applies to the songs BitChord normalises, the ones YouTube gives a loudness for.
+- **Fade out at the sleep timer:** when the timer's time is up, the song fades out over 10 seconds before it pauses. On by default.
+- **Battery saver:** lets the phone's audio chip decode songs it can, so the processor can sleep during long listens. While a song plays this way, the equaliser, loudness normalisation, Sing, spatial audio and crossfade don't work on it. Off by default.
+- **Lossless addons over Bluetooth:** BitChord skips addons marked lossless while the phone can't output lossless audio, such as over Bluetooth. With this on they're used anyway and the phone sends them with its best Bluetooth codec. Off by default.
+
+Everything is at BitChord's own behaviour until you change it, and the patch doesn't need the Telegram patch.
+
 ## Requirements
 
 - Android 8.0 or newer
@@ -63,11 +77,13 @@ Every extra (quality, fake lossless checks, covers, file names, naming by sound,
 
 ## Quick start
 
-1. [Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord). On the source card, enable **Pre-release patches** and **Experimental app versions**.
-2. Patch BitChord 1.8.1 with **Unofficial Telegram music**, **Install as Bitchord+** and, if you like, **Sign in with MicroG**. Leave the API ID at `0` and the API hash empty.
+1. [Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord). On the source card, enable **Experimental app versions**.
+2. Patch BitChord 1.8.1 with **Unofficial Telegram music**, **Install as Bitchord+** and, if you like, **Sign in with MicroG** and **Playback extras**. Leave the API ID at `0` and the API hash empty.
 3. Install the patched app and open **Settings → Account & integrations → Unofficial Telegram**.
 4. Enter your API ID and hash, sign in, and pick your music chats.
 5. Go to **Search → Addons** to find and play your audio.
+
+Testing builds are separate from this source; see [Testing builds](#testing-builds).
 
 If the source link doesn't work, download the `.mpp` from the [releases page](https://github.com/Hexclyde/bitchord-morphe-patches/releases) and add it as a Local source.
 
@@ -77,6 +93,18 @@ Step-by-step guides:
 - [Connecting Telegram](docs/SETUP.md)
 - [FAQ](docs/FAQ.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+
+## Testing builds
+
+New versions go to a `testing` branch first, as GitHub pre-releases with versions like `1.1.0-beta.1`. The normal source above only gets a version once it's out of testing, whatever its **Pre-release patches** switch is set to.
+
+To try a testing build, add a second source in Morphe with this URL and turn on **Experimental app versions** on it:
+
+```text
+https://github.com/Hexclyde/bitchord-morphe-patches/tree/testing
+```
+
+Patch from the testing source, and turn the normal source off for that run so the patches aren't listed twice. When the version is released, you'll get it from the normal source as an update. To go back to the current release, remove the testing source and patch again from the normal one. You can also download a testing build's `.mpp` from its pre-release on the [releases page](https://github.com/Hexclyde/bitchord-morphe-patches/releases) and add it as a Local source.
 
 ## Privacy
 
@@ -95,6 +123,13 @@ This is an independent project and isn't affiliated with BitChord, Telegram or M
 ## Contributing
 
 Bug reports and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) first. Translation fixes go in `translations/<language>.json`; `python3 tools/translations.py` rebuilds the table the add-on reads. If you want to build from source, see [docs/BUILDING.md](docs/BUILDING.md).
+
+## Credits
+
+- [BitChord](https://github.com/kushagrasinghx/BitChord) by kushagra (kushagrasinghx) and its contributors, the app these patches are for.
+- [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45, a fork of BitChord. Sing is ported from its vocal remover.
+- [Prism](https://github.com/Yigder/Prism) by Yigder and [Stash](https://github.com/rawnaldclark/Stash) by Rawnald Clark, with Evo (ParaliyzedEvo). Their pitch, loudness and battery features shaped Playback extras; no code was taken from them.
+- [MicroG RE](https://github.com/MorpheApp/MicroG-RE) and [Morphe](https://morphe.software) by the Morphe team.
 
 ## License
 

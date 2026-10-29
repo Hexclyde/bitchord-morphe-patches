@@ -76,6 +76,8 @@ SOURCES = [
     "ApplicationCredentials",
     "CredentialCipher",
     "PlaybackStats",
+    "VocalCut",
+    "SoundExtras",
 ]
 TESTS = [
     "NativeAudioTest",
@@ -110,6 +112,7 @@ TESTS = [
     "FileChecksTest",
     "VersionAlignTest",
     "MicroGSignInTest",
+    "SoundExtrasTest",
 ]
 
 subprocess.run(

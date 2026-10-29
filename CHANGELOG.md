@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.0-beta.1
+
+A testing build. It's only on the `testing` branch; see Testing builds in the README.
+
+
+- **Playback extras:** a new patch, on by default, with a **Playback extras** page at the end of **Settings → Equalizer**. It works with or without the Telegram patch, and nothing changes until you change a setting there.
+  - **Sing** turns the lead vocal down so you can sing over the song. It's ported from the vocal remover in [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45: by default only the voice range is cut, only while someone is singing, and drum hits ease it off. **Whole centre** uses Auris's first method, which removes everything in the middle.
+  - **Pitch** moves the key up or down by up to 12 semitones without changing the speed, and BitChord's speed control keeps it.
+  - **Loudness level** sets how loud loudness normalisation plays songs, from -23 to -8 LUFS instead of BitChord's fixed -14.
+  - **Fade out at the sleep timer:** the song fades out over 10 seconds before the timer pauses it, instead of stopping mid-phrase.
+  - **Battery saver** lets the phone's audio chip decode songs. BitChord's effects don't run on songs played this way, so it's off by default.
+  - **Lossless addons over Bluetooth** keeps addons marked lossless in use over Bluetooth, where BitChord normally skips them.
+- Credits for BitChord, Auris, Prism and Stash are in the README and THIRD_PARTY_NOTICES.
+
 ## 1.0.21
 
 - **Sign in with MicroG:** a new optional patch. With [MicroG RE](https://github.com/MorpheApp/MicroG-RE) installed, signing in to YouTube Music asks whether to use an account that's already in MicroG, instead of typing it into Google's sign-in page. You pick the account, allow BitChord once in MicroG RE, and BitChord carries on to its usual channel choice. Without MicroG RE nothing changes. If MicroG can't sign you in, Google's page opens.
