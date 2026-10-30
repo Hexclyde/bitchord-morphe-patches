@@ -156,7 +156,9 @@ final class HeadphoneEq {
                 a1 = -2 * cos;
                 a2 = 1 - alpha / a;
             } else {
-                double alpha = sin / 2 * Math.sqrt((a + 1 / a) * (1 / f.q - 1) + 2);
+                // AutoEq/APO specifies Q, not the RBJ shelf-slope parameter S. Treating
+                // Q as S makes valid high-Q shelves produce negative square roots.
+                double alpha = sin / (2 * f.q);
                 double root = 2 * Math.sqrt(a) * alpha;
                 if (f.kind == Filter.LOW_SHELF) {
                     b0 = a * ((a + 1) - (a - 1) * cos + root);

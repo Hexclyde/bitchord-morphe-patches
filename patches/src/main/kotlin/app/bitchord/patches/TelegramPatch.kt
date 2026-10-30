@@ -2020,6 +2020,27 @@ private fun BytecodePatchContext.addServiceHook() {
     println("Added the playback service hook")
 }
 
+/** Refresh per-output patch state after BitChord applies its actual output selection. */
+private fun BytecodePatchContext.addOutputRouting() {
+    val method =
+        mutableClassDefBy(SERVICE).methods.single {
+            it.name == "applyOutputRoute" && it.parameterTypes.isEmpty() && it.returnType == "V"
+        }
+    check(method.accessFlags and 8 == 0) { "Output route handler must remain an instance method" }
+    val returns =
+        method.implementation!!
+            .instructions
+            .withIndex()
+            .filter { it.value.opcode == Opcode.RETURN_VOID }
+            .map { it.index }
+    check(returns.isNotEmpty()) { "Output route completion hook missing" }
+    for (index in returns.reversed()) method.addInstruction(
+        index,
+        "invoke-static {}, $EXTRAS->outputChanged()V",
+    )
+    println("Added output-selection updates for playback patches")
+}
+
 /**
  * Per-download quality: a song queued for download is held while the quality is asked, and the
  * quality BitChord reads for it is the one chosen.
@@ -2036,11 +2057,13 @@ private fun BytecodePatchContext.addDownloadChoice() {
                 it.returnType == "V"
         }
     val implementation = enqueue.implementation!!
-    check(implementation.registerCount >= 5) { "Download queue has no free register" }
+    check(enqueue.accessFlags and 8 != 0 && implementation.registerCount >= 5) {
+        "Download queue must remain static with a free local register"
+    }
     enqueue.addInstructionsWithLabels(
         0,
         """
-        invoke-static/range {p1 .. p3}, $DOWNLOAD_CHOICE->hold(Landroid/content/Context;${song}Ljava/lang/String;)Z
+        invoke-static/range {p0 .. p2}, $DOWNLOAD_CHOICE->hold(Landroid/content/Context;${song}Ljava/lang/String;)Z
         move-result v0
         if-eqz v0, :original
         return-void
@@ -2052,6 +2075,7 @@ private fun BytecodePatchContext.addDownloadChoice() {
             it.name == "access${'$'}routeFor" &&
                 it.parameterTypes.take(3) == listOf("Landroid/content/Context;", song, quality)
         }
+    check(route.accessFlags and 8 != 0) { "Download route accessor must remain static" }
     route.addInstructions(
         0,
         """
@@ -2076,6 +2100,12 @@ private fun BytecodePatchContext.markApplied(name: String) {
 private val extrasPlayersPatch = bytecodePatch {
     dependsOn(extrasSettingsPatch)
     execute { addPlayerSettings() }
+}
+
+/** The selected output, shared once by the patches that depend on it. */
+private val extrasOutputsPatch = bytecodePatch {
+    dependsOn(extrasSettingsPatch)
+    execute { addOutputRouting() }
 }
 
 /** The decoded audio, for Sing, Headphone correction and DJ mode. */
@@ -2179,6 +2209,7 @@ val batterySaverPatch =
             "BitChord's effects don't run on songs played this way." +
             WHERE,
         extrasPlayersPatch,
+        extrasOutputsPatch,
     ) {
         markApplied("batterySaverApplied")
     }
@@ -2203,6 +2234,7 @@ val headphoneCorrectionPatch =
             "AutoEq's thousands of models or pasted in. From Prism by Yigder." +
             WHERE,
         extrasAudioPatch,
+        extrasOutputsPatch,
     ) {
         markApplied("headphoneApplied")
     }
@@ -2215,6 +2247,7 @@ val outputEqualiserPatch =
             "device) and puts it back when that output is used; shares settings as codes. " +
             "From Prism by Yigder." +
             WHERE,
+        extrasOutputsPatch,
     ) {
         markApplied("outputEqApplied")
     }
@@ -2252,6 +2285,7 @@ val losslessBluetoothPatch =
         "Keeps addons marked lossless in use over Bluetooth, where BitChord normally skips " +
             "them. Lossless-first, as in Auris by OreoMuncher45." +
             WHERE,
+        extrasOutputsPatch,
     ) {
         addLosslessOverBluetooth()
         markApplied("losslessBluetoothApplied")

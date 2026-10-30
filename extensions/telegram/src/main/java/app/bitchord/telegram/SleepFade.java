@@ -56,6 +56,12 @@ final class SleepFade {
         if (fade != null) fade.stop(true);
     }
 
+    /** A spare crossfade player's events must not cancel the active player's fade. */
+    static void cancel(Player player) {
+        Fade fade = running;
+        if (fade != null && fade.player == player) fade.stop(true);
+    }
+
     static boolean active() {
         return running != null;
     }
@@ -86,10 +92,12 @@ final class SleepFade {
         final boolean pauseAtEnd;
         final float startVolume;
         final MediaItemId item;
+        final Long initialDeadline;
         float expected;
         long lastPosition;
         int step;
         boolean done;
+        boolean deadlineCleared;
 
         Fade(Player player, Handler handler, int seconds, boolean pauseAtEnd) {
             this.player = player;
@@ -100,6 +108,8 @@ final class SleepFade {
             this.expected = startVolume;
             this.item = new MediaItemId(player);
             this.lastPosition = player.getCurrentPosition();
+            this.initialDeadline = SleepFade.deadline();
+            this.deadlineCleared = initialDeadline == null;
         }
 
         @Override
@@ -111,7 +121,10 @@ final class SleepFade {
                 boolean moved = Math.abs(now - expected) > 0.02f;
                 boolean elsewhere = !item.same(player) || position + 1500 < lastPosition;
                 boolean paused = !player.isPlaying() && !player.getPlayWhenReady();
-                boolean retimed = pauseAtEnd && timerSetAgain();
+                boolean retimed =
+                        pauseAtEnd
+                                ? timerSetAgain()
+                                : !SleepFade.afterTrack() || SleepFade.deadline() != null;
                 if (moved || elsewhere || paused || retimed) {
                     // Someone else is in charge: BitChord's own fade, a seek, the user.
                     HostLog.d(
@@ -169,7 +182,12 @@ final class SleepFade {
 
         /** After the timer fired BitChord cleared it; a deadline set again means a new timer. */
         private boolean timerSetAgain() {
-            return step > 10 && SleepFade.deadline() != null;
+            Long deadline = SleepFade.deadline();
+            if (deadline == null) {
+                deadlineCleared = true;
+                return false;
+            }
+            return deadlineCleared || !deadline.equals(initialDeadline);
         }
     }
 

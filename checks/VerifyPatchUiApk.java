@@ -21,8 +21,9 @@ public final class VerifyPatchUiApk {
         File apk = new File(args[0]);
         boolean telegram = Boolean.parseBoolean(args[1]);
         boolean downloads = Boolean.parseBoolean(args[2]);
-        boolean runtime = telegram || downloads;
-        boolean enabled = downloads || (args.length > 3 && Boolean.parseBoolean(args[3]));
+        boolean extraTweaks = args.length > 3 && Boolean.parseBoolean(args[3]);
+        boolean runtime = telegram || downloads || extraTweaks;
+        boolean enabled = downloads || extraTweaks;
         var dex = DexFileFactory.loadDexContainer(apk, Opcodes.getDefault());
         Map<String, ClassDef> classes = new HashMap<>();
         for (String entry : dex.getDexEntryNames())
@@ -51,7 +52,15 @@ public final class VerifyPatchUiApk {
                         "Translations",
                         "HostLog",
                         "VocalCut",
-                        "PatchSources");
+                        "PatchSources",
+                        "Outputs",
+                        "SleepFade",
+                        "HeadphoneEq",
+                        "OutputEq",
+                        "KeyTempo",
+                        "DjMode",
+                        "DownloadChoice",
+                        "EffectsApps");
         for (ClassDef cls : classes.values()) {
             String simple =
                     cls.getType().startsWith(base)

@@ -103,6 +103,10 @@ public final class DownloadChoice {
      */
     public static boolean hold(Context context, Song song, String from) {
         if (!ask || song == null || song.videoId == null) return false;
+        // An explicitly selected native file keeps its original encoding. These paths
+        // bypass catalogue quality selection and cannot produce a different rendition.
+        if (song.videoId.startsWith("src:soulseek-native::")
+                || song.videoId.startsWith("src:telegram-native::")) return false;
         if (chosen.containsKey(song.videoId)) return false;
         Activity activity = activity(context);
         if (activity == null || activity.isFinishing()) return false;

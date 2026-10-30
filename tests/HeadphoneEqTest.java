@@ -114,6 +114,31 @@ public final class HeadphoneEqTest {
                     "preamp −6.1 dB");
         }
 
+        // APO shelves use Q, including resonant shelves above Q=1. They must not
+        // generate NaN coefficients or samples at any accepted rate or strength.
+        for (String kind : new String[] {"LSC", "HSC"}) {
+            for (int rate : new int[] {8_000, 44_100, 48_000, 192_000}) {
+                for (float strength : new float[] {0f, 0.25f, 0.5f, 1f}) {
+                    HeadphoneEq.Profile resonant =
+                            HeadphoneEq.parse(
+                                    "resonant shelf",
+                                    "Filter 1: ON " + kind + " Fc 1000 Hz Gain 12 dB Q 10");
+                    HeadphoneEq.Chain chain = new HeadphoneEq.Chain(resonant, rate, strength, 2);
+                    double gain = chain.gainDb(1000);
+                    check(Double.isFinite(gain), "high-Q shelf gain stays finite");
+                    check(
+                            Math.abs(gain - 6 * strength) < 0.001,
+                            "shelf corner has half the requested dB gain");
+                    float[] impulse = new float[rate / 2 * 2];
+                    impulse[0] = impulse[1] = 0.25f;
+                    chain.process(impulse, impulse.length);
+                    boolean finite = true;
+                    for (float sample : impulse) finite &= Float.isFinite(sample);
+                    check(finite, "high-Q shelf output stays finite");
+                }
+            }
+        }
+
         // Off means untouched: zero strength is never built, and a flat profile passes through.
         HeadphoneEq.Profile flat =
                 HeadphoneEq.parse("flat", "Filter 1: ON PK Fc 1000 Hz Gain 0 dB Q 1.0");

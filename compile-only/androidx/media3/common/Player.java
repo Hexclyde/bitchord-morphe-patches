@@ -9,12 +9,23 @@ public interface Player {
 
     /** The events the patches listen to; Media3 gives each a default body. */
     interface Listener {
-        default void onMediaItemTransition(MediaItem mediaItem, int reason) {}
+        // R8 reordered these arguments in the pinned BitChord APK.
+        default void onMediaItemTransition(int reason, MediaItem mediaItem) {}
 
         default void onIsPlayingChanged(boolean isPlaying) {}
 
         default void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {}
+
+        default void onPlayWhenReadyChanged(int reason, boolean playWhenReady) {}
+
+        default void onPositionDiscontinuity(int reason) {}
+
+        default void onPositionDiscontinuity(
+                int reason, PositionInfo oldPosition, PositionInfo newPosition) {}
     }
+
+    /** Compile-time signature only; the target APK supplies this nested class. */
+    final class PositionInfo {}
 
     MediaItem getCurrentMediaItem();
 

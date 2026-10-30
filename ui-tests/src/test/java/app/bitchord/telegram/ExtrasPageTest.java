@@ -16,6 +16,7 @@ import androidx.media3.common.Player;
 import com.music.bitchord.data.model.Song;
 import com.music.bitchord.data.settings.DownloadQuality;
 import com.music.bitchord.download.Downloads;
+import com.music.bitchord.playback.SleepTimer;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -102,12 +103,19 @@ public class ExtrasPageTest {
 
     @Before
     public void setup() {
+        SleepTimer.deadline.setValue(null);
+        SleepTimer.afterTrack.setValue(false);
         activity = Robolectric.buildActivity(ExtrasActivity.class).setup().visible().get();
         Shadows.shadowOf(Looper.getMainLooper()).idle();
     }
 
     @After
     public void reset() {
+        Dialog shown = ShadowDialog.getLatestDialog();
+        if (shown != null && shown.isShowing()) shown.cancel();
+        Shadows.shadowOf(Looper.getMainLooper()).idle();
+        SleepTimer.deadline.setValue(null);
+        SleepTimer.afterTrack.setValue(false);
         SoundExtras.setSleepFade(false);
         SoundExtras.setSleepFadeSeconds(SoundExtras.FADE_SECONDS);
         SoundExtras.setLosslessBluetoothEnabled(false);
@@ -271,6 +279,35 @@ public class ExtrasPageTest {
         assertFalse(DownloadChoice.hold(activity.getApplicationContext(), one, null));
     }
 
+    @Test
+    public void selectedNativeFilesKeepTheirOriginalEncodingWithoutAQualityPrompt() {
+        DownloadChoice.setAsk(true);
+        Dialog before = ShadowDialog.getLatestDialog();
+        Song soulseek =
+                new Song("src:soulseek-native::selected-file", "Chosen audio", "Band", "3:00");
+        Song telegram =
+                new Song("src:telegram-native::selected-file", "Chosen audio", "Band", "3:00");
+        assertFalse(DownloadChoice.hold(activity, soulseek, "Album"));
+        assertFalse(DownloadChoice.hold(activity, telegram, "Album"));
+        assertSame(
+                "native files never open the quality dialog",
+                before,
+                ShadowDialog.getLatestDialog());
+        assertEquals(DownloadQuality.HIGH, DownloadChoice.quality(soulseek, DownloadQuality.HIGH));
+        assertEquals(
+                DownloadQuality.STANDARD,
+                DownloadChoice.quality(telegram, DownloadQuality.STANDARD));
+
+        Song catalogue = new Song("ordinary-video-id", "Catalogue song", "Band", "3:00");
+        assertTrue(DownloadChoice.hold(activity, catalogue, "Album"));
+        Dialog shown = ShadowDialog.getLatestDialog();
+        assertNotNull(shown);
+        assertTrue(shown.isShowing());
+        shown.cancel();
+        Shadows.shadowOf(Looper.getMainLooper()).idle();
+        assertFalse(shown.isShowing());
+    }
+
     /** A player that only knows its volume and whether it plays. */
     static final class FakePlayer implements java.lang.reflect.InvocationHandler {
         float volume = 1f;
@@ -396,6 +433,7 @@ public class ExtrasPageTest {
 
         // "Sleep after this song": the end fades and stays silent, without a pause of its own.
         SoundExtras.setSleepFade(true);
+        SleepTimer.afterTrack.setValue(true);
         FakePlayer ending = new FakePlayer();
         SleepFade.fadeEnding(ending.player, 2);
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(2_600));
@@ -405,6 +443,140 @@ public class ExtrasPageTest {
         Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(600));
         assertEquals(1f, ending.volume, 1e-6);
         assertFalse(SleepFade.active());
+    }
+
+    @Test
+    public void endingFadeStopsWhenAfterThisSongIsCleared() {
+        SoundExtras.setSleepFade(true);
+        SleepTimer.afterTrack.setValue(true);
+        FakePlayer fake = new FakePlayer();
+        fake.volume = 0.7f;
+        SleepFade.fadeEnding(fake.player, 3);
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(900));
+        assertTrue(SleepFade.active());
+        assertTrue(fake.volume < 0.7f);
+        SleepTimer.afterTrack.setValue(false);
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100));
+        assertFalse(SleepFade.active());
+        assertEquals(0.7f, fake.volume, 1e-6);
+        assertEquals(0, fake.pauses);
+    }
+
+    @Test
+    public void endingFadeStopsWhenATimedDeadlineReplacesIt() {
+        SoundExtras.setSleepFade(true);
+        SleepTimer.afterTrack.setValue(true);
+        FakePlayer fake = new FakePlayer();
+        SleepFade.fadeEnding(fake.player, 3);
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(900));
+        assertTrue(SleepFade.active());
+        SleepTimer.deadline.setValue(android.os.SystemClock.elapsedRealtime() + 60_000L);
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100));
+        assertFalse(SleepFade.active());
+        assertEquals(1f, fake.volume, 1e-6);
+        assertEquals(0, fake.pauses);
+    }
+
+    @Test
+    public void aNewDeadlineStopsTheTimedFadeBeforeHalfASecond() {
+        SoundExtras.setSleepFade(true);
+        FakePlayer fake = new FakePlayer();
+        fake.volume = 0.8f;
+        SleepFade.pauseSoon(fake.player, 3);
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100));
+        assertTrue(SleepFade.active());
+        assertTrue(fake.volume < 0.8f);
+        SleepTimer.deadline.setValue(android.os.SystemClock.elapsedRealtime() + 60_000L);
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(100));
+        restoredWithoutPause(fake);
+    }
+
+    private static Player.Listener watcher(Player player) throws Exception {
+        Class<?> type = Class.forName("app.bitchord.telegram.SoundExtras$Watcher");
+        java.lang.reflect.Constructor<?> constructor = type.getDeclaredConstructor(Player.class);
+        constructor.setAccessible(true);
+        return (Player.Listener) constructor.newInstance(player);
+    }
+
+    private static void callback(
+            Player.Listener watcher, String name, Class<?>[] parameters, Object... arguments)
+            throws Exception {
+        java.lang.reflect.Method method = watcher.getClass().getDeclaredMethod(name, parameters);
+        method.setAccessible(true);
+        method.invoke(watcher, arguments);
+    }
+
+    private static void beginAttenuatedFade(FakePlayer fake) {
+        fake.volume = 0.8f;
+        SleepFade.pauseSoon(fake.player, 3);
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(300));
+        assertTrue(SleepFade.active());
+        assertTrue(fake.volume < 0.8f);
+    }
+
+    private static void restoredWithoutPause(FakePlayer fake) {
+        assertFalse(SleepFade.active());
+        assertEquals(0.8f, fake.volume, 1e-6);
+        assertEquals(0, fake.pauses);
+    }
+
+    @Test
+    public void actualOptimizedPlayerCallbacksRestoreTheFadedVolume() throws Exception {
+        SoundExtras.setSleepFade(true);
+        FakePlayer fake = new FakePlayer();
+        Player.Listener listener = watcher(fake.player);
+        beginAttenuatedFade(fake);
+        fake.position += 30_000L; // A forward seek must stand down as well as a backward one.
+        callback(listener, "onPositionDiscontinuity", new Class<?>[] {int.class}, 1);
+        restoredWithoutPause(fake);
+
+        beginAttenuatedFade(fake);
+        callback(
+                listener,
+                "onPositionDiscontinuity",
+                new Class<?>[] {int.class, Player.PositionInfo.class, Player.PositionInfo.class},
+                1,
+                null,
+                null);
+        restoredWithoutPause(fake);
+
+        beginAttenuatedFade(fake);
+        callback(
+                listener,
+                "onPlayWhenReadyChanged",
+                new Class<?>[] {int.class, boolean.class},
+                1,
+                true);
+        restoredWithoutPause(fake);
+
+        beginAttenuatedFade(fake);
+        callback(
+                listener,
+                "onMediaItemTransition",
+                new Class<?>[] {int.class, MediaItem.class},
+                Player.MEDIA_ITEM_TRANSITION_REASON_AUTO,
+                MediaItem.fromUri("test://another-song"));
+        restoredWithoutPause(fake);
+    }
+
+    @Test
+    public void sourceOrderCallbacksAndTheSparePlayerKeepTheSameFadeOwnership() throws Exception {
+        SoundExtras.setSleepFade(true);
+        FakePlayer main = new FakePlayer();
+        FakePlayer spare = new FakePlayer();
+        Player.Listener mainListener = watcher(main.player);
+        Player.Listener spareListener = watcher(spare.player);
+        beginAttenuatedFade(main);
+        callback(spareListener, "onPositionDiscontinuity", new Class<?>[] {int.class}, 1);
+        assertTrue("the spare player's seek cannot cancel the active fade", SleepFade.active());
+        assertTrue(main.volume < 0.8f);
+        mainListener.onPlayWhenReadyChanged(true, 1);
+        restoredWithoutPause(main);
+
+        beginAttenuatedFade(main);
+        mainListener.onMediaItemTransition(
+                MediaItem.fromUri("test://source-order"), Player.MEDIA_ITEM_TRANSITION_REASON_AUTO);
+        restoredWithoutPause(main);
     }
 
     @Test

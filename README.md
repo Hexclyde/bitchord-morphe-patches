@@ -127,6 +127,7 @@ If the source link doesn't work, download the `.mpp` from the [releases page](ht
 Step-by-step guides:
 
 - [Installing with Morphe](docs/MOBILE.md)
+- [Publishing the prepared beta.7 ZIP](docs/PUBLISHING-1.1.0-beta.7.md)
 - [Connecting Telegram](docs/SETUP.md)
 - [Optional debrid downloads](docs/DEBRID.md)
 - [FAQ](docs/FAQ.md)

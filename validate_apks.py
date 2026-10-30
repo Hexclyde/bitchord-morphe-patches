@@ -80,6 +80,28 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
     (r / f"dex-control-flow-{abi}.txt").write_text(flow.stdout + flow.stderr)
     print(abi, flow.stdout, flow.stderr, flush=True)
     flow.check_returncode()
+    for checker, arguments in [
+        ("VerifyBeta7Apk", [str(output)]),
+        ("VerifyPatchUiApk", [str(output), "true", "true", "true"]),
+    ]:
+        checked = subprocess.run(
+            [
+                str(java),
+                "-Xshare:off",
+                "-Xmx3g",
+                "-cp",
+                str(checks) + ":" + str(jar),
+                checker,
+                *arguments,
+            ],
+            capture_output=True,
+            text=True,
+        )
+        (r / "build" / (checker + "-" + abi + ".log")).write_text(
+            checked.stdout + checked.stderr
+        )
+        print(abi, checker, checked.stdout, checked.stderr, flush=True)
+        checked.check_returncode()
     verify = subprocess.run(
         [
             str(java),

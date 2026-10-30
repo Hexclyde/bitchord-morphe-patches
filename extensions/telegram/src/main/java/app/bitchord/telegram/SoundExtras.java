@@ -479,6 +479,11 @@ public final class SoundExtras {
         if (djApplied()) DjMode.service(playbackService);
     }
 
+    /** BitChord's output picker has applied its route, including already-connected devices. */
+    public static void outputChanged() {
+        Outputs.refresh();
+    }
+
     /** What the patches do as a player moves from song to song. */
     private static final class Watcher implements Player.Listener {
         private final Player player;
@@ -491,8 +496,13 @@ public final class SoundExtras {
             this.handler = new Handler(looper == null ? Looper.getMainLooper() : looper);
         }
 
-        @Override
+        // R8 reordered the pinned APK's callback. Keep the source-order overload too so
+        // framework tests against the published Media3 API exercise the same handler.
         public void onMediaItemTransition(MediaItem mediaItem, int reason) {
+            onMediaItemTransition(reason, mediaItem);
+        }
+
+        public void onMediaItemTransition(int reason, MediaItem mediaItem) {
             Outputs.refresh();
             if (djApplied()) {
                 DjMode.pollSoon();
@@ -501,7 +511,7 @@ public final class SoundExtras {
             }
             if (sleepFadeApplied()) {
                 if (reason != Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED)
-                    SleepFade.cancel();
+                    SleepFade.cancel(player);
                 scheduleEnding();
             }
         }
@@ -512,6 +522,36 @@ public final class SoundExtras {
                 if (!isPlaying && !SleepFade.active()) handler.removeCallbacks(endingCheck);
                 else scheduleEnding();
             }
+        }
+
+        public void onPlayWhenReadyChanged(boolean playWhenReady, int reason) {
+            onPlayWhenReadyChanged(reason, playWhenReady);
+        }
+
+        // As above, these callbacks use the pinned APK's R8 argument order.
+        public void onPlayWhenReadyChanged(int reason, boolean playWhenReady) {
+            cancelEnding();
+        }
+
+        @Override
+        public void onPositionDiscontinuity(int reason) {
+            cancelEnding();
+        }
+
+        public void onPositionDiscontinuity(
+                Player.PositionInfo oldPosition, Player.PositionInfo newPosition, int reason) {
+            onPositionDiscontinuity(reason, oldPosition, newPosition);
+        }
+
+        public void onPositionDiscontinuity(
+                int reason, Player.PositionInfo oldPosition, Player.PositionInfo newPosition) {
+            cancelEnding();
+        }
+
+        private void cancelEnding() {
+            if (!sleepFadeApplied()) return;
+            handler.removeCallbacks(endingCheck);
+            SleepFade.cancel(player);
         }
 
         @Override

@@ -242,6 +242,20 @@ public class VerifyApk {
         for (String entry : container.getDexEntryNames())
             for (ClassDef cls : container.getEntry(entry).getDexFile().getClasses())
                 definitions.put(cls.getType(), cls);
+        boolean selectedTweaks = false, selectedJamesDsp = false;
+        ClassDef soundSettings = definitions.get("Lapp/bitchord/telegram/SoundExtras;");
+        if (soundSettings != null) {
+            for (Method method : soundSettings.getMethods()) {
+                if (!method.getName().endsWith("Applied") || method.getImplementation() == null)
+                    continue;
+                Instruction first = method.getImplementation().getInstructions().iterator().next();
+                boolean installed =
+                        first instanceof NarrowLiteralInstruction literal
+                                && literal.getNarrowLiteral() == 1;
+                selectedTweaks |= installed;
+                if (method.getName().equals("jamesDspApplied")) selectedJamesDsp = installed;
+            }
+        }
         Set<String> types = new HashSet<>();
         boolean hook = false,
                 iconPrefix = false,
@@ -965,7 +979,7 @@ public class VerifyApk {
                                 .contains(((Element) queried.item(i)).getAttributeNS(NS, "name")))
                     seesJamesDsp++;
             check(
-                    seesJamesDsp == 2,
+                    seesJamesDsp == (selectedJamesDsp ? 2 : 0),
                     "BitChord may see JamesDSP, rootless or root (Android 11 and up)");
             boolean extrasPage = false;
             for (int i = 0; i < activities.getLength(); i++) {
@@ -980,7 +994,12 @@ public class VerifyApk {
                         activity.getAttributeNS(NS, "label").equals("Patches & tweaks"),
                         "Patches & tweaks page is labelled");
             }
-            check(extrasPage, "Patches & tweaks page is declared");
+            check(
+                    extrasPage
+                            == (selectedTweaks
+                                    || definitions.containsKey(
+                                            "Lapp/bitchord/soulseek/SoulseekBridge;")),
+                    "Patches & tweaks page matches the selected features");
             check(
                     statsFormatHooks == 1 && statsCaptureHooks == 1 && statsMeasureHooks == 1,
                     "Exactly one of each stats hook");

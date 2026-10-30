@@ -2,7 +2,7 @@
 """Patch pinned BitChord APKs in each integration combination and inspect the output.
 
 Run build.py first. This creates local test APKs only; it never installs or uploads
-anything. Default: all supported ABIs and all four integration combinations.
+anything. Default: all supported ABIs and the five integration/standalone-tweak combinations.
 """
 
 import argparse
@@ -24,6 +24,19 @@ MODES = {
     "neither": [],
     "telegram": ["Unofficial Telegram music", "Sign in with MicroG"],
     "soulseek": ["Unofficial Soulseek audio"],
+    "tweaks": [
+        "Sing",
+        "Pitch control",
+        "Loudness level",
+        "Sleep timer fade-out",
+        "Battery saver",
+        "Lossless addons over Bluetooth",
+        "Per-download quality",
+        "Headphone correction",
+        "Equaliser per output",
+        "DJ mode",
+        "JamesDSP",
+    ],
     "combined": [
         "Unofficial Telegram music",
         "Sign in with MicroG",
@@ -169,11 +182,18 @@ def main():
                 raise RuntimeError("Patch report failed: " + name)
             telegram = "Unofficial Telegram music" in selected
             soulseek = "Unofficial Soulseek audio" in selected
+            tweaks = mode == "tweaks"
             for checker, check_args in [
                 ("VerifyDexControlFlow", [str(patched)]),
+                ("VerifyBeta7Apk", [str(patched)]),
                 (
                     "VerifyPatchUiApk",
-                    [str(patched), str(telegram).lower(), str(soulseek).lower()],
+                    [
+                        str(patched),
+                        str(telegram).lower(),
+                        str(soulseek).lower(),
+                        str(tweaks).lower(),
+                    ],
                 ),
                 (
                     "VerifyApk",

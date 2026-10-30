@@ -1,10 +1,91 @@
 {
   "NOTE": "Generated from the verified MPP by tools/prepare_mobile_source.py; do not hand-edit.",
-  "version": "1.1.0-beta.6",
+  "version": "1.1.0-beta.7",
   "patches": [
     {
       "name": "Battery saver",
       "description": "Lets the phone's audio chip decode songs, so long listens use less battery. BitChord's effects don't run on songs played this way. Settings are in Settings, Patches & tweaks.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.8.1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "DJ mode",
+      "description": "Picks the next song in the queue for a neighbouring key and a close tempo. Keys and tempos are learned as songs play. From Prism by Yigder. Settings are in Settings, Patches & tweaks.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.8.1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Equaliser per output",
+      "description": "Remembers BitChord's equaliser for each output (speaker, wired, each Bluetooth device) and puts it back when that output is used; shares settings as codes. From Prism by Yigder. Settings are in Settings, Patches & tweaks.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.8.1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Headphone correction",
+      "description": "Flattens your headphones' sound with a measured profile, one per output, from AutoEq's thousands of models or pasted in. From Prism by Yigder. Settings are in Settings, Patches & tweaks.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -67,6 +148,33 @@
       ]
     },
     {
+      "name": "JamesDSP",
+      "description": "Hands BitChord's audio to JamesDSP, the open-source effect engine: open it from BitChord, announce the audio session again and let it take over the effects. Settings are in Settings, Patches & tweaks.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.8.1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Lossless addons over Bluetooth",
       "description": "Keeps addons marked lossless in use over Bluetooth, where BitChord normally skips them. Lossless-first, as in Auris by OreoMuncher45. Settings are in Settings, Patches & tweaks.",
       "default": false,
@@ -96,6 +204,33 @@
     {
       "name": "Loudness level",
       "description": "Sets how loud loudness normalisation plays songs, from -23 to -8 LUFS instead of -14. From Prism by Yigder. Settings are in Settings, Patches & tweaks.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.8.1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Per-download quality",
+      "description": "Asks which quality to download each song in: Standard, High or Lossless. An album is asked about once. From Stash by Rawnald Clark. Settings are in Settings, Patches & tweaks.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -203,7 +338,7 @@
     },
     {
       "name": "Sleep timer fade-out",
-      "description": "Fades the song out over 10 seconds before the sleep timer pauses it. From Prism by Yigder. Settings are in Settings, Patches & tweaks.",
+      "description": "Fades the song out before the sleep timer pauses it, and fades the end of the last song with the timer's \"After this song\" option. From Prism by Yigder. Settings are in Settings, Patches & tweaks.",
       "default": false,
       "category": null,
       "compatiblePackages": [
