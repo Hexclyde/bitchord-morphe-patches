@@ -44,10 +44,18 @@ MODES = {
     ],
 }
 ABIS = ("arm64-v8a", "armeabi-v7a", "x86_64")
+REQUIRED_BETA9_JNI = frozenset(
+    {
+        "Java_app_bitchord_soulseek_PeerDiscoveryNative_" + name
+        for name in ("open", "poll", "status", "verify", "close")
+    }
+    | {"Java_app_bitchord_soulseek_SoulseekNative_searchAdaptive"}
+)
 
 
 def verify_native(apk):
-    """Check Android loader dependencies and hardened ELF segments, not just the filename."""
+    """Check loader security and exported beta.9 JNI ABI in an APK or release MPP."""
+    soulseek_abis = set()
     with zipfile.ZipFile(apk) as archive, tempfile.TemporaryDirectory() as temporary:
         for name in archive.namelist():
             if name.rsplit("/", 1)[-1] not in {
@@ -63,6 +71,28 @@ def verify_native(apk):
             local.write_bytes(archive.read(name))
             headers = subprocess.check_output(["readelf", "-lW", str(local)], text=True)
             dynamic = subprocess.check_output(["readelf", "-dW", str(local)], text=True)
+            if name.endswith("/libbitchord_soulseek.so"):
+                soulseek_abis.add(abi)
+                symbols = subprocess.check_output(
+                    ["readelf", "--dyn-syms", "--wide", str(local)], text=True
+                )
+                exported = set()
+                for line in symbols.splitlines():
+                    fields = line.split()
+                    if (
+                        len(fields) >= 8
+                        and fields[3] == "FUNC"
+                        and fields[4] in {"GLOBAL", "WEAK"}
+                        and fields[5] in {"DEFAULT", "PROTECTED"}
+                        and fields[6] != "UND"
+                    ):
+                        exported.add(fields[7].split("@", 1)[0])
+                missing = REQUIRED_BETA9_JNI - exported
+                if missing:
+                    raise RuntimeError(
+                        f"Missing exported beta.9 JNI ABI in {name}: "
+                        + ", ".join(sorted(missing))
+                    )
             alignments = [
                 int(line.split()[-1], 16)
                 for line in headers.splitlines()
@@ -98,6 +128,10 @@ def verify_native(apk):
                     and f"lib/{abi}/{needed}" not in archive.namelist()
                 ):
                     raise RuntimeError(f"Unbundled Android dependency: {abi}/{needed}")
+    if not soulseek_abis:
+        raise RuntimeError("No Soulseek native library to validate: " + str(apk))
+    if not soulseek_abis <= set(ABIS):
+        raise RuntimeError("Unexpected Soulseek native ABI: " + str(soulseek_abis))
 
 
 def main():

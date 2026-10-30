@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.1.0-beta.9 (testing build)
+
+- Return a settled initial Soulseek shortlist once the highest enabled format
+  arrives, while keeping the full search budget when it does not. Repeated
+  queries can reuse a small, short-lived cache bound to the login and format policy.
+- Add opt-in compatible-peer discovery under Patches & tweaks → Peer downloads
+  → Connection setup. Explicit scans use signed public Nostr profiles; publishing
+  your own profile is a separate switch, off by default.
+- Exchange bounded batches of signed public profiles with already paired clients
+  after capability negotiation. Discovery does not pair a key, share files, expose
+  private grants or join ordinary Soulseek or BitTorrent swarms.
+- Keep Real-Debrid, AllDebrid, Premiumize, TorBox and direct/I2P/Tor/IPFS download
+  behavior from beta.8. Download-only use, format verification and copy choices remain.
+- Translate the discovery page and new common states across all 20 supported
+  languages. Keep screenshots and screen recording enabled throughout beta.9.
+
 ## 1.1.0-beta.8 (testing build)
 
 - Updated all patch hooks for BitChord 1.9 while retaining the Soulseek,

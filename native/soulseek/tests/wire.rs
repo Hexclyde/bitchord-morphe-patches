@@ -1,5 +1,5 @@
 //! Exercises the adapter against real loopback Soulseek frames, not a mock engine.
-use bitchord_soulseek::{close, connect, create, download, search, transfers};
+use bitchord_soulseek::{close, connect, create, download, search, search_adaptive, transfers};
 use serde_json::Value;
 use soulseek_rs::message::Message;
 use soulseek_rs::message::peer::{FileEntry, build_file_search_response};
@@ -389,6 +389,28 @@ fn real_compressed_peer_results_keep_audio_candidates_aliases_and_metadata() {
         container["format"], "mp4",
         "extension hints must not claim ALAC or AAC without inspecting bytes"
     );
+}
+
+#[test]
+fn adaptive_search_settles_preferred_audio_but_waits_for_missing_preferred_formats() {
+    let _serial = TEST_LOCK.lock().unwrap();
+    let server = Fixture::start(true, None);
+    let session = Session::new(server.port);
+    session.login();
+    let started = Instant::now();
+    let response: Value = serde_json::from_str(
+        &search_adaptive(session.handle, "fixture song", 5_000, "flac").unwrap(),
+    ).unwrap();
+    assert!(response["tracks"].as_array().unwrap().iter().any(|row| row["extension"] == "flac"));
+    assert!(started.elapsed() < Duration::from_secs(3), "useful initial batch should not wait the full five seconds");
+    // This peer advertises FLAC/MP3/etc., but no Opus. Other audio must not
+    // shorten a window whose first enabled format is Opus.
+    let started = Instant::now();
+    let response: Value = serde_json::from_str(
+        &search_adaptive(session.handle, "fixture song", 1_500, "opus").unwrap(),
+    ).unwrap();
+    assert!(!response["tracks"].as_array().unwrap().is_empty());
+    assert!(started.elapsed() >= Duration::from_millis(1_450), "non-preferred files cannot settle the batch");
 }
 
 #[test]

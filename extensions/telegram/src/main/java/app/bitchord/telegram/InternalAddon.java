@@ -65,7 +65,7 @@ public final class InternalAddon {
             return new JSONObject()
                     .put("id", "bitchord.telegram.native")
                     .put("name", "Unofficial Telegram")
-                    .put("version", "1.1.0-beta.8")
+                    .put("version", "1.1.0-beta.9")
                     .put("description", "Private on-device Telegram audio")
                     .put("allowDownloads", true)
                     .put("checkValidLossless", false)

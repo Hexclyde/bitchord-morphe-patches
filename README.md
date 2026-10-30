@@ -1,6 +1,6 @@
 # BitChord Morphe Patches (Bitchord+)
 
-> **Testing build 1.1.0-beta.8:** brings download tools and playback
+> **Testing build 1.1.0-beta.9:** brings download tools and playback
 > controls together under **Settings → Patches & tweaks**. Disabled features show
 > only their compact row; enabling one opens its controls. Use its settings gear
 > to reopen them later. Download formats now use switches and drag handles to set
@@ -9,14 +9,17 @@
 > downloads retain the same Phone/Telegram/Both copy choices. See
 > [download setup](docs/SOULSEEK-TESTING.md) and [debrid setup](docs/DEBRID.md).
 > Download screens follow BitChord's selected language in all 20 supported translations.
-> Screenshots and screen recording are enabled across beta.8 for UI review.
+> Screenshots and screen recording are enabled across beta.9 for UI review.
+> Beta.9 adds quicker initial Soulseek results and opt-in discovery of compatible
+> app peers. Discovery is under **Peer downloads → Connection setup → Peer discovery**;
+> found public keys still require explicit pairing. See the [discovery guide](docs/PEER-DISCOVERY.md).
 > The testing build still needs real-phone and public-network qualification.
 
 [Morphe](https://morphe.software) patches for the [BitChord](https://github.com/kushagrasinghx/BitChord) Android music player. The main one, **Unofficial Telegram music**, lets BitChord search and play music from your own Telegram channels, in its original quality, entirely on your phone. No server, bot or hosting is involved.
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.8, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.9, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > The previous BitChord 1.8.1 Telegram integration was tested on an **arm64-v8a** phone; this 1.9 build still needs on-device testing. The armeabi-v7a and x86_64 builds pass the same automated checks, but haven't been run on a real device. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
 
@@ -109,7 +112,7 @@ Everything is at BitChord's own behaviour until you change it, and none of them 
 ## Requirements
 
 - Android 8.0 or newer
-- The original [BitChord 1.8.1 APK](https://github.com/kushagrasinghx/BitChord/releases/tag/v1.8.1) (arm64-v8a, armeabi-v7a or x86_64)
+- The original [BitChord 1.9 APK](https://github.com/kushagrasinghx/BitChord/releases) for the testing bundle (arm64-v8a, armeabi-v7a or x86_64)
 - [Morphe Manager](https://github.com/MorpheApp/morphe-manager/releases)
 - For Telegram features: a Telegram account and an API ID and hash from [my.telegram.org](https://my.telegram.org/apps)
 - For optional debrid downloads: an enabled provider and your own account API key
@@ -117,7 +120,7 @@ Everything is at BitChord's own behaviour until you change it, and none of them 
 ## Quick start
 
 1. [Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord). On the source card, enable **Experimental app versions**.
-2. Patch BitChord 1.8.1 with **Unofficial Telegram music**, **Install as Bitchord+** and, if you like, **Sign in with MicroG** and any of the [tweaks](#patches--tweaks). Leave the API ID at `0` and the API hash empty.
+2. Patch the BitChord version supported by your selected source with **Unofficial Telegram music**, **Install as Bitchord+** and, if you like, **Sign in with MicroG** and any of the [tweaks](#patches--tweaks). Leave the API ID at `0` and the API hash empty.
 3. Install the patched app and open **Settings → Account & integrations → Unofficial Telegram**.
 4. Enter your API ID and hash, sign in, and pick your music chats.
 5. Go to **Search → Addons** to find and play your audio.
@@ -129,9 +132,10 @@ If the source link doesn't work, download the `.mpp` from the [releases page](ht
 Step-by-step guides:
 
 - [Installing with Morphe](docs/MOBILE.md)
-- [Publishing the prepared beta.7 ZIP](docs/PUBLISHING-1.1.0-beta.8.md)
+- [Publishing the prepared beta.9 ZIP](docs/PUBLISHING-1.1.0-beta.9.md)
 - [Connecting Telegram](docs/SETUP.md)
 - [Optional debrid downloads](docs/DEBRID.md)
+- [Compatible-peer discovery and peer exchange](docs/PEER-DISCOVERY.md)
 - [FAQ](docs/FAQ.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 

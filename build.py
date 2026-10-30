@@ -216,7 +216,7 @@ run(
 flags = OUT / "BuildFlags.kt"
 flags.write_text(
     "package app.bitchord.patches\n\ninternal const val TESTING_CAPTURE = "
-    + ("true" if VERSION == "1.1.0-beta.8" else "false")
+    + ("true" if VERSION in ("1.1.0-beta.8", "1.1.0-beta.9") else "false")
     + "\n"
 )
 run(

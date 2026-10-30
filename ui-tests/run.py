@@ -83,6 +83,7 @@ for name in (
     "FormatDragOrder.java",
     "SoulseekTrack.java",
     "DebridSetupActivity.java",
+    "PeerDiscoveryActivity.java",
     "DebridCredentials.java",
     "DebridProvider.java",
     "DebridModels.java",

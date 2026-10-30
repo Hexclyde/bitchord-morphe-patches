@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT))
 from buildenv import jdk
 
 STUBS = {
+    "app/bitchord/soulseek/PeerDiscovery.java": "package app.bitchord.soulseek;final class PeerDiscovery {static PeerDiscovery existing(){return null;}void stop(){}boolean shutdownFailed(){return false;}}",
     "android/content/SharedPreferences.java": """package android.content;
 public interface SharedPreferences {
  boolean contains(String key); boolean getBoolean(String key,boolean fallback); Editor edit();

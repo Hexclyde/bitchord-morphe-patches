@@ -49,6 +49,20 @@ public final class SoulseekJniWireTest {
                         new JSONObject(SoulseekNative.search(handle, "fixture recording", 1000));
                 JSONArray tracks = search.getJSONArray("tracks");
                 check(tracks.length() == 0, "a real wire search may return an empty result list");
+                fails(
+                        () ->
+                                SoulseekNative.searchAdaptive(
+                                        handle, "fixture recording", 300, "exe"),
+                        "adaptive search rejects unsupported preferred extensions");
+                long emptyAt = System.nanoTime();
+                JSONObject empty =
+                        new JSONObject(
+                                SoulseekNative.searchAdaptive(
+                                        handle, "fixture recording", 300, "flac"));
+                check(
+                        empty.getJSONArray("tracks").length() == 0
+                                && (System.nanoTime() - emptyAt) / 1_000_000 >= 250,
+                        "adaptive no-hit search keeps its complete collection window");
                 JSONObject transfers = new JSONObject(SoulseekNative.transfers(handle));
                 check(
                         transfers.getJSONArray("transfers").length() == 0,
@@ -63,7 +77,8 @@ public final class SoulseekJniWireTest {
                         new Thread(
                                 () -> {
                                     try {
-                                        SoulseekNative.search(handle, "cancel this search", 15000);
+                                        SoulseekNative.searchAdaptive(
+                                                handle, "cancel this search", 15000, "flac");
                                     } catch (Throwable expectedOnClose) {
                                         searchFailure.set(expectedOnClose);
                                     }

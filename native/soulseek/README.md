@@ -2,7 +2,9 @@
 
 This development library wraps the pinned `soulseek-rs-lib` protocol engine for
 `app.bitchord.soulseek.SoulseekNative`. It opens direct network sockets from the
-phone. It has no hosted backend, embedded Node/.NET runtime or external relay.
+phone. It has no project-hosted backend or embedded Node/.NET runtime. Ordinary
+Soulseek operation still needs the existing Soulseek server/peer network; the
+separate opt-in coordination and discovery modules use public Nostr relays.
 
 The Java host must call blocking login/search and `close` from an IO executor.
 `download` queues a transfer; `transfers` returns bounded JSON snapshots. Only
@@ -40,6 +42,24 @@ The adapter suppresses upstream logs in embedded builds and throws redacted
 Java exceptions. It never writes credentials to disk. Credentials do remain in
 session memory while the upstream client is alive; no secure-memory guarantee
 is claimed. The server and peer protocol is not made end-to-end encrypted by JNI.
+
+## Adaptive search and compatible-peer discovery
+
+`search` preserves the full-window API. `searchAdaptive` adds a preferred-extension
+hint and returns a settled initial batch once the highest enabled format arrives,
+without shortening the no-preferred-result budget. Its result cap retains
+preferred-format candidates; downloaded bytes remain subject to Java's codec
+verification and exact selected-source authorization.
+
+`PeerDiscoveryNative` uses signed Nostr replaceable kind `11120` for public
+`app.bitchord.providers/1` profiles. A read-only session subscribes for ten
+seconds and publishes nothing. An explicitly advertising session renews only its
+own profile until closed. Records contain public app identity, protocol and
+transport capability names with an expiry of at most five minutes. Strict schema,
+signature, timestamp, frame, verification and queue limits apply. No filenames,
+network endpoint descriptors or private sharing capabilities enter these records.
+The Java host treats returned keys as untrusted candidates and owns consent,
+cache, lifecycle and paired-only PEX. See [the discovery guide](../../docs/PEER-DISCOVERY.md).
 
 ## Build and test
 

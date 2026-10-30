@@ -35,7 +35,7 @@ static NEXT: AtomicI64 = AtomicI64::new(1);
 static SESSIONS: OnceLock<Mutex<HashMap<i64, Arc<Session>>>> = OnceLock::new();
 
 #[derive(Debug)]
-struct BoundedTransport;
+pub(crate) struct BoundedTransport;
 
 type WireSocket =
     tokio_tungstenite::WebSocketStream<tokio_tungstenite::MaybeTlsStream<tokio::net::TcpStream>>;
@@ -300,7 +300,15 @@ fn validate_message(session: &str, kind: &str, payload: &Value) -> Result<()> {
     }
     if !matches!(
         kind,
-        "hello" | "offer" | "answer" | "candidate" | "cancel" | "ping" | "pong"
+        "hello"
+            | "offer"
+            | "answer"
+            | "candidate"
+            | "cancel"
+            | "ping"
+            | "pong"
+            | "pex_request"
+            | "pex_response"
     ) {
         return Err(input("Unsupported signaling message type"));
     }
@@ -917,6 +925,21 @@ mod tests {
             .sign_with_keys(&a)
             .unwrap();
         assert!(gate.accept(&b, &e, 1000).is_err());
+    }
+    #[test]
+    fn pex_messages_keep_the_existing_explicit_pairing_gate() {
+        let a = fixed(1);
+        let b = fixed(2);
+        let unpaired = fixed(3);
+        let mut gate = Gate::new(HashSet::from([a.public_key()]));
+        for kind in ["pex_request", "pex_response"] {
+            let paired = seal(&a, b.public_key(), SESSION, kind, json!({}), 1000).unwrap();
+            let received = gate.accept(&b, &paired, 1000).unwrap();
+            assert_eq!(received["type"], kind);
+            let other = seal(&unpaired, b.public_key(), SESSION, kind, json!({}), 1000).unwrap();
+            assert!(gate.accept(&b, &other, 1000).is_err());
+        }
+        assert_eq!(gate.peers, HashSet::from([a.public_key()]));
     }
     #[test]
     fn settings_and_messages_are_bounded_before_connecting() {

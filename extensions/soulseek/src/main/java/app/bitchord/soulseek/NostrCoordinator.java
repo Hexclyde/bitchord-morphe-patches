@@ -83,6 +83,13 @@ final class NostrCoordinator {
         return NostrConfig.lines(store.loadOrCreate().peers);
     }
 
+    NostrIdentityStore.Settings discoverySettings() throws Exception {
+        synchronized (lock) {
+            if (resetting || stopping) throw new IOException("Coordination is still stopping.");
+            return store.loadOrCreate();
+        }
+    }
+
     void configure(String relayText, String peerText) throws Exception {
         List<String> relays = NostrConfig.relays(relayText);
         List<String> peers = NostrConfig.peers(peerText);
@@ -193,6 +200,8 @@ final class NostrCoordinator {
                 reader.start();
             }
             opened = 0;
+            PeerDiscovery discovery = PeerDiscovery.existing();
+            if (discovery != null) discovery.onPairedStarted();
         } catch (Exception | LinkageError error) {
             synchronized (lock) {
                 if (generation == intent) {
@@ -225,6 +234,8 @@ final class NostrCoordinator {
         }
         MessageHandler listener = messageHandler;
         if (listener != null) listener.onStopped();
+        PeerDiscovery discovery = PeerDiscovery.existing();
+        if (discovery != null) discovery.stop();
         boolean closed = closeHandle(closing);
         for (long probe : probes) closeRelayProbe(probe);
         synchronized (lock) {
@@ -241,6 +252,13 @@ final class NostrCoordinator {
         }
         try {
             stop();
+            PeerDiscovery discovery = PeerDiscovery.existing();
+            if (discovery != null) {
+                discovery.clearCache();
+                if (discovery.shutdownFailed())
+                    throw new IOException(
+                            "Restart BitChord before resetting the connection identity.");
+            }
             synchronized (lock) {
                 if (shutdownFailed || stopping)
                     throw new IOException(
@@ -332,6 +350,31 @@ final class NostrCoordinator {
             throw new IOException("No relay accepted the download message.");
     }
 
+    void sendDiscoveryMessage(String peer, String session, String type, JSONObject payload)
+            throws Exception {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
+        if (!PeerExchange.PROTOCOL.equals(payload.optString("protocol"))
+                || !("hello".equals(type)
+                        || "pex_request".equals(type)
+                        || "pex_response".equals(type))
+                || !peer.matches("[0-9a-f]{64}")
+                || !session.matches("[0-9a-f]{32}")
+                || payload.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8).length
+                        > 8192) throw new IOException("Invalid provider exchange message.");
+        if (!store.loadOrCreate().peers.contains(peer))
+            throw new IOException("Save this peer's key before exchanging provider profiles.");
+        final long active, intent;
+        synchronized (lock) {
+            if (handle == 0 || stopping) throw new IOException("Start coordination first.");
+            active = handle;
+            intent = generation;
+        }
+        JSONObject sent =
+                new JSONObject(NostrNative.send(active, peer, session, type, payload.toString()));
+        if (!current(active, intent) || sent.getInt("accepted_relays") < 1)
+            throw new IOException("Provider exchange could not be delivered.");
+    }
+
     private void receive(long active, long intent) {
         boolean failed = false;
         try {
@@ -343,6 +386,14 @@ final class NostrCoordinator {
                     JSONObject payload = message.getJSONObject("payload");
                     String peer = message.getString("peer");
                     String session = message.getString("session");
+                    if ("hello".equals(type)
+                            || "pex_request".equals(type)
+                            || "pex_response".equals(type)) {
+                        PeerDiscovery discovery = PeerDiscovery.existing();
+                        if (discovery != null && current(active, intent))
+                            discovery.onPairedMessage(peer, session, type, payload);
+                        continue;
+                    }
                     if (!"ping".equals(type) && !"pong".equals(type)) {
                         MessageHandler listener = messageHandler;
                         if (listener != null && current(active, intent))
@@ -406,6 +457,8 @@ final class NostrCoordinator {
             if (failed) {
                 MessageHandler listener = messageHandler;
                 if (listener != null) listener.onStopped();
+                PeerDiscovery discovery = PeerDiscovery.existing();
+                if (discovery != null) discovery.stop();
             }
             boolean closed = closeHandle(active);
             synchronized (lock) {

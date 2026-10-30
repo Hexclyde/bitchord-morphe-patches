@@ -52,7 +52,7 @@
     }
   ],
   "generated_tdapi_sha256": "11155fabc41ca2a6d91bbde4fdf683603d60b50ed51cafab0068728aa7d8d74f",
-  "patch_bundle_version": "1.1.0-beta.8",
+  "patch_bundle_version": "1.1.0-beta.9",
   "native_sha256": {
     "lib/arm64-v8a/libc++_shared.so": "7466ed097631a564ed6bff0b47768caa76bf03270d2047b5a65c03f497b824df",
     "lib/arm64-v8a/libcryptox.so": "9fdc85415c999a2c7383817a204d822f0e509515016b8fee14c45d5a1c40e4d6",
@@ -89,7 +89,7 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "0569f12ce6990e4861229cd0633000fdbc36e41a1365d78081009180b5b324c2",
+  "patch_bundle_sha256": "c1c99c070770c9fe9cb29c5ca5187788c51272890bea6c48ccec11c66bda74b2",
   "soulseek_development": {
     "status": "experimental-local-build",
     "baseline_commit": "3de260f7f1d7967c5a97ce924085d7d42bec18af",
@@ -128,12 +128,17 @@
       "premiumize",
       "torbox"
     ],
-    "debrid_live_account_qualified": false
+    "debrid_live_account_qualified": false,
+    "opt_in_provider_discovery": true,
+    "public_provider_exchange": true,
+    "automatic_peer_trust": false,
+    "adaptive_soulseek_search": true,
+    "discovery_candidate_limit": 512
   },
   "soulseek_native_sha256": {
-    "lib/arm64-v8a/libbitchord_soulseek.so": "ba7685a1139f1fa9886557ce981e90970e3f58cdddbd97733b4a3bf46434ca9c",
-    "lib/armeabi-v7a/libbitchord_soulseek.so": "fbb4af7b682ed61600162c9297338fda44cf141b799b349410ff364d77d5fc7b",
-    "lib/x86_64/libbitchord_soulseek.so": "4849826e1e7b59c991d7c296d3b07f050c88337dc860e62d7c915014bfdd5be1"
+    "lib/arm64-v8a/libbitchord_soulseek.so": "9fc8485fe49838258b3e31558bb3a19f31fb746119446586f17827817a4e4e20",
+    "lib/armeabi-v7a/libbitchord_soulseek.so": "4c690b796c09007d7c622aef020c49b2b5eb26f7f5c4a56fa4eb82aef8c888df",
+    "lib/x86_64/libbitchord_soulseek.so": "12968470849ce7dbc78ee9153795996f9a046321632b9b175744194e976edf02"
   },
   "download_runtime_native_sha256": {
     "lib/arm64-v8a/libbitchord_direct.so": "2696942a2398a6d3514b262beedaf45b2addc54878361c64aea36655659da03e",

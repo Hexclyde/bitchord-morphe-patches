@@ -4,7 +4,9 @@ The Soulseek patch includes opt-in Nostr coordination between explicitly paired
 phones. It uses a separate generated identity and does not send Telegram messages.
 It carries encrypted peer checks, selected-file offers, recipient authorization
 and direct UDP candidates. File bytes use the direct or fallback transport;
-Nostr does not discover music or carry the audio.
+Nostr does not discover music or carry the audio. Beta.9 also adds a separate,
+opt-in public profile scan to find compatible app keys; see
+[peer discovery](PEER-DISCOVERY.md). Public keys still require explicit pairing.
 
 ## Setup
 
@@ -78,10 +80,10 @@ some carrier-grade or endpoint-dependent NATs will still prevent it. The downloa
 order is Direct, I2P, Tor, then paired IPFS, skipping routes not in the signed offer.
 
 Ordinary Soulseek peers do not advertise this protocol. They cannot acquire
-alternate routes automatically. Finding compatible providers and binding their
-offers to selected recordings remains a catalog task; Nostr relays are not an
-existing music index. A transfer-route fallback does not repair a failed
-signaling channel: it needs a valid cached offer or another established way to
+alternate routes automatically. The opt-in public discovery screen finds
+compatible app keys; binding their offers to selected recordings remains a
+catalog task. Nostr relays are not an existing music index. A transfer-route
+fallback does not repair a failed signaling channel: it needs a valid cached offer or another established way to
 reach the authenticated provider.
 
 The IPFS adapter uses paired Noise/TCP Bitswap with per-file grants. It does not
@@ -98,8 +100,11 @@ session, message type, creation time and expiration to its encrypted payload.
 Messages expire after 120 seconds. Only configured peer keys are accepted.
 
 Allowed message types are `hello`, `offer`, `answer`, `candidate`, `cancel`,
-`ping` and `pong`. Session IDs are 32 lowercase hexadecimal characters; payloads
-are JSON objects limited to 8 KiB. The engine bounds queued commands, incoming
+`ping`, `pong`, `pex_request` and `pex_response`. The two PEX messages are sent
+only to already trusted peers after a compatible `app.bitchord.pex/1` hello.
+Their bounded payloads carry original signed public profiles, never private offers
+or grants. Older clients retain the existing hello/file-transfer behavior.
+Session IDs are 32 lowercase hexadecimal characters; payloads are JSON objects limited to 8 KiB. The engine bounds queued commands, incoming
 messages, replay history, peer traffic and WebSocket frames. It rejects malformed,
 untrusted, expired, replayed or incorrectly signed events before delivery.
 
@@ -118,6 +123,27 @@ when the user starts a direct runtime. The list is not downloaded at startup.
 Google and Cloudflare endpoints are retained as candidate defaults if the bundled
 snapshot cannot be read. Discovery sends bounded STUN requests, retains the
 mapped socket for QUIC and stops direct I/O when the active network changes.
+
+## Public app discovery and PEX
+
+Public provider profiles use replaceable NIP-01 kind `11120` and the exact
+`app.bitchord.providers/1` topic, independently of the encrypted kind `21118`
+channel. The replacement kind lets a new subscriber read a relay's most recent
+fresh profile; it does not depend on an ephemeral event arriving during a scan.
+The app enforces signatures, strict fields/tags and a validity period of at most
+300 seconds. A profile advertises supported transport names, not endpoint
+addresses, files or current reachability. Publishing is a separate explicit
+opt-in and ends when discovery is stopped or its screen leaves the foreground.
+Relays can retain previously published data after local shutdown or expiration.
+
+A ten-second scan can start with zero paired peers. PEX supplements it only when
+an existing paired connection negotiates support. Each response contains at most
+eight signed public profiles within the existing 8 KiB encrypted payload limit,
+with per-peer request/response rate limits, expiring nonces and bounded caches.
+Receiving a referral does not save a trusted key or create a download session.
+This is the app's provider-referral protocol, not BitTorrent `ut_pex`, and it does
+not change the private IPFS node's DHT policy. The [discovery guide](PEER-DISCOVERY.md)
+explains setup and limitations.
 
 ## Relay discovery and selection
 

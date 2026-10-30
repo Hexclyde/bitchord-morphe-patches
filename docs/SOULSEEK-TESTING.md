@@ -1,7 +1,7 @@
 # Testing the download patch
 
-Testing version: **1.1.0-beta.6**, based on testing
-1.1.0-beta.5. Target: original **BitChord 1.8.1**, Android 8 or newer, on
+Testing version: **1.1.0-beta.9**, based on the completed beta.8 release.
+Target: original **BitChord 1.9**, Android 8 or newer, on
 arm64-v8a, armeabi-v7a or x86_64. This is an experimental testing bundle.
 
 ## Implemented behavior
@@ -10,7 +10,10 @@ arm64-v8a, armeabi-v7a or x86_64. This is an experimental testing bundle.
 - Unified **Patches & tweaks** controls, compact off states and one expanded
   enabled feature at a time.
 - BitChord-style format switches and drag ordering, with accessible move actions.
-- Manual Soulseek search and explicit downloads bound to the selected peer result.
+- Adaptive manual Soulseek search, bounded short-lived query caching and explicit
+  downloads bound to the selected peer result.
+- Opt-in public compatible-peer discovery and bounded encrypted PEX referrals;
+  found keys remain separate from trusted peers.
 - First setup for Phone, Telegram main channel or Both, followed by enabled audio
   formats and their preference order. Encoding is checked before saving.
 - Selected-source interception before the host's filename-based reuse, private
@@ -82,6 +85,39 @@ behind restrictive NAT may be unreachable by both direct UDP and IPFS; I2P/Tor
 must be reachable for those fallback routes to help. Direct connections disclose
 IP addresses to the paired phone. File names and codec probes do not prove an
 original lossless recording.
+
+## Beta.9 discovery checks
+
+1. Follow [the discovery setup](PEER-DISCOVERY.md) with two compatible builds. A
+   fresh installation must show discovery off, its gear disabled and details hidden.
+   Enabling it expands the controls without starting a network scan. Opening or
+   resuming the page must not start discovery automatically.
+2. Leave own-profile publication off and press **Find peers**. Verify that the
+   scan stops reading after ten seconds and publishes no profile. No paired phone
+   is required to read public profiles from a configured compatible relay.
+3. On the second phone enable **Discoverable while this page is open** and start
+   a scan. It publishes only its signed app profile. Scan on the first phone and
+   compare/copy the full key before explicitly saving it as a trusted peer.
+4. Check that expired, malformed, incorrectly signed or incompatible profiles
+   are absent. A recent result must not be labelled online or claim it has a
+   particular recording. The list initially shows at most 50 rows, with **Show
+   more** paging through at most 512 cached profiles.
+5. With both phones explicitly paired and coordination running, start discovery
+   on each. Compatible peers can exchange only signed public profiles after a
+   capability handshake. An older paired build must keep normal file transfers
+   without receiving unsupported PEX message types.
+6. Stop discovery, leave the screen, disable Peer downloads and reset the app
+   identity during a queued scan. Check that delayed callbacks do not restart it.
+   **Clear found peers** stops discovery and removes the local cache. A previously
+   published profile may remain on relays until expiry or longer in their storage.
+7. Repeat in light/dark themes, large text and an RTL language. Record screenshots
+   and screen video of the page, expanded controls and errors for UI review.
+
+For Soulseek search, compare a preferred-format response with no preferred result.
+The first can settle early; the second should retain the full search window.
+Repeat within 30 seconds, reorder or disable formats, sign out/reconnect and
+confirm that stale session or format results cannot be downloaded. A queue/speed
+hint must not replace recording identity or codec verification.
 
 ## Relay checks
 
@@ -156,6 +192,7 @@ python3 tests/bulk-downloads/run.py
 python3 tests/overlay-bridge/run.py
 python3 tests/relay-policy/run.py
 python3 tests/relay-discovery/run.py
+python3 tests/peer-discovery/run.py
 python3 tests/soulseek-wire/run.py
 python3 native/tor/test_runtime.py
 python3 native/direct/test_runtime.py

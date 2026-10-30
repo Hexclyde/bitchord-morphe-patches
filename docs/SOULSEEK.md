@@ -1,20 +1,21 @@
 # Soulseek and paired-phone downloads
 
-The optional Morphe patch adds on-phone audio downloads to BitChord 1.8.1 on
+The optional Morphe patch adds on-phone audio downloads to BitChord 1.9 on
 Android 8 or newer, for arm64-v8a, armeabi-v7a and x86_64. Soulseek results and
 paired-phone files are downloaded completely and verified before saving. They do
 not supply live playback or automatically replace YouTube. Completed phone copies
 can be played through the normal local-file workflow.
 
-The `1.1.0-beta.6` update extends testing build `1.1.0-beta.5`
-(commit `3abaad00d5ca329c93420575e9d3effc1695aff4`).
+The `1.1.0-beta.9` testing update builds on the combined BitChord 1.9 beta.8
+release. It adds adaptive Soulseek search and opt-in compatible-peer discovery.
 See [testing instructions](SOULSEEK-TESTING.md).
 
 ## Current implementation
 
 | Feature | Behavior |
 | --- | --- |
-| Soulseek | Account setup, manual Addons search and download of the exact selected peer result |
+| Soulseek | Account setup, adaptive manual Addons search and download of the exact selected peer result |
+| Compatible-peer discovery | Explicit scans of signed public app profiles, plus bounded referrals from paired clients; no automatic pairing |
 | First setup | Choose Phone, Telegram main channel or Both, then enable and order audio formats |
 | Paired sharing | Explicitly select complete local audio files; send offers to saved app public keys |
 | Coordination | Signed, encrypted Nostr offer, recipient request and source grant |
@@ -33,10 +34,30 @@ an explicitly selected service account to resolve a supplied link or magnet and
 save selected audio through the same destination publisher. Their keys and cloud
 transfers are separate from Nostr pairing and native transport fallback.
 
-Album/playlist catalog integration and automatic compatible-provider discovery
-remain unfinished. The current sharing picker accepts multiple selected files
-and processes them as individual queue items; it does not infer an album from
+Album/playlist catalog integration, automatic pairing and matching discovered
+providers to requested recordings remain unfinished. [Peer discovery](PEER-DISCOVERY.md)
+finds compatible app keys, not a music catalogue. The current sharing picker
+accepts multiple selected files and processes them as individual queue items; it does not infer an album from
 filenames or find an alternate recording after failure.
+
+## Initial search results
+
+Manual Soulseek search returns an initial shortlist rather than always waiting
+the full 12-second budget. Once a result in the highest enabled format arrives,
+it can settle after 750 ms if no additional preferred-format rows arrive for
+350 ms, or finish two seconds after that first preferred result. The overall
+12-second limit still applies. Without a preferred-format result, it continues
+up to that limit. Results arriving after the returned shortlist are not added
+to it. Filename extensions are hints; the completed file still has to pass
+encoding checks before saving. Ambiguous M4A and Ogg names cannot prove a codec.
+
+Repeated queries can reuse raw candidate rows for up to 30 seconds. The memory
+cache is limited to 16 queries, 200 rows per query, 1,200 rows total and an estimated
+8 MiB. Its key includes the current login session and complete format policy;
+signing out or reconnecting invalidates it. Peer-advertised free slots and speed
+are unverified ranking hints after recording identity and format preference.
+More peers or a quicker shortlist do not guarantee a free upload slot or faster
+file transfer.
 
 ## First setup and formats
 

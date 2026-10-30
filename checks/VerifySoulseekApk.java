@@ -40,6 +40,28 @@ public final class VerifySoulseekApk {
         return ref != null && ref.getDefiningClass().equals(owner) && ref.getName().equals(name);
     }
 
+    static void nativeMethod(
+            Map<String, ClassDef> classes, String owner, String name, String descriptor) {
+        ClassDef cls = classes.get(PREFIX + owner + ";");
+        check(cls != null, "JNI facade is present: " + owner);
+        int named = 0;
+        boolean matches = false;
+        for (Method method : cls.getMethods()) {
+            if (!method.getName().equals(name)) continue;
+            named++;
+            StringBuilder actual = new StringBuilder("(");
+            method.getParameterTypes().forEach(actual::append);
+            actual.append(')').append(method.getReturnType());
+            matches =
+                    descriptor.equals(actual.toString())
+                            && (method.getAccessFlags() & (8 | 256)) == (8 | 256)
+                            && method.getImplementation() == null;
+        }
+        check(
+                named == 1 && matches,
+                "Exact unambiguous static native ABI: " + owner + "->" + name + descriptor);
+    }
+
     public static void main(String[] args) throws Exception {
         File apk = new File(args[0]);
         boolean enabled = args[1].equals("enabled");
@@ -60,6 +82,7 @@ public final class VerifySoulseekApk {
             if (!Set.of(
                             "app.bitchord.soulseek.SoulseekActivity",
                             "app.bitchord.soulseek.NostrSetupActivity",
+                            "app.bitchord.soulseek.PeerDiscoveryActivity",
                             "app.bitchord.soulseek.BulkDownloadsActivity",
                             "app.bitchord.soulseek.DownloadDestinationActivity",
                             "app.bitchord.soulseek.AudioFormatSetupActivity",
@@ -81,7 +104,7 @@ public final class VerifySoulseekApk {
                     activity.getElementsByTagName("intent-filter").getLength() == 0,
                     "Soulseek setup adds no launcher");
         }
-        check(activityCount == (enabled ? 7 : 0), "Soulseek activities match patch selection");
+        check(activityCount == (enabled ? 8 : 0), "Soulseek activities match patch selection");
         int serviceCount = 0;
         var services = manifest.getElementsByTagName("service");
         for (int i = 0; i < services.getLength(); i++) {
@@ -133,6 +156,24 @@ public final class VerifySoulseekApk {
                 transferServices == (enabled ? 1 : 0),
                 "Foreground transfer service matches selection");
         if (enabled) {
+            nativeMethod(
+                    classes,
+                    "PeerDiscoveryNative",
+                    "open",
+                    "(Ljava/lang/String;Ljava/lang/String;Z)J");
+            nativeMethod(classes, "PeerDiscoveryNative", "poll", "(JI)Ljava/lang/String;");
+            nativeMethod(classes, "PeerDiscoveryNative", "status", "(J)Ljava/lang/String;");
+            nativeMethod(
+                    classes,
+                    "PeerDiscoveryNative",
+                    "verify",
+                    "(Ljava/lang/String;)Ljava/lang/String;");
+            nativeMethod(classes, "PeerDiscoveryNative", "close", "(J)V");
+            nativeMethod(
+                    classes,
+                    "SoulseekNative",
+                    "searchAdaptive",
+                    "(JLjava/lang/String;ILjava/lang/String;)Ljava/lang/String;");
             int overlayPermissions = 0;
             var permissions = manifest.getElementsByTagName("uses-permission");
             for (int i = 0; i < permissions.getLength(); i++)

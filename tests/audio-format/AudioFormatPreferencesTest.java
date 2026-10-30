@@ -274,6 +274,19 @@ public final class AudioFormatPreferencesTest {
                         .put("duration", duration));
     }
 
+    static SoulseekTrack hinted(
+            String peer, String artist, String ext, int duration, Object freeSlots, Object speed)
+            throws Exception {
+        return new SoulseekTrack(
+                new JSONObject()
+                        .put("peer", peer)
+                        .put("path", artist + " - Song." + ext)
+                        .put("size", 1000)
+                        .put("duration", duration)
+                        .put("freeSlots", freeSlots)
+                        .put("speed", speed));
+    }
+
     public static void main(String[] args) throws Exception {
         Memory memory = new Memory();
         AudioFormatPreferences.Settings defaults = AudioFormatPreferences.load(memory);
@@ -346,6 +359,46 @@ public final class AudioFormatPreferencesTest {
                 track("Artist", "m4a", 200).format.equals("unknown")
                         && !preferred.metadata().getBoolean("formatVerified"),
                 "peer codec and provenance never marked verified");
+        check(
+                AudioFormatPreferences.preferredSearchExtensions(onlyAlac).equals("alac,m4a,mp4"),
+                "ambiguous containers can match enabled preference without verifying codec");
+        AudioFormatPreferences.Settings onlyMp3 =
+                new AudioFormatPreferences.Settings(
+                        all.order, EnumSet.of(AudioFormatPreferences.Format.MP3), true);
+        check(
+                AudioFormatPreferences.preferredSearchExtensions(onlyMp3).equals("mp3"),
+                "disabled higher formats cannot shorten initial collection window");
+        SoulseekTrack queuedFlac = hinted("queued", "Artist A", "flac", 200, 0, 1);
+        SoulseekTrack freeMp3 = hinted("fast-mp3", "Artist A", "mp3", 200, 1, 0xffffffffL);
+        check(
+                AudioFormatPreferences.ordered(all, Arrays.asList(freeMp3, queuedFlac)).get(0)
+                        == queuedFlac,
+                "format preference outranks availability and maximum advertised speed");
+        SoulseekTrack freeFlac = hinted("free", "Artist A", "flac", 200, 1, 1);
+        check(
+                AudioFormatPreferences.ordered(all, Arrays.asList(queuedFlac, freeFlac)).get(0)
+                        == freeFlac,
+                "free-slot hint breaks ties inside exact recording and format group");
+        SoulseekTrack fastOther = hinted("other", "Artist B", "flac", 200, 1, 0xffffffffL);
+        check(
+                AudioFormatPreferences.ordered(all, Arrays.asList(queuedFlac, fastOther)).get(0)
+                        == queuedFlac,
+                "hints never reorder different recording groups");
+        SoulseekTrack invalidSpeed = hinted("invalid", "Artist A", "flac", 200, 1, Long.MAX_VALUE);
+        check(
+                AudioFormatPreferences.ordered(all, Arrays.asList(invalidSpeed, freeFlac)).get(0)
+                        == freeFlac,
+                "overflowing speed cannot outrank a valid hint");
+        SoulseekTrack capped = hinted("capped", "Artist A", "flac", 200, 1, 32L * 1024 * 1024);
+        SoulseekTrack maximum = hinted("maximum", "Artist A", "flac", 200, 1, 0xffffffffL);
+        check(
+                AudioFormatPreferences.ordered(all, Arrays.asList(capped, maximum)).get(0)
+                        == capped,
+                "very large speed claims stop gaining rank above bounded score");
+        check(
+                AudioFormatPreferences.ordered(onlyMp3, Arrays.asList(maximum, freeMp3))
+                        .equals(Arrays.asList(freeMp3)),
+                "peer hints never override disabled formats");
         File root = Files.createTempDirectory("audio-format-test-").toFile();
         try {
             Object[][] cases = {

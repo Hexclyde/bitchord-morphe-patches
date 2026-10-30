@@ -28,6 +28,7 @@ public final class SoulseekBridge {
     final SoulseekCredentialStore credentials;
     final ExecutorService work = Executors.newSingleThreadExecutor();
     private final Map<String, SoulseekTrack> catalog = new LinkedHashMap<>();
+    private final SoulseekSearchCache searches = new SoulseekSearchCache();
     private final Map<String, Transfer> transfers = new LinkedHashMap<>();
     private volatile long handle;
     private volatile boolean connected;
@@ -127,6 +128,7 @@ public final class SoulseekBridge {
     }
 
     synchronized long beginLogin() {
+        searches.clear();
         return ++loginIntent;
     }
 
@@ -221,6 +223,7 @@ public final class SoulseekBridge {
             username = "";
             sessionTag = UUID.randomUUID().toString();
             catalog.clear();
+            searches.clear();
             transfers.clear();
         }
         if (closing != 0) {
@@ -295,9 +298,36 @@ public final class SoulseekBridge {
     List<SoulseekTrack> search(String query) throws Exception {
         if (query == null || query.trim().length() < 2 || query.length() > 256)
             throw new IOException("Search using 2–256 characters.");
-        long current = ready();
-        String tag = sessionTag;
-        JSONObject result = new JSONObject(SoulseekNative.search(current, query.trim(), 12000));
+        String terms = query.trim();
+        AudioFormatPreferences.Settings settings = AudioFormatPreferences.snapshot(context);
+        String policy = searchPolicy(settings);
+        long current;
+        String tag, scope;
+        synchronized (this) {
+            current = ready();
+            tag = sessionTag;
+            if (!policy.equals(searchPolicy(AudioFormatPreferences.snapshot(context))))
+                throw new IOException("Audio format choices changed. Search again.");
+            scope = tag + ":" + current + ":" + policy;
+            List<SoulseekTrack> cached = searches.get(scope, terms);
+            if (cached != null) {
+                if (ready() != current
+                        || !tag.equals(sessionTag)
+                        || !policy.equals(searchPolicy(AudioFormatPreferences.snapshot(context)))) {
+                    searches.clear();
+                    throw new IOException("Soulseek settings changed. Search again.");
+                }
+                rememberTracks(cached);
+                return cached;
+            }
+        }
+        JSONObject result =
+                new JSONObject(
+                        SoulseekNative.searchAdaptive(
+                                current,
+                                terms,
+                                12000,
+                                AudioFormatPreferences.preferredSearchExtensions(settings)));
         JSONArray rows = result.optJSONArray("tracks");
         ArrayList<SoulseekTrack> found = new ArrayList<>();
         if (rows != null)
@@ -310,10 +340,22 @@ public final class SoulseekBridge {
         synchronized (this) {
             if (ready() != current || !tag.equals(sessionTag))
                 throw new IOException("Soulseek session changed. Search again.");
-            for (SoulseekTrack track : found) catalog.put(track.id, track);
-            while (catalog.size() > 600) catalog.remove(catalog.keySet().iterator().next());
+            if (!policy.equals(searchPolicy(AudioFormatPreferences.snapshot(context))))
+                throw new IOException("Audio format choices changed. Search again.");
+            searches.put(scope, terms, found);
+            rememberTracks(found);
         }
         return found;
+    }
+
+    private static String searchPolicy(AudioFormatPreferences.Settings settings) {
+        return AudioFormatPreferences.encode(settings) + ":" + settings.configured;
+    }
+
+    // Caller holds the bridge lock, including when a cache hit restores evicted catalog entries.
+    private void rememberTracks(List<SoulseekTrack> found) {
+        for (SoulseekTrack track : found) catalog.put(track.id, track);
+        while (catalog.size() > 600) catalog.remove(catalog.keySet().iterator().next());
     }
 
     synchronized SoulseekTrack track(String id) throws IOException {

@@ -156,6 +156,7 @@ private val soulseekResources = resourcePatch {
                 listOf(
                     "SoulseekActivity",
                     "NostrSetupActivity",
+                    "PeerDiscoveryActivity",
                     "BulkDownloadsActivity",
                     "DownloadDestinationActivity",
                     "AudioFormatSetupActivity",

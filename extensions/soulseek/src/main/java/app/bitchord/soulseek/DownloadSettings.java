@@ -134,6 +134,8 @@ public final class DownloadSettings {
                         throw new IOException("Soulseek did not finish stopping.");
                 }
             } else if (PEERS.equals(feature)) {
+                PeerDiscovery discovery = PeerDiscovery.existing();
+                if (discovery != null) discovery.stop();
                 BulkCoordinator coordinator = BulkCoordinator.existing();
                 if (coordinator != null) coordinator.disablePeers();
                 else {
@@ -144,6 +146,8 @@ public final class DownloadSettings {
                     if (nostr != null && nostr.shutdownFailed())
                         throw new IOException("Coordination did not finish stopping.");
                 }
+                if (discovery != null && discovery.shutdownFailed())
+                    throw new IOException("Peer discovery did not finish stopping.");
             } else if (DEBRID.equals(feature)) {
                 DebridDownloads downloads = DebridDownloads.existing();
                 if (downloads != null) downloads.stop();

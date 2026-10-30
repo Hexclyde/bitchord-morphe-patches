@@ -3836,6 +3836,172 @@ final class Translations {
             "\u0625\u064a\u0642\u0627\u0641 \u0627\u0644\u0643\u0644",
             "{0} download connections",
             "{0} \u0627\u062a\u0635\u0627\u0644\u0627\u062a \u062a\u0646\u0632\u064a\u0644",
+            "Audio format choices changed. Search again.",
+            "\u062a\u063a\u064a\u0651\u0631\u062a \u062e\u064a\u0627\u0631\u0627\u062a"
+                    + " \u0635\u064a\u063a \u0627\u0644\u0635\u0648\u062a. \u0627\u0628\u062d\u062b"
+                    + " \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "Cannot create provider cache.",
+            "\u062a\u0639\u0630\u0651\u0631 \u0625\u0646\u0634\u0627\u0621"
+                    + " \u0630\u0627\u0643\u0631\u0629 \u0627\u0644\u062a\u062e\u0632\u064a\u0646"
+                    + " \u0627\u0644\u0645\u0624\u0642\u062a"
+                    + " \u0644\u0644\u0645\u0632\u0648\u0651\u062f\u064a\u0646.",
+            "Clear found peers",
+            "\u0645\u0633\u062d \u0627\u0644\u0646\u0638\u0631\u0627\u0621"
+                    + " \u0627\u0644\u0645\u0643\u062a\u0634\u0641\u064a\u0646",
+            "Copy key for pairing",
+            "\u0646\u0633\u062e \u0627\u0644\u0645\u0641\u062a\u0627\u062d"
+                    + " \u0644\u0644\u0625\u0642\u0631\u0627\u0646",
+            "Could not complete peer discovery. Check relays and try again.",
+            "\u062a\u0639\u0630\u0651\u0631 \u0625\u0643\u0645\u0627\u0644"
+                    + " \u0627\u0643\u062a\u0634\u0627\u0641"
+                    + " \u0627\u0644\u0646\u0638\u0631\u0627\u0621. \u062a\u062d\u0642\u0651\u0642"
+                    + " \u0645\u0646 \u062e\u0648\u0627\u062f\u0645"
+                    + " \u0627\u0644\u062a\u0631\u062d\u064a\u0644 \u0648\u062d\u0627\u0648\u0644"
+                    + " \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "\u062a\u0639\u0630\u0651\u0631 \u062a\u062d\u062f\u064a\u062b"
+                    + " \u0627\u0643\u062a\u0634\u0627\u0641"
+                    + " \u0627\u0644\u0646\u0638\u0631\u0627\u0621. \u062a\u062d\u0642\u0651\u0642"
+                    + " \u0645\u0646 \u0625\u0639\u062f\u0627\u062f\u0627\u062a"
+                    + " \u0627\u0644\u0627\u062a\u0635\u0627\u0644 \u0648\u062d\u0627\u0648\u0644"
+                    + " \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "Direct UDP / QUIC",
+            "\u0627\u062a\u0635\u0627\u0644 \u0645\u0628\u0627\u0634\u0631 \u0639\u0628\u0631 UDP /"
+                    + " QUIC",
+            "Discover compatible peers",
+            "\u0627\u0643\u062a\u0634\u0627\u0641 \u0646\u0638\u0631\u0627\u0621"
+                    + " \u0645\u062a\u0648\u0627\u0641\u0642\u064a\u0646",
+            "Discoverable while this page is open",
+            "\u064a\u0645\u0643\u0646 \u0627\u0643\u062a\u0634\u0627\u0641\u0643 \u0645\u0627"
+                    + " \u062f\u0627\u0645\u062a \u0647\u0630\u0647"
+                    + " \u0627\u0644\u0635\u0641\u062d\u0629 \u0645\u0641\u062a\u0648\u062d\u0629",
+            "Discovery could not start.",
+            "\u062a\u0639\u0630\u0651\u0631 \u0628\u062f\u0621"
+                    + " \u0627\u0644\u0627\u0643\u062a\u0634\u0627\u0641.",
+            "Discovery settings could not be saved.",
+            "\u062a\u0639\u0630\u0651\u0631 \u062d\u0641\u0638"
+                    + " \u0625\u0639\u062f\u0627\u062f\u0627\u062a"
+                    + " \u0627\u0644\u0627\u0643\u062a\u0634\u0627\u0641.",
+            "Enable peer discovery first.",
+            "\u0641\u0639\u0651\u0644 \u0627\u0643\u062a\u0634\u0627\u0641"
+                    + " \u0627\u0644\u0646\u0638\u0631\u0627\u0621 \u0623\u0648\u0644\u064b\u0627.",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "\u0627\u0639\u062b\u0631 \u0639\u0644\u0649 \u0639\u0645\u0644\u0627\u0621"
+                    + " \u0645\u062a\u0648\u0627\u0641\u0642\u064a\u0646 \u0639\u0628\u0631"
+                    + " \u062e\u0648\u0627\u062f\u0645 \u0627\u0644\u062a\u0631\u062d\u064a\u0644"
+                    + " \u0627\u0644\u0639\u0627\u0645\u0629 \u0648\u062a\u0628\u0627\u062f\u0644"
+                    + " \u0627\u0644\u0646\u0638\u0631\u0627\u0621."
+                    + " \u0627\u0644\u0645\u0641\u0627\u062a\u064a\u062d"
+                    + " \u0627\u0644\u0645\u0643\u062a\u0634\u0641\u0629 \u0644\u064a\u0633\u062a"
+                    + " \u062c\u0647\u0627\u062a \u0627\u062a\u0635\u0627\u0644"
+                    + " \u0645\u0648\u062b\u0648\u0642\u0629 \u0648\u0644\u0627"
+                    + " \u062a\u0645\u0646\u062d \u062d\u0642 \u0627\u0644\u0648\u0635\u0648\u0644"
+                    + " \u0625\u0644\u0649 \u0627\u0644\u0645\u0644\u0641\u0627\u062a.",
+            "Find peers",
+            "\u0627\u0644\u0628\u062d\u062b \u0639\u0646 \u0646\u0638\u0631\u0627\u0621",
+            "Finding compatible provider profiles\u2026",
+            "\u062c\u0627\u0631\u064d \u0627\u0644\u0628\u062d\u062b \u0639\u0646"
+                    + " \u0645\u0644\u0641\u0627\u062a \u062a\u0639\u0631\u064a\u0641"
+                    + " \u0627\u0644\u0645\u0632\u0648\u0651\u062f\u064a\u0646"
+                    + " \u0627\u0644\u0645\u062a\u0648\u0627\u0641\u0642\u064a\u0646\u2026",
+            "Loading peer discovery\u2026",
+            "\u062c\u0627\u0631\u064d \u062a\u062d\u0645\u064a\u0644"
+                    + " \u0627\u0643\u062a\u0634\u0627\u0641"
+                    + " \u0627\u0644\u0646\u0638\u0631\u0627\u0621\u2026",
+            "No recent clients found yet.",
+            "\u0644\u0645 \u064a\u064f\u0639\u062b\u0631 \u0639\u0644\u0649"
+                    + " \u0639\u0645\u0644\u0627\u0621 \u062d\u062f\u064a\u062b\u064a\u0646"
+                    + " \u0628\u0639\u062f.",
+            "Peer discovery",
+            "\u0627\u0643\u062a\u0634\u0627\u0641 \u0627\u0644\u0646\u0638\u0631\u0627\u0621",
+            "Peer discovery controls",
+            "\u0639\u0646\u0627\u0635\u0631 \u0627\u0644\u062a\u062d\u0643\u0645"
+                    + " \u0628\u0627\u0643\u062a\u0634\u0627\u0641"
+                    + " \u0627\u0644\u0646\u0638\u0631\u0627\u0621",
+            "Peer discovery is off.",
+            "\u0627\u0643\u062a\u0634\u0627\u0641 \u0627\u0644\u0646\u0638\u0631\u0627\u0621"
+                    + " \u0645\u062a\u0648\u0642\u0641.",
+            "Peer discovery settings",
+            "\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0627\u0643\u062a\u0634\u0627\u0641"
+                    + " \u0627\u0644\u0646\u0638\u0631\u0627\u0621",
+            "Peer discovery stopped.",
+            "\u062a\u0648\u0642\u0641 \u0627\u0643\u062a\u0634\u0627\u0641"
+                    + " \u0627\u0644\u0646\u0638\u0631\u0627\u0621.",
+            "Peer key copied. Compare the full key before pairing.",
+            "\u0646\u064f\u0633\u062e \u0645\u0641\u062a\u0627\u062d"
+                + " \u0627\u0644\u0646\u0638\u064a\u0631. \u0642\u0627\u0631\u0646"
+                + " \u0627\u0644\u0645\u0641\u062a\u0627\u062d \u0643\u0627\u0645\u0644\u064b\u0627"
+                + " \u0642\u0628\u0644 \u0627\u0644\u0625\u0642\u0631\u0627\u0646.",
+            "Provider cache cleared.",
+            "\u0645\u064f\u0633\u062d\u062a \u0630\u0627\u0643\u0631\u0629"
+                + " \u0627\u0644\u062a\u062e\u0632\u064a\u0646 \u0627\u0644\u0645\u0624\u0642\u062a"
+                + " \u0644\u0644\u0645\u0632\u0648\u0651\u062f\u064a\u0646.",
+            "Provider profile scan finished.",
+            "\u0627\u0643\u062a\u0645\u0644 \u0641\u062d\u0635 \u0645\u0644\u0641\u0627\u062a"
+                    + " \u062a\u0639\u0631\u064a\u0641"
+                    + " \u0627\u0644\u0645\u0632\u0648\u0651\u062f\u064a\u0646.",
+            "Public discovery and peer exchange",
+            "\u0627\u0644\u0627\u0643\u062a\u0634\u0627\u0641 \u0627\u0644\u0639\u0627\u0645"
+                    + " \u0648\u062a\u0628\u0627\u062f\u0644"
+                    + " \u0627\u0644\u0646\u0638\u0631\u0627\u0621",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "\u064a\u0646\u0634\u0631 \u0641\u0642\u0637 \u0645\u0641\u062a\u0627\u062d"
+                    + " \u062a\u0637\u0628\u064a\u0642\u0643 \u0627\u0644\u0639\u0627\u0645"
+                    + " \u0648\u0648\u0633\u0627\u0626\u0644 \u0627\u0644\u0646\u0642\u0644"
+                    + " \u0627\u0644\u0645\u062f\u0639\u0648\u0645\u0629. \u0644\u0627"
+                    + " \u064a\u0646\u0634\u0631 \u0645\u0644\u0641\u0627\u062a\u0643 \u0623\u0648"
+                    + " \u062c\u0647\u0627\u062a \u0627\u062a\u0635\u0627\u0644\u0643"
+                    + " \u0627\u0644\u062e\u0627\u0635\u0629 \u0623\u0648"
+                    + " \u0639\u0646\u0627\u0648\u064a\u0646"
+                    + " \u0627\u0644\u0627\u062a\u0635\u0627\u0644.",
+            "Recent clients",
+            "\u0627\u0644\u0639\u0645\u0644\u0627\u0621 \u0627\u0644\u0630\u064a\u0646"
+                    + " \u0638\u0647\u0631\u0648\u0627 \u0645\u0624\u062e\u0631\u064b\u0627",
+            "Recent \u00b7 expires at {0}",
+            "\u062d\u062f\u064a\u062b \u00b7 \u062a\u0646\u062a\u0647\u064a"
+                    + " \u0635\u0644\u0627\u062d\u064a\u062a\u0647 \u0641\u064a {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "\u0627\u062a\u0635\u0627\u0644\u0627\u062a \u0627\u0644\u062a\u0631\u062d\u064a\u0644:"
+                    + " {0} \u00b7 \u0645\u0644\u0641\u0627\u062a"
+                    + " \u0627\u0644\u062a\u0639\u0631\u064a\u0641"
+                    + " \u0627\u0644\u0645\u0633\u062a\u0644\u0645\u0629: {1}",
+            "Restart BitChord before starting discovery.",
+            "\u0623\u0639\u0650\u062f \u062a\u0634\u063a\u064a\u0644 BitChord \u0642\u0628\u0644"
+                    + " \u0628\u062f\u0621 \u0627\u0644\u0627\u0643\u062a\u0634\u0627\u0641.",
+            "Sharing a public provider profile. No files are shared.",
+            "\u062a\u062c\u0631\u064a \u0645\u0634\u0627\u0631\u0643\u0629 \u0645\u0644\u0641"
+                    + " \u062a\u0639\u0631\u064a\u0641 \u0639\u0627\u0645"
+                    + " \u0644\u0644\u0645\u0632\u0648\u0651\u062f. \u0644\u0627"
+                    + " \u062a\u064f\u0634\u0627\u0631\u064e\u0643 \u0623\u064a"
+                    + " \u0645\u0644\u0641\u0627\u062a.",
+            "Show more",
+            "\u0639\u0631\u0636 \u0627\u0644\u0645\u0632\u064a\u062f",
+            "Showing {0} of {1}",
+            "\u0639\u0631\u0636 {0} \u0645\u0646 {1}",
+            "Soulseek settings changed. Search again.",
+            "\u062a\u063a\u064a\u0651\u0631\u062a \u0625\u0639\u062f\u0627\u062f\u0627\u062a"
+                    + " Soulseek. \u0627\u0628\u062d\u062b \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "Start a scan to apply the public profile setting.",
+            "\u0627\u0628\u062f\u0623 \u0641\u062d\u0635\u064b\u0627"
+                    + " \u0644\u062a\u0637\u0628\u064a\u0642 \u0625\u0639\u062f\u0627\u062f"
+                    + " \u0645\u0644\u0641 \u0627\u0644\u062a\u0639\u0631\u064a\u0641"
+                    + " \u0627\u0644\u0639\u0627\u0645.",
+            "Start a scan to find compatible provider profiles.",
+            "\u0627\u0628\u062f\u0623 \u0641\u062d\u0635\u064b\u0627"
+                    + " \u0644\u0644\u0639\u062b\u0648\u0631 \u0639\u0644\u0649"
+                    + " \u0645\u0644\u0641\u0627\u062a \u062a\u0639\u0631\u064a\u0641"
+                    + " \u0627\u0644\u0645\u0632\u0648\u0651\u062f\u064a\u0646"
+                    + " \u0627\u0644\u0645\u062a\u0648\u0627\u0641\u0642\u064a\u0646.",
+            "Stop discovery",
+            "\u0625\u064a\u0642\u0627\u0641 \u0627\u0644\u0627\u0643\u062a\u0634\u0627\u0641",
+            "Transports: {0}",
+            "\u0648\u0633\u0627\u0626\u0644 \u0627\u0644\u0646\u0642\u0644: {0}",
+            "{0} recent clients",
+            "{0} \u0645\u0646 \u0627\u0644\u0639\u0645\u0644\u0627\u0621"
+                    + " \u0627\u0644\u0630\u064a\u0646 \u0638\u0647\u0631\u0648\u0627"
+                    + " \u0645\u0624\u062e\u0631\u064b\u0627",
         };
     }
 
@@ -8028,6 +8194,190 @@ final class Translations {
             "{0} download connections",
             "{0}\u099f\u09bf \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
                     + " \u09b8\u0982\u09af\u09cb\u0997",
+            "Audio format choices changed. Search again.",
+            "\u0985\u09a1\u09bf\u0993 \u09ab\u09b0\u09ae\u09cd\u09af\u09be\u099f\u09c7\u09b0"
+                + " \u09aa\u099b\u09a8\u09cd\u09a6 \u09ac\u09a6\u09b2\u09c7\u099b\u09c7\u0964"
+                + " \u0986\u09ac\u09be\u09b0 \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8"
+                + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "Cannot create provider cache.",
+            "\u09aa\u09cd\u09b0\u09a6\u09be\u09a8\u0995\u09be\u09b0\u09c0\u09b0"
+                    + " \u0995\u09cd\u09af\u09be\u09b6 \u09a4\u09c8\u09b0\u09bf \u0995\u09b0\u09be"
+                    + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964",
+            "Clear found peers",
+            "\u09aa\u09be\u0993\u09af\u09bc\u09be"
+                    + " \u09aa\u09bf\u09af\u09bc\u09be\u09b0\u0997\u09c1\u09b2\u09cb"
+                    + " \u09ae\u09c1\u099b\u09c1\u09a8",
+            "Copy key for pairing",
+            "\u09aa\u09c7\u09af\u09bc\u09be\u09b0 \u0995\u09b0\u09be\u09b0 \u099c\u09a8\u09cd\u09af"
+                    + " \u0995\u09c0 \u0995\u09aa\u09bf \u0995\u09b0\u09c1\u09a8",
+            "Could not complete peer discovery. Check relays and try again.",
+            "\u09aa\u09bf\u09af\u09bc\u09be\u09b0"
+                    + " \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8"
+                    + " \u09b8\u09ae\u09cd\u09aa\u09c2\u09b0\u09cd\u09a3 \u0995\u09b0\u09be"
+                    + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964 \u09b0\u09bf\u09b2\u09c7"
+                    + " \u09a6\u09c7\u0996\u09c7 \u0986\u09ac\u09be\u09b0"
+                    + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8\u0964",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "\u09aa\u09bf\u09af\u09bc\u09be\u09b0"
+                + " \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8"
+                + " \u0986\u09aa\u09a1\u09c7\u099f \u0995\u09b0\u09be"
+                + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964"
+                + " \u09b8\u0982\u09af\u09cb\u0997\u09c7\u09b0 \u09b8\u09c7\u099f\u09bf\u0982\u09b8"
+                + " \u09a6\u09c7\u0996\u09c7 \u0986\u09ac\u09be\u09b0"
+                + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8\u0964",
+            "Direct UDP / QUIC",
+            "\u09b8\u09b0\u09be\u09b8\u09b0\u09bf UDP / QUIC",
+            "Discover compatible peers",
+            "\u09b8\u09be\u09ae\u099e\u09cd\u099c\u09b8\u09cd\u09af\u09aa\u09c2\u09b0\u09cd\u09a3"
+                    + " \u09aa\u09bf\u09af\u09bc\u09be\u09b0 \u0996\u09c1\u0981\u099c\u09c1\u09a8",
+            "Discoverable while this page is open",
+            "\u098f\u0987 \u09aa\u09c3\u09b7\u09cd\u09a0\u09be \u0996\u09cb\u09b2\u09be"
+                    + " \u09a5\u09be\u0995\u09b2\u09c7 \u0986\u09aa\u09a8\u09be\u0995\u09c7"
+                    + " \u0996\u09c1\u0981\u099c\u09c7 \u09aa\u09be\u0993\u09af\u09bc\u09be"
+                    + " \u09af\u09be\u09ac\u09c7",
+            "Discovery could not start.",
+            "\u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8 \u09b6\u09c1\u09b0\u09c1"
+                    + " \u0995\u09b0\u09be \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964",
+            "Discovery settings could not be saved.",
+            "\u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8\u09c7\u09b0"
+                + " \u09b8\u09c7\u099f\u09bf\u0982\u09b8 \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3"
+                + " \u0995\u09b0\u09be \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964",
+            "Enable peer discovery first.",
+            "\u0986\u0997\u09c7 \u09aa\u09bf\u09af\u09bc\u09be\u09b0"
+                + " \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8 \u099a\u09be\u09b2\u09c1"
+                + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "\u09aa\u09be\u09ac\u09b2\u09bf\u0995 \u09b0\u09bf\u09b2\u09c7 \u0993"
+                + " \u09aa\u09bf\u09af\u09bc\u09be\u09b0"
+                + " \u09ac\u09bf\u09a8\u09bf\u09ae\u09af\u09bc\u09c7\u09b0"
+                + " \u09ae\u09be\u09a7\u09cd\u09af\u09ae\u09c7"
+                + " \u09b8\u09be\u09ae\u099e\u09cd\u099c\u09b8\u09cd\u09af\u09aa\u09c2\u09b0\u09cd\u09a3"
+                + " \u0995\u09cd\u09b2\u09be\u09af\u09bc\u09c7\u09a8\u09cd\u099f"
+                + " \u0996\u09c1\u0981\u099c\u09c1\u09a8\u0964 \u09aa\u09be\u0993\u09af\u09bc\u09be"
+                + " \u0995\u09c0\u0997\u09c1\u09b2\u09cb"
+                + " \u09ac\u09bf\u09b6\u09cd\u09ac\u09b8\u09cd\u09a4"
+                + " \u09af\u09cb\u0997\u09be\u09af\u09cb\u0997 \u09a8\u09af\u09bc"
+                + " \u098f\u09ac\u0982 \u09ab\u09be\u0987\u09b2\u09c7"
+                + " \u09aa\u09cd\u09b0\u09ac\u09c7\u09b6\u09be\u09a7\u09bf\u0995\u09be\u09b0"
+                + " \u09a6\u09c7\u09af\u09bc \u09a8\u09be\u0964",
+            "Find peers",
+            "\u09aa\u09bf\u09af\u09bc\u09be\u09b0 \u0996\u09c1\u0981\u099c\u09c1\u09a8",
+            "Finding compatible provider profiles\u2026",
+            "\u09b8\u09be\u09ae\u099e\u09cd\u099c\u09b8\u09cd\u09af\u09aa\u09c2\u09b0\u09cd\u09a3"
+                + " \u09aa\u09cd\u09b0\u09a6\u09be\u09a8\u0995\u09be\u09b0\u09c0\u09b0"
+                + " \u09aa\u09cd\u09b0\u09cb\u09ab\u09be\u0987\u09b2 \u0996\u09cb\u0981\u099c\u09be"
+                + " \u09b9\u099a\u09cd\u099b\u09c7\u2026",
+            "Loading peer discovery\u2026",
+            "\u09aa\u09bf\u09af\u09bc\u09be\u09b0"
+                    + " \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8 \u09b2\u09cb\u09a1"
+                    + " \u09b9\u099a\u09cd\u099b\u09c7\u2026",
+            "No recent clients found yet.",
+            "\u098f\u0996\u09a8\u0993 \u09b8\u09ae\u09cd\u09aa\u09cd\u09b0\u09a4\u09bf"
+                    + " \u09a6\u09c7\u0996\u09be \u0995\u09cb\u09a8\u09cb"
+                    + " \u0995\u09cd\u09b2\u09be\u09af\u09bc\u09c7\u09a8\u09cd\u099f"
+                    + " \u09aa\u09be\u0993\u09af\u09bc\u09be"
+                    + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964",
+            "Peer discovery",
+            "\u09aa\u09bf\u09af\u09bc\u09be\u09b0 \u0996\u09cb\u0981\u099c\u09be",
+            "Peer discovery controls",
+            "\u09aa\u09bf\u09af\u09bc\u09be\u09b0"
+                    + " \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8\u09c7\u09b0"
+                    + " \u09a8\u09bf\u09af\u09bc\u09a8\u09cd\u09a4\u09cd\u09b0\u09a3",
+            "Peer discovery is off.",
+            "\u09aa\u09bf\u09af\u09bc\u09be\u09b0 \u0996\u09cb\u0981\u099c\u09be"
+                    + " \u09ac\u09a8\u09cd\u09a7 \u0986\u099b\u09c7\u0964",
+            "Peer discovery settings",
+            "\u09aa\u09bf\u09af\u09bc\u09be\u09b0"
+                    + " \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8\u09c7\u09b0"
+                    + " \u09b8\u09c7\u099f\u09bf\u0982\u09b8",
+            "Peer discovery stopped.",
+            "\u09aa\u09bf\u09af\u09bc\u09be\u09b0 \u0996\u09cb\u0981\u099c\u09be"
+                    + " \u09ac\u09a8\u09cd\u09a7 \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964",
+            "Peer key copied. Compare the full key before pairing.",
+            "\u09aa\u09bf\u09af\u09bc\u09be\u09b0\u09c7\u09b0 \u0995\u09c0 \u0995\u09aa\u09bf"
+                + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964 \u09aa\u09c7\u09af\u09bc\u09be\u09b0"
+                + " \u0995\u09b0\u09be\u09b0 \u0986\u0997\u09c7 \u09aa\u09c1\u09b0\u09cb"
+                + " \u0995\u09c0 \u09ae\u09bf\u09b2\u09bf\u09af\u09bc\u09c7"
+                + " \u09a6\u09c7\u0996\u09c1\u09a8\u0964",
+            "Provider cache cleared.",
+            "\u09aa\u09cd\u09b0\u09a6\u09be\u09a8\u0995\u09be\u09b0\u09c0\u09b0"
+                    + " \u0995\u09cd\u09af\u09be\u09b6 \u09ae\u09c1\u099b\u09c7"
+                    + " \u09ab\u09c7\u09b2\u09be \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964",
+            "Provider profile scan finished.",
+            "\u09aa\u09cd\u09b0\u09a6\u09be\u09a8\u0995\u09be\u09b0\u09c0\u09b0"
+                    + " \u09aa\u09cd\u09b0\u09cb\u09ab\u09be\u0987\u09b2"
+                    + " \u09b8\u09cd\u0995\u09cd\u09af\u09be\u09a8 \u09b6\u09c7\u09b7"
+                    + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964",
+            "Public discovery and peer exchange",
+            "\u09aa\u09be\u09ac\u09b2\u09bf\u0995"
+                    + " \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8 \u0993"
+                    + " \u09aa\u09bf\u09af\u09bc\u09be\u09b0"
+                    + " \u09ac\u09bf\u09a8\u09bf\u09ae\u09af\u09bc",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "\u09b6\u09c1\u09a7\u09c1 \u0986\u09aa\u09a8\u09be\u09b0"
+                + " \u0985\u09cd\u09af\u09be\u09aa\u09c7\u09b0 \u09aa\u09be\u09ac\u09b2\u09bf\u0995"
+                + " \u0995\u09c0 \u0993 \u09b8\u09ae\u09b0\u09cd\u09a5\u09bf\u09a4"
+                + " \u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09aa\u09cb\u09b0\u09cd\u099f"
+                + " \u09aa\u09cd\u09b0\u0995\u09be\u09b6 \u0995\u09b0\u09c7\u0964"
+                + " \u0986\u09aa\u09a8\u09be\u09b0 \u09ab\u09be\u0987\u09b2,"
+                + " \u09ac\u09cd\u09af\u0995\u09cd\u09a4\u09bf\u0997\u09a4"
+                + " \u09af\u09cb\u0997\u09be\u09af\u09cb\u0997 \u09ac\u09be"
+                + " \u09b8\u0982\u09af\u09cb\u0997\u09c7\u09b0 \u09a0\u09bf\u0995\u09be\u09a8\u09be"
+                + " \u09aa\u09cd\u09b0\u0995\u09be\u09b6 \u0995\u09b0\u09c7 \u09a8\u09be\u0964",
+            "Recent clients",
+            "\u09b8\u09ae\u09cd\u09aa\u09cd\u09b0\u09a4\u09bf \u09a6\u09c7\u0996\u09be"
+                    + " \u0995\u09cd\u09b2\u09be\u09af\u09bc\u09c7\u09a8\u09cd\u099f",
+            "Recent \u00b7 expires at {0}",
+            "\u09b8\u09be\u09ae\u09cd\u09aa\u09cd\u09b0\u09a4\u09bf\u0995 \u00b7"
+                    + " \u09ae\u09c7\u09af\u09bc\u09be\u09a6 \u09b6\u09c7\u09b7 {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "\u09b0\u09bf\u09b2\u09c7 \u09b8\u0982\u09af\u09cb\u0997: {0} \u00b7"
+                    + " \u09aa\u09be\u0993\u09af\u09bc\u09be"
+                    + " \u09aa\u09cd\u09b0\u09cb\u09ab\u09be\u0987\u09b2: {1}",
+            "Restart BitChord before starting discovery.",
+            "\u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8 \u09b6\u09c1\u09b0\u09c1"
+                + " \u0995\u09b0\u09be\u09b0 \u0986\u0997\u09c7 BitChord \u0986\u09ac\u09be\u09b0"
+                + " \u099a\u09be\u09b2\u09c1 \u0995\u09b0\u09c1\u09a8\u0964",
+            "Sharing a public provider profile. No files are shared.",
+            "\u09aa\u09cd\u09b0\u09a6\u09be\u09a8\u0995\u09be\u09b0\u09c0\u09b0"
+                    + " \u09aa\u09be\u09ac\u09b2\u09bf\u0995"
+                    + " \u09aa\u09cd\u09b0\u09cb\u09ab\u09be\u0987\u09b2"
+                    + " \u09b6\u09c7\u09af\u09bc\u09be\u09b0 \u0995\u09b0\u09be"
+                    + " \u09b9\u099a\u09cd\u099b\u09c7\u0964 \u0995\u09cb\u09a8\u09cb"
+                    + " \u09ab\u09be\u0987\u09b2 \u09b6\u09c7\u09af\u09bc\u09be\u09b0"
+                    + " \u0995\u09b0\u09be \u09b9\u099a\u09cd\u099b\u09c7 \u09a8\u09be\u0964",
+            "Show more",
+            "\u0986\u09b0\u0993 \u09a6\u09c7\u0996\u09c1\u09a8",
+            "Showing {0} of {1}",
+            "{1}\u099f\u09bf\u09b0 \u09ae\u09a7\u09cd\u09af\u09c7 {0}\u099f\u09bf"
+                    + " \u09a6\u09c7\u0996\u09be\u09a8\u09cb \u09b9\u099a\u09cd\u099b\u09c7",
+            "Soulseek settings changed. Search again.",
+            "Soulseek-\u098f\u09b0 \u09b8\u09c7\u099f\u09bf\u0982\u09b8"
+                    + " \u09ac\u09a6\u09b2\u09c7\u099b\u09c7\u0964 \u0986\u09ac\u09be\u09b0"
+                    + " \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8"
+                    + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "Start a scan to apply the public profile setting.",
+            "\u09aa\u09be\u09ac\u09b2\u09bf\u0995"
+                    + " \u09aa\u09cd\u09b0\u09cb\u09ab\u09be\u0987\u09b2\u09c7\u09b0"
+                    + " \u09b8\u09c7\u099f\u09bf\u0982 \u0995\u09be\u09b0\u09cd\u09af\u0995\u09b0"
+                    + " \u0995\u09b0\u09a4\u09c7 \u09b8\u09cd\u0995\u09cd\u09af\u09be\u09a8"
+                    + " \u09b6\u09c1\u09b0\u09c1 \u0995\u09b0\u09c1\u09a8\u0964",
+            "Start a scan to find compatible provider profiles.",
+            "\u09b8\u09be\u09ae\u099e\u09cd\u099c\u09b8\u09cd\u09af\u09aa\u09c2\u09b0\u09cd\u09a3"
+                + " \u09aa\u09cd\u09b0\u09a6\u09be\u09a8\u0995\u09be\u09b0\u09c0\u09b0"
+                + " \u09aa\u09cd\u09b0\u09cb\u09ab\u09be\u0987\u09b2"
+                + " \u0996\u09c1\u0981\u099c\u09a4\u09c7 \u09b8\u09cd\u0995\u09cd\u09af\u09be\u09a8"
+                + " \u09b6\u09c1\u09b0\u09c1 \u0995\u09b0\u09c1\u09a8\u0964",
+            "Stop discovery",
+            "\u09aa\u09bf\u09af\u09bc\u09be\u09b0 \u0996\u09cb\u0981\u099c\u09be"
+                    + " \u09ac\u09a8\u09cd\u09a7 \u0995\u09b0\u09c1\u09a8",
+            "Transports: {0}",
+            "\u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09aa\u09cb\u09b0\u09cd\u099f: {0}",
+            "{0} recent clients",
+            "\u09b8\u09ae\u09cd\u09aa\u09cd\u09b0\u09a4\u09bf \u09a6\u09c7\u0996\u09be"
+                + " {0}\u099f\u09bf \u0995\u09cd\u09b2\u09be\u09af\u09bc\u09c7\u09a8\u09cd\u099f",
         };
     }
 
@@ -10187,6 +10537,96 @@ final class Translations {
             "Alle stoppen",
             "{0} download connections",
             "{0} Downloadverbindungen",
+            "Audio format choices changed. Search again.",
+            "Die Audioformatauswahl wurde ge\u00e4ndert. Suche erneut.",
+            "Cannot create provider cache.",
+            "Der Anbieter-Zwischenspeicher konnte nicht erstellt werden.",
+            "Clear found peers",
+            "Gefundene Teilnehmer l\u00f6schen",
+            "Copy key for pairing",
+            "Schl\u00fcssel zum Koppeln kopieren",
+            "Could not complete peer discovery. Check relays and try again.",
+            "Die Teilnehmersuche konnte nicht abgeschlossen werden. Pr\u00fcfe die"
+                    + " Vermittlungsserver und versuche es erneut.",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "Die Teilnehmersuche konnte nicht aktualisiert werden. Pr\u00fcfe die"
+                    + " Verbindungseinstellungen und versuche es erneut.",
+            "Direct UDP / QUIC",
+            "UDP / QUIC direkt",
+            "Discover compatible peers",
+            "Kompatible Teilnehmer finden",
+            "Discoverable while this page is open",
+            "Auffindbar, solange diese Seite ge\u00f6ffnet ist",
+            "Discovery could not start.",
+            "Die Suche konnte nicht gestartet werden.",
+            "Discovery settings could not be saved.",
+            "Die Sucheinstellungen konnten nicht gespeichert werden.",
+            "Enable peer discovery first.",
+            "Aktiviere zuerst die Teilnehmersuche.",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "Finde kompatible Anwendungen \u00fcber \u00f6ffentliche Vermittlungsserver und den"
+                    + " Austausch von Teilnehmern. Gefundene Schl\u00fcssel gelten nicht als"
+                    + " vertrauensw\u00fcrdige Kontakte und gew\u00e4hren keinen Dateizugriff.",
+            "Find peers",
+            "Teilnehmer suchen",
+            "Finding compatible provider profiles\u2026",
+            "Kompatible Anbieterprofile werden gesucht\u2026",
+            "Loading peer discovery\u2026",
+            "Teilnehmersuche wird geladen\u2026",
+            "No recent clients found yet.",
+            "Noch keine k\u00fcrzlich aktiven Teilnehmer gefunden.",
+            "Peer discovery",
+            "Teilnehmersuche",
+            "Peer discovery controls",
+            "Steuerung der Teilnehmersuche",
+            "Peer discovery is off.",
+            "Die Teilnehmersuche ist ausgeschaltet.",
+            "Peer discovery settings",
+            "Einstellungen der Teilnehmersuche",
+            "Peer discovery stopped.",
+            "Teilnehmersuche beendet.",
+            "Peer key copied. Compare the full key before pairing.",
+            "Teilnehmerschl\u00fcssel kopiert. Vergleiche vor dem Koppeln den vollst\u00e4ndigen"
+                    + " Schl\u00fcssel.",
+            "Provider cache cleared.",
+            "Anbieter-Zwischenspeicher geleert.",
+            "Provider profile scan finished.",
+            "Suche nach Anbieterprofilen abgeschlossen.",
+            "Public discovery and peer exchange",
+            "\u00d6ffentliche Suche und Teilnehmeraustausch",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "Ver\u00f6ffentlicht nur deinen \u00f6ffentlichen App-Schl\u00fcssel und"
+                + " unterst\u00fctzte \u00dcbertragungswege. Deine Dateien, privaten Kontakte und"
+                + " Verbindungsadressen werden nicht ver\u00f6ffentlicht.",
+            "Recent clients",
+            "Zuletzt aktive Teilnehmer",
+            "Recent \u00b7 expires at {0}",
+            "K\u00fcrzlich aktiv \u00b7 g\u00fcltig bis {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "Verbindungen zu Vermittlungsservern: {0} \u00b7 Empfangene Profile: {1}",
+            "Restart BitChord before starting discovery.",
+            "Starte BitChord neu, bevor du die Suche beginnst.",
+            "Sharing a public provider profile. No files are shared.",
+            "Ein \u00f6ffentliches Anbieterprofil wird geteilt. Es werden keine Dateien geteilt.",
+            "Show more",
+            "Mehr anzeigen",
+            "Showing {0} of {1}",
+            "{0} von {1} angezeigt",
+            "Soulseek settings changed. Search again.",
+            "Die Soulseek-Einstellungen wurden ge\u00e4ndert. Suche erneut.",
+            "Start a scan to apply the public profile setting.",
+            "Starte eine Suche, um die Einstellung f\u00fcr das \u00f6ffentliche Profil"
+                    + " anzuwenden.",
+            "Start a scan to find compatible provider profiles.",
+            "Starte eine Suche nach kompatiblen Anbieterprofilen.",
+            "Stop discovery",
+            "Suche beenden",
+            "Transports: {0}",
+            "\u00dcbertragungswege: {0}",
+            "{0} recent clients",
+            "{0} zuletzt aktive Teilnehmer",
         };
     }
 
@@ -12357,6 +12797,94 @@ final class Translations {
             "Detener todo",
             "{0} download connections",
             "{0} conexiones de descarga",
+            "Audio format choices changed. Search again.",
+            "La selecci\u00f3n de formatos de audio ha cambiado. Busca de nuevo.",
+            "Cannot create provider cache.",
+            "No se pudo crear la cach\u00e9 de proveedores.",
+            "Clear found peers",
+            "Borrar pares encontrados",
+            "Copy key for pairing",
+            "Copiar clave para vincular",
+            "Could not complete peer discovery. Check relays and try again.",
+            "No se pudo completar la detecci\u00f3n de pares. Revisa los rel\u00e9s e"
+                    + " int\u00e9ntalo de nuevo.",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "No se pudo actualizar la detecci\u00f3n de pares. Revisa los ajustes de conexi\u00f3n"
+                    + " e int\u00e9ntalo de nuevo.",
+            "Direct UDP / QUIC",
+            "UDP / QUIC directo",
+            "Discover compatible peers",
+            "Detectar pares compatibles",
+            "Discoverable while this page is open",
+            "Visible mientras esta p\u00e1gina est\u00e9 abierta",
+            "Discovery could not start.",
+            "No se pudo iniciar la detecci\u00f3n.",
+            "Discovery settings could not be saved.",
+            "No se pudieron guardar los ajustes de detecci\u00f3n.",
+            "Enable peer discovery first.",
+            "Activa primero la detecci\u00f3n de pares.",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "Encuentra clientes compatibles mediante rel\u00e9s p\u00fablicos e intercambio de"
+                + " pares. Las claves encontradas no son contactos de confianza ni dan acceso a los"
+                + " archivos.",
+            "Find peers",
+            "Buscar pares",
+            "Finding compatible provider profiles\u2026",
+            "Buscando perfiles de proveedores compatibles\u2026",
+            "Loading peer discovery\u2026",
+            "Cargando detecci\u00f3n de pares\u2026",
+            "No recent clients found yet.",
+            "A\u00fan no se han encontrado clientes recientes.",
+            "Peer discovery",
+            "Detecci\u00f3n de pares",
+            "Peer discovery controls",
+            "Controles de detecci\u00f3n de pares",
+            "Peer discovery is off.",
+            "La detecci\u00f3n de pares est\u00e1 desactivada.",
+            "Peer discovery settings",
+            "Ajustes de detecci\u00f3n de pares",
+            "Peer discovery stopped.",
+            "Detecci\u00f3n de pares detenida.",
+            "Peer key copied. Compare the full key before pairing.",
+            "Clave del par copiada. Compara la clave completa antes de vincular.",
+            "Provider cache cleared.",
+            "Cach\u00e9 de proveedores borrada.",
+            "Provider profile scan finished.",
+            "B\u00fasqueda de perfiles de proveedores finalizada.",
+            "Public discovery and peer exchange",
+            "Detecci\u00f3n p\u00fablica e intercambio de pares",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "Solo publica tu clave p\u00fablica de la aplicaci\u00f3n y los transportes"
+                    + " compatibles. No publica tus archivos, contactos privados ni direcciones de"
+                    + " conexi\u00f3n.",
+            "Recent clients",
+            "Clientes recientes",
+            "Recent \u00b7 expires at {0}",
+            "Reciente \u00b7 caduca a las {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "Conexiones a rel\u00e9s: {0} \u00b7 Perfiles recibidos: {1}",
+            "Restart BitChord before starting discovery.",
+            "Reinicia BitChord antes de iniciar la detecci\u00f3n.",
+            "Sharing a public provider profile. No files are shared.",
+            "Compartiendo un perfil p\u00fablico de proveedor. No se comparte ning\u00fan archivo.",
+            "Show more",
+            "Mostrar m\u00e1s",
+            "Showing {0} of {1}",
+            "Mostrando {0} de {1}",
+            "Soulseek settings changed. Search again.",
+            "Los ajustes de Soulseek han cambiado. Busca de nuevo.",
+            "Start a scan to apply the public profile setting.",
+            "Inicia una b\u00fasqueda para aplicar el ajuste del perfil p\u00fablico.",
+            "Start a scan to find compatible provider profiles.",
+            "Inicia una b\u00fasqueda para encontrar perfiles de proveedores compatibles.",
+            "Stop discovery",
+            "Detener detecci\u00f3n",
+            "Transports: {0}",
+            "Transportes: {0}",
+            "{0} recent clients",
+            "{0} clientes recientes",
         };
     }
 
@@ -14579,6 +15107,96 @@ final class Translations {
             "Tout arr\u00eater",
             "{0} download connections",
             "{0} connexions de t\u00e9l\u00e9chargement",
+            "Audio format choices changed. Search again.",
+            "La s\u00e9lection des formats audio a chang\u00e9. Relancez la recherche.",
+            "Cannot create provider cache.",
+            "Impossible de cr\u00e9er le cache des fournisseurs.",
+            "Clear found peers",
+            "Effacer les pairs trouv\u00e9s",
+            "Copy key for pairing",
+            "Copier la cl\u00e9 pour l\u2019association",
+            "Could not complete peer discovery. Check relays and try again.",
+            "Impossible de terminer la d\u00e9couverte de pairs. V\u00e9rifiez les relais et"
+                    + " r\u00e9essayez.",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "Impossible d\u2019actualiser la d\u00e9couverte de pairs. V\u00e9rifiez les"
+                    + " param\u00e8tres de connexion et r\u00e9essayez.",
+            "Direct UDP / QUIC",
+            "UDP / QUIC direct",
+            "Discover compatible peers",
+            "D\u00e9couvrir des pairs compatibles",
+            "Discoverable while this page is open",
+            "D\u00e9tectable tant que cette page est ouverte",
+            "Discovery could not start.",
+            "Impossible de lancer la d\u00e9couverte.",
+            "Discovery settings could not be saved.",
+            "Impossible d\u2019enregistrer les param\u00e8tres de d\u00e9couverte.",
+            "Enable peer discovery first.",
+            "Activez d\u2019abord la d\u00e9couverte de pairs.",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "Trouvez des clients compatibles via des relais publics et l\u2019\u00e9change de"
+                + " pairs. Les cl\u00e9s trouv\u00e9es ne sont pas des contacts de confiance et ne"
+                + " donnent pas acc\u00e8s aux fichiers.",
+            "Find peers",
+            "Rechercher des pairs",
+            "Finding compatible provider profiles\u2026",
+            "Recherche de profils de fournisseurs compatibles\u2026",
+            "Loading peer discovery\u2026",
+            "Chargement de la d\u00e9couverte de pairs\u2026",
+            "No recent clients found yet.",
+            "Aucun client r\u00e9cent trouv\u00e9 pour le moment.",
+            "Peer discovery",
+            "D\u00e9couverte de pairs",
+            "Peer discovery controls",
+            "Commandes de d\u00e9couverte de pairs",
+            "Peer discovery is off.",
+            "La d\u00e9couverte de pairs est d\u00e9sactiv\u00e9e.",
+            "Peer discovery settings",
+            "Param\u00e8tres de d\u00e9couverte de pairs",
+            "Peer discovery stopped.",
+            "D\u00e9couverte de pairs arr\u00eat\u00e9e.",
+            "Peer key copied. Compare the full key before pairing.",
+            "Cl\u00e9 du pair copi\u00e9e. Comparez la cl\u00e9 compl\u00e8te avant"
+                    + " l\u2019association.",
+            "Provider cache cleared.",
+            "Cache des fournisseurs vid\u00e9.",
+            "Provider profile scan finished.",
+            "Recherche de profils de fournisseurs termin\u00e9e.",
+            "Public discovery and peer exchange",
+            "D\u00e9couverte publique et \u00e9change de pairs",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "Publie uniquement votre cl\u00e9 publique d\u2019application et les modes de transport"
+                + " pris en charge. Vos fichiers, contacts priv\u00e9s et adresses de connexion ne"
+                + " sont pas publi\u00e9s.",
+            "Recent clients",
+            "Clients r\u00e9cents",
+            "Recent \u00b7 expires at {0}",
+            "R\u00e9cent \u00b7 expire \u00e0 {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "Connexions aux relais : {0} \u00b7 Profils re\u00e7us : {1}",
+            "Restart BitChord before starting discovery.",
+            "Red\u00e9marrez BitChord avant de lancer la d\u00e9couverte.",
+            "Sharing a public provider profile. No files are shared.",
+            "Partage d\u2019un profil public de fournisseur. Aucun fichier n\u2019est"
+                    + " partag\u00e9.",
+            "Show more",
+            "Afficher plus",
+            "Showing {0} of {1}",
+            "Affichage de {0} sur {1}",
+            "Soulseek settings changed. Search again.",
+            "Les param\u00e8tres Soulseek ont chang\u00e9. Relancez la recherche.",
+            "Start a scan to apply the public profile setting.",
+            "Lancez une recherche pour appliquer le r\u00e9glage du profil public.",
+            "Start a scan to find compatible provider profiles.",
+            "Lancez une recherche pour trouver des profils de fournisseurs compatibles.",
+            "Stop discovery",
+            "Arr\u00eater la d\u00e9couverte",
+            "Transports: {0}",
+            "Transports : {0}",
+            "{0} recent clients",
+            "{0} clients r\u00e9cents",
         };
     }
 
@@ -18138,6 +18756,163 @@ final class Translations {
             "\u05e2\u05e6\u05d9\u05e8\u05ea \u05d4\u05db\u05d5\u05dc",
             "{0} download connections",
             "{0} \u05d7\u05d9\u05d1\u05d5\u05e8\u05d9 \u05d4\u05d5\u05e8\u05d3\u05d4",
+            "Audio format choices changed. Search again.",
+            "\u05d4\u05e2\u05d3\u05e4\u05d5\u05ea \u05e4\u05d5\u05e8\u05de\u05d8"
+                    + " \u05d4\u05e9\u05de\u05e2 \u05d4\u05e9\u05ea\u05e0\u05d5. \u05d9\u05e9"
+                    + " \u05dc\u05d7\u05e4\u05e9 \u05e9\u05d5\u05d1.",
+            "Cannot create provider cache.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05d9\u05e6\u05d5\u05e8"
+                    + " \u05de\u05d8\u05de\u05d5\u05df \u05e1\u05e4\u05e7\u05d9\u05dd.",
+            "Clear found peers",
+            "\u05e0\u05d9\u05e7\u05d5\u05d9 \u05d4\u05e2\u05de\u05d9\u05ea\u05d9\u05dd"
+                    + " \u05e9\u05e0\u05de\u05e6\u05d0\u05d5",
+            "Copy key for pairing",
+            "\u05d4\u05e2\u05ea\u05e7\u05ea \u05de\u05e4\u05ea\u05d7"
+                    + " \u05dc\u05e6\u05d9\u05de\u05d5\u05d3",
+            "Could not complete peer discovery. Check relays and try again.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05d4\u05e9\u05dc\u05d9\u05dd"
+                + " \u05d0\u05ea \u05d2\u05d9\u05dc\u05d5\u05d9"
+                + " \u05d4\u05e2\u05de\u05d9\u05ea\u05d9\u05dd. \u05d9\u05e9"
+                + " \u05dc\u05d1\u05d3\u05d5\u05e7 \u05d0\u05ea"
+                + " \u05d4\u05de\u05de\u05e1\u05e8\u05d9\u05dd \u05d5\u05dc\u05e0\u05e1\u05d5\u05ea"
+                + " \u05e9\u05d5\u05d1.",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05e2\u05d3\u05db\u05df \u05d0\u05ea"
+                    + " \u05d2\u05d9\u05dc\u05d5\u05d9 \u05d4\u05e2\u05de\u05d9\u05ea\u05d9\u05dd."
+                    + " \u05d9\u05e9 \u05dc\u05d1\u05d3\u05d5\u05e7 \u05d0\u05ea"
+                    + " \u05d4\u05d2\u05d3\u05e8\u05d5\u05ea \u05d4\u05d7\u05d9\u05d1\u05d5\u05e8"
+                    + " \u05d5\u05dc\u05e0\u05e1\u05d5\u05ea \u05e9\u05d5\u05d1.",
+            "Direct UDP / QUIC",
+            "\u05d7\u05d9\u05d1\u05d5\u05e8 \u05d9\u05e9\u05d9\u05e8 \u05d1\u05beUDP / QUIC",
+            "Discover compatible peers",
+            "\u05d2\u05d9\u05dc\u05d5\u05d9 \u05e2\u05de\u05d9\u05ea\u05d9\u05dd"
+                    + " \u05ea\u05d5\u05d0\u05de\u05d9\u05dd",
+            "Discoverable while this page is open",
+            "\u05e0\u05d9\u05ea\u05df \u05dc\u05d2\u05dc\u05d5\u05ea \u05d0\u05d5\u05ea\u05da"
+                + " \u05db\u05dc \u05e2\u05d5\u05d3 \u05d4\u05d3\u05e3 \u05e4\u05ea\u05d5\u05d7",
+            "Discovery could not start.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05d4\u05ea\u05d7\u05d9\u05dc"
+                    + " \u05d0\u05ea \u05d4\u05d2\u05d9\u05dc\u05d5\u05d9.",
+            "Discovery settings could not be saved.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05e9\u05de\u05d5\u05e8 \u05d0\u05ea"
+                    + " \u05d4\u05d2\u05d3\u05e8\u05d5\u05ea \u05d4\u05d2\u05d9\u05dc\u05d5\u05d9.",
+            "Enable peer discovery first.",
+            "\u05d9\u05e9 \u05dc\u05d4\u05e4\u05e2\u05d9\u05dc \u05ea\u05d7\u05d9\u05dc\u05d4"
+                    + " \u05d0\u05ea \u05d2\u05d9\u05dc\u05d5\u05d9"
+                    + " \u05d4\u05e2\u05de\u05d9\u05ea\u05d9\u05dd.",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "\u05d0\u05d9\u05ea\u05d5\u05e8 \u05dc\u05e7\u05d5\u05d7\u05d5\u05ea"
+                + " \u05ea\u05d5\u05d0\u05de\u05d9\u05dd \u05d1\u05d0\u05de\u05e6\u05e2\u05d5\u05ea"
+                + " \u05de\u05de\u05e1\u05e8\u05d9\u05dd"
+                + " \u05e6\u05d9\u05d1\u05d5\u05e8\u05d9\u05d9\u05dd"
+                + " \u05d5\u05d7\u05d9\u05dc\u05d5\u05e4\u05d9"
+                + " \u05e2\u05de\u05d9\u05ea\u05d9\u05dd. \u05de\u05e4\u05ea\u05d7\u05d5\u05ea"
+                + " \u05e9\u05e0\u05de\u05e6\u05d0\u05d5 \u05d0\u05d9\u05e0\u05dd"
+                + " \u05d0\u05e0\u05e9\u05d9 \u05e7\u05e9\u05e8"
+                + " \u05de\u05d4\u05d9\u05de\u05e0\u05d9\u05dd \u05d5\u05d0\u05d9\u05e0\u05dd"
+                + " \u05de\u05e2\u05e0\u05d9\u05e7\u05d9\u05dd \u05d2\u05d9\u05e9\u05d4"
+                + " \u05dc\u05e7\u05d1\u05e6\u05d9\u05dd.",
+            "Find peers",
+            "\u05d7\u05d9\u05e4\u05d5\u05e9 \u05e2\u05de\u05d9\u05ea\u05d9\u05dd",
+            "Finding compatible provider profiles\u2026",
+            "\u05d7\u05d9\u05e4\u05d5\u05e9 \u05e4\u05e8\u05d5\u05e4\u05d9\u05dc\u05d9\u05dd"
+                    + " \u05e9\u05dc \u05e1\u05e4\u05e7\u05d9\u05dd"
+                    + " \u05ea\u05d5\u05d0\u05de\u05d9\u05dd\u2026",
+            "Loading peer discovery\u2026",
+            "\u05d8\u05e2\u05d9\u05e0\u05ea \u05d2\u05d9\u05dc\u05d5\u05d9"
+                    + " \u05d4\u05e2\u05de\u05d9\u05ea\u05d9\u05dd\u2026",
+            "No recent clients found yet.",
+            "\u05e2\u05d3\u05d9\u05d9\u05df \u05dc\u05d0 \u05e0\u05de\u05e6\u05d0\u05d5"
+                    + " \u05dc\u05e7\u05d5\u05d7\u05d5\u05ea \u05e9\u05e0\u05e8\u05d0\u05d5"
+                    + " \u05dc\u05d0\u05d7\u05e8\u05d5\u05e0\u05d4.",
+            "Peer discovery",
+            "\u05d2\u05d9\u05dc\u05d5\u05d9 \u05e2\u05de\u05d9\u05ea\u05d9\u05dd",
+            "Peer discovery controls",
+            "\u05e4\u05e7\u05d3\u05d9 \u05d2\u05d9\u05dc\u05d5\u05d9"
+                    + " \u05e2\u05de\u05d9\u05ea\u05d9\u05dd",
+            "Peer discovery is off.",
+            "\u05d2\u05d9\u05dc\u05d5\u05d9 \u05d4\u05e2\u05de\u05d9\u05ea\u05d9\u05dd"
+                    + " \u05db\u05d1\u05d5\u05d9.",
+            "Peer discovery settings",
+            "\u05d4\u05d2\u05d3\u05e8\u05d5\u05ea \u05d2\u05d9\u05dc\u05d5\u05d9"
+                    + " \u05e2\u05de\u05d9\u05ea\u05d9\u05dd",
+            "Peer discovery stopped.",
+            "\u05d2\u05d9\u05dc\u05d5\u05d9 \u05d4\u05e2\u05de\u05d9\u05ea\u05d9\u05dd"
+                    + " \u05d4\u05d5\u05e4\u05e1\u05e7.",
+            "Peer key copied. Compare the full key before pairing.",
+            "\u05de\u05e4\u05ea\u05d7 \u05d4\u05e2\u05de\u05d9\u05ea"
+                    + " \u05d4\u05d5\u05e2\u05ea\u05e7. \u05d9\u05e9"
+                    + " \u05dc\u05d4\u05e9\u05d5\u05d5\u05ea \u05d0\u05ea"
+                    + " \u05d4\u05de\u05e4\u05ea\u05d7 \u05d4\u05de\u05dc\u05d0"
+                    + " \u05dc\u05e4\u05e0\u05d9 \u05d4\u05e6\u05d9\u05de\u05d5\u05d3.",
+            "Provider cache cleared.",
+            "\u05de\u05d8\u05de\u05d5\u05df \u05d4\u05e1\u05e4\u05e7\u05d9\u05dd"
+                    + " \u05e0\u05d5\u05e7\u05d4.",
+            "Provider profile scan finished.",
+            "\u05e1\u05e8\u05d9\u05e7\u05ea \u05e4\u05e8\u05d5\u05e4\u05d9\u05dc\u05d9"
+                    + " \u05d4\u05e1\u05e4\u05e7\u05d9\u05dd"
+                    + " \u05d4\u05e1\u05ea\u05d9\u05d9\u05de\u05d4.",
+            "Public discovery and peer exchange",
+            "\u05d2\u05d9\u05dc\u05d5\u05d9 \u05e6\u05d9\u05d1\u05d5\u05e8\u05d9"
+                    + " \u05d5\u05d7\u05d9\u05dc\u05d5\u05e4\u05d9"
+                    + " \u05e2\u05de\u05d9\u05ea\u05d9\u05dd",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "\u05de\u05e4\u05e8\u05e1\u05dd \u05e8\u05e7 \u05d0\u05ea"
+                + " \u05d4\u05de\u05e4\u05ea\u05d7 \u05d4\u05e6\u05d9\u05d1\u05d5\u05e8\u05d9"
+                + " \u05e9\u05dc \u05d4\u05d9\u05d9\u05e9\u05d5\u05de\u05d5\u05df"
+                + " \u05d5\u05d0\u05ea \u05e9\u05d9\u05d8\u05d5\u05ea"
+                + " \u05d4\u05ea\u05e2\u05d1\u05d5\u05e8\u05d4"
+                + " \u05d4\u05e0\u05ea\u05de\u05db\u05d5\u05ea."
+                + " \u05d4\u05e7\u05d1\u05e6\u05d9\u05dd, \u05d0\u05e0\u05e9\u05d9"
+                + " \u05d4\u05e7\u05e9\u05e8 \u05d4\u05e4\u05e8\u05d8\u05d9\u05d9\u05dd"
+                + " \u05d5\u05db\u05ea\u05d5\u05d1\u05d5\u05ea \u05d4\u05d7\u05d9\u05d1\u05d5\u05e8"
+                + " \u05e9\u05dc\u05da \u05d0\u05d9\u05e0\u05dd"
+                + " \u05de\u05ea\u05e4\u05e8\u05e1\u05de\u05d9\u05dd.",
+            "Recent clients",
+            "\u05dc\u05e7\u05d5\u05d7\u05d5\u05ea \u05e9\u05e0\u05e8\u05d0\u05d5"
+                    + " \u05dc\u05d0\u05d7\u05e8\u05d5\u05e0\u05d4",
+            "Recent \u00b7 expires at {0}",
+            "\u05e0\u05e8\u05d0\u05d4 \u05dc\u05d0\u05d7\u05e8\u05d5\u05e0\u05d4 \u00b7"
+                    + " \u05d4\u05ea\u05d5\u05e7\u05e3 \u05d9\u05e4\u05d5\u05d2 \u05d1\u05be{0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "\u05d7\u05d9\u05d1\u05d5\u05e8\u05d9 \u05de\u05de\u05e1\u05e8: {0} \u00b7"
+                    + " \u05e4\u05e8\u05d5\u05e4\u05d9\u05dc\u05d9\u05dd"
+                    + " \u05e9\u05d4\u05ea\u05e7\u05d1\u05dc\u05d5: {1}",
+            "Restart BitChord before starting discovery.",
+            "\u05d9\u05e9 \u05dc\u05d4\u05e4\u05e2\u05d9\u05dc \u05de\u05d7\u05d3\u05e9"
+                + " \u05d0\u05ea BitChord \u05dc\u05e4\u05e0\u05d9 \u05ea\u05d7\u05d9\u05dc\u05ea"
+                + " \u05d4\u05d2\u05d9\u05dc\u05d5\u05d9.",
+            "Sharing a public provider profile. No files are shared.",
+            "\u05de\u05ea\u05d1\u05e6\u05e2 \u05e9\u05d9\u05ea\u05d5\u05e3 \u05e9\u05dc"
+                    + " \u05e4\u05e8\u05d5\u05e4\u05d9\u05dc \u05e1\u05e4\u05e7"
+                    + " \u05e6\u05d9\u05d1\u05d5\u05e8\u05d9. \u05dc\u05d0"
+                    + " \u05de\u05e9\u05d5\u05ea\u05e4\u05d9\u05dd \u05e7\u05d1\u05e6\u05d9\u05dd.",
+            "Show more",
+            "\u05d4\u05e6\u05d2\u05ea \u05e2\u05d5\u05d3",
+            "Showing {0} of {1}",
+            "\u05de\u05d5\u05e6\u05d2\u05d9\u05dd {0} \u05de\u05ea\u05d5\u05da {1}",
+            "Soulseek settings changed. Search again.",
+            "\u05d4\u05d2\u05d3\u05e8\u05d5\u05ea Soulseek \u05d4\u05e9\u05ea\u05e0\u05d5."
+                    + " \u05d9\u05e9 \u05dc\u05d7\u05e4\u05e9 \u05e9\u05d5\u05d1.",
+            "Start a scan to apply the public profile setting.",
+            "\u05d9\u05e9 \u05dc\u05d4\u05ea\u05d7\u05d9\u05dc \u05e1\u05e8\u05d9\u05e7\u05d4"
+                    + " \u05db\u05d3\u05d9 \u05dc\u05d4\u05d7\u05d9\u05dc \u05d0\u05ea"
+                    + " \u05d4\u05d2\u05d3\u05e8\u05ea \u05d4\u05e4\u05e8\u05d5\u05e4\u05d9\u05dc"
+                    + " \u05d4\u05e6\u05d9\u05d1\u05d5\u05e8\u05d9.",
+            "Start a scan to find compatible provider profiles.",
+            "\u05d9\u05e9 \u05dc\u05d4\u05ea\u05d7\u05d9\u05dc \u05e1\u05e8\u05d9\u05e7\u05d4"
+                    + " \u05db\u05d3\u05d9 \u05dc\u05d0\u05ea\u05e8"
+                    + " \u05e4\u05e8\u05d5\u05e4\u05d9\u05dc\u05d9\u05dd \u05e9\u05dc"
+                    + " \u05e1\u05e4\u05e7\u05d9\u05dd \u05ea\u05d5\u05d0\u05de\u05d9\u05dd.",
+            "Stop discovery",
+            "\u05d4\u05e4\u05e1\u05e7\u05ea \u05d4\u05d2\u05d9\u05dc\u05d5\u05d9",
+            "Transports: {0}",
+            "\u05e9\u05d9\u05d8\u05d5\u05ea \u05ea\u05e2\u05d1\u05d5\u05e8\u05d4: {0}",
+            "{0} recent clients",
+            "{0} \u05dc\u05e7\u05d5\u05d7\u05d5\u05ea \u05e9\u05e0\u05e8\u05d0\u05d5"
+                    + " \u05dc\u05d0\u05d7\u05e8\u05d5\u05e0\u05d4",
         };
     }
 
@@ -22259,6 +23034,176 @@ final class Translations {
             "{0} download connections",
             "{0} \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
                     + " \u0915\u0928\u0947\u0915\u094d\u0936\u0928",
+            "Audio format choices changed. Search again.",
+            "\u0911\u0921\u093f\u092f\u094b \u092b\u093c\u0949\u0930\u094d\u092e\u0948\u091f"
+                    + " \u0915\u0940 \u092a\u0938\u0902\u0926 \u092c\u0926\u0932 \u0917\u0908"
+                    + " \u0939\u0948\u0964 \u092b\u093f\u0930 \u0938\u0947"
+                    + " \u0916\u094b\u091c\u0947\u0902\u0964",
+            "Cannot create provider cache.",
+            "\u092a\u094d\u0930\u0926\u093e\u0924\u093e \u0915\u0948\u0936 \u0928\u0939\u0940\u0902"
+                    + " \u092c\u0928 \u0938\u0915\u093e\u0964",
+            "Clear found peers",
+            "\u092e\u093f\u0932\u0947 \u0939\u0941\u090f \u092a\u0940\u092f\u0930"
+                    + " \u0938\u093e\u092b\u093c \u0915\u0930\u0947\u0902",
+            "Copy key for pairing",
+            "\u092a\u0947\u092f\u0930\u093f\u0902\u0917 \u0915\u0947 \u0932\u093f\u090f"
+                    + " \u0915\u0941\u0902\u091c\u0940 \u0915\u0949\u092a\u0940"
+                    + " \u0915\u0930\u0947\u0902",
+            "Could not complete peer discovery. Check relays and try again.",
+            "\u092a\u0940\u092f\u0930 \u0916\u094b\u091c \u092a\u0942\u0930\u0940"
+                    + " \u0928\u0939\u0940\u0902 \u0939\u094b \u0938\u0915\u0940\u0964"
+                    + " \u0930\u093f\u0932\u0947 \u091c\u093e\u0901\u091a\u0947\u0902 \u0914\u0930"
+                    + " \u092b\u093f\u0930 \u0938\u0947 \u0915\u094b\u0936\u093f\u0936"
+                    + " \u0915\u0930\u0947\u0902\u0964",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "\u092a\u0940\u092f\u0930 \u0916\u094b\u091c \u0905\u092a\u0921\u0947\u091f"
+                    + " \u0928\u0939\u0940\u0902 \u0939\u094b \u0938\u0915\u0940\u0964"
+                    + " \u0915\u0928\u0947\u0915\u094d\u0936\u0928"
+                    + " \u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938"
+                    + " \u091c\u093e\u0901\u091a\u0947\u0902 \u0914\u0930 \u092b\u093f\u0930"
+                    + " \u0938\u0947 \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0902\u0964",
+            "Direct UDP / QUIC",
+            "\u0938\u0940\u0927\u093e UDP / QUIC",
+            "Discover compatible peers",
+            "\u0938\u0902\u0917\u0924 \u092a\u0940\u092f\u0930 \u0916\u094b\u091c\u0947\u0902",
+            "Discoverable while this page is open",
+            "\u092f\u0939 \u092a\u0947\u091c \u0916\u0941\u0932\u093e \u0930\u0939\u0928\u0947"
+                    + " \u0924\u0915 \u0906\u092a\u0915\u094b \u0916\u094b\u091c\u093e \u091c\u093e"
+                    + " \u0938\u0915\u0947\u0917\u093e",
+            "Discovery could not start.",
+            "\u0916\u094b\u091c \u0936\u0941\u0930\u0942 \u0928\u0939\u0940\u0902 \u0939\u094b"
+                    + " \u0938\u0915\u0940\u0964",
+            "Discovery settings could not be saved.",
+            "\u0916\u094b\u091c \u0915\u0940 \u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938"
+                    + " \u0938\u0939\u0947\u091c\u0940 \u0928\u0939\u0940\u0902 \u091c\u093e"
+                    + " \u0938\u0915\u0940\u0902\u0964",
+            "Enable peer discovery first.",
+            "\u092a\u0939\u0932\u0947 \u092a\u0940\u092f\u0930 \u0916\u094b\u091c"
+                    + " \u091a\u093e\u0932\u0942 \u0915\u0930\u0947\u0902\u0964",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "\u0938\u093e\u0930\u094d\u0935\u091c\u0928\u093f\u0915 \u0930\u093f\u0932\u0947"
+                    + " \u0914\u0930 \u092a\u0940\u092f\u0930"
+                    + " \u090f\u0915\u094d\u0938\u091a\u0947\u0902\u091c \u0938\u0947"
+                    + " \u0938\u0902\u0917\u0924 \u0915\u094d\u0932\u093e\u0907\u0902\u091f"
+                    + " \u0916\u094b\u091c\u0947\u0902\u0964 \u092e\u093f\u0932\u0947"
+                    + " \u0939\u0941\u090f \u0915\u0941\u0902\u091c\u0940\u0927\u093e\u0930\u0915"
+                    + " \u092d\u0930\u094b\u0938\u0947\u092e\u0902\u0926"
+                    + " \u0938\u0902\u092a\u0930\u094d\u0915 \u0928\u0939\u0940\u0902"
+                    + " \u092e\u093e\u0928\u0947 \u091c\u093e\u0924\u0947 \u0914\u0930 \u0907\u0928"
+                    + " \u0915\u0941\u0902\u091c\u093f\u092f\u094b\u0902 \u0938\u0947"
+                    + " \u092b\u093c\u093e\u0907\u0932\u094b\u0902 \u0915\u0940"
+                    + " \u092a\u0939\u0941\u0901\u091a \u0928\u0939\u0940\u0902"
+                    + " \u092e\u093f\u0932\u0924\u0940\u0964",
+            "Find peers",
+            "\u092a\u0940\u092f\u0930 \u0922\u0942\u0901\u0922\u0947\u0902",
+            "Finding compatible provider profiles\u2026",
+            "\u0938\u0902\u0917\u0924 \u092a\u094d\u0930\u0926\u093e\u0924\u093e\u0913\u0902"
+                + " \u0915\u0940 \u092a\u094d\u0930\u094b\u092b\u093c\u093e\u0907\u0932\u0947\u0902"
+                + " \u0916\u094b\u091c\u0940 \u091c\u093e \u0930\u0939\u0940"
+                + " \u0939\u0948\u0902\u2026",
+            "Loading peer discovery\u2026",
+            "\u092a\u0940\u092f\u0930 \u0916\u094b\u091c \u0932\u094b\u0921 \u0939\u094b"
+                    + " \u0930\u0939\u0940 \u0939\u0948\u2026",
+            "No recent clients found yet.",
+            "\u0905\u092d\u0940 \u0924\u0915 \u0939\u093e\u0932 \u092e\u0947\u0902"
+                    + " \u0926\u093f\u0916\u093e \u0915\u094b\u0908"
+                    + " \u0915\u094d\u0932\u093e\u0907\u0902\u091f \u0928\u0939\u0940\u0902"
+                    + " \u092e\u093f\u0932\u093e\u0964",
+            "Peer discovery",
+            "\u092a\u0940\u092f\u0930 \u0916\u094b\u091c",
+            "Peer discovery controls",
+            "\u092a\u0940\u092f\u0930 \u0916\u094b\u091c \u0915\u0947"
+                    + " \u0928\u093f\u092f\u0902\u0924\u094d\u0930\u0923",
+            "Peer discovery is off.",
+            "\u092a\u0940\u092f\u0930 \u0916\u094b\u091c \u092c\u0902\u0926 \u0939\u0948\u0964",
+            "Peer discovery settings",
+            "\u092a\u0940\u092f\u0930 \u0916\u094b\u091c \u0915\u0940"
+                    + " \u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938",
+            "Peer discovery stopped.",
+            "\u092a\u0940\u092f\u0930 \u0916\u094b\u091c \u0930\u094b\u0915 \u0926\u0940"
+                    + " \u0917\u0908\u0964",
+            "Peer key copied. Compare the full key before pairing.",
+            "\u092a\u0940\u092f\u0930 \u0915\u0940 \u0915\u0941\u0902\u091c\u0940"
+                    + " \u0915\u0949\u092a\u0940 \u0915\u0940 \u0917\u0908\u0964"
+                    + " \u092a\u0947\u092f\u0930\u093f\u0902\u0917 \u0938\u0947"
+                    + " \u092a\u0939\u0932\u0947 \u092a\u0942\u0930\u0940"
+                    + " \u0915\u0941\u0902\u091c\u0940 \u092e\u093f\u0932\u093e\u090f\u0901\u0964",
+            "Provider cache cleared.",
+            "\u092a\u094d\u0930\u0926\u093e\u0924\u093e \u0915\u0948\u0936 \u0938\u093e\u092b\u093c"
+                    + " \u0915\u093f\u092f\u093e \u0917\u092f\u093e\u0964",
+            "Provider profile scan finished.",
+            "\u092a\u094d\u0930\u0926\u093e\u0924\u093e"
+                + " \u092a\u094d\u0930\u094b\u092b\u093c\u093e\u0907\u0932\u094b\u0902 \u0915\u093e"
+                + " \u0938\u094d\u0915\u0948\u0928 \u092a\u0942\u0930\u093e"
+                + " \u0939\u0941\u0906\u0964",
+            "Public discovery and peer exchange",
+            "\u0938\u093e\u0930\u094d\u0935\u091c\u0928\u093f\u0915 \u0916\u094b\u091c \u0914\u0930"
+                    + " \u092a\u0940\u092f\u0930 \u090f\u0915\u094d\u0938\u091a\u0947\u0902\u091c",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "\u0915\u0947\u0935\u0932 \u0906\u092a\u0915\u0940 \u0910\u092a \u0915\u0940"
+                    + " \u0938\u093e\u0930\u094d\u0935\u091c\u0928\u093f\u0915"
+                    + " \u0915\u0941\u0902\u091c\u0940 \u0914\u0930"
+                    + " \u0938\u092e\u0930\u094d\u0925\u093f\u0924"
+                    + " \u091f\u094d\u0930\u093e\u0902\u0938\u092a\u094b\u0930\u094d\u091f"
+                    + " \u092a\u094d\u0930\u0915\u093e\u0936\u093f\u0924 \u0915\u0930\u0924\u093e"
+                    + " \u0939\u0948\u0964 \u0906\u092a\u0915\u0940"
+                    + " \u092b\u093c\u093e\u0907\u0932\u0947\u0902, \u0928\u093f\u091c\u0940"
+                    + " \u0938\u0902\u092a\u0930\u094d\u0915 \u092f\u093e"
+                    + " \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u092a\u0924\u0947"
+                    + " \u092a\u094d\u0930\u0915\u093e\u0936\u093f\u0924 \u0928\u0939\u0940\u0902"
+                    + " \u0915\u0930\u0924\u093e\u0964",
+            "Recent clients",
+            "\u0939\u093e\u0932 \u092e\u0947\u0902 \u0926\u093f\u0916\u0947"
+                    + " \u0915\u094d\u0932\u093e\u0907\u0902\u091f",
+            "Recent \u00b7 expires at {0}",
+            "\u0939\u093e\u0932 \u092e\u0947\u0902 \u0926\u093f\u0916\u093e \u00b7"
+                    + " \u0938\u092e\u093e\u092a\u094d\u0924\u093f \u0938\u092e\u092f: {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "\u0930\u093f\u0932\u0947 \u0915\u0928\u0947\u0915\u094d\u0936\u0928: {0} \u00b7"
+                    + " \u092e\u093f\u0932\u0940"
+                    + " \u092a\u094d\u0930\u094b\u092b\u093c\u093e\u0907\u0932\u0947\u0902: {1}",
+            "Restart BitChord before starting discovery.",
+            "\u0916\u094b\u091c \u0936\u0941\u0930\u0942 \u0915\u0930\u0928\u0947 \u0938\u0947"
+                    + " \u092a\u0939\u0932\u0947 BitChord \u092b\u093f\u0930 \u0938\u0947"
+                    + " \u091a\u093e\u0932\u0942 \u0915\u0930\u0947\u0902\u0964",
+            "Sharing a public provider profile. No files are shared.",
+            "\u092a\u094d\u0930\u0926\u093e\u0924\u093e \u0915\u0940"
+                + " \u0938\u093e\u0930\u094d\u0935\u091c\u0928\u093f\u0915"
+                + " \u092a\u094d\u0930\u094b\u092b\u093c\u093e\u0907\u0932 \u0938\u093e\u091d\u093e"
+                + " \u0915\u0940 \u091c\u093e \u0930\u0939\u0940 \u0939\u0948\u0964"
+                + " \u0915\u094b\u0908 \u092b\u093c\u093e\u0907\u0932 \u0938\u093e\u091d\u093e"
+                + " \u0928\u0939\u0940\u0902 \u0915\u0940 \u091c\u093e \u0930\u0939\u0940\u0964",
+            "Show more",
+            "\u0914\u0930 \u0926\u093f\u0916\u093e\u090f\u0901",
+            "Showing {0} of {1}",
+            "{1} \u092e\u0947\u0902 \u0938\u0947 {0} \u0926\u093f\u0916\u093e\u090f \u091c\u093e"
+                    + " \u0930\u0939\u0947 \u0939\u0948\u0902",
+            "Soulseek settings changed. Search again.",
+            "Soulseek \u0915\u0940 \u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938"
+                    + " \u092c\u0926\u0932 \u0917\u0908 \u0939\u0948\u0902\u0964 \u092b\u093f\u0930"
+                    + " \u0938\u0947 \u0916\u094b\u091c\u0947\u0902\u0964",
+            "Start a scan to apply the public profile setting.",
+            "\u0938\u093e\u0930\u094d\u0935\u091c\u0928\u093f\u0915"
+                    + " \u092a\u094d\u0930\u094b\u092b\u093c\u093e\u0907\u0932 \u0915\u0940"
+                    + " \u0938\u0947\u091f\u093f\u0902\u0917 \u0932\u093e\u0917\u0942"
+                    + " \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f"
+                    + " \u0938\u094d\u0915\u0948\u0928 \u0936\u0941\u0930\u0942"
+                    + " \u0915\u0930\u0947\u0902\u0964",
+            "Start a scan to find compatible provider profiles.",
+            "\u0938\u0902\u0917\u0924 \u092a\u094d\u0930\u0926\u093e\u0924\u093e\u0913\u0902"
+                + " \u0915\u0940 \u092a\u094d\u0930\u094b\u092b\u093c\u093e\u0907\u0932\u0947\u0902"
+                + " \u0922\u0942\u0901\u0922\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f"
+                + " \u0938\u094d\u0915\u0948\u0928 \u0936\u0941\u0930\u0942"
+                + " \u0915\u0930\u0947\u0902\u0964",
+            "Stop discovery",
+            "\u0916\u094b\u091c \u0930\u094b\u0915\u0947\u0902",
+            "Transports: {0}",
+            "\u091f\u094d\u0930\u093e\u0902\u0938\u092a\u094b\u0930\u094d\u091f: {0}",
+            "{0} recent clients",
+            "\u0939\u093e\u0932 \u092e\u0947\u0902 \u0926\u093f\u0916\u0947 {0}"
+                    + " \u0915\u094d\u0932\u093e\u0907\u0902\u091f",
         };
     }
 
@@ -24351,6 +25296,90 @@ final class Translations {
             "Hentikan semua",
             "{0} download connections",
             "{0} koneksi unduhan",
+            "Audio format choices changed. Search again.",
+            "Pilihan format audio berubah. Cari lagi.",
+            "Cannot create provider cache.",
+            "Tidak dapat membuat tembolok penyedia.",
+            "Clear found peers",
+            "Hapus rekan yang ditemukan",
+            "Copy key for pairing",
+            "Salin kunci untuk penyandingan",
+            "Could not complete peer discovery. Check relays and try again.",
+            "Tidak dapat menyelesaikan pencarian rekan. Periksa relai dan coba lagi.",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "Tidak dapat memperbarui pencarian rekan. Periksa pengaturan koneksi dan coba lagi.",
+            "Direct UDP / QUIC",
+            "UDP / QUIC langsung",
+            "Discover compatible peers",
+            "Temukan rekan yang kompatibel",
+            "Discoverable while this page is open",
+            "Dapat ditemukan selama halaman ini terbuka",
+            "Discovery could not start.",
+            "Tidak dapat memulai pencarian.",
+            "Discovery settings could not be saved.",
+            "Tidak dapat menyimpan pengaturan pencarian.",
+            "Enable peer discovery first.",
+            "Aktifkan pencarian rekan terlebih dahulu.",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "Temukan aplikasi yang kompatibel melalui relai publik dan pertukaran rekan. Kunci yang"
+                    + " ditemukan bukan kontak tepercaya dan tidak memberi akses ke berkas.",
+            "Find peers",
+            "Cari rekan",
+            "Finding compatible provider profiles\u2026",
+            "Mencari profil penyedia yang kompatibel\u2026",
+            "Loading peer discovery\u2026",
+            "Memuat pencarian rekan\u2026",
+            "No recent clients found yet.",
+            "Belum ada aplikasi aktif terbaru yang ditemukan.",
+            "Peer discovery",
+            "Pencarian rekan",
+            "Peer discovery controls",
+            "Kontrol pencarian rekan",
+            "Peer discovery is off.",
+            "Pencarian rekan dinonaktifkan.",
+            "Peer discovery settings",
+            "Pengaturan pencarian rekan",
+            "Peer discovery stopped.",
+            "Pencarian rekan dihentikan.",
+            "Peer key copied. Compare the full key before pairing.",
+            "Kunci rekan disalin. Bandingkan kunci lengkap sebelum menyandingkan.",
+            "Provider cache cleared.",
+            "Tembolok penyedia dihapus.",
+            "Provider profile scan finished.",
+            "Pemindaian profil penyedia selesai.",
+            "Public discovery and peer exchange",
+            "Pencarian publik dan pertukaran rekan",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "Hanya memublikasikan kunci publik aplikasi dan jalur transfer yang didukung. Berkas,"
+                    + " kontak pribadi, dan alamat koneksi Anda tidak dipublikasikan.",
+            "Recent clients",
+            "Aplikasi aktif terbaru",
+            "Recent \u00b7 expires at {0}",
+            "Baru aktif \u00b7 kedaluwarsa pukul {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "Koneksi relai: {0} \u00b7 Profil diterima: {1}",
+            "Restart BitChord before starting discovery.",
+            "Mulai ulang BitChord sebelum memulai pencarian.",
+            "Sharing a public provider profile. No files are shared.",
+            "Membagikan profil penyedia publik. Tidak ada berkas yang dibagikan.",
+            "Show more",
+            "Tampilkan lainnya",
+            "Showing {0} of {1}",
+            "Menampilkan {0} dari {1}",
+            "Soulseek settings changed. Search again.",
+            "Pengaturan Soulseek berubah. Cari lagi.",
+            "Start a scan to apply the public profile setting.",
+            "Mulai pemindaian untuk menerapkan pengaturan profil publik.",
+            "Start a scan to find compatible provider profiles.",
+            "Mulai pemindaian untuk menemukan profil penyedia yang kompatibel.",
+            "Stop discovery",
+            "Hentikan pencarian",
+            "Transports: {0}",
+            "Jalur transfer: {0}",
+            "{0} recent clients",
+            "{0} aplikasi aktif terbaru",
         };
     }
 
@@ -26489,6 +27518,91 @@ final class Translations {
             "Interrompi tutto",
             "{0} download connections",
             "{0} connessioni di download",
+            "Audio format choices changed. Search again.",
+            "La scelta dei formati audio \u00e8 cambiata. Ripeti la ricerca.",
+            "Cannot create provider cache.",
+            "Impossibile creare la memoria temporanea dei fornitori.",
+            "Clear found peers",
+            "Cancella nodi trovati",
+            "Copy key for pairing",
+            "Copia chiave per abbinamento",
+            "Could not complete peer discovery. Check relays and try again.",
+            "Impossibile completare la ricerca di nodi. Controlla i ripetitori e riprova.",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "Impossibile aggiornare la ricerca di nodi. Controlla le impostazioni di connessione e"
+                    + " riprova.",
+            "Direct UDP / QUIC",
+            "UDP / QUIC diretto",
+            "Discover compatible peers",
+            "Trova nodi compatibili",
+            "Discoverable while this page is open",
+            "Rilevabile mentre questa pagina \u00e8 aperta",
+            "Discovery could not start.",
+            "Impossibile avviare la ricerca.",
+            "Discovery settings could not be saved.",
+            "Impossibile salvare le impostazioni di ricerca.",
+            "Enable peer discovery first.",
+            "Attiva prima la ricerca di nodi.",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "Trova applicazioni compatibili tramite ripetitori pubblici e scambio di nodi. Le"
+                + " chiavi trovate non sono contatti attendibili e non concedono accesso ai file.",
+            "Find peers",
+            "Cerca nodi",
+            "Finding compatible provider profiles\u2026",
+            "Ricerca di profili di fornitori compatibili\u2026",
+            "Loading peer discovery\u2026",
+            "Caricamento ricerca di nodi\u2026",
+            "No recent clients found yet.",
+            "Nessuna applicazione recente trovata.",
+            "Peer discovery",
+            "Ricerca di nodi",
+            "Peer discovery controls",
+            "Controlli di ricerca dei nodi",
+            "Peer discovery is off.",
+            "La ricerca di nodi \u00e8 disattivata.",
+            "Peer discovery settings",
+            "Impostazioni di ricerca dei nodi",
+            "Peer discovery stopped.",
+            "Ricerca di nodi interrotta.",
+            "Peer key copied. Compare the full key before pairing.",
+            "Chiave del nodo copiata. Confronta la chiave completa prima dell\u2019abbinamento.",
+            "Provider cache cleared.",
+            "Memoria temporanea dei fornitori svuotata.",
+            "Provider profile scan finished.",
+            "Scansione dei profili dei fornitori completata.",
+            "Public discovery and peer exchange",
+            "Ricerca pubblica e scambio di nodi",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "Pubblica solo la chiave pubblica dell\u2019app e i sistemi di trasporto supportati."
+                    + " Non pubblica file, contatti privati o indirizzi di connessione.",
+            "Recent clients",
+            "Applicazioni recenti",
+            "Recent \u00b7 expires at {0}",
+            "Recente \u00b7 scade alle {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "Connessioni ai ripetitori: {0} \u00b7 Profili ricevuti: {1}",
+            "Restart BitChord before starting discovery.",
+            "Riavvia BitChord prima di avviare la ricerca.",
+            "Sharing a public provider profile. No files are shared.",
+            "Condivisione di un profilo pubblico del fornitore. Nessun file viene condiviso.",
+            "Show more",
+            "Mostra altro",
+            "Showing {0} of {1}",
+            "Visualizzati {0} di {1}",
+            "Soulseek settings changed. Search again.",
+            "Le impostazioni di Soulseek sono cambiate. Ripeti la ricerca.",
+            "Start a scan to apply the public profile setting.",
+            "Avvia una scansione per applicare l\u2019impostazione del profilo pubblico.",
+            "Start a scan to find compatible provider profiles.",
+            "Avvia una scansione per trovare profili di fornitori compatibili.",
+            "Stop discovery",
+            "Interrompi ricerca",
+            "Transports: {0}",
+            "Sistemi di trasporto: {0}",
+            "{0} recent clients",
+            "{0} applicazioni recenti",
         };
     }
 
@@ -28700,6 +29814,89 @@ final class Translations {
             "\u3059\u3079\u3066\u505c\u6b62",
             "{0} download connections",
             "{0} \u4ef6\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u63a5\u7d9a",
+            "Audio format choices changed. Search again.",
+            "\u97f3\u58f0\u5f62\u5f0f\u306e\u9078\u629e\u304c\u5909\u66f4\u3055\u308c\u307e\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u691c\u7d22\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Cannot create provider cache.",
+            "\u63d0\u4f9b\u5143\u306e\u30ad\u30e3\u30c3\u30b7\u30e5\u3092\u4f5c\u6210\u3067\u304d\u307e\u305b\u3093\u3002",
+            "Clear found peers",
+            "\u898b\u3064\u304b\u3063\u305f\u30d4\u30a2\u3092\u6d88\u53bb",
+            "Copy key for pairing",
+            "\u30da\u30a2\u30ea\u30f3\u30b0\u7528\u306b\u30ad\u30fc\u3092\u30b3\u30d4\u30fc",
+            "Could not complete peer discovery. Check relays and try again.",
+            "\u30d4\u30a2\u306e\u691c\u51fa\u3092\u5b8c\u4e86\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u30ea\u30ec\u30fc\u3092\u78ba\u8a8d\u3057\u3066\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "\u30d4\u30a2\u306e\u691c\u51fa\u3092\u66f4\u65b0\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u63a5\u7d9a\u8a2d\u5b9a\u3092\u78ba\u8a8d\u3057\u3066\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
+            "Direct UDP / QUIC",
+            "\u76f4\u63a5\u63a5\u7d9a UDP / QUIC",
+            "Discover compatible peers",
+            "\u4e92\u63db\u6027\u306e\u3042\u308b\u30d4\u30a2\u3092\u691c\u51fa",
+            "Discoverable while this page is open",
+            "\u3053\u306e\u30da\u30fc\u30b8\u3092\u958b\u3044\u3066\u3044\u308b\u9593\u306f\u691c\u51fa\u53ef\u80fd",
+            "Discovery could not start.",
+            "\u691c\u51fa\u3092\u958b\u59cb\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002",
+            "Discovery settings could not be saved.",
+            "\u691c\u51fa\u8a2d\u5b9a\u3092\u4fdd\u5b58\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002",
+            "Enable peer discovery first.",
+            "\u5148\u306b\u30d4\u30a2\u306e\u691c\u51fa\u3092\u6709\u52b9\u306b\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "\u516c\u958b\u30ea\u30ec\u30fc\u3068\u30d4\u30a2\u4ea4\u63db\u3067\u4e92\u63db\u6027\u306e\u3042\u308b\u30af\u30e9\u30a4\u30a2\u30f3\u30c8\u3092\u63a2\u3057\u307e\u3059\u3002\u898b\u3064\u304b\u3063\u305f\u30ad\u30fc\u306f\u4fe1\u983c\u6e08\u307f\u306e\u9023\u7d61\u5148\u3067\u306f\u306a\u304f\u3001\u30d5\u30a1\u30a4\u30eb\u3078\u306e\u30a2\u30af\u30bb\u30b9\u3082\u8a31\u53ef\u3057\u307e\u305b\u3093\u3002",
+            "Find peers",
+            "\u30d4\u30a2\u3092\u63a2\u3059",
+            "Finding compatible provider profiles\u2026",
+            "\u4e92\u63db\u6027\u306e\u3042\u308b\u63d0\u4f9b\u5143\u306e\u30d7\u30ed\u30d5\u30a1\u30a4\u30eb\u3092\u691c\u7d22\u4e2d\u2026",
+            "Loading peer discovery\u2026",
+            "\u30d4\u30a2\u306e\u691c\u51fa\u3092\u8aad\u307f\u8fbc\u307f\u4e2d\u2026",
+            "No recent clients found yet.",
+            "\u6700\u8fd1\u78ba\u8a8d\u3055\u308c\u305f\u30af\u30e9\u30a4\u30a2\u30f3\u30c8\u306f\u307e\u3060\u3042\u308a\u307e\u305b\u3093\u3002",
+            "Peer discovery",
+            "\u30d4\u30a2\u306e\u691c\u51fa",
+            "Peer discovery controls",
+            "\u30d4\u30a2\u306e\u691c\u51fa\u64cd\u4f5c",
+            "Peer discovery is off.",
+            "\u30d4\u30a2\u306e\u691c\u51fa\u306f\u30aa\u30d5\u3067\u3059\u3002",
+            "Peer discovery settings",
+            "\u30d4\u30a2\u306e\u691c\u51fa\u8a2d\u5b9a",
+            "Peer discovery stopped.",
+            "\u30d4\u30a2\u306e\u691c\u51fa\u3092\u505c\u6b62\u3057\u307e\u3057\u305f\u3002",
+            "Peer key copied. Compare the full key before pairing.",
+            "\u30d4\u30a2\u306e\u30ad\u30fc\u3092\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f\u3002\u30da\u30a2\u30ea\u30f3\u30b0\u3059\u308b\u524d\u306b\u30ad\u30fc\u5168\u4f53\u3092\u7167\u5408\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Provider cache cleared.",
+            "\u63d0\u4f9b\u5143\u306e\u30ad\u30e3\u30c3\u30b7\u30e5\u3092\u6d88\u53bb\u3057\u307e\u3057\u305f\u3002",
+            "Provider profile scan finished.",
+            "\u63d0\u4f9b\u5143\u306e\u30d7\u30ed\u30d5\u30a1\u30a4\u30eb\u306e\u30b9\u30ad\u30e3\u30f3\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f\u3002",
+            "Public discovery and peer exchange",
+            "\u516c\u958b\u691c\u51fa\u3068\u30d4\u30a2\u4ea4\u63db",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "\u30a2\u30d7\u30ea\u306e\u516c\u958b\u30ad\u30fc\u3068\u5bfe\u5fdc\u3059\u308b\u8ee2\u9001\u65b9\u5f0f\u3060\u3051\u3092\u516c\u958b\u3057\u307e\u3059\u3002\u30d5\u30a1\u30a4\u30eb\u3001\u975e\u516c\u958b\u306e\u9023\u7d61\u5148\u3001\u63a5\u7d9a\u5148\u30a2\u30c9\u30ec\u30b9\u306f\u516c\u958b\u3057\u307e\u305b\u3093\u3002",
+            "Recent clients",
+            "\u6700\u8fd1\u78ba\u8a8d\u3055\u308c\u305f\u30af\u30e9\u30a4\u30a2\u30f3\u30c8",
+            "Recent \u00b7 expires at {0}",
+            "\u6700\u8fd1\u78ba\u8a8d \u00b7 \u6709\u52b9\u671f\u9650\uff1a{0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "\u30ea\u30ec\u30fc\u63a5\u7d9a\u6570\uff1a{0} \u00b7"
+                    + " \u53d7\u4fe1\u3057\u305f\u30d7\u30ed\u30d5\u30a1\u30a4\u30eb\uff1a{1}",
+            "Restart BitChord before starting discovery.",
+            "\u691c\u51fa\u3092\u958b\u59cb\u3059\u308b\u524d\u306bBitChord\u3092\u518d\u8d77\u52d5\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Sharing a public provider profile. No files are shared.",
+            "\u63d0\u4f9b\u5143\u306e\u516c\u958b\u30d7\u30ed\u30d5\u30a1\u30a4\u30eb\u3092\u5171\u6709\u3057\u3066\u3044\u307e\u3059\u3002\u30d5\u30a1\u30a4\u30eb\u306f\u5171\u6709\u3055\u308c\u307e\u305b\u3093\u3002",
+            "Show more",
+            "\u3055\u3089\u306b\u8868\u793a",
+            "Showing {0} of {1}",
+            "{1}\u4ef6\u4e2d{0}\u4ef6\u3092\u8868\u793a",
+            "Soulseek settings changed. Search again.",
+            "Soulseek\u306e\u8a2d\u5b9a\u304c\u5909\u66f4\u3055\u308c\u307e\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u691c\u7d22\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Start a scan to apply the public profile setting.",
+            "\u516c\u958b\u30d7\u30ed\u30d5\u30a1\u30a4\u30eb\u306e\u8a2d\u5b9a\u3092\u9069\u7528\u3059\u308b\u306b\u306f\u3001\u30b9\u30ad\u30e3\u30f3\u3092\u958b\u59cb\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Start a scan to find compatible provider profiles.",
+            "\u30b9\u30ad\u30e3\u30f3\u3092\u958b\u59cb\u3057\u3066\u3001\u4e92\u63db\u6027\u306e\u3042\u308b\u63d0\u4f9b\u5143\u306e\u30d7\u30ed\u30d5\u30a1\u30a4\u30eb\u3092\u63a2\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Stop discovery",
+            "\u691c\u51fa\u3092\u505c\u6b62",
+            "Transports: {0}",
+            "\u8ee2\u9001\u65b9\u5f0f\uff1a{0}",
+            "{0} recent clients",
+            "\u6700\u8fd1\u78ba\u8a8d\u3055\u308c\u305f\u30af\u30e9\u30a4\u30a2\u30f3\u30c8\uff1a{0}\u4ef6",
         };
     }
 
@@ -31361,6 +32558,114 @@ final class Translations {
             "\ubaa8\ub450 \uc911\uc9c0",
             "{0} download connections",
             "\ub2e4\uc6b4\ub85c\ub4dc \uc5f0\uacb0 {0}\uac1c",
+            "Audio format choices changed. Search again.",
+            "\uc624\ub514\uc624 \ud615\uc2dd \uc120\ud0dd\uc774"
+                    + " \ubcc0\uacbd\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \ub2e4\uc2dc"
+                    + " \uac80\uc0c9\ud558\uc138\uc694.",
+            "Cannot create provider cache.",
+            "\uc81c\uacf5\uc790 \uce90\uc2dc\ub97c \ub9cc\ub4e4 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
+            "Clear found peers",
+            "\ubc1c\uacac\ud55c \ud53c\uc5b4 \uc9c0\uc6b0\uae30",
+            "Copy key for pairing",
+            "\ud398\uc5b4\ub9c1\uc6a9 \ud0a4 \ubcf5\uc0ac",
+            "Could not complete peer discovery. Check relays and try again.",
+            "\ud53c\uc5b4 \uac80\uc0c9\uc744 \uc644\ub8cc\ud558\uc9c0"
+                    + " \ubabb\ud588\uc2b5\ub2c8\ub2e4. \ub9b4\ub808\uc774\ub97c"
+                    + " \ud655\uc778\ud558\uace0 \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uc138\uc694.",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "\ud53c\uc5b4 \uac80\uc0c9\uc744 \uc5c5\ub370\uc774\ud2b8\ud558\uc9c0"
+                    + " \ubabb\ud588\uc2b5\ub2c8\ub2e4. \uc5f0\uacb0 \uc124\uc815\uc744"
+                    + " \ud655\uc778\ud558\uace0 \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uc138\uc694.",
+            "Direct UDP / QUIC",
+            "\uc9c1\uc811 \uc5f0\uacb0 UDP / QUIC",
+            "Discover compatible peers",
+            "\ud638\ud658\ub418\ub294 \ud53c\uc5b4 \ucc3e\uae30",
+            "Discoverable while this page is open",
+            "\uc774 \ud398\uc774\uc9c0\uac00 \uc5f4\ub824 \uc788\ub294 \ub3d9\uc548 \uac80\uc0c9"
+                    + " \ud5c8\uc6a9",
+            "Discovery could not start.",
+            "\uac80\uc0c9\uc744 \uc2dc\uc791\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4.",
+            "Discovery settings could not be saved.",
+            "\uac80\uc0c9 \uc124\uc815\uc744 \uc800\uc7a5\ud558\uc9c0"
+                    + " \ubabb\ud588\uc2b5\ub2c8\ub2e4.",
+            "Enable peer discovery first.",
+            "\uba3c\uc800 \ud53c\uc5b4 \uac80\uc0c9\uc744 \ucf1c\uc138\uc694.",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "\uacf5\uac1c \ub9b4\ub808\uc774\uc640 \ud53c\uc5b4 \uad50\ud658\uc73c\ub85c"
+                    + " \ud638\ud658\ub418\ub294 \ud074\ub77c\uc774\uc5b8\ud2b8\ub97c"
+                    + " \ucc3e\uc2b5\ub2c8\ub2e4. \ubc1c\uacac\ud55c \ud0a4\ub294"
+                    + " \uc2e0\ub8b0\ud558\ub294 \uc5f0\ub77d\ucc98\uac00 \uc544\ub2c8\uba70"
+                    + " \ud30c\uc77c \uc811\uadfc \uad8c\ud55c\uc744 \ubd80\uc5ec\ud558\uc9c0"
+                    + " \uc54a\uc2b5\ub2c8\ub2e4.",
+            "Find peers",
+            "\ud53c\uc5b4 \ucc3e\uae30",
+            "Finding compatible provider profiles\u2026",
+            "\ud638\ud658\ub418\ub294 \uc81c\uacf5\uc790 \ud504\ub85c\ud544\uc744 \ucc3e\ub294"
+                    + " \uc911\u2026",
+            "Loading peer discovery\u2026",
+            "\ud53c\uc5b4 \uac80\uc0c9\uc744 \ubd88\ub7ec\uc624\ub294 \uc911\u2026",
+            "No recent clients found yet.",
+            "\ucd5c\uadfc \ud655\uc778\ub41c \ud074\ub77c\uc774\uc5b8\ud2b8\uac00 \uc544\uc9c1"
+                    + " \uc5c6\uc2b5\ub2c8\ub2e4.",
+            "Peer discovery",
+            "\ud53c\uc5b4 \uac80\uc0c9",
+            "Peer discovery controls",
+            "\ud53c\uc5b4 \uac80\uc0c9 \uc81c\uc5b4",
+            "Peer discovery is off.",
+            "\ud53c\uc5b4 \uac80\uc0c9\uc774 \uaebc\uc838 \uc788\uc2b5\ub2c8\ub2e4.",
+            "Peer discovery settings",
+            "\ud53c\uc5b4 \uac80\uc0c9 \uc124\uc815",
+            "Peer discovery stopped.",
+            "\ud53c\uc5b4 \uac80\uc0c9\uc774 \uc911\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4.",
+            "Peer key copied. Compare the full key before pairing.",
+            "\ud53c\uc5b4 \ud0a4\ub97c \ubcf5\uc0ac\ud588\uc2b5\ub2c8\ub2e4. \ud398\uc5b4\ub9c1"
+                    + " \uc804\uc5d0 \uc804\uccb4 \ud0a4\ub97c \ub300\uc870\ud558\uc138\uc694.",
+            "Provider cache cleared.",
+            "\uc81c\uacf5\uc790 \uce90\uc2dc\ub97c \uc9c0\uc6e0\uc2b5\ub2c8\ub2e4.",
+            "Provider profile scan finished.",
+            "\uc81c\uacf5\uc790 \ud504\ub85c\ud544 \uc2a4\uce94\uc774"
+                    + " \uc644\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4.",
+            "Public discovery and peer exchange",
+            "\uacf5\uac1c \uac80\uc0c9 \ubc0f \ud53c\uc5b4 \uad50\ud658",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "\uc571 \uacf5\uac1c \ud0a4\uc640 \uc9c0\uc6d0\ud558\ub294 \uc804\uc1a1"
+                    + " \ubc29\uc2dd\ub9cc \uacf5\uac1c\ud569\ub2c8\ub2e4. \ud30c\uc77c,"
+                    + " \ube44\uacf5\uac1c \uc5f0\ub77d\ucc98, \uc5f0\uacb0 \uc8fc\uc18c\ub294"
+                    + " \uacf5\uac1c\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
+            "Recent clients",
+            "\ucd5c\uadfc \ud655\uc778\ub41c \ud074\ub77c\uc774\uc5b8\ud2b8",
+            "Recent \u00b7 expires at {0}",
+            "\ucd5c\uadfc \ud655\uc778 \u00b7 \ub9cc\ub8cc: {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "\ub9b4\ub808\uc774 \uc5f0\uacb0: {0} \u00b7 \ubc1b\uc740 \ud504\ub85c\ud544: {1}",
+            "Restart BitChord before starting discovery.",
+            "\uac80\uc0c9\uc744 \uc2dc\uc791\ud558\uae30 \uc804\uc5d0 BitChord\ub97c \ub2e4\uc2dc"
+                    + " \uc2dc\uc791\ud558\uc138\uc694.",
+            "Sharing a public provider profile. No files are shared.",
+            "\uc81c\uacf5\uc790\uc758 \uacf5\uac1c \ud504\ub85c\ud544\uc744"
+                    + " \uacf5\uc720\ud558\uace0 \uc788\uc2b5\ub2c8\ub2e4. \ud30c\uc77c\uc740"
+                    + " \uacf5\uc720\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
+            "Show more",
+            "\ub354 \ubcf4\uae30",
+            "Showing {0} of {1}",
+            "{1}\uac1c \uc911 {0}\uac1c \ud45c\uc2dc",
+            "Soulseek settings changed. Search again.",
+            "Soulseek \uc124\uc815\uc774 \ubcc0\uacbd\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \ub2e4\uc2dc"
+                    + " \uac80\uc0c9\ud558\uc138\uc694.",
+            "Start a scan to apply the public profile setting.",
+            "\uacf5\uac1c \ud504\ub85c\ud544 \uc124\uc815\uc744 \uc801\uc6a9\ud558\ub824\uba74"
+                    + " \uc2a4\uce94\uc744 \uc2dc\uc791\ud558\uc138\uc694.",
+            "Start a scan to find compatible provider profiles.",
+            "\uc2a4\uce94\uc744 \uc2dc\uc791\ud558\uc5ec \ud638\ud658\ub418\ub294"
+                    + " \uc81c\uacf5\uc790 \ud504\ub85c\ud544\uc744 \ucc3e\uc73c\uc138\uc694.",
+            "Stop discovery",
+            "\uac80\uc0c9 \uc911\uc9c0",
+            "Transports: {0}",
+            "\uc804\uc1a1 \ubc29\uc2dd: {0}",
+            "{0} recent clients",
+            "\ucd5c\uadfc \ud655\uc778\ub41c \ud074\ub77c\uc774\uc5b8\ud2b8 {0}\uac1c",
         };
     }
 
@@ -33564,6 +34869,95 @@ final class Translations {
             "Zatrzymaj wszystko",
             "{0} download connections",
             "{0} po\u0142\u0105cze\u0144 pobierania",
+            "Audio format choices changed. Search again.",
+            "Wyb\u00f3r format\u00f3w audio uleg\u0142 zmianie. Wyszukaj ponownie.",
+            "Cannot create provider cache.",
+            "Nie mo\u017cna utworzy\u0107 pami\u0119ci podr\u0119cznej dostawc\u00f3w.",
+            "Clear found peers",
+            "Wyczy\u015b\u0107 znalezione w\u0119z\u0142y",
+            "Copy key for pairing",
+            "Kopiuj klucz do parowania",
+            "Could not complete peer discovery. Check relays and try again.",
+            "Nie uda\u0142o si\u0119 uko\u0144czy\u0107 wykrywania w\u0119z\u0142\u00f3w."
+                    + " Sprawd\u017a przeka\u017aniki i spr\u00f3buj ponownie.",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "Nie uda\u0142o si\u0119 od\u015bwie\u017cy\u0107 wykrywania w\u0119z\u0142\u00f3w."
+                    + " Sprawd\u017a ustawienia po\u0142\u0105czenia i spr\u00f3buj ponownie.",
+            "Direct UDP / QUIC",
+            "Bezpo\u015brednie UDP / QUIC",
+            "Discover compatible peers",
+            "Wykrywaj zgodne w\u0119z\u0142y",
+            "Discoverable while this page is open",
+            "Wykrywalno\u015b\u0107, gdy ta strona jest otwarta",
+            "Discovery could not start.",
+            "Nie uda\u0142o si\u0119 rozpocz\u0105\u0107 wykrywania.",
+            "Discovery settings could not be saved.",
+            "Nie uda\u0142o si\u0119 zapisa\u0107 ustawie\u0144 wykrywania.",
+            "Enable peer discovery first.",
+            "Najpierw w\u0142\u0105cz wykrywanie w\u0119z\u0142\u00f3w.",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "Znajduj zgodne aplikacje przez publiczne przeka\u017aniki i wymian\u0119"
+                + " w\u0119z\u0142\u00f3w. Znalezione klucze nie s\u0105 zaufanymi kontaktami i nie"
+                + " daj\u0105 dost\u0119pu do plik\u00f3w.",
+            "Find peers",
+            "Szukaj w\u0119z\u0142\u00f3w",
+            "Finding compatible provider profiles\u2026",
+            "Szukanie zgodnych profili dostawc\u00f3w\u2026",
+            "Loading peer discovery\u2026",
+            "Wczytywanie wykrywania w\u0119z\u0142\u00f3w\u2026",
+            "No recent clients found yet.",
+            "Nie znaleziono jeszcze ostatnio aktywnych aplikacji.",
+            "Peer discovery",
+            "Wykrywanie w\u0119z\u0142\u00f3w",
+            "Peer discovery controls",
+            "Sterowanie wykrywaniem w\u0119z\u0142\u00f3w",
+            "Peer discovery is off.",
+            "Wykrywanie w\u0119z\u0142\u00f3w jest wy\u0142\u0105czone.",
+            "Peer discovery settings",
+            "Ustawienia wykrywania w\u0119z\u0142\u00f3w",
+            "Peer discovery stopped.",
+            "Zatrzymano wykrywanie w\u0119z\u0142\u00f3w.",
+            "Peer key copied. Compare the full key before pairing.",
+            "Skopiowano klucz w\u0119z\u0142a. Por\u00f3wnaj ca\u0142y klucz przed sparowaniem.",
+            "Provider cache cleared.",
+            "Wyczyszczono pami\u0119\u0107 podr\u0119czn\u0105 dostawc\u00f3w.",
+            "Provider profile scan finished.",
+            "Zako\u0144czono skanowanie profili dostawc\u00f3w.",
+            "Public discovery and peer exchange",
+            "Wykrywanie publiczne i wymiana w\u0119z\u0142\u00f3w",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "Publikuje tylko klucz publiczny aplikacji i obs\u0142ugiwane sposoby przesy\u0142ania."
+                    + " Nie publikuje plik\u00f3w, prywatnych kontakt\u00f3w ani adres\u00f3w"
+                    + " po\u0142\u0105cze\u0144.",
+            "Recent clients",
+            "Ostatnio aktywne aplikacje",
+            "Recent \u00b7 expires at {0}",
+            "Ostatnio aktywny \u00b7 wygasa o {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "Po\u0142\u0105czenia z przeka\u017anikami: {0} \u00b7 Odebrane profile: {1}",
+            "Restart BitChord before starting discovery.",
+            "Uruchom ponownie BitChord przed rozpocz\u0119ciem wykrywania.",
+            "Sharing a public provider profile. No files are shared.",
+            "Udost\u0119pnianie publicznego profilu dostawcy. \u017badne pliki nie s\u0105"
+                    + " udost\u0119pniane.",
+            "Show more",
+            "Poka\u017c wi\u0119cej",
+            "Showing {0} of {1}",
+            "Wy\u015bwietlono {0} z {1}",
+            "Soulseek settings changed. Search again.",
+            "Ustawienia Soulseek uleg\u0142y zmianie. Wyszukaj ponownie.",
+            "Start a scan to apply the public profile setting.",
+            "Rozpocznij skanowanie, aby zastosowa\u0107 ustawienie profilu publicznego.",
+            "Start a scan to find compatible provider profiles.",
+            "Rozpocznij skanowanie, aby znale\u017a\u0107 zgodne profile dostawc\u00f3w.",
+            "Stop discovery",
+            "Zatrzymaj wykrywanie",
+            "Transports: {0}",
+            "Sposoby przesy\u0142ania: {0}",
+            "{0} recent clients",
+            "Ostatnio aktywne aplikacje: {0}",
         };
     }
 
@@ -35732,6 +37126,95 @@ final class Translations {
             "Parar tudo",
             "{0} download connections",
             "{0} conex\u00f5es de download",
+            "Audio format choices changed. Search again.",
+            "A sele\u00e7\u00e3o de formatos de \u00e1udio mudou. Busque novamente.",
+            "Cannot create provider cache.",
+            "N\u00e3o foi poss\u00edvel criar o cache de provedores.",
+            "Clear found peers",
+            "Limpar pares encontrados",
+            "Copy key for pairing",
+            "Copiar chave para pareamento",
+            "Could not complete peer discovery. Check relays and try again.",
+            "N\u00e3o foi poss\u00edvel concluir a descoberta de pares. Verifique os rel\u00e9s e"
+                    + " tente novamente.",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "N\u00e3o foi poss\u00edvel atualizar a descoberta de pares. Verifique as"
+                    + " configura\u00e7\u00f5es de conex\u00e3o e tente novamente.",
+            "Direct UDP / QUIC",
+            "UDP / QUIC direto",
+            "Discover compatible peers",
+            "Descobrir pares compat\u00edveis",
+            "Discoverable while this page is open",
+            "Detect\u00e1vel enquanto esta p\u00e1gina estiver aberta",
+            "Discovery could not start.",
+            "N\u00e3o foi poss\u00edvel iniciar a descoberta.",
+            "Discovery settings could not be saved.",
+            "N\u00e3o foi poss\u00edvel salvar as configura\u00e7\u00f5es de descoberta.",
+            "Enable peer discovery first.",
+            "Ative a descoberta de pares primeiro.",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "Encontre clientes compat\u00edveis por rel\u00e9s p\u00fablicos e troca de pares. As"
+                    + " chaves encontradas n\u00e3o s\u00e3o contatos confi\u00e1veis e n\u00e3o"
+                    + " concedem acesso aos arquivos.",
+            "Find peers",
+            "Buscar pares",
+            "Finding compatible provider profiles\u2026",
+            "Buscando perfis de provedores compat\u00edveis\u2026",
+            "Loading peer discovery\u2026",
+            "Carregando descoberta de pares\u2026",
+            "No recent clients found yet.",
+            "Nenhum cliente recente encontrado ainda.",
+            "Peer discovery",
+            "Descoberta de pares",
+            "Peer discovery controls",
+            "Controles de descoberta de pares",
+            "Peer discovery is off.",
+            "A descoberta de pares est\u00e1 desativada.",
+            "Peer discovery settings",
+            "Configura\u00e7\u00f5es de descoberta de pares",
+            "Peer discovery stopped.",
+            "Descoberta de pares interrompida.",
+            "Peer key copied. Compare the full key before pairing.",
+            "Chave do par copiada. Compare a chave completa antes de parear.",
+            "Provider cache cleared.",
+            "Cache de provedores limpo.",
+            "Provider profile scan finished.",
+            "Busca de perfis de provedores conclu\u00edda.",
+            "Public discovery and peer exchange",
+            "Descoberta p\u00fablica e troca de pares",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "Publica apenas sua chave p\u00fablica do aplicativo e os transportes compat\u00edveis."
+                    + " N\u00e3o publica seus arquivos, contatos privados nem endere\u00e7os de"
+                    + " conex\u00e3o.",
+            "Recent clients",
+            "Clientes recentes",
+            "Recent \u00b7 expires at {0}",
+            "Recente \u00b7 expira \u00e0s {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "Conex\u00f5es com rel\u00e9s: {0} \u00b7 Perfis recebidos: {1}",
+            "Restart BitChord before starting discovery.",
+            "Reinicie o BitChord antes de iniciar a descoberta.",
+            "Sharing a public provider profile. No files are shared.",
+            "Compartilhando um perfil p\u00fablico de provedor. Nenhum arquivo \u00e9"
+                    + " compartilhado.",
+            "Show more",
+            "Mostrar mais",
+            "Showing {0} of {1}",
+            "Mostrando {0} de {1}",
+            "Soulseek settings changed. Search again.",
+            "As configura\u00e7\u00f5es do Soulseek mudaram. Busque novamente.",
+            "Start a scan to apply the public profile setting.",
+            "Inicie uma busca para aplicar a configura\u00e7\u00e3o do perfil p\u00fablico.",
+            "Start a scan to find compatible provider profiles.",
+            "Inicie uma busca para encontrar perfis de provedores compat\u00edveis.",
+            "Stop discovery",
+            "Parar descoberta",
+            "Transports: {0}",
+            "Transportes: {0}",
+            "{0} recent clients",
+            "{0} clientes recentes",
         };
     }
 
@@ -40315,6 +41798,202 @@ final class Translations {
             "{0} download connections",
             "{0} \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439"
                     + " \u0434\u043b\u044f \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438",
+            "Audio format choices changed. Search again.",
+            "\u0412\u044b\u0431\u043e\u0440"
+                + " \u0430\u0443\u0434\u0438\u043e\u0444\u043e\u0440\u043c\u0430\u0442\u043e\u0432"
+                + " \u0438\u0437\u043c\u0435\u043d\u0438\u043b\u0441\u044f."
+                + " \u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                + " \u043f\u043e\u0438\u0441\u043a.",
+            "Cannot create provider cache.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u0441\u043e\u0437\u0434\u0430\u0442\u044c \u043a\u044d\u0448"
+                    + " \u043f\u043e\u0441\u0442\u0430\u0432\u0449\u0438\u043a\u043e\u0432.",
+            "Clear found peers",
+            "\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c"
+                    + " \u043d\u0430\u0439\u0434\u0435\u043d\u043d\u044b\u0435"
+                    + " \u0443\u0437\u043b\u044b",
+            "Copy key for pairing",
+            "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c"
+                    + " \u043a\u043b\u044e\u0447 \u0434\u043b\u044f"
+                    + " \u0441\u043e\u043f\u0440\u044f\u0436\u0435\u043d\u0438\u044f",
+            "Could not complete peer discovery. Check relays and try again.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                + " \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u044c"
+                + " \u043f\u043e\u0438\u0441\u043a \u0443\u0437\u043b\u043e\u0432."
+                + " \u041f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435"
+                + " \u0440\u0435\u0442\u0440\u0430\u043d\u0441\u043b\u044f\u0442\u043e\u0440\u044b"
+                + " \u0438 \u043f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                + " \u043f\u043e\u043f\u044b\u0442\u043a\u0443.",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                + " \u043e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u043f\u043e\u0438\u0441\u043a"
+                + " \u0443\u0437\u043b\u043e\u0432."
+                + " \u041f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435"
+                + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438"
+                + " \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f \u0438"
+                + " \u043f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                + " \u043f\u043e\u043f\u044b\u0442\u043a\u0443.",
+            "Direct UDP / QUIC",
+            "\u041f\u0440\u044f\u043c\u043e\u0435 UDP / QUIC",
+            "Discover compatible peers",
+            "\u041d\u0430\u0445\u043e\u0434\u0438\u0442\u044c"
+                    + " \u0441\u043e\u0432\u043c\u0435\u0441\u0442\u0438\u043c\u044b\u0435"
+                    + " \u0443\u0437\u043b\u044b",
+            "Discoverable while this page is open",
+            "\u0414\u043e\u0441\u0442\u0443\u043f\u043d\u043e\u0441\u0442\u044c \u0434\u043b\u044f"
+                    + " \u043f\u043e\u0438\u0441\u043a\u0430, \u043f\u043e\u043a\u0430"
+                    + " \u043e\u0442\u043a\u0440\u044b\u0442\u0430 \u044d\u0442\u0430"
+                    + " \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0430",
+            "Discovery could not start.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u0437\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u044c"
+                    + " \u043f\u043e\u0438\u0441\u043a.",
+            "Discovery settings could not be saved.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c"
+                    + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438"
+                    + " \u043f\u043e\u0438\u0441\u043a\u0430.",
+            "Enable peer discovery first.",
+            "\u0421\u043d\u0430\u0447\u0430\u043b\u0430"
+                + " \u0432\u043a\u043b\u044e\u0447\u0438\u0442\u0435 \u043f\u043e\u0438\u0441\u043a"
+                + " \u0443\u0437\u043b\u043e\u0432.",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "\u041d\u0430\u0445\u043e\u0434\u0438\u0442\u0435"
+                + " \u0441\u043e\u0432\u043c\u0435\u0441\u0442\u0438\u043c\u044b\u0435"
+                + " \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f"
+                + " \u0447\u0435\u0440\u0435\u0437"
+                + " \u043e\u0431\u0449\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u0435"
+                + " \u0440\u0435\u0442\u0440\u0430\u043d\u0441\u043b\u044f\u0442\u043e\u0440\u044b"
+                + " \u0438 \u043e\u0431\u043c\u0435\u043d \u0443\u0437\u043b\u0430\u043c\u0438."
+                + " \u041d\u0430\u0439\u0434\u0435\u043d\u043d\u044b\u0435"
+                + " \u043a\u043b\u044e\u0447\u0438 \u043d\u0435"
+                + " \u044f\u0432\u043b\u044f\u044e\u0442\u0441\u044f"
+                + " \u0434\u043e\u0432\u0435\u0440\u0435\u043d\u043d\u044b\u043c\u0438"
+                + " \u043a\u043e\u043d\u0442\u0430\u043a\u0442\u0430\u043c\u0438 \u0438"
+                + " \u043d\u0435 \u0434\u0430\u044e\u0442"
+                + " \u0434\u043e\u0441\u0442\u0443\u043f\u0430 \u043a"
+                + " \u0444\u0430\u0439\u043b\u0430\u043c.",
+            "Find peers",
+            "\u041d\u0430\u0439\u0442\u0438 \u0443\u0437\u043b\u044b",
+            "Finding compatible provider profiles\u2026",
+            "\u041f\u043e\u0438\u0441\u043a"
+                    + " \u0441\u043e\u0432\u043c\u0435\u0441\u0442\u0438\u043c\u044b\u0445"
+                    + " \u043f\u0440\u043e\u0444\u0438\u043b\u0435\u0439"
+                    + " \u043f\u043e\u0441\u0442\u0430\u0432\u0449\u0438\u043a\u043e\u0432\u2026",
+            "Loading peer discovery\u2026",
+            "\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u043f\u043e\u0438\u0441\u043a\u0430"
+                    + " \u0443\u0437\u043b\u043e\u0432\u2026",
+            "No recent clients found yet.",
+            "\u041d\u0435\u0434\u0430\u0432\u043d\u043e"
+                    + " \u0430\u043a\u0442\u0438\u0432\u043d\u044b\u0435"
+                    + " \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f"
+                    + " \u043f\u043e\u043a\u0430 \u043d\u0435"
+                    + " \u043d\u0430\u0439\u0434\u0435\u043d\u044b.",
+            "Peer discovery",
+            "\u041f\u043e\u0438\u0441\u043a \u0443\u0437\u043b\u043e\u0432",
+            "Peer discovery controls",
+            "\u0423\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435"
+                    + " \u043f\u043e\u0438\u0441\u043a\u043e\u043c \u0443\u0437\u043b\u043e\u0432",
+            "Peer discovery is off.",
+            "\u041f\u043e\u0438\u0441\u043a \u0443\u0437\u043b\u043e\u0432"
+                    + " \u0432\u044b\u043a\u043b\u044e\u0447\u0435\u043d.",
+            "Peer discovery settings",
+            "\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438"
+                    + " \u043f\u043e\u0438\u0441\u043a\u0430 \u0443\u0437\u043b\u043e\u0432",
+            "Peer discovery stopped.",
+            "\u041f\u043e\u0438\u0441\u043a \u0443\u0437\u043b\u043e\u0432"
+                    + " \u043e\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d.",
+            "Peer key copied. Compare the full key before pairing.",
+            "\u041a\u043b\u044e\u0447 \u0443\u0437\u043b\u0430"
+                    + " \u0441\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d."
+                    + " \u0421\u0440\u0430\u0432\u043d\u0438\u0442\u0435"
+                    + " \u043f\u043e\u043b\u043d\u044b\u0439 \u043a\u043b\u044e\u0447"
+                    + " \u043f\u0435\u0440\u0435\u0434"
+                    + " \u0441\u043e\u043f\u0440\u044f\u0436\u0435\u043d\u0438\u0435\u043c.",
+            "Provider cache cleared.",
+            "\u041a\u044d\u0448 \u043f\u043e\u0441\u0442\u0430\u0432\u0449\u0438\u043a\u043e\u0432"
+                    + " \u043e\u0447\u0438\u0449\u0435\u043d.",
+            "Provider profile scan finished.",
+            "\u0421\u043a\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435"
+                    + " \u043f\u0440\u043e\u0444\u0438\u043b\u0435\u0439"
+                    + " \u043f\u043e\u0441\u0442\u0430\u0432\u0449\u0438\u043a\u043e\u0432"
+                    + " \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e.",
+            "Public discovery and peer exchange",
+            "\u041f\u0443\u0431\u043b\u0438\u0447\u043d\u044b\u0439 \u043f\u043e\u0438\u0441\u043a"
+                    + " \u0438 \u043e\u0431\u043c\u0435\u043d \u0443\u0437\u043b\u0430\u043c\u0438",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "\u041f\u0443\u0431\u043b\u0438\u043a\u0443\u044e\u0442\u0441\u044f"
+                + " \u0442\u043e\u043b\u044c\u043a\u043e"
+                + " \u043e\u0442\u043a\u0440\u044b\u0442\u044b\u0439 \u043a\u043b\u044e\u0447"
+                + " \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f \u0438"
+                + " \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043c\u044b\u0435"
+                + " \u0441\u043f\u043e\u0441\u043e\u0431\u044b"
+                + " \u043f\u0435\u0440\u0435\u0434\u0430\u0447\u0438. \u0412\u0430\u0448\u0438"
+                + " \u0444\u0430\u0439\u043b\u044b, \u043b\u0438\u0447\u043d\u044b\u0435"
+                + " \u043a\u043e\u043d\u0442\u0430\u043a\u0442\u044b \u0438"
+                + " \u0430\u0434\u0440\u0435\u0441\u0430"
+                + " \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f \u043d\u0435"
+                + " \u043f\u0443\u0431\u043b\u0438\u043a\u0443\u044e\u0442\u0441\u044f.",
+            "Recent clients",
+            "\u041d\u0435\u0434\u0430\u0432\u043d\u043e"
+                    + " \u0430\u043a\u0442\u0438\u0432\u043d\u044b\u0435"
+                    + " \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f",
+            "Recent \u00b7 expires at {0}",
+            "\u041d\u0435\u0434\u0430\u0432\u043d\u0438\u0439 \u00b7"
+                    + " \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0434\u043e {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f \u043a"
+                + " \u0440\u0435\u0442\u0440\u0430\u043d\u0441\u043b\u044f\u0442\u043e\u0440\u0430\u043c:"
+                + " {0} \u00b7 \u041f\u043e\u043b\u0443\u0447\u0435\u043d\u043e"
+                + " \u043f\u0440\u043e\u0444\u0438\u043b\u0435\u0439: {1}",
+            "Restart BitChord before starting discovery.",
+            "\u041f\u0435\u0440\u0435\u0437\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u0435"
+                    + " BitChord \u043f\u0435\u0440\u0435\u0434"
+                    + " \u043d\u0430\u0447\u0430\u043b\u043e\u043c"
+                    + " \u043f\u043e\u0438\u0441\u043a\u0430.",
+            "Sharing a public provider profile. No files are shared.",
+            "\u041f\u0443\u0431\u043b\u0438\u043a\u0443\u0435\u0442\u0441\u044f"
+                + " \u043e\u0442\u043a\u0440\u044b\u0442\u044b\u0439"
+                + " \u043f\u0440\u043e\u0444\u0438\u043b\u044c"
+                + " \u043f\u043e\u0441\u0442\u0430\u0432\u0449\u0438\u043a\u0430."
+                + " \u0424\u0430\u0439\u043b\u044b \u043d\u0435"
+                + " \u043f\u0440\u0435\u0434\u043e\u0441\u0442\u0430\u0432\u043b\u044f\u044e\u0442\u0441\u044f.",
+            "Show more",
+            "\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c \u0435\u0449\u0451",
+            "Showing {0} of {1}",
+            "\u041f\u043e\u043a\u0430\u0437\u0430\u043d\u043e {0} \u0438\u0437 {1}",
+            "Soulseek settings changed. Search again.",
+            "\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438 Soulseek"
+                    + " \u0438\u0437\u043c\u0435\u043d\u0438\u043b\u0438\u0441\u044c."
+                    + " \u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                    + " \u043f\u043e\u0438\u0441\u043a.",
+            "Start a scan to apply the public profile setting.",
+            "\u0417\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u0435"
+                    + " \u0441\u043a\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435,"
+                    + " \u0447\u0442\u043e\u0431\u044b"
+                    + " \u043f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u044c"
+                    + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0443"
+                    + " \u043e\u0442\u043a\u0440\u044b\u0442\u043e\u0433\u043e"
+                    + " \u043f\u0440\u043e\u0444\u0438\u043b\u044f.",
+            "Start a scan to find compatible provider profiles.",
+            "\u0417\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u0435"
+                    + " \u0441\u043a\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435"
+                    + " \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430"
+                    + " \u0441\u043e\u0432\u043c\u0435\u0441\u0442\u0438\u043c\u044b\u0445"
+                    + " \u043f\u0440\u043e\u0444\u0438\u043b\u0435\u0439"
+                    + " \u043f\u043e\u0441\u0442\u0430\u0432\u0449\u0438\u043a\u043e\u0432.",
+            "Stop discovery",
+            "\u041e\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c"
+                    + " \u043f\u043e\u0438\u0441\u043a",
+            "Transports: {0}",
+            "\u0421\u043f\u043e\u0441\u043e\u0431\u044b"
+                    + " \u043f\u0435\u0440\u0435\u0434\u0430\u0447\u0438: {0}",
+            "{0} recent clients",
+            "\u041d\u0435\u0434\u0430\u0432\u043d\u043e"
+                    + " \u0430\u043a\u0442\u0438\u0432\u043d\u044b\u0445"
+                    + " \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0439: {0}",
         };
     }
 
@@ -43082,6 +44761,106 @@ final class Translations {
             "{0} download connections",
             "\u0e01\u0e32\u0e23\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14"
                 + " {0} \u0e23\u0e32\u0e22\u0e01\u0e32\u0e23",
+            "Audio format choices changed. Search again.",
+            "\u0e15\u0e31\u0e27\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e23\u0e39\u0e1b\u0e41\u0e1a\u0e1a\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e44\u0e1b\u0e41\u0e25\u0e49\u0e27"
+                + " \u0e42\u0e1b\u0e23\u0e14\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "Cannot create provider cache.",
+            "\u0e2a\u0e23\u0e49\u0e32\u0e07\u0e41\u0e04\u0e0a\u0e1c\u0e39\u0e49\u0e43\u0e2b\u0e49\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49",
+            "Clear found peers",
+            "\u0e25\u0e49\u0e32\u0e07\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c\u0e17\u0e35\u0e48\u0e1e\u0e1a",
+            "Copy key for pairing",
+            "\u0e04\u0e31\u0e14\u0e25\u0e2d\u0e01\u0e04\u0e35\u0e22\u0e4c\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e08\u0e31\u0e1a\u0e04\u0e39\u0e48",
+            "Could not complete peer discovery. Check relays and try again.",
+            "\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c\u0e44\u0e21\u0e48\u0e2a\u0e33\u0e40\u0e23\u0e47\u0e08"
+                + " \u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e23\u0e35\u0e40\u0e25\u0e22\u0e4c\u0e41\u0e25\u0e49\u0e27\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "\u0e2d\u0e31\u0e1b\u0e40\u0e14\u0e15\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49"
+                + " \u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e01\u0e32\u0e23\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d\u0e41\u0e25\u0e49\u0e27\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "Direct UDP / QUIC",
+            "UDP / QUIC \u0e42\u0e14\u0e22\u0e15\u0e23\u0e07",
+            "Discover compatible peers",
+            "\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c\u0e17\u0e35\u0e48\u0e40\u0e02\u0e49\u0e32\u0e01\u0e31\u0e19\u0e44\u0e14\u0e49",
+            "Discoverable while this page is open",
+            "\u0e43\u0e2b\u0e49\u0e1c\u0e39\u0e49\u0e2d\u0e37\u0e48\u0e19\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e44\u0e14\u0e49\u0e02\u0e13\u0e30\u0e40\u0e1b\u0e34\u0e14\u0e2b\u0e19\u0e49\u0e32\u0e19\u0e35\u0e49",
+            "Discovery could not start.",
+            "\u0e40\u0e23\u0e34\u0e48\u0e21\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49",
+            "Discovery settings could not be saved.",
+            "\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49",
+            "Enable peer discovery first.",
+            "\u0e40\u0e1b\u0e34\u0e14\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c\u0e01\u0e48\u0e2d\u0e19",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e44\u0e04\u0e25\u0e40\u0e2d\u0e19\u0e15\u0e4c\u0e17\u0e35\u0e48\u0e40\u0e02\u0e49\u0e32\u0e01\u0e31\u0e19\u0e44\u0e14\u0e49\u0e1c\u0e48\u0e32\u0e19\u0e23\u0e35\u0e40\u0e25\u0e22\u0e4c\u0e2a\u0e32\u0e18\u0e32\u0e23\u0e13\u0e30\u0e41\u0e25\u0e30\u0e01\u0e32\u0e23\u0e41\u0e25\u0e01\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c"
+                + " \u0e04\u0e35\u0e22\u0e4c\u0e17\u0e35\u0e48\u0e1e\u0e1a\u0e44\u0e21\u0e48\u0e43\u0e0a\u0e48\u0e1c\u0e39\u0e49\u0e15\u0e34\u0e14\u0e15\u0e48\u0e2d\u0e17\u0e35\u0e48\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e16\u0e37\u0e2d"
+                + " \u0e41\u0e25\u0e30\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e43\u0e2b\u0e49\u0e2a\u0e34\u0e17\u0e18\u0e34\u0e4c\u0e40\u0e02\u0e49\u0e32\u0e16\u0e36\u0e07\u0e44\u0e1f\u0e25\u0e4c",
+            "Find peers",
+            "\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c",
+            "Finding compatible provider profiles\u2026",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e42\u0e1b\u0e23\u0e44\u0e1f\u0e25\u0e4c\u0e1c\u0e39\u0e49\u0e43\u0e2b\u0e49\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23\u0e17\u0e35\u0e48\u0e40\u0e02\u0e49\u0e32\u0e01\u0e31\u0e19\u0e44\u0e14\u0e49\u2026",
+            "Loading peer discovery\u2026",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e42\u0e2b\u0e25\u0e14\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c\u2026",
+            "No recent clients found yet.",
+            "\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e1e\u0e1a\u0e44\u0e04\u0e25\u0e40\u0e2d\u0e19\u0e15\u0e4c\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14",
+            "Peer discovery",
+            "\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c",
+            "Peer discovery controls",
+            "\u0e15\u0e31\u0e27\u0e04\u0e27\u0e1a\u0e04\u0e38\u0e21\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c",
+            "Peer discovery is off.",
+            "\u0e1b\u0e34\u0e14\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c\u0e2d\u0e22\u0e39\u0e48",
+            "Peer discovery settings",
+            "\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c",
+            "Peer discovery stopped.",
+            "\u0e2b\u0e22\u0e38\u0e14\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c\u0e41\u0e25\u0e49\u0e27",
+            "Peer key copied. Compare the full key before pairing.",
+            "\u0e04\u0e31\u0e14\u0e25\u0e2d\u0e01\u0e04\u0e35\u0e22\u0e4c\u0e02\u0e2d\u0e07\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c\u0e41\u0e25\u0e49\u0e27"
+                + " \u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e04\u0e35\u0e22\u0e4c\u0e17\u0e31\u0e49\u0e07\u0e2b\u0e21\u0e14\u0e43\u0e2b\u0e49\u0e15\u0e23\u0e07\u0e01\u0e31\u0e19\u0e01\u0e48\u0e2d\u0e19\u0e08\u0e31\u0e1a\u0e04\u0e39\u0e48",
+            "Provider cache cleared.",
+            "\u0e25\u0e49\u0e32\u0e07\u0e41\u0e04\u0e0a\u0e1c\u0e39\u0e49\u0e43\u0e2b\u0e49\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23\u0e41\u0e25\u0e49\u0e27",
+            "Provider profile scan finished.",
+            "\u0e2a\u0e41\u0e01\u0e19\u0e42\u0e1b\u0e23\u0e44\u0e1f\u0e25\u0e4c\u0e1c\u0e39\u0e49\u0e43\u0e2b\u0e49\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23\u0e40\u0e2a\u0e23\u0e47\u0e08\u0e41\u0e25\u0e49\u0e27",
+            "Public discovery and peer exchange",
+            "\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e41\u0e1a\u0e1a\u0e2a\u0e32\u0e18\u0e32\u0e23\u0e13\u0e30\u0e41\u0e25\u0e30\u0e01\u0e32\u0e23\u0e41\u0e25\u0e01\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "\u0e40\u0e1c\u0e22\u0e41\u0e1e\u0e23\u0e48\u0e40\u0e09\u0e1e\u0e32\u0e30\u0e04\u0e35\u0e22\u0e4c\u0e2a\u0e32\u0e18\u0e32\u0e23\u0e13\u0e30\u0e02\u0e2d\u0e07\u0e41\u0e2d\u0e1b\u0e41\u0e25\u0e30\u0e27\u0e34\u0e18\u0e35\u0e23\u0e31\u0e1a\u0e2a\u0e48\u0e07\u0e17\u0e35\u0e48\u0e23\u0e2d\u0e07\u0e23\u0e31\u0e1a"
+                + " \u0e44\u0e21\u0e48\u0e40\u0e1c\u0e22\u0e41\u0e1e\u0e23\u0e48\u0e44\u0e1f\u0e25\u0e4c"
+                + " \u0e1c\u0e39\u0e49\u0e15\u0e34\u0e14\u0e15\u0e48\u0e2d\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27"
+                + " \u0e2b\u0e23\u0e37\u0e2d\u0e17\u0e35\u0e48\u0e2d\u0e22\u0e39\u0e48\u0e01\u0e32\u0e23\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13",
+            "Recent clients",
+            "\u0e44\u0e04\u0e25\u0e40\u0e2d\u0e19\u0e15\u0e4c\u0e17\u0e35\u0e48\u0e1e\u0e1a\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14",
+            "Recent \u00b7 expires at {0}",
+            "\u0e1e\u0e1a\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14 \u00b7"
+                    + " \u0e2b\u0e21\u0e14\u0e2d\u0e32\u0e22\u0e38\u0e40\u0e27\u0e25\u0e32 {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "\u0e01\u0e32\u0e23\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d\u0e23\u0e35\u0e40\u0e25\u0e22\u0e4c:"
+                + " {0} \u00b7"
+                + " \u0e42\u0e1b\u0e23\u0e44\u0e1f\u0e25\u0e4c\u0e17\u0e35\u0e48\u0e44\u0e14\u0e49\u0e23\u0e31\u0e1a:"
+                + " {1}",
+            "Restart BitChord before starting discovery.",
+            "\u0e40\u0e23\u0e34\u0e48\u0e21 BitChord"
+                + " \u0e43\u0e2b\u0e21\u0e48\u0e01\u0e48\u0e2d\u0e19\u0e40\u0e23\u0e34\u0e48\u0e21\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e1e\u0e1a",
+            "Sharing a public provider profile. No files are shared.",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e41\u0e0a\u0e23\u0e4c\u0e42\u0e1b\u0e23\u0e44\u0e1f\u0e25\u0e4c\u0e1c\u0e39\u0e49\u0e43\u0e2b\u0e49\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23\u0e41\u0e1a\u0e1a\u0e2a\u0e32\u0e18\u0e32\u0e23\u0e13\u0e30"
+                + " \u0e44\u0e21\u0e48\u0e21\u0e35\u0e01\u0e32\u0e23\u0e41\u0e0a\u0e23\u0e4c\u0e44\u0e1f\u0e25\u0e4c",
+            "Show more",
+            "\u0e41\u0e2a\u0e14\u0e07\u0e40\u0e1e\u0e34\u0e48\u0e21\u0e40\u0e15\u0e34\u0e21",
+            "Showing {0} of {1}",
+            "\u0e41\u0e2a\u0e14\u0e07 {0} \u0e08\u0e32\u0e01 {1}",
+            "Soulseek settings changed. Search again.",
+            "\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32 Soulseek"
+                + " \u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e44\u0e1b\u0e41\u0e25\u0e49\u0e27"
+                + " \u0e42\u0e1b\u0e23\u0e14\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "Start a scan to apply the public profile setting.",
+            "\u0e40\u0e23\u0e34\u0e48\u0e21\u0e2a\u0e41\u0e01\u0e19\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e43\u0e0a\u0e49\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e42\u0e1b\u0e23\u0e44\u0e1f\u0e25\u0e4c\u0e2a\u0e32\u0e18\u0e32\u0e23\u0e13\u0e30",
+            "Start a scan to find compatible provider profiles.",
+            "\u0e40\u0e23\u0e34\u0e48\u0e21\u0e2a\u0e41\u0e01\u0e19\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e42\u0e1b\u0e23\u0e44\u0e1f\u0e25\u0e4c\u0e1c\u0e39\u0e49\u0e43\u0e2b\u0e49\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23\u0e17\u0e35\u0e48\u0e40\u0e02\u0e49\u0e32\u0e01\u0e31\u0e19\u0e44\u0e14\u0e49",
+            "Stop discovery",
+            "\u0e2b\u0e22\u0e38\u0e14\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e1e\u0e1a",
+            "Transports: {0}",
+            "\u0e27\u0e34\u0e18\u0e35\u0e23\u0e31\u0e1a\u0e2a\u0e48\u0e07: {0}",
+            "{0} recent clients",
+            "\u0e44\u0e04\u0e25\u0e40\u0e2d\u0e19\u0e15\u0e4c\u0e17\u0e35\u0e48\u0e1e\u0e1a\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14"
+                + " {0} \u0e23\u0e32\u0e22",
         };
     }
 
@@ -45361,6 +47140,99 @@ final class Translations {
             "T\u00fcm\u00fcn\u00fc durdur",
             "{0} download connections",
             "{0} indirme ba\u011flant\u0131s\u0131",
+            "Audio format choices changed. Search again.",
+            "Ses bi\u00e7imi se\u00e7imleri de\u011fi\u015fti. Yeniden aray\u0131n.",
+            "Cannot create provider cache.",
+            "Sa\u011flay\u0131c\u0131 \u00f6nbelle\u011fi olu\u015fturulam\u0131yor.",
+            "Clear found peers",
+            "Bulunan e\u015fleri temizle",
+            "Copy key for pairing",
+            "E\u015fle\u015ftirme anahtar\u0131n\u0131 kopyala",
+            "Could not complete peer discovery. Check relays and try again.",
+            "E\u015f ke\u015ffi tamamlanamad\u0131. Aktar\u0131c\u0131lar\u0131 kontrol edip tekrar"
+                    + " deneyin.",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "E\u015f ke\u015ffi g\u00fcncellenemedi. Ba\u011flant\u0131 ayarlar\u0131n\u0131"
+                    + " kontrol edip tekrar deneyin.",
+            "Direct UDP / QUIC",
+            "Do\u011frudan UDP / QUIC",
+            "Discover compatible peers",
+            "Uyumlu e\u015fleri ke\u015ffet",
+            "Discoverable while this page is open",
+            "Bu sayfa a\u00e7\u0131kken ke\u015ffedilebilir",
+            "Discovery could not start.",
+            "Ke\u015fif ba\u015flat\u0131lamad\u0131.",
+            "Discovery settings could not be saved.",
+            "Ke\u015fif ayarlar\u0131 kaydedilemedi.",
+            "Enable peer discovery first.",
+            "\u00d6nce e\u015f ke\u015ffini etkinle\u015ftirin.",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "Herkese a\u00e7\u0131k aktar\u0131c\u0131lar ve e\u015f payla\u015f\u0131m\u0131yla"
+                + " uyumlu uygulamalar\u0131 bulun. Bulunan anahtarlar g\u00fcvenilir ki\u015filer"
+                + " de\u011fildir ve dosyalara eri\u015fim sa\u011flamaz.",
+            "Find peers",
+            "E\u015fleri bul",
+            "Finding compatible provider profiles\u2026",
+            "Uyumlu sa\u011flay\u0131c\u0131 profilleri aran\u0131yor\u2026",
+            "Loading peer discovery\u2026",
+            "E\u015f ke\u015ffi y\u00fckleniyor\u2026",
+            "No recent clients found yet.",
+            "Hen\u00fcz yak\u0131n zamanda etkin bir uygulama bulunamad\u0131.",
+            "Peer discovery",
+            "E\u015f ke\u015ffi",
+            "Peer discovery controls",
+            "E\u015f ke\u015ffi kontrolleri",
+            "Peer discovery is off.",
+            "E\u015f ke\u015ffi kapal\u0131.",
+            "Peer discovery settings",
+            "E\u015f ke\u015ffi ayarlar\u0131",
+            "Peer discovery stopped.",
+            "E\u015f ke\u015ffi durduruldu.",
+            "Peer key copied. Compare the full key before pairing.",
+            "E\u015f anahtar\u0131 kopyaland\u0131. E\u015fle\u015ftirmeden \u00f6nce"
+                    + " anahtar\u0131n tamam\u0131n\u0131 kar\u015f\u0131la\u015ft\u0131r\u0131n.",
+            "Provider cache cleared.",
+            "Sa\u011flay\u0131c\u0131 \u00f6nbelle\u011fi temizlendi.",
+            "Provider profile scan finished.",
+            "Sa\u011flay\u0131c\u0131 profili taramas\u0131 tamamland\u0131.",
+            "Public discovery and peer exchange",
+            "Herkese a\u00e7\u0131k ke\u015fif ve e\u015f payla\u015f\u0131m\u0131",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "Yaln\u0131zca uygulaman\u0131z\u0131n a\u00e7\u0131k anahtar\u0131 ve desteklenen"
+                    + " aktar\u0131m y\u00f6ntemleri yay\u0131mlan\u0131r. Dosyalar\u0131n\u0131z,"
+                    + " \u00f6zel ki\u015fileriniz veya ba\u011flant\u0131 adresleriniz"
+                    + " yay\u0131mlanmaz.",
+            "Recent clients",
+            "Yak\u0131n zamanda etkin uygulamalar",
+            "Recent \u00b7 expires at {0}",
+            "Yeni \u00b7 {0} saatinde sona erer",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "Aktar\u0131c\u0131 ba\u011flant\u0131lar\u0131: {0} \u00b7 Al\u0131nan profiller: {1}",
+            "Restart BitChord before starting discovery.",
+            "Ke\u015ffe ba\u015flamadan \u00f6nce BitChord\u2019u yeniden ba\u015flat\u0131n.",
+            "Sharing a public provider profile. No files are shared.",
+            "Herkese a\u00e7\u0131k bir sa\u011flay\u0131c\u0131 profili"
+                + " payla\u015f\u0131l\u0131yor. Hi\u00e7bir dosya payla\u015f\u0131lm\u0131yor.",
+            "Show more",
+            "Daha fazla g\u00f6ster",
+            "Showing {0} of {1}",
+            "{1} kay\u0131ttan {0} tanesi g\u00f6steriliyor",
+            "Soulseek settings changed. Search again.",
+            "Soulseek ayarlar\u0131 de\u011fi\u015fti. Yeniden aray\u0131n.",
+            "Start a scan to apply the public profile setting.",
+            "Herkese a\u00e7\u0131k profil ayar\u0131n\u0131 uygulamak i\u00e7in tarama"
+                    + " ba\u015flat\u0131n.",
+            "Start a scan to find compatible provider profiles.",
+            "Uyumlu sa\u011flay\u0131c\u0131 profillerini bulmak i\u00e7in tarama"
+                    + " ba\u015flat\u0131n.",
+            "Stop discovery",
+            "Ke\u015ffi durdur",
+            "Transports: {0}",
+            "Aktar\u0131m y\u00f6ntemleri: {0}",
+            "{0} recent clients",
+            "Yak\u0131n zamanda etkin {0} uygulama",
         };
     }
 
@@ -49408,6 +51280,186 @@ final class Translations {
             "\u0633\u0628 \u0631\u0648\u06a9\u06cc\u06ba",
             "{0} download connections",
             "{0} \u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u06a9\u0646\u06a9\u0634\u0646",
+            "Audio format choices changed. Search again.",
+            "\u0622\u0688\u06cc\u0648 \u0641\u0627\u0631\u0645\u06cc\u0679 \u06a9\u06d2"
+                    + " \u0627\u0646\u062a\u062e\u0627\u0628 \u0628\u062f\u0644 \u06af\u0626\u06d2"
+                    + " \u06c1\u06cc\u06ba\u06d4 \u062f\u0648\u0628\u0627\u0631\u06c1"
+                    + " \u062a\u0644\u0627\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Cannot create provider cache.",
+            "\u0641\u0631\u0627\u06c1\u0645 \u06a9\u0646\u0646\u062f\u06af\u0627\u0646 \u06a9\u0627"
+                    + " \u06a9\u06cc\u0634 \u0646\u06c1\u06cc\u06ba \u0628\u0646"
+                    + " \u0633\u06a9\u0627\u06d4",
+            "Clear found peers",
+            "\u0645\u0644\u0646\u06d2 \u0648\u0627\u0644\u06d2 \u0633\u0627\u062a\u06be\u06cc"
+                    + " \u0635\u0627\u0641 \u06a9\u0631\u06cc\u06ba",
+            "Copy key for pairing",
+            "\u062c\u0648\u0691\u0627 \u0628\u0646\u0627\u0646\u06d2 \u06a9\u06d2"
+                    + " \u0644\u06cc\u06d2 \u06a9\u0644\u06cc\u062f \u0646\u0642\u0644"
+                    + " \u06a9\u0631\u06cc\u06ba",
+            "Could not complete peer discovery. Check relays and try again.",
+            "\u0633\u0627\u062a\u06be\u06cc\u0648\u06ba \u06a9\u06cc \u062a\u0644\u0627\u0634"
+                    + " \u0645\u06a9\u0645\u0644 \u0646\u06c1\u06cc\u06ba \u06c1\u0648"
+                    + " \u0633\u06a9\u06cc\u06d4 \u0631\u06cc\u0644\u06d2"
+                    + " \u062f\u06cc\u06a9\u06be\u06cc\u06ba \u0627\u0648\u0631"
+                    + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u06a9\u0648\u0634\u0634"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "\u0633\u0627\u062a\u06be\u06cc\u0648\u06ba \u06a9\u06cc \u062a\u0644\u0627\u0634"
+                + " \u062a\u0627\u0632\u06c1 \u0646\u06c1\u06cc\u06ba \u06c1\u0648"
+                + " \u0633\u06a9\u06cc\u06d4 \u0631\u0627\u0628\u0637\u06d2 \u06a9\u06cc"
+                + " \u062a\u0631\u062a\u06cc\u0628\u0627\u062a \u062f\u06cc\u06a9\u06be\u06cc\u06ba"
+                + " \u0627\u0648\u0631 \u062f\u0648\u0628\u0627\u0631\u06c1"
+                + " \u06a9\u0648\u0634\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Direct UDP / QUIC",
+            "\u0628\u0631\u0627\u06c1 \u0631\u0627\u0633\u062a UDP / QUIC",
+            "Discover compatible peers",
+            "\u0645\u0648\u0627\u0641\u0642 \u0633\u0627\u062a\u06be\u06cc \u062a\u0644\u0627\u0634"
+                    + " \u06a9\u0631\u06cc\u06ba",
+            "Discoverable while this page is open",
+            "\u06cc\u06c1 \u0635\u0641\u062d\u06c1 \u06a9\u06be\u0644\u0627"
+                    + " \u06c1\u0648\u0646\u06d2 \u062a\u06a9 \u0622\u067e \u06a9\u0648"
+                    + " \u062a\u0644\u0627\u0634 \u06a9\u06cc\u0627 \u062c\u0627 \u0633\u06a9\u06d2"
+                    + " \u06af\u0627",
+            "Discovery could not start.",
+            "\u062a\u0644\u0627\u0634 \u0634\u0631\u0648\u0639 \u0646\u06c1\u06cc\u06ba"
+                    + " \u06c1\u0648 \u0633\u06a9\u06cc\u06d4",
+            "Discovery settings could not be saved.",
+            "\u062a\u0644\u0627\u0634 \u06a9\u06cc \u062a\u0631\u062a\u06cc\u0628\u0627\u062a"
+                    + " \u0645\u062d\u0641\u0648\u0638 \u0646\u06c1\u06cc\u06ba \u06c1\u0648"
+                    + " \u0633\u06a9\u06cc\u06ba\u06d4",
+            "Enable peer discovery first.",
+            "\u067e\u06c1\u0644\u06d2 \u0633\u0627\u062a\u06be\u06cc\u0648\u06ba \u06a9\u06cc"
+                    + " \u062a\u0644\u0627\u0634 \u0641\u0639\u0627\u0644"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "\u0639\u0648\u0627\u0645\u06cc \u0631\u06cc\u0644\u06d2 \u0627\u0648\u0631"
+                    + " \u0633\u0627\u062a\u06be\u06cc\u0648\u06ba \u06a9\u06d2"
+                    + " \u062a\u0628\u0627\u062f\u0644\u06d2 \u0633\u06d2"
+                    + " \u0645\u0648\u0627\u0641\u0642 \u06a9\u0644\u0627\u0626\u0646\u0679\u0633"
+                    + " \u062a\u0644\u0627\u0634 \u06a9\u0631\u06cc\u06ba\u06d4"
+                    + " \u0645\u0644\u0646\u06d2 \u0648\u0627\u0644\u06cc"
+                    + " \u06a9\u0644\u06cc\u062f\u06cc\u06ba \u0642\u0627\u0628\u0644"
+                    + " \u0627\u0639\u062a\u0645\u0627\u062f \u0631\u0627\u0628\u0637\u06d2"
+                    + " \u0646\u06c1\u06cc\u06ba \u06c1\u06cc\u06ba \u0627\u0648\u0631"
+                    + " \u0641\u0627\u0626\u0644\u0648\u06ba \u062a\u06a9"
+                    + " \u0631\u0633\u0627\u0626\u06cc \u0646\u06c1\u06cc\u06ba"
+                    + " \u062f\u06cc\u062a\u06cc\u06ba\u06d4",
+            "Find peers",
+            "\u0633\u0627\u062a\u06be\u06cc \u0688\u06be\u0648\u0646\u0688\u06cc\u06ba",
+            "Finding compatible provider profiles\u2026",
+            "\u0645\u0648\u0627\u0641\u0642 \u0641\u0631\u0627\u06c1\u0645"
+                + " \u06a9\u0646\u0646\u062f\u06af\u0627\u0646 \u06a9\u06d2"
+                + " \u067e\u0631\u0648\u0641\u0627\u0626\u0644\u0632 \u062a\u0644\u0627\u0634"
+                + " \u06a9\u06cc\u06d2 \u062c\u0627 \u0631\u06c1\u06d2 \u06c1\u06cc\u06ba\u2026",
+            "Loading peer discovery\u2026",
+            "\u0633\u0627\u062a\u06be\u06cc\u0648\u06ba \u06a9\u06cc \u062a\u0644\u0627\u0634"
+                    + " \u0644\u0648\u0688 \u06c1\u0648 \u0631\u06c1\u06cc \u06c1\u06d2\u2026",
+            "No recent clients found yet.",
+            "\u0627\u0628\u06be\u06cc \u062a\u06a9 \u06a9\u0648\u0626\u06cc"
+                    + " \u062d\u0627\u0644\u06cc\u06c1 \u06a9\u0644\u0627\u0626\u0646\u0679"
+                    + " \u0646\u06c1\u06cc\u06ba \u0645\u0644\u0627\u06d4",
+            "Peer discovery",
+            "\u0633\u0627\u062a\u06be\u06cc\u0648\u06ba \u06a9\u06cc \u062a\u0644\u0627\u0634",
+            "Peer discovery controls",
+            "\u0633\u0627\u062a\u06be\u06cc\u0648\u06ba \u06a9\u06cc \u062a\u0644\u0627\u0634"
+                    + " \u06a9\u06d2 \u06a9\u0646\u0679\u0631\u0648\u0644\u0632",
+            "Peer discovery is off.",
+            "\u0633\u0627\u062a\u06be\u06cc\u0648\u06ba \u06a9\u06cc \u062a\u0644\u0627\u0634"
+                    + " \u0628\u0646\u062f \u06c1\u06d2\u06d4",
+            "Peer discovery settings",
+            "\u0633\u0627\u062a\u06be\u06cc\u0648\u06ba \u06a9\u06cc \u062a\u0644\u0627\u0634"
+                    + " \u06a9\u06cc \u062a\u0631\u062a\u06cc\u0628\u0627\u062a",
+            "Peer discovery stopped.",
+            "\u0633\u0627\u062a\u06be\u06cc\u0648\u06ba \u06a9\u06cc \u062a\u0644\u0627\u0634"
+                    + " \u0631\u0648\u06a9 \u062f\u06cc \u06af\u0626\u06cc\u06d4",
+            "Peer key copied. Compare the full key before pairing.",
+            "\u0633\u0627\u062a\u06be\u06cc \u06a9\u06cc \u06a9\u0644\u06cc\u062f"
+                    + " \u0646\u0642\u0644 \u06c1\u0648 \u06af\u0626\u06cc\u06d4"
+                    + " \u062c\u0648\u0691\u0627 \u0628\u0646\u0627\u0646\u06d2 \u0633\u06d2"
+                    + " \u067e\u06c1\u0644\u06d2 \u067e\u0648\u0631\u06cc \u06a9\u0644\u06cc\u062f"
+                    + " \u06a9\u0627 \u0645\u0648\u0627\u0632\u0646\u06c1"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Provider cache cleared.",
+            "\u0641\u0631\u0627\u06c1\u0645 \u06a9\u0646\u0646\u062f\u06af\u0627\u0646 \u06a9\u0627"
+                    + " \u06a9\u06cc\u0634 \u0635\u0627\u0641 \u06a9\u0631 \u062f\u06cc\u0627"
+                    + " \u06af\u06cc\u0627\u06d4",
+            "Provider profile scan finished.",
+            "\u0641\u0631\u0627\u06c1\u0645 \u06a9\u0646\u0646\u062f\u06af\u0627\u0646 \u06a9\u06d2"
+                    + " \u067e\u0631\u0648\u0641\u0627\u0626\u0644\u0632 \u06a9\u0627"
+                    + " \u0627\u0633\u06a9\u06cc\u0646 \u0645\u06a9\u0645\u0644 \u06c1\u0648"
+                    + " \u06af\u06cc\u0627\u06d4",
+            "Public discovery and peer exchange",
+            "\u0639\u0648\u0627\u0645\u06cc \u062a\u0644\u0627\u0634 \u0627\u0648\u0631"
+                    + " \u0633\u0627\u062a\u06be\u06cc\u0648\u06ba \u06a9\u0627"
+                    + " \u062a\u0628\u0627\u062f\u0644\u06c1",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "\u0635\u0631\u0641 \u0622\u067e \u06a9\u06cc \u0627\u06cc\u067e \u06a9\u06cc"
+                    + " \u0639\u0648\u0627\u0645\u06cc \u06a9\u0644\u06cc\u062f \u0627\u0648\u0631"
+                    + " \u0645\u0646\u062a\u0642\u0644\u06cc \u06a9\u06d2"
+                    + " \u0645\u0639\u0627\u0648\u0646\u062a \u06cc\u0627\u0641\u062a\u06c1"
+                    + " \u0637\u0631\u06cc\u0642\u06d2 \u0634\u0627\u0626\u0639"
+                    + " \u06a9\u0631\u062a\u0627 \u06c1\u06d2\u06d4 \u0622\u067e \u06a9\u06cc"
+                    + " \u0641\u0627\u0626\u0644\u06cc\u06ba\u060c \u0646\u062c\u06cc"
+                    + " \u0631\u0627\u0628\u0637\u06d2 \u06cc\u0627 \u0631\u0627\u0628\u0637\u06d2"
+                    + " \u06a9\u06d2 \u067e\u062a\u06d2 \u0634\u0627\u0626\u0639"
+                    + " \u0646\u06c1\u06cc\u06ba \u06a9\u0631\u062a\u0627\u06d4",
+            "Recent clients",
+            "\u062d\u0627\u0644 \u06c1\u06cc \u0645\u06cc\u06ba \u0646\u0638\u0631"
+                    + " \u0622\u0646\u06d2 \u0648\u0627\u0644\u06d2"
+                    + " \u06a9\u0644\u0627\u0626\u0646\u0679\u0633",
+            "Recent \u00b7 expires at {0}",
+            "\u062d\u0627\u0644 \u06c1\u06cc \u0645\u06cc\u06ba \u0646\u0638\u0631"
+                    + " \u0622\u06cc\u0627 \u00b7 \u0645\u06cc\u0639\u0627\u062f \u062e\u062a\u0645"
+                    + " \u06c1\u0648\u0646\u06d2 \u06a9\u0627 \u0648\u0642\u062a: {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "\u0631\u06cc\u0644\u06d2 \u0631\u0627\u0628\u0637\u06d2: {0} \u00b7"
+                    + " \u0645\u0648\u0635\u0648\u0644\u06c1"
+                    + " \u067e\u0631\u0648\u0641\u0627\u0626\u0644\u0632: {1}",
+            "Restart BitChord before starting discovery.",
+            "\u062a\u0644\u0627\u0634 \u0634\u0631\u0648\u0639 \u06a9\u0631\u0646\u06d2"
+                    + " \u0633\u06d2 \u067e\u06c1\u0644\u06d2 BitChord"
+                    + " \u062f\u0648\u0628\u0627\u0631\u06c1"
+                    + " \u0686\u0644\u0627\u0626\u06cc\u06ba\u06d4",
+            "Sharing a public provider profile. No files are shared.",
+            "\u0641\u0631\u0627\u06c1\u0645 \u06a9\u0646\u0646\u062f\u06c1 \u06a9\u0627"
+                    + " \u0639\u0648\u0627\u0645\u06cc \u067e\u0631\u0648\u0641\u0627\u0626\u0644"
+                    + " \u0634\u06cc\u0626\u0631 \u06a9\u06cc\u0627 \u062c\u0627 \u0631\u06c1\u0627"
+                    + " \u06c1\u06d2\u06d4 \u06a9\u0648\u0626\u06cc \u0641\u0627\u0626\u0644"
+                    + " \u0634\u06cc\u0626\u0631 \u0646\u06c1\u06cc\u06ba \u06a9\u06cc \u062c\u0627"
+                    + " \u0631\u06c1\u06cc\u06d4",
+            "Show more",
+            "\u0645\u0632\u06cc\u062f \u062f\u06a9\u06be\u0627\u0626\u06cc\u06ba",
+            "Showing {0} of {1}",
+            "{1} \u0645\u06cc\u06ba \u0633\u06d2 {0} \u062f\u06a9\u06be\u0627\u0626\u06d2"
+                    + " \u062c\u0627 \u0631\u06c1\u06d2 \u06c1\u06cc\u06ba",
+            "Soulseek settings changed. Search again.",
+            "Soulseek \u06a9\u06cc \u062a\u0631\u062a\u06cc\u0628\u0627\u062a \u0628\u062f\u0644"
+                    + " \u06af\u0626\u06cc \u06c1\u06cc\u06ba\u06d4"
+                    + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u062a\u0644\u0627\u0634"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Start a scan to apply the public profile setting.",
+            "\u0639\u0648\u0627\u0645\u06cc \u067e\u0631\u0648\u0641\u0627\u0626\u0644 \u06a9\u06cc"
+                    + " \u062a\u0631\u062a\u06cc\u0628 \u0644\u0627\u06af\u0648"
+                    + " \u06a9\u0631\u0646\u06d2 \u06a9\u06d2 \u0644\u06cc\u06d2"
+                    + " \u0627\u0633\u06a9\u06cc\u0646 \u0634\u0631\u0648\u0639"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Start a scan to find compatible provider profiles.",
+            "\u0645\u0648\u0627\u0641\u0642 \u0641\u0631\u0627\u06c1\u0645"
+                    + " \u06a9\u0646\u0646\u062f\u06af\u0627\u0646 \u06a9\u06d2"
+                    + " \u067e\u0631\u0648\u0641\u0627\u0626\u0644\u0632"
+                    + " \u0688\u06be\u0648\u0646\u0688\u0646\u06d2 \u06a9\u06d2 \u0644\u06cc\u06d2"
+                    + " \u0627\u0633\u06a9\u06cc\u0646 \u0634\u0631\u0648\u0639"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Stop discovery",
+            "\u062a\u0644\u0627\u0634 \u0631\u0648\u06a9\u06cc\u06ba",
+            "Transports: {0}",
+            "\u0645\u0646\u062a\u0642\u0644\u06cc \u06a9\u06d2 \u0637\u0631\u06cc\u0642\u06d2: {0}",
+            "{0} recent clients",
+            "\u062d\u0627\u0644 \u06c1\u06cc \u0645\u06cc\u06ba \u0646\u0638\u0631"
+                    + " \u0622\u0646\u06d2 \u0648\u0627\u0644\u06d2 {0}"
+                    + " \u06a9\u0644\u0627\u0626\u0646\u0679\u0633",
         };
     }
 
@@ -51944,6 +53996,113 @@ final class Translations {
             "D\u1eebng t\u1ea5t c\u1ea3",
             "{0} download connections",
             "{0} k\u1ebft n\u1ed1i t\u1ea3i xu\u1ed1ng",
+            "Audio format choices changed. Search again.",
+            "L\u1ef1a ch\u1ecdn \u0111\u1ecbnh d\u1ea1ng \u00e2m thanh \u0111\u00e3 thay"
+                    + " \u0111\u1ed5i. H\u00e3y t\u00ecm l\u1ea1i.",
+            "Cannot create provider cache.",
+            "Kh\u00f4ng th\u1ec3 t\u1ea1o b\u1ed9 nh\u1edb \u0111\u1ec7m nh\u00e0 cung c\u1ea5p.",
+            "Clear found peers",
+            "X\u00f3a thi\u1ebft b\u1ecb \u0111\u00e3 t\u00ecm th\u1ea5y",
+            "Copy key for pairing",
+            "Sao ch\u00e9p kh\u00f3a \u0111\u1ec3 gh\u00e9p n\u1ed1i",
+            "Could not complete peer discovery. Check relays and try again.",
+            "Kh\u00f4ng th\u1ec3 ho\u00e0n t\u1ea5t vi\u1ec7c t\u00ecm thi\u1ebft b\u1ecb ngang"
+                    + " h\u00e0ng. Ki\u1ec3m tra m\u00e1y chuy\u1ec3n ti\u1ebfp r\u1ed3i th\u1eed"
+                    + " l\u1ea1i.",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "Kh\u00f4ng th\u1ec3 c\u1eadp nh\u1eadt vi\u1ec7c t\u00ecm thi\u1ebft b\u1ecb ngang"
+                    + " h\u00e0ng. Ki\u1ec3m tra c\u00e0i \u0111\u1eb7t k\u1ebft n\u1ed1i r\u1ed3i"
+                    + " th\u1eed l\u1ea1i.",
+            "Direct UDP / QUIC",
+            "UDP / QUIC tr\u1ef1c ti\u1ebfp",
+            "Discover compatible peers",
+            "T\u00ecm thi\u1ebft b\u1ecb ngang h\u00e0ng t\u01b0\u01a1ng th\u00edch",
+            "Discoverable while this page is open",
+            "C\u00f3 th\u1ec3 \u0111\u01b0\u1ee3c t\u00ecm th\u1ea5y khi trang n\u00e0y \u0111ang"
+                    + " m\u1edf",
+            "Discovery could not start.",
+            "Kh\u00f4ng th\u1ec3 b\u1eaft \u0111\u1ea7u t\u00ecm ki\u1ebfm.",
+            "Discovery settings could not be saved.",
+            "Kh\u00f4ng th\u1ec3 l\u01b0u c\u00e0i \u0111\u1eb7t t\u00ecm ki\u1ebfm.",
+            "Enable peer discovery first.",
+            "H\u00e3y b\u1eadt t\u00ednh n\u0103ng t\u00ecm thi\u1ebft b\u1ecb ngang h\u00e0ng"
+                    + " tr\u01b0\u1edbc.",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "T\u00ecm \u1ee9ng d\u1ee5ng kh\u00e1ch t\u01b0\u01a1ng th\u00edch qua m\u00e1y"
+                    + " chuy\u1ec3n ti\u1ebfp c\u00f4ng khai v\u00e0 trao \u0111\u1ed5i thi\u1ebft"
+                    + " b\u1ecb ngang h\u00e0ng. Kh\u00f3a t\u00ecm \u0111\u01b0\u1ee3c kh\u00f4ng"
+                    + " ph\u1ea3i l\u00e0 li\u00ean h\u1ec7 \u0111\u00e1ng tin c\u1eady v\u00e0"
+                    + " kh\u00f4ng c\u1ea5p quy\u1ec1n truy c\u1eadp t\u1ec7p.",
+            "Find peers",
+            "T\u00ecm thi\u1ebft b\u1ecb",
+            "Finding compatible provider profiles\u2026",
+            "\u0110ang t\u00ecm h\u1ed3 s\u01a1 nh\u00e0 cung c\u1ea5p t\u01b0\u01a1ng"
+                    + " th\u00edch\u2026",
+            "Loading peer discovery\u2026",
+            "\u0110ang t\u1ea3i ch\u1ee9c n\u0103ng t\u00ecm thi\u1ebft b\u1ecb ngang"
+                    + " h\u00e0ng\u2026",
+            "No recent clients found yet.",
+            "Ch\u01b0a t\u00ecm th\u1ea5y \u1ee9ng d\u1ee5ng kh\u00e1ch n\u00e0o ho\u1ea1t"
+                    + " \u0111\u1ed9ng g\u1ea7n \u0111\u00e2y.",
+            "Peer discovery",
+            "T\u00ecm thi\u1ebft b\u1ecb ngang h\u00e0ng",
+            "Peer discovery controls",
+            "\u0110i\u1ec1u khi\u1ec3n t\u00ecm thi\u1ebft b\u1ecb ngang h\u00e0ng",
+            "Peer discovery is off.",
+            "T\u00ednh n\u0103ng t\u00ecm thi\u1ebft b\u1ecb ngang h\u00e0ng \u0111ang t\u1eaft.",
+            "Peer discovery settings",
+            "C\u00e0i \u0111\u1eb7t t\u00ecm thi\u1ebft b\u1ecb ngang h\u00e0ng",
+            "Peer discovery stopped.",
+            "\u0110\u00e3 d\u1eebng t\u00ecm thi\u1ebft b\u1ecb ngang h\u00e0ng.",
+            "Peer key copied. Compare the full key before pairing.",
+            "\u0110\u00e3 sao ch\u00e9p kh\u00f3a thi\u1ebft b\u1ecb. H\u00e3y so s\u00e1nh"
+                    + " to\u00e0n b\u1ed9 kh\u00f3a tr\u01b0\u1edbc khi gh\u00e9p n\u1ed1i.",
+            "Provider cache cleared.",
+            "\u0110\u00e3 x\u00f3a b\u1ed9 nh\u1edb \u0111\u1ec7m nh\u00e0 cung c\u1ea5p.",
+            "Provider profile scan finished.",
+            "\u0110\u00e3 qu\u00e9t xong h\u1ed3 s\u01a1 nh\u00e0 cung c\u1ea5p.",
+            "Public discovery and peer exchange",
+            "T\u00ecm c\u00f4ng khai v\u00e0 trao \u0111\u1ed5i thi\u1ebft b\u1ecb ngang h\u00e0ng",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "Ch\u1ec9 c\u00f4ng b\u1ed1 kh\u00f3a c\u00f4ng khai c\u1ee7a \u1ee9ng d\u1ee5ng"
+                    + " v\u00e0 c\u00e1c ph\u01b0\u01a1ng th\u1ee9c truy\u1ec1n \u0111\u01b0\u1ee3c"
+                    + " h\u1ed7 tr\u1ee3. Kh\u00f4ng c\u00f4ng b\u1ed1 t\u1ec7p, li\u00ean h\u1ec7"
+                    + " ri\u00eang t\u01b0 hay \u0111\u1ecba ch\u1ec9 k\u1ebft n\u1ed1i c\u1ee7a"
+                    + " b\u1ea1n.",
+            "Recent clients",
+            "\u1ee8ng d\u1ee5ng kh\u00e1ch ho\u1ea1t \u0111\u1ed9ng g\u1ea7n \u0111\u00e2y",
+            "Recent \u00b7 expires at {0}",
+            "G\u1ea7n \u0111\u00e2y \u00b7 h\u1ebft h\u1ea1n l\u00fac {0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "K\u1ebft n\u1ed1i m\u00e1y chuy\u1ec3n ti\u1ebfp: {0} \u00b7 H\u1ed3 s\u01a1"
+                    + " \u0111\u00e3 nh\u1eadn: {1}",
+            "Restart BitChord before starting discovery.",
+            "Kh\u1edfi \u0111\u1ed9ng l\u1ea1i BitChord tr\u01b0\u1edbc khi b\u1eaft \u0111\u1ea7u"
+                    + " t\u00ecm ki\u1ebfm.",
+            "Sharing a public provider profile. No files are shared.",
+            "\u0110ang chia s\u1ebb h\u1ed3 s\u01a1 nh\u00e0 cung c\u1ea5p c\u00f4ng khai."
+                    + " Kh\u00f4ng chia s\u1ebb t\u1ec7p n\u00e0o.",
+            "Show more",
+            "Hi\u1ec3n th\u1ecb th\u00eam",
+            "Showing {0} of {1}",
+            "\u0110ang hi\u1ec3n th\u1ecb {0} tr\u00ean {1}",
+            "Soulseek settings changed. Search again.",
+            "C\u00e0i \u0111\u1eb7t Soulseek \u0111\u00e3 thay \u0111\u1ed5i. H\u00e3y t\u00ecm"
+                    + " l\u1ea1i.",
+            "Start a scan to apply the public profile setting.",
+            "B\u1eaft \u0111\u1ea7u qu\u00e9t \u0111\u1ec3 \u00e1p d\u1ee5ng c\u00e0i \u0111\u1eb7t"
+                    + " h\u1ed3 s\u01a1 c\u00f4ng khai.",
+            "Start a scan to find compatible provider profiles.",
+            "B\u1eaft \u0111\u1ea7u qu\u00e9t \u0111\u1ec3 t\u00ecm h\u1ed3 s\u01a1 nh\u00e0 cung"
+                    + " c\u1ea5p t\u01b0\u01a1ng th\u00edch.",
+            "Stop discovery",
+            "D\u1eebng t\u00ecm ki\u1ebfm",
+            "Transports: {0}",
+            "Ph\u01b0\u01a1ng th\u1ee9c truy\u1ec1n: {0}",
+            "{0} recent clients",
+            "{0} \u1ee9ng d\u1ee5ng kh\u00e1ch ho\u1ea1t \u0111\u1ed9ng g\u1ea7n \u0111\u00e2y",
         };
     }
 
@@ -54104,6 +56263,89 @@ final class Translations {
             "\u5168\u90e8\u505c\u6b62",
             "{0} download connections",
             "{0} \u500b\u4e0b\u8f09\u9023\u7dda",
+            "Audio format choices changed. Search again.",
+            "\u97f3\u8a0a\u683c\u5f0f\u504f\u597d\u5df2\u8b8a\u66f4\u3002\u8acb\u91cd\u65b0\u641c\u5c0b\u3002",
+            "Cannot create provider cache.",
+            "\u7121\u6cd5\u5efa\u7acb\u63d0\u4f9b\u8005\u5feb\u53d6\u3002",
+            "Clear found peers",
+            "\u6e05\u9664\u5df2\u63a2\u7d22\u5230\u7684\u7bc0\u9ede",
+            "Copy key for pairing",
+            "\u8907\u88fd\u516c\u958b\u91d1\u9470\u4ee5\u914d\u5c0d",
+            "Could not complete peer discovery. Check relays and try again.",
+            "\u7121\u6cd5\u5b8c\u6210\u7bc0\u9ede\u63a2\u7d22\u3002\u8acb\u6aa2\u67e5\u4e2d\u7e7c\u5f8c\u91cd\u8a66\u3002",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "\u7121\u6cd5\u66f4\u65b0\u7bc0\u9ede\u63a2\u7d22\u3002\u8acb\u6aa2\u67e5\u9023\u7dda\u8a2d\u5b9a\u5f8c\u91cd\u8a66\u3002",
+            "Direct UDP / QUIC",
+            "\u76f4\u9023 UDP / QUIC",
+            "Discover compatible peers",
+            "\u63a2\u7d22\u76f8\u5bb9\u7bc0\u9ede",
+            "Discoverable while this page is open",
+            "\u6b64\u9801\u9762\u958b\u555f\u6642\u5141\u8a31\u88ab\u63a2\u7d22",
+            "Discovery could not start.",
+            "\u7121\u6cd5\u555f\u52d5\u63a2\u7d22\u3002",
+            "Discovery settings could not be saved.",
+            "\u7121\u6cd5\u5132\u5b58\u63a2\u7d22\u8a2d\u5b9a\u3002",
+            "Enable peer discovery first.",
+            "\u8acb\u5148\u555f\u7528\u7bc0\u9ede\u63a2\u7d22\u3002",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "\u900f\u904e\u516c\u958b\u4e2d\u7e7c\u548c\u7bc0\u9ede\u4ea4\u63db\u5c0b\u627e\u76f8\u5bb9\u7684\u7528\u6236\u7aef\u3002\u627e\u5230\u7684\u516c\u958b\u91d1\u9470\u4e0d\u4ee3\u8868\u53d7\u4fe1\u4efb\u7684\u806f\u7d61\u4eba\uff0c\u4e5f\u4e0d\u6703\u6388\u4e88\u6a94\u6848\u5b58\u53d6\u6b0a\u3002",
+            "Find peers",
+            "\u5c0b\u627e\u7bc0\u9ede",
+            "Finding compatible provider profiles\u2026",
+            "\u6b63\u5728\u5c0b\u627e\u76f8\u5bb9\u7684\u63d0\u4f9b\u8005\u8a2d\u5b9a\u6a94\u2026",
+            "Loading peer discovery\u2026",
+            "\u6b63\u5728\u8f09\u5165\u7bc0\u9ede\u63a2\u7d22\u2026",
+            "No recent clients found yet.",
+            "\u5c1a\u672a\u627e\u5230\u8fd1\u671f\u7528\u6236\u7aef\u3002",
+            "Peer discovery",
+            "\u7bc0\u9ede\u63a2\u7d22",
+            "Peer discovery controls",
+            "\u7bc0\u9ede\u63a2\u7d22\u63a7\u5236",
+            "Peer discovery is off.",
+            "\u7bc0\u9ede\u63a2\u7d22\u5df2\u95dc\u9589\u3002",
+            "Peer discovery settings",
+            "\u7bc0\u9ede\u63a2\u7d22\u8a2d\u5b9a",
+            "Peer discovery stopped.",
+            "\u7bc0\u9ede\u63a2\u7d22\u5df2\u505c\u6b62\u3002",
+            "Peer key copied. Compare the full key before pairing.",
+            "\u5df2\u8907\u88fd\u7bc0\u9ede\u516c\u958b\u91d1\u9470\u3002\u914d\u5c0d\u524d\u8acb\u6838\u5c0d\u5b8c\u6574\u91d1\u9470\u3002",
+            "Provider cache cleared.",
+            "\u5df2\u6e05\u9664\u63d0\u4f9b\u8005\u5feb\u53d6\u3002",
+            "Provider profile scan finished.",
+            "\u63d0\u4f9b\u8005\u8a2d\u5b9a\u6a94\u6383\u63cf\u5df2\u5b8c\u6210\u3002",
+            "Public discovery and peer exchange",
+            "\u516c\u958b\u63a2\u7d22\u8207\u7bc0\u9ede\u4ea4\u63db",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "\u53ea\u516c\u5e03\u61c9\u7528\u7a0b\u5f0f\u516c\u958b\u91d1\u9470\u548c\u652f\u63f4\u7684\u50b3\u8f38\u65b9\u5f0f\uff0c\u4e0d\u6703\u516c\u5e03\u4f60\u7684\u6a94\u6848\u3001\u79c1\u4eba\u806f\u7d61\u4eba\u6216\u9023\u7dda\u4f4d\u5740\u3002",
+            "Recent clients",
+            "\u8fd1\u671f\u7528\u6236\u7aef",
+            "Recent \u00b7 expires at {0}",
+            "\u8fd1\u671f \u00b7 \u5230\u671f\u6642\u9593\uff1a{0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "\u4e2d\u7e7c\u9023\u7dda\uff1a{0} \u00b7"
+                    + " \u5df2\u63a5\u6536\u8a2d\u5b9a\u6a94\uff1a{1}",
+            "Restart BitChord before starting discovery.",
+            "\u958b\u59cb\u63a2\u7d22\u524d\u8acb\u91cd\u65b0\u555f\u52d5 BitChord\u3002",
+            "Sharing a public provider profile. No files are shared.",
+            "\u6b63\u5728\u5206\u4eab\u63d0\u4f9b\u8005\u7684\u516c\u958b\u8a2d\u5b9a\u6a94\u3002\u4e0d\u6703\u5206\u4eab\u4efb\u4f55\u6a94\u6848\u3002",
+            "Show more",
+            "\u986f\u793a\u66f4\u591a",
+            "Showing {0} of {1}",
+            "\u986f\u793a {0} \u500b\uff0c\u5171 {1} \u500b",
+            "Soulseek settings changed. Search again.",
+            "Soulseek \u8a2d\u5b9a\u5df2\u8b8a\u66f4\u3002\u8acb\u91cd\u65b0\u641c\u5c0b\u3002",
+            "Start a scan to apply the public profile setting.",
+            "\u555f\u52d5\u6383\u63cf\u4ee5\u5957\u7528\u516c\u958b\u8a2d\u5b9a\u6a94\u8a2d\u5b9a\u3002",
+            "Start a scan to find compatible provider profiles.",
+            "\u555f\u52d5\u6383\u63cf\u4ee5\u5c0b\u627e\u76f8\u5bb9\u7684\u63d0\u4f9b\u8005\u8a2d\u5b9a\u6a94\u3002",
+            "Stop discovery",
+            "\u505c\u6b62\u63a2\u7d22",
+            "Transports: {0}",
+            "\u50b3\u8f38\u65b9\u5f0f\uff1a{0}",
+            "{0} recent clients",
+            "{0} \u500b\u8fd1\u671f\u7528\u6236\u7aef",
         };
     }
 
@@ -56255,6 +58497,88 @@ final class Translations {
             "\u5168\u90e8\u505c\u6b62",
             "{0} download connections",
             "{0} \u4e2a\u4e0b\u8f7d\u8fde\u63a5",
+            "Audio format choices changed. Search again.",
+            "\u97f3\u9891\u683c\u5f0f\u504f\u597d\u5df2\u66f4\u6539\u3002\u8bf7\u91cd\u65b0\u641c\u7d22\u3002",
+            "Cannot create provider cache.",
+            "\u65e0\u6cd5\u521b\u5efa\u63d0\u4f9b\u65b9\u7f13\u5b58\u3002",
+            "Clear found peers",
+            "\u6e05\u9664\u5df2\u53d1\u73b0\u8282\u70b9",
+            "Copy key for pairing",
+            "\u590d\u5236\u516c\u94a5\u4ee5\u914d\u5bf9",
+            "Could not complete peer discovery. Check relays and try again.",
+            "\u65e0\u6cd5\u5b8c\u6210\u8282\u70b9\u53d1\u73b0\u3002\u8bf7\u68c0\u67e5\u4e2d\u7ee7\u540e\u91cd\u8bd5\u3002",
+            "Could not update peer discovery. Check connection settings and try again.",
+            "\u65e0\u6cd5\u66f4\u65b0\u8282\u70b9\u53d1\u73b0\u3002\u8bf7\u68c0\u67e5\u8fde\u63a5\u8bbe\u7f6e\u540e\u91cd\u8bd5\u3002",
+            "Direct UDP / QUIC",
+            "\u76f4\u8fde UDP / QUIC",
+            "Discover compatible peers",
+            "\u53d1\u73b0\u517c\u5bb9\u8282\u70b9",
+            "Discoverable while this page is open",
+            "\u6b64\u9875\u9762\u6253\u5f00\u65f6\u5141\u8bb8\u88ab\u53d1\u73b0",
+            "Discovery could not start.",
+            "\u65e0\u6cd5\u542f\u52a8\u53d1\u73b0\u3002",
+            "Discovery settings could not be saved.",
+            "\u65e0\u6cd5\u4fdd\u5b58\u53d1\u73b0\u8bbe\u7f6e\u3002",
+            "Enable peer discovery first.",
+            "\u8bf7\u5148\u542f\u7528\u8282\u70b9\u53d1\u73b0\u3002",
+            "Find compatible clients through public relays and peer exchange. Found keys are not"
+                    + " trusted contacts and do not grant access to files.",
+            "\u901a\u8fc7\u516c\u5171\u4e2d\u7ee7\u548c\u8282\u70b9\u4ea4\u6362\u67e5\u627e\u517c\u5bb9\u5ba2\u6237\u7aef\u3002\u627e\u5230\u7684\u516c\u94a5\u4e0d\u4ee3\u8868\u53ef\u4fe1\u8054\u7cfb\u4eba\uff0c\u4e5f\u4e0d\u4f1a\u6388\u4e88\u6587\u4ef6\u8bbf\u95ee\u6743\u9650\u3002",
+            "Find peers",
+            "\u67e5\u627e\u8282\u70b9",
+            "Finding compatible provider profiles\u2026",
+            "\u6b63\u5728\u67e5\u627e\u517c\u5bb9\u7684\u63d0\u4f9b\u65b9\u8d44\u6599\u2026",
+            "Loading peer discovery\u2026",
+            "\u6b63\u5728\u52a0\u8f7d\u8282\u70b9\u53d1\u73b0\u2026",
+            "No recent clients found yet.",
+            "\u5c1a\u672a\u627e\u5230\u8fd1\u671f\u5ba2\u6237\u7aef\u3002",
+            "Peer discovery",
+            "\u8282\u70b9\u53d1\u73b0",
+            "Peer discovery controls",
+            "\u8282\u70b9\u53d1\u73b0\u63a7\u5236",
+            "Peer discovery is off.",
+            "\u8282\u70b9\u53d1\u73b0\u5df2\u5173\u95ed\u3002",
+            "Peer discovery settings",
+            "\u8282\u70b9\u53d1\u73b0\u8bbe\u7f6e",
+            "Peer discovery stopped.",
+            "\u8282\u70b9\u53d1\u73b0\u5df2\u505c\u6b62\u3002",
+            "Peer key copied. Compare the full key before pairing.",
+            "\u5df2\u590d\u5236\u8282\u70b9\u516c\u94a5\u3002\u914d\u5bf9\u524d\u8bf7\u6838\u5bf9\u5b8c\u6574\u516c\u94a5\u3002",
+            "Provider cache cleared.",
+            "\u5df2\u6e05\u9664\u63d0\u4f9b\u65b9\u7f13\u5b58\u3002",
+            "Provider profile scan finished.",
+            "\u63d0\u4f9b\u65b9\u8d44\u6599\u626b\u63cf\u5df2\u5b8c\u6210\u3002",
+            "Public discovery and peer exchange",
+            "\u516c\u5171\u53d1\u73b0\u4e0e\u8282\u70b9\u4ea4\u6362",
+            "Publishes only your app public key and supported transports. It does not publish your"
+                    + " files, private contacts or connection addresses.",
+            "\u4ec5\u516c\u5e03\u5e94\u7528\u516c\u94a5\u548c\u652f\u6301\u7684\u4f20\u8f93\u65b9\u5f0f\uff0c\u4e0d\u4f1a\u516c\u5e03\u4f60\u7684\u6587\u4ef6\u3001\u79c1\u4eba\u8054\u7cfb\u4eba\u6216\u8fde\u63a5\u5730\u5740\u3002",
+            "Recent clients",
+            "\u8fd1\u671f\u5ba2\u6237\u7aef",
+            "Recent \u00b7 expires at {0}",
+            "\u8fd1\u671f \u00b7 \u5230\u671f\u65f6\u95f4\uff1a{0}",
+            "Relay connections: {0} \u00b7 Profiles received: {1}",
+            "\u4e2d\u7ee7\u8fde\u63a5\uff1a{0} \u00b7 \u5df2\u6536\u5230\u8d44\u6599\uff1a{1}",
+            "Restart BitChord before starting discovery.",
+            "\u5f00\u59cb\u53d1\u73b0\u524d\u8bf7\u91cd\u542f BitChord\u3002",
+            "Sharing a public provider profile. No files are shared.",
+            "\u6b63\u5728\u5206\u4eab\u63d0\u4f9b\u65b9\u7684\u516c\u5f00\u8d44\u6599\u3002\u4e0d\u4f1a\u5206\u4eab\u4efb\u4f55\u6587\u4ef6\u3002",
+            "Show more",
+            "\u663e\u793a\u66f4\u591a",
+            "Showing {0} of {1}",
+            "\u663e\u793a {0} \u4e2a\uff0c\u5171 {1} \u4e2a",
+            "Soulseek settings changed. Search again.",
+            "Soulseek \u8bbe\u7f6e\u5df2\u66f4\u6539\u3002\u8bf7\u91cd\u65b0\u641c\u7d22\u3002",
+            "Start a scan to apply the public profile setting.",
+            "\u542f\u52a8\u626b\u63cf\u4ee5\u5e94\u7528\u516c\u5f00\u8d44\u6599\u8bbe\u7f6e\u3002",
+            "Start a scan to find compatible provider profiles.",
+            "\u542f\u52a8\u626b\u63cf\u4ee5\u67e5\u627e\u517c\u5bb9\u7684\u63d0\u4f9b\u65b9\u8d44\u6599\u3002",
+            "Stop discovery",
+            "\u505c\u6b62\u53d1\u73b0",
+            "Transports: {0}",
+            "\u4f20\u8f93\u65b9\u5f0f\uff1a{0}",
+            "{0} recent clients",
+            "{0} \u4e2a\u8fd1\u671f\u5ba2\u6237\u7aef",
         };
     }
 }

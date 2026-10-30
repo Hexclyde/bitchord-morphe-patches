@@ -265,6 +265,46 @@ public final class AudioFormatPreferences {
         return settings.rank(candidates.iterator().next());
     }
 
+    /** Only the first enabled format may shorten the initial search window. */
+    static String preferredSearchExtensions(Settings settings) {
+        for (Format format : settings.order) {
+            if (!settings.enabled.contains(format)) continue;
+            switch (format) {
+                case FLAC:
+                    return "flac,ogg,oga";
+                case ALAC:
+                    return "alac,m4a,mp4";
+                case WAV:
+                    return "wav,wave";
+                case AIFF:
+                    return "aif,aiff,aifc";
+                case DSD:
+                    return "dsf,dff";
+                case OPUS:
+                    return "opus,ogg,oga";
+                case AAC:
+                    return "aac,m4a,mp4";
+                case VORBIS:
+                    return "vorbis,ogg,oga";
+                case MP3:
+                    return "mp3";
+                default:
+                    break;
+            }
+        }
+        throw new IllegalArgumentException("Choose at least one valid audio format.");
+    }
+
+    private static int availabilityRank(SoulseekTrack track) {
+        return track.freeSlots == 1 ? 0 : track.freeSlots < 0 ? 1 : 2;
+    }
+
+    private static long speedRank(SoulseekTrack track) {
+        // An arbitrary maximum-speed claim cannot keep gaining preference.
+        // These claims never establish availability or bypass the peer's queue.
+        return Math.min(track.speed, 32L * 1024 * 1024);
+    }
+
     /** Never changes an asset identity or substitutes one recording for another. */
     static List<SoulseekTrack> ordered(Settings settings, List<SoulseekTrack> tracks) {
         ArrayList<SoulseekTrack> result = new ArrayList<>();
@@ -293,7 +333,13 @@ public final class AudioFormatPreferences {
         for (List<Integer> positions : groups.values()) {
             ArrayList<SoulseekTrack> same = new ArrayList<>();
             for (int position : positions) same.add(result.get(position));
-            Collections.sort(same, Comparator.comparingInt(track -> hintRank(settings, track)));
+            Collections.sort(
+                    same,
+                    Comparator.<SoulseekTrack>comparingInt(track -> hintRank(settings, track))
+                            .thenComparingInt(AudioFormatPreferences::availabilityRank)
+                            .thenComparing(
+                                    Comparator.comparingLong(AudioFormatPreferences::speedRank)
+                                            .reversed()));
             for (int i = 0; i < positions.size(); i++) result.set(positions.get(i), same.get(i));
         }
         return result;

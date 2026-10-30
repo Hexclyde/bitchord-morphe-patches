@@ -153,6 +153,7 @@ subprocess.run(
                 "soulseek",
                 "soulseek-wire",
                 "coordination",
+                "peer-discovery",
                 "download-policy",
                 "download-route",
                 "download-route-v19",
@@ -192,6 +193,7 @@ for test in TESTS:
 for suite in (
     "soulseek",
     "coordination",
+    "peer-discovery",
     "download-policy",
     "download-route",
     "relay-policy",

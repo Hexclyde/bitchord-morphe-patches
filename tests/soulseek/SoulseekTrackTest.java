@@ -58,6 +58,34 @@ public final class SoulseekTrackTest {
         check(
                 !metadata.has("audioQuality") && !metadata.has("peer") && !metadata.has("path"),
                 "Metadata exposes neither unverified quality nor private peer paths");
+        check(first.freeSlots == -1 && first.speed == 0, "missing peer hints remain unknown");
+        JSONObject hints =
+                new JSONObject()
+                        .put("peer", "one")
+                        .put("path", "Artist - Song.flac")
+                        .put("size", 1000)
+                        .put("freeSlots", 1)
+                        .put("speed", 123456);
+        SoulseekTrack advertised = new SoulseekTrack(hints);
+        check(
+                advertised.freeSlots == 1 && advertised.speed == 123456,
+                "bounded numeric peer hints retained");
+        check(
+                !advertised.metadata().getBoolean("peerHintsVerified"),
+                "availability and speed claims are explicitly unverified");
+        for (Object invalid : new Object[] {-1, 2, 1.5, "1", Long.MAX_VALUE}) {
+            check(
+                    new SoulseekTrack(new JSONObject(hints.toString()).put("freeSlots", invalid))
+                                    .freeSlots
+                            == -1,
+                    "invalid free-slot flag ignored: " + invalid);
+        }
+        for (Object invalid : new Object[] {-1, 1.5, "999999999", Long.MAX_VALUE, 4294967296L}) {
+            check(
+                    new SoulseekTrack(new JSONObject(hints.toString()).put("speed", invalid)).speed
+                            == 0,
+                    "invalid speed ignored: " + invalid);
+        }
         denied(() -> track("one", "a.exe", 1000), "Executables rejected");
         denied(() -> track("one", "a.flac.exe", 1000), "Disguised executable rejected");
         denied(() -> track("one", "a.flac", -1), "Negative size rejected");

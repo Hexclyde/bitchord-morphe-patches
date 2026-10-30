@@ -3,6 +3,7 @@ package app.bitchord.soulseek;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -77,6 +78,9 @@ public final class NostrSetupActivity extends DownloadActivity {
                                 + " Connection coordination is for downloads; it does not stream"
                                 + " music."),
                 16);
+        button(body, PatchStrings.t("Peer discovery"), false)
+                .setOnClickListener(
+                        v -> startActivity(new Intent(this, PeerDiscoveryActivity.class)));
         text(body, PatchStrings.t("Your connection public key"), 16);
         identity = text(body, PatchStrings.t("Loading…"), 14);
         identity.setTextIsSelectable(true);

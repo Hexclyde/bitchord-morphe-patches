@@ -4,6 +4,7 @@
 //! cancels outstanding work, then disconnects and releases the reserved home. An in-flight operation
 //! retains an Arc, so Java races cannot free an object beneath another call.
 
+mod discovery;
 mod nostr;
 mod relay_probe;
 
@@ -309,6 +310,33 @@ impl Drop for SearchGuard<'_> {
 
 /// Collect bounded audio-only results from the actual network. No credentials are returned.
 pub fn search(handle: i64, query: &str, timeout_ms: i32) -> Result<String> {
+    search_window(handle, query, timeout_ms, None)
+}
+
+/// A preferred filename hint can settle the initial batch; it never verifies a codec.
+pub fn search_adaptive(
+    handle: i64,
+    query: &str,
+    timeout_ms: i32,
+    preferred_extensions: &str,
+) -> Result<String> {
+    bounded(preferred_extensions, 128, "Invalid preferred audio formats")?;
+    let preferred: std::collections::HashSet<&str> = preferred_extensions.split(',').collect();
+    if preferred
+        .iter()
+        .any(|ext| extension(&format!("audio.{ext}")).as_deref() != Some(*ext))
+    {
+        return Err(input("Invalid preferred audio formats"));
+    }
+    search_window(handle, query, timeout_ms, Some(&preferred))
+}
+
+fn search_window(
+    handle: i64,
+    query: &str,
+    timeout_ms: i32,
+    preferred: Option<&std::collections::HashSet<&str>>,
+) -> Result<String> {
     bounded(query, 512, "Invalid Soulseek search query")?;
     if query.trim().is_empty() || !(100..=20_000).contains(&timeout_ms) {
         return Err(input("Search timeout must be 100–20000 ms"));
@@ -333,11 +361,25 @@ pub fn search(handle: i64, query: &str, timeout_ms: i32) -> Result<String> {
     if client.session_loss().is_some() {
         return Err(io("Soulseek server session was lost"));
     }
-    let collected = client.search_with_cancel(
-        query,
-        Duration::from_millis(timeout_ms as u64),
-        Some(engine.search_cancel.clone()),
-    );
+    let timeout = Duration::from_millis(timeout_ms as u64);
+    let cancellation = Some(engine.search_cancel.clone());
+    let collected = if let Some(preferred) = preferred {
+        client.search_adaptive_with_cancel(query, timeout, cancellation, |response| {
+            if username(&response.username).is_err() {
+                return 0;
+            }
+            response
+                .files
+                .iter()
+                .filter(|file| {
+                    extension(&file.name).is_some_and(|ext| preferred.contains(ext.as_str()))
+                        && validate_remote(&file.name, file.size as i64).is_ok()
+                })
+                .count()
+        })
+    } else {
+        client.search_with_cancel(query, timeout, cancellation)
+    };
     let _ = client.forget_search(query);
     let results = collected.map_err(|_| io("Soulseek search failed"))?;
     live(&engine)?;
@@ -348,7 +390,7 @@ pub fn search(handle: i64, query: &str, timeout_ms: i32) -> Result<String> {
     let mut seen = std::collections::HashSet::new();
     for response in results {
         for file in response.files {
-            if tracks.len() >= MAX_RESULTS {
+            if preferred.is_none() && tracks.len() >= MAX_RESULTS {
                 break;
             }
             let Some(format) = extension(&file.name) else {
@@ -363,7 +405,8 @@ pub fn search(handle: i64, query: &str, timeout_ms: i32) -> Result<String> {
             if !seen.insert(identity) {
                 continue;
             }
-            tracks.push(json!({
+            let is_preferred = preferred.is_some_and(|allowed| allowed.contains(format.as_str()));
+            tracks.push((is_preferred, json!({
                 "id": format!("candidate-{}", tracks.len() + 1), "peer": response.username, "path": file.name,
                 "size": file.size, "format": format, "extension": format,
                 "duration": file.attribs.get(&1).copied().unwrap_or(0),
@@ -371,13 +414,33 @@ pub fn search(handle: i64, query: &str, timeout_ms: i32) -> Result<String> {
                 "sampleRate": file.attribs.get(&4).copied().unwrap_or(0),
                 "bitDepth": file.attribs.get(&5).copied().unwrap_or(0),
                 "freeSlots": response.slots, "speed": response.speed,
-            }));
+            })));
         }
-        if tracks.len() >= MAX_RESULTS {
+        if preferred.is_none() && tracks.len() >= MAX_RESULTS {
             break;
         }
     }
-    Ok(json!({"tracks": tracks}).to_string())
+    Ok(json!({"tracks": initial_search_batch(tracks)}).to_string())
+}
+
+fn initial_search_batch(tracks: Vec<(bool, Value)>) -> Vec<Value> {
+    // Keep preferred candidates even when an early lower-priority batch filled
+    // the 200-row output cap. Selection does not reorder different recordings.
+    let mut selected = vec![false; tracks.len()];
+    let mut remaining = MAX_RESULTS;
+    for wanted in [true, false] {
+        for (index, (is_preferred, _)) in tracks.iter().enumerate() {
+            if remaining > 0 && *is_preferred == wanted {
+                selected[index] = true;
+                remaining -= 1;
+            }
+        }
+    }
+    tracks
+        .into_iter()
+        .enumerate()
+        .filter_map(|(index, (_, row))| selected[index].then_some(row))
+        .collect()
 }
 
 fn snapshot(record: &Record, downloads: &[soulseek_rs::types::Download]) -> Result<Value> {
@@ -752,6 +815,24 @@ pub extern "system" fn Java_app_bitchord_soulseek_SoulseekNative_search(
     })
 }
 #[unsafe(no_mangle)]
+pub extern "system" fn Java_app_bitchord_soulseek_SoulseekNative_searchAdaptive(
+    mut env: JNIEnv,
+    _class: JClass,
+    handle: jlong,
+    query: JString,
+    timeout_ms: jint,
+    preferred_extensions: JString,
+) -> jstring {
+    invoke(&mut env, |env| {
+        let query = java_string(env, query)?;
+        let preferred = java_string(env, preferred_extensions)?;
+        output(
+            env,
+            search_adaptive(handle, &query, timeout_ms, &preferred)?,
+        )
+    })
+}
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_app_bitchord_soulseek_SoulseekNative_download(
     mut env: JNIEnv,
     _class: JClass,
@@ -802,6 +883,18 @@ mod tests {
         let (name, dir) = new_directory(&std::env::temp_dir()).unwrap();
         let _ = name;
         dir.to_str().unwrap().to_string()
+    }
+    #[test]
+    fn preferred_results_survive_a_full_early_batch_without_reordering_selected_rows() {
+        let mut rows: Vec<(bool, Value)> = (0..250).map(|i| (false, json!(i))).collect();
+        rows.push((true, json!(250)));
+        rows.push((true, json!(251)));
+        let selected = initial_search_batch(rows);
+        assert_eq!(selected.len(), MAX_RESULTS);
+        assert_eq!(selected[0], json!(0));
+        assert_eq!(selected[MAX_RESULTS - 3], json!(197));
+        assert_eq!(selected[MAX_RESULTS - 2], json!(250));
+        assert_eq!(selected[MAX_RESULTS - 1], json!(251));
     }
     #[test]
     fn closed_handles_cannot_be_used_or_double_freed() {

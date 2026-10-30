@@ -23,6 +23,9 @@ public final class SoulseekNative {
 
     public static native String search(long handle, String query, int timeoutMs);
 
+    public static native String searchAdaptive(
+            long handle, String query, int timeoutMs, String preferredExtensions);
+
     public static native String download(long handle, String peer, String remotePath, long size);
 
     public static native String transfers(long handle);

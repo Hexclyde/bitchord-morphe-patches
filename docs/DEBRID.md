@@ -1,6 +1,6 @@
 # Optional debrid downloads
 
-Build **1.1.0-beta.6** includes optional Real-Debrid, AllDebrid, Premiumize and
+Build **1.1.0-beta.9** retains optional Real-Debrid, AllDebrid, Premiumize and
 TorBox downloads. These adapters use the provider routes described below. Live
 accounts and every provider-supported host have not been qualified.
 
@@ -102,6 +102,10 @@ route provider authentication or cloud downloads over Nostr, I2P, Tor or IPFS,
 and it does not silently switch between providers. Nostr coordination and the
 direct/I2P/Tor/IPFS fallback chain remain available for compatible paired-file
 offers independently of debrid settings.
+
+Peer discovery and PEX do not change the provider's swarm, cloud queue or
+download speed. The phone still resolves and downloads through the explicitly
+selected provider.
 
 ## Qualification
 

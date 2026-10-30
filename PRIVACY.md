@@ -37,6 +37,26 @@ Sponsored-message views are reported when their text is fully visible in the act
 
 Only with **Name untagged files by sound** on: for each untagged file, its Chromaprint fingerprint (a summary of which notes sound when, not the audio), its length and your AcoustID key are sent to `api.acoustid.org`, which also sees your IP address. Nothing else about the file, the chat or your Telegram account is sent. [AcoustID's own terms](https://acoustid.org) apply.
 
+## Optional compatible-peer discovery
+
+Peer discovery starts disabled and does not scan on app launch. An explicit scan
+contacts your configured Nostr relays and looks for signed public app profiles.
+Those relays see the connection IP, subscription and timing. Publishing your own
+profile is a separate opt-in: it reveals the app public key, supported transport
+names and short validity period. It does not include filenames, catalogues,
+private contacts, account identifiers, endpoint addresses or file grants.
+Stopping discovery stops local publication; expiry does not guarantee that
+relays or other clients erase a profile they previously received.
+
+The app keeps up to 512 verified public profiles in private app storage and
+rejects expired profiles, which are valid for at most five minutes. **Clear found
+peers** removes this app's cached records. Profiles may also be exchanged in
+bounded encrypted messages with already paired clients while discovery is
+active. Referrals contain only the original signed public profiles. A discovered
+key is never automatically added to Trusted peers and does not receive file
+access. Downloading a file does not advertise it or make it publicly available.
+See the [discovery guide](docs/PEER-DISCOVERY.md).
+
 ## Optional debrid services
 
 Real-Debrid, AllDebrid, Premiumize and TorBox each have a separate switch and API
@@ -67,7 +87,7 @@ remain where they were published. See the [debrid setup guide](docs/DEBRID.md).
 
 **This is a normal Telegram client session, not a music-only authorization.** Choosing chats limits what the interface searches; it does not reduce the underlying session's account permissions. The patch and BitChord run in the same app and must both be trusted.
 
-Your regular BitChord installation has separate private data. Screen capture is enabled throughout the 1.1.0-beta.8 testing build for UI review. Other builds default to screenshot and recording protection on the protected setup pages.
+Your regular BitChord installation has separate private data. Screen capture is enabled throughout the 1.1.0-beta.8 and 1.1.0-beta.9 testing builds for UI review. Other builds default to screenshot and recording protection on the protected setup pages.
 
 ## Clear files or revoke access
 

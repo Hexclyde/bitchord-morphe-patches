@@ -12,6 +12,10 @@ final class SoulseekTrack {
     final String id, peer, path, format, advertisedExtension, title, artist, mime;
     final long size;
     final int duration, bitrate;
+    // Untrusted advertisements: slots is a boolean flag, not a capacity count.
+    // -1 means unknown. Speed is bytes/second; zero means unknown.
+    final int freeSlots;
+    final long speed;
 
     SoulseekTrack(JSONObject row) throws Exception {
         peer = row.getString("peer");
@@ -60,6 +64,8 @@ final class SoulseekTrack {
         title = separator > 0 ? name.substring(separator + 3) : name;
         duration = Math.max(0, Math.min(row.optInt("duration"), 86400));
         bitrate = Math.max(0, Math.min(row.optInt("bitrate"), 100000));
+        freeSlots = (int) unsignedHint(row.opt("freeSlots"), 1, -1);
+        speed = unsignedHint(row.opt("speed"), 0xffffffffL, 0);
         switch (advertisedExtension) {
             case "flac":
                 mime = "audio/flac";
@@ -115,11 +121,25 @@ final class SoulseekTrack {
                 .put("duration", duration)
                 .put("format", format)
                 .put("formatVerified", false)
+                .put("freeSlots", freeSlots < 0 ? JSONObject.NULL : freeSlots)
+                .put("speed", speed)
+                .put("peerHintsVerified", false)
                 .put(
                         "formatLabel",
                         format.equals("unknown")
                                 ? "Unknown / unverified codec"
                                 : format.toUpperCase(Locale.ROOT) + " (unverified)")
                 .put("sourceProvenance", "unverified");
+    }
+
+    private static long unsignedHint(Object raw, long max, long unknown) {
+        if (!(raw instanceof Number)) return unknown;
+        double number = ((Number) raw).doubleValue();
+        if (Double.isNaN(number)
+                || Double.isInfinite(number)
+                || number < 0
+                || number > max
+                || number != Math.rint(number)) return unknown;
+        return (long) number;
     }
 }

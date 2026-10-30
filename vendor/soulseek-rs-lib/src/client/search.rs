@@ -54,6 +54,56 @@ impl Client {
         Ok(self.get_search_results(query))
     }
 
+    /// Collect a bounded initial batch once useful results have settled.
+    ///
+    /// `useful` counts candidates acceptable for the caller's preferred policy;
+    /// unrelated/disabled files must return zero. No useful result keeps the
+    /// entire timeout, as with [`Client::search_with_cancel`]. This deliberately
+    /// returns a shortlist, not every late responder. The full-window API above
+    /// remains available for callers that need the longer collection window.
+    pub fn search_adaptive_with_cancel<F>(
+        &self,
+        query: &str,
+        timeout: Duration,
+        cancel_flag: Option<Arc<AtomicBool>>,
+        useful: F,
+    ) -> Result<Vec<SearchResult>>
+    where
+        F: Fn(&SearchResult) -> usize,
+    {
+        self.send_search(query, false)?;
+        let start = Instant::now();
+        let mut window = AdaptiveWindow::new(timeout);
+        loop {
+            if cancel_flag
+                .as_ref()
+                .is_some_and(|flag| flag.load(Ordering::Acquire))
+            {
+                break;
+            }
+            // Read counts under the lock; cloning the whole result pool on
+            // every poll would cost megabytes for broad searches.
+            let count = self.context.read_safe().ok().map(|ctx| {
+                ctx.searches.get(query).map_or(0, |search| {
+                    search.results.iter().map(&useful).sum()
+                })
+            });
+            // A contended/failed read is not evidence of a quiet network.
+            if let Some(count) = count {
+                if window.finished(start.elapsed(), count) {
+                    break;
+                }
+            } else if start.elapsed() >= timeout {
+                break;
+            }
+            sleep(
+                Duration::from_millis(50)
+                    .min(timeout.saturating_sub(start.elapsed())),
+            );
+        }
+        Ok(self.get_search_results(query))
+    }
+
     /// Register `query` and put its search on the wire. Returns as soon as the
     /// message is queued; nothing has answered yet.
     fn send_search(&self, query: &str, wishlist: bool) -> Result<()> {
@@ -234,5 +284,82 @@ impl Client {
                     .collect()
             })
             .unwrap_or_default()
+    }
+}
+
+/// Clock-independent collection policy, driven by monotonic elapsed time.
+struct AdaptiveWindow {
+    timeout: Duration,
+    first_useful: Option<Duration>,
+    last_change: Duration,
+    useful_count: usize,
+}
+
+impl AdaptiveWindow {
+    fn new(timeout: Duration) -> Self {
+        Self {
+            timeout,
+            first_useful: None,
+            last_change: Duration::ZERO,
+            useful_count: 0,
+        }
+    }
+
+    fn finished(&mut self, elapsed: Duration, count: usize) -> bool {
+        if elapsed >= self.timeout {
+            return true;
+        }
+        if count > self.useful_count {
+            self.first_useful.get_or_insert(elapsed);
+            self.last_change = elapsed;
+            self.useful_count = count;
+        }
+        let Some(first) = self.first_useful else {
+            return false;
+        };
+        elapsed.saturating_sub(first) >= Duration::from_millis(2_000)
+            || (elapsed.saturating_sub(first) >= Duration::from_millis(750)
+                && elapsed.saturating_sub(self.last_change)
+                    >= Duration::from_millis(350))
+    }
+}
+
+#[cfg(test)]
+mod adaptive_tests {
+    use super::*;
+
+    fn ms(value: u64) -> Duration {
+        Duration::from_millis(value)
+    }
+
+    #[test]
+    fn no_useful_hits_keep_full_window() {
+        let mut window = AdaptiveWindow::new(ms(12_000));
+        for elapsed in [0, 100, 1_000, 11_999] {
+            assert!(!window.finished(ms(elapsed), 0));
+        }
+        assert!(window.finished(ms(12_000), 0));
+    }
+
+    #[test]
+    fn initial_batch_waits_for_settle_and_late_burst() {
+        let mut window = AdaptiveWindow::new(ms(12_000));
+        assert!(!window.finished(ms(100), 1));
+        assert!(!window.finished(ms(800), 1));
+        assert!(!window.finished(ms(850), 2));
+        assert!(!window.finished(ms(1_199), 2));
+        assert!(window.finished(ms(1_200), 2));
+    }
+
+    #[test]
+    fn continuous_results_and_late_first_hit_are_bounded() {
+        let mut window = AdaptiveWindow::new(ms(12_000));
+        for i in 1..=20 {
+            assert!(!window.finished(ms(i * 100), i as usize));
+        }
+        assert!(window.finished(ms(2_100), 21));
+        let mut late = AdaptiveWindow::new(ms(12_000));
+        assert!(!late.finished(ms(11_900), 1));
+        assert!(late.finished(ms(12_000), 1));
     }
 }
