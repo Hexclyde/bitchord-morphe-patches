@@ -46,7 +46,10 @@ public final class SoundExtras {
     static volatile int singMethod = VocalCut.VOICE_GATE;
     static volatile int pitchSemitones = 0;
     static volatile int targetLufs = HOST_TARGET_LUFS;
-    static volatile boolean sleepFade = true;
+    static volatile boolean singEnabled = false;
+    static volatile boolean pitchEnabled = false;
+    static volatile boolean loudnessEnabled = false;
+    static volatile boolean sleepFade = false;
     static volatile boolean batterySaver = false;
     static volatile boolean losslessOverBluetooth = false;
 
@@ -90,7 +93,10 @@ public final class SoundExtras {
         SharedPreferences saved =
                 context.getApplicationContext()
                         .getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        singLevel = clamp(saved.getInt("singLevel", 0), 0, 100);
+        // Preserve a user's earlier adjustments when introducing the enable switches.
+        // A fresh install starts off, with a useful voice level ready when enabled.
+        int previousSingLevel = clamp(saved.getInt("singLevel", 0), 0, 100);
+        singLevel = clamp(saved.getInt("singLevel", 50), 0, 100);
         singMethod =
                 saved.getInt("singMethod", VocalCut.VOICE_GATE) == VocalCut.CENTRE
                         ? VocalCut.CENTRE
@@ -101,7 +107,10 @@ public final class SoundExtras {
                         saved.getInt("targetLufs", HOST_TARGET_LUFS),
                         MIN_TARGET_LUFS,
                         MAX_TARGET_LUFS);
-        sleepFade = saved.getBoolean("sleepFade", true);
+        singEnabled = saved.getBoolean("singEnabled", previousSingLevel > 0);
+        pitchEnabled = saved.getBoolean("pitchEnabled", pitchSemitones != 0);
+        loudnessEnabled = saved.getBoolean("loudnessEnabled", targetLufs != HOST_TARGET_LUFS);
+        sleepFade = saved.getBoolean("sleepFade", false);
         batterySaver = saved.getBoolean("batterySaver", false);
         losslessOverBluetooth = saved.getBoolean("losslessOverBluetooth", false);
         preferences = saved;
@@ -119,6 +128,23 @@ public final class SoundExtras {
     static void setSingLevel(int level) {
         singLevel = clamp(level, 0, 100);
         save("singLevel", singLevel);
+    }
+
+    static void setSingEnabled(boolean on) {
+        singEnabled = on;
+        save("singEnabled", on);
+        if (!on) singers.clear();
+    }
+
+    static void setPitchEnabled(boolean on) {
+        pitchEnabled = on;
+        save("pitchEnabled", on);
+        onPlayers(SoundExtras::applyPitch);
+    }
+
+    static void setLoudnessEnabled(boolean on) {
+        loudnessEnabled = on;
+        save("loudnessEnabled", on);
     }
 
     static void setSingMethod(int method) {
@@ -178,7 +204,7 @@ public final class SoundExtras {
      * samples.
      */
     public static void process(Object sink, Object block, int sampleRate) {
-        int level = singLevel;
+        int level = singEnabled ? singLevel : 0;
         if (level <= 0 || block == null) {
             if (!singers.isEmpty()) singers.remove(sink);
             return;
@@ -205,7 +231,7 @@ public final class SoundExtras {
      * from its position to its limit.
      */
     public static void processPcm16(Object equaliser, ByteBuffer block, int channels, int rate) {
-        int level = singLevel;
+        int level = singEnabled ? singLevel : 0;
         if (level <= 0 || block == null || channels != 2) {
             if (level <= 0 && !singers.isEmpty()) singers.remove(equaliser);
             return;
@@ -278,7 +304,7 @@ public final class SoundExtras {
      */
     public static Integer loudness(Integer millibels) {
         if (millibels == null) return null;
-        int shift = (targetLufs - HOST_TARGET_LUFS) * 100;
+        int shift = ((loudnessEnabled ? targetLufs : HOST_TARGET_LUFS) - HOST_TARGET_LUFS) * 100;
         if (shift == 0) return millibels;
         return clamp(millibels + shift, -1500 + Math.min(0, shift), 300 + Math.max(0, shift));
     }
@@ -334,7 +360,7 @@ public final class SoundExtras {
      */
     private static void applyPitch(Player player) {
         PlaybackParameters now = player.getPlaybackParameters();
-        float pitch = pitchFactor(pitchSemitones);
+        float pitch = pitchFactor(pitchEnabled ? pitchSemitones : 0);
         if (now != null && now.pitch == pitch) return;
         player.setPlaybackParameters(new PlaybackParameters(now == null ? 1f : now.speed, pitch));
     }
@@ -416,7 +442,7 @@ public final class SoundExtras {
 
                     public void run() {
                         try {
-                            if (!player.isPlaying() || ++step >= steps) {
+                            if (!sleepFade || !player.isPlaying() || ++step >= steps) {
                                 player.pause();
                                 player.setVolume(start);
                                 return;

@@ -27,6 +27,9 @@ subprocess.run(
             for name in (
                 "AudioFormatPreferences.java",
                 "AudioFormatSetupActivity.java",
+                "DownloadActivity.java",
+                "DownloadStyle.java",
+                "FormatDragOrder.java",
                 "SoulseekTrack.java",
             )
         ],

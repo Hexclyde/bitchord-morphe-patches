@@ -75,3 +75,12 @@ __pycache__/
 /ui-tests/src/test/java/app/bitchord/telegram/Chromaprint.java
 /ui-tests/src/test/java/app/bitchord/telegram/AcoustId.java
 /ui-tests/src/test/java/app/bitchord/telegram/Fingerprint.java
+/ui-tests/src/test/java/app/bitchord/telegram/ExtrasActivity.java
+/ui-tests/src/test/java/app/bitchord/telegram/SoundExtras.java
+/ui-tests/src/test/java/app/bitchord/telegram/VocalCut.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DownloadActivity.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DownloadStyle.java
+/ui-tests/src/test/java/app/bitchord/soulseek/AudioFormatSetupActivity.java
+/ui-tests/src/test/java/app/bitchord/soulseek/AudioFormatPreferences.java
+/ui-tests/src/test/java/app/bitchord/soulseek/FormatDragOrder.java
+/ui-tests/src/test/java/app/bitchord/soulseek/SoulseekTrack.java

@@ -630,7 +630,20 @@ public final class NostrCoordinatorTest {
         check(stops.get() > 0, "Stopping coordination clears pending download handshakes");
     }
 
+    static void featureGate() throws Exception {
+        NostrCoordinator coordinator = fresh();
+        DownloadSettings.on = false;
+        denied(() -> coordinator.start(), "disabled peer patch cannot open Nostr");
+        denied(() -> coordinator.createRelayProbe(), "disabled peer patch cannot probe relays");
+        denied(() -> coordinator.ping(PEER_A), "disabled peer patch cannot ping a peer");
+        denied(
+                () -> coordinator.sendToPeer(PEER_A, hex('1', 32), "offer", new JSONObject()),
+                "disabled peer patch cannot send coordination");
+        DownloadSettings.on = true;
+    }
+
     public static void main(String[] args) throws Exception {
+        featureGate();
         configBoundaries();
         constructionAndConfiguration();
         stopCancelsPendingStart();

@@ -52,24 +52,30 @@ public final class SoulseekBridge {
             SoulseekBridge bridge = new SoulseekBridge(context);
             instance = bridge;
             bridge.publish();
-            final long intent = bridge.beginLogin();
-            bridge.work.execute(
-                    () -> {
-                        try {
-                            String[] saved = bridge.credentials.load();
-                            if (saved != null) bridge.login(saved[0], saved[1], 0, intent);
-                        } catch (Throwable e) {
-                            synchronized (bridge) {
-                                if (bridge.loginIntent == intent)
-                                    bridge.status =
-                                            "Saved Soulseek account could not connect. Open setup"
-                                                    + " to retry.";
-                            }
-                        }
-                    });
+            bridge.reconnectSaved();
         } catch (Exception ignored) {
             // Boot must not prevent the original music player starting.
         }
+    }
+
+    void reconnectSaved() {
+        if (!DownloadSettings.enabled(context, DownloadSettings.SOULSEEK)) return;
+        final long intent = beginLogin();
+        work.execute(
+                () -> {
+                    try {
+                        if (!DownloadSettings.enabled(context, DownloadSettings.SOULSEEK)) return;
+                        String[] saved = credentials.load();
+                        if (saved != null) login(saved[0], saved[1], 0, intent);
+                    } catch (Throwable e) {
+                        synchronized (this) {
+                            if (loginIntent == intent)
+                                status =
+                                        "Saved Soulseek account could not connect. Open setup"
+                                                + " to retry.";
+                        }
+                    }
+                });
     }
 
     private static boolean mainProcess(Context context) {
@@ -133,6 +139,7 @@ public final class SoulseekBridge {
 
     private void loginSerialized(String user, String password, int mode, long intent)
             throws Exception {
+        DownloadSettings.requireEnabled(context, DownloadSettings.SOULSEEK);
         synchronized (this) {
             if (intent != loginIntent) throw new IOException("Sign-in cancelled");
         }
@@ -161,6 +168,7 @@ public final class SoulseekBridge {
         }
         long created = 0;
         try {
+            DownloadSettings.requireEnabled(context, DownloadSettings.SOULSEEK);
             SoulseekNative.load();
             // Standard server only. This is not a user-configurable proxy or hosted backend.
             created =
@@ -177,7 +185,7 @@ public final class SoulseekBridge {
                 if (mode == 1) credentials.save(user, password);
                 username = user;
                 connected = true;
-                status = "Connected. Enable Unofficial Soulseek in Sources, then search Addons.";
+                status = "Connected. Search Addons, then choose Download from the track menu.";
             }
         } catch (Throwable e) {
             synchronized (this) {
@@ -230,6 +238,10 @@ public final class SoulseekBridge {
         publish();
     }
 
+    boolean shutdownFailed() {
+        return engineShutdownFailed;
+    }
+
     void forget() throws Exception {
         try {
             synchronized (this) {
@@ -273,9 +285,10 @@ public final class SoulseekBridge {
     }
 
     long ready() throws IOException {
+        DownloadSettings.requireEnabled(context, DownloadSettings.SOULSEEK);
         long current = handle;
         if (!connected || current == 0)
-            throw new IOException("Sign in to Soulseek from the source's settings first.");
+            throw new IOException("Sign in to Soulseek from Patches & tweaks first.");
         return current;
     }
 

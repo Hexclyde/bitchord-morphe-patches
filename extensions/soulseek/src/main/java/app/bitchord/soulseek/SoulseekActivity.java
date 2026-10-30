@@ -1,6 +1,5 @@
 package app.bitchord.soulseek;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 /** Account settings for the download-only Soulseek source. */
-public final class SoulseekActivity extends Activity {
+public final class SoulseekActivity extends DownloadActivity {
     private SoulseekBridge bridge;
     private EditText username, password;
     private TextView status;
@@ -63,11 +62,15 @@ public final class SoulseekActivity extends Activity {
                 16);
         text(
                 body,
-                "Sign in, enable Unofficial Soulseek in Sources, then search in Addons and choose"
+                "Sign in, enable Soulseek in Patches & tweaks, then search in Addons and choose"
                         + " Download from the track menu. This source does not play live audio or"
                         + " replace YouTube. Use Peer downloads to share selected files with a"
                         + " paired phone.",
                 16);
+        LinearLayout account = new LinearLayout(this);
+        account.setOrientation(LinearLayout.VERTICAL);
+        downloadStyle.card(account);
+        body.addView(account);
         username = new EditText(this);
         username.setHint("Soulseek username");
         username.setSingleLine(true);
@@ -75,7 +78,7 @@ public final class SoulseekActivity extends Activity {
                 InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
         username.setText(bridge.username);
         username.setSaveEnabled(false);
-        body.addView(username);
+        account.addView(username);
         password = new EditText(this);
         password.setHint("Soulseek password");
         password.setSingleLine(true);
@@ -85,12 +88,12 @@ public final class SoulseekActivity extends Activity {
             username.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
             password.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
         }
-        body.addView(password);
+        account.addView(password);
         remember = new CheckBox(this);
         remember.setText("Remember this account on this phone (encrypted)");
         remember.setChecked(true);
-        body.addView(remember);
-        connect = button(body, "Sign in");
+        account.addView(remember);
+        connect = button(account, "Sign in");
         connect.setOnClickListener(
                 v -> {
                     String user = username.getText().toString().trim();
@@ -112,7 +115,7 @@ public final class SoulseekActivity extends Activity {
                                         });
                             });
                 });
-        button(body, "Reconnect saved account")
+        button(account, "Reconnect saved account")
                 .setOnClickListener(
                         v -> {
                             final long intent = bridge.beginLogin();
@@ -134,7 +137,7 @@ public final class SoulseekActivity extends Activity {
                                         }
                                     });
                         });
-        button(body, "Sign out and forget account")
+        button(account, "Sign out and forget account")
                 .setOnClickListener(
                         v -> {
                             password.setText("");
@@ -154,7 +157,7 @@ public final class SoulseekActivity extends Activity {
                                             "soulseek-signout")
                                     .start();
                         });
-        button(body, "Clear temporary audio cache and disconnect")
+        button(account, "Clear temporary audio cache and disconnect")
                 .setOnClickListener(
                         v -> {
                             bridge.beginLogin(); // Invalidate older queued sign-ins before this

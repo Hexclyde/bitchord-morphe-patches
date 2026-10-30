@@ -28,6 +28,7 @@ final class NostrCoordinator {
 
     private static NostrCoordinator instance;
     private final NostrIdentityStore store;
+    private final Context context;
     private final Object lock = new Object();
     private final Map<String, Pending> checks = new LinkedHashMap<>();
     private final Set<Long> relayProbes = new HashSet<>();
@@ -53,6 +54,7 @@ final class NostrCoordinator {
 
     private NostrCoordinator(Context context) throws IOException {
         Context app = context.getApplicationContext();
+        this.context = app;
         File home = new File(app.getNoBackupFilesDir(), "soulseek-coordination");
         if (!home.isDirectory() && !home.mkdirs())
             throw new IOException("Cannot create connection settings storage.");
@@ -61,6 +63,10 @@ final class NostrCoordinator {
 
     static synchronized NostrCoordinator get(Context context) throws IOException {
         if (instance == null) instance = new NostrCoordinator(context);
+        return instance;
+    }
+
+    static synchronized NostrCoordinator existing() {
         return instance;
     }
 
@@ -101,6 +107,7 @@ final class NostrCoordinator {
     }
 
     long createRelayProbe() throws Exception {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         final long intent;
         synchronized (lock) {
             if (handle != 0
@@ -142,6 +149,7 @@ final class NostrCoordinator {
     }
 
     void start() throws Exception {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         final long intent;
         synchronized (lock) {
             if (resetting || stopping) throw new IOException("Coordination is still stopping.");
@@ -165,6 +173,7 @@ final class NostrCoordinator {
                 throw new IOException("Add another phone's public key.");
             synchronized (lock) {
                 if (generation != intent) throw new IOException("Coordination start cancelled.");
+                DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
                 opened =
                         NostrNative.open(
                                 settings.secret,
@@ -247,6 +256,7 @@ final class NostrCoordinator {
     }
 
     void ping(String peerText) throws Exception {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         List<String> parsed = NostrConfig.peers(peerText);
         if (parsed.size() != 1) throw new IOException("Choose one trusted peer to test.");
         String peer = parsed.get(0);
@@ -290,11 +300,15 @@ final class NostrCoordinator {
 
     boolean isActive(long expectedGeneration) {
         synchronized (lock) {
-            return handle != 0 && generation == expectedGeneration && !stopping;
+            return handle != 0
+                    && generation == expectedGeneration
+                    && !stopping
+                    && DownloadSettings.enabled(context, DownloadSettings.PEERS);
         }
     }
 
     void sendToPeer(String peer, String session, String type, JSONObject payload) throws Exception {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         if (!peer.matches("[0-9a-f]{64}")
                 || !session.matches("[0-9a-f]{32}")
                 || !("offer".equals(type)
@@ -406,7 +420,9 @@ final class NostrCoordinator {
 
     private boolean current(long active, long intent) {
         synchronized (lock) {
-            return handle == active && generation == intent;
+            return handle == active
+                    && generation == intent
+                    && DownloadSettings.enabled(context, DownloadSettings.PEERS);
         }
     }
 
@@ -424,6 +440,12 @@ final class NostrCoordinator {
 
     boolean running() {
         return starting || handle != 0;
+    }
+
+    boolean shutdownFailed() {
+        synchronized (lock) {
+            return shutdownFailed;
+        }
     }
 
     String status() {

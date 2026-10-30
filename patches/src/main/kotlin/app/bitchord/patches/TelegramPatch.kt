@@ -1135,7 +1135,7 @@ val nativeTelegramPatch =
         compatibleWith(target)
         applicationIdOption()
         applicationHashOption()
-        dependsOn(telegramResources)
+        dependsOn(telegramResources, patchesUiRuntime)
         extendWith("extensions/telegram.mpe")
         execute {
             // AddonClient's original coroutine still supplies Dispatchers.IO. Only
@@ -1735,7 +1735,7 @@ val microGSignInPatch =
         default = true,
     ) {
         compatibleWith(target)
-        dependsOn(microGResources)
+        dependsOn(microGResources, patchesUiRuntime)
         extendWith("extensions/telegram.mpe")
         execute {
             // The sign-in WebView loads Google's sign-in page, or YouTube Music when changing
@@ -1790,28 +1790,7 @@ val microGSignInPatch =
     }
 
 private const val EXTRAS = "Lapp/bitchord/telegram/SoundExtras;"
-private const val EXTRAS_UI = "Lapp/bitchord/telegram/ExtrasUi;"
 private const val SINK = "Lcom/music/bitchord/playback/audio/PrecisionAudioSink;"
-private const val SETTINGS_GROUP_PARAMETERS =
-    "Ljava/lang/String;Ljava/lang/String;FLandroidx/compose/runtime/internal/ComposableLambdaImpl;Landroidx/compose/runtime/ComposerImpl;II"
-
-private val extrasResources = resourcePatch {
-    execute {
-        document("AndroidManifest.xml").use { doc ->
-            val app = doc.getElementsByTagName("application").item(0) as org.w3c.dom.Element
-            val activity = doc.createElement("activity")
-            activity.setAttributeNS(ANDROID, "android:name", "app.bitchord.telegram.ExtrasActivity")
-            activity.setAttributeNS(ANDROID, "android:exported", "false")
-            activity.setAttributeNS(ANDROID, "android:label", "Playback extras")
-            activity.setAttributeNS(
-                ANDROID,
-                "android:theme",
-                "@android:style/Theme.Material.NoActionBar",
-            )
-            app.appendChild(activity)
-        }
-    }
-}
 
 /** Sing: each decoded block goes through the vocal cut before BitChord's equaliser and effects. */
 private fun BytecodePatchContext.addSing() {
@@ -2024,67 +2003,6 @@ private fun BytecodePatchContext.addLosslessOverBluetooth() {
     println("Added lossless addons over Bluetooth")
 }
 
-/** The Tweaks & patches group in BitChord's Settings, after its first group. */
-private fun BytecodePatchContext.addExtrasSettings() {
-    val screen = mutableClassDefBy("Lcom/music/bitchord/ui/screens/SettingsSheetKt;")
-    val method = screen.methods.single { it.name.startsWith("SettingsScreen-") }
-    val code = method.implementation!!.instructions.toList()
-    val groups =
-        code.indices.filter { i ->
-            code[i].methodRef()?.let {
-                it.definingClass == "Lcom/music/bitchord/ui/screens/SettingsSheetKt;" &&
-                    it.name.startsWith("SearchableSettingsGroup-")
-            } == true
-        }
-    check(groups.size >= 3) { "Settings groups not found" }
-    val first = groups.first()
-    val composer = argumentRegisters(code[first])[4]
-    method.addInstruction(
-        first + 1,
-        "invoke-static/range {v$composer .. v$composer}, $EXTRAS_UI->tweaksSection(Landroidx/compose/runtime/ComposerImpl;)V",
-    )
-    val group =
-        screen.methods.single {
-            it.name.startsWith("SettingsGroup-") &&
-                it.parameterTypes.joinToString("") == SETTINGS_GROUP_PARAMETERS
-        }
-    val ui = mutableClassDefBy(EXTRAS_UI)
-    val original = ui.methods.single { it.name == "hostGroup" }
-    val replacement =
-        MutableMethod(
-            ImmutableMethod(
-                original.definingClass,
-                original.name,
-                original.parameters,
-                original.returnType,
-                original.accessFlags,
-                original.annotations,
-                original.hiddenApiRestrictions,
-                ImmutableMethodImplementation(8, emptyList<Instruction>(), emptyList(), emptyList()),
-            )
-        )
-    replacement.addInstructions(
-        0,
-        "invoke-static/range {p0 .. p6}, ${group.definingClass}->${group.name}($SETTINGS_GROUP_PARAMETERS)V\nreturn-void",
-    )
-    ui.methods.remove(original)
-    ui.methods.add(replacement)
-
-    val start = ApplicationCreate.method
-    val returns =
-        start.implementation!!
-            .instructions
-            .withIndex()
-            .filter { it.value.opcode == Opcode.RETURN_VOID }
-            .map { it.index }
-    check(returns.isNotEmpty()) { "Application startup hook not found" }
-    for (index in returns.reversed()) start.addInstruction(
-        index,
-        "invoke-static/range {p0 .. p0}, $EXTRAS_UI->start(Landroid/content/Context;)V",
-    )
-    println("Added Tweaks & patches to BitChord's Settings")
-}
-
 /** Makes SoundExtras.[name] answer true: the settings page shows that patch's part. */
 private fun BytecodePatchContext.markApplied(name: String) {
     val method =
@@ -2092,13 +2010,6 @@ private fun BytecodePatchContext.markApplied(name: String) {
             it.name == name && it.parameterTypes.isEmpty() && it.returnType == "Z"
         }
     method.addInstructions(0, "const/4 v0, 0x1\nreturn v0")
-}
-
-/** The Tweaks & patches page and its entry in Settings, shared by the patches below. */
-private val extrasSettingsPatch = bytecodePatch {
-    dependsOn(extrasResources)
-    extendWith("extensions/telegram.mpe")
-    execute { addExtrasSettings() }
 }
 
 /** Each player BitChord builds, for the pitch and battery saver patches. */
@@ -2116,11 +2027,10 @@ private fun extrasPatch(
     bytecodePatch(name = name, description = description, default = false) {
         compatibleWith(target)
         dependsOn(extrasSettingsPatch, *needs)
-        extendWith("extensions/telegram.mpe")
         execute { apply() }
     }
 
-private const val WHERE = " Settings are in Settings, Tweaks & patches."
+private const val WHERE = " Settings are in Settings, Patches & tweaks."
 
 @Suppress("unused")
 val singPatch =

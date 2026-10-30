@@ -172,6 +172,10 @@ def main():
             for checker, check_args in [
                 ("VerifyDexControlFlow", [str(patched)]),
                 (
+                    "VerifyPatchUiApk",
+                    [str(patched), str(telegram).lower(), str(soulseek).lower()],
+                ),
+                (
                     "VerifyApk",
                     [
                         str(original),

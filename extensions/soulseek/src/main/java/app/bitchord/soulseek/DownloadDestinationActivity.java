@@ -1,6 +1,5 @@
 package app.bitchord.soulseek;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -24,7 +23,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /** Resolves every selected destination before completing the first download setup. */
-public final class DownloadDestinationActivity extends Activity {
+public final class DownloadDestinationActivity extends DownloadActivity {
     private static final int PICK_FOLDER = 8127;
     private final ExecutorService worker = Executors.newSingleThreadExecutor();
     private final List<Button> actions = new ArrayList<>();
@@ -73,6 +72,7 @@ public final class DownloadDestinationActivity extends Activity {
                         + " settings.",
                 16);
         choices = new RadioGroup(this);
+        downloadStyle.card(choices);
         body.addView(choices);
         choice("Phone", DownloadDestinations.PHONE);
         choice("Telegram main channel", DownloadDestinations.TELEGRAM);
@@ -269,6 +269,7 @@ public final class DownloadDestinationActivity extends Activity {
     private LinearLayout section(LinearLayout parent) {
         LinearLayout section = new LinearLayout(this);
         section.setOrientation(LinearLayout.VERTICAL);
+        if (downloadStyle != null) downloadStyle.card(section);
         parent.addView(section);
         return section;
     }

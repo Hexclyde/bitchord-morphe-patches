@@ -45,6 +45,7 @@ public final class BulkCoordinatorTest {
     }
 
     static BulkCoordinator fresh() throws Exception {
+        DownloadSettings.on = true;
         Field singleton = BulkCoordinator.class.getDeclaredField("instance");
         singleton.setAccessible(true);
         singleton.set(null, null);
@@ -305,10 +306,29 @@ public final class BulkCoordinatorTest {
                 "Direct candidates must be structured data");
     }
 
+    static void featureGate() throws Exception {
+        BulkCoordinator coordinator = fresh();
+        DownloadSettings.on = false;
+        denied(() -> coordinator.start(), "disabled peer patch cannot start coordination");
+        denied(() -> coordinator.accept(SESSION), "disabled peer patch cannot accept a file");
+        check(!coordinator.isRunning(), "disabled peer patch immediately stops reporting active");
+        coordinator.onMessage(
+                NostrCoordinator.instance.generation,
+                SOURCE,
+                SESSION,
+                "offer",
+                envelope("offer").put("file", file()));
+        check(coordinator.offers().isEmpty(), "disabled peer patch ignores incoming offers");
+        coordinator.disablePeers();
+        check(BulkDownloads.instance.peerPauses == 1, "disabling peers uses targeted peer pause");
+        DownloadSettings.on = true;
+    }
+
     public static void main(String[] args) throws Exception {
         incomingAuthorization();
         outgoingAuthorization();
         expiryAndStop();
+        featureGate();
         System.out.println("PASS: " + checks + " bulk coordination checks.");
     }
 }

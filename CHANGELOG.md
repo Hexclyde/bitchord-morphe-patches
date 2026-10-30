@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.1.0-beta.6 (testing build)
+
+- Renamed **Tweaks & patches** to **Patches & tweaks** and moved download
+  controls there. Soulseek still registers internally for manual Addons search
+  and downloads, but its setup row no longer appears in Sources. Unofficial
+  Telegram keeps its existing settings, source row and behavior.
+- Added compact feature rows with enable switches and BitChord's settings gear.
+  Off hides the detailed controls and disables the gear. Enabling expands one
+  feature; opening another collapses the previous details without disabling it.
+  Saved settings are retained when a feature is switched off.
+- Added explicit enable gates for playback tweaks and download tools, so a
+  disabled feature does not keep applying its effect or starting new work.
+- Restyled download setup and management pages to follow BitChord's fonts,
+  theme, rounded groups, back navigation and controls.
+- Replaced the download format chooser's Up/Down buttons with numbered rows,
+  switches and drag handles. Accessible move actions provide an alternative to
+  dragging; at least one format must remain enabled.
+
+This remains a testing build for BitChord 1.8.1. Local UI, state and APK checks
+do not establish real-device gesture, Android lifecycle or public-network
+behavior. The download and provider limitations recorded below still apply.
+
 ## 1.1.0-beta.5 (testing build)
 
 - Added **Unofficial Soulseek audio**, a download-only Morphe patch for BitChord

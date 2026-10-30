@@ -91,6 +91,7 @@ final class BulkCoordinator implements NostrCoordinator.MessageHandler {
     }
 
     void start() throws Exception {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         BulkTransferService.ensureRunning(context);
         downloads = BulkDownloads.get(context);
         enabled = true;
@@ -111,6 +112,14 @@ final class BulkCoordinator implements NostrCoordinator.MessageHandler {
         status = "Downloads and coordination are stopped. Resume paused jobs explicitly.";
     }
 
+    void disablePeers() throws IOException {
+        enabled = false;
+        nostr.stop();
+        downloads.pausePeers();
+        if (nostr.shutdownFailed()) throw new IOException("Coordination did not finish stopping.");
+        status = "Peer downloads are disabled. Saved keys and local copies are kept.";
+    }
+
     String status() {
         return status;
     }
@@ -120,7 +129,9 @@ final class BulkCoordinator implements NostrCoordinator.MessageHandler {
     }
 
     public boolean isRunning() {
-        return enabled && nostr.running();
+        return enabled
+                && DownloadSettings.enabled(context, DownloadSettings.PEERS)
+                && nostr.running();
     }
 
     boolean hasPendingHandshake() {
@@ -138,6 +149,7 @@ final class BulkCoordinator implements NostrCoordinator.MessageHandler {
     }
 
     void sendOffer(BulkDownloads.Share share, String peer) throws Exception {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         if (!enabled) throw new IOException("Start download coordination first.");
         List<String> peers = NostrConfig.peers(peer);
         if (peers.size() != 1 || !NostrConfig.peers(nostr.peersText()).contains(peers.get(0)))
@@ -165,6 +177,7 @@ final class BulkCoordinator implements NostrCoordinator.MessageHandler {
     }
 
     void accept(String session) throws Exception {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         if (!enabled) throw new IOException("Start download coordination first.");
         BulkTransferService.ensureRunning(context);
         final Incoming offer;
@@ -252,6 +265,7 @@ final class BulkCoordinator implements NostrCoordinator.MessageHandler {
     public void onMessage(
             long generation, String peer, String session, String type, JSONObject payload) {
         if (!enabled
+                || !DownloadSettings.enabled(context, DownloadSettings.PEERS)
                 || !nostr.isActive(generation)
                 || !validKey(peer)
                 || !validToken(session)
@@ -260,7 +274,9 @@ final class BulkCoordinator implements NostrCoordinator.MessageHandler {
         try {
             control.execute(
                     () -> {
-                        if (!enabled || !nostr.isActive(generation)) return;
+                        if (!enabled
+                                || !DownloadSettings.enabled(context, DownloadSettings.PEERS)
+                                || !nostr.isActive(generation)) return;
                         try {
                             receive(peer, session, type, new JSONObject(encoded));
                         } catch (Exception | LinkageError invalid) {
@@ -285,6 +301,7 @@ final class BulkCoordinator implements NostrCoordinator.MessageHandler {
 
     private void receive(String peer, String session, String type, JSONObject payload)
             throws Exception {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         if (!NostrConfig.peers(nostr.peersText()).contains(peer))
             throw new IOException("Download message is not from a saved peer.");
         if (!PROTOCOL.equals(payload.optString("protocol"))) return;

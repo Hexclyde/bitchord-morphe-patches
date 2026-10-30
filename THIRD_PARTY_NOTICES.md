@@ -6,6 +6,7 @@ The patch code is licensed under GPL-3.0-or-later. Third-party components keep t
 
 | Component | Used for | License |
 | --- | --- | --- |
+| [Google Material Design Icons](https://github.com/google/material-design-icons) | Rounded Settings icon matching BitChord's `Icons.Rounded.Settings`, rendered from the same 24px path | [Apache License 2.0](licenses/APACHE-2.0.txt) |
 | [TDLib](https://github.com/tdlib/td) and its Java bindings | Telegram login, search and downloads | [Boost Software License 1.0](licenses/TDLIB-BOOST.txt) |
 | [TGX-Android/tdlib](https://github.com/TGX-Android/tdlib) | Prebuilt native TDLib libraries | See TDLib, OpenSSL and libc++ |
 | [OpenSSL](https://github.com/openssl/openssl) | TLS for TDLib | [Apache License 2.0](licenses/OPENSSL-APACHE.txt) |

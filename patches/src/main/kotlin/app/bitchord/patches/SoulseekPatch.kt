@@ -198,11 +198,11 @@ val nativeSoulseekPatch =
     bytecodePatch(
         name = "Unofficial Soulseek audio",
         description =
-            "Download selected Soulseek or debrid audio to a phone folder, a configured Telegram main channel, or both. Optional debrid services use your own API keys. Choose accepted formats and their order in setup. Live playback and automatic source matching are disabled. Android 8 or newer.",
+            "Download selected Soulseek or debrid audio to a phone folder, a configured Telegram main channel, or both. Optional debrid services use your own API keys. Choose accepted formats and their order in setup. Live playback and automatic source matching are disabled. Settings are in Settings, Patches & tweaks. Android 8 or newer.",
         default = false,
     ) {
         compatibleWith(soulseekTarget)
-        dependsOn(soulseekResources)
+        dependsOn(soulseekResources, extrasSettingsPatch)
         extendWith("extensions/soulseek.mpe")
         execute {
             val songType = "Lcom/music/bitchord/data/model/Song;"

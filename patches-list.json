@@ -1,10 +1,10 @@
 {
   "NOTE": "Generated from the verified MPP by tools/prepare_mobile_source.py; do not hand-edit.",
-  "version": "1.1.0-beta.5",
+  "version": "1.1.0-beta.6",
   "patches": [
     {
       "name": "Battery saver",
-      "description": "Lets the phone's audio chip decode songs, so long listens use less battery. BitChord's effects don't run on songs played this way. Settings are in Settings, Tweaks & patches.",
+      "description": "Lets the phone's audio chip decode songs, so long listens use less battery. BitChord's effects don't run on songs played this way. Settings are in Settings, Patches & tweaks.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -68,7 +68,7 @@
     },
     {
       "name": "Lossless addons over Bluetooth",
-      "description": "Keeps addons marked lossless in use over Bluetooth, where BitChord normally skips them. Lossless-first, as in Auris by OreoMuncher45. Settings are in Settings, Tweaks & patches.",
+      "description": "Keeps addons marked lossless in use over Bluetooth, where BitChord normally skips them. Lossless-first, as in Auris by OreoMuncher45. Settings are in Settings, Patches & tweaks.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -95,7 +95,7 @@
     },
     {
       "name": "Loudness level",
-      "description": "Sets how loud loudness normalisation plays songs, from -23 to -8 LUFS instead of -14. From Prism by Yigder. Settings are in Settings, Tweaks & patches.",
+      "description": "Sets how loud loudness normalisation plays songs, from -23 to -8 LUFS instead of -14. From Prism by Yigder. Settings are in Settings, Patches & tweaks.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -122,7 +122,7 @@
     },
     {
       "name": "Pitch control",
-      "description": "Moves the key up or down by up to 12 semitones without changing the speed. From Prism by Yigder. Settings are in Settings, Tweaks & patches.",
+      "description": "Moves the key up or down by up to 12 semitones without changing the speed. From Prism by Yigder. Settings are in Settings, Patches & tweaks.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -176,7 +176,7 @@
     },
     {
       "name": "Sing",
-      "description": "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord. Settings are in Settings, Tweaks & patches.",
+      "description": "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord. Settings are in Settings, Patches & tweaks.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -203,7 +203,7 @@
     },
     {
       "name": "Sleep timer fade-out",
-      "description": "Fades the song out over 10 seconds before the sleep timer pauses it. From Prism by Yigder. Settings are in Settings, Tweaks & patches.",
+      "description": "Fades the song out over 10 seconds before the sleep timer pauses it. From Prism by Yigder. Settings are in Settings, Patches & tweaks.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -230,7 +230,7 @@
     },
     {
       "name": "Unofficial Soulseek audio",
-      "description": "Download selected Soulseek or debrid audio to a phone folder, a configured Telegram main channel, or both. Optional debrid services use your own API keys. Choose accepted formats and their order in setup. Live playback and automatic source matching are disabled. Android 8 or newer.",
+      "description": "Download selected Soulseek or debrid audio to a phone folder, a configured Telegram main channel, or both. Optional debrid services use your own API keys. Choose accepted formats and their order in setup. Live playback and automatic source matching are disabled. Settings are in Settings, Patches & tweaks. Android 8 or newer.",
       "default": false,
       "category": null,
       "compatiblePackages": [

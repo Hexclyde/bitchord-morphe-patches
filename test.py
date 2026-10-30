@@ -191,5 +191,6 @@ for suite in (
     "debrid-pmtb",
     "debrid-settings",
     "debrid-tls",
+    "patch-controls",
 ):
     subprocess.run([sys.executable, str(ROOT / "tests" / suite / "run.py")], check=True)

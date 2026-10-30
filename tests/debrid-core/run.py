@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT))
 from buildenv import TOOLS, jdk
 
 STUBS = {
+    "app/bitchord/soulseek/DownloadSettings.java": 'package app.bitchord.soulseek;\nimport android.content.Context;\nimport java.io.IOException;\nfinal class DownloadSettings {\n static final String PEERS="peer-downloads", DEBRID="debrid";\n static volatile boolean on=true;\n static boolean enabled(Context context,String id){return on;}\n static void requireEnabled(Context context,String id)throws IOException{if(!on)throw new IOException("Enable the feature in Patches & tweaks first.");}\n}\n',
     "android/content/Context.java": """package android.content;
 import java.io.File;
 public class Context {

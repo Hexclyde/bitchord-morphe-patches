@@ -1,6 +1,5 @@
 package app.bitchord.soulseek;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -23,7 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
-public final class NostrSetupActivity extends Activity {
+public final class NostrSetupActivity extends DownloadActivity {
     private volatile NostrCoordinator coordinator;
     private volatile RelayDiscovery discovery;
     private volatile boolean destroyed;

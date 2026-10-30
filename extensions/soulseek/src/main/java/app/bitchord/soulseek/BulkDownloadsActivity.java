@@ -1,6 +1,5 @@
 package app.bitchord.soulseek;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
 import android.database.Cursor;
@@ -25,7 +24,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /** Explicit file sharing and resumable downloads between paired app identities. */
-public final class BulkDownloadsActivity extends Activity {
+public final class BulkDownloadsActivity extends DownloadActivity {
     private static final int PICK_AUDIO = 4701;
     private BulkCoordinator coordinator;
     private BulkDownloads downloads;
@@ -389,6 +388,7 @@ public final class BulkDownloadsActivity extends Activity {
     private LinearLayout group(LinearLayout parent) {
         LinearLayout group = new LinearLayout(this);
         group.setOrientation(LinearLayout.VERTICAL);
+        if (downloadStyle != null) downloadStyle.card(group);
         parent.addView(group);
         return group;
     }

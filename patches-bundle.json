@@ -1,8 +1,8 @@
 {
-  "created_at": "2026-10-30T20:23:22",
+  "created_at": "2026-10-30T21:48:52",
   "description": "Morphe patches for BitChord 1.8.1: music from your own Telegram channels, download-only Soulseek audio, and optional playback tools. Runs on your phone using your own accounts; doesn't unlock premium features.",
-  "download_url": "https://github.com/Hexclyde/bitchord-morphe-patches/releases/download/v1.1.0-beta.5/bitchord-patches-1.1.0-beta.5.mpp",
+  "download_url": "https://github.com/Hexclyde/bitchord-morphe-patches/releases/download/v1.1.0-beta.6/bitchord-patches-1.1.0-beta.6.mpp",
   "signature_download_url": "",
-  "version": "1.1.0-beta.5",
-  "page_url": "https://github.com/Hexclyde/bitchord-morphe-patches/releases/tag/v1.1.0-beta.5"
+  "version": "1.1.0-beta.6",
+  "page_url": "https://github.com/Hexclyde/bitchord-morphe-patches/releases/tag/v1.1.0-beta.6"
 }

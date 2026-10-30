@@ -4,7 +4,7 @@ Requires JDK 21, Maven 3.9+, network access, and about 2 GB for framework jars.
 """
 
 from pathlib import Path
-import os, shutil, subprocess, urllib.request, zipfile, io, hashlib
+import os, shutil, subprocess, urllib.request, zipfile, io, hashlib, sys
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
@@ -13,6 +13,9 @@ for name in (
     "TelegramActivity.java",
     "TelegramStyle.java",
     "TelegramSwitch.java",
+    "ExtrasActivity.java",
+    "SoundExtras.java",
+    "VocalCut.java",
     "ApplicationCredentials.java",
     "CachePolicy.java",
     "InternalAddon.java",
@@ -58,6 +61,19 @@ for name in (
     shutil.copy2(
         ROOT / "extensions/telegram/src/main/java/app/bitchord/telegram" / name, dest
     )
+for name in (
+    "DownloadActivity.java",
+    "DownloadStyle.java",
+    "AudioFormatSetupActivity.java",
+    "AudioFormatPreferences.java",
+    "FormatDragOrder.java",
+    "SoulseekTrack.java",
+):
+    dest = SOURCES / "app/bitchord/soulseek" / name
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(
+        ROOT / "extensions/soulseek/src/main/java/app/bitchord/soulseek" / name, dest
+    )
 api = ROOT / "vendor/tdlib-api/TdApi.java"
 if not api.exists():
     td = Path(os.environ.get("TDLIB_ANDROID", ROOT / ".deps/tdlib"))
@@ -80,20 +96,29 @@ for name, path, version in [
         "3.7.0",
     ),
 ]:
-    data = urllib.request.urlopen(
-        f"https://dl.google.com/dl/android/maven2/{path}/{version}/{name}-{version}.aar",
-        timeout=120,
-    ).read()
-    (libs / f"{name}.jar").write_bytes(
-        zipfile.ZipFile(io.BytesIO(data)).read("classes.jar")
-    )
+    target = libs / f"{name}.jar"
+    if not target.exists():
+        data = urllib.request.urlopen(
+            f"https://dl.google.com/dl/android/maven2/{path}/{version}/{name}-{version}.aar",
+            timeout=120,
+        ).read()
+        target.write_bytes(zipfile.ZipFile(io.BytesIO(data)).read("classes.jar"))
 for item in __import__("json").loads(
     (HERE / "media3-test-dependencies.json").read_text()
 ):
+    target = libs / (item["artifact"] + ".jar")
+    if (
+        target.exists()
+        and hashlib.sha256(target.read_bytes()).hexdigest() == item["classes_sha256"]
+    ):
+        continue
     data = urllib.request.urlopen(item["url"], timeout=120).read()
     if hashlib.sha256(data).hexdigest() != item["aar_sha256"]:
         raise RuntimeError("Media3 test artifact hash mismatch")
-    (libs / (item["artifact"] + ".jar")).write_bytes(
-        zipfile.ZipFile(io.BytesIO(data)).read("classes.jar")
-    )
-subprocess.run(["mvn", "-B", "-f", str(HERE / "pom.xml"), "test"], check=True)
+    classes = zipfile.ZipFile(io.BytesIO(data)).read("classes.jar")
+    if hashlib.sha256(classes).hexdigest() != item["classes_sha256"]:
+        raise RuntimeError("Media3 test classes hash mismatch")
+    target.write_bytes(classes)
+subprocess.run(
+    ["mvn", "-B", "-f", str(HERE / "pom.xml"), "test", *sys.argv[1:]], check=True
+)

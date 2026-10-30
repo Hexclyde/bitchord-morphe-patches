@@ -29,7 +29,13 @@ final class BulkDownloads {
         return instance;
     }
 
+    int peerPauses;
+
     void stop() {}
+
+    void pausePeers() {
+        peerPauses++;
+    }
 
     void prepareRoutes(String peer, String offerJson) {}
 

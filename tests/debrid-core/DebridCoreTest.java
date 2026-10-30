@@ -623,9 +623,29 @@ public final class DebridCoreTest {
         }
     }
 
+    static void featureGate() throws Exception {
+        try (Fixture f = new Fixture()) {
+            DebridDownloads.Prepared prepared = f.prepare();
+            int before = f.provider.resolves.get();
+            DownloadSettings.on = false;
+            rejected(() -> f.prepare(), "disabled debrid patch cannot resolve links");
+            rejected(
+                    () -> f.engine.refresh(prepared.id),
+                    "disabled debrid patch cannot refresh links");
+            rejected(() -> f.enqueue(prepared, "1"), "disabled debrid patch cannot queue files");
+            rejected(() -> f.engine.resume("unused"), "disabled debrid patch cannot resume files");
+            check(f.provider.resolves.get() == before, "disabled patch makes no provider request");
+            DownloadSettings.on = true;
+            check(f.prepare() != null, "explicit re-enable restores provider access");
+        } finally {
+            DownloadSettings.on = true;
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         httpTests();
         engineTests();
+        featureGate();
         System.out.println("Debrid core: " + checks + " assertions passed");
     }
 }

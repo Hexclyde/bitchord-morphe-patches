@@ -6,9 +6,8 @@ paired-phone files are downloaded completely and verified before saving. They do
 not supply live playback or automatically replace YouTube. Completed phone copies
 can be played through the normal local-file workflow.
 
-Development branch: `feature/soulseek-audio`, based on `testing` commit
-`3de260f7f1d7967c5a97ce924085d7d42bec18af` (1.1.0-beta.4).
-The local testing bundle is `1.1.0-beta.5`; it has not been published.
+The `1.1.0-beta.6` update extends testing build `1.1.0-beta.5`
+(commit `3abaad00d5ca329c93420575e9d3effc1695aff4`).
 See [testing instructions](SOULSEEK-TESTING.md).
 
 ## Current implementation
@@ -41,6 +40,12 @@ filenames or find an alternate recording after failure.
 
 ## First setup and formats
 
+Open **Settings → Patches & tweaks** and enable the download feature you want:
+**Soulseek downloads**, **Peer downloads** or **Debrid downloads**. Its expanded controls
+provide setup and downloads; tap its gear to reopen them after opening another
+feature. The gear is disabled while the feature is off. Saved accounts and
+settings remain when it is switched off.
+
 **Where copies go** requires an explicit destination. Phone uses a SAF folder
 with persisted read/write permission. Telegram uses the signed-in account's
 configured private main channel and requires the Telegram integration. Both
@@ -48,7 +53,10 @@ records each copy's result independently. Jobs keep their destination snapshot;
 changing settings cannot redirect queued work to a different account or folder.
 
 **Formats, best first** enables and orders FLAC, ALAC, WAV, AIFF, DSD, Opus,
-AAC, Vorbis and MP3. Filename extensions provide search hints. Completed files
+AAC, Vorbis and MP3. Each numbered row has an enable switch and drag handle,
+like BitChord's Sources list. Drag rows to change their priority, or use the
+handle's accessible move actions. At least one format must remain enabled.
+Save the choices to apply the new order. Filename extensions provide search hints. Completed files
 are inspected for their actual encoding before publication. Container names can
 be ambiguous: an M4A may contain ALAC or AAC, and Ogg may contain Vorbis or Opus.
 Changing preferences does not rewrite the policy captured by an accepted job.
@@ -58,7 +66,7 @@ original lossless source.
 ## Two source paths
 
 An explicit Soulseek result is intercepted before BitChord's filename-based
-download reuse. The source must be enabled and the host's current download
+download reuse. Soulseek must be enabled under **Patches & tweaks** and the host's current download
 settings must allow downloads. The task binds the selected catalog row and login
 session, copies the complete source into private staging, validates its encoding
 and imports the original bytes into the destination publisher. It does not

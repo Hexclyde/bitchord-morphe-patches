@@ -12,7 +12,7 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function2;
 
-/** The Tweaks & patches entry in BitChord's Settings. */
+/** The Patches & tweaks entry in BitChord's Settings. */
 public final class ExtrasUi {
     private static final Function0<Unit> OPEN =
             () -> {
@@ -23,7 +23,7 @@ public final class ExtrasUi {
             (composer, flags) -> {
                 SettingsSheetKt.SettingsRow(
                         null,
-                        Strings.t("Tweaks & patches"),
+                        Strings.t("Patches & tweaks"),
                         Strings.t("Settings of the patches you added"),
                         null,
                         null,
@@ -46,7 +46,7 @@ public final class ExtrasUi {
 
     public static void tweaksSection(ComposerImpl composer) {
         hostGroup(
-                Strings.t("Tweaks & patches"),
+                Strings.t("Patches & tweaks"),
                 Strings.t("Added to BitChord by patches."),
                 26f,
                 GROUP_CONTENT,
@@ -72,7 +72,10 @@ public final class ExtrasUi {
         SoundExtras.init(app);
     }
 
-    /** Filled with BitChord's SettingsGroup call by Morphe, as {@link TelegramUi#hostGroup}. */
+    /**
+     * Filled with BitChord's SettingsGroup call by Morphe, without a dependency on the optional
+     * Telegram patch.
+     */
     public static void hostGroup(
             String header,
             String footer,
@@ -81,6 +84,6 @@ public final class ExtrasUi {
             ComposerImpl composer,
             int flags,
             int defaults) {
-        TelegramUi.hostGroup(header, footer, spacing, content, composer, flags, defaults);
+        // Morphe replaces this body with the pinned host SettingsGroup call.
     }
 }

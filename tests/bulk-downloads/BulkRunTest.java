@@ -78,6 +78,8 @@ public final class BulkRunTest {
         queued();
         active();
         importRecovery();
+        featureGate();
+        targetedPeerPause();
         System.out.println("Bulk pause ownership: " + checks + " assertions passed");
     }
 
@@ -122,6 +124,62 @@ public final class BulkRunTest {
         public boolean awaitTermination(long timeout, TimeUnit unit) {
             return stopped;
         }
+    }
+
+    static void featureGate() throws Exception {
+        Object local = run();
+        invoke(local, "check", new Class<?>[0]);
+        checks++;
+        Object peer = run();
+        field(peer, "peer", true);
+        try {
+            invoke(peer, "check", new Class<?>[0]);
+            throw new AssertionError("peer worker must reject an unavailable/disabled feature");
+        } catch (java.lang.reflect.InvocationTargetException denied) {
+            check(
+                    denied.getCause() instanceof java.io.IOException,
+                    "peer worker checks master gate");
+        }
+    }
+
+    static void targetedPeerPause() throws Exception {
+        BulkJobStore store =
+                new BulkJobStore(Files.createTempDirectory("bulk-peer-pause-").toFile());
+        BulkJobStore.Job peerJob = store.create(BulkDownloadsTest.offer, "");
+        BulkJobStore.Job localJob =
+                new BulkJobStore.Job(
+                        "local-import", BulkDownloadsTest.offer, "", "phone", 0, 0, true);
+        Object peerRun = run(), localRun = run();
+        java.util.concurrent.FutureTask<Void> peerFuture =
+                new java.util.concurrent.FutureTask<>(() -> null);
+        java.util.concurrent.FutureTask<Void> localFuture =
+                new java.util.concurrent.FutureTask<>(() -> null);
+        field(peerRun, "future", peerFuture);
+        field(localRun, "future", localFuture);
+        BulkDownloads downloads = controller(store, peerJob, peerRun);
+        QueuedExecutor executor = new QueuedExecutor();
+        Map<String, BulkJobStore.Job> jobs = new LinkedHashMap<>();
+        jobs.put(peerJob.id, peerJob);
+        jobs.put(localJob.id, localJob);
+        Map<String, Object> runs = new LinkedHashMap<>();
+        runs.put(peerJob.id, peerRun);
+        runs.put(localJob.id, localRun);
+        field(downloads, "jobs", jobs);
+        field(downloads, "runs", runs);
+        field(downloads, "writer", executor);
+        field(downloads, "nativeLock", new Object());
+        field(downloads, "shares", new LinkedHashMap<>());
+        field(downloads, "downloadPeers", new java.util.HashSet<>());
+        field(downloads, "stagingResources", new java.util.HashSet<>());
+        field(downloads, "serving", new java.util.HashSet<>());
+        downloads.pausePeers();
+        check(
+                peerFuture.isCancelled() && peerJob.state == BulkJobStore.State.PAUSED,
+                "peer disable cancels and journals network jobs");
+        check(
+                !localFuture.isCancelled() && runs.get(localJob.id) == localRun,
+                "peer disable preserves independent verified local copies");
+        check(!executor.stopped, "peer disable leaves shared local-copy writer usable");
     }
 
     static void importRecovery() throws Exception {

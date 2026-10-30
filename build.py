@@ -63,6 +63,9 @@ for name in (
     "extension-classes",
     "patch-classes",
     "extension-dex",
+    "telegram-runtime-classes",
+    "patches-ui-classes",
+    "patches-ui-dex",
     "patch-dex",
     "bundle",
     "compile-api",
@@ -105,26 +108,58 @@ run(
     *sources,
 )
 jar(OUT / "extension.jar", OUT / "extension-classes")
-run(
-    JAVA,
-    "-Xshare:off",
-    "-Xmx3g",
-    "-cp",
-    R8,
-    "com.android.tools.r8.D8",
-    "--release",
-    "--min-api",
-    "26",
-    "--lib",
-    ANDROID,
-    "--lib",
-    stdlib,
-    "--lib",
-    OUT / "compile-api.jar",
-    "--output",
-    OUT / "extension-dex",
-    OUT / "extension.jar",
-)
+# Publish a small shared settings runtime separately, so download-only installs
+# never receive Telegram's account, TDLib client or generated API classes.
+shared_ui = {
+    "ExtrasActivity",
+    "ExtrasUi",
+    "SoundExtras",
+    "TelegramStyle",
+    "TelegramSwitch",
+    "Strings",
+    "Translations",
+    "HostLog",
+    "VocalCut",
+    "PatchSources",
+}
+for source in (OUT / "extension-classes").rglob("*.class"):
+    relative = source.relative_to(OUT / "extension-classes")
+    common = (
+        relative.parent.as_posix() == "app/bitchord/telegram"
+        and source.stem.split("$", 1)[0] in shared_ui
+    )
+    target = (
+        OUT
+        / ("patches-ui-classes" if common else "telegram-runtime-classes")
+        / relative
+    )
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, target)
+for name, classes, output in (
+    ("telegram-runtime", "telegram-runtime-classes", "extension-dex"),
+    ("patches-ui", "patches-ui-classes", "patches-ui-dex"),
+):
+    jar(OUT / (name + ".jar"), OUT / classes)
+    run(
+        JAVA,
+        "-Xshare:off",
+        "-Xmx3g",
+        "-cp",
+        R8,
+        "com.android.tools.r8.D8",
+        "--release",
+        "--min-api",
+        "26",
+        "--lib",
+        ANDROID,
+        "--lib",
+        stdlib,
+        "--lib",
+        OUT / "compile-api.jar",
+        "--output",
+        OUT / output,
+        OUT / (name + ".jar"),
+    )
 # Keep the Soulseek extension independent: selecting it never injects TDLib or
 # Telegram-only classes, and native sources can be selected together safely.
 soulseek_sources = sorted((ROOT / "extensions/soulseek/src/main/java").rglob("*.java"))
@@ -217,6 +252,10 @@ dexes = list((OUT / "extension-dex").glob("*.dex"))
 if len(dexes) != 1:
     raise RuntimeError("Expected one extension DEX")
 shutil.copy2(dexes[0], bundle / "extensions/telegram.mpe")
+ui_dexes = list((OUT / "patches-ui-dex").glob("*.dex"))
+if len(ui_dexes) != 1:
+    raise RuntimeError("Expected one shared settings extension DEX")
+shutil.copy2(ui_dexes[0], bundle / "extensions/patches-ui.mpe")
 soulseek_dexes = list((OUT / "soulseek-dex").glob("*.dex"))
 if len(soulseek_dexes) != 1:
     raise RuntimeError("Expected one Soulseek extension DEX")

@@ -8,7 +8,8 @@ Nostr does not discover music or carry the audio.
 
 ## Setup
 
-1. Open Soulseek setup, then **Download connection setup**.
+1. Open **Settings → Patches & tweaks**, enable **Peer downloads**, then open
+   **Connection setup** from its expanded controls.
 2. Exchange the displayed public keys through a trusted channel. Compare the full
    key before adding it to **Trusted peers** on the other phone.
 3. Configure one to three secure relay URLs on both phones. They need at least

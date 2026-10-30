@@ -1,6 +1,6 @@
 # Optional debrid downloads
 
-Build **1.1.0-beta.5** includes optional Real-Debrid, AllDebrid, Premiumize and
+Build **1.1.0-beta.6** includes optional Real-Debrid, AllDebrid, Premiumize and
 TorBox downloads. These adapters use the provider routes described below. Live
 accounts and every provider-supported host have not been qualified.
 
@@ -15,7 +15,9 @@ links and cloud transfers; it is not a music search index.
 1. Install the testing bundle with **Unofficial Soulseek audio**, which contains
    these download settings. Add **Unofficial Telegram music** if Telegram saving
    is wanted. A Soulseek account is not needed for the debrid path.
-2. Open **Debrid services and API keys** from Soulseek settings or **Peer downloads**.
+2. Open **Settings → Patches & tweaks**, enable **Debrid downloads**, then
+   choose **Services & API keys** from its expanded controls. Its settings
+   gear reopens those controls while enabled.
 3. Open the provider's account page and obtain your own API key. Enter it only in
    that provider's masked field in the app, then save it. Saved keys are not shown
    again; a blank field keeps an existing key.
@@ -79,7 +81,8 @@ the selected provider's response.
 
 API keys are encrypted with Android Keystore and kept in no-backup app storage.
 They are not included in Nostr offers, channel metadata, ordinary backups or the
-source package. Remove a provider's key to disable it; rotating or disabling a
+source package. The **Debrid downloads** master switch pauses local debrid work without deleting
+saved keys. Each provider also retains its own switch. Remove a provider's key to disable it; rotating or disabling a
 provider invalidates work using the older credential revision.
 
 Pause and cancel control the phone's fetching. A cloud transfer already created

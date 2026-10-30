@@ -129,6 +129,8 @@ public final class BulkDownloads {
         volatile Closeable active;
         volatile Thread owner;
         Future<?> future;
+        Context featureContext;
+        boolean peer;
 
         synchronized boolean claim() {
             if (cancelled) return false;
@@ -141,6 +143,7 @@ public final class BulkDownloads {
         }
 
         public void check() throws IOException {
+            if (peer) DownloadSettings.requireEnabled(featureContext, DownloadSettings.PEERS);
             if (cancelled || Thread.currentThread().isInterrupted())
                 throw new IOException("Download paused or cancelled.");
         }
@@ -224,6 +227,7 @@ public final class BulkDownloads {
      * Copies only the user-selected file; caller retains no writable reference to this snapshot.
      */
     public Share stage(Uri selectedFile, String displayName) throws IOException {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         AudioFormatPreferences.Settings formatSettings = AudioFormatPreferences.snapshot(context);
         String name = BulkOffer.audioName(displayName), id = random(16);
         File copy = new File(sourceHome, id + ".audio");
@@ -233,7 +237,7 @@ public final class BulkDownloads {
         Closeable cancelOpen = opening::cancel;
         InputStream input = null;
         synchronized (lock) {
-            ensureOpen();
+            ensurePeerOpen();
             if (shares.size() >= 8) throw new IOException("Stop an existing share first.");
             stagingResources.add(cancelOpen);
         }
@@ -243,7 +247,7 @@ public final class BulkDownloads {
             if (descriptor == null) throw new IOException("Cannot open the selected file.");
             input = new ParcelFileDescriptor.AutoCloseInputStream(descriptor);
             synchronized (lock) {
-                ensureOpen();
+                ensurePeerOpen();
                 stagingResources.add(input);
             }
             try (FileOutputStream output = new FileOutputStream(copy)) {
@@ -253,7 +257,7 @@ public final class BulkDownloads {
                     if (count == 0) continue;
                     length += count;
                     synchronized (lock) {
-                        ensureOpen();
+                        ensurePeerOpen();
                         if (length > BulkManifest.MAX_SIZE
                                 || usedBytes() + count > BulkManifest.MAX_SIZE)
                             throw new IOException(
@@ -279,6 +283,9 @@ public final class BulkDownloads {
                 try {
                     JSONObject publication;
                     synchronized (nativeLock) {
+                        synchronized (lock) {
+                            ensurePeerOpen();
+                        }
                         publication =
                                 new JSONObject(IpfsNative.publish(ipfs, copy.getAbsolutePath()));
                     }
@@ -305,14 +312,14 @@ public final class BulkDownloads {
             share.ipfsInfo = info;
             share.nativePublished = publishedCid != null;
             synchronized (lock) {
-                ensureOpen();
+                ensurePeerOpen();
                 shares.put(id, share);
                 stagingBytes -= reserved;
                 reserved = 0;
             }
             startProviders(share);
             synchronized (lock) {
-                ensureOpen();
+                ensurePeerOpen();
             }
             BulkOffer.verified(repeatZeroKey(), share.offerJson());
             return share;
@@ -347,6 +354,7 @@ public final class BulkDownloads {
     }
 
     public void authorizeRecipient(String fileId, String trustedRecipientKey) throws IOException {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         if (!BulkManifest.hex64(trustedRecipientKey))
             throw new IOException("Invalid paired identity.");
         synchronized (lock) {
@@ -356,6 +364,7 @@ public final class BulkDownloads {
 
     public void authorize(String fileId, String trustedRecipientKey, String receiverIpfsPeerId)
             throws IOException {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         if (receiverIpfsPeerId == null || receiverIpfsPeerId.length() > 160)
             throw new IOException("Invalid receiver identity.");
         synchronized (lock) {
@@ -370,6 +379,7 @@ public final class BulkDownloads {
 
     public void onDirectCandidates(String trustedPeer, String fileId, String descriptor)
             throws IOException {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         DirectClient client;
         synchronized (lock) {
             Share share = requireShare(fileId);
@@ -393,6 +403,7 @@ public final class BulkDownloads {
 
     /** Starts user-requested foreground services while the Accept action is still active. */
     public void prepareRoutes(String trustedPeer, String verifiedOfferJson) throws IOException {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         BulkOffer offer = BulkOffer.verified(trustedPeer, verifiedOfferJson);
         if (!offer.direct.isEmpty()) selfDirectDescriptor();
         if (!offer.i2p.isEmpty())
@@ -413,7 +424,7 @@ public final class BulkDownloads {
         synchronized (nativeLock) {
             try {
                 synchronized (lock) {
-                    ensureOpen();
+                    ensurePeerOpen();
                     if (ipfs == 0) {
                         File directory = new File(home, "ipfs");
                         if (!directory.isDirectory() && !directory.mkdirs())
@@ -481,12 +492,13 @@ public final class BulkDownloads {
             long user,
             String formatPolicy)
             throws IOException {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         AudioFormatPreferences.decode(formatPolicy);
         BulkOffer offer = BulkOffer.verified(trustedSourceKey, verifiedSignedOfferJson);
         if (offer.expires < System.currentTimeMillis())
             throw new IOException("Ask the peer for a new file offer.");
         synchronized (lock) {
-            ensureOpen();
+            ensurePeerOpen();
             if (jobs.size() >= 128)
                 throw new IOException(
                         "Remove a finished download from the list before adding another.");
@@ -615,6 +627,7 @@ public final class BulkDownloads {
         synchronized (lock) {
             ensureOpen();
             BulkJobStore.Job job = requireJob(id);
+            if (!job.localOnly) DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
             if (job.state == BulkJobStore.State.COMPLETE
                     || job.state == BulkJobStore.State.CANCELLED
                     || runs.containsKey(id)) return;
@@ -713,6 +726,9 @@ public final class BulkDownloads {
 
     private void submit(BulkJobStore.Job job) throws IOException {
         Run run = new Run();
+        run.featureContext = context;
+        run.peer = !job.localOnly;
+        if (run.peer) run.check();
         runs.put(job.id, run);
         try {
             run.future = writer.submit(() -> execute(job, run));
@@ -1122,13 +1138,13 @@ public final class BulkDownloads {
     private synchronized DirectClient direct() throws IOException {
         DirectClient client;
         synchronized (lock) {
-            ensureOpen();
+            ensurePeerOpen();
             if (direct == null) direct = new DirectClient(context);
             client = direct;
         }
         client.start(TIMEOUT);
         synchronized (lock) {
-            ensureOpen();
+            ensurePeerOpen();
         }
         return client;
     }
@@ -1136,7 +1152,7 @@ public final class BulkDownloads {
     private synchronized OverlayClient overlay(int kind) throws IOException {
         OverlayClient client;
         synchronized (lock) {
-            ensureOpen();
+            ensurePeerOpen();
             client = kind == 1 ? i2p : tor;
             if (client == null) {
                 client =
@@ -1149,7 +1165,7 @@ public final class BulkDownloads {
         }
         client.start(120_000);
         synchronized (lock) {
-            ensureOpen();
+            ensurePeerOpen();
         }
         return client;
     }
@@ -1233,7 +1249,7 @@ public final class BulkDownloads {
 
     private boolean providerActive() {
         synchronized (lock) {
-            return !stopped;
+            return !stopped && DownloadSettings.enabled(context, DownloadSettings.PEERS);
         }
     }
 
@@ -1241,7 +1257,9 @@ public final class BulkDownloads {
             Closeable connection, InputStream input, OutputStream output, Closeable finish)
             throws IOException {
         synchronized (lock) {
-            if (serving.size() >= 2 || stopped) {
+            if (serving.size() >= 2
+                    || stopped
+                    || !DownloadSettings.enabled(context, DownloadSettings.PEERS)) {
                 connection.close();
                 return;
             }
@@ -1273,6 +1291,7 @@ public final class BulkDownloads {
     }
 
     private byte[] readSource(String fileId, String token, int chunk) throws IOException {
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
         synchronized (lock) {
             Share share = requireShare(fileId);
             if (share.expires < System.currentTimeMillis()
@@ -1326,6 +1345,62 @@ public final class BulkDownloads {
         Set<String> allowed = new HashSet<>();
         for (String peer : share.peerGrants.values()) if (!peer.isEmpty()) allowed.add(peer);
         IpfsNative.grantPublication(ipfs, share.manifest.cid, new JSONArray(allowed).toString());
+    }
+
+    /** Stops peer network work without interrupting verified Soulseek/debrid local copies. */
+    void pausePeers() throws IOException {
+        List<String> ids = new ArrayList<>();
+        List<Closeable> resources;
+        List<Share> publications;
+        DirectClient closingDirect;
+        OverlayClient closingI2p, closingTor;
+        synchronized (lock) {
+            for (Map.Entry<String, Run> entry : runs.entrySet()) {
+                BulkJobStore.Job job = jobs.get(entry.getKey());
+                if (job != null && !job.localOnly) {
+                    entry.getValue().stop();
+                    ids.add(entry.getKey());
+                }
+            }
+            resources = new ArrayList<>(stagingResources);
+            resources.addAll(serving);
+            publications = new ArrayList<>(shares.values());
+            for (Share share : publications) share.revoked = true;
+            shares.clear();
+            downloadPeers.clear();
+            closingDirect = direct;
+            closingI2p = i2p;
+            closingTor = tor;
+            direct = null;
+            i2p = tor = null;
+            directAccepting = i2pAccepting = torAccepting = false;
+        }
+        IOException failure = null;
+        for (Closeable resource : resources) failure = closeResource(resource, failure);
+        for (String id : ids)
+            try {
+                pause(id);
+            } catch (IOException error) {
+                failure = combine(failure, error);
+            }
+        failure = closeResource(closingDirect, failure);
+        failure = closeResource(closingI2p, failure);
+        failure = closeResource(closingTor, failure);
+        synchronized (nativeLock) {
+            if (ipfs != 0) {
+                long closing = ipfs;
+                failure = closeResource(() -> IpfsNative.close(closing), failure);
+                ipfs = 0;
+            }
+        }
+        for (Share share : publications)
+            try {
+                delete(share.file);
+            } catch (IOException error) {
+                failure = combine(failure, error);
+            }
+        runtimeStatus = "Peer downloads are disabled. Saved local copies and jobs are kept.";
+        if (failure != null) throw failure;
     }
 
     public void stop() throws IOException {
@@ -1413,6 +1488,11 @@ public final class BulkDownloads {
             if (job.state == BulkJobStore.State.COMPLETE) used += store.complete(job).length();
             else if (job.state != BulkJobStore.State.CANCELLED) used += job.offer.size;
         return used;
+    }
+
+    private void ensurePeerOpen() throws IOException {
+        ensureOpen();
+        DownloadSettings.requireEnabled(context, DownloadSettings.PEERS);
     }
 
     private void ensureOpen() throws IOException {

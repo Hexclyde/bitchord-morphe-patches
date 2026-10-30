@@ -27,6 +27,7 @@ public final class DebridDownloads implements DebridCredentials.Listener {
     private volatile String status = "Debrid downloads are idle.";
 
     public static DebridDownloads get(Context context) throws IOException {
+        DownloadSettings.requireEnabled(context, DownloadSettings.DEBRID);
         DebridDownloads value = instance;
         if (value != null && value.stopping)
             throw new IOException("Debrid downloads are still stopping.");
@@ -182,6 +183,7 @@ public final class DebridDownloads implements DebridCredentials.Listener {
         }
 
         public void check() throws IOException {
+            DownloadSettings.requireEnabled(context, DownloadSettings.DEBRID);
             if (cancelled || stopped || Thread.currentThread().isInterrupted())
                 throw new InterruptedIOException("Debrid operation paused.");
             if (revision != null) credentials.requireCurrent(kind, revision);
@@ -380,6 +382,7 @@ public final class DebridDownloads implements DebridCredentials.Listener {
             DownloadDestinations.Snapshot destination,
             String formatPolicy)
             throws IOException {
+        DownloadSettings.requireEnabled(context, DownloadSettings.DEBRID);
         AudioFormatPreferences.Settings formats = AudioFormatPreferences.decode(formatPolicy);
         if (!formats.configured || fileIds == null || fileIds.isEmpty() || fileIds.size() > 32)
             throw new IOException("Choose supported audio files and format choices first.");
@@ -621,6 +624,7 @@ public final class DebridDownloads implements DebridCredentials.Listener {
     }
 
     public void resume(String id) throws IOException {
+        DownloadSettings.requireEnabled(context, DownloadSettings.DEBRID);
         BulkTransferService.ensureRunning(context);
         synchronized (lock) {
             ensureOpen();
@@ -754,6 +758,7 @@ public final class DebridDownloads implements DebridCredentials.Listener {
     }
 
     private void ensureOpen() throws IOException {
+        DownloadSettings.requireEnabled(context, DownloadSettings.DEBRID);
         if (stopped || stopping)
             throw new IOException(
                     "Debrid downloads are stopped. Start a new operation explicitly.");

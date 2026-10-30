@@ -90,6 +90,7 @@ public final class DebridUiSelectionTest {
         check(rows.get("17").isChecked(), "User can explicitly choose the exact waiting file ID");
 
         android.content.Context.home = Files.createTempDirectory("debrid-ui-reopen-").toFile();
+        DownloadSettings.setEnabled(activity, DownloadSettings.DEBRID, true);
         DebridCredentials vault =
                 new DebridCredentials(
                         new DebridCredentials.Storage() {

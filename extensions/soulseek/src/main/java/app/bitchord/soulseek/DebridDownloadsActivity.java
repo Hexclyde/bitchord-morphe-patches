@@ -1,12 +1,12 @@
 package app.bitchord.soulseek;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /** User-initiated links and selected audio files; debrid services are not catalogues. */
-public final class DebridDownloadsActivity extends Activity {
+public final class DebridDownloadsActivity extends DownloadActivity {
     private DebridDownloads downloads;
     private DebridCredentials credentials;
     private Spinner provider;
@@ -90,9 +90,31 @@ public final class DebridDownloadsActivity extends Activity {
         List<String> names = new ArrayList<>();
         for (DebridProvider.Kind k : DebridProvider.Kind.values()) names.add(k.label);
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
+                new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, names) {
+                    @Override
+                    public View getView(int position, View recycled, ViewGroup parent) {
+                        View row = super.getView(position, recycled, parent);
+                        downloadStyle.applyTree(row);
+                        return row;
+                    }
+
+                    @Override
+                    public View getDropDownView(int position, View recycled, ViewGroup parent) {
+                        View row = super.getDropDownView(position, recycled, parent);
+                        downloadStyle.applyTree(row);
+                        row.setBackgroundColor(downloadStyle.card);
+                        row.setMinimumHeight(downloadStyle.dp(48));
+                        row.setPadding(
+                                downloadStyle.dp(16),
+                                downloadStyle.dp(10),
+                                downloadStyle.dp(16),
+                                downloadStyle.dp(10));
+                        return row;
+                    }
+                };
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         provider.setAdapter(adapter);
+        provider.setPopupBackgroundDrawable(downloadStyle.shape(downloadStyle.card, 16, false));
         body.addView(provider);
         link = new EditText(this);
         link.setHint("HTTPS link or magnet");
@@ -393,6 +415,7 @@ public final class DebridDownloadsActivity extends Activity {
     private LinearLayout group(LinearLayout parent) {
         LinearLayout result = new LinearLayout(this);
         result.setOrientation(LinearLayout.VERTICAL);
+        if (downloadStyle != null) downloadStyle.card(result);
         parent.addView(result);
         return result;
     }

@@ -25,6 +25,8 @@ with tempfile.TemporaryDirectory(prefix="bitchord-destination-tests-") as tempor
             "-d",
             temporary,
             str(extension / "DownloadDestinations.java"),
+            str(extension / "DownloadStyle.java"),
+            str(extension / "DownloadActivity.java"),
             str(extension / "DownloadDestinationActivity.java"),
             str(Path(__file__).with_name("DestinationPolicyTest.java")),
         ],

@@ -1,6 +1,5 @@
 package app.bitchord.soulseek;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -23,7 +22,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /** Optional provider switches and protected API-key entry. */
-public final class DebridSetupActivity extends Activity {
+public final class DebridSetupActivity extends DownloadActivity {
     private final ThreadPoolExecutor worker =
             new ThreadPoolExecutor(
                     1,
@@ -114,8 +113,12 @@ public final class DebridSetupActivity extends Activity {
         final List<Button> actions = new ArrayList<>();
         boolean rendering;
 
-        Row(DebridProvider.Kind kind, LinearLayout body) {
+        Row(DebridProvider.Kind kind, LinearLayout parent) {
             this.kind = kind;
+            LinearLayout body = new LinearLayout(DebridSetupActivity.this);
+            body.setOrientation(LinearLayout.VERTICAL);
+            if (downloadStyle != null) downloadStyle.card(body);
+            parent.addView(body);
             text(body, kind.label, 20);
             enabled = new CheckBox(DebridSetupActivity.this);
             enabled.setText("Enable " + kind.label);

@@ -164,6 +164,122 @@ final class TelegramStyle {
         return b;
     }
 
+    /**
+     * Material Icons Rounded Settings, the same Icons.Rounded.Settings used by BitChord. Path from
+     * google/material-design-icons (Apache-2.0), action/settings/materialiconsround/24px.svg.
+     */
+    ImageButton settingsButton() {
+        ImageButton button = new ImageButton(activity);
+        button.setPadding(0, 0, 0, 0);
+        button.setScaleType(ImageView.ScaleType.CENTER);
+        button.setImageDrawable(
+                new Drawable() {
+                    final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                    final Path path = settingsPath();
+
+                    {
+                        paint.setColor(foreground);
+                    }
+
+                    @Override
+                    public void draw(Canvas canvas) {
+                        canvas.save();
+                        float scale = Math.min(getBounds().width(), getBounds().height()) / 24f;
+                        canvas.translate(
+                                getBounds().exactCenterX() - 12 * scale,
+                                getBounds().exactCenterY() - 12 * scale);
+                        canvas.scale(scale, scale);
+                        canvas.drawPath(path, paint);
+                        canvas.restore();
+                    }
+
+                    @Override
+                    public int getIntrinsicWidth() {
+                        return dp(24);
+                    }
+
+                    @Override
+                    public int getIntrinsicHeight() {
+                        return dp(24);
+                    }
+
+                    @Override
+                    public void setAlpha(int alpha) {
+                        paint.setAlpha(alpha);
+                        invalidateSelf();
+                    }
+
+                    @Override
+                    public void setColorFilter(ColorFilter filter) {
+                        paint.setColorFilter(filter);
+                        invalidateSelf();
+                    }
+
+                    @Override
+                    public int getOpacity() {
+                        return PixelFormat.TRANSLUCENT;
+                    }
+                });
+        button.setBackground(
+                new RippleDrawable(
+                        ColorStateList.valueOf(dark ? 0x228e8e93 : 0x22000000),
+                        shape(Color.TRANSPARENT, 24, false),
+                        null));
+        button.setBackgroundTintList(null);
+        return button;
+    }
+
+    private static Path settingsPath() {
+        Path path = new Path();
+        path.moveTo(19.5f, 12f);
+        path.cubicTo(19.5f, 11.77f, 19.49f, 11.55f, 19.47f, 11.32f);
+        path.lineTo(21.33f, 9.91f);
+        path.cubicTo(21.73f, 9.61f, 21.84f, 9.05f, 21.59f, 8.61f);
+        path.lineTo(19.72f, 5.38f);
+        path.cubicTo(19.47f, 4.94f, 18.93f, 4.76f, 18.47f, 4.96f);
+        path.lineTo(16.32f, 5.87f);
+        path.cubicTo(15.95f, 5.61f, 15.56f, 5.38f, 15.15f, 5.19f);
+        path.lineTo(14.86f, 2.88f);
+        path.cubicTo(14.8f, 2.38f, 14.37f, 2f, 13.87f, 2f);
+        path.lineTo(10.14f, 2f);
+        path.cubicTo(9.63f, 2f, 9.2f, 2.38f, 9.14f, 2.88f);
+        path.lineTo(8.85f, 5.19f);
+        path.cubicTo(8.44f, 5.38f, 8.05f, 5.61f, 7.68f, 5.87f);
+        path.lineTo(5.53f, 4.96f);
+        path.cubicTo(5.07f, 4.76f, 4.53f, 4.94f, 4.28f, 5.38f);
+        path.lineTo(2.41f, 8.62f);
+        path.cubicTo(2.16f, 9.06f, 2.27f, 9.61f, 2.67f, 9.92f);
+        path.lineTo(4.53f, 11.33f);
+        path.cubicTo(4.51f, 11.55f, 4.5f, 11.77f, 4.5f, 12f);
+        path.cubicTo(4.5f, 12.23f, 4.51f, 12.45f, 4.53f, 12.68f);
+        path.lineTo(2.67f, 14.09f);
+        path.cubicTo(2.27f, 14.39f, 2.16f, 14.95f, 2.41f, 15.39f);
+        path.lineTo(4.28f, 18.62f);
+        path.cubicTo(4.53f, 19.06f, 5.07f, 19.24f, 5.53f, 19.04f);
+        path.lineTo(7.68f, 18.13f);
+        path.cubicTo(8.05f, 18.39f, 8.44f, 18.62f, 8.85f, 18.81f);
+        path.lineTo(9.14f, 21.12f);
+        path.cubicTo(9.2f, 21.62f, 9.63f, 22f, 10.13f, 22f);
+        path.lineTo(13.86f, 22f);
+        path.cubicTo(14.36f, 22f, 14.79f, 21.62f, 14.85f, 21.12f);
+        path.lineTo(15.14f, 18.81f);
+        path.cubicTo(15.55f, 18.62f, 15.94f, 18.39f, 16.31f, 18.13f);
+        path.lineTo(18.46f, 19.04f);
+        path.cubicTo(18.92f, 19.24f, 19.46f, 19.06f, 19.71f, 18.62f);
+        path.lineTo(21.58f, 15.39f);
+        path.cubicTo(21.83f, 14.95f, 21.72f, 14.4f, 21.32f, 14.09f);
+        path.lineTo(19.46f, 12.68f);
+        path.cubicTo(19.49f, 12.45f, 19.5f, 12.23f, 19.5f, 12f);
+        path.close();
+        path.moveTo(12.04f, 15.5f);
+        path.cubicTo(10.11f, 15.5f, 8.54f, 13.93f, 8.54f, 12f);
+        path.cubicTo(8.54f, 10.07f, 10.11f, 8.5f, 12.04f, 8.5f);
+        path.cubicTo(13.97f, 8.5f, 15.54f, 10.07f, 15.54f, 12f);
+        path.cubicTo(15.54f, 13.93f, 13.97f, 15.5f, 12.04f, 15.5f);
+        path.close();
+        return path;
+    }
+
     TextView button(String value, boolean primary, Runnable action) {
         TextView b = text(value, 16, primary ? background : foreground, semibold);
         b.setGravity(android.view.Gravity.CENTER);

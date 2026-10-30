@@ -9,6 +9,33 @@ final class SoulseekSource {
 
     private SoulseekSource() {}
 
+    static boolean enabled() {
+        try {
+            Class<?> registry = Class.forName("com.music.bitchord.data.sources.SourceRegistry");
+            Object value = registry.getMethod("config", String.class).invoke(null, ID);
+            return value != null
+                    && (Boolean) value.getClass().getMethod("getEnabled").invoke(value);
+        } catch (ReflectiveOperationException | LinkageError unavailable) {
+            return false;
+        }
+    }
+
+    static void setEnabled(boolean enabled) throws java.io.IOException {
+        try {
+            Class<?> registry = Class.forName("com.music.bitchord.data.sources.SourceRegistry");
+            Object value = registry.getMethod("config", String.class).invoke(null, ID);
+            if (value == null)
+                throw new java.io.IOException(
+                        "Soulseek is still starting. Reopen Patches & tweaks.");
+            registry.getMethod("setEnabled", String.class, boolean.class).invoke(null, ID, enabled);
+            if (enabled() != enabled)
+                throw new java.io.IOException("Soulseek settings could not be changed.");
+        } catch (ReflectiveOperationException | LinkageError unavailable) {
+            throw new java.io.IOException(
+                    "Soulseek settings are unavailable in this BitChord version.", unavailable);
+        }
+    }
+
     static void register(String url) throws Exception {
         Class<?> config = Class.forName("com.music.bitchord.data.sources.SourceConfig");
         Class<?> kind = Class.forName("com.music.bitchord.data.sources.SourceKind");

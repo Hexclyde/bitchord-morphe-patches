@@ -1,12 +1,15 @@
 # Testing the download patch
 
-Testing version: **1.1.0-beta.5**, based on testing
-1.1.0-beta.4. Target: original **BitChord 1.8.1**, Android 8 or newer, on
-arm64-v8a, armeabi-v7a or x86_64. The bundle is a local development build.
+Testing version: **1.1.0-beta.6**, based on testing
+1.1.0-beta.5. Target: original **BitChord 1.8.1**, Android 8 or newer, on
+arm64-v8a, armeabi-v7a or x86_64. This is an experimental testing bundle.
 
 ## Implemented behavior
 
 - Optional **Unofficial Soulseek audio** Morphe patch with on-phone native runtimes.
+- Unified **Patches & tweaks** controls, compact off states and one expanded
+  enabled feature at a time.
+- BitChord-style format switches and drag ordering, with accessible move actions.
 - Manual Soulseek search and explicit downloads bound to the selected peer result.
 - First setup for Phone, Telegram main channel or Both, followed by enabled audio
   formats and their preference order. Encoding is checked before saving.
@@ -39,12 +42,15 @@ or change the paired-file fallback chain.
 3. Select **Unofficial Soulseek audio**. Add **Unofficial Telegram music** if
    Telegram saving is wanted. Patch and install with the existing Morphe signing
    key when updating an already patched installation.
-4. Open **Settings → Sources → Unofficial Soulseek**. In first setup choose
+4. Open **Settings → Patches & tweaks**, enable **Soulseek downloads**, then choose
+   **Account & download settings**. In first setup choose
    **Phone**, **Telegram main channel** or **Both**. Phone requires a writable
    folder; Telegram requires a connected account and its owned private main channel.
-5. Select the enabled formats and arrange them under **Formats, best first**.
+5. Under **Formats, best first**, switch on accepted formats and drag their
+   handles into preference order, then save. Accessible move actions can also
+   rearrange a row. At least one format must stay enabled.
    Cancelling an incomplete setup does not permit a download to bypass it.
-6. Sign in and enable Soulseek. Search in **Search → Addons**, open one result's
+6. Sign in to Soulseek. Search in **Search → Addons**, open one result's
    menu and select **Download**. Monitor **Peer downloads** for capture and copy
    status. Trying to play a remote result reports that it is download-only.
 
@@ -54,6 +60,8 @@ the initial Soulseek capture requires a fresh selection; completed imports and
 paired bulk jobs have their own publication/transfer journals.
 
 ## Paired download checks
+
+Enable **Peer downloads** under **Settings → Patches & tweaks** on each phone.
 
 1. On both phones open **Download connection setup**, exchange and compare the
    full app public keys, save each other as trusted peers and retain at least one
@@ -86,6 +94,31 @@ A connected socket is insufficient: the relay must accept and return probes.
 Applying a recommendation is explicit and preserves healthy configured relays.
 Both phones still need a common working relay. Rankings measure coordination
 latency, not file-transfer speed.
+
+
+## Settings and format UI checks
+
+1. Open **Settings → Patches & tweaks** with each selected patch combination.
+   Only installed download and playback-tweak features should appear. The
+   Soulseek setup row should be absent from Sources; Unofficial Telegram and
+   unrelated sources keep their existing controls and behavior.
+2. Check that an off feature hides its controls and disables its settings gear.
+   Turn it on: the controls expand. Open another feature: the first stays on,
+   but its details collapse. Reopen it with the gear and confirm values remain.
+3. Switch a feature off while it is active. Check that its effect or new network
+   work stops and that saved settings survive reenabling it. Existing completed
+   downloads and their independent publication receipts must remain intact.
+4. Drag the first format to the bottom and the last to the top, including while
+   the list scrolls. Save and reopen; order and enabled states should match.
+   Cancel a drag and rotate during an unsaved edit; no format should disappear
+   or be duplicated. The last enabled format cannot be switched off.
+5. Repeat with TalkBack/accessible move actions, large text, light and dark
+   themes, and the phone's selected app language. Check touch targets, readable
+   disabled states and back navigation.
+
+Local fixtures exercise state and pointer handling in a simulated Android
+runtime. These checks still need execution on physical phones; they do not
+establish device rendering, touch behavior or accessibility-service behavior.
 
 ## Local validation and remaining device checks
 

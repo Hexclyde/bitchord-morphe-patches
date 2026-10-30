@@ -126,6 +126,7 @@ public final class SoundExtrasTest {
         SoundExtras.singLevel = 0;
         SoundExtras.process(sink, new Block(samples, 2), RATE);
         check(java.util.Arrays.equals(samples, untouched), "Sing off changes nothing");
+        SoundExtras.singEnabled = true;
         SoundExtras.singLevel = 100;
         SoundExtras.singMethod = VocalCut.CENTRE;
         SoundExtras.process(sink, new Block(samples, 2), RATE);
@@ -137,6 +138,14 @@ public final class SoundExtrasTest {
         SoundExtras.flush(sink);
         SoundExtras.flush(new Object());
         SoundExtras.process(sink, null, RATE);
+        SoundExtras.singEnabled = false;
+        SoundExtras.singLevel = 100;
+        float[] disabled = voice(RATE / 10, 0f);
+        float[] disabledBefore = disabled.clone();
+        SoundExtras.process(sink, new Block(disabled, 2), RATE);
+        check(
+                java.util.Arrays.equals(disabled, disabledBefore),
+                "disabled Sing preserves its saved strength without changing samples");
         SoundExtras.singLevel = 0;
         SoundExtras.singMethod = VocalCut.VOICE_GATE;
 
@@ -153,6 +162,7 @@ public final class SoundExtrasTest {
         SoundExtras.singLevel = 0;
         SoundExtras.processPcm16(equaliser, pcm, 2, RATE);
         check(pcm.equals(original), "Sing off leaves the 16-bit block alone");
+        SoundExtras.singEnabled = true;
         SoundExtras.singLevel = 100;
         SoundExtras.singMethod = VocalCut.CENTRE;
         SoundExtras.processPcm16(equaliser, pcm, 2, RATE);
@@ -169,6 +179,7 @@ public final class SoundExtrasTest {
         SoundExtras.singMethod = VocalCut.VOICE_GATE;
 
         // Loudness level.
+        SoundExtras.loudnessEnabled = true;
         check(SoundExtras.loudness(null) == null, "no gain stays no gain");
         SoundExtras.targetLufs = SoundExtras.HOST_TARGET_LUFS;
         check(SoundExtras.loudness(-620) == -620, "BitChord's level changes nothing");
@@ -185,6 +196,12 @@ public final class SoundExtrasTest {
         check(SoundExtras.targetLufs == SoundExtras.MIN_TARGET_LUFS, "the level has a floor");
         SoundExtras.setTargetLufs(0);
         check(SoundExtras.targetLufs == SoundExtras.MAX_TARGET_LUFS, "and a ceiling");
+        SoundExtras.loudnessEnabled = false;
+        SoundExtras.targetLufs = -10;
+        check(
+                SoundExtras.loudness(-620) == -620,
+                "disabled loudness ignores its saved non-neutral level");
+        check(SoundExtras.targetLufs == -10, "disabled loudness preserves the saved level");
         SoundExtras.targetLufs = SoundExtras.HOST_TARGET_LUFS;
 
         // Pitch.

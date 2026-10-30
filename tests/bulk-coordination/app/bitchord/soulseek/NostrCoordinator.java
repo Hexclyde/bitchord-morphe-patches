@@ -51,6 +51,10 @@ final class NostrCoordinator {
         return running;
     }
 
+    boolean shutdownFailed() {
+        return false;
+    }
+
     void stop() {
         running = false;
         generation++;
