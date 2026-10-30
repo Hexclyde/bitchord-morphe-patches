@@ -37,6 +37,7 @@ OFF_BY_DEFAULT = {
     "Equaliser per output",
     "DJ mode",
     "JamesDSP",
+    "Audio and video switch",
 }
 
 

@@ -1,10 +1,17 @@
 # BitChord Morphe Patches (Bitchord+)
 
+[![Latest release](https://img.shields.io/github/v/release/Hexclyde/bitchord-morphe-patches?include_prereleases&sort=semver&label=release)](https://github.com/Hexclyde/bitchord-morphe-patches/releases)
+[![Checks](https://img.shields.io/github/actions/workflow/status/Hexclyde/bitchord-morphe-patches/source-checks.yml?label=checks)](https://github.com/Hexclyde/bitchord-morphe-patches/actions/workflows/source-checks.yml)
+[![BitChord compatibility](https://img.shields.io/github/actions/workflow/status/Hexclyde/bitchord-morphe-patches/bitchord-watch.yml?label=BitChord%20compatibility)](https://github.com/Hexclyde/bitchord-morphe-patches/actions/workflows/bitchord-watch.yml)
+[![BitChord 1.9](https://img.shields.io/badge/BitChord-1.9-fa233b)](https://github.com/kushagrasinghx/BitChord)
+[![Downloads](https://img.shields.io/github/downloads/Hexclyde/bitchord-morphe-patches/total)](https://github.com/Hexclyde/bitchord-morphe-patches/releases)
+[![Licence](https://img.shields.io/github/license/Hexclyde/bitchord-morphe-patches)](LICENSE)
+
 [Morphe](https://morphe.software) patches for the [BitChord](https://github.com/kushagrasinghx/BitChord) Android music player. The main one, **Unofficial Telegram music**, lets BitChord search and play music from your own Telegram channels, in its original quality, entirely on your phone. No server, bot or hosting is involved.
 
-**[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
+**[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Interactive install guide](https://hexclyde.github.io/bitchord-morphe-patches/) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.8, a testing build). It works with BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.11, a testing build). It works with BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > Every patch applies to BitChord 1.9's official APKs and passes the automated checks on all three architectures. The Telegram integration was last tested on an **arm64-v8a** phone with BitChord 1.8.1, so please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if anything behaves differently on 1.9.
 
@@ -25,7 +32,8 @@
 | **Headphone correction** | Flattens your headphones' sound with a measured profile from [AutoEq](https://github.com/jaakkopasanen/AutoEq), one per output. Off by default. |
 | **Equaliser per output** | Remembers BitChord's equaliser for each output and shares settings as codes. Off by default. |
 | **DJ mode** | Plays the queue in an order that mixes well, by key and tempo. Off by default. |
-| **JamesDSP** | Hands BitChord's audio to [JamesDSP](https://github.com/timschneeb/RootlessJamesDSP). Off by default. |
+| **JamesDSP** | Hands BitChord's audio to [JamesDSP](https://github.com/timschneeb/RootlessJamesDSP), shows whether it can hear BitChord and helps with its Shizuku or ADB setup. Off by default. |
+| **Audio and video switch** | A song and video switch at the top of the player, as in YouTube Music. Off by default. |
 
 More BitChord add-ons will be added to this repository over time.
 
@@ -76,8 +84,8 @@ controls are hidden and its gear is disabled. Enabling a feature expands its
 controls; opening another feature collapses the previous one without turning it
 off. Tap an enabled feature's gear to review it again. Disabling a feature keeps
 its saved settings for later. Existing explicitly chosen settings are retained
-when updating. Telegram keeps its existing source toggle and settings page. The eleven optional
-playback patches are:
+when updating. Telegram keeps its existing source toggle and settings page. The twelve optional
+patches are:
 
 - **Sing:** turns the lead vocal down so you can sing over the song, from a little to all of it. By default only the voice range is cut, only while someone is singing, and drum hits are left alone; **Whole centre** removes everything in the middle instead, which suits older recordings. Ported from [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45.
 - **Pitch control:** up or down by up to 12 semitones without changing the speed. BitChord's speed setting keeps the pitch you set.
@@ -89,7 +97,8 @@ playback patches are:
 - **Headphone correction:** a parametric equaliser that flattens a headphone's own sound from a profile measured for that model. Search [AutoEq](https://github.com/jaakkopasanen/AutoEq)'s thousands of models by name, or paste any parametric EQ in Equalizer APO's text form. Each output keeps its own profile, so wired earphones and a Bluetooth headset each get theirs, and a strength slider scales it. Profiles are fetched from AutoEq's GitHub repository when you pick one and kept on the phone.
 - **Equaliser per output:** BitChord's equaliser settings are remembered for each output (the speaker, wired, USB, each Bluetooth device) and put back when that output is in use again. Set the equaliser for the car with the car connected, for earbuds with the earbuds connected. A setting can be copied as a short code and pasted on another phone.
 - **DJ mode:** the next song in the queue is chosen for a key next to the current one on the Camelot wheel and a close tempo, so songs mix well. Songs you queued yourself keep their place, and nothing moves in a Listen Together party. Each song's key and tempo are learned as it plays, and BitChord's own Automix analyses are used when it has them. While Automix is mixing from one song into the next, DJ mode waits until it's done.
-- **JamesDSP:** opens [JamesDSP](https://github.com/timschneeb/RootlessJamesDSP) from BitChord, announces BitChord's audio session to it again, and can hand the effects over: BitChord's equaliser goes off and Battery saver stands down, since a song on the audio chip can't be heard by JamesDSP.
+- **JamesDSP:** opens [JamesDSP](https://github.com/timschneeb/RootlessJamesDSP) from BitChord, announces BitChord's audio session to it again, and can hand the effects over: BitChord's equaliser goes off and Battery saver stands down, since a song on the audio chip can't be heard by JamesDSP. The page says what Android lets BitChord see: whether the rootless JamesDSP has finished its one-time setup, whether some app is capturing the sound that plays (that's how the rootless JamesDSP works, though Android doesn't say which app), and when bit-perfect output or Battery saver keep a song out of its reach. It can start and stop the rootless JamesDSP, and until its setup is done it offers [Shizuku](https://github.com/RikkaApps/Shizuku) and copies the three ADB commands JamesDSP's own setup asks for.
+- **Audio and video switch:** BitChord 1.9 can play a song's music video and switches between the two from the song menu. This puts the switch at the top of the player, as in YouTube Music: tap the headphones for the song or the video frame for its music video. It finds the other version the way BitChord's menu does, from BitChord's cache or YouTube Music, and hands it to BitChord's own swap, so the song keeps its place in the queue and, with Smart version alignment on, the two line up in time. It shows for YouTube Music songs only, and greys out in a Listen Together party or when a song has no other version. It can be hidden on the page.
 
 Songs that play through BitChord's bit-perfect output reach your DAC unchanged, so Sing, Pitch control, Loudness level, Headphone correction and JamesDSP don't apply to them; the page says so while that output is on.
 

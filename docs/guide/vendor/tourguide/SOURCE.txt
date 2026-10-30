@@ -1,0 +1,7 @@
+TourGuide JS 0.0.27 by sjmc11 - https://github.com/sjmc11/tourguide-js - MIT (LICENSE.txt)
+From https://registry.npmjs.org/@sjmc11/tourguidejs/-/tourguidejs-0.0.27.tgz
+  tour.js      = package/dist/tour.js          sha256 d5bdc6e86221f0df5c01a68edba4d1bec4769b8344096897e3e0ee408f13d342
+  tour.min.css = package/dist/css/tour.min.css sha256 560d82a0c87447df2e728f57e98a28fb3a9da45c6ff79a43bf895ae8195d235f
+tour.js includes Floating UI (https://floating-ui.com) - MIT (LICENSE-floating-ui.txt)
+  LICENSE-floating-ui.txt = @floating-ui/core 1.0.1 package/LICENSE sha256 46c97b198a78dc0befc1a823ba7bcdf993726a887d0215edcce575a61b947115
+The files are copied byte for byte. Only the names of the licence files changed.

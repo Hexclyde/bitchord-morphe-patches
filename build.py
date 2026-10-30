@@ -120,6 +120,7 @@ shared_ui = {
     "DownloadChoice",
     "EffectsApps",
     "BitPerfect",
+    "VideoSwitch",
 }
 for source in (OUT / "extension-classes").rglob("*.class"):
     relative = source.relative_to(OUT / "extension-classes")

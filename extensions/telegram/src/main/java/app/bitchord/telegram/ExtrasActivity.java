@@ -35,7 +35,7 @@ public final class ExtrasActivity extends Activity {
     private final LinkedHashMap<String, Feature> features = new LinkedHashMap<>();
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable refreshStatus = this::refreshStatus;
-    private TextView batteryStatus, bluetoothStatus, djStatus;
+    private TextView batteryStatus, bluetoothStatus, djStatus, jamesStatus;
 
     interface Setting {
         void set(boolean on) throws Exception;
@@ -137,7 +137,7 @@ public final class ExtrasActivity extends Activity {
         int y = scroll.getScrollY();
         features.clear();
         body.removeAllViews();
-        batteryStatus = bluetoothStatus = djStatus = null;
+        batteryStatus = bluetoothStatus = djStatus = jamesStatus = null;
         render();
         scroll.post(() -> scroll.scrollTo(0, y));
         handler.post(refreshStatus);
@@ -393,6 +393,25 @@ public final class ExtrasActivity extends Activity {
                         SoundExtras.effectsChanged();
                     },
                     this::jamesDsp);
+        }
+        if (SoundExtras.videoSwitchApplied()) {
+            section(Strings.t("Audio and video switch"));
+            feature(
+                    "video-switch",
+                    Strings.t("Song and video switch on the player"),
+                    Strings.t("Shown at the top of the player"),
+                    () -> VideoSwitch.enabled,
+                    VideoSwitch::setEnabled,
+                    parent ->
+                            paragraph(
+                                    parent,
+                                    Strings.t(
+                                            "Tap the headphones for the song or the video frame"
+                                                    + " for its music video. BitChord keeps the"
+                                                    + " song’s place and, with Smart version"
+                                                    + " alignment on, lines the two up in time."
+                                                    + " Shown for YouTube Music songs, not for"
+                                                    + " files, addons or Telegram.")));
         }
         if (SoundExtras.downloadQualityApplied()) {
             section(Strings.t("Downloads"));
@@ -1011,6 +1030,7 @@ public final class ExtrasActivity extends Activity {
     private void jamesDsp(LinearLayout parent) {
         String installed = EffectsApps.installed(this);
         paragraph(parent, EffectsApps.describe(installed));
+        jamesStatus = status(parent);
         paragraph(
                 parent,
                 Strings.t(
@@ -1035,12 +1055,64 @@ public final class ExtrasActivity extends Activity {
                                                 : Strings.t("Play a song first."),
                                         Toast.LENGTH_SHORT)
                                 .show());
+        if (EffectsApps.ROOTLESS.equals(installed)) rootlessJamesDsp(parent);
         paragraph(
                 parent,
                 Strings.t(
                         "While this is on, BitChord’s equaliser is turned off and Battery saver"
                                 + " stands down, so the sound isn’t equalised twice and songs stay"
                                 + " off the audio chip, where JamesDSP couldn’t hear them."));
+    }
+
+    /** Turning the rootless JamesDSP on and off, and its one-time Shizuku or ADB setup. */
+    private void rootlessJamesDsp(LinearLayout parent) {
+        action(parent, Strings.t("Start JamesDSP"), () -> jamesPower(true));
+        action(parent, Strings.t("Stop JamesDSP"), () -> jamesPower(false));
+        if (EffectsApps.rootlessReady(this)) return;
+        divider(parent);
+        heading(parent, Strings.t("JamesDSP’s setup"));
+        paragraph(
+                parent,
+                Strings.t(
+                        "The rootless JamesDSP needs two permissions that only Shizuku or a"
+                                + " computer with ADB can grant, once. With Shizuku running, open"
+                                + " JamesDSP and pick Shizuku in its setup. With ADB, run these"
+                                + " commands; the last one lets JamesDSP start without opening."));
+        action(
+                parent,
+                EffectsApps.shizukuInstalled(this)
+                        ? Strings.t("Open Shizuku")
+                        : Strings.t("Get Shizuku"),
+                () -> EffectsApps.openShizuku(this));
+        action(
+                parent,
+                Strings.t("Copy ADB commands"),
+                () -> {
+                    ClipboardManager clipboard =
+                            (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    if (clipboard != null)
+                        clipboard.setPrimaryClip(
+                                ClipData.newPlainText("JamesDSP setup", EffectsApps.adbCommands()));
+                    Toast.makeText(this, Strings.t("Copied the ADB commands."), Toast.LENGTH_SHORT)
+                            .show();
+                });
+        divider(parent);
+    }
+
+    private void jamesPower(boolean on) {
+        EffectsApps.power(this, on);
+        if (on) EffectsApps.announce(this);
+        Toast.makeText(
+                        this,
+                        on
+                                ? Strings.t(
+                                        "Asked JamesDSP to start. If nothing changes, open"
+                                                + " JamesDSP and tap its power button.")
+                                : Strings.t("Asked JamesDSP to stop."),
+                        Toast.LENGTH_LONG)
+                .show();
+        handler.removeCallbacks(refreshStatus);
+        handler.postDelayed(refreshStatus, 1_500);
     }
 
     // ── Live status lines ────────────────────────────────────────────────────
@@ -1112,8 +1184,12 @@ public final class ExtrasActivity extends Activity {
             if (!DjMode.lastArrangement.isEmpty()) text += " · " + DjMode.lastArrangement;
             djStatus.setText(text);
         }
-        if (batteryStatus != null || bluetoothStatus != null || djStatus != null)
-            handler.postDelayed(refreshStatus, 3_000);
+        if (jamesStatus != null)
+            jamesStatus.setText(EffectsApps.status(this, EffectsApps.installed(this)));
+        if (batteryStatus != null
+                || bluetoothStatus != null
+                || djStatus != null
+                || jamesStatus != null) handler.postDelayed(refreshStatus, 3_000);
     }
 
     // ── More widgets ─────────────────────────────────────────────────────────

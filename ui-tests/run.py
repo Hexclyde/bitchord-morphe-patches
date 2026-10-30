@@ -66,6 +66,7 @@ for name in (
     "DownloadChoice.java",
     "EffectsApps.java",
     "BitPerfect.java",
+    "VideoSwitch.java",
     "VocalCut.java",
 ):
     dest = SOURCES / "app/bitchord/telegram" / name

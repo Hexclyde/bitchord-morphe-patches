@@ -64,7 +64,8 @@ public final class VerifyPatchUiApk {
                         "DjMode",
                         "DownloadChoice",
                         "EffectsApps",
-                        "BitPerfect");
+                        "BitPerfect",
+                        "VideoSwitch");
         for (ClassDef cls : classes.values()) {
             String simple =
                     cls.getType().startsWith(base)

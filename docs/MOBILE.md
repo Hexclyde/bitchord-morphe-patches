@@ -57,7 +57,7 @@ See [source download problems](TROUBLESHOOTING.md#the-source-shows-unnamed-or-me
    - **Unofficial Telegram music**
    - **Install as Bitchord+**
    - **Sign in with MicroG**, if you use MicroG RE. It's harmless without it: the option just doesn't show.
-   - Any of the extra patches you want: **Sing**, **Pitch control**, **Loudness level**, **Sleep timer fade-out**, **Battery saver**, **Lossless addons over Bluetooth**, **Per-download quality**, **Headphone correction**, **Equaliser per output**, **DJ mode** and **JamesDSP**. They're off by default. Their settings are under **Settings → Patches & tweaks**.
+   - Any of the extra patches you want: **Sing**, **Pitch control**, **Loudness level**, **Sleep timer fade-out**, **Battery saver**, **Lossless addons over Bluetooth**, **Per-download quality**, **Headphone correction**, **Equaliser per output**, **DJ mode**, **JamesDSP** and **Audio and video switch**. They're off by default. Their settings are under **Settings → Patches & tweaks**.
 
 3. Leave **Telegram application API ID** at **0** and **Telegram application API hash** empty. Enter your personal details in BitChord after installation.
 4. Open **Install as Bitchord+ → Installation name** to choose an app name. Leave it empty for **Bitchord+**. Names can contain up to 80 characters and must fit on one line. A name containing Telegram must include **Unofficial Telegram**.

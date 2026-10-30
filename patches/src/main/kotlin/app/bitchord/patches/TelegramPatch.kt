@@ -1972,6 +1972,7 @@ val microGSignInPatch =
 
 private const val EXTRAS = "Lapp/bitchord/telegram/SoundExtras;"
 private const val DOWNLOAD_CHOICE = "Lapp/bitchord/telegram/DownloadChoice;"
+private const val VIDEO_SWITCH = "Lapp/bitchord/telegram/VideoSwitch;"
 private const val SINK = "Lcom/music/bitchord/playback/audio/PrecisionAudioSink;"
 
 /**
@@ -2285,7 +2286,9 @@ private val jamesDspResources = resourcePatch {
     }
 }
 
-private val JAMES_DSP_PACKAGES = listOf("me.timschneeberger.rootlessjamesdsp", "james.dsp")
+/** JamesDSP's two versions, and Shizuku, which the rootless one's setup uses. */
+private val JAMES_DSP_PACKAGES =
+    listOf("me.timschneeberger.rootlessjamesdsp", "james.dsp", "moe.shizuku.privileged.api")
 
 private fun extrasPatch(
     name: String,
@@ -2423,6 +2426,54 @@ val jamesDspPatch =
     ) {
         markApplied("jamesDspApplied")
     }
+
+@Suppress("unused")
+val videoSwitchPatch =
+    extrasPatch(
+        "Audio and video switch",
+        "Adds a song and video switch to the top of the player, as in YouTube Music: one tap " +
+            "plays a song's music video, or the song again, in the same place in the queue." +
+            WHERE,
+    ) {
+        addVideoSwitch()
+        markApplied("videoSwitchApplied")
+    }
+
+/**
+ * The switch needs BitChord's player connection, which the app's screen reads its state from, and
+ * the player sheet's motion, which knows when the player is open.
+ */
+private fun BytecodePatchContext.addVideoSwitch() {
+    val remember =
+        mutableClassDefBy("Lcom/music/bitchord/playback/PlayerConnectionKt;").methods.single {
+            it.name == "rememberPlayerState" &&
+                it.parameterTypes.firstOrNull() == "Landroidx/media3/session/MediaController;"
+        }
+    remember.addInstruction(
+        0,
+        "invoke-static/range {p0 .. p0}, $VIDEO_SWITCH->controller(Ljava/lang/Object;)V",
+    )
+    val motion = mutableClassDefBy("Lcom/music/bitchord/ui/player/PlayerSheetMotion;")
+    check(motion.fields.any { it.name == "shown" && it.type.startsWith("L") }) {
+        "The player sheet has no shown state"
+    }
+    check(motion.fields.any { it.name == "window" && it.type == "Landroid/view/Window;" }) {
+        "The player sheet has no window"
+    }
+    val init = motion.methods.single { it.name == "<init>" }
+    val returns =
+        init.implementation!!
+            .instructions
+            .withIndex()
+            .filter { it.value.opcode == Opcode.RETURN_VOID }
+            .map { it.index }
+    check(returns.isNotEmpty()) { "The player sheet's constructor doesn't return" }
+    for (index in returns.reversed()) init.addInstruction(
+        index,
+        "invoke-static/range {p0 .. p0}, $VIDEO_SWITCH->motion(Ljava/lang/Object;)V",
+    )
+    println("Added the audio and video switch")
+}
 
 @Suppress("unused")
 val losslessBluetoothPatch =

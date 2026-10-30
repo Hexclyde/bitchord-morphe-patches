@@ -1,0 +1,882 @@
+/*
+ * Bitchord+ install guide: the Morphe Manager look (scope .app-morphe, classes m-) and the plain
+ * Android screens of the files and install tours (scope .app-android, classes ma-).
+ *
+ * Morphe uses Material 3 with its fixed dark "Morphe" palette here. On Android 12 and newer the
+ * real app takes its colours from the wallpaper, so a phone may look different.
+ */
+
+/* ------------------------------------------------------------------------------------------
+   Morphe tokens
+   ------------------------------------------------------------------------------------------ */
+
+.app-morphe {
+  --m-acc-rgb: 164, 201, 255;          /* the accent; dialogs about BitChord switch to its orange */
+  --m-card: #1f222b;
+  --m-card-edge: #43474e;
+  --m-panel: #2e313a;
+  --m-glass: rgba(67, 71, 78, .38);
+  --m-glass-edge: rgba(141, 145, 153, .42);
+  --m-sel: #263353;
+  --m-text-2: rgba(227, 226, 230, .72);
+  font-size: 14px;
+  line-height: 1.4;
+}
+.app-morphe .m-tint-orange { --m-acc-rgb: 255, 137, 68; }
+
+/* The default "Circles" background: a few large, faint circles behind the pages. Dialogs paint
+   the plain background over it. */
+.app-morphe.screen.m-screen {
+  background:
+    radial-gradient(circle at 12% 30%, rgba(164, 201, 255, .045) 0 118px, transparent 119px),
+    radial-gradient(circle at 96% 52%, rgba(164, 201, 255, .04) 0 150px, transparent 151px),
+    radial-gradient(circle at 34% 88%, rgba(164, 201, 255, .038) 0 108px, transparent 109px),
+    radial-gradient(circle at 78% 102%, rgba(164, 201, 255, .03) 0 120px, transparent 121px),
+    var(--app-bg);
+}
+.app-morphe.screen.m-screen-plain { background: var(--app-bg); }
+
+.app-morphe button { font: inherit; color: inherit; cursor: pointer; }
+.app-morphe button[aria-disabled="true"] { cursor: default; }
+.app-morphe b, .app-morphe strong { font-weight: 600; color: var(--app-fg); }
+.app-morphe code { font-family: ui-monospace, "Roboto Mono", Menlo, Consolas, monospace; }
+
+/* ------------------------------------------------------------------------------------------
+   Main pages: header, body and the floating pill bar
+   ------------------------------------------------------------------------------------------ */
+
+.app-morphe .m-main { min-height: 100%; display: flex; flex-direction: column; }
+.app-morphe .m-top {
+  position: sticky; top: 0; z-index: 3;
+  display: flex; align-items: center; gap: 8px;
+  min-height: 72px; padding: 8px 12px 8px 16px;
+  background: rgba(18, 19, 24, .86);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+}
+.app-morphe .m-top-text { flex: 1; min-width: 0; }
+.app-morphe .m-title { margin: 0; font-size: 24px; line-height: 1.2; font-weight: 600; }
+.app-morphe .m-sub { margin: 2px 0 0; font-size: 14px; color: var(--app-muted); }
+.app-morphe .m-wordmark {
+  flex: 1; margin: 0; font-size: 26px; line-height: 1; font-weight: 500; letter-spacing: .01em; color: #dfe6f5;
+}
+.app-morphe .m-top-actions { display: flex; gap: 8px; flex: none; }
+.app-morphe .m-body { display: flex; flex-direction: column; gap: 12px; padding: 4px 16px 4px; }
+
+.app-morphe .m-round {
+  flex: none; width: 48px; height: 48px; padding: 0;
+  display: grid; place-items: center;
+  border-radius: 50%; border: 1px solid var(--m-glass-edge);
+  background: var(--m-glass); color: var(--app-fg);
+}
+.app-morphe .m-round:hover { background: rgba(67, 71, 78, .6); }
+.app-morphe .m-round-accent {
+  background: var(--app-accent-container); border-color: rgba(164, 201, 255, .55); color: var(--app-on-accent-container);
+}
+.app-morphe .m-round-accent:hover { background: #2b3c60; }
+.app-morphe .m-round-sm { width: 40px; height: 40px; }
+.app-morphe .m-round[aria-disabled="true"] { opacity: .4; }
+
+.app-morphe .m-nav {
+  position: sticky; bottom: 12px; z-index: 3;
+  margin-top: auto; padding-top: 20px;
+  display: flex; justify-content: center;
+  pointer-events: none;
+}
+.app-morphe .m-nav-pill {
+  pointer-events: auto;
+  display: flex; gap: 4px; padding: 5px;
+  border-radius: 32px; border: 1px solid rgba(141, 145, 153, .38);
+  background: rgba(28, 29, 34, .9);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, .4);
+}
+.app-morphe .m-nav-item {
+  width: 96px; height: 52px; padding: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  border-radius: 26px; border: 1px solid transparent; background: transparent;
+  color: var(--app-muted); font-size: 12px; font-weight: 500;
+}
+.app-morphe .m-nav-item:hover { background: rgba(67, 71, 78, .4); }
+.app-morphe .m-nav-item[aria-current="page"] {
+  background: var(--m-sel); border-color: rgba(164, 201, 255, .6); color: #d4e3ff;
+}
+
+/* ------------------------------------------------------------------------------------------
+   Apps
+   ------------------------------------------------------------------------------------------ */
+
+.app-morphe .m-alerts { display: flex; flex-direction: column; gap: 8px; }
+.app-morphe .m-alert {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  padding: 12px 12px 12px 14px; border-radius: 20px; text-align: left;
+  border: 1px solid rgba(245, 189, 72, .45); background: rgba(95, 65, 0, .32);
+}
+.app-morphe .m-alert-ic {
+  flex: none; width: 42px; height: 42px; border-radius: 50%;
+  display: grid; place-items: center; background: rgba(245, 189, 72, .2); color: #f5bd48;
+}
+.app-morphe .m-alert-primary { border-color: rgba(164, 201, 255, .45); background: rgba(0, 72, 132, .35); }
+.app-morphe .m-alert-primary .m-alert-ic { background: rgba(164, 201, 255, .2); color: #a4c9ff; }
+.app-morphe .m-alert-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-morphe .m-alert-title { font-size: 15px; font-weight: 500; }
+.app-morphe .m-alert-sub { font-size: 13px; color: var(--app-muted); }
+.app-morphe .m-alert-chev { color: var(--app-muted); }
+
+.app-morphe .m-greet {
+  margin: 14px 4px 6px; text-align: center;
+  font-size: 22px; line-height: 1.25; font-weight: 700; color: #eef0f6;
+}
+.app-morphe .m-appcards { display: flex; flex-direction: column; gap: 12px; }
+.app-morphe .m-appcard {
+  --c: 30, 90, 168;
+  position: relative;
+  display: flex; align-items: center; gap: 16px;
+  width: 100%; min-height: 80px; padding: 10px 16px;
+  border-radius: 20px; border: 1px solid rgba(255, 255, 255, .2);
+  background: linear-gradient(to top right, rgba(var(--c), .7), rgba(30, 90, 168, .58) 58%, rgba(0, 175, 174, .64));
+  box-shadow: inset 1.5px 1.5px 0 rgba(255, 255, 255, .3);
+  color: #ffffff; text-align: left;
+}
+.app-morphe .m-appcard:hover { filter: brightness(1.07); }
+@media (prefers-reduced-motion: no-preference) {
+  .app-morphe .m-appcard { transition: transform 120ms ease; }
+  .app-morphe .m-appcard:active { transform: scale(.98); }
+}
+.app-morphe .m-appcard-icon {
+  flex: none; width: 56px; height: 56px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(255, 255, 255, .2); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3);
+  font-size: 22px; font-weight: 700;
+}
+.app-morphe .m-appcard-icon-bc { background: #1c1c1e; box-shadow: inset 0 0 0 2px rgba(255, 137, 68, .9); color: #ffb183; }
+.app-morphe .m-appcard-icon-add { background: rgba(255, 255, 255, .14); }
+.app-morphe .m-appcard-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.app-morphe .m-appcard-name { font-size: 20px; line-height: 1.3; font-weight: 600; text-shadow: 0 1px 3px rgba(0, 0, 0, .35); }
+.app-morphe .m-appcard-sub {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  font-size: 14px; color: rgba(255, 255, 255, .82); text-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+}
+.app-morphe .m-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 22px; padding: 0 8px; border-radius: 11px;
+  background: rgba(0, 0, 0, .35); color: #ffffff; font-size: 12px; font-weight: 600; text-shadow: none;
+}
+
+/* BitChord's app icon in Morphe's lists. */
+.app-morphe .m-appicon {
+  --s: 48px;
+  flex: none; width: var(--s); height: var(--s); border-radius: 50%; overflow: hidden;
+  background: linear-gradient(180deg, #fb5c74, #fa233b);
+}
+.app-morphe .m-appicon-sq { border-radius: 14px; }
+
+/* ------------------------------------------------------------------------------------------
+   Sources
+   ------------------------------------------------------------------------------------------ */
+
+.app-morphe .m-sources { display: flex; flex-direction: column; gap: 12px; }
+.app-morphe .m-source {
+  border-radius: 16px; border: 1px solid var(--m-card-edge);
+  background: var(--m-card); padding: 16px;
+}
+.app-morphe .m-source[data-action] { cursor: pointer; }
+.app-morphe .m-source.is-warn { border-color: rgba(245, 189, 72, .55); background: #22211d; }
+.app-morphe .m-src-head {
+  display: flex; align-items: center; gap: 14px;
+  width: 100%; padding: 0; margin: 0; border: 0; border-radius: 12px;
+  background: transparent; text-align: left;
+}
+.app-morphe .m-src-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.app-morphe .m-src-name { font-size: 16px; font-weight: 600; line-height: 1.3; }
+.app-morphe .m-src-meta { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--app-muted); }
+.app-morphe .m-src-meta .g-icon { margin-right: -1px; }
+.app-morphe .m-src-chev { flex: none; color: var(--app-fg); }
+@media (prefers-reduced-motion: no-preference) {
+  .app-morphe .m-src-chev { transition: transform 200ms ease; }
+}
+.app-morphe .m-src-head[aria-expanded="true"] .m-src-chev { transform: rotate(180deg); }
+
+.app-morphe .m-avatar {
+  flex: none; width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center;
+}
+.app-morphe .m-avatar-owner { background: #004c69; color: #c1e8ff; }
+.app-morphe .m-avatar-plain { background: #eef2fb; color: #1e5aa8; }
+.app-morphe .m-avatar-warn { background: rgba(245, 189, 72, .28); color: #f5bd48; }
+.app-morphe .m-avatar-xl { width: 64px; height: 64px; }
+
+.app-morphe .m-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.app-morphe .m-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 24px; padding: 0 9px; border-radius: 12px; border: 0;
+  font-size: 12px; font-weight: 500; white-space: nowrap;
+  background: rgba(67, 71, 78, .8); color: #e3e2e6;
+}
+.app-morphe .m-badge-error { background: #93000a; color: #ffdad6; }
+.app-morphe .m-badge-warn { background: #5f4100; color: #ffdea8; }
+.app-morphe .m-badge-success { background: #0d5316; color: #abf5a3; }
+.app-morphe .m-badge-primary { background: #004884; color: #d4e3ff; }
+.app-morphe .m-badge-btn { cursor: pointer; }
+
+.app-morphe .m-src-body { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+.app-morphe .m-notice {
+  display: flex; align-items: flex-start; gap: 10px; width: 100%;
+  padding: 10px 12px; border-radius: 12px; border: 0; text-align: left;
+  font-size: 13px; line-height: 1.4;
+}
+.app-morphe .m-notice > .g-icon { margin-top: 1px; }
+.app-morphe .m-notice-error { background: #8c1d18; color: #f9dedc; }
+.app-morphe .m-notice-warn { background: rgba(95, 65, 0, .55); color: #ffdea8; border: 1px solid rgba(245, 189, 72, .3); }
+.app-morphe .m-notice-primary { background: rgba(0, 72, 132, .5); color: #d4e3ff; border: 1px solid rgba(164, 201, 255, .3); }
+.app-morphe .m-notice-col { flex-direction: column; gap: 6px; }
+.app-morphe .m-notice-line { display: flex; align-items: center; gap: 10px; }
+.app-morphe .m-notice-action {
+  align-self: flex-end; min-height: 32px; padding: 0 12px; border-radius: 16px;
+  border: 1px solid rgba(249, 222, 220, .5); background: transparent; color: inherit; font-weight: 500;
+}
+
+.app-morphe .m-info {
+  border-radius: 12px; overflow: hidden;
+  background: var(--m-panel); border: 1px solid rgba(141, 145, 153, .2);
+}
+.app-morphe .m-info-row {
+  display: flex; align-items: center; gap: 14px;
+  width: 100%; min-height: 56px; padding: 8px 12px 8px 14px;
+  border: 0; background: transparent; text-align: left;
+}
+.app-morphe button.m-info-row:hover { background: rgba(255, 255, 255, .04); }
+.app-morphe .m-info-row + .m-info-row { border-top: 1px solid rgba(141, 145, 153, .22); }
+.app-morphe .m-info-ic { flex: none; color: var(--app-muted); display: grid; }
+.app-morphe .m-info-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-morphe .m-info-label { font-size: 12px; color: var(--app-muted); }
+.app-morphe .m-info-value { font-size: 15px; overflow-wrap: anywhere; }
+.app-morphe .m-info-chev { color: var(--app-muted); }
+.app-morphe .m-mini-btn {
+  flex: none; min-height: 34px; padding: 0 14px; border-radius: 17px;
+  border: 1px solid rgba(var(--m-acc-rgb), .45); background: rgba(var(--m-acc-rgb), .14); font-weight: 500;
+}
+
+/* Buttons joined into one group, as Morphe draws them. */
+.app-morphe .m-connected { display: flex; gap: 3px; }
+.app-morphe .m-cbtn {
+  flex: none; min-width: 52px; height: 40px; padding: 0 14px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border-radius: 4px; border: 1px solid var(--m-glass-edge);
+  background: rgba(67, 71, 78, .55); font-weight: 500;
+}
+.app-morphe .m-cbtn:hover { background: rgba(67, 71, 78, .8); }
+.app-morphe .m-cbtn:first-child { border-top-left-radius: 20px; border-bottom-left-radius: 20px; }
+.app-morphe .m-cbtn:last-child { border-top-right-radius: 20px; border-bottom-right-radius: 20px; }
+.app-morphe .m-cbtn-wide, .app-morphe .m-cbtn-main { flex: 1; }
+.app-morphe .m-connected-tall .m-cbtn { height: 52px; min-width: 56px; }
+.app-morphe .m-connected-tall .m-cbtn:first-child { border-top-left-radius: 26px; border-bottom-left-radius: 26px; }
+.app-morphe .m-connected-tall .m-cbtn:last-child { border-top-right-radius: 26px; border-bottom-right-radius: 26px; }
+
+.app-morphe .m-hr { height: 1px; margin: 2px -16px; border: 0; background: var(--m-card-edge); }
+.app-morphe .m-toggle-row { display: flex; align-items: center; gap: 16px; padding: 2px 0; }
+.app-morphe .m-tr-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.app-morphe .m-tr-title { font-size: 15px; font-weight: 500; }
+.app-morphe .m-tr-sub { font-size: 13px; color: var(--app-muted); }
+.app-morphe .m-acts { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+.app-morphe .m-act {
+  width: 56px; height: 36px; padding: 0;
+  display: grid; place-items: center;
+  border-radius: 18px; border: 1px solid var(--m-glass-edge); background: rgba(67, 71, 78, .55);
+}
+.app-morphe .m-act:hover { background: rgba(67, 71, 78, .8); }
+.app-morphe .m-act-danger { color: #ffb4ab; border-color: rgba(255, 180, 171, .4); }
+
+/* Morphe's switch: an M3 switch with a tick or a cross in the thumb. */
+.app-morphe .g-switch { --switch-off-track: #2a2c31; }
+.app-morphe .g-switch .g-icon { display: block; }
+
+/* ------------------------------------------------------------------------------------------
+   Full-screen dialogs
+   ------------------------------------------------------------------------------------------ */
+
+.app-morphe.overlay-full .overlay-panel { background: var(--app-bg); }
+.app-morphe.m-ov-fixed .overlay-panel { overflow: hidden; }
+.app-morphe .m-dlg {
+  min-height: 100%; max-width: 560px; margin: 0 auto;
+  display: flex; flex-direction: column; justify-content: center; gap: 16px;
+  padding: 28px 20px 24px; text-align: center;
+}
+.app-morphe .m-dlg-top { justify-content: flex-start; padding-top: 24px; }
+.app-morphe .m-dlg-left { text-align: left; }
+.app-morphe .m-dlg-left .m-dlg-title, .app-morphe .m-dlg-left > .m-dlg-text { text-align: center; }
+.app-morphe .m-dlg-title { margin: 0; font-size: 24px; line-height: 1.25; font-weight: 700; color: #eef0f6; }
+.app-morphe .m-dlg-text { margin: -4px 0 0; font-size: 16px; line-height: 1.45; color: var(--m-text-2); }
+.app-morphe .m-dlg-note { margin: -6px 0 0; font-size: 13px; color: var(--m-text-2); }
+.app-morphe .m-dlg-hero {
+  align-self: center; width: 72px; height: 72px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(var(--m-acc-rgb), .18); color: rgb(var(--m-acc-rgb));
+}
+.app-morphe .m-dlg-hero-warn { background: rgba(245, 189, 72, .2); color: #f5bd48; }
+
+.app-morphe .m-btns { display: flex; gap: 12px; }
+.app-morphe .m-btns > * { flex: 1; min-width: 0; }
+.app-morphe .m-btns-col { display: flex; flex-direction: column; gap: 8px; }
+.app-morphe .m-btn {
+  min-height: 52px; padding: 0 16px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border-radius: 26px; border: 1px solid rgba(var(--m-acc-rgb), .3);
+  background: transparent; color: rgba(227, 226, 230, .9);
+  font-size: 15px; font-weight: 500; line-height: 1.2; text-align: center;
+}
+.app-morphe .m-btn:hover { background: rgba(var(--m-acc-rgb), .08); }
+.app-morphe .m-btn-wide { width: 100%; }
+.app-morphe .m-btn-fill {
+  background: rgba(var(--m-acc-rgb), .3); border-color: rgba(var(--m-acc-rgb), .55); color: #f1f0f4;
+}
+.app-morphe .m-btn-fill:hover { background: rgba(var(--m-acc-rgb), .38); }
+.app-morphe .m-btn-solid, .app-morphe .m-cbtn.m-btn-solid {
+  background: rgb(var(--m-acc-rgb)); border-color: rgb(var(--m-acc-rgb)); color: #2a1102; font-weight: 600;
+}
+.app-morphe .m-btn-solid:hover, .app-morphe .m-cbtn.m-btn-solid:hover { filter: brightness(1.06); background: rgb(var(--m-acc-rgb)); }
+.app-morphe .m-btn-danger { color: #ffb4ab; border-color: rgba(255, 180, 171, .5); }
+.app-morphe .m-btn-fill.m-btn-danger { background: rgba(255, 180, 171, .12); }
+.app-morphe .m-btn-opaque { background: var(--app-bg); }
+.app-morphe .m-btn[aria-disabled="true"], .app-morphe .m-cbtn[aria-disabled="true"] { opacity: .45; filter: none; }
+
+/* The add-source prompt from the README link */
+.app-morphe .m-dl-head { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 4px 8px; border-radius: 20px; }
+.app-morphe .m-dl-avatar {
+  position: relative; width: 112px; height: 112px; margin-bottom: 8px; border-radius: 50%;
+  display: grid; place-items: center; background: #004c69; color: #c1e8ff;
+}
+.app-morphe .m-dl-badge {
+  position: absolute; right: -2px; bottom: -2px; width: 40px; height: 40px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: #eef2fb; color: #1a1c1e; border: 3px solid var(--app-bg);
+}
+.app-morphe .m-dl-badge.is-added { background: #90d889; color: #0d3a10; }
+.app-morphe .m-dl-owner { margin: -4px 0 0; font-size: 15px; color: var(--app-muted); }
+.app-morphe .m-dl-question { margin: 0; font-size: 17px; color: var(--app-fg); }
+.app-morphe .m-dl-app {
+  display: flex; align-items: center; gap: 16px; padding: 16px 18px;
+  border-radius: 20px; border: 1px solid var(--m-card-edge); background: var(--m-card); text-align: left;
+}
+.app-morphe .m-dl-app-tile {
+  flex: none; width: 36px; height: 36px; border-radius: 9px; overflow: hidden;
+  background: linear-gradient(180deg, #fb5c74, #fa233b);
+}
+.app-morphe .m-dl-app-text { display: flex; flex-direction: column; gap: 2px; }
+.app-morphe .m-dl-app-name { font-size: 16px; font-weight: 600; }
+.app-morphe .m-dl-app-sub { font-size: 14px; color: var(--app-muted); }
+.app-morphe .m-dl-warn { display: flex; align-items: center; gap: 8px; margin: 0 0 0 6px; color: var(--app-warning); font-size: 15px; text-align: left; }
+
+/* Add patch source */
+.app-morphe .m-seg {
+  display: flex; height: 48px; border-radius: 24px; overflow: hidden;
+  border: 1px solid rgba(141, 145, 153, .55);
+}
+.app-morphe .m-seg button {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+  border: 0; background: transparent; font-weight: 500;
+}
+.app-morphe .m-seg button + button { border-left: 1px solid rgba(141, 145, 153, .55); }
+.app-morphe .m-seg button[aria-pressed="true"] { background: #2f4577; color: #d4e3ff; box-shadow: inset 0 0 0 1px rgba(164, 201, 255, .6); }
+.app-morphe .m-add-body { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+.app-morphe .m-ofield { position: relative; margin-top: 6px; }
+.app-morphe .m-ofield-label {
+  position: absolute; left: 12px; top: -9px; z-index: 1;
+  padding: 0 4px; background: var(--app-bg);
+  font-size: 12px; line-height: 18px; color: var(--app-accent);
+}
+.app-morphe .m-ofield .g-field.m-ofield-input {
+  min-height: 56px; padding: 14px 52px 14px 16px; border-radius: 12px;
+  border-color: #8d9199; font-size: 16px;
+}
+.app-morphe .m-ofield-plain { margin-top: 2px; }
+.app-morphe .m-ofield input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+.app-morphe .m-ofield input[type="number"]::-webkit-inner-spin-button,
+.app-morphe .m-ofield input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.app-morphe .m-ofield-btn {
+  position: absolute; right: 6px; top: 50%; width: 40px; height: 40px; margin-top: -20px;
+  display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: var(--app-muted);
+}
+.app-morphe .m-ofield-btn:hover { background: rgba(255, 255, 255, .06); }
+.app-morphe .m-valid { display: flex; align-items: center; gap: 6px; margin: -4px 0 0 4px; font-size: 13px; }
+.app-morphe .m-valid.is-ok { color: var(--app-success); }
+.app-morphe .m-valid.is-bad { color: var(--app-error); }
+.app-morphe .m-hint {
+  padding: 12px 14px; border-radius: 16px; background: var(--m-card); border: 1px solid var(--m-card-edge);
+  font-size: 13px; color: var(--app-muted);
+}
+.app-morphe .m-hint p { margin: 0; display: flex; align-items: center; gap: 8px; }
+.app-morphe .m-hint-head { align-items: flex-start !important; margin-bottom: 8px !important; color: var(--app-fg); }
+.app-morphe .m-hint-head .g-icon { margin-top: 1px; color: var(--app-accent); }
+.app-morphe .m-hint-ex { padding: 3px 0 3px 2px; }
+.app-morphe .m-hint-ex code { font-size: 13px; color: var(--app-fg); }
+.app-morphe .m-drop {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  width: 100%; padding: 26px 16px; border-radius: 20px;
+  border: 2px dashed rgba(164, 201, 255, .55); background: rgba(164, 201, 255, .05);
+  color: var(--app-fg); text-align: center;
+}
+.app-morphe .m-drop .g-icon { color: var(--app-accent); }
+.app-morphe .m-drop-title { font-size: 16px; font-weight: 600; }
+.app-morphe .m-drop-sub { font-size: 13px; color: var(--app-muted); }
+.app-morphe .m-file-chip {
+  position: relative; display: flex; align-items: center; gap: 10px;
+  min-height: 52px; padding: 8px 52px 8px 14px; border-radius: 14px;
+  background: var(--m-card); border: 1px solid var(--m-card-edge); overflow-wrap: anywhere;
+}
+.app-morphe .m-check-row {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  padding: 10px 12px; border: 0; border-radius: 14px; background: transparent; text-align: left; color: var(--app-fg);
+}
+.app-morphe .m-check-row .g-icon { color: var(--app-muted); }
+.app-morphe .m-check-row[aria-checked="true"] .g-icon { color: var(--app-accent); }
+
+.app-morphe .m-subject { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.app-morphe .m-subject-name { font-size: 20px; font-weight: 600; }
+
+/* Source Apps list */
+.app-morphe .m-sa-head { display: flex; align-items: center; gap: 12px; }
+.app-morphe .m-sa-title { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-morphe .m-sa-name { font-size: 18px; font-weight: 600; }
+.app-morphe .m-sa-sub { font-size: 13px; color: var(--app-muted); }
+.app-morphe .m-sa-text { margin: 0; font-size: 14px; color: var(--m-text-2); }
+.app-morphe .m-list-head { margin: 4px 4px -6px; font-size: 13px; font-weight: 600; color: var(--app-muted); }
+.app-morphe .m-sa-row {
+  display: flex; align-items: center; gap: 14px; width: 100%;
+  padding: 12px 16px; border-radius: 20px; border: 1px solid var(--m-card-edge); background: var(--m-card); text-align: left;
+}
+.app-morphe .m-sa-check { display: grid; color: var(--app-muted); }
+.app-morphe .m-sa-row[aria-checked="true"] .m-sa-check { color: var(--app-accent); }
+.app-morphe .m-sa-app { display: flex; flex-direction: column; }
+.app-morphe .m-sa-app-name { font-size: 16px; font-weight: 600; }
+.app-morphe .m-sa-app-sub { font-size: 13px; color: var(--app-muted); }
+
+/* Changelog */
+.app-morphe .m-cl { padding: 16px; border-radius: 20px; background: var(--m-card); border: 1px solid var(--m-card-edge); }
+.app-morphe .m-cl-head { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; }
+.app-morphe .m-cl-version { font-size: 18px; font-weight: 600; font-family: ui-monospace, "Roboto Mono", Menlo, Consolas, monospace; }
+.app-morphe .m-cl-list { margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.5; color: var(--m-text-2); }
+.app-morphe .m-cl-list li + li { margin-top: 6px; }
+
+/* ------------------------------------------------------------------------------------------
+   Settings
+   ------------------------------------------------------------------------------------------ */
+
+.app-morphe .m-settings { display: flex; flex-direction: column; }
+.app-morphe .m-sec-head {
+  display: flex; align-items: center; gap: 10px;
+  margin: 16px 6px 10px; font-size: 14px; font-weight: 600; color: var(--app-fg);
+}
+.app-morphe .m-sec-head:first-child { margin-top: 4px; }
+.app-morphe .m-sec-head .g-icon { color: var(--app-accent); }
+.app-morphe .m-rows { display: flex; flex-direction: column; gap: 3px; }
+.app-morphe .m-row {
+  display: flex; align-items: center; gap: 16px;
+  width: 100%; min-height: 72px; padding: 12px 16px;
+  border-radius: 4px; border: 1px solid var(--m-card-edge);
+  background: var(--m-card); text-align: left;
+}
+.app-morphe button.m-row:hover { background: #252935; }
+.app-morphe .m-rows > .m-row:first-child, .app-morphe .m-row-solo { border-top-left-radius: 20px; border-top-right-radius: 20px; }
+.app-morphe .m-rows > .m-row:last-child, .app-morphe .m-row-solo { border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+.app-morphe .m-row-ic { flex: none; display: grid; color: var(--app-accent); }
+.app-morphe .m-row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.app-morphe .m-row-title { font-size: 16px; font-weight: 500; line-height: 1.3; }
+.app-morphe .m-row-sub { font-size: 14px; line-height: 1.35; color: var(--app-muted); }
+.app-morphe .m-row-chev { flex: none; color: var(--app-muted); }
+.app-morphe .m-about { flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; }
+.app-morphe .m-about-name { font-size: 18px; font-weight: 600; }
+.app-morphe .m-switch-look { pointer-events: none; }
+
+/* ------------------------------------------------------------------------------------------
+   The APK questions
+   ------------------------------------------------------------------------------------------ */
+
+.app-morphe .m-vcard {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px 12px;
+  padding: 14px 16px; border-radius: 16px; text-align: left;
+  border: 1px solid rgba(var(--m-acc-rgb), .35); background: rgba(var(--m-acc-rgb), .08);
+}
+.app-morphe .m-vcard .m-badges { margin: 0; }
+.app-morphe .m-vcard-pick { display: grid; color: rgb(var(--m-acc-rgb)); }
+.app-morphe .m-vcard-version { font-family: ui-monospace, "Roboto Mono", Menlo, Consolas, monospace; font-size: 17px; font-weight: 600; }
+.app-morphe .m-vcard-col { flex: 1; display: flex; flex-direction: column; }
+.app-morphe .m-vcard-label { font-size: 12px; color: var(--app-muted); }
+
+/* ------------------------------------------------------------------------------------------
+   Expert mode: the patch list and the patch options
+   ------------------------------------------------------------------------------------------ */
+
+.app-morphe .m-pl { position: absolute; inset: 0; display: flex; flex-direction: column; }
+.app-morphe .m-pl-head {
+  flex: none; display: flex; align-items: center; gap: 12px;
+  padding: 12px 12px 12px 16px;
+  background: rgba(var(--m-acc-rgb), .14); border-bottom: 1px solid rgba(var(--m-acc-rgb), .28);
+}
+.app-morphe .m-pl-title { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-morphe .m-pl-name { font-size: 20px; font-weight: 600; line-height: 1.25; }
+.app-morphe .m-pl-sub { font-size: 13px; color: var(--app-muted); }
+.app-morphe .m-counter {
+  flex: none; display: inline-flex; align-items: center; gap: 4px;
+  height: 32px; padding: 0 10px; border-radius: 16px;
+  border: 1px solid rgba(var(--m-acc-rgb), .5); background: rgba(var(--m-acc-rgb), .2);
+  font-size: 13px; font-weight: 600;
+}
+.app-morphe .m-counter[aria-pressed="true"] { background: rgba(var(--m-acc-rgb), .45); }
+.app-morphe .m-pl-tabs {
+  flex: none; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
+  padding: 10px 16px 4px;
+}
+.app-morphe .m-pl-tabs::-webkit-scrollbar { display: none; }
+.app-morphe .m-tab {
+  flex: none; display: inline-flex; align-items: center; gap: 8px;
+  height: 44px; padding: 0 14px 0 8px; border-radius: 22px;
+  border: 1px solid var(--m-glass-edge); background: var(--m-glass);
+  font-weight: 500; white-space: nowrap;
+}
+.app-morphe .m-tab[aria-selected="true"] { background: rgba(var(--m-acc-rgb), .26); border-color: rgba(var(--m-acc-rgb), .6); }
+.app-morphe .m-tab-av { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; }
+.app-morphe .m-tab-count { font-size: 13px; color: var(--app-muted); }
+.app-morphe .m-tab[aria-selected="true"] .m-tab-count { color: var(--app-fg); }
+.app-morphe .m-pl-tools { flex: none; display: flex; gap: 8px; padding: 8px 16px 8px; }
+.app-morphe .m-tool {
+  width: 52px; height: 36px; padding: 0;
+  display: grid; place-items: center;
+  border-radius: 18px; border: 1px solid var(--m-glass-edge); background: var(--m-glass);
+}
+.app-morphe .m-tool[aria-disabled="true"] { opacity: .38; }
+.app-morphe .m-pl-list {
+  flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+  padding: 4px 16px 92px;
+  scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, .22) transparent;
+}
+.app-morphe .m-pl-list > .m-notice { margin-bottom: 12px; }
+.app-morphe .m-pl-foot { position: absolute; left: 16px; right: 16px; bottom: 14px; z-index: 2; }
+.app-morphe .m-pl-foot .m-btn { box-shadow: 0 6px 20px rgba(0, 0, 0, .45); }
+
+.app-morphe .m-group { display: flex; flex-direction: column; gap: 3px; margin-bottom: 12px; }
+.app-morphe .m-patch {
+  position: relative; display: flex; align-items: center;
+  border-radius: 4px; border: 1px solid rgba(67, 71, 78, .55);
+  background: rgba(31, 34, 43, .55); cursor: pointer;
+}
+.app-morphe .m-patch.is-on { background: #232733; border-color: var(--m-card-edge); }
+.app-morphe .m-group > :first-child { border-top-left-radius: 20px; border-top-right-radius: 20px; }
+.app-morphe .m-group > :last-child { border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+.app-morphe .m-patch-main {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px;
+  padding: 14px 12px 14px 14px; border: 0; border-radius: inherit; background: transparent; text-align: left;
+}
+.app-morphe .m-patch-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.app-morphe .m-patch-name { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; line-height: 1.3; }
+.app-morphe .m-patch-desc { font-size: 13px; line-height: 1.4; color: var(--app-muted); }
+.app-morphe .m-patch:not(.is-on) .m-patch-name { color: rgba(227, 226, 230, .82); }
+.app-morphe .m-patch:not(.is-on) .m-patch-desc { color: rgba(195, 198, 207, .78); }
+.app-morphe .m-check {
+  flex: none; width: 24px; height: 24px; border-radius: 50%;
+  display: grid; place-items: center;
+  border: 2px solid var(--app-outline-strong); color: transparent;
+}
+.app-morphe .m-check.is-on { background: rgb(var(--m-acc-rgb)); border-color: rgb(var(--m-acc-rgb)); color: #2a1102; }
+.app-morphe .m-gear {
+  flex: none; width: 36px; height: 36px; margin-right: 12px; padding: 0;
+  display: grid; place-items: center; border: 0; border-radius: 50%;
+  background: rgba(61, 71, 88, .7); color: #d8e3f8;
+}
+.app-morphe .m-gear.is-changed { background: rgba(var(--m-acc-rgb), .5); color: #f1f0f4; }
+.app-morphe .m-gear[aria-disabled="true"] { background: rgba(61, 71, 88, .3); color: rgba(195, 198, 207, .35); }
+.app-morphe .m-fold {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  min-height: 56px; padding: 0 16px; border-radius: 4px;
+  border: 1px solid var(--m-card-edge); background: var(--m-card); text-align: left;
+}
+.app-morphe .m-fold-title { flex: 1; font-size: 15px; font-weight: 600; }
+.app-morphe .m-fold-count { font-size: 13px; color: var(--app-muted); }
+.app-morphe .m-fold[aria-expanded="true"] .m-fold-chev { transform: rotate(180deg); }
+
+.app-morphe .m-po-list { display: flex; flex-direction: column; gap: 12px; padding-top: 14px; }
+.app-morphe .m-po-desc { margin: 0 4px; font-size: 14px; color: var(--m-text-2); }
+.app-morphe .m-opt {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 16px; border-radius: 20px; border: 1px solid var(--m-card-edge); background: var(--m-card);
+}
+.app-morphe .m-opt-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.app-morphe .m-opt-title { font-size: 15px; font-weight: 600; }
+.app-morphe .m-opt-desc { margin: 0; font-size: 13px; color: var(--app-muted); }
+.app-morphe .m-opt .m-ofield .g-field.m-ofield-input { min-height: 52px; }
+
+/* ------------------------------------------------------------------------------------------
+   Patching progress and the result
+   ------------------------------------------------------------------------------------------ */
+
+.app-morphe .m-patching {
+  min-height: 100%; display: flex; flex-direction: column; align-items: center; gap: 14px;
+  padding: 28px 20px 18px; text-align: center;
+}
+.app-morphe .m-phrase { margin: auto 0 4px; min-height: 2.8em; font-size: 19px; line-height: 1.4; font-weight: 500; }
+.app-morphe .m-ring { position: relative; width: 260px; height: 260px; max-width: 72vw; max-height: 72vw; border-radius: 50%; }
+.app-morphe .m-ring-svg { display: block; width: 100%; height: 100%; }
+.app-morphe .m-ring-track { fill: none; stroke: rgba(var(--m-acc-rgb), .2); stroke-width: 6; }
+.app-morphe .m-ring-arc { fill: none; stroke: rgb(var(--m-acc-rgb)); stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+.app-morphe .m-ring-center {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+}
+.app-morphe .m-ring-pct { font-size: 54px; line-height: 1; font-weight: 700; font-variant-numeric: tabular-nums; }
+.app-morphe .m-ring-count { font-size: 16px; color: var(--app-muted); }
+.app-morphe .m-step { margin: 6px 0 0; font-size: 17px; font-weight: 600; color: rgb(var(--m-acc-rgb)); }
+.app-morphe .m-step-hint { margin: -6px 0 0; font-size: 14px; color: var(--app-muted); }
+.app-morphe .m-patching-foot { width: 100%; margin-top: auto; padding-top: 16px; }
+
+.app-morphe .m-xp { min-height: 100%; display: flex; flex-direction: column; gap: 12px; padding: 16px 16px 16px; }
+.app-morphe .m-xp-head {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 16px; border-radius: 20px;
+  background: rgba(var(--m-acc-rgb), .1); border: 1px solid rgba(var(--m-acc-rgb), .3);
+}
+.app-morphe .m-xp-head p { margin: 0; }
+.app-morphe .m-xp-title { font-size: 22px; font-weight: 700; }
+.app-morphe .m-xp-step { font-size: 15px; font-weight: 600; color: rgb(var(--m-acc-rgb)); }
+.app-morphe .m-xp-chips { display: flex; gap: 6px; }
+.app-morphe .m-xp-chips .m-chip { background: rgba(var(--m-acc-rgb), .2); font-variant-numeric: tabular-nums; }
+.app-morphe .m-bar-svg { display: block; width: 100%; height: 14px; margin-top: 4px; overflow: visible; }
+.app-morphe .m-bar-track { fill: none; stroke: rgba(var(--m-acc-rgb), .22); stroke-width: 4; stroke-linecap: round; }
+.app-morphe .m-bar-done { fill: none; stroke: rgb(var(--m-acc-rgb)); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.app-morphe .m-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.app-morphe .m-stat {
+  display: flex; flex-direction: column; gap: 4px; min-width: 0;
+  padding: 10px; border-radius: 14px; background: var(--m-card); border: 1px solid var(--m-card-edge);
+}
+.app-morphe .m-stat-label { font-size: 11px; color: var(--app-muted); }
+.app-morphe .m-stat-value { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+.app-morphe .m-stat-bar { height: 4px; border-radius: 2px; background: rgba(var(--m-acc-rgb), .2); overflow: hidden; }
+.app-morphe .m-stat-bar > span { display: block; height: 100%; background: rgb(var(--m-acc-rgb)); }
+.app-morphe .m-xp-panel {
+  flex: 1; min-height: 160px; display: flex; flex-direction: column;
+  border-radius: 20px; background: #0c0e11; border: 1px solid var(--m-card-edge); overflow: hidden;
+}
+.app-morphe .m-xp-tabs { display: flex; border-bottom: 1px solid var(--m-card-edge); }
+.app-morphe .m-xp-tabs button {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 44px; border: 0; background: transparent; color: var(--app-muted); font-weight: 500;
+}
+.app-morphe .m-xp-tabs button[aria-pressed="true"] { color: var(--app-fg); box-shadow: inset 0 -2px 0 rgb(var(--m-acc-rgb)); }
+.app-morphe .m-log {
+  margin: 0; padding: 10px 14px; list-style: none;
+  font: 12px/1.6 ui-monospace, "Roboto Mono", Menlo, Consolas, monospace; color: #b9d8b5;
+}
+.app-morphe .m-log li::before { content: "INFO: "; color: var(--app-muted); }
+.app-morphe .m-games { margin: 0; padding: 16px; color: var(--app-muted); }
+.app-morphe .m-xp-foot { display: flex; gap: 8px; }
+.app-morphe .m-xp-foot .m-btn { flex: 1; }
+
+.app-morphe .m-res { min-height: 100%; display: flex; flex-direction: column; padding: 20px 16px 16px; }
+.app-morphe .m-res-main {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center;
+}
+.app-morphe .m-res-icon { position: relative; width: 104px; height: 104px; margin-bottom: 6px; border-radius: 50%; }
+.app-morphe .m-res-mark {
+  position: absolute; right: -2px; bottom: 2px; width: 34px; height: 34px; border-radius: 50%;
+  display: grid; place-items: center; border: 3px solid var(--app-bg);
+}
+.app-morphe .m-res-mark-primary { background: #a4c9ff; color: #00315d; }
+.app-morphe .m-res-mark-success { background: #90d889; color: #0d3a10; }
+.app-morphe .m-res-mark-error { background: #ffb4ab; color: #690005; }
+.app-morphe .m-res-mark-neutral { background: #c3c6cf; color: #2d3038; }
+@media (prefers-reduced-motion: no-preference) {
+  .app-morphe .m-res-icon:not(.is-bad)::after {
+    content: ""; position: absolute; inset: -6px; border-radius: 50%;
+    border: 2px solid rgba(var(--m-acc-rgb), .5);
+    animation: m-pulse 2.4s ease-out infinite;
+  }
+}
+@keyframes m-pulse { 0% { transform: scale(.94); opacity: .9; } 100% { transform: scale(1.18); opacity: 0; } }
+.app-morphe .m-res-name { margin: 0; font-size: 28px; line-height: 1.2; font-weight: 700; }
+.app-morphe .m-res-sub { margin: -4px 0 0; font-size: 16px; color: var(--m-text-2); }
+.app-morphe .m-res-info { align-self: stretch; margin-top: 8px; text-align: left; border-color: rgba(var(--m-acc-rgb), .35); }
+.app-morphe .m-res-main > .m-notice { align-self: stretch; }
+.app-morphe .m-res-actions { display: flex; flex-direction: column; gap: 8px; padding-top: 16px; }
+
+/* App info */
+.app-morphe .m-appinfo-head { display: flex; align-items: center; gap: 16px; }
+.app-morphe .m-appinfo-title { display: flex; flex-direction: column; }
+.app-morphe .m-appinfo-name { font-size: 22px; font-weight: 700; }
+.app-morphe .m-appinfo-sub { font-size: 14px; color: var(--app-muted); }
+
+/* ------------------------------------------------------------------------------------------
+   Android: browser, Files, the file picker, the installer and its settings page
+   ------------------------------------------------------------------------------------------ */
+
+.app-android .ma-browser { min-height: 100%; background: #0f1115; color: #e6e8ee; }
+.app-android .ma-chrome {
+  position: sticky; top: 0; z-index: 3;
+  display: flex; align-items: center; gap: 4px;
+  height: 60px; padding: 0 6px;
+  background: #1f2024; border-bottom: 1px solid #2c2e33;
+}
+.app-android .ma-ic {
+  flex: none; width: 44px; height: 44px; padding: 0;
+  display: grid; place-items: center; border: 0; border-radius: 50%;
+  background: transparent; color: #e3e3e8; cursor: pointer;
+}
+.app-android .ma-ic:hover { background: rgba(255, 255, 255, .08); }
+.app-android .ma-url {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px;
+  height: 42px; padding: 0 14px; border-radius: 21px;
+  background: #303136; color: #e3e3e8; font-size: 14px;
+}
+.app-android .ma-url span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.app-android .ma-url .g-icon { flex: none; color: #c4c6d0; }
+.app-android .ma-tabs {
+  flex: none; width: 26px; height: 26px; margin: 0 6px; padding: 0;
+  border: 2px solid #e3e3e8; border-radius: 6px; background: transparent;
+  color: #e3e3e8; font: 600 12px/1 Roboto, Inter, system-ui, sans-serif; cursor: pointer;
+}
+.app-android .ma-web { padding: 16px 16px 40px; }
+.app-android .ma-crumb { margin: 0 0 4px; font-size: 14px; color: #9aa1ad; }
+.app-android .ma-h1 { margin: 0 0 14px; font-size: 24px; line-height: 1.25; font-weight: 600; }
+.app-android .ma-rel {
+  margin: 0 0 14px; padding: 16px; border-radius: 12px;
+  background: #171a20; border: 1px solid #2a2f38;
+}
+.app-android .ma-rel-folded { display: flex; align-items: center; gap: 10px; padding: 12px 16px; }
+.app-android .ma-rel-top { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.app-android .ma-rel-title { margin: 0; font-size: 20px; font-weight: 600; }
+.app-android .ma-rel-h { margin: 0 0 8px; }
+.app-android .ma-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 24px; padding: 0 10px; border-radius: 12px;
+  border: 1px solid #4a515e; color: #c9ced8; font-size: 12px; font-weight: 600;
+}
+.app-android .ma-pill-latest { border-color: #3fae63; color: #7fdc98; background: rgba(63, 174, 99, .12); }
+.app-android .ma-pill-pre { border-color: #c79a2c; color: #f0c766; background: rgba(199, 154, 44, .12); }
+.app-android .ma-date { margin: 6px 0 4px; font-size: 13px; color: #9aa1ad; }
+.app-android .ma-tagline { margin: 0 0 12px; }
+.app-android .ma-h4 { margin: 14px 0 6px; font-size: 15px; font-weight: 600; }
+.app-android .ma-notes { margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.5; color: #c9ced8; }
+.app-android .ma-assets-head { display: flex; align-items: center; gap: 8px; margin-top: 18px; }
+.app-android .ma-count {
+  display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px;
+  border-radius: 11px; background: #2a2f38; font-size: 12px; color: #c9ced8;
+}
+.app-android .ma-assets {
+  display: flex; flex-direction: column;
+  border-radius: 10px; border: 1px solid #2a2f38; overflow: hidden;
+}
+.app-android .ma-assets-sub { display: flex; flex-direction: column; }
+.app-android .ma-asset {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; min-height: 48px; padding: 8px 12px;
+  border: 0; border-top: 1px solid #2a2f38; background: transparent;
+  color: #8ab4f8; font: inherit; font-size: 14px; text-align: left; cursor: pointer;
+}
+.app-android .ma-assets > .ma-asset:first-child { border-top: 0; }
+.app-android .ma-asset:hover { background: rgba(138, 180, 248, .07); }
+.app-android .ma-asset .g-icon { flex: none; color: #9aa1ad; }
+.app-android .ma-asset-name { flex: 1; min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
+.app-android .ma-asset-size { flex: none; font-size: 12px; color: #9aa1ad; }
+.app-android .ma-asset.is-dim { color: #8b919c; }
+.app-android .ma-asset.is-dim .ma-asset-name { font-weight: 400; }
+.app-android .ma-skeleton { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 6px; }
+.app-android .ma-skeleton span { display: block; height: 10px; border-radius: 5px; background: #262a32; }
+.app-android .ma-skeleton span:nth-child(2) { width: 82%; }
+.app-android .ma-skeleton span:nth-child(3) { width: 58%; }
+
+.app-android .ma-files { min-height: 100%; background: var(--app-bg); }
+.app-android.overlay-full .ma-files { min-height: 100%; }
+.app-android .ma-top {
+  position: sticky; top: 0; z-index: 3;
+  display: flex; align-items: center; gap: 6px;
+  height: 64px; padding: 0 8px; background: var(--app-bg);
+}
+.app-android .ma-top-title { flex: 1; min-width: 0; margin: 0 0 0 6px; font-size: 22px; font-weight: 400; }
+.app-android .ma-sort { display: flex; align-items: center; gap: 4px; margin: 4px 20px 8px; font-size: 14px; color: var(--app-muted); }
+.app-android .ma-file-list { display: flex; flex-direction: column; padding: 0 8px; }
+.app-android .ma-file {
+  display: flex; align-items: center; gap: 16px;
+  width: 100%; min-height: 72px; padding: 8px 12px;
+  border: 0; border-radius: 16px; background: transparent;
+  color: var(--app-fg); font: inherit; text-align: left; cursor: pointer;
+}
+.app-android .ma-file:hover { background: rgba(255, 255, 255, .05); }
+.app-android .ma-file-ic { flex: none; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; }
+.app-android .ma-file-apk { background: #20352a; color: #8fd6a4; }
+.app-android .ma-file-mpp { background: #22304d; color: #a8c7fa; }
+.app-android .ma-file-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.app-android .ma-file-name { font-size: 15px; overflow-wrap: anywhere; }
+.app-android .ma-file-meta { font-size: 13px; color: var(--app-muted); }
+.app-android .ma-file.is-dim { opacity: .45; cursor: default; }
+
+.app-android .ma-app-head { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; font-size: 18px; font-weight: 500; }
+.app-android .ma-installer-q { margin: 0; font-size: 15px; line-height: 1.45; color: var(--app-fg); }
+.app-android .ma-btn-strong { font-weight: 600; }
+
+.app-android .ma-settings { min-height: 100%; background: var(--app-bg); }
+.app-android .ma-set-app { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px 16px 22px; }
+.app-android .ma-set-app-name { font-size: 22px; }
+.app-android .ma-set-app-ver { font-size: 14px; color: var(--app-muted); }
+.app-android .ma-set-row {
+  display: flex; align-items: center; gap: 16px;
+  width: calc(100% - 32px); min-height: 64px; margin: 0 16px; padding: 10px 20px;
+  border: 0; border-radius: 28px; background: #2a3a5a;
+  color: var(--app-fg); font: inherit; font-size: 18px; text-align: left; cursor: pointer;
+}
+.app-android .ma-set-row span:first-child { flex: 1; }
+.app-android .ma-set-row .g-switch { pointer-events: none; }
+.app-android .ma-set-info {
+  display: flex; gap: 12px; align-items: flex-start;
+  margin: 20px 20px; font-size: 14px; line-height: 1.45; color: var(--app-muted);
+}
+.app-android .ma-set-info .g-icon { flex: none; margin-top: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .app-morphe .m-appcard, .app-morphe .m-src-chev { transition: none !important; }
+  .app-morphe .m-res-icon::after { animation: none !important; }
+}
+
+/* morphe.software, the browser's tabs, a new tab, my README and the add-source page */
+.app-android .ma-site { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding-top: 28px; }
+.app-android .ma-site-brand { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: .02em; color: #ffb183; }
+.app-android .ma-site-h { margin: 0; font-size: 26px; line-height: 1.2; font-weight: 700; text-wrap: balance; }
+.app-android .ma-site-lead { margin: 0; font-size: 15px; line-height: 1.5; color: #c9ced8; }
+.app-android .ma-site-btn {
+  display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 22px;
+  border: 0; border-radius: 24px; background: rgb(255, 137, 68); color: #1b0e05;
+  font: 600 16px/1 Roboto, Inter, system-ui, sans-serif; cursor: pointer;
+}
+.app-android .ma-site-note { margin: 0; font-size: 13px; color: #9aa1ad; }
+.app-android .ma-tabgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px 16px; }
+.app-android .ma-tabcard {
+  display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 10px; text-align: left;
+  border: 1px solid #2a2f38; border-radius: 14px; background: #171a20; color: #e6e8ee; cursor: pointer;
+}
+.app-android .ma-tabcard-title { font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.app-android .ma-tabcard-url { font-size: 12px; color: #9aa1ad; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.app-android .ma-tabcard-page { display: grid; gap: 6px; margin-top: 6px; height: 96px; padding: 10px; border-radius: 8px; background: #0f1115; align-content: start; }
+.app-android .ma-tabcard-page span { display: block; height: 8px; border-radius: 4px; background: #2a2f38; }
+.app-android .ma-tabcard-page span:nth-child(2) { width: 70%; }
+.app-android .ma-tabcard-page span:nth-child(3) { width: 45%; }
+.app-android .ma-newtab {
+  display: flex; align-items: center; gap: 8px; margin: 4px 16px 24px auto;
+  height: 52px; padding: 0 20px; border: 0; border-radius: 16px; background: #a8c7fa; color: #062e6f;
+  font: 600 15px/1 Roboto, Inter, system-ui, sans-serif; cursor: pointer;
+}
+.app-android .ma-url-typing { color: #9aa1ad; }
+.app-android .ma-suggest {
+  display: flex; align-items: center; gap: 12px; width: 100%; min-height: 52px; padding: 0 8px; margin: 0 0 4px;
+  border: 0; border-radius: 12px; background: transparent; color: #e6e8ee; text-align: left; font-size: 15px; cursor: pointer;
+}
+.app-android .ma-suggest:hover { background: rgba(255, 255, 255, .06); }
+.app-android .ma-suggest span { min-width: 0; overflow-wrap: anywhere; }
+.app-android .ma-repo-meta { display: flex; align-items: center; gap: 10px; margin: 6px 0 14px; font-size: 13px; color: #9aa1ad; }
+.app-android .ma-readme { padding: 16px; border: 1px solid #2a2f38; border-radius: 12px; background: #171a20; }
+.app-android .ma-readme-tab { display: flex; align-items: center; gap: 6px; margin: 0 0 12px; font-size: 13px; font-weight: 600; color: #c9ced8; }
+.app-android .ma-readme-p { margin: 0 0 12px; font-size: 14px; line-height: 1.55; color: #c9ced8; }
+.app-android .ma-readme-links { margin: 0 0 12px; font-size: 14px; color: #9aa1ad; }
+.app-android .ma-link { padding: 0; border: 0; background: transparent; color: #7fb4ff; font: inherit; text-decoration: underline; cursor: pointer; }
+.app-android .ma-dim { color: #9aa1ad; }
+.app-android .ma-addsrc { display: grid; gap: 8px; width: 100%; padding: 16px; border: 1px solid #2a2f38; border-radius: 14px; background: #171a20; }
+.app-android .ma-addsrc-name { margin: 0; font-size: 17px; font-weight: 600; }
+.app-android .ma-addsrc-row { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 14px; color: #c9ced8; overflow-wrap: anywhere; }
+.app-android .ma-path {
+  display: flex; align-items: center; gap: 6px; margin: 4px 16px 0; padding: 8px 12px;
+  border-radius: 12px; background: rgba(255, 137, 68, .12); color: #ffb183; font-size: 14px; font-weight: 600;
+}

@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.0-beta.11
+
+A testing build, on the `testing` branch only. It works with **BitChord 1.9**.
+
+- **New patch, Audio and video switch** (off by default): a song and video switch at the top of the player, as in YouTube Music. One tap plays the song's music video, or the song again, through BitChord's own version swap, so the queue place and Smart version alignment are kept.
+- **JamesDSP:** the page now says whether the rootless JamesDSP has finished its Shizuku or ADB setup, whether an app is capturing the sound that plays, and when bit-perfect output or Battery saver keep songs out of JamesDSP's reach. **Start JamesDSP** and **Stop JamesDSP** use its power switch, and until its setup is done the page offers Shizuku and copies the ADB commands.
+- **Install guide:** an interactive guide with two step-by-step tours, from getting Morphe to Telegram's music chats, is published on GitHub Pages.
+- **README badges** for the latest release, the build checks, the BitChord version and the licence.
+
 ## 1.1.0-beta.8
 
 A testing build, on the `testing` branch only. It works with **BitChord 1.9** instead of 1.8.1.

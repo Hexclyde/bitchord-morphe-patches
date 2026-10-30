@@ -12,6 +12,9 @@ I've only tested the Telegram integration on an arm64-v8a device, with BitChord 
 - Only the standard 1.9 APKs are supported. TV, Wear OS, split APKs and other BitChord versions are not.
 - BitChord plays addon sources, Telegram included, only when its streaming quality for the connection in use is **Lossless**. On High or lower, Telegram results are marked as needing Lossless. This is BitChord's own quality rule.
 - Songs on BitChord's bit-perfect output skip every effect, so Sing, Pitch control, Loudness level, Headphone correction, the sleep fade and JamesDSP don't reach them.
+- The JamesDSP page can't tell for certain that JamesDSP is processing BitChord. Android only says that some app is capturing the sound that plays, not which one, so a screen recorder looks the same.
+- **Start JamesDSP** works without opening JamesDSP only after its optional auto-start permission (the third ADB command) is granted. Otherwise open JamesDSP and tap its power button.
+- The audio and video switch shows only for YouTube Music songs. Files, addons and Telegram tracks have no video version. It hasn't been tried on a phone yet; the song menu's own switch keeps working either way.
 
 - Copying into your main channel oldest post first starts from a community channel only once the saved index has gone through all of it, which takes about an hour for a channel of 200,000 files. **Newest first** starts straight away.
 - The fake lossless check reads FLAC and WAV files, alone, in zips that aren't compressed, or as cue albums. ALAC, AIFF, APE and WavPack files aren't checked. Files made from 256 and 320 kbps MP3s usually can't be told from CD-era masters, and are called inconclusive. An old recording that never had much above 16 kHz can show **maybe lossy**.

@@ -124,6 +124,10 @@ public final class SoundExtras {
         return false;
     }
 
+    public static boolean videoSwitchApplied() {
+        return false;
+    }
+
     // ── Settings ─────────────────────────────────────────────────────────────
 
     public static void init(Context context) {
@@ -172,6 +176,7 @@ public final class SoundExtras {
         if (djApplied()) DjMode.init(application);
         if (downloadQualityApplied()) DownloadChoice.init(application);
         if (jamesDspApplied()) EffectsApps.init(application);
+        if (videoSwitchApplied()) VideoSwitch.init(application);
         Outputs.listen(
                 () -> {
                     rememberBluetooth(Outputs.current());

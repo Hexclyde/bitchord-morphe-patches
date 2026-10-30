@@ -87,6 +87,7 @@ SOURCES = [
     "EffectsApps",
     "BitPerfect",
     "SoundExtras",
+    "VideoSwitch",
 ]
 TESTS = [
     "NativeAudioTest",
@@ -127,6 +128,7 @@ TESTS = [
     "OutputEqTest",
     "DjModeTest",
     "DownloadProbeTest",
+    "VideoSwitchTest",
 ]
 
 subprocess.run(
