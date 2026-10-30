@@ -14,7 +14,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.6, a testing build). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.7, a testing build). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > The existing Telegram integration has been tested on an **arm64-v8a** phone. The armeabi-v7a and x86_64 builds pass the same automated checks, but haven't been run on a real device. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
 
@@ -29,9 +29,14 @@
 | **Sing** | Turns the lead vocal down so you can sing over the song. Ported from [Auris](https://github.com/OreoMuncher45/Auris). Off by default. |
 | **Pitch control** | Moves the key up or down without changing the speed. Off by default. |
 | **Loudness level** | Sets how loud loudness normalisation plays songs. Off by default. |
-| **Sleep timer fade-out** | Fades the song out before the sleep timer pauses it. Off by default. |
+| **Sleep timer fade-out** | Fades the song out before the sleep timer pauses it, and fades the end of the last song. Off by default. |
 | **Battery saver** | Lets the phone's audio chip decode songs. Off by default. |
-| **Lossless addons over Bluetooth** | Keeps lossless addons in use over Bluetooth. Off by default. |
+| **Lossless addons over Bluetooth** | Keeps lossless addons in use over Bluetooth, for all outputs or chosen ones. Off by default. |
+| **Per-download quality** | Asks which quality to download each song in. Off by default. |
+| **Headphone correction** | Flattens your headphones' sound with a measured profile from [AutoEq](https://github.com/jaakkopasanen/AutoEq), one per output. Off by default. |
+| **Equaliser per output** | Remembers BitChord's equaliser for each output and shares settings as codes. Off by default. |
+| **DJ mode** | Plays the queue in an order that mixes well, by key and tempo. Off by default. |
+| **JamesDSP** | Hands BitChord's audio to [JamesDSP](https://github.com/timschneeb/RootlessJamesDSP). Off by default. |
 
 More BitChord add-ons will be added to this repository over time.
 
@@ -67,7 +72,7 @@ More BitChord add-ons will be added to this repository over time.
 - Browse channel posts in Channel View
 - Control the size of the Telegram audio cache
 - See the playing source and bitrate in **Show stats for nerds**
-- The Telegram page in 14 languages, following your phone: Spanish, Portuguese, French, German, Russian, Turkish, Arabic, Urdu, Hindi, Bengali, Chinese, Japanese, Korean and Indonesian
+- The patch pages in 20 languages, following BitChord's language setting: Spanish, Portuguese, French, German, Italian, Polish, Russian, Turkish, Arabic, Hebrew, Urdu, Hindi, Bengali, Thai, Vietnamese, Indonesian, Chinese (Simplified and Traditional), Japanese and Korean
 
 Every extra (quality, fake lossless checks, covers, file names, naming by sound, format legend, smooth switching, surround mixing, sound checks, the saved index, the main channel copy, name fixes and suggestions) can be turned off in the app.
 
@@ -82,17 +87,22 @@ controls are hidden and its gear is disabled. Enabling a feature expands its
 controls; opening another feature collapses the previous one without turning it
 off. Tap an enabled feature's gear to review it again. Disabling a feature keeps
 its saved settings for later. Existing explicitly chosen settings are retained
-when updating. Telegram keeps its existing source toggle and settings page. The six optional
+when updating. Telegram keeps its existing source toggle and settings page. The eleven optional
 playback patches are:
 
 - **Sing:** turns the lead vocal down so you can sing over the song, from a little to all of it. By default only the voice range is cut, only while someone is singing, and drum hits are left alone; **Whole centre** removes everything in the middle instead, which suits older recordings. Ported from [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45.
-- **Pitch:** up or down by up to 12 semitones without changing the speed. BitChord's speed setting keeps the pitch you set.
+- **Pitch control:** up or down by up to 12 semitones without changing the speed. BitChord's speed setting keeps the pitch you set.
 - **Loudness level:** how loud songs play with BitChord's loudness normalisation on, from -23 to -8 LUFS. BitChord's own level is -14 LUFS. It applies to the songs BitChord normalises, the ones YouTube gives a loudness for.
-- **Sleep timer fade-out:** when the timer's time is up, the song fades out over 10 seconds before it pauses. You can turn the fade off on the page.
-- **Battery saver:** lets the phone's audio chip decode songs it can, so the processor can sleep during long listens. While a song plays this way, the equaliser, loudness normalisation, Sing, spatial audio and crossfade don't work on it. It stays off on the page until you turn it on.
-- **Lossless addons over Bluetooth:** BitChord skips addons marked lossless while the phone can't output lossless audio, such as over Bluetooth. With this on they're used anyway and the phone sends them with its best Bluetooth codec. It stays off on the page until you turn it on.
+- **Sleep timer fade-out:** when the timer's time is up, the song fades out over a length you choose (3 to 60 seconds) before it pauses. With the timer's **After this song** option, the last seconds of that song fade instead of it stopping at full volume. A fade stands down the moment you play, pause, seek or set the timer again, and the volume comes back up for the next time you play.
+- **Battery saver:** lets the phone's audio chip decode songs it can, so the processor can sleep during long listens. While a song plays this way, the equaliser, loudness normalisation, Sing, spatial audio and crossfade don't work on it. The page shows which formats your phone's chip can play and which decoder is in use now. The chip isn't asked for while Sing, Headphone correction, DJ mode or JamesDSP needs the decoded audio, and a changed speed or pitch is only handed over when the chip supports it. It stays off on the page until you turn it on.
+- **Lossless addons over Bluetooth:** BitChord skips addons marked lossless while the phone can't output lossless audio, such as over Bluetooth. Allow them for every Bluetooth output, or only for the devices you pick from the ones you've connected; the page shows the codec in use. The phone then sends them with its best Bluetooth codec. It stays off on the page until you turn it on.
+- **Per-download quality:** when you download a song, BitChord asks whether you want it in Standard, High or Lossless quality instead of always using the Download quality setting. An album asked for in one go is asked about once. The idea is from [Stash](https://github.com/rawnaldclark/Stash).
+- **Headphone correction:** a parametric equaliser that flattens a headphone's own sound from a profile measured for that model. Search [AutoEq](https://github.com/jaakkopasanen/AutoEq)'s thousands of models by name, or paste any parametric EQ in Equalizer APO's text form. Each output keeps its own profile, so wired earphones and a Bluetooth headset each get theirs, and a strength slider scales it. Profiles are fetched from AutoEq's GitHub repository when you pick one and kept on the phone.
+- **Equaliser per output:** BitChord's equaliser settings are remembered for each output (the speaker, wired, USB, each Bluetooth device) and put back when that output is in use again. Set the equaliser for the car with the car connected, for earbuds with the earbuds connected. A setting can be copied as a short code and pasted on another phone.
+- **DJ mode:** the next song in the queue is chosen for a key next to the current one on the Camelot wheel and a close tempo, so songs mix well. Songs you queued yourself keep their place, and nothing moves in a Listen Together party. Each song's key and tempo are learned as it plays, and BitChord's own Automix analyses are used when it has them.
+- **JamesDSP:** opens [JamesDSP](https://github.com/timschneeb/RootlessJamesDSP) from BitChord, announces BitChord's audio session to it again, and can hand the effects over: BitChord's equaliser goes off and Battery saver stands down, since a song on the audio chip can't be heard by JamesDSP.
 
-Everything is at BitChord's own behaviour until you change it, and none of the playback patches needs the Telegram patch.
+Everything is at BitChord's own behaviour until you change it, and none of them needs the Telegram patch. Pitch control, Loudness level, Sleep timer fade-out, Headphone correction, Equaliser per output and DJ mode follow features of [Prism](https://github.com/Yigder/Prism) by Yigder; the code is written for BitChord.
 
 ## Requirements
 
@@ -158,7 +168,9 @@ Bug reports and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.m
 
 - [BitChord](https://github.com/kushagrasinghx/BitChord) by kushagra (kushagrasinghx) and its contributors, the app these patches are for.
 - [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45, a fork of BitChord. Sing is ported from its vocal remover.
-- [Prism](https://github.com/Yigder/Prism) by Yigder and [Stash](https://github.com/rawnaldclark/Stash) by Rawnald Clark, with Evo (ParaliyzedEvo). Their pitch, loudness and battery features shaped the playback patches extras; no code was taken from them.
+- [Prism](https://github.com/Yigder/Prism) by Yigder and [Stash](https://github.com/rawnaldclark/Stash) by Rawnald Clark, with Evo (ParaliyzedEvo). Their pitch, loudness, sleep fade, headphone correction, per-output equaliser, DJ mode and per-download quality features shaped the playback patches; no code was taken from them.
+- [AutoEq](https://github.com/jaakkopasanen/AutoEq) by Jaakko Pasanen, whose headphone measurements Headphone correction fetches.
+- [JamesDSP](https://github.com/timschneeb/RootlessJamesDSP) by Tim Schneeberger and [James Fung](https://github.com/james34602/JamesDSPManager), the effect engine the JamesDSP patch works with.
 - [MicroG RE](https://github.com/MorpheApp/MicroG-RE) and [Morphe](https://morphe.software) by the Morphe team.
 
 ## License

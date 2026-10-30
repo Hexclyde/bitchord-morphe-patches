@@ -57,7 +57,12 @@ The existing Rust standard-library notices apply to all embedded Rust outputs.
 | --- | --- | --- |
 | [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45 and the BitChord contributors, a fork of [BitChord](https://github.com/kushagrasinghx/BitChord) by kushagra | Sing (`VocalCut.java`), from `VocalCutDsp.kt` and `VocalCutOriginal.kt` at [`4c07477`](https://github.com/OreoMuncher45/Auris/tree/4c07477533d8ce9fb0f2ba7f5cc33e070e4d8f1f), translated to Java | [GPL-3.0](licenses/GPL-3.0.txt) |
 
-The **Pitch control**, **Loudness level** and **Sleep timer fade-out** patches follow features of [Prism](https://github.com/Yigder/Prism) by Yigder (GPL-3.0-or-later), and **Lossless addons over Bluetooth** follows Auris's lossless-first approach. Their code is written for BitChord; nothing was copied from Prism.
+The **Pitch control**, **Loudness level**, **Sleep timer fade-out**, **Headphone correction**, **Equaliser per output** and **DJ mode** patches follow features of [Prism](https://github.com/Yigder/Prism) by Yigder (GPL-3.0-or-later), **Per-download quality** follows [Stash](https://github.com/rawnaldclark/Stash) by Rawnald Clark (GPL-3.0), and **Lossless addons over Bluetooth** follows Auris's lossless-first approach. Their code is written for BitChord; nothing was copied from Prism or Stash.
+
+## Fetched or used at run time, not bundled
+
+- **Headphone correction** downloads headphone profiles from [AutoEq](https://github.com/jaakkopasanen/AutoEq) by Jaakko Pasanen ([MIT License](https://github.com/jaakkopasanen/AutoEq/blob/master/LICENSE)) when you pick a model, straight from its GitHub repository, and keeps them on the phone. The filter formulas are the peaking and shelving biquads of Robert Bristow-Johnson's Audio EQ Cookbook.
+- The **JamesDSP** patch works with [RootlessJamesDSP](https://github.com/timschneeb/RootlessJamesDSP) by Tim Schneeberger and [JamesDSPManager](https://github.com/james34602/JamesDSPManager) by James Fung (both GPL-3.0), installed separately by you. Nothing of theirs is bundled; BitChord's audio session is announced to them through Android's standard audio-effect broadcasts.
 
 ## Not bundled
 

@@ -121,6 +121,14 @@ shared_ui = {
     "HostLog",
     "VocalCut",
     "PatchSources",
+    "Outputs",
+    "SleepFade",
+    "HeadphoneEq",
+    "OutputEq",
+    "KeyTempo",
+    "DjMode",
+    "DownloadChoice",
+    "EffectsApps",
 }
 for source in (OUT / "extension-classes").rglob("*.class"):
     relative = source.relative_to(OUT / "extension-classes")

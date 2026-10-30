@@ -95,10 +95,23 @@ final class Strings {
         return lang.equals("ar") || lang.equals("ur") || lang.equals("fa") || lang.equals("he");
     }
 
+    /** The table's name for a locale: the language, with Traditional Chinese on its own. */
     static String language(Locale locale) {
         String lang = locale.getLanguage();
-        // Older Android names Indonesian "in".
-        return lang.equals("in") ? "id" : lang;
+        // Older Android names Indonesian "in" and Hebrew "iw".
+        if (lang.equals("in")) return "id";
+        if (lang.equals("iw")) return "he";
+        if (lang.equals("zh")) {
+            String script = locale.getScript(), country = locale.getCountry();
+            boolean traditional =
+                    script.equals("Hant")
+                            || script.isEmpty()
+                                    && (country.equals("TW")
+                                            || country.equals("HK")
+                                            || country.equals("MO"));
+            return traditional ? "zh-TW" : "zh";
+        }
+        return lang;
     }
 
     private static Map<String, String> table() {

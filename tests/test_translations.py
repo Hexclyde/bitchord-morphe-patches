@@ -26,6 +26,12 @@ LANGUAGES = {
     "ja",
     "ko",
     "id",
+    "pl",
+    "he",
+    "it",
+    "th",
+    "vi",
+    "zh-TW",
 }
 
 

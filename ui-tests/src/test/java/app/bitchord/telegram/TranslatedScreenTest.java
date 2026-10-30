@@ -80,7 +80,7 @@ public class TranslatedScreenTest {
         for (String language :
                 new String[] {
                     "es", "pt", "fr", "de", "ru", "tr", "ar", "ur", "hi", "bn", "zh", "ja", "ko",
-                    "id"
+                    "id", "pl", "he", "it", "th", "vi", "zh-TW"
                 }) {
             Locale.setDefault(Locale.forLanguageTag(language));
             String text = Strings.f("Up to {0} files an hour", 120);
@@ -91,5 +91,11 @@ public class TranslatedScreenTest {
         assertEquals("Up to 120 files an hour", Strings.f("Up to {0} files an hour", 120));
         Locale.setDefault(Locale.forLanguageTag("in"));
         assertNotEquals("Older Android's code for Indonesian", "Cancel", Strings.t("Cancel"));
+        Locale.setDefault(Locale.forLanguageTag("iw"));
+        assertNotEquals("Older Android's code for Hebrew", "Cancel", Strings.t("Cancel"));
+        Locale.setDefault(Locale.forLanguageTag("zh-Hant-HK"));
+        assertEquals("zh-TW", Strings.language(Locale.getDefault()));
+        Locale.setDefault(Locale.forLanguageTag("zh-CN"));
+        assertEquals("zh", Strings.language(Locale.getDefault()));
     }
 }

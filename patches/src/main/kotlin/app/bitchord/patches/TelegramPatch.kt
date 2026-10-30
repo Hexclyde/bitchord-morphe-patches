@@ -1790,10 +1790,14 @@ val microGSignInPatch =
     }
 
 private const val EXTRAS = "Lapp/bitchord/telegram/SoundExtras;"
+private const val DOWNLOAD_CHOICE = "Lapp/bitchord/telegram/DownloadChoice;"
 private const val SINK = "Lcom/music/bitchord/playback/audio/PrecisionAudioSink;"
 
-/** Sing: each decoded block goes through the vocal cut before BitChord's equaliser and effects. */
-private fun BytecodePatchContext.addSing() {
+/**
+ * The audio tap: each decoded block passes through the patches (Sing, Headphone correction, DJ
+ * mode) before BitChord's equaliser and effects.
+ */
+private fun BytecodePatchContext.addAudioTap() {
     val sink = mutableClassDefBy(SINK)
     fun Instruction.readsField(name: String) =
         opcode == Opcode.IGET_OBJECT &&
@@ -1843,7 +1847,7 @@ private fun BytecodePatchContext.addSing() {
         .single { it.name == name && it.parameterTypes.isEmpty() && it.returnType == "V" }
         .addInstruction(0, "invoke-static/range {p0 .. p0}, $EXTRAS->flush(Ljava/lang/Object;)V")
     // BitChord's usual mode plays through Android's media player, with its effects as audio
-    // processors; the sink above only runs its own chain in its precision mode. Sing then works on
+    // processors; the sink above only runs its own chain in its precision mode. The tap then gets
     // what the equaliser has just written, a 16-bit block.
     val equaliserType = "Lcom/music/bitchord/playback/EqualizerProcessor;"
     val equaliser = mutableClassDefBy(equaliserType)
@@ -1890,7 +1894,7 @@ private fun BytecodePatchContext.addSing() {
     for (name in listOf("onFlush", "onReset")) equaliser.methods
         .single { it.name == name && it.parameterTypes.isEmpty() && it.returnType == "V" }
         .addInstruction(0, "invoke-static/range {p0 .. p0}, $EXTRAS->flush(Ljava/lang/Object;)V")
-    println("Added Sing to the audio chain")
+    println("Added the audio tap to BitChord's audio chain")
 }
 
 /** The loudness gain BitChord works out for a song, moved to the chosen level. */
@@ -2003,6 +2007,62 @@ private fun BytecodePatchContext.addLosslessOverBluetooth() {
     println("Added lossless addons over Bluetooth")
 }
 
+/** BitChord's playback service is handed to the patches as it starts, for DJ mode. */
+private fun BytecodePatchContext.addServiceHook() {
+    val method =
+        mutableClassDefBy(SERVICE).methods.single {
+            it.name == "onCreate" && it.parameterTypes.isEmpty() && it.returnType == "V"
+        }
+    method.addInstruction(
+        0,
+        "invoke-static/range {p0 .. p0}, $EXTRAS->service(Ljava/lang/Object;)V",
+    )
+    println("Added the playback service hook")
+}
+
+/**
+ * Per-download quality: a song queued for download is held while the quality is asked, and the
+ * quality BitChord reads for it is the one chosen.
+ */
+private fun BytecodePatchContext.addDownloadChoice() {
+    val downloads = mutableClassDefBy("Lcom/music/bitchord/download/Downloads;")
+    val song = "Lcom/music/bitchord/data/model/Song;"
+    val quality = "Lcom/music/bitchord/data/settings/DownloadQuality;"
+    val enqueue =
+        downloads.methods.single {
+            it.name == "enqueue" &&
+                it.parameterTypes ==
+                    listOf("Landroid/content/Context;", song, "Ljava/lang/String;") &&
+                it.returnType == "V"
+        }
+    val implementation = enqueue.implementation!!
+    check(implementation.registerCount >= 5) { "Download queue has no free register" }
+    enqueue.addInstructionsWithLabels(
+        0,
+        """
+        invoke-static/range {p1 .. p3}, $DOWNLOAD_CHOICE->hold(Landroid/content/Context;${song}Ljava/lang/String;)Z
+        move-result v0
+        if-eqz v0, :original
+        return-void
+    """,
+        ExternalLabel("original", implementation.instructions.first()),
+    )
+    val route =
+        downloads.methods.single {
+            it.name == "access${'$'}routeFor" &&
+                it.parameterTypes.take(3) == listOf("Landroid/content/Context;", song, quality)
+        }
+    route.addInstructions(
+        0,
+        """
+        invoke-static/range {p1 .. p2}, $DOWNLOAD_CHOICE->quality(${song}Ljava/lang/Object;)Ljava/lang/Object;
+        move-result-object p2
+        check-cast p2, $quality
+    """,
+    )
+    println("Added per-download quality to BitChord's downloads")
+}
+
 /** Makes SoundExtras.[name] answer true: the settings page shows that patch's part. */
 private fun BytecodePatchContext.markApplied(name: String) {
     val method =
@@ -2012,11 +2072,41 @@ private fun BytecodePatchContext.markApplied(name: String) {
     method.addInstructions(0, "const/4 v0, 0x1\nreturn v0")
 }
 
-/** Each player BitChord builds, for the pitch and battery saver patches. */
+/** Each player BitChord builds, for the pitch, battery saver, sleep fade and DJ mode patches. */
 private val extrasPlayersPatch = bytecodePatch {
     dependsOn(extrasSettingsPatch)
     execute { addPlayerSettings() }
 }
+
+/** The decoded audio, for Sing, Headphone correction and DJ mode. */
+private val extrasAudioPatch = bytecodePatch {
+    dependsOn(extrasSettingsPatch)
+    execute { addAudioTap() }
+}
+
+/** The playback service, for DJ mode. */
+private val extrasServicePatch = bytecodePatch {
+    dependsOn(extrasSettingsPatch)
+    execute { addServiceHook() }
+}
+
+/** Since Android 11 an app only sees the packages it declares; JamesDSP's are declared. */
+private val jamesDspResources = resourcePatch {
+    execute {
+        document("AndroidManifest.xml").use { doc ->
+            val app = doc.getElementsByTagName("application").item(0) as org.w3c.dom.Element
+            val queries = doc.createElement("queries")
+            for (name in JAMES_DSP_PACKAGES) {
+                val pkg = doc.createElement("package")
+                pkg.setAttributeNS(ANDROID, "android:name", name)
+                queries.appendChild(pkg)
+            }
+            doc.documentElement.insertBefore(queries, app)
+        }
+    }
+}
+
+private val JAMES_DSP_PACKAGES = listOf("me.timschneeberger.rootlessjamesdsp", "james.dsp")
 
 private fun extrasPatch(
     name: String,
@@ -2039,8 +2129,8 @@ val singPatch =
         "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover " +
             "in Auris by OreoMuncher45, a fork of BitChord." +
             WHERE,
+        extrasAudioPatch,
     ) {
-        addSing()
         markApplied("singApplied")
     }
 
@@ -2072,9 +2162,10 @@ val loudnessLevelPatch =
 val sleepFadePatch =
     extrasPatch(
         "Sleep timer fade-out",
-        "Fades the song out over 10 seconds before the sleep timer pauses it. From Prism by " +
-            "Yigder." +
+        "Fades the song out before the sleep timer pauses it, and fades the end of the last " +
+            "song with the timer's \"After this song\" option. From Prism by Yigder." +
             WHERE,
+        extrasPlayersPatch,
     ) {
         addSleepFade()
         markApplied("sleepFadeApplied")
@@ -2090,6 +2181,68 @@ val batterySaverPatch =
         extrasPlayersPatch,
     ) {
         markApplied("batterySaverApplied")
+    }
+
+@Suppress("unused")
+val downloadQualityPatch =
+    extrasPatch(
+        "Per-download quality",
+        "Asks which quality to download each song in: Standard, High or Lossless. An album " +
+            "is asked about once. From Stash by Rawnald Clark." +
+            WHERE,
+    ) {
+        addDownloadChoice()
+        markApplied("downloadQualityApplied")
+    }
+
+@Suppress("unused")
+val headphoneCorrectionPatch =
+    extrasPatch(
+        "Headphone correction",
+        "Flattens your headphones' sound with a measured profile, one per output, from " +
+            "AutoEq's thousands of models or pasted in. From Prism by Yigder." +
+            WHERE,
+        extrasAudioPatch,
+    ) {
+        markApplied("headphoneApplied")
+    }
+
+@Suppress("unused")
+val outputEqualiserPatch =
+    extrasPatch(
+        "Equaliser per output",
+        "Remembers BitChord's equaliser for each output (speaker, wired, each Bluetooth " +
+            "device) and puts it back when that output is used; shares settings as codes. " +
+            "From Prism by Yigder." +
+            WHERE,
+    ) {
+        markApplied("outputEqApplied")
+    }
+
+@Suppress("unused")
+val djModePatch =
+    extrasPatch(
+        "DJ mode",
+        "Picks the next song in the queue for a neighbouring key and a close tempo. Keys " +
+            "and tempos are learned as songs play. From Prism by Yigder." +
+            WHERE,
+        extrasPlayersPatch,
+        extrasAudioPatch,
+        extrasServicePatch,
+    ) {
+        markApplied("djApplied")
+    }
+
+@Suppress("unused")
+val jamesDspPatch =
+    extrasPatch(
+        "JamesDSP",
+        "Hands BitChord's audio to JamesDSP, the open-source effect engine: open it from " +
+            "BitChord, announce the audio session again and let it take over the effects." +
+            WHERE,
+        jamesDspResources,
+    ) {
+        markApplied("jamesDspApplied")
     }
 
 @Suppress("unused")

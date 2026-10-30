@@ -1,11 +1,18 @@
 package app.bitchord.telegram;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -15,7 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 
 /** The native Patches & tweaks page. Installed features stay compact until enabled and opened. */
@@ -25,6 +34,9 @@ public final class ExtrasActivity extends Activity {
     private ScrollView scroll;
     private String expanded;
     private final LinkedHashMap<String, Feature> features = new LinkedHashMap<>();
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Runnable refreshStatus = this::refreshStatus;
+    private TextView batteryStatus, bluetoothStatus, djStatus;
 
     interface Setting {
         void set(boolean on) throws Exception;
@@ -111,6 +123,25 @@ public final class ExtrasActivity extends Activity {
         super.onResume();
         for (Feature feature : features.values()) feature.sync();
         showExpanded();
+        Outputs.refresh();
+        handler.post(refreshStatus);
+    }
+
+    @Override
+    protected void onPause() {
+        handler.removeCallbacks(refreshStatus);
+        super.onPause();
+    }
+
+    /** Builds the page again after a section's content changed, keeping the place. */
+    private void rebuild() {
+        int y = scroll.getScrollY();
+        features.clear();
+        body.removeAllViews();
+        batteryStatus = bluetoothStatus = djStatus = null;
+        render();
+        scroll.post(() -> scroll.scrollTo(0, y));
+        handler.post(refreshStatus);
     }
 
     @Override
@@ -199,7 +230,11 @@ public final class ExtrasActivity extends Activity {
                 || SoundExtras.loudnessApplied()
                 || SoundExtras.sleepFadeApplied()
                 || SoundExtras.batterySaverApplied()
-                || SoundExtras.losslessBluetoothApplied()) section(Strings.t("Audio tweaks"));
+                || SoundExtras.losslessBluetoothApplied()
+                || SoundExtras.headphoneApplied()
+                || SoundExtras.outputEqApplied()
+                || SoundExtras.djApplied()
+                || SoundExtras.jamesDspApplied()) section(Strings.t("Audio tweaks"));
         if (SoundExtras.singApplied()) {
             feature(
                     "sing",
@@ -298,13 +333,35 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "sleep-fade",
                     Strings.t("Fade out at the sleep timer"),
-                    Strings.t("Fade over 10 seconds before pausing"),
+                    Strings.t("Fade out before the sleep timer pauses"),
                     () -> SoundExtras.sleepFade,
                     SoundExtras::setSleepFade,
-                    parent ->
-                            paragraph(
-                                    parent,
-                                    Strings.t("The song fades out over 10 seconds, then pauses")));
+                    parent -> {
+                        slider(
+                                parent,
+                                Strings.t("Fade length"),
+                                SleepFade.MIN_SECONDS,
+                                SleepFade.MAX_SECONDS,
+                                1,
+                                SoundExtras.sleepFadeSeconds,
+                                SoundExtras::seconds,
+                                SoundExtras::setSleepFadeSeconds);
+                        divider(parent);
+                        option(
+                                parent,
+                                Strings.t("Fade the end of the last song"),
+                                Strings.t("With “After this song”, its last seconds fade out"),
+                                Strings.t("The last song plays to its end at full volume"),
+                                SoundExtras.sleepFadeEnding,
+                                SoundExtras::setSleepFadeEnding);
+                        paragraph(
+                                parent,
+                                Strings.t(
+                                        "A fade stands down as soon as you play, pause, seek or set"
+                                            + " the timer again, and the volume goes back up for"
+                                            + " the next time you play. The idea is from Prism by"
+                                            + " Yigder."));
+                    });
         }
         if (SoundExtras.batterySaverApplied()) {
             feature(
@@ -312,35 +369,98 @@ public final class ExtrasActivity extends Activity {
                     Strings.t("Battery saver"),
                     Strings.t("Let the phone’s audio chip decode songs"),
                     () -> SoundExtras.batterySaver,
-                    SoundExtras::setBatterySaver,
-                    parent ->
-                            paragraph(
-                                    parent,
-                                    Strings.t(
-                                            "Saves battery on long listens. While a song plays this"
+                    on -> {
+                        SoundExtras.setBatterySaver(on);
+                        handler.post(refreshStatus);
+                    },
+                    parent -> {
+                        paragraph(
+                                parent,
+                                Strings.t(
+                                        "Saves battery on long listens. While a song plays this"
                                                 + " way, BitChord’s equaliser, loudness"
                                                 + " normalisation, Sing, spatial audio and"
                                                 + " crossfade don’t work on it. Android decides"
                                                 + " which songs and devices can; the rest play as"
-                                                + " before.")));
+                                                + " before."));
+                        batteryStatus = status(parent);
+                    });
         }
         if (SoundExtras.losslessBluetoothApplied()) {
             feature(
                     "lossless-bluetooth",
                     Strings.t("Lossless addons over Bluetooth"),
                     Strings.t("Keep lossless sources available over Bluetooth"),
-                    () -> SoundExtras.losslessOverBluetooth,
-                    SoundExtras::setLosslessOverBluetooth,
+                    () -> SoundExtras.losslessBluetoothEnabled,
+                    SoundExtras::setLosslessBluetoothEnabled,
+                    this::bluetooth);
+        }
+        if (SoundExtras.headphoneApplied()) {
+            feature(
+                    "headphone-correction",
+                    Strings.t("Headphone correction"),
+                    Strings.t("Flatten your headphones’ own sound"),
+                    () -> HeadphoneEq.enabled,
+                    on -> {
+                        HeadphoneEq.setEnabled(on);
+                        SoundExtras.effectsChanged();
+                    },
+                    this::headphones);
+        }
+        if (SoundExtras.outputEqApplied()) {
+            feature(
+                    "output-eq",
+                    Strings.t("Equaliser per output"),
+                    Strings.t("Remember the equaliser for each output"),
+                    OutputEq::enabled,
+                    OutputEq::setEnabled,
+                    this::outputEq);
+        }
+        if (SoundExtras.djApplied()) {
+            feature(
+                    "dj-mode",
+                    Strings.t("DJ mode"),
+                    Strings.t("Play the queue in an order that mixes well"),
+                    () -> DjMode.enabled,
+                    on -> {
+                        DjMode.setEnabled(on);
+                        SoundExtras.effectsChanged();
+                        handler.post(refreshStatus);
+                    },
+                    this::dj);
+        }
+        if (SoundExtras.jamesDspApplied()) {
+            feature(
+                    "jamesdsp",
+                    "JamesDSP",
+                    Strings.t("Let JamesDSP do the effects"),
+                    () -> EffectsApps.useJamesDsp,
+                    on -> {
+                        EffectsApps.setUseJamesDsp(on);
+                        if (on && EffectsApps.hostEqualiserOn(this)) EffectsApps.hostEqualiserOff();
+                        SoundExtras.effectsChanged();
+                    },
+                    this::jamesDsp);
+        }
+        if (SoundExtras.downloadQualityApplied()) {
+            section(Strings.t("Downloads"));
+            feature(
+                    "download-quality",
+                    Strings.t("Ask the quality for each download"),
+                    Strings.t("Standard, High or Lossless, chosen per download"),
+                    () -> DownloadChoice.ask,
+                    DownloadChoice::setAsk,
                     parent ->
                             paragraph(
                                     parent,
-                                    Strings.t(
-                                            "Bluetooth can’t carry lossless audio on most phones,"
-                                                + " so BitChord normally skips lossless addons"
-                                                + " there. With this on they’re used anyway, and"
-                                                + " the phone sends them with its best Bluetooth"
-                                                + " codec, such as LDAC or aptX. Starts with the"
-                                                + " next song.")));
+                                    Strings.f(
+                                                    "Last chosen: {0}",
+                                                    DownloadChoice.label(DownloadChoice.last))
+                                            + " · "
+                                            + Strings.t(
+                                                    "An album asked for in one go is asked about"
+                                                            + " once. The idea is from Stash by"
+                                                            + " Rawnald Clark.")));
         }
         showExpanded();
     }
@@ -652,5 +772,519 @@ public final class ExtrasActivity extends Activity {
         row.addView(toggle);
         row.setOnClickListener(view -> toggle.toggle());
         parent.addView(row);
+    }
+
+    // ── Sections of the playback patches ───────────────────────────────────────
+
+    private void bluetooth(LinearLayout parent) {
+        paragraph(
+                parent,
+                Strings.t(
+                        "Bluetooth can’t carry lossless audio on most phones, so BitChord normally"
+                                + " skips lossless addons there. Allow them on the outputs you want"
+                                + " anyway; the phone sends them with its best Bluetooth codec,"
+                                + " such as LDAC or aptX. Starts with the next song."));
+        bluetoothStatus = status(parent);
+        divider(parent);
+        option(
+                parent,
+                Strings.t("All Bluetooth outputs"),
+                Strings.t("Lossless addons are used over any Bluetooth output"),
+                Strings.t("Only the outputs allowed below"),
+                SoundExtras.losslessOverBluetooth,
+                on -> {
+                    SoundExtras.setLosslessOverBluetooth(on);
+                    handler.post(refreshStatus);
+                });
+        Outputs.Output now = Outputs.current();
+        if (now.bluetooth) SoundExtras.rememberBluetooth(now);
+        List<String> seen = SoundExtras.bluetoothSeen();
+        if (seen.isEmpty()) {
+            paragraph(parent, Strings.t("Connect a Bluetooth output and it will be listed here."));
+            return;
+        }
+        divider(parent);
+        heading(parent, Strings.t("Bluetooth outputs seen"));
+        for (String key : seen) {
+            String name = SoundExtras.bluetoothName(key);
+            option(
+                    parent,
+                    key.equals(now.key) ? Strings.f("{0} (connected)", name) : name,
+                    Strings.t("Lossless addons allowed"),
+                    Strings.t("Left to BitChord"),
+                    SoundExtras.losslessDevices.contains(key),
+                    on -> SoundExtras.setLosslessDevice(key, on));
+        }
+    }
+
+    private void headphones(LinearLayout parent) {
+        Outputs.Output output = Outputs.current();
+        paragraph(
+                parent,
+                Strings.t(
+                        "Flattens a headphone’s own sound with a profile measured for that model."
+                                + " Each output keeps its own profile: set one with the headphones"
+                                + " connected."));
+        paragraph(parent, Strings.f("Playing through: {0} ({1})", output.name, output.kind()));
+        String assigned = HeadphoneEq.assignedName(output.key);
+        HeadphoneEq.Profile active = HeadphoneEq.active;
+        if (assigned != null) {
+            LinearLayout row = new LinearLayout(this);
+            row.setGravity(Gravity.CENTER_VERTICAL);
+            LinearLayout labels = new LinearLayout(this);
+            labels.setOrientation(LinearLayout.VERTICAL);
+            labels.addView(style.text(assigned, 16, style.foreground, style.medium));
+            TextView sub =
+                    style.text(
+                            active != null && assigned.equals(active.name)
+                                    ? active.summary()
+                                    : Strings.t("Profile couldn’t be read"),
+                            14,
+                            style.secondary,
+                            style.regular);
+            sub.setPadding(0, style.dp(4), 0, 0);
+            labels.addView(sub);
+            row.addView(labels, new LinearLayout.LayoutParams(0, -2, 1));
+            row.addView(
+                    small(
+                            Strings.t("Remove"),
+                            () -> {
+                                HeadphoneEq.clear(output.key);
+                                SoundExtras.effectsChanged();
+                                rebuild();
+                            }));
+            parent.addView(row);
+            slider(
+                    parent,
+                    Strings.t("Strength"),
+                    0,
+                    100,
+                    5,
+                    HeadphoneEq.strength,
+                    value -> value + "%",
+                    value -> {
+                        HeadphoneEq.setStrength(value);
+                        SoundExtras.effectsChanged();
+                    });
+        } else {
+            paragraph(parent, Strings.t("No profile for this output yet."));
+        }
+        divider(parent);
+        heading(parent, Strings.t("Find your headphones"));
+        EditText query = input(parent, Strings.t("Model, such as “HD 650” or “AirPods Pro”"));
+        LinearLayout results = new LinearLayout(this);
+        results.setOrientation(LinearLayout.VERTICAL);
+        TextView progress = style.text("", 13, style.secondary, style.regular);
+        progress.setPadding(0, style.dp(8), 0, 0);
+        action(
+                parent,
+                Strings.t("Search"),
+                () -> searchHeadphones(query.getText().toString(), results, progress, output));
+        action(parent, Strings.t("Paste a profile"), () -> pasteProfile(output));
+        parent.addView(progress);
+        parent.addView(results);
+        paragraph(
+                parent,
+                Strings.t(
+                        "Profiles come from AutoEq by Jaakko Pasanen, which measures thousands of"
+                                + " headphones. Any parametric EQ in Equalizer APO’s text form can"
+                                + " be pasted too. The idea is from Prism by Yigder."));
+    }
+
+    private void searchHeadphones(
+            String query, LinearLayout results, TextView progress, Outputs.Output output) {
+        results.removeAllViews();
+        if (query.trim().length() < 2) {
+            progress.setText(Strings.t("Type part of the model name."));
+            return;
+        }
+        progress.setText(Strings.t("Searching…"));
+        new Thread(
+                        () -> {
+                            List<HeadphoneEq.Entry> found;
+                            String problem = null;
+                            try {
+                                found = HeadphoneEq.search(HeadphoneEq.index(false), query, 25);
+                            } catch (Exception e) {
+                                found = Collections.emptyList();
+                                problem = e.getMessage();
+                            }
+                            List<HeadphoneEq.Entry> shown = found;
+                            String failed = problem;
+                            runOnUiThread(
+                                    () -> {
+                                        if (isFinishing()) return;
+                                        if (failed != null) {
+                                            progress.setText(
+                                                    Strings.f(
+                                                            "Couldn’t load AutoEq’s list: {0}",
+                                                            failed));
+                                            return;
+                                        }
+                                        progress.setText(
+                                                shown.isEmpty()
+                                                        ? Strings.t(
+                                                                "No headphones found with that"
+                                                                        + " name.")
+                                                        : Strings.f(
+                                                                "{0} results",
+                                                                String.valueOf(shown.size())));
+                                        for (HeadphoneEq.Entry entry : shown) {
+                                            TextView row =
+                                                    style.text(
+                                                            entry.label(),
+                                                            15,
+                                                            style.foreground,
+                                                            style.regular);
+                                            row.setPadding(
+                                                    style.dp(12),
+                                                    style.dp(12),
+                                                    style.dp(12),
+                                                    style.dp(12));
+                                            row.setBackground(style.shape(style.field, 10, false));
+                                            row.setClickable(true);
+                                            row.setFocusable(true);
+                                            row.setOnClickListener(
+                                                    v -> useHeadphones(entry, progress, output));
+                                            LinearLayout.LayoutParams lp =
+                                                    new LinearLayout.LayoutParams(-1, -2);
+                                            lp.topMargin = style.dp(6);
+                                            results.addView(row, lp);
+                                        }
+                                    });
+                        },
+                        "autoeq-search")
+                .start();
+    }
+
+    private void useHeadphones(HeadphoneEq.Entry entry, TextView progress, Outputs.Output output) {
+        progress.setText(Strings.f("Loading {0}…", entry.name));
+        new Thread(
+                        () -> {
+                            String text = null, problem = null;
+                            try {
+                                text = HeadphoneEq.download(entry);
+                            } catch (Exception e) {
+                                problem = e.getMessage();
+                            }
+                            HeadphoneEq.Profile profile =
+                                    text == null ? null : HeadphoneEq.parse(entry.name, text);
+                            String profileText = text;
+                            String failed = problem;
+                            runOnUiThread(
+                                    () -> {
+                                        if (isFinishing()) return;
+                                        if (profile == null) {
+                                            progress.setText(
+                                                    Strings.f(
+                                                            "Couldn’t load the profile: {0}",
+                                                            failed == null
+                                                                    ? Strings.t("no filters in it")
+                                                                    : failed));
+                                            return;
+                                        }
+                                        HeadphoneEq.assign(output.key, profile, profileText);
+                                        SoundExtras.effectsChanged();
+                                        Toast.makeText(
+                                                        this,
+                                                        Strings.f("Using {0}", profile.name),
+                                                        Toast.LENGTH_SHORT)
+                                                .show();
+                                        rebuild();
+                                    });
+                        },
+                        "autoeq-profile")
+                .start();
+    }
+
+    private void pasteProfile(Outputs.Output output) {
+        EditText field =
+                dialogField("Preamp: -6 dB\nFilter 1: ON PK Fc 105 Hz Gain -3.2 dB Q 0.70");
+        field.setMinLines(5);
+        field.setGravity(Gravity.TOP);
+        field.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        new AlertDialog.Builder(this)
+                .setTitle(Strings.t("Paste a profile"))
+                .setView(wrap(field))
+                .setPositiveButton(
+                        Strings.t("Use it"),
+                        (d, w) -> {
+                            String text = field.getText().toString();
+                            HeadphoneEq.Profile profile =
+                                    HeadphoneEq.parse(Strings.t("Pasted profile"), text);
+                            if (profile == null) {
+                                Toast.makeText(
+                                                this,
+                                                Strings.t("No filters found in the text."),
+                                                Toast.LENGTH_LONG)
+                                        .show();
+                                return;
+                            }
+                            HeadphoneEq.assign(output.key, profile, text);
+                            SoundExtras.effectsChanged();
+                            rebuild();
+                        })
+                .setNegativeButton(Strings.t("Cancel"), null)
+                .show();
+    }
+
+    private void outputEq(LinearLayout parent) {
+        Outputs.Output output = Outputs.current();
+        paragraph(
+                parent,
+                Strings.t(
+                        "Each output gets back the equaliser you set with it connected: the"
+                                + " speaker, wired, USB and each Bluetooth device."));
+        paragraph(parent, Strings.f("Now: {0} · {1}", output.name, OutputEq.current().describe()));
+        List<String> saved = OutputEq.savedOutputs();
+        if (!saved.isEmpty()) {
+            divider(parent);
+            heading(parent, Strings.t("Saved for"));
+            for (String key : saved) {
+                OutputEq.Snapshot snapshot = OutputEq.saved(key);
+                if (snapshot == null) continue;
+                LinearLayout row = new LinearLayout(this);
+                row.setGravity(Gravity.CENTER_VERTICAL);
+                row.setMinimumHeight(style.dp(44));
+                LinearLayout labels = new LinearLayout(this);
+                labels.setOrientation(LinearLayout.VERTICAL);
+                labels.addView(
+                        style.text(OutputEq.savedName(key), 15, style.foreground, style.medium));
+                labels.addView(style.text(snapshot.describe(), 13, style.secondary, style.regular));
+                row.addView(labels, new LinearLayout.LayoutParams(0, -2, 1));
+                row.addView(
+                        small(
+                                Strings.t("Forget"),
+                                () -> {
+                                    OutputEq.forget(key);
+                                    rebuild();
+                                }));
+                parent.addView(row);
+            }
+        }
+        divider(parent);
+        action(
+                parent,
+                Strings.t("Copy code"),
+                () -> {
+                    String code = OutputEq.current().code();
+                    ClipboardManager clipboard =
+                            (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    if (clipboard != null)
+                        clipboard.setPrimaryClip(ClipData.newPlainText("BitChord equaliser", code));
+                    Toast.makeText(this, Strings.f("Copied {0}", code), Toast.LENGTH_SHORT).show();
+                });
+        action(parent, Strings.t("Paste code"), this::pasteCode);
+        paragraph(
+                parent,
+                Strings.t(
+                        "A code holds the equaliser’s sliders, tone pad and balance, so a setting"
+                                + " can be shared. The idea is from Prism by Yigder."));
+    }
+
+    private void pasteCode() {
+        EditText field = dialogField(OutputEq.CODE_PREFIX + "…");
+        field.setSingleLine(true);
+        new AlertDialog.Builder(this)
+                .setTitle(Strings.t("Paste code"))
+                .setView(wrap(field))
+                .setPositiveButton(
+                        Strings.t("Use it"),
+                        (d, w) -> {
+                            OutputEq.Snapshot snapshot =
+                                    OutputEq.Snapshot.fromCode(field.getText().toString());
+                            if (snapshot == null) {
+                                Toast.makeText(
+                                                this,
+                                                Strings.t("That isn’t an equaliser code."),
+                                                Toast.LENGTH_LONG)
+                                        .show();
+                                return;
+                            }
+                            OutputEq.apply(snapshot);
+                            handler.postDelayed(this::rebuild, 300);
+                        })
+                .setNegativeButton(Strings.t("Cancel"), null)
+                .show();
+    }
+
+    private void dj(LinearLayout parent) {
+        paragraph(
+                parent,
+                Strings.t(
+                        "Songs you queued yourself keep their place, and nothing moves in a Listen"
+                                + " Together party. Each song’s key and tempo are learned as it"
+                                + " plays; BitChord’s own Automix analyses are used too."));
+        djStatus = status(parent);
+        paragraph(parent, Strings.t("The idea is from Prism by Yigder."));
+    }
+
+    private void jamesDsp(LinearLayout parent) {
+        String installed = EffectsApps.installed(this);
+        paragraph(parent, EffectsApps.describe(installed));
+        paragraph(
+                parent,
+                Strings.t(
+                        "BitChord tells effect apps about its audio session when a song starts, so"
+                                + " JamesDSP can work on the music. The rootless JamesDSP hears"
+                                + " BitChord through Android’s audio capture, which BitChord"
+                                + " allows."));
+        action(
+                parent,
+                installed == null ? Strings.t("Get JamesDSP") : Strings.t("Open JamesDSP"),
+                () -> EffectsApps.open(this));
+        action(
+                parent,
+                Strings.t("Announce the session again"),
+                () ->
+                        Toast.makeText(
+                                        this,
+                                        EffectsApps.announce(this)
+                                                ? Strings.t(
+                                                        "Told effect apps about BitChord’s audio"
+                                                                + " session.")
+                                                : Strings.t("Play a song first."),
+                                        Toast.LENGTH_SHORT)
+                                .show());
+        paragraph(
+                parent,
+                Strings.t(
+                        "While this is on, BitChord’s equaliser is turned off and Battery saver"
+                                + " stands down, so the sound isn’t equalised twice and songs stay"
+                                + " off the audio chip, where JamesDSP couldn’t hear them."));
+    }
+
+    // ── Live status lines ────────────────────────────────────────────────────
+
+    private void refreshStatus() {
+        handler.removeCallbacks(refreshStatus);
+        if (batteryStatus != null) {
+            StringBuilder text = new StringBuilder();
+            if (android.os.Build.VERSION.SDK_INT < 29)
+                text.append(Strings.t("Needs Android 10 or newer."));
+            else {
+                List<String> formats = SoundExtras.offloadFormats(this);
+                text.append(
+                        formats.isEmpty()
+                                ? Strings.t(
+                                        "Android says this phone’s audio chip can’t play songs by"
+                                                + " itself.")
+                                : Strings.f(
+                                        "This phone’s audio chip can play: {0}.",
+                                        String.join(", ", formats)));
+            }
+            if (SoundExtras.batterySaver) {
+                SoundExtras.offloadWanted();
+                String held = SoundExtras.offloadHeldBack;
+                if (held != null) text.append(' ').append(Strings.f("Waiting: {0}.", held));
+                String decoder = SoundExtras.hostDecoder();
+                text.append(' ')
+                        .append(
+                                decoder != null
+                                        ? Strings.f("Now decoding with {0}.", decoder)
+                                        : Strings.t("No decoder in use now."));
+            }
+            batteryStatus.setText(text.toString());
+        }
+        if (bluetoothStatus != null) {
+            Outputs.Output output = Outputs.current();
+            String text;
+            if (!output.bluetooth)
+                text = Strings.f("Playing through: {0} ({1})", output.name, output.kind());
+            else {
+                String codec = Outputs.bluetoothCodec();
+                String about;
+                if (codec != null)
+                    about =
+                            Outputs.losslessCapable()
+                                    ? Strings.f(
+                                            "{0}, which BitChord already counts as lossless", codec)
+                                    : codec;
+                else if (Outputs.bluetoothCodecUnknown())
+                    about =
+                            Strings.t(
+                                    "codec unknown; allow Nearby devices on BitChord’s Sources"
+                                            + " page");
+                else about = Strings.t("codec not reported");
+                text = Strings.f("Playing through: {0} over Bluetooth ({1})", output.name, about);
+            }
+            bluetoothStatus.setText(text);
+        }
+        if (djStatus != null) {
+            DjMode.Info now = DjMode.info(DjMode.currentId());
+            String text =
+                    (now != null
+                                    ? Strings.f("This song: {0}", now.describe())
+                                    : DjMode.enabled
+                                            ? Strings.t("This song: listening…")
+                                            : Strings.t("This song: not known yet"))
+                            + " · "
+                            + Strings.f("{0} songs known", String.valueOf(DjMode.knownCount()));
+            if (!DjMode.lastArrangement.isEmpty()) text += " · " + DjMode.lastArrangement;
+            djStatus.setText(text);
+        }
+        if (batteryStatus != null || bluetoothStatus != null || djStatus != null)
+            handler.postDelayed(refreshStatus, 3_000);
+    }
+
+    // ── More widgets ─────────────────────────────────────────────────────────
+
+    private TextView status(LinearLayout parent) {
+        TextView text = style.text("", 13, style.secondary, style.regular);
+        text.setLineSpacing(style.dp(3), 1);
+        text.setPadding(0, 0, 0, style.dp(8));
+        parent.addView(text);
+        return text;
+    }
+
+    private void heading(LinearLayout parent, String value) {
+        TextView text = style.text(value, 12, style.secondary, style.semibold);
+        text.setPadding(0, style.dp(4), 0, style.dp(6));
+        parent.addView(text);
+    }
+
+    private EditText input(LinearLayout parent, String hint) {
+        EditText field = new EditText(this);
+        field.setSingleLine(true);
+        field.setTextSize(15);
+        field.setTextColor(style.foreground);
+        field.setHintTextColor(style.secondary);
+        field.setHint(hint);
+        field.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        field.setTypeface(style.regular);
+        field.setPadding(style.dp(14), style.dp(12), style.dp(14), style.dp(12));
+        field.setBackground(style.shape(style.field, 10, false));
+        field.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
+        parent.addView(field, new LinearLayout.LayoutParams(-1, -2));
+        return field;
+    }
+
+    private EditText dialogField(String hint) {
+        EditText field = new EditText(this);
+        field.setHint(hint);
+        field.setTextColor(style.foreground);
+        field.setHintTextColor(style.secondary);
+        field.setPadding(style.dp(14), style.dp(12), style.dp(14), style.dp(12));
+        return field;
+    }
+
+    private LinearLayout wrap(View view) {
+        LinearLayout wrap = new LinearLayout(this);
+        wrap.setPadding(style.dp(20), style.dp(8), style.dp(20), 0);
+        wrap.addView(view, new LinearLayout.LayoutParams(-1, -2));
+        return wrap;
+    }
+
+    private TextView small(String label, Runnable action) {
+        TextView button = style.text(label, 14, style.foreground, style.semibold);
+        button.setPadding(style.dp(14), style.dp(8), style.dp(14), style.dp(8));
+        button.setBackground(style.shape(style.field, 18, false));
+        button.setOnClickListener(view -> action.run());
+        button.setClickable(true);
+        button.setFocusable(true);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2, -2);
+        lp.leftMargin = style.dp(12);
+        button.setLayoutParams(lp);
+        return button;
     }
 }

@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.0-beta.7
+
+A testing build, on the `testing` branch only.
+
+- **Five new patches, all off by default:** **Per-download quality** (asks Standard, High or Lossless for each download; an album is asked about once), **Headphone correction** (a parametric equaliser from AutoEq's measured profiles or a pasted one, one profile per output, with a strength slider), **Equaliser per output** (BitChord's equaliser remembered for each output and shared as codes), **DJ mode** (the next song chosen for a neighbouring key and a close tempo, learned as songs play, with BitChord's Automix analyses used too) and **JamesDSP** (open it from BitChord, announce the audio session again, hand the effects over).
+- **Sleep timer fade-out reworked:** the fade length is yours to set (3 to 60 seconds), the timer's **After this song** option fades the last seconds of that song instead of stopping it at full volume, and a fade stands down the moment you play, pause, seek, change the song or set the timer again, with the volume put back.
+- **Battery saver reworked:** the page shows which formats the phone's audio chip can play and which decoder is in use. The chip isn't asked for while Sing, Headphone correction, DJ mode or JamesDSP needs the decoded audio, and a changed speed or pitch is only handed over when the chip supports it, so those keep working.
+- **Lossless addons over Bluetooth reworked:** allow them for every Bluetooth output or only for the devices you pick from those you've connected. The page shows the output in use and its codec, and says when BitChord already counts it as lossless or can't read the codec.
+- **Six more languages:** Polish, Hebrew, Italian, Thai, Vietnamese and Traditional Chinese, following BitChord's language setting.
+- **The Telegram audio cache is trimmed at most every five minutes** as songs start, instead of at every start. Applying a new cache size still trims at once.
+- **Every feature row on Patches & tweaks has its own switch,** and the new features start switched off. Lossless addons over Bluetooth has a switch of its own now, then all outputs or only the ones you allow.
+- **In Polish, Hebrew, Italian, Thai, Vietnamese and Traditional Chinese,** the Soulseek, peer and debrid download labels from 1.1.0-beta.6 are still in English.
+- **The BitChord compatibility check** says when BitChord's own build of a new version fails, instead of reporting a hook that no longer matches, and tries that build again on the next run.
+
 ## 1.1.0-beta.6 (testing build)
 
 - Renamed **Tweaks & patches** to **Patches & tweaks** and moved download

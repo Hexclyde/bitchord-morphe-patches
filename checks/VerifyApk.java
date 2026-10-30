@@ -839,7 +839,7 @@ public class VerifyApk {
                                     check(
                                             !text.getString().contains("BitChord native test"),
                                             "Telegram application version is unbranded");
-                                    if (text.getString().equals("1.1.0-beta.6")) version = true;
+                                    if (text.getString().equals("1.1.0-beta.7")) version = true;
                                 }
                                 if (cls.getType()
                                         .equals("Lapp/bitchord/telegram/TelegramActivity;")) {
@@ -958,6 +958,29 @@ public class VerifyApk {
                                 .equals(((Element) queried.item(i)).getAttributeNS(NS, "name")))
                     seesMicroG = true;
             check(seesMicroG, "BitChord may see MicroG RE and its accounts (Android 11 and up)");
+            int seesJamesDsp = 0;
+            for (int i = 0; i < queried.getLength(); i++)
+                if (queried.item(i).getParentNode().getNodeName().equals("queries")
+                        && List.of("me.timschneeberger.rootlessjamesdsp", "james.dsp")
+                                .contains(((Element) queried.item(i)).getAttributeNS(NS, "name")))
+                    seesJamesDsp++;
+            check(
+                    seesJamesDsp == 2,
+                    "BitChord may see JamesDSP, rootless or root (Android 11 and up)");
+            boolean extrasPage = false;
+            for (int i = 0; i < activities.getLength(); i++) {
+                Element activity = (Element) activities.item(i);
+                if (!activity.getAttributeNS(NS, "name")
+                        .equals("app.bitchord.telegram.ExtrasActivity")) continue;
+                extrasPage = true;
+                check(
+                        activity.getAttributeNS(NS, "exported").equals("false"),
+                        "Patches & tweaks page is not exported");
+                check(
+                        activity.getAttributeNS(NS, "label").equals("Patches & tweaks"),
+                        "Patches & tweaks page is labelled");
+            }
+            check(extrasPage, "Patches & tweaks page is declared");
             check(
                     statsFormatHooks == 1 && statsCaptureHooks == 1 && statsMeasureHooks == 1,
                     "Exactly one of each stats hook");

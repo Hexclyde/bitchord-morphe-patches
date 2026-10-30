@@ -222,8 +222,11 @@ public final class SoundExtrasTest {
 
         check(!SoundExtras.losslessAnywhere(), "lossless addons wait for lossless output");
         SoundExtras.losslessOverBluetooth = true;
+        check(!SoundExtras.losslessAnywhere(), "not while the feature is switched off");
+        SoundExtras.losslessBluetoothEnabled = true;
         check(SoundExtras.losslessAnywhere(), "unless asked");
         SoundExtras.losslessOverBluetooth = false;
+        SoundExtras.losslessBluetoothEnabled = false;
 
         // Labels.
         check(SoundExtras.semitones(0).equals("Original key"), SoundExtras.semitones(0));

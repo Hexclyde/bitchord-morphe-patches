@@ -84,3 +84,11 @@ __pycache__/
 /ui-tests/src/test/java/app/bitchord/soulseek/AudioFormatPreferences.java
 /ui-tests/src/test/java/app/bitchord/soulseek/FormatDragOrder.java
 /ui-tests/src/test/java/app/bitchord/soulseek/SoulseekTrack.java
+/ui-tests/src/test/java/app/bitchord/telegram/Outputs.java
+/ui-tests/src/test/java/app/bitchord/telegram/SleepFade.java
+/ui-tests/src/test/java/app/bitchord/telegram/HeadphoneEq.java
+/ui-tests/src/test/java/app/bitchord/telegram/OutputEq.java
+/ui-tests/src/test/java/app/bitchord/telegram/KeyTempo.java
+/ui-tests/src/test/java/app/bitchord/telegram/DjMode.java
+/ui-tests/src/test/java/app/bitchord/telegram/DownloadChoice.java
+/ui-tests/src/test/java/app/bitchord/telegram/EffectsApps.java

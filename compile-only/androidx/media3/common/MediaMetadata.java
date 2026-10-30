@@ -5,4 +5,5 @@ public final class MediaMetadata {
     public final CharSequence title = null;
     public final CharSequence artist = null;
     public final Long durationMs = null;
+    public final android.os.Bundle extras = null;
 }

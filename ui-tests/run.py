@@ -55,6 +55,17 @@ for name in (
     "Chromaprint.java",
     "AcoustId.java",
     "Fingerprint.java",
+    "ExtrasActivity.java",
+    "SoundExtras.java",
+    "Outputs.java",
+    "SleepFade.java",
+    "HeadphoneEq.java",
+    "OutputEq.java",
+    "KeyTempo.java",
+    "DjMode.java",
+    "DownloadChoice.java",
+    "EffectsApps.java",
+    "VocalCut.java",
 ):
     dest = SOURCES / "app/bitchord/telegram" / name
     dest.parent.mkdir(parents=True, exist_ok=True)

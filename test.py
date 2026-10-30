@@ -78,6 +78,14 @@ SOURCES = [
     "CredentialCipher",
     "PlaybackStats",
     "VocalCut",
+    "Outputs",
+    "SleepFade",
+    "HeadphoneEq",
+    "OutputEq",
+    "KeyTempo",
+    "DjMode",
+    "DownloadChoice",
+    "EffectsApps",
     "SoundExtras",
 ]
 TESTS = [
@@ -114,6 +122,10 @@ TESTS = [
     "VersionAlignTest",
     "MicroGSignInTest",
     "SoundExtrasTest",
+    "KeyTempoTest",
+    "HeadphoneEqTest",
+    "OutputEqTest",
+    "DjModeTest",
 ]
 
 subprocess.run(

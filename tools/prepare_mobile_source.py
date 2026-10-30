@@ -33,6 +33,11 @@ OFF_BY_DEFAULT = {
     "Sleep timer fade-out",
     "Battery saver",
     "Lossless addons over Bluetooth",
+    "Per-download quality",
+    "Headphone correction",
+    "Equaliser per output",
+    "DJ mode",
+    "JamesDSP",
 }
 
 

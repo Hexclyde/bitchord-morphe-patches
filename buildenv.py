@@ -23,6 +23,11 @@ PATCHES = [
     "Sleep timer fade-out",
     "Battery saver",
     "Lossless addons over Bluetooth",
+    "Per-download quality",
+    "Headphone correction",
+    "Equaliser per output",
+    "DJ mode",
+    "JamesDSP",
 ]
 
 TOOLS = Path(os.environ.get("MORPHE_TOOLS", ROOT / ".deps/tools"))

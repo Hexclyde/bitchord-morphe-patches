@@ -15,6 +15,12 @@ final class NativeAudio {
     final Map<Integer, Lease> leases = new HashMap<>();
     int active;
 
+    /** When the cache was last trimmed as a read started; a trim at every read was wasteful. */
+    long lastTrimNanos = Long.MIN_VALUE / 2;
+
+    /** How long between the trims that reads start, in seconds. */
+    static final int TRIM_EVERY_SECONDS = 300;
+
     static final class Lease {
         int readers;
     }
@@ -33,6 +39,7 @@ final class NativeAudio {
         synchronized (cacheGuard) {
             if (active > 0) return false;
             bridge.optimize(bridge.cacheLimitBytes());
+            lastTrimNanos = System.nanoTime();
             return true;
         }
     }
@@ -72,7 +79,12 @@ final class NativeAudio {
             long available = size - position,
                     end = position + (length < 0 ? available : Math.min(length, available));
             synchronized (cacheGuard) {
-                if (active == 0) bridge.optimize(bridge.cacheLimitBytes());
+                if (active == 0
+                        && System.nanoTime() - lastTrimNanos
+                                > TRIM_EVERY_SECONDS * 1_000_000_000L) {
+                    bridge.optimize(bridge.cacheLimitBytes());
+                    lastTrimNanos = System.nanoTime();
+                }
                 active++;
                 counted = true;
                 lease = leases.get(fileId);

@@ -51,6 +51,10 @@ def problems(source, languages):
     return found
 
 
+def method(lang):
+    return lang.replace("-", "_")
+
+
 def java(source, languages):
     lines = [
         "package app.bitchord.telegram;",
@@ -65,7 +69,7 @@ def java(source, languages):
     ]
     for lang in languages:
         lines.append(f'            case "{lang}":')
-        lines.append(f"                return {lang}();")
+        lines.append(f"                return {method(lang)}();")
     lines += [
         "            default:",
         "                return new String[0];",
@@ -75,7 +79,7 @@ def java(source, languages):
     for lang, table in languages.items():
         lines += [
             "",
-            f"    private static String[] {lang}() {{",
+            f"    private static String[] {method(lang)}() {{",
             "        return new String[] {",
         ]
         for english in source:

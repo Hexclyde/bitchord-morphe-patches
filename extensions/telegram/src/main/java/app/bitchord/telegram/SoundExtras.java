@@ -2,9 +2,14 @@ package app.bitchord.telegram;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.AudioAttributes;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.media3.common.MediaItem;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
 
@@ -16,19 +21,23 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 /**
- * The Playback extras patches, each added on its own: Sing, Pitch control, Loudness level, Sleep
- * timer fade-out, Battery saver and Lossless addons over Bluetooth. Each is called from one place
- * in BitChord's playback code and leaves it exactly as it was while its setting is at the default.
+ * The playback patches, each added on its own: Sing, Pitch control, Loudness level, Sleep timer
+ * fade-out, Battery saver, Lossless addons over Bluetooth, Per-download quality, Headphone
+ * correction, Equaliser per output, DJ mode and JamesDSP. Each is called from one place in
+ * BitChord's playback code and leaves it exactly as it was while its setting is at the default.
  *
- * <p>Sing is ported from Auris by OreoMuncher45 (see {@link VocalCut}). The pitch, loudness level
- * and battery saver settings follow ideas from Auris, Prism by Yigder and Stash by Rawnald Clark;
- * the code here is written for BitChord.
+ * <p>Sing is ported from Auris by OreoMuncher45 (see {@link VocalCut}). Pitch control, the loudness
+ * level, the sleep fade, headphone correction, the equaliser per output and DJ mode follow ideas
+ * from Prism by Yigder; per-download quality from Stash by Rawnald Clark; the code here is written
+ * for BitChord.
  */
 public final class SoundExtras {
     private SoundExtras() {}
@@ -50,10 +59,19 @@ public final class SoundExtras {
     static volatile boolean pitchEnabled = false;
     static volatile boolean loudnessEnabled = false;
     static volatile boolean sleepFade = false;
+    static volatile int sleepFadeSeconds = FADE_SECONDS;
+    static volatile boolean sleepFadeEnding = true;
     static volatile boolean batterySaver = false;
     static volatile boolean losslessOverBluetooth = false;
 
+    /** The page's switch for Lossless addons over Bluetooth; off keeps BitChord's own rule. */
+    static volatile boolean losslessBluetoothEnabled = false;
+
+    /** Bluetooth outputs allowed lossless addons one by one, by their {@link Outputs} keys. */
+    static volatile Set<String> losslessDevices = Collections.emptySet();
+
     private static volatile SharedPreferences preferences;
+    private static volatile Context app;
     private static final List<WeakReference<Player>> players = new ArrayList<>();
     private static final Map<Object, VocalCut> singers =
             Collections.synchronizedMap(new WeakHashMap<>());
@@ -86,13 +104,34 @@ public final class SoundExtras {
         return false;
     }
 
+    public static boolean downloadQualityApplied() {
+        return false;
+    }
+
+    public static boolean headphoneApplied() {
+        return false;
+    }
+
+    public static boolean outputEqApplied() {
+        return false;
+    }
+
+    public static boolean djApplied() {
+        return false;
+    }
+
+    public static boolean jamesDspApplied() {
+        return false;
+    }
+
     // ── Settings ─────────────────────────────────────────────────────────────
 
     public static void init(Context context) {
         if (preferences != null || context == null) return;
+        Context application = context.getApplicationContext();
+        app = application;
         SharedPreferences saved =
-                context.getApplicationContext()
-                        .getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+                application.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         // Preserve a user's earlier adjustments when introducing the enable switches.
         // A fresh install starts off, with a useful voice level ready when enabled.
         int previousSingLevel = clamp(saved.getInt("singLevel", 0), 0, 100);
@@ -111,9 +150,37 @@ public final class SoundExtras {
         pitchEnabled = saved.getBoolean("pitchEnabled", pitchSemitones != 0);
         loudnessEnabled = saved.getBoolean("loudnessEnabled", targetLufs != HOST_TARGET_LUFS);
         sleepFade = saved.getBoolean("sleepFade", false);
+        sleepFadeSeconds =
+                clamp(
+                        saved.getInt("sleepFadeSeconds", FADE_SECONDS),
+                        SleepFade.MIN_SECONDS,
+                        SleepFade.MAX_SECONDS);
+        sleepFadeEnding = saved.getBoolean("sleepFadeEnding", true);
         batterySaver = saved.getBoolean("batterySaver", false);
         losslessOverBluetooth = saved.getBoolean("losslessOverBluetooth", false);
+        Set<String> devices = saved.getStringSet("losslessDevices", null);
+        losslessDevices = devices == null ? Collections.emptySet() : new HashSet<>(devices);
+        // Earlier versions had no switch: a choice made there turns it on.
+        losslessBluetoothEnabled =
+                saved.getBoolean(
+                        "losslessBluetoothEnabled",
+                        losslessOverBluetooth || !losslessDevices.isEmpty());
         preferences = saved;
+        Outputs.init(application);
+        if (headphoneApplied()) HeadphoneEq.init(application);
+        if (outputEqApplied()) OutputEq.init(application);
+        if (djApplied()) DjMode.init(application);
+        if (downloadQualityApplied()) DownloadChoice.init(application);
+        if (jamesDspApplied()) EffectsApps.init(application);
+        Outputs.listen(
+                () -> {
+                    rememberBluetooth(Outputs.current());
+                    if (batterySaverApplied()) onPlayers(SoundExtras::applyOffload);
+                });
+    }
+
+    static Context app() {
+        return app;
     }
 
     private static void save(String key, Object value) {
@@ -126,20 +193,24 @@ public final class SoundExtras {
     }
 
     static void setSingLevel(int level) {
+        boolean was = singLevel > 0;
         singLevel = clamp(level, 0, 100);
         save("singLevel", singLevel);
+        if (was != singLevel > 0 && batterySaverApplied()) onPlayers(SoundExtras::applyOffload);
     }
 
     static void setSingEnabled(boolean on) {
         singEnabled = on;
         save("singEnabled", on);
         if (!on) singers.clear();
+        effectsChanged();
     }
 
     static void setPitchEnabled(boolean on) {
         pitchEnabled = on;
         save("pitchEnabled", on);
         onPlayers(SoundExtras::applyPitch);
+        effectsChanged();
     }
 
     static void setLoudnessEnabled(boolean on) {
@@ -156,6 +227,7 @@ public final class SoundExtras {
         pitchSemitones = clamp(semitones, MIN_PITCH, MAX_PITCH);
         save("pitch", pitchSemitones);
         onPlayers(SoundExtras::applyPitch);
+        if (batterySaverApplied()) onPlayers(SoundExtras::applyOffload);
     }
 
     static void setTargetLufs(int lufs) {
@@ -166,6 +238,17 @@ public final class SoundExtras {
     static void setSleepFade(boolean on) {
         sleepFade = on;
         save("sleepFade", on);
+        if (!on) SleepFade.cancel();
+    }
+
+    static void setSleepFadeSeconds(int seconds) {
+        sleepFadeSeconds = clamp(seconds, SleepFade.MIN_SECONDS, SleepFade.MAX_SECONDS);
+        save("sleepFadeSeconds", sleepFadeSeconds);
+    }
+
+    static void setSleepFadeEnding(boolean on) {
+        sleepFadeEnding = on;
+        save("sleepFadeEnding", on);
     }
 
     static void setBatterySaver(boolean on) {
@@ -174,9 +257,54 @@ public final class SoundExtras {
         onPlayers(SoundExtras::applyOffload);
     }
 
+    /** Called when another patch's setting changes what Battery saver may do. */
+    static void effectsChanged() {
+        if (batterySaverApplied()) onPlayers(SoundExtras::applyOffload);
+    }
+
+    static void setLosslessBluetoothEnabled(boolean on) {
+        losslessBluetoothEnabled = on;
+        save("losslessBluetoothEnabled", on);
+    }
+
     static void setLosslessOverBluetooth(boolean on) {
         losslessOverBluetooth = on;
         save("losslessOverBluetooth", on);
+    }
+
+    /** Allows or stops lossless addons on one Bluetooth output. */
+    static void setLosslessDevice(String outputKey, boolean on) {
+        Set<String> next = new HashSet<>(losslessDevices);
+        if (on) next.add(outputKey);
+        else next.remove(outputKey);
+        losslessDevices = next;
+        SharedPreferences saved = preferences;
+        if (saved != null)
+            saved.edit().putStringSet("losslessDevices", new HashSet<>(next)).apply();
+    }
+
+    /** Bluetooth outputs seen so far, for the page's list. */
+    static List<String> bluetoothSeen() {
+        SharedPreferences saved = preferences;
+        List<String> out = new ArrayList<>();
+        if (saved == null) return out;
+        for (String key : saved.getAll().keySet())
+            if (key.startsWith("btname.")) out.add(key.substring(7));
+        Collections.sort(out);
+        return out;
+    }
+
+    static String bluetoothName(String outputKey) {
+        SharedPreferences saved = preferences;
+        String name = saved == null ? null : saved.getString("btname." + outputKey, null);
+        return name == null ? outputKey : name;
+    }
+
+    static void rememberBluetooth(Outputs.Output output) {
+        SharedPreferences saved = preferences;
+        if (saved == null || output == null || !output.bluetooth) return;
+        if (!output.name.equals(saved.getString("btname." + output.key, null)))
+            saved.edit().putString("btname." + output.key, output.name).apply();
     }
 
     static int clamp(int value, int low, int high) {
@@ -194,7 +322,11 @@ public final class SoundExtras {
         return value == HOST_TARGET_LUFS ? Strings.f("{0} (BitChord’s level)", level) : level;
     }
 
-    // ── Sing ─────────────────────────────────────────────────────────────────
+    static String seconds(int value) {
+        return Strings.f("{0} s", String.valueOf(value));
+    }
+
+    // ── The audio tap: Sing, headphone correction and DJ mode ────────────────
 
     private static volatile Field samplesField, framesField, channelsField;
 
@@ -204,21 +336,27 @@ public final class SoundExtras {
      * samples.
      */
     public static void process(Object sink, Object block, int sampleRate) {
-        int level = singEnabled ? singLevel : 0;
-        if (level <= 0 || block == null) {
+        if (block == null) return;
+        boolean sing = singEnabled && singLevel > 0;
+        boolean headphones = headphoneApplied() && HeadphoneEq.active();
+        boolean dj = djApplied() && DjMode.enabled;
+        if (!sing && !headphones && !dj) {
             if (!singers.isEmpty()) singers.remove(sink);
             return;
         }
         try {
             if (samplesField == null) fields(block.getClass());
-            if ((int) channelsField.getInt(block) != 2) return;
+            int channels = channelsField.getInt(block);
             float[] samples = (float[]) samplesField.get(block);
             int frames = framesField.getInt(block);
-            if (samples == null || frames <= 0) return;
-            singer(sink, sampleRate)
-                    .process(samples, Math.min(samples.length, frames * 2), level / 100f);
+            if (samples == null || frames <= 0 || channels <= 0) return;
+            int count = Math.min(samples.length, frames * channels);
+            if (dj) DjMode.tap(sink, samples, count, channels, sampleRate);
+            if (sing && channels == 2)
+                singer(sink, sampleRate).process(samples, count, singLevel / 100f);
+            if (headphones) HeadphoneEq.process(sink, samples, count, channels, sampleRate);
         } catch (Exception e) {
-            HostLog.d("Sing stopped: " + e);
+            HostLog.d("Playback extras stopped on this block: " + e);
             singLevel = 0;
         }
     }
@@ -231,14 +369,17 @@ public final class SoundExtras {
      * from its position to its limit.
      */
     public static void processPcm16(Object equaliser, ByteBuffer block, int channels, int rate) {
-        int level = singEnabled ? singLevel : 0;
-        if (level <= 0 || block == null || channels != 2) {
-            if (level <= 0 && !singers.isEmpty()) singers.remove(equaliser);
+        if (block == null || channels < 1 || channels > 2) return;
+        boolean sing = singEnabled && singLevel > 0 && channels == 2;
+        boolean headphones = headphoneApplied() && HeadphoneEq.active();
+        boolean dj = djApplied() && DjMode.enabled;
+        if (!sing && !headphones && !dj) {
+            if (!sing && !singers.isEmpty()) singers.remove(equaliser);
             return;
         }
         try {
             ByteBuffer pcm = block.duplicate().order(ByteOrder.nativeOrder());
-            int start = pcm.position(), count = pcm.remaining() / 4 * 2;
+            int start = pcm.position(), count = pcm.remaining() / (2 * channels) * channels;
             if (count == 0) return;
             float[] samples = scratch.get();
             if (samples == null || samples.length < count) {
@@ -246,13 +387,16 @@ public final class SoundExtras {
                 scratch.set(samples);
             }
             for (int i = 0; i < count; i++) samples[i] = pcm.getShort(start + 2 * i) / 32768f;
-            singer(equaliser, rate).process(samples, count, level / 100f);
+            if (dj) DjMode.tap(equaliser, samples, count, channels, rate);
+            if (!sing && !headphones) return;
+            if (sing) singer(equaliser, rate).process(samples, count, singLevel / 100f);
+            if (headphones) HeadphoneEq.process(equaliser, samples, count, channels, rate);
             for (int i = 0; i < count; i++)
                 pcm.putShort(
                         start + 2 * i,
                         (short) Math.max(-32768, Math.min(32767, Math.round(samples[i] * 32768f))));
         } catch (RuntimeException e) {
-            HostLog.d("Sing stopped: " + e);
+            HostLog.d("Playback extras stopped on this block: " + e);
             singLevel = 0;
         }
     }
@@ -293,6 +437,7 @@ public final class SoundExtras {
     public static void flush(Object sink) {
         VocalCut singer = singers.get(sink);
         if (singer != null) singer.reset();
+        if (headphoneApplied()) HeadphoneEq.flush(sink);
     }
 
     // ── Loudness level ───────────────────────────────────────────────────────
@@ -309,18 +454,100 @@ public final class SoundExtras {
         return clamp(millibels + shift, -1500 + Math.min(0, shift), 300 + Math.max(0, shift));
     }
 
-    // ── Players: pitch and battery saver ─────────────────────────────────────
+    // ── Players ──────────────────────────────────────────────────────────────
 
     /** Each player BitChord builds; it keeps two, for crossfades and version swaps. */
     public static void player(Player player) {
-        init(ExtrasUi.context);
         if (player == null) return;
         synchronized (players) {
             players.removeIf(reference -> reference.get() == null);
             players.add(new WeakReference<>(player));
         }
+        if (sleepFadeApplied() || djApplied() || batterySaverApplied())
+            try {
+                player.addListener(new Watcher(player));
+            } catch (RuntimeException | LinkageError e) {
+                HostLog.d("Playback extras couldn't watch the player: " + e);
+            }
         if (pitchApplied()) applyPitch(player);
         if (batterySaverApplied()) applyOffload(player);
+    }
+
+    /** BitChord's playback service, from its start. */
+    public static void service(Object playbackService) {
+        if (playbackService instanceof Context) init((Context) playbackService);
+        if (djApplied()) DjMode.service(playbackService);
+    }
+
+    /** What the patches do as a player moves from song to song. */
+    private static final class Watcher implements Player.Listener {
+        private final Player player;
+        private final Handler handler;
+        private final Runnable endingCheck = this::checkEnding;
+
+        Watcher(Player player) {
+            this.player = player;
+            Looper looper = player.getApplicationLooper();
+            this.handler = new Handler(looper == null ? Looper.getMainLooper() : looper);
+        }
+
+        @Override
+        public void onMediaItemTransition(MediaItem mediaItem, int reason) {
+            Outputs.refresh();
+            if (djApplied()) {
+                DjMode.pollSoon();
+                DjMode.importHost();
+                if (DjMode.isSessionPlayer(player)) DjMode.arrange(player);
+            }
+            if (sleepFadeApplied()) {
+                if (reason != Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED)
+                    SleepFade.cancel();
+                scheduleEnding();
+            }
+        }
+
+        @Override
+        public void onIsPlayingChanged(boolean isPlaying) {
+            if (sleepFadeApplied()) {
+                if (!isPlaying && !SleepFade.active()) handler.removeCallbacks(endingCheck);
+                else scheduleEnding();
+            }
+        }
+
+        @Override
+        public void onPlaybackParametersChanged(PlaybackParameters parameters) {
+            if (batterySaverApplied()) applyOffload(player);
+        }
+
+        private void scheduleEnding() {
+            handler.removeCallbacks(endingCheck);
+            if (sleepFade && sleepFadeEnding && player.isPlaying())
+                handler.postDelayed(endingCheck, 1_000);
+        }
+
+        /** "Sleep after this song": start the fade so it ends with the song. */
+        private void checkEnding() {
+            try {
+                if (!sleepFade || !sleepFadeEnding || !player.isPlaying()) return;
+                if (!SleepFade.afterTrack()) {
+                    handler.postDelayed(endingCheck, 5_000);
+                    return;
+                }
+                long left = player.getDuration() - player.getCurrentPosition();
+                if (left > 0 && left <= sleepFadeSeconds * 1000L + 500) {
+                    SleepFade.fadeEnding(
+                            player, (int) Math.max(1, Math.min(sleepFadeSeconds, left / 1000)));
+                    return;
+                }
+                long wait =
+                        left > 0
+                                ? Math.max(200, Math.min(1_000, left - sleepFadeSeconds * 1000L))
+                                : 1_000;
+                handler.postDelayed(endingCheck, wait);
+            } catch (RuntimeException e) {
+                // The player is gone.
+            }
+        }
     }
 
     private interface Change {
@@ -350,6 +577,8 @@ public final class SoundExtras {
         }
     }
 
+    // ── Pitch ────────────────────────────────────────────────────────────────
+
     static float pitchFactor(int semitones) {
         return (float) Math.pow(2, semitones / 12.0);
     }
@@ -365,12 +594,44 @@ public final class SoundExtras {
         player.setPlaybackParameters(new PlaybackParameters(now == null ? 1f : now.speed, pitch));
     }
 
+    // ── Battery saver ────────────────────────────────────────────────────────
+
+    /** Why the audio chip isn't asked for right now, or null when it is. */
+    static volatile String offloadHeldBack;
+
+    /**
+     * Whether Battery saver should ask for the audio chip now: not while an effect of the patches
+     * needs the decoded audio, since the chip plays the file as it is.
+     */
+    static boolean offloadWanted() {
+        String reason = null;
+        if (batterySaver) {
+            if (singEnabled && singLevel > 0) reason = Strings.t("Sing is on");
+            else if (headphoneApplied() && HeadphoneEq.active())
+                reason = Strings.t("Headphone correction is on");
+            else if (jamesDspApplied() && EffectsApps.useJamesDsp)
+                reason = Strings.t("JamesDSP has the audio");
+            else if (djApplied() && DjMode.enabled) reason = Strings.t("DJ mode is listening");
+        }
+        offloadHeldBack = reason;
+        return batterySaver && reason == null;
+    }
+
     /**
      * Battery saver: lets the phone's audio hardware decode the song, so the processor sleeps. The
      * equaliser, Sing and BitChord's other effects don't run then. Android decides which songs can
-     * play this way; the rest play as before.
+     * play this way; the rest play as before. A changed speed or pitch needs the chip to support
+     * it, so it's asked for only then.
      */
     private static void applyOffload(Player player) {
+        boolean wanted = offloadWanted();
+        boolean changedSpeed = false;
+        try {
+            PlaybackParameters now = player.getPlaybackParameters();
+            changedSpeed = now != null && (now.speed != 1f || now.pitch != 1f);
+        } catch (RuntimeException ignored) {
+            // Not a parameter the player has.
+        }
         try {
             Method get = player.getClass().getMethod("getTrackSelectionParameters");
             Object parameters = get.invoke(player);
@@ -384,14 +645,14 @@ public final class SoundExtras {
             Object preferencesBuilder =
                     preferencesBuilderType.getDeclaredConstructor().newInstance();
             // AUDIO_OFFLOAD_MODE_ENABLED is 1 and DISABLED 0. R8 removed the setters.
-            set(preferencesBuilder, "audioOffloadMode", batterySaver ? 1 : 0);
-            set(preferencesBuilder, "isGaplessSupportRequired", batterySaver);
+            set(preferencesBuilder, "audioOffloadMode", wanted ? 1 : 0);
+            set(preferencesBuilder, "isGaplessSupportRequired", wanted);
+            set(preferencesBuilder, "isSpeedChangeSupportRequired", wanted && changedSpeed);
             Constructor<?> make = preferencesType.getDeclaredConstructor(preferencesBuilderType);
             make.setAccessible(true);
             Object offload = make.newInstance(preferencesBuilder);
-            Class<?> builderType = builder.getClass();
             Field field = null;
-            for (Class<?> c = builderType; c != null && field == null; c = c.getSuperclass())
+            for (Class<?> c = builder.getClass(); c != null && field == null; c = c.getSuperclass())
                 try {
                     field = c.getDeclaredField("audioOffloadPreferences");
                 } catch (NoSuchFieldException ignored) {
@@ -399,13 +660,19 @@ public final class SoundExtras {
                 }
             if (field == null) throw new NoSuchFieldException("audioOffloadPreferences");
             field.setAccessible(true);
+            Object current = field.get(builder);
+            if (current != null && current.equals(offload)) return;
             field.set(builder, offload);
-            Object built = builderType.getMethod("build").invoke(builder);
+            Object built = builder.getClass().getMethod("build").invoke(builder);
             for (Method set : player.getClass().getMethods())
                 if (set.getName().equals("setTrackSelectionParameters")
                         && set.getParameterTypes().length == 1) {
                     set.invoke(player, built);
-                    HostLog.d("Battery saver " + (batterySaver ? "on" : "off"));
+                    HostLog.d(
+                            "Battery saver "
+                                    + (wanted ? "on" : "off")
+                                    + (offloadHeldBack != null ? " (" + offloadHeldBack + ")" : "")
+                                    + (changedSpeed ? ", speed changed" : ""));
                     return;
                 }
             throw new NoSuchMethodException("setTrackSelectionParameters");
@@ -420,56 +687,91 @@ public final class SoundExtras {
         field.set(target, value);
     }
 
+    /** Which formats this phone's audio chip can play by itself, for the page; empty if none. */
+    static List<String> offloadFormats(Context context) {
+        List<String> out = new ArrayList<>();
+        if (Build.VERSION.SDK_INT < 29 || context == null) return out;
+        AudioManager manager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        if (manager == null) return out;
+        AudioAttributes music =
+                new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .build();
+        // Android's names for the encodings the chip can take: AAC-LC 10, MP3 9, Opus 20.
+        String[][] formats = {{"AAC", "10"}, {"MP3", "9"}, {"Opus", "20"}};
+        for (String[] format : formats) {
+            try {
+                AudioFormat audio =
+                        new AudioFormat.Builder()
+                                .setEncoding(Integer.parseInt(format[1]))
+                                .setSampleRate(44_100)
+                                .setChannelMask(AudioFormat.CHANNEL_OUT_STEREO)
+                                .build();
+                boolean yes;
+                if (Build.VERSION.SDK_INT >= 31)
+                    yes =
+                            manager.getPlaybackOffloadSupport(audio, music)
+                                    != AudioManager.PLAYBACK_OFFLOAD_NOT_SUPPORTED;
+                else yes = AudioManager.isOffloadedPlaybackSupported(audio, music);
+                if (yes) out.add(format[0]);
+            } catch (RuntimeException | LinkageError ignored) {
+                // An encoding this Android doesn't know, or an Android without the call.
+            }
+        }
+        return out;
+    }
+
+    /** The decoder BitChord says it's using, or null: none means the chip plays the song. */
+    static String hostDecoder() {
+        try {
+            Class<?> type = Class.forName("com.music.bitchord.playback.AudioOutputStatus");
+            Field field = type.getDeclaredField("current");
+            field.setAccessible(true);
+            Object flow = field.get(null);
+            Object snapshot =
+                    flow == null ? null : flow.getClass().getMethod("getValue").invoke(flow);
+            Object decoder = snapshot == null ? null : Outputs.read(snapshot, "decoderName");
+            return decoder instanceof String && !((String) decoder).isEmpty()
+                    ? (String) decoder
+                    : null;
+        } catch (Exception | LinkageError e) {
+            return null;
+        }
+    }
+
     // ── Sleep timer ──────────────────────────────────────────────────────────
 
     /**
-     * Replaces the sleep timer's pause when its time is up: the song fades out over ten seconds
-     * first, then pauses, and the volume goes back to where it was for the next time you play.
+     * Replaces the sleep timer's pause when its time is up: the song fades out first, then pauses,
+     * and the volume goes back to where it was for the next time you play.
      */
     public static void sleepPause(Player player) {
         if (!sleepFade || player == null) {
             if (player != null) player.pause();
             return;
         }
-        Looper looper = player.getApplicationLooper();
-        Handler handler = new Handler(looper == null ? Looper.getMainLooper() : looper);
-        float start = player.getVolume();
-        int steps = FADE_SECONDS * 10;
-        HostLog.d("Sleep timer: fading out");
-        handler.post(
-                new Runnable() {
-                    int step = 0;
-
-                    public void run() {
-                        try {
-                            if (!sleepFade || !player.isPlaying() || ++step >= steps) {
-                                player.pause();
-                                player.setVolume(start);
-                                return;
-                            }
-                            player.setVolume(start * fade(step, steps));
-                            handler.postDelayed(this, 100);
-                        } catch (RuntimeException e) {
-                            player.pause();
-                            player.setVolume(start);
-                        }
-                    }
-                });
+        SleepFade.pauseSoon(player, sleepFadeSeconds);
     }
 
     /** Volume at {@code step} of {@code steps}: an even fade to the ear, not to the meter. */
     static float fade(int step, int steps) {
-        float left = 1f - (float) step / steps;
-        return Math.max(0f, left * left);
+        return SleepFade.fade(step, steps);
     }
 
     // ── Lossless addons over Bluetooth ───────────────────────────────────────
 
     /**
      * BitChord leaves out addons marked lossless while the phone can't play lossless audio, such as
-     * over Bluetooth. With this on they stay in; Bluetooth then gets the phone's best codec.
+     * over Bluetooth. With this on for every Bluetooth output, or for the one in use, they stay in;
+     * Bluetooth then gets the phone's best codec. Other outputs are left to BitChord.
      */
     public static boolean losslessAnywhere() {
-        return losslessOverBluetooth;
+        if (!losslessBluetoothEnabled) return false;
+        if (losslessOverBluetooth) return true;
+        Set<String> devices = losslessDevices;
+        if (devices.isEmpty()) return false;
+        Outputs.Output output = Outputs.current();
+        return output.bluetooth && devices.contains(output.key);
     }
 }

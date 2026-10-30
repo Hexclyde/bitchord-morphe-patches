@@ -56,7 +56,7 @@ public final class NativeAudioTest {
             check(
                     new JSONObject(InternalAddon.body(bridge, bridge.url() + "/manifest.json"))
                             .getString("version")
-                            .equals("1.1.0-beta.6"),
+                            .equals("1.1.0-beta.7"),
                     "Native manifest");
             check(
                     new JSONObject(InternalAddon.body(bridge, bridge.url() + "/search?q=Test"))

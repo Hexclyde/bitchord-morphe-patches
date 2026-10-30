@@ -4,10 +4,23 @@ package androidx.media3.common;
 public interface Player {
     int STATE_BUFFERING = 2;
     int STATE_READY = 3;
+    int STATE_ENDED = 4;
+    int MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED = 3;
+
+    /** The events the patches listen to; Media3 gives each a default body. */
+    interface Listener {
+        default void onMediaItemTransition(MediaItem mediaItem, int reason) {}
+
+        default void onIsPlayingChanged(boolean isPlaying) {}
+
+        default void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {}
+    }
 
     MediaItem getCurrentMediaItem();
 
     boolean isPlaying();
+
+    boolean getPlayWhenReady();
 
     long getDuration();
 
@@ -20,6 +33,14 @@ public interface Player {
     void prepare();
 
     int getCurrentMediaItemIndex();
+
+    int getMediaItemCount();
+
+    MediaItem getMediaItemAt(int index);
+
+    void moveMediaItems(int fromIndex, int toIndex, int newIndex);
+
+    void addListener(Listener listener);
 
     android.os.Looper getApplicationLooper();
 
