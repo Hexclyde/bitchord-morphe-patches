@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "android_reference": {
+    "repository": "https://github.com/PurpleI2P/i2pd-android",
+    "revision": "df7e2420b6a5108caa7463bde420d3ab48ff2888",
+    "dependency_file": "binary/jni/fetch_deps.sh"
+  },
+  "components": [
+    {
+      "name": "i2pd",
+      "version": "3.0.0",
+      "revision": "56958857c9f00b1de2cbbe55dd3a853310e608be",
+      "archive": "i2pd-56958857c9f00b1de2cbbe55dd3a853310e608be.tar.gz",
+      "urls": ["https://codeload.github.com/PurpleI2P/i2pd/tar.gz/56958857c9f00b1de2cbbe55dd3a853310e608be"],
+      "sha256": "dbbaadd5817818f8ed4a4c1cc7171e54593ddaf59582d1ddf6dfbfc6943d27db",
+      "prefix": "i2pd-56958857c9f00b1de2cbbe55dd3a853310e608be",
+      "include": ["libi2pd", "libi2pd_client", "libi2pd_wrapper", "build", "daemon", "i18n", "tests", "contrib/certificates", "LICENSE", "README.md", "filelist.mk"],
+      "max_archive_bytes": 16777216,
+      "max_source_bytes": 67108864,
+      "required": ["LICENSE", "libi2pd/api.h", "libi2pd/Streaming.h", "libi2pd/Destination.h", "libi2pd/version.h"]
+    },
+    {
+      "name": "boost",
+      "version": "1.89.0",
+      "archive": "boost_1_89_0.tar.gz",
+      "urls": ["https://archives.boost.io/release/1.89.0/source/boost_1_89_0.tar.gz"],
+      "sha256": "9de758db755e8330a01d995b0a24d09798048400ac25c03fc5ea9be364b13c93",
+      "prefix": "boost_1_89_0",
+      "include": ["boost", "libs/program_options/src", "libs/json/src", "libs/url/src", "LICENSE_1_0.txt"],
+      "max_archive_bytes": 268435456,
+      "max_source_bytes": 536870912,
+      "required": ["LICENSE_1_0.txt", "boost/asio.hpp", "boost/program_options.hpp", "boost/json.hpp", "boost/url.hpp", "libs/json/src/src.cpp"]
+    },
+    {
+      "name": "openssl",
+      "version": "3.5.9",
+      "archive": "openssl-3.5.9.tar.gz",
+      "urls": ["https://github.com/openssl/openssl/releases/download/openssl-3.5.9/openssl-3.5.9.tar.gz", "https://www.openssl.org/source/openssl-3.5.9.tar.gz"],
+      "sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
+      "prefix": "openssl-3.5.9",
+      "include": [],
+      "max_archive_bytes": 67108864,
+      "max_source_bytes": 536870912,
+      "required": ["LICENSE.txt", "Configure", "include/openssl/ssl.h.in", "Configurations/15-android.conf"]
+    }
+  ]
+}

@@ -74,6 +74,7 @@ public final class TelegramBridge {
     final CredentialStore credentialStore;
     volatile Client client;
     volatile long generation;
+    volatile long authorizationRevision;
     volatile CompletableFuture<Void> clientClosed;
     volatile boolean restarting;
     final NativeAudio audio = new NativeAudio(this);
@@ -145,6 +146,7 @@ public final class TelegramBridge {
     }
 
     public static synchronized void init(Context context) {
+        if (!mainProcess(context)) return;
         appContext = context.getApplicationContext();
         Strings.init(appContext);
         if (instance != null || !startupError.isEmpty()) return;
@@ -158,6 +160,21 @@ public final class TelegramBridge {
         } catch (Throwable t) {
             startupError = Strings.f("Native extension could not start: {0}", t);
         }
+    }
+
+    private static boolean mainProcess(Context context) {
+        String process;
+        if (Build.VERSION.SDK_INT >= 28) process = Application.getProcessName();
+        else
+            try (InputStream input = new FileInputStream("/proc/self/cmdline")) {
+                byte[] bytes = new byte[512];
+                int length = input.read(bytes), end = 0;
+                while (end < length && bytes[end] != 0) end++;
+                process = new String(bytes, 0, end, StandardCharsets.UTF_8);
+            } catch (IOException unavailable) {
+                return false;
+            }
+        return context.getApplicationInfo().processName.equals(process);
     }
 
     public static void openSetup() {
@@ -718,7 +735,9 @@ public final class TelegramBridge {
     }
 
     private void update(TdApi.Object obj) {
+        DownloadUploadBridge.onUpdate(this, obj);
         if (obj instanceof TdApi.UpdateAuthorizationState) {
+            authorizationRevision++;
             auth = ((TdApi.UpdateAuthorizationState) obj).authorizationState;
             if (auth instanceof TdApi.AuthorizationStateWaitTdlibParameters) {
                 status =
@@ -794,7 +813,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.1.0-beta.4"));
+                            "1.1.0-beta.5"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -1352,7 +1371,7 @@ public final class TelegramBridge {
     }
 
     /** Null when the chat isn't a channel this account created; otherwise whether it's public. */
-    private Boolean ownChannel(TdApi.Chat chat) throws Exception {
+    Boolean ownChannel(TdApi.Chat chat) throws Exception {
         if (!(chat.type instanceof TdApi.ChatTypeSupergroup)) return null;
         TdApi.ChatTypeSupergroup type = (TdApi.ChatTypeSupergroup) chat.type;
         if (!type.isChannel) return null;

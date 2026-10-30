@@ -1,0 +1,720 @@
+use std::io;
+use std::net::{TcpListener, TcpStream};
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::mpsc::Sender;
+use std::sync::{Arc, RwLock};
+use std::thread;
+use std::time::{Duration, Instant};
+
+use crate::client::{Client, ClientContext, ClientOperation};
+
+use crate::message::{Message, MessageReader};
+use crate::peer::{ConnectionType, DownloadError, DownloadPeer, Peer};
+use crate::types::Download;
+use crate::utils::lock::RwLockExt;
+use crate::utils::semaphore::{Permit, Semaphore};
+use crate::{debug, error, info, trace};
+
+/// How long to wait before accepting again after a failure.
+///
+/// The failure worth pausing for is running out of file descriptors, which a
+/// busy search can reach: it does not clear by the next instruction, and
+/// retrying flat out spins a core and floods the log.
+const ACCEPT_BACKOFF: Duration = Duration::from_millis(100);
+
+const PEER_INIT_MESSAGE_CODE: u8 = 1;
+
+/// How long an accepted peer gets to send its peer-init handshake.
+const PEER_INIT_TIMEOUT: Duration = Duration::from_secs(10);
+
+const TOKEN_REGISTRATION_TIMEOUT: Duration = Duration::from_secs(10);
+
+const MAX_HANDSHAKES: usize = 128;
+
+const MAX_PEER_INIT_BYTES: usize = 4096;
+
+#[derive(Clone)]
+struct ConnectionContext {
+    client_sender: Sender<ClientOperation>,
+    client_context: Arc<RwLock<ClientContext>>,
+    own_username: String,
+}
+
+struct PeerInitData {
+    username: String,
+    connection_type: ConnectionType,
+    token: u32,
+}
+
+fn read_peer_init_message(
+    stream: &mut TcpStream,
+    reader: &mut MessageReader,
+    deadline: Instant,
+) -> io::Result<Message> {
+    // An untrusted peer gets a bounded handshake. Without this a peer that
+    // connects and stays silent parks this read forever, pinning a thread that
+    // owes us a peer init.
+    let message = loop {
+        let remaining = deadline.saturating_duration_since(Instant::now());
+        if remaining.is_zero() {
+            return Err(io::Error::new(
+                io::ErrorKind::TimedOut,
+                "peer init deadline passed",
+            ));
+        }
+        stream.set_read_timeout(Some(remaining))?;
+        reader.read_from_socket(stream)?;
+        if let Ok(Some(msg)) = reader.extract_message() {
+            break msg;
+        }
+        if reader.buffer_len() > MAX_PEER_INIT_BYTES {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                "peer init larger than any handshake",
+            ));
+        }
+    };
+
+    // Whatever this connection turns into reads on its own terms from here.
+    stream.set_read_timeout(None)?;
+    Ok(message)
+}
+
+fn parse_peer_init_message(mut message: Message) -> Option<PeerInitData> {
+    message.set_pointer(4);
+    let message_code = message.read_int8();
+
+    if message_code != PEER_INIT_MESSAGE_CODE {
+        return None;
+    }
+
+    let username = message.read_string();
+    // An untrusted peer can send any connection-type string; an unknown value
+    // must be rejected, not panic the listener accept loop.
+    let connection_type = message.read_string().parse().ok()?;
+    Some(PeerInitData {
+        username,
+        connection_type,
+        token: message.read_int32(),
+    })
+}
+
+fn wait_for_transfer_token(
+    stream: &mut TcpStream,
+    reader: &mut MessageReader,
+    deadline: Instant,
+) -> io::Result<()> {
+    while reader.buffer_len() < 4 {
+        let remaining = deadline.saturating_duration_since(Instant::now());
+        if remaining.is_zero() {
+            return Err(io::Error::new(
+                io::ErrorKind::TimedOut,
+                "transfer token deadline passed",
+            ));
+        }
+        stream.set_read_timeout(Some(remaining))?;
+        reader.read_from_socket(stream)?;
+    }
+    stream.set_read_timeout(None)?;
+    Ok(())
+}
+
+fn take_transfer_token(reader: &mut MessageReader) -> Option<u32> {
+    let buffer = reader.get_buffer();
+    Some(u32::from_le_bytes(buffer.get(0..4)?.try_into().ok()?))
+}
+
+fn wait_for_download_registration(
+    client_context: &Arc<RwLock<ClientContext>>,
+    token: u32,
+    username: &str,
+    deadline: Instant,
+) -> Option<Download> {
+    loop {
+        let download = match client_context.write_safe() {
+            Ok(mut context) => {
+                context.downloads.claim_for_peer(token, username)
+            }
+            Err(e) => {
+                error!("[listener] client context lock: {}", e);
+                return None;
+            }
+        };
+        if download.is_some() {
+            return download;
+        }
+        if Instant::now() >= deadline {
+            if let Ok(context) = client_context.read_safe() {
+                trace!(
+                    "[listener:{}] no claimable download for token {}, known tokens: {:?}",
+                    username,
+                    token,
+                    context.get_download_tokens()
+                );
+            }
+            return None;
+        }
+        thread::sleep(Duration::from_millis(50));
+    }
+}
+
+fn handle_peer_connection(
+    peer: Peer,
+    stream: TcpStream,
+    reader: MessageReader,
+    context: &ConnectionContext,
+) -> bool {
+    // The peer actor multiplexes socket reads with its mailbox on a single
+    // thread: `tick()` reads the socket, but outgoing messages (e.g. a queued
+    // QueueUpload for a download) are delivered through the mailbox between
+    // ticks. A blocking socket would park `tick()` inside `read` whenever the
+    // peer is idle, starving the mailbox and stalling downloads. Match the
+    // outbound path and drive this connection non-blocking.
+    if let Err(e) = stream.set_nonblocking(true) {
+        error!("[listener] failed to set peer stream non-blocking: {}", e);
+        return false;
+    }
+    stream.set_nodelay(true).ok();
+
+    Client::register_peer_or_fail(
+        &context.client_context,
+        peer,
+        Some(stream),
+        Some(reader),
+    )
+}
+
+fn handle_file_connection(
+    peer: Peer,
+    mut stream: TcpStream,
+    mut reader: MessageReader,
+    token: u32,
+    context: &ConnectionContext,
+    deadline: Instant,
+) {
+    trace!(
+        "[client] DownloadFromPeer token: {} peer: {:?}",
+        token, peer
+    );
+
+    if let Err(e) = wait_for_transfer_token(&mut stream, &mut reader, deadline)
+    {
+        debug!(
+            "[listener:{}:{}] no transfer token arrived: {e}",
+            peer.host, peer.port
+        );
+        return;
+    }
+
+    let download =
+        take_transfer_token(&mut reader).and_then(|transfer_token| {
+            wait_for_download_registration(
+                &context.client_context,
+                transfer_token,
+                &peer.username,
+                Instant::now() + TOKEN_REGISTRATION_TIMEOUT,
+            )
+        });
+    let download_peer = DownloadPeer::new(
+        peer.username.clone(),
+        peer.host.clone(),
+        peer.port,
+        token,
+        true,
+        context.own_username.clone(),
+    );
+
+    match download_peer.download_file(
+        context.client_context.clone(),
+        download,
+        Some(stream),
+    ) {
+        Ok((download, filename)) => {
+            info!(
+                "Successfully downloaded {} bytes to {}",
+                download.size, filename
+            );
+        }
+        Err(DownloadError::Cancelled) => {}
+        Err(e) => {
+            error!(
+                "Failed to download file from {}:{} (token: {}) - Error: {}",
+                peer.host, peer.port, token, e
+            );
+        }
+    }
+}
+
+/// Handle a `PierceFirewall` (peer init code 0): a peer we asked the server to
+/// broker (because a direct connection failed) connecting back to us. It quotes
+/// the correlation token we registered; we register the stream as its P control
+/// connection and tell the client the connection is live.
+fn handle_pierce_firewall(
+    mut message: Message,
+    stream: TcpStream,
+    reader: MessageReader,
+    context: &ConnectionContext,
+    peer_ip: &str,
+    peer_port: u16,
+) {
+    message.set_pointer(5); // skip length prefix (4) + int8 code (1)
+    let token = message.read_int32();
+
+    let username = match context.client_context.write_safe() {
+        Ok(mut ctx) => {
+            if let Some(upload) = ctx.take_brokered_upload(token) {
+                drop(ctx);
+                crate::client::Client::serve_pierced(
+                    &context.client_context,
+                    upload,
+                    stream,
+                );
+                return;
+            }
+            ctx.take_pending_connect(token)
+        }
+        Err(e) => {
+            error!("[listener] pierce firewall lock: {}", e);
+            return;
+        }
+    };
+    let Some(username) = username else {
+        debug!(
+            "[listener:{peer_ip}:{peer_port}] PierceFirewall token {token} is not pending; ignoring"
+        );
+        return;
+    };
+
+    let peer = Peer::new(
+        username.clone(),
+        ConnectionType::P,
+        peer_ip.to_string(),
+        peer_port.into(),
+        None,
+        0,
+        0,
+        0,
+    );
+    if handle_peer_connection(peer, stream, reader, context) {
+        // Inbound peers don't self-announce, so nudge the client to flush any
+        // downloads queued for this now-connected peer.
+        let _ = context
+            .client_sender
+            .send(ClientOperation::PeerConnected(username));
+    }
+}
+
+fn handle_incoming_connection(
+    mut stream: TcpStream,
+    context: ConnectionContext,
+    permit: Permit,
+) {
+    let Ok(peer_addr) = stream.peer_addr() else {
+        error!("[listener] failed to get peer address");
+        return;
+    };
+
+    let peer_ip = peer_addr.ip().to_string();
+    let peer_port = peer_addr.port();
+    let mut reader = MessageReader::new();
+
+    // A peer that dials and then goes away is routine, not an error.
+    let deadline = Instant::now() + PEER_INIT_TIMEOUT;
+    let message =
+        match read_peer_init_message(&mut stream, &mut reader, deadline) {
+            Ok(message) => message,
+            Err(e) => {
+                debug!(
+                    "[listener:{peer_ip}:{peer_port}] no peer init message: {e}"
+                );
+                return;
+            }
+        };
+    drop(permit);
+
+    // A firewalled peer brokered through the server connects back with a
+    // PierceFirewall (code 0) instead of a PeerInit (code 1).
+    if message.get_init_code() == 0 {
+        handle_pierce_firewall(
+            message, stream, reader, &context, &peer_ip, peer_port,
+        );
+        return;
+    }
+
+    let Some(init_data) = parse_peer_init_message(message) else {
+        error!(
+            "[listener:{peer_ip}:{peer_port}] Invalid or unknown peer init message"
+        );
+        return;
+    };
+
+    debug!(
+        "[listener:{peer_ip}:{peer_port}] peerInit (0)  username: {} connection_type: {} token: {}",
+        init_data.username, init_data.connection_type, init_data.token
+    );
+
+    // Register under the plain username, the same key outbound connections
+    // use. A suffixed key ("user:direct") put the same peer in the registry
+    // twice — two sockets, two threads — and made every "already connected?"
+    // check miss, so an inbound searcher still got a second, outbound
+    // connection dialled at them.
+    let peer = Peer::new(
+        init_data.username.clone(),
+        init_data.connection_type.clone(),
+        peer_ip.clone(),
+        peer_port.into(),
+        None,
+        0,
+        0,
+        0,
+    );
+
+    match init_data.connection_type {
+        ConnectionType::P => {
+            if handle_peer_connection(peer, stream, reader, &context) {
+                // Inbound peers don't self-announce, so nudge the client to
+                // flush anything queued for this now-connected peer — same as
+                // the PierceFirewall path.
+                let _ = context
+                    .client_sender
+                    .send(ClientOperation::PeerConnected(init_data.username));
+            }
+        }
+
+        ConnectionType::F => handle_file_connection(
+            peer,
+            stream,
+            reader,
+            init_data.token,
+            &context,
+            deadline,
+        ),
+        ConnectionType::D => {
+            // A child asking to hang from us. The client decides whether it
+            // serves children at all; here we only hand the socket over.
+            debug!(
+                "[listener:{peer_ip}:{peer_port}] distributed child {} offered",
+                init_data.username
+            );
+            let _ =
+                context.client_sender.send(ClientOperation::ChildConnected {
+                    username: init_data.username,
+                    stream,
+                });
+        }
+    }
+}
+
+pub struct Listen {}
+
+impl Listen {
+    /// Take the peer-listening socket, falling back to a port the operating
+    /// system picks when the configured one is already held.
+    ///
+    /// Several clients on one machine share one configured port, and losing
+    /// the race for it must not cost a session its listener: an unreachable
+    /// client is one that never receives search responses or transfers. The
+    /// caller advertises [`TcpListener::local_addr`], so peers are always told
+    /// the port that was really bound.
+    pub fn bind(port: u16) -> io::Result<TcpListener> {
+        match TcpListener::bind(("0.0.0.0", port)) {
+            Err(e) if e.kind() == io::ErrorKind::AddrInUse && port != 0 => {
+                info!(
+                    "[listener] port {port} is taken, falling back to an \
+                     ephemeral port"
+                );
+                TcpListener::bind(("0.0.0.0", 0))
+            }
+            other => other,
+        }
+    }
+
+    pub fn serve(
+        listener: &TcpListener,
+        client_sender: Sender<ClientOperation>,
+        client_context: Arc<RwLock<ClientContext>>,
+        own_username: String,
+        stopped: Arc<AtomicBool>,
+    ) {
+        info!("[listener] listening on {:?}", listener.local_addr());
+
+        let context = ConnectionContext {
+            client_sender,
+            client_context,
+            own_username,
+        };
+        let handshakes = Arc::new(Semaphore::new(MAX_HANDSHAKES));
+
+        for stream in listener.incoming() {
+            if stopped.load(Ordering::Relaxed) {
+                debug!("[listener] stopping, releasing the port");
+                return;
+            }
+            let Ok(stream) = stream else {
+                error!(
+                    "[listener] Failed to accept connection: {}",
+                    stream.unwrap_err()
+                );
+                // Running out of file descriptors does not clear by the next
+                // instruction, and retrying flat out turns one exhausted
+                // moment into a spinning core and thousands of identical log
+                // lines. Pause long enough for something to be released.
+                std::thread::sleep(ACCEPT_BACKOFF);
+                continue;
+            };
+
+            let permit = handshakes.acquire();
+            let context = context.clone();
+            // One thread per connection: the peer-init handshake blocks, and a
+            // peer that is slow to send one must not stop us accepting anybody
+            // else — a wedged accept loop makes us unreachable to every peer.
+            thread::spawn(move || {
+                handle_incoming_connection(stream, context, permit);
+            });
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::types::{DownloadMetadata, DownloadStatus};
+    use std::io::Write;
+    use std::net::TcpListener;
+    use std::sync::mpsc;
+
+    fn registered_download(token: u32) -> Download {
+        Download {
+            username: "peer".to_string(),
+            filename: "song.mp3".to_string(),
+            token,
+            size: 100,
+            download_directory: std::env::temp_dir().display().to_string(),
+            status: DownloadStatus::Queued,
+            sender: mpsc::channel().0,
+            queue_position: None,
+            metadata: DownloadMetadata::default(),
+        }
+    }
+
+    #[test]
+    fn a_cancelled_download_is_not_claimable() {
+        let client_context = Arc::new(RwLock::new(ClientContext::new()));
+        let mut download = registered_download(7);
+        download.status = DownloadStatus::Cancelled;
+        client_context.write().unwrap().add_download(download);
+
+        let claimed = wait_for_download_registration(
+            &client_context,
+            7,
+            "peer",
+            Instant::now() + Duration::from_millis(200),
+        );
+
+        assert!(claimed.is_none(), "a cancelled transfer must not restart");
+    }
+
+    #[test]
+    fn a_download_registered_during_the_wait_is_found() {
+        let client_context = Arc::new(RwLock::new(ClientContext::new()));
+        let registering = {
+            let client_context = client_context.clone();
+            std::thread::spawn(move || {
+                std::thread::sleep(Duration::from_millis(100));
+                client_context
+                    .write()
+                    .unwrap()
+                    .add_download(registered_download(7));
+            })
+        };
+
+        let download = wait_for_download_registration(
+            &client_context,
+            7,
+            "peer",
+            Instant::now() + Duration::from_secs(5),
+        );
+
+        assert!(
+            download.is_some(),
+            "a token registered during the wait must be found"
+        );
+        let _ = registering.join();
+    }
+
+    #[test]
+    fn an_unregistered_token_gives_up_at_the_deadline() {
+        let client_context = Arc::new(RwLock::new(ClientContext::new()));
+
+        let started = Instant::now();
+        let download = wait_for_download_registration(
+            &client_context,
+            7,
+            "peer",
+            started + Duration::from_millis(200),
+        );
+
+        assert!(download.is_none(), "an unknown token must not be invented");
+        assert!(
+            started.elapsed() < Duration::from_secs(2),
+            "the deadline must bound the wait"
+        );
+    }
+
+    #[test]
+    fn a_download_for_another_peer_is_not_claimed() {
+        let client_context = Arc::new(RwLock::new(ClientContext::new()));
+        client_context
+            .write()
+            .unwrap()
+            .add_download(registered_download(7));
+
+        let download = wait_for_download_registration(
+            &client_context,
+            7,
+            "impostor",
+            Instant::now() + Duration::from_millis(200),
+        );
+
+        assert!(
+            download.is_none(),
+            "a token must only match the peer it was registered for"
+        );
+    }
+
+    #[test]
+    fn an_already_claimed_download_is_not_reclaimed() {
+        let client_context = Arc::new(RwLock::new(ClientContext::new()));
+        let mut claimed = registered_download(7);
+        claimed.status = DownloadStatus::InProgress {
+            bytes_downloaded: 25,
+            total_bytes: 100,
+            speed_bytes_per_sec: 10.0,
+        };
+        client_context.write().unwrap().add_download(claimed);
+
+        let download = wait_for_download_registration(
+            &client_context,
+            7,
+            "peer",
+            Instant::now() + Duration::from_millis(200),
+        );
+
+        assert!(
+            download.is_none(),
+            "a transfer already in progress must not be claimed again"
+        );
+    }
+
+    #[test]
+    fn a_dribbling_handshake_hits_the_total_deadline() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let addr = listener.local_addr().unwrap();
+        let writer = std::thread::spawn(move || {
+            let mut socket = TcpStream::connect(addr).unwrap();
+            let _ = socket.write_all(&1000u32.to_le_bytes());
+            for _ in 0..20 {
+                if socket.write_all(&[0u8]).is_err() {
+                    return;
+                }
+                std::thread::sleep(Duration::from_millis(50));
+            }
+        });
+        let (mut stream, _) = listener.accept().unwrap();
+        let mut reader = MessageReader::new();
+
+        let started = Instant::now();
+        let result = read_peer_init_message(
+            &mut stream,
+            &mut reader,
+            started + Duration::from_millis(300),
+        );
+
+        assert!(result.is_err(), "a dribbled handshake must not succeed");
+        assert!(
+            started.elapsed() < Duration::from_secs(5),
+            "the deadline must bound the whole handshake, not each read"
+        );
+        let _ = writer.join();
+    }
+
+    #[test]
+    fn the_transfer_token_is_waited_for_across_segments() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let addr = listener.local_addr().unwrap();
+        let writer = std::thread::spawn(move || {
+            let mut socket = TcpStream::connect(addr).unwrap();
+            std::thread::sleep(Duration::from_millis(100));
+            socket.write_all(&42u32.to_le_bytes()).unwrap();
+            std::thread::sleep(Duration::from_millis(200));
+        });
+        let (mut stream, _) = listener.accept().unwrap();
+        let mut reader = MessageReader::new();
+
+        let result = wait_for_transfer_token(
+            &mut stream,
+            &mut reader,
+            Instant::now() + Duration::from_secs(5),
+        );
+
+        assert!(
+            result.is_ok(),
+            "token in a later segment must be waited for"
+        );
+        assert!(reader.buffer_len() >= 4, "token bytes must be buffered");
+        let _ = writer.join();
+    }
+
+    #[test]
+    fn waiting_for_a_transfer_token_stops_at_the_deadline() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let addr = listener.local_addr().unwrap();
+        let writer = std::thread::spawn(move || {
+            let socket = TcpStream::connect(addr).unwrap();
+            std::thread::sleep(Duration::from_millis(500));
+            drop(socket);
+        });
+        let (mut stream, _) = listener.accept().unwrap();
+        let mut reader = MessageReader::new();
+
+        let started = Instant::now();
+        let result = wait_for_transfer_token(
+            &mut stream,
+            &mut reader,
+            started + Duration::from_millis(200),
+        );
+
+        assert!(result.is_err(), "a silent peer must not park the thread");
+        assert!(
+            started.elapsed() < Duration::from_secs(2),
+            "the deadline must bound the wait"
+        );
+        let _ = writer.join();
+    }
+
+    #[test]
+    fn an_oversized_handshake_is_rejected() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let addr = listener.local_addr().unwrap();
+        let writer = std::thread::spawn(move || {
+            let mut socket = TcpStream::connect(addr).unwrap();
+            let junk = vec![0xFFu8; MAX_PEER_INIT_BYTES * 2];
+            let _ = socket.write_all(&junk);
+            std::thread::sleep(Duration::from_millis(500));
+        });
+        let (mut stream, _) = listener.accept().unwrap();
+        let mut reader = MessageReader::new();
+
+        let result = read_peer_init_message(
+            &mut stream,
+            &mut reader,
+            Instant::now() + Duration::from_secs(5),
+        );
+
+        assert!(
+            result.is_err(),
+            "an oversized handshake must be rejected, got {result:?}"
+        );
+        let _ = writer.join();
+    }
+}

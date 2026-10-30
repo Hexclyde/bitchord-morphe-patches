@@ -1,0 +1,66 @@
+[package]
+name = "beetswap"
+version = "0.5.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "Implementation of bitswap protocol for libp2p"
+authors = ["Eiger <hello@eiger.co>"]
+homepage = "https://www.eiger.co"
+readme = "README.md"
+rust-version = "1.85"
+repository = "https://github.com/eigerco/beetswap"
+# crates.io is limited to 5 keywords and 5 categories
+keywords = ["bitswap", "blockstore", "ipld", "cid"]
+# Must be one of <https://crates.io/category_slugs>
+categories = [
+  "asynchronous",
+  "cryptography::cryptocurrencies",
+  "network-programming",
+  "wasm",
+]
+
+[dependencies]
+asynchronous-codec = "0.7"
+blockstore = "0.8"
+bytes = "1"
+cid = "0.11"
+fnv = "1.0.5"
+futures-core = "0.3.31"
+futures-timer = "3.0.3"
+futures-util = "0.3"
+web-time = "1.1"
+libp2p-core = "0.43.1"
+libp2p-identity = "0.2.12"
+libp2p-swarm = "0.47"
+multihash-codetable = "0.1"
+quick-protobuf = "0.8.1"
+smallvec = "1.13.2"
+thiserror = "2"
+tracing = "0.1.41"
+unsigned-varint = "0.8"
+
+[dev-dependencies]
+anyhow = "1.0"
+clap = { version = "4.5", features = ["derive"] }
+hex = "0.4"
+libp2p = { version = "0.56.0", features = [
+  "tokio",
+  "tcp",
+  "identify",
+  "macros",
+  "noise",
+  "yamux",
+] }
+libp2p-stream = "0.4.0-alpha"
+libp2p-swarm-test = "0.6.0"
+multihash = "0.19"
+multihash-codetable = { version = "0.1", features = ["digest", "sha2"] }
+tokio = { version = "1", features = ["rt", "macros", "time", "sync"] }
+tracing-appender = "0.2.3"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+
+[features]
+wasm-bindgen = ["futures-timer/wasm-bindgen"]
+
+[package.metadata.docs.rs]
+rustdoc-args = ["--cfg", "docsrs"]

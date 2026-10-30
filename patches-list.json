@@ -1,6 +1,6 @@
 {
   "NOTE": "Generated from the verified MPP by tools/prepare_mobile_source.py; do not hand-edit.",
-  "version": "1.1.0-beta.4",
+  "version": "1.1.0-beta.5",
   "patches": [
     {
       "name": "Battery saver",
@@ -204,6 +204,33 @@
     {
       "name": "Sleep timer fade-out",
       "description": "Fades the song out over 10 seconds before the sleep timer pauses it. From Prism by Yigder. Settings are in Settings, Tweaks & patches.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.8.1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Unofficial Soulseek audio",
+      "description": "Download selected Soulseek or debrid audio to a phone folder, a configured Telegram main channel, or both. Optional debrid services use your own API keys. Choose accepted formats and their order in setup. Live playback and automatic source matching are disabled. Android 8 or newer.",
       "default": false,
       "category": null,
       "compatiblePackages": [

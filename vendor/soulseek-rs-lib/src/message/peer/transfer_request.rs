@@ -1,0 +1,18 @@
+use crate::{
+    message::{Message, MessageHandler},
+    peer::PeerMessage,
+    types::Transfer,
+};
+use std::sync::mpsc::Sender;
+
+pub struct TransferRequest;
+impl MessageHandler<PeerMessage> for TransferRequest {
+    fn get_code(&self) -> u32 {
+        40
+    }
+    fn handle(&self, message: &mut Message, sender: Sender<PeerMessage>) {
+        let transfer = Transfer::new_from_message(message);
+
+        let _ = sender.send(PeerMessage::TransferRequest(transfer));
+    }
+}

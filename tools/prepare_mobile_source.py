@@ -26,6 +26,7 @@ ON_BY_DEFAULT = {
     "Sign in with MicroG",
 }
 OFF_BY_DEFAULT = {
+    "Unofficial Soulseek audio",
     "Sing",
     "Pitch control",
     "Loudness level",
@@ -284,7 +285,7 @@ def main():
             )
         )
     print(
-        "PASS: verified MPP; exported both real patches, compatibility, experimental target and blank API options; mobile metadata "
+        "PASS: verified MPP; exported patch catalog, compatibility, experimental target and blank API options; mobile metadata "
         + ("matches." if args.check else "prepared.")
     )
 

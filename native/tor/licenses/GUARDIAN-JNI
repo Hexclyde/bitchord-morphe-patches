@@ -1,0 +1,11 @@
+Guardian Project Android JNI adapter bundled in libtor.so:
+Copyright (c) 2019, Matthew Finkel.
+Copyright (c) 2019, Hans-Christoph Steiner.
+Copyright (c) 2007-2019, The Tor Project, Inc.
+
+This native adapter is covered by the Tor 3-clause BSD license reproduced in
+TOR, which also includes notices for Tor's bundled components.
+
+JNI ABI reference source:
+https://github.com/bitmold/tor/blob/4a522a3ca491c6c04d4a44cb006b92101c42efc1/src/feature/api/org_torproject_jni_TorService.c
+The app's Java 8 shim was independently written for that ABI.

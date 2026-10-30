@@ -1,18 +1,31 @@
 # BitChord Morphe Patches (Bitchord+)
 
+> **Testing build 1.1.0-beta.5:** adds an experimental,
+> optional, download-only **Unofficial Soulseek audio** patch, paired-phone sharing,
+> direct UDP/QUIC with I2P/Tor/IPFS fallback, and Phone/Telegram/Both saving.
+> First setup chooses copy destinations and enabled audio formats in preference order.
+> Optional Real-Debrid, AllDebrid, Premiumize and TorBox link downloads use
+> independent switches and personal API keys.
+> All start disabled; see [debrid setup](docs/DEBRID.md) for the workflow and limits.
+> Import the development `.mpp` as a Local source in Morphe. It is not a published
+> source update. Public-network and phone qualification remain outstanding. See
+> [Soulseek testing instructions](docs/SOULSEEK-TESTING.md) for the implemented
+> features, setup and remaining work.
+
 [Morphe](https://morphe.software) patches for the [BitChord](https://github.com/kushagrasinghx/BitChord) Android music player. The main one, **Unofficial Telegram music**, lets BitChord search and play music from your own Telegram channels, in its original quality, entirely on your phone. No server, bot or hosting is involved.
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.4, a testing build). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.5, a testing build). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
-> I've only been able to test it on an **arm64-v8a** phone. The armeabi-v7a and x86_64 builds pass the same automated checks, but I haven't run them on a real device. If you're on one of those, please give it a try and [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems. Hearing that it works is useful too.
+> The existing Telegram integration has been tested on an **arm64-v8a** phone. The armeabi-v7a and x86_64 builds pass the same automated checks, but haven't been run on a real device. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
 
 ## Patches
 
 | Patch | What it does |
 | --- | --- |
 | **Unofficial Telegram music** | Search and play audio from your own Telegram channels and chats through TDLib, using your own account. Android 8 or newer. |
+| **Unofficial Soulseek audio** | Download selected Soulseek and paired-phone originals, plus optional debrid link downloads, with saved destination and format choices. Live playback from these sources is disabled. Android 8 or newer. |
 | **Install as Bitchord+** | Installs next to your regular BitChord as **Bitchord+**, or under a name you choose. |
 | **Sign in with MicroG** | Signs in to YouTube Music with an account that’s already in [MicroG RE](https://github.com/MorpheApp/MicroG-RE), instead of Google’s sign-in page. Only shows when MicroG RE is installed. |
 | **Sing** | Turns the lead vocal down so you can sing over the song. Ported from [Auris](https://github.com/OreoMuncher45/Auris). Off by default. |
@@ -79,7 +92,8 @@ Everything is at BitChord's own behaviour until you change it, and none of them 
 - Android 8.0 or newer
 - The original [BitChord 1.8.1 APK](https://github.com/kushagrasinghx/BitChord/releases/tag/v1.8.1) (arm64-v8a, armeabi-v7a or x86_64)
 - [Morphe Manager](https://github.com/MorpheApp/morphe-manager/releases)
-- A Telegram account and an API ID and hash from [my.telegram.org](https://my.telegram.org/apps)
+- For Telegram features: a Telegram account and an API ID and hash from [my.telegram.org](https://my.telegram.org/apps)
+- For optional debrid downloads: an enabled provider and your own account API key
 
 ## Quick start
 
@@ -97,6 +111,7 @@ Step-by-step guides:
 
 - [Installing with Morphe](docs/MOBILE.md)
 - [Connecting Telegram](docs/SETUP.md)
+- [Optional debrid downloads](docs/DEBRID.md)
 - [FAQ](docs/FAQ.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 

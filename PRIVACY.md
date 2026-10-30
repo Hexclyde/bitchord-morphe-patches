@@ -2,7 +2,7 @@
 
 The Telegram patch runs inside Bitchord+. Your phone connects to Telegram using your own account. It searches the chats you select and downloads audio as needed. No project-operated server, proxy or bot is involved.
 
-This page covers the Telegram patch only. BitChord, Morphe and Telegram have their own privacy policies.
+This page covers the Telegram integration and optional download credentials. BitChord, Morphe and each connected service have their own privacy policies. Paired-phone connection details are described in the [Nostr guide](docs/NOSTR-SIGNALING.md).
 
 ## What stays on your phone
 
@@ -37,7 +37,33 @@ Sponsored-message views are reported when their text is fully visible in the act
 
 Only with **Name untagged files by sound** on: for each untagged file, its Chromaprint fingerprint (a summary of which notes sound when, not the audio), its length and your AcoustID key are sent to `api.acoustid.org`, which also sees your IP address. Nothing else about the file, the chat or your Telegram account is sent. [AcoustID's own terms](https://acoustid.org) apply.
 
-## Account permissions
+## Optional debrid services
+
+Real-Debrid, AllDebrid, Premiumize and TorBox each have a separate switch and API
+key. All four start disabled. Saved keys are encrypted with Android Keystore in
+no-backup app storage. They are not placed in patched APK options, Telegram
+backups, file captions or Nostr messages, and the settings screen does not reveal
+a previously saved key.
+
+Testing a key, resolving a link and downloading a selected file contact the
+chosen service. That service sees the account authorization, submitted link or
+magnet, requested files and connecting IP address. A provider's download host
+also sees requests for its generated file link. The TorBox download-link API
+requires its token as a parameter on its own HTTPS API endpoint; this token is
+not attached to the subsequent media-host request. Signed file links remain in
+memory rather than being written into download journals.
+
+Provider downloads use the saved destination and format choices. Telegram or
+Both uploads the completed original to the configured private main channel.
+Saving a file does not automatically share it with paired phones. There is no
+automatic switch to another debrid account or provider after a failure.
+
+Disabling a service or changing/removing its key stops that service's local
+requests. It does not remove a cloud transfer already created in the provider's
+account; manage those transfers on the provider's account page. Saved copies
+remain where they were published. See the [debrid setup guide](docs/DEBRID.md).
+
+## Telegram account permissions
 
 **This is a normal Telegram client session, not a music-only authorization.** Choosing chats limits what the interface searches; it does not reduce the underlying session's account permissions. The patch and BitChord run in the same app and must both be trusted.
 

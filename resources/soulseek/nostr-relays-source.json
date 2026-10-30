@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "repository": "https://github.com/sesseor/nostr-relays-list",
+  "revision": "23234b5d167ba7a482b4d3d2a523e7b1f0d69050",
+  "source_url": "https://raw.githubusercontent.com/sesseor/nostr-relays-list/23234b5d167ba7a482b4d3d2a523e7b1f0d69050/relays.txt",
+  "source_sha256": "41234efd3164f869a8a15e560b1a255380a1bd2079f7ded4bee75a161b044369",
+  "bundled_sha256": "3519c442aa222672f126fd45488e21ca1fdcd0b16570a7307f20beea7e923d05",
+  "source_unique": 1746,
+  "unsupported_entries": 50,
+  "bundled_candidates": 1746,
+  "duplicate_entries": 16,
+  "supported_entries": 1762,
+  "source_entries": 1812
+}

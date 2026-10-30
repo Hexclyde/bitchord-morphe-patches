@@ -1,0 +1,30 @@
+{
+  "version": "0.4.9.14",
+  "source_repository": "https://github.com/guardianproject/tor-android",
+  "source_commit": "38ff08def31741a8211e3ed26af6cc1f92484e9c",
+  "maven_commit": "5fdb8dbcfe98d1b7e027e2f99bc086709870b005",
+  "url": "https://raw.githubusercontent.com/guardianproject/gpmaven/5fdb8dbcfe98d1b7e027e2f99bc086709870b005/info/guardianproject/tor-android/0.4.9.14/tor-android-0.4.9.14.aar",
+  "sha256": "28ff2bb6d4d42eabe57183dedd7a97fce77e8ce4b6f5af6fa03993b3ca054edd",
+  "libraries": {
+    "arm64-v8a": {
+      "sha256": "67ce86a6664c330f49037487f0931498e2a0f82099fbfaf3de7a62c32cf5e996",
+      "size": 7580256,
+      "elf_machine": 183,
+      "elf_class": 2
+    },
+    "armeabi-v7a": {
+      "sha256": "a27f80fc60f96d953c8251e9a3ba007a7da0ba941c51968962b525141d416f7c",
+      "size": 6819684,
+      "elf_machine": 40,
+      "elf_class": 1
+    },
+    "x86_64": {
+      "sha256": "dc7f0fecc47ed73397b2f7928ddf2b87d18fac7c6ba1d00d72e3d7772e5eb480",
+      "size": 8445824,
+      "elf_machine": 62,
+      "elf_class": 2
+    }
+  },
+  "jni_reference_commit": "4a522a3ca491c6c04d4a44cb006b92101c42efc1",
+  "jni_reference_repository": "https://github.com/bitmold/tor"
+}

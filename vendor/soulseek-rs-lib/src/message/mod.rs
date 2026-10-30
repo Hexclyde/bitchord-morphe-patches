@@ -1,0 +1,448 @@
+pub use crate::{debug, error, info, trace, warn};
+
+pub mod distributed;
+pub mod handlers;
+mod message_reader;
+pub mod peer;
+pub mod server;
+
+pub use handlers::{Handlers, MessageHandler};
+pub use message_reader::MessageReader;
+
+use std::str;
+
+#[derive(Debug, PartialEq, Eq)]
+#[allow(dead_code)]
+pub enum MessageType {
+    Server,
+    Peer,
+    PeerInit,
+    Distributed,
+}
+
+#[derive(Debug)]
+pub struct Error(String);
+
+impl std::fmt::Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
+impl std::error::Error for Error {}
+
+#[derive(Debug, PartialEq, Eq, Clone)]
+pub struct Message {
+    data: Vec<u8>,
+    pointer: usize,
+}
+
+impl Default for Message {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl Message {
+    #[must_use]
+    pub const fn new() -> Self {
+        Self {
+            data: Vec::new(),
+            pointer: 0,
+        }
+    }
+
+    #[must_use]
+    pub fn get_message_code(&self) -> u32 {
+        if self.data.len() < 8 {
+            return 0;
+        }
+        self.data[4..8].try_into().map_or(0, u32::from_le_bytes)
+    }
+
+    /// The one-byte code of a peer init frame (PierceFirewall 0, PeerInit 1),
+    /// the only messages whose code is not four bytes wide.
+    #[must_use]
+    pub fn get_init_code(&self) -> u8 {
+        self.data.get(4).copied().unwrap_or(0)
+    }
+
+    #[must_use]
+    pub const fn new_with_data(data: Vec<u8>) -> Self {
+        Self { data, pointer: 0 }
+    }
+    pub const fn set_pointer(&mut self, pointer: usize) {
+        self.pointer = pointer;
+    }
+
+    pub const fn get_pointer(&mut self) -> usize {
+        self.pointer
+    }
+
+    pub const fn get_size(&mut self) -> usize {
+        self.data.len()
+    }
+
+    #[must_use]
+    pub fn get_data(&self) -> Vec<u8> {
+        self.data.clone()
+    }
+
+    #[must_use]
+    pub fn get_slice(&self, from: usize, to: usize) -> Vec<u8> {
+        self.data[from..to].to_vec()
+    }
+
+    /// gets buffer with the message length prepended
+    #[must_use]
+    pub fn get_buffer(&self) -> Vec<u8> {
+        let mut b = vec![0u8; 4];
+        let length = self.data.len() as u32;
+        b[0..4].copy_from_slice(&length.to_le_bytes());
+        let mut combined = b;
+        combined.extend(&self.data);
+        combined
+    }
+
+    pub fn read_string(&mut self) -> String {
+        if self.pointer + 4 > self.data.len() {
+            self.pointer = self.data.len();
+            return String::new();
+        }
+        let size = u32::from_le_bytes([
+            self.data[self.pointer],
+            self.data[self.pointer + 1],
+            self.data[self.pointer + 2],
+            self.data[self.pointer + 3],
+        ]) as usize;
+
+        self.pointer += 4;
+        // A truncated / malformed length field from an untrusted peer must not
+        // slice past the buffer end; treat it as an empty string and consume
+        // the rest of the message.
+        if self.pointer + size > self.data.len() {
+            self.pointer = self.data.len();
+            return String::new();
+        }
+        let data = &self.data[self.pointer..self.pointer + size];
+        self.pointer += size;
+
+        match String::from_utf8(data.to_vec()) {
+            Ok(s) => s,
+            Err(_) => data.iter().map(|&b| b as char).collect::<String>(),
+        }
+    }
+
+    pub fn read_int8(&mut self) -> u8 {
+        if self.pointer >= self.data.len() {
+            return 0;
+        }
+        let val = self.data[self.pointer];
+        self.pointer += 1;
+        val
+    }
+
+    #[allow(dead_code)]
+    pub fn read_int64(&mut self) -> u64 {
+        if self.pointer + 8 > self.data.len() {
+            return 0;
+        }
+        let val = u64::from_le_bytes([
+            self.data[self.pointer],
+            self.data[self.pointer + 1],
+            self.data[self.pointer + 2],
+            self.data[self.pointer + 3],
+            self.data[self.pointer + 4],
+            self.data[self.pointer + 5],
+            self.data[self.pointer + 6],
+            self.data[self.pointer + 7],
+        ]);
+        self.pointer += 8;
+        val
+    }
+
+    pub fn read_int32(&mut self) -> u32 {
+        if self.pointer + 4 > self.data.len() {
+            return 0;
+        }
+
+        let val = u32::from_le_bytes([
+            self.data[self.pointer],
+            self.data[self.pointer + 1],
+            self.data[self.pointer + 2],
+            self.data[self.pointer + 3],
+        ]);
+        self.pointer += 4;
+        val
+    }
+
+    pub fn read_bool(&mut self) -> bool {
+        if self.pointer >= self.data.len() {
+            return false;
+        }
+        let val = self.data[self.pointer] == 1;
+        self.pointer += 1;
+        val
+    }
+
+    pub fn write_string(&mut self, val: &str) -> &mut Self {
+        let length = val.len() as u32;
+        self.data.extend_from_slice(&length.to_le_bytes());
+        self.data.extend_from_slice(val.as_bytes());
+        self
+    }
+
+    pub fn write_int8(&mut self, value: u8) -> &mut Self {
+        self.data.extend_from_slice(&value.to_le_bytes());
+        self
+    }
+
+    pub fn write_int32(&mut self, value: u32) -> &mut Self {
+        self.data.extend_from_slice(&value.to_le_bytes());
+        self
+    }
+
+    #[allow(dead_code)]
+    pub fn write_int64(&mut self, value: u64) -> &mut Self {
+        self.data.extend_from_slice(&value.to_le_bytes());
+        self
+    }
+    pub fn write_raw_bytes(&mut self, value: Vec<u8>) -> &mut Self {
+        self.data.extend_from_slice(&value);
+        self
+    }
+
+    pub fn write_bool(&mut self, value: bool) -> &mut Self {
+        self.data.push(u8::from(value));
+        self
+    }
+
+    pub fn get_message_name(
+        &self,
+        msg_type: MessageType,
+        code: u32,
+    ) -> Result<&str, Error> {
+        match msg_type {
+            MessageType::Server => match code {
+                1 => Ok("Login"),
+                2 => Ok("SetWaitPort"),
+                3 => Ok("GetPeerAddress"),
+                5 => Ok("WatchUser"),
+                6 => Ok("UnwatchUser"),
+                7 => Ok("GetUserStatus"),
+                13 => Ok("SayChatroom"),
+                14 => Ok("JoinRoom"),
+                15 => Ok("LeaveRoom"),
+                18 => Ok("ConnectToPeer"),
+                22 => Ok("MessageUser"),
+                23 => Ok("MessageAcked"),
+                26 => Ok("FileSearch"),
+                28 => Ok("SetStatus"),
+                32 => Ok("ServerPing"),
+                35 => Ok("SharedFoldersFiles"),
+                36 => Ok("GetUserStats"),
+                41 => Ok("Relogged"),
+                42 => Ok("UserSearch"),
+                64 => Ok("RoomList"),
+                69 => Ok("PrivilegedUsers"),
+                71 => Ok("HaveNoParent"),
+                83 => Ok("ParentMinSpeed"),
+                84 => Ok("ParentSpeedRatio"),
+                92 => Ok("CheckPrivileges"),
+                93 => Ok("EmbeddedMessage"),
+                100 => Ok("AcceptChildren"),
+                102 => Ok("PossibleParents"),
+                104 => Ok("WishlistInterval"),
+                121 => Ok("SendUploadSpeed"),
+                160 => Ok("ExcludedSearchPhrases"),
+                1001 => Ok("CantConnectToPeer"),
+                _ => Err(Error(format!("Unknown server message code: {code}"))),
+            },
+            MessageType::PeerInit => match code {
+                0 => Ok("PierceFireWall"),
+                1 => Ok("PeerInit"),
+                _ => Err(Error(format!(
+                    "Unknown peer init message code: {code}"
+                ))),
+            },
+            MessageType::Peer => match code {
+                1 => Ok("PeerInit"),
+                4 => Ok("GetShareFileList"),
+                5 => Ok("SharedFileListResponse"),
+                9 => Ok("FileSearchResponse"),
+                15 => Ok("UserInfoRequest"),
+                16 => Ok("UserInfoResponse"),
+                36 => Ok("FolderContentsRequest"),
+                37 => Ok("FolderContentsResponse"),
+                40 => Ok("TransferRequest"),
+                41 => Ok("TransferResponse"),
+                43 => Ok("QueueUpload"),
+                44 => Ok("PlaceInQueueResponse"),
+                46 => Ok("UploadFailed"),
+                50 => Ok("UploadDenied"),
+                51 => Ok("PlaceInQueueRequest"),
+                _ => Err(Error(format!("Unknown peer message code: {code}"))),
+            },
+            MessageType::Distributed => match code {
+                3 => Ok("SearchRequest"),
+                4 => Ok("BranchLevel"),
+                5 => Ok("BranchRoot"),
+                93 => Ok("EmbeddedMessage"),
+                _ => Err(Error(format!(
+                    "Unknown distributed message code: {code}"
+                ))),
+            },
+        }
+    }
+}
+
+/// Build a received message the way the dispatcher hands one to a handler:
+/// 8 bytes of frame header, then the fields, with the pointer parked at the
+/// start of the payload.
+#[cfg(test)]
+pub fn framed(build: impl FnOnce(&mut Message)) -> Message {
+    let mut message = Message::new();
+    message.write_raw_bytes(vec![0u8; 8]);
+    build(&mut message);
+    message.set_pointer(8);
+    message
+}
+
+#[test]
+fn test_get_buffer() {
+    let message = Message::new_with_data(
+        [
+            26, 0, 0, 0, 219, 178, 47, 28, 11, 0, 0, 0, 116, 104, 101, 32, 119,
+            101, 101, 107, 101, 110, 100,
+        ]
+        .to_vec(),
+    );
+    assert_eq!(
+        message.get_buffer(),
+        [
+            23, 0, 0, 0, 26, 0, 0, 0, 219, 178, 47, 28, 11, 0, 0, 0, 116, 104,
+            101, 32, 119, 101, 101, 107, 101, 110, 100,
+        ]
+        .to_vec()
+    );
+
+    let message = Message::new_with_data(
+        [
+            1, 0, 0, 0, 20, 0, 0, 0, 105, 110, 115, 97, 110, 101, 95, 105, 110,
+            95, 116, 104, 101, 95, 98, 114, 97, 105, 110, 50, 8, 0, 0, 0, 49,
+            51, 51, 55, 53, 49, 51, 55, 160, 0, 0, 0, 32, 0, 0, 0, 50, 101,
+            100, 102, 53, 49, 100, 48, 51, 55, 57, 52, 51, 55, 56, 102, 56, 98,
+            98, 54, 51, 49, 48, 100, 52, 54, 48, 99, 50, 50, 98, 49, 17, 0, 0,
+            0,
+        ]
+        .to_vec(),
+    );
+    assert_eq!(
+        message.get_buffer(),
+        [
+            84, 0, 0, 0, 1, 0, 0, 0, 20, 0, 0, 0, 105, 110, 115, 97, 110, 101,
+            95, 105, 110, 95, 116, 104, 101, 95, 98, 114, 97, 105, 110, 50, 8,
+            0, 0, 0, 49, 51, 51, 55, 53, 49, 51, 55, 160, 0, 0, 0, 32, 0, 0, 0,
+            50, 101, 100, 102, 53, 49, 100, 48, 51, 55, 57, 52, 51, 55, 56,
+            102, 56, 98, 98, 54, 51, 49, 48, 100, 52, 54, 48, 99, 50, 50, 98,
+            49, 17, 0, 0, 0,
+        ]
+        .to_vec()
+    );
+}
+#[test]
+fn test_read_string() {
+    let data = vec![
+        5, 0, 0, 0, // size = 5
+        72, 101, 108, 108, 111, // "Hello"
+    ];
+    let mut test_data = Message::new_with_data(data);
+    assert_eq!(test_data.read_string(), "Hello");
+}
+
+// Robustness against malformed / truncated network input. A remote server or
+// peer is untrusted and can send a message whose declared field lengths exceed
+// the bytes actually present; parsing must not panic (which would unwind out of
+// the actor job and permanently kill a thread-pool worker).
+#[test]
+fn read_string_with_oversized_length_does_not_panic() {
+    // size = 0xFFFFFFFF but no payload bytes follow.
+    let mut msg = Message::new_with_data(vec![255, 255, 255, 255]);
+    assert_eq!(msg.read_string(), "");
+}
+
+#[test]
+fn read_string_with_truncated_payload_does_not_panic() {
+    // size = 10 but only 2 payload bytes present.
+    let mut msg = Message::new_with_data(vec![10, 0, 0, 0, 65, 66]);
+    assert_eq!(msg.read_string(), "");
+}
+
+#[test]
+fn read_string_with_missing_length_prefix_does_not_panic() {
+    // Only 2 bytes: not even a full 4-byte length prefix.
+    let mut msg = Message::new_with_data(vec![1, 2]);
+    assert_eq!(msg.read_string(), "");
+}
+
+#[test]
+fn get_message_code_on_short_message_does_not_panic() {
+    // A zero-length frame drains to exactly the 4-byte length prefix, leaving
+    // no room for a code after it.
+    let msg = Message::new_with_data(vec![0, 0, 0, 0]);
+    assert_eq!(msg.get_message_code(), 0);
+    assert_eq!(msg.get_init_code(), 0);
+}
+
+#[test]
+fn an_init_frame_reads_its_one_byte_code() {
+    let init = Message::new_with_data(
+        Message::new().write_int8(1).write_string("ab").get_buffer(),
+    );
+    assert_eq!(init.get_init_code(), 1);
+    assert_ne!(init.get_message_code(), 1);
+}
+
+#[test]
+fn read_int_primitives_are_bounds_checked() {
+    let mut msg = Message::new_with_data(vec![1, 2]);
+    assert_eq!(msg.read_int64(), 0);
+    let mut msg = Message::new_with_data(vec![]);
+    assert_eq!(msg.read_int8(), 0);
+    assert!(!msg.read_bool());
+}
+
+#[test]
+fn test_read_string_2() {
+    let data = vec![
+        50, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 81, 170, 162, 77, 32, 0, 0, 0,
+        101, 102, 99, 97, 51, 52, 102, 99, 52, 99, 56, 98, 101, 56, 98, 55,
+        101, 102, 51, 56, 97, 102, 50, 54, 50, 52, 100, 101, 53, 52, 54, 52, 0,
+    ];
+    let mut test_data = Message::new_with_data(data);
+    test_data.set_pointer(9);
+    assert_eq!(test_data.read_string(), "");
+}
+
+#[test]
+fn test_read_string_invalid_utf82() {
+    let data = [
+        128, 0, 0, 0, 103, 58, 92, 100, 105, 115, 107, 52, 92, 115, 101, 109,
+        105, 114, 97, 109, 105, 115, 92, 99, 104, 105, 108, 108, 44, 32, 100,
+        117, 98, 44, 32, 100, 111, 119, 110, 98, 101, 97, 116, 44, 32, 97, 109,
+        98, 105, 101, 110, 116, 92, 118, 97, 114, 105, 111, 117, 115, 32, 97,
+        114, 116, 105, 115, 116, 115, 92, 112, 111, 116, 116, 32, 104, 101, 97,
+        100, 122, 32, 45, 32, 100, 111, 112, 101, 32, 115, 109, 111, 107, 105,
+        110, 180, 98, 101, 97, 116, 115, 32, 107, 98, 115, 32, 49, 50, 56, 32,
+        49, 57, 57, 54, 92, 48, 53, 32, 45, 32, 98, 108, 117, 101, 32, 116,
+        114, 97, 105, 110, 46, 109, 112, 51,
+    ]
+    .to_vec();
+
+    let mut test_data = Message::new_with_data(data);
+    let str = test_data.read_string();
+    assert_eq!(
+        str,
+        r"g:\disk4\semiramis\chill, dub, downbeat, ambient\various artists\pott headz - dope smokin´beats kbs 128 1996\05 - blue train.mp3"
+    );
+}

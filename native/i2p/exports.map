@@ -1,0 +1,4 @@
+{
+  global: Java_app_bitchord_soulseek_I2pNative_*;
+  local: *;
+};

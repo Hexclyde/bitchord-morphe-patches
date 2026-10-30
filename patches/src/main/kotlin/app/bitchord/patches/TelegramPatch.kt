@@ -174,13 +174,18 @@ private val telegramResources = resourcePatch {
         document("AndroidManifest.xml").use { document ->
             val doc = document
             val app = doc.getElementsByTagName("application").item(0) as org.w3c.dom.Element
-            val overlayPermission = doc.createElement("uses-permission")
-            overlayPermission.setAttributeNS(
-                ANDROID,
-                "android:name",
-                "android.permission.HIDE_OVERLAY_WINDOWS",
-            )
-            doc.documentElement.insertBefore(overlayPermission, app)
+            val overlayName = "android.permission.HIDE_OVERLAY_WINDOWS"
+            val permissions = doc.getElementsByTagName("uses-permission")
+            if (
+                (0 until permissions.length).none {
+                    (permissions.item(it) as org.w3c.dom.Element).getAttributeNS(ANDROID, "name") ==
+                        overlayName
+                }
+            ) {
+                val overlayPermission = doc.createElement("uses-permission")
+                overlayPermission.setAttributeNS(ANDROID, "android:name", overlayName)
+                doc.documentElement.insertBefore(overlayPermission, app)
+            }
             check(!app.hasAttributeNS(ANDROID, "networkSecurityConfig")) {
                 "Unexpected network policy in target APK"
             }
@@ -1201,14 +1206,20 @@ val nativeTelegramPatch =
                 mutableClassDefBy(downloadClass).methods.single { it.name == "invokeSuspend" }
             val directCode = directDownload.implementation!!.instructions.toList()
             check(directDownload.implementation!!.registerCount == 29)
-            val downloadIndex = 468
-            check(
-                directCode[downloadIndex].opcode == Opcode.NEW_INSTANCE &&
-                    ((directCode[downloadIndex] as ReferenceInstruction).reference.toString() ==
-                        "Lokhttp3/Request\$Builder;")
-            ) {
-                "Direct download branch changed"
-            }
+            // Locate the original HTTP branch semantically: an independent source patch may
+            // have inserted its own native dispatch before it without changing host registers.
+            val downloadAnchors =
+                directCode.indices.filter { index ->
+                    directCode[index].opcode == Opcode.NEW_INSTANCE &&
+                        (directCode[index] as? ReferenceInstruction)?.reference.toString() ==
+                            "Lokhttp3/Request\$Builder;" &&
+                        directCode.subList(index, minOf(index + 140, directCode.size)).any {
+                            ((it as? ReferenceInstruction)?.reference as? StringReference)
+                                ?.string == "fetched "
+                        }
+                }
+            check(downloadAnchors.size == 1) { "Direct download branch changed" }
+            val downloadIndex = downloadAnchors.single()
             check(
                 directCode.subList(downloadIndex, downloadIndex + 140).any {
                     ((it as? ReferenceInstruction)?.reference as? StringReference)?.string ==

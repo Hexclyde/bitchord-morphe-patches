@@ -2,7 +2,7 @@
 """Build the patch bundle (.mpp)."""
 
 from pathlib import Path
-import os, subprocess, zipfile, hashlib, shutil, fcntl, tempfile, uuid
+import os, subprocess, zipfile, hashlib, shutil, fcntl, tempfile, uuid, struct, json
 
 from buildenv import (
     BUNDLE_NAME,
@@ -19,6 +19,13 @@ JDK = jdk()
 JAVA, JAVAC = str(JDK / "bin/java"), str(JDK / "bin/javac")
 ANDROID = TOOLS / "android.jar"
 R8 = TOOLS / "r8-latest.jar"
+SOULSEEK_NATIVE = Path(os.environ.get("SOULSEEK_NATIVE", ROOT / ".deps/soulseek"))
+DOWNLOAD_RUNTIMES = {
+    "i2p": (ROOT / ".deps/i2p", "libbitchord_i2p.so"),
+    "tor": (ROOT / ".deps/tor", "libtor.so"),
+    "ipfs": (ROOT / ".deps/ipfs", "libbitchord_ipfs.so"),
+    "direct": (ROOT / ".deps/direct", "libbitchord_direct.so"),
+}
 OUT = ROOT / "build"
 OUT.mkdir(exist_ok=True)
 lock = open(ROOT / ".build.lock", "w")
@@ -59,6 +66,8 @@ for name in (
     "patch-dex",
     "bundle",
     "compile-api",
+    "soulseek-classes",
+    "soulseek-dex",
 ):
     shutil.rmtree(OUT / name, ignore_errors=True)
     (OUT / name).mkdir()
@@ -116,6 +125,48 @@ run(
     OUT / "extension-dex",
     OUT / "extension.jar",
 )
+# Keep the Soulseek extension independent: selecting it never injects TDLib or
+# Telegram-only classes, and native sources can be selected together safely.
+soulseek_sources = sorted((ROOT / "extensions/soulseek/src/main/java").rglob("*.java"))
+if not soulseek_sources:
+    raise RuntimeError("Soulseek extension sources are missing")
+run(
+    JAVAC,
+    "-J-Xshare:off",
+    "-encoding",
+    "UTF-8",
+    "--release",
+    "8",
+    "-Xlint:-options",
+    "-cp",
+    os.pathsep.join(
+        map(str, [ANDROID, TOOLS / "annotation.jar", stdlib, OUT / "compile-api.jar"])
+    ),
+    "-d",
+    OUT / "soulseek-classes",
+    *soulseek_sources,
+)
+jar(OUT / "soulseek.jar", OUT / "soulseek-classes")
+run(
+    JAVA,
+    "-Xshare:off",
+    "-Xmx2g",
+    "-cp",
+    R8,
+    "com.android.tools.r8.D8",
+    "--release",
+    "--min-api",
+    "26",
+    "--lib",
+    ANDROID,
+    "--lib",
+    stdlib,
+    "--lib",
+    OUT / "compile-api.jar",
+    "--output",
+    OUT / "soulseek-dex",
+    OUT / "soulseek.jar",
+)
 run(
     TOOLS / "kotlinc/bin/kotlinc",
     "-Xskip-metadata-version-check",
@@ -152,11 +203,24 @@ shutil.copytree(OUT / "patch-classes", bundle, dirs_exist_ok=True)
 for dex in (OUT / "patch-dex").glob("*.dex"):
     shutil.copy2(dex, bundle / dex.name)
 (bundle / "extensions").mkdir(exist_ok=True)
+relay_resources = bundle / "soulseek"
+relay_resources.mkdir(exist_ok=True)
+for name in (
+    "nostr-relays.txt",
+    "nostr-relays-source.json",
+    "stun-servers.txt",
+    "stun-servers-source.json",
+):
+    shutil.copy2(ROOT / "resources/soulseek" / name, relay_resources / name)
 # Morphe's extension input may be a multidex ZIP; use one DEX here and fail if it grows.
 dexes = list((OUT / "extension-dex").glob("*.dex"))
 if len(dexes) != 1:
     raise RuntimeError("Expected one extension DEX")
 shutil.copy2(dexes[0], bundle / "extensions/telegram.mpe")
+soulseek_dexes = list((OUT / "soulseek-dex").glob("*.dex"))
+if len(soulseek_dexes) != 1:
+    raise RuntimeError("Expected one Soulseek extension DEX")
+shutil.copy2(soulseek_dexes[0], bundle / "extensions/soulseek.mpe")
 for abi in ("arm64-v8a", "armeabi-v7a", "x86_64"):
     libs = bundle / "lib" / abi
     libs.mkdir(parents=True, exist_ok=True)
@@ -167,7 +231,100 @@ for abi in ("arm64-v8a", "armeabi-v7a", "x86_64"):
         TOOLS / "libcxx" / abi / "libc++_shared.so",
     ]:
         shutil.copy2(src, libs / src.name)
+# Check the ELF architecture before packaging each cross-compiled Android input.
+for abi, machine in (("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)):
+    native = SOULSEEK_NATIVE / abi / "libbitchord_soulseek.so"
+    if not native.is_file():
+        raise RuntimeError(
+            f"Missing Soulseek native library: {native}. Run tools/build_soulseek_native.py first."
+        )
+    data = native.read_bytes()
+    if (
+        len(data) < 20
+        or data[:4] != b"\x7fELF"
+        or struct.unpack_from("<H", data, 18)[0] != machine
+    ):
+        raise RuntimeError(f"Wrong Soulseek ELF architecture: {abi}")
+    shutil.copy2(native, bundle / "lib" / abi / native.name)
+
+runtime_assets = bundle / "runtimes/assets"
+asset_paths = []
+
+
+def runtime_asset(source, relative):
+    target = runtime_assets / relative
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, target)
+    asset_paths.append(relative)
+
+
+for runtime, (base, library) in DOWNLOAD_RUNTIMES.items():
+    if runtime == "tor":
+        inventory = json.loads((ROOT / "native/tor/PINNED.json").read_text())[
+            "libraries"
+        ]
+    else:
+        inventory = json.loads((base / "build-hashes.json").read_text())
+    for abi, machine in (("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)):
+        source = base / "lib" / abi / library
+        if not source.is_file():
+            source = base / abi / library
+        data = source.read_bytes()
+        expected = inventory[abi]
+        if (
+            len(data) < 64
+            or data[:4] != b"\x7fELF"
+            or struct.unpack_from("<H", data, 18)[0] != machine
+            or hashlib.sha256(data).hexdigest() != expected["sha256"]
+            or len(data) != expected.get("bytes", expected.get("size"))
+        ):
+            raise RuntimeError(f"Invalid {runtime} native input: {abi}")
+        shutil.copy2(source, bundle / "lib" / abi / library)
+    notice_root = (
+        (ROOT / "native/tor/licenses") if runtime == "tor" else base / "licenses"
+    )
+    notices = sorted(path for path in notice_root.rglob("*") if path.is_file())
+    if not notices:
+        raise RuntimeError(f"Missing {runtime} runtime notices")
+    for source in notices:
+        runtime_asset(
+            source,
+            "bitchord/runtimes/licenses/"
+            + runtime
+            + "/"
+            + source.relative_to(notice_root).as_posix(),
+        )
+    pin = (
+        (ROOT / "native/tor/PINNED.json")
+        if runtime == "tor"
+        else base / "build-hashes.json"
+    )
+    runtime_asset(pin, "bitchord/runtimes/" + runtime + "-inputs.json")
+    for name in ("dependencies.json", "runtime-manifest.json", "provenance.json"):
+        source = base / name
+        if source.is_file():
+            runtime_asset(source, "bitchord/runtimes/" + runtime + "-" + name)
+
+certificate_root = ROOT / ".deps/i2p/assets/certificates"
+certificates = sorted(path for path in certificate_root.rglob("*") if path.is_file())
+certificate_hashes = json.loads((ROOT / ".deps/i2p/runtime-manifest.json").read_text())[
+    "certificates"
+]
+if not certificates or len(certificates) != len(certificate_hashes):
+    raise RuntimeError("Incomplete I2P bootstrap certificates")
+for source in certificates:
+    relative = source.relative_to(certificate_root).as_posix()
+    if (
+        hashlib.sha256(source.read_bytes()).hexdigest()
+        != certificate_hashes["certificates/" + relative]
+    ):
+        raise RuntimeError("Changed I2P bootstrap certificate: " + relative)
+    runtime_asset(source, "bitchord/i2p/certificates/" + relative)
+(bundle / "runtimes/assets.list").write_text("\n".join(sorted(asset_paths)) + "\n")
 shutil.copytree(ROOT / "licenses", bundle / "licenses", dirs_exist_ok=True)
+shutil.copy2(
+    ROOT / "vendor/soulseek-rs-lib/LICENSE", bundle / "licenses/soulseek-rs-MIT.txt"
+)
 (bundle / "META-INF").mkdir(exist_ok=True)
 (bundle / "META-INF/MANIFEST.MF").write_text(
     f"Manifest-Version: 1.0\nName: BitChord Morphe Patches\nVersion: {VERSION}\nPatcher-Version: {PATCHER_VERSION}\n\n"

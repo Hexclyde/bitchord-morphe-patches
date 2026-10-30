@@ -1,0 +1,42 @@
+use std::collections::HashMap;
+
+use crate::message::Message;
+use std::sync::mpsc::Sender;
+
+pub trait MessageHandler<Op>: Send {
+    fn get_code(&self) -> u32;
+    fn handle(&self, message: &mut Message, sender: Sender<Op>);
+}
+pub struct Handlers<Op> {
+    handlers: HashMap<u32, Box<dyn MessageHandler<Op> + Send>>,
+}
+
+impl<Op> Default for Handlers<Op> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl<Op> Handlers<Op> {
+    #[must_use]
+    pub fn new() -> Self {
+        Self {
+            handlers: HashMap::new(),
+        }
+    }
+
+    pub fn register_handler<H>(&mut self, handler: H) -> &mut Self
+    where
+        H: 'static + MessageHandler<Op> + Send + Sync,
+    {
+        self.handlers.insert(handler.get_code(), Box::new(handler));
+        self
+    }
+    #[must_use]
+    pub fn get_handler(
+        &self,
+        code: u32,
+    ) -> Option<&(dyn MessageHandler<Op> + Send)> {
+        self.handlers.get(&code).map(|v| &**v)
+    }
+}

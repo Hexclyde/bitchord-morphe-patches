@@ -1,6 +1,7 @@
 /.deps/
 /build/
 /.build.lock
+/native/soulseek/target/
 /ui-tests/target/
 /ui-tests/aar-libs/
 /ui-tests/src/test/java/org/

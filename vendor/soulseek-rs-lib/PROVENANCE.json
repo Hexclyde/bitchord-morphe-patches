@@ -1,0 +1,19 @@
+{
+  "repository": "https://github.com/michel/soulseek-rs",
+  "revision": "d20e433a8979068acd80f4d4242125beaf4825ee",
+  "library": "soulseek-rs-lib",
+  "version": "19.1.0",
+  "license": "MIT",
+  "upstream_license_sha256": "af27931999cdcda3b34e2d19075f9e6e6993112566b1f805d2e3bf194a1d10a7",
+  "modifications": [
+    "Standalone Cargo manifest with embedded feature and pinned libc dependency.",
+    "Embedded builds suppress upstream logs; application reports redacted operation errors.",
+    "Embedded builds cap peers at 32, retained search responses at 50 and retained search files at 1000.",
+    "Embedded decompression ceilings: 8 MiB ordinary payloads; 16 MiB listings.",
+    "Embedded peer frame and receive-buffer ceilings: 8 MiB; length arithmetic checked on 32-bit targets.",
+    "Embedded search parser bounds usernames, filenames, file counts and attributes before retention; aggregate cap enforced exactly.",
+    "Download worker stop/counter API enables JNI to await teardown before file cleanup.",
+    "Open-file limit comparison normalized for Android 32-bit rlim_t.",
+    "Embedded pending peer write backlog capped at 1 MiB."
+  ]
+}

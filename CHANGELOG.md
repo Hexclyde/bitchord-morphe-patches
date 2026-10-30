@@ -1,5 +1,44 @@
 # Changelog
 
+## 1.1.0-beta.5 (testing build)
+
+- Added **Unofficial Soulseek audio**, a download-only Morphe patch for BitChord
+  1.8.1. Manual Addons downloads stay bound to the exact selected peer and login
+  session, before the host can reuse an unrelated file by filename.
+- Added first setup for **Phone**, **Telegram main channel** or **Both**, followed
+  by enabled formats and their order. Completed audio is inspected before saving;
+  filenames do not prove its recording or original lossless provenance.
+- Added optional **Real-Debrid**, **AllDebrid**, **Premiumize** and **TorBox**
+  downloads with independent switches, all off by default, and protected personal
+  API keys. Resolve a supported HTTPS link or magnet, select audio entries and
+  save them through the same Phone/Telegram/Both publisher. Provider-side cloud
+  requests can remain after local cancellation; the app does not automatically
+  switch paid providers or use them as a music search catalogue.
+- Added explicit paired-phone file sharing with signed encrypted Nostr
+  offer/request/grant authorization. App keys are separate from Telegram accounts.
+- Added retained-socket public STUN discovery and UDP punching with
+  certificate-pinned QUIC as the primary paired-download path. Embedded I2P,
+  Tor onion and paired IPFS Bitswap runtimes provide eligible fallback routes.
+- Added durable per-item journals, verified chunk recovery, pause/cancel/resume,
+  unchanged-byte phone publication and confirmed original-document Telegram
+  uploads. Both destinations retain separate status and captured settings.
+- Added on-phone relay benchmarking with a bundled validated candidate pool,
+  bounded checks and no GPS/GeoIP requests.
+- Kept live playback and automatic Soulseek replacement blocked. Completed
+  local downloads remain available through the normal local-file workflow.
+- Added local transport, JNI, isolated-service, authorization, format, staging,
+  recovery and publication checks, alongside Morphe APK inspections.
+
+The native transports are built for arm64-v8a, armeabi-v7a and x86_64. This
+bundle has not been published. Real-phone NAT behavior, public I2P/Tor bootstrap,
+background operation, live Telegram delivery and debrid account/queue behavior
+still require qualification. Provider checks use synthetic responses without
+genuine account keys.
+IPFS currently uses paired Noise/TCP without DHT, relay or DCUtR and is not a
+universal NAT fallback. Ordinary Soulseek peers do not gain overlay endpoints.
+Album/playlist catalog integration and automatic provider discovery remain pending;
+the current picker queues multiple explicitly selected local files.
+
 ## 1.1.0-beta.4
 
 A testing build, on the `testing` branch only.
