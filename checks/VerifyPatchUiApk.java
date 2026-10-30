@@ -71,7 +71,10 @@ public final class VerifyPatchUiApk {
                             : "";
             for (Method method : cls.getMethods()) {
                 if (method.getImplementation() == null) continue;
-                for (Instruction instruction : method.getImplementation().getInstructions()) {
+                List<Instruction> code = new ArrayList<>();
+                method.getImplementation().getInstructions().forEach(code::add);
+                for (int index = 0; index < code.size(); index++) {
+                    Instruction instruction = code.get(index);
                     if (!(instruction instanceof ReferenceInstruction reference)) continue;
                     if (reference.getReference() instanceof StringReference text
                             && cls.getType().equals(base + "ExtrasActivity;")
@@ -86,6 +89,27 @@ public final class VerifyPatchUiApk {
                                                         "Lcom/music/bitchord/ui/screens/SettingsSheetKt;")
                                         && method.getName().startsWith("SettingsScreen-"),
                                 "Entry uses BitChord Settings screen");
+                        MethodReference anchor =
+                                index > 0
+                                                && code.get(index - 1)
+                                                        instanceof ReferenceInstruction before
+                                                && before.getReference()
+                                                        instanceof MethodReference previous
+                                        ? previous
+                                        : null;
+                        check(
+                                anchor != null
+                                        && anchor.getDefiningClass().equals(cls.getType())
+                                        && (anchor.getName().startsWith("SearchableSettingsGroup-")
+                                                || anchor.getName().equals("SettingsCategoryList")),
+                                "Entry follows the supported main settings anchor");
+                        List<Integer> arguments = registers(code.get(index - 1));
+                        int expectedComposer =
+                                arguments.get(
+                                        anchor.getName().equals("SettingsCategoryList") ? 1 : 4);
+                        check(
+                                registers(instruction).equals(List.of(expectedComposer)),
+                                "Settings entry receives the live host composer");
                     }
                     if (call.getDefiningClass().equals(base + "ExtrasUi;")
                             && call.getName().equals("start")) starts++;
@@ -93,11 +117,29 @@ public final class VerifyPatchUiApk {
                             && call.getName().equals("visibleState")) {
                         filters++;
                         check(
-                                cls.getType()
-                                                .equals(
-                                                        "Lcom/music/bitchord/ui/screens/DiscordScreenKt;")
+                                cls.getType().startsWith("Lcom/music/bitchord/ui/screens/")
                                         && method.getName().equals("SourcesScreen"),
                                 "Filtering applies only to collected Sources UI state");
+                        check(index >= 2, "Source state filter follows collection");
+                        Instruction collect = code.get(index - 2);
+                        check(
+                                collect instanceof ReferenceInstruction collected
+                                        && collected.getReference()
+                                                instanceof MethodReference callTo
+                                        && callTo.getName().equals("collectAsStateWithLifecycle")
+                                        && callTo.getReturnType()
+                                                .equals("Landroidx/compose/runtime/MutableState;")
+                                        && code.get(index - 1).getOpcode()
+                                                == Opcode.MOVE_RESULT_OBJECT,
+                                "Filter wraps the collected Sources state");
+                        check(
+                                registers(instruction)
+                                        .equals(
+                                                List.of(
+                                                        ((OneRegisterInstruction)
+                                                                        code.get(index - 1))
+                                                                .getRegisterA())),
+                                "Source filter receives the collected state register");
                     }
                     if (common.contains(simple)) {
                         check(
@@ -143,5 +185,23 @@ public final class VerifyPatchUiApk {
         }
         check(declared == (enabled ? 1 : 0), "Shared settings Activity declared once");
         System.out.println("PASS: " + checks + " shared settings/source-isolation checks");
+    }
+
+    static List<Integer> registers(Instruction instruction) {
+        if (instruction instanceof RegisterRangeInstruction range) {
+            List<Integer> result = new ArrayList<>();
+            for (int i = 0; i < range.getRegisterCount(); i++)
+                result.add(range.getStartRegister() + i);
+            return result;
+        }
+        if (instruction instanceof FiveRegisterInstruction fixed)
+            return List.of(
+                            fixed.getRegisterC(),
+                            fixed.getRegisterD(),
+                            fixed.getRegisterE(),
+                            fixed.getRegisterF(),
+                            fixed.getRegisterG())
+                    .subList(0, fixed.getRegisterCount());
+        throw new AssertionError("Expected invoke register encoding");
     }
 }

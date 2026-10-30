@@ -79,6 +79,12 @@ for name in (
     "AudioFormatPreferences.java",
     "FormatDragOrder.java",
     "SoulseekTrack.java",
+    "DebridSetupActivity.java",
+    "DebridCredentials.java",
+    "DebridProvider.java",
+    "DebridModels.java",
+    "DebridHttp.java",
+    "DebridTlsSockets.java",
 ):
     dest = SOURCES / "app/bitchord/soulseek" / name
     dest.parent.mkdir(parents=True, exist_ok=True)

@@ -103,7 +103,21 @@ public final class SoulseekDownloadRouteTest {
                 "flac".equals(route.extension) && "audio/flac".equals(route.mimeType),
                 "Selected format");
         check(route.offlineHls == null, "Original is not a streaming manifest");
-        check(!route.taggable(), "Download route does not request metadata work");
+        if (Boolean.getBoolean("host.v19")) {
+            boolean removed = false;
+            try {
+                route.getClass().getDeclaredField("taggable");
+            } catch (NoSuchFieldException expected) {
+                removed = true;
+            }
+            check(
+                    removed,
+                    "1.9 route has no taggable field; selected-file tagger hook owns bypass");
+        } else {
+            java.lang.reflect.Field taggable = route.getClass().getDeclaredField("taggable");
+            taggable.setAccessible(true);
+            check(!taggable.getBoolean(route), "Legacy route does not request metadata work");
+        }
         check(route.write instanceof SuspendLambda, "R8 constructor writer cast is satisfied");
         check(route.write.getArity() == 3, "Host writer arity");
         SoulseekDownloadRoute.Writer writer = (SoulseekDownloadRoute.Writer) route.write;

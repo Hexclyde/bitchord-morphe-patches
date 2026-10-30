@@ -47,25 +47,50 @@ public final class SoulseekDownloadRoute {
 
             Class<?> routeType = Class.forName("com.music.bitchord.download.Downloads$Route");
             Class<?> manifestType = Class.forName("com.google.android.gms.tasks.zzr");
-            Constructor<?> constructor =
-                    routeType.getConstructor(
-                            String.class,
-                            String.class,
-                            String.class,
-                            String.class,
-                            manifestType,
-                            Function3.class);
-            Object route =
-                    constructor.newInstance(
-                            track.format,
-                            track.mime,
-                            "Soulseek " + track.format.toUpperCase(java.util.Locale.ROOT),
-                            track.format.toUpperCase(java.util.Locale.ROOT),
-                            null,
-                            new Writer(url));
-            Field taggable = routeType.getDeclaredField("taggable");
-            taggable.setAccessible(true);
-            taggable.setBoolean(route, false);
+            Object[] arguments = {
+                track.format,
+                track.mime,
+                "Soulseek " + track.format.toUpperCase(java.util.Locale.ROOT),
+                track.format.toUpperCase(java.util.Locale.ROOT),
+                null,
+                new Writer(url)
+            };
+            Constructor<?> constructor;
+            boolean legacy;
+            try {
+                constructor =
+                        routeType.getConstructor(
+                                String.class,
+                                String.class,
+                                String.class,
+                                String.class,
+                                manifestType,
+                                Function3.class);
+                legacy = true;
+            } catch (NoSuchMethodException changed) {
+                // In the 1.9 release R8 retained the offline-HLS default mask and removed
+                // the constant taggable field. A zero mask preserves all explicit values.
+                constructor =
+                        routeType.getConstructor(
+                                String.class,
+                                String.class,
+                                String.class,
+                                String.class,
+                                manifestType,
+                                Function3.class,
+                                int.class);
+                arguments = java.util.Arrays.copyOf(arguments, 7);
+                arguments[6] = 0;
+                legacy = false;
+            }
+            Object route = constructor.newInstance(arguments);
+            if (legacy) {
+                Field taggable = routeType.getDeclaredField("taggable");
+                taggable.setAccessible(true);
+                taggable.setBoolean(route, false);
+            }
+            // The selected-file MediaTagger hook also bypasses metadata work in both
+            // releases; it is required on 1.9 where the per-route field was removed.
             return route;
         } catch (IOException error) {
             throw error;

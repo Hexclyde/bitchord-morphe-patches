@@ -150,6 +150,7 @@ subprocess.run(
                 "coordination",
                 "download-policy",
                 "download-route",
+                "download-route-v19",
                 "relay-policy",
                 "relay-discovery",
                 "bulk-downloads",

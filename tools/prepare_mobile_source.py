@@ -132,11 +132,14 @@ def validate_metadata(manifest, patches, source, provenance):
         app = patch["compatiblePackages"][0]
         if app["packageName"] != "com.music.bitchord" or app["apkFileType"] != "APK":
             raise ValueError("Unexpected target app/file type")
-        if (
-            len(app["targets"]) != 1
-            or app["targets"][0]["version"] != "1.8.1"
-            or app["targets"][0]["minSdk"] != 26
-            or not app["targets"][0]["isExperimental"]
+        versions = (
+            ["1.8.1", "1.9"]
+            if patch["name"] == "Unofficial Soulseek audio"
+            else ["1.8.1"]
+        )
+        if [target["version"] for target in app["targets"]] != versions or any(
+            target["minSdk"] != 26 or not target["isExperimental"]
+            for target in app["targets"]
         ):
             raise ValueError("Review changed mobile compatibility before releasing")
         expected_keys = {

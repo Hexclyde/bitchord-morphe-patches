@@ -67,6 +67,29 @@ class MobileSourceTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.validate()
 
+    def test_only_soulseek_can_advertise_the_reviewed_19_target(self):
+        soulseek = next(
+            p
+            for p in self.patches["patches"]
+            if p["name"] == "Unofficial Soulseek audio"
+        )
+        targets = soulseek["compatiblePackages"][0]["targets"]
+        self.assertEqual(["1.8.1", "1.9"], [t["version"] for t in targets])
+        other = next(p for p in self.patches["patches"] if p is not soulseek)
+        other["compatiblePackages"][0]["targets"].append(copy.deepcopy(targets[1]))
+        with self.assertRaises(ValueError):
+            self.validate()
+
+    def test_unreviewed_soulseek_host_is_rejected(self):
+        soulseek = next(
+            p
+            for p in self.patches["patches"]
+            if p["name"] == "Unofficial Soulseek audio"
+        )
+        soulseek["compatiblePackages"][0]["targets"][1]["version"] = "1.9.1"
+        with self.assertRaises(ValueError):
+            self.validate()
+
     def test_api_hash_seed_cannot_be_added(self):
         native = next(
             p

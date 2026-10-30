@@ -201,6 +201,30 @@ public final class VerifySoulseekApk {
                     "Exactly one matching Soulseek host hook: " + hook);
 
         if (enabled) {
+            ClassDef route = classes.get("Lcom/music/bitchord/download/Downloads$Route;");
+            check(route != null, "Host download route retained");
+            List<String> routeParameters =
+                    List.of(
+                            "Ljava/lang/String;",
+                            "Ljava/lang/String;",
+                            "Ljava/lang/String;",
+                            "Ljava/lang/String;",
+                            "Lcom/google/android/gms/tasks/zzr;",
+                            "Lkotlin/jvm/functions/Function3;");
+            List<String> maskedParameters = new ArrayList<>(routeParameters);
+            maskedParameters.add("I");
+            boolean maskedRoute = false;
+            boolean legacyRoute = false;
+            for (Method method : route.getMethods())
+                if (method.getName().equals("<init>")) {
+                    maskedRoute |= method.getParameterTypes().equals(maskedParameters);
+                    legacyRoute |= method.getParameterTypes().equals(routeParameters);
+                }
+            check(maskedRoute ^ legacyRoute, "Exactly one supported route constructor ABI");
+            boolean taggable = false;
+            for (Field field : route.getFields())
+                taggable |= field.getName().equals("taggable") && field.getType().equals("Z");
+            check(taggable == legacyRoute, "Route metadata policy matches inspected host ABI");
             ClassDef guard = classes.get(PREFIX + "SoulseekDataSource$Routing;");
             check(guard != null, "Download-only playback guard included");
             for (Method method : guard.getMethods())
@@ -230,6 +254,9 @@ public final class VerifySoulseekApk {
             for (Method method : downloads.getMethods())
                 if (method.getName().equals("access$routeFor")) routing = method;
             check(routing != null, "Selected-file route method retained");
+            check(
+                    routing.getImplementation().getRegisterCount() == (maskedRoute ? 18 : 25),
+                    "Selected-file hook retains the inspected route register ABI");
             List<Instruction> routeCode = code(routing);
             check(
                     routeCode.get(1).getOpcode() == Opcode.IF_EQZ
@@ -254,6 +281,58 @@ public final class VerifySoulseekApk {
                                     && VerifyApk.branchTarget(body, 1) == body.get(9),
                             "Coroutine metadata resumes bypass selected-file guard safely");
                 }
+            for (ClassDef cls : classes.values())
+                if (!cls.getType().startsWith(PREFIX))
+                    for (Method method : cls.getMethods()) {
+                        List<Instruction> body = code(method);
+                        for (int i = 0; i < body.size(); i++) {
+                            if (!namedCall(body.get(i), PREFIX + "SoulseekDownloads;", "fetch"))
+                                continue;
+                            check(
+                                    method.getImplementation().getRegisterCount()
+                                            == (maskedRoute ? 27 : 29),
+                                    "Direct download hook retains inspected coroutine registers");
+                            check(
+                                    body.get(i) instanceof FiveRegisterInstruction call
+                                            && call.getRegisterCount() == 4
+                                            && call.getRegisterC() == 4
+                                            && call.getRegisterD() == 5
+                                            && call.getRegisterE() == 6
+                                            && call.getRegisterF() == 7,
+                                    "Native download receives URL, output, progress and job"
+                                            + " context");
+                            check(
+                                    i >= 2
+                                            && namedCall(
+                                                    body.get(i - 2),
+                                                    "Lkotlinx/coroutines/CoroutineScope;",
+                                                    "getCoroutineContext"),
+                                    "Download hook obtains the original coroutine job context");
+                            check(
+                                    body.get(i + 2).getOpcode() == Opcode.RETURN_OBJECT
+                                            && body.get(i - 7).getOpcode() == Opcode.IF_EQZ
+                                            && VerifyApk.branchTarget(body, i - 7)
+                                                    == body.get(i + 3)
+                                            && body
+                                                    .subList(i + 3, Math.min(i + 35, body.size()))
+                                                    .stream()
+                                                    .anyMatch(
+                                                            instruction ->
+                                                                    instruction.getOpcode()
+                                                                                    == Opcode
+                                                                                            .NEW_INSTANCE
+                                                                            && instruction
+                                                                                    instanceof
+                                                                                    ReferenceInstruction
+                                                                                                    request
+                                                                            && request.getReference()
+                                                                                    .toString()
+                                                                                    .equals(
+                                                                                            "Lokhttp3/Request$Builder;")),
+                                    "Owned URL exits before host HTTP; other URLs reach original"
+                                            + " request");
+                        }
+                    }
         }
 
         ClassDef source = classes.get("Lcom/music/bitchord/data/sources/AddonSource;");
@@ -391,6 +470,9 @@ public final class VerifySoulseekApk {
                     }
                 }
             if (enabled) {
+                check(
+                        zip.stream().noneMatch(entry -> entry.getName().startsWith("lib/x86/")),
+                        "No partial unsupported 32-bit x86 ABI remains in the patched APK");
                 Set<String> inputAbis = new HashSet<>();
                 zip.stream()
                         .map(e -> e.getName())

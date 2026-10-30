@@ -23,7 +23,11 @@ private val soulseekTarget =
         packageName = "com.music.bitchord",
         apkFileType = ApkFileType.APK,
         appIconColor = 0xFF8944,
-        targets = listOf(AppTarget(version = "1.8.1", isExperimental = true, minSdk = 26)),
+        targets =
+            listOf(
+                AppTarget(version = "1.8.1", isExperimental = true, minSdk = 26),
+                AppTarget(version = "1.9", isExperimental = true, minSdk = 26),
+            ),
     )
 
 private object SoulseekApplicationCreate :
@@ -38,11 +42,26 @@ private class SoulseekPatchMarker
 
 private val soulseekResources = resourcePatch {
     execute {
-        val abis =
+        val supportedAbis = setOf("arm64-v8a", "armeabi-v7a", "x86_64")
+        val originalAbis =
             listApkEntries("lib/").filter { it.endsWith(".so") }.map { it.split('/')[1] }.toSet()
-        check(abis.isNotEmpty() && abis.all { it in setOf("arm64-v8a", "armeabi-v7a", "x86_64") }) {
-            "Unsupported Soulseek APK architecture: $abis"
+        // The official 1.9 universal APK includes a partial x86 library set. There is no
+        // 32-bit x86 Soulseek/transfer runtime, so remove that ABI in full: retaining even
+        // the host's partial set could make Android select an ABI without our runtimes.
+        val universal19 =
+            packageMetadata.versionName == "1.9" && originalAbis == supportedAbis + "x86"
+        check(
+            originalAbis.isNotEmpty() && (originalAbis.all { it in supportedAbis } || universal19)
+        ) {
+            "Unsupported Soulseek APK architecture: $originalAbis"
         }
+        if (universal19) {
+            val unsupportedEntries = listApkEntries("lib/x86/")
+            check(unsupportedEntries.isNotEmpty()) { "Universal APK x86 entries are missing" }
+            for (path in unsupportedEntries) delete(path)
+            println("Removed unsupported 32-bit x86 libraries; kept all three supported ABIs")
+        }
+        val abis = originalAbis.intersect(supportedAbis)
         for (abi in abis) {
             for (library in
                 listOf(
@@ -238,24 +257,31 @@ val nativeSoulseekPatch =
             }
             val routeType = "Lcom/music/bitchord/download/Downloads\$Route;"
             val routeClass = classDefBy(routeType)
+            val routeParameters =
+                listOf(
+                    "Ljava/lang/String;",
+                    "Ljava/lang/String;",
+                    "Ljava/lang/String;",
+                    "Ljava/lang/String;",
+                    "Lcom/google/android/gms/tasks/zzr;",
+                    "Lkotlin/jvm/functions/Function3;",
+                )
+            // 1.9 removed taggable and retained the R8-optimised default-argument mask.
+            // Keep the two inspected host ABIs explicit; the runtime mirrors this choice.
+            val currentRoute =
+                routeClass.methods.any {
+                    it.name == "<init>" && it.parameterTypes == routeParameters + "I"
+                }
             check(
                 routeClass.methods.any {
-                    it.name == "<init>" &&
-                        it.parameterTypes ==
-                            listOf(
-                                "Ljava/lang/String;",
-                                "Ljava/lang/String;",
-                                "Ljava/lang/String;",
-                                "Ljava/lang/String;",
-                                "Lcom/google/android/gms/tasks/zzr;",
-                                "Lkotlin/jvm/functions/Function3;",
-                            )
-                }
+                    it.name == "<init>" && it.parameterTypes == routeParameters
+                } || currentRoute
             ) {
                 "Download route constructor changed"
             }
             check(
-                routeClass.fields.any { it.name == "taggable" && it.type == "Z" } &&
+                (currentRoute ||
+                    routeClass.fields.any { it.name == "taggable" && it.type == "Z" }) &&
                     routeClass.fields.any {
                         it.name == "write" &&
                             it.type == "Lkotlin/coroutines/jvm/internal/SuspendLambda;"
@@ -302,7 +328,7 @@ val nativeSoulseekPatch =
                 }
             check(
                 selectedRoute.accessFlags and 8 != 0 &&
-                    selectedRoute.implementation!!.registerCount == 25
+                    selectedRoute.implementation!!.registerCount == if (currentRoute) 18 else 25
             ) {
                 "Explicit download route registers changed"
             }
@@ -462,7 +488,9 @@ val nativeSoulseekPatch =
             val download =
                 mutableClassDefBy(downloadType).methods.single { it.name == "invokeSuspend" }
             val code = download.implementation!!.instructions.toList()
-            check(download.implementation!!.registerCount == 29) { "Download IO registers changed" }
+            check(download.implementation!!.registerCount == if (currentRoute) 27 else 29) {
+                "Download IO registers changed"
+            }
             val anchors =
                 code.indices.filter { index ->
                     code[index].opcode == Opcode.NEW_INSTANCE &&
@@ -475,6 +503,51 @@ val nativeSoulseekPatch =
                 }
             check(anchors.size == 1) { "Native download insertion point changed" }
             val downloadIndex = anchors.single()
+            // Both supported APKs use v1 for this merged coroutine and v0 for its IO scope
+            // at this branch. Validate those live values before reusing its scratch locals.
+            val scopeRead =
+                code
+                    // An independently selected Telegram hook may precede this same HTTP site.
+                    .subList(maxOf(0, downloadIndex - 32), downloadIndex)
+                    .filterIsInstance<ReferenceInstruction>()
+            check(
+                scopeRead.any {
+                    val field = it.reference as? FieldReference
+                    it.opcode == Opcode.IGET_OBJECT &&
+                        field?.definingClass == downloadType &&
+                        field.name == "L\$0" &&
+                        (it as TwoRegisterInstruction).registerA == 0 &&
+                        it.registerB == 1
+                } &&
+                    scopeRead.any {
+                        it.opcode == Opcode.CHECK_CAST &&
+                            it.reference.toString() == "Lkotlinx/coroutines/CoroutineScope;"
+                    }
+            ) {
+                "Download IO coroutine scope changed"
+            }
+            for ((fieldName, castType) in
+                listOf(
+                    "\$path" to "Ljava/lang/String;",
+                    "\$app" to "Ljava/io/OutputStream;",
+                    "\$payload" to "Lkotlin/jvm/functions/Function2;",
+                )) {
+                check(
+                    (downloadIndex until minOf(downloadIndex + 40, code.size - 1)).any { index ->
+                        val field =
+                            (code[index] as? ReferenceInstruction)?.reference as? FieldReference
+                        code[index].opcode == Opcode.IGET_OBJECT &&
+                            field?.definingClass == downloadType &&
+                            field.name == fieldName &&
+                            (code[index] as TwoRegisterInstruction).registerB == 1 &&
+                            code[index + 1].opcode == Opcode.CHECK_CAST &&
+                            (code[index + 1] as ReferenceInstruction).reference.toString() ==
+                                castType
+                    }
+                ) {
+                    "Download IO capture changed: $fieldName"
+                }
+            }
             check(
                 classDefBy("Lkotlinx/coroutines/JobKt;").methods.any {
                     it.name == "ensureActive" &&

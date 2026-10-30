@@ -84,6 +84,12 @@ __pycache__/
 /ui-tests/src/test/java/app/bitchord/soulseek/AudioFormatPreferences.java
 /ui-tests/src/test/java/app/bitchord/soulseek/FormatDragOrder.java
 /ui-tests/src/test/java/app/bitchord/soulseek/SoulseekTrack.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DebridSetupActivity.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DebridCredentials.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DebridProvider.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DebridModels.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DebridHttp.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DebridTlsSockets.java
 /ui-tests/src/test/java/app/bitchord/telegram/Outputs.java
 /ui-tests/src/test/java/app/bitchord/telegram/SleepFade.java
 /ui-tests/src/test/java/app/bitchord/telegram/HeadphoneEq.java

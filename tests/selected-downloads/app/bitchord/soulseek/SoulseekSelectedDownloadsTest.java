@@ -61,6 +61,37 @@ public final class SoulseekSelectedDownloadsTest {
         return ((ConcurrentHashMap<?, ?>) field.get(null)).size();
     }
 
+    static void observeCancellationBeforeInterrupt(String id) throws Exception {
+        Field field = SoulseekSelectedDownloads.class.getDeclaredField("TASKS");
+        field.setAccessible(true);
+        ConcurrentHashMap<?, ?> pending = (ConcurrentHashMap<?, ?>) field.get(null);
+        Object active = pending.get(PREFIX + id);
+        Field thread = active.getClass().getDeclaredField("thread");
+        thread.setAccessible(true);
+        Thread actual = (Thread) thread.get(active);
+        thread.set(
+                active,
+                new Thread() {
+                    @Override
+                    public void interrupt() {
+                        try {
+                            for (Object task : pending.values()) {
+                                Field cancelled = task.getClass().getDeclaredField("cancelled");
+                                cancelled.setAccessible(true);
+                                check(
+                                        ((java.util.concurrent.atomic.AtomicBoolean)
+                                                        cancelled.get(task))
+                                                .get(),
+                                        "Every pending task is cancelled before the worker wakes");
+                            }
+                        } catch (ReflectiveOperationException failure) {
+                            throw new AssertionError(failure);
+                        }
+                        actual.interrupt();
+                    }
+                });
+    }
+
     static void idle() throws Exception {
         long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
         while ((tasks() != 0 || worker().getActiveCount() != 0 || !worker().getQueue().isEmpty())
@@ -242,6 +273,7 @@ public final class SoulseekSelectedDownloadsTest {
         check(
                 tasks() == 33 && SoulseekSelectedDownloads.status().contains("queue is full"),
                 "Queue overflow fails closed without a hidden task");
+        observeCancellationBeforeInterrupt(id(1));
         SoulseekSelectedDownloads.cancelAll();
         idle();
         check(

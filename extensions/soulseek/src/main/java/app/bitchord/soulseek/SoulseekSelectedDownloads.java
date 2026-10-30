@@ -237,8 +237,11 @@ public final class SoulseekSelectedDownloads {
     }
 
     public static void cancelAll() {
-        for (Task task : TASKS.values()) {
-            task.cancelled.set(true);
+        Task[] pending = TASKS.values().toArray(new Task[0]);
+        // Mark the whole queue before waking the active worker. Otherwise it can finish
+        // its interrupted task and open a pending transfer before that task is marked.
+        for (Task task : pending) task.cancelled.set(true);
+        for (Task task : pending) {
             Thread thread = task.thread;
             if (thread != null) thread.interrupt();
         }

@@ -114,10 +114,36 @@ internal val extrasSettingsPatch = bytecodePatch {
                 val ref = (code[i] as? ReferenceInstruction)?.reference as? MethodReference
                 ref?.definingClass == screen.type && ref.name.startsWith("SearchableSettingsGroup-")
             }
-        check(groups.size >= 3) { "Settings groups not found" }
-        val composer = registers(code[groups.first()])[4]
+        // 1.9 inlines SearchableSettingsGroup and opens individual categories as
+        // separate pages. Its category list is on the main page only; putting
+        // our entry after it does not repeat it inside each category or depend
+        // on whether the account group matched the current search.
+        val categories =
+            code.indices.filter { i ->
+                val ref = (code[i] as? ReferenceInstruction)?.reference as? MethodReference
+                ref?.definingClass == screen.type &&
+                    ref.name == "SettingsCategoryList" &&
+                    ref.parameterTypes ==
+                        listOf(
+                            "Lkotlin/jvm/functions/Function1;",
+                            "Landroidx/compose/runtime/ComposerImpl;",
+                            "I",
+                        ) &&
+                    ref.returnType == "V"
+            }
+        val insertion: Int
+        val composer: Int
+        if (groups.isNotEmpty()) {
+            check(groups.size >= 3 && categories.isEmpty()) { "Settings groups changed" }
+            insertion = groups.first()
+            composer = registers(code[insertion])[4]
+        } else {
+            check(categories.size == 1) { "Main settings category list is not unique" }
+            insertion = categories.single()
+            composer = registers(code[insertion])[1]
+        }
         method.addInstruction(
-            groups.first() + 1,
+            insertion + 1,
             "invoke-static/range {v$composer .. v$composer}, $UI->tweaksSection(Landroidx/compose/runtime/ComposerImpl;)V",
         )
         val group =
@@ -164,13 +190,34 @@ internal val extrasSettingsPatch = bytecodePatch {
             "invoke-static/range {p0 .. p0}, $UI->start(Landroid/content/Context;)V",
         )
 
-        // R8 merged SourcesScreen into DiscordScreenKt in the pinned BitChord APK.
+        // R8 merges SourcesScreen into different ScreenKt classes in 1.8.1/1.9.
         // Wrap only its collected UI state. The registry, playback resolver and search
         // retain their original source configurations and enabled state.
+        val sourceOwners = mutableListOf<String>()
+        classDefForEach { candidate ->
+            if (
+                candidate.type.startsWith("Lcom/music/bitchord/ui/screens/") &&
+                    candidate.methods.any {
+                        it.name == "SourcesScreen" &&
+                            it.returnType == "V" &&
+                            it.parameterTypes ==
+                                listOf(
+                                    "Landroidx/compose/foundation/layout/PaddingValuesImpl;",
+                                    "Lkotlin/jvm/functions/Function1;",
+                                    "Lkotlin/jvm/functions/Function0;",
+                                    "Lkotlin/jvm/functions/Function0;",
+                                    "Lkotlin/jvm/functions/Function0;",
+                                    "Landroidx/compose/ui/Modifier;",
+                                    "Landroidx/compose/runtime/ComposerImpl;",
+                                    "I",
+                                )
+                    }
+            )
+                sourceOwners.add(candidate.type)
+        }
+        check(sourceOwners.size == 1) { "Sources UI entry is not unique" }
         val sources =
-            mutableClassDefBy("Lcom/music/bitchord/ui/screens/DiscordScreenKt;").methods.single {
-                it.name == "SourcesScreen"
-            }
+            mutableClassDefBy(sourceOwners.single()).methods.single { it.name == "SourcesScreen" }
         val sourceCode = sources.implementation!!.instructions.toList()
         val reads =
             sourceCode.indices.filter { i ->
