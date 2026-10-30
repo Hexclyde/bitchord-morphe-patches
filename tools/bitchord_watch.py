@@ -2,12 +2,14 @@
 """Find new BitChord versions to test, and report the results as issues.
 
     bitchord_watch.py targets [--force]        JSON list of builds to test
+    bitchord_watch.py failed STAGE RESULTS_DIR record that BitChord's build or download failed
     bitchord_watch.py report RESULTS_DIR       open or update one issue per version
 
 BitChord develops each version on a vX.Y.Z branch and tags it when released.
 A published release is tested from its APKs; an unreleased version branch is
 tested from a build of its latest commit. Versions up to the one this patch
-already supports (PROVENANCE.json app_version) are skipped.
+already supports (PROVENANCE.json app_version) are skipped. A build that failed
+on BitChord's side is tried again on the next run.
 
 Uses GITHUB_TOKEN when set; report also needs GITHUB_REPOSITORY.
 """
@@ -111,7 +113,8 @@ def targets(force):
     for version in sorted(found, key=version_key, reverse=True)[:3]:
         target = dict(found[version], version=version)
         last = tested.get(version, {}).get("state", {})
-        if last.get("kind") == target["kind"] and last.get("id") == target["id"]:
+        same = last.get("kind") == target["kind"] and last.get("id") == target["id"]
+        if same and not last.get("build_failed"):
             continue
         result.append(target)
     return result
@@ -125,13 +128,21 @@ def render(target, result, run_url):
         "id": target["id"],
         "passed": result["passed"],
     }
+    if result.get("build_failed"):
+        state["build_failed"] = True
     source = (
         f"release [{target['ref']}](https://github.com/{UPSTREAM}/releases/tag/{target['ref']})"
         if target["kind"] == "release"
         else f"branch [{target['ref']}](https://github.com/{UPSTREAM}/tree/{target['ref']}) "
         f"at [`{target['id'][:7]}`](https://github.com/{UPSTREAM}/commit/{target['id']})"
     )
-    if result["passed"]:
+    if result.get("build_failed"):
+        next_step = (
+            "BitChord's own build or download failed, so the patch couldn't be tried. This is "
+            "usually work in progress on their side, so the next run tries again. The log is "
+            "kept with the workflow run."
+        )
+    elif result["passed"]:
         next_step = (
             "The patch applies and every check passes. To support this version, add it to the "
             "patch's compatible versions, test it on a phone and publish a release."
@@ -181,12 +192,19 @@ def report(results_dir):
         else:
             result = {
                 "passed": False,
+                "build_failed": True,
                 "summary": "The BitChord build or download failed before the patch could be "
                 "tried. See the workflow run for details.\n",
             }
-        state, body = render(target, result, run_url)
-        verdict = "passes" if state["passed"] else "fails"
         current = existing.get(target["version"])
+        if result.get("build_failed"):
+            # The patch wasn't tried, so the last real result still stands.
+            result["passed"] = bool(current and current["state"].get("passed"))
+        state, body = render(target, result, run_url)
+        if result.get("build_failed"):
+            verdict = "couldn't be built"
+        else:
+            verdict = "passes" if state["passed"] else "fails"
         if current is None:
             title = f"BitChord {target['version']} compatibility"
             issue = api(
@@ -198,6 +216,9 @@ def report(results_dir):
             continue
         issue, last = current["issue"], current["state"]
         api(f"repos/{repo}/issues/{issue['number']}", "PATCH", {"body": body})
+        if state.get("build_failed"):
+            print(f"{target['version']}: updated #{issue['number']} ({verdict})")
+            continue
         if last.get("passed") != state["passed"]:
             what = "now passes" if state["passed"] else "fails"
             api(
@@ -213,6 +234,28 @@ def report(results_dir):
         print(f"{target['version']}: updated #{issue['number']} ({verdict})")
 
 
+def failed(stage, results_dir):
+    """Writes the result of a build or download that failed, with the end of its log."""
+    results = Path(results_dir)
+    results.mkdir(parents=True, exist_ok=True)
+    log = results / f"{stage}.log"
+    lines = log.read_text(errors="replace").splitlines() if log.exists() else []
+    # Gradle's own summary of what went wrong, when it printed one.
+    start = next((i for i, l in enumerate(lines) if "What went wrong" in l), None)
+    excerpt = lines[start : start + 30] if start is not None else lines[-40:]
+    what = "BitChord's build" if stage == "build" else "Downloading BitChord's APKs"
+    summary = f"**{what} failed, so the patch wasn't tried.**\n"
+    if excerpt:
+        summary += "\n```\n" + "\n".join(excerpt) + "\n```\n"
+    (results / "result.json").write_text(
+        json.dumps({"passed": False, "build_failed": True, "stage": stage}, indent=2)
+        + "\n"
+    )
+    (results / "summary.md").write_text(summary)
+    print(summary)
+    print(f"::warning::{what} failed; see {stage}.log in the results.")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     commands = parser.add_subparsers(dest="command", required=True)
@@ -220,11 +263,16 @@ def main():
     find.add_argument(
         "--force", action="store_true", help="Test even builds already reported"
     )
+    broken = commands.add_parser("failed")
+    broken.add_argument("stage", choices=["build", "download"])
+    broken.add_argument("results", type=Path)
     send = commands.add_parser("report")
     send.add_argument("results", type=Path)
     args = parser.parse_args()
     if args.command == "targets":
         print(json.dumps(targets(args.force)))
+    elif args.command == "failed":
+        failed(args.stage, args.results)
     else:
         report(args.results)
 

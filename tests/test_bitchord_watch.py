@@ -163,6 +163,39 @@ class WatchTest(unittest.TestCase):
             fake, {"kind": "branch", "ref": "v1.9", "id": "e", "version": "1.9"}, None
         )
         self.assertIn("build or download failed", fake.issues[0]["body"])
+        self.assertIn("own build or download failed", fake.issues[0]["body"])
+        self.assertNotIn("no longer matches", fake.issues[0]["body"])
+
+    def test_failed_build_is_tried_again_and_keeps_the_last_result(self):
+        fake = FakeGitHub([], {"v1.8.2": "aaa"})
+        branch = {"kind": "branch", "ref": "v1.8.2", "id": "aaa", "version": "1.8.2"}
+        self.run_report(fake, branch, passed=True)
+        fake.issues[0]["state"] = "closed"
+
+        self.run_report(fake, branch, passed=None)
+        self.assertEqual(fake.issues[0]["state"], "closed", "Not reopened")
+        self.assertEqual(fake.comments, [], "No comment for BitChord's own failure")
+        self.use(fake)
+        self.assertEqual(len(watch.targets(False)), 1, "The same commit is tried again")
+
+        self.run_report(fake, branch, passed=True)
+        self.assertEqual(fake.comments, [], "Still passes, as before the failed build")
+        self.use(fake)
+        self.assertEqual(watch.targets(False), [])
+
+    def test_failed_writes_gradles_reason(self):
+        with tempfile.TemporaryDirectory() as folder:
+            log = "> Task :app:x\n* What went wrong:\nCould not resolve com.github.a:b:1.1.1.\n"
+            (Path(folder) / "build.log").write_text("noise\n" * 100 + log)
+            with mock.patch("builtins.print"):
+                watch.failed("build", folder)
+            result = json.loads((Path(folder) / "result.json").read_text())
+            self.assertEqual(
+                result, {"passed": False, "build_failed": True, "stage": "build"}
+            )
+            summary = (Path(folder) / "summary.md").read_text()
+            self.assertIn("Could not resolve com.github.a:b:1.1.1.", summary)
+            self.assertNotIn("noise", summary)
 
 
 if __name__ == "__main__":

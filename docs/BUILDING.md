@@ -73,7 +73,7 @@ The **BitChord compatibility** workflow (`.github/workflows/bitchord-watch.yml`)
 
 Branch results only mean something if a source build compiles to the same code as BitChord's official release. To check that, run the workflow by hand with **calibrate** ticked: it builds the supported version from its tag and compares it class by class with the official APKs (`checks/CompareDex.java`). The run summary says whether every class the patch hooks is identical. Run it again whenever BitChord changes its build setup.
 
-Each build is patched with Morphe's version check turned off, then run through `VerifyDexControlFlow` and `VerifyApk`. The result goes to one issue per version, labelled `bitchord-compat`: it's opened on the first result and commented on when the result changes. A failure names the hook that no longer matches (the `TelegramPatch.kt` line). A build that was already tested isn't tested again unless you run the workflow by hand with **force**.
+Each build is patched with Morphe's version check turned off, then run through `VerifyDexControlFlow` and `VerifyApk`. The result goes to one issue per version, labelled `bitchord-compat`: it's opened on the first result and commented on when the result changes. A failure names the hook that no longer matches (the `TelegramPatch.kt` line). If BitChord's own build or the APK download fails, the patch isn't tried: the issue says so and quotes Gradle's reason, the full log is kept with the run as `build.log`, and the next run tries the same commit again. The build is retried once first, since JitPack often times out the first time it builds a dependency. A build that was already tested isn't tested again unless you run the workflow by hand with **force**.
 
 To try a BitChord APK yourself:
 

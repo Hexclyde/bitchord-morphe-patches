@@ -25,7 +25,7 @@ concurrency:
 
 jobs:
   discover:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read
@@ -50,7 +50,7 @@ jobs:
   check:
     needs: discover
     if: needs.discover.outputs.targets != '[]'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     strategy:
       fail-fast: false
@@ -80,15 +80,19 @@ jobs:
           python3 build.py
 
       - name: Download the release APKs
+        id: download
         if: matrix.target.kind == 'release'
+        continue-on-error: true
+        shell: bash
         env:
           APKS: ${{ toJSON(matrix.target.apks) }}
+          REF: ${{ matrix.target.ref }}
         run: |
           mkdir -p apks
           echo "$APKS" | python3 -c "import json, sys; [print(abi, url) for abi, url in json.load(sys.stdin).items()]" |
             while read -r abi url; do
-              curl -fsSL --retry 5 --retry-all-errors -o "apks/BitChord-${{ matrix.target.ref }}_$abi.apk" "$url"
-            done
+              curl -fsSL --retry 5 --retry-all-errors -o "apks/BitChord-${REF}_$abi.apk" "$url"
+            done 2>&1 | tee results/download.log
 
       - name: Check out BitChord
         if: matrix.target.kind == 'branch'
@@ -108,11 +112,24 @@ jobs:
           cache-dependency-path: |
             upstream/**/*.gradle*
             upstream/**/gradle-wrapper.properties
+      # A version branch is work in progress and doesn't always build. That is
+      # recorded as BitChord's build failing, not as the patch failing.
       - name: Build BitChord
+        id: build
         if: matrix.target.kind == 'branch'
-        run: tools/build_bitchord.sh upstream apks "${{ matrix.target.ref }}"
+        continue-on-error: true
+        shell: bash
+        env:
+          REF: ${{ matrix.target.ref }}
+        run: tools/build_bitchord.sh upstream apks "$REF" 2>&1 | tee results/build.log
+      - name: Record the failed build
+        if: steps.build.outcome == 'failure' || steps.download.outcome == 'failure'
+        env:
+          STAGE: ${{ steps.build.outcome == 'failure' && 'build' || 'download' }}
+        run: python3 tools/bitchord_watch.py failed "$STAGE" results
 
       - name: Try the patch
+        if: steps.build.outcome != 'failure' && steps.download.outcome != 'failure'
         run: python3 tools/check_bitchord.py --label "${{ matrix.target.kind }} ${{ matrix.target.ref }}" --out results apks/*.apk
       - name: Keep the results
         if: always()
@@ -127,7 +144,7 @@ jobs:
   report:
     needs: [discover, check]
     if: always() && needs.discover.outputs.targets != '[]' && needs.discover.result == 'success'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read
@@ -152,7 +169,7 @@ jobs:
   # and compares it with the official APKs, class by class.
   calibrate:
     if: inputs.calibrate
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
       - name: Check out source
