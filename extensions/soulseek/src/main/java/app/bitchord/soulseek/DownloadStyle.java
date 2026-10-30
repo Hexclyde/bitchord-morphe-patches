@@ -306,9 +306,9 @@ final class DownloadStyle {
         toggle.setButtonDrawable((Drawable) null);
         toggle.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 null, null, new ToggleDrawable(), null);
-        toggle.setPadding(0, dp(8), 0, dp(8));
+        toggle.setPadding(0, dp(10), 0, dp(10));
         toggle.setMinHeight(dp(48));
-        toggle.setMinWidth(dp(52));
+        toggle.setMinWidth(dp(64));
         toggle.setBackground(null);
         toggle.setFocusable(true);
         markCustom(toggle);
@@ -473,7 +473,7 @@ final class DownloadStyle {
         }
     }
 
-    /** The same monochrome pill and thumb proportions used by BitChord's source switches. */
+    /** BitChord 1.9 IosSwitch, matching Patches & tweaks and the approved HTML demo. */
     private final class ToggleDrawable extends Drawable {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -490,31 +490,35 @@ final class DownloadStyle {
 
         @Override
         public void draw(Canvas canvas) {
-            boolean checked = false, enabled = false;
+            boolean checked = false, enabled = false, pressed = false;
             for (int value : getState()) {
                 if (value == android.R.attr.state_checked) checked = true;
                 if (value == android.R.attr.state_enabled) enabled = true;
+                if (value == android.R.attr.state_pressed) pressed = true;
             }
             canvas.save();
             canvas.translate(getBounds().left, getBounds().top);
-            float scale = Math.min(getBounds().width() / 52f, getBounds().height() / 32f);
+            float scale = Math.min(getBounds().width() / 64f, getBounds().height() / 28f);
             canvas.scale(scale, scale);
-            paint.setColor(checked ? foreground : outline);
+            paint.setColor(checked ? (dark ? 0xff30d158 : 0xff34c759) : (dark ? 0x5c8e8e93 : 0x388e8e93));
+            if (!enabled) paint.setAlpha(paint.getAlpha() * 100 / 255);
+            canvas.drawRoundRect(0, 0, 64, 28, 14, 14, paint);
+            paint.setColor(0xffffffff);
             paint.setAlpha(enabled ? 255 : 100);
-            canvas.drawRoundRect(0, 0, 52, 32, 16, 16, paint);
-            paint.setColor(checked ? background : secondary);
-            canvas.drawCircle(checked ? 36 : 16, 16, 12, paint);
+            float width = pressed ? 40 * 1.18f : 40;
+            float x = checked ? 62 - width : 2;
+            canvas.drawRoundRect(x, 2, x + width, 26, 12, 12, paint);
             canvas.restore();
         }
 
         @Override
         public int getIntrinsicWidth() {
-            return dp(52);
+            return dp(64);
         }
 
         @Override
         public int getIntrinsicHeight() {
-            return dp(32);
+            return dp(28);
         }
 
         @Override

@@ -1,0 +1,856 @@
+/*
+ * Bitchord+ install guide: the look of BitChord 1.8.1 and of our own pages inside it
+ * (Unofficial Telegram, Patches & Tweaks, the download dialog). Every rule is scoped to
+ * .app-bitchord (prefix b-, b-tg-, b-tw-) or, for the plain web and MicroG RE screens drawn
+ * here, to .app-android with the prefix ba-.
+ *
+ * BitChord's dark look: black pages, #1c1c1e cards with 14 px corners, grey uppercase group
+ * headers and white as the only accent colour. System fonts only.
+ */
+
+.app-bitchord {
+  --b-card: #1c1c1e;
+  --b-field: #2c2c2e;
+  --b-muted: #8e8e93;
+  --b-chrome: #0d0d0f;
+  --b-edge: rgba(255, 255, 255, .12);
+  --b-line: #2c2c2e;
+  --b-teal: #80cbc4;
+  font-family: -apple-system, Inter, Roboto, system-ui, sans-serif;
+}
+
+/* ---------------------------------------------------------------------------------------
+   Page frame, top bar, titles
+   --------------------------------------------------------------------------------------- */
+
+.app-bitchord .b-page { min-height: 100%; display: flex; flex-direction: column; }
+.app-bitchord .b-topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  min-height: 56px; padding: 4px 16px 0;
+}
+.app-bitchord .b-circle {
+  flex: none; width: 48px; height: 48px; padding: 0;
+  display: grid; place-items: center;
+  border: .5px solid var(--b-edge); border-radius: 50%;
+  background: var(--b-chrome); color: #ffffff; cursor: pointer;
+}
+.app-bitchord .b-circle:hover { background: #18181b; }
+.app-bitchord .b-avatar {
+  flex: none; width: var(--size, 28px); height: var(--size, 28px); overflow: hidden;
+  display: grid; place-items: center;
+  border-radius: 50%; background: #2c2c2e; color: var(--b-muted);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1);
+}
+.app-bitchord .b-avatar .g-icon { transform: translateY(12%); }
+.app-bitchord .b-avatar-in {
+  background: linear-gradient(135deg, #4f63d9, #9b45b0); color: #ffffff;
+  font-weight: 700; font-size: calc(var(--size, 28px) * .46); line-height: 1;
+}
+.app-bitchord .b-title {
+  margin: 8px 20px 14px;
+  font-size: 34px; line-height: 1.12; font-weight: 800; letter-spacing: -.8px;
+}
+
+/* Floating mini player and tab bar, kept at the bottom of the tab pages. */
+.app-bitchord .b-dock {
+  position: sticky; bottom: 0; z-index: 3;
+  margin-top: auto; padding: 16px 16px 12px;
+  display: flex; flex-direction: column; gap: 8px;
+  pointer-events: none;
+}
+.app-bitchord .b-dock > * { pointer-events: auto; }
+.app-bitchord .b-nav {
+  display: flex; gap: 6px; height: 70px; padding: 6px;
+  border: .5px solid rgba(255, 255, 255, .1); border-radius: 35px;
+  background: rgba(13, 13, 15, .9);
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, .55);
+}
+.app-bitchord .b-nav-tab {
+  flex: 1 1 0; min-width: 0; padding: 7px 0 6px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  border: 0; border-radius: 29px;
+  background: transparent; color: var(--b-muted);
+  font-size: 11px; font-weight: 600; cursor: pointer;
+}
+.app-bitchord .b-nav-tab[aria-current="page"] { background: #2f2f31; color: #ffffff; }
+.app-bitchord .b-nav-tab[aria-current="page"] .g-icon { transform: scale(1.08); }
+.app-bitchord .b-nav-tab:not([aria-current="page"]):hover { color: #c7c7cc; }
+
+.app-bitchord .b-mini {
+  display: flex; align-items: center; gap: 2px;
+  height: 62px; padding: 0 6px 0 9px;
+  border: .5px solid rgba(255, 255, 255, .1); border-radius: 22px;
+  background: rgba(13, 13, 15, .9);
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, .5);
+  cursor: pointer;
+}
+.app-bitchord .b-mini-open {
+  flex: 1; min-width: 0; height: 100%; padding: 0;
+  display: flex; align-items: center; gap: 12px;
+  border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer;
+}
+.app-bitchord .b-mini-text { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.app-bitchord .b-mini-title { font-size: 16px; font-weight: 600; letter-spacing: -.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-bitchord .b-mini-artist { font-size: 14px; color: var(--b-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-bitchord .b-mini-btn {
+  flex: none; width: 44px; height: 44px; padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; color: #ffffff; cursor: pointer;
+}
+.app-bitchord .b-mini-btn:hover { background: rgba(255, 255, 255, .08); }
+
+/* Artwork stand-in: a gradient tile. Not real cover art. */
+.app-bitchord .b-art {
+  flex: none; width: var(--size, 48px); height: var(--size, 48px);
+  display: grid; place-items: center;
+  border-radius: calc(var(--size, 48px) * .17);
+  background: linear-gradient(140deg, hsl(var(--hue, 210) 52% 44%), hsl(calc(var(--hue, 210) + 45) 58% 22%));
+  color: rgba(255, 255, 255, .72);
+}
+
+/* Home: sign-in card (a slowly moving purple-to-magenta wash, like BitChord's mesh). */
+.app-bitchord .b-signin-card {
+  margin: 0 16px 6px; padding: 22px 20px 20px;
+  border-radius: 22px; cursor: pointer;
+  background: linear-gradient(120deg, #2e0b57 0%, #5a1f5b 45%, #8a3262 75%, #7a2a3a 100%);
+  background-size: 180% 180%; background-position: 0% 50%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .app-bitchord .b-signin-card { animation: b-mesh 12s ease-in-out infinite alternate; }
+}
+@keyframes b-mesh { from { background-position: 0% 40%; } to { background-position: 100% 60%; } }
+.app-bitchord .b-signin-title { margin: 0 0 16px; font-size: 22px; line-height: 1.2; font-weight: 800; letter-spacing: -.4px; }
+.app-bitchord .b-pill {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 22px;
+  border: 0; border-radius: 999px;
+  font-size: 16px; font-weight: 600; letter-spacing: -.2px; cursor: pointer;
+}
+.app-bitchord .b-pill-white { background: #ffffff; color: #000000; }
+.app-bitchord .b-pill-white:hover { background: #e9e9ee; }
+
+.app-bitchord .b-shelf { margin: 22px 20px 6px; font-size: 20px; line-height: 1.25; font-weight: 700; letter-spacing: -.3px; }
+.app-bitchord .b-shelf-small { margin: 0; font-size: 16px; }
+
+/* Song rows */
+.app-bitchord .b-list { display: flex; flex-direction: column; padding: 0 8px; }
+.app-bitchord .b-song { display: flex; align-items: center; border-radius: 12px; cursor: pointer; }
+.app-bitchord .b-song-main {
+  flex: 1; min-width: 0; padding: 6px 8px;
+  display: flex; align-items: center; gap: 12px;
+  border: 0; border-radius: 12px; background: transparent; color: inherit; text-align: left; cursor: pointer;
+}
+.app-bitchord .b-song-main:hover { background: rgba(255, 255, 255, .05); }
+.app-bitchord .b-song-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.app-bitchord .b-song-title { font-size: 16px; font-weight: 600; letter-spacing: -.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-bitchord .b-song-sub { display: block; font-size: 14px; color: var(--b-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-bitchord .b-song-length { flex: none; font-size: 14px; color: var(--b-muted); }
+.app-bitchord .b-song-more {
+  flex: none; width: 40px; height: 40px; padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; color: #ffffff; cursor: pointer;
+}
+.app-bitchord .b-song-more:hover { background: rgba(255, 255, 255, .08); }
+.app-bitchord .b-quality {
+  display: inline-block; margin-right: 6px; padding: 1px 5px; vertical-align: 1px;
+  border-radius: 4px; background: rgba(255, 255, 255, .16); color: #ffffff;
+  font-size: 10px; font-weight: 700; letter-spacing: .02em;
+}
+
+/* Explore */
+.app-bitchord .b-hscroll {
+  display: flex; gap: 12px; padding: 0 16px 4px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.app-bitchord .b-hscroll::-webkit-scrollbar { display: none; }
+.app-bitchord .b-tile {
+  flex: none; width: 132px; padding: 0;
+  display: flex; flex-direction: column; gap: 2px;
+  border: 0; background: transparent; color: #ffffff; text-align: left; cursor: pointer;
+}
+.app-bitchord .b-art-tile { margin-bottom: 8px; }
+.app-bitchord .b-tile-title { font-size: 16px; font-weight: 600; letter-spacing: -.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-bitchord .b-tile-sub { font-size: 14px; color: var(--b-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Library */
+.app-bitchord .b-pillbar {
+  display: flex; align-items: center; gap: 2px; height: 48px; padding: 0 0 0 4px;
+  border: .5px solid var(--b-edge); border-radius: 24px; background: var(--b-chrome);
+}
+.app-bitchord .b-pillbar .b-circle { border: 0; background: transparent; }
+.app-bitchord .b-pillbar-btn {
+  width: 44px; height: 44px; padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; color: #ffffff; cursor: pointer;
+}
+.app-bitchord .b-plain { margin-top: 2px; }
+.app-bitchord .b-plain .b-row { padding-left: 20px; }
+.app-bitchord .b-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 150px)); gap: 12px; padding: 0 16px; }
+.app-bitchord .b-ptile {
+  padding: 0; display: flex; flex-direction: column; gap: 2px;
+  border: 0; background: transparent; color: #ffffff; text-align: left; cursor: pointer;
+}
+.app-bitchord .b-ptile-art {
+  width: 100%; aspect-ratio: 1; margin-bottom: 8px;
+  display: grid; place-items: center;
+  border-radius: 16px; background: var(--b-card); color: #ffffff;
+}
+.app-bitchord .b-empty { margin: 28px 22px 12px; text-align: center; color: var(--b-muted); font-size: 16px; line-height: 1.4; }
+.app-bitchord .b-empty p { margin: 0 0 18px; }
+
+/* Search */
+.app-bitchord .b-topbar-search { padding-top: 6px; }
+.app-bitchord .b-search-box, .app-bitchord .b-settings-search { position: relative; }
+.app-bitchord .b-search-box { flex: 1; min-width: 0; }
+.app-bitchord .b-settings-search { margin: 0 20px; }
+.app-bitchord .b-search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--b-muted); pointer-events: none; z-index: 1; }
+.app-bitchord .g-field.b-search-input {
+  height: 46px; min-height: 46px; padding: 0 40px 0 46px;
+  border: 0; border-radius: 11px; background: var(--b-card);
+  font-size: 16px;
+}
+.app-bitchord .b-search-input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; display: none; }
+.app-bitchord .b-search-clear {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  width: 34px; height: 34px; padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; color: var(--b-muted); cursor: pointer;
+}
+.app-bitchord .b-search-empty { margin: 26px 30px 14px; text-align: center; color: var(--b-muted); font-size: 15px; line-height: 1.45; }
+.app-bitchord .b-recent { margin: 6px 20px 0; }
+.app-bitchord .b-recent-head { display: flex; align-items: center; justify-content: space-between; }
+.app-bitchord .b-textbtn { padding: 8px 4px; border: 0; background: transparent; color: #ffffff; font-size: 15px; font-weight: 600; cursor: pointer; }
+.app-bitchord .b-recent-row {
+  width: 100%; min-height: 46px; padding: 0 2px;
+  display: flex; align-items: center; gap: 14px;
+  border: 0; background: transparent; color: var(--b-muted); text-align: left; cursor: pointer;
+}
+.app-bitchord .b-recent-row span { color: #ffffff; font-size: 16px; }
+
+/* Segmented control (Theme, Output precision, Equalizer mode, Search) */
+.app-bitchord .b-seg { display: flex; padding: 4px; border-radius: 10px; background: var(--b-field); }
+.app-bitchord .b-seg-btn {
+  flex: 1 1 0; min-width: 0; min-height: 32px; padding: 7px 6px;
+  border: 0; border-radius: 8px;
+  background: transparent; color: var(--b-muted);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.app-bitchord .b-seg-btn[aria-pressed="true"] { background: #ffffff; color: #000000; }
+.app-bitchord .b-seg-btn:not([aria-pressed="true"]):hover { color: #d1d1d6; }
+.app-bitchord .b-seg-search { margin: 6px 16px 4px; }
+.app-bitchord .b-seg-eq { margin: 18px 16px 0; }
+
+/* ---------------------------------------------------------------------------------------
+   Settings groups and rows
+   --------------------------------------------------------------------------------------- */
+
+.app-bitchord .b-group-h {
+  margin: 26px 20px 8px;
+  font-size: 11px; line-height: 1.3; font-weight: 600; letter-spacing: .02em; text-transform: uppercase;
+  color: var(--b-muted);
+}
+.app-bitchord .b-group-gap { height: 26px; }
+.app-bitchord .b-card { margin: 0 16px; overflow: hidden; border-radius: 14px; background: var(--b-card); }
+.app-bitchord .b-group-f { margin: 8px 20px 0; font-size: 14px; line-height: 1.35; color: var(--b-muted); }
+
+.app-bitchord .b-row {
+  position: relative; width: 100%; min-height: 52px; padding: 12px 16px;
+  display: flex; align-items: center; gap: 14px;
+  border: 0; background: transparent; color: #ffffff; text-align: left; font: inherit;
+}
+.app-bitchord button.b-row { cursor: pointer; }
+.app-bitchord button.b-row:hover { background: rgba(255, 255, 255, .04); }
+.app-bitchord .b-card > .b-row:not(:first-child)::before,
+.app-bitchord .b-card > .b-src:not(:first-child)::before,
+.app-bitchord .b-plain > .b-row:not(:first-child)::before {
+  content: ''; position: absolute; top: 0; left: 52px; right: 0;
+  height: 1px; background: var(--b-line); transform: scaleY(.6); transform-origin: top;
+}
+.app-bitchord .b-row-icon { flex: none; width: 22px; height: 22px; display: grid; place-items: center; color: #ffffff; }
+.app-bitchord .b-row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.app-bitchord .b-row-title { display: flex; align-items: center; gap: 8px; font-size: 16px; line-height: 1.3; }
+.app-bitchord .b-row-sub { font-size: 14px; line-height: 1.32; color: var(--b-muted); }
+.app-bitchord .b-row-sub:empty { display: none; }
+.app-bitchord .b-row-value { flex: none; font-size: 16px; color: var(--b-muted); white-space: nowrap; }
+.app-bitchord .b-row-chev { flex: none; margin-left: -6px; display: grid; place-items: center; color: rgba(142, 142, 147, .7); }
+.app-bitchord .b-row-disabled .b-row-icon,
+.app-bitchord .b-row-disabled .b-row-text { opacity: .45; }
+.app-bitchord .b-row-top { padding-bottom: 6px; }
+.app-bitchord .b-row-extra { padding: 2px 16px 14px 52px; }
+.app-bitchord .b-row-extra-slider { padding-top: 0; }
+.app-bitchord .b-badge {
+  padding: 2px 6px; border-radius: 5px;
+  background: rgba(255, 255, 255, .16); color: #ffffff;
+  font-size: 11px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase;
+}
+.app-bitchord .b-version {
+  margin: 30px 20px 0; text-align: center;
+  font-size: 11px; line-height: 1.7; font-weight: 600; color: var(--b-muted);
+}
+.app-bitchord .b-version span { margin-left: 6px; color: #ffffff; text-decoration: underline; text-underline-offset: 2px; }
+
+/* BitChord's own slider: a white 4 × 44 bar thumb on a 16 px track. */
+.app-bitchord .g-slider.b-slider-bar {
+  height: 48px;
+  --slider-h: 16px; --slider-thumb-w: 4px; --slider-thumb-h: 44px; --slider-thumb-r: 2px;
+  --slider-track: #2c2c2e; --slider-active: #ffffff; --slider-thumb: #ffffff;
+}
+
+.app-bitchord .b-account-row {
+  width: 100%; padding: 14px 16px;
+  display: flex; align-items: center; gap: 14px;
+  border: 0; background: transparent; color: #ffffff; text-align: left; font: inherit;
+}
+.app-bitchord button.b-account-row { cursor: pointer; }
+.app-bitchord button.b-account-row:hover { background: rgba(255, 255, 255, .04); }
+.app-bitchord .b-account-name { font-size: 20px; line-height: 1.25; font-weight: 700; letter-spacing: -.3px; }
+.app-bitchord .b-center-btn {
+  display: block; width: 100%; min-height: 50px;
+  border: 0; border-top: 1px solid rgba(44, 44, 46, .8);
+  background: transparent; color: #ffffff; font-size: 16px; cursor: pointer;
+}
+.app-bitchord .b-center-btn:hover { background: rgba(255, 255, 255, .04); }
+
+/* Sources */
+.app-bitchord .b-src { position: relative; display: flex; align-items: center; gap: 8px; padding-right: 10px; }
+.app-bitchord .b-src-main {
+  flex: 1; min-width: 0; padding: 12px 0 12px 10px;
+  display: flex; align-items: center; gap: 12px;
+  border: 0; background: transparent; color: #ffffff; text-align: left; font: inherit; cursor: pointer;
+}
+.app-bitchord .b-src-num { flex: none; width: 18px; text-align: center; font-size: 14px; color: var(--b-muted); }
+.app-bitchord .b-src-off .b-src-main { opacity: .4; }
+.app-bitchord .b-src-red { color: #f2b8b5; }
+.app-bitchord .b-src-always { flex: none; padding-right: 6px; font-size: 14px; color: var(--b-muted); }
+.app-bitchord .b-src-drag { flex: none; display: grid; place-items: center; color: var(--b-muted); }
+.app-bitchord .b-card > .b-src:not(:first-child)::before { left: 72px; }
+
+/* Equalizer */
+.app-bitchord .b-eq-body { transition: opacity 150ms; }
+.app-bitchord .b-eq-dim { opacity: .38; }
+.app-bitchord .b-eq-tone { padding-top: 18px; }
+.app-bitchord .b-eq-pad {
+  position: relative; display: block;
+  width: min(calc(100% - 48px), 270px); aspect-ratio: 1; margin: 0 auto; padding: 0;
+  border: 0; border-radius: 10px; background: transparent; cursor: crosshair;
+}
+.app-bitchord .b-eq-pad::before {
+  content: ''; position: absolute; left: -5%; top: -5%; width: 110%; height: 110%;
+  background: radial-gradient(circle, #8e8e93 0 1.6px, transparent 2.1px) 0 0 / calc(100% / 11) calc(100% / 11);
+  pointer-events: none;
+}
+.app-bitchord .b-eq-puck {
+  position: absolute; left: var(--x, 50%); top: var(--y, 50%);
+  width: 38px; height: 38px; margin: -19px 0 0 -19px;
+  border-radius: 50%; background: #000000;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, .65), 0 0 0 1px rgba(255, 255, 255, .16);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .app-bitchord .b-eq-puck { transition: left 140ms ease-out, top 140ms ease-out; }
+}
+.app-bitchord .b-eq-readout { display: flex; justify-content: center; gap: 30px; padding: 18px 0 12px; font-size: 16px; }
+.app-bitchord .b-eq-readout span { display: inline-flex; align-items: center; gap: 6px; }
+.app-bitchord .b-eq-readout .g-icon { color: var(--b-muted); }
+.app-bitchord .b-card .b-hair { margin: 0 0 0 16px; background: var(--b-line); }
+.app-bitchord .b-eq-faders { display: flex; justify-content: space-between; padding: 16px 18px; }
+.app-bitchord .b-eq-fader { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; }
+.app-bitchord .b-eq-track { position: relative; width: 6px; height: 150px; border-radius: 3px; background: var(--b-line); }
+.app-bitchord .b-eq-knob {
+  position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px;
+  border-radius: 50%; background: #000000; box-shadow: 0 0 0 1px rgba(255, 255, 255, .28), 0 2px 6px rgba(0, 0, 0, .6);
+}
+.app-bitchord .b-eq-freq { color: var(--b-muted); font-weight: 500; }
+.app-bitchord .b-eq-balance { padding: 14px 16px 20px; }
+.app-bitchord .b-eq-bal-labels { display: flex; justify-content: space-between; font-size: 16px; }
+.app-bitchord .b-eq-bal-track { position: relative; height: 4px; margin-top: 18px; border-radius: 2px; background: var(--b-line); }
+.app-bitchord .b-eq-bal-track span {
+  position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px;
+  border-radius: 50%; background: #000000; box-shadow: 0 0 0 1px rgba(255, 255, 255, .28);
+}
+
+/* ---------------------------------------------------------------------------------------
+   Sheets: song actions (tinted with the artwork's colours), sleep timer, download quality,
+   account, up next, and the audio output drawer
+   --------------------------------------------------------------------------------------- */
+
+.app-bitchord .b-sheet { padding: 0 0 18px; }
+.app-bitchord .b-handle { width: 32px; height: 4px; margin: 10px auto 14px; border-radius: 2px; background: rgba(142, 142, 147, .6); }
+.app-bitchord .b-handle-light { width: 34px; background: rgba(255, 255, 255, .35); }
+.app-bitchord .b-sheet-title { margin: 0; padding: 0 22px; font-size: 20px; line-height: 1.25; font-weight: 700; letter-spacing: -.3px; }
+.app-bitchord .b-sheet-sub { margin: 2px 0 0; padding: 0 22px; font-size: 14px; color: var(--b-muted); }
+.app-bitchord .b-hair { height: 1px; margin: 14px 0 4px; background: rgba(255, 255, 255, .12); }
+.app-bitchord .b-action {
+  width: 100%; min-height: 52px; padding: 14px 22px;
+  display: flex; align-items: center; gap: 18px;
+  border: 0; background: transparent; color: #ffffff; font-size: 16px; text-align: left; cursor: pointer;
+}
+.app-bitchord .b-action:hover { background: rgba(255, 255, 255, .06); }
+.app-bitchord .b-action-static { cursor: default; }
+.app-bitchord .b-action-static:hover { background: transparent; }
+.app-bitchord .b-action-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.app-bitchord .b-action-sub { font-size: 14px; color: var(--b-muted); }
+.app-bitchord .b-action-value { flex: none; font-size: 15px; color: rgba(255, 255, 255, .7); }
+.app-bitchord .b-action-accent { color: hsl(var(--hue, 210) 85% 78%); font-variant-numeric: tabular-nums; }
+.app-bitchord .b-sheet-rows { padding-top: 8px; }
+
+.app-bitchord.b-songsheet-ov .overlay-panel { background: #141219; }
+.app-bitchord .b-songsheet {
+  min-height: 100%;
+  background:
+    radial-gradient(130% 55% at 15% 0%, hsl(var(--hue, 210) 50% 28% / .95) 0%, transparent 70%),
+    radial-gradient(90% 50% at 100% 30%, hsl(calc(var(--hue, 210) + 50) 45% 22% / .7) 0%, transparent 70%),
+    linear-gradient(hsl(var(--hue, 210) 22% 11%), #0b0a10);
+}
+.app-bitchord .b-sheet-track { display: flex; align-items: center; gap: 14px; padding: 0 22px; }
+.app-bitchord .b-sheet-track .b-art { border-radius: 8px; }
+.app-bitchord .b-sheet-track-title { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -.2px; }
+.app-bitchord .b-sheet-track-artist { margin: 2px 0 0; font-size: 14px; color: rgba(255, 255, 255, .72); }
+.app-bitchord .b-sleep-head { display: flex; align-items: center; gap: 6px; padding: 0 12px; }
+.app-bitchord .b-sleep-head .b-sheet-title,
+.app-bitchord .b-sleep-head .b-sheet-sub { padding: 0; }
+.app-bitchord .b-iconbtn {
+  flex: none; width: 44px; height: 44px; padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; color: #ffffff; cursor: pointer;
+}
+.app-bitchord .b-iconbtn:hover { background: rgba(255, 255, 255, .08); }
+.app-bitchord .b-choice {
+  width: 100%; min-height: 52px; padding: 14px 22px;
+  display: flex; align-items: center; gap: 12px;
+  border: 0; background: transparent; color: #ffffff; font-size: 16px; text-align: left; cursor: pointer;
+}
+.app-bitchord .b-choice:hover { background: rgba(255, 255, 255, .05); }
+.app-bitchord .b-choice-in { padding: 13px 16px; }
+.app-bitchord .b-choice-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.app-bitchord .b-choice-sub { font-size: 14px; line-height: 1.3; color: var(--b-muted); }
+.app-bitchord .b-choice-pad { flex: none; width: 22px; }
+.app-bitchord .b-dq-head { display: flex; align-items: center; gap: 18px; padding: 4px 24px 0; }
+.app-bitchord .b-dq-head .b-sheet-title { padding: 0; font-weight: 800; }
+.app-bitchord .b-dq-head .b-sheet-sub { padding: 0; }
+.app-bitchord .b-dq .b-choice { padding: 14px 24px; }
+
+.app-bitchord.b-drawer-ov .overlay-panel {
+  background: rgba(18, 18, 18, .94);
+  -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+  border-radius: 26px 26px 0 0;
+}
+.app-bitchord .b-drawer { padding: 0 16px 18px; }
+.app-bitchord .b-drawer-title { margin: 0 4px 14px; font-size: 19px; font-weight: 700; letter-spacing: -.3px; }
+.app-bitchord .b-outputs { display: flex; flex-direction: column; gap: 6px; }
+.app-bitchord .b-out {
+  width: 100%; padding: 12px 14px;
+  display: flex; align-items: center; gap: 12px;
+  border: 0; border-radius: 16px;
+  background: rgba(255, 255, 255, .05); color: #ffffff; text-align: left; font-size: 16px; cursor: pointer;
+}
+.app-bitchord .b-out:hover { background: rgba(255, 255, 255, .08); }
+.app-bitchord .b-out-on, .app-bitchord .b-out-on:hover { background: rgba(255, 255, 255, .1); }
+.app-bitchord .b-out-icon { flex: none; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: rgba(255, 255, 255, .08); }
+.app-bitchord .b-out-on .b-out-icon { background: rgba(255, 255, 255, .16); }
+.app-bitchord .b-out-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.app-bitchord .b-out-on .b-out-name { font-weight: 600; }
+.app-bitchord .b-out-sub { font-size: 12px; font-weight: 600; color: rgba(255, 255, 255, .55); }
+.app-bitchord .b-out-pipe { margin-top: 2px; }
+.app-bitchord .b-volume-drawer { margin: 14px 4px 10px; }
+
+.app-bitchord .b-queue-list { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px 0; }
+.app-bitchord .b-qrow { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px; }
+.app-bitchord .b-qrow-now { background: rgba(255, 255, 255, .08); }
+.app-bitchord .b-qrow-eq { color: #ffffff; }
+
+/* ---------------------------------------------------------------------------------------
+   Now Playing
+   --------------------------------------------------------------------------------------- */
+
+.app-bitchord .b-player {
+  height: 100%; min-height: 470px;
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 14px 24px 12px;
+  color: #ffffff;
+  background:
+    radial-gradient(120% 65% at 25% 8%, hsl(var(--hue, 210) 55% 32%) 0%, transparent 62%),
+    radial-gradient(100% 60% at 95% 92%, hsl(calc(var(--hue, 210) + 50) 45% 22%) 0%, transparent 62%),
+    #15131c;
+}
+.app-bitchord .b-player-art { flex: 1 1 0; min-height: 96px; container-type: size; display: grid; place-items: center; }
+.app-bitchord .b-player-art .b-art-xl {
+  --s: min(100cqw, 100cqh, 340px);
+  width: var(--s); height: var(--s); border-radius: 14px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .45);
+}
+.app-bitchord .b-player-art .b-art-xl .g-icon { width: 30%; height: 30%; }
+.app-bitchord .b-player-meta { display: flex; align-items: center; gap: 10px; }
+.app-bitchord .b-player-text { flex: 1; min-width: 0; }
+.app-bitchord .b-player-title { margin: 0; font-size: 22px; line-height: 1.2; font-weight: 700; letter-spacing: -.4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-bitchord .b-player-artist { margin: 2px 0 0; font-size: 17px; color: rgba(255, 255, 255, .7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-bitchord .b-glass {
+  flex: none; width: 34px; height: 34px; padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: rgba(255, 255, 255, .18); color: #ffffff; cursor: pointer;
+}
+.app-bitchord .b-glass:hover { background: rgba(255, 255, 255, .26); }
+.app-bitchord .b-scrub-bar { height: 4px; overflow: hidden; border-radius: 2px; background: rgba(255, 255, 255, .25); }
+.app-bitchord .b-scrub-bar span { display: block; height: 100%; background: #ffffff; }
+.app-bitchord .b-scrub-times { display: flex; justify-content: space-between; margin-top: 6px; font-size: 12px; font-weight: 600; color: rgba(255, 255, 255, .55); }
+.app-bitchord .b-scrub-q { color: rgba(255, 255, 255, .8); }
+.app-bitchord .b-transport { display: flex; align-items: center; justify-content: center; gap: 22px; }
+.app-bitchord .b-tbtn {
+  width: 60px; height: 60px; padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; color: #ffffff; cursor: pointer;
+}
+.app-bitchord .b-tbtn:hover { background: rgba(255, 255, 255, .08); }
+.app-bitchord .b-tbtn-main { width: 80px; height: 80px; }
+.app-bitchord .b-volume { display: flex; align-items: center; gap: 10px; color: rgba(255, 255, 255, .5); }
+.app-bitchord .g-slider.b-volume-slider {
+  flex: 1; min-width: 0; height: 28px;
+  --slider-h: 4px; --slider-thumb-w: 12px; --slider-thumb-h: 12px;
+  --slider-track: rgba(255, 255, 255, .25); --slider-active: #ffffff; --slider-thumb: #ffffff;
+}
+.app-bitchord .b-pactions { display: flex; align-items: center; justify-content: space-between; }
+.app-bitchord .b-picon {
+  width: 44px; height: 44px; padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; color: rgba(255, 255, 255, .88); cursor: pointer;
+}
+.app-bitchord .b-picon:hover { background: rgba(255, 255, 255, .08); }
+.app-bitchord .b-capsule { display: flex; padding: 3px; border-radius: 999px; background: rgba(255, 255, 255, .14); }
+.app-bitchord .b-capsule-btn {
+  width: 54px; height: 38px; padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 999px; background: transparent; color: #ffffff; cursor: pointer;
+}
+.app-bitchord .b-capsule-btn:hover { background: rgba(255, 255, 255, .12); }
+.app-bitchord .b-output-caption {
+  align-self: center; margin-top: -2px; padding: 3px 12px;
+  border: 0; border-radius: 10px; background: transparent;
+  color: rgba(255, 255, 255, .55); font-size: 11px; font-weight: 600; cursor: pointer;
+}
+
+/* BitChord's sign-in browser: a top bar over the web page. */
+.app-bitchord .b-web { min-height: 100%; display: flex; flex-direction: column; background: #000000; }
+.app-bitchord .b-web-bar { display: flex; align-items: center; gap: 4px; min-height: 58px; padding: 4px 8px; background: #000000; color: #ffffff; }
+.app-bitchord .b-web-bar-text { flex: 1; min-width: 0; }
+.app-bitchord .b-web-bar-title { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -.2px; }
+.app-bitchord .b-web-bar-sub { margin: 1px 0 0; font-size: 12px; line-height: 1.3; color: var(--b-muted); }
+.app-bitchord .b-web-use {
+  flex: none; padding: 9px 10px;
+  border: 0; border-radius: 18px; background: transparent; color: #ffffff;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.app-bitchord .b-web-use:hover { background: rgba(255, 255, 255, .08); }
+.app-bitchord .b-web-page { flex: 1; padding: 12px 16px 24px; border-top: 1px solid #1c1c1e; background: #030303; }
+.app-bitchord .b-web-site { margin: 0 0 12px; font-size: 12px; color: #6e6e73; }
+.app-bitchord .b-web-panel { max-width: 380px; margin-left: auto; padding: 14px 0 6px; border-radius: 12px; background: #212121; box-shadow: 0 8px 26px rgba(0, 0, 0, .6); }
+.app-bitchord .b-web-who { display: flex; align-items: center; gap: 12px; padding: 0 16px 12px; border-bottom: 1px solid #383838; }
+.app-bitchord .b-web-name { margin: 0; font-size: 16px; }
+.app-bitchord .b-web-mail { margin: 2px 0 0; font-size: 13px; color: #aaaaaa; }
+.app-bitchord .b-web-channels { padding-top: 6px; }
+.app-bitchord .b-web-channel {
+  width: 100%; padding: 10px 16px;
+  display: flex; align-items: center; gap: 14px;
+  border: 0; background: transparent; color: #ffffff; text-align: left; font: inherit; cursor: pointer;
+}
+.app-bitchord .b-web-channel:hover { background: rgba(255, 255, 255, .08); }
+
+/* ---------------------------------------------------------------------------------------
+   Our pages (Patches & Tweaks, Unofficial Telegram): Android views in BitChord's colours
+   --------------------------------------------------------------------------------------- */
+
+.app-bitchord .b-our { padding-bottom: 32px; }
+.app-bitchord .b-tw-top { padding: 16px 20px 18px; }
+.app-bitchord .b-ourback {
+  width: 48px; height: 48px; padding: 0;
+  display: grid; place-items: center;
+  border: 1px solid #2c2c2e; border-radius: 50%; background: var(--b-chrome); color: #ffffff; cursor: pointer;
+}
+.app-bitchord .b-ourback:hover { background: #18181b; }
+.app-bitchord .b-tw-title { margin: 0; font-size: 34px; line-height: 1.15; font-weight: 800; }
+.app-bitchord .b-tg-top .b-tw-title { margin-top: 26px; letter-spacing: -.025em; }
+.app-bitchord .b-tw-sub { margin: 7px 0 0; font-size: 14px; line-height: 1.35; color: var(--b-muted); }
+.app-bitchord .b-tw-label {
+  margin: 24px 20px 8px;
+  font-size: 11px; line-height: 1.3; font-weight: 600; letter-spacing: .02em; text-transform: uppercase;
+  color: var(--b-muted);
+}
+.app-bitchord .b-tw-card { margin: 0 16px; padding: 16px; border-radius: 14px; background: var(--b-card); }
+.app-bitchord .b-tw-card-nolabel { margin-top: 16px; }
+.app-bitchord .b-tw-p { margin: 0; padding-bottom: 6px; font-size: 14px; line-height: 1.42; color: var(--b-muted); }
+.app-bitchord .b-tw-p-top { padding-top: 8px; }
+.app-bitchord .b-tw-div { height: 1px; margin: 14px 0; border: 0; background: var(--b-line); }
+.app-bitchord .b-tw-h { margin: 0; padding: 4px 0 6px; font-size: 12px; font-weight: 600; color: var(--b-muted); }
+
+.app-bitchord .b-tw-toggle {
+  width: 100%; min-height: 40px; padding: 0;
+  display: flex; align-items: center; gap: 16px;
+  border: 0; border-radius: 8px; background: transparent; color: #ffffff; text-align: left; font: inherit; cursor: pointer;
+}
+.app-bitchord .b-tw-toggle-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-bitchord .b-tw-toggle-title { font-size: 16px; line-height: 1.3; font-weight: 500; }
+.app-bitchord .b-tw-toggle-state { padding-top: 4px; font-size: 14px; line-height: 1.35; color: var(--b-muted); }
+.app-bitchord .b-tw-toggle-details { padding: 6px 0 4px; font-size: 13px; line-height: 1.4; color: var(--b-muted); }
+.app-bitchord .b-tw-toggle + .b-tw-toggle { margin-top: 14px; }
+.app-bitchord .b-tw-h + .b-tw-toggle { margin-top: 2px; }
+
+.app-bitchord .b-tw-slider-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-top: 4px; }
+.app-bitchord .b-tw-slider-title { font-size: 16px; font-weight: 500; }
+.app-bitchord .b-tw-slider-value { font-size: 14px; font-weight: 500; color: var(--b-muted); text-align: right; }
+.app-bitchord .g-slider.b-tw-range {
+  height: 48px; padding: 0 14px;
+  --slider-h: 3px; --slider-thumb-w: 20px; --slider-thumb-h: 20px; --slider-thumb-r: 50%;
+  --slider-track: #2c2c2e; --slider-active: #ffffff; --slider-thumb: #ffffff;
+}
+
+.app-bitchord .b-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 50px; padding: 6px 14px;
+  border: 0; border-radius: 28px;
+  font: inherit; font-size: 16px; line-height: 1.2; font-weight: 600; text-align: center; cursor: pointer;
+}
+.app-bitchord .b-btn-primary { background: #ffffff; color: #000000; }
+.app-bitchord .b-btn-primary:hover { background: #e9e9ee; }
+.app-bitchord .b-btn-secondary { background: var(--b-field); color: #ffffff; }
+.app-bitchord .b-btn-secondary:hover { background: #3a3a3c; }
+.app-bitchord .b-btn-block { display: flex; width: 100%; margin-top: 12px; }
+.app-bitchord .b-btn-flush { margin-top: 0; }
+.app-bitchord .b-tw-buttons { display: flex; gap: 8px; padding-top: 10px; }
+.app-bitchord .b-tw-buttons .b-btn { flex: 1 1 0; min-width: 0; }
+.app-bitchord .b-small {
+  flex: none; margin-left: 12px; padding: 8px 14px;
+  border: 0; border-radius: 18px; background: var(--b-field); color: #ffffff;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.app-bitchord .b-small:hover { background: #3a3a3c; }
+.app-bitchord .g-field.b-tw-input { min-height: 48px; padding: 12px 14px; border: 0; font-size: 15px; }
+.app-bitchord .b-tw-progress { margin: 0; padding-top: 8px; font-size: 13px; color: var(--b-muted); }
+.app-bitchord .b-tw-progress:empty { padding-top: 0; }
+.app-bitchord .b-tw-results { display: flex; flex-direction: column; gap: 6px; padding-top: 8px; }
+.app-bitchord .b-tw-result {
+  width: 100%; padding: 12px 14px;
+  border: 0; border-radius: 10px; background: var(--b-field); color: #ffffff;
+  font-size: 15px; text-align: left; cursor: pointer;
+}
+.app-bitchord .b-tw-result:hover { background: #3a3a3c; }
+.app-bitchord .b-tw-profile,
+.app-bitchord .b-tw-savedrow { display: flex; align-items: center; min-height: 44px; padding: 2px 0 4px; }
+.app-bitchord .b-tw-profile-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-bitchord .b-tw-profile-name { font-size: 16px; font-weight: 500; }
+.app-bitchord .b-tw-profile-sub { padding-top: 4px; font-size: 14px; color: var(--b-muted); }
+.app-bitchord .b-tw-saved-name { font-size: 15px; font-weight: 500; }
+.app-bitchord .b-tw-saved-sub { font-size: 13px; color: var(--b-muted); }
+
+/* Unofficial Telegram page */
+.app-bitchord .b-tg-label { display: block; padding: 14px 0 7px; font-size: 12px; font-weight: 600; color: var(--b-muted); }
+.app-bitchord .g-field.b-tg-input { height: 50px; min-height: 50px; padding: 12px 14px; border: 0; border-radius: 10px; font-size: 16px; }
+.app-bitchord .b-tg-showrow { display: flex; justify-content: flex-end; }
+.app-bitchord .b-tg-show { padding: 10px 2px 10px 10px; border: 0; background: transparent; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; }
+.app-bitchord .b-tg-link {
+  display: block; padding: 16px 0 2px 4px;
+  border: 0; background: transparent; color: var(--b-muted);
+  font-size: 14px; text-align: left; cursor: pointer;
+}
+.app-bitchord .b-tg-link:hover { color: #ffffff; }
+.app-bitchord .b-tg-row {
+  width: 100%; min-height: 40px; padding: 0;
+  display: flex; align-items: center;
+  border: 0; border-radius: 8px; background: transparent; color: #ffffff; text-align: left; font: inherit;
+}
+.app-bitchord button.b-tg-row { cursor: pointer; }
+.app-bitchord .b-tg-row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-bitchord .b-tg-row-title { font-size: 16px; line-height: 1.3; font-weight: 500; }
+.app-bitchord .b-tg-row-sub { padding-top: 4px; font-size: 14px; line-height: 1.35; color: var(--b-muted); }
+.app-bitchord .b-tg-row-more { flex: none; padding: 8px 0 8px 16px; font-size: 14px; font-weight: 500; color: var(--b-muted); white-space: nowrap; }
+.app-bitchord .b-tg-tabs { display: flex; gap: 8px; margin: 4px 16px; }
+.app-bitchord .b-tg-tabs .b-btn { flex: 1 1 0; }
+.app-bitchord .b-tg-status { margin: 0; font-size: 14px; line-height: 1.4; color: var(--b-muted); }
+.app-bitchord .b-tg-cache-value { margin: 0; font-size: 18px; font-weight: 600; }
+.app-bitchord .b-tg-error { margin: 0; padding-top: 8px; font-size: 14px; line-height: 1.4; color: #fa2d48; }
+
+/* Dialogs. "Music chats" and the paste dialogs use the phone's plain dialog look; the
+   checkbox list and the confirmations are tuned to the page (#1c1c1e, white buttons). */
+.app-bitchord.b-pdlg-ov .overlay-panel { max-width: 340px; border-radius: 4px; background: #424242; box-shadow: 0 14px 36px rgba(0, 0, 0, .55); }
+.app-bitchord .b-pdlg { padding: 22px 0 8px; }
+.app-bitchord .b-pdlg-title { margin: 0 24px 10px; font-size: 20px; font-weight: 600; }
+.app-bitchord .b-pdlg-items { display: flex; flex-direction: column; }
+.app-bitchord .b-pdlg-item {
+  min-height: 48px; padding: 0 24px;
+  border: 0; background: transparent; color: #ffffff; font-size: 16px; text-align: left; cursor: pointer;
+}
+.app-bitchord .b-pdlg-item:hover { background: rgba(255, 255, 255, .08); }
+.app-bitchord .b-pdlg-body { padding: 4px 24px 0; }
+.app-bitchord .g-field.b-pdlg-field {
+  min-height: 40px; padding: 8px 2px;
+  border: 0; border-bottom: 2px solid var(--b-teal); border-radius: 0;
+  background: transparent; font-size: 16px;
+}
+.app-bitchord .g-field.b-pdlg-field:focus { box-shadow: none; border-color: var(--b-teal); }
+.app-bitchord .g-textarea.b-pdlg-field { min-height: 110px; resize: none; font-size: 15px; }
+.app-bitchord .b-pdlg-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 4px; padding: 14px 8px 0; }
+.app-bitchord .b-pdlg-btn {
+  min-height: 40px; padding: 0 12px;
+  border: 0; border-radius: 2px; background: transparent; color: var(--b-teal);
+  font-size: 14px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; cursor: pointer;
+}
+.app-bitchord .b-pdlg-btn:hover { background: rgba(128, 203, 196, .12); }
+
+.app-bitchord.b-tdlg-ov .overlay-panel { max-width: 340px; border-radius: 18px; background: var(--b-card); box-shadow: 0 14px 36px rgba(0, 0, 0, .55); }
+.app-bitchord .b-tdlg { padding: 22px 0 8px; }
+.app-bitchord .b-tdlg-title { margin: 0 24px 12px; font-size: 20px; font-weight: 600; }
+.app-bitchord .b-tdlg-text { margin: 0 24px; font-size: 16px; line-height: 1.45; color: rgba(255, 255, 255, .86); }
+.app-bitchord .b-tdlg-list { display: flex; flex-direction: column; }
+.app-bitchord .b-tdlg-check {
+  min-height: 48px; padding: 0 24px;
+  display: flex; align-items: center; gap: 22px;
+  border: 0; background: transparent; color: #ffffff; font-size: 16px; text-align: left; cursor: pointer;
+}
+.app-bitchord .b-tdlg-check:hover { background: rgba(255, 255, 255, .06); }
+.app-bitchord .b-tdlg-box {
+  flex: none; width: 18px; height: 18px;
+  display: grid; place-items: center;
+  border: 2px solid #b0b0b5; border-radius: 2px; color: #1c1c1e;
+}
+.app-bitchord .b-tdlg-check[aria-checked="true"] .b-tdlg-box { border-color: var(--b-teal); background: var(--b-teal); }
+.app-bitchord .b-tdlg-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 4px; padding: 14px 8px 0; }
+.app-bitchord .b-tdlg-btn {
+  min-height: 40px; padding: 0 12px;
+  border: 0; border-radius: 2px; background: transparent; color: #ffffff;
+  font-size: 14px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; cursor: pointer;
+}
+.app-bitchord .b-tdlg-btn:hover { background: rgba(255, 255, 255, .08); }
+.app-bitchord .b-tdlg-neutral { margin-right: auto; color: var(--b-teal); }
+
+/* Per-download quality dialog: black, nearly full width, 22 px corners. */
+.app-bitchord.overlay-dialog.b-dc-ov { padding: 24px 14px; }
+.app-bitchord.b-dc-ov .overlay-panel {
+  max-width: 440px; border-radius: 22px; background: #000000;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .07), 0 16px 40px rgba(0, 0, 0, .6);
+}
+.app-bitchord .b-dc { padding: 22px 22px 14px; }
+.app-bitchord .b-dc-title { margin: 0; font-size: 20px; line-height: 1.25; font-weight: 800; letter-spacing: -.2px; }
+.app-bitchord .b-dc-sub { margin: 0; padding: 6px 0 14px; font-size: 14px; color: var(--b-muted); }
+.app-bitchord .b-dc-options { display: flex; flex-direction: column; gap: 8px; }
+.app-bitchord .b-dc-opt {
+  width: 100%; padding: 12px 16px;
+  display: flex; flex-direction: column; gap: 3px;
+  border: 0; border-radius: 14px; background: var(--b-field); color: #ffffff; text-align: left; cursor: pointer;
+}
+.app-bitchord .b-dc-opt:hover { background: #3a3a3c; }
+.app-bitchord .b-dc-last, .app-bitchord .b-dc-last:hover { background: var(--b-card); }
+.app-bitchord .b-dc-label { font-size: 16px; font-weight: 600; }
+.app-bitchord .b-dc-detail { font-size: 13px; line-height: 1.35; color: var(--b-muted); }
+.app-bitchord .b-dc-cancel {
+  display: block; width: 100%; margin-top: 6px; padding: 12px 0 6px;
+  border: 0; border-radius: 10px; background: transparent; color: var(--b-muted);
+  font-size: 15px; font-weight: 500; cursor: pointer;
+}
+.app-bitchord .b-dc-cancel:hover { color: #ffffff; }
+
+/* ---------------------------------------------------------------------------------------
+   Plain Android screens drawn here: Google's sign-in page in BitChord's browser,
+   MicroG RE's account chooser and consent screen, and my.telegram.org/apps.
+   --------------------------------------------------------------------------------------- */
+
+.app-android .ba-web { min-height: 100%; display: flex; flex-direction: column; background: #ffffff; }
+.app-android .ba-web-top { flex: none; background: #000000; color: #ffffff; }
+.app-android .ba-web-page { flex: 1; padding: 22px 18px 28px; background: #ffffff; color: #1f1f1f; }
+.app-android .ba-web-card { max-width: 380px; margin: 0 auto; padding: 24px 22px; border: 1px solid #dadce0; border-radius: 10px; }
+.app-android .ba-web-site { margin: 0 0 14px; font-size: 12px; color: #5f6368; }
+.app-android .ba-web-h { margin: 0 0 8px; font-size: 24px; font-weight: 400; color: #1f1f1f; }
+.app-android .ba-web-p { margin: 0 0 18px; font-size: 14px; line-height: 1.45; color: #444746; }
+.app-android .ba-web-label { display: block; margin-bottom: 6px; font-size: 13px; color: #444746; }
+.app-android .ba-web-input {
+  display: block; width: 100%; height: 48px; padding: 0 14px;
+  border: 1px solid #747775; border-radius: 4px; background: #ffffff; color: #1f1f1f;
+  font: inherit; font-size: 16px;
+}
+.app-android .ba-web-input:focus { outline: none; border: 2px solid #3466c2; padding: 0 13px; }
+.app-android .ba-web-row { display: flex; justify-content: flex-end; margin-top: 22px; }
+.app-android .ba-web-btn {
+  min-height: 40px; padding: 0 24px;
+  border: 0; border-radius: 20px; background: #3466c2; color: #ffffff;
+  font-size: 14px; font-weight: 500; cursor: pointer;
+}
+
+.app-android .ba-mg { min-height: 100%; display: flex; flex-direction: column; padding: 30px 22px 22px; }
+.app-android .ba-mg-app { margin: 0 0 6px; font-size: 13px; letter-spacing: .02em; color: var(--app-muted); }
+.app-android .ba-mg-title { margin: 0 0 18px; font-size: 24px; line-height: 1.3; font-weight: 400; }
+.app-android .ba-mg-list { display: flex; flex-direction: column; overflow: hidden; border-radius: 16px; background: var(--app-surface); }
+.app-android .ba-mg-row {
+  width: 100%; min-height: 64px; padding: 10px 16px;
+  display: flex; align-items: center; gap: 14px;
+  border: 0; background: transparent; color: inherit; text-align: left; font-size: 16px; cursor: pointer;
+}
+.app-android .ba-mg-row:hover { background: rgba(255, 255, 255, .05); }
+.app-android .ba-mg-row + .ba-mg-row { border-top: 1px solid var(--app-outline); }
+.app-android .ba-mg-avatar {
+  flex: none; width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border-radius: 50%; background: #2f6b55; color: #ffffff; font-weight: 500; font-size: 17px;
+}
+.app-android .ba-mg-add { border: 1px solid var(--app-outline); background: transparent; color: var(--app-accent); }
+.app-android .ba-mg-text { display: flex; flex-direction: column; gap: 2px; }
+.app-android .ba-mg-sub { font-size: 14px; color: var(--app-muted); }
+.app-android .ba-mg-center { margin: 0; text-align: center; }
+.app-android .ba-mg-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: auto; padding-top: 24px; }
+.app-android .ba-mg-consent { align-items: center; text-align: center; }
+.app-android .ba-mg-consent .ba-mg-title { margin-bottom: 8px; }
+.app-android .ba-mg-consent .ba-mg-actions { align-self: stretch; }
+.app-android .ba-mg-avatar-big { width: 64px; height: 64px; margin: 18px 0 16px; font-size: 26px; }
+.app-android .ba-mg-allow {
+  min-height: 40px; padding: 0 24px;
+  border: 0; border-radius: 20px; background: var(--app-accent); color: var(--app-on-accent);
+  font-size: 14px; font-weight: 500; cursor: pointer;
+}
+
+.app-android .ba-browser { min-height: 100%; display: flex; flex-direction: column; background: #ffffff; color: #222222; }
+.app-android .ba-chrome {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; align-items: center; gap: 6px; padding: 8px 6px 8px 10px;
+  border-bottom: 1px solid #dadce0; background: #f1f3f4;
+}
+.app-android .ba-chrome-url {
+  flex: 1; min-width: 0; height: 40px; padding: 0 14px;
+  display: flex; align-items: center; gap: 8px;
+  border-radius: 20px; background: #ffffff; color: #202124; font-size: 15px;
+}
+.app-android .ba-chrome-url span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-android .ba-chrome-url .g-icon { color: #5f6368; }
+.app-android .ba-chrome-btn {
+  width: 40px; height: 40px; padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; color: #444444; cursor: pointer;
+}
+.app-android .ba-tga { padding: 18px 16px 28px; font-size: 15px; }
+.app-android .ba-tga-h { margin: 0 0 12px; font-size: 20px; font-weight: 600; color: #222222; }
+.app-android .ba-tga-box { padding: 2px 12px; border: 1px solid #e3e3e3; border-radius: 6px; background: #fafafa; }
+.app-android .ba-tga-field { display: flex; flex-direction: column; gap: 4px; padding: 9px 0; }
+.app-android .ba-tga-field + .ba-tga-field { border-top: 1px solid #ececec; }
+.app-android .ba-tga-label { font-size: 13px; font-weight: 600; color: #555555; }
+.app-android .ba-tga-value { color: #222222; word-break: break-all; }
+.app-android .ba-tga-mono {
+  align-self: flex-start; max-width: 100%; padding: 4px 8px;
+  border: 1px solid #e3e3e3; border-radius: 4px; background: #ffffff;
+  font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 14px; user-select: all;
+}
+.app-android .ba-tga-note {
+  margin: 8px 0 16px; padding: 6px 10px;
+  border: 1px dashed #c9a227; border-radius: 6px; background: #fff8de; color: #6b5200;
+  font-size: 12.5px;
+}
+.app-android .ba-tga-form { padding: 2px 12px 14px; border: 1px solid #e3e3e3; border-radius: 6px; }
+.app-android .ba-tga-input {
+  display: block; min-height: 36px; padding: 7px 10px;
+  border: 1px solid #cccccc; border-radius: 4px; background: #ffffff; color: #222222; font-size: 15px;
+}
+.app-android .ba-tga-btn {
+  margin-top: 10px; padding: 10px 18px;
+  border: 0; border-radius: 4px; background: #3a7fc1; color: #ffffff; font-size: 15px; cursor: pointer;
+}
+
+/* Reduced motion: nothing here moves by itself. */
+@media (prefers-reduced-motion: reduce) {
+  .app-bitchord .b-signin-card { animation: none; }
+  .app-bitchord .b-eq-body, .app-bitchord .b-eq-puck { transition: none; }
+}

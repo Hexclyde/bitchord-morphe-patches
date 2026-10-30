@@ -275,7 +275,8 @@ public class ExtrasActivityTest {
         toggle("sing").performClick();
         layoutPage();
         assertEquals(48, gear("sing").getWidth());
-        assertEquals(52, toggle("sing").getWidth());
+        assertEquals(64, toggle("sing").getWidth());
+        assertEquals(48, toggle("sing").getHeight());
         assertTrue(gear("sing").getRight() <= ((View) toggle("sing").getParent()).getLeft());
         shown("sing");
         assertTrue(gear("sing").isEnabled());

@@ -1,0 +1,757 @@
+/*
+ * Bitchord+ install guide: page layout, the pretend phone's frame and Android parts,
+ * base controls, the shared app colour tokens and the tour dialog's theme.
+ * Morphe Manager screens are styled in morphe.css (scope .app-morphe) and BitChord screens in
+ * bitchord.css (scope .app-bitchord). Generic Android screens use .app-android.
+ */
+
+/* ------------------------------------------------------------------------------------------
+   Page tokens. The page follows light and dark mode; the pretend phone stays dark.
+   ------------------------------------------------------------------------------------------ */
+
+:root {
+  --font: Roboto, Inter, system-ui, sans-serif;
+  --mono: ui-monospace, "Roboto Mono", Menlo, Consolas, monospace;
+  --page-bg: #f4f5f8;
+  --page-fg: #16181d;
+  --page-muted: #4c5260;
+  --card-bg: #ffffff;
+  --card-line: #d6dae2;
+  --accent: #2c53c4;
+  --accent-fg: #ffffff;
+  --accent-soft: #e5ebfb;
+  --notice-bg: #fff6df;
+  --notice-line: #e2bd5c;
+  --notice-fg: #3f3108;
+  --focus: #1849d6;
+  --stage-bg: #e7e9ef;
+  --stage-line: #d6dae2;
+  --tour-surface: #ffffff;
+  --tour-text: #16181d;
+  --tour-muted: #4c5260;
+  --tour-line: #d6dae2;
+  --tour-accent: #2c53c4;
+  --tour-accent-fg: #ffffff;
+  --tour-code-bg: #eef0f5;
+  --stagebar-h: 52px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page-bg: #0e1014;
+    --page-fg: #e7e9ef;
+    --page-muted: #a9afbd;
+    --card-bg: #171a20;
+    --card-line: #2b303a;
+    --accent: #93abff;
+    --accent-fg: #0a1230;
+    --accent-soft: #1d2643;
+    --notice-bg: #28220f;
+    --notice-line: #6a5521;
+    --notice-fg: #f1e2b5;
+    --focus: #a6bcff;
+    --stage-bg: #08090c;
+    --stage-line: #20242c;
+    --tour-surface: #272c37;
+    --tour-text: #eef0f5;
+    --tour-muted: #bcc2cf;
+    --tour-line: #464e5e;
+    --tour-accent: #93abff;
+    --tour-accent-fg: #0a1230;
+    --tour-code-bg: #282d37;
+    color-scheme: dark;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--page-bg);
+  color: var(--page-fg);
+  font: 16px/1.5 var(--font);
+}
+a { color: var(--accent); }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+[hidden] { display: none !important; }
+
+.skip-link {
+  position: absolute; left: 12px; top: -60px; z-index: 10000;
+  background: var(--accent); color: var(--accent-fg); padding: 8px 14px; border-radius: 999px;
+  font-weight: 600; text-decoration: none;
+}
+.skip-link:focus { top: 12px; }
+
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+@media (max-width: 520px) { .wrap { padding: 0 16px; } }
+
+/* ------------------------------------------------------------------------------------------
+   Header, notice, tour picker and footer
+   ------------------------------------------------------------------------------------------ */
+
+.site-header { padding: 32px 0 8px; }
+.eyebrow { margin: 0 0 4px; font-size: 14px; font-weight: 600; color: var(--page-muted); letter-spacing: .02em; }
+.site-header h1 { margin: 0 0 12px; font-size: clamp(28px, 5vw, 40px); line-height: 1.15; letter-spacing: -.01em; }
+.intro { margin: 0 0 16px; max-width: 70ch; font-size: 17px; }
+.intro-short { display: none; }
+@media (max-width: 560px) {
+  .intro-long { display: none; }
+  .intro-short { display: block; }
+}
+
+.notice {
+  display: flex; gap: 12px; align-items: flex-start;
+  max-width: 78ch; margin: 0 0 8px; padding: 14px 16px;
+  background: var(--notice-bg); color: var(--notice-fg);
+  border: 1px solid var(--notice-line); border-radius: 14px;
+  font-size: 15px;
+}
+.notice p { margin: 0 0 6px; }
+.notice p:last-child { margin-bottom: 0; }
+.notice-icon { flex: none; margin-top: 1px; }
+
+.picker { padding: 20px 0 28px; }
+.picker h2 { margin: 0 0 4px; font-size: 24px; }
+.picker h2:focus { outline: none; }
+.picker-lead { margin: 0 0 18px; color: var(--page-muted); max-width: 70ch; }
+.tour-group { margin: 0 0 20px; }
+.tour-group h3 { margin: 0 0 10px; font-size: 18px; }
+.tour-group .tour-subhead { font-size: 16px; color: var(--page-muted); }
+.picker-note {
+  margin: -2px 0 12px; max-width: 78ch; font-size: 14px; color: var(--page-muted);
+  padding-left: 12px; border-left: 3px solid var(--notice-line);
+}
+.picker-empty { color: var(--page-muted); }
+
+.tour-cards {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+.tour-card {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 16px; border-radius: 16px;
+  background: var(--card-bg); border: 1px solid var(--card-line);
+}
+.tour-card-title { margin: 0; font-size: 17px; line-height: 1.3; }
+.tour-card-summary { margin: 0; font-size: 14px; color: var(--page-muted); }
+.tour-card-meta {
+  margin: 2px 0 6px; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center;
+  font-size: 13px; color: var(--page-muted);
+}
+.tour-card-status { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; }
+.tour-card-status.is-done { color: var(--accent); }
+.tour-card-actions { margin-top: auto; display: flex; flex-wrap: wrap; gap: 8px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 40px; padding: 0 18px; border-radius: 999px;
+  font: 600 15px/1 var(--font); text-decoration: none; cursor: pointer;
+  border: 1px solid transparent;
+}
+.btn-primary { background: var(--accent); color: var(--accent-fg); }
+.btn-primary:hover { filter: brightness(1.08); }
+.btn-quiet { background: transparent; color: var(--page-fg); border-color: var(--card-line); }
+.btn-quiet:hover { background: var(--accent-soft); }
+.btn-small { min-height: 34px; padding: 0 12px; font-size: 14px; }
+.link-button {
+  font: inherit; font-weight: 600; color: var(--accent); background: none; border: 0; padding: 0;
+  text-decoration: underline; cursor: pointer;
+}
+.link-button:disabled { color: inherit; text-decoration: none; cursor: default; }
+
+.site-footer { padding: 28px 0 40px; border-top: 1px solid var(--card-line); color: var(--page-muted); font-size: 15px; }
+.site-footer h2 { font-size: 18px; color: var(--page-fg); margin: 20px 0 8px; }
+.site-footer p { max-width: 80ch; margin: 0 0 10px; }
+.site-footer .small { font-size: 14px; }
+.footer-notice { color: var(--page-fg); }
+.footer-links { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 16px; }
+
+/* ------------------------------------------------------------------------------------------
+   Stage: the bar above the phone, and the phone frame
+   ------------------------------------------------------------------------------------------ */
+
+.stage {
+  background: var(--stage-bg);
+  border-top: 1px solid var(--stage-line);
+  border-bottom: 1px solid var(--stage-line);
+  padding: 8px 0 16px;
+}
+.stage-bar {
+  max-width: 720px; height: var(--stagebar-h); margin: 0 auto; padding: 0 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.stage-status {
+  flex: 1; min-width: 0; margin: 0;
+  display: flex; gap: 8px; align-items: baseline;
+  font-size: 14px; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.stage-tour { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.stage-step { flex: none; font-weight: 500; color: var(--page-muted); }
+.stage-actions { display: flex; gap: 6px; flex: none; }
+.noscript { text-align: center; padding: 16px; }
+
+.phone {
+  --phone-w: 392px;
+  position: relative;
+  width: calc(var(--phone-w) + 20px);
+  height: clamp(560px, calc(100vh - var(--stagebar-h) - 40px), 900px);
+  margin: 8px auto 0;
+  border: 10px solid #0a0b0e;
+  border-radius: 46px;
+  background: #0a0b0e;
+  box-shadow: 0 0 0 1px #2a2d34, 0 18px 50px rgba(0, 0, 0, .35);
+}
+@supports (height: 100svh) {
+  .phone { height: clamp(560px, calc(100svh - var(--stagebar-h) - 40px), 900px); }
+}
+
+@media (max-width: 520px) {
+  :root { --stagebar-h: 48px; }
+  .stage { padding: 0; border: 0; }
+  .stage-bar { padding: 0 12px; gap: 6px; }
+  .stage-status { font-size: 13px; }
+  .btn-small { min-height: 32px; padding: 0 10px; font-size: 13px; }
+  .phone {
+    width: 100%;
+    height: calc(100vh - var(--stagebar-h));
+    min-height: 520px;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  @supports (height: 100svh) {
+    .phone { height: calc(100svh - var(--stagebar-h)); }
+  }
+}
+@media (max-width: 520px) {
+  .stage.is-touring #stage-tours { display: none; }
+  .stage-status { flex-direction: column; gap: 0; line-height: 1.25; }
+  .stage-step { font-size: 12px; }
+}
+
+/* ------------------------------------------------------------------------------------------
+   Inside the phone: Android status bar, the screen area, the Android buttons
+   ------------------------------------------------------------------------------------------ */
+
+.phone-screen {
+  --sys-bg: #111318;
+  --sys-fg: #f1f2f6;
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  border-radius: 36px;
+  background: var(--sys-bg);
+  color: #e2e2e9;
+  font: 14px/1.4 var(--font);
+  color-scheme: dark;
+  -webkit-tap-highlight-color: transparent;
+}
+@media (max-width: 520px) { .phone-screen { border-radius: 0; } }
+.phone-screen[data-app="morphe"] { --sys-bg: #121318; }
+.phone-screen[data-app="bitchord"] { --sys-bg: #000000; }
+.phone-screen[data-app="android"] { --sys-bg: #111318; }
+
+.sys-status {
+  flex: none; height: 30px; padding: 0 20px 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--sys-bg); color: var(--sys-fg);
+  font-size: 13px; font-weight: 500; letter-spacing: .01em;
+}
+.sys-icons { display: inline-flex; align-items: center; gap: 5px; }
+.sys-battery .g-icon { transform: translateY(-.5px); }
+
+.phone-viewport { position: relative; flex: 1; min-height: 0; overflow: hidden; }
+.screen-host { position: absolute; inset: 0; }
+
+.sys-nav {
+  flex: none; height: 46px;
+  display: flex; align-items: center; justify-content: space-around;
+  padding: 0 24px;
+  background: var(--sys-bg);
+}
+.sys-nav-btn {
+  width: 64px; height: 38px; border: 0; border-radius: 19px;
+  display: grid; place-items: center;
+  background: transparent; color: var(--sys-fg); opacity: .9;
+  cursor: pointer;
+}
+.sys-nav-btn:hover { background: rgba(255, 255, 255, .08); }
+
+.phone-screen button { font-family: inherit; }
+.phone-screen :focus-visible { outline: 3px solid #a6bcff; outline-offset: 2px; }
+
+/* A screen fills the area between the bars and scrolls on its own. */
+.screen {
+  position: absolute; inset: 0;
+  overflow-x: hidden; overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--app-bg); color: var(--app-fg);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, .22) transparent;
+}
+.screen::-webkit-scrollbar { width: 6px; }
+.screen::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .22); border-radius: 3px; }
+.g-render-error { padding: 24px; color: #ffb4ab; }
+
+/* Dialogs, sheets and full-screen dialogs */
+.overlay-host { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+.overlay { position: absolute; inset: 0; display: flex; pointer-events: auto; color: var(--app-fg); }
+.overlay-scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, .58); }
+.overlay-panel { position: relative; z-index: 1; color: var(--app-fg); }
+.overlay-dialog { align-items: center; justify-content: center; padding: 24px; }
+.overlay-dialog .overlay-panel {
+  width: 100%; max-width: 340px; max-height: 100%; overflow-y: auto;
+  background: var(--app-dialog-bg, var(--app-surface)); border-radius: 28px;
+}
+.overlay-sheet { align-items: flex-end; }
+.overlay-sheet .overlay-panel {
+  width: 100%; max-height: 90%; overflow-y: auto;
+  background: var(--app-sheet-bg, var(--app-bg)); border-radius: 28px 28px 0 0;
+}
+.overlay-full .overlay-panel { position: absolute; inset: 0; overflow-y: auto; background: var(--app-bg); }
+
+/* Toasts sit above the apps' own floating bars. */
+.toast-host {
+  position: absolute; left: 16px; right: 16px; bottom: 104px; z-index: 8;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  pointer-events: none;
+}
+.g-toast {
+  max-width: 100%; padding: 10px 16px; border-radius: 20px;
+  background: #e4e4ea; color: #1b1b1f;
+  font-size: 14px; line-height: 1.35; text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .35);
+  animation: g-toast-in 180ms ease-out both;
+}
+.g-toast.rt-hide { animation: g-toast-out 220ms ease-in both; }
+
+/* Screen and overlay motion. The engine waits for these to end before measuring. */
+.screen.rt-enter-forward { animation: g-in-forward 220ms cubic-bezier(.2, .8, .2, 1) both; }
+.screen.rt-leave-forward { animation: g-out-forward 220ms ease-in both; pointer-events: none; }
+.screen.rt-enter-back { animation: g-in-back 220ms cubic-bezier(.2, .8, .2, 1) both; }
+.screen.rt-leave-back { animation: g-out-back 220ms ease-in both; pointer-events: none; }
+.screen.rt-enter-fade { animation: g-in-fade 240ms ease-out both; }
+.screen.rt-leave-fade { animation: g-out-fade 200ms ease-in both; pointer-events: none; }
+.overlay.rt-opening .overlay-scrim { animation: g-fade-in 200ms ease-out both; }
+.overlay-dialog.rt-opening .overlay-panel,
+.overlay-full.rt-opening .overlay-panel { animation: g-pop-in 220ms cubic-bezier(.2, .8, .2, 1) both; }
+.overlay-sheet.rt-opening .overlay-panel { animation: g-sheet-in 260ms cubic-bezier(.2, .8, .2, 1) both; }
+.overlay.rt-closing { pointer-events: none; }
+.overlay.rt-closing .overlay-scrim { animation: g-fade-out 180ms ease-in both; }
+.overlay-dialog.rt-closing .overlay-panel,
+.overlay-full.rt-closing .overlay-panel { animation: g-pop-out 180ms ease-in both; }
+.overlay-sheet.rt-closing .overlay-panel { animation: g-sheet-out 200ms ease-in both; }
+
+@keyframes g-in-forward { from { transform: translateX(36px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes g-out-forward { from { opacity: 1; } to { transform: translateX(-36px); opacity: 0; } }
+@keyframes g-in-back { from { transform: translateX(-36px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes g-out-back { from { opacity: 1; } to { transform: translateX(36px); opacity: 0; } }
+@keyframes g-in-fade { from { transform: scale(.97); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes g-out-fade { from { opacity: 1; } to { opacity: 0; } }
+@keyframes g-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes g-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes g-pop-in { from { transform: scale(.95); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes g-pop-out { from { opacity: 1; } to { transform: scale(.95); opacity: 0; } }
+@keyframes g-sheet-in { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes g-sheet-out { from { transform: none; } to { transform: translateY(100%); } }
+@keyframes g-toast-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes g-toast-out { from { opacity: 1; } to { opacity: 0; } }
+
+/* ------------------------------------------------------------------------------------------
+   App colour tokens. Each screen and overlay carries one scope class: .app-morphe,
+   .app-bitchord or .app-android. morphe.css and bitchord.css may add tokens of their own.
+   ------------------------------------------------------------------------------------------ */
+
+.app-morphe {
+  /* Morphe's fixed dark palette; on Android 12+ the real app follows the wallpaper. */
+  --app-bg: #121318;
+  --app-fg: #e3e2e6;
+  --app-muted: #c3c6cf;
+  --app-surface: #1f222b;
+  --app-surface-2: #2e313a;
+  --app-outline: #43474e;
+  --app-outline-strong: #8d9199;
+  --app-accent: #a4c9ff;
+  --app-on-accent: #00315d;
+  --app-accent-container: #22304d;
+  --app-on-accent-container: #d4e3ff;
+  --app-error: #ffb4ab;
+  --app-error-container: #93000a;
+  --app-on-error-container: #ffdad6;
+  --app-warning: #f5bd48;
+  --app-warning-container: #5f4100;
+  --app-success: #90d889;
+  --app-success-container: #0d5316;
+  --app-bitchord-colour: #ff8944;
+  --switch-on-track: var(--app-accent);
+  --switch-on-thumb: var(--app-on-accent);
+  --switch-off-track: #333537;
+  --switch-off-thumb: #8d9199;
+  --switch-off-border: #8d9199;
+  --slider-active: var(--app-accent);
+  --slider-track: #43474e;
+  --slider-thumb: var(--app-accent);
+  --field-bg: transparent;
+  --field-line: #8d9199;
+  --field-r: 12px;
+  font-family: Roboto, Inter, system-ui, sans-serif;
+}
+
+.app-bitchord {
+  /* BitChord's own dark look: black pages, grey cards, white as the accent. */
+  --app-bg: #000000;
+  --app-fg: #ffffff;
+  --app-muted: #8e8e93;
+  --app-surface: #1c1c1e;
+  --app-surface-2: #2c2c2e;
+  --app-outline: #2c2c2e;
+  --app-accent: #ffffff;
+  --app-on-accent: #000000;
+  --app-danger: #fa2d48;
+  --app-dialog-bg: #1c1c1e;
+  --switch-on-track: #ffffff;
+  --switch-on-thumb: #000000;
+  --switch-off-track: #36343b;
+  --switch-off-thumb: #2c2c2e;
+  --switch-off-border: #2c2c2e;
+  --slider-active: #ffffff;
+  --slider-track: #2c2c2e;
+  --slider-thumb: #ffffff;
+  --field-bg: #2c2c2e;
+  --field-line: transparent;
+  --field-r: 10px;
+  font-family: Inter, Roboto, system-ui, sans-serif;
+}
+
+.app-android {
+  /* A plain Android 14-style dark look for system screens, the browser and MicroG RE. */
+  --app-bg: #111318;
+  --app-fg: #e2e2e9;
+  --app-muted: #c4c6d0;
+  --app-surface: #1d2025;
+  --app-surface-2: #282a2f;
+  --app-outline: #44474f;
+  --app-accent: #a8c7fa;
+  --app-on-accent: #062e6f;
+  --app-dialog-bg: #282a2f;
+  --app-sheet-bg: #1d2025;
+  --switch-on-track: #a8c7fa;
+  --switch-on-thumb: #062e6f;
+  --switch-off-track: #33353a;
+  --switch-off-thumb: #8e9099;
+  --switch-off-border: #8e9099;
+  --slider-active: #a8c7fa;
+  --slider-track: #44474f;
+  --slider-thumb: #a8c7fa;
+  --field-bg: transparent;
+  --field-line: #8e9099;
+  --field-r: 8px;
+  font-family: Roboto, Inter, system-ui, sans-serif;
+}
+
+/* ------------------------------------------------------------------------------------------
+   Base controls made by Guide.ui. App CSS may restyle them inside its own scope.
+   ------------------------------------------------------------------------------------------ */
+
+.g-icon { display: inline-block; flex: none; vertical-align: middle; }
+
+.g-switch {
+  position: relative; flex: none;
+  width: 52px; height: 32px; padding: 0;
+  border-radius: 999px; border: 2px solid var(--switch-off-border, #8d9199);
+  background: var(--switch-off-track, #333);
+  cursor: pointer;
+  transition: background-color 150ms, border-color 150ms;
+}
+.g-switch-thumb {
+  position: absolute; top: 50%; left: 4px;
+  width: 16px; height: 16px; margin-top: -8px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--switch-off-thumb, #8d9199); color: var(--switch-off-track, #333);
+  transition: left 150ms, width 150ms, height 150ms, margin 150ms, background-color 150ms;
+}
+.g-switch[aria-checked="true"] { background: var(--switch-on-track, #fff); border-color: var(--switch-on-track, #fff); }
+.g-switch[aria-checked="true"] .g-switch-thumb {
+  left: calc(100% - 26px); width: 24px; height: 24px; margin-top: -12px;
+  background: var(--switch-on-thumb, #000); color: var(--switch-on-track, #fff);
+}
+.g-switch:has(svg) .g-switch-thumb { left: 2px; width: 24px; height: 24px; margin-top: -12px; }
+.g-switch:has(svg)[aria-checked="true"] .g-switch-thumb { left: calc(100% - 26px); }
+.g-switch[aria-disabled="true"] { opacity: .45; cursor: default; }
+
+.g-check, .g-radio {
+  flex: none; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%;
+  display: inline-grid; place-items: center;
+  background: transparent; color: var(--app-muted, #aaa); cursor: pointer;
+}
+.g-check[aria-checked="true"], .g-radio[aria-checked="true"] { color: var(--app-accent, #fff); }
+
+.g-slider {
+  -webkit-appearance: none; appearance: none;
+  display: block; width: 100%; height: 32px; margin: 0;
+  background: transparent; cursor: pointer;
+}
+.g-slider::-webkit-slider-runnable-track {
+  height: var(--slider-h, 4px); border-radius: 999px;
+  background: linear-gradient(to right, var(--slider-active, #fff) 0 var(--pct, 50%), var(--slider-track, #444) var(--pct, 50%) 100%);
+}
+.g-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: var(--slider-thumb-w, 20px); height: var(--slider-thumb-h, 20px);
+  margin-top: calc((var(--slider-h, 4px) - var(--slider-thumb-h, 20px)) / 2);
+  border: 0; border-radius: var(--slider-thumb-r, 50%);
+  background: var(--slider-thumb, #fff);
+}
+.g-slider::-moz-range-track { height: var(--slider-h, 4px); border-radius: 999px; background: var(--slider-track, #444); }
+.g-slider::-moz-range-progress { height: var(--slider-h, 4px); border-radius: 999px; background: var(--slider-active, #fff); }
+.g-slider::-moz-range-thumb {
+  width: var(--slider-thumb-w, 20px); height: var(--slider-thumb-h, 20px);
+  border: 0; border-radius: var(--slider-thumb-r, 50%); background: var(--slider-thumb, #fff);
+}
+
+.g-field {
+  display: block; width: 100%; min-height: 48px; padding: 12px 14px;
+  border: 1px solid var(--field-line, transparent); border-radius: var(--field-r, 10px);
+  background: var(--field-bg, transparent); color: var(--app-fg, inherit);
+  font: inherit; font-size: 16px; line-height: 1.3;
+}
+.g-field::placeholder { color: var(--app-muted, #999); opacity: 1; }
+.g-field:focus { border-color: var(--app-accent, #fff); outline: none; box-shadow: 0 0 0 1px var(--app-accent, #fff); }
+.g-textarea { resize: vertical; min-height: 96px; }
+
+/* ------------------------------------------------------------------------------------------
+   Built-in Android parts: home screen, recent apps, and plain system dialogs and sheets
+   that the screen files can reuse (.a-dialog, .a-sheet, .a-btn-text).
+   ------------------------------------------------------------------------------------------ */
+
+.a-home {
+  min-height: 100%;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 24px;
+  padding: 40px 20px 20px;
+  background:
+    radial-gradient(120% 60% at 20% 0%, #2b3550 0%, transparent 60%),
+    radial-gradient(90% 60% at 100% 100%, #20352f 0%, transparent 60%),
+    #101318;
+}
+.a-home-clock { display: flex; flex-direction: column; gap: 2px; padding: 0 6px; }
+.a-home-time { font-size: 64px; line-height: 1; font-weight: 300; letter-spacing: -.02em; color: #eef0f6; }
+.a-home-date { font-size: 15px; color: #c9ccd6; }
+.a-home-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px 6px;
+  margin-top: auto; padding: 6px;
+  border-radius: 20px;
+}
+.a-home-app {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 6px 2px; border: 0; border-radius: 16px;
+  background: transparent; color: #eef0f6; cursor: pointer;
+  font-size: 12.5px; line-height: 1.2;
+}
+.a-home-app:hover { background: rgba(255, 255, 255, .06); }
+.a-home-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.a-home-search {
+  display: flex; align-items: center; gap: 10px;
+  height: 48px; padding: 0 18px; border-radius: 24px;
+  background: rgba(255, 255, 255, .1); color: #c9ccd6;
+}
+
+/* Letter tiles stand in for most app icons; BitChord's tile uses its real icon. */
+.a-tile {
+  width: var(--tile, 56px); height: var(--tile, 56px); border-radius: 30%;
+  display: grid; place-items: center;
+  font-weight: 700; font-size: calc(var(--tile, 56px) * .38); letter-spacing: -.02em;
+  color: #ffffff;
+}
+.a-tile-letter { line-height: 1; }
+.a-tile-morphe { background: linear-gradient(140deg, #2a5fae, #1f8a9a); }
+.a-tile-bitchord { background: linear-gradient(180deg, #fb5c74, #fa233b); overflow: hidden; }
+/* BitChord's own icon: white sound waves on its red gradient. */
+.g-bitchord-mark { display: block; width: 100%; height: 100%; }
+.a-tile-files { background: #3a65c9; }
+.a-tile-browser { background: #2f7a58; }
+.a-tile-plain { background: #4a4d57; }
+
+.a-sheet { padding: 8px 20px 20px; }
+.a-sheet-handle { width: 32px; height: 4px; margin: 6px auto 14px; border-radius: 2px; background: rgba(255, 255, 255, .35); }
+.a-sheet-title { margin: 0 0 10px; font-size: 20px; font-weight: 500; }
+.a-recents { display: flex; flex-direction: column; gap: 4px; }
+.a-recents-app {
+  display: flex; align-items: center; gap: 14px;
+  min-height: 56px; padding: 6px 10px; border: 0; border-radius: 16px;
+  background: transparent; color: inherit; text-align: left; font-size: 16px; cursor: pointer;
+}
+.a-recents-app span:not(.a-tile) { flex: 1; }
+.a-recents-app:hover { background: rgba(255, 255, 255, .06); }
+
+.a-dialog { padding: 24px 24px 18px; }
+.a-dialog-title { margin: 0 0 14px; font-size: 22px; line-height: 1.3; font-weight: 400; }
+.a-dialog-text { margin: 0 0 8px; font-size: 14px; line-height: 1.45; color: var(--app-muted); }
+.a-dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.a-btn-text {
+  min-height: 40px; padding: 0 14px; border: 0; border-radius: 20px;
+  background: transparent; color: var(--app-accent); font-size: 14px; font-weight: 500; cursor: pointer;
+}
+.a-btn-text:hover { background: rgba(168, 199, 250, .1); }
+
+/* ------------------------------------------------------------------------------------------
+   Tour dialog theme (TourGuide JS). The library has no CSS variables, so these rules are
+   scoped to our dialogClass (guide-tour) and backdropClass (guide-backdrop).
+   ------------------------------------------------------------------------------------------ */
+
+.tg-dialog.guide-tour {
+  max-width: min(340px, calc(100vw - 32px)) !important;
+  min-height: 0;
+  background: var(--tour-surface); color: var(--tour-text);
+  border: 1px solid var(--tour-line); border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, .38);
+  font: 15px/1.45 var(--font);
+}
+.tg-dialog.guide-tour .tg-arrow { background: var(--tour-surface); }
+@media (prefers-color-scheme: dark) {
+  .tg-dialog.guide-tour { border-color: #6b7690; box-shadow: 0 12px 40px rgba(0, 0, 0, .6), 0 0 0 1px rgba(157, 182, 255, .15); }
+}
+.tg-dialog.guide-tour .tg-dialog-header { align-items: flex-start; padding: 16px 12px 0 18px; }
+.tg-dialog.guide-tour .tg-dialog-title {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px;
+  font-size: 17px; line-height: 1.3; font-weight: 700;
+}
+.tour-badge {
+  font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--tour-accent);
+}
+.tg-dialog.guide-tour .tg-dialog-close-btn {
+  flex: none; width: 32px; height: 32px; margin: -6px 0 0 8px;
+  display: grid; place-items: center; border-radius: 50%; opacity: .8;
+}
+.tg-dialog.guide-tour .tg-dialog-close-btn:hover { opacity: 1; background: var(--accent-soft); }
+.tg-dialog.guide-tour .tg-dialog-close-btn svg,
+.tg-dialog.guide-tour .tg-dialog-spinner svg { fill: currentColor; stroke: currentColor; }
+.tg-dialog.guide-tour .tg-dialog-spinner { margin: 4px 0 0 8px; }
+.tg-dialog.guide-tour .tg-dialog-progress-bar { height: 4px; margin: 12px 0 0; background: var(--tour-line); }
+.tg-dialog.guide-tour .tg-dialog-progress-bar > .tg-bar { background-color: var(--tour-accent) !important; }
+.tg-dialog.guide-tour .tg-dialog-body { padding: 12px 18px 4px; }
+.tg-dialog.guide-tour .tg-dialog-footer { padding: 10px 14px 14px; }
+.tg-dialog.guide-tour .tg-dialog-footer .tg-dialog-footer-sup .tg-step-progress {
+  opacity: 1; color: var(--tour-muted); font-size: 13px; letter-spacing: .02em;
+}
+.tg-dialog.guide-tour .tg-dialog-footer button.tg-dialog-btn {
+  min-height: 40px; padding: 0 18px; border-radius: 999px;
+  font: 600 14px/1 var(--font);
+  background: transparent; color: var(--tour-text); border: 1px solid var(--tour-line);
+  cursor: pointer;
+}
+.tg-dialog.guide-tour .tg-dialog-footer button.tg-dialog-btn:hover { background: var(--accent-soft); color: var(--tour-text); border: 1px solid var(--tour-line); }
+.tg-dialog.guide-tour .tg-dialog-footer button.tg-dialog-btn:active { background: var(--accent-soft); color: var(--tour-text); border: 1px solid var(--tour-accent); }
+.tg-dialog.guide-tour .tg-dialog-footer button#tg-dialog-next-btn,
+.tg-dialog.guide-tour .tg-dialog-footer button#tg-dialog-next-btn:hover,
+.tg-dialog.guide-tour .tg-dialog-footer button#tg-dialog-next-btn:active {
+  background: var(--tour-accent); color: var(--tour-accent-fg); border-color: var(--tour-accent);
+}
+.tg-dialog.guide-tour .tg-dialog-footer button.tg-dialog-btn:focus-visible,
+.tg-dialog.guide-tour .tg-dialog-close-btn:focus-visible,
+.tg-dialog.guide-tour button:focus-visible {
+  outline: 3px solid var(--focus); outline-offset: 2px;
+}
+.tg-dialog.guide-tour .tg-dialog-footer button.tg-dialog-btn.disabled { opacity: .45; }
+
+.tour-body p { margin: 0 0 8px; }
+.tour-body p:last-child { margin-bottom: 0; }
+.tour-body code {
+  font-family: var(--mono); font-size: 13px; word-break: break-all;
+  padding: 1px 4px; border-radius: 5px; background: var(--tour-code-bg);
+}
+.tour-body table { width: 100%; margin: 8px 0; border-collapse: collapse; font-size: 13px; }
+.tour-body th, .tour-body td { padding: 4px 6px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--tour-line); }
+.tour-body ul, .tour-body ol { margin: 4px 0 8px; padding-left: 20px; }
+.tour-hint { margin: 8px 0 0; font-size: 13px; color: var(--tour-muted); }
+.tour-copy {
+  min-height: 32px; margin: 2px 0 6px; padding: 0 12px; border-radius: 999px; cursor: pointer;
+  font: 600 13px/1 var(--font);
+  background: var(--accent-soft); color: var(--tour-text); border: 1px solid var(--tour-line);
+}
+.tour-copy:hover { border-color: var(--tour-accent); }
+.tour-next {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--tour-line);
+}
+.tour-next p { width: 100%; margin: 0; font-size: 13px; color: var(--tour-muted); }
+.tour-next-btn {
+  min-height: 36px; padding: 0 14px; border-radius: 999px; cursor: pointer;
+  font: 600 14px/1 var(--font);
+  background: var(--accent-soft); color: var(--tour-text); border: 1px solid var(--tour-line);
+}
+.tour-next-btn:hover { border-color: var(--tour-accent); }
+
+.tg-backdrop.guide-backdrop { border-radius: 14px; border: 2px solid #9db6ff; }
+
+/* The invisible element the dialog is placed against on wide screens and for tall targets. */
+.tour-anchor { position: absolute; visibility: hidden; pointer-events: none; z-index: -1; }
+
+/* The control that moves the tour on gets a soft pulse. */
+.rt-tap { animation: g-tap-pulse 1.8s ease-out infinite; }
+@keyframes g-tap-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(157, 182, 255, .7); }
+  70% { box-shadow: 0 0 0 12px rgba(157, 182, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(157, 182, 255, 0); }
+}
+
+/* With exitOnClickOutside off, the library blocks every click on the page (its body class
+   tg-no-interaction). Give clicks back to the page's own controls, and to a tap control that
+   isn't the highlighted element. */
+.tg-no-interaction .tg-allow,
+.tg-no-interaction .tg-allow *,
+.tg-no-interaction .rt-tap,
+.tg-no-interaction .rt-tap * {
+  pointer-events: auto !important;
+  user-select: auto !important;
+}
+
+/* ------------------------------------------------------------------------------------------
+   Reduced motion: no slides, pops, pulses or dialog glides.
+   ------------------------------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .screen, .overlay, .overlay-panel, .overlay-scrim, .g-toast, .rt-tap,
+  .g-switch, .g-switch-thumb { animation: none !important; transition: none !important; }
+  .tg-dialog, .tg-backdrop, .tg-dialog .tg-bar { transition: none !important; animation: none !important; }
+  .rt-tap { box-shadow: 0 0 0 3px rgba(157, 182, 255, .8); }
+  html { scroll-behavior: auto; }
+}
+
+/* ------------------------------------------------------------------------------------------
+   Demo screens (only shown with ?demo=1, for testing the engine)
+   ------------------------------------------------------------------------------------------ */
+
+.demo-page { padding: 12px 16px 120px; }
+.demo-full { min-height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 24px; text-align: center; }
+.demo-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 8px 0 16px; }
+.demo-title { margin: 0; font-size: 24px; font-weight: 600; }
+.demo-big { font-size: 34px; font-weight: 800; letter-spacing: -.02em; margin: 12px 4px 16px; }
+.demo-sub { margin: 2px 0 0; color: var(--app-muted); }
+.demo-label { margin: 22px 4px 8px; font-size: 11px; font-weight: 600; color: var(--app-muted); }
+.demo-round {
+  width: 48px; height: 48px; border: 0; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--app-accent-container, #333); color: var(--app-on-accent-container, #fff); cursor: pointer;
+}
+.demo-card { margin: 0 0 12px; padding: 4px 16px; border-radius: 16px; background: var(--app-surface); border: 1px solid var(--app-outline); }
+.demo-row { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 8px 0; color: inherit; }
+.demo-row + .demo-row { border-top: 1px solid var(--app-outline); }
+.demo-col { flex-direction: column; align-items: stretch; gap: 4px; }
+.demo-line { display: flex; justify-content: space-between; }
+.demo-grow { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.demo-grow small { color: var(--app-muted); font-size: 13px; }
+.demo-option { width: 100%; border: 0; background: transparent; text-align: left; font-size: 16px; cursor: pointer; }
+.demo-sheet { padding: 8px 20px 24px; }
+.demo-button {
+  display: block; width: 100%; min-height: 48px; margin: 12px 0 0; border-radius: 999px;
+  border: 1px solid var(--app-accent); background: var(--app-accent); color: var(--app-on-accent);
+  font-size: 15px; font-weight: 600; cursor: pointer;
+}
+.demo-quiet { background: transparent; color: var(--app-fg); border-color: var(--app-outline); }

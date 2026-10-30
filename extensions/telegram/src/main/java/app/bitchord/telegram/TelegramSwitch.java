@@ -11,9 +11,8 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Checkable;
 
 /**
- * A switch drawn the way BitChord's own settings and Sources screens draw theirs (Material 3 with
- * BitChord's colours): a 52×32dp pill, filled with the primary colour and a large dark thumb when
- * on, outlined with a small thumb when off.
+ * BitChord 1.9's IosSwitch geometry: a 64×28dp track and white 40×24dp capsule,
+ * within a 48dp touch target. The enabled colour stays green in either theme.
  */
 final class TelegramSwitch extends View implements Checkable {
     interface Listener {
@@ -32,9 +31,7 @@ final class TelegramSwitch extends View implements Checkable {
     TelegramSwitch(Context context, TelegramStyle style) {
         super(context);
         this.style = style;
-        // Material 3's surfaceContainerHighest, which BitChord's colour scheme leaves at its
-        // default.
-        uncheckedTrack = style.dark ? 0xff36343b : 0xffe6e0e9;
+        uncheckedTrack = style.dark ? 0x5c8e8e93 : 0x388e8e93;
         setClickable(true);
         setFocusable(true);
         setOnClickListener(v -> toggle());
@@ -46,7 +43,7 @@ final class TelegramSwitch extends View implements Checkable {
 
     @Override
     protected void onMeasure(int widthSpec, int heightSpec) {
-        setMeasuredDimension(style.dp(52), style.dp(32));
+        setMeasuredDimension(style.dp(64), style.dp(48));
     }
 
     @Override
@@ -92,24 +89,24 @@ final class TelegramSwitch extends View implements Checkable {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        float w = getWidth(), h = getHeight(), radius = h / 2f, border = style.dp(2);
-        track.set(0, 0, w, h);
+        float left = (getWidth() - style.dp(64)) / 2f;
+        float top = (getHeight() - style.dp(28)) / 2f;
+        float radius = style.dp(14);
+        track.set(left, top, left + style.dp(64), top + style.dp(28));
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(blend(uncheckedTrack, style.foreground, position));
+        paint.setColor(blend(uncheckedTrack, style.dark ? 0xff30d158 : 0xff34c759, position));
         canvas.drawRoundRect(track, radius, radius, paint);
-        if (position < 1) {
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(border);
-            paint.setColor(blend(style.outline, style.foreground, position));
-            track.inset(border / 2f, border / 2f);
-            canvas.drawRoundRect(track, radius - border / 2f, radius - border / 2f, paint);
-        }
-        // Thumb: 16dp off, 24dp on, centred 16dp from its end of the track.
-        float size = style.dp(16) + (style.dp(24) - style.dp(16)) * position;
-        float x = radius + (w - 2 * radius) * position;
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(blend(style.outline, style.background, position));
-        canvas.drawCircle(x, h / 2f, size / 2f, paint);
+        float width = style.dp(40) * (isPressed() ? 1.18f : 1f);
+        float x = left + style.dp(2) + (style.dp(60) - width) * position;
+        track.set(x, top + style.dp(2), x + width, top + style.dp(26));
+        paint.setColor(0xffffffff);
+        canvas.drawRoundRect(track, style.dp(12), style.dp(12), paint);
+    }
+
+    @Override
+    protected void drawableStateChanged() {
+        super.drawableStateChanged();
+        invalidate();
     }
 
     @Override

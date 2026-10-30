@@ -62,10 +62,10 @@ The **Pitch control**, **Loudness level**, **Sleep timer fade-out**, **Headphone
 ## Fetched or used at run time, not bundled
 
 - **Headphone correction** downloads headphone profiles from [AutoEq](https://github.com/jaakkopasanen/AutoEq) by Jaakko Pasanen ([MIT License](https://github.com/jaakkopasanen/AutoEq/blob/master/LICENSE)) when you pick a model, straight from its GitHub repository, and keeps them on the phone. The filter formulas are the peaking and shelving biquads of Robert Bristow-Johnson's Audio EQ Cookbook.
-- The **JamesDSP** patch works with [RootlessJamesDSP](https://github.com/timschneeb/RootlessJamesDSP) by Tim Schneeberger and [JamesDSPManager](https://github.com/james34602/JamesDSPManager) by James Fung (both GPL-3.0), installed separately by you. Nothing of theirs is bundled; BitChord's audio session is announced to them through Android's standard audio-effect broadcasts.
+- The **JamesDSP** patch works with [RootlessJamesDSP](https://github.com/timschneeb/RootlessJamesDSP) by Tim Schneeberger and [JamesDSPManager](https://github.com/james34602/JamesDSPManager) by James Fung (both GPL-3.0), installed separately by you. Its setup help links to [Shizuku](https://github.com/RikkaApps/Shizuku) by RikkaApps (Apache-2.0), also installed separately, and its power switch is RootlessJamesDSP's own `SET_POWER_STATE` broadcast. Nothing of theirs is bundled; BitChord's audio session is announced to them through Android's standard audio-effect broadcasts.
 
 ## Not bundled
 
-[BitChord](https://github.com/kushagrasinghx/BitChord) is a separate GPL-3.0 app (patched against [`7d956f2`](https://github.com/kushagrasinghx/BitChord/tree/7d956f211b8a46a87184fd3ff87432b51a111dfa)). This repository doesn't distribute it. If you redistribute a patched APK, BitChord's own license obligations apply.
+[BitChord](https://github.com/kushagrasinghx/BitChord) is a separate GPL-3.0 app (patched against [`04f64c9`](https://github.com/kushagrasinghx/BitChord/tree/04f64c9f11bd2714d01bbc6da401f146f3d9399f)). This repository doesn't distribute it. If you redistribute a patched APK, BitChord's own license obligations apply.
 
 The build and test tools (Morphe, Kotlin, the JDK, R8, the Android SDK, Media3, Robolectric, JUnit and others) are downloaded separately and are covered by their own licenses. The versions are listed in `PROVENANCE.json`, and the [Apache 2.0](licenses/APACHE-2.0.txt) text is included.

@@ -28,6 +28,7 @@ PATCHES = [
     "Equaliser per output",
     "DJ mode",
     "JamesDSP",
+    "Audio and video switch",
 ]
 
 TOOLS = Path(os.environ.get("MORPHE_TOOLS", ROOT / ".deps/tools"))

@@ -1,11 +1,16 @@
 package app.bitchord.telegram;
 
+import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
+import android.media.AudioRecordingConfiguration;
+import android.media.MediaRecorder;
 import android.media.audiofx.AudioEffect;
 import android.net.Uri;
+import android.os.Build;
 
 import java.lang.reflect.Field;
 
@@ -24,6 +29,14 @@ final class EffectsApps {
     static final String ROOT = "james.dsp";
     static final String GET_IT =
             "https://f-droid.org/packages/me.timschneeberger.rootlessjamesdsp/";
+
+    static final String SHIZUKU = "moe.shizuku.privileged.api";
+    static final String GET_SHIZUKU = "https://shizuku.rikka.app/download/";
+
+    /** The rootless JamesDSP's power switch, which it lets other apps use. */
+    static final String POWER = "me.timschneeberger.rootlessjamesdsp.SET_POWER_STATE";
+
+    static final String POWER_ENABLED = "rootlessjamesdsp.enabled";
 
     private static volatile SharedPreferences preferences;
 
@@ -123,5 +136,120 @@ final class EffectsApps {
     static boolean hostEqualiserOn(Context context) {
         return context.getSharedPreferences(OutputEq.HOST_PREFERENCES, Context.MODE_PRIVATE)
                 .getBoolean("equalizer_enabled", false);
+    }
+
+    // ── The rootless JamesDSP ───────────────────────────────────────────────
+
+    /**
+     * Whether the rootless JamesDSP has finished its one-time setup: the DUMP permission it uses to
+     * find which app is playing, and permanent leave to capture sound, both granted over Shizuku or
+     * ADB. The same two checks JamesDSP makes on itself.
+     */
+    static boolean rootlessReady(Context context) {
+        PackageManager pm = context.getPackageManager();
+        if (pm.checkPermission("android.permission.DUMP", ROOTLESS)
+                != PackageManager.PERMISSION_GRANTED) return false;
+        try {
+            int uid = pm.getApplicationInfo(ROOTLESS, 0).uid;
+            AppOpsManager ops = context.getSystemService(AppOpsManager.class);
+            return ops == null
+                    || ops.unsafeCheckOpNoThrow("android:project_media", uid, ROOTLESS)
+                            == AppOpsManager.MODE_ALLOWED;
+        } catch (Exception e) {
+            // Android didn't say; the DUMP permission is the part that needs Shizuku or ADB.
+            return true;
+        }
+    }
+
+    static boolean shizukuInstalled(Context context) {
+        try {
+            context.getPackageManager().getPackageInfo(SHIZUKU, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
+    /**
+     * True while some app is capturing the sound that plays. Android doesn't say which app, so this
+     * is only a hint: the rootless JamesDSP processes music this way, and so would a screen
+     * recorder.
+     */
+    static boolean somethingCapturing(Context context) {
+        if (Build.VERSION.SDK_INT < 29) return false;
+        AudioManager audio = context.getSystemService(AudioManager.class);
+        if (audio == null) return false;
+        try {
+            for (AudioRecordingConfiguration recording : audio.getActiveRecordingConfigurations())
+                if (recording.getClientAudioSource() == MediaRecorder.AudioSource.REMOTE_SUBMIX)
+                    return true;
+        } catch (RuntimeException e) {
+            HostLog.d("Couldn't read Android's recordings: " + e);
+        }
+        return false;
+    }
+
+    /** Turns the rootless JamesDSP on or off through its power switch. */
+    static void power(Context context, boolean on) {
+        Intent intent = new Intent(POWER).setPackage(ROOTLESS).putExtra(POWER_ENABLED, on);
+        context.sendBroadcast(intent);
+        HostLog.d("Asked JamesDSP to turn " + (on ? "on" : "off"));
+    }
+
+    /** The commands that do the rootless JamesDSP's setup from a computer, for ADB users. */
+    static String adbCommands() {
+        return adbCommands(ROOTLESS);
+    }
+
+    static String adbCommands(String pkg) {
+        return "adb shell pm grant "
+                + pkg
+                + " android.permission.DUMP\n"
+                + "adb shell appops set "
+                + pkg
+                + " PROJECT_MEDIA allow\n"
+                + "adb shell appops set "
+                + pkg
+                + " SYSTEM_ALERT_WINDOW allow\n";
+    }
+
+    /** Opens Shizuku, or where to get it. */
+    static void openShizuku(Context context) {
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(SHIZUKU);
+        if (intent == null) intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GET_SHIZUKU));
+        try {
+            context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        } catch (RuntimeException e) {
+            HostLog.d("Shizuku couldn't be opened: " + e);
+        }
+    }
+
+    /**
+     * What's known about JamesDSP and BitChord's sound right now, most important first. Each part
+     * says only what Android lets BitChord see.
+     */
+    static String status(Context context, String installedPackage) {
+        if (installedPackage == null) return Strings.t("JamesDSP isn’t installed");
+        if (BitPerfect.playing())
+            return Strings.t(
+                    "Bit-perfect output is sending this song straight to the DAC, where JamesDSP"
+                            + " can’t hear it.");
+        if (SoundExtras.batterySaver && !useJamesDsp)
+            return Strings.t(
+                    "Battery saver can send songs to the audio chip, where JamesDSP can’t hear"
+                            + " them. Turn on Let JamesDSP do the effects.");
+        if (ROOT.equals(installedPackage))
+            return Strings.t(
+                    "JamesDSP (root) works on the audio session BitChord announces when a song"
+                            + " starts.");
+        if (!rootlessReady(context))
+            return Strings.t(
+                    "JamesDSP hasn’t finished its setup. It needs Shizuku or ADB once: open"
+                            + " JamesDSP and follow its steps, or use the commands below.");
+        if (somethingCapturing(context))
+            return Strings.t(
+                    "JamesDSP is set up, and an app is capturing what plays. JamesDSP works this"
+                            + " way, so it’s most likely processing BitChord now.");
+        return Strings.t("JamesDSP is set up but isn’t capturing sound now. Start it below.");
     }
 }

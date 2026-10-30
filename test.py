@@ -90,6 +90,7 @@ SOURCES = [
     "EffectsApps",
     "BitPerfect",
     "SoundExtras",
+    "VideoSwitch",
 ]
 TESTS = [
     "BitPerfectTest",
@@ -131,6 +132,7 @@ TESTS = [
     "HeadphoneEqTest",
     "OutputEqTest",
     "DjModeTest",
+    "VideoSwitchTest",
 ]
 
 subprocess.run(

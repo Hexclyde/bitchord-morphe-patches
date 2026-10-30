@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Build Bitchord+ on your Android phone with Morphe Manager, then set up its extras. An interactive, step-by-step guide on a pretend phone.">
+<title>Bitchord+ install guide</title>
+<link rel="stylesheet" href="vendor/tourguide/tour.min.css">
+<link rel="stylesheet" href="guide.css">
+<link rel="stylesheet" href="morphe.css">
+<link rel="stylesheet" href="bitchord.css">
+</head>
+<body>
+<a class="skip-link" href="#tours">Skip to the tours</a>
+
+<header class="site-header tg-allow">
+  <div class="wrap">
+    <p class="eyebrow">BitChord Morphe Patches · 1.1.0-beta.11</p>
+    <h1>Bitchord+ install guide</h1>
+    <p class="intro intro-long">Bitchord+ is BitChord with my patches added. The main patch plays music from your own Telegram
+      channels, in the quality it was uploaded in. Others add things like pitch control, headphone correction and a DJ mode.
+      You build Bitchord+ yourself, on your own phone, with Morphe Manager. This guide walks you through it on a pretend phone.
+      Pick a tour, then tap the highlighted parts to go step by step. It’s written for patches version 1.1.0-beta.11 and
+      BitChord 1.9.</p>
+    <p class="intro intro-short">Build Bitchord+ on your phone with Morphe Manager, then set up its extras. Pick a tour and tap
+      the highlighted parts to follow along.</p>
+    <aside class="notice" aria-labelledby="notice-title">
+      <span class="notice-icon" data-icon="info" data-size="22"></span>
+      <div>
+        <p><strong id="notice-title">This is an illustration, not the real apps.</strong> The screens are simple drawings that look
+          like Morphe Manager and BitChord, so colours, icons and some wording may differ from your phone. Nothing you tap here
+          changes your real phone.</p>
+        <p>On Android 12 and newer, Morphe takes its colours from your wallpaper, so yours may look different again.</p>
+      </div>
+    </aside>
+  </div>
+</header>
+
+<main>
+  <section id="tours" class="picker tg-allow" aria-labelledby="tours-title">
+    <div class="wrap">
+      <h2 id="tours-title">Pick a tour</h2>
+      <p class="picker-lead">Each tour plays on the pretend phone below. Tap the highlighted part, or use Next. Outside a tour,
+        you can tap around the phone freely.</p>
+
+      <div class="tour-group" data-group-wrap>
+        <h3>Getting started</h3>
+        <div class="tour-cards" data-group="start"></div>
+      </div>
+
+      <div class="tour-section" data-section="use">
+        <div class="tour-group" data-group-wrap>
+          <h3>Using Bitchord+</h3>
+          <div class="tour-cards" data-group="use"></div>
+        </div>
+        <div class="tour-group" data-group-wrap>
+          <h3 class="tour-subhead">Patches &amp; tweaks</h3>
+          <p class="picker-note">Right now 1.1.0-beta.11 is a testing build. Until 1.1.0 is released, the Patches &amp; tweaks
+            patches are only in testing builds. To try them now, follow
+            <button type="button" class="link-button" data-start="testing">Testing builds</button>.</p>
+          <div class="tour-cards" data-group="tweaks"></div>
+        </div>
+      </div>
+
+      <div class="tour-group" data-group-wrap>
+        <h3>Help</h3>
+        <div class="tour-cards" data-group="help"></div>
+      </div>
+
+      <p id="tours-empty" class="picker-empty" hidden>The tours are still being written. You can tap around the phone below.</p>
+    </div>
+  </section>
+
+  <section id="stage" class="stage" aria-label="Pretend phone">
+    <div class="stage-bar tg-allow">
+      <p id="stage-status" class="stage-status">Loading the pretend phone…</p>
+      <div class="stage-actions">
+        <a href="#tours" id="stage-tours" class="btn btn-quiet btn-small">All tours</a>
+        <button type="button" id="stage-restart" class="btn btn-quiet btn-small" hidden>Restart</button>
+        <button type="button" id="stage-stop" class="btn btn-quiet btn-small" hidden>Stop tour</button>
+        <button type="button" id="stage-reset" class="btn btn-quiet btn-small">Reset phone</button>
+      </div>
+    </div>
+    <div class="phone" id="phone"></div>
+    <noscript>
+      <p class="noscript">This guide needs JavaScript. The written guide is
+        <a href="https://github.com/Hexclyde/bitchord-morphe-patches/blob/main/docs/MOBILE.md">docs/MOBILE.md</a>.</p>
+    </noscript>
+  </section>
+</main>
+
+<footer class="site-footer tg-allow">
+  <div class="wrap">
+    <p class="footer-notice"><strong>This is an illustration, not the real apps.</strong> The real Morphe Manager and BitChord may
+      look a little different, and on Android 12 and newer Morphe’s colours follow your wallpaper. Nothing you tap here changes
+      your real phone.</p>
+
+    <h2>Credits</h2>
+    <p>BitChord is made by kushagra (kushagrasinghx) and its contributors. Morphe Manager and MicroG RE are made by the Morphe
+      team. These patches are an independent project. They aren’t made by, or affiliated with, BitChord, Morphe or Telegram.</p>
+    <p class="small">Sing is ported from Auris by OreoMuncher45. Pitch control, Loudness level, Sleep timer fade-out, Headphone
+      correction, Equaliser per output and DJ mode follow ideas from Prism by Yigder, and Per-download quality from Stash by
+      Rawnald Clark. Headphone profiles come from AutoEq by Jaakko Pasanen. JamesDSP is by Tim Schneeberger and James Fung.</p>
+    <p class="small">The step-by-step tour uses TourGuide JS by sjmc11 (MIT licence), which includes Floating UI (MIT licence).
+      Licence texts: <a href="vendor/tourguide/LICENSE.txt">TourGuide JS</a> and
+      <a href="vendor/tourguide/LICENSE-floating-ui.txt">Floating UI</a>. The BitChord icon is BitChord’s own, by kushagra; the other phone drawings and icons were made for this guide.</p>
+
+    <nav class="footer-links" aria-label="More help">
+      <a href="https://github.com/Hexclyde/bitchord-morphe-patches/blob/main/README.md">Project README</a>
+      <a href="https://github.com/Hexclyde/bitchord-morphe-patches/blob/main/docs/MOBILE.md">Written phone guide (docs/MOBILE.md)</a>
+      <a href="https://github.com/Hexclyde/bitchord-morphe-patches/blob/main/docs/TROUBLESHOOTING.md">Troubleshooting</a>
+      <a href="https://github.com/Hexclyde/bitchord-morphe-patches/releases">Releases</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="vendor/tourguide/tour.js"></script>
+<script src="icons.js"></script>
+<script src="guide.js"></script>
+<script src="screens-morphe.js"></script>
+<script src="screens-bitchord.js"></script>
+<script src="tours.js"></script>
+</body>
+</html>

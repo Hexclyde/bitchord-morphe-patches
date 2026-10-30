@@ -1,3 +1,10 @@
+# 1.1.0-beta.12
+
+- Merge the Audio and video switch patch, JamesDSP setup/status controls, README badges and interactive Morphe/Telegram installation guide.
+- Retain complete beta.9–11 Downloads integration, batch source selection, public Soulseek sharing and verified Telegram offloading.
+- Audio and video switch starts off; enable it under Patches & tweaks.
+- The guide ships under docs/guide. Enable GitHub Pages from testing /docs after publishing.
+
 # 1.1.0-beta.11
 
 - Embed Downloads, Explorer and batch source selection in BitChord 1.9's real player content slot, with measured bar padding, a selected Downloads tab and Compose back handling.
