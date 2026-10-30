@@ -43,6 +43,10 @@ static SoulseekBridge get()throws IOException{if(instance==null)throw new IOExce
 final class DownloadSettings {static final String SOULSEEK="soulseek";static boolean on=true;static boolean enabled(Context context,String feature){return on;}}
 final class SoulseekSearchActivity {}
 final class DownloadExplorerActivity {}
+final class BatchDownloadActivity {}
+final class DownloadsShell {static boolean open(android.content.Intent i){return false;}}
+final class DownloadBatch {static void forget(String token){}}
+
 """,
 }
 

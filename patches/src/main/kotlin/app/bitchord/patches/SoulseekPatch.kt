@@ -158,6 +158,7 @@ private val soulseekResources = resourcePatch {
                     "SoulseekSearchActivity",
                     "DownloadExplorerActivity",
                     "DownloadsHubActivity",
+                    "BatchDownloadActivity",
                     "NostrSetupActivity",
                     "PeerDiscoveryActivity",
                     "BulkDownloadsActivity",
@@ -221,7 +222,7 @@ val nativeSoulseekPatch =
     bytecodePatch(
         name = "Unofficial Soulseek audio",
         description =
-            "Download selected Soulseek or debrid audio to a phone folder, a configured Telegram main channel, or both. Optional debrid services use your own API keys. Choose accepted formats and their order in setup. Live playback and automatic source matching are disabled. Settings are in Settings, Patches & tweaks. Android 8 or newer.",
+            "Adds player-integrated Downloads on BitChord 1.9, addon/Soulseek source choices, batch review, selected-file public Soulseek sharing, and verified Telegram archiving/restore. Telegram copies require the optional Telegram patch and your private main channel. Debrid services use your API keys. Live Soulseek playback stays disabled. Settings are in Patches & tweaks. Android 8 or newer.",
         default = false,
     ) {
         compatibleWith(soulseekTarget)
@@ -360,6 +361,9 @@ val nativeSoulseekPatch =
                     bar.addInstructions(
                         0,
                         """
+                        move/from16 v2, p${bar.parameterTypes.lastIndex}
+                        and-int/lit16 v2, v2, -0x3ff
+                        move/16 p${bar.parameterTypes.lastIndex}, v2
                         move-object/from16 v0, p0
                         move/from16 v1, p1
                         invoke-static {v0, v1}, ${SOULSEEK}DownloadNavigation;->index(Ljava/lang/Object;I)I
@@ -374,6 +378,117 @@ val nativeSoulseekPatch =
                     """,
                     )
                 }
+
+                // The real player content slot retains measured padding, mini player and both bars.
+                val library =
+                    mutableClassDefBy("Lcom/music/bitchord/ui/screens/LibraryScreenKt;")
+                        .methods
+                        .single { it.name == "LibraryScreen" }
+                check(
+                    library.parameterTypes.size == 21 &&
+                        library.parameterTypes[14] == "Landroidx/compose/ui/Modifier;" &&
+                        library.parameterTypes[15] ==
+                            "Landroidx/compose/foundation/layout/PaddingValuesImpl;" &&
+                        library.parameterTypes[19] == "Landroidx/compose/runtime/ComposerImpl;" &&
+                        library.implementation!!.registerCount == 46
+                ) {
+                    "Player content slot ABI changed"
+                }
+                val libraryStart = library.implementation!!.instructions.first()
+                library.addInstructionsWithLabels(
+                    0,
+                    """
+                    move-object/from16 v0, p14
+                    move-object/from16 v1, p15
+                    move-object/from16 v2, p19
+                    invoke-static {v0, v1, v2}, ${SOULSEEK}DownloadsShell;->compose(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z
+                    move-result v0
+                    if-eqz v0, :original_library_content
+                    return-void
+                """,
+                    ExternalLabel("original_library_content", libraryStart),
+                )
+                val root =
+                    mutableClassDefBy("Lcom/music/bitchord/MainActivityKt;").methods.single {
+                        it.name.startsWith("BitChordApp-")
+                    }
+                val headingReads =
+                    root.implementation!!.instructions.toList().indices.filter { index ->
+                        val instruction = root.implementation!!.instructions.elementAt(index)
+                        val field =
+                            (instruction as? ReferenceInstruction)?.reference as? FieldReference
+                        instruction.opcode == Opcode.IGET_OBJECT &&
+                            field?.definingClass ==
+                                "Lcom/music/bitchord/ui/components/BottomTab;" &&
+                            field.name == "label"
+                    }
+                check(headingReads.size == 2) { "Player page heading changed" }
+                for (index in headingReads.reversed()) {
+                    val register =
+                        (root.implementation!!.instructions.elementAt(index)
+                                as TwoRegisterInstruction)
+                            .registerA
+                    root.addInstructions(
+                        index + 1,
+                        """
+                        invoke-static/range {v$register .. v$register}, ${SOULSEEK}DownloadsShell;->heading(Ljava/lang/String;)Ljava/lang/String;
+                        move-result-object v$register
+                    """,
+                    )
+                }
+                check(
+                    classDefBy("Lcoil/util/DrawableUtils;").methods.any {
+                        it.name == "BackHandler" &&
+                            it.parameterTypes ==
+                                listOf(
+                                    "Z",
+                                    "Lkotlin/jvm/functions/Function0;",
+                                    "Landroidx/compose/runtime/ComposerImpl;",
+                                    "I",
+                                    "I",
+                                )
+                    }
+                ) {
+                    "Player Compose back handler changed"
+                }
+                // Exact R8 branch for the manual release/selection callback; sync/retry paths stay
+                // independent.
+                val batch =
+                    mutableClassDefBy(
+                            "Lcom/music/bitchord/MainActivityKt\$\$ExternalSyntheticLambda109;"
+                        )
+                        .methods
+                        .single {
+                            it.name == "invoke" &&
+                                it.parameterTypes ==
+                                    listOf("Ljava/lang/Object;", "Ljava/lang/Object;")
+                        }
+                check(
+                    batch.implementation!!.instructions.any { instruction ->
+                        val method =
+                            (instruction as? ReferenceInstruction)?.reference as? MethodReference
+                        method?.definingClass == "Lcom/music/bitchord/download/Downloads;" &&
+                            method.name == "rememberCollection"
+                    }
+                ) {
+                    "Manual batch callback changed"
+                }
+                val batchStart = batch.implementation!!.instructions.first()
+                batch.addInstructionsWithLabels(
+                    0,
+                    """
+                    move-object/from16 v0, p0
+                    iget v0, v0, Lcom/music/bitchord/MainActivityKt${'$'}${'$'}ExternalSyntheticLambda109;->${'$'}r8${'$'}classId:I
+                    const/4 v1, 0x1
+                    if-ne v0, v1, :original_manual_batch
+                    invoke-static/range {p0 .. p2}, ${SOULSEEK}SoulseekDownloadChoice;->interceptBatch(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z
+                    move-result v0
+                    if-eqz v0, :original_manual_batch
+                    sget-object v0, Lkotlin/Unit;->INSTANCE:Lkotlin/Unit;
+                    return-object v0
+                """,
+                    ExternalLabel("original_manual_batch", batchStart),
+                )
                 val fallback =
                     mutableClassDefBy("Lcom/music/bitchord/download/Downloads;").methods.single {
                         it.name == "fromSources"

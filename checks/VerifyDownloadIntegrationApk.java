@@ -38,7 +38,16 @@ public final class VerifyDownloadIntegrationApk {
                         "DownloadNavigation",
                         "HostDownloadAccess",
                         "DownloadExplorerActivity",
-                        "DownloadsHubActivity"))
+                        "DownloadsHubActivity",
+                        "DownloadsShell",
+                        "DownloadPage",
+                        "DownloadExplorerPage",
+                        "DownloadsHubPage",
+                        "BatchDownloadActivity",
+                        "BatchDownloadPage",
+                        "DownloadBatch",
+                        "PublicSoulseekShares",
+                        "DownloadArchives"))
             check(types.containsKey(runtime + name + ";"), "Production runtime present: " + name);
         for (String[] bar :
                 new String[][] {
@@ -54,6 +63,66 @@ public final class VerifyDownloadIntegrationApk {
                         calls(found, runtime + "DownloadNavigation;", hook) == 1,
                         "Navigation has one " + hook + " hook");
         }
+        Method library = null, root = null, batch = null, androidView = null, back = null;
+        for (Method method :
+                types.get("Lcom/music/bitchord/ui/screens/LibraryScreenKt;").getMethods())
+            if (method.getName().equals("LibraryScreen")) library = method;
+        check(
+                library != null && calls(library, runtime + "DownloadsShell;", "compose") == 1,
+                "Library content delegates to one embedded downloads page");
+        for (Method method : types.get("Lcom/music/bitchord/MainActivityKt;").getMethods())
+            if (method.getName().startsWith("BitChordApp-")) root = method;
+        check(
+                root != null && calls(root, runtime + "DownloadsShell;", "heading") == 2,
+                "Player heading follows downloads while Library keeps its tab");
+        for (Method method :
+                types.get("Lcom/music/bitchord/MainActivityKt$$ExternalSyntheticLambda109;")
+                        .getMethods()) if (method.getName().equals("invoke")) batch = method;
+        check(
+                batch != null
+                        && calls(batch, runtime + "SoulseekDownloadChoice;", "interceptBatch") == 1,
+                "Manual release callback has one bounded batch choice hook");
+        for (Method method :
+                types.get("Landroidx/compose/ui/viewinterop/AndroidView_androidKt;").getMethods())
+            if (method.getName().equals("AndroidView") && method.getParameterTypes().size() == 6)
+                androidView = method;
+        check(
+                androidView != null
+                        && androidView
+                                .getParameterTypes()
+                                .get(3)
+                                .equals("Landroidx/compose/runtime/ComposerImpl;"),
+                "Exact AndroidView host ABI retained");
+        for (Method method : types.get("Lcoil/util/DrawableUtils;").getMethods())
+            if (method.getName().equals("BackHandler")) back = method;
+        check(
+                back != null
+                        && back.getParameterTypes()
+                                .equals(
+                                        List.of(
+                                                "Z",
+                                                "Lkotlin/jvm/functions/Function0;",
+                                                "Landroidx/compose/runtime/ComposerImpl;",
+                                                "I",
+                                                "I")),
+                "Compose back handler keeps player and dialogs above downloads");
+        for (Method method : types.get("Landroidx/activity/OnBackPressedDispatcher;").getMethods())
+            check(
+                    calls(method, runtime + "DownloadsShell;", "handleBack") == 0,
+                    "Global back dispatcher is untouched");
+        for (String name : List.of("configureShares", "sharing", "cancelUpload")) {
+            boolean present = false;
+            for (Method method : types.get(runtime + "SoulseekNative;").getMethods())
+                if (method.getName().equals(name) && (method.getAccessFlags() & 256) != 0)
+                    present = true;
+            check(present, "Public sharing JNI declaration retained: " + name);
+        }
+        boolean forget = false;
+        for (Method method : types.get("Lcom/music/bitchord/download/Downloads;").getMethods())
+            if (method.getName().equals("forget")
+                    && method.getParameterTypes().equals(List.of("Ljava/lang/String;"))
+                    && (method.getAccessFlags() & 9) == 9) forget = true;
+        check(forget, "Host saved-file removal ABI retained");
         boolean guarded = false;
         for (Method method : types.get("Lcom/music/bitchord/download/Downloads;").getMethods())
             if (method.getName().equals("fromSources"))

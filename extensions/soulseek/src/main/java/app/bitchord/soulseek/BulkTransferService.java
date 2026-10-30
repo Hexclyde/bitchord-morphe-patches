@@ -250,7 +250,7 @@ public final class BulkTransferService extends Service {
                 PendingIntent.getActivity(
                         this,
                         NOTIFICATION,
-                        new Intent(this, BulkDownloadsActivity.class)
+                        new Intent(this, DownloadsHubActivity.class)
                                 .addFlags(
                                         Intent.FLAG_ACTIVITY_NEW_TASK
                                                 | Intent.FLAG_ACTIVITY_CLEAR_TOP),
@@ -282,7 +282,11 @@ public final class BulkTransferService extends Service {
     private void inspect() {
         if (lifetime.stopping()) return;
         BulkDownloads downloads = BulkDownloads.existing();
-        boolean busy = SoulseekSelectedDownloads.activeCount() > 0;
+        boolean publicSharing = PublicSoulseekShares.enabled(this);
+        boolean busy =
+                SoulseekSelectedDownloads.activeCount() > 0
+                        || publicSharing
+                        || DownloadArchives.activeCount() > 0;
         DebridDownloads debrid = DebridDownloads.existing();
         if (debrid != null) busy |= debrid.hasActiveWork();
         BulkCoordinator coordinator = BulkCoordinator.existing();
@@ -292,11 +296,12 @@ public final class BulkTransferService extends Service {
                 connections
                         || offers > 0
                         || (coordinator != null && coordinator.hasPendingHandshake());
-        int shares = 0, jobs = SoulseekSelectedDownloads.activeCount();
+        int shares = publicSharing ? 1 : 0,
+                jobs = SoulseekSelectedDownloads.activeCount() + DownloadArchives.activeCount();
         if (debrid != null) jobs += debrid.activeCount();
         if (downloads != null) {
             busy |= downloads.hasActiveWork();
-            shares = downloads.shares().size();
+            shares += downloads.shares().size();
             for (BulkJobStore.Job job : downloads.jobs())
                 if (job.state == BulkJobStore.State.QUEUED
                         || job.state == BulkJobStore.State.RUNNING
@@ -309,7 +314,7 @@ public final class BulkTransferService extends Service {
         }
         final String message =
                 shares > 0 || jobs > 0
-                        ? jobs + " download(s), " + shares + " shared file(s)"
+                        ? jobs + " transfer(s), " + shares + " sharing source(s)"
                         : offers > 0
                                 ? "Open Peer downloads to review a file offer"
                                 : connections
@@ -357,6 +362,12 @@ public final class BulkTransferService extends Service {
                 () -> {
                     boolean failed = false;
                     SoulseekSelectedDownloads.cancelAll();
+                    DownloadArchives.pauseAll();
+                    try {
+                        PublicSoulseekShares.pause(this);
+                    } catch (Exception | LinkageError failure) {
+                        failed = true;
+                    }
                     DebridDownloads debrid = DebridDownloads.existing();
                     if (debrid != null) {
                         try {

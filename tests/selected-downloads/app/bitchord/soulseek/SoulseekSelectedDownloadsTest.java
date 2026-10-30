@@ -271,15 +271,15 @@ public final class SoulseekSelectedDownloadsTest {
                 "Active source transfer reaches its blocking fixture");
         SoulseekSelectedDownloads.enqueueOrFalse(app, selected);
         check(tasks() == 1, "Repeated tapping deduplicates the same selected source");
-        for (int i = 2; i <= 33; i++) SoulseekSelectedDownloads.enqueueOrFalse(app, song(i));
+        for (int i = 2; i <= 257; i++) SoulseekSelectedDownloads.enqueueOrFalse(app, song(i));
         check(
-                tasks() == 33 && worker().getQueue().size() == 32,
-                "The selected queue is bounded to one active and 32 waiting");
+                tasks() == 257 && worker().getQueue().size() == 256,
+                "The selected queue is bounded to one active and 256 waiting");
         check(
-                SoulseekSelectedDownloads.enqueueOrFalse(app, song(34)),
+                SoulseekSelectedDownloads.enqueueOrFalse(app, song(258)),
                 "A full owned queue cannot fall through to the host");
         check(
-                tasks() == 33 && SoulseekSelectedDownloads.status().contains("queue is full"),
+                tasks() == 257 && SoulseekSelectedDownloads.status().contains("queue is full"),
                 "Queue overflow fails closed without a hidden task");
         observeCancellationBeforeInterrupt(id(1));
         SoulseekSelectedDownloads.cancelAll();
@@ -525,12 +525,33 @@ public final class SoulseekSelectedDownloadsTest {
         idle();
     }
 
+    static void selectedBatchMetadataSurvivesSearchCatalogEviction() throws Exception {
+        Context app = fresh();
+        SoulseekTrack selected = new SoulseekTrack(id(991), 4);
+        check(
+                !SoulseekBridge.get().tracks.containsKey(selected.id),
+                "batch result is absent from the search catalog fixture");
+        check(
+                SoulseekSelectedDownloads.enqueueSelectedFile(
+                        app, selected, SoulseekBridge.get().sessionTag, false),
+                "an explicit batch file retains its exact metadata after later searches");
+        idle();
+        check(
+                SoulseekDownloads.fetches == 1 && BulkDownloads.imports == 1,
+                "the retained exact file reaches the existing verified destination path");
+        check(
+                !SoulseekSelectedDownloads.enqueueSelectedFile(
+                        app, new SoulseekTrack(id(992), 4), "another-session", false),
+                "retained metadata cannot cross a Soulseek session");
+    }
+
     public static void main(String[] args) throws Exception {
         try {
             sourceOwnership();
             setupAndBinding();
             verifiedImportAndCleanup();
             boundedQueueAndCancel();
+            selectedBatchMetadataSurvivesSearchCatalogEviction();
             nowPrecedesWaitingQueue();
             exactSelectionAndNamedPhases();
             cancelledAndRedactedProgress();

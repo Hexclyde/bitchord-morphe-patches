@@ -796,6 +796,14 @@ impl Client {
     /// be served.
     #[must_use]
     pub fn uploads(&self) -> Vec<crate::types::UploadInfo> {
+        // Public sharing may run for hours. Keep all live rows and a bounded recent history.
+        if let Ok(mut ctx) = self.context.write_safe() {
+            let mut finished: Vec<u32> = ctx.active_uploads.iter()
+                .filter(|(_,upload)| !matches!(upload.status, crate::types::UploadStatus::InProgress))
+                .map(|(token,_)| *token).collect();
+            finished.sort_unstable_by(|a,b| b.cmp(a));
+            for token in finished.into_iter().skip(128) {ctx.active_uploads.remove(&token);}
+        }
         self.context.read_safe().map_or_else(
             |_| Vec::new(),
             |ctx| {
@@ -876,6 +884,14 @@ impl Client {
         let file_count = shares.file_count();
         {
             let mut ctx = self.context.write_safe()?;
+            // A changed inventory withdraws pending grants too. Otherwise an already
+            // offered token could still serve a file after the user stopped sharing it.
+            ctx.upload_queue.clear();
+            ctx.uploads.clear();
+            ctx.brokered_uploads.clear();
+            for upload in ctx.active_uploads.values() {
+                upload.cancel.store(true, Ordering::Release);
+            }
             ctx.shares = Arc::new(shares);
             ctx.shared_directories = dirs;
         }

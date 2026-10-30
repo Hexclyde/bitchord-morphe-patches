@@ -24,6 +24,13 @@ public final class TelegramBridge {
             confirmBeforeReturn;
     public volatile TdApi.Message lastSent;
     public volatile File sentPayload;
+    public volatile byte[] remoteBytes;
+    public volatile boolean keepCache, corruptReadback, missingMessage, failDownload;
+    public final AtomicInteger cacheEvictions = new AtomicInteger(),
+            readbacks = new AtomicInteger();
+    private TdApi.File cached;
+    private TdApi.Message confirmedArchive;
+
     public final AtomicInteger sends = new AtomicInteger(),
             searches = new AtomicInteger(),
             resends = new AtomicInteger();
@@ -72,6 +79,17 @@ public final class TelegramBridge {
             sentPayload = new File(((TdApi.InputFileLocal) content.document.document).path);
             TdApi.File file = new TdApi.File();
             file.size = sentPayload.length();
+            file.id = 71;
+            file.remote = new TdApi.RemoteFile();
+            file.remote.id = "fixture-remote";
+            file.remote.uniqueId = "fixture-unique";
+            file.remote.isUploadingCompleted = true;
+            remoteBytes = java.nio.file.Files.readAllBytes(sentPayload.toPath());
+            file.local = new TdApi.LocalFile();
+            file.local.path = sentPayload.getAbsolutePath();
+            file.local.isDownloadingCompleted = true;
+            file.local.downloadedSize = file.size;
+            cached = file;
             TdApi.Document document = new TdApi.Document();
             document.document = file;
             document.fileName = sentPayload.getName();
@@ -94,6 +112,9 @@ public final class TelegramBridge {
         }
         if (request instanceof TdApi.GetMessage) {
             TdApi.GetMessage get = (TdApi.GetMessage) request;
+            if (missingMessage) throw new IOException("archive message missing");
+            if (confirmedArchive != null && get.messageId == confirmedArchive.id)
+                return (T) confirmedArchive;
             if (lastSent == null || get.messageId != lastSent.id)
                 throw new IOException("message replaced");
             return (T) lastSent;
@@ -115,7 +136,39 @@ public final class TelegramBridge {
             lastSent = confirmed;
             return (T) new TdApi.Messages(1, new TdApi.Message[] {lastSent});
         }
+        if (request instanceof TdApi.CancelDownloadFile) return (T) new TdApi.Ok();
+        if (request instanceof TdApi.DeleteFile) {
+            cacheEvictions.incrementAndGet();
+            if (!keepCache) {
+                cached.local = new TdApi.LocalFile();
+                cached.local.path = "";
+            }
+            return (T) new TdApi.Ok();
+        }
+        if (request instanceof TdApi.GetFile) return (T) cached;
+        if (request instanceof TdApi.DownloadFile) {
+            readbacks.incrementAndGet();
+            if (failDownload) throw new IOException("remote download failed");
+            File file = new File(home, "remote-readback.audio");
+            byte[] bytes = remoteBytes.clone();
+            if (corruptReadback) bytes[0] ^= 1;
+            java.nio.file.Files.write(file.toPath(), bytes);
+            cached.local = new TdApi.LocalFile();
+            cached.local.path = file.getAbsolutePath();
+            cached.local.isDownloadingCompleted = true;
+            cached.local.downloadedSize = bytes.length;
+            return (T) cached;
+        }
         throw new AssertionError("Unexpected request: " + request.getClass().getName());
+    }
+
+    void cachedForTest() {
+        cached.local.isDownloadingCompleted = true;
+        cached.local.downloadedSize = cached.size;
+    }
+
+    void archiveMessage(TdApi.Message message) {
+        confirmedArchive = message;
     }
 
     static final class MainChannel {

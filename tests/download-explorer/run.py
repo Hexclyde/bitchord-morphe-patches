@@ -22,7 +22,7 @@ public Prefs putStringSet(String k,Set<String> s){if(success)saved=new HashSet<>
 public Intent(Context c,Class<?> t){}public Intent addFlags(int f){return this;}}""",
     "app/bitchord/telegram/PatchStrings.java": """package app.bitchord.telegram;public class PatchStrings{public static String t(String s){return s;}}""",
     "app/bitchord/soulseek/Fixtures.java": """package app.bitchord.soulseek;
-class DownloadsHubActivity{} class SoulseekBridge{static SoulseekBridge instance;final android.content.Context context;
+class DownloadsHubActivity{} class DownloadsShell {static boolean visible(){return false;}static boolean open(android.content.Intent i){return false;}static void close(){}} class SoulseekBridge{static SoulseekBridge instance;final android.content.Context context;
 SoulseekBridge(android.content.Context c){context=c;}static SoulseekBridge get(){return instance;}}""",
     "com/music/bitchord/ui/icons/BitChordIcons.java": """package com.music.bitchord.ui.icons;
 public class BitChordIcons{public static final kotlin.Lazy<Object> Download$delegate=new kotlin.Lazy<Object>(){

@@ -105,3 +105,21 @@ Do not post API hashes, login codes, passwords, session files, signing keys or p
 If a session is exposed, revoke it in Telegram and remove the public material. For a security issue, follow [Security](SECURITY.md).
 
 Telegram's [privacy policy](https://telegram.org/privacy) and [API terms](https://core.telegram.org/api/terms) apply to your use of its services.
+
+
+## Public Soulseek sharing and Telegram archives (beta.11)
+
+Adding a saved file creates a separate verified copy in a private sharing inventory.
+Enabling public sharing advertises those selected filenames and audio metadata to
+Soulseek; other users can browse/request the files and see the account's peer
+identity. Phone folders are not automatically shared. Pause, removal and notification
+Stop withdraw grants and cancel streams; bytes already sent cannot be retracted.
+Sharing pauses after a process restart. Sharing copies occupy additional storage.
+
+Archiving sends the selected original document to the configured private Telegram
+main channel, including a durable copy marker and SHA-256 digest in its caption.
+Verification evicts the TDLib cache and downloads the document again. Removing a
+local copy requires a separate confirmation, a fresh remote check and a matching
+local hash. Receipts retain account/channel/message IDs, source URI, file size and
+hash in private app storage. Restore obtains original bytes through the same account.
+A Telegram copy does not automatically become a public Soulseek share.

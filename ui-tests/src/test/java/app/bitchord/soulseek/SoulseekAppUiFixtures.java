@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 final class SoulseekBridge {
     static SoulseekBridge instance;
     final Context context;
+    final java.io.File home;
     final ExecutorService work =
             Executors.newSingleThreadExecutor(
                     runnable -> {
@@ -36,6 +37,8 @@ final class SoulseekBridge {
 
     private SoulseekBridge(Context context) {
         this.context = context.getApplicationContext();
+        this.home = new java.io.File(this.context.getNoBackupFilesDir(), "soulseek-native");
+        home.mkdirs();
     }
 
     static SoulseekBridge reset(Context context) {
@@ -51,6 +54,14 @@ final class SoulseekBridge {
     static SoulseekBridge get() throws IOException {
         if (instance == null) throw new IOException("Soulseek is unavailable. Restart the app.");
         return instance;
+    }
+
+    long sharingHandle() throws IOException {
+        return ready();
+    }
+
+    boolean connected() {
+        return connected;
     }
 
     long ready() throws IOException {
@@ -155,6 +166,11 @@ final class DownloadSettings {
 
 final class DownloadDestinations {
     static final String PHONE = "phone", TELEGRAM = "telegram", BOTH = "both";
+
+    static org.json.JSONObject configuredTelegram(Context context) throws Exception {
+        return new org.json.JSONObject().put("userId", 42L).put("chatId", -100123L);
+    }
+
     static boolean configured = true;
     static String mode = PHONE;
     static int opened;
@@ -177,8 +193,21 @@ final class DownloadDestinations {
 
     static final class Snapshot {
         final String mode;
+        final String phoneTreeUri = "";
+
+        boolean needsPhone() {
+            return true;
+        }
+
+        boolean needsTelegram() {
+            return false;
+        }
 
         Snapshot(String mode) {
+            this.mode = mode;
+        }
+
+        Snapshot(String mode, String tree, long chat, long user, String title) {
             this.mode = mode;
         }
     }
@@ -191,6 +220,42 @@ final class SoulseekSelectedDownloads {
     static boolean enqueueSelected(Context context, String reference) {
         selectedReferences.add(reference);
         return accepted;
+    }
+
+    static boolean enqueueSelectedFile(
+            Context context, SoulseekTrack track, String session, boolean now) {
+        return enqueueSelected(context, "src:soulseek-native::" + track.id);
+    }
+
+    static boolean enqueueSelected(Context context, String ref, boolean now) {
+        return enqueueSelected(context, ref);
+    }
+
+    static java.util.List<Progress> snapshots() {
+        return java.util.Collections.emptyList();
+    }
+
+    static void cancel(String ref) {}
+
+    static class Progress {
+        String reference, name = "";
+        boolean needsPhone;
+        Phase phase;
+
+        boolean canCancel() {
+            return false;
+        }
+
+        String summary() {
+            return "";
+        }
+    }
+
+    enum Phase {
+        QUEUED,
+        COMPLETE,
+        CANCELLED,
+        FAILED
     }
 
     static String status() {
@@ -208,5 +273,75 @@ final class BulkDownloadsActivity extends Activity {}
 
 final class NostrSetupActivity extends Activity {}
 
-// Navigation endpoint only; production explorer contracts have an independent runner.
-final class DownloadExplorerActivity {}
+final class SoulseekNative {
+    static int announcements;
+    static boolean publicEnabled;
+    static int slots;
+
+    static String sharing(long h) {
+        return "{\"files\":0,\"uploads\":[]}";
+    }
+
+    static void cancelUpload(long h, String peer, String path) {}
+
+    static void configureShares(long h, boolean enabled, int count) {
+        announcements++;
+        publicEnabled = enabled;
+        slots = count;
+    }
+}
+
+final class BulkJobStore {
+    static class Job {
+        String publishedUri = "", phoneStatus = "", telegramStatus = "", telegramReceipt = "";
+        BulkOffer offer;
+    }
+}
+
+final class BulkOffer {
+    String name = "";
+}
+
+final class BulkDownloads {
+    static BulkDownloads existing() {
+        return null;
+    }
+
+    static BulkDownloads get(Context c) throws IOException {
+        return new BulkDownloads();
+    }
+
+    static String restoredHash;
+
+    String importVerified(
+            java.io.File file,
+            String name,
+            DownloadDestinations.Snapshot destination,
+            String token,
+            String policy)
+            throws Exception {
+        restoredHash = PublicSoulseekShares.digest(file);
+        return "fixture-restore";
+    }
+
+    java.util.List<Share> shares() {
+        return java.util.Collections.emptyList();
+    }
+
+    java.util.List<BulkJobStore.Job> jobs() {
+        return java.util.Collections.emptyList();
+    }
+
+    static class Share {
+        boolean revoked;
+        String name;
+    }
+}
+
+final class BulkTransferService {
+    static int starts;
+
+    static void ensureRunning(Context c) {
+        starts++;
+    }
+}

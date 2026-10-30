@@ -182,25 +182,32 @@ public class SoulseekDownloadChoiceTest {
     }
 
     @Test
-    public void albumsCollectionsRetriesAndDisabledModuleAreNotHeld() throws Exception {
-        Original album = new Original();
+    public void manualBatchesAndSingleTrackReleasesOpenOneReviewPlan() throws Exception {
         List<Song> songs = Arrays.asList(new Song("Abc_12-Xy9Z"), new Song("Abc_12-Xy9Y"));
-        Object from = new Object();
-        assertSame(album.result, SoulseekDownloadChoice.offer(album, songs, null));
-        assertSame(songs, album.songs);
-        assertEquals(1, album.calls);
-        Original collection = new Original();
-        List<Song> one = Collections.singletonList(songs.get(0));
-        assertSame(collection.result, SoulseekDownloadChoice.offer(collection, one, from));
-        assertSame(from, collection.from);
-        assertSame(one, collection.songs);
-        assertEquals(1, collection.calls);
-        DownloadSettings.soulseek = false;
-        Original disabled = new Original();
-        assertSame(Unit.INSTANCE, SoulseekDownloadChoice.offer(disabled, one, null));
-        assertEquals(0, disabled.calls);
-        assertEquals(1, pending().size());
-        assertNotNull(shadowOf(RuntimeEnvironment.getApplication()).getNextStartedActivity());
+        Original original = new Original();
+        assertTrue(SoulseekDownloadChoice.interceptBatch(original, songs, null));
+        Intent intent = shadowOf(RuntimeEnvironment.getApplication()).getNextStartedActivity();
+        assertEquals(BatchDownloadActivity.class.getName(), intent.getComponent().getClassName());
+        assertEquals(0, original.calls);
+        String token = intent.getStringExtra(SoulseekDownloadChoice.EXTRA_CHOICE);
+        assertEquals(songs, SoulseekDownloadChoice.songs(token));
+        assertTrue(SoulseekDownloadChoice.resume(token, context));
+        assertEquals(1, original.calls);
+        Original one = new Original();
+        Object collection = new Object();
+        assertTrue(
+                SoulseekDownloadChoice.interceptBatch(
+                        one, Collections.singletonList(songs.get(0)), collection));
+        assertEquals(0, one.calls);
+        assertEquals(
+                BatchDownloadActivity.class.getName(),
+                shadowOf(RuntimeEnvironment.getApplication())
+                        .getNextStartedActivity()
+                        .getComponent()
+                        .getClassName());
+        assertFalse(
+                SoulseekDownloadChoice.interceptBatch(
+                        one, Collections.singletonList(songs.get(0)), null));
     }
 
     @Test

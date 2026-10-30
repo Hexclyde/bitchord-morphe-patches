@@ -105,3 +105,17 @@ __pycache__/
 /ui-tests/src/test/java/app/bitchord/telegram/BitPerfect.java
 /ui-tests/src/test/java/app/bitchord/telegram/PatchStrings.java
 /ui-tests/src/test/java/app/bitchord/telegram/CapturePolicy.java
+
+/ui-tests/src/test/java/app/bitchord/soulseek/DownloadPage.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DownloadExplorerActivity.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DownloadExplorerPage.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DownloadsHubActivity.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DownloadsHubPage.java
+/ui-tests/src/test/java/app/bitchord/soulseek/BatchDownloadActivity.java
+/ui-tests/src/test/java/app/bitchord/soulseek/BatchDownloadPage.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DownloadBatch.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DownloadsShell.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DownloadNavigation.java
+/ui-tests/src/test/java/app/bitchord/soulseek/HostDownloadAccess.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DownloadArchives.java
+/ui-tests/src/test/java/app/bitchord/soulseek/PublicSoulseekShares.java

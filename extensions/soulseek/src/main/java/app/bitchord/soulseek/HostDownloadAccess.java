@@ -152,6 +152,12 @@ public final class HostDownloadAccess {
         }
     }
 
+    static void forget(String id) throws Exception {
+        Class.forName("com.music.bitchord.download.Downloads")
+                .getMethod("forget", String.class)
+                .invoke(null, id);
+    }
+
     static Map<?, ?> state(String fieldName) throws Exception {
         Object flow =
                 propertyObject(Class.forName("com.music.bitchord.download.Downloads"), fieldName);

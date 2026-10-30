@@ -400,17 +400,31 @@ fn adaptive_search_settles_preferred_audio_but_waits_for_missing_preferred_forma
     let started = Instant::now();
     let response: Value = serde_json::from_str(
         &search_adaptive(session.handle, "fixture song", 5_000, "flac").unwrap(),
-    ).unwrap();
-    assert!(response["tracks"].as_array().unwrap().iter().any(|row| row["extension"] == "flac"));
-    assert!(started.elapsed() < Duration::from_secs(3), "useful initial batch should not wait the full five seconds");
+    )
+    .unwrap();
+    assert!(
+        response["tracks"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|row| row["extension"] == "flac")
+    );
+    assert!(
+        started.elapsed() < Duration::from_secs(3),
+        "useful initial batch should not wait the full five seconds"
+    );
     // This peer advertises FLAC/MP3/etc., but no Opus. Other audio must not
     // shorten a window whose first enabled format is Opus.
     let started = Instant::now();
     let response: Value = serde_json::from_str(
         &search_adaptive(session.handle, "fixture song", 1_500, "opus").unwrap(),
-    ).unwrap();
+    )
+    .unwrap();
     assert!(!response["tracks"].as_array().unwrap().is_empty());
-    assert!(started.elapsed() >= Duration::from_millis(1_450), "non-preferred files cannot settle the batch");
+    assert!(
+        started.elapsed() >= Duration::from_millis(1_450),
+        "non-preferred files cannot settle the batch"
+    );
 }
 
 #[test]
@@ -655,4 +669,81 @@ fn close_mid_transfer_quiesces_files_before_the_same_home_is_reopened() {
         "old transfer workers cannot write, rename, or delete staging after close returned"
     );
     close(reopened).unwrap();
+}
+
+#[test]
+fn public_shares_are_opt_in_browsable_and_withdrawn_over_real_peer_frames() {
+    use bitchord_soulseek::{configure_shares, sharing};
+    use soulseek_rs::message::peer::parse_shared_file_list;
+    let _serial = TEST_LOCK.lock().unwrap();
+    let server = Fixture::start(true, None);
+    let reservation = TcpListener::bind(("127.0.0.1", 0)).unwrap();
+    let public_port = reservation.local_addr().unwrap().port();
+    drop(reservation);
+    let home = std::env::temp_dir().join(format!(
+        "bitchord-public-wire-{}",
+        NEXT_TEST.fetch_add(1, Ordering::SeqCst)
+    ));
+    fs::create_dir_all(&home).unwrap();
+    let session = Session {
+        handle: create(
+            home.to_str().unwrap(),
+            "127.0.0.1",
+            i32::from(server.port),
+            i32::from(public_port),
+        )
+        .unwrap(),
+        home,
+    };
+    let selected = session.home.join("public-shares");
+    fs::create_dir_all(&selected).unwrap();
+    fs::write(
+        selected.join("Artist - Selected.flac"),
+        b"fLaCselected original bytes",
+    )
+    .unwrap();
+    fs::write(session.home.join("Private.flac"), b"fLaCnot selected").unwrap();
+    session.login();
+    assert_eq!(
+        serde_json::from_str::<Value>(&sharing(session.handle).unwrap()).unwrap()["files"],
+        0
+    );
+    configure_shares(session.handle, true, 2).unwrap();
+    assert_eq!(
+        serde_json::from_str::<Value>(&sharing(session.handle).unwrap()).unwrap()["files"],
+        1
+    );
+    let mut peer = TcpStream::connect(("127.0.0.1", public_port)).unwrap();
+    peer.set_read_timeout(Some(Duration::from_millis(50)))
+        .unwrap();
+    send(&mut peer, &init("public-downloader", "P")).unwrap();
+    let mut frames = Frames(Vec::new());
+    let mut browse = |peer: &mut TcpStream| {
+        send(peer, &Message::new().write_int32(4).clone()).unwrap();
+        let deadline = Instant::now() + Duration::from_secs(5);
+        while Instant::now() < deadline {
+            if let Ok(Some(mut message)) = frames.next(peer) {
+                message.set_pointer(4);
+                if message.read_int32() == 5 {
+                    return parse_shared_file_list(&mut message);
+                }
+            }
+        }
+        panic!("public browse response timed out")
+    };
+    let dirs = browse(&mut peer);
+    let names: Vec<_> = dirs
+        .iter()
+        .flat_map(|dir| dir.files.iter().map(|file| file.name.as_str()))
+        .collect();
+    assert_eq!(names, vec!["Artist - Selected.flac"]);
+    configure_shares(session.handle, false, 2).unwrap();
+    assert!(browse(&mut peer).is_empty());
+    assert_eq!(
+        serde_json::from_str::<Value>(&sharing(session.handle).unwrap()).unwrap()["files"],
+        0
+    );
+    assert!(configure_shares(session.handle, true, 0).is_err());
+    assert!(configure_shares(session.handle, true, 5).is_err());
+    drop(peer);
 }

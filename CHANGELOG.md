@@ -1,3 +1,13 @@
+# 1.1.0-beta.11
+
+- Embed Downloads, Explorer and batch source selection in BitChord 1.9's real player content slot, with measured bar padding, a selected Downloads tab and Compose back handling.
+- Add album/playlist/artist batch review for up to 200 YouTube catalogue tracks. Choose each source/quality or search for unique artist/title matches in an enabled addon or Soulseek; unresolved tracks stay unselected.
+- Keep partial submission receipts and exact Soulseek file metadata across later searches; allow 256 waiting selected files without interrupting active work.
+- Expose native public Soulseek browse/search/upload support through an explicit selected-file inventory, 1–4 upload slots, live upload progress and cancellation. Inventory changes withdraw outstanding grants. Public sharing pauses after a process restart.
+- Archive existing downloaded files to the private Telegram main channel. Verify an independent remote read-back before enabling explicit local removal; recheck the receipt and original hash at removal. Restore original bytes through the existing verified phone publisher.
+- Keep sharing and archive operations under the foreground download notification and its Stop/Android time-limit handling.
+- Rebuild the Soulseek library for all three supported ABIs. Add real peer-frame, archive integrity, batch and embedded-view checks. New UI phrases have English fallbacks in the 20-language catalogue.
+
 # 1.1.0-beta.10
 
 - Adds a host-native Downloads icon in both bottom-bar styles on BitChord 1.9.

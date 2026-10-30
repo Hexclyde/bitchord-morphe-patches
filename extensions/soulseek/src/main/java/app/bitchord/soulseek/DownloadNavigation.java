@@ -18,6 +18,26 @@ public final class DownloadNavigation {
     private static List<?> expanded;
     private static String language;
     private static Object callback, wrapped;
+    private static int selected, previousSelected;
+    private static boolean selecting;
+
+    static boolean hasPlayer() {
+        return callback instanceof Function1;
+    }
+
+    @SuppressWarnings("unchecked")
+    static void selectLibrary() {
+        if (!selecting) previousSelected = selected;
+        selecting = true;
+        ((Function1<Object, Object>) callback).invoke(2);
+    }
+
+    @SuppressWarnings("unchecked")
+    static void returnToPlayer() {
+        selecting = false;
+        if (callback instanceof Function1)
+            ((Function1<Object, Object>) callback).invoke(previousSelected);
+    }
 
     private DownloadNavigation() {}
 
@@ -45,6 +65,8 @@ public final class DownloadNavigation {
     }
 
     public static synchronized int index(Object original, int selected) {
+        DownloadNavigation.selected = selected;
+        if (DownloadsShell.visible()) return 2;
         return original != expanded && tabs(original) != original && selected >= 2
                 ? selected + 1
                 : selected;
@@ -61,14 +83,17 @@ public final class DownloadNavigation {
                     if (index == 2) {
                         try {
                             android.content.Context context = SoulseekBridge.get().context;
-                            context.startActivity(
-                                    new Intent(context, DownloadsHubActivity.class)
-                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            Intent target = new Intent(context, DownloadsHubActivity.class);
+                            if (!DownloadsShell.open(target))
+                                context.startActivity(
+                                        target.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                         } catch (Exception | LinkageError unavailable) {
                             // Navigation never routes a failed launch to Library or Search.
                         }
                         return Unit.INSTANCE;
                     }
+                    DownloadsShell.close();
+                    selecting = false;
                     return delegate.invoke(index > 2 ? index - 1 : index);
                 };
         callback = original;

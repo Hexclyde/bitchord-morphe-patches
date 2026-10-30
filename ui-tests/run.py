@@ -76,6 +76,19 @@ for name in (
         ROOT / "extensions/telegram/src/main/java/app/bitchord/telegram" / name, dest
     )
 for name in (
+    "DownloadArchives.java",
+    "PublicSoulseekShares.java",
+    "DownloadPage.java",
+    "DownloadExplorerActivity.java",
+    "DownloadExplorerPage.java",
+    "DownloadsHubActivity.java",
+    "DownloadsHubPage.java",
+    "BatchDownloadActivity.java",
+    "BatchDownloadPage.java",
+    "DownloadBatch.java",
+    "DownloadsShell.java",
+    "DownloadNavigation.java",
+    "HostDownloadAccess.java",
     "DownloadActivity.java",
     "DownloadStyle.java",
     "AudioFormatSetupActivity.java",

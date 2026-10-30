@@ -1,6 +1,6 @@
 {
   "NOTE": "Generated from the verified MPP by tools/prepare_mobile_source.py; do not hand-edit.",
-  "version": "1.1.0-beta.10",
+  "version": "1.1.0-beta.11",
   "patches": [
     {
       "name": "Battery saver",
@@ -365,7 +365,7 @@
     },
     {
       "name": "Unofficial Soulseek audio",
-      "description": "Download selected Soulseek or debrid audio to a phone folder, a configured Telegram main channel, or both. Optional debrid services use your own API keys. Choose accepted formats and their order in setup. Live playback and automatic source matching are disabled. Settings are in Settings, Patches & tweaks. Android 8 or newer.",
+      "description": "Adds player-integrated Downloads on BitChord 1.9, addon/Soulseek source choices, batch review, selected-file public Soulseek sharing, and verified Telegram archiving/restore. Telegram copies require the optional Telegram patch and your private main channel. Debrid services use your API keys. Live Soulseek playback stays disabled. Settings are in Patches & tweaks. Android 8 or newer.",
       "default": false,
       "category": null,
       "compatiblePackages": [

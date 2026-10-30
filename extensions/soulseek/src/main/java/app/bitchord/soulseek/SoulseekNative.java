@@ -32,5 +32,11 @@ public final class SoulseekNative {
 
     public static native void cancel(long handle, String transferId);
 
+    public static native void configureShares(long handle, boolean enabled, int slots);
+
+    public static native String sharing(long handle);
+
+    public static native void cancelUpload(long handle, String peer, String path);
+
     public static native void close(long handle);
 }

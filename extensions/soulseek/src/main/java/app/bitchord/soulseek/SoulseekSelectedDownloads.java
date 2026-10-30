@@ -33,7 +33,7 @@ public final class SoulseekSelectedDownloads {
                     1,
                     30,
                     TimeUnit.SECONDS,
-                    new LinkedBlockingDeque<Runnable>(32),
+                    new LinkedBlockingDeque<Runnable>(256),
                     runnable -> new Thread(runnable, "selected-soulseek-download"));
     private static volatile String lastError = "";
     private static final AtomicLong SEQUENCE = new AtomicLong();
@@ -227,6 +227,20 @@ public final class SoulseekSelectedDownloads {
 
     /** A now request moves ahead of waiting work, without interrupting the active transfer. */
     public static boolean enqueueSelected(Context context, String reference, boolean now) {
+        return enqueueSelected(context, reference, now, null, null);
+    }
+
+    static boolean enqueueSelectedFile(
+            Context context, SoulseekTrack track, String session, boolean now) {
+        return enqueueSelected(context, PREFIX + track.id, now, track, session);
+    }
+
+    private static boolean enqueueSelected(
+            Context context,
+            String reference,
+            boolean now,
+            SoulseekTrack selected,
+            String expectedSession) {
         if (context == null) return false;
         final Context app = context.getApplicationContext();
         try {
@@ -268,7 +282,10 @@ public final class SoulseekSelectedDownloads {
             String session = bridge.sessionTag;
             SoulseekTrack track;
             try {
-                track = bridge.track(id);
+                track = selected == null ? bridge.track(id) : selected;
+                if (!track.id.equals(id)
+                        || expectedSession != null && !expectedSession.equals(session))
+                    throw new IOException("Selected file session changed");
             } catch (IOException expired) {
                 throw new UserFailure("This Soulseek result expired. Search again.");
             }
@@ -284,7 +301,7 @@ public final class SoulseekSelectedDownloads {
             synchronized (HISTORY) {
                 HISTORY.remove(reference);
                 HISTORY.put(reference, task.entry);
-                while (HISTORY.size() > 64) HISTORY.remove(HISTORY.keySet().iterator().next());
+                while (HISTORY.size() > 512) HISTORY.remove(HISTORY.keySet().iterator().next());
             }
             try {
                 BulkTransferService.ensureRunning(app);
@@ -403,12 +420,12 @@ public final class SoulseekSelectedDownloads {
                                                 + 1));
                 try (FileOutputStream output = new FileOutputStream(source)) {
                     final FileOutputStream sink = output;
-                    String url = SoulseekAddon.ORIGIN + session + "/audio/" + track.id;
                     check();
                     entry.phase = Phase.WAITING_PEER;
                     startMonitor();
-                    SoulseekDownloads.fetch(
-                            url,
+                    SoulseekDownloads.fetchSelected(
+                            track,
+                            session,
                             new FilterOutputStream(sink) {
                                 public void write(byte[] bytes, int offset, int length)
                                         throws IOException {

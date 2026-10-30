@@ -1,0 +1,1 @@
+package coil.util;import kotlin.jvm.functions.Function0;import androidx.compose.runtime.ComposerImpl;public final class DrawableUtils {public static Function0 back;public static void BackHandler(boolean enabled,Function0 action,ComposerImpl composer,int changed,int defaults){back=enabled?action:null;}}

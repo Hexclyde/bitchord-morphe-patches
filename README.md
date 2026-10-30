@@ -1,9 +1,8 @@
-> **Downloads foundation — 1.1.0-beta.10:** adds a Downloads navigation entry,
-> a live addon/Soulseek Download Explorer for manual single-track actions,
-> explicit source binding and next-slot/FIFO queue choices. This is the first
-> implementation stage; see [scope, limitations and next stages](docs/DOWNLOAD-MANAGER.md).
-> Public Soulseek uploads and archive-and-delete are pending. New preview labels
-> use English fallbacks. Physical-device and live-provider qualification is pending.
+> **Downloads integration — 1.1.0-beta.11:** Downloads, Explorer and batch selection
+> now use BitChord's player content area with its real mini-player and both navigation styles.
+> Selected-file public Soulseek sharing and verified Telegram archive/removal/restore are implemented.
+> Includes all unpublished beta.9 improvements and beta.10. See [the Downloads guide](docs/DOWNLOAD-MANAGER.md).
+> Device and live-account qualification remains separate from the automated checks.
 
 # BitChord Morphe Patches (Bitchord+)
 
@@ -29,7 +28,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.10, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.11, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > The previous BitChord 1.8.1 Telegram integration was tested on an **arm64-v8a** phone; this 1.9 build still needs on-device testing. The armeabi-v7a and x86_64 builds pass the same automated checks, but haven't been run on a real device. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
 

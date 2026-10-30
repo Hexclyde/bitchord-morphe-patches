@@ -18,6 +18,17 @@ final class SoulseekDownloads {
     static volatile boolean pauseBeforeReturn;
     static volatile String failure;
 
+    static Long fetchSelected(
+            SoulseekTrack track,
+            String session,
+            OutputStream sink,
+            Function2<Long, Long, ?> progress,
+            CoroutineContext context)
+            throws IOException {
+        return fetch(
+                SoulseekAddon.ORIGIN + session + "/audio/" + track.id, sink, progress, context);
+    }
+
     static Long fetch(
             String request,
             OutputStream sink,

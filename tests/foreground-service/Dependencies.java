@@ -80,3 +80,21 @@ class BulkJobStore {
         State state;
     }
 }
+
+class PublicSoulseekShares {
+    static boolean enabled(android.content.Context c) {
+        return false;
+    }
+
+    static void pause(android.content.Context c) {}
+}
+
+class DownloadArchives {
+    static int activeCount() {
+        return 0;
+    }
+
+    static void pauseAll() {}
+}
+
+class DownloadsHubActivity extends android.app.Activity {}

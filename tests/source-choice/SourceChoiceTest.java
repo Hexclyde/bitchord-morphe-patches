@@ -108,21 +108,33 @@ public final class SourceChoiceTest {
         List<Song> many = Arrays.asList(new Song("abcDEF123_-"), new Song("ZYXwvut9876"));
         Object from = new Object();
         SoulseekDownloadChoice.offer(album, many, from);
+        check(album.calls == 0, "album waits for a source review plan");
         check(
-                album.calls == 1 && album.songs == many && album.from == from,
-                "album preserves entire original continuation and collection metadata");
+                app.launched.get(app.launched.size() - 1).target == BatchDownloadActivity.class,
+                "album opens the batch page");
+        check(
+                SoulseekDownloadChoice.resume(token(app), app),
+                "album original callback resumes explicitly");
+        check(
+                album.calls == 1 && album.songs.equals(many) && album.from == from,
+                "batch preserves its collection metadata");
         Continuation collectionOne = new Continuation();
         List<Song> songs = one();
         SoulseekDownloadChoice.offer(collectionOne, songs, from);
+        check(collectionOne.calls == 0, "single-track collection waits for review");
+        check(
+                SoulseekDownloadChoice.resume(token(app), app),
+                "single-track collection can explicitly resume");
         check(
                 collectionOne.calls == 1 && collectionOne.from == from,
-                "single-track collection preserves collection semantics");
+                "single-track collection preserves metadata");
         Continuation malformed = new Continuation();
         SoulseekDownloadChoice.offer(malformed, null, null);
         check(
                 malformed.calls == 1 && malformed.songs == null,
                 "unrecognized callback arguments stay with original handler");
-        check(app.launched.isEmpty(), "passthrough never creates a source-choice page");
+        check(app.launched.size() == 2, "only explicit batch choices create review pages");
+        app.launched.clear();
         DownloadSettings.on = false;
         Continuation disabled = new Continuation();
         SoulseekDownloadChoice.offer(disabled, one(), null);

@@ -1,5 +1,15 @@
 # Known limitations
 
+## Downloads in beta.11
+
+The four implementation stages from beta.10 are implemented. The [Downloads guide](DOWNLOAD-MANAGER.md)
+explains the qualified 1.9 player slot, 200-track batch limit, explicit public-share
+inventory and verified Telegram archive/removal/restore flow. Quality claims remain
+reported metadata; initial source plans/queues do not survive process death. Public
+sharing pauses after a restart. Live Android/Waydroid and real-account qualification
+is still required. The older paragraphs below describe the earlier feature boundaries.
+
+
 These apply to the current release on BitChord 1.9. This version hasn't been widely tested on real phones yet, so behavior may differ between devices.
 
 The Telegram integration was tested on an arm64-v8a device with BitChord 1.8.1; the 1.9 build still needs on-device testing. The armeabi-v7a and x86_64 builds pass the same automated checks but haven't been tried on real hardware. If you run one of them, please [report what you find](../CONTRIBUTING.md).

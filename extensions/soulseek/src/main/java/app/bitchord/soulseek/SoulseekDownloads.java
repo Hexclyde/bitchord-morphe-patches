@@ -18,11 +18,23 @@ public final class SoulseekDownloads {
             Function2<Long, Long, ?> progress,
             CoroutineContext context)
             throws IOException {
+        SoulseekBridge bridge = SoulseekBridge.get();
+        String session = bridge.sessionTag;
+        String id = SoulseekAddon.audioId(bridge, url);
+        return fetchSelected(bridge.track(id), session, sink, progress, context);
+    }
+
+    static Long fetchSelected(
+            SoulseekTrack track,
+            String session,
+            OutputStream sink,
+            Function2<Long, Long, ?> progress,
+            CoroutineContext context)
+            throws IOException {
         JobKt.ensureActive(context);
         SoulseekBridge bridge = SoulseekBridge.get();
-        String id = SoulseekAddon.audioId(bridge, url);
-        long total = bridge.track(id).size;
-        try (ProgressiveReader reader = bridge.open(id, 0, -1)) {
+        long total = track.size;
+        try (ProgressiveReader reader = bridge.openSelected(track, session, 0, -1)) {
             reader.cancellation = () -> JobKt.ensureActive(context);
             byte[] buffer = new byte[64 * 1024];
             long written = 0;

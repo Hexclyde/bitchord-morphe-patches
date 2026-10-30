@@ -45,6 +45,7 @@ public final class SoulseekBridge {
         if (!home.isDirectory() && !home.mkdirs())
             throw new IOException("Cannot create Soulseek storage");
         credentials = new SoulseekCredentialStore(this.context, home);
+        PublicSoulseekShares.initialize(this.context);
     }
 
     public static synchronized void boot(Context context) {
@@ -188,6 +189,11 @@ public final class SoulseekBridge {
                 username = user;
                 connected = true;
                 status = "Connected. Search Addons, then choose Download from the track menu.";
+                try {
+                    PublicSoulseekShares.reconcile(context);
+                } catch (Exception unavailable) {
+                    status = "Connected. Public sharing needs a rescan in Downloads.";
+                }
             }
         } catch (Throwable e) {
             synchronized (this) {
@@ -285,6 +291,16 @@ public final class SoulseekBridge {
                     "Temporary Soulseek audio cleared. Saved account kept; reconnect to use the"
                             + " source.";
         }
+    }
+
+    boolean connected() {
+        return connected;
+    }
+
+    long sharingHandle() throws IOException {
+        long current = handle;
+        if (!connected || current == 0) throw new IOException("Soulseek is not connected");
+        return current;
     }
 
     long ready() throws IOException {
@@ -433,9 +449,20 @@ public final class SoulseekBridge {
     }
 
     ProgressiveReader open(String id, long position, long length) throws IOException {
+        synchronized (this) {
+            return openSelected(track(id), sessionTag, position, length);
+        }
+    }
+
+    ProgressiveReader openSelected(
+            SoulseekTrack track, String expectedSession, long position, long length)
+            throws IOException {
+        final String id = track.id;
         Transfer transfer;
         synchronized (this) {
-            SoulseekTrack track = track(id);
+            ready();
+            if (!expectedSession.equals(sessionTag))
+                throw new IOException("Soulseek session changed. Select the result again.");
             if (position < 0 || position > track.size || length < -1)
                 throw new IOException("Invalid Soulseek audio range");
             transfer = transfers.get(id);

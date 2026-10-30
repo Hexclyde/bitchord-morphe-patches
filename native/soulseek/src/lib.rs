@@ -628,6 +628,129 @@ pub fn download(handle: i64, peer: &str, remote: &str, size: i64) -> Result<Stri
     snapshot(record, &client.get_all_downloads()).map(|value| value.to_string())
 }
 
+/// Only the explicit, flat, app-private share inventory may be exposed to peers.
+fn share_root(home: &Path) -> Result<PathBuf> {
+    let root = home.join("public-shares");
+    fs::create_dir_all(&root).map_err(|_| io("Cannot create public share inventory"))?;
+    if fs::symlink_metadata(&root)
+        .map_err(|_| io("Share inventory unavailable"))?
+        .file_type()
+        .is_symlink()
+        || root
+            .canonicalize()
+            .map_err(|_| io("Share inventory unavailable"))?
+            != root
+    {
+        return Err(input("Share inventory must not be a symlink"));
+    }
+    let mut count = 0;
+    let mut bytes = 0u64;
+    for item in fs::read_dir(&root).map_err(|_| io("Cannot read share inventory"))? {
+        let item = item.map_err(|_| io("Cannot read share inventory"))?;
+        let meta = fs::symlink_metadata(item.path()).map_err(|_| io("Cannot read shared file"))?;
+        count += 1;
+        bytes = bytes.saturating_add(meta.len());
+        if !meta.file_type().is_file()
+            || meta.len() == 0
+            || meta.len() > MAX_CACHE
+            || count > 200
+            || bytes > 2 * 1024 * 1024 * 1024
+            || extension(&item.file_name().to_string_lossy()).is_none()
+        {
+            return Err(input("Invalid or oversized public share inventory"));
+        }
+    }
+    Ok(root)
+}
+
+pub fn configure_shares(handle: i64, enabled: bool, slots: i32) -> Result<()> {
+    if !(1..=4).contains(&slots) {
+        return Err(input("Choose one to four upload slots"));
+    }
+    let engine = engine(handle)?;
+    let slot = engine
+        .client
+        .read()
+        .map_err(|_| state("Soulseek session unavailable"))?;
+    live(&engine)?;
+    let client = slot
+        .as_ref()
+        .ok_or_else(|| state("Connect Soulseek before sharing"))?;
+    let roots = if enabled {
+        vec![
+            share_root(
+                engine
+                    .config
+                    .home
+                    .parent()
+                    .ok_or_else(|| state("Invalid Soulseek home"))?,
+            )?
+            .to_string_lossy()
+            .into_owned(),
+        ]
+    } else {
+        Vec::new()
+    };
+    client.set_upload_slots(slots as usize);
+    if client.set_shared_directories(roots).is_err() {
+        // Updating the index precedes the server announcement. Withdraw it on a failed enable.
+        if enabled {
+            let _ = client.set_shared_directories(Vec::new());
+        }
+        return Err(io("Could not announce public shares"));
+    }
+    Ok(())
+}
+
+pub fn sharing(handle: i64) -> Result<String> {
+    let engine = engine(handle)?;
+    let slot = engine
+        .client
+        .read()
+        .map_err(|_| state("Soulseek session unavailable"))?;
+    live(&engine)?;
+    let client = slot
+        .as_ref()
+        .ok_or_else(|| state("Connect Soulseek before reading uploads"))?;
+    let (folders, files) = client.shared_counts();
+    let uploads: Vec<Value> = client
+        .uploads()
+        .into_iter()
+        .take(256)
+        .map(|upload| {
+            let (phase, position) = match upload.status {
+                soulseek_rs::UploadStatus::Queued(p) => ("queued", p),
+                soulseek_rs::UploadStatus::InProgress => ("uploading", 0),
+                soulseek_rs::UploadStatus::Completed => ("complete", 0),
+                soulseek_rs::UploadStatus::Cancelled => ("cancelled", 0),
+                soulseek_rs::UploadStatus::Failed(_) => ("failed", 0),
+            };
+            json!({"peer":upload.username,"path":upload.filename,"size":upload.size,
+            "sent":upload.bytes_sent,"speed":upload.speed_bytes_per_sec,
+            "phase":phase,"position":position})
+        })
+        .collect();
+    Ok(json!({"folders":folders,"files":files,"uploads":uploads}).to_string())
+}
+
+pub fn cancel_upload(handle: i64, peer: &str, path: &str) -> Result<()> {
+    bounded(peer, 128, "Invalid upload peer")?;
+    bounded(path, 4096, "Invalid upload path")?;
+    let engine = engine(handle)?;
+    let slot = engine
+        .client
+        .read()
+        .map_err(|_| state("Soulseek session unavailable"))?;
+    live(&engine)?;
+    let client = slot
+        .as_ref()
+        .ok_or_else(|| state("Soulseek disconnected"))?;
+    if !client.cancel_upload(peer, path) {
+        return Err(state("Upload is no longer active"));
+    }
+    Ok(())
+}
+
 pub fn transfers(handle: i64) -> Result<String> {
     let engine = engine(handle)?;
     let slot = engine
@@ -876,6 +999,39 @@ pub extern "system" fn Java_app_bitchord_soulseek_SoulseekNative_close(
     invoke(&mut env, |_| close(handle));
 }
 
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_app_bitchord_soulseek_SoulseekNative_configureShares(
+    mut env: JNIEnv,
+    _class: JClass,
+    handle: jlong,
+    enabled: jni::sys::jboolean,
+    slots: jint,
+) {
+    invoke(&mut env, |_| configure_shares(handle, enabled != 0, slots));
+}
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_app_bitchord_soulseek_SoulseekNative_sharing(
+    mut env: JNIEnv,
+    _class: JClass,
+    handle: jlong,
+) -> jstring {
+    invoke(&mut env, |env| output(env, sharing(handle)?))
+}
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_app_bitchord_soulseek_SoulseekNative_cancelUpload(
+    mut env: JNIEnv,
+    _class: JClass,
+    handle: jlong,
+    peer: JString,
+    path: JString,
+) {
+    invoke(&mut env, |env| {
+        let peer = java_string(env, peer)?;
+        let path = java_string(env, path)?;
+        cancel_upload(handle, &peer, &path)
+    });
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -932,6 +1088,24 @@ mod tests {
         assert!(create("/tmp/unused", "localhost", 0, 0).is_err());
         assert!(create("/tmp/unused", "localhost", 1, -1).is_err());
     }
+    #[test]
+    fn public_inventory_rejects_symlinks_directories_and_non_audio() {
+        let path = home();
+        let root = Path::new(&path).join("public-shares");
+        assert!(share_root(Path::new(&path)).is_ok());
+        fs::write(root.join("valid.flac"), b"fLaCbytes").unwrap();
+        assert!(share_root(Path::new(&path)).is_ok());
+        fs::write(root.join("secret.txt"), b"private").unwrap();
+        assert!(share_root(Path::new(&path)).is_err());
+        fs::remove_file(root.join("secret.txt")).unwrap();
+        std::os::unix::fs::symlink(root.join("valid.flac"), root.join("linked.flac")).unwrap();
+        assert!(share_root(Path::new(&path)).is_err());
+        fs::remove_file(root.join("linked.flac")).unwrap();
+        fs::create_dir(root.join("nested")).unwrap();
+        assert!(share_root(Path::new(&path)).is_err());
+        fs::remove_dir_all(path).unwrap();
+    }
+
     #[test]
     fn same_basename_from_different_peers_has_different_storage() {
         let home = home();

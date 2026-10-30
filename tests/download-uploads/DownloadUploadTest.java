@@ -70,6 +70,51 @@ public final class DownloadUploadTest {
                 "verified source survives confirmation");
         DownloadUploadBridge.upload(context, source, "Exact original.flac", CHAT, USER, firstToken);
         check(value.sends.get() == 1, "confirmed token is idempotent");
+        value.archiveMessage(confirmed);
+        JSONObject verified =
+                new JSONObject(DownloadUploadBridge.verifyArchive(context, firstToken));
+        check(verified.getLong("readbackVerifiedAt") > 0, "fresh remote readback is journaled");
+        check(
+                value.cacheEvictions.get() >= 2 && value.readbacks.get() == 1,
+                "cache is evicted before verification and released afterward");
+        check(source.exists(), "verification never removes original");
+        File restore = new File(context.getNoBackupFilesDir(), "restored.flac");
+        DownloadUploadBridge.restoreArchive(context, firstToken, restore);
+        check(
+                Arrays.equals(audio, Files.readAllBytes(restore.toPath())),
+                "restore preserves original bytes exactly");
+        value.corruptReadback = true;
+        fails(
+                () -> DownloadUploadBridge.verifyArchive(context, firstToken),
+                "remote hash mismatch rejects verification");
+        check(source.exists(), "remote mismatch keeps original");
+        value.corruptReadback = false;
+        value.keepCache = true;
+        // A still-complete cached local file cannot qualify as an independent remote read-back.
+        value.cachedForTest();
+        int reads = value.readbacks.get();
+        fails(
+                () -> DownloadUploadBridge.verifyArchive(context, firstToken),
+                "failed cache eviction blocks verification");
+        check(
+                value.readbacks.get() == reads,
+                "no cached bytes are accepted as remote verification");
+        value.keepCache = false;
+        value.missingMessage = true;
+        fails(
+                () -> DownloadUploadBridge.verifyArchive(context, firstToken),
+                "deleted channel message blocks offloading");
+        value.missingMessage = false;
+        value.accountId = 99;
+        fails(
+                () -> DownloadUploadBridge.verifyArchive(context, firstToken),
+                "changed account blocks archive verification");
+        value.accountId = USER;
+        File outside = new File(root, "outside-restore.flac");
+        fails(
+                () -> DownloadUploadBridge.restoreArchive(context, firstToken, outside),
+                "restore refuses non-private destination");
+        value.archiveMessage(null);
 
         value.throwAfterSend = true;
         String uncertain = "download_fixture_uncertain_2";

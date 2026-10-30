@@ -328,6 +328,119 @@ public final class DownloadUploadBridge {
         return owner.sessionTag + ":" + owner.authorizationRevision + ":" + chat + ":" + message;
     }
 
+    /**
+     * Re-fetch from Telegram after evicting its local cache; acknowledgement alone is insufficient.
+     */
+    public static String verifyArchive(Context context, String durableToken) throws Exception {
+        return archiveFile(context, durableToken, null);
+    }
+
+    /** Restore original bytes into a caller-owned app-private staging file. */
+    public static String restoreArchive(Context context, String durableToken, File destination)
+            throws Exception {
+        if (destination == null) throw new IOException("Missing archive destination");
+        File canonical = destination.getCanonicalFile();
+        String root = context.getNoBackupFilesDir().getCanonicalPath() + File.separator;
+        if (!canonical.getPath().startsWith(root)
+                || java.nio.file.Files.isSymbolicLink(destination.toPath()))
+            throw new IOException("Archive restore requires private staging");
+        return archiveFile(context, durableToken, canonical);
+    }
+
+    private static String archiveFile(Context context, String token, File destination)
+            throws Exception {
+        worker();
+        if (token == null || !token.matches("[A-Za-z0-9_-]{16,96}"))
+            throw new IOException("Invalid archive receipt");
+        TelegramBridge value = bridge(context);
+        String key =
+                hex(
+                        MessageDigest.getInstance("SHA-256")
+                                .digest(token.getBytes(StandardCharsets.UTF_8)));
+        if (ACTIVE.putIfAbsent(key, Thread.currentThread()) != null)
+            throw new IOException("Archive is busy");
+        int fileId = 0;
+        boolean readbackStarted = false;
+        try {
+            AtomicFile ledger =
+                    new AtomicFile(
+                            new File(value.home, "download-receipts/" + key + "/receipt.json"));
+            JSONObject receipt = read(ledger);
+            if (!receipt.optBoolean("confirmed") || receipt.optLong("messageId") == 0)
+                throw new IOException("Telegram copy is not confirmed");
+            long account = receipt.getLong("userId"), chat = receipt.getLong("chatId");
+            validate(value, account, chat);
+            final long generation = value.generation, authorization = value.authorizationRevision;
+            String caption =
+                    receipt.getString("name")
+                            + "\nBitChord copy "
+                            + key
+                            + "\nSHA-256 "
+                            + receipt.getString("sha256");
+            TdApi.Message message =
+                    value.call(new TdApi.GetMessage(chat, receipt.getLong("messageId")), 20000);
+            if (!matches(message, chat, caption, receipt.getLong("bytes"))
+                    || message.sendingState != null)
+                throw new IOException("Archived message is missing or changed");
+            TdApi.File remote = ((TdApi.MessageDocument) message.content).document.document;
+            if (remote.remote == null
+                    || !remote.remote.isUploadingCompleted
+                    || remote.remote.id.isEmpty())
+                throw new IOException("Telegram has not retained the entire archive");
+            fileId = remote.id;
+            // DeleteFile affects TDLib's cache only. Require eviction before claiming a read-back.
+            value.call(new TdApi.DeleteFile(fileId), 20000);
+            TdApi.File cleared = value.call(new TdApi.GetFile(fileId), 15000);
+            if (cleared.local != null
+                    && (cleared.local.isDownloadingCompleted || cleared.local.downloadedSize != 0))
+                throw new IOException(
+                        "Telegram file is still in use; retry archive verification later");
+            check(value, generation, authorization);
+            readbackStarted = true;
+            TdApi.File downloaded =
+                    value.call(new TdApi.DownloadFile(fileId, 8, 0, 0, true), 600000);
+            check(value, generation, authorization);
+            if (downloaded.local == null || !downloaded.local.isDownloadingCompleted)
+                throw new IOException("Telegram read-back did not finish");
+            File bytes = new File(downloaded.local.path).getCanonicalFile();
+            if (!bytes.isFile()
+                    || bytes.length() != receipt.getLong("bytes")
+                    || !digest(bytes).equals(receipt.getString("sha256")))
+                throw new IOException("Telegram read-back hash mismatch");
+            // Check the message again before permitting deletion of a phone copy.
+            TdApi.Message current =
+                    value.call(new TdApi.GetMessage(chat, receipt.getLong("messageId")), 20000);
+            if (!matches(current, chat, caption, bytes.length()))
+                throw new IOException("Archived message changed during verification");
+            if (destination != null) {
+                try (InputStream in = new FileInputStream(bytes);
+                        FileOutputStream out = new FileOutputStream(destination)) {
+                    byte[] buffer = new byte[65536];
+                    int count;
+                    while ((count = in.read(buffer)) != -1) {
+                        check(value, generation, authorization);
+                        out.write(buffer, 0, count);
+                    }
+                    out.getFD().sync();
+                }
+                if (!digest(destination).equals(receipt.getString("sha256")))
+                    throw new IOException("Restored archive hash mismatch");
+            }
+            receipt.put("readbackVerifiedAt", System.currentTimeMillis())
+                    .put("remoteUniqueId", remote.remote.uniqueId);
+            write(ledger, receipt);
+            return receipt.toString();
+        } finally {
+            if (fileId != 0 && readbackStarted)
+                try {
+                    value.call(new TdApi.CancelDownloadFile(fileId, false), 15000);
+                    value.call(new TdApi.DeleteFile(fileId), 15000);
+                } catch (Exception ignored) {
+                }
+            ACTIVE.remove(key, Thread.currentThread());
+        }
+    }
+
     static boolean matches(TdApi.Message message, long chat, String caption, long size) {
         if (message == null
                 || message.chatId != chat
