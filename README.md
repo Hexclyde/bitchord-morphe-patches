@@ -1,29 +1,18 @@
 # BitChord Morphe Patches (Bitchord+)
 
-> **Testing build 1.1.0-beta.6:** brings download tools and playback
-> controls together under **Settings → Patches & tweaks**. Disabled features show
-> only their compact row; enabling one opens its controls. Use its settings gear
-> to reopen them later. Download formats now use switches and drag handles to set
-> their preference order, following BitChord's Sources list.
-> Optional Soulseek, paired-phone and Real-Debrid, AllDebrid, Premiumize and TorBox
-> downloads retain the same Phone/Telegram/Both copy choices. See
-> [download setup](docs/SOULSEEK-TESTING.md) and [debrid setup](docs/DEBRID.md).
-> The testing build still needs real-phone and public-network qualification.
-
 [Morphe](https://morphe.software) patches for the [BitChord](https://github.com/kushagrasinghx/BitChord) Android music player. The main one, **Unofficial Telegram music**, lets BitChord search and play music from your own Telegram channels, in its original quality, entirely on your phone. No server, bot or hosting is involved.
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.7, a testing build). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.8, a testing build). It works with BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
-> The existing Telegram integration has been tested on an **arm64-v8a** phone. The armeabi-v7a and x86_64 builds pass the same automated checks, but haven't been run on a real device. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
+> Every patch applies to BitChord 1.9's official APKs and passes the automated checks on all three architectures. The Telegram integration was last tested on an **arm64-v8a** phone with BitChord 1.8.1, so please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if anything behaves differently on 1.9.
 
 ## Patches
 
 | Patch | What it does |
 | --- | --- |
 | **Unofficial Telegram music** | Search and play audio from your own Telegram channels and chats through TDLib, using your own account. Android 8 or newer. |
-| **Unofficial Soulseek audio** | Download selected Soulseek and paired-phone originals, plus optional debrid link downloads, with saved destination and format choices. Live playback from these sources is disabled. Android 8 or newer. |
 | **Install as Bitchord+** | Installs next to your regular BitChord as **Bitchord+**, or under a name you choose. |
 | **Sign in with MicroG** | Signs in to YouTube Music with an account that’s already in [MicroG RE](https://github.com/MorpheApp/MicroG-RE), instead of Google’s sign-in page. Only shows when MicroG RE is installed. |
 | **Sing** | Turns the lead vocal down so you can sing over the song. Ported from [Auris](https://github.com/OreoMuncher45/Auris). Off by default. |
@@ -79,7 +68,7 @@ Every extra (quality, fake lossless checks, covers, file names, naming by sound,
 ## Patches & tweaks
 
 Install the features you want in Morphe, then open **Settings → Patches & tweaks**.
-The page contains the installed download and playback features. Their
+The page contains the installed playback features. Their
 controls follow BitChord's theme, fonts, switches and rounded cards.
 
 Each feature has an enable switch and settings gear. When off, its detailed
@@ -93,29 +82,30 @@ playback patches are:
 - **Sing:** turns the lead vocal down so you can sing over the song, from a little to all of it. By default only the voice range is cut, only while someone is singing, and drum hits are left alone; **Whole centre** removes everything in the middle instead, which suits older recordings. Ported from [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45.
 - **Pitch control:** up or down by up to 12 semitones without changing the speed. BitChord's speed setting keeps the pitch you set.
 - **Loudness level:** how loud songs play with BitChord's loudness normalisation on, from -23 to -8 LUFS. BitChord's own level is -14 LUFS. It applies to the songs BitChord normalises, the ones YouTube gives a loudness for.
-- **Sleep timer fade-out:** when the timer's time is up, the song fades out over a length you choose (3 to 60 seconds) before it pauses. With the timer's **After this song** option, the last seconds of that song fade instead of it stopping at full volume. A fade stands down the moment you play, pause, seek or set the timer again, and the volume comes back up for the next time you play.
-- **Battery saver:** lets the phone's audio chip decode songs it can, so the processor can sleep during long listens. While a song plays this way, the equaliser, loudness normalisation, Sing, spatial audio and crossfade don't work on it. The page shows which formats your phone's chip can play and which decoder is in use now. The chip isn't asked for while Sing, Headphone correction, DJ mode or JamesDSP needs the decoded audio, and a changed speed or pitch is only handed over when the chip supports it. It stays off on the page until you turn it on.
+- **Sleep timer fade-out:** when the timer's time is up, the song fades out over a length you choose (3 to 60 seconds) before it pauses. With the timer's **After this song** option, the last seconds of that song fade instead of it stopping at full volume. A fade stands down the moment you play, pause, seek or set the timer again, and the volume comes back up for the next time you play. A song on BitChord's bit-perfect output pauses without a fade, since its volume belongs to the DAC.
+- **Battery saver:** lets the phone's audio chip decode songs it can, so the processor can sleep during long listens. While a song plays this way, the equaliser, loudness normalisation, Sing, spatial audio and crossfade don't work on it. The page shows which formats your phone's chip can play and which decoder is in use now. The chip isn't asked for while Sing, Headphone correction, DJ mode or JamesDSP needs the decoded audio, or while BitChord's bit-perfect output is on, and a changed speed or pitch is only handed over when the chip supports it. It stays off on the page until you turn it on.
 - **Lossless addons over Bluetooth:** BitChord skips addons marked lossless while the phone can't output lossless audio, such as over Bluetooth. Allow them for every Bluetooth output, or only for the devices you pick from the ones you've connected; the page shows the codec in use. The phone then sends them with its best Bluetooth codec. It stays off on the page until you turn it on.
 - **Per-download quality:** when you download a song, BitChord asks whether you want it in Standard, High or Lossless quality instead of always using the Download quality setting. An album asked for in one go is asked about once. The idea is from [Stash](https://github.com/rawnaldclark/Stash).
 - **Headphone correction:** a parametric equaliser that flattens a headphone's own sound from a profile measured for that model. Search [AutoEq](https://github.com/jaakkopasanen/AutoEq)'s thousands of models by name, or paste any parametric EQ in Equalizer APO's text form. Each output keeps its own profile, so wired earphones and a Bluetooth headset each get theirs, and a strength slider scales it. Profiles are fetched from AutoEq's GitHub repository when you pick one and kept on the phone.
 - **Equaliser per output:** BitChord's equaliser settings are remembered for each output (the speaker, wired, USB, each Bluetooth device) and put back when that output is in use again. Set the equaliser for the car with the car connected, for earbuds with the earbuds connected. A setting can be copied as a short code and pasted on another phone.
-- **DJ mode:** the next song in the queue is chosen for a key next to the current one on the Camelot wheel and a close tempo, so songs mix well. Songs you queued yourself keep their place, and nothing moves in a Listen Together party. Each song's key and tempo are learned as it plays, and BitChord's own Automix analyses are used when it has them.
+- **DJ mode:** the next song in the queue is chosen for a key next to the current one on the Camelot wheel and a close tempo, so songs mix well. Songs you queued yourself keep their place, and nothing moves in a Listen Together party. Each song's key and tempo are learned as it plays, and BitChord's own Automix analyses are used when it has them. While Automix is mixing from one song into the next, DJ mode waits until it's done.
 - **JamesDSP:** opens [JamesDSP](https://github.com/timschneeb/RootlessJamesDSP) from BitChord, announces BitChord's audio session to it again, and can hand the effects over: BitChord's equaliser goes off and Battery saver stands down, since a song on the audio chip can't be heard by JamesDSP.
+
+Songs that play through BitChord's bit-perfect output reach your DAC unchanged, so Sing, Pitch control, Loudness level, Headphone correction and JamesDSP don't apply to them; the page says so while that output is on.
 
 Everything is at BitChord's own behaviour until you change it, and none of them needs the Telegram patch. Pitch control, Loudness level, Sleep timer fade-out, Headphone correction, Equaliser per output and DJ mode follow features of [Prism](https://github.com/Yigder/Prism) by Yigder; the code is written for BitChord.
 
 ## Requirements
 
 - Android 8.0 or newer
-- The original [BitChord 1.8.1 APK](https://github.com/kushagrasinghx/BitChord/releases/tag/v1.8.1) (arm64-v8a, armeabi-v7a or x86_64)
+- The original [BitChord 1.9 APK](https://github.com/kushagrasinghx/BitChord/releases/tag/v1.9) (arm64-v8a, armeabi-v7a or x86_64)
 - [Morphe Manager](https://github.com/MorpheApp/morphe-manager/releases)
 - For Telegram features: a Telegram account and an API ID and hash from [my.telegram.org](https://my.telegram.org/apps)
-- For optional debrid downloads: an enabled provider and your own account API key
 
 ## Quick start
 
 1. [Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord). On the source card, enable **Experimental app versions**.
-2. Patch BitChord 1.8.1 with **Unofficial Telegram music**, **Install as Bitchord+** and, if you like, **Sign in with MicroG** and any of the [tweaks](#patches--tweaks). Leave the API ID at `0` and the API hash empty.
+2. Patch BitChord 1.9 with **Unofficial Telegram music**, **Install as Bitchord+** and, if you like, **Sign in with MicroG** and any of the [tweaks](#patches--tweaks). Leave the API ID at `0` and the API hash empty.
 3. Install the patched app and open **Settings → Account & integrations → Unofficial Telegram**.
 4. Enter your API ID and hash, sign in, and pick your music chats.
 5. Go to **Search → Addons** to find and play your audio.
@@ -128,7 +118,6 @@ Step-by-step guides:
 
 - [Installing with Morphe](docs/MOBILE.md)
 - [Connecting Telegram](docs/SETUP.md)
-- [Optional debrid downloads](docs/DEBRID.md)
 - [FAQ](docs/FAQ.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 

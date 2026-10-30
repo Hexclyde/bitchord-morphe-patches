@@ -1,7 +1,6 @@
 /.deps/
 /build/
 /.build.lock
-/native/soulseek/target/
 /ui-tests/target/
 /ui-tests/aar-libs/
 /ui-tests/src/test/java/org/
@@ -78,12 +77,6 @@ __pycache__/
 /ui-tests/src/test/java/app/bitchord/telegram/ExtrasActivity.java
 /ui-tests/src/test/java/app/bitchord/telegram/SoundExtras.java
 /ui-tests/src/test/java/app/bitchord/telegram/VocalCut.java
-/ui-tests/src/test/java/app/bitchord/soulseek/DownloadActivity.java
-/ui-tests/src/test/java/app/bitchord/soulseek/DownloadStyle.java
-/ui-tests/src/test/java/app/bitchord/soulseek/AudioFormatSetupActivity.java
-/ui-tests/src/test/java/app/bitchord/soulseek/AudioFormatPreferences.java
-/ui-tests/src/test/java/app/bitchord/soulseek/FormatDragOrder.java
-/ui-tests/src/test/java/app/bitchord/soulseek/SoulseekTrack.java
 /ui-tests/src/test/java/app/bitchord/telegram/Outputs.java
 /ui-tests/src/test/java/app/bitchord/telegram/SleepFade.java
 /ui-tests/src/test/java/app/bitchord/telegram/HeadphoneEq.java
@@ -92,3 +85,4 @@ __pycache__/
 /ui-tests/src/test/java/app/bitchord/telegram/DjMode.java
 /ui-tests/src/test/java/app/bitchord/telegram/DownloadChoice.java
 /ui-tests/src/test/java/app/bitchord/telegram/EffectsApps.java
+/ui-tests/src/test/java/app/bitchord/telegram/BitPerfect.java

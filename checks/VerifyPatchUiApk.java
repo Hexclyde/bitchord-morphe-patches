@@ -8,7 +8,13 @@ import org.w3c.dom.*;
 import java.io.File;
 import java.util.*;
 
-/** Inspect the installed settings entry and UI-only filtering without changing the registry. */
+/**
+ * Checks the shared Patches & tweaks page: one Settings entry, one start hook, and no Telegram or
+ * TDLib code in it, so the playback patches can be installed without the Telegram patch.
+ *
+ * <p>Arguments: the patched APK, whether the Telegram patch was selected, and whether any playback
+ * patch was.
+ */
 public final class VerifyPatchUiApk {
     static int checks;
 
@@ -20,9 +26,8 @@ public final class VerifyPatchUiApk {
     public static void main(String[] args) throws Exception {
         File apk = new File(args[0]);
         boolean telegram = Boolean.parseBoolean(args[1]);
-        boolean downloads = Boolean.parseBoolean(args[2]);
-        boolean runtime = telegram || downloads;
-        boolean enabled = downloads || (args.length > 3 && Boolean.parseBoolean(args[3]));
+        boolean enabled = Boolean.parseBoolean(args[2]);
+        boolean runtime = telegram || enabled;
         var dex = DexFileFactory.loadDexContainer(apk, Opcodes.getDefault());
         Map<String, ClassDef> classes = new HashMap<>();
         for (String entry : dex.getDexEntryNames())
@@ -37,8 +42,8 @@ public final class VerifyPatchUiApk {
                 "Telegram implementation matches selection");
         check(
                 classes.containsKey("Lorg/drinkless/tdlib/Client;") == telegram,
-                "No TDLib in download-only selection");
-        int entries = 0, starts = 0, filters = 0;
+                "No TDLib without the Telegram patch");
+        int entries = 0, starts = 0;
         boolean title = false;
         Set<String> common =
                 Set.of(
@@ -51,7 +56,15 @@ public final class VerifyPatchUiApk {
                         "Translations",
                         "HostLog",
                         "VocalCut",
-                        "PatchSources");
+                        "Outputs",
+                        "SleepFade",
+                        "HeadphoneEq",
+                        "OutputEq",
+                        "KeyTempo",
+                        "DjMode",
+                        "DownloadChoice",
+                        "EffectsApps",
+                        "BitPerfect");
         for (ClassDef cls : classes.values()) {
             String simple =
                     cls.getType().startsWith(base)
@@ -80,21 +93,10 @@ public final class VerifyPatchUiApk {
                     }
                     if (call.getDefiningClass().equals(base + "ExtrasUi;")
                             && call.getName().equals("start")) starts++;
-                    if (call.getDefiningClass().equals(base + "PatchSources;")
-                            && call.getName().equals("visibleState")) {
-                        filters++;
-                        check(
-                                cls.getType()
-                                                .equals(
-                                                        "Lcom/music/bitchord/ui/screens/DiscordScreenKt;")
-                                        && method.getName().equals("SourcesScreen"),
-                                "Filtering applies only to collected Sources UI state");
-                    }
                     if (common.contains(simple)) {
                         check(
-                                !call.getDefiningClass().startsWith("Lapp/bitchord/soulseek/")
-                                        && !call.getDefiningClass().startsWith("Lorg/drinkless/"),
-                                "Shared settings has no optional download or TDLib dependency");
+                                !call.getDefiningClass().startsWith("Lorg/drinkless/"),
+                                "Shared settings has no TDLib dependency");
                         if (call.getDefiningClass().startsWith(base)) {
                             String owner =
                                     call.getDefiningClass()
@@ -111,7 +113,6 @@ public final class VerifyPatchUiApk {
         }
         check(entries == (enabled ? 1 : 0), "Exactly one Patches & tweaks settings entry");
         check(starts == (enabled ? 1 : 0), "Exactly one settings initialization hook");
-        check(filters == (enabled ? 1 : 0), "Exactly one Sources UI filter");
 
         check(title == runtime, "Shared page uses renamed title");
         Document manifest = VerifyApk.manifest(apk);
@@ -133,6 +134,6 @@ public final class VerifyPatchUiApk {
                     "No extra launcher");
         }
         check(declared == (enabled ? 1 : 0), "Shared settings Activity declared once");
-        System.out.println("PASS: " + checks + " shared settings/source-isolation checks");
+        System.out.println("PASS: " + checks + " shared settings checks");
     }
 }

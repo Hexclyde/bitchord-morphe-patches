@@ -2,7 +2,7 @@ package com.music.bitchord.data.model;
 
 import java.util.List;
 
-/** BitChord 1.8.1's Song constructor, for HostLibraryTest. */
+/** BitChord 1.9's Song constructor, for HostLibraryTest. */
 public final class Song {
     public final String videoId, title, artist, thumbnailUrl, durationText, sourceQuality;
     public final QueueTier queueTier;
@@ -35,7 +35,8 @@ public final class Song {
             Boolean isExplicit,
             String playbackSource,
             PlaybackSourceType playbackSourceType,
-            String playbackSourceId) {
+            String playbackSourceId,
+            String feedbackToken) {
         this.videoId = videoId;
         this.title = title;
         this.artist = artist;

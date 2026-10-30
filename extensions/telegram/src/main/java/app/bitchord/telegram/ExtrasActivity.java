@@ -21,7 +21,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -164,77 +163,30 @@ public final class ExtrasActivity extends Activity {
         top.addView(title);
         body.addView(top);
 
-        boolean downloads = exists("app.bitchord.soulseek.DownloadSettings");
-        if (downloads) section(Strings.t("Patches"));
-        if (downloads) {
-            downloadFeature(
-                    "soulseek",
-                    Strings.t("Soulseek downloads"),
-                    Strings.t("Find audio and save a complete copy"),
-                    parent -> {
-                        paragraph(
-                                parent,
-                                Strings.t(
-                                        "Search Soulseek for audio files and download the version"
-                                                + " you choose."));
-                        action(
-                                parent,
-                                Strings.t("Account & download settings"),
-                                () -> openDownload("soulseek", "account"));
-                        copyActions(parent, "soulseek");
-                    });
-            downloadFeature(
-                    "peer-downloads",
-                    Strings.t("Peer downloads"),
-                    Strings.t("Exchange selected files with a paired phone"),
-                    parent -> {
-                        paragraph(
-                                parent,
-                                Strings.t(
-                                        "Pair a trusted phone and choose files to send or"
-                                                + " download."));
-                        action(
-                                parent,
-                                Strings.t("Download queue"),
-                                () -> openDownload("peer-downloads", "downloads"));
-                        action(
-                                parent,
-                                Strings.t("Connection setup"),
-                                () -> openDownload("peer-downloads", "connections"));
-                        copyActions(parent, "peer-downloads");
-                    });
-            downloadFeature(
-                    "debrid",
-                    Strings.t("Debrid downloads"),
-                    Strings.t("Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account"),
-                    parent -> {
-                        paragraph(
-                                parent,
-                                Strings.t(
-                                        "Choose a service, enter its API key and download selected"
-                                                + " audio from a link."));
-                        action(
-                                parent,
-                                Strings.t("Services & API keys"),
-                                () -> openDownload("debrid", "services"));
-                        action(
-                                parent,
-                                Strings.t("Link downloads"),
-                                () -> openDownload("debrid", "links"));
-                        copyActions(parent, "debrid");
-                    });
+        boolean audio =
+                SoundExtras.singApplied()
+                        || SoundExtras.pitchApplied()
+                        || SoundExtras.loudnessApplied()
+                        || SoundExtras.sleepFadeApplied()
+                        || SoundExtras.batterySaverApplied()
+                        || SoundExtras.losslessBluetoothApplied()
+                        || SoundExtras.headphoneApplied()
+                        || SoundExtras.outputEqApplied()
+                        || SoundExtras.djApplied()
+                        || SoundExtras.jamesDspApplied();
+        if (audio) section(Strings.t("Audio tweaks"));
+        if (audio && BitPerfect.wanted()) {
+            LinearLayout note = new LinearLayout(this);
+            note.setOrientation(LinearLayout.VERTICAL);
+            note.setPadding(style.dp(20), 0, style.dp(20), 0);
+            paragraph(
+                    note,
+                    Strings.t(
+                            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC"
+                                    + " unchanged, so these effects, the sleep fade and JamesDSP"
+                                    + " don’t apply to them."));
+            body.addView(note);
         }
-
-        if (SoundExtras.singApplied()
-                || SoundExtras.pitchApplied()
-                || SoundExtras.loudnessApplied()
-                || SoundExtras.sleepFadeApplied()
-                || SoundExtras.batterySaverApplied()
-                || SoundExtras.losslessBluetoothApplied()
-                || SoundExtras.headphoneApplied()
-                || SoundExtras.outputEqApplied()
-                || SoundExtras.djApplied()
-                || SoundExtras.jamesDspApplied()) section(Strings.t("Audio tweaks"));
         if (SoundExtras.singApplied()) {
             feature(
                     "sing",
@@ -463,69 +415,6 @@ public final class ExtrasActivity extends Activity {
                                                             + " Rawnald Clark.")));
         }
         showExpanded();
-    }
-
-    private void downloadFeature(String id, String title, String summary, Details details) {
-        feature(
-                id,
-                title,
-                summary,
-                () ->
-                        (Boolean)
-                                invoke(
-                                        "app.bitchord.soulseek.DownloadSettings",
-                                        "enabled",
-                                        new Class<?>[] {Context.class, String.class},
-                                        this,
-                                        id),
-                on ->
-                        invoke(
-                                "app.bitchord.soulseek.DownloadSettings",
-                                "setEnabled",
-                                new Class<?>[] {Context.class, String.class, boolean.class},
-                                this,
-                                id,
-                                on),
-                details);
-    }
-
-    private void copyActions(LinearLayout parent, String feature) {
-        action(parent, Strings.t("Where copies go"), () -> openDownload(feature, "destinations"));
-        action(parent, Strings.t("Formats, best first"), () -> openDownload(feature, "formats"));
-    }
-
-    private void openDownload(String id, String action) {
-        try {
-            invoke(
-                    "app.bitchord.soulseek.DownloadSettings",
-                    "open",
-                    new Class<?>[] {Context.class, String.class, String.class},
-                    this,
-                    id,
-                    action);
-        } catch (Exception error) {
-            unavailable();
-        }
-    }
-
-    private static boolean exists(String name) {
-        try {
-            Class.forName(name, false, ExtrasActivity.class.getClassLoader());
-            return true;
-        } catch (ClassNotFoundException | LinkageError missing) {
-            return false;
-        }
-    }
-
-    private static Object invoke(String name, String method, Class<?>[] types, Object... args)
-            throws Exception {
-        try {
-            return Class.forName(name).getMethod(method, types).invoke(null, args);
-        } catch (InvocationTargetException error) {
-            Throwable cause = error.getCause();
-            if (cause instanceof Exception) throw (Exception) cause;
-            throw new Exception("Patch setting unavailable", cause);
-        }
     }
 
     private void unavailable() {

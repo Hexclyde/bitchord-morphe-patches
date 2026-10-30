@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -389,6 +390,34 @@ final class DjMode {
         }
     }
 
+    private static volatile Field crossfadeField;
+    private static volatile Method transitioningMethod;
+
+    /** True while BitChord's crossfade or Automix is moving from one song to the next. */
+    static boolean transitioning() {
+        Object host = service;
+        if (host == null) return false;
+        try {
+            Field field = crossfadeField;
+            if (field == null) {
+                field = host.getClass().getDeclaredField("crossfade");
+                field.setAccessible(true);
+                crossfadeField = field;
+            }
+            Object crossfade = field.get(host);
+            if (crossfade == null) return false;
+            Method method = transitioningMethod;
+            if (method == null) {
+                method = crossfade.getClass().getMethod("isTransitioning");
+                method.setAccessible(true);
+                transitioningMethod = method;
+            }
+            return Boolean.TRUE.equals(method.invoke(crossfade));
+        } catch (Exception | LinkageError e) {
+            return false;
+        }
+    }
+
     /** The player BitChord's session is on; BitChord keeps a spare for crossfades. */
     static Object sessionPlayer() {
         Object host = service;
@@ -533,9 +562,24 @@ final class DjMode {
 
     /** Called on the player's thread when a song starts: brings the best next song forward. */
     static void arrange(Player player) {
+        arrange(player, 0);
+    }
+
+    /** How often a reorder waits for an Automix transition to finish before giving up. */
+    static final int TRANSITION_RETRIES = 10;
+
+    private static void arrange(Player player, int waited) {
         if (!enabled || player == null) return;
         try {
             if (inParty()) return;
+            // Automix plans its mix into the next song while a transition runs; moving that song
+            // now would leave the plan mixing into the wrong one.
+            Handler handler = main;
+            if (transitioning()) {
+                if (handler != null && waited < TRANSITION_RETRIES)
+                    handler.postDelayed(() -> arrange(player, waited + 1), 1_000);
+                return;
+            }
             int at = player.getCurrentMediaItemIndex();
             int count = player.getMediaItemCount();
             if (at < 0 || at + 2 > count) return;

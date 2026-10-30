@@ -228,8 +228,6 @@ final class Translations {
             "\u0645\u062a\u0628\u0642\u064d \u0646\u062d\u0648 {0}\u060c \u062d\u062a\u0649 {1}",
             "Account",
             "\u0627\u0644\u062d\u0633\u0627\u0628",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "\u0645\u0641\u062a\u0627\u062d \u062a\u0637\u0628\u064a\u0642 AcoustID",
             "AcoustID key",
@@ -581,8 +579,6 @@ final class Translations {
                     + " \u0645\u0646 \u0645\u0635\u0627\u062f\u0631 \u0623\u062e\u0631\u0649",
             "Choose",
             "\u0627\u062e\u062a\u064a\u0627\u0631",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "\u0627\u062e\u062a\u0631 \u062d\u062c\u0645\u064b\u0627"
                 + " \u0645\u0633\u062a\u0647\u062f\u0641\u064b\u0627"
@@ -637,8 +633,6 @@ final class Translations {
                     + " Telegram\u2026",
             "Connection",
             "\u0627\u0644\u0627\u062a\u0635\u0627\u0644",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "\u0645\u062a\u0627\u0628\u0639\u0629",
             "Copied {0}",
@@ -719,8 +713,6 @@ final class Translations {
                     + " \u0627\u0644\u062e\u0627\u0635\u0629 \u0628\u0643 \u2197",
             "Damaged index file",
             "\u0645\u0644\u0641 \u0641\u0647\u0631\u0633 \u062a\u0627\u0644\u0641",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "\u062a\u062c\u0627\u0647\u0644",
             "DJ mode",
@@ -742,8 +734,6 @@ final class Translations {
             "\u062a\u0646\u0632\u064a\u0644 \u0627\u0644\u0643\u0644",
             "Download all ({0}, {1})",
             "\u062a\u0646\u0632\u064a\u0644 \u0627\u0644\u0643\u0644 ({0}\u060c {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "\u062a\u0646\u0632\u064a\u0644 {0} \u0623\u063a\u0627\u0646\u064d",
             "Download \u201c{0}\u201d",
@@ -847,8 +837,6 @@ final class Translations {
             "\u064a\u0645\u0643\u0646 \u0644\u0643\u0644 \u0645\u0646 \u064a\u0631\u0649 {0}"
                     + " \u0631\u0624\u064a\u0629 \u0642\u0627\u0626\u0645\u0629"
                     + " \u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649 \u0641\u064a {1}.",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "\u0645\u062f\u0629 \u0627\u0644\u062e\u0641\u0648\u062a",
             "Fade out at the sleep timer",
@@ -883,8 +871,6 @@ final class Translations {
             "\u064a\u064f\u0628\u062d\u062b \u0639\u0646 \u0627\u0644\u0645\u0644\u0641\u0627\u062a"
                     + " \u063a\u064a\u0631 \u0627\u0644\u0645\u0648\u0633\u0648\u0645\u0629"
                     + " \u0641\u064a AcoustID",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "\u0627\u0628\u062d\u062b \u0639\u0646 \u0633\u0645\u0627\u0639\u0627\u062a\u0643",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -930,8 +916,6 @@ final class Translations {
             "\u062a\u062c\u0627\u0647\u0644",
             "Format legend",
             "\u062f\u0644\u064a\u0644 \u0627\u0644\u0635\u064a\u063a",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "\u0639\u064f\u062b\u0631 \u0639\u0644\u0649 {0} \u0645\u0642\u0637\u0639.",
             "Found {0} tracks.",
@@ -1085,8 +1069,6 @@ final class Translations {
             "Let the phone\u2019s audio chip decode songs",
             "Level",
             "\u0627\u0644\u0645\u0633\u062a\u0648\u0649",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "\u062a\u062d\u0645\u064a\u0644 \u0627\u0644\u0645\u0646\u0634\u0648\u0631\u0627\u062a"
                     + " \u0627\u0644\u0623\u0642\u062f\u0645",
@@ -1373,16 +1355,12 @@ final class Translations {
             "\u0627\u0644\u0637\u0628\u0642\u0629 \u0627\u0644\u0623\u0635\u0644\u064a\u0629",
             "Other",
             "\u0623\u062e\u0631\u0649",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "\u0644\u0635\u0642 \u0645\u0644\u0641 \u062a\u0639\u0631\u064a\u0641",
             "Paste code",
             "\u0644\u0635\u0642 \u0627\u0644\u0631\u0645\u0632",
             "Pasted profile",
             "\u0645\u0644\u0641 \u062a\u0639\u0631\u064a\u0641 \u0645\u0644\u0635\u0648\u0642",
-            "Patches",
-            "Patches",
             "Patches & tweaks",
             "Patches & tweaks",
             "Paused until this phone is charging",
@@ -1393,8 +1371,6 @@ final class Translations {
             "\u0645\u062a\u0648\u0642\u0641 \u0645\u0624\u0642\u062a\u064b\u0627 \u062d\u062a\u0649"
                     + " \u064a\u062a\u0635\u0644 \u0647\u0630\u0627"
                     + " \u0627\u0644\u0647\u0627\u062a\u0641 \u0628\u0640 Wi-Fi",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062a\u0641",
             "Phone speaker",
@@ -1624,8 +1600,6 @@ final class Translations {
                 + " \u0627\u0644\u062a\u064a \u062a\u0646\u062a\u0638\u0631.",
             "Search first",
             "\u0627\u0628\u062d\u062b \u0623\u0648\u0644\u064b\u0627",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "\u0646\u0635 \u0627\u0644\u0628\u062d\u062b \u0637\u0648\u064a\u0644"
                     + " \u062c\u062f\u064b\u0627.",
@@ -1661,8 +1635,6 @@ final class Translations {
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "\u062a\u0645 \u0627\u062e\u062a\u064a\u0627\u0631 {0}. \u0627\u0628\u062d\u062b"
                     + " \u0641\u064a BitChord \u2192 Addons.",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "\u0627\u0644\u062c\u0644\u0633\u0629",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -1814,8 +1786,6 @@ final class Translations {
                     + " \u0627\u0644\u0645\u0648\u062c\u0648\u062f\u0629 \u0641\u064a"
                     + " \u0642\u0646\u0627\u062a\u0643"
                     + " \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0627\u0644\u0631\u0627\u0639\u064a",
             "Sponsored",
@@ -2375,8 +2345,6 @@ final class Translations {
             "Use this name?",
             "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0647\u0630\u0627"
                     + " \u0627\u0644\u0627\u0633\u0645\u061f",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "\u064a\u0633\u062a\u062e\u062f\u0645 \u0627\u0644\u063a\u0644\u0627\u0641"
                     + " \u0627\u0644\u0645\u0648\u062c\u0648\u062f \u0641\u064a Telegram"
@@ -2482,8 +2450,6 @@ final class Translations {
                 + " \u064a\u064f\u0631\u0641\u0639 \u0623\u064a \u0634\u064a\u0621"
                 + " \u0648\u0644\u0627 \u064a\u064f\u0631\u0633\u064e\u0644 \u0625\u0644\u0649"
                 + " \u0623\u064a \u0645\u0643\u0627\u0646 \u0622\u062e\u0631.",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "\u0645\u0635\u062f\u0631 \u0646\u0633\u062e"
                     + " \u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649",
@@ -2767,6 +2733,20 @@ final class Translations {
             "{0}, which BitChord already counts as lossless",
             "{0}\u060c \u0648\u0647\u0648 \u0645\u0627 \u064a\u0639\u062f\u0651\u0647 BitChord"
                     + " \u0628\u0644\u0627 \u0641\u0642\u062f \u0623\u0635\u0644\u064b\u0627",
+            "Bit-perfect output is on",
+            "\u0625\u062e\u0631\u0627\u062c Bit-perfect \u0645\u0641\u0639\u0651\u0644",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "\u0625\u062e\u0631\u0627\u062c Bit-perfect \u0645\u0641\u0639\u0651\u0644 \u0641\u064a"
+                    + " BitChord. \u062a\u0635\u0644 \u0627\u0644\u0623\u063a\u0627\u0646\u064a"
+                    + " \u0627\u0644\u062a\u064a \u064a\u0634\u063a\u0651\u0644\u0647\u0627"
+                    + " \u0625\u0644\u0649 \u0645\u062d\u0648\u0651\u0644 DAC \u062f\u0648\u0646"
+                    + " \u062a\u063a\u064a\u064a\u0631\u060c \u0644\u0630\u0627 \u0644\u0627"
+                    + " \u062a\u0646\u0637\u0628\u0642 \u0639\u0644\u064a\u0647\u0627"
+                    + " \u0647\u0630\u0647 \u0627\u0644\u0645\u0624\u062b\u0631\u0627\u062a"
+                    + " \u0648\u0644\u0627 \u0627\u0644\u062e\u0641\u0648\u062a \u0639\u0646\u062f"
+                    + " \u0627\u0646\u062a\u0647\u0627\u0621 \u0645\u0624\u0642\u062a"
+                    + " \u0627\u0644\u0646\u0648\u0645 \u0648\u0644\u0627 JamesDSP.",
         };
     }
 
@@ -2966,8 +2946,6 @@ final class Translations {
                     + " \u09b8\u09b0\u09cd\u09ac\u09cb\u099a\u09cd\u099a {1}",
             "Account",
             "\u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "AcoustID \u0985\u09cd\u09af\u09be\u09aa\u09cd\u09b2\u09bf\u0995\u09c7\u09b6\u09a8"
                     + " \u0995\u09c0",
@@ -3361,8 +3339,6 @@ final class Translations {
                     + " \u0995\u09b0\u09c7",
             "Choose",
             "\u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a8",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "64 MiB \u09a5\u09c7\u0995\u09c7 16 GiB-\u098f\u09b0 \u09ae\u09a7\u09cd\u09af\u09c7"
                     + " Telegram \u0995\u09cd\u09af\u09be\u09b6\u09c7\u09b0"
@@ -3423,8 +3399,6 @@ final class Translations {
                     + " \u09b9\u099a\u09cd\u099b\u09c7\u2026",
             "Connection",
             "\u0995\u09be\u09a8\u09c7\u0995\u09b6\u09a8",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "\u099a\u09be\u09b2\u09bf\u09af\u09bc\u09c7 \u09af\u09be\u09a8",
             "Copied {0}",
@@ -3511,8 +3485,6 @@ final class Translations {
             "Damaged index file",
             "\u09a8\u09b7\u09cd\u099f \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
                     + " \u09ab\u09be\u0987\u09b2",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "\u09ac\u09be\u09a6 \u09a6\u09bf\u09a8",
             "DJ mode",
@@ -3536,8 +3508,6 @@ final class Translations {
             "Download all ({0}, {1})",
             "\u09b8\u09ac \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u0995\u09b0\u09c1\u09a8 ({0},"
                     + " {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "{0}\u099f\u09bf \u0997\u09be\u09a8 \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
                     + " \u0995\u09b0\u09c1\u09a8",
@@ -3661,8 +3631,6 @@ final class Translations {
                     + " \u09ae\u09bf\u0989\u099c\u09bf\u0995\u09c7\u09b0"
                     + " \u09a4\u09be\u09b2\u09bf\u0995\u09be \u09a6\u09c7\u0996\u09a4\u09c7"
                     + " \u09aa\u09be\u09af\u09bc\u0964",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "\u09ab\u09c7\u09a1\u09c7\u09b0 \u09a6\u09c8\u09b0\u09cd\u0998\u09cd\u09af",
             "Fade out at the sleep timer",
@@ -3695,8 +3663,6 @@ final class Translations {
             "Files without tags are looked up in AcoustID",
             "\u099f\u09cd\u09af\u09be\u0997 \u099b\u09be\u09a1\u09bc\u09be \u09ab\u09be\u0987\u09b2"
                     + " AcoustID-\u098f \u0996\u09cb\u0981\u099c\u09be \u09b9\u09af\u09bc",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "\u0986\u09aa\u09a8\u09be\u09b0 \u09b9\u09c7\u09a1\u09ab\u09cb\u09a8"
                     + " \u0996\u09c1\u0981\u099c\u09c1\u09a8",
@@ -3746,8 +3712,6 @@ final class Translations {
             "\u09ad\u09c1\u09b2\u09c7 \u09af\u09be\u09a8",
             "Format legend",
             "\u09ab\u09b0\u09ae\u09cd\u09af\u09be\u099f \u09b2\u09c7\u09ac\u09c7\u09b2",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "{0}\u099f\u09bf \u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995"
                     + " \u09aa\u09be\u0993\u09af\u09bc\u09be \u0997\u09c7\u099b\u09c7\u0964",
@@ -3913,8 +3877,6 @@ final class Translations {
             "Let the phone\u2019s audio chip decode songs",
             "Level",
             "\u09b8\u09cd\u09a4\u09b0",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "\u09aa\u09c1\u09b0\u09cb\u09a8\u09cb \u09aa\u09cb\u09b8\u09cd\u099f \u09b2\u09cb\u09a1"
                     + " \u0995\u09b0\u09c1\u09a8",
@@ -4226,8 +4188,6 @@ final class Translations {
             "\u09ae\u09c2\u09b2 \u09b8\u09c1\u09b0",
             "Other",
             "\u0985\u09a8\u09cd\u09af\u09be\u09a8\u09cd\u09af",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "\u09aa\u09cd\u09b0\u09cb\u09ab\u09be\u0987\u09b2 \u09aa\u09c7\u09b8\u09cd\u099f"
                     + " \u0995\u09b0\u09c1\u09a8",
@@ -4236,8 +4196,6 @@ final class Translations {
             "Pasted profile",
             "\u09aa\u09c7\u09b8\u09cd\u099f \u0995\u09b0\u09be"
                     + " \u09aa\u09cd\u09b0\u09cb\u09ab\u09be\u0987\u09b2",
-            "Patches",
-            "Patches",
             "Patches & tweaks",
             "Patches & tweaks",
             "Paused until this phone is charging",
@@ -4248,8 +4206,6 @@ final class Translations {
             "\u09ab\u09cb\u09a8 Wi-Fi-\u09a4\u09c7 \u09a8\u09be \u0986\u09b8\u09be"
                     + " \u09aa\u09b0\u09cd\u09af\u09a8\u09cd\u09a4 \u09a5\u09c7\u09ae\u09c7"
                     + " \u0986\u099b\u09c7",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "\u09ab\u09cb\u09a8 \u09a8\u09ae\u09cd\u09ac\u09b0",
             "Phone speaker",
@@ -4507,8 +4463,6 @@ final class Translations {
                 + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be \u0995\u09b0\u09c7\u0964",
             "Search first",
             "\u0986\u0997\u09c7 \u09b8\u09be\u09b0\u09cd\u099a \u0995\u09b0\u09c1\u09a8",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "\u09b8\u09be\u09b0\u09cd\u099a\u09c7\u09b0 \u09b2\u09c7\u0996\u09be \u0996\u09c1\u09ac"
                     + " \u09ac\u09a1\u09bc\u0964",
@@ -4550,8 +4504,6 @@ final class Translations {
             "{0} \u09ac\u09be\u099b\u09be \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964 BitChord"
                     + " \u2192 Addons-\u098f \u09b8\u09be\u09b0\u09cd\u099a"
                     + " \u0995\u09b0\u09c1\u09a8\u0964",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "\u09b8\u09c7\u09b6\u09a8",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -4700,8 +4652,6 @@ final class Translations {
                 + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7 \u0986\u0997\u09c7"
                 + " \u09a5\u09c7\u0995\u09c7\u0987 \u09a5\u09be\u0995\u09be \u0997\u09be\u09a8"
                 + " \u0986\u09ac\u09be\u09b0 \u0995\u09aa\u09bf \u09b9\u09af\u09bc \u09a8\u09be",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "\u09b8\u09cd\u09aa\u09a8\u09b8\u09b0\u09c7\u09b0 \u09a4\u09a5\u09cd\u09af",
             "Sponsored",
@@ -5307,8 +5257,6 @@ final class Translations {
             "Use this name?",
             "\u098f\u0987 \u09a8\u09be\u09ae \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0"
                     + " \u0995\u09b0\u09ac\u09c7\u09a8?",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "\u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u09ab\u09be\u0987\u09b2\u09c7\u09b0"
                     + " \u099c\u09a8\u09cd\u09af Telegram-\u098f \u09a5\u09be\u0995\u09be"
@@ -5426,8 +5374,6 @@ final class Translations {
                 + " \u0986\u09aa\u09b2\u09cb\u09a1 \u09b9\u09af\u09bc \u09a8\u09be \u09ac\u09be"
                 + " \u0985\u09a8\u09cd\u09af \u0995\u09cb\u09a5\u09be\u0993"
                 + " \u09aa\u09be\u09a0\u09be\u09a8\u09cb \u09b9\u09af\u09bc \u09a8\u09be\u0964",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "\u09ae\u09bf\u0989\u099c\u09bf\u0995 \u0995\u09cb\u09a5\u09be \u09a5\u09c7\u0995\u09c7"
                     + " \u0995\u09aa\u09bf \u09b9\u09af\u09bc",
@@ -5751,6 +5697,24 @@ final class Translations {
             "{0}, which BitChord already counts as lossless",
             "{0}, \u09af\u09be BitChord \u098f\u09ae\u09a8\u09bf\u09a4\u09c7\u0987"
                     + " \u09b2\u09b8\u09b2\u09c7\u09b8 \u09a7\u09b0\u09c7",
+            "Bit-perfect output is on",
+            "\u09ac\u09bf\u099f-\u09aa\u09be\u09b0\u09ab\u09c7\u0995\u09cd\u099f"
+                    + " \u0986\u0989\u099f\u09aa\u09c1\u099f \u099a\u09be\u09b2\u09c1"
+                    + " \u0986\u099b\u09c7",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "BitChord-\u098f \u09ac\u09bf\u099f-\u09aa\u09be\u09b0\u09ab\u09c7\u0995\u09cd\u099f"
+                + " \u0986\u0989\u099f\u09aa\u09c1\u099f \u099a\u09be\u09b2\u09c1"
+                + " \u0986\u099b\u09c7\u0964 \u098f\u09a4\u09c7"
+                + " \u09ac\u09be\u099c\u09be\u09a8\u09cb \u0997\u09be\u09a8"
+                + " \u0985\u09aa\u09b0\u09bf\u09ac\u09b0\u09cd\u09a4\u09bf\u09a4"
+                + " \u0985\u09ac\u09b8\u09cd\u09a5\u09be\u09af\u09bc \u0986\u09aa\u09a8\u09be\u09b0"
+                + " DAC-\u098f \u09aa\u09cc\u0981\u099b\u09be\u09af\u09bc, \u09a4\u09be\u0987"
+                + " \u098f\u0987 \u0987\u09ab\u09c7\u0995\u09cd\u099f\u0997\u09c1\u09b2\u09cb,"
+                + " \u09b8\u09cd\u09b2\u09bf\u09aa \u099f\u09be\u0987\u09ae\u09be\u09b0\u09c7\u09b0"
+                + " \u09ab\u09c7\u09a1 \u0986\u09b0 JamesDSP"
+                + " \u09b8\u09c7\u0997\u09c1\u09b2\u09cb\u09b0 \u0993\u09aa\u09b0"
+                + " \u0995\u09be\u099c \u0995\u09b0\u09c7 \u09a8\u09be\u0964",
         };
     }
 
@@ -5837,8 +5801,6 @@ final class Translations {
             "noch etwa {0}, h\u00f6chstens {1}",
             "Account",
             "Konto",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "AcoustID-Anwendungsschl\u00fcssel",
             "AcoustID key",
@@ -6044,8 +6006,6 @@ final class Translations {
             "Pr\u00fcft Songs, die aus anderen Quellen spielen",
             "Choose",
             "Ausw\u00e4hlen",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "W\u00e4hle ein Telegram-Cache-Ziel zwischen 64 MiB und 16 GiB.",
             "Choose a track",
@@ -6081,8 +6041,6 @@ final class Translations {
             "Verbindung zu Telegram wird hergestellt\u2026",
             "Connection",
             "Verbindung",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "Weiter",
             "Copied {0}",
@@ -6125,8 +6083,6 @@ final class Translations {
             "Eigene Telegram-API-Zugangsdaten erstellen \u2197",
             "Damaged index file",
             "Besch\u00e4digte Indexdatei",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "Ausblenden",
             "DJ mode",
@@ -6145,8 +6101,6 @@ final class Translations {
             "Alle herunterladen",
             "Download all ({0}, {1})",
             "Alle herunterladen ({0}, {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "{0} Songs herunterladen",
             "Download \u201c{0}\u201d",
@@ -6210,8 +6164,6 @@ final class Translations {
             "Jede verlustfreie Datei in deinen Musik-Chats, bis zu 1 GB pro Tag",
             "Everyone who can see {0} can see the list of music in {1}.",
             "Jeder, der {0} sehen kann, kann die Musikliste von {1} sehen.",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "Ausblenddauer",
             "Fade out at the sleep timer",
@@ -6230,8 +6182,6 @@ final class Translations {
             "Dateien mit anderer L\u00e4nge werden nicht verwendet",
             "Files without tags are looked up in AcoustID",
             "Dateien ohne Tags werden in AcoustID nachgeschlagen",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "Finde deine Kopfh\u00f6rer",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -6259,8 +6209,6 @@ final class Translations {
             "Vergessen",
             "Format legend",
             "Formatlegende",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "{0} Titel gefunden.",
             "Found {0} tracks.",
@@ -6356,8 +6304,6 @@ final class Translations {
             "Let the phone\u2019s audio chip decode songs",
             "Level",
             "Pegel",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "\u00c4ltere Beitr\u00e4ge laden",
             "Loading channel\u2026",
@@ -6529,24 +6475,18 @@ final class Translations {
             "Originaltonart",
             "Other",
             "Sonstiges",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "Profil einf\u00fcgen",
             "Paste code",
             "Code einf\u00fcgen",
             "Pasted profile",
             "Eingef\u00fcgtes Profil",
-            "Patches",
-            "Patches",
             "Patches & tweaks",
             "Patches & tweaks",
             "Paused until this phone is charging",
             "Pausiert, bis dieses Handy l\u00e4dt",
             "Paused until this phone is on Wi-Fi",
             "Pausiert, bis dieses Handy im Wi-Fi ist",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "Telefonnummer",
             "Phone speaker",
@@ -6688,8 +6628,6 @@ final class Translations {
                     + " wartet.",
             "Search first",
             "Zuerst suchen",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "Suchtext ist zu lang.",
             "Search your music chats",
@@ -6708,8 +6646,6 @@ final class Translations {
             "{0} Musik-Chats ausgew\u00e4hlt. Suche in BitChord \u2192 Addons.",
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "{0} ausgew\u00e4hlt. Suche in BitChord \u2192 Addons.",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "Sitzung",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -6787,8 +6723,6 @@ final class Translations {
                 + " Automix-Analysen werden genutzt.",
             "Songs your main channel already has aren\u2019t copied again",
             "Songs, die dein Hauptkanal schon hat, werden nicht erneut kopiert",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "Sponsor-Informationen",
             "Sponsored",
@@ -7095,8 +7029,6 @@ final class Translations {
                     + " BitChord verf\u00fcgbar.",
             "Use this name?",
             "Diesen Namen verwenden?",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "Verwendet das Cover, das Telegram f\u00fcr jede Datei hat",
             "Using {0}",
@@ -7153,8 +7085,6 @@ final class Translations {
                 + " Telegram-Datei herunter, etwa 5 bis 15 MB bei einer verlustfreien Datei, und"
                 + " verbraucht ein paar Sekunden lang etwas Akku. Nichts wird hochgeladen oder"
                 + " anderswohin gesendet.",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "Woher Musik kopiert wird",
             "While this is on, BitChord\u2019s equaliser is turned off and Battery saver stands"
@@ -7329,6 +7259,13 @@ final class Translations {
             "{0} % leiser",
             "{0}, which BitChord already counts as lossless",
             "{0}, den BitChord bereits als verlustfrei einstuft",
+            "Bit-perfect output is on",
+            "Bit-perfekte Ausgabe ist an",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "Die bit-perfekte Ausgabe ist in BitChord an. Titel, die dar\u00fcber laufen, erreichen"
+                + " deinen DAC unver\u00e4ndert, deshalb wirken diese Effekte, das Ausblenden beim"
+                + " Sleep-Timer und JamesDSP bei ihnen nicht.",
         };
     }
 
@@ -7415,8 +7352,6 @@ final class Translations {
             "faltan unos {0}, hasta {1}",
             "Account",
             "Cuenta",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "Clave de aplicaci\u00f3n de AcoustID",
             "AcoustID key",
@@ -7624,8 +7559,6 @@ final class Translations {
             "Comprueba canciones que suenan desde otras fuentes",
             "Choose",
             "Elegir",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "Elige un objetivo de cach\u00e9 de Telegram entre 64 MiB y 16 GiB.",
             "Choose a track",
@@ -7661,8 +7594,6 @@ final class Translations {
             "Conectando con Telegram\u2026",
             "Connection",
             "Conexi\u00f3n",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "Continuar",
             "Copied {0}",
@@ -7708,8 +7639,6 @@ final class Translations {
             "Crea tus credenciales de la API de Telegram \u2197",
             "Damaged index file",
             "Archivo de \u00edndice da\u00f1ado",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "Descartar",
             "DJ mode",
@@ -7728,8 +7657,6 @@ final class Translations {
             "Descargar todo",
             "Download all ({0}, {1})",
             "Descargar todo ({0}, {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "Descargar {0} canciones",
             "Download \u201c{0}\u201d",
@@ -7793,8 +7720,6 @@ final class Translations {
                     + " d\u00eda",
             "Everyone who can see {0} can see the list of music in {1}.",
             "Todos los que pueden ver {0} pueden ver la lista de m\u00fasica de {1}.",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "Duraci\u00f3n del desvanecimiento",
             "Fade out at the sleep timer",
@@ -7813,8 +7738,6 @@ final class Translations {
             "No se usan archivos con otra duraci\u00f3n",
             "Files without tags are looked up in AcoustID",
             "Los archivos sin etiquetas se buscan en AcoustID",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "Busca tus auriculares",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -7843,8 +7766,6 @@ final class Translations {
             "Olvidar",
             "Format legend",
             "Leyenda de formato",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "Se encontr\u00f3 {0} pista.",
             "Found {0} tracks.",
@@ -7942,8 +7863,6 @@ final class Translations {
             "Let the phone\u2019s audio chip decode songs",
             "Level",
             "Nivel",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "Cargar publicaciones anteriores",
             "Loading channel\u2026",
@@ -8116,24 +8035,18 @@ final class Translations {
             "Tono original",
             "Other",
             "Otros",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "Pegar un perfil",
             "Paste code",
             "Pegar c\u00f3digo",
             "Pasted profile",
             "Perfil pegado",
-            "Patches",
-            "Patches",
             "Patches & tweaks",
             "Patches & tweaks",
             "Paused until this phone is charging",
             "En pausa hasta que el tel\u00e9fono se est\u00e9 cargando",
             "Paused until this phone is on Wi-Fi",
             "En pausa hasta que el tel\u00e9fono tenga Wi-Fi",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "N\u00famero de tel\u00e9fono",
             "Phone speaker",
@@ -8278,8 +8191,6 @@ final class Translations {
                     + " indexaci\u00f3n en segundo plano espera.",
             "Search first",
             "Busca primero",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "El texto de b\u00fasqueda es demasiado largo.",
             "Search your music chats",
@@ -8298,8 +8209,6 @@ final class Translations {
             "{0} chats de m\u00fasica seleccionados. Busca en BitChord \u2192 Addons.",
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "Seleccionado: {0}. Busca en BitChord \u2192 Addons.",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "Sesi\u00f3n",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -8378,8 +8287,6 @@ final class Translations {
                 + " autom\u00e1tica de BitChord.",
             "Songs your main channel already has aren\u2019t copied again",
             "No se vuelven a copiar las canciones que tu canal principal ya tiene",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "Informaci\u00f3n del patrocinador",
             "Sponsored",
@@ -8691,8 +8598,6 @@ final class Translations {
                     + " disponible en BitChord.",
             "Use this name?",
             "\u00bfUsar este nombre?",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "Usa la portada que Telegram tiene para cada archivo",
             "Using {0}",
@@ -8747,8 +8652,6 @@ final class Translations {
                 + " Telegram, unos 5 a 15 MB en un archivo sin p\u00e9rdida, y usa algo de"
                 + " bater\u00eda durante unos segundos. No se sube ni se env\u00eda nada a"
                 + " ning\u00fan otro lugar.",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "De d\u00f3nde se copia la m\u00fasica",
             "While this is on, BitChord\u2019s equaliser is turned off and Battery saver stands"
@@ -8924,6 +8827,13 @@ final class Translations {
             "{0}% m\u00e1s baja",
             "{0}, which BitChord already counts as lossless",
             "{0}, que BitChord ya cuenta como sin p\u00e9rdida",
+            "Bit-perfect output is on",
+            "La salida bit-perfect est\u00e1 activada",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "La salida bit-perfect est\u00e1 activada en BitChord. Las canciones que reproduce"
+                    + " llegan a tu DAC sin cambios, as\u00ed que estos efectos, el desvanecido del"
+                    + " temporizador y JamesDSP no se aplican a ellas.",
         };
     }
 
@@ -9017,8 +8927,6 @@ final class Translations {
             "encore {0} environ, jusqu\u2019\u00e0 {1}",
             "Account",
             "Compte",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "Cl\u00e9 d\u2019application AcoustID",
             "AcoustID key",
@@ -9229,8 +9137,6 @@ final class Translations {
             "V\u00e9rifie les morceaux lus depuis d\u2019autres sources",
             "Choose",
             "Choisir",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "Choisissez une cible de cache Telegram entre 64 MiB et 16 GiB.",
             "Choose a track",
@@ -9266,8 +9172,6 @@ final class Translations {
             "Connexion \u00e0 Telegram\u2026",
             "Connection",
             "Connexion",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "Continuer",
             "Copied {0}",
@@ -9314,8 +9218,6 @@ final class Translations {
             "Cr\u00e9er vos identifiants API Telegram \u2197",
             "Damaged index file",
             "Fichier d\u2019index endommag\u00e9",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "Ignorer",
             "DJ mode",
@@ -9335,8 +9237,6 @@ final class Translations {
             "Tout t\u00e9l\u00e9charger",
             "Download all ({0}, {1})",
             "Tout t\u00e9l\u00e9charger ({0}, {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "T\u00e9l\u00e9charger {0} morceaux",
             "Download \u201c{0}\u201d",
@@ -9402,8 +9302,6 @@ final class Translations {
                     + " jour",
             "Everyone who can see {0} can see the list of music in {1}.",
             "Toute personne qui voit {0} peut voir la liste de la musique de {1}.",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "Dur\u00e9e du fondu",
             "Fade out at the sleep timer",
@@ -9422,8 +9320,6 @@ final class Translations {
             "Les fichiers d\u2019une autre dur\u00e9e ne sont pas utilis\u00e9s",
             "Files without tags are looked up in AcoustID",
             "Les fichiers sans tags sont recherch\u00e9s dans AcoustID",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "Trouvez votre casque",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -9451,8 +9347,6 @@ final class Translations {
             "Oublier",
             "Format legend",
             "L\u00e9gende du format",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "{0} titre trouv\u00e9.",
             "Found {0} tracks.",
@@ -9551,8 +9445,6 @@ final class Translations {
             "Let the phone\u2019s audio chip decode songs",
             "Level",
             "Niveau",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "Charger les publications plus anciennes",
             "Loading channel\u2026",
@@ -9727,24 +9619,18 @@ final class Translations {
             "Tonalit\u00e9 d\u2019origine",
             "Other",
             "Autres",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "Coller un profil",
             "Paste code",
             "Coller un code",
             "Pasted profile",
             "Profil coll\u00e9",
-            "Patches",
-            "Patches",
             "Patches & tweaks",
             "Patches & tweaks",
             "Paused until this phone is charging",
             "En pause jusqu\u2019\u00e0 ce que ce t\u00e9l\u00e9phone soit en charge",
             "Paused until this phone is on Wi-Fi",
             "En pause jusqu\u2019\u00e0 ce que ce t\u00e9l\u00e9phone soit en Wi-Fi",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "Num\u00e9ro de t\u00e9l\u00e9phone",
             "Phone speaker",
@@ -9892,8 +9778,6 @@ final class Translations {
                     + " l\u2019indexation en arri\u00e8re-plan attend.",
             "Search first",
             "Recherchez d\u2019abord",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "Le texte de recherche est trop long.",
             "Search your music chats",
@@ -9915,8 +9799,6 @@ final class Translations {
                     + " Addons.",
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "S\u00e9lection : {0}. Recherchez dans BitChord \u2192 Addons.",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "Session",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -9996,8 +9878,6 @@ final class Translations {
             "Songs your main channel already has aren\u2019t copied again",
             "Les morceaux d\u00e9j\u00e0 pr\u00e9sents dans votre canal principal ne sont pas"
                     + " recopi\u00e9s",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "Informations sur le sponsor",
             "Sponsored",
@@ -10311,8 +10191,6 @@ final class Translations {
                     + " en direct reste disponible dans BitChord.",
             "Use this name?",
             "Utiliser ce nom ?",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "Utilise la pochette fournie par Telegram pour chaque fichier",
             "Using {0}",
@@ -10369,8 +10247,6 @@ final class Translations {
                 + " secondes du fichier Telegram, soit environ 5 \u00e0 15 MB pour un fichier sans"
                 + " perte, et consomme un peu de batterie pendant quelques secondes. Rien"
                 + " n\u2019est envoy\u00e9 ni transmis ailleurs.",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "D\u2019o\u00f9 la musique est copi\u00e9e",
             "While this is on, BitChord\u2019s equaliser is turned off and Battery saver stands"
@@ -10552,6 +10428,13 @@ final class Translations {
             "{0} % plus bas",
             "{0}, which BitChord already counts as lossless",
             "{0}, que BitChord compte d\u00e9j\u00e0 comme sans perte",
+            "Bit-perfect output is on",
+            "La sortie bit-perfect est activ\u00e9e",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "La sortie bit-perfect est activ\u00e9e dans BitChord. Les morceaux qu\u2019elle lit"
+                + " arrivent \u00e0 votre DAC sans modification : ces effets, le fondu du minuteur"
+                + " de veille et JamesDSP ne s\u2019y appliquent donc pas.",
         };
     }
 
@@ -10706,8 +10589,6 @@ final class Translations {
             "\u05e0\u05d5\u05ea\u05e8\u05d5 \u05db-{0}, \u05e2\u05d3 {1}",
             "Account",
             "\u05d7\u05e9\u05d1\u05d5\u05df",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "\u05de\u05e4\u05ea\u05d7 \u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05e9\u05dc"
                     + " AcoustID",
@@ -11043,8 +10924,6 @@ final class Translations {
                     + " \u05de\u05de\u05e7\u05d5\u05e8\u05d5\u05ea \u05d0\u05d7\u05e8\u05d9\u05dd",
             "Choose",
             "\u05d1\u05d7\u05d9\u05e8\u05d4",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "\u05d9\u05e9 \u05dc\u05d1\u05d7\u05d5\u05e8 \u05d9\u05e2\u05d3"
                 + " \u05dc\u05de\u05d8\u05de\u05d5\u05df \u05e9\u05dc Telegram \u05d1\u05d9\u05df"
@@ -11096,8 +10975,6 @@ final class Translations {
             "\u05de\u05ea\u05d7\u05d1\u05e8 \u05dc-Telegram\u2026",
             "Connection",
             "\u05d7\u05d9\u05d1\u05d5\u05e8",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "\u05d4\u05de\u05e9\u05da",
             "Copied {0}",
@@ -11180,8 +11057,6 @@ final class Translations {
             "Damaged index file",
             "\u05e7\u05d5\u05d1\u05e5 \u05d0\u05d9\u05e0\u05d3\u05e7\u05e1"
                     + " \u05e4\u05d2\u05d5\u05dd",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "\u05d3\u05d7\u05d9\u05d9\u05d4",
             "DJ mode",
@@ -11202,8 +11077,6 @@ final class Translations {
             "\u05d4\u05d5\u05e8\u05d3\u05ea \u05d4\u05db\u05d5\u05dc",
             "Download all ({0}, {1})",
             "\u05d4\u05d5\u05e8\u05d3\u05ea \u05d4\u05db\u05d5\u05dc ({0}, {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "\u05d4\u05d5\u05e8\u05d3\u05ea {0} \u05e9\u05d9\u05e8\u05d9\u05dd",
             "Download \u201c{0}\u201d",
@@ -11306,8 +11179,6 @@ final class Translations {
                     + " \u05dc\u05e8\u05d0\u05d5\u05ea \u05d0\u05ea {0} \u05d9\u05d5\u05db\u05dc"
                     + " \u05dc\u05e8\u05d0\u05d5\u05ea \u05d0\u05ea \u05e8\u05e9\u05d9\u05de\u05ea"
                     + " \u05d4\u05de\u05d5\u05d6\u05d9\u05e7\u05d4 \u05d1-{1}.",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "\u05de\u05e9\u05da \u05d4\u05d3\u05e2\u05d9\u05db\u05d4",
             "Fade out at the sleep timer",
@@ -11338,8 +11209,6 @@ final class Translations {
             "Files without tags are looked up in AcoustID",
             "\u05e7\u05d1\u05e6\u05d9\u05dd \u05dc\u05dc\u05d0 \u05ea\u05d2\u05d9\u05d5\u05ea"
                     + " \u05e0\u05d1\u05d3\u05e7\u05d9\u05dd \u05d1-AcoustID",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "\u05d7\u05d9\u05e4\u05d5\u05e9 \u05d4\u05d0\u05d5\u05d6\u05e0\u05d9\u05d5\u05ea"
                     + " \u05e9\u05dc\u05da",
@@ -11387,8 +11256,6 @@ final class Translations {
             "\u05dc\u05e9\u05db\u05d5\u05d7",
             "Format legend",
             "\u05ea\u05d5\u05d5\u05d9\u05ea \u05e4\u05d5\u05e8\u05de\u05d8",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "\u05e0\u05de\u05e6\u05d0\u05d4 {0} \u05e8\u05e6\u05d5\u05e2\u05d4.",
             "Found {0} tracks.",
@@ -11537,8 +11404,6 @@ final class Translations {
                     + " \u05d4\u05e9\u05de\u05e2 \u05e9\u05dc \u05d4\u05d8\u05dc\u05e4\u05d5\u05df",
             "Level",
             "\u05e8\u05de\u05d4",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "\u05d8\u05e2\u05d9\u05e0\u05ea \u05e4\u05d5\u05e1\u05d8\u05d9\u05dd"
                     + " \u05d9\u05e9\u05e0\u05d9\u05dd \u05d9\u05d5\u05ea\u05e8",
@@ -11809,16 +11674,12 @@ final class Translations {
             "\u05e1\u05d5\u05dc\u05dd \u05de\u05e7\u05d5\u05e8\u05d9",
             "Other",
             "\u05d0\u05d7\u05e8",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "\u05d4\u05d3\u05d1\u05e7\u05ea \u05e4\u05e8\u05d5\u05e4\u05d9\u05dc",
             "Paste code",
             "\u05d4\u05d3\u05d1\u05e7\u05ea \u05e7\u05d5\u05d3",
             "Pasted profile",
             "\u05e4\u05e8\u05d5\u05e4\u05d9\u05dc \u05de\u05d5\u05d3\u05d1\u05e7",
-            "Patches",
-            "\u05ea\u05d9\u05e7\u05d5\u05e0\u05d9\u05dd",
             "Patches & tweaks",
             "\u05ea\u05d9\u05e7\u05d5\u05e0\u05d9\u05dd"
                     + " \u05d5\u05db\u05d5\u05d5\u05e0\u05d5\u05e0\u05d9\u05dd",
@@ -11828,8 +11689,6 @@ final class Translations {
             "Paused until this phone is on Wi-Fi",
             "\u05de\u05d5\u05e9\u05d4\u05d4 \u05e2\u05d3 \u05e9\u05d4\u05d8\u05dc\u05e4\u05d5\u05df"
                     + " \u05d9\u05ea\u05d7\u05d1\u05e8 \u05dc-Wi-Fi",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "\u05de\u05e1\u05e4\u05e8 \u05d8\u05dc\u05e4\u05d5\u05df",
             "Phone speaker",
@@ -12046,8 +11905,6 @@ final class Translations {
                     + " \u05de\u05de\u05ea\u05d9\u05df.",
             "Search first",
             "\u05d9\u05e9 \u05dc\u05d7\u05e4\u05e9 \u05e7\u05d5\u05d3\u05dd",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "\u05d8\u05e7\u05e1\u05d8 \u05d4\u05d7\u05d9\u05e4\u05d5\u05e9 \u05d0\u05e8\u05d5\u05da"
                     + " \u05de\u05d3\u05d9.",
@@ -12082,8 +11939,6 @@ final class Translations {
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "\u05e0\u05d1\u05d7\u05e8: {0}. \u05d0\u05e4\u05e9\u05e8 \u05dc\u05d7\u05e4\u05e9"
                     + " \u05d1-BitChord \u2192 \u05ea\u05d5\u05e1\u05e4\u05d9\u05dd.",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "\u05d4\u05e4\u05e2\u05dc\u05d4",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -12214,8 +12069,6 @@ final class Translations {
                     + " \u05e7\u05d9\u05d9\u05de\u05d9\u05dd \u05d1\u05e2\u05e8\u05d5\u05e5"
                     + " \u05d4\u05e8\u05d0\u05e9\u05d9 \u05e9\u05dc\u05da \u05dc\u05d0"
                     + " \u05de\u05d5\u05e2\u05ea\u05e7\u05d9\u05dd \u05e9\u05d5\u05d1",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "\u05de\u05d9\u05d3\u05e2 \u05e2\u05dc \u05e0\u05d5\u05ea\u05df"
                     + " \u05d4\u05d7\u05e1\u05d5\u05ea",
@@ -12747,8 +12600,6 @@ final class Translations {
                 + " \u05d1-BitChord.",
             "Use this name?",
             "\u05dc\u05d4\u05e9\u05ea\u05de\u05e9 \u05d1\u05e9\u05dd \u05d4\u05d6\u05d4?",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "\u05de\u05e9\u05ea\u05de\u05e9 \u05d1\u05e2\u05d8\u05d9\u05e4\u05d4 \u05e9-Telegram"
                     + " \u05de\u05d7\u05d6\u05d9\u05e7 \u05dc\u05db\u05dc \u05e7\u05d5\u05d1\u05e5",
@@ -12845,8 +12696,6 @@ final class Translations {
                 + " \u05d3\u05d1\u05e8 \u05dc\u05d0 \u05de\u05d5\u05e2\u05dc\u05d4 \u05d0\u05d5"
                 + " \u05e0\u05e9\u05dc\u05d7 \u05dc\u05e9\u05d5\u05dd \u05de\u05e7\u05d5\u05dd"
                 + " \u05d0\u05d7\u05e8.",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "\u05de\u05d0\u05d9\u05e4\u05d4 \u05d4\u05de\u05d5\u05d6\u05d9\u05e7\u05d4"
                     + " \u05de\u05d5\u05e2\u05ea\u05e7\u05ea",
@@ -13122,6 +12971,18 @@ final class Translations {
             "{0}, which BitChord already counts as lossless",
             "{0}, \u05e9-BitChord \u05db\u05d1\u05e8 \u05de\u05d7\u05e9\u05d9\u05d1"
                     + " \u05db\u05dc\u05dc\u05d0 \u05d0\u05d5\u05d1\u05d3\u05df",
+            "Bit-perfect output is on",
+            "\u05e4\u05dc\u05d8 Bit-perfect \u05e4\u05d5\u05e2\u05dc",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "\u05e4\u05dc\u05d8 Bit-perfect \u05e4\u05d5\u05e2\u05dc \u05d1-BitChord."
+                + " \u05e9\u05d9\u05e8\u05d9\u05dd \u05e9\u05de\u05d5\u05e9\u05de\u05e2\u05d9\u05dd"
+                + " \u05d3\u05e8\u05db\u05d5 \u05de\u05d2\u05d9\u05e2\u05d9\u05dd \u05dc-DAC"
+                + " \u05dc\u05dc\u05d0 \u05e9\u05d9\u05e0\u05d5\u05d9, \u05d5\u05dc\u05db\u05df"
+                + " \u05d4\u05d0\u05e4\u05e7\u05d8\u05d9\u05dd \u05d4\u05d0\u05dc\u05d4,"
+                + " \u05d4\u05d3\u05e2\u05d9\u05db\u05d4 \u05d1\u05d8\u05d9\u05d9\u05de\u05e8"
+                + " \u05d4\u05e9\u05d9\u05e0\u05d4 \u05d5-JamesDSP \u05dc\u05d0"
+                + " \u05d7\u05dc\u05d9\u05dd \u05e2\u05dc\u05d9\u05d4\u05dd.",
         };
     }
 
@@ -13316,8 +13177,6 @@ final class Translations {
                     + " \u0938\u0947 \u091c\u093c\u094d\u092f\u093e\u0926\u093e {1}",
             "Account",
             "\u0905\u0915\u093e\u0909\u0902\u091f",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "AcoustID \u0910\u092a\u094d\u0932\u093f\u0915\u0947\u0936\u0928 key",
             "AcoustID key",
@@ -13704,8 +13563,6 @@ final class Translations {
                     + " \u091c\u093e\u0901\u091a\u0924\u093e \u0939\u0948",
             "Choose",
             "\u091a\u0941\u0928\u0947\u0902",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "64 MiB \u0938\u0947 16 GiB \u0915\u0947 \u092c\u0940\u091a Telegram \u0915\u0948\u0936"
                     + " \u0915\u093e \u0932\u0915\u094d\u0937\u094d\u092f"
@@ -13760,8 +13617,6 @@ final class Translations {
                     + " \u0930\u0939\u093e \u0939\u0948\u2026",
             "Connection",
             "\u0915\u0928\u0947\u0915\u094d\u0936\u0928",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "\u091c\u093e\u0930\u0940 \u0930\u0916\u0947\u0902",
             "Copied {0}",
@@ -13844,8 +13699,6 @@ final class Translations {
             "Damaged index file",
             "\u0916\u0930\u093e\u092c \u0907\u0902\u0921\u0947\u0915\u094d\u0938"
                     + " \u092b\u093c\u093e\u0907\u0932",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "\u0939\u091f\u093e\u090f\u0901",
             "DJ mode",
@@ -13869,8 +13722,6 @@ final class Translations {
             "Download all ({0}, {1})",
             "\u0938\u092c \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0930\u0947\u0902 ({0},"
                     + " {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "{0} \u0917\u093e\u0928\u0947 \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
                     + " \u0915\u0930\u0947\u0902",
@@ -13986,8 +13837,6 @@ final class Translations {
                     + " \u092e\u094d\u092f\u0942\u091c\u093c\u093f\u0915 \u0915\u0940"
                     + " \u0938\u0942\u091a\u0940 \u0926\u0947\u0916 \u0938\u0915\u0924\u093e"
                     + " \u0939\u0948\u0964",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "\u092b\u093c\u0947\u0921 \u0915\u0940 \u0932\u0902\u092c\u093e\u0908",
             "Fade out at the sleep timer",
@@ -14027,8 +13876,6 @@ final class Translations {
             "\u092c\u093f\u0928\u093e \u091f\u0948\u0917 \u0935\u093e\u0932\u0940"
                     + " \u092b\u093c\u093e\u0907\u0932\u0947\u0902 AcoustID \u092e\u0947\u0902"
                     + " \u0916\u094b\u091c\u0940 \u091c\u093e\u0924\u0940 \u0939\u0948\u0902",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "\u0905\u092a\u0928\u0947 \u0939\u0947\u0921\u092b\u093c\u094b\u0928"
                     + " \u0916\u094b\u091c\u0947\u0902",
@@ -14082,8 +13929,6 @@ final class Translations {
             "\u092d\u0942\u0932 \u091c\u093e\u090f\u0901",
             "Format legend",
             "\u092b\u093c\u0949\u0930\u094d\u092e\u0948\u091f \u0932\u0947\u092c\u0932",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "{0} \u091f\u094d\u0930\u0948\u0915 \u092e\u093f\u0932\u093e\u0964",
             "Found {0} tracks.",
@@ -14247,8 +14092,6 @@ final class Translations {
             "Let the phone\u2019s audio chip decode songs",
             "Level",
             "\u0938\u094d\u0924\u0930",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "\u092a\u0941\u0930\u093e\u0928\u0940 \u092a\u094b\u0938\u094d\u091f \u0932\u094b\u0921"
                     + " \u0915\u0930\u0947\u0902",
@@ -14560,8 +14403,6 @@ final class Translations {
             "\u092e\u0942\u0932 \u0938\u094d\u0935\u0930",
             "Other",
             "\u0905\u0928\u094d\u092f",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "\u092a\u094d\u0930\u094b\u092b\u093c\u093e\u0907\u0932 \u092a\u0947\u0938\u094d\u091f"
                     + " \u0915\u0930\u0947\u0902",
@@ -14570,8 +14411,6 @@ final class Translations {
             "Pasted profile",
             "\u092a\u0947\u0938\u094d\u091f \u0915\u0940 \u0917\u0908"
                     + " \u092a\u094d\u0930\u094b\u092b\u093c\u093e\u0907\u0932",
-            "Patches",
-            "Patches",
             "Patches & tweaks",
             "Patches & tweaks",
             "Paused until this phone is charging",
@@ -14580,8 +14419,6 @@ final class Translations {
             "Paused until this phone is on Wi-Fi",
             "\u092b\u093c\u094b\u0928 \u0915\u0947 Wi-Fi \u092a\u0930 \u0906\u0928\u0947"
                     + " \u0924\u0915 \u0930\u0941\u0915\u093e \u0939\u0948",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "\u092b\u093c\u094b\u0928 \u0928\u0902\u092c\u0930",
             "Phone speaker",
@@ -14839,8 +14676,6 @@ final class Translations {
                     + " \u0939\u0948\u0964",
             "Search first",
             "\u092a\u0939\u0932\u0947 \u0916\u094b\u091c\u0947\u0902",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "\u0916\u094b\u091c \u0915\u093e \u091f\u0947\u0915\u094d\u0938\u094d\u091f"
                     + " \u092c\u0939\u0941\u0924 \u0932\u0902\u092c\u093e \u0939\u0948\u0964",
@@ -14881,8 +14716,6 @@ final class Translations {
             "{0} \u091a\u0941\u0928\u0940 \u0917\u0908\u0902\u0964 BitChord \u2192"
                     + " \u0910\u0921\u0911\u0928 \u092e\u0947\u0902"
                     + " \u0916\u094b\u091c\u0947\u0902\u0964",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "\u0938\u0947\u0936\u0928",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -15034,8 +14867,6 @@ final class Translations {
                     + " \u092a\u0939\u0932\u0947 \u0938\u0947 \u0939\u0948\u0902, \u0935\u0947"
                     + " \u092b\u093f\u0930 \u0938\u0947 \u0915\u0949\u092a\u0940"
                     + " \u0928\u0939\u0940\u0902 \u0939\u094b\u0924\u0947",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "\u0938\u094d\u092a\u0949\u0928\u094d\u0938\u0930 \u0915\u0940"
                     + " \u091c\u093e\u0928\u0915\u093e\u0930\u0940",
@@ -15638,8 +15469,6 @@ final class Translations {
             "Use this name?",
             "\u092f\u0939 \u0928\u093e\u092e \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932"
                     + " \u0915\u0930\u0947\u0902?",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "\u0939\u0930 \u092b\u093c\u093e\u0907\u0932 \u0915\u0947 \u0932\u093f\u090f Telegram"
                     + " \u0935\u093e\u0932\u093e \u0915\u0935\u0930"
@@ -15760,8 +15589,6 @@ final class Translations {
                 + " \u0939\u094b\u0924\u093e \u092f\u093e \u0915\u0939\u0940\u0902 \u0914\u0930"
                 + " \u0928\u0939\u0940\u0902 \u092d\u0947\u091c\u093e"
                 + " \u091c\u093e\u0924\u093e\u0964",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "\u092e\u094d\u092f\u0942\u091c\u093c\u093f\u0915 \u0915\u0939\u093e\u0901 \u0938\u0947"
                     + " \u0915\u0949\u092a\u0940 \u0939\u094b\u0924\u093e \u0939\u0948",
@@ -16078,6 +15905,23 @@ final class Translations {
             "{0}, \u091c\u093f\u0938\u0947 BitChord \u092a\u0939\u0932\u0947 \u0938\u0947"
                     + " \u0932\u0949\u0938\u0932\u0947\u0938 \u092e\u093e\u0928\u0924\u093e"
                     + " \u0939\u0948",
+            "Bit-perfect output is on",
+            "\u092c\u093f\u091f-\u092a\u0930\u092b\u093c\u0947\u0915\u094d\u091f"
+                    + " \u0906\u0909\u091f\u092a\u0941\u091f \u091a\u093e\u0932\u0942 \u0939\u0948",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "BitChord \u092e\u0947\u0902"
+                    + " \u092c\u093f\u091f-\u092a\u0930\u092b\u093c\u0947\u0915\u094d\u091f"
+                    + " \u0906\u0909\u091f\u092a\u0941\u091f \u091a\u093e\u0932\u0942"
+                    + " \u0939\u0948\u0964 \u0907\u0938\u0938\u0947 \u091a\u0932\u0928\u0947"
+                    + " \u0935\u093e\u0932\u0947 \u0917\u093e\u0928\u0947 \u092c\u093f\u0928\u093e"
+                    + " \u092c\u0926\u0932\u093e\u0935 \u0906\u092a\u0915\u0947 DAC \u0924\u0915"
+                    + " \u092a\u0939\u0941\u0901\u091a\u0924\u0947 \u0939\u0948\u0902,"
+                    + " \u0907\u0938\u0932\u093f\u090f \u092f\u0947"
+                    + " \u0907\u092b\u093c\u0947\u0915\u094d\u091f, \u0938\u094d\u0932\u0940\u092a"
+                    + " \u091f\u093e\u0907\u092e\u0930 \u0915\u093e \u092b\u093c\u0947\u0921"
+                    + " \u0914\u0930 JamesDSP \u0909\u0928 \u092a\u0930 \u0932\u093e\u0917\u0942"
+                    + " \u0928\u0939\u0940\u0902 \u0939\u094b\u0924\u0947\u0964",
         };
     }
 
@@ -16160,8 +16004,6 @@ final class Translations {
             "sekitar {0} lagi, hingga {1}",
             "Account",
             "Akun",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "Kunci aplikasi AcoustID",
             "AcoustID key",
@@ -16361,8 +16203,6 @@ final class Translations {
             "Memeriksa lagu yang diputar dari sumber lain",
             "Choose",
             "Pilih",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "Pilih target cache Telegram antara 64 MiB dan 16 GiB.",
             "Choose a track",
@@ -16397,8 +16237,6 @@ final class Translations {
             "Menghubungkan ke Telegram\u2026",
             "Connection",
             "Koneksi",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "Lanjutkan",
             "Copied {0}",
@@ -16440,8 +16278,6 @@ final class Translations {
             "Buat kredensial Telegram API Anda \u2197",
             "Damaged index file",
             "File indeks rusak",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "Tutup",
             "DJ mode",
@@ -16460,8 +16296,6 @@ final class Translations {
             "Unduh semua",
             "Download all ({0}, {1})",
             "Unduh semua ({0}, {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "Unduh {0} lagu",
             "Download \u201c{0}\u201d",
@@ -16523,8 +16357,6 @@ final class Translations {
             "Setiap file lossless di chat musik Anda, hingga 1 GB per hari",
             "Everyone who can see {0} can see the list of music in {1}.",
             "Semua yang dapat melihat {0} dapat melihat daftar musik di {1}.",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "Durasi fade",
             "Fade out at the sleep timer",
@@ -16543,8 +16375,6 @@ final class Translations {
             "File dengan durasi berbeda tidak dipakai",
             "Files without tags are looked up in AcoustID",
             "File tanpa tag dicari di AcoustID",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "Cari headphone Anda",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -16569,8 +16399,6 @@ final class Translations {
             "Lupakan",
             "Format legend",
             "Keterangan format",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "Ditemukan {0} trek.",
             "Found {0} tracks.",
@@ -16665,8 +16493,6 @@ final class Translations {
             "Let the phone\u2019s audio chip decode songs",
             "Level",
             "Level",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "Muat postingan lama",
             "Loading channel\u2026",
@@ -16834,24 +16660,18 @@ final class Translations {
             "Nada asli",
             "Other",
             "Lainnya",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "Tempel profil",
             "Paste code",
             "Tempel kode",
             "Pasted profile",
             "Profil yang ditempel",
-            "Patches",
-            "Patches",
             "Patches & tweaks",
             "Patches & tweaks",
             "Paused until this phone is charging",
             "Dijeda sampai ponsel ini diisi daya",
             "Paused until this phone is on Wi-Fi",
             "Dijeda sampai ponsel ini terhubung ke Wi-Fi",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "Nomor telepon",
             "Phone speaker",
@@ -16992,8 +16812,6 @@ final class Translations {
                     + " belakang yang menunggu.",
             "Search first",
             "Cari dulu",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "Teks pencarian terlalu panjang.",
             "Search your music chats",
@@ -17012,8 +16830,6 @@ final class Translations {
             "{0} chat musik dipilih. Cari di BitChord \u2192 Addon.",
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "{0} dipilih. Cari di BitChord \u2192 Addon.",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "Sesi",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -17088,8 +16904,6 @@ final class Translations {
                 + " analisis Automix milik BitChord juga dipakai.",
             "Songs your main channel already has aren\u2019t copied again",
             "Lagu yang sudah ada di kanal utama Anda tidak disalin lagi",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "Informasi sponsor",
             "Sponsored",
@@ -17389,8 +17203,6 @@ final class Translations {
                     + " tersedia di BitChord.",
             "Use this name?",
             "Gunakan nama ini?",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "Memakai sampul yang dimiliki Telegram untuk setiap file",
             "Using {0}",
@@ -17443,8 +17255,6 @@ final class Translations {
                 + "Setiap pemeriksaan mengunduh hingga 45 detik pertama file Telegram, sekitar 5"
                 + " hingga 15 MB untuk file lossless, dan memakai sedikit baterai selama beberapa"
                 + " detik. Tidak ada yang diunggah atau dikirim ke tempat lain.",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "Sumber musik yang disalin",
             "While this is on, BitChord\u2019s equaliser is turned off and Battery saver stands"
@@ -17615,6 +17425,13 @@ final class Translations {
             "{0}% lebih pelan",
             "{0}, which BitChord already counts as lossless",
             "{0}, yang sudah dianggap lossless oleh BitChord",
+            "Bit-perfect output is on",
+            "Output bit-perfect aktif",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "Output bit-perfect aktif di BitChord. Lagu yang diputarnya sampai ke DAC Anda tanpa"
+                    + " perubahan, jadi efek ini, pelan otomatis timer tidur, dan JamesDSP tidak"
+                    + " berlaku untuknya.",
         };
     }
 
@@ -17702,8 +17519,6 @@ final class Translations {
             "ne mancano circa {0}, fino a {1}",
             "Account",
             "Account",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "Chiave dell\u2019applicazione AcoustID",
             "AcoustID key",
@@ -17908,8 +17723,6 @@ final class Translations {
             "Controlla i brani riprodotti da altre fonti",
             "Choose",
             "Scegli",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "Scegli una dimensione della cache di Telegram tra 64 MiB e 16 GiB.",
             "Choose a track",
@@ -17945,8 +17758,6 @@ final class Translations {
             "Connessione a Telegram\u2026",
             "Connection",
             "Connessione",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "Continua",
             "Copied {0}",
@@ -17991,8 +17802,6 @@ final class Translations {
             "Crea le tue credenziali API di Telegram \u2197",
             "Damaged index file",
             "File indice danneggiato",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "Ignora",
             "DJ mode",
@@ -18011,8 +17820,6 @@ final class Translations {
             "Scarica tutto",
             "Download all ({0}, {1})",
             "Scarica tutto ({0}, {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "Scarica {0} brani",
             "Download \u201c{0}\u201d",
@@ -18075,8 +17882,6 @@ final class Translations {
             "Ogni file lossless delle tue chat musicali, fino a 1 GB al giorno",
             "Everyone who can see {0} can see the list of music in {1}.",
             "Chiunque possa vedere {0} pu\u00f2 vedere l\u2019elenco della musica in {1}.",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "Durata dissolvenza",
             "Fade out at the sleep timer",
@@ -18095,8 +17900,6 @@ final class Translations {
             "I file con durata diversa non vengono usati",
             "Files without tags are looked up in AcoustID",
             "I file senza tag vengono cercati su AcoustID",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "Trova le tue cuffie",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -18122,8 +17925,6 @@ final class Translations {
             "Dimentica",
             "Format legend",
             "Legenda dei formati",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "Trovata {0} traccia.",
             "Found {0} tracks.",
@@ -18219,8 +18020,6 @@ final class Translations {
             "Lascia decodificare i brani al chip audio del telefono",
             "Level",
             "Livello",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "Carica post meno recenti",
             "Loading channel\u2026",
@@ -18392,24 +18191,18 @@ final class Translations {
             "Tonalit\u00e0 originale",
             "Other",
             "Altro",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "Incolla un profilo",
             "Paste code",
             "Incolla codice",
             "Pasted profile",
             "Profilo incollato",
-            "Patches",
-            "Patch",
             "Patches & tweaks",
             "Patch e regolazioni",
             "Paused until this phone is charging",
             "In pausa finch\u00e9 il telefono non \u00e8 in carica",
             "Paused until this phone is on Wi-Fi",
             "In pausa finch\u00e9 il telefono non \u00e8 connesso al Wi-Fi",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "Numero di telefono",
             "Phone speaker",
@@ -18552,8 +18345,6 @@ final class Translations {
                     + " l\u2019indicizzazione in background.",
             "Search first",
             "Cerca prima",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "Il testo di ricerca \u00e8 troppo lungo.",
             "Search your music chats",
@@ -18572,8 +18363,6 @@ final class Translations {
             "{0} chat musicali selezionate. Cerca in BitChord \u2192 Addon.",
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "Selezionata: {0}. Cerca in BitChord \u2192 Addon.",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "Sessione",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -18651,8 +18440,6 @@ final class Translations {
                     + " analisi Automix di BitChord.",
             "Songs your main channel already has aren\u2019t copied again",
             "I brani gi\u00e0 presenti nel tuo canale principale non vengono copiati di nuovo",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "Informazioni sullo sponsor",
             "Sponsored",
@@ -18957,8 +18744,6 @@ final class Translations {
                     + " tempo reale resta disponibile in BitChord.",
             "Use this name?",
             "Usare questo nome?",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "Usa la copertina che Telegram ha per ogni file",
             "Using {0}",
@@ -19014,8 +18799,6 @@ final class Translations {
                 + "Ogni controllo scarica al massimo i primi 45 secondi del file di Telegram, circa"
                 + " 5-15 MB per un file lossless, e usa un po\u2019 di batteria per qualche"
                 + " secondo. Non viene caricato n\u00e9 inviato nulla altrove.",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "Da dove viene copiata la musica",
             "While this is on, BitChord\u2019s equaliser is turned off and Battery saver stands"
@@ -19190,6 +18973,13 @@ final class Translations {
             "{0}% pi\u00f9 bassa",
             "{0}, which BitChord already counts as lossless",
             "{0}, che BitChord considera gi\u00e0 lossless",
+            "Bit-perfect output is on",
+            "L\u2019uscita bit-perfect \u00e8 attiva",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "L\u2019uscita bit-perfect \u00e8 attiva in BitChord. I brani che riproduce arrivano al"
+                    + " tuo DAC senza modifiche, quindi questi effetti, la dissolvenza del timer di"
+                    + " spegnimento e JamesDSP non si applicano.",
         };
     }
 
@@ -19285,8 +19075,6 @@ final class Translations {
             "\u6b8b\u308a\u7d04 {0}\u3001\u6700\u5927 {1}",
             "Account",
             "\u30a2\u30ab\u30a6\u30f3\u30c8",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "AcoustID \u30a2\u30d7\u30ea\u30b1\u30fc\u30b7\u30e7\u30f3\u30ad\u30fc",
             "AcoustID key",
@@ -19517,8 +19305,6 @@ final class Translations {
             "\u4ed6\u306e\u30bd\u30fc\u30b9\u304b\u3089\u518d\u751f\u3055\u308c\u308b\u66f2\u3092\u78ba\u8a8d",
             "Choose",
             "\u9078\u629e",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "Telegram \u306e\u30ad\u30e3\u30c3\u30b7\u30e5\u76ee\u5b89\u3092 64 MiB\u301c16 GiB"
                 + " \u306e\u7bc4\u56f2\u3067\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
@@ -19558,8 +19344,6 @@ final class Translations {
             "Telegram \u306b\u63a5\u7d9a\u3057\u3066\u3044\u307e\u3059\u2026",
             "Connection",
             "\u63a5\u7d9a",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "\u7d9a\u3051\u308b",
             "Copied {0}",
@@ -19602,8 +19386,6 @@ final class Translations {
             "Telegram API \u306e\u8a8d\u8a3c\u60c5\u5831\u3092\u4f5c\u6210 \u2197",
             "Damaged index file",
             "\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u30d5\u30a1\u30a4\u30eb\u304c\u7834\u640d\u3057\u3066\u3044\u307e\u3059",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "\u9589\u3058\u308b",
             "DJ mode",
@@ -19623,8 +19405,6 @@ final class Translations {
             "\u3059\u3079\u3066\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9",
             "Download all ({0}, {1})",
             "\u3059\u3079\u3066\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\uff08{0}\u3001{1}\uff09",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "{0} \u66f2\u3092\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9",
             "Download \u201c{0}\u201d",
@@ -19696,8 +19476,6 @@ final class Translations {
             "Everyone who can see {0} can see the list of music in {1}.",
             "{0} \u3092\u898b\u3089\u308c\u308b\u4eba\u306f\u5168\u54e1\u3001{1}"
                 + " \u306e\u97f3\u697d\u306e\u4e00\u89a7\u3092\u898b\u3089\u308c\u307e\u3059\u3002",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "\u30d5\u30a7\u30fc\u30c9\u306e\u9577\u3055",
             "Fade out at the sleep timer",
@@ -19718,8 +19496,6 @@ final class Translations {
             "Files without tags are looked up in AcoustID",
             "\u30bf\u30b0\u306e\u306a\u3044\u30d5\u30a1\u30a4\u30eb\u3092 AcoustID"
                     + " \u3067\u691c\u7d22\u3057\u307e\u3059",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "\u30d8\u30c3\u30c9\u30db\u30f3\u3092\u63a2\u3059",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -19746,8 +19522,6 @@ final class Translations {
             "\u5fd8\u308c\u308b",
             "Format legend",
             "\u30d5\u30a9\u30fc\u30de\u30c3\u30c8\u8868\u793a",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "{0} \u4ef6\u306e\u30c8\u30e9\u30c3\u30af\u304c\u898b\u3064\u304b\u308a\u307e\u3057\u305f\u3002",
             "Found {0} tracks.",
@@ -19849,8 +19623,6 @@ final class Translations {
             "Let the phone\u2019s audio chip decode songs",
             "Level",
             "\u30ec\u30d9\u30eb",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "\u4ee5\u524d\u306e\u6295\u7a3f\u3092\u8aad\u307f\u8fbc\u3080",
             "Loading channel\u2026",
@@ -20029,16 +19801,12 @@ final class Translations {
             "\u539f\u66f2\u306e\u30ad\u30fc",
             "Other",
             "\u305d\u306e\u4ed6",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "\u30d7\u30ed\u30d5\u30a1\u30a4\u30eb\u3092\u8cbc\u308a\u4ed8\u3051",
             "Paste code",
             "\u30b3\u30fc\u30c9\u3092\u8cbc\u308a\u4ed8\u3051",
             "Pasted profile",
             "\u8cbc\u308a\u4ed8\u3051\u305f\u30d7\u30ed\u30d5\u30a1\u30a4\u30eb",
-            "Patches",
-            "Patches",
             "Patches & tweaks",
             "Patches & tweaks",
             "Paused until this phone is charging",
@@ -20046,8 +19814,6 @@ final class Translations {
             "Paused until this phone is on Wi-Fi",
             "\u3053\u306e\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u304c Wi-Fi"
                 + " \u306b\u63a5\u7d9a\u3055\u308c\u308b\u307e\u3067\u4e00\u6642\u505c\u6b62\u4e2d",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "\u96fb\u8a71\u756a\u53f7",
             "Phone speaker",
@@ -20201,8 +19967,6 @@ final class Translations {
             "\u691c\u7d22\u3068\u518d\u751f\u306b\u306f\u5f15\u304d\u7d9a\u304d\u30e2\u30d0\u30a4\u30eb\u30c7\u30fc\u30bf\u304c\u4f7f\u308f\u308c\u307e\u3059\u3002\u5f85\u6a5f\u3059\u308b\u306e\u306f\u30d0\u30c3\u30af\u30b0\u30e9\u30a6\u30f3\u30c9\u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u306e\u307f\u3067\u3059\u3002",
             "Search first",
             "\u5148\u306b\u691c\u7d22",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "\u691c\u7d22\u30c6\u30ad\u30b9\u30c8\u304c\u9577\u3059\u304e\u307e\u3059\u3002",
             "Search your music chats",
@@ -20226,8 +19990,6 @@ final class Translations {
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "{0} \u3092\u9078\u629e\u3057\u307e\u3057\u305f\u3002\u300cBitChord \u2192"
                 + " \u30a2\u30c9\u30aa\u30f3\u300d\u3067\u691c\u7d22\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "\u30bb\u30c3\u30b7\u30e7\u30f3",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -20309,8 +20071,6 @@ final class Translations {
                 + " \u306e\u89e3\u6790\u7d50\u679c\u3082\u4f7f\u308f\u308c\u307e\u3059\u3002",
             "Songs your main channel already has aren\u2019t copied again",
             "\u30e1\u30a4\u30f3\u30c1\u30e3\u30f3\u30cd\u30eb\u306b\u65e2\u306b\u3042\u308b\u66f2\u306f\u518d\u5ea6\u30b3\u30d4\u30fc\u3057\u306a\u3044",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "\u30b9\u30dd\u30f3\u30b5\u30fc\u60c5\u5831",
             "Sponsored",
@@ -20661,8 +20421,6 @@ final class Translations {
                 + " \u3067\u306f\u5f15\u304d\u7d9a\u304d\u97f3\u58f0\u306e\u30e9\u30a4\u30d6\u691c\u7d22\u3092\u5229\u7528\u3067\u304d\u307e\u3059\u3002",
             "Use this name?",
             "\u3053\u306e\u540d\u524d\u3092\u4f7f\u7528\u3057\u307e\u3059\u304b\uff1f",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "\u5404\u30d5\u30a1\u30a4\u30eb\u306b Telegram"
                     + " \u304c\u6301\u3064\u30ab\u30d0\u30fc\u3092\u4f7f\u7528",
@@ -20720,8 +20478,6 @@ final class Translations {
                 + " \u79d2\uff08\u30ed\u30b9\u30ec\u30b9\u30d5\u30a1\u30a4\u30eb\u3067\u7d04"
                 + " 5\u301c15"
                 + " MB\uff09\u3092\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3057\u3001\u6570\u79d2\u9593\u30d0\u30c3\u30c6\u30ea\u30fc\u3092\u5c11\u3057\u6d88\u8cbb\u3057\u307e\u3059\u3002\u4ed6\u306e\u5834\u6240\u3078\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u3084\u9001\u4fe1\u3055\u308c\u308b\u3082\u306e\u306f\u3042\u308a\u307e\u305b\u3093\u3002",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "\u97f3\u697d\u306e\u30b3\u30d4\u30fc\u5143",
             "While this is on, BitChord\u2019s equaliser is turned off and Battery saver stands"
@@ -20902,6 +20658,14 @@ final class Translations {
             "{0}% \u5c0f\u3055\u304f",
             "{0}, which BitChord already counts as lossless",
             "{0}\u3001BitChord \u3067\u306f\u3059\u3067\u306b\u30ed\u30b9\u30ec\u30b9\u6271\u3044",
+            "Bit-perfect output is on",
+            "\u30d3\u30c3\u30c8\u30d1\u30fc\u30d5\u30a7\u30af\u30c8\u51fa\u529b\u304c\u30aa\u30f3\u3067\u3059",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "BitChord"
+                + " \u3067\u30d3\u30c3\u30c8\u30d1\u30fc\u30d5\u30a7\u30af\u30c8\u51fa\u529b\u304c\u30aa\u30f3\u3067\u3059\u3002\u3053\u306e\u51fa\u529b\u3067\u518d\u751f\u3055\u308c\u308b\u66f2\u306f\u5909\u66f4\u3055\u308c\u305a\u306b"
+                + " DAC \u306b\u5c4a\u304f\u305f\u3081\u3001\u3053\u308c\u3089\u306e\u30a8\u30d5\u30a7\u30af\u30c8\u3001\u30b9\u30ea\u30fc\u30d7\u30bf\u30a4\u30de\u30fc\u306e\u30d5\u30a7\u30fc\u30c9\u3001JamesDSP"
+                + " \u306f\u9069\u7528\u3055\u308c\u307e\u305b\u3093\u3002",
         };
     }
 
@@ -21018,8 +20782,6 @@ final class Translations {
             "\uc57d {0} \ub0a8\uc74c, \ucd5c\ub300 {1}",
             "Account",
             "\uacc4\uc815",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "AcoustID \uc560\ud50c\ub9ac\ucf00\uc774\uc158 \ud0a4",
             "AcoustID key",
@@ -21274,8 +21036,6 @@ final class Translations {
                     + " \ud655\uc778\ud574\uc694",
             "Choose",
             "\uc120\ud0dd",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "Telegram \uce90\uc2dc \ubaa9\ud45c\ub97c 64 MiB~16 GiB \uc0ac\uc774\ub85c"
                     + " \uc120\ud0dd\ud558\uc138\uc694.",
@@ -21316,8 +21076,6 @@ final class Translations {
             "Telegram\uc5d0 \uc5f0\uacb0 \uc911\u2026",
             "Connection",
             "\uc5f0\uacb0",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "\uacc4\uc18d",
             "Copied {0}",
@@ -21372,8 +21130,6 @@ final class Translations {
             "Telegram API \uc778\uc99d \uc815\ubcf4 \ub9cc\ub4e4\uae30 \u2197",
             "Damaged index file",
             "\uc190\uc0c1\ub41c \uc0c9\uc778 \ud30c\uc77c",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "\ub2eb\uae30",
             "DJ mode",
@@ -21393,8 +21149,6 @@ final class Translations {
             "\ubaa8\ub450 \ub2e4\uc6b4\ub85c\ub4dc",
             "Download all ({0}, {1})",
             "\ubaa8\ub450 \ub2e4\uc6b4\ub85c\ub4dc({0}, {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "\ub178\ub798 {0}\uace1 \ub2e4\uc6b4\ub85c\ub4dc",
             "Download \u201c{0}\u201d",
@@ -21471,8 +21225,6 @@ final class Translations {
             "Everyone who can see {0} can see the list of music in {1}.",
             "{0}\uc744(\ub97c) \ubcfc \uc218 \uc788\ub294 \ubaa8\ub4e0 \uc0ac\ub78c\uc774 {1}\uc758"
                     + " \uc74c\uc545 \ubaa9\ub85d\uc744 \ubcfc \uc218 \uc788\uc5b4\uc694.",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "\ud398\uc774\ub4dc \uae38\uc774",
             "Fade out at the sleep timer",
@@ -21495,8 +21247,6 @@ final class Translations {
                     + " \uc54a\uc544\uc694",
             "Files without tags are looked up in AcoustID",
             "\ud0dc\uadf8 \uc5c6\ub294 \ud30c\uc77c\uc744 AcoustID\uc5d0\uc11c \ucc3e\uc544\uc694",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "\ub0b4 \ud5e4\ub4dc\ud3f0 \ucc3e\uae30",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -21532,8 +21282,6 @@ final class Translations {
             "\uc78a\uae30",
             "Format legend",
             "\ud3ec\ub9f7 \ud45c\uc2dc",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "\ud2b8\ub799 {0}\uac1c\ub97c \ucc3e\uc558\uc5b4\uc694.",
             "Found {0} tracks.",
@@ -21644,8 +21392,6 @@ final class Translations {
             "Let the phone\u2019s audio chip decode songs",
             "Level",
             "\ub808\ubca8",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "\uc774\uc804 \uac8c\uc2dc\ubb3c \ubd88\ub7ec\uc624\uae30",
             "Loading channel\u2026",
@@ -21850,16 +21596,12 @@ final class Translations {
             "\uc6d0\ub798 \ud0a4",
             "Other",
             "\uae30\ud0c0",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "\ud504\ub85c\ud544 \ubd99\uc5ec\ub123\uae30",
             "Paste code",
             "\ucf54\ub4dc \ubd99\uc5ec\ub123\uae30",
             "Pasted profile",
             "\ubd99\uc5ec\ub123\uc740 \ud504\ub85c\ud544",
-            "Patches",
-            "Patches",
             "Patches & tweaks",
             "Patches & tweaks",
             "Paused until this phone is charging",
@@ -21868,8 +21610,6 @@ final class Translations {
             "Paused until this phone is on Wi-Fi",
             "\uc774 \ud734\ub300\uc804\ud654\uac00 Wi-Fi\uc5d0 \uc5f0\uacb0\ub420"
                     + " \ub54c\uae4c\uc9c0 \uc77c\uc2dc \uc911\uc9c0\ub428",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "\uc804\ud654\ubc88\ud638",
             "Phone speaker",
@@ -22037,8 +21777,6 @@ final class Translations {
                 + " \ubc31\uadf8\ub77c\uc6b4\ub4dc \uc0c9\uc778\ub9cc \uae30\ub2e4\ub824\uc694.",
             "Search first",
             "\uba3c\uc800 \uac80\uc0c9\ud558\uc138\uc694",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "\uac80\uc0c9\uc5b4\uac00 \ub108\ubb34 \uae38\uc5b4\uc694.",
             "Search your music chats",
@@ -22063,8 +21801,6 @@ final class Translations {
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "\uc120\ud0dd\ub428: {0}. BitChord \u2192 Addons\uc5d0\uc11c"
                     + " \uac80\uc0c9\ud558\uc138\uc694.",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "\uc138\uc158",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -22160,8 +21896,6 @@ final class Translations {
             "Songs your main channel already has aren\u2019t copied again",
             "\uba54\uc778 \ucc44\ub110\uc5d0 \uc774\ubbf8 \uc788\ub294 \ub178\ub798\ub294"
                     + " \ub2e4\uc2dc \ubcf5\uc0ac\ud558\uc9c0 \uc54a\uc544\uc694",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "\uc2a4\ud3f0\uc11c \uc815\ubcf4",
             "Sponsored",
@@ -22551,8 +22285,6 @@ final class Translations {
                 + " \uc788\uc5b4\uc694.",
             "Use this name?",
             "\uc774 \uc774\ub984\uc744 \uc0ac\uc6a9\ud560\uae4c\uc694?",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "\ud30c\uc77c\ub9c8\ub2e4 Telegram\uc5d0 \uc788\ub294 \ucee4\ubc84\ub97c"
                     + " \uc0ac\uc6a9\ud574\uc694",
@@ -22622,8 +22354,6 @@ final class Translations {
                 + " \ubc30\ud130\ub9ac\ub97c \uc57d\uac04 \uc0ac\uc6a9\ud574\uc694."
                 + " \uc544\ubb34\uac83\ub3c4 \uc5c5\ub85c\ub4dc\ud558\uac70\ub098 \ub2e4\ub978"
                 + " \uacf3\uc73c\ub85c \ubcf4\ub0b4\uc9c0 \uc54a\uc544\uc694.",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "\uc74c\uc545\uc744 \ubcf5\uc0ac\ud574 \uc62c \ucc44\ub110",
             "While this is on, BitChord\u2019s equaliser is turned off and Battery saver stands"
@@ -22834,6 +22564,15 @@ final class Translations {
             "{0}% \uc791\uac8c",
             "{0}, which BitChord already counts as lossless",
             "{0}, BitChord\uc5d0\uc11c \uc774\ubbf8 \ubb34\uc190\uc2e4\ub85c \ucde8\uae09",
+            "Bit-perfect output is on",
+            "\ube44\ud2b8 \ud37c\ud399\ud2b8 \ucd9c\ub825\uc774 \ucf1c\uc838 \uc788\uc5b4\uc694",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "BitChord\uc5d0\uc11c \ube44\ud2b8 \ud37c\ud399\ud2b8 \ucd9c\ub825\uc774 \ucf1c\uc838"
+                + " \uc788\uc5b4\uc694. \uc774 \ucd9c\ub825\uc73c\ub85c \uc7ac\uc0dd\ub418\ub294"
+                + " \uace1\uc740 \ubcc0\uacbd \uc5c6\uc774 DAC\uc5d0 \uc804\ub2ec\ub418\ubbc0\ub85c"
+                + " \uc774 \ud6a8\uacfc\ub4e4, \uc218\uba74 \ud0c0\uc774\uba38 \ud398\uc774\ub4dc,"
+                + " JamesDSP\uac00 \uc801\uc6a9\ub418\uc9c0 \uc54a\uc544\uc694.",
         };
     }
 
@@ -22924,8 +22663,6 @@ final class Translations {
             "pozosta\u0142o oko\u0142o {0}, najwy\u017cej {1}",
             "Account",
             "Konto",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "Klucz aplikacji AcoustID",
             "AcoustID key",
@@ -23138,8 +22875,6 @@ final class Translations {
             "Sprawdza utwory odtwarzane z innych \u017ar\u00f3de\u0142",
             "Choose",
             "Wybierz",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "Wybierz limit pami\u0119ci podr\u0119cznej Telegrama mi\u0119dzy 64 MiB a 16 GiB.",
             "Choose a track",
@@ -23175,8 +22910,6 @@ final class Translations {
             "\u0141\u0105czenie z Telegramem\u2026",
             "Connection",
             "Po\u0142\u0105czenie",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "Dalej",
             "Copied {0}",
@@ -23223,8 +22956,6 @@ final class Translations {
             "Utw\u00f3rz swoje dane API Telegrama \u2197",
             "Damaged index file",
             "Uszkodzony plik indeksu",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "Odrzu\u0107",
             "DJ mode",
@@ -23243,8 +22974,6 @@ final class Translations {
             "Pobierz wszystko",
             "Download all ({0}, {1})",
             "Pobierz wszystko ({0}, {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "Pobierz utwory ({0})",
             "Download \u201c{0}\u201d",
@@ -23309,8 +23038,6 @@ final class Translations {
             "Ka\u017cdy bezstratny plik z twoich czat\u00f3w muzycznych, do 1 GB dziennie",
             "Everyone who can see {0} can see the list of music in {1}.",
             "Ka\u017cdy, kto widzi {0}, zobaczy list\u0119 muzyki z {1}.",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "D\u0142ugo\u015b\u0107 wyciszania",
             "Fade out at the sleep timer",
@@ -23329,8 +23056,6 @@ final class Translations {
             "Pliki o innej d\u0142ugo\u015bci nie s\u0105 u\u017cywane",
             "Files without tags are looked up in AcoustID",
             "Pliki bez tag\u00f3w s\u0105 wyszukiwane w AcoustID",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "Znajd\u017a swoje s\u0142uchawki",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -23357,8 +23082,6 @@ final class Translations {
             "Zapomnij",
             "Format legend",
             "Legenda format\u00f3w",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "Znaleziono {0} utw\u00f3r.",
             "Found {0} tracks.",
@@ -23455,8 +23178,6 @@ final class Translations {
             "Pozw\u00f3l uk\u0142adowi audio telefonu dekodowa\u0107 utwory",
             "Level",
             "Poziom",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "Wczytaj starsze posty",
             "Loading channel\u2026",
@@ -23631,24 +23352,18 @@ final class Translations {
             "Oryginalna tonacja",
             "Other",
             "Inne",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "Wklej profil",
             "Paste code",
             "Wklej kod",
             "Pasted profile",
             "Wklejony profil",
-            "Patches",
-            "Patche",
             "Patches & tweaks",
             "Patche i poprawki",
             "Paused until this phone is charging",
             "Wstrzymane do czasu pod\u0142\u0105czenia \u0142adowarki",
             "Paused until this phone is on Wi-Fi",
             "Wstrzymane do czasu po\u0142\u0105czenia z Wi-Fi",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "Numer telefonu",
             "Phone speaker",
@@ -23793,8 +23508,6 @@ final class Translations {
                     + " tylko indeksowanie w tle.",
             "Search first",
             "Najpierw wyszukaj",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "Tekst wyszukiwania jest za d\u0142ugi.",
             "Search your music chats",
@@ -23813,8 +23526,6 @@ final class Translations {
             "Wybrano czat\u00f3w muzycznych: {0}. Szukaj w BitChord \u2192 Dodatki.",
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "Wybrano: {0}. Szukaj w BitChord \u2192 Dodatki.",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "Sesja",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -23896,8 +23607,6 @@ final class Translations {
             "Songs your main channel already has aren\u2019t copied again",
             "Utwory, kt\u00f3re s\u0105 ju\u017c w kanale g\u0142\u00f3wnym, nie s\u0105 kopiowane"
                     + " ponownie",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "Informacje o sponsorze",
             "Sponsored",
@@ -24208,8 +23917,6 @@ final class Translations {
                     + " audio na \u017cywo pozostaje dost\u0119pne w BitChord.",
             "Use this name?",
             "U\u017cy\u0107 tej nazwy?",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "U\u017cywa ok\u0142adki, kt\u00f3r\u0105 Telegram ma dla ka\u017cdego pliku",
             "Using {0}",
@@ -24266,8 +23973,6 @@ final class Translations {
                 + " Telegrama, czyli oko\u0142o 5\u201315 MB w przypadku pliku bezstratnego, i"
                 + " przez kilka sekund zu\u017cywa troch\u0119 baterii. Nic nie jest nigdzie"
                 + " wysy\u0142ane.",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "Sk\u0105d kopiowana jest muzyka",
             "While this is on, BitChord\u2019s equaliser is turned off and Battery saver stands"
@@ -24448,6 +24153,13 @@ final class Translations {
             "{0}% ciszej",
             "{0}, which BitChord already counts as lossless",
             "{0}, kt\u00f3ry BitChord ju\u017c uznaje za bezstratny",
+            "Bit-perfect output is on",
+            "Wyj\u015bcie bit-perfect jest w\u0142\u0105czone",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "Wyj\u015bcie bit-perfect jest w\u0142\u0105czone w BitChord. Odtwarzane przez nie"
+                    + " utwory trafiaj\u0105 do DAC bez zmian, wi\u0119c te efekty, wyciszanie przy"
+                    + " wy\u0142\u0105czniku czasowym i JamesDSP ich nie obejmuj\u0105.",
         };
     }
 
@@ -24536,8 +24248,6 @@ final class Translations {
             "cerca de {0} pela frente, at\u00e9 {1}",
             "Account",
             "Conta",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "Chave de aplicativo do AcoustID",
             "AcoustID key",
@@ -24745,8 +24455,6 @@ final class Translations {
             "Verifica m\u00fasicas que tocam de outras fontes",
             "Choose",
             "Escolher",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "Escolha uma meta de cache do Telegram entre 64 MiB e 16 GiB.",
             "Choose a track",
@@ -24781,8 +24489,6 @@ final class Translations {
             "Conectando ao Telegram\u2026",
             "Connection",
             "Conex\u00e3o",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "Continuar",
             "Copied {0}",
@@ -24827,8 +24533,6 @@ final class Translations {
             "Crie suas credenciais da API do Telegram \u2197",
             "Damaged index file",
             "Arquivo de \u00edndice danificado",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "Dispensar",
             "DJ mode",
@@ -24847,8 +24551,6 @@ final class Translations {
             "Baixar tudo",
             "Download all ({0}, {1})",
             "Baixar tudo ({0}, {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "Baixar {0} m\u00fasicas",
             "Download \u201c{0}\u201d",
@@ -24911,8 +24613,6 @@ final class Translations {
             "Todos os arquivos sem perdas dos seus chats de m\u00fasica, at\u00e9 1 GB por dia",
             "Everyone who can see {0} can see the list of music in {1}.",
             "Todos que podem ver {0} podem ver a lista de m\u00fasicas de {1}.",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "Dura\u00e7\u00e3o do fade",
             "Fade out at the sleep timer",
@@ -24932,8 +24632,6 @@ final class Translations {
             "Arquivos com outra dura\u00e7\u00e3o n\u00e3o s\u00e3o usados",
             "Files without tags are looked up in AcoustID",
             "Arquivos sem tags s\u00e3o procurados no AcoustID",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "Encontre seus fones de ouvido",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -24960,8 +24658,6 @@ final class Translations {
             "Esquecer",
             "Format legend",
             "Legenda de formato",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "{0} faixa encontrada.",
             "Found {0} tracks.",
@@ -25057,8 +24753,6 @@ final class Translations {
             "Let the phone\u2019s audio chip decode songs",
             "Level",
             "N\u00edvel",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "Carregar postagens anteriores",
             "Loading channel\u2026",
@@ -25229,24 +24923,18 @@ final class Translations {
             "Tom original",
             "Other",
             "Outros",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "Colar um perfil",
             "Paste code",
             "Colar c\u00f3digo",
             "Pasted profile",
             "Perfil colado",
-            "Patches",
-            "Patches",
             "Patches & tweaks",
             "Patches & tweaks",
             "Paused until this phone is charging",
             "Pausado at\u00e9 o celular estar carregando",
             "Paused until this phone is on Wi-Fi",
             "Pausado at\u00e9 o celular estar no Wi-Fi",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "N\u00famero de telefone",
             "Phone speaker",
@@ -25389,8 +25077,6 @@ final class Translations {
                     + " indexa\u00e7\u00e3o em segundo plano espera.",
             "Search first",
             "Busque primeiro",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "O texto da busca \u00e9 longo demais.",
             "Search your music chats",
@@ -25409,8 +25095,6 @@ final class Translations {
             "{0} chats de m\u00fasica selecionados. Busque em BitChord \u2192 Addons.",
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "Selecionado: {0}. Busque em BitChord \u2192 Addons.",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "Sess\u00e3o",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -25488,8 +25172,6 @@ final class Translations {
                 + " tamb\u00e9m s\u00e3o usadas.",
             "Songs your main channel already has aren\u2019t copied again",
             "M\u00fasicas que seu canal principal j\u00e1 tem n\u00e3o s\u00e3o copiadas de novo",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "Informa\u00e7\u00f5es do patrocinador",
             "Sponsored",
@@ -25798,8 +25480,6 @@ final class Translations {
                     + " dispon\u00edvel no BitChord.",
             "Use this name?",
             "Usar este nome?",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "Usa a capa que o Telegram tem para cada arquivo",
             "Using {0}",
@@ -25856,8 +25536,6 @@ final class Translations {
                 + " Telegram, cerca de 5 a 15 MB em um arquivo sem perdas, e usa um pouco de"
                 + " bateria por alguns segundos. Nada \u00e9 enviado nem compartilhado com qualquer"
                 + " outro lugar.",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "De onde as m\u00fasicas s\u00e3o copiadas",
             "While this is on, BitChord\u2019s equaliser is turned off and Battery saver stands"
@@ -26033,6 +25711,13 @@ final class Translations {
             "{0}% mais baixa",
             "{0}, which BitChord already counts as lossless",
             "{0}, que o BitChord j\u00e1 conta como sem perdas",
+            "Bit-perfect output is on",
+            "A sa\u00edda bit-perfect est\u00e1 ativada",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "A sa\u00edda bit-perfect est\u00e1 ativada no BitChord. As m\u00fasicas que ela toca"
+                + " chegam ao seu DAC sem altera\u00e7\u00f5es, ent\u00e3o estes efeitos, o fade do"
+                + " temporizador de sono e o JamesDSP n\u00e3o se aplicam a elas.",
         };
     }
 
@@ -26242,8 +25927,6 @@ final class Translations {
                     + " \u043d\u0435 \u0431\u043e\u043b\u0435\u0435 {1}",
             "Account",
             "\u0410\u043a\u043a\u0430\u0443\u043d\u0442",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "\u041a\u043b\u044e\u0447 \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f"
                     + " AcoustID",
@@ -26665,8 +26348,6 @@ final class Translations {
                     + " \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u043e\u0432",
             "Choose",
             "\u0412\u044b\u0431\u0440\u0430\u0442\u044c",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0440\u0430\u0437\u043c\u0435\u0440"
                     + " \u043a\u0435\u0448\u0430 Telegram \u043e\u0442 64 MiB \u0434\u043e 16 GiB.",
@@ -26730,8 +26411,6 @@ final class Translations {
                     + " Telegram\u2026",
             "Connection",
             "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "\u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c",
             "Copied {0}",
@@ -26835,8 +26514,6 @@ final class Translations {
             "\u041f\u043e\u0432\u0440\u0435\u0436\u0434\u0451\u043d\u043d\u044b\u0439"
                     + " \u0438\u043d\u0434\u0435\u043a\u0441\u043d\u044b\u0439"
                     + " \u0444\u0430\u0439\u043b",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "\u0421\u043a\u0440\u044b\u0442\u044c",
             "DJ mode",
@@ -26860,8 +26537,6 @@ final class Translations {
             "\u0421\u043a\u0430\u0447\u0430\u0442\u044c \u0432\u0441\u0435",
             "Download all ({0}, {1})",
             "\u0421\u043a\u0430\u0447\u0430\u0442\u044c \u0432\u0441\u0435 ({0}, {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "\u0421\u043a\u0430\u0447\u0430\u0442\u044c \u043f\u0435\u0441\u043d\u0438 ({0})",
             "Download \u201c{0}\u201d",
@@ -26987,8 +26662,6 @@ final class Translations {
                     + " \u043c\u043e\u0433\u0443\u0442 \u0443\u0432\u0438\u0434\u0435\u0442\u044c"
                     + " \u0441\u043f\u0438\u0441\u043e\u043a \u043c\u0443\u0437\u044b\u043a\u0438"
                     + " \u0432 {1}.",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "\u0414\u043b\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c"
                     + " \u0437\u0430\u0442\u0443\u0445\u0430\u043d\u0438\u044f",
@@ -27023,8 +26696,6 @@ final class Translations {
             "Files without tags are looked up in AcoustID",
             "\u0424\u0430\u0439\u043b\u044b \u0431\u0435\u0437 \u0442\u0435\u0433\u043e\u0432"
                     + " \u0438\u0449\u0443\u0442\u0441\u044f \u0432 AcoustID",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "\u041d\u0430\u0439\u0434\u0438\u0442\u0435 \u0441\u0432\u043e\u0438"
                     + " \u043d\u0430\u0443\u0448\u043d\u0438\u043a\u0438",
@@ -27085,8 +26756,6 @@ final class Translations {
             "\u0417\u0430\u0431\u044b\u0442\u044c",
             "Format legend",
             "\u041c\u0435\u0442\u043a\u0438 \u0444\u043e\u0440\u043c\u0430\u0442\u0430",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0442\u0440\u0435\u043a\u043e\u0432: {0}.",
             "Found {0} tracks.",
@@ -27261,8 +26930,6 @@ final class Translations {
             "Let the phone\u2019s audio chip decode songs",
             "Level",
             "\u0423\u0440\u043e\u0432\u0435\u043d\u044c",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0431\u043e\u043b\u0435\u0435"
                     + " \u0441\u0442\u0430\u0440\u044b\u0435 \u043f\u043e\u0441\u0442\u044b",
@@ -27600,8 +27267,6 @@ final class Translations {
                     + " \u0442\u043e\u043d\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c",
             "Other",
             "\u0414\u0440\u0443\u0433\u043e\u0435",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "\u0412\u0441\u0442\u0430\u0432\u0438\u0442\u044c"
                     + " \u043f\u0440\u043e\u0444\u0438\u043b\u044c",
@@ -27610,8 +27275,6 @@ final class Translations {
             "Pasted profile",
             "\u0412\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0439"
                     + " \u043f\u0440\u043e\u0444\u0438\u043b\u044c",
-            "Patches",
-            "Patches",
             "Patches & tweaks",
             "Patches & tweaks",
             "Paused until this phone is charging",
@@ -27622,8 +27285,6 @@ final class Translations {
             "\u041f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u043e"
                 + " \u0434\u043e \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f"
                 + " \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430 \u043a Wi-Fi",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "\u041d\u043e\u043c\u0435\u0440 \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430",
             "Phone speaker",
@@ -27897,8 +27558,6 @@ final class Translations {
                 + " \u0438\u043d\u0434\u0435\u043a\u0441\u0430\u0446\u0438\u044f.",
             "Search first",
             "\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u043f\u043e\u0438\u0441\u043a",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "\u0421\u043b\u0438\u0448\u043a\u043e\u043c \u0434\u043b\u0438\u043d\u043d\u044b\u0439"
                     + " \u0442\u0435\u043a\u0441\u0442 \u043f\u043e\u0438\u0441\u043a\u0430.",
@@ -27941,8 +27600,6 @@ final class Translations {
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "\u0412\u044b\u0431\u0440\u0430\u043d\u043e {0}. \u0418\u0449\u0438\u0442\u0435 \u0432"
                     + " BitChord \u2192 \u0410\u0434\u0434\u043e\u043d\u044b.",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "\u0421\u0435\u0430\u043d\u0441",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -28112,8 +27769,6 @@ final class Translations {
                     + " \u043a\u0430\u043d\u0430\u043b\u0435, \u043d\u0435"
                     + " \u043a\u043e\u043f\u0438\u0440\u0443\u044e\u0442\u0441\u044f"
                     + " \u043f\u043e\u0432\u0442\u043e\u0440\u043d\u043e",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "\u0418\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044f \u043e"
                     + " \u0441\u043f\u043e\u043d\u0441\u043e\u0440\u0435",
@@ -28769,8 +28424,6 @@ final class Translations {
             "Use this name?",
             "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"
                     + " \u044d\u0442\u043e \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435?",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442\u0441\u044f"
                     + " \u043e\u0431\u043b\u043e\u0436\u043a\u0430,"
@@ -28905,8 +28558,6 @@ final class Translations {
                 + " \u043d\u0438\u043a\u0443\u0434\u0430 \u0431\u043e\u043b\u044c\u0448\u0435"
                 + " \u043d\u0435"
                 + " \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u0442\u0441\u044f.",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "\u041e\u0442\u043a\u0443\u0434\u0430"
                     + " \u043a\u043e\u043f\u0438\u0440\u0443\u0435\u0442\u0441\u044f"
@@ -29258,6 +28909,23 @@ final class Translations {
                     + " \u0441\u0447\u0438\u0442\u0430\u0435\u0442"
                     + " \u043a\u043e\u0434\u0435\u043a\u043e\u043c \u0431\u0435\u0437"
                     + " \u043f\u043e\u0442\u0435\u0440\u044c",
+            "Bit-perfect output is on",
+            "\u0412\u044b\u0432\u043e\u0434 bit-perfect \u0432\u043a\u043b\u044e\u0447\u0451\u043d",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "\u0412 BitChord \u0432\u043a\u043b\u044e\u0447\u0451\u043d"
+                + " \u0432\u044b\u0432\u043e\u0434 bit-perfect. \u0422\u0440\u0435\u043a\u0438,"
+                + " \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u043e\u043d"
+                + " \u0432\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442,"
+                + " \u043f\u043e\u043f\u0430\u0434\u0430\u044e\u0442 \u043d\u0430"
+                + " \u0426\u0410\u041f \u0431\u0435\u0437"
+                + " \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u0439,"
+                + " \u043f\u043e\u044d\u0442\u043e\u043c\u0443 \u044d\u0442\u0438"
+                + " \u044d\u0444\u0444\u0435\u043a\u0442\u044b,"
+                + " \u0437\u0430\u0442\u0443\u0445\u0430\u043d\u0438\u0435 \u043f\u043e"
+                + " \u0442\u0430\u0439\u043c\u0435\u0440\u0443 \u0441\u043d\u0430 \u0438 JamesDSP"
+                + " \u043a \u043d\u0438\u043c \u043d\u0435"
+                + " \u043f\u0440\u0438\u043c\u0435\u043d\u044f\u044e\u0442\u0441\u044f.",
         };
     }
 
@@ -29388,8 +29056,6 @@ final class Translations {
                     + " {0} \u0e2a\u0e39\u0e07\u0e2a\u0e38\u0e14 {1}",
             "Account",
             "\u0e1a\u0e31\u0e0d\u0e0a\u0e35",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "\u0e04\u0e35\u0e22\u0e4c\u0e41\u0e2d\u0e1b\u0e1e\u0e25\u0e34\u0e40\u0e04\u0e0a\u0e31\u0e19"
                 + " AcoustID",
@@ -29661,8 +29327,6 @@ final class Translations {
             "\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e40\u0e1e\u0e25\u0e07\u0e17\u0e35\u0e48\u0e40\u0e25\u0e48\u0e19\u0e08\u0e32\u0e01\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e2d\u0e37\u0e48\u0e19",
             "Choose",
             "\u0e40\u0e25\u0e37\u0e2d\u0e01",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e40\u0e1b\u0e49\u0e32\u0e2b\u0e21\u0e32\u0e22\u0e41\u0e04\u0e0a"
                 + " Telegram \u0e23\u0e30\u0e2b\u0e27\u0e48\u0e32\u0e07 64 MiB \u0e16\u0e36\u0e07"
@@ -29710,8 +29374,6 @@ final class Translations {
                 + " Telegram\u2026",
             "Connection",
             "\u0e01\u0e32\u0e23\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "\u0e14\u0e33\u0e40\u0e19\u0e34\u0e19\u0e01\u0e32\u0e23\u0e15\u0e48\u0e2d",
             "Copied {0}",
@@ -29772,8 +29434,6 @@ final class Translations {
                 + " Telegram API \u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13 \u2197",
             "Damaged index file",
             "\u0e44\u0e1f\u0e25\u0e4c\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e40\u0e2a\u0e35\u0e22\u0e2b\u0e32\u0e22",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "\u0e1b\u0e34\u0e14",
             "DJ mode",
@@ -29796,8 +29456,6 @@ final class Translations {
             "Download all ({0}, {1})",
             "\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e17\u0e31\u0e49\u0e07\u0e2b\u0e21\u0e14"
                 + " ({0}, {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14 {0} \u0e40\u0e1e\u0e25\u0e07",
             "Download \u201c{0}\u201d",
@@ -29879,8 +29537,6 @@ final class Translations {
             "\u0e17\u0e38\u0e01\u0e04\u0e19\u0e17\u0e35\u0e48\u0e40\u0e2b\u0e47\u0e19 {0}"
                 + " \u0e08\u0e30\u0e40\u0e2b\u0e47\u0e19\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e40\u0e1e\u0e25\u0e07\u0e43\u0e19"
                 + " {1} \u0e44\u0e14\u0e49",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "\u0e04\u0e27\u0e32\u0e21\u0e22\u0e32\u0e27\u0e01\u0e32\u0e23\u0e40\u0e1f\u0e14",
             "Fade out at the sleep timer",
@@ -29902,8 +29558,6 @@ final class Translations {
             "Files without tags are looked up in AcoustID",
             "\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e44\u0e1f\u0e25\u0e4c\u0e17\u0e35\u0e48\u0e44\u0e21\u0e48\u0e21\u0e35\u0e41\u0e17\u0e47\u0e01\u0e43\u0e19"
                 + " AcoustID",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e2b\u0e39\u0e1f\u0e31\u0e07\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -29936,8 +29590,6 @@ final class Translations {
             "\u0e25\u0e37\u0e21",
             "Format legend",
             "\u0e1b\u0e49\u0e32\u0e22\u0e1f\u0e2d\u0e23\u0e4c\u0e41\u0e21\u0e15",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "\u0e1e\u0e1a {0} \u0e41\u0e17\u0e23\u0e47\u0e01",
             "Found {0} tracks.",
@@ -30057,8 +29709,6 @@ final class Translations {
             "\u0e43\u0e2b\u0e49\u0e0a\u0e34\u0e1b\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e02\u0e2d\u0e07\u0e42\u0e17\u0e23\u0e28\u0e31\u0e1e\u0e17\u0e4c\u0e16\u0e2d\u0e14\u0e23\u0e2b\u0e31\u0e2a\u0e40\u0e1e\u0e25\u0e07",
             "Level",
             "\u0e23\u0e30\u0e14\u0e31\u0e1a",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "\u0e42\u0e2b\u0e25\u0e14\u0e42\u0e1e\u0e2a\u0e15\u0e4c\u0e40\u0e01\u0e48\u0e32\u0e01\u0e27\u0e48\u0e32",
             "Loading channel\u2026",
@@ -30273,16 +29923,12 @@ final class Translations {
             "\u0e04\u0e35\u0e22\u0e4c\u0e15\u0e49\u0e19\u0e09\u0e1a\u0e31\u0e1a",
             "Other",
             "\u0e2d\u0e37\u0e48\u0e19\u0e46",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "\u0e27\u0e32\u0e07\u0e42\u0e1b\u0e23\u0e44\u0e1f\u0e25\u0e4c",
             "Paste code",
             "\u0e27\u0e32\u0e07\u0e42\u0e04\u0e49\u0e14",
             "Pasted profile",
             "\u0e42\u0e1b\u0e23\u0e44\u0e1f\u0e25\u0e4c\u0e17\u0e35\u0e48\u0e27\u0e32\u0e07\u0e44\u0e27\u0e49",
-            "Patches",
-            "\u0e41\u0e1e\u0e15\u0e0a\u0e4c",
             "Patches & tweaks",
             "\u0e41\u0e1e\u0e15\u0e0a\u0e4c\u0e41\u0e25\u0e30\u0e01\u0e32\u0e23\u0e1b\u0e23\u0e31\u0e1a\u0e41\u0e15\u0e48\u0e07",
             "Paused until this phone is charging",
@@ -30290,8 +29936,6 @@ final class Translations {
             "Paused until this phone is on Wi-Fi",
             "\u0e2b\u0e22\u0e38\u0e14\u0e0a\u0e31\u0e48\u0e27\u0e04\u0e23\u0e32\u0e27\u0e08\u0e19\u0e01\u0e27\u0e48\u0e32\u0e42\u0e17\u0e23\u0e28\u0e31\u0e1e\u0e17\u0e4c\u0e08\u0e30\u0e43\u0e0a\u0e49"
                 + " Wi-Fi",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "\u0e2b\u0e21\u0e32\u0e22\u0e40\u0e25\u0e02\u0e42\u0e17\u0e23\u0e28\u0e31\u0e1e\u0e17\u0e4c",
             "Phone speaker",
@@ -30477,8 +30121,6 @@ final class Translations {
                 + " \u0e21\u0e35\u0e40\u0e1e\u0e35\u0e22\u0e07\u0e01\u0e32\u0e23\u0e17\u0e33\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e43\u0e19\u0e40\u0e1a\u0e37\u0e49\u0e2d\u0e07\u0e2b\u0e25\u0e31\u0e07\u0e40\u0e17\u0e48\u0e32\u0e19\u0e31\u0e49\u0e19\u0e17\u0e35\u0e48\u0e23\u0e2d",
             "Search first",
             "\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e01\u0e48\u0e2d\u0e19",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "\u0e02\u0e49\u0e2d\u0e04\u0e27\u0e32\u0e21\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e22\u0e32\u0e27\u0e40\u0e01\u0e34\u0e19\u0e44\u0e1b",
             "Search your music chats",
@@ -30506,8 +30148,6 @@ final class Translations {
             "\u0e40\u0e25\u0e37\u0e2d\u0e01 {0} \u0e41\u0e25\u0e49\u0e27"
                 + " \u0e04\u0e49\u0e19\u0e2b\u0e32\u0e44\u0e14\u0e49\u0e43\u0e19 BitChord \u2192"
                 + " \u0e41\u0e2d\u0e14\u0e2d\u0e2d\u0e19",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "\u0e40\u0e0b\u0e2a\u0e0a\u0e31\u0e19",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -30615,8 +30255,6 @@ final class Translations {
                 + " Automix \u0e02\u0e2d\u0e07 BitChord \u0e40\u0e2d\u0e07\u0e14\u0e49\u0e27\u0e22",
             "Songs your main channel already has aren\u2019t copied again",
             "\u0e40\u0e1e\u0e25\u0e07\u0e17\u0e35\u0e48\u0e0a\u0e48\u0e2d\u0e07\u0e2b\u0e25\u0e31\u0e01\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13\u0e21\u0e35\u0e2d\u0e22\u0e39\u0e48\u0e41\u0e25\u0e49\u0e27\u0e08\u0e30\u0e44\u0e21\u0e48\u0e16\u0e39\u0e01\u0e04\u0e31\u0e14\u0e25\u0e2d\u0e01\u0e0b\u0e49\u0e33",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e1c\u0e39\u0e49\u0e2a\u0e19\u0e31\u0e1a\u0e2a\u0e19\u0e38\u0e19",
             "Sponsored",
@@ -31023,8 +30661,6 @@ final class Translations {
                 + " BitChord",
             "Use this name?",
             "\u0e43\u0e0a\u0e49\u0e0a\u0e37\u0e48\u0e2d\u0e19\u0e35\u0e49\u0e2b\u0e23\u0e37\u0e2d\u0e44\u0e21\u0e48",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "\u0e43\u0e0a\u0e49\u0e1b\u0e01\u0e17\u0e35\u0e48 Telegram"
                 + " \u0e21\u0e35\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e41\u0e15\u0e48\u0e25\u0e30\u0e44\u0e1f\u0e25\u0e4c",
@@ -31097,8 +30733,6 @@ final class Translations {
                 + " \u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e44\u0e1f\u0e25\u0e4c lossless"
                 + " \u0e41\u0e25\u0e30\u0e43\u0e0a\u0e49\u0e41\u0e1a\u0e15\u0e40\u0e15\u0e2d\u0e23\u0e35\u0e48\u0e40\u0e25\u0e47\u0e01\u0e19\u0e49\u0e2d\u0e22\u0e40\u0e1e\u0e35\u0e22\u0e07\u0e44\u0e21\u0e48\u0e01\u0e35\u0e48\u0e27\u0e34\u0e19\u0e32\u0e17\u0e35"
                 + " \u0e44\u0e21\u0e48\u0e21\u0e35\u0e01\u0e32\u0e23\u0e2d\u0e31\u0e1b\u0e42\u0e2b\u0e25\u0e14\u0e2b\u0e23\u0e37\u0e2d\u0e2a\u0e48\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e44\u0e1b\u0e17\u0e35\u0e48\u0e2d\u0e37\u0e48\u0e19",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e17\u0e35\u0e48\u0e04\u0e31\u0e14\u0e25\u0e2d\u0e01\u0e40\u0e1e\u0e25\u0e07\u0e21\u0e32",
             "While this is on, BitChord\u2019s equaliser is turned off and Battery saver stands"
@@ -31328,6 +30962,19 @@ final class Translations {
             "{0}, which BitChord already counts as lossless",
             "{0} \u0e0b\u0e36\u0e48\u0e07 BitChord \u0e19\u0e31\u0e1a\u0e40\u0e1b\u0e47\u0e19"
                     + " lossless \u0e2d\u0e22\u0e39\u0e48\u0e41\u0e25\u0e49\u0e27",
+            "Bit-perfect output is on",
+            "\u0e40\u0e2d\u0e32\u0e15\u0e4c\u0e1e\u0e38\u0e15 Bit-perfect"
+                    + " \u0e40\u0e1b\u0e34\u0e14\u0e2d\u0e22\u0e39\u0e48",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "\u0e40\u0e2d\u0e32\u0e15\u0e4c\u0e1e\u0e38\u0e15 Bit-perfect"
+                + " \u0e40\u0e1b\u0e34\u0e14\u0e2d\u0e22\u0e39\u0e48\u0e43\u0e19 BitChord"
+                + " \u0e40\u0e1e\u0e25\u0e07\u0e17\u0e35\u0e48\u0e40\u0e25\u0e48\u0e19\u0e1c\u0e48\u0e32\u0e19\u0e40\u0e2d\u0e32\u0e15\u0e4c\u0e1e\u0e38\u0e15\u0e19\u0e35\u0e49\u0e08\u0e30\u0e44\u0e1b\u0e16\u0e36\u0e07"
+                + " DAC \u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13\u0e42\u0e14\u0e22\u0e44\u0e21\u0e48\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e41\u0e1b\u0e25\u0e07"
+                + " \u0e40\u0e2d\u0e1f\u0e40\u0e1f\u0e01\u0e15\u0e4c\u0e40\u0e2b\u0e25\u0e48\u0e32\u0e19\u0e35\u0e49"
+                + " \u0e01\u0e32\u0e23\u0e40\u0e1f\u0e14\u0e02\u0e2d\u0e07\u0e15\u0e31\u0e27\u0e08\u0e31\u0e1a\u0e40\u0e27\u0e25\u0e32\u0e1b\u0e34\u0e14\u0e40\u0e1e\u0e25\u0e07"
+                + " \u0e41\u0e25\u0e30 JamesDSP"
+                + " \u0e08\u0e36\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e1c\u0e25\u0e01\u0e31\u0e1a\u0e40\u0e1e\u0e25\u0e07\u0e40\u0e2b\u0e25\u0e48\u0e32\u0e19\u0e31\u0e49\u0e19",
         };
     }
 
@@ -31426,8 +31073,6 @@ final class Translations {
             "kalan s\u00fcre yakla\u015f\u0131k {0}, en fazla {1}",
             "Account",
             "Hesap",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "AcoustID uygulama anahtar\u0131",
             "AcoustID key",
@@ -31644,8 +31289,6 @@ final class Translations {
             "Ba\u015fka kaynaklardan \u00e7alan \u015fark\u0131lar\u0131 kontrol eder",
             "Choose",
             "Se\u00e7",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "64 MiB ile 16 GiB aras\u0131nda bir Telegram \u00f6nbellek hedefi se\u00e7in.",
             "Choose a track",
@@ -31681,8 +31324,6 @@ final class Translations {
             "Telegram\u2019a ba\u011flan\u0131l\u0131yor\u2026",
             "Connection",
             "Ba\u011flant\u0131",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "Devam",
             "Copied {0}",
@@ -31727,8 +31368,6 @@ final class Translations {
             "Telegram API kimlik bilgilerinizi olu\u015fturun \u2197",
             "Damaged index file",
             "Hasarl\u0131 dizin dosyas\u0131",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "Yok say",
             "DJ mode",
@@ -31748,8 +31387,6 @@ final class Translations {
             "T\u00fcm\u00fcn\u00fc indir",
             "Download all ({0}, {1})",
             "T\u00fcm\u00fcn\u00fc indir ({0}, {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "{0} \u015fark\u0131y\u0131 indir",
             "Download \u201c{0}\u201d",
@@ -31817,8 +31454,6 @@ final class Translations {
             "Everyone who can see {0} can see the list of music in {1}.",
             "{0} sohbetini g\u00f6rebilen herkes {1} i\u00e7indeki m\u00fczik listesini"
                     + " g\u00f6rebilir.",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "Ses k\u0131sma s\u00fcresi",
             "Fade out at the sleep timer",
@@ -31837,8 +31472,6 @@ final class Translations {
             "Farkl\u0131 s\u00fcreli dosyalar kullan\u0131lmaz",
             "Files without tags are looked up in AcoustID",
             "Etiketsiz dosyalar AcoustID\u2019de aran\u0131r",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "Kulakl\u0131\u011f\u0131n\u0131z\u0131 bulun",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -31869,8 +31502,6 @@ final class Translations {
             "Unut",
             "Format legend",
             "Format etiketi",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "{0} par\u00e7a bulundu.",
             "Found {0} tracks.",
@@ -31970,8 +31601,6 @@ final class Translations {
             "Let the phone\u2019s audio chip decode songs",
             "Level",
             "Seviye",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "Daha eski g\u00f6nderileri y\u00fckle",
             "Loading channel\u2026",
@@ -32152,24 +31781,18 @@ final class Translations {
             "Orijinal ton",
             "Other",
             "Di\u011fer",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "Profil yap\u0131\u015ft\u0131r",
             "Paste code",
             "Kod yap\u0131\u015ft\u0131r",
             "Pasted profile",
             "Yap\u0131\u015ft\u0131r\u0131lan profil",
-            "Patches",
-            "Patches",
             "Patches & tweaks",
             "Patches & tweaks",
             "Paused until this phone is charging",
             "Bu telefon \u015farj olana kadar duraklat\u0131ld\u0131",
             "Paused until this phone is on Wi-Fi",
             "Bu telefon Wi-Fi\u2019a ba\u011flanana kadar duraklat\u0131ld\u0131",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "Telefon numaras\u0131",
             "Phone speaker",
@@ -32319,8 +31942,6 @@ final class Translations {
                     + " ekleme bekler.",
             "Search first",
             "\u00d6nce aray\u0131n",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "Arama metni \u00e7ok uzun.",
             "Search your music chats",
@@ -32340,8 +31961,6 @@ final class Translations {
             "{0} m\u00fczik sohbeti se\u00e7ildi. BitChord \u2192 Eklentiler\u2019de aray\u0131n.",
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "Se\u00e7ildi: {0}. BitChord \u2192 Eklentiler\u2019de aray\u0131n.",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "Oturum",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -32427,8 +32046,6 @@ final class Translations {
                 + " kullan\u0131l\u0131r.",
             "Songs your main channel already has aren\u2019t copied again",
             "Ana kanal\u0131n\u0131zda zaten olan \u015fark\u0131lar yeniden kopyalanmaz",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "Sponsor bilgileri",
             "Sponsored",
@@ -32751,8 +32368,6 @@ final class Translations {
                 + " devam eder.",
             "Use this name?",
             "Bu ad kullan\u0131ls\u0131n m\u0131?",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "Telegram\u2019\u0131n her dosya i\u00e7in sahip oldu\u011fu kapa\u011f\u0131"
                     + " kullan\u0131r",
@@ -32813,8 +32428,6 @@ final class Translations {
                 + " bu, kay\u0131ps\u0131z bir dosya i\u00e7in yakla\u015f\u0131k 5 ile 15 MB"
                 + " aras\u0131d\u0131r ve birka\u00e7 saniye boyunca biraz pil kullan\u0131r."
                 + " Hi\u00e7bir \u015fey y\u00fcklenmez veya ba\u015fka bir yere g\u00f6nderilmez.",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "M\u00fczi\u011fin kopyaland\u0131\u011f\u0131 yer",
             "While this is on, BitChord\u2019s equaliser is turned off and Battery saver stands"
@@ -33001,6 +32614,15 @@ final class Translations {
             "%{0} daha k\u0131s\u0131k",
             "{0}, which BitChord already counts as lossless",
             "{0}; BitChord bunu zaten kay\u0131ps\u0131z say\u0131yor",
+            "Bit-perfect output is on",
+            "Bit-perfect \u00e7\u0131k\u0131\u015f a\u00e7\u0131k",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "BitChord\u2019da bit-perfect \u00e7\u0131k\u0131\u015f a\u00e7\u0131k. Bu"
+                + " \u00e7\u0131k\u0131\u015ftan \u00e7alan \u015fark\u0131lar"
+                + " DAC\u2019\u0131n\u0131za de\u011fi\u015fmeden ula\u015f\u0131r; bu y\u00fczden"
+                + " bu efektler, uyku zamanlay\u0131c\u0131s\u0131ndaki ses k\u0131sma ve JamesDSP"
+                + " onlara uygulanmaz.",
         };
     }
 
@@ -33193,8 +32815,6 @@ final class Translations {
                 + " \u0632\u06cc\u0627\u062f\u06c1 \u0633\u06d2 \u0632\u06cc\u0627\u062f\u06c1 {1}",
             "Account",
             "\u0627\u06a9\u0627\u0624\u0646\u0679",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "AcoustID \u0627\u06cc\u067e\u0644\u06cc\u06a9\u06cc\u0634\u0646"
                     + " \u06a9\u0644\u06cc\u062f",
@@ -33580,8 +33200,6 @@ final class Translations {
                     + " \u062c\u0627\u0646\u0686\u062a\u0627 \u06c1\u06d2",
             "Choose",
             "\u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "64 MiB \u0627\u0648\u0631 16 GiB \u06a9\u06d2 \u062f\u0631\u0645\u06cc\u0627\u0646"
                     + " Telegram \u06a9\u06cc\u0634 \u06a9\u0627 \u06c1\u062f\u0641"
@@ -33638,8 +33256,6 @@ final class Translations {
                     + " \u06c1\u06d2\u2026",
             "Connection",
             "\u06a9\u0646\u06a9\u0634\u0646",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "\u062c\u0627\u0631\u06cc \u0631\u06a9\u06be\u06cc\u06ba",
             "Copied {0}",
@@ -33723,8 +33339,6 @@ final class Translations {
             "Damaged index file",
             "\u062e\u0631\u0627\u0628 \u0627\u0646\u0688\u06cc\u06a9\u0633"
                     + " \u0641\u0627\u0626\u0644",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "\u062e\u0627\u0631\u062c \u06a9\u0631\u06cc\u06ba",
             "DJ mode",
@@ -33748,8 +33362,6 @@ final class Translations {
             "Download all ({0}, {1})",
             "\u0633\u0628 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u06a9\u0631\u06cc\u06ba"
                     + " ({0}\u060c {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "{0} \u06af\u0627\u0646\u06d2 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
                     + " \u06a9\u0631\u06cc\u06ba",
@@ -33865,8 +33477,6 @@ final class Translations {
                     + " \u0645\u0648\u0633\u06cc\u0642\u06cc \u06a9\u06cc"
                     + " \u0641\u06c1\u0631\u0633\u062a \u062f\u06cc\u06a9\u06be"
                     + " \u0633\u06a9\u062a\u0627 \u06c1\u06d2\u06d4",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "\u0622\u0648\u0627\u0632 \u06a9\u0645 \u06c1\u0648\u0646\u06d2 \u06a9\u0627"
                     + " \u062f\u0648\u0631\u0627\u0646\u06cc\u06c1",
@@ -33907,8 +33517,6 @@ final class Translations {
                     + " \u0641\u0627\u0626\u0644\u06cc\u06ba AcoustID \u0645\u06cc\u06ba"
                     + " \u062a\u0644\u0627\u0634 \u06a9\u06cc \u062c\u0627\u062a\u06cc"
                     + " \u06c1\u06cc\u06ba",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "\u0627\u067e\u0646\u06d2 \u06c1\u06cc\u0688 \u0641\u0648\u0646\u0632"
                     + " \u062a\u0644\u0627\u0634 \u06a9\u0631\u06cc\u06ba",
@@ -33959,8 +33567,6 @@ final class Translations {
             "\u0628\u06be\u0648\u0644 \u062c\u0627\u0626\u06cc\u06ba",
             "Format legend",
             "\u0641\u0627\u0631\u0645\u06cc\u0679 \u0644\u06cc\u062c\u0646\u0688",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "{0} \u0679\u0631\u06cc\u06a9 \u0645\u0644\u0627\u06d4",
             "Found {0} tracks.",
@@ -34117,8 +33723,6 @@ final class Translations {
             "Let the phone\u2019s audio chip decode songs",
             "Level",
             "\u0633\u0637\u062d",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "\u067e\u0631\u0627\u0646\u06cc \u067e\u0648\u0633\u0679\u0633 \u0644\u0648\u0688"
                     + " \u06a9\u0631\u06cc\u06ba",
@@ -34418,8 +34022,6 @@ final class Translations {
             "\u0627\u0635\u0644 \u0633\u064f\u0631",
             "Other",
             "\u062f\u06cc\u06af\u0631",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "\u067e\u0631\u0648\u0641\u0627\u0626\u0644 \u067e\u06cc\u0633\u0679"
                     + " \u06a9\u0631\u06cc\u06ba",
@@ -34428,8 +34030,6 @@ final class Translations {
             "Pasted profile",
             "\u067e\u06cc\u0633\u0679 \u06a9\u06cc\u0627 \u06af\u06cc\u0627"
                     + " \u067e\u0631\u0648\u0641\u0627\u0626\u0644",
-            "Patches",
-            "Patches",
             "Patches & tweaks",
             "Patches & tweaks",
             "Paused until this phone is charging",
@@ -34438,8 +34038,6 @@ final class Translations {
             "Paused until this phone is on Wi-Fi",
             "\u0641\u0648\u0646 Wi-Fi \u067e\u0631 \u0622\u0646\u06d2 \u062a\u06a9"
                     + " \u0631\u06a9\u0627 \u06c1\u0648\u0627 \u06c1\u06d2",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "\u0641\u0648\u0646 \u0646\u0645\u0628\u0631",
             "Phone speaker",
@@ -34688,8 +34286,6 @@ final class Translations {
                     + " \u06c1\u06d2\u06d4",
             "Search first",
             "\u067e\u06c1\u0644\u06d2 \u062a\u0644\u0627\u0634 \u06a9\u0631\u06cc\u06ba",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "\u062a\u0644\u0627\u0634 \u06a9\u0627 \u0645\u062a\u0646 \u0628\u06c1\u062a"
                     + " \u0644\u0645\u0628\u0627 \u06c1\u06d2\u06d4",
@@ -34726,8 +34322,6 @@ final class Translations {
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "\u0645\u0646\u062a\u062e\u0628: {0}\u06d4 BitChord \u2192 Addons \u0645\u06cc\u06ba"
                     + " \u062a\u0644\u0627\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "\u0633\u06cc\u0634\u0646",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -34877,8 +34471,6 @@ final class Translations {
                     + " \u0633\u06d2 \u06c1\u06cc\u06ba \u0648\u06c1"
                     + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u06a9\u0627\u067e\u06cc"
                     + " \u0646\u06c1\u06cc\u06ba \u06c1\u0648\u062a\u06d2",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "\u0627\u0633\u067e\u0627\u0646\u0633\u0631 \u06a9\u06cc"
                     + " \u0645\u0639\u0644\u0648\u0645\u0627\u062a",
@@ -35461,8 +35053,6 @@ final class Translations {
             "Use this name?",
             "\u06cc\u06c1 \u0646\u0627\u0645 \u0627\u0633\u062a\u0639\u0645\u0627\u0644"
                     + " \u06a9\u0631\u06cc\u06ba\u061f",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "\u06c1\u0631 \u0641\u0627\u0626\u0644 \u06a9\u06d2 \u0644\u06cc\u06d2 Telegram"
                     + " \u06a9\u0627 \u06a9\u0648\u0631 \u0627\u0633\u062a\u0639\u0645\u0627\u0644"
@@ -35575,8 +35165,6 @@ final class Translations {
                     + " \u0628\u06be\u06cc \u0627\u067e \u0644\u0648\u0688 \u06cc\u0627"
                     + " \u06a9\u06c1\u06cc\u06ba \u0627\u0648\u0631 \u0646\u06c1\u06cc\u06ba"
                     + " \u0628\u06be\u06cc\u062c\u0627 \u062c\u0627\u062a\u0627\u06d4",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "\u0645\u0648\u0633\u06cc\u0642\u06cc \u06a9\u06c1\u0627\u06ba \u0633\u06d2"
                     + " \u06a9\u0627\u067e\u06cc \u06c1\u0648\u062a\u06cc \u06c1\u06d2",
@@ -35885,6 +35473,22 @@ final class Translations {
             "{0}\u060c \u062c\u0633\u06d2 BitChord \u067e\u06c1\u0644\u06d2 \u06c1\u06cc"
                     + " \u0644\u0627\u0633 \u0644\u06cc\u0633 \u0645\u0627\u0646\u062a\u0627"
                     + " \u06c1\u06d2",
+            "Bit-perfect output is on",
+            "\u0628\u0679 \u067e\u0631\u0641\u06cc\u06a9\u0679 \u0622\u0624\u0679 \u067e\u0679"
+                    + " \u0622\u0646 \u06c1\u06d2",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "BitChord \u0645\u06cc\u06ba \u0628\u0679 \u067e\u0631\u0641\u06cc\u06a9\u0679"
+                + " \u0622\u0624\u0679 \u067e\u0679 \u0622\u0646 \u06c1\u06d2\u06d4 \u0627\u0633"
+                + " \u0633\u06d2 \u0686\u0644\u0646\u06d2 \u0648\u0627\u0644\u06d2"
+                + " \u06af\u0627\u0646\u06d2 \u0628\u063a\u06cc\u0631"
+                + " \u062a\u0628\u062f\u06cc\u0644\u06cc \u06a9\u06d2 \u0622\u067e \u06a9\u06d2 DAC"
+                + " \u062a\u06a9 \u067e\u06c1\u0646\u0686\u062a\u06d2 \u06c1\u06cc\u06ba\u060c"
+                + " \u0627\u0633 \u0644\u06cc\u06d2 \u06cc\u06c1"
+                + " \u0627\u06cc\u0641\u06cc\u06a9\u0679\u0633\u060c \u0633\u0644\u06cc\u067e"
+                + " \u0679\u0627\u0626\u0645\u0631 \u06a9\u0627 \u0641\u06cc\u0688"
+                + " \u0627\u0648\u0631 JamesDSP \u0627\u0646 \u067e\u0631 \u0644\u0627\u06af\u0648"
+                + " \u0646\u06c1\u06cc\u06ba \u06c1\u0648\u062a\u06d2\u06d4",
         };
     }
 
@@ -35996,8 +35600,6 @@ final class Translations {
             "c\u00f2n kho\u1ea3ng {0}, t\u1ed1i \u0111a {1}",
             "Account",
             "T\u00e0i kho\u1ea3n",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "Kh\u00f3a \u1ee9ng d\u1ee5ng AcoustID",
             "AcoustID key",
@@ -36237,8 +35839,6 @@ final class Translations {
             "Ki\u1ec3m tra c\u00e1c b\u00e0i h\u00e1t ph\u00e1t t\u1eeb ngu\u1ed3n kh\u00e1c",
             "Choose",
             "Ch\u1ecdn",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "H\u00e3y ch\u1ecdn m\u1ee9c b\u1ed9 nh\u1edb \u0111\u1ec7m Telegram t\u1eeb 64 MiB"
                     + " \u0111\u1ebfn 16 GiB.",
@@ -36279,8 +35879,6 @@ final class Translations {
             "\u0110ang k\u1ebft n\u1ed1i v\u1edbi Telegram\u2026",
             "Connection",
             "K\u1ebft n\u1ed1i",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "Ti\u1ebfp t\u1ee5c",
             "Copied {0}",
@@ -36335,8 +35933,6 @@ final class Translations {
             "T\u1ea1o th\u00f4ng tin x\u00e1c th\u1ef1c Telegram API \u2197",
             "Damaged index file",
             "T\u1ec7p ch\u1ec9 m\u1ee5c b\u1ecb h\u1ecfng",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "B\u1ecf qua",
             "DJ mode",
@@ -36356,8 +35952,6 @@ final class Translations {
             "T\u1ea3i xu\u1ed1ng t\u1ea5t c\u1ea3",
             "Download all ({0}, {1})",
             "T\u1ea3i xu\u1ed1ng t\u1ea5t c\u1ea3 ({0}, {1})",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "T\u1ea3i xu\u1ed1ng {0} b\u00e0i h\u00e1t",
             "Download \u201c{0}\u201d",
@@ -36430,8 +36024,6 @@ final class Translations {
             "Everyone who can see {0} can see the list of music in {1}.",
             "M\u1ecdi ng\u01b0\u1eddi xem \u0111\u01b0\u1ee3c {0} \u0111\u1ec1u c\u00f3 th\u1ec3"
                     + " th\u1ea5y danh s\u00e1ch nh\u1ea1c trong {1}.",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "Th\u1eddi l\u01b0\u1ee3ng nh\u1ecf d\u1ea7n",
             "Fade out at the sleep timer",
@@ -36453,8 +36045,6 @@ final class Translations {
             "Files without tags are looked up in AcoustID",
             "T\u1ec7p ch\u01b0a g\u1eafn th\u1ebb \u0111\u01b0\u1ee3c tra c\u1ee9u tr\u00ean"
                     + " AcoustID",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "T\u00ecm tai nghe c\u1ee7a b\u1ea1n",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -36486,8 +36076,6 @@ final class Translations {
             "Qu\u00ean",
             "Format legend",
             "Ch\u00fa gi\u1ea3i \u0111\u1ecbnh d\u1ea1ng",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "\u0110\u00e3 t\u00ecm th\u1ea5y {0} b\u1ea3n nh\u1ea1c.",
             "Found {0} tracks.",
@@ -36599,8 +36187,6 @@ final class Translations {
                     + " b\u00e0i h\u00e1t",
             "Level",
             "M\u1ee9c",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "T\u1ea3i b\u00e0i \u0111\u0103ng c\u0169 h\u01a1n",
             "Loading channel\u2026",
@@ -36793,16 +36379,12 @@ final class Translations {
             "T\u00f4ng g\u1ed1c",
             "Other",
             "Kh\u00e1c",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "D\u00e1n h\u1ed3 s\u01a1",
             "Paste code",
             "D\u00e1n m\u00e3",
             "Pasted profile",
             "H\u1ed3 s\u01a1 \u0111\u00e3 d\u00e1n",
-            "Patches",
-            "B\u1ea3n v\u00e1",
             "Patches & tweaks",
             "B\u1ea3n v\u00e1 & Tinh ch\u1ec9nh",
             "Paused until this phone is charging",
@@ -36811,8 +36393,6 @@ final class Translations {
             "Paused until this phone is on Wi-Fi",
             "T\u1ea1m d\u1eebng cho \u0111\u1ebfn khi \u0111i\u1ec7n tho\u1ea1i k\u1ebft n\u1ed1i"
                     + " Wi-Fi",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "S\u1ed1 \u0111i\u1ec7n tho\u1ea1i",
             "Phone speaker",
@@ -36977,8 +36557,6 @@ final class Translations {
                 + " ph\u1ea3i ch\u1edd.",
             "Search first",
             "T\u00ecm ki\u1ebfm tr\u01b0\u1edbc",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "N\u1ed9i dung t\u00ecm ki\u1ebfm qu\u00e1 d\u00e0i.",
             "Search your music chats",
@@ -37000,8 +36578,6 @@ final class Translations {
                     + " Addon.",
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "\u0110\u00e3 ch\u1ecdn {0}. H\u00e3y t\u00ecm trong BitChord \u2192 Addon.",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "Phi\u00ean",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -37096,8 +36672,6 @@ final class Translations {
             "Songs your main channel already has aren\u2019t copied again",
             "B\u00e0i h\u00e1t k\u00eanh ch\u00ednh \u0111\u00e3 c\u00f3 s\u1ebd kh\u00f4ng"
                     + " \u0111\u01b0\u1ee3c sao ch\u00e9p l\u1ea1i",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "Th\u00f4ng tin nh\u00e0 t\u00e0i tr\u1ee3",
             "Sponsored",
@@ -37471,8 +37045,6 @@ final class Translations {
                     + " BitChord.",
             "Use this name?",
             "D\u00f9ng t\u00ean n\u00e0y?",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "D\u00f9ng \u1ea3nh b\u00eca Telegram c\u00f3 cho m\u1ed7i t\u1ec7p",
             "Using {0}",
@@ -37541,8 +37113,6 @@ final class Translations {
                 + " 15 MB v\u1edbi t\u1ec7p lossless, v\u00e0 t\u1ed1n m\u1ed9t \u00edt pin trong"
                 + " v\u00e0i gi\u00e2y. Kh\u00f4ng c\u00f3 g\u00ec \u0111\u01b0\u1ee3c t\u1ea3i"
                 + " l\u00ean hay g\u1eedi \u0111\u1ebfn n\u01a1i kh\u00e1c.",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "Ngu\u1ed3n nh\u1ea1c \u0111\u01b0\u1ee3c sao ch\u00e9p",
             "While this is on, BitChord\u2019s equaliser is turned off and Battery saver stands"
@@ -37745,6 +37315,15 @@ final class Translations {
             "nh\u1ecf h\u01a1n {0}%",
             "{0}, which BitChord already counts as lossless",
             "{0}, codec m\u00e0 BitChord \u0111\u00e3 coi l\u00e0 lossless",
+            "Bit-perfect output is on",
+            "\u0110\u1ea7u ra bit-perfect \u0111ang b\u1eadt",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "\u0110\u1ea7u ra bit-perfect \u0111ang b\u1eadt trong BitChord. B\u00e0i h\u00e1t"
+                    + " ph\u00e1t qua \u0111\u1ea7u ra n\u00e0y \u0111\u1ebfn DAC c\u1ee7a b\u1ea1n"
+                    + " m\u00e0 kh\u00f4ng thay \u0111\u1ed5i, n\u00ean c\u00e1c hi\u1ec7u \u1ee9ng"
+                    + " n\u00e0y, hi\u1ec7u \u1ee9ng nh\u1ecf d\u1ea7n c\u1ee7a h\u1eb9n gi\u1edd"
+                    + " t\u1eaft v\u00e0 JamesDSP kh\u00f4ng \u00e1p d\u1ee5ng cho ch\u00fang.",
         };
     }
 
@@ -37833,8 +37412,6 @@ final class Translations {
             "\u5927\u7d04\u9084\u9700 {0}\uff0c\u6700\u591a {1}",
             "Account",
             "\u5e33\u865f",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "AcoustID \u61c9\u7528\u7a0b\u5f0f\u91d1\u9470",
             "AcoustID key",
@@ -38046,8 +37623,6 @@ final class Translations {
             "\u6aa2\u67e5\u5f9e\u5176\u4ed6\u4f86\u6e90\u64ad\u653e\u7684\u6b4c\u66f2",
             "Choose",
             "\u9078\u64c7",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "\u8acb\u9078\u64c7 64 MiB \u5230 16 GiB \u4e4b\u9593\u7684 Telegram"
                     + " \u5feb\u53d6\u76ee\u6a19\u3002",
@@ -38085,8 +37660,6 @@ final class Translations {
             "\u6b63\u5728\u9023\u7dda\u81f3 Telegram\u2026",
             "Connection",
             "\u9023\u7dda",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "\u7e7c\u7e8c",
             "Copied {0}",
@@ -38127,8 +37700,6 @@ final class Translations {
             "\u5efa\u7acb\u4f60\u7684 Telegram API \u6191\u8b49 \u2197",
             "Damaged index file",
             "\u7d22\u5f15\u6a94\u5df2\u640d\u6bc0",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "\u5ffd\u7565",
             "DJ mode",
@@ -38148,8 +37719,6 @@ final class Translations {
             "\u5168\u90e8\u4e0b\u8f09",
             "Download all ({0}, {1})",
             "\u5168\u90e8\u4e0b\u8f09\uff08{0}\uff0c{1}\uff09",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "\u4e0b\u8f09 {0} \u9996\u6b4c\u66f2",
             "Download \u201c{0}\u201d",
@@ -38216,8 +37785,6 @@ final class Translations {
             "Everyone who can see {0} can see the list of music in {1}.",
             "\u6240\u6709\u80fd\u770b\u5230 {0} \u7684\u4eba\u90fd\u80fd\u770b\u5230 {1}"
                     + " \u4e2d\u7684\u97f3\u6a02\u6e05\u55ae\u3002",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "\u6de1\u51fa\u9577\u5ea6",
             "Fade out at the sleep timer",
@@ -38237,8 +37804,6 @@ final class Translations {
             "\u4e0d\u4f7f\u7528\u9577\u5ea6\u4e0d\u540c\u7684\u6a94\u6848",
             "Files without tags are looked up in AcoustID",
             "\u5728 AcoustID \u4e2d\u67e5\u8a62\u6c92\u6709\u6a19\u7c64\u7684\u6a94\u6848",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "\u5c0b\u627e\u4f60\u7684\u8033\u6a5f",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -38266,8 +37831,6 @@ final class Translations {
             "\u5fd8\u8a18",
             "Format legend",
             "\u683c\u5f0f\u6a19\u793a",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "\u627e\u5230 {0} \u9996\u66f2\u76ee\u3002",
             "Found {0} tracks.",
@@ -38364,8 +37927,6 @@ final class Translations {
             "\u8b93\u624b\u6a5f\u7684\u97f3\u8a0a\u6676\u7247\u89e3\u78bc\u6b4c\u66f2",
             "Level",
             "\u4f4d\u6e96",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "\u8f09\u5165\u66f4\u65e9\u7684\u8cbc\u6587",
             "Loading channel\u2026",
@@ -38536,24 +38097,18 @@ final class Translations {
             "\u539f\u8abf",
             "Other",
             "\u5176\u4ed6",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "\u8cbc\u4e0a\u8a2d\u5b9a\u6a94",
             "Paste code",
             "\u8cbc\u4e0a\u4ee3\u78bc",
             "Pasted profile",
             "\u8cbc\u4e0a\u7684\u8a2d\u5b9a\u6a94",
-            "Patches",
-            "\u4fee\u88dc\u7a0b\u5f0f",
             "Patches & tweaks",
             "\u4fee\u88dc\u7a0b\u5f0f\u8207\u8abf\u6574",
             "Paused until this phone is charging",
             "\u5df2\u66ab\u505c\uff0c\u76f4\u5230\u9019\u90e8\u624b\u6a5f\u958b\u59cb\u5145\u96fb",
             "Paused until this phone is on Wi-Fi",
             "\u5df2\u66ab\u505c\uff0c\u76f4\u5230\u9019\u90e8\u624b\u6a5f\u9023\u4e0a Wi-Fi",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "\u96fb\u8a71\u865f\u78bc",
             "Phone speaker",
@@ -38702,8 +38257,6 @@ final class Translations {
             "\u641c\u5c0b\u548c\u64ad\u653e\u4ecd\u6703\u4f7f\u7528\u884c\u52d5\u6578\u64da\uff1b\u53ea\u6709\u80cc\u666f\u7d22\u5f15\u6703\u7b49\u5f85\u3002",
             "Search first",
             "\u8acb\u5148\u641c\u5c0b",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "\u641c\u5c0b\u6587\u5b57\u904e\u9577\u3002",
             "Search your music chats",
@@ -38726,8 +38279,6 @@ final class Translations {
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "\u5df2\u9078\u64c7 {0}\u3002\u8acb\u5728\u300cBitChord \u2192"
                     + " \u5916\u639b\u300d\u4e2d\u641c\u5c0b\u3002",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "\u5de5\u4f5c\u968e\u6bb5",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -38803,8 +38354,6 @@ final class Translations {
                 + " BitChord \u81ea\u5df1\u7684 Automix \u5206\u6790\u3002",
             "Songs your main channel already has aren\u2019t copied again",
             "\u4e3b\u983b\u9053\u4e2d\u5df2\u6709\u7684\u6b4c\u66f2\u4e0d\u6703\u518d\u6b21\u8907\u88fd",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "\u8d0a\u52a9\u5546\u8cc7\u8a0a",
             "Sponsored",
@@ -39131,8 +38680,6 @@ final class Translations {
                     + " \u4e2d\u4ecd\u53ef\u5373\u6642\u641c\u5c0b\u97f3\u8a0a\u3002",
             "Use this name?",
             "\u8981\u4f7f\u7528\u9019\u500b\u540d\u7a31\u55ce\uff1f",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "\u4f7f\u7528 Telegram \u70ba\u6bcf\u500b\u6a94\u6848\u63d0\u4f9b\u7684\u5c01\u9762",
             "Using {0}",
@@ -39186,8 +38733,6 @@ final class Translations {
                 + "\u6bcf\u6b21\u6aa2\u67e5\u6700\u591a\u4e0b\u8f09 Telegram"
                 + " \u6a94\u6848\u7684\u524d 45 \u79d2\uff0c\u7121\u640d\u6a94\u6848\u7d04 5 \u5230"
                 + " 15 MB\uff0c\u4e26\u6703\u5728\u5e7e\u79d2\u5167\u6d88\u8017\u4e00\u4e9b\u96fb\u529b\u3002\u4e0d\u6703\u4e0a\u50b3\u6216\u50b3\u9001\u4efb\u4f55\u5167\u5bb9\u5230\u5176\u4ed6\u5730\u65b9\u3002",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "\u97f3\u6a02\u7684\u8907\u88fd\u4f86\u6e90",
             "While this is on, BitChord\u2019s equaliser is turned off and Battery saver stands"
@@ -39362,6 +38907,14 @@ final class Translations {
             "\u964d\u4f4e {0}%",
             "{0}, which BitChord already counts as lossless",
             "{0}\uff0cBitChord \u5df2\u5c07\u5176\u8996\u70ba\u7121\u640d",
+            "Bit-perfect output is on",
+            "\u4f4d\u5143\u5b8c\u7f8e\u8f38\u51fa\u5df2\u958b\u555f",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "BitChord"
+                + " \u5df2\u958b\u555f\u4f4d\u5143\u5b8c\u7f8e\u8f38\u51fa\u3002\u7d93\u7531\u5b83\u64ad\u653e\u7684\u6b4c\u66f2\u6703\u539f\u6a23\u9001\u9054\u4f60\u7684"
+                + " DAC\uff0c\u56e0\u6b64\u9019\u4e9b\u6548\u679c\u3001\u7761\u7720\u5b9a\u6642\u5668\u7684\u6de1\u51fa\u548c"
+                + " JamesDSP \u90fd\u4e0d\u6703\u5957\u7528\u5230\u9019\u4e9b\u6b4c\u66f2\u3002",
         };
     }
 
@@ -39450,8 +39003,6 @@ final class Translations {
             "\u5927\u7ea6\u8fd8\u9700 {0}\uff0c\u6700\u591a {1}",
             "Account",
             "\u8d26\u53f7",
-            "Account & download settings",
-            "Account & download settings",
             "AcoustID application key",
             "AcoustID \u5e94\u7528\u5bc6\u94a5",
             "AcoustID key",
@@ -39663,8 +39214,6 @@ final class Translations {
             "\u68c0\u67e5\u4ece\u5176\u4ed6\u6765\u6e90\u64ad\u653e\u7684\u6b4c\u66f2",
             "Choose",
             "\u9009\u62e9",
-            "Choose a service, enter its API key and download selected audio from a link.",
-            "Choose a service, enter its API key and download selected audio from a link.",
             "Choose a Telegram cache target between 64 MiB and 16 GiB.",
             "\u8bf7\u9009\u62e9 64 MiB \u5230 16 GiB \u4e4b\u95f4\u7684 Telegram"
                     + " \u7f13\u5b58\u76ee\u6807\u3002",
@@ -39702,8 +39251,6 @@ final class Translations {
             "\u6b63\u5728\u8fde\u63a5 Telegram\u2026",
             "Connection",
             "\u8fde\u63a5",
-            "Connection setup",
-            "Connection setup",
             "Continue",
             "\u7ee7\u7eed",
             "Copied {0}",
@@ -39744,8 +39291,6 @@ final class Translations {
             "\u521b\u5efa\u4f60\u7684 Telegram API \u51ed\u636e \u2197",
             "Damaged index file",
             "\u7d22\u5f15\u6587\u4ef6\u5df2\u635f\u574f",
-            "Debrid downloads",
-            "Debrid downloads",
             "Dismiss",
             "\u5173\u95ed",
             "DJ mode",
@@ -39765,8 +39310,6 @@ final class Translations {
             "\u5168\u90e8\u4e0b\u8f7d",
             "Download all ({0}, {1})",
             "\u5168\u90e8\u4e0b\u8f7d\uff08{0}\uff0c{1}\uff09",
-            "Download queue",
-            "Download queue",
             "Download {0} songs",
             "\u4e0b\u8f7d {0} \u9996\u6b4c\u66f2",
             "Download \u201c{0}\u201d",
@@ -39832,8 +39375,6 @@ final class Translations {
             "Everyone who can see {0} can see the list of music in {1}.",
             "\u6240\u6709\u80fd\u770b\u5230 {0} \u7684\u4eba\u90fd\u80fd\u770b\u5230 {1}"
                     + " \u4e2d\u7684\u97f3\u4e50\u5217\u8868\u3002",
-            "Exchange selected files with a paired phone",
-            "Exchange selected files with a paired phone",
             "Fade length",
             "\u6de1\u51fa\u65f6\u957f",
             "Fade out at the sleep timer",
@@ -39853,8 +39394,6 @@ final class Translations {
             "\u4e0d\u4f7f\u7528\u65f6\u957f\u4e0d\u540c\u7684\u6587\u4ef6",
             "Files without tags are looked up in AcoustID",
             "\u5728 AcoustID \u4e2d\u67e5\u627e\u6ca1\u6709\u6807\u7b7e\u7684\u6587\u4ef6",
-            "Find audio and save a complete copy",
-            "Find audio and save a complete copy",
             "Find your headphones",
             "\u67e5\u627e\u4f60\u7684\u8033\u673a",
             "Fix a Telegram file\u2019s title or artist on this phone, without uploading it again."
@@ -39882,8 +39421,6 @@ final class Translations {
             "\u5ffd\u7565",
             "Format legend",
             "\u683c\u5f0f\u6807\u6ce8",
-            "Formats, best first",
-            "Formats, best first",
             "Found {0} track.",
             "\u627e\u5230 {0} \u9996\u66f2\u76ee\u3002",
             "Found {0} tracks.",
@@ -39980,8 +39517,6 @@ final class Translations {
             "Let the phone\u2019s audio chip decode songs",
             "Level",
             "\u7535\u5e73",
-            "Link downloads",
-            "Link downloads",
             "Load older posts",
             "\u52a0\u8f7d\u66f4\u65e9\u7684\u5e16\u5b50",
             "Loading channel\u2026",
@@ -40152,24 +39687,18 @@ final class Translations {
             "\u539f\u8c03",
             "Other",
             "\u5176\u4ed6",
-            "Pair a trusted phone and choose files to send or download.",
-            "Pair a trusted phone and choose files to send or download.",
             "Paste a profile",
             "\u7c98\u8d34\u914d\u7f6e\u6587\u4ef6",
             "Paste code",
             "\u7c98\u8d34\u4ee3\u7801",
             "Pasted profile",
             "\u7c98\u8d34\u7684\u914d\u7f6e\u6587\u4ef6",
-            "Patches",
-            "Patches",
             "Patches & tweaks",
             "Patches & tweaks",
             "Paused until this phone is charging",
             "\u5df2\u6682\u505c\uff0c\u76f4\u5230\u8fd9\u90e8\u624b\u673a\u5f00\u59cb\u5145\u7535",
             "Paused until this phone is on Wi-Fi",
             "\u5df2\u6682\u505c\uff0c\u76f4\u5230\u8fd9\u90e8\u624b\u673a\u8fde\u63a5 Wi-Fi",
-            "Peer downloads",
-            "Peer downloads",
             "Phone number",
             "\u624b\u673a\u53f7\u7801",
             "Phone speaker",
@@ -40318,8 +39847,6 @@ final class Translations {
             "\u641c\u7d22\u548c\u64ad\u653e\u4ecd\u4f1a\u4f7f\u7528\u79fb\u52a8\u6570\u636e\uff1b\u53ea\u6709\u540e\u53f0\u7d22\u5f15\u4f1a\u7b49\u5f85\u3002",
             "Search first",
             "\u5148\u641c\u7d22",
-            "Search Soulseek for audio files and download the version you choose.",
-            "Search Soulseek for audio files and download the version you choose.",
             "Search text is too long.",
             "\u641c\u7d22\u6587\u672c\u8fc7\u957f\u3002",
             "Search your music chats",
@@ -40341,8 +39868,6 @@ final class Translations {
             "Selected {0}. Search in BitChord \u2192 Addons.",
             "\u5df2\u9009\u62e9 {0}\u3002\u8bf7\u5728\u300cBitChord \u2192"
                     + " \u63d2\u4ef6\u300d\u4e2d\u641c\u7d22\u3002",
-            "Services & API keys",
-            "Services & API keys",
             "Session",
             "\u4f1a\u8bdd",
             "Session key missing; sign out/reset app data before creating a new session",
@@ -40418,8 +39943,6 @@ final class Translations {
                 + " BitChord \u81ea\u5df1\u7684 Automix \u5206\u6790\u7ed3\u679c\u3002",
             "Songs your main channel already has aren\u2019t copied again",
             "\u4e3b\u9891\u9053\u4e2d\u5df2\u6709\u7684\u6b4c\u66f2\u4e0d\u4f1a\u518d\u6b21\u590d\u5236",
-            "Soulseek downloads",
-            "Soulseek downloads",
             "Sponsor information",
             "\u8d5e\u52a9\u5546\u4fe1\u606f",
             "Sponsored",
@@ -40740,8 +40263,6 @@ final class Translations {
                     + " \u4e2d\u4ecd\u53ef\u5b9e\u65f6\u641c\u7d22\u97f3\u9891\u3002",
             "Use this name?",
             "\u4f7f\u7528\u8fd9\u4e2a\u540d\u79f0\u5417\uff1f",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
-            "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Uses the cover Telegram has for each file",
             "\u4f7f\u7528 Telegram \u4e3a\u6bcf\u4e2a\u6587\u4ef6\u63d0\u4f9b\u7684\u5c01\u9762",
             "Using {0}",
@@ -40795,8 +40316,6 @@ final class Translations {
                 + "\u6bcf\u6b21\u68c0\u67e5\u6700\u591a\u4e0b\u8f7d Telegram"
                 + " \u6587\u4ef6\u7684\u524d 45 \u79d2\uff0c\u65e0\u635f\u6587\u4ef6\u7ea6 5 \u5230"
                 + " 15 MB\uff0c\u5e76\u4f1a\u5728\u51e0\u79d2\u949f\u5185\u6d88\u8017\u4e00\u4e9b\u7535\u91cf\u3002\u4e0d\u4f1a\u4e0a\u4f20\u6216\u53d1\u9001\u4efb\u4f55\u5185\u5bb9\u5230\u5176\u4ed6\u5730\u65b9\u3002",
-            "Where copies go",
-            "Where copies go",
             "Where music is copied from",
             "\u97f3\u4e50\u7684\u590d\u5236\u6765\u6e90",
             "While this is on, BitChord\u2019s equaliser is turned off and Battery saver stands"
@@ -40971,6 +40490,14 @@ final class Translations {
             "\u964d\u4f4e {0}%",
             "{0}, which BitChord already counts as lossless",
             "{0}\uff0cBitChord \u5df2\u5c06\u5176\u89c6\u4e3a\u65e0\u635f",
+            "Bit-perfect output is on",
+            "\u6bd4\u7279\u5b8c\u7f8e\u8f93\u51fa\u5df2\u5f00\u542f",
+            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC unchanged, so"
+                    + " these effects, the sleep fade and JamesDSP don\u2019t apply to them.",
+            "BitChord"
+                + " \u5df2\u5f00\u542f\u6bd4\u7279\u5b8c\u7f8e\u8f93\u51fa\u3002\u7ecf\u7531\u5b83\u64ad\u653e\u7684\u6b4c\u66f2\u4f1a\u539f\u6837\u9001\u8fbe\u4f60\u7684"
+                + " DAC\uff0c\u56e0\u6b64\u8fd9\u4e9b\u6548\u679c\u3001\u7761\u7720\u5b9a\u65f6\u5668\u7684\u6de1\u51fa\u548c"
+                + " JamesDSP \u90fd\u4e0d\u4f1a\u4f5c\u7528\u4e8e\u8fd9\u4e9b\u6b4c\u66f2\u3002",
         };
     }
 }

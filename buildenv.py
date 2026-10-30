@@ -14,7 +14,6 @@ APP_VERSION = PROVENANCE["app_version"]
 BUNDLE_NAME = f"bitchord-patches-{VERSION}.mpp"
 PATCHES = [
     "Unofficial Telegram music",
-    "Unofficial Soulseek audio",
     "Install as Bitchord+",
     "Sign in with MicroG",
     "Sing",

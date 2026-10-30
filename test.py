@@ -3,7 +3,6 @@
 
 import os
 import subprocess
-import sys
 
 from buildenv import MORPHE_JAR, ROOT, TOOLS, jdk
 
@@ -86,6 +85,7 @@ SOURCES = [
     "DjMode",
     "DownloadChoice",
     "EffectsApps",
+    "BitPerfect",
     "SoundExtras",
 ]
 TESTS = [
@@ -126,6 +126,7 @@ TESTS = [
     "HeadphoneEqTest",
     "OutputEqTest",
     "DjModeTest",
+    "DownloadProbeTest",
 ]
 
 subprocess.run(
@@ -139,34 +140,7 @@ subprocess.run(
         "-d",
         str(OUT),
         *(str(EXTENSION / f"{name}.java") for name in SOURCES),
-        # Independent Soulseek/JNI tests have their own classpaths and runners.
-        *(
-            str(path)
-            for path in (ROOT / "tests").rglob("*.java")
-            if path.relative_to(ROOT / "tests").parts[0]
-            not in {
-                "soulseek",
-                "soulseek-wire",
-                "coordination",
-                "download-policy",
-                "download-route",
-                "relay-policy",
-                "relay-discovery",
-                "bulk-downloads",
-                "bulk-coordination",
-                "overlay-bridge",
-                "selected-downloads",
-                "audio-format",
-                "download-destinations",
-                "download-uploads",
-                "foreground-service",
-                "debrid-core",
-                "debrid-rdad",
-                "debrid-pmtb",
-                "debrid-settings",
-                "debrid-tls",
-            }
-        ),
+        *map(str, (ROOT / "tests").rglob("*.java")),
     ],
     check=True,
 )
@@ -181,28 +155,3 @@ for test in TESTS:
         ],
         check=True,
     )
-
-# Each download suite owns its Android/host fixtures and must use a separate classpath.
-for suite in (
-    "soulseek",
-    "coordination",
-    "download-policy",
-    "download-route",
-    "relay-policy",
-    "relay-discovery",
-    "bulk-coordination",
-    "bulk-downloads",
-    "audio-format",
-    "selected-downloads",
-    "overlay-bridge",
-    "download-uploads",
-    "download-destinations",
-    "foreground-service",
-    "debrid-core",
-    "debrid-rdad",
-    "debrid-pmtb",
-    "debrid-settings",
-    "debrid-tls",
-    "patch-controls",
-):
-    subprocess.run([sys.executable, str(ROOT / "tests" / suite / "run.py")], check=True)

@@ -1,15 +1,17 @@
 # Known limitations
 
-These apply to the current release on BitChord 1.8.1. This version hasn't been widely tested on real phones yet, so behavior may differ between devices.
+These apply to the current release on BitChord 1.9. This version hasn't been widely tested on real phones yet, so behavior may differ between devices.
 
-I've only tested it on an arm64-v8a device. The armeabi-v7a and x86_64 builds pass the same automated checks but haven't been tried on real hardware. If you run one of them, please [report what you find](../CONTRIBUTING.md).
+I've only tested the Telegram integration on an arm64-v8a device, with BitChord 1.8.1. On 1.9 every patch applies and passes the automated checks on all three architectures, but hasn't been tried on a phone yet. If you run one of them, please [report what you find](../CONTRIBUTING.md).
 
 ## Search and playback
 
 - Regular BitChord search may still play from YouTube. Use **Search → Addons** to get Telegram results.
 - A search returns up to 200 tracks across your selected chats.
 - Only one Telegram account is supported. You can't create a new account from the app, and some login methods aren't supported.
-- Only the standard 1.8.1 APKs are supported. TV, Wear OS, split APKs and other BitChord versions are not.
+- Only the standard 1.9 APKs are supported. TV, Wear OS, split APKs and other BitChord versions are not.
+- BitChord plays addon sources, Telegram included, only when its streaming quality for the connection in use is **Lossless**. On High or lower, Telegram results are marked as needing Lossless. This is BitChord's own quality rule.
+- Songs on BitChord's bit-perfect output skip every effect, so Sing, Pitch control, Loudness level, Headphone correction, the sleep fade and JamesDSP don't reach them.
 
 - Copying into your main channel oldest post first starts from a community channel only once the saved index has gone through all of it, which takes about an hour for a channel of 200,000 files. **Newest first** starts straight away.
 - The fake lossless check reads FLAC and WAV files, alone, in zips that aren't compressed, or as cue albums. ALAC, AIFF, APE and WavPack files aren't checked. Files made from 256 and 320 kbps MP3s usually can't be told from CD-era masters, and are called inconclusive. An old recording that never had much above 16 kHz can show **maybe lossy**.

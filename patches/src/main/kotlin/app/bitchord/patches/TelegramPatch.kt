@@ -75,7 +75,7 @@ private val target =
         packageName = "com.music.bitchord",
         apkFileType = ApkFileType.APK,
         appIconColor = 0xFF8944,
-        targets = listOf(AppTarget(version = "1.8.1", isExperimental = true, minSdk = 26)),
+        targets = listOf(AppTarget(version = "1.9", isExperimental = true, minSdk = 26)),
     )
 
 private object ApplicationCreate :
@@ -473,6 +473,25 @@ private const val MEDIA_ITEM = "Landroidx/media3/common/MediaItem;"
 
 private fun Instruction.methodRef() = (this as? ReferenceInstruction)?.reference as? MethodReference
 
+/**
+ * The classes with a method that calls [owner]'s [name]. R8 moves coroutine and lambda bodies into
+ * whichever class it merges them with, so callers are found by what they call, not by class name.
+ */
+private fun BytecodePatchContext.classesCalling(owner: String, name: String): List<String> {
+    val found = mutableListOf<String>()
+    classDefForEach { classDef ->
+        val calls =
+            classDef.methods.any { method ->
+                method.implementation?.instructions?.any { instruction ->
+                    instruction.methodRef()?.let { it.definingClass == owner && it.name == name } ==
+                        true
+                } == true
+            }
+        if (calls) found += classDef.type
+    }
+    return found
+}
+
 private fun Instruction.fieldRef() = (this as? ReferenceInstruction)?.reference as? FieldReference
 
 /**
@@ -522,8 +541,10 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
                 SERVICE,
                 "Z",
                 "Landroidx/media3/exoplayer/ExoPlayer;",
+                "Z",
                 "Lcom/music/bitchord/data/model/Song;",
                 "Lcom/music/bitchord/data/model/Song;",
+                "Lcom/music/bitchord/data/model/VersionTimeMap;",
                 "I",
                 "I",
                 "Lkotlin/coroutines/Continuation;",
@@ -532,7 +553,16 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
         "Version swap parameters changed: ${constructor.parameterTypes}"
     }
     val launch = after { it.methodRef()?.name == "launch\$default" }.methodRef()!!
-    check(launch.parameterTypes.size == 4 && launch.parameterTypes[3] == "I") {
+    check(
+        launch.parameterTypes.map(CharSequence::toString) ==
+            listOf(
+                "Lkotlinx/coroutines/CoroutineScope;",
+                "Lkotlin/coroutines/CoroutineContext;",
+                "Lkotlinx/coroutines/CoroutineStart;",
+                "Lkotlin/jvm/functions/Function2;",
+                "I",
+            )
+    ) {
         "Coroutine launcher signature changed"
     }
     val job =
@@ -550,7 +580,19 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
                         "Lkotlinx/coroutines/internal/MainDispatcherLoader;"
             }
             .fieldRef()!!
-    val cancel = before { it.methodRef()?.name == "cancel\$default" }.methodRef()!!
+    // The old job is cancelled through Kotlin's default-argument helper, or, once R8 inlines that,
+    // straight through JobSupport.cancel(null).
+    val cancel =
+        before {
+                it.methodRef()?.let { m ->
+                    m.name == "cancel\$default" ||
+                        (m.name == "cancel" &&
+                            m.definingClass == "Lkotlinx/coroutines/JobSupport;" &&
+                            m.parameterTypes.map(CharSequence::toString) ==
+                                listOf("Ljava/util/concurrent/CancellationException;"))
+                } == true
+            }
+            .methodRef()!!
     val toSong = before { it.methodRef()?.name == "toSong" }.methodRef()!!
     val crossfade =
         before { it.opcode == Opcode.IGET_OBJECT && it.fieldRef()?.name == "crossfade" }
@@ -567,6 +609,10 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
     fun ref(m: MethodReference) =
         "${m.definingClass}->${m.name}(${m.parameterTypes.joinToString("")})${m.returnType}"
     fun ref(f: FieldReference) = "${f.definingClass}->${f.name}:${f.type}"
+    val cancelCall =
+        if (cancel.name == "cancel")
+            "const/4 v12, 0x0\n        invoke-virtual {v0, v12}, ${ref(cancel)}"
+        else "invoke-static {v0}, ${ref(cancel)}"
 
     // 2. A static entry point the extension calls: starts the swap, or returns false.
     val entry =
@@ -587,7 +633,7 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
                 null,
                 null,
                 ImmutableMethodImplementation(
-                    20,
+                    26,
                     emptyList<Instruction>(),
                     emptyList(),
                     emptyList(),
@@ -597,53 +643,64 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
     entry.addInstructionsWithLabels(
         0,
         """
-        move-object/from16 v14, p0
-        move-object/from16 v15, p1
-        instance-of v0, v14, $SERVICE
+        move-object/from16 v3, p0
+        instance-of v0, v3, $SERVICE
         if-eqz v0, :no
-        instance-of v0, v15, Landroidx/media3/exoplayer/ExoPlayer;
+        move-object/from16 v3, p1
+        instance-of v0, v3, Landroidx/media3/exoplayer/ExoPlayer;
         if-eqz v0, :no
-        check-cast v14, $SERVICE
-        check-cast v15, Landroidx/media3/exoplayer/ExoPlayer;
-        iget-object v0, v14, ${ref(crossfade)}
+        move-object/from16 v20, p0
+        move-object/from16 v21, p1
+        check-cast v20, $SERVICE
+        check-cast v21, Landroidx/media3/exoplayer/ExoPlayer;
+        move-object/from16 v0, v20
+        iget-object v0, v0, ${ref(crossfade)}
         if-eqz v0, :free
         invoke-virtual {v0}, ${ref(transitioning)}
         move-result v0
         if-nez v0, :no
         :free
-        iget-object v0, v14, $SERVICE->spare:Landroidx/media3/exoplayer/ExoPlayer;
+        move-object/from16 v0, v20
+        iget-object v0, v0, $SERVICE->spare:Landroidx/media3/exoplayer/ExoPlayer;
         if-eqz v0, :no
-        invoke-interface {v15}, $PLAYER->getCurrentMediaItem()$MEDIA_ITEM
+        move-object/from16 v0, v21
+        invoke-interface {v0}, $PLAYER->getCurrentMediaItem()$MEDIA_ITEM
         move-result-object v0
         if-eqz v0, :no
         invoke-static {v0}, ${ref(toSong)}
         move-result-object v1
         invoke-static/range {p3 .. p3}, ${ref(toSong)}
         move-result-object v2
-        iget-object v0, v14, ${ref(job)}
+        move-object/from16 v3, v20
+        iget-object v0, v3, ${ref(job)}
         if-eqz v0, :nojob
-        invoke-static {v0}, ${ref(cancel)}
+        $cancelCall
         :nojob
-        iget v3, v14, ${ref(generation)}
-        add-int/lit8 v3, v3, 0x1
-        iput v3, v14, ${ref(generation)}
+        iget v0, v3, ${ref(generation)}
+        add-int/lit8 v0, v0, 0x1
+        iput v0, v3, ${ref(generation)}
+        move v14, v0
         new-instance v4, $VERSION_SWAP
         move-object/from16 v5, p3
-        move-object v6, v14
+        move-object/from16 v6, v20
         const/4 v7, 0x0
-        move-object v8, v15
-        move-object v9, v1
-        move-object v10, v2
-        move/from16 v11, p2
-        move v12, v3
-        const/4 v13, 0x0
-        invoke-direct/range {v4 .. v13}, ${ref(constructor)}
-        iget-object v0, v14, ${ref(scope)}
+        move-object/from16 v8, v21
+        const/4 v9, 0x0
+        move-object v10, v1
+        move-object v11, v2
+        const/4 v12, 0x0
+        move/from16 v13, p2
+        const/4 v15, 0x0
+        invoke-direct/range {v4 .. v15}, ${ref(constructor)}
+        move-object/from16 v3, v20
+        iget-object v0, v3, ${ref(scope)}
         sget-object v1, ${ref(dispatcher)}
-        const/4 v2, 0x2
-        invoke-static {v0, v1, v4, v2}, ${ref(launch)}
+        const/4 v2, 0x0
+        const/4 v3, 0x2
+        invoke-static {v0, v1, v2, v4, v3}, ${ref(launch)}
         move-result-object v0
-        iput-object v0, v14, ${ref(job)}
+        move-object/from16 v3, v20
+        iput-object v0, v3, ${ref(job)}
         const/4 v0, 0x1
         return v0
         :no
@@ -827,6 +884,78 @@ private const val WHITE = -0x100000000L
 private const val LEGEND = "Lapp/bitchord/telegram/FormatLegend;"
 
 /**
+ * BitChord 1.9 opens each download candidate's URL to see what it holds before letting it win. A
+ * Telegram file's identifier isn't a web address, so the check is answered by the extension from
+ * the index, and the identifier never reaches the network.
+ */
+private fun BytecodePatchContext.addDownloadProbe() {
+    val name = "invokeSuspend\$com\$music\$bitchord\$download\$Downloader\$probe\$2"
+    val owners = mutableListOf<String>()
+    classDefForEach { clazz ->
+        if (
+            clazz.methods.any {
+                (it.name == name ||
+                    (clazz.type == "Lcom/music/bitchord/download/Downloader\$probe\$2;" &&
+                        it.name == "invokeSuspend")) && it.parameterTypes.size == 1
+            }
+        )
+            owners += clazz.type
+    }
+    check(owners.size == 1) { "Download check not found (${owners.size})" }
+    val probe =
+        mutableClassDefBy(owners.single()).methods.single {
+            (it.name == name || it.name == "invokeSuspend") &&
+                it.parameterTypes == listOf("Ljava/lang/Object;") &&
+                it.implementation?.instructions?.any { instruction ->
+                    instruction.methodRef()?.name?.startsWith("sniff") == true
+                } == true
+        }
+    val code = probe.implementation!!.instructions.toList()
+    // The check builds its request for the URL; the codec the source stated is read just before.
+    val builder =
+        code.indices.single {
+            code[it].opcode == Opcode.NEW_INSTANCE &&
+                (code[it] as ReferenceInstruction).reference.toString() ==
+                    "Lokhttp3/Request\$Builder;"
+        }
+    val urlCall =
+        (builder + 1 until minOf(builder + 4, code.size)).single {
+            code[it].methodRef()?.let { m ->
+                m.definingClass == "Lokhttp3/Request\$Builder;" && m.name == "url"
+            } == true
+        }
+    val url = argumentRegisters(code[urlCall])[1]
+    val codecCast = code[builder - 1]
+    check(
+        codecCast.opcode == Opcode.CHECK_CAST &&
+            (codecCast as ReferenceInstruction).reference.toString() == "Ljava/lang/String;" &&
+            code.subList(urlCall, code.size).any {
+                it.methodRef()?.name?.startsWith("sniff") == true
+            }
+    ) {
+        "Download check layout changed"
+    }
+    val codec = (codecCast as OneRegisterInstruction).registerA
+    val scratch = (code[builder] as OneRegisterInstruction).registerA
+    check(maxOf(url, codec, scratch) < 16 && scratch != url && scratch != codec) {
+        "Download check registers changed"
+    }
+    probe.addInstructionsWithLabels(
+        builder,
+        """
+        invoke-static {v$url}, Lapp/bitchord/telegram/InternalAddon;->reserved(Ljava/lang/String;)Z
+        move-result v$scratch
+        if-eqz v$scratch, :network_check
+        invoke-static {v$url, v$codec}, Lapp/bitchord/telegram/NativeDownloads;->probe(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+        move-result-object v$scratch
+        return-object v$scratch
+    """,
+        ExternalLabel("network_check", code[builder]),
+    )
+    println("Telegram files answer BitChord's download check from the index")
+}
+
+/**
  * Adds the "FLAC 24bit" legend after a song title. BitChord draws every song title (search rows,
  * mini player, queue) through one ExplicitSongTitle composable: its title Text is made to hug its
  * text, and the same Text call is made again with the legend at 10sp. The legend is always emitted,
@@ -913,22 +1042,27 @@ private fun BytecodePatchContext.addFormatLegend() {
         "Format legend chip wasn't added"
     }
 
-    // weight(1f) → weight(1f, fill = false), so the legend sits right after the title.
-    val weightIndex =
-        code.indexOfFirst {
-            it.opcode == Opcode.INVOKE_DIRECT &&
-                it.methodRef()?.let { m -> m.definingClass == WEIGHT && m.name == "<init>" } == true
+    // weight(1f) → weight(1f, fill = false), so the legend sits right after the title. BitChord
+    // 1.9 already lays its titles out this way, and then nothing is changed.
+    val weights =
+        code.indices.filter { i ->
+            i < textIndex &&
+                code[i].opcode == Opcode.INVOKE_DIRECT &&
+                code[i].methodRef()?.let { m -> m.definingClass == WEIGHT && m.name == "<init>" } ==
+                    true
         }
-    check(weightIndex in 0 until textIndex) { "Title weight not found" }
-    val weight = code[weightIndex] as FiveRegisterInstruction
-    val fill = weight.registerE
-    val fillWrite =
-        code.subList(0, weightIndex).lastOrNull {
-            it is OneRegisterInstruction && it.registerA == fill
-        } as? NarrowLiteralInstruction
-    check(fillWrite?.narrowLiteral == 1 && fill < 16) { "Title weight fill changed" }
-    songText.addInstructions(weightIndex, "const/4 v$fill, 0x0")
-    songText.addInstructions(weightIndex + 2, "const/4 v$fill, 0x1")
+    check(weights.isNotEmpty()) { "Title weight not found" }
+    for (weightIndex in weights.reversed()) {
+        val fill = (code[weightIndex] as FiveRegisterInstruction).registerE
+        val fillWrite =
+            code.subList(0, weightIndex).lastOrNull {
+                it is OneRegisterInstruction && it.registerA == fill
+            } as? NarrowLiteralInstruction
+        check(fillWrite?.narrowLiteral in listOf(0, 1) && fill < 16) { "Title weight fill changed" }
+        if (fillWrite?.narrowLiteral == 0) continue
+        songText.addInstructions(weightIndex, "const/4 v$fill, 0x0")
+        songText.addInstructions(weightIndex + 2, "const/4 v$fill, 0x1")
+    }
     linkLegendHelpers()
     // A main search also looks for the query in the selected Telegram chats.
     val request =
@@ -1205,21 +1339,38 @@ val nativeTelegramPatch =
             val directDownload =
                 mutableClassDefBy(downloadClass).methods.single { it.name == "invokeSuspend" }
             val directCode = directDownload.implementation!!.instructions.toList()
-            check(directDownload.implementation!!.registerCount == 29)
-            // Locate the original HTTP branch semantically: an independent source patch may
-            // have inserted its own native dispatch before it without changing host registers.
-            val downloadAnchors =
-                directCode.indices.filter { index ->
-                    directCode[index].opcode == Opcode.NEW_INSTANCE &&
-                        (directCode[index] as? ReferenceInstruction)?.reference.toString() ==
+            // The branch starts by building the request for the URL it was given, right after it
+            // reads its coroutine scope into v0.
+            val downloadIndex =
+                directCode.indices.single { i ->
+                    directCode[i].opcode == Opcode.NEW_INSTANCE &&
+                        (directCode[i] as ReferenceInstruction).reference.toString() ==
                             "Lokhttp3/Request\$Builder;" &&
-                        directCode.subList(index, minOf(index + 140, directCode.size)).any {
-                            ((it as? ReferenceInstruction)?.reference as? StringReference)
-                                ?.string == "fetched "
-                        }
+                        directCode.getOrNull(i + 2)?.fieldRef()?.name == "\$path"
                 }
-            check(downloadAnchors.size == 1) { "Direct download branch changed" }
-            val downloadIndex = downloadAnchors.single()
+            check(
+                (downloadIndex - 4 until downloadIndex).any {
+                    val cast = directCode[it]
+                    cast.opcode == Opcode.CHECK_CAST &&
+                        (cast as OneRegisterInstruction).registerA == 0 &&
+                        (cast as ReferenceInstruction).reference.toString() ==
+                            "Lkotlinx/coroutines/CoroutineScope;"
+                }
+            ) {
+                "Direct download scope changed"
+            }
+            check(directDownload.implementation!!.registerCount >= 10) {
+                "Direct download registers changed"
+            }
+            check(
+                (directCode[downloadIndex - 4] as? TwoRegisterInstruction)?.registerB == 1 ||
+                    directCode.subList(0, 3).any {
+                        it.opcode == Opcode.MOVE_OBJECT_FROM16 &&
+                            (it as OneRegisterInstruction).registerA == 1
+                    }
+            ) {
+                "Direct download receiver changed"
+            }
             check(
                 directCode.subList(downloadIndex, downloadIndex + 140).any {
                     ((it as? ReferenceInstruction)?.reference as? StringReference)?.string ==
@@ -1254,6 +1405,7 @@ val nativeTelegramPatch =
         """,
                 ExternalLabel("external_download", directCode[downloadIndex]),
             )
+            addDownloadProbe()
             println(
                 "Installed internal Telegram metadata calls and Media3 data source; no local HTTP listener"
             )
@@ -1302,8 +1454,8 @@ val nativeTelegramPatch =
                             (instruction as? ReferenceInstruction)?.reference as? MethodReference
                                 ?: return@forEachIndexed
                         if (
-                            clazz.type == "Lcom/music/bitchord/ui/screens/DiscordScreenKt;" &&
-                                candidate.name == "AccountAndScrobblingScreen" &&
+                            // R8 moves this screen into whichever screen file it merges.
+                            candidate.name == "AccountAndScrobblingScreen" &&
                                 ref.definingClass ==
                                     "Lcom/music/bitchord/ui/screens/SettingsSheetKt;" &&
                                 ref.name.startsWith("SettingsGroup-") &&
@@ -1362,11 +1514,16 @@ val nativeTelegramPatch =
                                 "I",
                             )
                 }
-            val painter =
-                classDefBy("Lkotlin/reflect/TypesJVMKt;").methods.single {
-                    it.name == "painterResource" &&
-                        it.parameterTypes == listOf("I", "Landroidx/compose/runtime/ComposerImpl;")
-                }
+            // Compose's painterResource, in whichever class R8 merged it into.
+            fun isPainter(method: com.android.tools.smali.dexlib2.iface.Method) =
+                method.name == "painterResource" &&
+                    method.parameterTypes ==
+                        listOf("I", "Landroidx/compose/runtime/ComposerImpl;") &&
+                    method.returnType == "Landroidx/compose/ui/graphics/painter/Painter;"
+            val painters = mutableListOf<com.android.tools.smali.dexlib2.iface.Method>()
+            classDefForEach { clazz -> painters += clazz.methods.filter(::isPainter) }
+            check(painters.size == 1) { "Compose painterResource not unique (${painters.size})" }
+            val painter = painters.single()
             val ui = mutableClassDefBy("Lapp/bitchord/telegram/TelegramUi;")
             fun linkedMethod(name: String, registers: Int, code: String) {
                 val original = ui.methods.single { it.name == name }
@@ -1414,7 +1571,7 @@ val nativeTelegramPatch =
                 "Added standalone Telegram settings section and icon; Sources setup row omitted"
             )
             // Extend the existing stats overlay, retaining all host source-selection and
-            // generation checks. These signatures/operands are pinned to optimized 1.8.1.
+            // generation checks. These signatures/operands are pinned to optimized 1.9.
             val snapshotType = "Lcom/music/bitchord/data/NerdStats\$Snapshot;"
             val statsType = "Lapp/bitchord/telegram/PlaybackStats;"
             val snapshot = classDefBy(snapshotType)
@@ -1434,10 +1591,32 @@ val nativeTelegramPatch =
             }
             // A tap on the Telegram row in Sources opens the Telegram settings page instead of
             // the generic editor, which would only show the internal add-on address.
-            val rowLambda =
-                mutableClassDefBy(
-                    "Lcom/music/bitchord/ui/screens/SourcesScreenKt\$\$ExternalSyntheticLambda32;"
+            // R8 numbers the screen's lambdas, so the row's click lambda is the one that decides
+            // on SourceKind.needsServer.
+            val rowLambdas = mutableListOf<String>()
+            classDefForEach { clazz ->
+                if (
+                    clazz.type.startsWith(
+                        "Lcom/music/bitchord/ui/screens/SourcesScreenKt\$\$ExternalSyntheticLambda"
+                    ) &&
+                        clazz.methods.any { method ->
+                            method.name == "invoke" &&
+                                method.parameterTypes.size == 5 &&
+                                method.implementation?.instructions?.any {
+                                    it.fieldRef()?.let { ref ->
+                                        ref.definingClass ==
+                                            "Lcom/music/bitchord/data/sources/SourceKind;" &&
+                                            ref.name == "needsServer"
+                                    } == true
+                                } == true
+                        }
                 )
+                    rowLambdas += clazz.type
+            }
+            check(rowLambdas.size == 1) {
+                "Source row click lambda not unique (${rowLambdas.size})"
+            }
+            val rowLambda = mutableClassDefBy(rowLambdas.single())
             val rowInvoke =
                 rowLambda.methods.single { it.name == "invoke" && it.parameterTypes.size == 5 }
             val rowCode = rowInvoke.implementation!!.instructions.toList()
@@ -1518,7 +1697,8 @@ val nativeTelegramPatch =
                             listOf("Landroidx/media3/common/MediaItem;", "Z", "I", "Z") &&
                         it.returnType == "V"
                 }
-            check(transition.implementation!!.registerCount == 59) {
+            // The hook only needs one local register of its own, v0, before BitChord's code runs.
+            check(transition.implementation!!.registerCount > 5) {
                 "Current-track callback layout changed"
             }
             transition.addInstructions(
@@ -1601,7 +1781,8 @@ val nativeTelegramPatch =
                             )
                 }
             val sleeveCode = sleeve.implementation!!.instructions.toList()
-            check(sleeve.implementation!!.registerCount == 50) {
+            // v45 is borrowed below, so it has to be a local register (four parameters follow).
+            check(sleeve.implementation!!.registerCount - 4 > 45) {
                 "Stats overlay register layout changed"
             }
             val firstField =
@@ -1802,47 +1983,45 @@ private fun BytecodePatchContext.addAudioTap() {
     fun Instruction.readsField(name: String) =
         opcode == Opcode.IGET_OBJECT &&
             fieldRef()?.let { it.definingClass == SINK && it.name == name } == true
-    // The audio chain starts where the sink reads its effects chain, then the block it fills.
-    val found =
-        sink.methods.mapNotNull { method ->
-            val code = method.implementation?.instructions?.toList() ?: return@mapNotNull null
-            val at =
-                code.indices.filter { i ->
-                    code[i].readsField("dspChain") &&
-                        i + 1 < code.size &&
-                        code[i + 1].readsField("audioBlock")
-                }
-            if (at.isEmpty()) null else method to at
-        }
-    check(found.size == 1 && found[0].second.size == 1) { "Audio chain entry not unique" }
-    val (method, at) = found[0]
-    val code = method.implementation!!.instructions.toList()
-    val chainRead = code[at[0]] as TwoRegisterInstruction
-    val blockRead = code[at[0] + 1] as TwoRegisterInstruction
-    val sinkRegister = chainRead.registerB
-    val blockRegister = blockRead.registerA
-    check(blockRead.registerB == sinkRegister) { "Audio block read changed" }
-    // BitChord checks the block isn't null, then reads its frame count into a scratch register.
-    val nullCheck =
-        (at[0] + 2 until minOf(at[0] + 6, code.size)).single {
-            code[it].methodRef()?.name == "checkNotNullParameter"
-        }
-    val next = code[nullCheck + 1] as TwoRegisterInstruction
-    check(next.opcode == Opcode.IGET && next.registerB == blockRegister) {
-        "Audio block frame count read changed"
-    }
-    val scratch = next.registerA
-    check(maxOf(sinkRegister, blockRegister, scratch) < 16) { "Audio chain registers out of range" }
     check(sink.fields.any { it.name == "configuredSampleRate" && it.type == "I" }) {
         "Audio sink sample rate field changed"
     }
-    method.addInstructions(
-        nullCheck + 1,
-        """
-        iget v$scratch, v$sinkRegister, $SINK->configuredSampleRate:I
-        invoke-static {v$sinkRegister, v$blockRegister, v$scratch}, $EXTRAS->process(Ljava/lang/Object;Ljava/lang/Object;I)V
-    """,
-    )
+    // The audio chain starts where the sink reads its effects chain, then the block it fills, and
+    // hands the block to the chain. BitChord 1.9 does this twice: for the song as it plays and for
+    // Automix's loop mix, so both pass through the tap.
+    var tapped = 0
+    for (method in sink.methods) {
+        val code = method.implementation?.instructions?.toList() ?: continue
+        val at =
+            code.indices.filter { i ->
+                code[i].readsField("dspChain") &&
+                    code.getOrNull(i + 1)?.readsField("audioBlock") == true &&
+                    code.getOrNull(i + 2)?.methodRef()?.name == "process"
+            }
+        if (at.isEmpty()) continue
+        val targets =
+            code
+                .filterIsInstance<
+                    com.android.tools.smali.dexlib2.builder.BuilderOffsetInstruction
+                >()
+                .map { it.target.location.index }
+                .toSet()
+        for (i in at.reversed()) {
+            check(i + 2 !in targets) { "Audio chain call is a branch target" }
+            val chainRead = code[i] as TwoRegisterInstruction
+            val blockRead = code[i + 1] as TwoRegisterInstruction
+            val sinkRegister = chainRead.registerB
+            check(blockRead.registerB == sinkRegister) { "Audio block read changed" }
+            val block = blockRead.registerA
+            check(maxOf(sinkRegister, block) < 16) { "Audio chain registers out of range" }
+            method.addInstruction(
+                i + 2,
+                "invoke-static {v$sinkRegister, v$block}, $EXTRAS->process(Ljava/lang/Object;Ljava/lang/Object;)V",
+            )
+            tapped++
+        }
+    }
+    check(tapped == 2) { "Audio chain entries not found ($tapped)" }
     for (name in listOf("flush", "reset")) sink.methods
         .single { it.name == name && it.parameterTypes.isEmpty() && it.returnType == "V" }
         .addInstruction(0, "invoke-static/range {p0 .. p0}, $EXTRAS->flush(Ljava/lang/Object;)V")
@@ -1930,7 +2109,7 @@ private fun BytecodePatchContext.addLoudnessLevel() {
 /** Pitch and battery saver are set on each player BitChord builds. */
 private fun BytecodePatchContext.addPlayerSettings() {
     var hooked = 0
-    for (type in listOf(SERVICE, "Lcom/music/bitchord/playback/PlaybackService\$onCreate\$2;")) {
+    for (type in classesCalling(SERVICE, "buildPlayer")) {
         val clazz = mutableClassDefBy(type)
         for (method in clazz.methods) {
             val code = method.implementation?.instructions?.toList() ?: continue

@@ -9,7 +9,6 @@ from pathlib import Path
 import argparse
 import hashlib
 import json
-import re
 import shutil
 import tarfile
 import time
@@ -18,65 +17,6 @@ import urllib.request
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-ABIS = ("arm64-v8a", "armeabi-v7a", "x86_64")
-RUNTIMES = {
-    "direct": "libbitchord_direct.so",
-    "i2p": "libbitchord_i2p.so",
-    "tor": "libtor.so",
-    "ipfs": "libbitchord_ipfs.so",
-}
-ASSET_ROOT = "runtimes/assets/"
-
-
-def native_hashes(metadata):
-    result = {}
-    for field in (
-        "native_sha256",
-        "soulseek_native_sha256",
-        "download_runtime_native_sha256",
-    ):
-        for name, expected in metadata.get(field, {}).items():
-            if not re.fullmatch(
-                r"lib/(arm64-v8a|armeabi-v7a|x86_64)/[A-Za-z0-9_+.-]+\.so", name
-            ):
-                raise ValueError("Unsafe native dependency path")
-            if name in result and result[name] != expected:
-                raise ValueError("Conflicting native dependency hashes")
-            result[name] = expected
-    return result
-
-
-def runtime_assets(archive):
-    """Resolve only the bounded runtime manifest, never arbitrary ZIP paths."""
-    try:
-        info = archive.getinfo("runtimes/assets.list")
-    except KeyError:
-        return {}
-    if info.file_size > 1024 * 1024:
-        raise ValueError("Runtime asset manifest is too large")
-    names = archive.read(info).decode("utf-8").splitlines()
-    if not 1 <= len(names) <= 4096 or len(set(names)) != len(names):
-        raise ValueError("Invalid runtime asset manifest")
-    assets = {}
-    total = 0
-    for name in names:
-        parts = name.split("/")
-        if (
-            not name.startswith("bitchord/")
-            or len(name) > 512
-            or any(part in ("", ".", "..") for part in parts)
-            or "\\" in name
-            or any(ord(char) < 32 for char in name)
-        ):
-            raise ValueError("Unsafe runtime asset path")
-        entry = archive.getinfo(ASSET_ROOT + name)
-        if entry.is_dir() or entry.file_size > 8 * 1024 * 1024:
-            raise ValueError("Invalid runtime asset size")
-        total += entry.file_size
-        if total > 32 * 1024 * 1024:
-            raise ValueError("Runtime assets exceed staging limit")
-        assets[name] = entry
-    return assets
 
 
 def digest(data):
@@ -108,62 +48,20 @@ def verify_bundle(path, metadata):
     if digest(path.read_bytes()) != metadata["patch_bundle_sha256"]:
         raise ValueError("Release bundle SHA-256 does not match PROVENANCE.json")
     with zipfile.ZipFile(path) as archive:
-        if len(set(archive.namelist())) != len(archive.namelist()):
-            raise ValueError("Duplicate release bundle entry")
         if archive.testzip() is not None:
             raise ValueError("Corrupt release bundle")
-        for name, expected in native_hashes(metadata).items():
+        for name, expected in metadata["native_sha256"].items():
             if digest(archive.read(name)) != expected:
                 raise ValueError("Native dependency hash mismatch: " + name)
-        assets = runtime_assets(archive)
-        if metadata.get("download_runtime_native_sha256"):
-            if not assets:
-                raise ValueError("Download runtime assets are missing")
-            for runtime, library in RUNTIMES.items():
-                inputs = json.loads(
-                    archive.read(
-                        ASSET_ROOT + "bitchord/runtimes/" + runtime + "-inputs.json"
-                    )
-                )
-                libraries = inputs["libraries"] if runtime == "tor" else inputs
-                for abi in ABIS:
-                    name = f"lib/{abi}/{library}"
-                    entry = libraries[abi]
-                    if entry["sha256"] != metadata[
-                        "download_runtime_native_sha256"
-                    ].get(name) or archive.getinfo(name).file_size != entry.get(
-                        "bytes", entry.get("size")
-                    ):
-                        raise ValueError("Download runtime inventory mismatch: " + name)
-                prefix = "bitchord/runtimes/licenses/" + runtime + "/"
-                if not any(name.startswith(prefix) for name in assets):
-                    raise ValueError("Download runtime notices are missing: " + runtime)
-            manifest = json.loads(
-                archive.read(ASSET_ROOT + "bitchord/runtimes/i2p-runtime-manifest.json")
-            )
-            certificates = {
-                name.removeprefix("bitchord/i2p/")
-                for name in assets
-                if name.startswith("bitchord/i2p/certificates/")
-            }
-            if certificates != set(manifest["certificates"]):
-                raise ValueError("I2P certificate inventory is incomplete")
-            for name, expected in manifest["certificates"].items():
-                if (
-                    digest(archive.read(ASSET_ROOT + "bitchord/i2p/" + name))
-                    != expected
-                ):
-                    raise ValueError("I2P certificate hash mismatch")
     api = ROOT / "vendor/tdlib-api/TdApi.java"
     if digest(api.read_bytes()) != metadata["generated_tdapi_sha256"]:
         raise ValueError("Generated TDLib Java API hash mismatch")
 
 
-def stage_native(path, tools, root=None):
-    root = ROOT if root is None else Path(root)
-    td = root / ".deps/tdlib"
+def stage_native(path, tools):
+    td = ROOT / ".deps/tdlib"
     with zipfile.ZipFile(path) as archive:
-        for abi in ABIS:
+        for abi in ("arm64-v8a", "armeabi-v7a", "x86_64"):
             for name in (
                 "libtdjni.so",
                 "libsslx.so",
@@ -178,59 +76,6 @@ def stage_native(path, tools, root=None):
                     target = td / f"openssl/30.0.16248370/android-24/{abi}/lib" / name
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_bytes(archive.read(f"lib/{abi}/{name}"))
-            soulseek = f"lib/{abi}/libbitchord_soulseek.so"
-            if soulseek in archive.namelist():
-                target = root / ".deps/soulseek" / abi / "libbitchord_soulseek.so"
-                target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_bytes(archive.read(soulseek))
-            for runtime, library in RUNTIMES.items():
-                name = f"lib/{abi}/{library}"
-                if name in archive.namelist():
-                    target = root / ".deps" / runtime / "lib" / abi / library
-                    target.parent.mkdir(parents=True, exist_ok=True)
-                    target.write_bytes(archive.read(name))
-        assets = runtime_assets(archive)
-        if assets:
-            # These directories contain generated build inputs, never phone data.
-            # Do not carry certificates or notices from a previous release forward.
-            shutil.rmtree(root / ".deps/i2p/assets/certificates", ignore_errors=True)
-            for runtime in RUNTIMES:
-                base = root / ".deps" / runtime
-                shutil.rmtree(base / "licenses", ignore_errors=True)
-                for name in (
-                    "dependencies.json",
-                    "runtime-manifest.json",
-                    "provenance.json",
-                ):
-                    (base / name).unlink(missing_ok=True)
-        for name, entry in assets.items():
-            relative = name.removeprefix("bitchord/")
-            if relative.startswith("i2p/certificates/"):
-                target = root / ".deps/i2p/assets" / relative.removeprefix("i2p/")
-            elif relative.startswith("runtimes/licenses/"):
-                components = relative.split("/")
-                runtime = components[2]
-                if runtime not in RUNTIMES:
-                    raise ValueError("Unknown runtime notice scope")
-                target = root / ".deps" / runtime / "licenses" / Path(*components[3:])
-            elif relative.startswith("runtimes/"):
-                filename = relative.removeprefix("runtimes/")
-                runtime, separator, suffix = filename.partition("-")
-                if runtime not in RUNTIMES or not separator or "/" in suffix:
-                    raise ValueError("Unknown runtime metadata scope")
-                if suffix == "inputs.json":
-                    suffix = "PINNED.json" if runtime == "tor" else "build-hashes.json"
-                elif suffix not in (
-                    "dependencies.json",
-                    "runtime-manifest.json",
-                    "provenance.json",
-                ):
-                    raise ValueError("Unknown runtime metadata file")
-                target = root / ".deps" / runtime / suffix
-            else:
-                raise ValueError("Unknown runtime asset scope")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(archive.read(entry))
     target = td / "src/main/java/org/drinkless/tdlib"
     target.mkdir(parents=True, exist_ok=True)
     for name in ("Client.java", "TdApi.java"):
@@ -295,7 +140,7 @@ def main():
         if args.download_tools:
             download_tools(tools, metadata)
     print(
-        f"PASS: release MPP, {len(native_hashes(metadata))} pinned native files and generated Java API hashes verified."
+        "PASS: release MPP, 12 pinned native files and generated Java API hashes verified."
     )
     if not args.verify_only:
         print(

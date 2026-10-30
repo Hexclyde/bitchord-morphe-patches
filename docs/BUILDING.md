@@ -52,7 +52,7 @@ python3 ui-tests/run.py
 
 ## Checking patched APKs
 
-Put the three original BitChord 1.8.1 APKs listed in `PROVENANCE.json` in a directory, then run:
+Put the three original BitChord 1.9 APKs listed in `PROVENANCE.json` in a directory, then run:
 
 ```bash
 ORIGINAL_APKS_DIR=/path/to/apks python3 validate_apks.py
@@ -60,7 +60,7 @@ ORIGINAL_APKS_DIR=/path/to/apks python3 validate_apks.py
 
 The script patches each ABI, then checks the hooks, signatures, DEX control flow and native libraries. It needs `readelf`.
 
-The hooks target the R8-optimized 1.8.1 bytecode, so small changes can break merged coroutine branches. Run this script after changing anything in `TelegramPatch.kt`.
+The hooks target the R8-optimized 1.9 bytecode, so small changes can break merged coroutine branches. Run this script after changing anything in `TelegramPatch.kt`.
 
 ## New BitChord versions
 

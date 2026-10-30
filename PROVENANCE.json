@@ -1,9 +1,9 @@
 {
   "build_date": "2026-10-30",
-  "app_version": "1.8.1",
-  "app_source_commit": "7d956f211b8a46a87184fd3ff87432b51a111dfa",
-  "original_apk_url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.8.1/BitChord-v1.8.1_arm64-v8a.apk",
-  "original_apk_sha256": "057fb6321a1e1ecf956c8db9c421c2487ebb693017eebc9e717106ed693a25f6",
+  "app_version": "1.9",
+  "app_source_commit": "04f64c9f11bd2714d01bbc6da401f146f3d9399f",
+  "original_apk_url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.9/BitChord-v1.9_arm64-v8a.apk",
+  "original_apk_sha256": "82734a8b8c332bb5bd7d59f6d32696b6b8205583c98bb995e26be411aa7091d3",
   "tdlib_android_commit": "7ec241d026ee3563e615c25a700117c2abbaea19",
   "tdlib_source_commit": "ea3f69ce11aef458bfbb09869b809ede4447486f",
   "openssl_source_commit": "45e844fa2a14ec92d146bd8f5778ac130b6625fb",
@@ -52,7 +52,7 @@
     }
   ],
   "generated_tdapi_sha256": "11155fabc41ca2a6d91bbde4fdf683603d60b50ed51cafab0068728aa7d8d74f",
-  "patch_bundle_version": "1.1.0-beta.7",
+  "patch_bundle_version": "1.1.0-beta.8",
   "native_sha256": {
     "lib/arm64-v8a/libc++_shared.so": "7466ed097631a564ed6bff0b47768caa76bf03270d2047b5a65c03f497b824df",
     "lib/arm64-v8a/libcryptox.so": "9fdc85415c999a2c7383817a204d822f0e509515016b8fee14c45d5a1c40e4d6",
@@ -69,19 +69,19 @@
   },
   "original_apks": [
     {
-      "file": "BitChord-v1.8.1_arm64-v8a.apk",
-      "url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.8.1/BitChord-v1.8.1_arm64-v8a.apk",
-      "sha256": "057fb6321a1e1ecf956c8db9c421c2487ebb693017eebc9e717106ed693a25f6"
+      "file": "BitChord-v1.9_arm64-v8a.apk",
+      "url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.9/BitChord-v1.9_arm64-v8a.apk",
+      "sha256": "82734a8b8c332bb5bd7d59f6d32696b6b8205583c98bb995e26be411aa7091d3"
     },
     {
-      "file": "BitChord-v1.8.1_armeabi-v7a.apk",
-      "url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.8.1/BitChord-v1.8.1_armeabi-v7a.apk",
-      "sha256": "4dc6a02ec4bbb4831f7c22acd4a7eb5e3f21b2c58ee7e514d54ebf5f846d3c54"
+      "file": "BitChord-v1.9_armeabi-v7a.apk",
+      "url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.9/BitChord-v1.9_armeabi-v7a.apk",
+      "sha256": "e0a996642e44742f1c7014dcf6aa291000854f66dd1740d2802ae12a51d3f33d"
     },
     {
-      "file": "BitChord-v1.8.1_x86_64.apk",
-      "url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.8.1/BitChord-v1.8.1_x86_64.apk",
-      "sha256": "ec3a7d0588ec2f2a78e263310d317099315deebfd684712dc157376f1d084b15"
+      "file": "BitChord-v1.9_x86_64.apk",
+      "url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.9/BitChord-v1.9_x86_64.apk",
+      "sha256": "bd06992664a4221c4f7f08473cf30f7b6f4e36e2641080276b4cf2b2f343dd04"
     }
   ],
   "native_version_strings_inspected": {
@@ -89,64 +89,5 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "a472e66b3d017b5234aa1909af79ac9cedf4745c11a7f14e4a679531eddc89a5",
-  "soulseek_development": {
-    "status": "experimental-local-build",
-    "baseline_commit": "3de260f7f1d7967c5a97ce924085d7d42bec18af",
-    "engine_repository": "https://github.com/michel/soulseek-rs",
-    "engine_commit": "d20e433a8979068acd80f4d4242125beaf4825ee",
-    "runtime_location": "end-user-phone",
-    "automatic_quality_upgrade": false,
-    "telegram_audio_upload": true,
-    "telegram_channel_peer_sharing": false,
-    "nostr_coordination": true,
-    "stun_configuration": true,
-    "udp_audio_transport": true,
-    "automatic_peer_discovery": false,
-    "download_only": true,
-    "progressive_playback": false,
-    "nostr_relay_benchmark": true,
-    "relay_candidate_count": 1746,
-    "udp_transport_profile": "IPv4 retained-socket STUN with certificate-pinned QUIC",
-    "paired_file_offers": true,
-    "fallback_adapters": [
-      "i2pd",
-      "Tor onion services",
-      "IPFS Bitswap"
-    ],
-    "download_destinations": [
-      "phone",
-      "telegram-main-channel",
-      "both"
-    ],
-    "ordered_audio_formats": true,
-    "device_network_qualified": false,
-    "album_playlist_catalog_integration": false,
-    "optional_debrid_services": [
-      "real-debrid",
-      "alldebrid",
-      "premiumize",
-      "torbox"
-    ],
-    "debrid_live_account_qualified": false
-  },
-  "soulseek_native_sha256": {
-    "lib/arm64-v8a/libbitchord_soulseek.so": "ba7685a1139f1fa9886557ce981e90970e3f58cdddbd97733b4a3bf46434ca9c",
-    "lib/armeabi-v7a/libbitchord_soulseek.so": "fbb4af7b682ed61600162c9297338fda44cf141b799b349410ff364d77d5fc7b",
-    "lib/x86_64/libbitchord_soulseek.so": "4849826e1e7b59c991d7c296d3b07f050c88337dc860e62d7c915014bfdd5be1"
-  },
-  "download_runtime_native_sha256": {
-    "lib/arm64-v8a/libbitchord_direct.so": "2696942a2398a6d3514b262beedaf45b2addc54878361c64aea36655659da03e",
-    "lib/armeabi-v7a/libbitchord_direct.so": "71afd7e8e14c1511411dd4476053b6c30a2af1df491699d39b1242592e4d45a9",
-    "lib/x86_64/libbitchord_direct.so": "c412176d6c193bdb45ba020366d98e5e4c327dfa05fb6d16e1ce2e851dcaba73",
-    "lib/arm64-v8a/libbitchord_i2p.so": "7d18dca9dee3703cba00f597cb2f368d5797226593637a16f7a0cbf24a5f178b",
-    "lib/armeabi-v7a/libbitchord_i2p.so": "1e09bfb218292f4b02a39f61ba64a714b32a28b07b6b259c8d9b02b149b294b9",
-    "lib/x86_64/libbitchord_i2p.so": "8056d89431f9691ecdbe2caf5c4ed0494a61b588b4ea124ab8ee8e4411161188",
-    "lib/arm64-v8a/libbitchord_ipfs.so": "1747feb2afbdac4d3e5989ae4508716417894a388d491470372ba971d08669d2",
-    "lib/armeabi-v7a/libbitchord_ipfs.so": "6173898647ac210fbc625e08661214e7a1b7f019eb3fc0413a383ddea1f0f5f1",
-    "lib/x86_64/libbitchord_ipfs.so": "b3dfa8cd3021b8153dc1a0107817c2425b953c3ad7d6b89c747e9bce09bf3c60",
-    "lib/arm64-v8a/libtor.so": "67ce86a6664c330f49037487f0931498e2a0f82099fbfaf3de7a62c32cf5e996",
-    "lib/armeabi-v7a/libtor.so": "a27f80fc60f96d953c8251e9a3ba007a7da0ba941c51968962b525141d416f7c",
-    "lib/x86_64/libtor.so": "dc7f0fecc47ed73397b2f7928ddf2b87d18fac7c6ba1d00d72e3d7772e5eb480"
-  }
+  "patch_bundle_sha256": "a472e66b3d017b5234aa1909af79ac9cedf4745c11a7f14e4a679531eddc89a5"
 }

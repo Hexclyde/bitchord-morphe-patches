@@ -29,7 +29,7 @@ public class VerifyApk {
                     + " Ljava/lang/String;, Ljava/lang/Long;, Ljava/lang/Long;,"
                     + " Ljava/lang/Integer;, Ljava/lang/String;, Z, Ljava/lang/Boolean;,"
                     + " Ljava/lang/String;, Lcom/music/bitchord/data/model/PlaybackSourceType;,"
-                    + " Ljava/lang/String;]";
+                    + " Ljava/lang/String;, Ljava/lang/String;]";
 
     static void check(boolean value, String name) {
         checks++;
@@ -392,8 +392,9 @@ public class VerifyApk {
                                         && !field.getName().equals("cursors"),
                                 "Bridge has no full-history map or index cursor");
                 for (Method method : cls.getMethods()) {
+                    // R8 moves Compose's painterResource into whichever class it merges.
                     if (cls.getType().equals("Lcom/music/bitchord/ui/screens/SettingsSheetKt;")
-                            || cls.getType().equals("Lkotlin/reflect/TypesJVMKt;"))
+                            || method.getName().equals("painterResource"))
                         uiDefinitions.add(signature(method));
                     if (cls.getType().equals("Lapp/bitchord/telegram/TelegramUi;")
                             && (method.getName().equals("hostGroup")
@@ -425,7 +426,7 @@ public class VerifyApk {
                             && isStatic
                             && isPublic
                             && params.equals("[]")) atmosDecoder = true;
-                    if (cls.getType().startsWith("Lcom/music/bitchord/playback/PlaybackService")
+                    if (cls.getType().startsWith("Lcom/music/bitchord/playback/")
                             && method.getName().equals("buildAudioRenderers")
                             && method.getImplementation() != null)
                         for (Instruction i : method.getImplementation().getInstructions())
@@ -600,8 +601,7 @@ public class VerifyApk {
                                         && (target.getDefiningClass()
                                                         .equals(
                                                                 "Lcom/music/bitchord/ui/screens/SettingsSheetKt;")
-                                                || target.getDefiningClass()
-                                                        .equals("Lkotlin/reflect/TypesJVMKt;")))
+                                                || target.getName().equals("painterResource")))
                                     uiReferences.add(signature(target));
                                 if (target.getDefiningClass()
                                                 .equals("Lapp/bitchord/telegram/TelegramUi;")
@@ -656,8 +656,8 @@ public class VerifyApk {
                                         && target.getName().equals("wrap")) {
                                     check(
                                             cls.getType()
-                                                    .equals(
-                                                            "Lcom/music/bitchord/ui/screens/SourcesScreenKt$$ExternalSyntheticLambda32;"),
+                                                    .startsWith(
+                                                            "Lcom/music/bitchord/ui/screens/SourcesScreenKt$$ExternalSyntheticLambda"),
                                             "Source editor route is in the Sources row");
                                     sourceEditorHooks++;
                                 }
@@ -839,7 +839,7 @@ public class VerifyApk {
                                     check(
                                             !text.getString().contains("BitChord native test"),
                                             "Telegram application version is unbranded");
-                                    if (text.getString().equals("1.1.0-beta.7")) version = true;
+                                    if (text.getString().equals("1.1.0-beta.8")) version = true;
                                 }
                                 if (cls.getType()
                                         .equals("Lapp/bitchord/telegram/TelegramActivity;")) {

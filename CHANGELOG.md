@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.0-beta.8
+
+A testing build, on the `testing` branch only. It works with **BitChord 1.9** instead of 1.8.1.
+
+- **Every patch applies to BitChord 1.9.** The hooks find BitChord's code by what it does rather than by the names its build gave it, so they're less likely to break on the next version.
+- **Patches & tweaks** sits on BitChord's redesigned Settings page, after the list of categories.
+- **Sing, Headphone correction and DJ mode** also work during Automix's loop mixes, which 1.9 renders separately.
+- **Telegram downloads work again on 1.9.** BitChord now checks every download source before choosing one; a Telegram file is answered from the saved index, without contacting anything else.
+- **Smooth quality switch** passes along BitChord 1.9's new version-alignment settings.
+- **Channel playlists** build songs with BitChord 1.9's extra song field.
+- **Bit-perfect output:** a song on BitChord's new bit-perfect output pauses at the sleep timer without a fade, Battery saver stays off while that output is on, and the page says which effects don't reach those songs.
+- **DJ mode** waits for an Automix transition to finish before it reorders the queue.
+- **The Unofficial Soulseek audio patch is gone**, together with its debrid downloads, paired-phone transfers and the Tor, I2P and IPFS layer.
+
 ## 1.1.0-beta.7
 
 A testing build, on the `testing` branch only.

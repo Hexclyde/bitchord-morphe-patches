@@ -7,7 +7,6 @@ import app.morphe.patcher.patch.*
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.*
-import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodImplementation
@@ -109,15 +108,17 @@ internal val extrasSettingsPatch = bytecodePatch {
         val screen = mutableClassDefBy("Lcom/music/bitchord/ui/screens/SettingsSheetKt;")
         val method = screen.methods.single { it.name.startsWith("SettingsScreen-") }
         val code = method.implementation!!.instructions.toList()
-        val groups =
+        // On the main Settings page, after its list of categories, so the group shows once and
+        // not on each category's page.
+        val lists =
             code.indices.filter { i ->
                 val ref = (code[i] as? ReferenceInstruction)?.reference as? MethodReference
-                ref?.definingClass == screen.type && ref.name.startsWith("SearchableSettingsGroup-")
+                ref?.definingClass == screen.type && ref.name == "SettingsCategoryList"
             }
-        check(groups.size >= 3) { "Settings groups not found" }
-        val composer = registers(code[groups.first()])[4]
+        check(lists.size == 1) { "Settings category list not found" }
+        val composer = registers(code[lists.single()])[1]
         method.addInstruction(
-            groups.first() + 1,
+            lists.single() + 1,
             "invoke-static/range {v$composer .. v$composer}, $UI->tweaksSection(Landroidx/compose/runtime/ComposerImpl;)V",
         )
         val group =
@@ -164,40 +165,6 @@ internal val extrasSettingsPatch = bytecodePatch {
             "invoke-static/range {p0 .. p0}, $UI->start(Landroid/content/Context;)V",
         )
 
-        // R8 merged SourcesScreen into DiscordScreenKt in the pinned BitChord APK.
-        // Wrap only its collected UI state. The registry, playback resolver and search
-        // retain their original source configurations and enabled state.
-        val sources =
-            mutableClassDefBy("Lcom/music/bitchord/ui/screens/DiscordScreenKt;").methods.single {
-                it.name == "SourcesScreen"
-            }
-        val sourceCode = sources.implementation!!.instructions.toList()
-        val reads =
-            sourceCode.indices.filter { i ->
-                val field = (sourceCode[i] as? ReferenceInstruction)?.reference as? FieldReference
-                sourceCode[i].opcode == Opcode.SGET_OBJECT &&
-                    field?.definingClass == "Lcom/music/bitchord/data/sources/SourceRegistry;" &&
-                    field.name == "configs"
-            }
-        check(reads.size == 1) { "Sources UI configuration read is not unique" }
-        val read = reads.single()
-        val collect = (sourceCode[read + 1] as? ReferenceInstruction)?.reference as? MethodReference
-        check(
-            collect?.name == "collectAsStateWithLifecycle" &&
-                collect.returnType == "Landroidx/compose/runtime/MutableState;" &&
-                sourceCode[read + 2].opcode == Opcode.MOVE_RESULT_OBJECT
-        ) {
-            "Sources UI state collection changed"
-        }
-        val state = (sourceCode[read + 2] as OneRegisterInstruction).registerA
-        sources.addInstructions(
-            read + 3,
-            """
-            invoke-static/range {v$state .. v$state}, Lapp/bitchord/telegram/PatchSources;->visibleState(Ljava/lang/Object;)Ljava/lang/Object;
-            move-result-object v$state
-            check-cast v$state, Landroidx/compose/runtime/MutableState;
-        """,
-        )
-        println("Added Patches & tweaks and isolated its managed sources from the Sources UI")
+        println("Added Patches & tweaks to BitChord's Settings")
     }
 }

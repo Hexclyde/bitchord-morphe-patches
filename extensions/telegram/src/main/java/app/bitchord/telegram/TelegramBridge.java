@@ -74,7 +74,6 @@ public final class TelegramBridge {
     final CredentialStore credentialStore;
     volatile Client client;
     volatile long generation;
-    volatile long authorizationRevision;
     volatile CompletableFuture<Void> clientClosed;
     volatile boolean restarting;
     final NativeAudio audio = new NativeAudio(this);
@@ -735,9 +734,7 @@ public final class TelegramBridge {
     }
 
     private void update(TdApi.Object obj) {
-        DownloadUploadBridge.onUpdate(this, obj);
         if (obj instanceof TdApi.UpdateAuthorizationState) {
-            authorizationRevision++;
             auth = ((TdApi.UpdateAuthorizationState) obj).authorizationState;
             if (auth instanceof TdApi.AuthorizationStateWaitTdlibParameters) {
                 status =
@@ -813,7 +810,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.1.0-beta.7"));
+                            "1.1.0-beta.8"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -1371,7 +1368,7 @@ public final class TelegramBridge {
     }
 
     /** Null when the chat isn't a channel this account created; otherwise whether it's public. */
-    Boolean ownChannel(TdApi.Chat chat) throws Exception {
+    private Boolean ownChannel(TdApi.Chat chat) throws Exception {
         if (!(chat.type instanceof TdApi.ChatTypeSupergroup)) return null;
         TdApi.ChatTypeSupergroup type = (TdApi.ChatTypeSupergroup) chat.type;
         if (!type.isChannel) return null;

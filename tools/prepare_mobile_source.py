@@ -26,7 +26,6 @@ ON_BY_DEFAULT = {
     "Sign in with MicroG",
 }
 OFF_BY_DEFAULT = {
-    "Unofficial Soulseek audio",
     "Sing",
     "Pitch control",
     "Loudness level",
@@ -134,7 +133,7 @@ def validate_metadata(manifest, patches, source, provenance):
             raise ValueError("Unexpected target app/file type")
         if (
             len(app["targets"]) != 1
-            or app["targets"][0]["version"] != "1.8.1"
+            or app["targets"][0]["version"] != provenance["app_version"]
             or app["targets"][0]["minSdk"] != 26
             or not app["targets"][0]["isExperimental"]
         ):

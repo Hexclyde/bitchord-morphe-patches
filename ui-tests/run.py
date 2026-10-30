@@ -65,25 +65,13 @@ for name in (
     "DjMode.java",
     "DownloadChoice.java",
     "EffectsApps.java",
+    "BitPerfect.java",
     "VocalCut.java",
 ):
     dest = SOURCES / "app/bitchord/telegram" / name
     dest.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(
         ROOT / "extensions/telegram/src/main/java/app/bitchord/telegram" / name, dest
-    )
-for name in (
-    "DownloadActivity.java",
-    "DownloadStyle.java",
-    "AudioFormatSetupActivity.java",
-    "AudioFormatPreferences.java",
-    "FormatDragOrder.java",
-    "SoulseekTrack.java",
-):
-    dest = SOURCES / "app/bitchord/soulseek" / name
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(
-        ROOT / "extensions/soulseek/src/main/java/app/bitchord/soulseek" / name, dest
     )
 api = ROOT / "vendor/tdlib-api/TdApi.java"
 if not api.exists():

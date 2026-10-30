@@ -20,7 +20,7 @@ final class HostLibrary {
 
     static final String KEY_PREFIX = "src:" + NativeSource.ID + "::";
 
-    /** The parameter types of BitChord 1.8.1's Song constructor, in order. */
+    /** The parameter types of BitChord 1.9's Song constructor, in order. */
     private static final String[] SONG_PARAMETERS = {
         "String",
         "String",
@@ -48,6 +48,7 @@ final class HostLibrary {
         "Boolean",
         "String",
         "PlaybackSourceType",
+        "String",
         "String"
     };
 
