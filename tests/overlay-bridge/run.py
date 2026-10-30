@@ -146,6 +146,7 @@ with tempfile.TemporaryDirectory(prefix="bitchord-overlay-tests-") as temporary:
             str(jdk() / "bin/javac"),
             "--release",
             "8",
+            str(ROOT / "compile-only/app/bitchord/telegram/PatchStrings.java"),
             "-Xlint:-options",
             "-d",
             str(output),

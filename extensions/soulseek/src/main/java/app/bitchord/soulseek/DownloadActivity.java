@@ -6,9 +6,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import app.bitchord.telegram.PatchStrings;
+
 /** Shared native shell for download pages; no dependency on the optional Telegram patch. */
 class DownloadActivity extends Activity {
     protected DownloadStyle downloadStyle;
+    private String patchLanguage;
 
     @Override
     public void onCreate(Bundle state) {
@@ -26,6 +29,12 @@ class DownloadActivity extends Activity {
                                 ? android.R.style.Theme_Material_NoActionBar
                                 : android.R.style.Theme_Material_Light_NoActionBar);
         super.onCreate(state);
+        PatchStrings.refresh(this);
+        patchLanguage = PatchStrings.locale().toLanguageTag();
+        getWindow()
+                .getDecorView()
+                .setLayoutDirection(
+                        PatchStrings.rtl() ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
         downloadStyle = new DownloadStyle(this);
         getWindow().setStatusBarColor(downloadStyle.background);
         getWindow().setNavigationBarColor(downloadStyle.background);
@@ -36,6 +45,14 @@ class DownloadActivity extends Activity {
                                 ? 0
                                 : View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                                         | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PatchStrings.refresh(this);
+        if (patchLanguage != null && !patchLanguage.equals(PatchStrings.locale().toLanguageTag()))
+            recreate();
     }
 
     @Override

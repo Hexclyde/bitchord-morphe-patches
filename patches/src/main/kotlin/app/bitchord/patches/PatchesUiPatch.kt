@@ -3,6 +3,7 @@ package app.bitchord.patches
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.*
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import com.android.tools.smali.dexlib2.Opcode
@@ -26,7 +27,41 @@ private object PatchesApplicationCreate :
     )
 
 /** Shared settings and sound controls contain no Telegram account or TDLib implementation. */
-internal val patchesUiRuntime = bytecodePatch { extendWith("extensions/patches-ui.mpe") }
+internal val patchesUiRuntime = bytecodePatch {
+    extendWith("extensions/patches-ui.mpe")
+    execute {
+        val policy = "Lapp/bitchord/telegram/CapturePolicy;"
+        val marker =
+            mutableClassDefBy(policy).methods.single {
+                it.name == "testingBuild" && it.parameterTypes.isEmpty() && it.returnType == "Z"
+            }
+        val code = marker.implementation!!.instructions.toList()
+        check(
+            marker.accessFlags and 8 != 0 &&
+                code.size == 2 &&
+                code[0].opcode == Opcode.CONST_4 &&
+                code[1].opcode == Opcode.RETURN &&
+                (code[0] as NarrowLiteralInstruction).narrowLiteral == 0 &&
+                (code[0] as OneRegisterInstruction).registerA == 0 &&
+                (code[1] as OneRegisterInstruction).registerA == 0
+        ) {
+            "Testing capture marker changed"
+        }
+        marker.replaceInstruction(0, "const/4 v0, ${if (TESTING_CAPTURE) "0x1" else "0x0"}")
+        val start = PatchesApplicationCreate.method
+        val returns =
+            start.implementation!!
+                .instructions
+                .withIndex()
+                .filter { it.value.opcode == Opcode.RETURN_VOID }
+                .map { it.index }
+        check(returns.isNotEmpty()) { "Capture startup hook not found" }
+        for (index in returns.reversed()) start.addInstruction(
+            index,
+            "invoke-static/range {p0 .. p0}, $policy->start(Landroid/content/Context;)V",
+        )
+    }
+}
 
 private val patchesUiResources = resourcePatch {
     execute {

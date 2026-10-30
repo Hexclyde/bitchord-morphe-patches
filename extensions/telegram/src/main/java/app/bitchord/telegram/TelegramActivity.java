@@ -88,7 +88,7 @@ public final class TelegramActivity extends Activity {
                                 : android.R.style.Theme_Material_Light_NoActionBar);
         super.onCreate(saved);
         secureWindow(getWindow());
-        if (Build.VERSION.SDK_INT >= 33) setRecentsScreenshotEnabled(false);
+        CapturePolicy.apply(this);
         style = new TelegramStyle(this);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         getWindow().setStatusBarColor(style.background);
@@ -166,7 +166,7 @@ public final class TelegramActivity extends Activity {
 
     void secureWindow(Window window) {
         if (window == null) return;
-        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        CapturePolicy.apply(window);
         if (Build.VERSION.SDK_INT >= 31) window.setHideOverlayWindows(true);
     }
 

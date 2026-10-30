@@ -9,12 +9,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.view.WindowManager;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import app.bitchord.telegram.CapturePolicy;
+import app.bitchord.telegram.PatchStrings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +58,7 @@ public final class NostrSetupActivity extends DownloadActivity {
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        if (Build.VERSION.SDK_INT >= 33) setRecentsScreenshotEnabled(false);
+        CapturePolicy.apply(this);
         if (Build.VERSION.SDK_INT >= 31) getWindow().setHideOverlayWindows(true);
         ScrollView scroll = new ScrollView(this);
         LinearLayout body = new LinearLayout(this);
@@ -65,18 +67,20 @@ public final class NostrSetupActivity extends DownloadActivity {
         body.setPadding(padding, padding, padding, padding);
         scroll.addView(body);
         setContentView(scroll);
-        button(body, "Back", false).setOnClickListener(v -> finish());
-        text(body, "Download connection setup", 24);
+        button(body, PatchStrings.t("Back"), false).setOnClickListener(v -> finish());
+        text(body, PatchStrings.t("Download connection setup"), 24);
         text(
                 body,
-                "Experimental encrypted coordination through public Nostr relays. "
-                        + "Uses a separate identity and never messages your Telegram contacts. "
-                        + "Connection coordination is for downloads; it does not stream music.",
+                PatchStrings.t(
+                        "Experimental encrypted coordination through public Nostr relays. Uses a"
+                                + " separate identity and never messages your Telegram contacts."
+                                + " Connection coordination is for downloads; it does not stream"
+                                + " music."),
                 16);
-        text(body, "Your connection public key", 16);
-        identity = text(body, "Loading…", 14);
+        text(body, PatchStrings.t("Your connection public key"), 16);
+        identity = text(body, PatchStrings.t("Loading…"), 14);
         identity.setTextIsSelectable(true);
-        button(body, "Copy public key", true)
+        button(body, PatchStrings.t("Copy public key"), true)
                 .setOnClickListener(
                         v -> {
                             ClipboardManager clipboard =
@@ -85,27 +89,35 @@ public final class NostrSetupActivity extends DownloadActivity {
                                 clipboard.setPrimaryClip(
                                         ClipData.newPlainText(
                                                 "BitChord public key", identity.getText()));
-                                result.setText("Public key copied.");
+                                result.setText(PatchStrings.t("Public key copied."));
                             }
                         });
         text(
                 body,
-                "Exchange public keys through a trusted channel and compare the full key. A key"
-                        + " does not verify a person's name or Soulseek account. Relays can see"
-                        + " connection metadata; direct peers can see your public IP address.",
+                PatchStrings.t(
+                        "Exchange public keys through a trusted channel and compare the full key. A"
+                            + " key does not verify a person's name or Soulseek account. Relays can"
+                            + " see connection metadata; direct peers can see your public IP"
+                            + " address."),
                 14);
-        relays = field(body, "Relay URLs: one wss:// address per line, up to 3", 1024, false);
+        relays =
+                field(
+                        body,
+                        PatchStrings.t("Relay URLs: one wss:// address per line, up to 3"),
+                        1024,
+                        false);
         text(
                 body,
-                "Find best relays sends small, encrypted test messages addressed to this app's own"
-                    + " identity. It tests up to 24 candidates within a two-minute budget. Results"
-                    + " reflect this phone's network without GPS or location lookup, and measure"
-                    + " coordination latency rather than download speed. Leaving this screen"
-                    + " cancels the check.",
+                PatchStrings.t(
+                        "Find best relays sends small, encrypted test messages addressed to this"
+                            + " app's own identity. It tests up to 24 candidates within a"
+                            + " two-minute budget. Results reflect this phone's network without GPS"
+                            + " or location lookup, and measure coordination latency rather than"
+                            + " download speed. Leaving this screen cancels the check."),
                 14);
-        button(body, "Find best relays", true)
+        button(body, PatchStrings.t("Find best relays"), true)
                 .setOnClickListener(v -> perform(io, null, () -> discovery.scan()));
-        cancelScan = button(body, "Cancel relay check", false);
+        cancelScan = button(body, PatchStrings.t("Cancel relay check"), false);
         cancelScan.setEnabled(false);
         cancelScan.setOnClickListener(
                 v ->
@@ -116,7 +128,7 @@ public final class NostrSetupActivity extends DownloadActivity {
                                     RelayDiscovery scan = discovery;
                                     if (scan != null) scan.cancel();
                                 }));
-        applyRelays = button(body, "Use compatible relay selection", true);
+        applyRelays = button(body, PatchStrings.t("Use compatible relay selection"), true);
         applyRelays.setEnabled(false);
         applyRelays.setOnClickListener(
                 v ->
@@ -134,7 +146,7 @@ public final class NostrSetupActivity extends DownloadActivity {
                                                     relays.setText(selected);
                                             });
                                 }));
-        showRelays = button(body, "Show checked relays", true);
+        showRelays = button(body, PatchStrings.t("Show checked relays"), true);
         showRelays.setEnabled(false);
         showRelays.setOnClickListener(
                 v -> {
@@ -147,24 +159,28 @@ public final class NostrSetupActivity extends DownloadActivity {
                     ScrollView entries = new ScrollView(this);
                     entries.addView(details);
                     new AlertDialog.Builder(this)
-                            .setTitle("Relay measurements")
+                            .setTitle(PatchStrings.t("Relay measurements"))
                             .setView(entries)
-                            .setPositiveButton("Close", null)
+                            .setPositiveButton(PatchStrings.t("Close"), null)
                             .show();
                 });
         text(
                 body,
-                "Applying a selection preserves working configured relays. To replace those with"
-                    + " faster alternatives, coordinate the change with your paired phone. Another"
-                    + " check explores more candidates. Stop coordination before checking relays.",
+                PatchStrings.t(
+                        "Applying a selection preserves working configured relays. To replace those"
+                            + " with faster alternatives, coordinate the change with your paired"
+                            + " phone. Another check explores more candidates. Stop coordination"
+                            + " before checking relays."),
                 14);
         peers =
                 field(
                         body,
-                        "Trusted peer public keys: one 64-character key per line, up to 16",
+                        PatchStrings.t(
+                                "Trusted peer public keys: one 64-character key per line, up to"
+                                        + " 16"),
                         2048,
                         false);
-        button(body, "Save settings", true)
+        button(body, PatchStrings.t("Save settings"), true)
                 .setOnClickListener(
                         v -> {
                             String relayText = relays.getText().toString();
@@ -174,14 +190,14 @@ public final class NostrSetupActivity extends DownloadActivity {
                                     "Settings saved.",
                                     () -> coordinator.configure(relayText, peerText));
                         });
-        button(body, "Start coordination", true)
+        button(body, PatchStrings.t("Start coordination"), true)
                 .setOnClickListener(
                         v ->
                                 perform(
                                         io,
                                         "Coordination started. Waiting for relay connections.",
                                         () -> coordinator.start()));
-        stop = button(body, "Stop coordination", false);
+        stop = button(body, PatchStrings.t("Stop coordination"), false);
         stop.setEnabled(false);
         stop.setOnClickListener(
                 v ->
@@ -194,8 +210,8 @@ public final class NostrSetupActivity extends DownloadActivity {
                                     if (scan != null) scan.cancel();
                                     if (current != null) current.stop();
                                 }));
-        target = field(body, "Trusted peer public key to test", 64, true);
-        button(body, "Test trusted peer", true)
+        target = field(body, PatchStrings.t("Trusted peer public key to test"), 64, true);
+        button(body, PatchStrings.t("Test trusted peer"), true)
                 .setOnClickListener(
                         v -> {
                             String peer = target.getText().toString().trim();
@@ -204,19 +220,20 @@ public final class NostrSetupActivity extends DownloadActivity {
                                     "Connection test sent. Check the response count below.",
                                     () -> coordinator.ping(peer));
                         });
-        button(body, "Reset connection identity", true)
+        button(body, PatchStrings.t("Reset connection identity"), true)
                 .setOnClickListener(
                         v ->
                                 new AlertDialog.Builder(this)
-                                        .setTitle("Reset connection identity?")
+                                        .setTitle(PatchStrings.t("Reset connection identity?"))
                                         .setMessage(
-                                                "Stops coordination and deletes this app's"
-                                                    + " connection identity and trusted peers. You"
-                                                    + " will need to exchange the new public key"
-                                                    + " with peers.")
-                                        .setNegativeButton("Cancel", null)
+                                                PatchStrings.t(
+                                                        "Stops coordination and deletes this app's"
+                                                            + " connection identity and trusted"
+                                                            + " peers. You will need to exchange"
+                                                            + " the new public key with peers."))
+                                        .setNegativeButton(PatchStrings.t("Cancel"), null)
                                         .setPositiveButton(
-                                                "Reset",
+                                                PatchStrings.t("Reset"),
                                                 (dialog, which) ->
                                                         perform(
                                                                 control,
@@ -228,8 +245,8 @@ public final class NostrSetupActivity extends DownloadActivity {
                                                                     loadFields();
                                                                 }))
                                         .show());
-        status = text(body, "Coordination is off until you start it.", 14);
-        result = text(body, "Save settings while coordination is stopped.", 14);
+        status = text(body, PatchStrings.t("Coordination is off until you start it."), 14);
+        result = text(body, PatchStrings.t("Save settings while coordination is stopped."), 14);
         perform(
                 io,
                 "Ready.",
@@ -264,7 +281,7 @@ public final class NostrSetupActivity extends DownloadActivity {
         busy = true;
         if (executor == control) controlBusy = true;
         updateControls();
-        result.setText("Working…");
+        result.setText(PatchStrings.t("Working…"));
         executor.execute(
                 () -> {
                     if (destroyed || revision.get() != intent) return;
@@ -281,7 +298,7 @@ public final class NostrSetupActivity extends DownloadActivity {
                     handler.post(
                             () -> {
                                 if (destroyed || revision.get() != intent) return;
-                                result.setText(completed);
+                                result.setText(PatchStrings.t(completed));
                                 busy = false;
                                 if (executor == control) controlBusy = false;
                                 updateControls();
@@ -316,6 +333,7 @@ public final class NostrSetupActivity extends DownloadActivity {
     private EditText field(LinearLayout parent, String hint, int limit, boolean singleLine) {
         EditText view = new EditText(this);
         view.setHint(hint);
+        view.setTextDirection(View.TEXT_DIRECTION_LTR);
         view.setSingleLine(singleLine);
         view.setInputType(
                 InputType.TYPE_CLASS_TEXT

@@ -43,12 +43,35 @@ public final class VerifyBeta7Apk {
         return method.getName() + method.getParameterTypes() + method.getReturnType();
     }
 
+    private static List<Integer> arguments(Instruction instruction) {
+        if (instruction instanceof RegisterRangeInstruction range) {
+            List<Integer> values = new ArrayList<>();
+            for (int i = 0; i < range.getRegisterCount(); i++)
+                values.add(range.getStartRegister() + i);
+            return values;
+        }
+        if (instruction instanceof FiveRegisterInstruction five)
+            return List.of(
+                            five.getRegisterC(),
+                            five.getRegisterD(),
+                            five.getRegisterE(),
+                            five.getRegisterF(),
+                            five.getRegisterG())
+                    .subList(0, five.getRegisterCount());
+        throw new AssertionError("Unexpected invoke register encoding");
+    }
+
     public static void main(String[] args) throws Exception {
         var dex = DexFileFactory.loadDexContainer(new File(args[0]), Opcodes.getDefault());
         Map<String, ClassDef> classes = new HashMap<>();
         for (String entry : dex.getDexEntryNames())
             for (ClassDef cls : dex.getEntry(entry).getDexFile().getClasses())
                 check(classes.put(cls.getType(), cls) == null, "Unique class " + cls.getType());
+        boolean host19 =
+                VerifyApk.manifest(new File(args[0]))
+                        .getDocumentElement()
+                        .getAttributeNS(VerifyApk.NS, "versionName")
+                        .equals("1.9");
 
         boolean jamesDsp = applied(classes, "jamesDspApplied");
         var queriedPackages = VerifyApk.manifest(new File(args[0])).getElementsByTagName("package");
@@ -122,6 +145,77 @@ public final class VerifyBeta7Apk {
                                             new HashSet<>()),
                                     "Optimized host method resolves: " + target);
 
+                        if (target.getDefiningClass().equals(BASE + "SoundExtras;")
+                                && target.getName().equals("process")
+                                && !cls.getType().startsWith(BASE)
+                                && host19) {
+                            check(
+                                    cls.getType()
+                                                    .equals(
+                                                            "Lcom/music/bitchord/playback/audio/PrecisionAudioSink;")
+                                            && method.getName()
+                                                    .equals(
+                                                            cls.getInterfaces()
+                                                                            .contains(
+                                                                                    BASE
+                                                                                            + "Downmix$Target;")
+                                                                    ? "hostHandleBuffer"
+                                                                    : "handleBuffer")
+                                            && method.getParameterTypes()
+                                                    .equals(
+                                                            List.of(
+                                                                    "I",
+                                                                    "J",
+                                                                    "Ljava/nio/ByteBuffer;"))
+                                            && method.getReturnType().equals("Z"),
+                                    "Both precision taps stay in the actual host sink");
+                            int position = instructions.indexOf(instruction);
+                            check(
+                                    position >= 2 && position + 1 < instructions.size(),
+                                    "Precision tap has its original chain context");
+                            Instruction chain = instructions.get(position - 2);
+                            Instruction block = instructions.get(position - 1);
+                            check(
+                                    chain.getOpcode() == Opcode.IGET_OBJECT
+                                            && block.getOpcode() == Opcode.IGET_OBJECT
+                                            && chain instanceof ReferenceInstruction chainRef
+                                            && chainRef.getReference()
+                                                    instanceof FieldReference chainField
+                                            && chainField.getName().equals("dspChain")
+                                            && block instanceof ReferenceInstruction blockRef
+                                            && blockRef.getReference()
+                                                    instanceof FieldReference blockField
+                                            && blockField.getName().equals("audioBlock"),
+                                    "Precision tap follows the sink's chain and audio block reads");
+                            TwoRegisterInstruction chainRead = (TwoRegisterInstruction) chain;
+                            TwoRegisterInstruction blockRead = (TwoRegisterInstruction) block;
+                            check(
+                                    chainRead.getRegisterB() == blockRead.getRegisterB()
+                                            && arguments(instruction)
+                                                    .equals(
+                                                            List.of(
+                                                                    chainRead.getRegisterB(),
+                                                                    blockRead.getRegisterA()))
+                                            && target.getParameterTypes()
+                                                    .equals(
+                                                            List.of(
+                                                                    "Ljava/lang/Object;",
+                                                                    "Ljava/lang/Object;")),
+                                    "Precision tap gets the live sink and block");
+                            Instruction next = instructions.get(position + 1);
+                            check(
+                                    next instanceof ReferenceInstruction nextRef
+                                            && nextRef.getReference()
+                                                    instanceof MethodReference nextCall
+                                            && nextCall.getName().equals("process")
+                                            && arguments(next)
+                                                    .equals(
+                                                            List.of(
+                                                                    chainRead.getRegisterA(),
+                                                                    blockRead.getRegisterA())),
+                                    "Each precision block reaches the original chain immediately"
+                                            + " after its tap");
+                        }
                         if (target.getDefiningClass().equals(BASE + "SoundExtras;")
                                 && target.getName().equals("processPcm16")
                                 && !cls.getType().startsWith(BASE)) {
@@ -241,8 +335,9 @@ public final class VerifyBeta7Apk {
                 "Player hooks are shared once across the dependent features");
         boolean audio = sing || headphones || dj;
         check(
-                hooks.getOrDefault(BASE + "SoundExtras;->process", 0) == (audio ? 1 : 0),
-                "Precision audio tap is shared once across dependent features");
+                hooks.getOrDefault(BASE + "SoundExtras;->process", 0)
+                        == (audio ? (host19 ? 2 : 1) : 0),
+                "Precision audio taps cover each host output path once across dependent features");
         check(
                 hooks.getOrDefault(BASE + "SoundExtras;->processPcm16", 0) == (audio ? 2 : 0),
                 "The two mutually exclusive PCM16 output paths each receive one shared tap");
@@ -285,6 +380,6 @@ public final class VerifyBeta7Apk {
                         "Watcher implements pinned callback: " + callback);
             }
         }
-        System.out.println("PASS: " + checks + " beta.7 hook/optimized-host ABI checks");
+        System.out.println("PASS: " + checks + " playback hook/optimized-host ABI checks");
     }
 }

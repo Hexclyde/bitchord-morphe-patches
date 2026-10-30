@@ -67,7 +67,7 @@ class MobileSourceTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.validate()
 
-    def test_only_soulseek_can_advertise_the_reviewed_19_target(self):
+    def test_only_soulseek_can_advertise_the_additional_181_target(self):
         soulseek = next(
             p
             for p in self.patches["patches"]
@@ -76,7 +76,11 @@ class MobileSourceTest(unittest.TestCase):
         targets = soulseek["compatiblePackages"][0]["targets"]
         self.assertEqual(["1.8.1", "1.9"], [t["version"] for t in targets])
         other = next(p for p in self.patches["patches"] if p is not soulseek)
-        other["compatiblePackages"][0]["targets"].append(copy.deepcopy(targets[1]))
+        self.assertEqual(
+            ["1.9"],
+            [t["version"] for t in other["compatiblePackages"][0]["targets"]],
+        )
+        other["compatiblePackages"][0]["targets"].append(copy.deepcopy(targets[0]))
         with self.assertRaises(ValueError):
             self.validate()
 

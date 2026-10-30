@@ -117,6 +117,8 @@ shared_ui = {
     "TelegramStyle",
     "TelegramSwitch",
     "Strings",
+    "PatchStrings",
+    "CapturePolicy",
     "Translations",
     "HostLog",
     "VocalCut",
@@ -129,6 +131,7 @@ shared_ui = {
     "DjMode",
     "DownloadChoice",
     "EffectsApps",
+    "BitPerfect",
 }
 for source in (OUT / "extension-classes").rglob("*.class"):
     relative = source.relative_to(OUT / "extension-classes")
@@ -210,6 +213,12 @@ run(
     OUT / "soulseek-dex",
     OUT / "soulseek.jar",
 )
+flags = OUT / "BuildFlags.kt"
+flags.write_text(
+    "package app.bitchord.patches\n\ninternal const val TESTING_CAPTURE = "
+    + ("true" if VERSION == "1.1.0-beta.8" else "false")
+    + "\n"
+)
 run(
     TOOLS / "kotlinc/bin/kotlinc",
     "-Xskip-metadata-version-check",
@@ -221,6 +230,7 @@ run(
     "-d",
     OUT / "patch-classes",
     *sorted((ROOT / "patches/src/main/kotlin").rglob("*.kt")),
+    flags,
 )
 jar(OUT / "patch.jar", OUT / "patch-classes")
 run(

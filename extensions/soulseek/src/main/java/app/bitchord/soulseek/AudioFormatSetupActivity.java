@@ -18,6 +18,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import app.bitchord.telegram.PatchStrings;
+
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -55,11 +57,16 @@ public final class AudioFormatSetupActivity extends DownloadActivity {
         body.setOrientation(LinearLayout.VERTICAL);
         body.setPadding(style.dp(20), style.dp(12), style.dp(20), style.dp(28));
         scroll.addView(body);
-        TextView title = style.text("Download formats", 34, style.foreground, style.heavy);
+        TextView title =
+                style.text(PatchStrings.t("Download formats"), 34, style.foreground, style.heavy);
         title.setPadding(0, style.dp(12), 0, style.dp(28));
         body.addView(title);
         TextView heading =
-                style.text("FORMATS, TRIED IN THIS ORDER", 11, style.secondary, style.semibold);
+                style.text(
+                        PatchStrings.t("FORMATS, TRIED IN THIS ORDER"),
+                        11,
+                        style.secondary,
+                        style.semibold);
         heading.setPadding(style.dp(4), 0, 0, style.dp(8));
         body.addView(heading);
         rows = new LinearLayout(this);
@@ -74,8 +81,9 @@ public final class AudioFormatSetupActivity extends DownloadActivity {
         renderOrder();
         TextView explanation =
                 style.text(
-                        "Enable the formats you accept. Drag a handle to choose which is checked"
-                                + " first. Keep at least one format enabled.",
+                        PatchStrings.t(
+                                "Enable the formats you accept. Drag a handle to choose which is"
+                                        + " checked first. Keep at least one format enabled."),
                         14,
                         style.secondary,
                         style.regular);
@@ -83,7 +91,7 @@ public final class AudioFormatSetupActivity extends DownloadActivity {
         explanation.setPadding(style.dp(4), style.dp(12), style.dp(4), style.dp(20));
         body.addView(explanation);
         android.widget.Button save = new android.widget.Button(this);
-        save.setText("Save format choices");
+        save.setText(PatchStrings.t("Save format choices"));
         body.addView(save, new LinearLayout.LayoutParams(-1, -2));
         save.setOnClickListener(
                 v -> {
@@ -94,17 +102,19 @@ public final class AudioFormatSetupActivity extends DownloadActivity {
                     } catch (Exception error) {
                         Toast.makeText(
                                         this,
-                                        "Could not save audio format choices. Try again.",
+                                        PatchStrings.t(
+                                                "Could not save audio format choices. Try again."),
                                         Toast.LENGTH_LONG)
                                 .show();
                     }
                 });
         TextView provenance =
                 style.text(
-                        "Preference applies among matching artist, title and duration results."
-                                + " Completed files must match an enabled format. A filename or"
-                                + " encoding check cannot prove that a lossless file was never"
-                                + " converted from a lossy source.",
+                        PatchStrings.t(
+                                "Preference applies among matching artist, title and duration"
+                                    + " results. Completed files must match an enabled format. A"
+                                    + " filename or encoding check cannot prove that a lossless"
+                                    + " file was never converted from a lossy source."),
                         13,
                         style.secondary,
                         style.regular);
@@ -310,7 +320,7 @@ public final class AudioFormatSetupActivity extends DownloadActivity {
             labels.addView(style.text(extensions(format), 13, style.secondary, style.regular));
             addView(labels, new LayoutParams(0, -2, 1));
             enabled = new FormatSwitch(getContext());
-            enabled.setContentDescription("Accept " + format.label);
+            enabled.setContentDescription(PatchStrings.f("Accept {0}", format.label));
             enabled.setOnClickListener(
                     v -> {
                         if (held != null) return;
@@ -321,7 +331,8 @@ public final class AudioFormatSetupActivity extends DownloadActivity {
                         } catch (IllegalArgumentException lastFormat) {
                             Toast.makeText(
                                             AudioFormatSetupActivity.this,
-                                            "Keep at least one audio format enabled.",
+                                            PatchStrings.t(
+                                                    "Keep at least one audio format enabled."),
                                             Toast.LENGTH_SHORT)
                                     .show();
                         }
@@ -355,13 +366,14 @@ public final class AudioFormatSetupActivity extends DownloadActivity {
         DragHandle(Context context, AudioFormatPreferences.Format format) {
             super(context);
             this.format = format;
-            setContentDescription("Reorder " + format.label);
+            setContentDescription(PatchStrings.f("Reorder {0}", format.label));
             setFocusable(true);
             setClickable(true);
             setOnClickListener(
                     v ->
                             announceForAccessibility(
-                                    "Drag to reorder, or use Move up and Move down."));
+                                    PatchStrings.t(
+                                            "Drag to reorder, or use Move up and Move down.")));
             setOnKeyListener(
                     (view, key, event) -> {
                         if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
@@ -392,10 +404,13 @@ public final class AudioFormatSetupActivity extends DownloadActivity {
             super.onInitializeAccessibilityNodeInfo(info);
             int index = settings.order.indexOf(format);
             if (index > 0)
-                info.addAction(new AccessibilityNodeInfo.AccessibilityAction(MOVE_UP, "Move up"));
+                info.addAction(
+                        new AccessibilityNodeInfo.AccessibilityAction(
+                                MOVE_UP, PatchStrings.t("Move up")));
             if (index < settings.order.size() - 1) {
                 info.addAction(
-                        new AccessibilityNodeInfo.AccessibilityAction(MOVE_DOWN, "Move down"));
+                        new AccessibilityNodeInfo.AccessibilityAction(
+                                MOVE_DOWN, PatchStrings.t("Move down")));
             }
         }
 

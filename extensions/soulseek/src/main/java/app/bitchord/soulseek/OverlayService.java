@@ -21,6 +21,8 @@ import android.system.Os;
 import android.system.OsConstants;
 import android.system.StructTimeval;
 
+import app.bitchord.telegram.PatchStrings;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -127,6 +129,7 @@ public abstract class OverlayService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        PatchStrings.refresh(this);
         ipcThread = new HandlerThread("bitchord-overlay-ipc");
         ipcThread.start();
         ipc =
@@ -156,12 +159,14 @@ public abstract class OverlayService extends Service {
                 throw new IllegalStateException("Notification manager unavailable");
             manager.createNotificationChannel(
                     new NotificationChannel(
-                            CHANNEL, "Peer downloads", NotificationManager.IMPORTANCE_LOW));
+                            CHANNEL,
+                            PatchStrings.t("Peer downloads"),
+                            NotificationManager.IMPORTANCE_LOW));
             Notification notification =
                     new Notification.Builder(this, CHANNEL)
                             .setSmallIcon(android.R.drawable.stat_sys_download)
-                            .setContentTitle("Peer downloads")
-                            .setContentText(label() + " download connections")
+                            .setContentTitle(PatchStrings.t("Peer downloads"))
+                            .setContentText(PatchStrings.f("{0} download connections", label()))
                             .setCategory(Notification.CATEGORY_SERVICE)
                             .setOngoing(true)
                             .build();

@@ -66,6 +66,8 @@ SOURCES = [
     "VersionAlign",
     "MicroGSignIn",
     "Strings",
+    "PatchStrings",
+    "CapturePolicy",
     "Translations",
     "InternalAddon",
     "NativeAudio",
@@ -86,9 +88,12 @@ SOURCES = [
     "DjMode",
     "DownloadChoice",
     "EffectsApps",
+    "BitPerfect",
     "SoundExtras",
 ]
 TESTS = [
+    "BitPerfectTest",
+    "DownloadProbeTest",
     "NativeAudioTest",
     "NavigationTest",
     "CredentialsTest",

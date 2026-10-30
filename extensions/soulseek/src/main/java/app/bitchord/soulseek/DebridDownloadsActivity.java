@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -16,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import app.bitchord.telegram.CapturePolicy;
+import app.bitchord.telegram.PatchStrings;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -57,8 +59,7 @@ public final class DebridDownloadsActivity extends DownloadActivity {
     public void onCreate(Bundle state) {
         super.onCreate(state);
         if (state != null) preparedId = state.getString("preparedId", "");
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        if (Build.VERSION.SDK_INT >= 33) setRecentsScreenshotEnabled(false);
+        CapturePolicy.apply(this);
         if (Build.VERSION.SDK_INT >= 31) getWindow().setHideOverlayWindows(true);
         ScrollView scroll = new ScrollView(this);
         LinearLayout body = new LinearLayout(this);
@@ -67,25 +68,34 @@ public final class DebridDownloadsActivity extends DownloadActivity {
         body.setPadding(p, p, p, p);
         scroll.addView(body);
         setContentView(scroll);
-        button(body, "Back", () -> finish());
-        text(body, "Debrid downloads", 24);
+        button(body, PatchStrings.t("Back"), () -> finish());
+        text(body, PatchStrings.t("Debrid downloads"), 24);
         text(
                 body,
-                "Choose an enabled service and paste a supported HTTPS link or magnet. Select the"
-                    + " audio files to save using your chosen destination and format preferences.",
+                PatchStrings.t(
+                        "Choose an enabled service and paste a supported HTTPS link or magnet."
+                            + " Select the audio files to save using your chosen destination and"
+                            + " format preferences."),
                 16);
         text(
                 body,
-                "Resolve may create a transfer in your service account. Account limits and host"
-                    + " support apply. Only selected audio files are saved here; this page does not"
-                    + " search a music catalogue or stream audio.",
+                PatchStrings.t(
+                        "Resolve may create a transfer in your service account. Account limits and"
+                            + " host support apply. Only selected audio files are saved here; this"
+                            + " page does not search a music catalogue or stream audio."),
                 14);
         button(
                 body,
-                "Services and API keys",
+                PatchStrings.t("Services and API keys"),
                 () -> startActivity(new Intent(this, DebridSetupActivity.class)));
-        button(body, "Where copies go", () -> DownloadDestinations.openSettings(this));
-        button(body, "Formats, best first", () -> AudioFormatPreferences.openSettings(this));
+        button(
+                body,
+                PatchStrings.t("Where copies go"),
+                () -> DownloadDestinations.openSettings(this));
+        button(
+                body,
+                PatchStrings.t("Formats, best first"),
+                () -> AudioFormatPreferences.openSettings(this));
         provider = new Spinner(this);
         List<String> names = new ArrayList<>();
         for (DebridProvider.Kind k : DebridProvider.Kind.values()) names.add(k.label);
@@ -117,7 +127,8 @@ public final class DebridDownloadsActivity extends DownloadActivity {
         provider.setPopupBackgroundDrawable(downloadStyle.shape(downloadStyle.card, 16, false));
         body.addView(provider);
         link = new EditText(this);
-        link.setHint("HTTPS link or magnet");
+        link.setHint(PatchStrings.t("HTTPS link or magnet"));
+        link.setTextDirection(View.TEXT_DIRECTION_LTR);
         link.setSingleLine(true);
         link.setSaveEnabled(false);
         link.setFilters(
@@ -125,17 +136,17 @@ public final class DebridDownloadsActivity extends DownloadActivity {
         if (Build.VERSION.SDK_INT >= 26)
             link.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
         body.addView(link);
-        notice = text(body, "Loading download settings…", 14);
+        notice = text(body, PatchStrings.t("Loading download settings…"), 14);
         button(
                 body,
-                "Resolve link",
+                PatchStrings.t("Resolve link"),
                 () -> {
                     if (working) return;
                     final DebridProvider.Kind kind =
                             DebridProvider.Kind.values()[provider.getSelectedItemPosition()];
                     final String source = link.getText().toString().trim();
                     if (source.isEmpty()) {
-                        notice.setText("Paste a supported link first.");
+                        notice.setText(PatchStrings.t("Paste a supported link first."));
                         return;
                     }
                     runAction(
@@ -150,10 +161,10 @@ public final class DebridDownloadsActivity extends DownloadActivity {
                 });
         button(
                 body,
-                "Refresh provider transfer",
+                PatchStrings.t("Refresh provider transfer"),
                 () -> {
                     if (preparedId.isEmpty()) {
-                        notice.setText("Resolve a link first.");
+                        notice.setText(PatchStrings.t("Resolve a link first."));
                         return;
                     }
                     final String id = preparedId;
@@ -166,11 +177,11 @@ public final class DebridDownloadsActivity extends DownloadActivity {
                             });
                 });
         results = group(body);
-        text(body, "Recent provider transfers", 18);
+        text(body, PatchStrings.t("Recent provider transfers"), 18);
         recent = group(body);
         button(
                 body,
-                "Download selected audio",
+                PatchStrings.t("Download selected audio"),
                 () -> {
                     if (working) return;
                     if (!DownloadDestinations.ensureConfigured(this)
@@ -179,7 +190,7 @@ public final class DebridDownloadsActivity extends DownloadActivity {
                     for (Map.Entry<String, CheckBox> item : selections.entrySet())
                         if (item.getValue().isChecked()) selected.add(item.getKey());
                     if (preparedId.isEmpty() || selected.isEmpty()) {
-                        notice.setText("Select at least one available audio file.");
+                        notice.setText(PatchStrings.t("Select at least one available audio file."));
                         return;
                     }
                     final String id = preparedId;
@@ -189,7 +200,8 @@ public final class DebridDownloadsActivity extends DownloadActivity {
                     try {
                         destination = DownloadDestinations.snapshot(this);
                     } catch (Exception unavailable) {
-                        notice.setText("Choose an available save destination first.");
+                        notice.setText(
+                                PatchStrings.t("Choose an available save destination first."));
                         return;
                     }
                     runAction(
@@ -204,13 +216,15 @@ public final class DebridDownloadsActivity extends DownloadActivity {
                 });
         button(
                 body,
-                "Open copy queue",
+                PatchStrings.t("Open copy queue"),
                 () -> startActivity(new Intent(this, BulkDownloadsActivity.class)));
-        text(body, "Debrid transfer queue", 20);
+        text(body, PatchStrings.t("Debrid transfer queue"), 20);
         text(
                 body,
-                "Pause or cancel stops local fetching. A transfer already created in your service"
-                    + " account may continue there. Use that service's account page to manage it.",
+                PatchStrings.t(
+                        "Pause or cancel stops local fetching. A transfer already created in your"
+                            + " service account may continue there. Use that service's account page"
+                            + " to manage it."),
                 14);
         jobs = group(body);
         runAction(
@@ -234,9 +248,9 @@ public final class DebridDownloadsActivity extends DownloadActivity {
         preparedId = prepared.id;
         selections.clear();
         results.removeAllViews();
-        text(results, prepared.kind.label + " · " + prepared.state, 18);
+        text(results, prepared.kind.label + " · " + PatchStrings.state(prepared.state), 18);
         if (prepared.message != null && !prepared.message.isEmpty())
-            text(results, prepared.message, 14);
+            text(results, PatchStrings.t(prepared.message), 14);
         AudioFormatPreferences.Settings policy = AudioFormatPreferences.snapshot(this);
         int audio = 0;
         for (DebridModels.Entry entry : prepared.entries) {
@@ -256,8 +270,11 @@ public final class DebridDownloadsActivity extends DownloadActivity {
             text(
                     results,
                     prepared.ready
-                            ? "No files match your enabled audio formats and size limit."
-                            : "The provider is still preparing files. Refresh this transfer later.",
+                            ? PatchStrings.t(
+                                    "No files match your enabled audio formats and size limit.")
+                            : PatchStrings.t(
+                                    "The provider is still preparing files. Refresh this transfer"
+                                            + " later."),
                     14);
     }
 
@@ -279,13 +296,13 @@ public final class DebridDownloadsActivity extends DownloadActivity {
                     recent,
                     prepared.kind.label
                             + " · "
-                            + prepared.state
+                            + PatchStrings.state(prepared.state)
                             + " · "
                             + prepared.id.substring(0, Math.min(6, prepared.id.length())),
                     () -> showPrepared(prepared));
             button(
                     recent,
-                    "Dismiss link here (keep provider transfer)",
+                    PatchStrings.t("Dismiss link here (keep provider transfer)"),
                     () ->
                             runAction(
                                     () -> {
@@ -302,27 +319,27 @@ public final class DebridDownloadsActivity extends DownloadActivity {
                                                 + " not removed.";
                                     }));
         }
-        if (list.isEmpty()) text(jobs, "No debrid downloads queued.", 14);
+        if (list.isEmpty()) text(jobs, PatchStrings.t("No debrid downloads queued."), 14);
         for (DebridDownloads.Job job : list) {
             text(jobs, job.name + " · " + job.kind.label, 16);
             text(
                     jobs,
-                    job.state
+                    PatchStrings.state(job.state)
                             + " · "
                             + bytes(job.bytes)
                             + (job.total > 0 ? " / " + bytes(job.total) : "")
                             + "\n"
-                            + job.message,
+                            + PatchStrings.t(job.message),
                     14);
             if (job.bulkJobId != null && !job.bulkJobId.isEmpty()) {
                 button(
                         jobs,
-                        "Check saved copies",
+                        PatchStrings.t("Check saved copies"),
                         () -> startActivity(new Intent(this, BulkDownloadsActivity.class)));
             } else {
                 button(
                         jobs,
-                        "Pause",
+                        PatchStrings.t("Pause"),
                         () ->
                                 runAction(
                                         () -> {
@@ -331,7 +348,7 @@ public final class DebridDownloadsActivity extends DownloadActivity {
                                         }));
                 button(
                         jobs,
-                        "Resume",
+                        PatchStrings.t("Resume"),
                         () ->
                                 runAction(
                                         () -> {
@@ -340,7 +357,7 @@ public final class DebridDownloadsActivity extends DownloadActivity {
                                         }));
                 button(
                         jobs,
-                        "Cancel local download",
+                        PatchStrings.t("Cancel local download"),
                         () ->
                                 runAction(
                                         () -> {
@@ -353,7 +370,7 @@ public final class DebridDownloadsActivity extends DownloadActivity {
             if (!"RUNNING".equals(job.state) && !"QUEUED".equals(job.state))
                 button(
                         jobs,
-                        "Dismiss local status",
+                        PatchStrings.t("Dismiss local status"),
                         () ->
                                 runAction(
                                         () -> {
@@ -370,7 +387,7 @@ public final class DebridDownloadsActivity extends DownloadActivity {
 
     private void runAction(Action action) {
         if (working) {
-            notice.setText("Wait for the current action to finish.");
+            notice.setText(PatchStrings.t("Wait for the current action to finish."));
             return;
         }
         working = true;
@@ -393,14 +410,14 @@ public final class DebridDownloadsActivity extends DownloadActivity {
                                 () -> {
                                     working = false;
                                     if (!destroyed && !isFinishing()) {
-                                        notice.setText(result);
+                                        notice.setText(PatchStrings.t(result));
                                         renderJobs();
                                     }
                                 });
                     });
         } catch (java.util.concurrent.RejectedExecutionException full) {
             working = false;
-            notice.setText("Too many pending actions. Wait and retry.");
+            notice.setText(PatchStrings.t("Too many pending actions. Wait and retry."));
         }
     }
 

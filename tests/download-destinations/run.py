@@ -24,6 +24,8 @@ with tempfile.TemporaryDirectory(prefix="bitchord-destination-tests-") as tempor
             classpath,
             "-d",
             temporary,
+            str(ROOT / "compile-only/app/bitchord/telegram/PatchStrings.java"),
+            str(ROOT / "compile-only/app/bitchord/telegram/CapturePolicy.java"),
             str(extension / "DownloadDestinations.java"),
             str(extension / "DownloadStyle.java"),
             str(extension / "DownloadActivity.java"),

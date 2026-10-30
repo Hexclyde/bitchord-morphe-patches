@@ -556,8 +556,40 @@ val nativeSoulseekPatch =
             ) {
                 "Download cancellation helper changed"
             }
+            // Keep native dispatchers in one chain in either selection order.
+            // The existing handler's fallback already targets the HTTP builder;
+            // inserting after it would make that branch skip this handler.
+            val nativeDispatches =
+                (maxOf(0, downloadIndex - 40) until downloadIndex - 2).filter { index ->
+                    val read = code[index] as? TwoRegisterInstruction
+                    val field = (code[index] as? ReferenceInstruction)?.reference as? FieldReference
+                    val cast = code[index + 1]
+                    val call = code[index + 2]
+                    val target = (call as? ReferenceInstruction)?.reference as? MethodReference
+                    code[index].opcode == Opcode.IGET_OBJECT &&
+                        field?.definingClass == downloadType &&
+                        field.name == "\$path" &&
+                        read?.registerA == 4 &&
+                        read.registerB == 1 &&
+                        cast.opcode == Opcode.CHECK_CAST &&
+                        (cast
+                                as
+                                com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction)
+                            .registerA == 4 &&
+                        (cast as ReferenceInstruction).reference.toString() ==
+                            "Ljava/lang/String;" &&
+                        call.opcode == Opcode.INVOKE_STATIC &&
+                        target?.definingClass == "Lapp/bitchord/telegram/InternalAddon;" &&
+                        target.name == "reserved" &&
+                        target.parameterTypes == listOf("Ljava/lang/String;") &&
+                        target.returnType == "Z" &&
+                        (call as FiveRegisterInstruction).registerCount == 1 &&
+                        call.registerC == 4
+                }
+            check(nativeDispatches.size <= 1) { "Existing native download dispatch is not unique" }
+            val nativeDownloadIndex = nativeDispatches.singleOrNull() ?: downloadIndex
             download.addInstructionsWithLabels(
-                downloadIndex,
+                nativeDownloadIndex,
                 """
                 iget-object v4, v1, $downloadType->${'$'}path:Ljava/lang/Object;
                 check-cast v4, Ljava/lang/String;
@@ -574,7 +606,7 @@ val nativeSoulseekPatch =
                 move-result-object v4
                 return-object v4
                 """,
-                ExternalLabel("external_soulseek_download", code[downloadIndex]),
+                ExternalLabel("external_soulseek_download", code[nativeDownloadIndex]),
             )
 
             // Registering as an ADDON gives the source its normal Sources row. Intercept only

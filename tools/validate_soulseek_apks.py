@@ -185,6 +185,8 @@ def main():
             tweaks = mode == "tweaks"
             for checker, check_args in [
                 ("VerifyDexControlFlow", [str(patched)]),
+                ("VerifyCaptureApk", [str(patched)]),
+                ("VerifyNativeDispatchApk", [str(patched)]),
                 ("VerifyBeta7Apk", [str(patched)]),
                 (
                     "VerifyPatchUiApk",

@@ -67,6 +67,8 @@ public class ExtrasActivityTest {
 
     @Before
     public void create() throws Exception {
+        com.music.bitchord.data.settings.AppSettings.bitPerfectMode.setValue(
+                com.music.bitchord.data.settings.AppSettings.BitPerfectMode.OFF);
         android.content.Context app = org.robolectric.RuntimeEnvironment.getApplication();
         app.getSharedPreferences(SoundExtras.PREFERENCES, android.content.Context.MODE_PRIVATE)
                 .edit()
@@ -102,6 +104,38 @@ public class ExtrasActivityTest {
         TextView text = new TextView(activity);
         text.setText(value);
         return text;
+    }
+
+    private TextView bitPerfectNote(View view) {
+        if (view instanceof TextView
+                && ((TextView) view).getText().toString().startsWith("Bit-perfect output is on in"))
+            return (TextView) view;
+        if (view instanceof android.view.ViewGroup) {
+            android.view.ViewGroup group = (android.view.ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                TextView found = bitPerfectNote(group.getChildAt(i));
+                if (found != null) return found;
+            }
+        }
+        return null;
+    }
+
+    @Test
+    public void bitPerfectNoteFollowsHostSettingAndLeavesControlsUsable() {
+        assertNull(bitPerfectNote(activity.findViewById(android.R.id.content)));
+        com.music.bitchord.data.settings.AppSettings.bitPerfectMode.setValue(
+                com.music.bitchord.data.settings.AppSettings.BitPerfectMode.USB_DIRECT);
+        controller.recreate();
+        activity = controller.get();
+        assertNotNull(bitPerfectNote(activity.findViewById(android.R.id.content)));
+        toggle("sing").performClick();
+        shown("sing");
+        assertTrue(gear("sing").isEnabled());
+        com.music.bitchord.data.settings.AppSettings.bitPerfectMode.setValue(
+                com.music.bitchord.data.settings.AppSettings.BitPerfectMode.OFF);
+        controller.recreate();
+        activity = controller.get();
+        assertNull(bitPerfectNote(activity.findViewById(android.R.id.content)));
     }
 
     private View tagged(String tag) {

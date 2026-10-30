@@ -1,6 +1,6 @@
 # BitChord Morphe Patches (Bitchord+)
 
-> **Testing build 1.1.0-beta.6:** brings download tools and playback
+> **Testing build 1.1.0-beta.8:** brings download tools and playback
 > controls together under **Settings → Patches & tweaks**. Disabled features show
 > only their compact row; enabling one opens its controls. Use its settings gear
 > to reopen them later. Download formats now use switches and drag handles to set
@@ -8,15 +8,17 @@
 > Optional Soulseek, paired-phone and Real-Debrid, AllDebrid, Premiumize and TorBox
 > downloads retain the same Phone/Telegram/Both copy choices. See
 > [download setup](docs/SOULSEEK-TESTING.md) and [debrid setup](docs/DEBRID.md).
+> Download screens follow BitChord's selected language in all 20 supported translations.
+> Screenshots and screen recording are enabled across beta.8 for UI review.
 > The testing build still needs real-phone and public-network qualification.
 
 [Morphe](https://morphe.software) patches for the [BitChord](https://github.com/kushagrasinghx/BitChord) Android music player. The main one, **Unofficial Telegram music**, lets BitChord search and play music from your own Telegram channels, in its original quality, entirely on your phone. No server, bot or hosting is involved.
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.7, a testing build). It only works with BitChord **1.8.1**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.8, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
-> The existing Telegram integration has been tested on an **arm64-v8a** phone. The armeabi-v7a and x86_64 builds pass the same automated checks, but haven't been run on a real device. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
+> The previous BitChord 1.8.1 Telegram integration was tested on an **arm64-v8a** phone; this 1.9 build still needs on-device testing. The armeabi-v7a and x86_64 builds pass the same automated checks, but haven't been run on a real device. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
 
 ## Patches
 
@@ -127,7 +129,7 @@ If the source link doesn't work, download the `.mpp` from the [releases page](ht
 Step-by-step guides:
 
 - [Installing with Morphe](docs/MOBILE.md)
-- [Publishing the prepared beta.7 ZIP](docs/PUBLISHING-1.1.0-beta.7.md)
+- [Publishing the prepared beta.7 ZIP](docs/PUBLISHING-1.1.0-beta.8.md)
 - [Connecting Telegram](docs/SETUP.md)
 - [Optional debrid downloads](docs/DEBRID.md)
 - [FAQ](docs/FAQ.md)

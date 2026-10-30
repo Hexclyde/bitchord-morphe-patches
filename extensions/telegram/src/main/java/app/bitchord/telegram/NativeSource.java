@@ -2,7 +2,7 @@ package app.bitchord.telegram;
 
 import java.util.*;
 
-/** Isolated v1.8.1 registry adapter; preserves the user's enable/disable choice. */
+/** Isolated registry adapter; preserves the user's enable/disable choice. */
 public final class NativeSource {
     static final String ID = "telegram-native";
 

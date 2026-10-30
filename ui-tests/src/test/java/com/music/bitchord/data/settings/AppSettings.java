@@ -7,5 +7,13 @@ import kotlinx.coroutines.flow.StateFlowKt;
 public final class AppSettings {
     public static final MutableStateFlow<String> themeMode = StateFlowKt.MutableStateFlow("SYSTEM");
 
+    public enum BitPerfectMode {
+        OFF,
+        USB_DIRECT
+    }
+
+    public static final MutableStateFlow<BitPerfectMode> bitPerfectMode =
+            StateFlowKt.MutableStateFlow(BitPerfectMode.OFF);
+
     private AppSettings() {}
 }

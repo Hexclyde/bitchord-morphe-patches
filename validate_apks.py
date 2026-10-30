@@ -5,8 +5,16 @@ from pathlib import Path
 import subprocess, zipfile, json, hashlib, struct, tempfile, re, os
 
 from buildenv import APP_VERSION, BUNDLE_NAME, MORPHE_JAR, PATCHES, ROOT, VERSION, jdk
+from tools.validate_soulseek_apks import verify_native
 
 r = ROOT
+# The optional patches that don't need the Telegram patch.
+PLAYBACK_PATCHES = set(PATCHES) - {
+    "Unofficial Telegram music",
+    "Unofficial Soulseek audio",
+    "Install as Bitchord+",
+    "Sign in with MicroG",
+}
 if "ORIGINAL_APKS_DIR" not in os.environ:
     raise SystemExit(
         "Set ORIGINAL_APKS_DIR to the folder with the original BitChord APKs."
@@ -81,8 +89,11 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
     print(abi, flow.stdout, flow.stderr, flush=True)
     flow.check_returncode()
     for checker, arguments in [
+        ("VerifyCaptureApk", [str(output)]),
+        ("VerifyNativeDispatchApk", [str(output)]),
         ("VerifyBeta7Apk", [str(output)]),
         ("VerifyPatchUiApk", [str(output), "true", "true", "true"]),
+        ("VerifySoulseekApk", [str(output), "enabled", str(mpp)]),
     ]:
         checked = subprocess.run(
             [
@@ -102,6 +113,7 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
         )
         print(abi, checker, checked.stdout, checked.stderr, flush=True)
         checked.check_returncode()
+    verify_native(output)
     verify = subprocess.run(
         [
             str(java),
@@ -119,6 +131,54 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
     (r / f"apk-check-{abi}.txt").write_text(verify.stdout + verify.stderr)
     print(abi, verify.stdout, verify.stderr, flush=True)
     verify.check_returncode()
+    # The shared Patches & tweaks page: once with everything, and on one ABI with only the
+    # playback patches, which must not bring Telegram's code along.
+    shared = [(output, "true")]
+    if abi == "arm64-v8a":
+        playback = outputs / f"BitChord-Playback-{VERSION}-{abi}-test.apk"
+        only = [name for name in PATCHES if name in PLAYBACK_PATCHES]
+        with (r / f"patch-log-playback-{abi}.txt").open("w") as log:
+            subprocess.run(
+                [
+                    str(java),
+                    "-Xshare:off",
+                    "-Xmx4g",
+                    "-jar",
+                    str(jar),
+                    "patch",
+                    "--validate",
+                    "--exclusive",
+                    "-p",
+                    str(mpp),
+                    *[arg for name in only for arg in ("-e", name)],
+                    "-o",
+                    str(playback),
+                    str(original),
+                ],
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                check=True,
+            )
+        shared.append((playback, "false"))
+    for apk, telegram in shared:
+        page = subprocess.run(
+            [
+                str(java),
+                "-Xshare:off",
+                "-Xmx3g",
+                "-cp",
+                str(checks) + ":" + str(jar),
+                "VerifyPatchUiApk",
+                str(apk),
+                telegram,
+                "true" if telegram == "true" else "false",
+                "true",
+            ],
+            capture_output=True,
+            text=True,
+        )
+        print(abi, page.stdout, page.stderr, flush=True)
+        page.check_returncode()
     with zipfile.ZipFile(output) as z, zipfile.ZipFile(
         mpp
     ) as bundle, tempfile.TemporaryDirectory() as temp:

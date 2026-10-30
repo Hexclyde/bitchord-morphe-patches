@@ -4,17 +4,17 @@ You can do all of this on your phone. No computer or root access is needed.
 
 ## 1. Download Morphe and BitChord
 
-Install [Morphe Manager](https://github.com/MorpheApp/morphe-manager/releases). Then download the original **BitChord 1.8.1** APK from [BitChord's release page](https://github.com/kushagrasinghx/BitChord/releases/tag/v1.8.1).
+Install [Morphe Manager](https://github.com/MorpheApp/morphe-manager/releases). Then download the original **BitChord 1.9** APK from [BitChord's release page](https://github.com/kushagrasinghx/BitChord/releases/tag/v1.9).
 
 Choose the APK for your phone:
 
 | Device | APK |
 | --- | --- |
-| Most current Android phones | `BitChord-v1.8.1_arm64-v8a.apk` |
-| Older 32-bit ARM phones running Android 8+ | `BitChord-v1.8.1_armeabi-v7a.apk` |
-| x86-64 Android devices or emulators | `BitChord-v1.8.1_x86_64.apk` |
+| Most current Android phones | `BitChord-v1.9_arm64-v8a.apk` |
+| Older 32-bit ARM phones running Android 8+ | `BitChord-v1.9_armeabi-v7a.apk` |
+| x86-64 Android devices or emulators | `BitChord-v1.9_x86_64.apk` |
 
-I've only tested the patch on an arm64-v8a phone so far. If you're on armeabi-v7a or x86_64, it should work the same way, but please [report any problems](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) and mention your architecture.
+The Telegram integration was tested on an arm64-v8a phone with BitChord 1.8.1. The 1.9 build still needs on-device testing. If you're on armeabi-v7a or x86_64, it should work the same way, but please [report any problems](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) and mention your architecture.
 
 Use the normal Android APK. TV, Wear OS, split APK packages and already patched APKs are not suitable inputs. Keep the original APK in Downloads; you will select it in Morphe.
 
@@ -51,7 +51,7 @@ See [source download problems](TROUBLESHOOTING.md#the-source-shows-unnamed-or-me
 
 ## 3. Select the APK and patches
 
-1. In Morphe, open **Apps**, choose BitChord and select the original **1.8.1** APK from Downloads when asked. If you need to select a local APK manually, enable **Expert mode** in **Settings → Advanced → Expert settings**.
+1. In Morphe, open **Apps**, choose BitChord and select the original **1.9** APK from Downloads when asked. If you need to select a local APK manually, enable **Expert mode** in **Settings → Advanced → Expert settings**.
 2. Choose this project's source and keep these patches selected:
 
    - **Unofficial Telegram music**

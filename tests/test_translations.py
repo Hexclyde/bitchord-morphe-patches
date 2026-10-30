@@ -10,7 +10,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import translations
 
-SOURCE = ROOT / "extensions/telegram/src/main/java/app/bitchord/telegram"
+SOURCES = [
+    ROOT / "extensions/telegram/src/main/java/app/bitchord/telegram",
+    ROOT / "extensions/soulseek/src/main/java/app/bitchord/soulseek",
+]
 LANGUAGES = {
     "es",
     "pt",
@@ -40,7 +43,7 @@ def marked_phrases():
     literal = r'"(?:[^"\\]|\\.)*"'
     joined = rf"{literal}(?:\s*\+\s*{literal})*"
     found = set()
-    for path in SOURCE.glob("*.java"):
+    for path in (p for folder in SOURCES for p in folder.glob("*.java")):
         text = path.read_text(encoding="utf-8")
         for match in re.finditer(rf"Strings\.[tf]\(\s*({joined})\s*[,)]", text):
             parts = re.findall(literal, match.group(1))
@@ -62,6 +65,30 @@ class TranslationsTest(unittest.TestCase):
     def test_marked_phrases_are_listed(self):
         missing = sorted(marked_phrases() - set(self.source))
         self.assertEqual([], missing, "add these to translations/source.json")
+
+    def test_download_ui_labels_are_explicitly_localized(self):
+        # Factory inputs may be filenames or keys, so localization belongs at literal call sites.
+        literal = r'"(?:[^"\\]|\\.)*"'
+        joined = rf"{literal}(?:\s*\+\s*{literal})*"
+        patterns = [
+            rf"\.set(?:Text|Hint|Title|Message|ContentDescription|Error)\(\s*({joined})\s*[,)]",
+            rf"\b(?:text|button|action|field)\(\s*[^,()]+,\s*({joined})\s*[,)]",
+            rf"\b(?:style|downloadStyle)\.text\(\s*({joined})\s*[,)]",
+        ]
+        missing = []
+        folder = SOURCES[1]
+        for path in [*folder.glob("*Activity.java"), folder / "DownloadStyle.java"]:
+            text = path.read_text(encoding="utf-8")
+            for pattern in patterns:
+                for match in re.finditer(pattern, text):
+                    value = "".join(
+                        json.loads(p) for p in re.findall(literal, match.group(1))
+                    )
+                    if value and re.search(r"[A-Za-z]", value):
+                        missing.append(path.name + ": " + value)
+        self.assertEqual(
+            [], missing, "wrap fixed UI labels, while keeping editable values raw"
+        )
 
     def test_every_language_is_complete(self):
         self.assertEqual(LANGUAGES, set(self.languages))

@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
+import app.bitchord.telegram.PatchStrings;
+
 import kotlin.coroutines.EmptyCoroutineContext;
 
 import java.io.*;
@@ -272,6 +274,9 @@ public final class SoulseekSelectedDownloads {
 
     private static void notice(Context context, String message) {
         new Handler(Looper.getMainLooper())
-                .post(() -> Toast.makeText(context, message, Toast.LENGTH_LONG).show());
+                .post(
+                        () ->
+                                Toast.makeText(context, PatchStrings.t(message), Toast.LENGTH_LONG)
+                                        .show());
     }
 }

@@ -10,12 +10,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.OpenableColumns;
 import android.text.InputType;
-import android.view.WindowManager;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import app.bitchord.telegram.CapturePolicy;
+import app.bitchord.telegram.PatchStrings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,15 +75,17 @@ public final class BulkDownloadsActivity extends DownloadActivity {
     @Override
     public void onCreate(Bundle saved) {
         super.onCreate(saved);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        if (Build.VERSION.SDK_INT >= 33) setRecentsScreenshotEnabled(false);
+        CapturePolicy.apply(this);
         if (Build.VERSION.SDK_INT >= 31) getWindow().setHideOverlayWindows(true);
         try {
             coordinator = BulkCoordinator.get(this);
             downloads = BulkDownloads.get(this);
         } catch (Exception | LinkageError unavailable) {
             TextView error = new TextView(this);
-            error.setText("Download storage could not be opened. Restart BitChord and try again.");
+            error.setText(
+                    PatchStrings.t(
+                            "Download storage could not be opened. Restart BitChord and try"
+                                    + " again."));
             setContentView(error);
             return;
         }
@@ -91,41 +96,50 @@ public final class BulkDownloadsActivity extends DownloadActivity {
         body.setPadding(padding, padding, padding, padding);
         scroll.addView(body);
         setContentView(scroll);
-        button(body, "Back", () -> finish());
-        text(body, "Peer downloads", 24);
+        button(body, PatchStrings.t("Back"), () -> finish());
+        text(body, PatchStrings.t("Peer downloads"), 24);
         text(
                 body,
-                "Share selected audio files with a saved peer's app key. Downloads try a direct"
-                    + " encrypted UDP connection, then available I2P, Tor and IPFS routes. These"
-                    + " files are downloaded completely before playback.",
+                PatchStrings.t(
+                        "Share selected audio files with a saved peer's app key. Downloads try a"
+                            + " direct encrypted UDP connection, then available I2P, Tor and IPFS"
+                            + " routes. These files are downloaded completely before playback."),
                 16);
         text(
                 body,
-                "Direct connections reveal your IP address to the paired phone. Your Telegram phone"
-                        + " number and personal account are not used for coordination. Public STUN"
-                        + " services and Nostr relays are used to establish connections.",
+                PatchStrings.t(
+                        "Direct connections reveal your IP address to the paired phone. Your"
+                                + " Telegram phone number and personal account are not used for"
+                                + " coordination. Public STUN services and Nostr relays are used to"
+                                + " establish connections."),
                 14);
         button(
                 body,
-                "Connection keys and relays",
+                PatchStrings.t("Connection keys and relays"),
                 () -> startActivity(new Intent(this, NostrSetupActivity.class)));
-        button(body, "Where copies go", () -> DownloadDestinations.openSettings(this));
-        button(body, "Formats, best first", () -> AudioFormatPreferences.openSettings(this));
         button(
                 body,
-                "Debrid services and API keys",
+                PatchStrings.t("Where copies go"),
+                () -> DownloadDestinations.openSettings(this));
+        button(
+                body,
+                PatchStrings.t("Formats, best first"),
+                () -> AudioFormatPreferences.openSettings(this));
+        button(
+                body,
+                PatchStrings.t("Debrid services and API keys"),
                 () -> startActivity(new Intent(this, DebridSetupActivity.class)));
         button(
                 body,
-                "Debrid link downloads",
+                PatchStrings.t("Debrid link downloads"),
                 () -> startActivity(new Intent(this, DebridDownloadsActivity.class)));
         button(
                 body,
-                "Start download connections",
+                PatchStrings.t("Start download connections"),
                 () -> command("Starting connections", () -> coordinator.start()));
         button(
                 body,
-                "Stop connections and pause downloads",
+                PatchStrings.t("Stop connections and pause downloads"),
                 () ->
                         command(
                                 "Stopping connections",
@@ -138,9 +152,10 @@ public final class BulkDownloadsActivity extends DownloadActivity {
                                     }
                                 }));
         status = text(body, "", 16);
-        text(body, "Share files", 20);
+        text(body, PatchStrings.t("Share files"), 20);
         recipient = new EditText(this);
-        recipient.setHint("Saved peer's 64-character app public key");
+        recipient.setHint(PatchStrings.t("Saved peer's 64-character app public key"));
+        recipient.setTextDirection(View.TEXT_DIRECTION_LTR);
         recipient.setSingleLine(true);
         recipient.setInputType(
                 InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
@@ -150,7 +165,7 @@ public final class BulkDownloadsActivity extends DownloadActivity {
         body.addView(recipient);
         button(
                 body,
-                "Choose audio files to share",
+                PatchStrings.t("Choose audio files to share"),
                 () -> {
                     if (!readyForDownloads()) return;
                     try {
@@ -173,13 +188,15 @@ public final class BulkDownloadsActivity extends DownloadActivity {
                 });
         text(
                 body,
-                "Only selected files are copied into private sharing storage. Revoke a shared file"
-                    + " to stop serving it. Recipients must approve each offer within two minutes.",
+                PatchStrings.t(
+                        "Only selected files are copied into private sharing storage. Revoke a"
+                            + " shared file to stop serving it. Recipients must approve each offer"
+                            + " within two minutes."),
                 14);
         shared = group(body);
-        text(body, "Incoming offers", 20);
+        text(body, PatchStrings.t("Incoming offers"), 20);
         incoming = group(body);
-        text(body, "Download queue", 20);
+        text(body, PatchStrings.t("Download queue"), 20);
         jobs = group(body);
         render();
     }
@@ -239,27 +256,27 @@ public final class BulkDownloadsActivity extends DownloadActivity {
         String nativeStatus = downloads.status();
         String selectedStatus = SoulseekSelectedDownloads.status();
         status.setText(
-                coordinator.status()
-                        + (nativeStatus.isEmpty() ? "" : "\n" + nativeStatus)
-                        + (selectedStatus.isEmpty() ? "" : "\n" + selectedStatus)
-                        + (actionStatus.isEmpty() ? "" : "\n" + actionStatus));
+                PatchStrings.t(coordinator.status())
+                        + (nativeStatus.isEmpty() ? "" : "\n" + PatchStrings.t(nativeStatus))
+                        + (selectedStatus.isEmpty() ? "" : "\n" + PatchStrings.t(selectedStatus))
+                        + (actionStatus.isEmpty() ? "" : "\n" + PatchStrings.t(actionStatus)));
         incoming.removeAllViews();
         List<BulkCoordinator.Incoming> offers = coordinator.offers();
-        if (offers.isEmpty()) text(incoming, "No pending offers.", 14);
+        if (offers.isEmpty()) text(incoming, PatchStrings.t("No pending offers."), 14);
         for (BulkCoordinator.Incoming offer : offers) {
             text(
                     incoming,
                     offer.name
                             + " · "
                             + bytes(offer.size)
-                            + "\nFrom "
-                            + shortKey(offer.peer)
+                            + "\n"
+                            + PatchStrings.f("From {0}", shortKey(offer.peer))
                             + " · "
-                            + offer.state,
+                            + PatchStrings.state(offer.state),
                     16);
             button(
                     incoming,
-                    "Accept download",
+                    PatchStrings.t("Accept download"),
                     () -> {
                         if (readyForDownloads())
                             command(
@@ -268,7 +285,7 @@ public final class BulkDownloadsActivity extends DownloadActivity {
                     });
             button(
                     incoming,
-                    "Decline",
+                    PatchStrings.t("Decline"),
                     () -> {
                         coordinator.decline(offer.session);
                         render();
@@ -276,54 +293,60 @@ public final class BulkDownloadsActivity extends DownloadActivity {
         }
         shared.removeAllViews();
         List<BulkDownloads.Share> shares = downloads.shares();
-        if (shares.isEmpty()) text(shared, "No files are shared.", 14);
+        if (shares.isEmpty()) text(shared, PatchStrings.t("No files are shared."), 14);
         for (BulkDownloads.Share share : shares) {
             text(shared, share.name + " · " + bytes(share.size), 16);
             button(
                     shared,
-                    "Send this offer again",
+                    PatchStrings.t("Send this offer again"),
                     () -> {
                         String peer = recipient.getText().toString().trim();
                         action("Sending file offer", () -> coordinator.sendOffer(share, peer));
                     });
             button(
                     shared,
-                    "Revoke sharing",
+                    PatchStrings.t("Revoke sharing"),
                     () -> command("Revoking shared file", () -> coordinator.revoke(share.fileId)));
         }
         jobs.removeAllViews();
         List<BulkJobStore.Job> downloadsNow = downloads.jobs();
-        if (downloadsNow.isEmpty()) text(jobs, "No queued downloads.", 14);
+        if (downloadsNow.isEmpty()) text(jobs, PatchStrings.t("No queued downloads."), 14);
         for (BulkJobStore.Job job : downloadsNow) {
             text(
                     jobs,
                     job.offer.name
                             + " · "
-                            + job.state
+                            + PatchStrings.state(job.state)
                             + "\n"
                             + bytes(job.verifiedBytes())
                             + " / "
                             + bytes(job.offer.size)
                             + (job.route.isEmpty() ? "" : " · " + job.route)
                             + (job.needsPhone()
-                                    ? "\nPhone: " + job.phoneStatus.replace('-', ' ')
+                                    ? "\n"
+                                            + PatchStrings.f(
+                                                    "Phone folder: {0}",
+                                                    PatchStrings.state(job.phoneStatus))
                                     : "")
                             + (job.needsTelegram()
-                                    ? "\nTelegram: " + job.telegramStatus.replace('-', ' ')
+                                    ? "\n"
+                                            + PatchStrings.f(
+                                                    "Telegram main channel: {0}",
+                                                    PatchStrings.state(job.telegramStatus))
                                     : "")
-                            + (job.message.isEmpty() ? "" : "\n" + job.message),
+                            + (job.message.isEmpty() ? "" : "\n" + PatchStrings.t(job.message)),
                     16);
             if (job.state == BulkJobStore.State.RUNNING || job.state == BulkJobStore.State.QUEUED)
                 button(
                         jobs,
-                        "Pause",
+                        PatchStrings.t("Pause"),
                         () -> command("Pausing download", () -> downloads.pause(job.id)));
             else if (job.state == BulkJobStore.State.PAUSED
                     || job.state == BulkJobStore.State.FAILED
                     || job.state == BulkJobStore.State.VERIFIED)
                 button(
                         jobs,
-                        "Resume",
+                        PatchStrings.t("Resume"),
                         () -> command("Resuming download", () -> downloads.resume(job.id)));
             boolean pendingTelegram =
                     "uploading".equals(job.telegramStatus)
@@ -331,14 +354,17 @@ public final class BulkDownloadsActivity extends DownloadActivity {
             if (pendingTelegram)
                 text(
                         jobs,
-                        "Telegram may finish sending after a pause. Resume checks the existing"
-                                + " receipt.",
+                        PatchStrings.t(
+                                "Telegram may finish sending after a pause. Resume checks the"
+                                        + " existing receipt."),
                         14);
             if (job.state != BulkJobStore.State.COMPLETE
                     && job.state != BulkJobStore.State.CANCELLED)
                 button(
                         jobs,
-                        pendingTelegram ? "Pause / check receipt" : "Cancel",
+                        pendingTelegram
+                                ? PatchStrings.t("Pause / check receipt")
+                                : PatchStrings.t("Cancel"),
                         () -> command("Stopping this download", () -> downloads.cancel(job.id)));
         }
     }
@@ -356,18 +382,19 @@ public final class BulkDownloadsActivity extends DownloadActivity {
     }
 
     private void submit(ThreadPoolExecutor executor, String label, Action action) {
-        actionStatus = label + "…";
+        actionStatus = PatchStrings.t(label) + "…";
         try {
             executor.execute(
                     () -> {
                         try {
                             action.run();
-                            actionStatus = label + " completed.";
+                            actionStatus = PatchStrings.f("{0} completed.", PatchStrings.t(label));
                         } catch (Exception | LinkageError failed) {
                             actionStatus =
-                                    label
-                                            + " could not finish. Check setup, storage and the"
-                                            + " paired phone, then retry.";
+                                    PatchStrings.f(
+                                            "{0} could not finish. Check setup, storage and the"
+                                                    + " paired phone, then retry.",
+                                            PatchStrings.t(label));
                         }
                         ui.post(() -> render());
                     });

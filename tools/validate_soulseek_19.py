@@ -31,7 +31,9 @@ def main():
     )
     pins = {
         item["file"]: item["sha256"]
-        for item in provenance["original_apks"] + compatibility["original_apks"]
+        for item in provenance["original_apks"]
+        + compatibility["original_apks"]
+        + compatibility.get("previous_original_apks", [])
     }
     out = ROOT / "build/soulseek-19-validation"
     checks = out / "checks"
@@ -93,6 +95,8 @@ def main():
                 raise ValueError("Patching failed: " + name)
             for checker, values in (
                 ("VerifyDexControlFlow", [str(patched)]),
+                ("VerifyCaptureApk", [str(patched)]),
+                ("VerifyNativeDispatchApk", [str(patched)]),
                 ("VerifyPatchUiApk", [str(patched), "false", "true", "false"]),
                 ("VerifySoulseekApk", [str(patched), "enabled", str(bundle)]),
                 ("VerifySoulseekHostAbi", [str(original), str(patched)]),

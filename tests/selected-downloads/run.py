@@ -19,6 +19,7 @@ subprocess.run(
         str(JAVA / "javac"),
         "--release",
         "8",
+        str(ROOT / "compile-only/app/bitchord/telegram/PatchStrings.java"),
         "-Xlint:-options",
         "-cp",
         CP,

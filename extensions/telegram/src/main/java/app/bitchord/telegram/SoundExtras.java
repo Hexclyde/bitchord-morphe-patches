@@ -328,7 +328,40 @@ public final class SoundExtras {
 
     // ── The audio tap: Sing, headphone correction and DJ mode ────────────────
 
-    private static volatile Field samplesField, framesField, channelsField;
+    private static volatile Field samplesField, framesField, channelsField, sampleRateField;
+
+    /**
+     * Called by BitChord's own audio sink as it hands a block to its effects chain, for the song
+     * that plays and for Automix's loop mix. The sample rate is read from the sink.
+     */
+    public static void process(Object sink, Object block) {
+        if (block == null || sink == null) return;
+        if (!(singEnabled && singLevel > 0)
+                && !(headphoneApplied() && HeadphoneEq.active())
+                && !djEnabled()) {
+            if (!singers.isEmpty()) singers.remove(sink);
+            return;
+        }
+        int rate;
+        try {
+            Field field = sampleRateField;
+            if (field == null) {
+                field = sink.getClass().getDeclaredField("configuredSampleRate");
+                field.setAccessible(true);
+                sampleRateField = field;
+            }
+            rate = field.getInt(sink);
+        } catch (Exception e) {
+            HostLog.d("Playback extras can't read the sample rate: " + e);
+            singLevel = 0;
+            return;
+        }
+        if (rate > 0) process(sink, block, rate);
+    }
+
+    private static boolean djEnabled() {
+        return djApplied() && DjMode.enabled;
+    }
 
     /**
      * Called by BitChord's own audio sink with each decoded block, before its equaliser and
@@ -652,6 +685,9 @@ public final class SoundExtras {
             else if (jamesDspApplied() && EffectsApps.useJamesDsp)
                 reason = Strings.t("JamesDSP has the audio");
             else if (djApplied() && DjMode.enabled) reason = Strings.t("DJ mode is listening");
+            // The chip plays the file through Android's usual output, which a bit-perfect song
+            // would leave.
+            else if (BitPerfect.wanted()) reason = Strings.t("Bit-perfect output is on");
         }
         offloadHeldBack = reason;
         return batterySaver && reason == null;

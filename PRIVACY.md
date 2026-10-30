@@ -67,7 +67,7 @@ remain where they were published. See the [debrid setup guide](docs/DEBRID.md).
 
 **This is a normal Telegram client session, not a music-only authorization.** Choosing chats limits what the interface searches; it does not reduce the underlying session's account permissions. The patch and BitChord run in the same app and must both be trusted.
 
-Your regular BitChord installation has separate private data. The Telegram setup page requests screenshot and recording protection, but this does not protect against a compromised phone or an external camera.
+Your regular BitChord installation has separate private data. Screen capture is enabled throughout the 1.1.0-beta.8 testing build for UI review. Other builds default to screenshot and recording protection on the protected setup pages.
 
 ## Clear files or revoke access
 

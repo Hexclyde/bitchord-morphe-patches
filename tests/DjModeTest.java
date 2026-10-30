@@ -32,7 +32,11 @@ public final class DjModeTest {
         return new DjMode.Info(camelot, bpm, "test");
     }
 
-    public static void main(String[] args) {
+    static final class Service {
+        Object player;
+    }
+
+    public static void main(String[] args) throws Exception {
         DjMode.Info now = info("8A", 124);
         check(DjMode.cost(now, info("8A", 124)) == 0, "the same key and tempo cost nothing");
         check(
@@ -126,6 +130,32 @@ public final class DjModeTest {
                 "a failed decode has no tempo");
         DjMode.Info nokey = DjMode.fromHost(new Analysis("ready", "", 100));
         check(nokey != null && nokey.camelot == null, "a tempo without a key");
+        // A delayed reorder must not keep editing a player that became the spare during Automix.
+        java.lang.reflect.Field service = DjMode.class.getDeclaredField("service");
+        service.setAccessible(true);
+        Service owner = new Service();
+        owner.player = new Object();
+        service.set(null, owner);
+        androidx.media3.common.Player spare =
+                (androidx.media3.common.Player)
+                        java.lang.reflect.Proxy.newProxyInstance(
+                                androidx.media3.common.Player.class.getClassLoader(),
+                                new Class<?>[] {androidx.media3.common.Player.class},
+                                (proxy, method, values) -> {
+                                    throw new AssertionError(
+                                            "The spare queue must not be accessed");
+                                });
+        DjMode.enabled = true;
+        java.lang.reflect.Method deferred =
+                DjMode.class.getDeclaredMethod(
+                        "arrange", androidx.media3.common.Player.class, int.class);
+        deferred.setAccessible(true);
+        deferred.invoke(null, spare, 1);
+        check(
+                !DjMode.isSessionPlayer(spare),
+                "A deferred arrangement sees the current player owner");
+        DjMode.enabled = false;
+        service.set(null, null);
         System.out.println("PASS: " + checks + " DJ mode checks.");
     }
 }

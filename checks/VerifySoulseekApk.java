@@ -150,9 +150,37 @@ public final class VerifySoulseekApk {
                     if (!(instruction instanceof ReferenceInstruction r)) continue;
                     String reference = r.getReference().toString();
                     if (cls.getType().startsWith(PREFIX)) {
+                        boolean sharedUi =
+                                reference.startsWith("Lapp/bitchord/telegram/PatchStrings;")
+                                        || reference.startsWith(
+                                                "Lapp/bitchord/telegram/CapturePolicy;");
                         check(
-                                !reference.contains("Lapp/bitchord/telegram/"),
+                                !reference.contains("Lapp/bitchord/telegram/") || sharedUi,
                                 "Soulseek has no hard dependency on optional Telegram extension");
+                        if (sharedUi && r.getReference() instanceof MethodReference sharedCall) {
+                            check(
+                                    VerifyApk.resolves(
+                                            classes,
+                                            sharedCall,
+                                            sharedCall.getDefiningClass(),
+                                            new HashSet<>()),
+                                    "Required shared UI facade resolves: " + sharedCall);
+                            ClassDef sharedOwner = classes.get(sharedCall.getDefiningClass());
+                            check(
+                                    sharedOwner != null && (sharedOwner.getAccessFlags() & 1) != 0,
+                                    "Shared facade is accessible to the download module");
+                            boolean accessible = false;
+                            for (Method target : sharedOwner.getMethods())
+                                if (target.getName().equals(sharedCall.getName())
+                                        && target.getParameterTypes()
+                                                .equals(sharedCall.getParameterTypes())
+                                        && target.getReturnType()
+                                                .equals(sharedCall.getReturnType()))
+                                    accessible = (target.getAccessFlags() & 9) == 9;
+                            check(
+                                    accessible,
+                                    "Shared facade method is public static: " + sharedCall);
+                        }
                         if (r.getReference() instanceof MethodReference m
                                 && (m.getDefiningClass().startsWith("Landroidx/media3/")
                                         || m.getDefiningClass().startsWith("Lcom/music/bitchord/")))

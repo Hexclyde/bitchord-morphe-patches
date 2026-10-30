@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.vector.ImageVector;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function2;
 
-/** Signatures verified against the R8-optimized v1.8.1 release. Never packaged. */
+/** Signatures verified against the R8-optimized 1.9 release. Never packaged. */
 public final class SettingsSheetKt {
     public static void RowDivider(int flags, ComposerImpl composer) {
         throw new AssertionError("Compile-only stub");

@@ -49,6 +49,8 @@ for name in (
     "ChannelView.java",
     "PlaybackPolicy.java",
     "Strings.java",
+    "PatchStrings.java",
+    "CapturePolicy.java",
     "Translations.java",
     "LosslessCheck.java",
     "FileChecks.java",
@@ -65,6 +67,7 @@ for name in (
     "DjMode.java",
     "DownloadChoice.java",
     "EffectsApps.java",
+    "BitPerfect.java",
     "VocalCut.java",
 ):
     dest = SOURCES / "app/bitchord/telegram" / name

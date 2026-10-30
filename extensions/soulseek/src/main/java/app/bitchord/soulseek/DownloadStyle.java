@@ -27,6 +27,8 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import app.bitchord.telegram.PatchStrings;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -334,7 +336,7 @@ final class DownloadStyle {
                         canvas.save();
                         canvas.translate(getBounds().exactCenterX(), getBounds().exactCenterY());
                         float scale = Math.min(getBounds().width(), getBounds().height()) / 24f;
-                        canvas.scale(scale, scale);
+                        canvas.scale(PatchStrings.rtl() ? -scale : scale, scale);
                         Path arrow = new Path();
                         arrow.moveTo(7, 0);
                         arrow.lineTo(-7, 0);
@@ -378,7 +380,7 @@ final class DownloadStyle {
                         shape(dark ? 0xff0d0d0f : 0xfff7f7f9, 30, true),
                         null));
         result.setBackgroundTintList(null);
-        result.setContentDescription("Back");
+        result.setContentDescription(PatchStrings.t("Back"));
         result.setOnClickListener(view -> action.run());
         markCustom(result);
         return result;
@@ -405,7 +407,9 @@ final class DownloadStyle {
                 }
             } else if (view instanceof Button) {
                 Button button = (Button) view;
-                if ("Back".contentEquals(button.getText())) button.setVisibility(View.GONE);
+                if ("Back".contentEquals(button.getText())
+                        || PatchStrings.t("Back").contentEquals(button.getText()))
+                    button.setVisibility(View.GONE);
                 else button(button);
             } else if (view instanceof TextView) {
                 TextView text = (TextView) view;

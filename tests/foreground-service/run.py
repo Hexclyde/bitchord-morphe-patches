@@ -16,6 +16,7 @@ subprocess.run(
         str(jdk() / "bin/javac"),
         "--release",
         "8",
+        str(ROOT / "compile-only/app/bitchord/telegram/PatchStrings.java"),
         "-cp",
         str(TOOLS / "android.jar"),
         "-d",

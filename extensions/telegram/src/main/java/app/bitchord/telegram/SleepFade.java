@@ -13,7 +13,8 @@ import java.lang.reflect.Field;
  * last seconds of the song fade instead, so it isn't cut off at full volume.
  *
  * <p>The fade stands down the moment anything else touches playback: a pause or play, a seek
- * backwards, a song change, a new timer, or the volume being moved by BitChord's own fades.
+ * backwards, a song change, a new timer, or the volume being moved by BitChord's own fades. A song
+ * on BitChord's bit-perfect output, whose volume is the DAC's, pauses without a fade.
  */
 final class SleepFade {
     private SleepFade() {}
@@ -33,7 +34,8 @@ final class SleepFade {
     /** The timer's time is up: fade out, then pause. */
     static void pauseSoon(Player player, int seconds) {
         if (player == null) return;
-        if (!player.isPlaying() || seconds <= 0) {
+        // A bit-perfect song ignores the player's volume, so a fade would only delay the pause.
+        if (!player.isPlaying() || seconds <= 0 || BitPerfect.playing()) {
             player.pause();
             return;
         }
@@ -46,7 +48,7 @@ final class SleepFade {
      */
     static void fadeEnding(Player player, int seconds) {
         if (player == null || !player.isPlaying() || seconds <= 0) return;
-        if (running != null) return;
+        if (running != null || BitPerfect.playing()) return;
         start(player, seconds, false);
     }
 

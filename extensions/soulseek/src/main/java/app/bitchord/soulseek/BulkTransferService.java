@@ -14,6 +14,8 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.SystemClock;
 
+import app.bitchord.telegram.PatchStrings;
+
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -190,6 +192,7 @@ public final class BulkTransferService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        PatchStrings.refresh(this);
         if (intent != null && STOP.equals(intent.getAction())) {
             shutdown("Downloads and sharing stopped.", false);
             return START_NOT_STICKY;
@@ -213,7 +216,9 @@ public final class BulkTransferService extends Service {
                 throw new IllegalStateException("Notification manager unavailable");
             manager.createNotificationChannel(
                     new NotificationChannel(
-                            CHANNEL, "Downloads and sharing", NotificationManager.IMPORTANCE_LOW));
+                            CHANNEL,
+                            PatchStrings.t("Downloads and sharing"),
+                            NotificationManager.IMPORTANCE_LOW));
             Notification notification = notification("Preparing your downloads");
             if (Build.VERSION.SDK_INT >= 29)
                 startForeground(
@@ -259,13 +264,16 @@ public final class BulkTransferService extends Service {
         Notification.Builder builder =
                 new Notification.Builder(this, CHANNEL)
                         .setSmallIcon(android.R.drawable.stat_sys_download)
-                        .setContentTitle("Downloads and sharing")
-                        .setContentText(message)
+                        .setContentTitle(PatchStrings.t("Downloads and sharing"))
+                        .setContentText(PatchStrings.t(message))
                         .setContentIntent(open)
                         .setCategory(Notification.CATEGORY_SERVICE)
                         .setOnlyAlertOnce(true)
                         .setOngoing(true)
-                        .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Stop all", stop);
+                        .addAction(
+                                android.R.drawable.ic_menu_close_clear_cancel,
+                                PatchStrings.t("Stop all"),
+                                stop);
         if (Build.VERSION.SDK_INT >= 31)
             builder.setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE);
         return builder.build();

@@ -7,13 +7,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.InputType;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import app.bitchord.telegram.CapturePolicy;
+import app.bitchord.telegram.PatchStrings;
 
 /** Account settings for the download-only Soulseek source. */
 public final class SoulseekActivity extends DownloadActivity {
@@ -27,7 +29,8 @@ public final class SoulseekActivity extends DownloadActivity {
     private final Runnable refresh =
             new Runnable() {
                 public void run() {
-                    if (bridge != null && status != null) status.setText(bridge.status);
+                    if (bridge != null && status != null)
+                        status.setText(PatchStrings.t(bridge.status));
                     handler.postDelayed(this, 500);
                 }
             };
@@ -35,8 +38,7 @@ public final class SoulseekActivity extends DownloadActivity {
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        if (Build.VERSION.SDK_INT >= 33) setRecentsScreenshotEnabled(false);
+        CapturePolicy.apply(this);
         if (Build.VERSION.SDK_INT >= 31) getWindow().setHideOverlayWindows(true);
         SoulseekBridge.boot(getApplicationContext());
         try {
@@ -52,27 +54,30 @@ public final class SoulseekActivity extends DownloadActivity {
         body.setPadding(padding, padding, padding, padding);
         scroll.addView(body);
         setContentView(scroll);
-        Button back = button(body, "Back");
+        Button back = button(body, PatchStrings.t("Back"));
         back.setOnClickListener(v -> finish());
-        text(body, "Unofficial Soulseek downloads", 24);
+        text(body, PatchStrings.t("Unofficial Soulseek downloads"), 24);
         text(
                 body,
-                "Download audio using your chosen formats and copy destinations. No custom server"
-                        + " or separate Seeker app is required.",
+                PatchStrings.t(
+                        "Download audio using your chosen formats and copy destinations. No custom"
+                                + " server or separate Seeker app is required."),
                 16);
         text(
                 body,
-                "Sign in, enable Soulseek in Patches & tweaks, then search in Addons and choose"
-                        + " Download from the track menu. This source does not play live audio or"
-                        + " replace YouTube. Use Peer downloads to share selected files with a"
-                        + " paired phone.",
+                PatchStrings.t(
+                        "Sign in, enable Soulseek in Patches & tweaks, then search in Addons and"
+                            + " choose Download from the track menu. This source does not play live"
+                            + " audio or replace YouTube. Use Peer downloads to share selected"
+                            + " files with a paired phone."),
                 16);
         LinearLayout account = new LinearLayout(this);
         account.setOrientation(LinearLayout.VERTICAL);
         downloadStyle.card(account);
         body.addView(account);
         username = new EditText(this);
-        username.setHint("Soulseek username");
+        username.setHint(PatchStrings.t("Soulseek username"));
+        username.setTextDirection(View.TEXT_DIRECTION_LTR);
         username.setSingleLine(true);
         username.setInputType(
                 InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
@@ -80,7 +85,8 @@ public final class SoulseekActivity extends DownloadActivity {
         username.setSaveEnabled(false);
         account.addView(username);
         password = new EditText(this);
-        password.setHint("Soulseek password");
+        password.setHint(PatchStrings.t("Soulseek password"));
+        password.setTextDirection(View.TEXT_DIRECTION_LTR);
         password.setSingleLine(true);
         password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         password.setSaveEnabled(false);
@@ -90,10 +96,10 @@ public final class SoulseekActivity extends DownloadActivity {
         }
         account.addView(password);
         remember = new CheckBox(this);
-        remember.setText("Remember this account on this phone (encrypted)");
+        remember.setText(PatchStrings.t("Remember this account on this phone (encrypted)"));
         remember.setChecked(true);
         account.addView(remember);
-        connect = button(account, "Sign in");
+        connect = button(account, PatchStrings.t("Sign in"));
         connect.setOnClickListener(
                 v -> {
                     String user = username.getText().toString().trim();
@@ -115,7 +121,7 @@ public final class SoulseekActivity extends DownloadActivity {
                                         });
                             });
                 });
-        button(account, "Reconnect saved account")
+        button(account, PatchStrings.t("Reconnect saved account"))
                 .setOnClickListener(
                         v -> {
                             final long intent = bridge.beginLogin();
@@ -137,7 +143,7 @@ public final class SoulseekActivity extends DownloadActivity {
                                         }
                                     });
                         });
-        button(account, "Sign out and forget account")
+        button(account, PatchStrings.t("Sign out and forget account"))
                 .setOnClickListener(
                         v -> {
                             password.setText("");
@@ -157,7 +163,7 @@ public final class SoulseekActivity extends DownloadActivity {
                                             "soulseek-signout")
                                     .start();
                         });
-        button(account, "Clear temporary audio cache and disconnect")
+        button(account, PatchStrings.t("Clear temporary audio cache and disconnect"))
                 .setOnClickListener(
                         v -> {
                             bridge.beginLogin(); // Invalidate older queued sign-ins before this
@@ -175,27 +181,28 @@ public final class SoulseekActivity extends DownloadActivity {
                                     });
                         });
         status = text(body, bridge.status, 16);
-        button(body, "Debrid services and API keys")
+        button(body, PatchStrings.t("Debrid services and API keys"))
                 .setOnClickListener(
                         v -> startActivity(new Intent(this, DebridSetupActivity.class)));
-        button(body, "Debrid link downloads")
+        button(body, PatchStrings.t("Debrid link downloads"))
                 .setOnClickListener(
                         v -> startActivity(new Intent(this, DebridDownloadsActivity.class)));
-        button(body, "Download connection setup")
+        button(body, PatchStrings.t("Download connection setup"))
                 .setOnClickListener(v -> startActivity(new Intent(this, NostrSetupActivity.class)));
-        button(body, "Peer downloads")
+        button(body, PatchStrings.t("Peer downloads"))
                 .setOnClickListener(
                         v -> startActivity(new Intent(this, BulkDownloadsActivity.class)));
-        button(body, "Where copies go")
+        button(body, PatchStrings.t("Where copies go"))
                 .setOnClickListener(v -> DownloadDestinations.openSettings(this));
-        button(body, "Formats, best first")
+        button(body, PatchStrings.t("Formats, best first"))
                 .setOnClickListener(v -> AudioFormatPreferences.openSettings(this));
         text(
                 body,
-                "Peer queues and mobile NAT can prevent connections. Search takes up to 12 seconds."
-                    + " Downloads wait up to 30 seconds for peer data. Temporary storage is limited"
-                    + " to 256 MiB. Format labels come from peer filenames and do not prove an"
-                    + " original lossless source.",
+                PatchStrings.t(
+                        "Peer queues and mobile NAT can prevent connections. Search takes up to 12"
+                            + " seconds. Downloads wait up to 30 seconds for peer data. Temporary"
+                            + " storage is limited to 256 MiB. Format labels come from peer"
+                            + " filenames and do not prove an original lossless source."),
                 14);
     }
 

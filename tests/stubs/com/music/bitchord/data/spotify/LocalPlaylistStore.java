@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlowKt;
 import java.util.ArrayList;
 import java.util.List;
 
-/** BitChord 1.8.1's playlist store, after shrinking: savePlaylist and the private flow. */
+/** BitChord 1.9's playlist store, after shrinking: savePlaylist and the private flow. */
 public final class LocalPlaylistStore {
     private static final MutableStateFlow<List<LocalPlaylist>> _playlists =
             StateFlowKt.MutableStateFlow(new ArrayList<>());

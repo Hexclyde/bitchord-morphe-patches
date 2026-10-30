@@ -225,16 +225,30 @@ public final class ExtrasActivity extends Activity {
                     });
         }
 
-        if (SoundExtras.singApplied()
-                || SoundExtras.pitchApplied()
-                || SoundExtras.loudnessApplied()
-                || SoundExtras.sleepFadeApplied()
-                || SoundExtras.batterySaverApplied()
-                || SoundExtras.losslessBluetoothApplied()
-                || SoundExtras.headphoneApplied()
-                || SoundExtras.outputEqApplied()
-                || SoundExtras.djApplied()
-                || SoundExtras.jamesDspApplied()) section(Strings.t("Audio tweaks"));
+        boolean audio =
+                SoundExtras.singApplied()
+                        || SoundExtras.pitchApplied()
+                        || SoundExtras.loudnessApplied()
+                        || SoundExtras.sleepFadeApplied()
+                        || SoundExtras.batterySaverApplied()
+                        || SoundExtras.losslessBluetoothApplied()
+                        || SoundExtras.headphoneApplied()
+                        || SoundExtras.outputEqApplied()
+                        || SoundExtras.djApplied()
+                        || SoundExtras.jamesDspApplied();
+        if (audio) section(Strings.t("Audio tweaks"));
+        if (audio && BitPerfect.wanted()) {
+            LinearLayout note = new LinearLayout(this);
+            note.setOrientation(LinearLayout.VERTICAL);
+            note.setPadding(style.dp(20), 0, style.dp(20), 0);
+            paragraph(
+                    note,
+                    Strings.t(
+                            "Bit-perfect output is on in BitChord. Songs it plays reach your DAC"
+                                    + " unchanged, so these effects, the sleep fade and JamesDSP"
+                                    + " don’t apply to them."));
+            body.addView(note);
+        }
         if (SoundExtras.singApplied()) {
             feature(
                     "sing",

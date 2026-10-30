@@ -6,13 +6,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import app.bitchord.telegram.CapturePolicy;
+import app.bitchord.telegram.PatchStrings;
 
 import org.json.JSONObject;
 
@@ -38,8 +40,7 @@ public final class DownloadDestinationActivity extends DownloadActivity {
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        if (Build.VERSION.SDK_INT >= 33) setRecentsScreenshotEnabled(false);
+        CapturePolicy.apply(this);
         if (Build.VERSION.SDK_INT >= 31) getWindow().setHideOverlayWindows(true);
         if (state != null) {
             mode = state.getString("mode", "");
@@ -65,46 +66,49 @@ public final class DownloadDestinationActivity extends DownloadActivity {
         body.setPadding(padding, padding, padding, padding);
         scroll.addView(body);
         setContentView(scroll);
-        text(body, "Where copies go", 24);
+        text(body, PatchStrings.t("Where copies go"), 24);
         text(
                 body,
-                "Choose where completed downloads are saved. You can change this later in"
-                        + " settings.",
+                PatchStrings.t(
+                        "Choose where completed downloads are saved. You can change this later in"
+                                + " settings."),
                 16);
         choices = new RadioGroup(this);
         downloadStyle.card(choices);
         body.addView(choices);
-        choice("Phone", DownloadDestinations.PHONE);
-        choice("Telegram main channel", DownloadDestinations.TELEGRAM);
-        choice("Both", DownloadDestinations.BOTH);
+        choice(PatchStrings.t("Phone"), DownloadDestinations.PHONE);
+        choice(PatchStrings.t("Telegram main channel"), DownloadDestinations.TELEGRAM);
+        choice(PatchStrings.t("Both"), DownloadDestinations.BOTH);
 
         phoneSection = section(body);
-        text(phoneSection, "Phone folder", 18);
+        text(phoneSection, PatchStrings.t("Phone folder"), 18);
         phoneSummary = text(phoneSection, "", 14);
-        button(phoneSection, "Choose folder").setOnClickListener(view -> chooseFolder());
+        button(phoneSection, PatchStrings.t("Choose folder"))
+                .setOnClickListener(view -> chooseFolder());
 
         telegramSection = section(body);
-        text(telegramSection, "Telegram main channel", 18);
+        text(telegramSection, PatchStrings.t("Telegram main channel"), 18);
         text(
                 telegramSection,
-                "Uses your configured private main channel. Downloads are uploaded as files with"
-                        + " their original audio bytes.",
+                PatchStrings.t(
+                        "Uses your configured private main channel. Downloads are uploaded as files"
+                                + " with their original audio bytes."),
                 14);
         telegramSummary = text(telegramSection, "", 14);
-        button(telegramSection, "Use configured main channel")
+        button(telegramSection, PatchStrings.t("Use configured main channel"))
                 .setOnClickListener(view -> selectTelegram());
-        button(telegramSection, "Open Telegram settings")
+        button(telegramSection, PatchStrings.t("Open Telegram settings"))
                 .setOnClickListener(
                         view -> {
                             try {
                                 DownloadDestinations.openTelegramSetup(this);
                             } catch (IOException failure) {
-                                notice.setText(failure.getMessage());
+                                notice.setText(PatchStrings.t(failure.getMessage()));
                             }
                         });
         notice = text(body, "", 14);
-        button(body, "Save").setOnClickListener(view -> save());
-        button(body, "Back").setOnClickListener(view -> finish());
+        button(body, PatchStrings.t("Save")).setOnClickListener(view -> save());
+        button(body, PatchStrings.t("Back")).setOnClickListener(view -> finish());
         choices.setOnCheckedChangeListener(
                 (group, checkedId) -> {
                     RadioButton selected = findViewById(checkedId);
@@ -135,7 +139,7 @@ public final class DownloadDestinationActivity extends DownloadActivity {
         try {
             startActivityForResult(intent, PICK_FOLDER);
         } catch (RuntimeException failure) {
-            notice.setText("A folder picker is not available on this device.");
+            notice.setText(PatchStrings.t("A folder picker is not available on this device."));
         }
     }
 
@@ -155,7 +159,9 @@ public final class DownloadDestinationActivity extends DownloadActivity {
             getContentResolver().takePersistableUriPermission(uri, flags);
         } catch (RuntimeException failure) {
             notice.setText(
-                    "The folder must allow lasting read and write access. Choose another folder.");
+                    PatchStrings.t(
+                            "The folder must allow lasting read and write access. Choose another"
+                                    + " folder."));
             return;
         }
         if (busy) return;
@@ -205,7 +211,7 @@ public final class DownloadDestinationActivity extends DownloadActivity {
                     new DownloadDestinations.Snapshot(
                             mode, phoneTree, telegramChatId, telegramUserId, telegramTitle);
         } catch (IOException failure) {
-            notice.setText(failure.getMessage());
+            notice.setText(PatchStrings.t(failure.getMessage()));
             return;
         }
         setBusy(true, "Saving destinations…");
@@ -235,12 +241,13 @@ public final class DownloadDestinationActivity extends DownloadActivity {
                         : View.GONE);
         phoneSummary.setText(
                 phoneTree.length() == 0
-                        ? "Choose a folder for downloaded files."
-                        : "Selected folder: " + Uri.parse(phoneTree).getLastPathSegment());
+                        ? PatchStrings.t("Choose a folder for downloaded files.")
+                        : PatchStrings.f(
+                                "Phone folder: {0}", Uri.parse(phoneTree).getLastPathSegment()));
         telegramSummary.setText(
                 telegramChatId == 0
-                        ? "No private main channel selected."
-                        : "Selected channel: " + telegramTitle);
+                        ? PatchStrings.t("No private main channel selected.")
+                        : PatchStrings.f("Telegram main channel: {0}", telegramTitle));
     }
 
     private void setBusy(boolean value, String message) {
@@ -248,7 +255,10 @@ public final class DownloadDestinationActivity extends DownloadActivity {
         for (Button button : actions) button.setEnabled(!value);
         for (int index = 0; index < choices.getChildCount(); index++)
             choices.getChildAt(index).setEnabled(!value);
-        notice.setText(message == null ? "Destination could not be saved." : message);
+        notice.setText(
+                message == null
+                        ? PatchStrings.t("Destination could not be saved.")
+                        : PatchStrings.t(message));
         update();
     }
 

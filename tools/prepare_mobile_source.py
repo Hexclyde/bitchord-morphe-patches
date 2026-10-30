@@ -135,7 +135,7 @@ def validate_metadata(manifest, patches, source, provenance):
         versions = (
             ["1.8.1", "1.9"]
             if patch["name"] == "Unofficial Soulseek audio"
-            else ["1.8.1"]
+            else ["1.9"]
         )
         if [target["version"] for target in app["targets"]] != versions or any(
             target["minSdk"] != 26 or not target["isExperimental"]

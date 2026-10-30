@@ -22,6 +22,7 @@ subprocess.run(
         classpath,
         "-d",
         str(output),
+        str(ROOT / "compile-only/app/bitchord/telegram/PatchStrings.java"),
         *[
             str(source / name)
             for name in (

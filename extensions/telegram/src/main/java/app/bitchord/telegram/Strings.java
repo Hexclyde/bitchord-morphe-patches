@@ -21,6 +21,14 @@ final class Strings {
         if (app != null) context = app.getApplicationContext();
     }
 
+    /** Refreshes the app language when a nested patch page is opened or resumed. */
+    static void refresh(android.content.Context app) {
+        init(app);
+        chosen = picked();
+        checkedAt = System.nanoTime();
+        language = "";
+    }
+
     /**
      * BitChord's language: the one picked in its settings (Android keeps it from Android 13 on;
      * before that AndroidX saves it in a file of BitChord's), or else the phone's.

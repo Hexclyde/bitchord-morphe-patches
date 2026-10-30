@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.1.0-beta.8 (testing build)
+
+- Updated all patch hooks for BitChord 1.9 while retaining the Soulseek,
+  debrid and peer-transfer tools under Patches & tweaks.
+- Added download-page translations across all 20 supported languages,
+  including common transfer states, notifications and right-to-left layout.
+- Enabled screenshots and screen recording throughout beta.8, including
+  setup pages and dialogs, for UI review. Other builds default to protection.
+- Adapted Telegram downloads, playlists, smooth upgrades and Automix audio
+  processing to the changed 1.9 interfaces and added bit-perfect behavior.
+- Kept provider settings nested, with one expanded service at a time;
+  disabled services hide their controls and disable their settings gear.
+
 ## 1.1.0-beta.7
 
 A testing build, on the `testing` branch only.

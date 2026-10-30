@@ -49,6 +49,8 @@ public final class VerifyPatchUiApk {
                         "TelegramStyle",
                         "TelegramSwitch",
                         "Strings",
+                        "PatchStrings",
+                        "CapturePolicy",
                         "Translations",
                         "HostLog",
                         "VocalCut",
@@ -60,7 +62,8 @@ public final class VerifyPatchUiApk {
                         "KeyTempo",
                         "DjMode",
                         "DownloadChoice",
-                        "EffectsApps");
+                        "EffectsApps",
+                        "BitPerfect");
         for (ClassDef cls : classes.values()) {
             String simple =
                     cls.getType().startsWith(base)
