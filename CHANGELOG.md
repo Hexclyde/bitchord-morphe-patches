@@ -2,6 +2,12 @@
 
 ## 1.1.0-beta.9 (testing build)
 
+- Add guided Soulseek setup, dedicated search and named download progress under
+  Patches & tweaks. Eligible manual single-track downloads offer Soulseek search
+  or the original flow explicitly. Cancelled/failed searches do not silently
+  download YouTube, and saving a different selected file does not mark the
+  original YouTube row as saved. Batch/retry/export and explicit-source paths
+  retain their existing behavior; Soulseek remains download-only.
 - Return a settled initial Soulseek shortlist once the highest enabled format
   arrives, while keeping the full search budget when it does not. Repeated
   queries can reuse a small, short-lived cache bound to the login and format policy.

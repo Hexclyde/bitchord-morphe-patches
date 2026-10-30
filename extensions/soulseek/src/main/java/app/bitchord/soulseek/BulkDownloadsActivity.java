@@ -33,7 +33,7 @@ public final class BulkDownloadsActivity extends DownloadActivity {
     private BulkDownloads downloads;
     private EditText recipient;
     private TextView status;
-    private LinearLayout incoming, shared, jobs;
+    private LinearLayout incoming, shared, jobs, selected;
     private boolean destinationSetupAsked, formatSetupAsked;
     private volatile String actionStatus = "";
     private final Handler ui = new Handler(Looper.getMainLooper());
@@ -152,6 +152,11 @@ public final class BulkDownloadsActivity extends DownloadActivity {
                                     }
                                 }));
         status = text(body, "", 16);
+        text(body, PatchStrings.t("Soulseek downloads"), 20);
+        selected = new LinearLayout(this);
+        selected.setOrientation(LinearLayout.VERTICAL);
+        downloadStyle.card(selected);
+        body.addView(selected);
         text(body, PatchStrings.t("Share files"), 20);
         recipient = new EditText(this);
         recipient.setHint(PatchStrings.t("Saved peer's 64-character app public key"));
@@ -254,12 +259,27 @@ public final class BulkDownloadsActivity extends DownloadActivity {
         if (coordinator == null || status == null || isFinishing()) return;
         downloads = coordinator.downloads();
         String nativeStatus = downloads.status();
-        String selectedStatus = SoulseekSelectedDownloads.status();
         status.setText(
                 PatchStrings.t(coordinator.status())
                         + (nativeStatus.isEmpty() ? "" : "\n" + PatchStrings.t(nativeStatus))
-                        + (selectedStatus.isEmpty() ? "" : "\n" + PatchStrings.t(selectedStatus))
                         + (actionStatus.isEmpty() ? "" : "\n" + PatchStrings.t(actionStatus)));
+        selected.removeAllViews();
+        int selectedRows = 0;
+        for (SoulseekSelectedDownloads.Progress item : SoulseekSelectedDownloads.snapshots()) {
+            if (item.handedOff || selectedRows >= 8) continue; // Persisted copy jobs appear below.
+            selectedRows++;
+            text(selected, item.summary(), 16);
+            if (item.canCancel())
+                button(
+                        selected,
+                        PatchStrings.t("Cancel"),
+                        () ->
+                                command(
+                                        "Stopping this download",
+                                        () -> SoulseekSelectedDownloads.cancel(item.reference)));
+        }
+        if (selectedRows == 0)
+            text(selected, PatchStrings.t("No selected Soulseek downloads."), 14);
         incoming.removeAllViews();
         List<BulkCoordinator.Incoming> offers = coordinator.offers();
         if (offers.isEmpty()) text(incoming, PatchStrings.t("No pending offers."), 14);

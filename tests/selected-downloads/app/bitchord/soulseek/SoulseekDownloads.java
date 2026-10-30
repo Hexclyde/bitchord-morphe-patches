@@ -14,6 +14,7 @@ final class SoulseekDownloads {
     static volatile String url;
     static volatile CountDownLatch entered, release;
     static volatile boolean pauseBeforeReturn;
+    static volatile String failure;
 
     static Long fetch(
             String request,
@@ -23,6 +24,7 @@ final class SoulseekDownloads {
             throws IOException {
         fetches++;
         url = request;
+        if (failure != null) throw new IOException(failure);
         CountDownLatch gate = entered, proceed = release;
         if (gate != null) {
             gate.countDown();

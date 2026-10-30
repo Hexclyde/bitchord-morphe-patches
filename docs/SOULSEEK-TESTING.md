@@ -10,8 +10,10 @@ arm64-v8a, armeabi-v7a or x86_64. This is an experimental testing bundle.
 - Unified **Patches & tweaks** controls, compact off states and one expanded
   enabled feature at a time.
 - BitChord-style format switches and drag ordering, with accessible move actions.
-- Adaptive manual Soulseek search, bounded short-lived query caching and explicit
-  downloads bound to the selected peer result.
+- Guided Soulseek setup, dedicated manual search, bounded short-lived query
+  caching and downloads bound to the exact selected peer result.
+- Explicit Soulseek/original-flow choice for eligible manual single-track
+  downloads; no automatic original download after a cancelled or failed search.
 - Opt-in public compatible-peer discovery and bounded encrypted PEX referrals;
   found keys remain separate from trusted peers.
 - First setup for Phone, Telegram main channel or Both, followed by enabled audio
@@ -29,7 +31,7 @@ arm64-v8a, armeabi-v7a or x86_64. This is an experimental testing bundle.
 Soulseek starts disabled and file sharing requires explicit selection. There is
 no live playback from these download transports or automatic YouTube replacement.
 Ordinary Soulseek peers do not gain overlay routes. Collection-level album and
-playlist integration and automatic compatible-provider discovery remain pending;
+playlist integration, automatic pairing and recording matching remain pending;
 the sharing picker currently queues multiple explicitly selected files.
 
 Optional Real-Debrid, AllDebrid, Premiumize and TorBox link downloads are included
@@ -41,7 +43,7 @@ or change the paired-file fallback chain.
 
 1. Import the development `.mpp` as a Local source in Morphe and disable duplicate
    versions of this patch source for that patching run.
-2. Select the original BitChord **1.8.1 APK** for the phone's architecture.
+2. Select the original BitChord **1.9 APK** for the phone's architecture.
 3. Select **Unofficial Soulseek audio**. Add **Unofficial Telegram music** if
    Telegram saving is wanted. Patch and install with the existing Morphe signing
    key when updating an already patched installation.
@@ -53,9 +55,40 @@ or change the paired-file fallback chain.
    handles into preference order, then save. Accessible move actions can also
    rearrange a row. At least one format must stay enabled.
    Cancelling an incomplete setup does not permit a download to bypass it.
-6. Sign in to Soulseek. Search in **Search → Addons**, open one result's
-   menu and select **Download**. Monitor **Peer downloads** for capture and copy
-   status. Trying to play a remote result reports that it is download-only.
+6. Use **Account settings** to sign in to Soulseek. The guided overview should
+   report **Ready to search** only after the feature is enabled, the account is
+   signed in and destination/format setup is complete. Open **Find music on
+   Soulseek**, enter an artist and title and press **Search Soulseek**. Then
+   review the peer's advertised details and choose **Download this file**.
+   Use **View downloads** for that file's capture and destination-copy progress.
+   **Search → Addons** remains an alternative manual entry point. Remote
+   Soulseek results remain download-only.
+7. Confirm that **More download options** keeps peer/debrid details collapsed
+   until opened, that the setup summary updates after returning from each row,
+   and that resuming the overview does not unexpectedly open another setup page.
+
+## Manual single-track download checks
+
+1. With Soulseek downloads enabled, use Download on an eligible ordinary YouTube
+   song from the normal player. Check that the source-choice screen offers
+   **Search Soulseek** and **Continue with BitChord download**, with the artist
+   and title prefilled for a search.
+2. Choose Soulseek and run the search. Check that no original YouTube download
+   starts in parallel. Review and select one exact result, then check its named
+   progress, selected format and saved destination. The original YouTube row
+   must not be marked saved merely because a different Soulseek file was imported.
+3. Cancel the source choice, cancel the search, search for no matching result and
+   force a search failure. None may silently resume the original download.
+   Select **Continue with BitChord download** explicitly and check that the host
+   resumes its existing source selection and download settings only once.
+4. Let the source-choice lease expire after two minutes. Check that an expired
+   button cannot start old work and that returning to the song permits a new
+   choice. Recreate the activity and leave/resume during a search; old callbacks
+   must not repopulate stale results or enqueue a file.
+5. Check a manual album/playlist batch, a managed retry and a cached-folder export.
+   Those paths must retain their existing behavior without entering this choice.
+   Explicit Telegram/Soulseek selections keep their original source. With the
+   Soulseek feature off, the ordinary Download action keeps the host's behavior.
 
 Changed accounts, disabled sources and expired results must fail without a
 new title search or an unrelated filename being adopted. Process death during

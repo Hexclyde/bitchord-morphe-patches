@@ -36,6 +36,15 @@ follows BitChord's Lossless streaming-quality requirement for addons.
 
 ## Soulseek and compatible-peer discovery
 
+The beta.9 source choice applies to eligible manual single-track Download
+actions. Album/playlist loops, download retries and cached-folder exports retain
+their existing paths; explicit addon and local-file selections retain their
+original source. Choosing Soulseek requires reviewing and selecting a search
+result. Search cancellation, no results or failure does not silently download
+from YouTube. An imported Soulseek file is tracked independently and does not
+mark an unrelated original YouTube row as saved. This remains a download feature,
+not live Soulseek playback or automatic recording replacement.
+
 Beta.9 returns a bounded initial Soulseek shortlist and may finish before later
 search replies arrive. Repeating a query can reuse a 30-second session/policy
 cache. A peer's advertised speed and free slots are unverified; availability and

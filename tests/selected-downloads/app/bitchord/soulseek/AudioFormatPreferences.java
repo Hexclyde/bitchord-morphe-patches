@@ -4,6 +4,8 @@ import android.content.Context;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 final class AudioFormatPreferences {
     static final class Settings {
@@ -19,6 +21,7 @@ final class AudioFormatPreferences {
     static volatile Settings current = new Settings("original", true), verified;
     static volatile boolean failVerification, flipAfterSnapshot;
     static int snapshots;
+    static volatile CountDownLatch verificationEntered, verificationRelease;
 
     static Settings snapshot(Context context) {
         snapshots++;
@@ -38,6 +41,16 @@ final class AudioFormatPreferences {
     static void validateSelectedFile(Settings formats, File source, String name)
             throws IOException {
         verified = formats;
+        if (verificationEntered != null) {
+            verificationEntered.countDown();
+            try {
+                if (!verificationRelease.await(5, TimeUnit.SECONDS))
+                    throw new IOException("Timed out");
+            } catch (InterruptedException interrupted) {
+                Thread.currentThread().interrupt();
+                throw new IOException(interrupted);
+            }
+        }
         if (failVerification)
             throw new IOException("Audio header does not match an enabled format.");
     }

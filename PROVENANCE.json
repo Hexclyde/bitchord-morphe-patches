@@ -89,7 +89,7 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "c1c99c070770c9fe9cb29c5ca5187788c51272890bea6c48ccec11c66bda74b2",
+  "patch_bundle_sha256": "e587f122a7ecbb94de842bcdb4c2133fe0b27d2d0c7236dc69df8233504c1a41",
   "soulseek_development": {
     "status": "experimental-local-build",
     "baseline_commit": "3de260f7f1d7967c5a97ce924085d7d42bec18af",
@@ -133,7 +133,9 @@
     "public_provider_exchange": true,
     "automatic_peer_trust": false,
     "adaptive_soulseek_search": true,
-    "discovery_candidate_limit": 512
+    "discovery_candidate_limit": 512,
+    "manual_single_track_source_choice": true,
+    "guided_download_ui": true
   },
   "soulseek_native_sha256": {
     "lib/arm64-v8a/libbitchord_soulseek.so": "9fc8485fe49838258b3e31558bb3a19f31fb746119446586f17827817a4e4e20",

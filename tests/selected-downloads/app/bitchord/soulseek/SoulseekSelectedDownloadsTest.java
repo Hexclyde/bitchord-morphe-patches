@@ -114,12 +114,19 @@ public final class SoulseekSelectedDownloadsTest {
         AudioFormatPreferences.flipAfterSnapshot = false;
         AudioFormatPreferences.snapshots = 0;
         AudioFormatPreferences.verified = null;
+        AudioFormatPreferences.verificationEntered = null;
+        AudioFormatPreferences.verificationRelease = null;
         BulkDownloads.imports = 0;
         BulkDownloads.bytes = null;
+        BulkDownloads.entries.clear();
+        BulkDownloads.importEntered = null;
+        BulkDownloads.importRelease = null;
+        BulkDownloads.importInterrupted = false;
         SoulseekDownloads.fetches = 0;
         SoulseekDownloads.entered = null;
         SoulseekDownloads.release = null;
         SoulseekDownloads.pauseBeforeReturn = false;
+        SoulseekDownloads.failure = null;
         return new Context(Files.createTempDirectory("selected-download-").toFile());
     }
 
@@ -284,12 +291,225 @@ public final class SoulseekSelectedDownloadsTest {
                 "Cancelled pending selections never open a native transfer");
     }
 
+    static SoulseekSelectedDownloads.Progress progress(String reference) {
+        for (SoulseekSelectedDownloads.Progress item : SoulseekSelectedDownloads.snapshots())
+            if (item.reference.equals(reference)) return item;
+        throw new AssertionError("Missing named progress: " + reference);
+    }
+
+    static SoulseekSelectedDownloads.Progress awaitProgress(
+            String reference, SoulseekSelectedDownloads.Phase phase, long queue) throws Exception {
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(3);
+        SoulseekSelectedDownloads.Progress current;
+        do {
+            current = progress(reference);
+            if (current.phase == phase && current.queuePosition == queue) return current;
+            Thread.sleep(5);
+        } while (System.nanoTime() < deadline);
+        throw new AssertionError("Progress did not reach " + phase + " / " + queue);
+    }
+
+    static void exactSelectionAndNamedPhases() throws Exception {
+        Context app = fresh();
+        check(
+                !SoulseekSelectedDownloads.enqueueSelected(app, "ordinary-video"),
+                "Explicit API rejects other sources instead of falling back");
+        check(
+                !SoulseekSelectedDownloads.enqueueSelected(app, PREFIX + "bad"),
+                "Explicit API rejects a malformed selected ID");
+        String reference = PREFIX + id(1);
+        SoulseekBridge.instance.tracks.put(
+                id(1), new SoulseekTrack(id(1), 4, "private/secret-folder/Artist - Song.flac"));
+        DownloadDestinations.current = new DownloadDestinations.Snapshot("both");
+        SoulseekDownloads.entered = new CountDownLatch(1);
+        SoulseekDownloads.release = new CountDownLatch(1);
+        AudioFormatPreferences.verificationEntered = new CountDownLatch(1);
+        AudioFormatPreferences.verificationRelease = new CountDownLatch(1);
+        check(
+                SoulseekSelectedDownloads.enqueueSelected(app, reference),
+                "Explicit file selection is accepted with the exact reference");
+        check(SoulseekDownloads.entered.await(5, TimeUnit.SECONDS), "Transfer started");
+        SoulseekSelectedDownloads.Progress waiting =
+                awaitProgress(reference, SoulseekSelectedDownloads.Phase.WAITING_PEER, 7);
+        check(
+                waiting.phase == SoulseekSelectedDownloads.Phase.WAITING_PEER
+                        && waiting.queuePosition == 7
+                        && waiting.canCancel(),
+                "Actual peer queue position appears before any byte progress");
+        check(
+                waiting.name.equals("Artist - Song.flac")
+                        && !waiting.summary().contains("secret-folder"),
+                "Named progress never exposes the remote directory");
+        SoulseekBridge.instance.progress =
+                new SoulseekBridge.TransferStatus("downloading", 2, 4, -1);
+        SoulseekSelectedDownloads.Progress receiving =
+                awaitProgress(reference, SoulseekSelectedDownloads.Phase.RECEIVING, -1);
+        check(
+                receiving.phase == SoulseekSelectedDownloads.Phase.RECEIVING
+                        && receiving.downloaded == 2,
+                "Receiving phase uses actual native byte facts");
+        check(
+                SoulseekSelectedDownloads.snapshots().get(0).reference.equals(reference),
+                "Active transfer is shown before older queue or history rows");
+        SoulseekDownloads.release.countDown();
+        check(
+                AudioFormatPreferences.verificationEntered.await(5, TimeUnit.SECONDS),
+                "Completed bytes enter the codec check");
+        check(
+                progress(reference).phase == SoulseekSelectedDownloads.Phase.VERIFYING,
+                "Byte completion does not claim a saved file before codec verification");
+        AudioFormatPreferences.verificationRelease.countDown();
+        idle();
+        check(
+                progress(reference).phase == SoulseekSelectedDownloads.Phase.DESTINATIONS_PENDING
+                        && progress(reference).handedOff,
+                "Verified staging waits for destination copies instead of claiming completion");
+        BulkJobStore.Job job = BulkDownloads.entries.get(0);
+        job.state = BulkJobStore.State.PUBLISHING;
+        job.phoneStatus = "writing";
+        check(
+                progress(reference).phase == SoulseekSelectedDownloads.Phase.SAVING,
+                "Publisher writing state is shown as saving");
+        job.phoneStatus = "complete";
+        job.publishedUri = "content://test/saved-audio";
+        job.telegramStatus = "failed";
+        job.state = BulkJobStore.State.FAILED;
+        SoulseekSelectedDownloads.Progress partial = progress(reference);
+        check(
+                partial.phase == SoulseekSelectedDownloads.Phase.FAILED
+                        && partial.phoneState.equals("complete")
+                        && partial.telegramState.equals("failed"),
+                "Phone success and Telegram failure are independent");
+        check(
+                partial.summary().contains("Saved and verified")
+                        && partial.summary().contains("Copy failed"),
+                "Partial completion has separate destination messages");
+        job.state = BulkJobStore.State.COMPLETE;
+        job.telegramStatus = "complete";
+        check(
+                progress(reference).phase != SoulseekSelectedDownloads.Phase.COMPLETE,
+                "A complete flag without the Telegram receipt cannot report full completion");
+        job.telegramReceipt = "confirmed-test-receipt";
+        job.publishedUri = "";
+        check(
+                progress(reference).phase != SoulseekSelectedDownloads.Phase.COMPLETE,
+                "A complete flag without the phone receipt cannot report full completion");
+        job.publishedUri = "content://test/saved-audio";
+        check(
+                progress(reference).phase == SoulseekSelectedDownloads.Phase.COMPLETE
+                        && !progress(reference).canCancel(),
+                "All selected copies require their successful backend receipts");
+    }
+
+    static void cancelledAndRedactedProgress() throws Exception {
+        Context app = fresh();
+        SoulseekDownloads.entered = new CountDownLatch(1);
+        SoulseekDownloads.release = new CountDownLatch(1);
+        SoulseekSelectedDownloads.enqueueSelected(app, song(1).videoId);
+        check(SoulseekDownloads.entered.await(5, TimeUnit.SECONDS), "Blocking transfer entered");
+        String pending = song(2).videoId;
+        SoulseekSelectedDownloads.enqueueSelected(app, pending);
+        check(SoulseekSelectedDownloads.cancel(pending), "A queued exact file can be cancelled");
+        check(
+                progress(pending).phase == SoulseekSelectedDownloads.Phase.CANCELLED,
+                "Cancellation is visible before the queue worker runs");
+        SoulseekDownloads.release.countDown();
+        idle();
+        check(
+                SoulseekDownloads.fetches == 1,
+                "Cancelled queue entries never open a native transfer");
+        app = fresh();
+        SoulseekDownloads.failure = "https://private.endpoint.invalid/?api_key=secret-token";
+        String failed = song(1).videoId;
+        SoulseekSelectedDownloads.enqueueSelected(app, failed);
+        idle();
+        check(
+                progress(failed).phase == SoulseekSelectedDownloads.Phase.FAILED,
+                "Transfer failures retain a named failed state");
+        check(
+                !progress(failed).summary().contains("endpoint")
+                        && !progress(failed).summary().contains("secret-token"),
+                "Transport exception details never become status text");
+    }
+
+    static void cancellationHandoffBoundary() throws Exception {
+        Context app = fresh();
+        AudioFormatPreferences.verificationEntered = new CountDownLatch(1);
+        AudioFormatPreferences.verificationRelease = new CountDownLatch(1);
+        String reference = song(1).videoId;
+        SoulseekSelectedDownloads.enqueueSelected(app, reference);
+        check(
+                AudioFormatPreferences.verificationEntered.await(5, TimeUnit.SECONDS),
+                "Verification gate entered");
+        check(SoulseekSelectedDownloads.cancel(reference), "Cancellation before handoff wins");
+        AudioFormatPreferences.verificationRelease.countDown();
+        idle();
+        check(
+                BulkDownloads.imports == 0
+                        && progress(reference).phase == SoulseekSelectedDownloads.Phase.CANCELLED,
+                "A cancelled verification cannot hand bytes to the publisher");
+        app = fresh();
+        BulkDownloads.importEntered = new CountDownLatch(1);
+        BulkDownloads.importRelease = new CountDownLatch(1);
+        reference = song(1).videoId;
+        SoulseekSelectedDownloads.enqueueSelected(app, reference);
+        check(
+                BulkDownloads.importEntered.await(5, TimeUnit.SECONDS),
+                "Publisher handoff gate entered");
+        check(
+                !SoulseekSelectedDownloads.cancel(reference),
+                "Source cancellation cannot claim success after handoff starts");
+        SoulseekSelectedDownloads.cancelAll();
+        check(
+                progress(reference).phase == SoulseekSelectedDownloads.Phase.DESTINATIONS_PENDING,
+                "Global source cancellation does not falsely label an accepted copy as cancelled");
+        BulkDownloads.importRelease.countDown();
+        idle();
+        check(
+                BulkDownloads.imports == 1 && !BulkDownloads.importInterrupted,
+                "Destination lifecycle retains ownership once its handoff has started");
+    }
+
+    static void nativePollingNeverBlocksDisplay() throws Exception {
+        Context app = fresh();
+        SoulseekBridge.instance.pollEntered = new CountDownLatch(1);
+        SoulseekBridge.instance.pollRelease = new CountDownLatch(1);
+        SoulseekDownloads.entered = new CountDownLatch(1);
+        SoulseekDownloads.release = new CountDownLatch(1);
+        String reference = song(1).videoId;
+        SoulseekSelectedDownloads.enqueueSelected(app, reference);
+        try {
+            check(
+                    SoulseekBridge.instance.pollEntered.await(3, TimeUnit.SECONDS),
+                    "Background native poll entered");
+            long start = System.nanoTime();
+            SoulseekSelectedDownloads.Progress pending = progress(reference);
+            check(
+                    System.nanoTime() - start < TimeUnit.MILLISECONDS.toNanos(200),
+                    "A blocked native poll cannot block UI snapshot rendering");
+            check(
+                    pending.phase == SoulseekSelectedDownloads.Phase.WAITING_PEER
+                            && pending.queuePosition == -1,
+                    "Queue position remains unknown until a real background observation arrives");
+        } finally {
+            SoulseekBridge.instance.pollRelease.countDown();
+        }
+        awaitProgress(reference, SoulseekSelectedDownloads.Phase.WAITING_PEER, 7);
+        SoulseekSelectedDownloads.cancelAll();
+        SoulseekDownloads.release.countDown();
+        idle();
+    }
+
     public static void main(String[] args) throws Exception {
         try {
             sourceOwnership();
             setupAndBinding();
             verifiedImportAndCleanup();
             boundedQueueAndCancel();
+            exactSelectionAndNamedPhases();
+            cancelledAndRedactedProgress();
+            cancellationHandoffBoundary();
+            nativePollingNeverBlocksDisplay();
             System.out.println("PASS: " + checks + " selected download checks.");
         } finally {
             worker().shutdownNow();

@@ -4,6 +4,7 @@ import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.*
 import app.morphe.patcher.util.smali.ExternalLabel
 import com.android.tools.smali.dexlib2.Opcode
@@ -155,6 +156,7 @@ private val soulseekResources = resourcePatch {
             for (name in
                 listOf(
                     "SoulseekActivity",
+                    "SoulseekSearchActivity",
                     "NostrSetupActivity",
                     "PeerDiscoveryActivity",
                     "BulkDownloadsActivity",
@@ -226,6 +228,65 @@ val nativeSoulseekPatch =
         extendWith("extensions/soulseek.mpe")
         execute {
             val songType = "Lcom/music/bitchord/data/model/Song;"
+            // R8 merges this lambda with unrelated callbacks. Identify the manual
+            // downloadSong branch by its duration backfill and singleton-list dispatch;
+            // albums, cached-folder exports, permission continuations and retries never
+            // pass this call site. No queue-wide or stack-trace heuristic is involved.
+            val manual =
+                mutableClassDefBy("Lcom/dokar/quickjs/QuickJs\$\$ExternalSyntheticLambda0;")
+                    .methods
+                    .single {
+                        it.name == "invoke" &&
+                            it.parameterTypes == listOf("Ljava/lang/Object;") &&
+                            it.returnType == "Ljava/lang/Object;"
+                    }
+            check(manual.accessFlags == 17 && manual.implementation!!.registerCount == 48) {
+                "Manual single-song download callback changed"
+            }
+            val manualCode = manual.implementation!!.instructions.toList()
+            val durationAt =
+                manualCode.indices.single { index ->
+                    val call =
+                        (manualCode[index] as? ReferenceInstruction)?.reference as? MethodReference
+                    call?.definingClass == "Lcom/music/bitchord/data/model/ModelsKt;" &&
+                        call.name == "durationMillis" &&
+                        call.parameterTypes == listOf(songType) &&
+                        call.returnType == "J"
+                }
+            val dispatchAt =
+                ((durationAt + 1) until minOf(durationAt + 100, manualCode.size)).first { index ->
+                    val call =
+                        (manualCode[index] as? ReferenceInstruction)?.reference as? MethodReference
+                    call?.definingClass == "Lkotlin/jvm/functions/Function2;" &&
+                        call.name == "invoke" &&
+                        call.parameterTypes == listOf("Ljava/lang/Object;", "Ljava/lang/Object;") &&
+                        call.returnType == "Ljava/lang/Object;"
+                }
+            val dispatch = manualCode[dispatchAt] as FiveRegisterInstruction
+            val singleton =
+                (manualCode[dispatchAt - 2] as? ReferenceInstruction)?.reference as? MethodReference
+            check(
+                manualCode[dispatchAt].opcode == Opcode.INVOKE_INTERFACE &&
+                    dispatch.registerCount == 3 &&
+                    manualCode[dispatchAt - 1].opcode == Opcode.MOVE_RESULT_OBJECT &&
+                    (manualCode[dispatchAt - 1]
+                            as
+                            com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction)
+                        .registerA == dispatch.registerD &&
+                    singleton?.name == "listOf" &&
+                    singleton.parameterTypes == listOf("Ljava/lang/Object;") &&
+                    singleton.returnType == "Ljava/util/List;" &&
+                    singleton.definingClass in
+                        setOf("Lkotlin/io/TextStreamsKt;", "Lcoil/util/-Collections;") &&
+                    manualCode[dispatchAt + 1].opcode == Opcode.SGET_OBJECT &&
+                    manualCode[dispatchAt + 2].opcode == Opcode.RETURN_OBJECT
+            ) {
+                "Manual single-song singleton dispatch changed"
+            }
+            manual.replaceInstruction(
+                dispatchAt,
+                "invoke-static {v${dispatch.registerC}, v${dispatch.registerD}, v${dispatch.registerE}}, ${SOULSEEK}SoulseekDownloadChoice;->offer(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+            )
             val enqueue =
                 mutableClassDefBy("Lcom/music/bitchord/download/Downloads;").methods.single {
                     it.name == "enqueue" &&

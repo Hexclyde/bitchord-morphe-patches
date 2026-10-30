@@ -62,6 +62,69 @@ public final class VerifySoulseekApk {
                 "Exact unambiguous static native ABI: " + owner + "->" + name + descriptor);
     }
 
+    static void manualChoiceScope(Map<String, ClassDef> classes) {
+        ClassDef owner = classes.get("Lcom/dokar/quickjs/QuickJs$$ExternalSyntheticLambda0;");
+        check(owner != null, "Manual download callback retained");
+        Method manual = null;
+        for (Method method : owner.getMethods())
+            if (method.getName().equals("invoke")
+                    && method.getParameterTypes().equals(List.of("Ljava/lang/Object;"))
+                    && method.getReturnType().equals("Ljava/lang/Object;")) manual = method;
+        check(
+                manual != null
+                        && manual.getImplementation() != null
+                        && manual.getAccessFlags() == 17
+                        && manual.getImplementation().getRegisterCount() == 48,
+                "Manual download callback ABI retained");
+        List<Instruction> instructions = code(manual);
+        int offered = 0;
+        for (int i = 0; i < instructions.size(); i++) {
+            if (!namedCall(instructions.get(i), PREFIX + "SoulseekDownloadChoice;", "offer"))
+                continue;
+            offered++;
+            check(
+                    i >= 2 && i + 2 < instructions.size(),
+                    "Choice is inside an existing singleton dispatch");
+            MethodReference target = call(instructions.get(i));
+            check(
+                    target.getParameterTypes()
+                                    .equals(
+                                            List.of(
+                                                    "Ljava/lang/Object;",
+                                                    "Ljava/lang/Object;",
+                                                    "Ljava/lang/Object;"))
+                            && target.getReturnType().equals("Ljava/lang/Object;")
+                            && instructions.get(i).getOpcode() == Opcode.INVOKE_STATIC,
+                    "Exact manual choice facade descriptor");
+            FiveRegisterInstruction dispatch = (FiveRegisterInstruction) instructions.get(i);
+            MethodReference singleton = call(instructions.get(i - 2));
+            check(
+                    singleton != null
+                            && singleton.getName().equals("listOf")
+                            && singleton.getParameterTypes().equals(List.of("Ljava/lang/Object;"))
+                            && singleton.getReturnType().equals("Ljava/util/List;")
+                            && Set.of("Lkotlin/io/TextStreamsKt;", "Lcoil/util/-Collections;")
+                                    .contains(singleton.getDefiningClass())
+                            && instructions.get(i - 1).getOpcode() == Opcode.MOVE_RESULT_OBJECT
+                            && ((OneRegisterInstruction) instructions.get(i - 1)).getRegisterA()
+                                    == dispatch.getRegisterD(),
+                    "Choice receives the original singleton song list");
+            int duration = 0;
+            for (int at = Math.max(0, i - 100); at < i; at++)
+                if (namedCall(
+                        instructions.get(at),
+                        "Lcom/music/bitchord/data/model/ModelsKt;",
+                        "durationMillis")) duration++;
+            check(
+                    duration == 1
+                            && instructions.get(i + 1).getOpcode() == Opcode.SGET_OBJECT
+                            && instructions.get(i + 2).getOpcode() == Opcode.RETURN_OBJECT,
+                    "Choice is confined to manual song-duration backfill, outside batch/cache/retry"
+                            + " paths");
+        }
+        check(offered == 1, "Exactly one inspected manual source-choice dispatch");
+    }
+
     public static void main(String[] args) throws Exception {
         File apk = new File(args[0]);
         boolean enabled = args[1].equals("enabled");
@@ -81,6 +144,7 @@ public final class VerifySoulseekApk {
             Element activity = (Element) activities.item(i);
             if (!Set.of(
                             "app.bitchord.soulseek.SoulseekActivity",
+                            "app.bitchord.soulseek.SoulseekSearchActivity",
                             "app.bitchord.soulseek.NostrSetupActivity",
                             "app.bitchord.soulseek.PeerDiscoveryActivity",
                             "app.bitchord.soulseek.BulkDownloadsActivity",
@@ -104,7 +168,7 @@ public final class VerifySoulseekApk {
                     activity.getElementsByTagName("intent-filter").getLength() == 0,
                     "Soulseek setup adds no launcher");
         }
-        check(activityCount == (enabled ? 8 : 0), "Soulseek activities match patch selection");
+        check(activityCount == (enabled ? 9 : 0), "Soulseek activities match patch selection");
         int serviceCount = 0;
         var services = manifest.getElementsByTagName("service");
         for (int i = 0; i < services.getLength(); i++) {
@@ -156,6 +220,7 @@ public final class VerifySoulseekApk {
                 transferServices == (enabled ? 1 : 0),
                 "Foreground transfer service matches selection");
         if (enabled) {
+            manualChoiceScope(classes);
             nativeMethod(
                     classes,
                     "PeerDiscoveryNative",
@@ -257,6 +322,7 @@ public final class VerifySoulseekApk {
         for (String hook :
                 List.of(
                         "SoulseekBridge;->boot",
+                        "SoulseekDownloadChoice;->offer",
                         "SoulseekAddon;->bodyOrNull",
                         "SoulseekAddon;->reserved",
                         "SoulseekDataSource;->wrap",

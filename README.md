@@ -10,8 +10,11 @@
 > [download setup](docs/SOULSEEK-TESTING.md) and [debrid setup](docs/DEBRID.md).
 > Download screens follow BitChord's selected language in all 20 supported translations.
 > Screenshots and screen recording are enabled across beta.9 for UI review.
-> Beta.9 adds quicker initial Soulseek results and opt-in discovery of compatible
-> app peers. Discovery is under **Peer downloads → Connection setup → Peer discovery**;
+> Beta.9 adds guided Soulseek setup, **Find music on Soulseek**, named download progress
+> and an explicit source choice for eligible manual single-song downloads. Choosing
+> Soulseek opens a separate file search; cancellation or failure does not silently
+> download YouTube or mark its original row as saved. See [Soulseek downloads](docs/SOULSEEK.md).
+> Opt-in app-peer discovery is under **Peer downloads → Connection setup → Peer discovery**;
 > found public keys still require explicit pairing. See the [discovery guide](docs/PEER-DISCOVERY.md).
 > The testing build still needs real-phone and public-network qualification.
 
@@ -28,7 +31,7 @@
 | Patch | What it does |
 | --- | --- |
 | **Unofficial Telegram music** | Search and play audio from your own Telegram channels and chats through TDLib, using your own account. Android 8 or newer. |
-| **Unofficial Soulseek audio** | Download selected Soulseek and paired-phone originals, plus optional debrid link downloads, with saved destination and format choices. Live playback from these sources is disabled. Android 8 or newer. |
+| **Unofficial Soulseek audio** | Guided Soulseek search and exact-file downloads, an explicit source choice for eligible single-song Download actions, paired-phone originals and optional debrid links. Saved destination/format choices; download-only. Android 8 or newer. |
 | **Install as Bitchord+** | Installs next to your regular BitChord as **Bitchord+**, or under a name you choose. |
 | **Sign in with MicroG** | Signs in to YouTube Music with an account that’s already in [MicroG RE](https://github.com/MorpheApp/MicroG-RE), instead of Google’s sign-in page. Only shows when MicroG RE is installed. |
 | **Sing** | Turns the lead vocal down so you can sing over the song. Ported from [Auris](https://github.com/OreoMuncher45/Auris). Off by default. |
@@ -134,6 +137,7 @@ Step-by-step guides:
 - [Installing with Morphe](docs/MOBILE.md)
 - [Publishing the prepared beta.9 ZIP](docs/PUBLISHING-1.1.0-beta.9.md)
 - [Connecting Telegram](docs/SETUP.md)
+- [Guided Soulseek search and downloads](docs/SOULSEEK.md)
 - [Optional debrid downloads](docs/DEBRID.md)
 - [Compatible-peer discovery and peer exchange](docs/PEER-DISCOVERY.md)
 - [FAQ](docs/FAQ.md)

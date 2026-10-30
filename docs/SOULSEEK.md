@@ -7,14 +7,16 @@ not supply live playback or automatically replace YouTube. Completed phone copie
 can be played through the normal local-file workflow.
 
 The `1.1.0-beta.9` testing update builds on the combined BitChord 1.9 beta.8
-release. It adds adaptive Soulseek search and opt-in compatible-peer discovery.
+release. It adds guided Soulseek setup, a dedicated search screen, an explicit
+source choice for eligible manual single-track downloads, adaptive search and
+opt-in compatible-peer discovery.
 See [testing instructions](SOULSEEK-TESTING.md).
 
 ## Current implementation
 
 | Feature | Behavior |
 | --- | --- |
-| Soulseek | Account setup, adaptive manual Addons search and download of the exact selected peer result |
+| Soulseek | Guided account/download setup, dedicated manual search and download of the exact selected peer result; manual Addons search remains available |
 | Compatible-peer discovery | Explicit scans of signed public app profiles, plus bounded referrals from paired clients; no automatic pairing |
 | First setup | Choose Phone, Telegram main channel or Both, then enable and order audio formats |
 | Paired sharing | Explicitly select complete local audio files; send offers to saved app public keys |
@@ -67,6 +69,15 @@ provide setup and downloads; tap its gear to reopen them after opening another
 feature. The gear is disabled while the feature is off. Saved accounts and
 settings remain when it is switched off.
 
+For Soulseek, **Account & download settings** opens the guided overview. Use
+**Account settings** to sign in or reconnect; signing in does not replace the
+feature's enable switch. The overview reports **Ready to search** only when
+Soulseek is enabled and signed in, a destination is chosen and formats are
+configured. Its primary **Find music on Soulseek** action opens the dedicated
+search screen. Optional peer and debrid controls remain collapsed under
+**More download options** until opened. Returning to the page does not
+automatically navigate into setup.
+
 **Where copies go** requires an explicit destination. Phone uses a SAF folder
 with persisted read/write permission. Telegram uses the signed-in account's
 configured private main channel and requires the Telegram integration. Both
@@ -85,6 +96,37 @@ Encoding checks do not prove the artist, recording, mastering history or an
 original lossless source.
 
 ## Two source paths
+
+With Soulseek enabled, an eligible manual single-track Download action for an
+ordinary YouTube song can offer **Search Soulseek** or **Continue with BitChord
+download**. Choosing Soulseek opens a search; it does not assert that
+the current recording exists there or automatically select a similarly named
+file. Review the returned peer, filename, format and recording details before
+selecting a result. Cancelling the choice or search does not download the original.
+A failed or empty Soulseek search does not silently fall back to YouTube. Use
+**Continue with BitChord download** explicitly if that is wanted. The original
+download choice is single-use and expires after two minutes; return to the song
+and start Download again if it has expired. Back, cancellation and process death
+never start that original continuation automatically.
+
+This source choice is scoped to the manual single-track path. Album/playlist
+loops, retry-manager work and the existing cached-folder export branch retain
+their existing behavior. Explicit addon and local-file selections, including
+Telegram and Soulseek files, keep their selected source rather than entering a
+fresh search. The action does not
+switch the playing source: Soulseek stays download-only.
+
+From **Find music on Soulseek**, enter the artist and title, press **Search
+Soulseek**, then review the source, peer, filename, advertised format and file size. Use
+**Download this file** to queue the exact selected result. Nothing downloads
+merely because a search was run. **View downloads** opens its progress and copy
+results. Manual **Search → Addons** remains an alternative for existing users;
+the dedicated screen does not require finding the Addons tab.
+
+Saving a selected Soulseek file publishes that file through the chosen
+Phone/Telegram/Both destinations. It does not mark a different original YouTube
+catalogue row as saved or replace its playback/download identity. Check the named
+Soulseek download progress and destination result for the selected file.
 
 An explicit Soulseek result is intercepted before BitChord's filename-based
 download reuse. Soulseek must be enabled under **Patches & tweaks** and the host's current download

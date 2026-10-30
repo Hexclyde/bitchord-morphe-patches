@@ -1,10 +1,19 @@
 # 1.1.0-beta.9
 
 This testing release builds on the completed beta.8 bundle for BitChord 1.9.
-Its new work focuses on the **Unofficial Soulseek audio** patch: initial search
-results, opt-in compatible-peer discovery and bounded public-profile exchange.
+Its new work focuses on the **Unofficial Soulseek audio** patch: guided setup,
+dedicated search, explicit source choice, opt-in compatible-peer discovery and
+bounded public-profile exchange.
 The existing playback patches and Unofficial Telegram integration are retained.
 
+- **Soulseek download workflow:** a guided overview leads to account setup,
+  destination and format choices, dedicated search and named download progress.
+  Eligible manual single-track Download actions can open Soulseek search or
+  continue the original flow through an explicit choice. Album/playlist loops,
+  retries, cached-folder exports and explicit source selections keep their
+  existing paths. Cancelling or failing Soulseek search does not silently
+  download from YouTube. Saving a selected Soulseek file does not mark a
+  different original YouTube row as saved, and it does not change playback.
 - **Initial Soulseek results:** a preferred-format result can settle the first
   shortlist before the full 12-second search window. Without a result in the
   highest enabled format, search keeps its full budget. A short-lived bounded
@@ -47,13 +56,17 @@ retained separately from the combined bundle's 1.9 application target.
 
 ## Qualification
 
-Release validation is recorded in the publishing package's `verification.json`.
-All three Android native runtimes built successfully. Validation passed 88
-behavioral UI tests, 31 Python tests, the complete host regression suite and ten
-patched-APK cases: four standalone 1.9 layouts, standalone 1.8.1 arm64, three
-combined architectures, reversed combined selection and all 15 patches on arm64. Automated checks use local
-fixtures and do not qualify real accounts, public relay behavior, carrier/router
-NAT traversal, overlay bootstrap, physical-device UI or Android background limits.
+The final UX bundle passed 117 behavioral UI tests, 31 Python tests and the
+complete host regression suite, including 41 source-choice assertions and 126
+selected-download checks. Ten patched-APK cases passed: four standalone 1.9
+layouts, standalone 1.8.1 arm64, three combined architectures, reversed combined
+selection and all 15 patches on arm64. Checks cover the nine private activities,
+manual single-song callback scope, native ABI exports, capture policy, source
+isolation and file dispatch. All 20 language catalogs cover 1,004 phrases.
+The publishing package's `verification.json` records the final bundle and APK
+hashes. Automated checks use local fixtures and do not qualify real accounts,
+public relay behavior, carrier/router NAT traversal, overlay bootstrap,
+physical-device UI or Android background limits.
 
 See the [discovery guide](PEER-DISCOVERY.md), [testing checklist](SOULSEEK-TESTING.md),
 [known limitations](KNOWN_LIMITATIONS.md) and [publishing guide](PUBLISHING-1.1.0-beta.9.md).

@@ -378,6 +378,60 @@ public final class SoulseekBridge {
         }
     }
 
+    /** Read-only native transfer facts; no endpoint, peer key or private path is exposed. */
+    static final class TransferStatus {
+        final String state;
+        final long downloaded, total, queuePosition;
+
+        TransferStatus(String state, long downloaded, long total, long queuePosition) {
+            this.state = state;
+            this.downloaded = downloaded;
+            this.total = total;
+            this.queuePosition = queuePosition;
+        }
+    }
+
+    TransferStatus transferStatus(String id, String expectedSession) throws IOException {
+        final Transfer transfer;
+        synchronized (this) {
+            if (!expectedSession.equals(sessionTag))
+                throw new IOException("Soulseek session changed. Search again.");
+            ready();
+            transfer = transfers.get(id);
+            if (transfer == null) return null;
+        }
+        try {
+            JSONArray rows =
+                    new JSONObject(SoulseekNative.transfers(transfer.handle))
+                            .getJSONArray("transfers");
+            synchronized (this) {
+                if (!expectedSession.equals(sessionTag) || ready() != transfer.handle)
+                    throw new IOException("Soulseek session changed. Search again.");
+            }
+            for (int i = 0; i < rows.length(); i++) {
+                JSONObject row = rows.getJSONObject(i);
+                if (!transfer.id.equals(row.optString("id"))) continue;
+                long position = -1;
+                Object queue = row.opt("queuePosition");
+                if (queue instanceof Number) {
+                    double value = ((Number) queue).doubleValue();
+                    if (value >= 0 && value <= 0xffffffffL && value == Math.rint(value))
+                        position = (long) value;
+                }
+                return new TransferStatus(
+                        row.optString("status"),
+                        Math.max(0, Math.min(transfer.track.size, row.optLong("downloaded"))),
+                        transfer.track.size,
+                        position);
+            }
+            return null;
+        } catch (IOException changed) {
+            throw changed;
+        } catch (Exception unavailable) {
+            throw new IOException("Soulseek transfer state unavailable", unavailable);
+        }
+    }
+
     ProgressiveReader open(String id, long position, long length) throws IOException {
         Transfer transfer;
         synchronized (this) {

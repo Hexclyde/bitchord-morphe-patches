@@ -4002,6 +4002,362 @@ final class Translations {
             "{0} \u0645\u0646 \u0627\u0644\u0639\u0645\u0644\u0627\u0621"
                     + " \u0627\u0644\u0630\u064a\u0646 \u0638\u0647\u0631\u0648\u0627"
                     + " \u0645\u0624\u062e\u0631\u064b\u0627",
+            "Soulseek account",
+            "\u062d\u0633\u0627\u0628 Soulseek",
+            "Signed in as {0}",
+            "\u062a\u0645 \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644"
+                    + " \u0628\u0627\u0633\u0645 {0}",
+            "Ready to search",
+            "\u062c\u0627\u0647\u0632 \u0644\u0644\u0628\u062d\u062b",
+            "Sign in to search Soulseek.",
+            "\u0633\u062c\u0651\u0644 \u0627\u0644\u062f\u062e\u0648\u0644"
+                    + " \u0644\u0644\u0628\u062d\u062b \u0641\u064a Soulseek.",
+            "Enable Soulseek to sign in and search.",
+            "\u0641\u0639\u0651\u0644 Soulseek \u0644\u062a\u0633\u062c\u064a\u0644"
+                    + " \u0627\u0644\u062f\u062e\u0648\u0644 \u0648\u0627\u0644\u0628\u062d\u062b.",
+            "Download setup",
+            "\u0625\u0639\u062f\u0627\u062f \u0627\u0644\u062a\u0646\u0632\u064a\u0644",
+            "Choose where copies go before searching.",
+            "\u0627\u062e\u062a\u0631 \u0648\u062c\u0647\u0627\u062a \u062d\u0641\u0638"
+                    + " \u0627\u0644\u0646\u0633\u062e \u0642\u0628\u0644"
+                    + " \u0627\u0644\u0628\u062d\u062b.",
+            "Choose your audio formats before searching.",
+            "\u0627\u062e\u062a\u0631 \u0635\u064a\u063a \u0627\u0644\u0635\u0648\u062a"
+                    + " \u0642\u0628\u0644 \u0627\u0644\u0628\u062d\u062b.",
+            "Find music on Soulseek",
+            "\u0627\u0644\u0628\u062d\u062b \u0639\u0646 \u0645\u0648\u0633\u064a\u0642\u0649"
+                    + " \u0641\u064a Soulseek",
+            "{0} formats enabled",
+            "\u0639\u062f\u062f \u0627\u0644\u0635\u064a\u063a"
+                    + " \u0627\u0644\u0645\u0641\u0639\u0651\u0644\u0629: {0}",
+            "More download options",
+            "\u062e\u064a\u0627\u0631\u0627\u062a \u062a\u0646\u0632\u064a\u0644"
+                    + " \u0625\u0636\u0627\u0641\u064a\u0629",
+            "Account settings",
+            "\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0627\u0644\u062d\u0633\u0627\u0628",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "\u0625\u0639\u062f\u0627\u062f\u0627\u062a Soulseek \u063a\u064a\u0631"
+                    + " \u0645\u062a\u0627\u062d\u0629. \u0623\u0639\u0650\u062f"
+                    + " \u062a\u0634\u063a\u064a\u0644 BitChord \u0648\u062d\u0627\u0648\u0644"
+                    + " \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "Other download options are controlled in Patches & tweaks.",
+            "\u064a\u0645\u0643\u0646 \u0627\u0644\u062a\u062d\u0643\u0645 \u0641\u064a"
+                + " \u062e\u064a\u0627\u0631\u0627\u062a \u0627\u0644\u062a\u0646\u0632\u064a\u0644"
+                + " \u0627\u0644\u0623\u062e\u0631\u0649 \u0645\u0646"
+                + " \u00ab\u0627\u0644\u062a\u0635\u062d\u064a\u062d\u0627\u062a"
+                + " \u0648\u0627\u0644\u062a\u0639\u062f\u064a\u0644\u0627\u062a\u00bb.",
+            "Source enabled",
+            "\u0627\u0644\u0645\u0635\u062f\u0631 \u0645\u0641\u0639\u0651\u0644",
+            "Account actions",
+            "\u0625\u062c\u0631\u0627\u0621\u0627\u062a \u0627\u0644\u062d\u0633\u0627\u0628",
+            "Not chosen yet",
+            "\u0644\u0645 \u064a\u064f\u062e\u062a\u0631 \u0628\u0639\u062f",
+            "Not signed in",
+            "\u0644\u0645 \u064a\u062a\u0645 \u062a\u0633\u062c\u064a\u0644"
+                    + " \u0627\u0644\u062f\u062e\u0648\u0644",
+            "Finish the open download choice first.",
+            "\u0623\u0643\u0645\u0644 \u0627\u062e\u062a\u064a\u0627\u0631"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644"
+                    + " \u0627\u0644\u0645\u0641\u062a\u0648\u062d \u0623\u0648\u0644\u064b\u0627.",
+            "Could not open the download source choice. Try again.",
+            "\u062a\u0639\u0630\u0651\u0631 \u0641\u062a\u062d \u0627\u062e\u062a\u064a\u0627\u0631"
+                    + " \u0645\u0635\u062f\u0631 \u0627\u0644\u062a\u0646\u0632\u064a\u0644."
+                    + " \u062d\u0627\u0648\u0644 \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "BitChord could not start this download. Try again.",
+            "\u062a\u0639\u0630\u0651\u0631 \u0639\u0644\u0649 BitChord \u0628\u062f\u0621"
+                    + " \u0647\u0630\u0627 \u0627\u0644\u062a\u0646\u0632\u064a\u0644."
+                    + " \u062d\u0627\u0648\u0644 \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "\u0627\u0628\u062d\u062b \u0639\u0646 \u0645\u0644\u0641"
+                + " \u0648\u0631\u0627\u062c\u0639 \u062a\u0641\u0627\u0635\u064a\u0644"
+                + " \u0627\u0644\u0646\u0638\u064a\u0631\u060c \u062b\u0645"
+                + " \u0627\u062e\u062a\u0631 \u0645\u0627 \u062a\u0631\u064a\u062f"
+                + " \u062a\u0646\u0632\u064a\u0644\u0647 \u0628\u0627\u0644\u0636\u0628\u0637."
+                + " \u0644\u0646 \u062a\u062a\u063a\u064a\u0631"
+                + " \u0623\u063a\u0646\u064a\u062a\u0643 \u0627\u0644\u062d\u0627\u0644\u064a\u0629"
+                + " \u0623\u0648 \u062d\u0627\u0644\u0629"
+                + " \u062a\u0646\u0632\u064a\u0644\u0647\u0627.",
+            "Choose download source",
+            "\u0627\u062e\u062a\u064a\u0627\u0631 \u0645\u0635\u062f\u0631"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "\u064a\u0628\u062d\u062b Soulseek \u0639\u0646 \u0645\u0644\u0641"
+                + " \u0645\u0646\u0641\u0635\u0644. \u064a\u0633\u062a\u062e\u062f\u0645 BitChord"
+                + " \u0645\u0635\u0627\u062f\u0631 \u0627\u0644\u062a\u0646\u0632\u064a\u0644"
+                + " \u0648\u0625\u0639\u062f\u0627\u062f\u0627\u062a\u0647"
+                + " \u0627\u0644\u062d\u0627\u0644\u064a\u0629.",
+            "Search Soulseek",
+            "\u0627\u0644\u0628\u062d\u062b \u0641\u064a Soulseek",
+            "Continue with BitChord download",
+            "\u0645\u062a\u0627\u0628\u0639\u0629 \u0627\u0644\u062a\u0646\u0632\u064a\u0644"
+                    + " \u0639\u0628\u0631 BitChord",
+            "This download choice expired. Return to the song and try again.",
+            "\u0627\u0646\u062a\u0647\u062a \u0635\u0644\u0627\u062d\u064a\u0629"
+                + " \u0627\u062e\u062a\u064a\u0627\u0631 \u0627\u0644\u062a\u0646\u0632\u064a\u0644"
+                + " \u0647\u0630\u0627. \u0627\u0631\u062c\u0639 \u0625\u0644\u0649"
+                + " \u0627\u0644\u0623\u063a\u0646\u064a\u0629 \u0648\u062d\u0627\u0648\u0644"
+                + " \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "Source: Soulseek",
+            "\u0627\u0644\u0645\u0635\u062f\u0631: Soulseek",
+            "Artist and song title",
+            "\u0627\u0644\u0641\u0646\u0627\u0646 \u0648\u0639\u0646\u0648\u0627\u0646"
+                    + " \u0627\u0644\u0623\u063a\u0646\u064a\u0629",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "\u062c\u0627\u0647\u0632 \u0644\u0644\u0628\u062d\u062b. \u0644\u0646"
+                    + " \u064a\u0628\u062f\u0623 \u0623\u064a \u062a\u0646\u0632\u064a\u0644"
+                    + " \u062d\u062a\u0649 \u062a\u062e\u062a\u0627\u0631"
+                    + " \u0645\u0644\u0641\u064b\u0627.",
+            "Soulseek account and setup",
+            "\u062d\u0633\u0627\u0628 Soulseek \u0648\u0625\u0639\u062f\u0627\u062f\u0647",
+            "Audio formats and preference order",
+            "\u0635\u064a\u063a \u0627\u0644\u0635\u0648\u062a \u0648\u062a\u0631\u062a\u064a\u0628"
+                    + " \u062a\u0641\u0636\u064a\u0644\u0647\u0627",
+            "View downloads",
+            "\u0639\u0631\u0636 \u0627\u0644\u062a\u0646\u0632\u064a\u0644\u0627\u062a",
+            "Choose your audio formats and their order first.",
+            "\u0627\u062e\u062a\u0631 \u0635\u064a\u063a \u0627\u0644\u0635\u0648\u062a"
+                    + " \u0648\u062a\u0631\u062a\u064a\u0628\u0647\u0627"
+                    + " \u0623\u0648\u0644\u064b\u0627.",
+            "Search using 2\u2013256 characters.",
+            "\u0627\u0633\u062a\u062e\u062f\u0645 \u0645\u0646 \u062d\u0631\u0641\u064a\u0646"
+                    + " \u0625\u0644\u0649 256 \u062d\u0631\u0641\u064b\u0627"
+                    + " \u0644\u0644\u0628\u062d\u062b.",
+            "Searching Soulseek\u2026",
+            "\u062c\u0627\u0631\u064d \u0627\u0644\u0628\u062d\u062b \u0641\u064a Soulseek\u2026",
+            "Soulseek session changed. Search again.",
+            "\u062a\u063a\u064a\u0651\u0631\u062a \u062c\u0644\u0633\u0629 Soulseek."
+                    + " \u0627\u0628\u062d\u062b \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "\u0644\u0627 \u062a\u0648\u062c\u062f \u0645\u0644\u0641\u0627\u062a"
+                    + " \u0645\u0637\u0627\u0628\u0642\u0629. \u062c\u0631\u0651\u0628"
+                    + " \u0643\u0644\u0645\u0627\u062a \u0628\u062d\u062b \u0623\u062e\u0631\u0649."
+                    + " \u0644\u0645 \u064a\u0628\u062f\u0623"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644 \u0639\u0628\u0631 BitChord.",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "\u0627\u062e\u062a\u0631 \u0645\u0644\u0641\u064b\u0627"
+                + " \u0623\u062f\u0646\u0627\u0647. \u0623\u0633\u0645\u0627\u0621"
+                + " \u0627\u0644\u0645\u0644\u0641\u0627\u062a \u0648\u0635\u064a\u063a\u0647\u0627"
+                + " \u0648\u062a\u0648\u0641\u0651\u0631\u0647\u0627"
+                + " \u0645\u0639\u0644\u0648\u0645\u0627\u062a \u063a\u064a\u0631"
+                + " \u0645\u062a\u062d\u0642\u0651\u064e\u0642 \u0645\u0646\u0647\u0627"
+                + " \u064a\u0642\u062f\u0651\u0645\u0647\u0627"
+                + " \u0627\u0644\u0646\u0638\u064a\u0631.",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "\u062a\u0639\u0630\u0651\u0631 \u0625\u0643\u0645\u0627\u0644"
+                    + " \u0627\u0644\u0628\u062d\u062b \u0641\u064a Soulseek."
+                    + " \u062a\u062d\u0642\u0651\u0642 \u0645\u0646 \u062a\u0633\u062c\u064a\u0644"
+                    + " \u0627\u0644\u062f\u062e\u0648\u0644 \u0648\u0627\u0644\u0635\u064a\u063a"
+                    + " \u0648\u0648\u062c\u0647\u0627\u062a \u062d\u0641\u0638"
+                    + " \u0627\u0644\u0646\u0633\u062e\u060c \u062b\u0645 \u062d\u0627\u0648\u0644"
+                    + " \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "A previous search is stopping. Try again shortly.",
+            "\u062c\u0627\u0631\u064d \u0625\u064a\u0642\u0627\u0641 \u0628\u062d\u062b"
+                    + " \u0633\u0627\u0628\u0642. \u062d\u0627\u0648\u0644 \u0628\u0639\u062f"
+                    + " \u0642\u0644\u064a\u0644.",
+            "Peer: {0}",
+            "\u0627\u0644\u0646\u0638\u064a\u0631: {0}",
+            "File: {0}",
+            "\u0627\u0644\u0645\u0644\u0641: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "\u0627\u0644\u0635\u064a\u063a\u0629 \u0627\u0644\u0645\u064f\u0639\u0644\u0646\u0629:"
+                    + " {0} \u00b7 {1} \u0628\u0627\u064a\u062a",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "\u0647\u0630\u0647 \u0627\u0644\u062a\u0641\u0627\u0635\u064a\u0644 \u0645\u0646"
+                + " \u0627\u0644\u0646\u0638\u064a\u0631 \u0648\u0644\u0645"
+                + " \u064a\u064f\u062a\u062d\u0642\u0651\u064e\u0642 \u0645\u0646\u0647\u0627."
+                + " \u064a\u064f\u0641\u062d\u0635 \u062a\u0631\u0645\u064a\u0632"
+                + " \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0645\u0646\u0632\u0651\u064e\u0644"
+                + " \u0642\u0628\u0644 \u062d\u0641\u0638\u0647.",
+            "Download this file",
+            "\u062a\u0646\u0632\u064a\u0644 \u0647\u0630\u0627 \u0627\u0644\u0645\u0644\u0641",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "\u0627\u0644\u0645\u0635\u062f\u0631: Soulseek. \u0623\u064f\u0636\u064a\u0641"
+                    + " \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0645\u062d\u062f\u062f"
+                    + " \u0625\u0644\u0649 \u0642\u0627\u0626\u0645\u0629"
+                    + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631. \u0627\u0641\u062a\u062d"
+                    + " \u00ab\u0639\u0631\u0636"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644\u0627\u062a\u00bb"
+                    + " \u0644\u0645\u062a\u0627\u0628\u0639\u0629"
+                    + " \u0627\u0644\u062a\u0642\u062f\u0645.",
+            "The selected file could not be queued. Review setup and try again.",
+            "\u062a\u0639\u0630\u0651\u0631\u062a \u0625\u0636\u0627\u0641\u0629"
+                    + " \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0645\u062d\u062f\u062f"
+                    + " \u0625\u0644\u0649 \u0642\u0627\u0626\u0645\u0629"
+                    + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631. \u0631\u0627\u062c\u0639"
+                    + " \u0627\u0644\u0625\u0639\u062f\u0627\u062f \u0648\u062d\u0627\u0648\u0644"
+                    + " \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "The selected file is no longer ready. Check setup and search again.",
+            "\u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0645\u062d\u062f\u062f \u0644\u0645"
+                    + " \u064a\u0639\u062f \u062c\u0627\u0647\u0632\u064b\u0627."
+                    + " \u062a\u062d\u0642\u0651\u0642 \u0645\u0646"
+                    + " \u0627\u0644\u0625\u0639\u062f\u0627\u062f \u0648\u0627\u0628\u062d\u062b"
+                    + " \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "Cannot create selected download storage.",
+            "\u062a\u0639\u0630\u0651\u0631 \u0625\u0646\u0634\u0627\u0621"
+                    + " \u0645\u0633\u0627\u062d\u0629 \u062a\u062e\u0632\u064a\u0646"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644"
+                    + " \u0627\u0644\u0645\u062d\u062f\u062f.",
+            "Cannot inspect selected download storage.",
+            "\u062a\u0639\u0630\u0651\u0631 \u0641\u062d\u0635 \u0645\u0633\u0627\u062d\u0629"
+                    + " \u062a\u062e\u0632\u064a\u0646 \u0627\u0644\u062a\u0646\u0632\u064a\u0644"
+                    + " \u0627\u0644\u0645\u062d\u062f\u062f.",
+            "Cannot remove interrupted selected download staging.",
+            "\u062a\u0639\u0630\u0651\u0631 \u062d\u0630\u0641"
+                + " \u0627\u0644\u0645\u0644\u0641\u0627\u062a"
+                + " \u0627\u0644\u0645\u0624\u0642\u062a\u0629"
+                + " \u0644\u0644\u062a\u0646\u0632\u064a\u0644 \u0627\u0644\u0645\u062d\u062f\u062f"
+                + " \u0627\u0644\u0645\u062a\u0648\u0642\u0641.",
+            "Check the saved file before retry",
+            "\u062a\u062d\u0642\u0651\u0642 \u0645\u0646 \u0627\u0644\u0645\u0644\u0641"
+                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638 \u0642\u0628\u0644"
+                    + " \u0625\u0639\u0627\u062f\u0629"
+                    + " \u0627\u0644\u0645\u062d\u0627\u0648\u0644\u0629",
+            "Checking audio format",
+            "\u062c\u0627\u0631\u064d \u0641\u062d\u0635 \u0635\u064a\u063a\u0629"
+                    + " \u0627\u0644\u0635\u0648\u062a",
+            "Choose where copies go before downloading.",
+            "\u0627\u062e\u062a\u0631 \u0648\u062c\u0647\u0627\u062a \u062d\u0641\u0638"
+                    + " \u0627\u0644\u0646\u0633\u062e \u0642\u0628\u0644"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644.",
+            "Confirmation required before retry",
+            "\u064a\u0644\u0632\u0645 \u0627\u0644\u062a\u0623\u0643\u064a\u062f \u0642\u0628\u0644"
+                    + " \u0625\u0639\u0627\u062f\u0629"
+                    + " \u0627\u0644\u0645\u062d\u0627\u0648\u0644\u0629",
+            "Copy failed",
+            "\u0641\u0634\u0644 \u0627\u0644\u0646\u0633\u062e",
+            "Download cancelled",
+            "\u0623\u064f\u0644\u063a\u064a \u0627\u0644\u062a\u0646\u0632\u064a\u0644",
+            "Download needs attention",
+            "\u0627\u0644\u062a\u0646\u0632\u064a\u0644 \u064a\u062d\u062a\u0627\u062c"
+                    + " \u0625\u0644\u0649 \u0627\u0646\u062a\u0628\u0627\u0647\u0643",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "\u062a\u0639\u0630\u0651\u0631 \u0627\u0644\u062a\u062d\u0642\u0642 \u0645\u0646"
+                    + " \u0625\u0639\u062f\u0627\u062f\u0627\u062a"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644. \u0623\u0639\u0650\u062f"
+                    + " \u062a\u0634\u063a\u064a\u0644 BitChord \u0648\u062d\u0627\u0648\u0644"
+                    + " \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "Downloading \u00b7 {0} of {1}",
+            "\u062c\u0627\u0631\u064d \u0627\u0644\u062a\u0646\u0632\u064a\u0644 \u00b7 {0}"
+                    + " \u0645\u0646 {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "\u0627\u0644\u062a\u0646\u0632\u064a\u0644\u0627\u062a"
+                    + " \u0645\u062a\u0648\u0642\u0641\u0629 \u0645\u0624\u0642\u062a\u064b\u0627"
+                    + " \u0628\u0633\u0628\u0628 \u0625\u0639\u062f\u0627\u062f\u0627\u062a"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644"
+                    + " \u0627\u0644\u062d\u0627\u0644\u064a\u0629. \u062d\u0627\u0648\u0644"
+                    + " \u0645\u062c\u062f\u062f\u064b\u0627 \u0639\u0646\u062f\u0645\u0627"
+                    + " \u064a\u064f\u0633\u0645\u062d"
+                    + " \u0628\u0627\u0644\u062a\u0646\u0632\u064a\u0644.",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "\u0641\u0639\u0651\u0644 Unofficial Soulseek \u0642\u0628\u0644"
+                    + " \u062a\u0646\u0632\u064a\u0644 \u0647\u0630\u0647"
+                    + " \u0627\u0644\u0646\u062a\u064a\u062c\u0629.",
+            "Invalid selected Soulseek reference.",
+            "\u0645\u0631\u062c\u0639 Soulseek \u0627\u0644\u0645\u062d\u062f\u062f"
+                    + " \u063a\u064a\u0631 \u0635\u0627\u0644\u062d.",
+            "No selected Soulseek downloads.",
+            "\u0644\u0627 \u062a\u0648\u062c\u062f \u062a\u0646\u0632\u064a\u0644\u0627\u062a"
+                    + " \u0645\u062d\u062f\u062f\u0629 \u0645\u0646 Soulseek.",
+            "Preparing download",
+            "\u062c\u0627\u0631\u064d \u062a\u062c\u0647\u064a\u0632"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644",
+            "Queued for download",
+            "\u0641\u064a \u0642\u0627\u0626\u0645\u0629 \u0627\u0646\u062a\u0638\u0627\u0631"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644",
+            "Queued {0}. Open downloads to follow progress.",
+            "\u0623\u064f\u0636\u064a\u0641 {0} \u0625\u0644\u0649 \u0642\u0627\u0626\u0645\u0629"
+                    + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631. \u0627\u0641\u062a\u062d"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644\u0627\u062a"
+                    + " \u0644\u0645\u062a\u0627\u0628\u0639\u0629"
+                    + " \u0627\u0644\u062a\u0642\u062f\u0645.",
+            "Saved and verified",
+            "\u062a\u0645 \u0627\u0644\u062d\u0641\u0638"
+                    + " \u0648\u0627\u0644\u062a\u062d\u0642\u0642",
+            "Saved to all selected destinations",
+            "\u062a\u0645 \u0627\u0644\u062d\u0641\u0638 \u0641\u064a \u062c\u0645\u064a\u0639"
+                    + " \u0627\u0644\u0648\u062c\u0647\u0627\u062a"
+                    + " \u0627\u0644\u0645\u062d\u062f\u062f\u0629",
+            "Saving file",
+            "\u062c\u0627\u0631\u064d \u062d\u0641\u0638 \u0627\u0644\u0645\u0644\u0641",
+            "Saving paused",
+            "\u0627\u0644\u062d\u0641\u0638 \u0645\u062a\u0648\u0642\u0641"
+                    + " \u0645\u0624\u0642\u062a\u064b\u0627",
+            "Saving selected copies",
+            "\u062c\u0627\u0631\u064d \u062d\u0641\u0638 \u0627\u0644\u0646\u0633\u062e"
+                    + " \u0627\u0644\u0645\u062d\u062f\u062f\u0629",
+            "Selected audio file",
+            "\u0645\u0644\u0641 \u0627\u0644\u0635\u0648\u062a"
+                    + " \u0627\u0644\u0645\u062d\u062f\u062f",
+            "Selected download storage is full. Finish existing copies first.",
+            "\u0645\u0633\u0627\u062d\u0629 \u062a\u062e\u0632\u064a\u0646"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644\u0627\u062a"
+                    + " \u0627\u0644\u0645\u062d\u062f\u062f\u0629"
+                    + " \u0645\u0645\u062a\u0644\u0626\u0629. \u0623\u0643\u0645\u0644"
+                    + " \u062d\u0641\u0638 \u0627\u0644\u0646\u0633\u062e"
+                    + " \u0627\u0644\u062d\u0627\u0644\u064a\u0629 \u0623\u0648\u0644\u064b\u0627.",
+            "Selected files are limited to 256 MiB.",
+            "\u0627\u0644\u062d\u062f \u0627\u0644\u0623\u0642\u0635\u0649"
+                    + " \u0644\u0644\u0645\u0644\u0641\u0627\u062a"
+                    + " \u0627\u0644\u0645\u062d\u062f\u062f\u0629 \u0647\u0648 256 MiB.",
+            "Soulseek session changed. Select the result again.",
+            "\u062a\u063a\u064a\u0651\u0631\u062a \u062c\u0644\u0633\u0629 Soulseek."
+                    + " \u0627\u062e\u062a\u0631 \u0627\u0644\u0646\u062a\u064a\u062c\u0629"
+                    + " \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "The selected download could not complete. Try again or choose another result.",
+            "\u062a\u0639\u0630\u0651\u0631 \u0625\u0643\u0645\u0627\u0644"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644"
+                    + " \u0627\u0644\u0645\u062d\u062f\u062f. \u062d\u0627\u0648\u0644"
+                    + " \u0645\u062c\u062f\u062f\u064b\u0627 \u0623\u0648 \u0627\u062e\u062a\u0631"
+                    + " \u0646\u062a\u064a\u062c\u0629 \u0623\u062e\u0631\u0649.",
+            "The selected download queue is full.",
+            "\u0642\u0627\u0626\u0645\u0629 \u0627\u0646\u062a\u0638\u0627\u0631"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644\u0627\u062a"
+                    + " \u0627\u0644\u0645\u062d\u062f\u062f\u0629"
+                    + " \u0645\u0645\u062a\u0644\u0626\u0629.",
+            "This Soulseek result expired. Search again.",
+            "\u0627\u0646\u062a\u0647\u062a \u0635\u0644\u0627\u062d\u064a\u0629"
+                    + " \u0646\u062a\u064a\u062c\u0629 Soulseek \u0647\u0630\u0647."
+                    + " \u0627\u0628\u062d\u062b \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "This file did not pass the audio format check. Choose another result.",
+            "\u0644\u0645 \u064a\u062c\u062a\u0632 \u0647\u0630\u0627"
+                    + " \u0627\u0644\u0645\u0644\u0641 \u0641\u062d\u0635 \u0635\u064a\u063a\u0629"
+                    + " \u0627\u0644\u0635\u0648\u062a. \u0627\u062e\u062a\u0631"
+                    + " \u0646\u062a\u064a\u062c\u0629 \u0623\u062e\u0631\u0649.",
+            "This selected download is already queued.",
+            "\u0647\u0630\u0627 \u0627\u0644\u062a\u0646\u0632\u064a\u0644"
+                    + " \u0627\u0644\u0645\u062d\u062f\u062f \u0645\u0648\u062c\u0648\u062f"
+                    + " \u0641\u064a \u0642\u0627\u0626\u0645\u0629"
+                    + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631"
+                    + " \u0628\u0627\u0644\u0641\u0639\u0644.",
+            "Uploading file",
+            "\u062c\u0627\u0631\u064d \u0631\u0641\u0639 \u0627\u0644\u0645\u0644\u0641",
+            "Waiting for peer",
+            "\u0628\u0627\u0646\u062a\u0638\u0627\u0631 \u0627\u0644\u0646\u0638\u064a\u0631",
+            "Waiting for peer \u00b7 queue position {0}",
+            "\u0628\u0627\u0646\u062a\u0638\u0627\u0631 \u0627\u0644\u0646\u0638\u064a\u0631 \u00b7"
+                    + " \u0627\u0644\u0645\u0648\u0636\u0639 \u0641\u064a"
+                    + " \u0642\u0627\u0626\u0645\u0629"
+                    + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631: {0}",
+            "Waiting to save",
+            "\u0628\u0627\u0646\u062a\u0638\u0627\u0631 \u0627\u0644\u062d\u0641\u0638",
+            "Waiting to save selected copies",
+            "\u0628\u0627\u0646\u062a\u0638\u0627\u0631 \u062d\u0641\u0638"
+                    + " \u0627\u0644\u0646\u0633\u062e \u0627\u0644\u0645\u062d\u062f\u062f\u0629",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "\u0627\u0644\u0635\u064a\u063a\u0629: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "\u062c\u0627\u0631\u064d \u0627\u0644\u0627\u062a\u0635\u0627\u0644 \u0628\u0640"
+                    + " Soulseek\u2026",
+            "May use YouTube or another enabled source.",
+            "\u0642\u062f \u064a\u0633\u062a\u062e\u062f\u0645 YouTube \u0623\u0648"
+                    + " \u0645\u0635\u062f\u0631\u064b\u0627 \u0622\u062e\u0631"
+                    + " \u0645\u0641\u0639\u0651\u0644\u064b\u0627.",
         };
     }
 
@@ -8378,6 +8734,407 @@ final class Translations {
             "{0} recent clients",
             "\u09b8\u09ae\u09cd\u09aa\u09cd\u09b0\u09a4\u09bf \u09a6\u09c7\u0996\u09be"
                 + " {0}\u099f\u09bf \u0995\u09cd\u09b2\u09be\u09af\u09bc\u09c7\u09a8\u09cd\u099f",
+            "Soulseek account",
+            "Soulseek \u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f",
+            "Signed in as {0}",
+            "{0} \u09b9\u09bf\u09b8\u09c7\u09ac\u09c7 \u09b8\u09be\u0987\u09a8 \u0987\u09a8"
+                    + " \u0995\u09b0\u09be \u0986\u099b\u09c7",
+            "Ready to search",
+            "\u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8\u09c7\u09b0"
+                    + " \u099c\u09a8\u09cd\u09af \u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09c1\u09a4",
+            "Sign in to search Soulseek.",
+            "Soulseek-\u098f \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8"
+                    + " \u0995\u09b0\u09a4\u09c7 \u09b8\u09be\u0987\u09a8 \u0987\u09a8"
+                    + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "Enable Soulseek to sign in and search.",
+            "\u09b8\u09be\u0987\u09a8 \u0987\u09a8 \u0993"
+                + " \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8 \u0995\u09b0\u09a4\u09c7"
+                + " Soulseek \u099a\u09be\u09b2\u09c1 \u0995\u09b0\u09c1\u09a8\u0964",
+            "Download setup",
+            "\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u09b8\u09c7\u099f\u0986\u09aa",
+            "Choose where copies go before searching.",
+            "\u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8\u09c7\u09b0 \u0986\u0997\u09c7"
+                + " \u0995\u09aa\u09bf\u0997\u09c1\u09b2\u09cb \u0995\u09cb\u09a5\u09be\u09af\u09bc"
+                + " \u09b0\u09be\u0996\u09be \u09b9\u09ac\u09c7 \u09ac\u09c7\u099b\u09c7"
+                + " \u09a8\u09bf\u09a8\u0964",
+            "Choose your audio formats before searching.",
+            "\u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8\u09c7\u09b0 \u0986\u0997\u09c7"
+                    + " \u0985\u09a1\u09bf\u0993 \u09ab\u09b0\u09ae\u09cd\u09af\u09be\u099f"
+                    + " \u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a8\u0964",
+            "Find music on Soulseek",
+            "Soulseek-\u098f \u09b8\u0999\u09cd\u0997\u09c0\u09a4"
+                    + " \u0996\u09c1\u0981\u099c\u09c1\u09a8",
+            "{0} formats enabled",
+            "{0}\u099f\u09bf \u09ab\u09b0\u09ae\u09cd\u09af\u09be\u099f \u099a\u09be\u09b2\u09c1"
+                    + " \u0986\u099b\u09c7",
+            "More download options",
+            "\u0986\u09b0\u0993 \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                    + " \u09ac\u09bf\u0995\u09b2\u09cd\u09aa",
+            "Account settings",
+            "\u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f\u09c7\u09b0"
+                    + " \u09b8\u09c7\u099f\u09bf\u0982\u09b8",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Soulseek-\u098f\u09b0 \u09b8\u09c7\u099f\u09bf\u0982\u09b8"
+                + " \u09aa\u09be\u0993\u09af\u09bc\u09be \u09af\u09be\u099a\u09cd\u099b\u09c7"
+                + " \u09a8\u09be\u0964 BitChord \u0986\u09ac\u09be\u09b0 \u099a\u09be\u09b2\u09c1"
+                + " \u0995\u09b0\u09c7 \u099a\u09c7\u09b7\u09cd\u099f\u09be"
+                + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "Other download options are controlled in Patches & tweaks.",
+            "\u0985\u09a8\u09cd\u09af \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                + " \u09ac\u09bf\u0995\u09b2\u09cd\u09aa\u0997\u09c1\u09b2\u09cb"
+                + " \u09aa\u09cd\u09af\u09be\u099a \u0993 \u099f\u09c1\u0987\u0995\u09b8"
+                + " \u09a5\u09c7\u0995\u09c7"
+                + " \u09a8\u09bf\u09af\u09bc\u09a8\u09cd\u09a4\u09cd\u09b0\u09a3 \u0995\u09b0\u09be"
+                + " \u09b9\u09af\u09bc\u0964",
+            "Source enabled",
+            "\u0989\u09ce\u09b8 \u099a\u09be\u09b2\u09c1 \u0986\u099b\u09c7",
+            "Account actions",
+            "\u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f\u09c7\u09b0"
+                    + " \u0995\u09be\u099c",
+            "Not chosen yet",
+            "\u098f\u0996\u09a8\u0993 \u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be"
+                    + " \u09b9\u09af\u09bc\u09a8\u09bf",
+            "Not signed in",
+            "\u09b8\u09be\u0987\u09a8 \u0987\u09a8 \u0995\u09b0\u09be \u09a8\u09c7\u0987",
+            "Finish the open download choice first.",
+            "\u0986\u0997\u09c7 \u0996\u09cb\u09b2\u09be \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                    + " \u09ac\u09bf\u0995\u09b2\u09cd\u09aa\u099f\u09bf \u09ac\u09c7\u099b\u09c7"
+                    + " \u09a8\u09c7\u0993\u09af\u09bc\u09be \u09b6\u09c7\u09b7"
+                    + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "Could not open the download source choice. Try again.",
+            "\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0 \u0989\u09ce\u09b8"
+                    + " \u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be\u09b0"
+                    + " \u09aa\u09c3\u09b7\u09cd\u09a0\u09be \u0996\u09cb\u09b2\u09be"
+                    + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964 \u0986\u09ac\u09be\u09b0"
+                    + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8\u0964",
+            "BitChord could not start this download. Try again.",
+            "BitChord \u098f\u0987 \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                    + " \u09b6\u09c1\u09b0\u09c1 \u0995\u09b0\u09a4\u09c7"
+                    + " \u09aa\u09be\u09b0\u09c7\u09a8\u09bf\u0964 \u0986\u09ac\u09be\u09b0"
+                    + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8\u0964",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "\u09ab\u09be\u0987\u09b2 \u0996\u09c1\u0981\u099c\u09c1\u09a8,"
+                    + " \u09aa\u09bf\u09af\u09bc\u09be\u09b0\u09c7\u09b0 \u09a4\u09a5\u09cd\u09af"
+                    + " \u09a6\u09c7\u0996\u09c1\u09a8, \u09a4\u09be\u09b0\u09aa\u09b0"
+                    + " \u09a0\u09bf\u0995 \u0995\u09cb\u09a8\u099f\u09bf"
+                    + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u0995\u09b0\u09ac\u09c7\u09a8"
+                    + " \u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a8\u0964"
+                    + " \u0986\u09aa\u09a8\u09be\u09b0 \u09ac\u09b0\u09cd\u09a4\u09ae\u09be\u09a8"
+                    + " \u0997\u09be\u09a8 \u0993 \u09a4\u09be\u09b0"
+                    + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0"
+                    + " \u0985\u09ac\u09b8\u09cd\u09a5\u09be"
+                    + " \u0985\u09aa\u09b0\u09bf\u09ac\u09b0\u09cd\u09a4\u09bf\u09a4"
+                    + " \u09a5\u09be\u0995\u09ac\u09c7\u0964",
+            "Choose download source",
+            "\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0 \u0989\u09ce\u09b8"
+                    + " \u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a8",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek \u0986\u09b2\u09be\u09a6\u09be \u098f\u0995\u099f\u09bf"
+                    + " \u09ab\u09be\u0987\u09b2 \u0996\u09cb\u0981\u099c\u09c7\u0964 BitChord"
+                    + " \u09a4\u09be\u09b0 \u09ac\u09bf\u09a6\u09cd\u09af\u09ae\u09be\u09a8"
+                    + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0 \u0989\u09ce\u09b8"
+                    + " \u0993 \u09b8\u09c7\u099f\u09bf\u0982\u09b8"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09c7\u0964",
+            "Search Soulseek",
+            "Soulseek-\u098f \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8"
+                    + " \u0995\u09b0\u09c1\u09a8",
+            "Continue with BitChord download",
+            "BitChord \u09a6\u09bf\u09af\u09bc\u09c7 \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                    + " \u099a\u09be\u09b2\u09bf\u09af\u09bc\u09c7 \u09af\u09be\u09a8",
+            "This download choice expired. Return to the song and try again.",
+            "\u098f\u0987 \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                    + " \u09ac\u09bf\u0995\u09b2\u09cd\u09aa\u099f\u09bf\u09b0"
+                    + " \u09ae\u09c7\u09af\u09bc\u09be\u09a6 \u09b6\u09c7\u09b7\u0964"
+                    + " \u0997\u09be\u09a8\u09c7 \u09ab\u09bf\u09b0\u09c7 \u0986\u09ac\u09be\u09b0"
+                    + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8\u0964",
+            "Source: Soulseek",
+            "\u0989\u09ce\u09b8: Soulseek",
+            "Artist and song title",
+            "\u09b6\u09bf\u09b2\u09cd\u09aa\u09c0 \u0993 \u0997\u09be\u09a8\u09c7\u09b0"
+                    + " \u09b6\u09bf\u09b0\u09cb\u09a8\u09be\u09ae",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "\u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8\u09c7\u09b0"
+                + " \u099c\u09a8\u09cd\u09af \u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09c1\u09a4\u0964"
+                + " \u09ab\u09be\u0987\u09b2 \u09ac\u09c7\u099b\u09c7 \u09a8\u09be"
+                + " \u09a8\u09c7\u0993\u09af\u09bc\u09be \u09aa\u09b0\u09cd\u09af\u09a8\u09cd\u09a4"
+                + " \u0995\u09bf\u099b\u09c1\u0987 \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                + " \u09b9\u09ac\u09c7 \u09a8\u09be\u0964",
+            "Soulseek account and setup",
+            "Soulseek \u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f \u0993"
+                    + " \u09b8\u09c7\u099f\u0986\u09aa",
+            "Audio formats and preference order",
+            "\u0985\u09a1\u09bf\u0993 \u09ab\u09b0\u09ae\u09cd\u09af\u09be\u099f \u0993"
+                    + " \u09aa\u099b\u09a8\u09cd\u09a6\u09c7\u09b0 \u0995\u09cd\u09b0\u09ae",
+            "View downloads",
+            "\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u09a6\u09c7\u0996\u09c1\u09a8",
+            "Choose your audio formats and their order first.",
+            "\u0986\u0997\u09c7 \u0985\u09a1\u09bf\u0993 \u09ab\u09b0\u09ae\u09cd\u09af\u09be\u099f"
+                    + " \u0993 \u09b8\u09c7\u0997\u09c1\u09b2\u09cb\u09b0 \u0995\u09cd\u09b0\u09ae"
+                    + " \u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a8\u0964",
+            "Search using 2\u2013256 characters.",
+            "\u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8\u09c7 2\u2013256\u099f\u09bf"
+                    + " \u0985\u0995\u09cd\u09b7\u09b0 \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0"
+                    + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "Searching Soulseek\u2026",
+            "Soulseek-\u098f \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8"
+                    + " \u0995\u09b0\u09be \u09b9\u099a\u09cd\u099b\u09c7\u2026",
+            "Soulseek session changed. Search again.",
+            "Soulseek \u09b8\u09c7\u09b6\u09a8 \u09ac\u09a6\u09b2\u09c7\u099b\u09c7\u0964"
+                + " \u0986\u09ac\u09be\u09b0 \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8"
+                + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "\u0995\u09cb\u09a8\u09cb \u09ae\u09c7\u09b2\u09be \u09ab\u09be\u0987\u09b2"
+                + " \u09a8\u09c7\u0987\u0964 \u0985\u09a8\u09cd\u09af \u09b6\u09ac\u09cd\u09a6"
+                + " \u09a6\u09bf\u09af\u09bc\u09c7 \u0996\u09c1\u0981\u099c\u09c1\u09a8\u0964"
+                + " BitChord \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u09b6\u09c1\u09b0\u09c1"
+                + " \u09b9\u09af\u09bc\u09a8\u09bf\u0964",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "\u09a8\u09bf\u099a\u09c7 \u098f\u0995\u099f\u09bf \u09ab\u09be\u0987\u09b2"
+                    + " \u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a8\u0964"
+                    + " \u09aa\u09bf\u09af\u09bc\u09be\u09b0\u09c7\u09b0"
+                    + " \u09a6\u09c7\u0993\u09af\u09bc\u09be \u09ab\u09be\u0987\u09b2\u09c7\u09b0"
+                    + " \u09a8\u09be\u09ae, \u09ab\u09b0\u09ae\u09cd\u09af\u09be\u099f \u0993"
+                    + " \u09aa\u09cd\u09b0\u09be\u09aa\u09cd\u09af\u09a4\u09be"
+                    + " \u09af\u09be\u099a\u09be\u0987 \u0995\u09b0\u09be"
+                    + " \u09b9\u09af\u09bc\u09a8\u09bf\u0964",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "Soulseek \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8"
+                    + " \u09b8\u09ae\u09cd\u09aa\u09c2\u09b0\u09cd\u09a3 \u0995\u09b0\u09be"
+                    + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964 \u09b8\u09be\u0987\u09a8"
+                    + " \u0987\u09a8, \u09ab\u09b0\u09ae\u09cd\u09af\u09be\u099f \u0993"
+                    + " \u0995\u09aa\u09bf \u09b0\u09be\u0996\u09be\u09b0"
+                    + " \u0997\u09a8\u09cd\u09a4\u09ac\u09cd\u09af \u09a6\u09c7\u0996\u09c7"
+                    + " \u0986\u09ac\u09be\u09b0 \u099a\u09c7\u09b7\u09cd\u099f\u09be"
+                    + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "A previous search is stopping. Try again shortly.",
+            "\u0986\u0997\u09c7\u09b0 \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8"
+                    + " \u09ac\u09a8\u09cd\u09a7 \u09b9\u099a\u09cd\u099b\u09c7\u0964"
+                    + " \u098f\u0995\u099f\u09c1 \u09aa\u09b0\u09c7 \u0986\u09ac\u09be\u09b0"
+                    + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8\u0964",
+            "Peer: {0}",
+            "\u09aa\u09bf\u09af\u09bc\u09be\u09b0: {0}",
+            "File: {0}",
+            "\u09ab\u09be\u0987\u09b2: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "\u0998\u09cb\u09b7\u09bf\u09a4 \u09ab\u09b0\u09ae\u09cd\u09af\u09be\u099f: {0} \u00b7"
+                    + " {1} \u09ac\u09be\u0987\u099f",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "\u09a4\u09a5\u09cd\u09af\u0997\u09c1\u09b2\u09cb"
+                + " \u09aa\u09bf\u09af\u09bc\u09be\u09b0\u09c7\u09b0 \u09a6\u09be\u09ac\u09bf\u0964"
+                + " \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3\u09c7\u09b0 \u0986\u0997\u09c7"
+                + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u0995\u09b0\u09be"
+                + " \u09ab\u09be\u0987\u09b2\u09c7\u09b0 \u0995\u09cb\u09a1\u09c7\u0995"
+                + " \u09aa\u09b0\u09c0\u0995\u09cd\u09b7\u09be \u0995\u09b0\u09be"
+                + " \u09b9\u09af\u09bc\u0964",
+            "Download this file",
+            "\u098f\u0987 \u09ab\u09be\u0987\u09b2 \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                    + " \u0995\u09b0\u09c1\u09a8",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "\u0989\u09ce\u09b8: Soulseek\u0964 \u09ac\u09c7\u099b\u09c7"
+                    + " \u09a8\u09c7\u0993\u09af\u09bc\u09be \u09ab\u09be\u0987\u09b2"
+                    + " \u09b8\u09be\u09b0\u09bf\u09a4\u09c7 \u09b0\u09be\u0996\u09be"
+                    + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964"
+                    + " \u0985\u0997\u09cd\u09b0\u0997\u09a4\u09bf \u09a6\u09c7\u0996\u09a4\u09c7"
+                    + " \u201c\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                    + " \u09a6\u09c7\u0996\u09c1\u09a8\u201d \u0996\u09c1\u09b2\u09c1\u09a8\u0964",
+            "The selected file could not be queued. Review setup and try again.",
+            "\u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be \u09ab\u09be\u0987\u09b2"
+                    + " \u09b8\u09be\u09b0\u09bf\u09a4\u09c7 \u09b0\u09be\u0996\u09be"
+                    + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964 \u09b8\u09c7\u099f\u0986\u09aa"
+                    + " \u09a6\u09c7\u0996\u09c7 \u0986\u09ac\u09be\u09b0"
+                    + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8\u0964",
+            "The selected file is no longer ready. Check setup and search again.",
+            "\u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be \u09ab\u09be\u0987\u09b2"
+                    + " \u0986\u09b0 \u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09c1\u09a4"
+                    + " \u09a8\u09c7\u0987\u0964 \u09b8\u09c7\u099f\u0986\u09aa"
+                    + " \u09a6\u09c7\u0996\u09c7 \u0986\u09ac\u09be\u09b0"
+                    + " \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8"
+                    + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "Cannot create selected download storage.",
+            "\u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be"
+                    + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0"
+                    + " \u09b8\u099e\u09cd\u099a\u09af\u09bc\u09b8\u09cd\u09a5\u09be\u09a8"
+                    + " \u09a4\u09c8\u09b0\u09bf \u0995\u09b0\u09be"
+                    + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964",
+            "Cannot inspect selected download storage.",
+            "\u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be"
+                    + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0"
+                    + " \u09b8\u099e\u09cd\u099a\u09af\u09bc\u09b8\u09cd\u09a5\u09be\u09a8"
+                    + " \u09aa\u09b0\u09c0\u0995\u09cd\u09b7\u09be \u0995\u09b0\u09be"
+                    + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964",
+            "Cannot remove interrupted selected download staging.",
+            "\u09ac\u09be\u09a7\u09be\u09aa\u09cd\u09b0\u09be\u09aa\u09cd\u09a4"
+                    + " \u09a8\u09bf\u09b0\u09cd\u09ac\u09be\u099a\u09bf\u09a4"
+                    + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0"
+                    + " \u0985\u09b8\u09cd\u09a5\u09be\u09af\u09bc\u09c0 \u09ab\u09be\u0987\u09b2"
+                    + " \u09ae\u09cb\u099b\u09be \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964",
+            "Check the saved file before retry",
+            "\u0986\u09ac\u09be\u09b0 \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09be\u09b0"
+                    + " \u0986\u0997\u09c7 \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09bf\u09a4"
+                    + " \u09ab\u09be\u0987\u09b2 \u09a6\u09c7\u0996\u09c1\u09a8",
+            "Checking audio format",
+            "\u0985\u09a1\u09bf\u0993 \u09ab\u09b0\u09ae\u09cd\u09af\u09be\u099f"
+                    + " \u09aa\u09b0\u09c0\u0995\u09cd\u09b7\u09be \u0995\u09b0\u09be"
+                    + " \u09b9\u099a\u09cd\u099b\u09c7",
+            "Choose where copies go before downloading.",
+            "\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0 \u0986\u0997\u09c7"
+                + " \u0995\u09aa\u09bf\u0997\u09c1\u09b2\u09cb \u0995\u09cb\u09a5\u09be\u09af\u09bc"
+                + " \u09b0\u09be\u0996\u09be \u09b9\u09ac\u09c7 \u09ac\u09c7\u099b\u09c7"
+                + " \u09a8\u09bf\u09a8\u0964",
+            "Confirmation required before retry",
+            "\u0986\u09ac\u09be\u09b0 \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09be\u09b0"
+                    + " \u0986\u0997\u09c7 \u09a8\u09bf\u09b6\u09cd\u099a\u09bf\u09a4"
+                    + " \u0995\u09b0\u09a4\u09c7 \u09b9\u09ac\u09c7",
+            "Copy failed",
+            "\u0995\u09aa\u09bf \u0995\u09b0\u09be \u09af\u09be\u09af\u09bc\u09a8\u09bf",
+            "Download cancelled",
+            "\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u09ac\u09be\u09a4\u09bf\u09b2"
+                    + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7",
+            "Download needs attention",
+            "\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7 \u0986\u09aa\u09a8\u09be\u09b0"
+                    + " \u09ae\u09a8\u09cb\u09af\u09cb\u0997"
+                    + " \u09aa\u09cd\u09b0\u09af\u09bc\u09cb\u099c\u09a8",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0"
+                + " \u09b8\u09c7\u099f\u09bf\u0982\u09b8 \u09aa\u09b0\u09c0\u0995\u09cd\u09b7\u09be"
+                + " \u0995\u09b0\u09be \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964 BitChord"
+                + " \u0986\u09ac\u09be\u09b0 \u099a\u09be\u09b2\u09c1 \u0995\u09b0\u09c7"
+                + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8\u0964",
+            "Downloading \u00b7 {0} of {1}",
+            "\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u09b9\u099a\u09cd\u099b\u09c7 \u00b7"
+                    + " {1}-\u098f\u09b0 \u09ae\u09a7\u09cd\u09af\u09c7 {0}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "\u09ac\u09b0\u09cd\u09a4\u09ae\u09be\u09a8 \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                + " \u09b8\u09c7\u099f\u09bf\u0982\u09b8\u09c7\u09b0 \u0995\u09be\u09b0\u09a3\u09c7"
+                + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u09ac\u09bf\u09b0\u09a4"
+                + " \u0986\u099b\u09c7\u0964 \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0"
+                + " \u0985\u09a8\u09c1\u09ae\u09a4\u09bf \u09a5\u09be\u0995\u09b2\u09c7"
+                + " \u0986\u09ac\u09be\u09b0 \u099a\u09c7\u09b7\u09cd\u099f\u09be"
+                + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "\u098f\u0987 \u09ab\u09b2\u09be\u09ab\u09b2"
+                + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0 \u0986\u0997\u09c7"
+                + " Unofficial Soulseek \u099a\u09be\u09b2\u09c1 \u0995\u09b0\u09c1\u09a8\u0964",
+            "Invalid selected Soulseek reference.",
+            "\u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be Soulseek"
+                    + " \u09b0\u09c7\u09ab\u09be\u09b0\u09c7\u09a8\u09cd\u09b8\u099f\u09bf"
+                    + " \u0985\u09ac\u09c8\u09a7\u0964",
+            "No selected Soulseek downloads.",
+            "\u0995\u09cb\u09a8\u09cb \u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be"
+                + " Soulseek \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u09a8\u09c7\u0987\u0964",
+            "Preparing download",
+            "\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                    + " \u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09c1\u09a4"
+                    + " \u09b9\u099a\u09cd\u099b\u09c7",
+            "Queued for download",
+            "\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0"
+                    + " \u09b8\u09be\u09b0\u09bf\u09a4\u09c7 \u0986\u099b\u09c7",
+            "Queued {0}. Open downloads to follow progress.",
+            "{0} \u09b8\u09be\u09b0\u09bf\u09a4\u09c7 \u09b0\u09be\u0996\u09be"
+                    + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964"
+                    + " \u0985\u0997\u09cd\u09b0\u0997\u09a4\u09bf \u09a6\u09c7\u0996\u09a4\u09c7"
+                    + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                    + " \u0996\u09c1\u09b2\u09c1\u09a8\u0964",
+            "Saved and verified",
+            "\u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09bf\u09a4 \u0993"
+                    + " \u09af\u09be\u099a\u09be\u0987\u0995\u09c3\u09a4",
+            "Saved to all selected destinations",
+            "\u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be \u09b8\u09ac"
+                    + " \u0997\u09a8\u09cd\u09a4\u09ac\u09cd\u09af\u09c7"
+                    + " \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09bf\u09a4",
+            "Saving file",
+            "\u09ab\u09be\u0987\u09b2 \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3 \u0995\u09b0\u09be"
+                    + " \u09b9\u099a\u09cd\u099b\u09c7",
+            "Saving paused",
+            "\u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3 \u09ac\u09bf\u09b0\u09a4"
+                    + " \u0986\u099b\u09c7",
+            "Saving selected copies",
+            "\u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be"
+                    + " \u0995\u09aa\u09bf\u0997\u09c1\u09b2\u09cb"
+                    + " \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3 \u0995\u09b0\u09be"
+                    + " \u09b9\u099a\u09cd\u099b\u09c7",
+            "Selected audio file",
+            "\u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be \u0985\u09a1\u09bf\u0993"
+                    + " \u09ab\u09be\u0987\u09b2",
+            "Selected download storage is full. Finish existing copies first.",
+            "\u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be"
+                    + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0"
+                    + " \u09b8\u099e\u09cd\u099a\u09af\u09bc\u09b8\u09cd\u09a5\u09be\u09a8"
+                    + " \u09aa\u09c2\u09b0\u09cd\u09a3\u0964 \u0986\u0997\u09c7"
+                    + " \u099a\u09b2\u09ae\u09be\u09a8 \u0995\u09aa\u09bf\u0997\u09c1\u09b2\u09cb"
+                    + " \u09b8\u09ae\u09cd\u09aa\u09c2\u09b0\u09cd\u09a3"
+                    + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "Selected files are limited to 256 MiB.",
+            "\u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be"
+                + " \u09ab\u09be\u0987\u09b2\u09c7\u09b0 \u09b8\u09c0\u09ae\u09be 256 MiB\u0964",
+            "Soulseek session changed. Select the result again.",
+            "Soulseek \u09b8\u09c7\u09b6\u09a8 \u09ac\u09a6\u09b2\u09c7\u099b\u09c7\u0964"
+                    + " \u09ab\u09b2\u09be\u09ab\u09b2\u099f\u09bf \u0986\u09ac\u09be\u09b0"
+                    + " \u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a8\u0964",
+            "The selected download could not complete. Try again or choose another result.",
+            "\u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be"
+                    + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                    + " \u09b8\u09ae\u09cd\u09aa\u09c2\u09b0\u09cd\u09a3"
+                    + " \u09b9\u09af\u09bc\u09a8\u09bf\u0964 \u0986\u09ac\u09be\u09b0"
+                    + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8 \u09ac\u09be"
+                    + " \u0985\u09a8\u09cd\u09af \u09ab\u09b2\u09be\u09ab\u09b2"
+                    + " \u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a8\u0964",
+            "The selected download queue is full.",
+            "\u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be"
+                + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0 \u09b8\u09be\u09b0\u09bf"
+                + " \u09aa\u09c2\u09b0\u09cd\u09a3\u0964",
+            "This Soulseek result expired. Search again.",
+            "\u098f\u0987 Soulseek \u09ab\u09b2\u09be\u09ab\u09b2\u09c7\u09b0"
+                + " \u09ae\u09c7\u09af\u09bc\u09be\u09a6 \u09b6\u09c7\u09b7\u0964"
+                + " \u0986\u09ac\u09be\u09b0 \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8"
+                + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "This file did not pass the audio format check. Choose another result.",
+            "\u098f\u0987 \u09ab\u09be\u0987\u09b2 \u0985\u09a1\u09bf\u0993"
+                    + " \u09ab\u09b0\u09ae\u09cd\u09af\u09be\u099f"
+                    + " \u09aa\u09b0\u09c0\u0995\u09cd\u09b7\u09be\u09af\u09bc \u09aa\u09be\u09b8"
+                    + " \u0995\u09b0\u09c7\u09a8\u09bf\u0964 \u0985\u09a8\u09cd\u09af"
+                    + " \u09ab\u09b2\u09be\u09ab\u09b2 \u09ac\u09c7\u099b\u09c7"
+                    + " \u09a8\u09bf\u09a8\u0964",
+            "This selected download is already queued.",
+            "\u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be \u098f\u0987"
+                    + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u099f\u09bf \u0986\u0997\u09c7"
+                    + " \u09a5\u09c7\u0995\u09c7\u0987 \u09b8\u09be\u09b0\u09bf\u09a4\u09c7"
+                    + " \u0986\u099b\u09c7\u0964",
+            "Uploading file",
+            "\u09ab\u09be\u0987\u09b2 \u0986\u09aa\u09b2\u09cb\u09a1"
+                    + " \u09b9\u099a\u09cd\u099b\u09c7",
+            "Waiting for peer",
+            "\u09aa\u09bf\u09af\u09bc\u09be\u09b0\u09c7\u09b0"
+                    + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be\u09af\u09bc",
+            "Waiting for peer \u00b7 queue position {0}",
+            "\u09aa\u09bf\u09af\u09bc\u09be\u09b0\u09c7\u09b0"
+                + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be\u09af\u09bc \u00b7"
+                + " \u09b8\u09be\u09b0\u09bf\u09a4\u09c7 \u0985\u09ac\u09b8\u09cd\u09a5\u09be\u09a8"
+                + " {0}",
+            "Waiting to save",
+            "\u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3\u09c7\u09b0"
+                    + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be\u09af\u09bc",
+            "Waiting to save selected copies",
+            "\u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u0993\u09af\u09bc\u09be"
+                    + " \u0995\u09aa\u09bf\u0997\u09c1\u09b2\u09cb"
+                    + " \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3\u09c7\u09b0"
+                    + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be\u09af\u09bc",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "\u09ab\u09b0\u09ae\u09cd\u09af\u09be\u099f: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "Soulseek-\u098f\u09b0 \u09b8\u0999\u09cd\u0997\u09c7 \u09b8\u0982\u09af\u09cb\u0997"
+                    + " \u0995\u09b0\u09be \u09b9\u099a\u09cd\u099b\u09c7\u2026",
+            "May use YouTube or another enabled source.",
+            "\u098f\u09a4\u09c7 YouTube \u09ac\u09be \u0985\u09a8\u09cd\u09af"
+                    + " \u0995\u09cb\u09a8\u09cb \u099a\u09be\u09b2\u09c1 \u0989\u09ce\u09b8"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u09b9\u09a4\u09c7"
+                    + " \u09aa\u09be\u09b0\u09c7\u0964",
         };
     }
 
@@ -10627,6 +11384,211 @@ final class Translations {
             "\u00dcbertragungswege: {0}",
             "{0} recent clients",
             "{0} zuletzt aktive Teilnehmer",
+            "Soulseek account",
+            "Soulseek-Konto",
+            "Signed in as {0}",
+            "Angemeldet als {0}",
+            "Ready to search",
+            "Bereit zur Suche",
+            "Sign in to search Soulseek.",
+            "Melde dich an, um auf Soulseek zu suchen.",
+            "Enable Soulseek to sign in and search.",
+            "Aktiviere Soulseek, um dich anzumelden und zu suchen.",
+            "Download setup",
+            "Download-Einrichtung",
+            "Choose where copies go before searching.",
+            "W\u00e4hle vor der Suche die Speicherorte der Kopien.",
+            "Choose your audio formats before searching.",
+            "W\u00e4hle vor der Suche deine Audioformate.",
+            "Find music on Soulseek",
+            "Musik auf Soulseek finden",
+            "{0} formats enabled",
+            "{0} Formate aktiviert",
+            "More download options",
+            "Weitere Download-Optionen",
+            "Account settings",
+            "Kontoeinstellungen",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Soulseek-Einstellungen nicht verf\u00fcgbar. Starte BitChord neu und versuche es"
+                    + " erneut.",
+            "Other download options are controlled in Patches & tweaks.",
+            "Weitere Download-Optionen werden unter Patches und Anpassungen verwaltet.",
+            "Source enabled",
+            "Quelle aktiviert",
+            "Account actions",
+            "Kontoaktionen",
+            "Not chosen yet",
+            "Noch nicht gew\u00e4hlt",
+            "Not signed in",
+            "Nicht angemeldet",
+            "Finish the open download choice first.",
+            "Schlie\u00dfe zuerst die offene Download-Auswahl ab.",
+            "Could not open the download source choice. Try again.",
+            "Die Auswahl der Download-Quelle konnte nicht ge\u00f6ffnet werden. Versuche es"
+                    + " erneut.",
+            "BitChord could not start this download. Try again.",
+            "BitChord konnte diesen Download nicht starten. Versuche es erneut.",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "Suche eine Datei, pr\u00fcfe die Angaben des Peers und w\u00e4hle dann genau aus, was"
+                + " du herunterladen m\u00f6chtest. Dein aktueller Titel und sein Download-Status"
+                + " bleiben unver\u00e4ndert.",
+            "Choose download source",
+            "Download-Quelle w\u00e4hlen",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek sucht nach einer separaten Datei. BitChord verwendet seine bestehenden"
+                    + " Download-Quellen und Einstellungen.",
+            "Search Soulseek",
+            "Soulseek durchsuchen",
+            "Continue with BitChord download",
+            "Mit dem BitChord-Download fortfahren",
+            "This download choice expired. Return to the song and try again.",
+            "Diese Download-Auswahl ist abgelaufen. Kehre zum Titel zur\u00fcck und versuche es"
+                    + " erneut.",
+            "Source: Soulseek",
+            "Quelle: Soulseek",
+            "Artist and song title",
+            "Interpret und Titel",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "Bereit zur Suche. Erst nach der Dateiauswahl wird etwas heruntergeladen.",
+            "Soulseek account and setup",
+            "Soulseek-Konto und Einrichtung",
+            "Audio formats and preference order",
+            "Audioformate und Reihenfolge",
+            "View downloads",
+            "Downloads ansehen",
+            "Choose your audio formats and their order first.",
+            "W\u00e4hle zuerst deine Audioformate und ihre Reihenfolge.",
+            "Search using 2\u2013256 characters.",
+            "Verwende 2\u2013256 Zeichen f\u00fcr die Suche.",
+            "Searching Soulseek\u2026",
+            "Soulseek wird durchsucht\u2026",
+            "Soulseek session changed. Search again.",
+            "Die Soulseek-Sitzung hat sich ge\u00e4ndert. Suche erneut.",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "Keine passenden Dateien. Versuche andere Suchbegriffe. Der BitChord-Download wurde"
+                    + " nicht gestartet.",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "W\u00e4hle unten eine Datei. Dateinamen, Formate und Verf\u00fcgbarkeit der Peers sind"
+                    + " ungepr\u00fcft.",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "Die Soulseek-Suche konnte nicht abgeschlossen werden. Pr\u00fcfe Anmeldung, Formate"
+                    + " und Speicherorte und versuche es erneut.",
+            "A previous search is stopping. Try again shortly.",
+            "Eine vorherige Suche wird beendet. Versuche es gleich erneut.",
+            "Peer: {0}",
+            "Peer: {0}",
+            "File: {0}",
+            "Datei: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "Angegebenes Format: {0} \u00b7 {1} Bytes",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "Die Angaben stammen vom Peer. Der Codec der heruntergeladenen Datei wird vor dem"
+                    + " Speichern gepr\u00fcft.",
+            "Download this file",
+            "Diese Datei herunterladen",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "Quelle: Soulseek. Ausgew\u00e4hlte Datei eingereiht. \u00d6ffne Downloads ansehen, um"
+                    + " den Fortschritt zu verfolgen.",
+            "The selected file could not be queued. Review setup and try again.",
+            "Die ausgew\u00e4hlte Datei konnte nicht eingereiht werden. Pr\u00fcfe die Einrichtung"
+                    + " und versuche es erneut.",
+            "The selected file is no longer ready. Check setup and search again.",
+            "Die ausgew\u00e4hlte Datei ist nicht mehr bereit. Pr\u00fcfe die Einrichtung und suche"
+                    + " erneut.",
+            "Cannot create selected download storage.",
+            "Der Speicher f\u00fcr ausgew\u00e4hlte Downloads kann nicht erstellt werden.",
+            "Cannot inspect selected download storage.",
+            "Der Speicher f\u00fcr ausgew\u00e4hlte Downloads kann nicht gepr\u00fcft werden.",
+            "Cannot remove interrupted selected download staging.",
+            "Die tempor\u00e4ren Daten des unterbrochenen ausgew\u00e4hlten Downloads k\u00f6nnen"
+                    + " nicht entfernt werden.",
+            "Check the saved file before retry",
+            "Pr\u00fcfe die gespeicherte Datei vor einem erneuten Versuch",
+            "Checking audio format",
+            "Audioformat wird gepr\u00fcft",
+            "Choose where copies go before downloading.",
+            "W\u00e4hle vor dem Herunterladen die Speicherorte der Kopien.",
+            "Confirmation required before retry",
+            "Best\u00e4tigung vor erneutem Versuch erforderlich",
+            "Copy failed",
+            "Kopieren fehlgeschlagen",
+            "Download cancelled",
+            "Download abgebrochen",
+            "Download needs attention",
+            "Download erfordert Aufmerksamkeit",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "Die Download-Einstellungen konnten nicht gepr\u00fcft werden. Starte BitChord neu und"
+                    + " versuche es erneut.",
+            "Downloading \u00b7 {0} of {1}",
+            "Wird heruntergeladen \u00b7 {0} von {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "Downloads sind durch die aktuellen Einstellungen pausiert. Versuche es erneut, wenn"
+                    + " Downloads erlaubt sind.",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "Aktiviere Inoffizielles Soulseek, bevor du dieses Ergebnis herunterl\u00e4dst.",
+            "Invalid selected Soulseek reference.",
+            "Ung\u00fcltiger Verweis auf die Soulseek-Auswahl.",
+            "No selected Soulseek downloads.",
+            "Keine ausgew\u00e4hlten Soulseek-Downloads.",
+            "Preparing download",
+            "Download wird vorbereitet",
+            "Queued for download",
+            "Zum Herunterladen eingereiht",
+            "Queued {0}. Open downloads to follow progress.",
+            "{0} eingereiht. \u00d6ffne die Downloads, um den Fortschritt zu verfolgen.",
+            "Saved and verified",
+            "Gespeichert und gepr\u00fcft",
+            "Saved to all selected destinations",
+            "An allen gew\u00e4hlten Speicherorten gespeichert",
+            "Saving file",
+            "Datei wird gespeichert",
+            "Saving paused",
+            "Speichern pausiert",
+            "Saving selected copies",
+            "Ausgew\u00e4hlte Kopien werden gespeichert",
+            "Selected audio file",
+            "Ausgew\u00e4hlte Audiodatei",
+            "Selected download storage is full. Finish existing copies first.",
+            "Der Speicher f\u00fcr ausgew\u00e4hlte Downloads ist voll. Schlie\u00dfe zuerst"
+                    + " bestehende Kopien ab.",
+            "Selected files are limited to 256 MiB.",
+            "Ausgew\u00e4hlte Dateien d\u00fcrfen h\u00f6chstens 256 MiB gro\u00df sein.",
+            "Soulseek session changed. Select the result again.",
+            "Die Soulseek-Sitzung hat sich ge\u00e4ndert. W\u00e4hle das Ergebnis erneut.",
+            "The selected download could not complete. Try again or choose another result.",
+            "Der ausgew\u00e4hlte Download konnte nicht abgeschlossen werden. Versuche es erneut"
+                    + " oder w\u00e4hle ein anderes Ergebnis.",
+            "The selected download queue is full.",
+            "Die Warteschlange ausgew\u00e4hlter Downloads ist voll.",
+            "This Soulseek result expired. Search again.",
+            "Dieses Soulseek-Ergebnis ist abgelaufen. Suche erneut.",
+            "This file did not pass the audio format check. Choose another result.",
+            "Diese Datei hat die Audioformatpr\u00fcfung nicht bestanden. W\u00e4hle ein anderes"
+                    + " Ergebnis.",
+            "This selected download is already queued.",
+            "Dieser ausgew\u00e4hlte Download ist bereits eingereiht.",
+            "Uploading file",
+            "Datei wird hochgeladen",
+            "Waiting for peer",
+            "Warten auf Peer",
+            "Waiting for peer \u00b7 queue position {0}",
+            "Warten auf Peer \u00b7 Warteschlangenposition {0}",
+            "Waiting to save",
+            "Warten auf Speichern",
+            "Waiting to save selected copies",
+            "Warten auf das Speichern ausgew\u00e4hlter Kopien",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "Verbindung mit Soulseek wird hergestellt\u2026",
+            "May use YouTube or another enabled source.",
+            "Kann YouTube oder eine andere aktivierte Quelle verwenden.",
         };
     }
 
@@ -12885,6 +13847,208 @@ final class Translations {
             "Transportes: {0}",
             "{0} recent clients",
             "{0} clientes recientes",
+            "Soulseek account",
+            "Cuenta de Soulseek",
+            "Signed in as {0}",
+            "Sesi\u00f3n iniciada como {0}",
+            "Ready to search",
+            "Listo para buscar",
+            "Sign in to search Soulseek.",
+            "Inicia sesi\u00f3n para buscar en Soulseek.",
+            "Enable Soulseek to sign in and search.",
+            "Activa Soulseek para iniciar sesi\u00f3n y buscar.",
+            "Download setup",
+            "Configuraci\u00f3n de descargas",
+            "Choose where copies go before searching.",
+            "Elige el destino de las copias antes de buscar.",
+            "Choose your audio formats before searching.",
+            "Elige tus formatos de audio antes de buscar.",
+            "Find music on Soulseek",
+            "Buscar m\u00fasica en Soulseek",
+            "{0} formats enabled",
+            "{0} formatos activados",
+            "More download options",
+            "M\u00e1s opciones de descarga",
+            "Account settings",
+            "Ajustes de la cuenta",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Los ajustes de Soulseek no est\u00e1n disponibles. Reinicia BitChord e int\u00e9ntalo"
+                    + " de nuevo.",
+            "Other download options are controlled in Patches & tweaks.",
+            "Las dem\u00e1s opciones de descarga se controlan en Parches y ajustes.",
+            "Source enabled",
+            "Fuente activada",
+            "Account actions",
+            "Acciones de la cuenta",
+            "Not chosen yet",
+            "A\u00fan no elegido",
+            "Not signed in",
+            "Sin iniciar sesi\u00f3n",
+            "Finish the open download choice first.",
+            "Termina primero la selecci\u00f3n de descarga abierta.",
+            "Could not open the download source choice. Try again.",
+            "No se pudo abrir la selecci\u00f3n de fuente de descarga. Int\u00e9ntalo de nuevo.",
+            "BitChord could not start this download. Try again.",
+            "BitChord no pudo iniciar esta descarga. Int\u00e9ntalo de nuevo.",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "Busca un archivo, revisa los datos del par y elige exactamente qu\u00e9 descargar. La"
+                    + " canci\u00f3n actual y su estado de descarga no cambian.",
+            "Choose download source",
+            "Elegir fuente de descarga",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek busca un archivo aparte. BitChord usa sus fuentes de descarga y ajustes"
+                    + " actuales.",
+            "Search Soulseek",
+            "Buscar en Soulseek",
+            "Continue with BitChord download",
+            "Continuar con la descarga de BitChord",
+            "This download choice expired. Return to the song and try again.",
+            "Esta selecci\u00f3n de descarga ha caducado. Vuelve a la canci\u00f3n e int\u00e9ntalo"
+                    + " de nuevo.",
+            "Source: Soulseek",
+            "Fuente: Soulseek",
+            "Artist and song title",
+            "Artista y t\u00edtulo de la canci\u00f3n",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "Listo para buscar. No se descarga nada hasta que elijas un archivo.",
+            "Soulseek account and setup",
+            "Cuenta y configuraci\u00f3n de Soulseek",
+            "Audio formats and preference order",
+            "Formatos de audio y orden de preferencia",
+            "View downloads",
+            "Ver descargas",
+            "Choose your audio formats and their order first.",
+            "Elige primero los formatos de audio y su orden.",
+            "Search using 2\u2013256 characters.",
+            "Usa entre 2 y 256 caracteres para buscar.",
+            "Searching Soulseek\u2026",
+            "Buscando en Soulseek\u2026",
+            "Soulseek session changed. Search again.",
+            "La sesi\u00f3n de Soulseek ha cambiado. Busca de nuevo.",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "No hay archivos coincidentes. Prueba otros t\u00e9rminos. No se ha iniciado la"
+                    + " descarga de BitChord.",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "Elige un archivo de abajo. Los nombres, formatos y disponibilidad indicados por los"
+                    + " pares no est\u00e1n verificados.",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "No se pudo completar la b\u00fasqueda en Soulseek. Revisa la sesi\u00f3n, los formatos"
+                    + " y los destinos de las copias e int\u00e9ntalo de nuevo.",
+            "A previous search is stopping. Try again shortly.",
+            "Se est\u00e1 deteniendo una b\u00fasqueda anterior. Int\u00e9ntalo de nuevo en un"
+                    + " momento.",
+            "Peer: {0}",
+            "Par: {0}",
+            "File: {0}",
+            "Archivo: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "Formato anunciado: {0} \u00b7 {1} bytes",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "Los datos son declaraciones del par. El c\u00f3dec del archivo descargado se comprueba"
+                    + " antes de guardarlo.",
+            "Download this file",
+            "Descargar este archivo",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "Fuente: Soulseek. Archivo elegido en cola. Abre Ver descargas para seguir el"
+                    + " progreso.",
+            "The selected file could not be queued. Review setup and try again.",
+            "No se pudo poner el archivo elegido en cola. Revisa la configuraci\u00f3n e"
+                    + " int\u00e9ntalo de nuevo.",
+            "The selected file is no longer ready. Check setup and search again.",
+            "El archivo elegido ya no est\u00e1 listo. Revisa la configuraci\u00f3n y busca de"
+                    + " nuevo.",
+            "Cannot create selected download storage.",
+            "No se puede crear el almacenamiento de la descarga elegida.",
+            "Cannot inspect selected download storage.",
+            "No se puede inspeccionar el almacenamiento de la descarga elegida.",
+            "Cannot remove interrupted selected download staging.",
+            "No se pueden eliminar los datos temporales de la descarga elegida interrumpida.",
+            "Check the saved file before retry",
+            "Comprueba el archivo guardado antes de reintentar",
+            "Checking audio format",
+            "Comprobando el formato de audio",
+            "Choose where copies go before downloading.",
+            "Elige el destino de las copias antes de descargar.",
+            "Confirmation required before retry",
+            "Se requiere confirmaci\u00f3n antes de reintentar",
+            "Copy failed",
+            "Error al copiar",
+            "Download cancelled",
+            "Descarga cancelada",
+            "Download needs attention",
+            "La descarga requiere atenci\u00f3n",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "No se pudieron comprobar los ajustes de descarga. Reinicia BitChord e int\u00e9ntalo"
+                    + " de nuevo.",
+            "Downloading \u00b7 {0} of {1}",
+            "Descargando \u00b7 {0} de {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "Las descargas est\u00e1n pausadas por los ajustes actuales. Reintenta cuando se"
+                    + " permitan las descargas.",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "Activa Soulseek no oficial antes de descargar este resultado.",
+            "Invalid selected Soulseek reference.",
+            "Referencia de selecci\u00f3n de Soulseek no v\u00e1lida.",
+            "No selected Soulseek downloads.",
+            "No hay descargas de Soulseek seleccionadas.",
+            "Preparing download",
+            "Preparando la descarga",
+            "Queued for download",
+            "En cola para descargar",
+            "Queued {0}. Open downloads to follow progress.",
+            "{0} en cola. Abre las descargas para seguir el progreso.",
+            "Saved and verified",
+            "Guardado y verificado",
+            "Saved to all selected destinations",
+            "Guardado en todos los destinos elegidos",
+            "Saving file",
+            "Guardando el archivo",
+            "Saving paused",
+            "Guardado en pausa",
+            "Saving selected copies",
+            "Guardando las copias elegidas",
+            "Selected audio file",
+            "Archivo de audio elegido",
+            "Selected download storage is full. Finish existing copies first.",
+            "El almacenamiento de descargas elegidas est\u00e1 lleno. Termina primero las copias"
+                    + " pendientes.",
+            "Selected files are limited to 256 MiB.",
+            "Los archivos elegidos no pueden superar los 256 MiB.",
+            "Soulseek session changed. Select the result again.",
+            "La sesi\u00f3n de Soulseek ha cambiado. Elige el resultado de nuevo.",
+            "The selected download could not complete. Try again or choose another result.",
+            "No se pudo completar la descarga elegida. Reintenta o elige otro resultado.",
+            "The selected download queue is full.",
+            "La cola de descargas elegidas est\u00e1 llena.",
+            "This Soulseek result expired. Search again.",
+            "Este resultado de Soulseek ha caducado. Busca de nuevo.",
+            "This file did not pass the audio format check. Choose another result.",
+            "Este archivo no ha superado la comprobaci\u00f3n del formato de audio. Elige otro"
+                    + " resultado.",
+            "This selected download is already queued.",
+            "Esta descarga elegida ya est\u00e1 en cola.",
+            "Uploading file",
+            "Subiendo el archivo",
+            "Waiting for peer",
+            "Esperando al par",
+            "Waiting for peer \u00b7 queue position {0}",
+            "Esperando al par \u00b7 posici\u00f3n en cola {0}",
+            "Waiting to save",
+            "Esperando para guardar",
+            "Waiting to save selected copies",
+            "Esperando para guardar las copias elegidas",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "Formato: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "Conectando con Soulseek\u2026",
+            "May use YouTube or another enabled source.",
+            "Puede usar YouTube u otra fuente activada.",
         };
     }
 
@@ -15197,6 +16361,213 @@ final class Translations {
             "Transports : {0}",
             "{0} recent clients",
             "{0} clients r\u00e9cents",
+            "Soulseek account",
+            "Compte Soulseek",
+            "Signed in as {0}",
+            "Connect\u00e9 en tant que {0}",
+            "Ready to search",
+            "Pr\u00eat pour la recherche",
+            "Sign in to search Soulseek.",
+            "Connectez-vous pour rechercher sur Soulseek.",
+            "Enable Soulseek to sign in and search.",
+            "Activez Soulseek pour vous connecter et rechercher.",
+            "Download setup",
+            "Configuration des t\u00e9l\u00e9chargements",
+            "Choose where copies go before searching.",
+            "Choisissez la destination des copies avant de rechercher.",
+            "Choose your audio formats before searching.",
+            "Choisissez vos formats audio avant de rechercher.",
+            "Find music on Soulseek",
+            "Trouver de la musique sur Soulseek",
+            "{0} formats enabled",
+            "{0} formats activ\u00e9s",
+            "More download options",
+            "Autres options de t\u00e9l\u00e9chargement",
+            "Account settings",
+            "Param\u00e8tres du compte",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Les param\u00e8tres Soulseek sont indisponibles. Red\u00e9marrez BitChord et"
+                    + " r\u00e9essayez.",
+            "Other download options are controlled in Patches & tweaks.",
+            "Les autres options de t\u00e9l\u00e9chargement se r\u00e8glent dans Correctifs et"
+                    + " r\u00e9glages.",
+            "Source enabled",
+            "Source activ\u00e9e",
+            "Account actions",
+            "Actions du compte",
+            "Not chosen yet",
+            "Pas encore choisi",
+            "Not signed in",
+            "Non connect\u00e9",
+            "Finish the open download choice first.",
+            "Terminez d'abord le choix de t\u00e9l\u00e9chargement ouvert.",
+            "Could not open the download source choice. Try again.",
+            "Impossible d'ouvrir le choix de source du t\u00e9l\u00e9chargement. R\u00e9essayez.",
+            "BitChord could not start this download. Try again.",
+            "BitChord n'a pas pu d\u00e9marrer ce t\u00e9l\u00e9chargement. R\u00e9essayez.",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "Recherchez un fichier, v\u00e9rifiez les informations du pair, puis choisissez"
+                + " exactement quoi t\u00e9l\u00e9charger. Le morceau en cours et son \u00e9tat de"
+                + " t\u00e9l\u00e9chargement restent inchang\u00e9s.",
+            "Choose download source",
+            "Choisir la source du t\u00e9l\u00e9chargement",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek recherche un fichier distinct. BitChord utilise ses sources de"
+                    + " t\u00e9l\u00e9chargement et r\u00e9glages existants.",
+            "Search Soulseek",
+            "Rechercher sur Soulseek",
+            "Continue with BitChord download",
+            "Continuer le t\u00e9l\u00e9chargement BitChord",
+            "This download choice expired. Return to the song and try again.",
+            "Ce choix de t\u00e9l\u00e9chargement a expir\u00e9. Revenez au morceau et"
+                    + " r\u00e9essayez.",
+            "Source: Soulseek",
+            "Source : Soulseek",
+            "Artist and song title",
+            "Artiste et titre du morceau",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "Pr\u00eat pour la recherche. Rien n'est t\u00e9l\u00e9charg\u00e9 avant le choix d'un"
+                    + " fichier.",
+            "Soulseek account and setup",
+            "Compte et configuration Soulseek",
+            "Audio formats and preference order",
+            "Formats audio et ordre de pr\u00e9f\u00e9rence",
+            "View downloads",
+            "Voir les t\u00e9l\u00e9chargements",
+            "Choose your audio formats and their order first.",
+            "Choisissez d'abord vos formats audio et leur ordre.",
+            "Search using 2\u2013256 characters.",
+            "Saisissez entre 2 et 256 caract\u00e8res pour rechercher.",
+            "Searching Soulseek\u2026",
+            "Recherche sur Soulseek\u2026",
+            "Soulseek session changed. Search again.",
+            "La session Soulseek a chang\u00e9. Relancez la recherche.",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "Aucun fichier correspondant. Essayez d'autres mots. Le t\u00e9l\u00e9chargement"
+                    + " BitChord n'a pas d\u00e9marr\u00e9.",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "Choisissez un fichier ci-dessous. Les noms, formats et disponibilit\u00e9s"
+                    + " annonc\u00e9s par les pairs ne sont pas v\u00e9rifi\u00e9s.",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "La recherche Soulseek n'a pas pu aboutir. V\u00e9rifiez la connexion au compte, les"
+                    + " formats et les destinations des copies, puis r\u00e9essayez.",
+            "A previous search is stopping. Try again shortly.",
+            "Une recherche pr\u00e9c\u00e9dente s'arr\u00eate. R\u00e9essayez dans un instant.",
+            "Peer: {0}",
+            "Pair : {0}",
+            "File: {0}",
+            "Fichier : {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "Format annonc\u00e9 : {0} \u00b7 {1} octets",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "Ces informations sont d\u00e9clar\u00e9es par le pair. Le codec du fichier"
+                    + " t\u00e9l\u00e9charg\u00e9 est v\u00e9rifi\u00e9 avant l'enregistrement.",
+            "Download this file",
+            "T\u00e9l\u00e9charger ce fichier",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "Source : Soulseek. Fichier choisi ajout\u00e9 \u00e0 la file. Ouvrez Voir les"
+                    + " t\u00e9l\u00e9chargements pour suivre sa progression.",
+            "The selected file could not be queued. Review setup and try again.",
+            "Impossible d'ajouter le fichier choisi \u00e0 la file. V\u00e9rifiez la configuration"
+                    + " et r\u00e9essayez.",
+            "The selected file is no longer ready. Check setup and search again.",
+            "Le fichier choisi n'est plus pr\u00eat. V\u00e9rifiez la configuration et relancez la"
+                    + " recherche.",
+            "Cannot create selected download storage.",
+            "Impossible de cr\u00e9er le stockage du t\u00e9l\u00e9chargement choisi.",
+            "Cannot inspect selected download storage.",
+            "Impossible d'inspecter le stockage du t\u00e9l\u00e9chargement choisi.",
+            "Cannot remove interrupted selected download staging.",
+            "Impossible de supprimer les donn\u00e9es temporaires du t\u00e9l\u00e9chargement"
+                    + " choisi interrompu.",
+            "Check the saved file before retry",
+            "V\u00e9rifiez le fichier enregistr\u00e9 avant de r\u00e9essayer",
+            "Checking audio format",
+            "V\u00e9rification du format audio",
+            "Choose where copies go before downloading.",
+            "Choisissez la destination des copies avant de t\u00e9l\u00e9charger.",
+            "Confirmation required before retry",
+            "Confirmation requise avant de r\u00e9essayer",
+            "Copy failed",
+            "\u00c9chec de la copie",
+            "Download cancelled",
+            "T\u00e9l\u00e9chargement annul\u00e9",
+            "Download needs attention",
+            "Le t\u00e9l\u00e9chargement n\u00e9cessite votre attention",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "Impossible de v\u00e9rifier les param\u00e8tres de t\u00e9l\u00e9chargement."
+                    + " Red\u00e9marrez BitChord et r\u00e9essayez.",
+            "Downloading \u00b7 {0} of {1}",
+            "T\u00e9l\u00e9chargement \u00b7 {0} sur {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "Les t\u00e9l\u00e9chargements sont suspendus par les r\u00e9glages actuels."
+                    + " R\u00e9essayez lorsqu'ils sont autoris\u00e9s.",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "Activez Soulseek non officiel avant de t\u00e9l\u00e9charger ce r\u00e9sultat.",
+            "Invalid selected Soulseek reference.",
+            "R\u00e9f\u00e9rence de s\u00e9lection Soulseek invalide.",
+            "No selected Soulseek downloads.",
+            "Aucun t\u00e9l\u00e9chargement Soulseek s\u00e9lectionn\u00e9.",
+            "Preparing download",
+            "Pr\u00e9paration du t\u00e9l\u00e9chargement",
+            "Queued for download",
+            "En attente de t\u00e9l\u00e9chargement",
+            "Queued {0}. Open downloads to follow progress.",
+            "{0} ajout\u00e9 \u00e0 la file. Ouvrez les t\u00e9l\u00e9chargements pour suivre la"
+                    + " progression.",
+            "Saved and verified",
+            "Enregistr\u00e9 et v\u00e9rifi\u00e9",
+            "Saved to all selected destinations",
+            "Enregistr\u00e9 dans toutes les destinations choisies",
+            "Saving file",
+            "Enregistrement du fichier",
+            "Saving paused",
+            "Enregistrement en pause",
+            "Saving selected copies",
+            "Enregistrement des copies choisies",
+            "Selected audio file",
+            "Fichier audio choisi",
+            "Selected download storage is full. Finish existing copies first.",
+            "Le stockage des t\u00e9l\u00e9chargements choisis est plein. Terminez d'abord les"
+                    + " copies en cours.",
+            "Selected files are limited to 256 MiB.",
+            "Les fichiers choisis sont limit\u00e9s \u00e0 256 MiB.",
+            "Soulseek session changed. Select the result again.",
+            "La session Soulseek a chang\u00e9. S\u00e9lectionnez de nouveau le r\u00e9sultat.",
+            "The selected download could not complete. Try again or choose another result.",
+            "Le t\u00e9l\u00e9chargement choisi n'a pas pu aboutir. R\u00e9essayez ou choisissez un"
+                    + " autre r\u00e9sultat.",
+            "The selected download queue is full.",
+            "La file des t\u00e9l\u00e9chargements choisis est pleine.",
+            "This Soulseek result expired. Search again.",
+            "Ce r\u00e9sultat Soulseek a expir\u00e9. Relancez la recherche.",
+            "This file did not pass the audio format check. Choose another result.",
+            "Ce fichier n'a pas pass\u00e9 la v\u00e9rification du format audio. Choisissez un"
+                    + " autre r\u00e9sultat.",
+            "This selected download is already queued.",
+            "Ce t\u00e9l\u00e9chargement choisi est d\u00e9j\u00e0 dans la file.",
+            "Uploading file",
+            "Envoi du fichier",
+            "Waiting for peer",
+            "En attente du pair",
+            "Waiting for peer \u00b7 queue position {0}",
+            "En attente du pair \u00b7 position dans la file {0}",
+            "Waiting to save",
+            "En attente d'enregistrement",
+            "Waiting to save selected copies",
+            "En attente d'enregistrement des copies choisies",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "Format : {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "Connexion \u00e0 Soulseek\u2026",
+            "May use YouTube or another enabled source.",
+            "Peut utiliser YouTube ou une autre source activ\u00e9e.",
         };
     }
 
@@ -18913,6 +20284,330 @@ final class Translations {
             "{0} recent clients",
             "{0} \u05dc\u05e7\u05d5\u05d7\u05d5\u05ea \u05e9\u05e0\u05e8\u05d0\u05d5"
                     + " \u05dc\u05d0\u05d7\u05e8\u05d5\u05e0\u05d4",
+            "Soulseek account",
+            "\u05d7\u05e9\u05d1\u05d5\u05df Soulseek",
+            "Signed in as {0}",
+            "\u05de\u05d7\u05d5\u05d1\u05e8 \u05d1\u05ea\u05d5\u05e8 {0}",
+            "Ready to search",
+            "\u05de\u05d5\u05db\u05df \u05dc\u05d7\u05d9\u05e4\u05d5\u05e9",
+            "Sign in to search Soulseek.",
+            "\u05d9\u05e9 \u05dc\u05d4\u05ea\u05d7\u05d1\u05e8 \u05db\u05d3\u05d9"
+                    + " \u05dc\u05d7\u05e4\u05e9 \u05d1\u05beSoulseek.",
+            "Enable Soulseek to sign in and search.",
+            "\u05d9\u05e9 \u05dc\u05d4\u05e4\u05e2\u05d9\u05dc \u05d0\u05ea Soulseek"
+                    + " \u05db\u05d3\u05d9 \u05dc\u05d4\u05ea\u05d7\u05d1\u05e8"
+                    + " \u05d5\u05dc\u05d7\u05e4\u05e9.",
+            "Download setup",
+            "\u05d4\u05d2\u05d3\u05e8\u05ea \u05d4\u05d5\u05e8\u05d3\u05d5\u05ea",
+            "Choose where copies go before searching.",
+            "\u05d9\u05e9 \u05dc\u05d1\u05d7\u05d5\u05e8 \u05d4\u05d9\u05db\u05df"
+                    + " \u05dc\u05e9\u05de\u05d5\u05e8 \u05e2\u05d5\u05ea\u05e7\u05d9\u05dd"
+                    + " \u05dc\u05e4\u05e0\u05d9 \u05d4\u05d7\u05d9\u05e4\u05d5\u05e9.",
+            "Choose your audio formats before searching.",
+            "\u05d9\u05e9 \u05dc\u05d1\u05d7\u05d5\u05e8 \u05e4\u05d5\u05e8\u05de\u05d8\u05d9"
+                    + " \u05e9\u05de\u05e2 \u05dc\u05e4\u05e0\u05d9"
+                    + " \u05d4\u05d7\u05d9\u05e4\u05d5\u05e9.",
+            "Find music on Soulseek",
+            "\u05d7\u05d9\u05e4\u05d5\u05e9 \u05de\u05d5\u05d6\u05d9\u05e7\u05d4"
+                    + " \u05d1\u05beSoulseek",
+            "{0} formats enabled",
+            "{0} \u05e4\u05d5\u05e8\u05de\u05d8\u05d9\u05dd"
+                    + " \u05de\u05d5\u05e4\u05e2\u05dc\u05d9\u05dd",
+            "More download options",
+            "\u05d0\u05e4\u05e9\u05e8\u05d5\u05d9\u05d5\u05ea \u05d4\u05d5\u05e8\u05d3\u05d4"
+                    + " \u05e0\u05d5\u05e1\u05e4\u05d5\u05ea",
+            "Account settings",
+            "\u05d4\u05d2\u05d3\u05e8\u05d5\u05ea \u05d7\u05e9\u05d1\u05d5\u05df",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "\u05d4\u05d2\u05d3\u05e8\u05d5\u05ea Soulseek \u05d0\u05d9\u05e0\u05df"
+                    + " \u05d6\u05de\u05d9\u05e0\u05d5\u05ea. \u05d9\u05e9"
+                    + " \u05dc\u05d4\u05e4\u05e2\u05d9\u05dc \u05de\u05d7\u05d3\u05e9 \u05d0\u05ea"
+                    + " BitChord \u05d5\u05dc\u05e0\u05e1\u05d5\u05ea \u05e9\u05d5\u05d1.",
+            "Other download options are controlled in Patches & tweaks.",
+            "\u05d0\u05e4\u05e9\u05e8\u05d5\u05d9\u05d5\u05ea \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4"
+                + " \u05d4\u05d0\u05d7\u05e8\u05d5\u05ea \u05de\u05e0\u05d5\u05d4\u05dc\u05d5\u05ea"
+                + " \u05d1\u05ea\u05d9\u05e7\u05d5\u05e0\u05d9\u05dd"
+                + " \u05d5\u05db\u05d5\u05d5\u05e0\u05d5\u05e0\u05d9\u05dd.",
+            "Source enabled",
+            "\u05d4\u05de\u05e7\u05d5\u05e8 \u05de\u05d5\u05e4\u05e2\u05dc",
+            "Account actions",
+            "\u05e4\u05e2\u05d5\u05dc\u05d5\u05ea \u05d7\u05e9\u05d1\u05d5\u05df",
+            "Not chosen yet",
+            "\u05d8\u05e8\u05dd \u05e0\u05d1\u05d7\u05e8",
+            "Not signed in",
+            "\u05dc\u05d0 \u05de\u05d7\u05d5\u05d1\u05e8",
+            "Finish the open download choice first.",
+            "\u05d9\u05e9 \u05dc\u05d4\u05e9\u05dc\u05d9\u05dd \u05ea\u05d7\u05d9\u05dc\u05d4"
+                    + " \u05d0\u05ea \u05d1\u05d7\u05d9\u05e8\u05ea"
+                    + " \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4 \u05d4\u05e4\u05ea\u05d5\u05d7\u05d4.",
+            "Could not open the download source choice. Try again.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05e4\u05ea\u05d5\u05d7 \u05d0\u05ea"
+                    + " \u05d1\u05d7\u05d9\u05e8\u05ea \u05de\u05e7\u05d5\u05e8"
+                    + " \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4. \u05d9\u05e9"
+                    + " \u05dc\u05e0\u05e1\u05d5\u05ea \u05e9\u05d5\u05d1.",
+            "BitChord could not start this download. Try again.",
+            "BitChord \u05dc\u05d0 \u05d4\u05e6\u05dc\u05d9\u05d7"
+                    + " \u05dc\u05d4\u05ea\u05d7\u05d9\u05dc \u05d0\u05ea"
+                    + " \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4. \u05d9\u05e9"
+                    + " \u05dc\u05e0\u05e1\u05d5\u05ea \u05e9\u05d5\u05d1.",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "\u05d9\u05e9 \u05dc\u05d7\u05e4\u05e9 \u05e7\u05d5\u05d1\u05e5,"
+                    + " \u05dc\u05d1\u05d3\u05d5\u05e7 \u05d0\u05ea \u05e4\u05e8\u05d8\u05d9"
+                    + " \u05d4\u05e2\u05de\u05d9\u05ea \u05d5\u05dc\u05d1\u05d7\u05d5\u05e8"
+                    + " \u05d1\u05d3\u05d9\u05d5\u05e7 \u05de\u05d4"
+                    + " \u05dc\u05d4\u05d5\u05e8\u05d9\u05d3. \u05d4\u05e9\u05d9\u05e8"
+                    + " \u05d4\u05e0\u05d5\u05db\u05d7\u05d9 \u05d5\u05de\u05e6\u05d1"
+                    + " \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4 \u05e9\u05dc\u05d5"
+                    + " \u05d9\u05d9\u05e9\u05d0\u05e8\u05d5 \u05dc\u05dc\u05d0"
+                    + " \u05e9\u05d9\u05e0\u05d5\u05d9.",
+            "Choose download source",
+            "\u05d1\u05d7\u05d9\u05e8\u05ea \u05de\u05e7\u05d5\u05e8"
+                    + " \u05d4\u05d5\u05e8\u05d3\u05d4",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek \u05de\u05d7\u05e4\u05e9 \u05e7\u05d5\u05d1\u05e5 \u05e0\u05e4\u05e8\u05d3."
+                + " BitChord \u05de\u05e9\u05ea\u05de\u05e9"
+                + " \u05d1\u05de\u05e7\u05d5\u05e8\u05d5\u05ea \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4"
+                + " \u05d5\u05d1\u05d4\u05d2\u05d3\u05e8\u05d5\u05ea"
+                + " \u05d4\u05e7\u05d9\u05d9\u05de\u05d9\u05dd \u05e9\u05dc\u05d5.",
+            "Search Soulseek",
+            "\u05d7\u05d9\u05e4\u05d5\u05e9 \u05d1\u05beSoulseek",
+            "Continue with BitChord download",
+            "\u05d4\u05de\u05e9\u05da \u05d4\u05d5\u05e8\u05d3\u05d4 \u05e2\u05dd BitChord",
+            "This download choice expired. Return to the song and try again.",
+            "\u05ea\u05d5\u05e7\u05e3 \u05d1\u05d7\u05d9\u05e8\u05ea"
+                    + " \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4 \u05e4\u05d2. \u05d9\u05e9"
+                    + " \u05dc\u05d7\u05d6\u05d5\u05e8 \u05dc\u05e9\u05d9\u05e8"
+                    + " \u05d5\u05dc\u05e0\u05e1\u05d5\u05ea \u05e9\u05d5\u05d1.",
+            "Source: Soulseek",
+            "\u05de\u05e7\u05d5\u05e8: Soulseek",
+            "Artist and song title",
+            "\u05d0\u05de\u05df \u05d5\u05e9\u05dd \u05d4\u05e9\u05d9\u05e8",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "\u05de\u05d5\u05db\u05df \u05dc\u05d7\u05d9\u05e4\u05d5\u05e9. \u05dc\u05d0"
+                    + " \u05ea\u05ea\u05d7\u05d9\u05dc \u05d4\u05d5\u05e8\u05d3\u05d4 \u05e2\u05d3"
+                    + " \u05dc\u05d1\u05d7\u05d9\u05e8\u05ea \u05e7\u05d5\u05d1\u05e5.",
+            "Soulseek account and setup",
+            "\u05d7\u05e9\u05d1\u05d5\u05df \u05d5\u05d4\u05d2\u05d3\u05e8\u05ea Soulseek",
+            "Audio formats and preference order",
+            "\u05e4\u05d5\u05e8\u05de\u05d8\u05d9 \u05e9\u05de\u05e2 \u05d5\u05e1\u05d3\u05e8"
+                    + " \u05d4\u05e2\u05d3\u05e4\u05d4",
+            "View downloads",
+            "\u05d4\u05e6\u05d2\u05ea \u05d4\u05d5\u05e8\u05d3\u05d5\u05ea",
+            "Choose your audio formats and their order first.",
+            "\u05d9\u05e9 \u05dc\u05d1\u05d7\u05d5\u05e8 \u05ea\u05d7\u05d9\u05dc\u05d4"
+                    + " \u05e4\u05d5\u05e8\u05de\u05d8\u05d9 \u05e9\u05de\u05e2 \u05d5\u05d0\u05ea"
+                    + " \u05d4\u05e1\u05d3\u05e8 \u05e9\u05dc\u05d4\u05dd.",
+            "Search using 2\u2013256 characters.",
+            "\u05d9\u05e9 \u05dc\u05d7\u05e4\u05e9 \u05d1\u05d0\u05de\u05e6\u05e2\u05d5\u05ea"
+                    + " 2\u2013256 \u05ea\u05d5\u05d5\u05d9\u05dd.",
+            "Searching Soulseek\u2026",
+            "\u05d7\u05d9\u05e4\u05d5\u05e9 \u05d1\u05beSoulseek\u2026",
+            "Soulseek session changed. Search again.",
+            "\u05d4\u05e4\u05e2\u05dc\u05ea Soulseek \u05d4\u05e9\u05ea\u05e0\u05ea\u05d4."
+                    + " \u05d9\u05e9 \u05dc\u05d7\u05e4\u05e9 \u05e9\u05d5\u05d1.",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "\u05dc\u05d0 \u05e0\u05de\u05e6\u05d0\u05d5 \u05e7\u05d1\u05e6\u05d9\u05dd"
+                + " \u05ea\u05d5\u05d0\u05de\u05d9\u05dd. \u05d9\u05e9"
+                + " \u05dc\u05e0\u05e1\u05d5\u05ea \u05de\u05d9\u05dc\u05d5\u05ea"
+                + " \u05d7\u05d9\u05e4\u05d5\u05e9 \u05d0\u05d7\u05e8\u05d5\u05ea."
+                + " \u05d4\u05d5\u05e8\u05d3\u05ea BitChord \u05dc\u05d0 \u05d4\u05d7\u05dc\u05d4.",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "\u05d9\u05e9 \u05dc\u05d1\u05d7\u05d5\u05e8 \u05e7\u05d5\u05d1\u05e5"
+                + " \u05dc\u05de\u05d8\u05d4. \u05e9\u05de\u05d5\u05ea"
+                + " \u05d4\u05e7\u05d1\u05e6\u05d9\u05dd,"
+                + " \u05d4\u05e4\u05d5\u05e8\u05de\u05d8\u05d9\u05dd"
+                + " \u05d5\u05d4\u05d6\u05de\u05d9\u05e0\u05d5\u05ea \u05e9\u05de\u05d5\u05e1\u05e8"
+                + " \u05d4\u05e2\u05de\u05d9\u05ea \u05dc\u05d0 \u05d0\u05d5\u05de\u05ea\u05d5.",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05d4\u05e9\u05dc\u05d9\u05dd"
+                + " \u05d0\u05ea \u05d4\u05d7\u05d9\u05e4\u05d5\u05e9 \u05d1\u05beSoulseek."
+                + " \u05d9\u05e9 \u05dc\u05d1\u05d3\u05d5\u05e7 \u05d0\u05ea"
+                + " \u05d4\u05d4\u05ea\u05d7\u05d1\u05e8\u05d5\u05ea,"
+                + " \u05d4\u05e4\u05d5\u05e8\u05de\u05d8\u05d9\u05dd \u05d5\u05d9\u05e2\u05d3\u05d9"
+                + " \u05d4\u05e2\u05d5\u05ea\u05e7\u05d9\u05dd \u05d5\u05dc\u05e0\u05e1\u05d5\u05ea"
+                + " \u05e9\u05d5\u05d1.",
+            "A previous search is stopping. Try again shortly.",
+            "\u05d7\u05d9\u05e4\u05d5\u05e9 \u05e7\u05d5\u05d3\u05dd \u05e0\u05e2\u05e6\u05e8"
+                    + " \u05db\u05e2\u05ea. \u05d9\u05e9 \u05dc\u05e0\u05e1\u05d5\u05ea"
+                    + " \u05e9\u05d5\u05d1 \u05d1\u05e2\u05d5\u05d3 \u05e8\u05d2\u05e2.",
+            "Peer: {0}",
+            "\u05e2\u05de\u05d9\u05ea: {0}",
+            "File: {0}",
+            "\u05e7\u05d5\u05d1\u05e5: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "\u05e4\u05d5\u05e8\u05de\u05d8 \u05de\u05d5\u05e6\u05d4\u05e8: {0} \u00b7 {1}"
+                    + " \u05d1\u05ea\u05d9\u05dd",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "\u05d4\u05e4\u05e8\u05d8\u05d9\u05dd \u05d4\u05dd \u05d8\u05e2\u05e0\u05d5\u05ea"
+                    + " \u05e9\u05dc \u05d4\u05e2\u05de\u05d9\u05ea. \u05d4\u05e7\u05d5\u05d3\u05e7"
+                    + " \u05e9\u05dc \u05d4\u05e7\u05d5\u05d1\u05e5 \u05e9\u05d4\u05d5\u05e8\u05d3"
+                    + " \u05e0\u05d1\u05d3\u05e7 \u05dc\u05e4\u05e0\u05d9"
+                    + " \u05e9\u05de\u05d9\u05e8\u05ea\u05d5.",
+            "Download this file",
+            "\u05d4\u05d5\u05e8\u05d3\u05ea \u05d4\u05e7\u05d5\u05d1\u05e5 \u05d4\u05d6\u05d4",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "\u05de\u05e7\u05d5\u05e8: Soulseek. \u05d4\u05e7\u05d5\u05d1\u05e5"
+                    + " \u05e9\u05e0\u05d1\u05d7\u05e8 \u05e0\u05d5\u05e1\u05e3"
+                    + " \u05dc\u05ea\u05d5\u05e8. \u05dc\u05de\u05e2\u05e7\u05d1 \u05d0\u05d7\u05e8"
+                    + " \u05d4\u05d4\u05ea\u05e7\u05d3\u05de\u05d5\u05ea \u05d9\u05e9"
+                    + " \u05dc\u05e4\u05ea\u05d5\u05d7 \u05d0\u05ea \u05f4\u05d4\u05e6\u05d2\u05ea"
+                    + " \u05d4\u05d5\u05e8\u05d3\u05d5\u05ea\u05f4.",
+            "The selected file could not be queued. Review setup and try again.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05d4\u05d5\u05e1\u05d9\u05e3"
+                    + " \u05d0\u05ea \u05d4\u05e7\u05d5\u05d1\u05e5 \u05e9\u05e0\u05d1\u05d7\u05e8"
+                    + " \u05dc\u05ea\u05d5\u05e8. \u05d9\u05e9 \u05dc\u05d1\u05d3\u05d5\u05e7"
+                    + " \u05d0\u05ea \u05d4\u05d4\u05d2\u05d3\u05e8\u05d4"
+                    + " \u05d5\u05dc\u05e0\u05e1\u05d5\u05ea \u05e9\u05d5\u05d1.",
+            "The selected file is no longer ready. Check setup and search again.",
+            "\u05d4\u05e7\u05d5\u05d1\u05e5 \u05e9\u05e0\u05d1\u05d7\u05e8 \u05d0\u05d9\u05e0\u05d5"
+                    + " \u05de\u05d5\u05db\u05df \u05e2\u05d5\u05d3. \u05d9\u05e9"
+                    + " \u05dc\u05d1\u05d3\u05d5\u05e7 \u05d0\u05ea"
+                    + " \u05d4\u05d4\u05d2\u05d3\u05e8\u05d4 \u05d5\u05dc\u05d7\u05e4\u05e9"
+                    + " \u05e9\u05d5\u05d1.",
+            "Cannot create selected download storage.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05d9\u05e6\u05d5\u05e8"
+                    + " \u05d0\u05d7\u05e1\u05d5\u05df \u05dc\u05d4\u05d5\u05e8\u05d3\u05d4"
+                    + " \u05e9\u05e0\u05d1\u05d7\u05e8\u05d4.",
+            "Cannot inspect selected download storage.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05d1\u05d3\u05d5\u05e7 \u05d0\u05ea"
+                    + " \u05d4\u05d0\u05d7\u05e1\u05d5\u05df \u05e9\u05dc"
+                    + " \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4 \u05e9\u05e0\u05d1\u05d7\u05e8\u05d4.",
+            "Cannot remove interrupted selected download staging.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05d4\u05e1\u05d9\u05e8"
+                    + " \u05e7\u05d1\u05e6\u05d9\u05dd \u05d6\u05de\u05e0\u05d9\u05d9\u05dd"
+                    + " \u05e9\u05dc \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4"
+                    + " \u05e9\u05e0\u05d1\u05d7\u05e8\u05d4 \u05d5\u05e0\u05e7\u05d8\u05e2\u05d4.",
+            "Check the saved file before retry",
+            "\u05d9\u05e9 \u05dc\u05d1\u05d3\u05d5\u05e7 \u05d0\u05ea"
+                    + " \u05d4\u05e7\u05d5\u05d1\u05e5 \u05e9\u05e0\u05e9\u05de\u05e8"
+                    + " \u05dc\u05e4\u05e0\u05d9 \u05e0\u05d9\u05e1\u05d9\u05d5\u05df"
+                    + " \u05d7\u05d5\u05d6\u05e8",
+            "Checking audio format",
+            "\u05d1\u05d3\u05d9\u05e7\u05ea \u05e4\u05d5\u05e8\u05de\u05d8"
+                    + " \u05d4\u05e9\u05de\u05e2",
+            "Choose where copies go before downloading.",
+            "\u05d9\u05e9 \u05dc\u05d1\u05d7\u05d5\u05e8 \u05d4\u05d9\u05db\u05df"
+                    + " \u05dc\u05e9\u05de\u05d5\u05e8 \u05e2\u05d5\u05ea\u05e7\u05d9\u05dd"
+                    + " \u05dc\u05e4\u05e0\u05d9 \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4.",
+            "Confirmation required before retry",
+            "\u05e0\u05d3\u05e8\u05e9 \u05d0\u05d9\u05e9\u05d5\u05e8 \u05dc\u05e4\u05e0\u05d9"
+                    + " \u05e0\u05d9\u05e1\u05d9\u05d5\u05df \u05d7\u05d5\u05d6\u05e8",
+            "Copy failed",
+            "\u05d4\u05d4\u05e2\u05ea\u05e7\u05d4 \u05e0\u05db\u05e9\u05dc\u05d4",
+            "Download cancelled",
+            "\u05d4\u05d4\u05d5\u05e8\u05d3\u05d4 \u05d1\u05d5\u05d8\u05dc\u05d4",
+            "Download needs attention",
+            "\u05d4\u05d4\u05d5\u05e8\u05d3\u05d4 \u05d3\u05d5\u05e8\u05e9\u05ea"
+                    + " \u05d8\u05d9\u05e4\u05d5\u05dc",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05d1\u05d3\u05d5\u05e7 \u05d0\u05ea"
+                + " \u05d4\u05d2\u05d3\u05e8\u05d5\u05ea \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4."
+                + " \u05d9\u05e9 \u05dc\u05d4\u05e4\u05e2\u05d9\u05dc \u05de\u05d7\u05d3\u05e9"
+                + " \u05d0\u05ea BitChord \u05d5\u05dc\u05e0\u05e1\u05d5\u05ea \u05e9\u05d5\u05d1.",
+            "Downloading \u00b7 {0} of {1}",
+            "\u05d4\u05d5\u05e8\u05d3\u05d4 \u00b7 {0} \u05de\u05ea\u05d5\u05da {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "\u05d4\u05d4\u05d5\u05e8\u05d3\u05d5\u05ea \u05de\u05d5\u05e9\u05d4\u05d5\u05ea"
+                    + " \u05e2\u05e7\u05d1 \u05d4\u05d2\u05d3\u05e8\u05d5\u05ea"
+                    + " \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4"
+                    + " \u05d4\u05e0\u05d5\u05db\u05d7\u05d9\u05d5\u05ea. \u05d9\u05e9"
+                    + " \u05dc\u05e0\u05e1\u05d5\u05ea \u05e9\u05d5\u05d1 \u05db\u05d0\u05e9\u05e8"
+                    + " \u05d4\u05d4\u05d5\u05e8\u05d3\u05d5\u05ea"
+                    + " \u05de\u05d5\u05ea\u05e8\u05d5\u05ea.",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "\u05d9\u05e9 \u05dc\u05d4\u05e4\u05e2\u05d9\u05dc \u05d0\u05ea Unofficial Soulseek"
+                    + " \u05dc\u05e4\u05e0\u05d9 \u05d4\u05d5\u05e8\u05d3\u05ea"
+                    + " \u05d4\u05ea\u05d5\u05e6\u05d0\u05d4 \u05d4\u05d6\u05d5.",
+            "Invalid selected Soulseek reference.",
+            "\u05d4\u05e4\u05e0\u05d9\u05d9\u05ea Soulseek \u05e9\u05e0\u05d1\u05d7\u05e8\u05d4"
+                    + " \u05d0\u05d9\u05e0\u05d4 \u05ea\u05e7\u05d9\u05e0\u05d4.",
+            "No selected Soulseek downloads.",
+            "\u05d0\u05d9\u05df \u05d4\u05d5\u05e8\u05d3\u05d5\u05ea Soulseek"
+                    + " \u05e9\u05e0\u05d1\u05d7\u05e8\u05d5.",
+            "Preparing download",
+            "\u05d4\u05db\u05e0\u05ea \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4",
+            "Queued for download",
+            "\u05d1\u05ea\u05d5\u05e8 \u05dc\u05d4\u05d5\u05e8\u05d3\u05d4",
+            "Queued {0}. Open downloads to follow progress.",
+            "{0} \u05e0\u05d5\u05e1\u05e3 \u05dc\u05ea\u05d5\u05e8. \u05dc\u05de\u05e2\u05e7\u05d1"
+                    + " \u05d0\u05d7\u05e8 \u05d4\u05d4\u05ea\u05e7\u05d3\u05de\u05d5\u05ea"
+                    + " \u05d9\u05e9 \u05dc\u05e4\u05ea\u05d5\u05d7 \u05d0\u05ea"
+                    + " \u05d4\u05d4\u05d5\u05e8\u05d3\u05d5\u05ea.",
+            "Saved and verified",
+            "\u05e0\u05e9\u05de\u05e8 \u05d5\u05d0\u05d5\u05de\u05ea",
+            "Saved to all selected destinations",
+            "\u05e0\u05e9\u05de\u05e8 \u05d1\u05db\u05dc \u05d4\u05d9\u05e2\u05d3\u05d9\u05dd"
+                    + " \u05e9\u05e0\u05d1\u05d7\u05e8\u05d5",
+            "Saving file",
+            "\u05e9\u05de\u05d9\u05e8\u05ea \u05d4\u05e7\u05d5\u05d1\u05e5",
+            "Saving paused",
+            "\u05d4\u05e9\u05de\u05d9\u05e8\u05d4 \u05de\u05d5\u05e9\u05d4\u05d9\u05ea",
+            "Saving selected copies",
+            "\u05e9\u05de\u05d9\u05e8\u05ea \u05d4\u05e2\u05d5\u05ea\u05e7\u05d9\u05dd"
+                    + " \u05e9\u05e0\u05d1\u05d7\u05e8\u05d5",
+            "Selected audio file",
+            "\u05e7\u05d5\u05d1\u05e5 \u05d4\u05e9\u05de\u05e2 \u05e9\u05e0\u05d1\u05d7\u05e8",
+            "Selected download storage is full. Finish existing copies first.",
+            "\u05d0\u05d7\u05e1\u05d5\u05df \u05d4\u05d4\u05d5\u05e8\u05d3\u05d5\u05ea"
+                    + " \u05e9\u05e0\u05d1\u05d7\u05e8\u05d5 \u05de\u05dc\u05d0. \u05d9\u05e9"
+                    + " \u05dc\u05d4\u05e9\u05dc\u05d9\u05dd \u05ea\u05d7\u05d9\u05dc\u05d4"
+                    + " \u05d0\u05ea \u05d4\u05e2\u05d5\u05ea\u05e7\u05d9\u05dd"
+                    + " \u05d4\u05e7\u05d9\u05d9\u05de\u05d9\u05dd.",
+            "Selected files are limited to 256 MiB.",
+            "\u05d4\u05e7\u05d1\u05e6\u05d9\u05dd \u05e9\u05e0\u05d1\u05d7\u05e8\u05d5"
+                    + " \u05de\u05d5\u05d2\u05d1\u05dc\u05d9\u05dd \u05dc\u05be256 MiB.",
+            "Soulseek session changed. Select the result again.",
+            "\u05d4\u05e4\u05e2\u05dc\u05ea Soulseek \u05d4\u05e9\u05ea\u05e0\u05ea\u05d4."
+                    + " \u05d9\u05e9 \u05dc\u05d1\u05d7\u05d5\u05e8 \u05e9\u05d5\u05d1 \u05d0\u05ea"
+                    + " \u05d4\u05ea\u05d5\u05e6\u05d0\u05d4.",
+            "The selected download could not complete. Try again or choose another result.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05d4\u05e9\u05dc\u05d9\u05dd"
+                    + " \u05d0\u05ea \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4"
+                    + " \u05e9\u05e0\u05d1\u05d7\u05e8\u05d4. \u05d9\u05e9"
+                    + " \u05dc\u05e0\u05e1\u05d5\u05ea \u05e9\u05d5\u05d1 \u05d0\u05d5"
+                    + " \u05dc\u05d1\u05d7\u05d5\u05e8 \u05ea\u05d5\u05e6\u05d0\u05d4"
+                    + " \u05d0\u05d7\u05e8\u05ea.",
+            "The selected download queue is full.",
+            "\u05ea\u05d5\u05e8 \u05d4\u05d4\u05d5\u05e8\u05d3\u05d5\u05ea"
+                    + " \u05e9\u05e0\u05d1\u05d7\u05e8\u05d5 \u05de\u05dc\u05d0.",
+            "This Soulseek result expired. Search again.",
+            "\u05ea\u05d5\u05e7\u05e3 \u05ea\u05d5\u05e6\u05d0\u05ea Soulseek \u05d4\u05d6\u05d5"
+                    + " \u05e4\u05d2. \u05d9\u05e9 \u05dc\u05d7\u05e4\u05e9 \u05e9\u05d5\u05d1.",
+            "This file did not pass the audio format check. Choose another result.",
+            "\u05d4\u05e7\u05d5\u05d1\u05e5 \u05d4\u05d6\u05d4 \u05dc\u05d0 \u05e2\u05d1\u05e8"
+                    + " \u05d0\u05ea \u05d1\u05d3\u05d9\u05e7\u05ea \u05e4\u05d5\u05e8\u05de\u05d8"
+                    + " \u05d4\u05e9\u05de\u05e2. \u05d9\u05e9 \u05dc\u05d1\u05d7\u05d5\u05e8"
+                    + " \u05ea\u05d5\u05e6\u05d0\u05d4 \u05d0\u05d7\u05e8\u05ea.",
+            "This selected download is already queued.",
+            "\u05d4\u05d4\u05d5\u05e8\u05d3\u05d4 \u05d4\u05d6\u05d5 \u05db\u05d1\u05e8"
+                    + " \u05e0\u05de\u05e6\u05d0\u05ea \u05d1\u05ea\u05d5\u05e8.",
+            "Uploading file",
+            "\u05d4\u05e2\u05dc\u05d0\u05ea \u05d4\u05e7\u05d5\u05d1\u05e5",
+            "Waiting for peer",
+            "\u05de\u05de\u05ea\u05d9\u05df \u05dc\u05e2\u05de\u05d9\u05ea",
+            "Waiting for peer \u00b7 queue position {0}",
+            "\u05de\u05de\u05ea\u05d9\u05df \u05dc\u05e2\u05de\u05d9\u05ea \u00b7"
+                    + " \u05de\u05e7\u05d5\u05dd \u05d1\u05ea\u05d5\u05e8: {0}",
+            "Waiting to save",
+            "\u05de\u05de\u05ea\u05d9\u05df \u05dc\u05e9\u05de\u05d9\u05e8\u05d4",
+            "Waiting to save selected copies",
+            "\u05de\u05de\u05ea\u05d9\u05df \u05dc\u05e9\u05de\u05d9\u05e8\u05ea"
+                    + " \u05d4\u05e2\u05d5\u05ea\u05e7\u05d9\u05dd"
+                    + " \u05e9\u05e0\u05d1\u05d7\u05e8\u05d5",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "\u05e4\u05d5\u05e8\u05de\u05d8: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "\u05de\u05ea\u05d7\u05d1\u05e8 \u05dc\u05beSoulseek\u2026",
+            "May use YouTube or another enabled source.",
+            "\u05e2\u05e9\u05d5\u05d9 \u05dc\u05d4\u05e9\u05ea\u05de\u05e9 \u05d1\u05beYouTube"
+                    + " \u05d0\u05d5 \u05d1\u05de\u05e7\u05d5\u05e8 \u05de\u05d5\u05e4\u05e2\u05dc"
+                    + " \u05d0\u05d7\u05e8.",
         };
     }
 
@@ -23204,6 +24899,397 @@ final class Translations {
             "{0} recent clients",
             "\u0939\u093e\u0932 \u092e\u0947\u0902 \u0926\u093f\u0916\u0947 {0}"
                     + " \u0915\u094d\u0932\u093e\u0907\u0902\u091f",
+            "Soulseek account",
+            "Soulseek \u0916\u093e\u0924\u093e",
+            "Signed in as {0}",
+            "{0} \u0915\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 \u0938\u093e\u0907\u0928"
+                    + " \u0907\u0928 \u0939\u0948",
+            "Ready to search",
+            "\u0916\u094b\u091c \u0915\u0947 \u0932\u093f\u090f \u0924\u0948\u092f\u093e\u0930",
+            "Sign in to search Soulseek.",
+            "Soulseek \u092a\u0930 \u0916\u094b\u091c\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f"
+                    + " \u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902\u0964",
+            "Enable Soulseek to sign in and search.",
+            "\u0938\u093e\u0907\u0928 \u0907\u0928 \u0914\u0930 \u0916\u094b\u091c \u0915\u0947"
+                    + " \u0932\u093f\u090f Soulseek \u091a\u093e\u0932\u0942"
+                    + " \u0915\u0930\u0947\u0902\u0964",
+            "Download setup",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0938\u0947\u091f\u0905\u092a",
+            "Choose where copies go before searching.",
+            "\u0916\u094b\u091c\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947"
+                    + " \u091a\u0941\u0928\u0947\u0902 \u0915\u093f"
+                    + " \u0915\u0949\u092a\u093f\u092f\u093e\u0901 \u0915\u0939\u093e\u0901"
+                    + " \u0938\u0939\u0947\u091c\u0940 \u091c\u093e\u090f\u0901\u0964",
+            "Choose your audio formats before searching.",
+            "\u0916\u094b\u091c\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947"
+                + " \u0911\u0921\u093f\u092f\u094b \u092b\u093c\u0949\u0930\u094d\u092e\u0948\u091f"
+                + " \u091a\u0941\u0928\u0947\u0902\u0964",
+            "Find music on Soulseek",
+            "Soulseek \u092a\u0930 \u0938\u0902\u0917\u0940\u0924 \u0916\u094b\u091c\u0947\u0902",
+            "{0} formats enabled",
+            "{0} \u092b\u093c\u0949\u0930\u094d\u092e\u0948\u091f \u091a\u093e\u0932\u0942"
+                    + " \u0939\u0948\u0902",
+            "More download options",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0947 \u0914\u0930"
+                    + " \u0935\u093f\u0915\u0932\u094d\u092a",
+            "Account settings",
+            "\u0916\u093e\u0924\u0947 \u0915\u0940"
+                    + " \u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Soulseek \u0915\u0940 \u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938"
+                    + " \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902"
+                    + " \u0939\u0948\u0902\u0964 BitChord \u092b\u093f\u0930 \u0938\u0947"
+                    + " \u091a\u093e\u0932\u0942 \u0915\u0930\u0915\u0947"
+                    + " \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0902\u0964",
+            "Other download options are controlled in Patches & tweaks.",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0947 \u0905\u0928\u094d\u092f"
+                    + " \u0935\u093f\u0915\u0932\u094d\u092a \u092a\u0948\u091a \u0914\u0930"
+                    + " \u092c\u0926\u0932\u093e\u0935 \u092e\u0947\u0902"
+                    + " \u0928\u093f\u092f\u0902\u0924\u094d\u0930\u093f\u0924 \u0915\u093f\u090f"
+                    + " \u091c\u093e\u0924\u0947 \u0939\u0948\u0902\u0964",
+            "Source enabled",
+            "\u0938\u094d\u0930\u094b\u0924 \u091a\u093e\u0932\u0942 \u0939\u0948",
+            "Account actions",
+            "\u0916\u093e\u0924\u0947 \u0915\u0940"
+                    + " \u0915\u093e\u0930\u094d\u0930\u0935\u093e\u0907\u092f\u093e\u0901",
+            "Not chosen yet",
+            "\u0905\u092d\u0940 \u0928\u0939\u0940\u0902 \u091a\u0941\u0928\u093e"
+                    + " \u0917\u092f\u093e",
+            "Not signed in",
+            "\u0938\u093e\u0907\u0928 \u0907\u0928 \u0928\u0939\u0940\u0902 \u0939\u0948",
+            "Finish the open download choice first.",
+            "\u092a\u0939\u0932\u0947 \u0916\u0941\u0932\u093e \u0939\u0941\u0906"
+                + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0935\u093f\u0915\u0932\u094d\u092a"
+                + " \u092a\u0942\u0930\u093e \u0915\u0930\u0947\u0902\u0964",
+            "Could not open the download source choice. Try again.",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u093e \u0938\u094d\u0930\u094b\u0924"
+                    + " \u091a\u0941\u0928\u0928\u0947 \u0915\u093e"
+                    + " \u0935\u093f\u0915\u0932\u094d\u092a \u0928\u0939\u0940\u0902"
+                    + " \u0916\u0941\u0932 \u0938\u0915\u093e\u0964 \u092b\u093f\u0930 \u0938\u0947"
+                    + " \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0902\u0964",
+            "BitChord could not start this download. Try again.",
+            "BitChord \u092f\u0939 \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u0936\u0941\u0930\u0942 \u0928\u0939\u0940\u0902 \u0915\u0930"
+                    + " \u0938\u0915\u093e\u0964 \u092b\u093f\u0930 \u0938\u0947"
+                    + " \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0902\u0964",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "\u092b\u093c\u093e\u0907\u0932 \u0916\u094b\u091c\u0947\u0902,"
+                    + " \u092a\u0940\u092f\u0930 \u0915\u0940"
+                    + " \u091c\u093e\u0928\u0915\u093e\u0930\u0940 \u0926\u0947\u0916\u0947\u0902,"
+                    + " \u092b\u093f\u0930 \u0920\u0940\u0915 \u0935\u0939\u0940"
+                    + " \u092b\u093c\u093e\u0907\u0932 \u091a\u0941\u0928\u0947\u0902"
+                    + " \u091c\u093f\u0938\u0947 \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u0915\u0930\u0928\u093e \u0939\u0948\u0964 \u0906\u092a\u0915\u093e"
+                    + " \u092e\u094c\u091c\u0942\u0926\u093e \u0917\u093e\u0928\u093e \u0914\u0930"
+                    + " \u0909\u0938\u0915\u0947 \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u0915\u0940 \u0938\u094d\u0925\u093f\u0924\u093f \u0928\u0939\u0940\u0902"
+                    + " \u092c\u0926\u0932\u0947\u0917\u0940\u0964",
+            "Choose download source",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u093e \u0938\u094d\u0930\u094b\u0924"
+                    + " \u091a\u0941\u0928\u0947\u0902",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek \u090f\u0915 \u0905\u0932\u0917 \u092b\u093c\u093e\u0907\u0932"
+                    + " \u0916\u094b\u091c\u0924\u093e \u0939\u0948\u0964 BitChord"
+                    + " \u0905\u092a\u0928\u0947 \u092e\u094c\u091c\u0942\u0926\u093e"
+                    + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0938\u094d\u0930\u094b\u0924"
+                    + " \u0914\u0930 \u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938"
+                    + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0924\u093e"
+                    + " \u0939\u0948\u0964",
+            "Search Soulseek",
+            "Soulseek \u092a\u0930 \u0916\u094b\u091c\u0947\u0902",
+            "Continue with BitChord download",
+            "BitChord \u0938\u0947 \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u091c\u093e\u0930\u0940 \u0930\u0916\u0947\u0902",
+            "This download choice expired. Return to the song and try again.",
+            "\u0907\u0938 \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u0935\u093f\u0915\u0932\u094d\u092a \u0915\u0940 \u0938\u092e\u092f"
+                    + " \u0938\u0940\u092e\u093e \u0938\u092e\u093e\u092a\u094d\u0924 \u0939\u094b"
+                    + " \u0917\u0908\u0964 \u0917\u093e\u0928\u0947 \u092a\u0930"
+                    + " \u0932\u094c\u091f\u0915\u0930 \u092b\u093f\u0930 \u0938\u0947"
+                    + " \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0902\u0964",
+            "Source: Soulseek",
+            "\u0938\u094d\u0930\u094b\u0924: Soulseek",
+            "Artist and song title",
+            "\u0915\u0932\u093e\u0915\u093e\u0930 \u0914\u0930 \u0917\u093e\u0928\u0947"
+                    + " \u0915\u093e \u0928\u093e\u092e",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "\u0916\u094b\u091c \u0915\u0947 \u0932\u093f\u090f"
+                    + " \u0924\u0948\u092f\u093e\u0930\u0964 \u091c\u092c \u0924\u0915 \u0906\u092a"
+                    + " \u092b\u093c\u093e\u0907\u0932 \u0928\u0939\u0940\u0902"
+                    + " \u091a\u0941\u0928\u0947\u0902\u0917\u0947, \u0915\u0941\u091b"
+                    + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0928\u0939\u0940\u0902"
+                    + " \u0939\u094b\u0917\u093e\u0964",
+            "Soulseek account and setup",
+            "Soulseek \u0916\u093e\u0924\u093e \u0914\u0930 \u0938\u0947\u091f\u0905\u092a",
+            "Audio formats and preference order",
+            "\u0911\u0921\u093f\u092f\u094b \u092b\u093c\u0949\u0930\u094d\u092e\u0948\u091f"
+                + " \u0914\u0930 \u092a\u0938\u0902\u0926 \u0915\u093e \u0915\u094d\u0930\u092e",
+            "View downloads",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0926\u0947\u0916\u0947\u0902",
+            "Choose your audio formats and their order first.",
+            "\u092a\u0939\u0932\u0947 \u0911\u0921\u093f\u092f\u094b"
+                    + " \u092b\u093c\u0949\u0930\u094d\u092e\u0948\u091f \u0914\u0930"
+                    + " \u0909\u0928\u0915\u093e \u0915\u094d\u0930\u092e"
+                    + " \u091a\u0941\u0928\u0947\u0902\u0964",
+            "Search using 2\u2013256 characters.",
+            "\u0916\u094b\u091c\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f 2\u2013256"
+                + " \u0905\u0915\u094d\u0937\u0930 \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932"
+                + " \u0915\u0930\u0947\u0902\u0964",
+            "Searching Soulseek\u2026",
+            "Soulseek \u092a\u0930 \u0916\u094b\u091c\u093e \u091c\u093e \u0930\u0939\u093e"
+                    + " \u0939\u0948\u2026",
+            "Soulseek session changed. Search again.",
+            "Soulseek \u0938\u0947\u0936\u0928 \u092c\u0926\u0932 \u0917\u092f\u093e"
+                    + " \u0939\u0948\u0964 \u092b\u093f\u0930 \u0938\u0947"
+                    + " \u0916\u094b\u091c\u0947\u0902\u0964",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "\u0915\u094b\u0908 \u092e\u0947\u0932 \u0916\u093e\u0924\u0940"
+                    + " \u092b\u093c\u093e\u0907\u0932 \u0928\u0939\u0940\u0902"
+                    + " \u092e\u093f\u0932\u0940\u0964 \u0926\u0942\u0938\u0930\u0947"
+                    + " \u0936\u092c\u094d\u0926\u094b\u0902 \u0938\u0947"
+                    + " \u0916\u094b\u091c\u0947\u0902\u0964 BitChord"
+                    + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0936\u0941\u0930\u0942"
+                    + " \u0928\u0939\u0940\u0902 \u0939\u0941\u0906\u0964",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "\u0928\u0940\u091a\u0947 \u0915\u094b\u0908 \u092b\u093c\u093e\u0907\u0932"
+                    + " \u091a\u0941\u0928\u0947\u0902\u0964 \u092a\u0940\u092f\u0930 \u0915\u0947"
+                    + " \u092c\u0924\u093e\u090f \u092b\u093c\u093e\u0907\u0932 \u0928\u093e\u092e,"
+                    + " \u092b\u093c\u0949\u0930\u094d\u092e\u0948\u091f \u0914\u0930"
+                    + " \u0909\u092a\u0932\u092c\u094d\u0927\u0924\u093e \u0915\u0940"
+                    + " \u092a\u0941\u0937\u094d\u091f\u093f \u0928\u0939\u0940\u0902"
+                    + " \u0939\u0941\u0908 \u0939\u0948\u0964",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "Soulseek \u092a\u0930 \u0916\u094b\u091c \u092a\u0942\u0930\u0940"
+                    + " \u0928\u0939\u0940\u0902 \u0939\u094b \u0938\u0915\u0940\u0964"
+                    + " \u0938\u093e\u0907\u0928 \u0907\u0928,"
+                    + " \u092b\u093c\u0949\u0930\u094d\u092e\u0948\u091f \u0914\u0930"
+                    + " \u0915\u0949\u092a\u093f\u092f\u094b\u0902 \u0915\u0947"
+                    + " \u0917\u0902\u0924\u0935\u094d\u092f \u091c\u093e\u0901\u091a\u0915\u0930"
+                    + " \u092b\u093f\u0930 \u0938\u0947 \u0915\u094b\u0936\u093f\u0936"
+                    + " \u0915\u0930\u0947\u0902\u0964",
+            "A previous search is stopping. Try again shortly.",
+            "\u092a\u093f\u091b\u0932\u0940 \u0916\u094b\u091c \u0930\u094b\u0915\u0940"
+                    + " \u091c\u093e \u0930\u0939\u0940 \u0939\u0948\u0964"
+                    + " \u0925\u094b\u0921\u093c\u0940 \u0926\u0947\u0930 \u092e\u0947\u0902"
+                    + " \u092b\u093f\u0930 \u0938\u0947 \u0915\u094b\u0936\u093f\u0936"
+                    + " \u0915\u0930\u0947\u0902\u0964",
+            "Peer: {0}",
+            "\u092a\u0940\u092f\u0930: {0}",
+            "File: {0}",
+            "\u092b\u093c\u093e\u0907\u0932: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "\u092c\u0924\u093e\u092f\u093e \u0917\u092f\u093e"
+                    + " \u092b\u093c\u0949\u0930\u094d\u092e\u0948\u091f: {0} \u00b7 {1}"
+                    + " \u092c\u093e\u0907\u091f",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "\u092f\u0939 \u091c\u093e\u0928\u0915\u093e\u0930\u0940 \u092a\u0940\u092f\u0930"
+                    + " \u0915\u093e \u0926\u093e\u0935\u093e \u0939\u0948\u0964"
+                    + " \u0938\u0939\u0947\u091c\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947"
+                    + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0940 \u0917\u0908"
+                    + " \u092b\u093c\u093e\u0907\u0932 \u0915\u093e \u0915\u094b\u0921\u0947\u0915"
+                    + " \u091c\u093e\u0901\u091a\u093e \u091c\u093e\u0924\u093e \u0939\u0948\u0964",
+            "Download this file",
+            "\u092f\u0939 \u092b\u093c\u093e\u0907\u0932 \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u0915\u0930\u0947\u0902",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "\u0938\u094d\u0930\u094b\u0924: Soulseek\u0964 \u091a\u0941\u0928\u0940 \u0917\u0908"
+                    + " \u092b\u093c\u093e\u0907\u0932 \u0915\u0924\u093e\u0930 \u092e\u0947\u0902"
+                    + " \u091c\u094b\u0921\u093c \u0926\u0940 \u0917\u0908\u0964"
+                    + " \u092a\u094d\u0930\u0917\u0924\u093f \u0915\u0947 \u0932\u093f\u090f"
+                    + " \u201c\u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u0926\u0947\u0916\u0947\u0902\u201d \u0916\u094b\u0932\u0947\u0902\u0964",
+            "The selected file could not be queued. Review setup and try again.",
+            "\u091a\u0941\u0928\u0940 \u0917\u0908 \u092b\u093c\u093e\u0907\u0932"
+                    + " \u0915\u0924\u093e\u0930 \u092e\u0947\u0902 \u0928\u0939\u0940\u0902"
+                    + " \u091c\u094b\u0921\u093c\u0940 \u091c\u093e \u0938\u0915\u0940\u0964"
+                    + " \u0938\u0947\u091f\u0905\u092a \u091c\u093e\u0901\u091a\u0915\u0930"
+                    + " \u092b\u093f\u0930 \u0938\u0947 \u0915\u094b\u0936\u093f\u0936"
+                    + " \u0915\u0930\u0947\u0902\u0964",
+            "The selected file is no longer ready. Check setup and search again.",
+            "\u091a\u0941\u0928\u0940 \u0917\u0908 \u092b\u093c\u093e\u0907\u0932 \u0905\u092c"
+                    + " \u0924\u0948\u092f\u093e\u0930 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964"
+                    + " \u0938\u0947\u091f\u0905\u092a \u091c\u093e\u0901\u091a\u0947\u0902"
+                    + " \u0914\u0930 \u092b\u093f\u0930 \u0938\u0947"
+                    + " \u0916\u094b\u091c\u0947\u0902\u0964",
+            "Cannot create selected download storage.",
+            "\u091a\u0941\u0928\u0947 \u0917\u090f \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u0915\u0947 \u0932\u093f\u090f \u0938\u094d\u091f\u094b\u0930\u0947\u091c"
+                    + " \u0928\u0939\u0940\u0902 \u092c\u0928\u093e\u092f\u093e \u091c\u093e"
+                    + " \u0938\u0915\u093e\u0964",
+            "Cannot inspect selected download storage.",
+            "\u091a\u0941\u0928\u0947 \u0917\u090f \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u0915\u093e \u0938\u094d\u091f\u094b\u0930\u0947\u091c"
+                    + " \u091c\u093e\u0901\u091a\u093e \u0928\u0939\u0940\u0902 \u091c\u093e"
+                    + " \u0938\u0915\u093e\u0964",
+            "Cannot remove interrupted selected download staging.",
+            "\u092c\u0940\u091a \u092e\u0947\u0902 \u0930\u0941\u0915\u0947"
+                    + " \u091a\u0941\u0928\u0947 \u0917\u090f"
+                    + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0940"
+                    + " \u0905\u0938\u094d\u0925\u093e\u092f\u0940"
+                    + " \u092b\u093c\u093e\u0907\u0932\u0947\u0902 \u0939\u091f\u093e\u0908"
+                    + " \u0928\u0939\u0940\u0902 \u091c\u093e \u0938\u0915\u0940\u0902\u0964",
+            "Check the saved file before retry",
+            "\u092b\u093f\u0930 \u0938\u0947 \u0915\u094b\u0936\u093f\u0936"
+                    + " \u0915\u0930\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947"
+                    + " \u0938\u0939\u0947\u091c\u0940 \u0917\u0908 \u092b\u093c\u093e\u0907\u0932"
+                    + " \u091c\u093e\u0901\u091a\u0947\u0902",
+            "Checking audio format",
+            "\u0911\u0921\u093f\u092f\u094b \u092b\u093c\u0949\u0930\u094d\u092e\u0948\u091f"
+                + " \u091c\u093e\u0901\u091a\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948",
+            "Choose where copies go before downloading.",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0930\u0928\u0947 \u0938\u0947"
+                    + " \u092a\u0939\u0932\u0947 \u091a\u0941\u0928\u0947\u0902 \u0915\u093f"
+                    + " \u0915\u0949\u092a\u093f\u092f\u093e\u0901 \u0915\u0939\u093e\u0901"
+                    + " \u0938\u0939\u0947\u091c\u0940 \u091c\u093e\u090f\u0901\u0964",
+            "Confirmation required before retry",
+            "\u092b\u093f\u0930 \u0938\u0947 \u0915\u094b\u0936\u093f\u0936"
+                    + " \u0915\u0930\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947"
+                    + " \u092a\u0941\u0937\u094d\u091f\u093f \u091c\u093c\u0930\u0942\u0930\u0940"
+                    + " \u0939\u0948",
+            "Copy failed",
+            "\u0915\u0949\u092a\u0940 \u0928\u0939\u0940\u0902 \u0939\u094b \u0938\u0915\u0940",
+            "Download cancelled",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0930\u0926\u094d\u0926 \u0915\u0930"
+                    + " \u0926\u093f\u092f\u093e \u0917\u092f\u093e",
+            "Download needs attention",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u092a\u0930 \u0927\u094d\u092f\u093e\u0928"
+                    + " \u0926\u0947\u0928\u093e \u091c\u093c\u0930\u0942\u0930\u0940 \u0939\u0948",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                + " \u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938 \u091c\u093e\u0901\u091a\u0940"
+                + " \u0928\u0939\u0940\u0902 \u091c\u093e \u0938\u0915\u0940\u0902\u0964 BitChord"
+                + " \u092b\u093f\u0930 \u0938\u0947 \u091a\u093e\u0932\u0942"
+                + " \u0915\u0930\u0915\u0947 \u0915\u094b\u0936\u093f\u0936"
+                + " \u0915\u0930\u0947\u0902\u0964",
+            "Downloading \u00b7 {0} of {1}",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0939\u094b \u0930\u0939\u093e"
+                    + " \u0939\u0948 \u00b7 {1} \u092e\u0947\u0902 \u0938\u0947 {0}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "\u092e\u094c\u091c\u0942\u0926\u093e \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938 \u0915\u0947"
+                    + " \u0915\u093e\u0930\u0923 \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u0930\u0941\u0915\u0947 \u0939\u0941\u090f \u0939\u0948\u0902\u0964"
+                    + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0940"
+                    + " \u0905\u0928\u0941\u092e\u0924\u093f \u092e\u093f\u0932\u0928\u0947"
+                    + " \u092a\u0930 \u092b\u093f\u0930 \u0938\u0947 \u0915\u094b\u0936\u093f\u0936"
+                    + " \u0915\u0930\u0947\u0902\u0964",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "\u092f\u0939 \u0928\u0924\u0940\u091c\u093e \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u0915\u0930\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 Unofficial"
+                    + " Soulseek \u091a\u093e\u0932\u0942 \u0915\u0930\u0947\u0902\u0964",
+            "Invalid selected Soulseek reference.",
+            "\u091a\u0941\u0928\u093e \u0917\u092f\u093e Soulseek"
+                    + " \u0938\u0902\u0926\u0930\u094d\u092d \u0905\u092e\u093e\u0928\u094d\u092f"
+                    + " \u0939\u0948\u0964",
+            "No selected Soulseek downloads.",
+            "\u0915\u094b\u0908 \u091a\u0941\u0928\u093e \u0917\u092f\u093e Soulseek"
+                    + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0928\u0939\u0940\u0902"
+                    + " \u0939\u0948\u0964",
+            "Preparing download",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0924\u0948\u092f\u093e\u0930 \u0939\u094b"
+                    + " \u0930\u0939\u093e \u0939\u0948",
+            "Queued for download",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0940 \u0915\u0924\u093e\u0930"
+                    + " \u092e\u0947\u0902 \u0939\u0948",
+            "Queued {0}. Open downloads to follow progress.",
+            "{0} \u0915\u0924\u093e\u0930 \u092e\u0947\u0902 \u091c\u094b\u0921\u093c"
+                    + " \u0926\u093f\u092f\u093e \u0917\u092f\u093e\u0964"
+                    + " \u092a\u094d\u0930\u0917\u0924\u093f \u0926\u0947\u0916\u0928\u0947"
+                    + " \u0915\u0947 \u0932\u093f\u090f \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u0916\u094b\u0932\u0947\u0902\u0964",
+            "Saved and verified",
+            "\u0938\u0939\u0947\u091c\u093e \u0917\u092f\u093e \u0914\u0930"
+                    + " \u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924",
+            "Saved to all selected destinations",
+            "\u0938\u092d\u0940 \u091a\u0941\u0928\u0947 \u0917\u090f"
+                    + " \u0917\u0902\u0924\u0935\u094d\u092f\u094b\u0902 \u092a\u0930"
+                    + " \u0938\u0939\u0947\u091c\u093e \u0917\u092f\u093e",
+            "Saving file",
+            "\u092b\u093c\u093e\u0907\u0932 \u0938\u0939\u0947\u091c\u0940 \u091c\u093e"
+                    + " \u0930\u0939\u0940 \u0939\u0948",
+            "Saving paused",
+            "\u0938\u0939\u0947\u091c\u0928\u093e \u0930\u0941\u0915\u093e \u0939\u0941\u0906"
+                    + " \u0939\u0948",
+            "Saving selected copies",
+            "\u091a\u0941\u0928\u0940 \u0917\u0908 \u0915\u0949\u092a\u093f\u092f\u093e\u0901"
+                    + " \u0938\u0939\u0947\u091c\u0940 \u091c\u093e \u0930\u0939\u0940"
+                    + " \u0939\u0948\u0902",
+            "Selected audio file",
+            "\u091a\u0941\u0928\u0940 \u0917\u0908 \u0911\u0921\u093f\u092f\u094b"
+                    + " \u092b\u093c\u093e\u0907\u0932",
+            "Selected download storage is full. Finish existing copies first.",
+            "\u091a\u0941\u0928\u0947 \u0917\u090f \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                + " \u0915\u093e \u0938\u094d\u091f\u094b\u0930\u0947\u091c \u092d\u0930"
+                + " \u0917\u092f\u093e \u0939\u0948\u0964 \u092a\u0939\u0932\u0947"
+                + " \u092e\u094c\u091c\u0942\u0926\u093e \u0915\u0949\u092a\u093f\u092f\u093e\u0901"
+                + " \u092a\u0942\u0930\u0940 \u0915\u0930\u0947\u0902\u0964",
+            "Selected files are limited to 256 MiB.",
+            "\u091a\u0941\u0928\u0940 \u0917\u0908 \u092b\u093c\u093e\u0907\u0932\u094b\u0902"
+                    + " \u0915\u0940 \u0938\u0940\u092e\u093e 256 MiB \u0939\u0948\u0964",
+            "Soulseek session changed. Select the result again.",
+            "Soulseek \u0938\u0947\u0936\u0928 \u092c\u0926\u0932 \u0917\u092f\u093e"
+                    + " \u0939\u0948\u0964 \u0928\u0924\u0940\u091c\u093e \u092b\u093f\u0930"
+                    + " \u0938\u0947 \u091a\u0941\u0928\u0947\u0902\u0964",
+            "The selected download could not complete. Try again or choose another result.",
+            "\u091a\u0941\u0928\u093e \u0917\u092f\u093e \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u092a\u0942\u0930\u093e \u0928\u0939\u0940\u0902 \u0939\u094b"
+                    + " \u0938\u0915\u093e\u0964 \u092b\u093f\u0930 \u0938\u0947"
+                    + " \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0902 \u092f\u093e"
+                    + " \u0926\u0942\u0938\u0930\u093e \u0928\u0924\u0940\u091c\u093e"
+                    + " \u091a\u0941\u0928\u0947\u0902\u0964",
+            "The selected download queue is full.",
+            "\u091a\u0941\u0928\u0947 \u0917\u090f \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u0915\u0940 \u0915\u0924\u093e\u0930 \u092d\u0930\u0940 \u0939\u0941\u0908"
+                    + " \u0939\u0948\u0964",
+            "This Soulseek result expired. Search again.",
+            "\u0907\u0938 Soulseek \u0928\u0924\u0940\u091c\u0947 \u0915\u0940 \u0938\u092e\u092f"
+                    + " \u0938\u0940\u092e\u093e \u0938\u092e\u093e\u092a\u094d\u0924 \u0939\u094b"
+                    + " \u0917\u0908\u0964 \u092b\u093f\u0930 \u0938\u0947"
+                    + " \u0916\u094b\u091c\u0947\u0902\u0964",
+            "This file did not pass the audio format check. Choose another result.",
+            "\u092f\u0939 \u092b\u093c\u093e\u0907\u0932 \u0911\u0921\u093f\u092f\u094b"
+                    + " \u092b\u093c\u0949\u0930\u094d\u092e\u0948\u091f \u0915\u0940"
+                    + " \u091c\u093e\u0901\u091a \u092e\u0947\u0902 \u0938\u092b\u0932"
+                    + " \u0928\u0939\u0940\u0902 \u0939\u0941\u0908\u0964"
+                    + " \u0926\u0942\u0938\u0930\u093e \u0928\u0924\u0940\u091c\u093e"
+                    + " \u091a\u0941\u0928\u0947\u0902\u0964",
+            "This selected download is already queued.",
+            "\u092f\u0939 \u091a\u0941\u0928\u093e \u0917\u092f\u093e"
+                + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u092a\u0939\u0932\u0947"
+                + " \u0938\u0947 \u0915\u0924\u093e\u0930 \u092e\u0947\u0902 \u0939\u0948\u0964",
+            "Uploading file",
+            "\u092b\u093c\u093e\u0907\u0932 \u0905\u092a\u0932\u094b\u0921 \u0939\u094b"
+                    + " \u0930\u0939\u0940 \u0939\u0948",
+            "Waiting for peer",
+            "\u092a\u0940\u092f\u0930 \u0915\u093e \u0907\u0902\u0924\u091c\u093c\u093e\u0930"
+                    + " \u0939\u0948",
+            "Waiting for peer \u00b7 queue position {0}",
+            "\u092a\u0940\u092f\u0930 \u0915\u093e \u0907\u0902\u0924\u091c\u093c\u093e\u0930"
+                    + " \u0939\u0948 \u00b7 \u0915\u0924\u093e\u0930 \u092e\u0947\u0902"
+                    + " \u0938\u094d\u0925\u093e\u0928 {0}",
+            "Waiting to save",
+            "\u0938\u0939\u0947\u091c\u0928\u0947 \u0915\u093e"
+                    + " \u0907\u0902\u0924\u091c\u093c\u093e\u0930 \u0939\u0948",
+            "Waiting to save selected copies",
+            "\u091a\u0941\u0928\u0940 \u0917\u0908 \u0915\u0949\u092a\u093f\u092f\u093e\u0901"
+                    + " \u0938\u0939\u0947\u091c\u0928\u0947 \u0915\u093e"
+                    + " \u0907\u0902\u0924\u091c\u093c\u093e\u0930 \u0939\u0948",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "\u092b\u093c\u0949\u0930\u094d\u092e\u0948\u091f: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "Soulseek \u0938\u0947 \u0915\u0928\u0947\u0915\u094d\u091f \u0939\u094b"
+                    + " \u0930\u0939\u093e \u0939\u0948\u2026",
+            "May use YouTube or another enabled source.",
+            "\u0907\u0938\u092e\u0947\u0902 YouTube \u092f\u093e \u0915\u093f\u0938\u0940"
+                    + " \u0926\u0942\u0938\u0930\u0947 \u091a\u093e\u0932\u0942"
+                    + " \u0938\u094d\u0930\u094b\u0924 \u0915\u093e \u0909\u092a\u092f\u094b\u0917"
+                    + " \u0939\u094b \u0938\u0915\u0924\u093e \u0939\u0948\u0964",
         };
     }
 
@@ -25380,6 +27466,199 @@ final class Translations {
             "Jalur transfer: {0}",
             "{0} recent clients",
             "{0} aplikasi aktif terbaru",
+            "Soulseek account",
+            "Akun Soulseek",
+            "Signed in as {0}",
+            "Masuk sebagai {0}",
+            "Ready to search",
+            "Siap mencari",
+            "Sign in to search Soulseek.",
+            "Masuk untuk mencari di Soulseek.",
+            "Enable Soulseek to sign in and search.",
+            "Aktifkan Soulseek untuk masuk dan mencari.",
+            "Download setup",
+            "Penyiapan unduhan",
+            "Choose where copies go before searching.",
+            "Pilih tempat menyimpan salinan sebelum mencari.",
+            "Choose your audio formats before searching.",
+            "Pilih format audio sebelum mencari.",
+            "Find music on Soulseek",
+            "Cari musik di Soulseek",
+            "{0} formats enabled",
+            "{0} format diaktifkan",
+            "More download options",
+            "Opsi unduhan lainnya",
+            "Account settings",
+            "Pengaturan akun",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Pengaturan Soulseek tidak tersedia. Mulai ulang BitChord dan coba lagi.",
+            "Other download options are controlled in Patches & tweaks.",
+            "Opsi unduhan lainnya diatur di Patch dan penyesuaian.",
+            "Source enabled",
+            "Sumber diaktifkan",
+            "Account actions",
+            "Tindakan akun",
+            "Not chosen yet",
+            "Belum dipilih",
+            "Not signed in",
+            "Belum masuk",
+            "Finish the open download choice first.",
+            "Selesaikan pilihan unduhan yang terbuka terlebih dahulu.",
+            "Could not open the download source choice. Try again.",
+            "Tidak dapat membuka pilihan sumber unduhan. Coba lagi.",
+            "BitChord could not start this download. Try again.",
+            "BitChord tidak dapat memulai unduhan ini. Coba lagi.",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "Cari berkas, tinjau detail perangkat lain, lalu pilih persis apa yang ingin diunduh."
+                    + " Lagu saat ini dan status unduhannya tidak berubah.",
+            "Choose download source",
+            "Pilih sumber unduhan",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek mencari berkas terpisah. BitChord menggunakan sumber unduhan dan pengaturan"
+                    + " yang sudah ada.",
+            "Search Soulseek",
+            "Cari di Soulseek",
+            "Continue with BitChord download",
+            "Lanjutkan unduhan BitChord",
+            "This download choice expired. Return to the song and try again.",
+            "Pilihan unduhan ini kedaluwarsa. Kembali ke lagu dan coba lagi.",
+            "Source: Soulseek",
+            "Sumber: Soulseek",
+            "Artist and song title",
+            "Artis dan judul lagu",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "Siap mencari. Tidak ada yang diunduh sampai Anda memilih berkas.",
+            "Soulseek account and setup",
+            "Akun dan penyiapan Soulseek",
+            "Audio formats and preference order",
+            "Format audio dan urutan preferensi",
+            "View downloads",
+            "Lihat unduhan",
+            "Choose your audio formats and their order first.",
+            "Pilih format audio dan urutannya terlebih dahulu.",
+            "Search using 2\u2013256 characters.",
+            "Gunakan 2\u2013256 karakter untuk mencari.",
+            "Searching Soulseek\u2026",
+            "Mencari di Soulseek\u2026",
+            "Soulseek session changed. Search again.",
+            "Sesi Soulseek berubah. Cari lagi.",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "Tidak ada berkas yang cocok. Coba kata pencarian lain. Unduhan BitChord tidak"
+                    + " dimulai.",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "Pilih berkas di bawah. Nama, format, dan ketersediaan berkas dari perangkat lain belum"
+                    + " diverifikasi.",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "Pencarian Soulseek tidak dapat diselesaikan. Periksa akun, format, dan tujuan salinan,"
+                    + " lalu coba lagi.",
+            "A previous search is stopping. Try again shortly.",
+            "Pencarian sebelumnya sedang dihentikan. Coba lagi sebentar.",
+            "Peer: {0}",
+            "Perangkat lain: {0}",
+            "File: {0}",
+            "Berkas: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "Format yang dilaporkan: {0} \u00b7 {1} byte",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "Detail tersebut merupakan klaim perangkat lain. Kodek berkas unduhan diperiksa sebelum"
+                    + " disimpan.",
+            "Download this file",
+            "Unduh berkas ini",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "Sumber: Soulseek. Berkas pilihan masuk antrean. Buka Lihat unduhan untuk memantau"
+                    + " progres.",
+            "The selected file could not be queued. Review setup and try again.",
+            "Berkas pilihan tidak dapat dimasukkan ke antrean. Tinjau penyiapan dan coba lagi.",
+            "The selected file is no longer ready. Check setup and search again.",
+            "Berkas pilihan tidak lagi siap. Periksa penyiapan dan cari lagi.",
+            "Cannot create selected download storage.",
+            "Tidak dapat membuat penyimpanan unduhan pilihan.",
+            "Cannot inspect selected download storage.",
+            "Tidak dapat memeriksa penyimpanan unduhan pilihan.",
+            "Cannot remove interrupted selected download staging.",
+            "Tidak dapat menghapus data sementara unduhan pilihan yang terputus.",
+            "Check the saved file before retry",
+            "Periksa berkas tersimpan sebelum mencoba lagi",
+            "Checking audio format",
+            "Memeriksa format audio",
+            "Choose where copies go before downloading.",
+            "Pilih tempat menyimpan salinan sebelum mengunduh.",
+            "Confirmation required before retry",
+            "Perlu konfirmasi sebelum mencoba lagi",
+            "Copy failed",
+            "Penyalinan gagal",
+            "Download cancelled",
+            "Unduhan dibatalkan",
+            "Download needs attention",
+            "Unduhan perlu perhatian",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "Pengaturan unduhan tidak dapat diperiksa. Mulai ulang BitChord dan coba lagi.",
+            "Downloading \u00b7 {0} of {1}",
+            "Mengunduh \u00b7 {0} dari {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "Unduhan dijeda oleh pengaturan unduhan saat ini. Coba lagi saat unduhan diizinkan.",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "Aktifkan Soulseek Tidak Resmi sebelum mengunduh hasil ini.",
+            "Invalid selected Soulseek reference.",
+            "Referensi hasil pilihan Soulseek tidak valid.",
+            "No selected Soulseek downloads.",
+            "Tidak ada unduhan Soulseek yang dipilih.",
+            "Preparing download",
+            "Menyiapkan unduhan",
+            "Queued for download",
+            "Masuk antrean unduhan",
+            "Queued {0}. Open downloads to follow progress.",
+            "{0} masuk antrean. Buka unduhan untuk memantau progres.",
+            "Saved and verified",
+            "Tersimpan dan terverifikasi",
+            "Saved to all selected destinations",
+            "Tersimpan ke semua tujuan pilihan",
+            "Saving file",
+            "Menyimpan berkas",
+            "Saving paused",
+            "Penyimpanan dijeda",
+            "Saving selected copies",
+            "Menyimpan salinan pilihan",
+            "Selected audio file",
+            "Berkas audio pilihan",
+            "Selected download storage is full. Finish existing copies first.",
+            "Penyimpanan unduhan pilihan penuh. Selesaikan salinan yang ada terlebih dahulu.",
+            "Selected files are limited to 256 MiB.",
+            "Berkas pilihan dibatasi hingga 256 MiB.",
+            "Soulseek session changed. Select the result again.",
+            "Sesi Soulseek berubah. Pilih hasilnya lagi.",
+            "The selected download could not complete. Try again or choose another result.",
+            "Unduhan pilihan tidak dapat diselesaikan. Coba lagi atau pilih hasil lain.",
+            "The selected download queue is full.",
+            "Antrean unduhan pilihan penuh.",
+            "This Soulseek result expired. Search again.",
+            "Hasil Soulseek ini kedaluwarsa. Cari lagi.",
+            "This file did not pass the audio format check. Choose another result.",
+            "Berkas ini tidak lolos pemeriksaan format audio. Pilih hasil lain.",
+            "This selected download is already queued.",
+            "Unduhan pilihan ini sudah masuk antrean.",
+            "Uploading file",
+            "Mengunggah berkas",
+            "Waiting for peer",
+            "Menunggu perangkat lain",
+            "Waiting for peer \u00b7 queue position {0}",
+            "Menunggu perangkat lain \u00b7 posisi antrean {0}",
+            "Waiting to save",
+            "Menunggu untuk menyimpan",
+            "Waiting to save selected copies",
+            "Menunggu untuk menyimpan salinan pilihan",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "Menghubungkan ke Soulseek\u2026",
+            "May use YouTube or another enabled source.",
+            "Dapat memakai YouTube atau sumber lain yang diaktifkan.",
         };
     }
 
@@ -27603,6 +29882,201 @@ final class Translations {
             "Sistemi di trasporto: {0}",
             "{0} recent clients",
             "{0} applicazioni recenti",
+            "Soulseek account",
+            "Account Soulseek",
+            "Signed in as {0}",
+            "Accesso effettuato come {0}",
+            "Ready to search",
+            "Pronto per la ricerca",
+            "Sign in to search Soulseek.",
+            "Accedi per cercare su Soulseek.",
+            "Enable Soulseek to sign in and search.",
+            "Attiva Soulseek per accedere e cercare.",
+            "Download setup",
+            "Configurazione download",
+            "Choose where copies go before searching.",
+            "Scegli la destinazione delle copie prima di cercare.",
+            "Choose your audio formats before searching.",
+            "Scegli i formati audio prima di cercare.",
+            "Find music on Soulseek",
+            "Trova musica su Soulseek",
+            "{0} formats enabled",
+            "{0} formati attivati",
+            "More download options",
+            "Altre opzioni di download",
+            "Account settings",
+            "Impostazioni account",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Impostazioni Soulseek non disponibili. Riavvia BitChord e riprova.",
+            "Other download options are controlled in Patches & tweaks.",
+            "Le altre opzioni di download si gestiscono in Patch e regolazioni.",
+            "Source enabled",
+            "Sorgente attivata",
+            "Account actions",
+            "Azioni account",
+            "Not chosen yet",
+            "Non ancora scelto",
+            "Not signed in",
+            "Accesso non effettuato",
+            "Finish the open download choice first.",
+            "Completa prima la scelta di download aperta.",
+            "Could not open the download source choice. Try again.",
+            "Impossibile aprire la scelta della sorgente di download. Riprova.",
+            "BitChord could not start this download. Try again.",
+            "BitChord non ha potuto avviare questo download. Riprova.",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "Cerca un file, controlla i dettagli del peer e scegli esattamente cosa scaricare. Il"
+                    + " brano attuale e il suo stato di download restano invariati.",
+            "Choose download source",
+            "Scegli la sorgente di download",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek cerca un file separato. BitChord usa le sorgenti di download e le"
+                    + " impostazioni esistenti.",
+            "Search Soulseek",
+            "Cerca su Soulseek",
+            "Continue with BitChord download",
+            "Continua con il download di BitChord",
+            "This download choice expired. Return to the song and try again.",
+            "Questa scelta di download \u00e8 scaduta. Torna al brano e riprova.",
+            "Source: Soulseek",
+            "Sorgente: Soulseek",
+            "Artist and song title",
+            "Artista e titolo del brano",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "Pronto per la ricerca. Non viene scaricato nulla finch\u00e9 non scegli un file.",
+            "Soulseek account and setup",
+            "Account e configurazione Soulseek",
+            "Audio formats and preference order",
+            "Formati audio e ordine di preferenza",
+            "View downloads",
+            "Visualizza download",
+            "Choose your audio formats and their order first.",
+            "Scegli prima i formati audio e il loro ordine.",
+            "Search using 2\u2013256 characters.",
+            "Usa da 2 a 256 caratteri per la ricerca.",
+            "Searching Soulseek\u2026",
+            "Ricerca su Soulseek\u2026",
+            "Soulseek session changed. Search again.",
+            "La sessione Soulseek \u00e8 cambiata. Ripeti la ricerca.",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "Nessun file corrispondente. Prova altre parole. Il download di BitChord non \u00e8"
+                    + " stato avviato.",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "Scegli un file qui sotto. Nomi, formati e disponibilit\u00e0 dichiarati dai peer non"
+                    + " sono verificati.",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "Impossibile completare la ricerca Soulseek. Controlla accesso, formati e destinazioni"
+                    + " delle copie, poi riprova.",
+            "A previous search is stopping. Try again shortly.",
+            "Una ricerca precedente si sta arrestando. Riprova tra poco.",
+            "Peer: {0}",
+            "Peer: {0}",
+            "File: {0}",
+            "File: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "Formato dichiarato: {0} \u00b7 {1} byte",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "I dettagli sono dichiarazioni del peer. Il codec del file scaricato viene controllato"
+                    + " prima del salvataggio.",
+            "Download this file",
+            "Scarica questo file",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "Sorgente: Soulseek. File scelto in coda. Apri Visualizza download per seguire"
+                    + " l'avanzamento.",
+            "The selected file could not be queued. Review setup and try again.",
+            "Impossibile accodare il file scelto. Controlla la configurazione e riprova.",
+            "The selected file is no longer ready. Check setup and search again.",
+            "Il file scelto non \u00e8 pi\u00f9 pronto. Controlla la configurazione e ripeti la"
+                    + " ricerca.",
+            "Cannot create selected download storage.",
+            "Impossibile creare lo spazio per il download scelto.",
+            "Cannot inspect selected download storage.",
+            "Impossibile controllare lo spazio del download scelto.",
+            "Cannot remove interrupted selected download staging.",
+            "Impossibile eliminare i dati temporanei del download scelto interrotto.",
+            "Check the saved file before retry",
+            "Controlla il file salvato prima di riprovare",
+            "Checking audio format",
+            "Controllo del formato audio",
+            "Choose where copies go before downloading.",
+            "Scegli la destinazione delle copie prima di scaricare.",
+            "Confirmation required before retry",
+            "Conferma richiesta prima di riprovare",
+            "Copy failed",
+            "Copia non riuscita",
+            "Download cancelled",
+            "Download annullato",
+            "Download needs attention",
+            "Il download richiede attenzione",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "Impossibile controllare le impostazioni di download. Riavvia BitChord e riprova.",
+            "Downloading \u00b7 {0} of {1}",
+            "Download \u00b7 {0} di {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "I download sono sospesi dalle impostazioni attuali. Riprova quando sono consentiti.",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "Attiva Soulseek non ufficiale prima di scaricare questo risultato.",
+            "Invalid selected Soulseek reference.",
+            "Riferimento alla selezione Soulseek non valido.",
+            "No selected Soulseek downloads.",
+            "Nessun download Soulseek selezionato.",
+            "Preparing download",
+            "Preparazione del download",
+            "Queued for download",
+            "In coda per il download",
+            "Queued {0}. Open downloads to follow progress.",
+            "{0} in coda. Apri i download per seguire l'avanzamento.",
+            "Saved and verified",
+            "Salvato e verificato",
+            "Saved to all selected destinations",
+            "Salvato in tutte le destinazioni scelte",
+            "Saving file",
+            "Salvataggio del file",
+            "Saving paused",
+            "Salvataggio in pausa",
+            "Saving selected copies",
+            "Salvataggio delle copie scelte",
+            "Selected audio file",
+            "File audio scelto",
+            "Selected download storage is full. Finish existing copies first.",
+            "Lo spazio per i download scelti \u00e8 pieno. Completa prima le copie in corso.",
+            "Selected files are limited to 256 MiB.",
+            "I file scelti non possono superare 256 MiB.",
+            "Soulseek session changed. Select the result again.",
+            "La sessione Soulseek \u00e8 cambiata. Seleziona di nuovo il risultato.",
+            "The selected download could not complete. Try again or choose another result.",
+            "Impossibile completare il download scelto. Riprova o scegli un altro risultato.",
+            "The selected download queue is full.",
+            "La coda dei download scelti \u00e8 piena.",
+            "This Soulseek result expired. Search again.",
+            "Questo risultato Soulseek \u00e8 scaduto. Ripeti la ricerca.",
+            "This file did not pass the audio format check. Choose another result.",
+            "Questo file non ha superato il controllo del formato audio. Scegli un altro"
+                    + " risultato.",
+            "This selected download is already queued.",
+            "Questo download scelto \u00e8 gi\u00e0 in coda.",
+            "Uploading file",
+            "Caricamento del file",
+            "Waiting for peer",
+            "In attesa del peer",
+            "Waiting for peer \u00b7 queue position {0}",
+            "In attesa del peer \u00b7 posizione in coda {0}",
+            "Waiting to save",
+            "In attesa di salvataggio",
+            "Waiting to save selected copies",
+            "In attesa di salvare le copie scelte",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "Formato: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "Connessione a Soulseek\u2026",
+            "May use YouTube or another enabled source.",
+            "Pu\u00f2 usare YouTube o un\u2019altra fonte attiva.",
         };
     }
 
@@ -29897,6 +32371,196 @@ final class Translations {
             "\u8ee2\u9001\u65b9\u5f0f\uff1a{0}",
             "{0} recent clients",
             "\u6700\u8fd1\u78ba\u8a8d\u3055\u308c\u305f\u30af\u30e9\u30a4\u30a2\u30f3\u30c8\uff1a{0}\u4ef6",
+            "Soulseek account",
+            "Soulseek\u30a2\u30ab\u30a6\u30f3\u30c8",
+            "Signed in as {0}",
+            "{0}\u3068\u3057\u3066\u30ed\u30b0\u30a4\u30f3\u4e2d",
+            "Ready to search",
+            "\u691c\u7d22\u3067\u304d\u307e\u3059",
+            "Sign in to search Soulseek.",
+            "Soulseek\u3067\u691c\u7d22\u3059\u308b\u306b\u306f\u30ed\u30b0\u30a4\u30f3\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Enable Soulseek to sign in and search.",
+            "\u30ed\u30b0\u30a4\u30f3\u3057\u3066\u691c\u7d22\u3059\u308b\u306b\u306fSoulseek\u3092\u6709\u52b9\u306b\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Download setup",
+            "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u8a2d\u5b9a",
+            "Choose where copies go before searching.",
+            "\u691c\u7d22\u3059\u308b\u524d\u306b\u30b3\u30d4\u30fc\u306e\u4fdd\u5b58\u5148\u3092\u9078\u3093\u3067\u304f\u3060\u3055\u3044\u3002",
+            "Choose your audio formats before searching.",
+            "\u691c\u7d22\u3059\u308b\u524d\u306b\u97f3\u58f0\u5f62\u5f0f\u3092\u9078\u3093\u3067\u304f\u3060\u3055\u3044\u3002",
+            "Find music on Soulseek",
+            "Soulseek\u3067\u97f3\u697d\u3092\u63a2\u3059",
+            "{0} formats enabled",
+            "{0}\u7a2e\u985e\u306e\u5f62\u5f0f\u304c\u6709\u52b9",
+            "More download options",
+            "\u305d\u306e\u4ed6\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u65b9\u6cd5",
+            "Account settings",
+            "\u30a2\u30ab\u30a6\u30f3\u30c8\u8a2d\u5b9a",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Soulseek\u306e\u8a2d\u5b9a\u3092\u958b\u3051\u307e\u305b\u3093\u3002BitChord\u3092\u518d\u8d77\u52d5\u3057\u3066\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
+            "Other download options are controlled in Patches & tweaks.",
+            "\u305d\u306e\u4ed6\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u65b9\u6cd5\u306f\u300c\u30d1\u30c3\u30c1\u3068\u8abf\u6574\u300d\u3067\u8a2d\u5b9a\u3067\u304d\u307e\u3059\u3002",
+            "Source enabled",
+            "\u30bd\u30fc\u30b9\u306f\u6709\u52b9\u3067\u3059",
+            "Account actions",
+            "\u30a2\u30ab\u30a6\u30f3\u30c8\u64cd\u4f5c",
+            "Not chosen yet",
+            "\u672a\u9078\u629e",
+            "Not signed in",
+            "\u672a\u30ed\u30b0\u30a4\u30f3",
+            "Finish the open download choice first.",
+            "\u5148\u306b\u958b\u3044\u3066\u3044\u308b\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u65b9\u6cd5\u306e\u9078\u629e\u3092\u5b8c\u4e86\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Could not open the download source choice. Try again.",
+            "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u5143\u306e\u9078\u629e\u3092\u958b\u3051\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
+            "BitChord could not start this download. Try again.",
+            "BitChord\u3067\u3053\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3092\u958b\u59cb\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "\u30d5\u30a1\u30a4\u30eb\u3092\u691c\u7d22\u3057\u3066\u30d4\u30a2\u306e\u8a73\u7d30\u3092\u78ba\u8a8d\u3057\u3001\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3059\u308b\u30d5\u30a1\u30a4\u30eb\u3092\u9078\u3073\u307e\u3059\u3002\u73fe\u5728\u306e\u66f2\u3084\u305d\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u72b6\u6cc1\u306f\u5909\u308f\u308a\u307e\u305b\u3093\u3002",
+            "Choose download source",
+            "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u5143\u3092\u9078\u629e",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek\u306f\u5225\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u691c\u7d22\u3057\u307e\u3059\u3002BitChord\u306f\u65e2\u5b58\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u5143\u3068\u8a2d\u5b9a\u3092\u4f7f\u3044\u307e\u3059\u3002",
+            "Search Soulseek",
+            "Soulseek\u3067\u691c\u7d22",
+            "Continue with BitChord download",
+            "BitChord\u3067\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3092\u7d9a\u3051\u308b",
+            "This download choice expired. Return to the song and try again.",
+            "\u3053\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u9078\u629e\u306e\u6709\u52b9\u671f\u9650\u304c\u5207\u308c\u307e\u3057\u305f\u3002\u66f2\u306b\u623b\u3063\u3066\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
+            "Source: Soulseek",
+            "\u30bd\u30fc\u30b9\uff1aSoulseek",
+            "Artist and song title",
+            "\u30a2\u30fc\u30c6\u30a3\u30b9\u30c8\u540d\u3068\u66f2\u540d",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "\u691c\u7d22\u3067\u304d\u307e\u3059\u3002\u30d5\u30a1\u30a4\u30eb\u3092\u9078\u3076\u307e\u3067\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u306f\u59cb\u307e\u308a\u307e\u305b\u3093\u3002",
+            "Soulseek account and setup",
+            "Soulseek\u306e\u30a2\u30ab\u30a6\u30f3\u30c8\u3068\u8a2d\u5b9a",
+            "Audio formats and preference order",
+            "\u97f3\u58f0\u5f62\u5f0f\u3068\u512a\u5148\u9806\u4f4d",
+            "View downloads",
+            "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3092\u8868\u793a",
+            "Choose your audio formats and their order first.",
+            "\u5148\u306b\u97f3\u58f0\u5f62\u5f0f\u3068\u512a\u5148\u9806\u4f4d\u3092\u9078\u3093\u3067\u304f\u3060\u3055\u3044\u3002",
+            "Search using 2\u2013256 characters.",
+            "\u691c\u7d22\u8a9e\u306f2\uff5e256\u6587\u5b57\u3067\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Searching Soulseek\u2026",
+            "Soulseek\u3092\u691c\u7d22\u4e2d\u2026",
+            "Soulseek session changed. Search again.",
+            "Soulseek\u306e\u30bb\u30c3\u30b7\u30e7\u30f3\u304c\u5909\u308f\u308a\u307e\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u691c\u7d22\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "\u4e00\u81f4\u3059\u308b\u30d5\u30a1\u30a4\u30eb\u304c\u3042\u308a\u307e\u305b\u3093\u3002\u5225\u306e\u691c\u7d22\u8a9e\u3092\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002BitChord\u3067\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u306f\u958b\u59cb\u3055\u308c\u3066\u3044\u307e\u305b\u3093\u3002",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "\u4e0b\u304b\u3089\u30d5\u30a1\u30a4\u30eb\u3092\u9078\u3093\u3067\u304f\u3060\u3055\u3044\u3002\u30d4\u30a2\u306e\u30d5\u30a1\u30a4\u30eb\u540d\u3001\u5f62\u5f0f\u3001\u5229\u7528\u53ef\u5426\u306f\u672a\u78ba\u8a8d\u306e\u60c5\u5831\u3067\u3059\u3002",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "Soulseek\u306e\u691c\u7d22\u3092\u5b8c\u4e86\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u30ed\u30b0\u30a4\u30f3\u3001\u5f62\u5f0f\u3001\u30b3\u30d4\u30fc\u306e\u4fdd\u5b58\u5148\u3092\u78ba\u8a8d\u3057\u3066\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
+            "A previous search is stopping. Try again shortly.",
+            "\u524d\u306e\u691c\u7d22\u3092\u505c\u6b62\u3057\u3066\u3044\u307e\u3059\u3002\u5c11\u3057\u5f85\u3063\u3066\u304b\u3089\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
+            "Peer: {0}",
+            "\u30d4\u30a2\uff1a{0}",
+            "File: {0}",
+            "\u30d5\u30a1\u30a4\u30eb\uff1a{0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "\u7533\u544a\u3055\u308c\u305f\u5f62\u5f0f\uff1a{0} \u00b7 {1}\u30d0\u30a4\u30c8",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "\u8a73\u7d30\u306f\u30d4\u30a2\u304b\u3089\u306e\u7533\u544a\u3067\u3059\u3002\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3057\u305f\u30d5\u30a1\u30a4\u30eb\u306e\u30b3\u30fc\u30c7\u30c3\u30af\u306f\u4fdd\u5b58\u524d\u306b\u691c\u67fb\u3057\u307e\u3059\u3002",
+            "Download this file",
+            "\u3053\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "\u30bd\u30fc\u30b9\uff1aSoulseek\u3002\u9078\u3093\u3060\u30d5\u30a1\u30a4\u30eb\u3092\u5f85\u3061\u884c\u5217\u306b\u8ffd\u52a0\u3057\u307e\u3057\u305f\u3002\u300c\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3092\u8868\u793a\u300d\u3067\u9032\u6357\u3092\u78ba\u8a8d\u3067\u304d\u307e\u3059\u3002",
+            "The selected file could not be queued. Review setup and try again.",
+            "\u9078\u3093\u3060\u30d5\u30a1\u30a4\u30eb\u3092\u5f85\u3061\u884c\u5217\u306b\u8ffd\u52a0\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u8a2d\u5b9a\u3092\u78ba\u8a8d\u3057\u3066\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
+            "The selected file is no longer ready. Check setup and search again.",
+            "\u9078\u3093\u3060\u30d5\u30a1\u30a4\u30eb\u306f\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3067\u304d\u308b\u72b6\u614b\u3067\u306f\u306a\u304f\u306a\u308a\u307e\u3057\u305f\u3002\u8a2d\u5b9a\u3092\u78ba\u8a8d\u3057\u3066\u3001\u3082\u3046\u4e00\u5ea6\u691c\u7d22\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Cannot create selected download storage.",
+            "\u9078\u629e\u3057\u305f\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u306e\u4fdd\u5b58\u9818\u57df\u3092\u4f5c\u6210\u3067\u304d\u307e\u305b\u3093\u3002",
+            "Cannot inspect selected download storage.",
+            "\u9078\u629e\u3057\u305f\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u306e\u4fdd\u5b58\u9818\u57df\u3092\u78ba\u8a8d\u3067\u304d\u307e\u305b\u3093\u3002",
+            "Cannot remove interrupted selected download staging.",
+            "\u4e2d\u65ad\u3055\u308c\u305f\u9078\u629e\u6e08\u307f\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u306e\u4e00\u6642\u30d5\u30a1\u30a4\u30eb\u3092\u524a\u9664\u3067\u304d\u307e\u305b\u3093\u3002",
+            "Check the saved file before retry",
+            "\u518d\u8a66\u884c\u3059\u308b\u524d\u306b\u4fdd\u5b58\u6e08\u307f\u30d5\u30a1\u30a4\u30eb\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044",
+            "Checking audio format",
+            "\u97f3\u58f0\u5f62\u5f0f\u3092\u78ba\u8a8d\u4e2d",
+            "Choose where copies go before downloading.",
+            "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3059\u308b\u524d\u306b\u30b3\u30d4\u30fc\u306e\u4fdd\u5b58\u5148\u3092\u9078\u3093\u3067\u304f\u3060\u3055\u3044\u3002",
+            "Confirmation required before retry",
+            "\u518d\u8a66\u884c\u3059\u308b\u524d\u306b\u78ba\u8a8d\u304c\u5fc5\u8981\u3067\u3059",
+            "Copy failed",
+            "\u30b3\u30d4\u30fc\u306b\u5931\u6557\u3057\u307e\u3057\u305f",
+            "Download cancelled",
+            "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3092\u30ad\u30e3\u30f3\u30bb\u30eb\u3057\u307e\u3057\u305f",
+            "Download needs attention",
+            "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u306e\u78ba\u8a8d\u304c\u5fc5\u8981\u3067\u3059",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u8a2d\u5b9a\u3092\u78ba\u8a8d\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002BitChord\u3092\u518d\u8d77\u52d5\u3057\u3066\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
+            "Downloading \u00b7 {0} of {1}",
+            "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u4e2d \u00b7 {1}\u4e2d{0}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "\u73fe\u5728\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u8a2d\u5b9a\u306b\u3088\u308a\u4e00\u6642\u505c\u6b62\u3057\u3066\u3044\u307e\u3059\u3002\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u304c\u8a31\u53ef\u3055\u308c\u3066\u304b\u3089\u518d\u8a66\u884c\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "\u3053\u306e\u7d50\u679c\u3092\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3059\u308b\u306b\u306f\u3001\u5148\u306bUnofficial"
+                + " Soulseek\u3092\u6709\u52b9\u306b\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Invalid selected Soulseek reference.",
+            "\u9078\u629e\u3057\u305fSoulseek\u306e\u53c2\u7167\u304c\u7121\u52b9\u3067\u3059\u3002",
+            "No selected Soulseek downloads.",
+            "\u9078\u629e\u3057\u305fSoulseek\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u306f\u3042\u308a\u307e\u305b\u3093\u3002",
+            "Preparing download",
+            "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3092\u6e96\u5099\u4e2d",
+            "Queued for download",
+            "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u5f85\u3061",
+            "Queued {0}. Open downloads to follow progress.",
+            "{0}\u3092\u5f85\u3061\u884c\u5217\u306b\u8ffd\u52a0\u3057\u307e\u3057\u305f\u3002\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3092\u958b\u3044\u3066\u9032\u6357\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Saved and verified",
+            "\u4fdd\u5b58\u30fb\u691c\u8a3c\u6e08\u307f",
+            "Saved to all selected destinations",
+            "\u9078\u629e\u3057\u305f\u3059\u3079\u3066\u306e\u4fdd\u5b58\u5148\u306b\u4fdd\u5b58\u6e08\u307f",
+            "Saving file",
+            "\u30d5\u30a1\u30a4\u30eb\u3092\u4fdd\u5b58\u4e2d",
+            "Saving paused",
+            "\u4fdd\u5b58\u3092\u4e00\u6642\u505c\u6b62\u4e2d",
+            "Saving selected copies",
+            "\u9078\u629e\u3057\u305f\u30b3\u30d4\u30fc\u3092\u4fdd\u5b58\u4e2d",
+            "Selected audio file",
+            "\u9078\u629e\u3057\u305f\u97f3\u58f0\u30d5\u30a1\u30a4\u30eb",
+            "Selected download storage is full. Finish existing copies first.",
+            "\u9078\u629e\u3057\u305f\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u306e\u4fdd\u5b58\u9818\u57df\u304c\u3044\u3063\u3071\u3044\u3067\u3059\u3002\u5148\u306b\u65e2\u5b58\u306e\u30b3\u30d4\u30fc\u3092\u5b8c\u4e86\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Selected files are limited to 256 MiB.",
+            "\u9078\u629e\u3059\u308b\u30d5\u30a1\u30a4\u30eb\u306e\u4e0a\u9650\u306f256"
+                    + " MiB\u3067\u3059\u3002",
+            "Soulseek session changed. Select the result again.",
+            "Soulseek\u306e\u30bb\u30c3\u30b7\u30e7\u30f3\u304c\u5909\u308f\u308a\u307e\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u7d50\u679c\u3092\u9078\u3093\u3067\u304f\u3060\u3055\u3044\u3002",
+            "The selected download could not complete. Try again or choose another result.",
+            "\u9078\u629e\u3057\u305f\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3092\u5b8c\u4e86\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u518d\u8a66\u884c\u3059\u308b\u304b\u3001\u5225\u306e\u7d50\u679c\u3092\u9078\u3093\u3067\u304f\u3060\u3055\u3044\u3002",
+            "The selected download queue is full.",
+            "\u9078\u629e\u3057\u305f\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u306e\u5f85\u3061\u884c\u5217\u304c\u3044\u3063\u3071\u3044\u3067\u3059\u3002",
+            "This Soulseek result expired. Search again.",
+            "\u3053\u306eSoulseek\u306e\u7d50\u679c\u306f\u6709\u52b9\u671f\u9650\u304c\u5207\u308c\u307e\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u691c\u7d22\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "This file did not pass the audio format check. Choose another result.",
+            "\u3053\u306e\u30d5\u30a1\u30a4\u30eb\u306f\u97f3\u58f0\u5f62\u5f0f\u306e\u691c\u67fb\u306b\u5408\u683c\u3057\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u5225\u306e\u7d50\u679c\u3092\u9078\u3093\u3067\u304f\u3060\u3055\u3044\u3002",
+            "This selected download is already queued.",
+            "\u3053\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u306f\u3059\u3067\u306b\u5f85\u3061\u884c\u5217\u306b\u5165\u3063\u3066\u3044\u307e\u3059\u3002",
+            "Uploading file",
+            "\u30d5\u30a1\u30a4\u30eb\u3092\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u4e2d",
+            "Waiting for peer",
+            "\u30d4\u30a2\u3092\u5f85\u6a5f\u4e2d",
+            "Waiting for peer \u00b7 queue position {0}",
+            "\u30d4\u30a2\u3092\u5f85\u6a5f\u4e2d \u00b7"
+                    + " \u5f85\u3061\u884c\u5217\u306e\u4f4d\u7f6e\uff1a{0}",
+            "Waiting to save",
+            "\u4fdd\u5b58\u3092\u5f85\u6a5f\u4e2d",
+            "Waiting to save selected copies",
+            "\u9078\u629e\u3057\u305f\u30b3\u30d4\u30fc\u306e\u4fdd\u5b58\u3092\u5f85\u6a5f\u4e2d",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "\u5f62\u5f0f\uff1a{0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "Soulseek \u306b\u63a5\u7d9a\u4e2d\u2026",
+            "May use YouTube or another enabled source.",
+            "YouTube"
+                + " \u307e\u305f\u306f\u4ed6\u306e\u6709\u52b9\u306a\u30bd\u30fc\u30b9\u3092\u4f7f\u7528\u3059\u308b\u5834\u5408\u304c\u3042\u308a\u307e\u3059\u3002",
         };
     }
 
@@ -32666,6 +35330,261 @@ final class Translations {
             "\uc804\uc1a1 \ubc29\uc2dd: {0}",
             "{0} recent clients",
             "\ucd5c\uadfc \ud655\uc778\ub41c \ud074\ub77c\uc774\uc5b8\ud2b8 {0}\uac1c",
+            "Soulseek account",
+            "Soulseek \uacc4\uc815",
+            "Signed in as {0}",
+            "{0}(\uc73c)\ub85c \ub85c\uadf8\uc778\ub428",
+            "Ready to search",
+            "\uac80\uc0c9 \uc900\ube44 \uc644\ub8cc",
+            "Sign in to search Soulseek.",
+            "Soulseek\uc5d0\uc11c \uac80\uc0c9\ud558\ub824\uba74"
+                    + " \ub85c\uadf8\uc778\ud558\uc138\uc694.",
+            "Enable Soulseek to sign in and search.",
+            "\ub85c\uadf8\uc778\ud558\uace0 \uac80\uc0c9\ud558\ub824\uba74 Soulseek\uc744"
+                    + " \ucf1c\uc138\uc694.",
+            "Download setup",
+            "\ub2e4\uc6b4\ub85c\ub4dc \uc124\uc815",
+            "Choose where copies go before searching.",
+            "\uac80\uc0c9\ud558\uae30 \uc804\uc5d0 \uc0ac\ubcf8 \uc800\uc7a5 \uc704\uce58\ub97c"
+                    + " \uc120\ud0dd\ud558\uc138\uc694.",
+            "Choose your audio formats before searching.",
+            "\uac80\uc0c9\ud558\uae30 \uc804\uc5d0 \uc624\ub514\uc624 \ud615\uc2dd\uc744"
+                    + " \uc120\ud0dd\ud558\uc138\uc694.",
+            "Find music on Soulseek",
+            "Soulseek\uc5d0\uc11c \uc74c\uc545 \ucc3e\uae30",
+            "{0} formats enabled",
+            "\ud615\uc2dd {0}\uac1c \uc0ac\uc6a9 \uc911",
+            "More download options",
+            "\ucd94\uac00 \ub2e4\uc6b4\ub85c\ub4dc \uc635\uc158",
+            "Account settings",
+            "\uacc4\uc815 \uc124\uc815",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Soulseek \uc124\uc815\uc744 \uc0ac\uc6a9\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
+                    + " BitChord\ub97c \ub2e4\uc2dc \uc2dc\uc791\ud558\uace0"
+                    + " \uc2dc\ub3c4\ud558\uc138\uc694.",
+            "Other download options are controlled in Patches & tweaks.",
+            "\ub2e4\ub978 \ub2e4\uc6b4\ub85c\ub4dc \uc635\uc158\uc740 \ud328\uce58 \ubc0f"
+                    + " \uc870\uc815\uc5d0\uc11c \uc124\uc815\ud569\ub2c8\ub2e4.",
+            "Source enabled",
+            "\uc18c\uc2a4 \uc0ac\uc6a9 \uc911",
+            "Account actions",
+            "\uacc4\uc815 \uc791\uc5c5",
+            "Not chosen yet",
+            "\uc544\uc9c1 \uc120\ud0dd\ud558\uc9c0 \uc54a\uc74c",
+            "Not signed in",
+            "\ub85c\uadf8\uc778\ub418\uc9c0 \uc54a\uc74c",
+            "Finish the open download choice first.",
+            "\uba3c\uc800 \uc5f4\ub824 \uc788\ub294 \ub2e4\uc6b4\ub85c\ub4dc \uc120\ud0dd\uc744"
+                    + " \uc644\ub8cc\ud558\uc138\uc694.",
+            "Could not open the download source choice. Try again.",
+            "\ub2e4\uc6b4\ub85c\ub4dc \uc18c\uc2a4 \uc120\ud0dd\uc744 \uc5f4\uc9c0"
+                + " \ubabb\ud588\uc2b5\ub2c8\ub2e4. \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uc138\uc694.",
+            "BitChord could not start this download. Try again.",
+            "BitChord\uc5d0\uc11c \uc774 \ub2e4\uc6b4\ub85c\ub4dc\ub97c \uc2dc\uc791\ud558\uc9c0"
+                + " \ubabb\ud588\uc2b5\ub2c8\ub2e4. \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uc138\uc694.",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "\ud30c\uc77c\uc744 \uac80\uc0c9\ud558\uace0 \ud53c\uc5b4\uc758 \uc138\ubd80"
+                    + " \uc815\ubcf4\ub97c \ud655\uc778\ud55c \ub2e4\uc74c"
+                    + " \ub2e4\uc6b4\ub85c\ub4dc\ud560 \ud30c\uc77c\uc744 \uc9c1\uc811"
+                    + " \uc120\ud0dd\ud558\uc138\uc694. \ud604\uc7ac \uace1\uacfc \ud574\ub2f9"
+                    + " \ub2e4\uc6b4\ub85c\ub4dc \uc0c1\ud0dc\ub294 \uadf8\ub300\ub85c"
+                    + " \uc720\uc9c0\ub429\ub2c8\ub2e4.",
+            "Choose download source",
+            "\ub2e4\uc6b4\ub85c\ub4dc \uc18c\uc2a4 \uc120\ud0dd",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek\uc740 \ubcc4\ub3c4\uc758 \ud30c\uc77c\uc744 \uac80\uc0c9\ud569\ub2c8\ub2e4."
+                    + " BitChord\ub294 \uae30\uc874 \ub2e4\uc6b4\ub85c\ub4dc \uc18c\uc2a4\uc640"
+                    + " \uc124\uc815\uc744 \uc0ac\uc6a9\ud569\ub2c8\ub2e4.",
+            "Search Soulseek",
+            "Soulseek\uc5d0\uc11c \uac80\uc0c9",
+            "Continue with BitChord download",
+            "BitChord \ub2e4\uc6b4\ub85c\ub4dc \uacc4\uc18d",
+            "This download choice expired. Return to the song and try again.",
+            "\uc774 \ub2e4\uc6b4\ub85c\ub4dc \uc120\ud0dd\uc774"
+                    + " \ub9cc\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \uace1\uc73c\ub85c"
+                    + " \ub3cc\uc544\uac00 \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uc138\uc694.",
+            "Source: Soulseek",
+            "\uc18c\uc2a4: Soulseek",
+            "Artist and song title",
+            "\uc544\ud2f0\uc2a4\ud2b8 \ubc0f \uace1 \uc81c\ubaa9",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "\uac80\uc0c9 \uc900\ube44\uac00 \ub418\uc5c8\uc2b5\ub2c8\ub2e4. \ud30c\uc77c\uc744"
+                    + " \uc120\ud0dd\ud560 \ub54c\uae4c\uc9c0 \ub2e4\uc6b4\ub85c\ub4dc\uac00"
+                    + " \uc2dc\uc791\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
+            "Soulseek account and setup",
+            "Soulseek \uacc4\uc815 \ubc0f \uc124\uc815",
+            "Audio formats and preference order",
+            "\uc624\ub514\uc624 \ud615\uc2dd \ubc0f \uc6b0\uc120\uc21c\uc704",
+            "View downloads",
+            "\ub2e4\uc6b4\ub85c\ub4dc \ubcf4\uae30",
+            "Choose your audio formats and their order first.",
+            "\uba3c\uc800 \uc624\ub514\uc624 \ud615\uc2dd\uacfc \uc21c\uc11c\ub97c"
+                    + " \uc120\ud0dd\ud558\uc138\uc694.",
+            "Search using 2\u2013256 characters.",
+            "\uac80\uc0c9\uc5b4\ub294 2~256\uc790\ub85c \uc785\ub825\ud558\uc138\uc694.",
+            "Searching Soulseek\u2026",
+            "Soulseek \uac80\uc0c9 \uc911\u2026",
+            "Soulseek session changed. Search again.",
+            "Soulseek \uc138\uc158\uc774 \ubcc0\uacbd\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \ub2e4\uc2dc"
+                    + " \uac80\uc0c9\ud558\uc138\uc694.",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "\uc77c\uce58\ud558\ub294 \ud30c\uc77c\uc774 \uc5c6\uc2b5\ub2c8\ub2e4. \ub2e4\ub978"
+                    + " \uac80\uc0c9\uc5b4\ub97c \uc0ac\uc6a9\ud558\uc138\uc694. BitChord"
+                    + " \ub2e4\uc6b4\ub85c\ub4dc\ub294 \uc2dc\uc791\ub418\uc9c0"
+                    + " \uc54a\uc558\uc2b5\ub2c8\ub2e4.",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "\uc544\ub798\uc5d0\uc11c \ud30c\uc77c\uc744 \uc120\ud0dd\ud558\uc138\uc694."
+                + " \ud53c\uc5b4\uac00 \uc81c\uacf5\ud55c \ud30c\uc77c \uc774\ub984, \ud615\uc2dd,"
+                + " \uc0ac\uc6a9 \uac00\ub2a5 \uc5ec\ubd80\ub294 \ud655\uc778\ub418\uc9c0"
+                + " \uc54a\uc558\uc2b5\ub2c8\ub2e4.",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "Soulseek \uac80\uc0c9\uc744 \uc644\ub8cc\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4."
+                + " \ub85c\uadf8\uc778, \ud615\uc2dd, \uc0ac\ubcf8 \uc800\uc7a5 \uc704\uce58\ub97c"
+                + " \ud655\uc778\ud558\uace0 \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uc138\uc694.",
+            "A previous search is stopping. Try again shortly.",
+            "\uc774\uc804 \uac80\uc0c9\uc744 \uc911\uc9c0\ud558\ub294 \uc911\uc785\ub2c8\ub2e4."
+                    + " \uc7a0\uc2dc \ud6c4 \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uc138\uc694.",
+            "Peer: {0}",
+            "\ud53c\uc5b4: {0}",
+            "File: {0}",
+            "\ud30c\uc77c: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "\ud45c\uc2dc\ub41c \ud615\uc2dd: {0} \u00b7 {1}\ubc14\uc774\ud2b8",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "\uc138\ubd80 \uc815\ubcf4\ub294 \ud53c\uc5b4\uac00 \uc81c\uacf5\ud55c"
+                    + " \ubbf8\ud655\uc778 \uc815\ubcf4\uc785\ub2c8\ub2e4."
+                    + " \ub2e4\uc6b4\ub85c\ub4dc\ud55c \ud30c\uc77c\uc758 \ucf54\ub371\uc740"
+                    + " \uc800\uc7a5 \uc804\uc5d0 \uac80\uc0ac\ud569\ub2c8\ub2e4.",
+            "Download this file",
+            "\uc774 \ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "\uc18c\uc2a4: Soulseek. \uc120\ud0dd\ud55c \ud30c\uc77c\uc744 \ub300\uae30\uc5f4\uc5d0"
+                    + " \ucd94\uac00\ud588\uc2b5\ub2c8\ub2e4. \ub2e4\uc6b4\ub85c\ub4dc"
+                    + " \ubcf4\uae30\ub97c \uc5f4\uc5b4 \uc9c4\ud589 \uc0c1\ud669\uc744"
+                    + " \ud655\uc778\ud558\uc138\uc694.",
+            "The selected file could not be queued. Review setup and try again.",
+            "\uc120\ud0dd\ud55c \ud30c\uc77c\uc744 \ub300\uae30\uc5f4\uc5d0"
+                    + " \ucd94\uac00\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4. \uc124\uc815\uc744"
+                    + " \ud655\uc778\ud558\uace0 \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uc138\uc694.",
+            "The selected file is no longer ready. Check setup and search again.",
+            "\uc120\ud0dd\ud55c \ud30c\uc77c\uc744 \ub354 \uc774\uc0c1"
+                    + " \ub2e4\uc6b4\ub85c\ub4dc\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."
+                    + " \uc124\uc815\uc744 \ud655\uc778\ud558\uace0 \ub2e4\uc2dc"
+                    + " \uac80\uc0c9\ud558\uc138\uc694.",
+            "Cannot create selected download storage.",
+            "\uc120\ud0dd\ud55c \ub2e4\uc6b4\ub85c\ub4dc\uc758 \uc800\uc7a5 \uacf5\uac04\uc744"
+                    + " \ub9cc\ub4e4 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
+            "Cannot inspect selected download storage.",
+            "\uc120\ud0dd\ud55c \ub2e4\uc6b4\ub85c\ub4dc\uc758 \uc800\uc7a5 \uacf5\uac04\uc744"
+                    + " \ud655\uc778\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
+            "Cannot remove interrupted selected download staging.",
+            "\uc911\ub2e8\ub41c \uc120\ud0dd \ub2e4\uc6b4\ub85c\ub4dc\uc758 \uc784\uc2dc"
+                    + " \ud30c\uc77c\uc744 \uc9c0\uc6b8 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
+            "Check the saved file before retry",
+            "\ub2e4\uc2dc \uc2dc\ub3c4\ud558\uae30 \uc804\uc5d0 \uc800\uc7a5\ub41c"
+                    + " \ud30c\uc77c\uc744 \ud655\uc778\ud558\uc138\uc694",
+            "Checking audio format",
+            "\uc624\ub514\uc624 \ud615\uc2dd \ud655\uc778 \uc911",
+            "Choose where copies go before downloading.",
+            "\ub2e4\uc6b4\ub85c\ub4dc\ud558\uae30 \uc804\uc5d0 \uc0ac\ubcf8 \uc800\uc7a5"
+                    + " \uc704\uce58\ub97c \uc120\ud0dd\ud558\uc138\uc694.",
+            "Confirmation required before retry",
+            "\ub2e4\uc2dc \uc2dc\ub3c4\ud558\ub824\uba74 \ud655\uc778\uc774"
+                    + " \ud544\uc694\ud569\ub2c8\ub2e4",
+            "Copy failed",
+            "\ubcf5\uc0ac \uc2e4\ud328",
+            "Download cancelled",
+            "\ub2e4\uc6b4\ub85c\ub4dc \ucde8\uc18c\ub428",
+            "Download needs attention",
+            "\ub2e4\uc6b4\ub85c\ub4dc \ud655\uc778 \ud544\uc694",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "\ub2e4\uc6b4\ub85c\ub4dc \uc124\uc815\uc744 \ud655\uc778\ud558\uc9c0"
+                    + " \ubabb\ud588\uc2b5\ub2c8\ub2e4. BitChord\ub97c \ub2e4\uc2dc"
+                    + " \uc2dc\uc791\ud558\uace0 \uc2dc\ub3c4\ud558\uc138\uc694.",
+            "Downloading \u00b7 {0} of {1}",
+            "\ub2e4\uc6b4\ub85c\ub4dc \uc911 \u00b7 {1} \uc911 {0}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "\ud604\uc7ac \ub2e4\uc6b4\ub85c\ub4dc \uc124\uc815\uc5d0 \ub530\ub77c"
+                    + " \ub2e4\uc6b4\ub85c\ub4dc\uac00 \uc77c\uc2dc"
+                    + " \uc911\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \ub2e4\uc6b4\ub85c\ub4dc\uac00"
+                    + " \ud5c8\uc6a9\ub420 \ub54c \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uc138\uc694.",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "\uc774 \uacb0\uacfc\ub97c \ub2e4\uc6b4\ub85c\ub4dc\ud558\ub824\uba74 \uba3c\uc800"
+                    + " Unofficial Soulseek\uc744 \ucf1c\uc138\uc694.",
+            "Invalid selected Soulseek reference.",
+            "\uc120\ud0dd\ud55c Soulseek \ucc38\uc870\uac00 \uc62c\ubc14\ub974\uc9c0"
+                    + " \uc54a\uc2b5\ub2c8\ub2e4.",
+            "No selected Soulseek downloads.",
+            "\uc120\ud0dd\ud55c Soulseek \ub2e4\uc6b4\ub85c\ub4dc\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.",
+            "Preparing download",
+            "\ub2e4\uc6b4\ub85c\ub4dc \uc900\ube44 \uc911",
+            "Queued for download",
+            "\ub2e4\uc6b4\ub85c\ub4dc \ub300\uae30 \uc911",
+            "Queued {0}. Open downloads to follow progress.",
+            "{0}\uc744(\ub97c) \ub300\uae30\uc5f4\uc5d0 \ucd94\uac00\ud588\uc2b5\ub2c8\ub2e4."
+                    + " \ub2e4\uc6b4\ub85c\ub4dc\ub97c \uc5f4\uc5b4 \uc9c4\ud589 \uc0c1\ud669\uc744"
+                    + " \ud655\uc778\ud558\uc138\uc694.",
+            "Saved and verified",
+            "\uc800\uc7a5 \ubc0f \uac80\uc99d \uc644\ub8cc",
+            "Saved to all selected destinations",
+            "\uc120\ud0dd\ud55c \ubaa8\ub4e0 \uc704\uce58\uc5d0 \uc800\uc7a5\ub428",
+            "Saving file",
+            "\ud30c\uc77c \uc800\uc7a5 \uc911",
+            "Saving paused",
+            "\uc800\uc7a5 \uc77c\uc2dc \uc911\uc9c0\ub428",
+            "Saving selected copies",
+            "\uc120\ud0dd\ud55c \uc0ac\ubcf8 \uc800\uc7a5 \uc911",
+            "Selected audio file",
+            "\uc120\ud0dd\ud55c \uc624\ub514\uc624 \ud30c\uc77c",
+            "Selected download storage is full. Finish existing copies first.",
+            "\uc120\ud0dd\ud55c \ub2e4\uc6b4\ub85c\ub4dc\uc758 \uc800\uc7a5 \uacf5\uac04\uc774"
+                + " \uac00\ub4dd \ucc3c\uc2b5\ub2c8\ub2e4. \uba3c\uc800 \uae30\uc874 \uc0ac\ubcf8"
+                + " \uc800\uc7a5\uc744 \uc644\ub8cc\ud558\uc138\uc694.",
+            "Selected files are limited to 256 MiB.",
+            "\uc120\ud0dd\ud55c \ud30c\uc77c\uc740 256 MiB\ub85c \uc81c\ud55c\ub429\ub2c8\ub2e4.",
+            "Soulseek session changed. Select the result again.",
+            "Soulseek \uc138\uc158\uc774 \ubcc0\uacbd\ub418\uc5c8\uc2b5\ub2c8\ub2e4."
+                    + " \uacb0\uacfc\ub97c \ub2e4\uc2dc \uc120\ud0dd\ud558\uc138\uc694.",
+            "The selected download could not complete. Try again or choose another result.",
+            "\uc120\ud0dd\ud55c \ub2e4\uc6b4\ub85c\ub4dc\ub97c \uc644\ub8cc\ud558\uc9c0"
+                    + " \ubabb\ud588\uc2b5\ub2c8\ub2e4. \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uac70\ub098"
+                    + " \ub2e4\ub978 \uacb0\uacfc\ub97c \uc120\ud0dd\ud558\uc138\uc694.",
+            "The selected download queue is full.",
+            "\uc120\ud0dd\ud55c \ub2e4\uc6b4\ub85c\ub4dc \ub300\uae30\uc5f4\uc774 \uac00\ub4dd"
+                    + " \ucc3c\uc2b5\ub2c8\ub2e4.",
+            "This Soulseek result expired. Search again.",
+            "\uc774 Soulseek \uacb0\uacfc\uac00 \ub9cc\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4."
+                    + " \ub2e4\uc2dc \uac80\uc0c9\ud558\uc138\uc694.",
+            "This file did not pass the audio format check. Choose another result.",
+            "\uc774 \ud30c\uc77c\uc740 \uc624\ub514\uc624 \ud615\uc2dd \uac80\uc0ac\ub97c"
+                    + " \ud1b5\uacfc\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4. \ub2e4\ub978"
+                    + " \uacb0\uacfc\ub97c \uc120\ud0dd\ud558\uc138\uc694.",
+            "This selected download is already queued.",
+            "\uc774 \ub2e4\uc6b4\ub85c\ub4dc\ub294 \uc774\ubbf8 \ub300\uae30\uc5f4\uc5d0"
+                    + " \uc788\uc2b5\ub2c8\ub2e4.",
+            "Uploading file",
+            "\ud30c\uc77c \uc5c5\ub85c\ub4dc \uc911",
+            "Waiting for peer",
+            "\ud53c\uc5b4 \ub300\uae30 \uc911",
+            "Waiting for peer \u00b7 queue position {0}",
+            "\ud53c\uc5b4 \ub300\uae30 \uc911 \u00b7 \ub300\uae30\uc5f4 \uc704\uce58 {0}",
+            "Waiting to save",
+            "\uc800\uc7a5 \ub300\uae30 \uc911",
+            "Waiting to save selected copies",
+            "\uc120\ud0dd\ud55c \uc0ac\ubcf8 \uc800\uc7a5 \ub300\uae30 \uc911",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "\ud615\uc2dd: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "Soulseek\uc5d0 \uc5f0\uacb0 \uc911\u2026",
+            "May use YouTube or another enabled source.",
+            "YouTube \ub610\ub294 \ub2e4\ub978 \ud65c\uc131\ud654\ub41c \uc18c\uc2a4\ub97c"
+                    + " \uc0ac\uc6a9\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.",
         };
     }
 
@@ -34958,6 +37877,212 @@ final class Translations {
             "Sposoby przesy\u0142ania: {0}",
             "{0} recent clients",
             "Ostatnio aktywne aplikacje: {0}",
+            "Soulseek account",
+            "Konto Soulseek",
+            "Signed in as {0}",
+            "Zalogowano jako {0}",
+            "Ready to search",
+            "Gotowe do wyszukiwania",
+            "Sign in to search Soulseek.",
+            "Zaloguj si\u0119, aby wyszukiwa\u0107 w Soulseek.",
+            "Enable Soulseek to sign in and search.",
+            "W\u0142\u0105cz Soulseek, aby si\u0119 zalogowa\u0107 i wyszukiwa\u0107.",
+            "Download setup",
+            "Konfiguracja pobierania",
+            "Choose where copies go before searching.",
+            "Wybierz miejsce zapisu kopii przed wyszukiwaniem.",
+            "Choose your audio formats before searching.",
+            "Wybierz formaty audio przed wyszukiwaniem.",
+            "Find music on Soulseek",
+            "Znajd\u017a muzyk\u0119 w Soulseek",
+            "{0} formats enabled",
+            "W\u0142\u0105czone formaty: {0}",
+            "More download options",
+            "Wi\u0119cej opcji pobierania",
+            "Account settings",
+            "Ustawienia konta",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Ustawienia Soulseek s\u0105 niedost\u0119pne. Uruchom ponownie BitChord i spr\u00f3buj"
+                    + " jeszcze raz.",
+            "Other download options are controlled in Patches & tweaks.",
+            "Pozosta\u0142e opcje pobierania znajduj\u0105 si\u0119 w sekcji Patche i poprawki.",
+            "Source enabled",
+            "\u0179r\u00f3d\u0142o w\u0142\u0105czone",
+            "Account actions",
+            "Dzia\u0142ania na koncie",
+            "Not chosen yet",
+            "Jeszcze nie wybrano",
+            "Not signed in",
+            "Nie zalogowano",
+            "Finish the open download choice first.",
+            "Najpierw doko\u0144cz otwarty wyb\u00f3r pobierania.",
+            "Could not open the download source choice. Try again.",
+            "Nie uda\u0142o si\u0119 otworzy\u0107 wyboru \u017ar\u00f3d\u0142a pobierania."
+                    + " Spr\u00f3buj ponownie.",
+            "BitChord could not start this download. Try again.",
+            "BitChord nie m\u00f3g\u0142 rozpocz\u0105\u0107 tego pobierania. Spr\u00f3buj"
+                    + " ponownie.",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "Wyszukaj plik, sprawd\u017a dane drugiego u\u017cytkownika i wybierz dok\u0142adnie"
+                + " to, co chcesz pobra\u0107. Bie\u017c\u0105cy utw\u00f3r i stan jego pobrania"
+                + " pozostan\u0105 bez zmian.",
+            "Choose download source",
+            "Wybierz \u017ar\u00f3d\u0142o pobierania",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek wyszukuje osobny plik. BitChord u\u017cywa dotychczasowych"
+                    + " \u017ar\u00f3de\u0142 pobierania i ustawie\u0144.",
+            "Search Soulseek",
+            "Szukaj w Soulseek",
+            "Continue with BitChord download",
+            "Kontynuuj pobieranie przez BitChord",
+            "This download choice expired. Return to the song and try again.",
+            "Ten wyb\u00f3r pobierania wygas\u0142. Wr\u00f3\u0107 do utworu i spr\u00f3buj"
+                    + " ponownie.",
+            "Source: Soulseek",
+            "\u0179r\u00f3d\u0142o: Soulseek",
+            "Artist and song title",
+            "Wykonawca i tytu\u0142 utworu",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "Gotowe do wyszukiwania. Nic nie zostanie pobrane, dop\u00f3ki nie wybierzesz pliku.",
+            "Soulseek account and setup",
+            "Konto i konfiguracja Soulseek",
+            "Audio formats and preference order",
+            "Formaty audio i kolejno\u015b\u0107 preferencji",
+            "View downloads",
+            "Poka\u017c pobieranie",
+            "Choose your audio formats and their order first.",
+            "Najpierw wybierz formaty audio i ich kolejno\u015b\u0107.",
+            "Search using 2\u2013256 characters.",
+            "Wpisz od 2 do 256 znak\u00f3w.",
+            "Searching Soulseek\u2026",
+            "Wyszukiwanie w Soulseek\u2026",
+            "Soulseek session changed. Search again.",
+            "Sesja Soulseek uleg\u0142a zmianie. Wyszukaj ponownie.",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "Brak pasuj\u0105cych plik\u00f3w. Spr\u00f3buj innych s\u0142\u00f3w. Pobieranie przez"
+                    + " BitChord nie zosta\u0142o rozpocz\u0119te.",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "Wybierz plik poni\u017cej. Nazwy, formaty i dost\u0119pno\u015b\u0107 podane przez"
+                    + " innych u\u017cytkownik\u00f3w nie s\u0105 zweryfikowane.",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "Nie uda\u0142o si\u0119 uko\u0144czy\u0107 wyszukiwania w Soulseek. Sprawd\u017a"
+                    + " logowanie, formaty i miejsca zapisu kopii, a nast\u0119pnie spr\u00f3buj"
+                    + " ponownie.",
+            "A previous search is stopping. Try again shortly.",
+            "Poprzednie wyszukiwanie jest zatrzymywane. Spr\u00f3buj za chwil\u0119.",
+            "Peer: {0}",
+            "U\u017cytkownik: {0}",
+            "File: {0}",
+            "Plik: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "Deklarowany format: {0} \u00b7 {1} bajt\u00f3w",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "Dane s\u0105 deklaracjami drugiego u\u017cytkownika. Kodek pobranego pliku jest"
+                    + " sprawdzany przed zapisem.",
+            "Download this file",
+            "Pobierz ten plik",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "\u0179r\u00f3d\u0142o: Soulseek. Wybrany plik dodano do kolejki. Otw\u00f3rz"
+                    + " Poka\u017c pobieranie, aby \u015bledzi\u0107 post\u0119p.",
+            "The selected file could not be queued. Review setup and try again.",
+            "Nie uda\u0142o si\u0119 doda\u0107 wybranego pliku do kolejki. Sprawd\u017a"
+                    + " konfiguracj\u0119 i spr\u00f3buj ponownie.",
+            "The selected file is no longer ready. Check setup and search again.",
+            "Wybrany plik nie jest ju\u017c gotowy. Sprawd\u017a konfiguracj\u0119 i wyszukaj"
+                    + " ponownie.",
+            "Cannot create selected download storage.",
+            "Nie mo\u017cna utworzy\u0107 miejsca na wybrane pobieranie.",
+            "Cannot inspect selected download storage.",
+            "Nie mo\u017cna sprawdzi\u0107 miejsca na wybrane pobieranie.",
+            "Cannot remove interrupted selected download staging.",
+            "Nie mo\u017cna usun\u0105\u0107 danych tymczasowych przerwanego wybranego pobierania.",
+            "Check the saved file before retry",
+            "Sprawd\u017a zapisany plik przed ponown\u0105 pr\u00f3b\u0105",
+            "Checking audio format",
+            "Sprawdzanie formatu audio",
+            "Choose where copies go before downloading.",
+            "Wybierz miejsce zapisu kopii przed pobieraniem.",
+            "Confirmation required before retry",
+            "Przed ponown\u0105 pr\u00f3b\u0105 wymagane jest potwierdzenie",
+            "Copy failed",
+            "Kopiowanie nie powiod\u0142o si\u0119",
+            "Download cancelled",
+            "Pobieranie anulowano",
+            "Download needs attention",
+            "Pobieranie wymaga uwagi",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "Nie uda\u0142o si\u0119 sprawdzi\u0107 ustawie\u0144 pobierania. Uruchom ponownie"
+                    + " BitChord i spr\u00f3buj jeszcze raz.",
+            "Downloading \u00b7 {0} of {1}",
+            "Pobieranie \u00b7 {0} z {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "Bie\u017c\u0105ce ustawienia wstrzymuj\u0105 pobieranie. Spr\u00f3buj ponownie, gdy"
+                    + " b\u0119dzie dozwolone.",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "W\u0142\u0105cz Nieoficjalny Soulseek przed pobraniem tego wyniku.",
+            "Invalid selected Soulseek reference.",
+            "Nieprawid\u0142owe odwo\u0142anie do wybranego wyniku Soulseek.",
+            "No selected Soulseek downloads.",
+            "Brak wybranych pobra\u0144 z Soulseek.",
+            "Preparing download",
+            "Przygotowywanie pobierania",
+            "Queued for download",
+            "W kolejce do pobrania",
+            "Queued {0}. Open downloads to follow progress.",
+            "Dodano do kolejki: {0}. Otw\u00f3rz pobieranie, aby \u015bledzi\u0107 post\u0119p.",
+            "Saved and verified",
+            "Zapisano i zweryfikowano",
+            "Saved to all selected destinations",
+            "Zapisano we wszystkich wybranych miejscach",
+            "Saving file",
+            "Zapisywanie pliku",
+            "Saving paused",
+            "Zapisywanie wstrzymane",
+            "Saving selected copies",
+            "Zapisywanie wybranych kopii",
+            "Selected audio file",
+            "Wybrany plik audio",
+            "Selected download storage is full. Finish existing copies first.",
+            "Miejsce na wybrane pobieranie jest pe\u0142ne. Najpierw doko\u0144cz istniej\u0105ce"
+                    + " kopie.",
+            "Selected files are limited to 256 MiB.",
+            "Wybrane pliki mog\u0105 mie\u0107 najwy\u017cej 256 MiB.",
+            "Soulseek session changed. Select the result again.",
+            "Sesja Soulseek uleg\u0142a zmianie. Wybierz wynik ponownie.",
+            "The selected download could not complete. Try again or choose another result.",
+            "Nie uda\u0142o si\u0119 uko\u0144czy\u0107 wybranego pobierania. Spr\u00f3buj ponownie"
+                    + " lub wybierz inny wynik.",
+            "The selected download queue is full.",
+            "Kolejka wybranych pobra\u0144 jest pe\u0142na.",
+            "This Soulseek result expired. Search again.",
+            "Ten wynik Soulseek wygas\u0142. Wyszukaj ponownie.",
+            "This file did not pass the audio format check. Choose another result.",
+            "Ten plik nie przeszed\u0142 sprawdzania formatu audio. Wybierz inny wynik.",
+            "This selected download is already queued.",
+            "To wybrane pobieranie jest ju\u017c w kolejce.",
+            "Uploading file",
+            "Wysy\u0142anie pliku",
+            "Waiting for peer",
+            "Oczekiwanie na drugiego u\u017cytkownika",
+            "Waiting for peer \u00b7 queue position {0}",
+            "Oczekiwanie na u\u017cytkownika \u00b7 pozycja w kolejce {0}",
+            "Waiting to save",
+            "Oczekiwanie na zapis",
+            "Waiting to save selected copies",
+            "Oczekiwanie na zapis wybranych kopii",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "\u0141\u0105czenie z Soulseek\u2026",
+            "May use YouTube or another enabled source.",
+            "Mo\u017ce korzysta\u0107 z YouTube lub innego w\u0142\u0105czonego"
+                    + " \u017ar\u00f3d\u0142a.",
         };
     }
 
@@ -37215,6 +40340,208 @@ final class Translations {
             "Transportes: {0}",
             "{0} recent clients",
             "{0} clientes recentes",
+            "Soulseek account",
+            "Conta do Soulseek",
+            "Signed in as {0}",
+            "Conectado como {0}",
+            "Ready to search",
+            "Pronto para pesquisar",
+            "Sign in to search Soulseek.",
+            "Entre na conta para pesquisar no Soulseek.",
+            "Enable Soulseek to sign in and search.",
+            "Ative o Soulseek para entrar na conta e pesquisar.",
+            "Download setup",
+            "Configura\u00e7\u00e3o de downloads",
+            "Choose where copies go before searching.",
+            "Escolha o destino das c\u00f3pias antes de pesquisar.",
+            "Choose your audio formats before searching.",
+            "Escolha os formatos de \u00e1udio antes de pesquisar.",
+            "Find music on Soulseek",
+            "Encontrar m\u00fasicas no Soulseek",
+            "{0} formats enabled",
+            "{0} formatos ativados",
+            "More download options",
+            "Mais op\u00e7\u00f5es de download",
+            "Account settings",
+            "Configura\u00e7\u00f5es da conta",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "As configura\u00e7\u00f5es do Soulseek est\u00e3o indispon\u00edveis. Reinicie o"
+                    + " BitChord e tente novamente.",
+            "Other download options are controlled in Patches & tweaks.",
+            "As outras op\u00e7\u00f5es de download ficam em Modifica\u00e7\u00f5es e ajustes.",
+            "Source enabled",
+            "Fonte ativada",
+            "Account actions",
+            "A\u00e7\u00f5es da conta",
+            "Not chosen yet",
+            "Ainda n\u00e3o escolhido",
+            "Not signed in",
+            "N\u00e3o conectado",
+            "Finish the open download choice first.",
+            "Conclua primeiro a escolha de download aberta.",
+            "Could not open the download source choice. Try again.",
+            "N\u00e3o foi poss\u00edvel abrir a escolha da fonte do download. Tente novamente.",
+            "BitChord could not start this download. Try again.",
+            "O BitChord n\u00e3o conseguiu iniciar este download. Tente novamente.",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "Pesquise um arquivo, confira os detalhes do par e escolha exatamente o que baixar. A"
+                    + " m\u00fasica atual e seu estado de download permanecem iguais.",
+            "Choose download source",
+            "Escolher fonte do download",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "O Soulseek pesquisa um arquivo separado. O BitChord usa suas fontes de download e"
+                    + " configura\u00e7\u00f5es atuais.",
+            "Search Soulseek",
+            "Pesquisar no Soulseek",
+            "Continue with BitChord download",
+            "Continuar com o download do BitChord",
+            "This download choice expired. Return to the song and try again.",
+            "Esta escolha de download expirou. Volte \u00e0 m\u00fasica e tente novamente.",
+            "Source: Soulseek",
+            "Fonte: Soulseek",
+            "Artist and song title",
+            "Artista e t\u00edtulo da m\u00fasica",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "Pronto para pesquisar. Nada ser\u00e1 baixado at\u00e9 voc\u00ea escolher um arquivo.",
+            "Soulseek account and setup",
+            "Conta e configura\u00e7\u00e3o do Soulseek",
+            "Audio formats and preference order",
+            "Formatos de \u00e1udio e ordem de prefer\u00eancia",
+            "View downloads",
+            "Ver downloads",
+            "Choose your audio formats and their order first.",
+            "Escolha primeiro os formatos de \u00e1udio e sua ordem.",
+            "Search using 2\u2013256 characters.",
+            "Use de 2 a 256 caracteres na pesquisa.",
+            "Searching Soulseek\u2026",
+            "Pesquisando no Soulseek\u2026",
+            "Soulseek session changed. Search again.",
+            "A sess\u00e3o do Soulseek mudou. Pesquise novamente.",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "Nenhum arquivo correspondente. Tente outras palavras. O download do BitChord n\u00e3o"
+                    + " foi iniciado.",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "Escolha um arquivo abaixo. Nomes, formatos e disponibilidade informados pelos pares"
+                    + " n\u00e3o foram verificados.",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "N\u00e3o foi poss\u00edvel concluir a pesquisa no Soulseek. Confira a conta, os"
+                    + " formatos e os destinos das c\u00f3pias e tente novamente.",
+            "A previous search is stopping. Try again shortly.",
+            "Uma pesquisa anterior est\u00e1 sendo interrompida. Tente novamente em instantes.",
+            "Peer: {0}",
+            "Par: {0}",
+            "File: {0}",
+            "Arquivo: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "Formato anunciado: {0} \u00b7 {1} bytes",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "Os detalhes s\u00e3o declara\u00e7\u00f5es do par. O codec do arquivo baixado \u00e9"
+                    + " verificado antes de salvar.",
+            "Download this file",
+            "Baixar este arquivo",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "Fonte: Soulseek. Arquivo escolhido na fila. Abra Ver downloads para acompanhar o"
+                    + " progresso.",
+            "The selected file could not be queued. Review setup and try again.",
+            "N\u00e3o foi poss\u00edvel colocar o arquivo escolhido na fila. Confira a"
+                    + " configura\u00e7\u00e3o e tente novamente.",
+            "The selected file is no longer ready. Check setup and search again.",
+            "O arquivo escolhido n\u00e3o est\u00e1 mais pronto. Confira a configura\u00e7\u00e3o e"
+                    + " pesquise novamente.",
+            "Cannot create selected download storage.",
+            "N\u00e3o \u00e9 poss\u00edvel criar o armazenamento do download escolhido.",
+            "Cannot inspect selected download storage.",
+            "N\u00e3o \u00e9 poss\u00edvel inspecionar o armazenamento do download escolhido.",
+            "Cannot remove interrupted selected download staging.",
+            "N\u00e3o \u00e9 poss\u00edvel remover os dados tempor\u00e1rios do download escolhido"
+                    + " interrompido.",
+            "Check the saved file before retry",
+            "Confira o arquivo salvo antes de tentar novamente",
+            "Checking audio format",
+            "Verificando o formato de \u00e1udio",
+            "Choose where copies go before downloading.",
+            "Escolha o destino das c\u00f3pias antes de baixar.",
+            "Confirmation required before retry",
+            "Confirma\u00e7\u00e3o necess\u00e1ria antes de tentar novamente",
+            "Copy failed",
+            "Falha ao copiar",
+            "Download cancelled",
+            "Download cancelado",
+            "Download needs attention",
+            "O download precisa de aten\u00e7\u00e3o",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "N\u00e3o foi poss\u00edvel verificar as configura\u00e7\u00f5es de download. Reinicie"
+                    + " o BitChord e tente novamente.",
+            "Downloading \u00b7 {0} of {1}",
+            "Baixando \u00b7 {0} de {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "Os downloads est\u00e3o pausados pelas configura\u00e7\u00f5es atuais. Tente novamente"
+                    + " quando forem permitidos.",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "Ative o Soulseek n\u00e3o oficial antes de baixar este resultado.",
+            "Invalid selected Soulseek reference.",
+            "Refer\u00eancia da sele\u00e7\u00e3o do Soulseek inv\u00e1lida.",
+            "No selected Soulseek downloads.",
+            "Nenhum download do Soulseek selecionado.",
+            "Preparing download",
+            "Preparando o download",
+            "Queued for download",
+            "Na fila para baixar",
+            "Queued {0}. Open downloads to follow progress.",
+            "{0} na fila. Abra os downloads para acompanhar o progresso.",
+            "Saved and verified",
+            "Salvo e verificado",
+            "Saved to all selected destinations",
+            "Salvo em todos os destinos escolhidos",
+            "Saving file",
+            "Salvando arquivo",
+            "Saving paused",
+            "Salvamento pausado",
+            "Saving selected copies",
+            "Salvando as c\u00f3pias escolhidas",
+            "Selected audio file",
+            "Arquivo de \u00e1udio escolhido",
+            "Selected download storage is full. Finish existing copies first.",
+            "O armazenamento dos downloads escolhidos est\u00e1 cheio. Conclua primeiro as"
+                    + " c\u00f3pias existentes.",
+            "Selected files are limited to 256 MiB.",
+            "Os arquivos escolhidos est\u00e3o limitados a 256 MiB.",
+            "Soulseek session changed. Select the result again.",
+            "A sess\u00e3o do Soulseek mudou. Selecione o resultado novamente.",
+            "The selected download could not complete. Try again or choose another result.",
+            "N\u00e3o foi poss\u00edvel concluir o download escolhido. Tente novamente ou escolha"
+                    + " outro resultado.",
+            "The selected download queue is full.",
+            "A fila de downloads escolhidos est\u00e1 cheia.",
+            "This Soulseek result expired. Search again.",
+            "Este resultado do Soulseek expirou. Pesquise novamente.",
+            "This file did not pass the audio format check. Choose another result.",
+            "Este arquivo n\u00e3o passou na verifica\u00e7\u00e3o do formato de \u00e1udio."
+                    + " Escolha outro resultado.",
+            "This selected download is already queued.",
+            "Este download escolhido j\u00e1 est\u00e1 na fila.",
+            "Uploading file",
+            "Enviando arquivo",
+            "Waiting for peer",
+            "Aguardando o par",
+            "Waiting for peer \u00b7 queue position {0}",
+            "Aguardando o par \u00b7 posi\u00e7\u00e3o na fila {0}",
+            "Waiting to save",
+            "Aguardando para salvar",
+            "Waiting to save selected copies",
+            "Aguardando para salvar as c\u00f3pias escolhidas",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "Formato: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "Conectando ao Soulseek\u2026",
+            "May use YouTube or another enabled source.",
+            "Pode usar o YouTube ou outra fonte ativada.",
         };
     }
 
@@ -41994,6 +45321,456 @@ final class Translations {
             "\u041d\u0435\u0434\u0430\u0432\u043d\u043e"
                     + " \u0430\u043a\u0442\u0438\u0432\u043d\u044b\u0445"
                     + " \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0439: {0}",
+            "Soulseek account",
+            "\u0423\u0447\u0451\u0442\u043d\u0430\u044f \u0437\u0430\u043f\u0438\u0441\u044c"
+                    + " Soulseek",
+            "Signed in as {0}",
+            "\u0412\u0445\u043e\u0434 \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d"
+                    + " \u043a\u0430\u043a {0}",
+            "Ready to search",
+            "\u0412\u0441\u0451 \u0433\u043e\u0442\u043e\u0432\u043e \u043a"
+                    + " \u043f\u043e\u0438\u0441\u043a\u0443",
+            "Sign in to search Soulseek.",
+            "\u0412\u043e\u0439\u0434\u0438\u0442\u0435 \u0432"
+                + " \u0443\u0447\u0451\u0442\u043d\u0443\u044e \u0437\u0430\u043f\u0438\u0441\u044c"
+                + " \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430 \u0432 Soulseek.",
+            "Enable Soulseek to sign in and search.",
+            "\u0412\u043a\u043b\u044e\u0447\u0438\u0442\u0435 Soulseek,"
+                    + " \u0447\u0442\u043e\u0431\u044b \u0432\u043e\u0439\u0442\u0438 \u0438"
+                    + " \u043d\u0430\u0447\u0430\u0442\u044c \u043f\u043e\u0438\u0441\u043a.",
+            "Download setup",
+            "\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f",
+            "Choose where copies go before searching.",
+            "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043c\u0435\u0441\u0442\u043e"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u044f"
+                    + " \u043a\u043e\u043f\u0438\u0439 \u043f\u0435\u0440\u0435\u0434"
+                    + " \u043f\u043e\u0438\u0441\u043a\u043e\u043c.",
+            "Choose your audio formats before searching.",
+            "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435"
+                    + " \u0430\u0443\u0434\u0438\u043e\u0444\u043e\u0440\u043c\u0430\u0442\u044b"
+                    + " \u043f\u0435\u0440\u0435\u0434 \u043f\u043e\u0438\u0441\u043a\u043e\u043c.",
+            "Find music on Soulseek",
+            "\u041d\u0430\u0439\u0442\u0438 \u043c\u0443\u0437\u044b\u043a\u0443 \u0432 Soulseek",
+            "{0} formats enabled",
+            "\u0412\u043a\u043b\u044e\u0447\u0435\u043d\u043e"
+                    + " \u0444\u043e\u0440\u043c\u0430\u0442\u043e\u0432: {0}",
+            "More download options",
+            "\u0414\u0440\u0443\u0433\u0438\u0435 \u0432\u0430\u0440\u0438\u0430\u043d\u0442\u044b"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f",
+            "Account settings",
+            "\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438"
+                    + " \u0443\u0447\u0451\u0442\u043d\u043e\u0439"
+                    + " \u0437\u0430\u043f\u0438\u0441\u0438",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438 Soulseek"
+                + " \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b."
+                + " \u041f\u0435\u0440\u0435\u0437\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u0435"
+                + " BitChord \u0438 \u043f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                + " \u043f\u043e\u043f\u044b\u0442\u043a\u0443.",
+            "Other download options are controlled in Patches & tweaks.",
+            "\u0414\u0440\u0443\u0433\u0438\u0435 \u0432\u0430\u0440\u0438\u0430\u043d\u0442\u044b"
+                + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f"
+                + " \u043d\u0430\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u044e\u0442\u0441\u044f"
+                + " \u0432 \u0440\u0430\u0437\u0434\u0435\u043b\u0435"
+                + " \u00ab\u041f\u0430\u0442\u0447\u0438 \u0438"
+                + " \u0434\u043e\u0440\u0430\u0431\u043e\u0442\u043a\u0438\u00bb.",
+            "Source enabled",
+            "\u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a"
+                    + " \u0432\u043a\u043b\u044e\u0447\u0451\u043d",
+            "Account actions",
+            "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u044f \u0441"
+                    + " \u0443\u0447\u0451\u0442\u043d\u043e\u0439"
+                    + " \u0437\u0430\u043f\u0438\u0441\u044c\u044e",
+            "Not chosen yet",
+            "\u0415\u0449\u0451 \u043d\u0435 \u0432\u044b\u0431\u0440\u0430\u043d\u043e",
+            "Not signed in",
+            "\u0412\u0445\u043e\u0434 \u043d\u0435"
+                    + " \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d",
+            "Finish the open download choice first.",
+            "\u0421\u043d\u0430\u0447\u0430\u043b\u0430"
+                + " \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435"
+                + " \u043e\u0442\u043a\u0440\u044b\u0442\u044b\u0439 \u0432\u044b\u0431\u043e\u0440"
+                + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f.",
+            "Could not open the download source choice. Try again.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u043e\u0442\u043a\u0440\u044b\u0442\u044c \u0432\u044b\u0431\u043e\u0440"
+                    + " \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u0430"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f."
+                    + " \u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                    + " \u043f\u043e\u043f\u044b\u0442\u043a\u0443.",
+            "BitChord could not start this download. Try again.",
+            "BitChord \u043d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u043d\u0430\u0447\u0430\u0442\u044c \u044d\u0442\u043e"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435."
+                    + " \u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                    + " \u043f\u043e\u043f\u044b\u0442\u043a\u0443.",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "\u041d\u0430\u0439\u0434\u0438\u0442\u0435 \u0444\u0430\u0439\u043b,"
+                    + " \u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435"
+                    + " \u0441\u0432\u0435\u0434\u0435\u043d\u0438\u044f \u043e\u0442"
+                    + " \u0434\u0440\u0443\u0433\u043e\u0433\u043e"
+                    + " \u0443\u0447\u0430\u0441\u0442\u043d\u0438\u043a\u0430 \u0438"
+                    + " \u0432\u044b\u0431\u0435\u0440\u0438\u0442\u0435, \u0447\u0442\u043e"
+                    + " \u0438\u043c\u0435\u043d\u043d\u043e"
+                    + " \u0441\u043a\u0430\u0447\u0430\u0442\u044c."
+                    + " \u0422\u0435\u043a\u0443\u0449\u0438\u0439 \u0442\u0440\u0435\u043a \u0438"
+                    + " \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u0435\u0433\u043e"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f \u043d\u0435"
+                    + " \u0438\u0437\u043c\u0435\u043d\u044f\u0442\u0441\u044f.",
+            "Choose download source",
+            "\u0412\u044b\u0431\u0440\u0430\u0442\u044c"
+                    + " \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek \u0438\u0449\u0435\u0442"
+                    + " \u043e\u0442\u0434\u0435\u043b\u044c\u043d\u044b\u0439"
+                    + " \u0444\u0430\u0439\u043b. BitChord"
+                    + " \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442"
+                    + " \u043f\u0440\u0435\u0436\u043d\u0438\u0435"
+                    + " \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u0438"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f \u0438"
+                    + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438.",
+            "Search Soulseek",
+            "\u0418\u0441\u043a\u0430\u0442\u044c \u0432 Soulseek",
+            "Continue with BitChord download",
+            "\u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435"
+                    + " \u0447\u0435\u0440\u0435\u0437 BitChord",
+            "This download choice expired. Return to the song and try again.",
+            "\u0421\u0440\u043e\u043a \u044d\u0442\u043e\u0433\u043e"
+                    + " \u0432\u044b\u0431\u043e\u0440\u0430"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f"
+                    + " \u0438\u0441\u0442\u0451\u043a."
+                    + " \u0412\u0435\u0440\u043d\u0438\u0442\u0435\u0441\u044c \u043a"
+                    + " \u0442\u0440\u0435\u043a\u0443 \u0438"
+                    + " \u043f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                    + " \u043f\u043e\u043f\u044b\u0442\u043a\u0443.",
+            "Source: Soulseek",
+            "\u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a: Soulseek",
+            "Artist and song title",
+            "\u0418\u0441\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c \u0438"
+                    + " \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435"
+                    + " \u0442\u0440\u0435\u043a\u0430",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "\u0412\u0441\u0451 \u0433\u043e\u0442\u043e\u0432\u043e \u043a"
+                    + " \u043f\u043e\u0438\u0441\u043a\u0443."
+                    + " \u0421\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435"
+                    + " \u043d\u0430\u0447\u043d\u0451\u0442\u0441\u044f"
+                    + " \u0442\u043e\u043b\u044c\u043a\u043e \u043f\u043e\u0441\u043b\u0435"
+                    + " \u0432\u044b\u0431\u043e\u0440\u0430 \u0444\u0430\u0439\u043b\u0430.",
+            "Soulseek account and setup",
+            "\u0423\u0447\u0451\u0442\u043d\u0430\u044f \u0437\u0430\u043f\u0438\u0441\u044c \u0438"
+                    + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430 Soulseek",
+            "Audio formats and preference order",
+            "\u0410\u0443\u0434\u0438\u043e\u0444\u043e\u0440\u043c\u0430\u0442\u044b \u0438"
+                    + " \u043f\u043e\u0440\u044f\u0434\u043e\u043a"
+                    + " \u043f\u0440\u0435\u0434\u043f\u043e\u0447\u0442\u0435\u043d\u0438\u044f",
+            "View downloads",
+            "\u041f\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u0442\u044c"
+                    + " \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438",
+            "Choose your audio formats and their order first.",
+            "\u0421\u043d\u0430\u0447\u0430\u043b\u0430"
+                + " \u0432\u044b\u0431\u0435\u0440\u0438\u0442\u0435"
+                + " \u0430\u0443\u0434\u0438\u043e\u0444\u043e\u0440\u043c\u0430\u0442\u044b \u0438"
+                + " \u0438\u0445 \u043f\u043e\u0440\u044f\u0434\u043e\u043a.",
+            "Search using 2\u2013256 characters.",
+            "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043e\u0442 2 \u0434\u043e 256"
+                    + " \u0441\u0438\u043c\u0432\u043e\u043b\u043e\u0432 \u0434\u043b\u044f"
+                    + " \u043f\u043e\u0438\u0441\u043a\u0430.",
+            "Searching Soulseek\u2026",
+            "\u041f\u043e\u0438\u0441\u043a \u0432 Soulseek\u2026",
+            "Soulseek session changed. Search again.",
+            "\u0421\u0435\u0430\u043d\u0441 Soulseek"
+                    + " \u0438\u0437\u043c\u0435\u043d\u0438\u043b\u0441\u044f."
+                    + " \u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                    + " \u043f\u043e\u0438\u0441\u043a.",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "\u041f\u043e\u0434\u0445\u043e\u0434\u044f\u0449\u0438\u0445"
+                    + " \u0444\u0430\u0439\u043b\u043e\u0432 \u043d\u0435\u0442."
+                    + " \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435"
+                    + " \u0434\u0440\u0443\u0433\u0438\u0435 \u0441\u043b\u043e\u0432\u0430."
+                    + " \u0421\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435"
+                    + " \u0447\u0435\u0440\u0435\u0437 BitChord \u043d\u0435"
+                    + " \u043d\u0430\u0447\u0430\u043b\u043e\u0441\u044c.",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0444\u0430\u0439\u043b"
+                    + " \u043d\u0438\u0436\u0435. \u0418\u043c\u0435\u043d\u0430,"
+                    + " \u0444\u043e\u0440\u043c\u0430\u0442\u044b \u0438"
+                    + " \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u043e\u0441\u0442\u044c,"
+                    + " \u0443\u043a\u0430\u0437\u0430\u043d\u043d\u044b\u0435"
+                    + " \u0443\u0447\u0430\u0441\u0442\u043d\u0438\u043a\u0430\u043c\u0438,"
+                    + " \u043d\u0435 \u043f\u0440\u043e\u0432\u0435\u0440\u0435\u043d\u044b.",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u044c"
+                    + " \u043f\u043e\u0438\u0441\u043a \u0432 Soulseek."
+                    + " \u041f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435"
+                    + " \u0432\u0445\u043e\u0434, \u0444\u043e\u0440\u043c\u0430\u0442\u044b \u0438"
+                    + " \u043c\u0435\u0441\u0442\u0430"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u044f"
+                    + " \u043a\u043e\u043f\u0438\u0439, \u0437\u0430\u0442\u0435\u043c"
+                    + " \u043f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                    + " \u043f\u043e\u043f\u044b\u0442\u043a\u0443.",
+            "A previous search is stopping. Try again shortly.",
+            "\u041f\u0440\u0435\u0434\u044b\u0434\u0443\u0449\u0438\u0439"
+                + " \u043f\u043e\u0438\u0441\u043a"
+                + " \u043e\u0441\u0442\u0430\u043d\u0430\u0432\u043b\u0438\u0432\u0430\u0435\u0442\u0441\u044f."
+                + " \u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                + " \u043f\u043e\u043f\u044b\u0442\u043a\u0443 \u0447\u0443\u0442\u044c"
+                + " \u043f\u043e\u0437\u0436\u0435.",
+            "Peer: {0}",
+            "\u0423\u0447\u0430\u0441\u0442\u043d\u0438\u043a: {0}",
+            "File: {0}",
+            "\u0424\u0430\u0439\u043b: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "\u0417\u0430\u044f\u0432\u043b\u0435\u043d\u043d\u044b\u0439"
+                + " \u0444\u043e\u0440\u043c\u0430\u0442: {0} \u00b7 {1} \u0431\u0430\u0439\u0442",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "\u0421\u0432\u0435\u0434\u0435\u043d\u0438\u044f"
+                + " \u043f\u0440\u0435\u0434\u043e\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u044b"
+                + " \u0434\u0440\u0443\u0433\u0438\u043c"
+                + " \u0443\u0447\u0430\u0441\u0442\u043d\u0438\u043a\u043e\u043c."
+                + " \u041a\u043e\u0434\u0435\u043a"
+                + " \u0441\u043a\u0430\u0447\u0430\u043d\u043d\u043e\u0433\u043e"
+                + " \u0444\u0430\u0439\u043b\u0430"
+                + " \u043f\u0440\u043e\u0432\u0435\u0440\u044f\u0435\u0442\u0441\u044f"
+                + " \u043f\u0435\u0440\u0435\u0434"
+                + " \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435\u043c.",
+            "Download this file",
+            "\u0421\u043a\u0430\u0447\u0430\u0442\u044c \u044d\u0442\u043e\u0442"
+                    + " \u0444\u0430\u0439\u043b",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "\u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a: Soulseek."
+                + " \u0412\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0439 \u0444\u0430\u0439\u043b"
+                + " \u0432 \u043e\u0447\u0435\u0440\u0435\u0434\u0438."
+                + " \u041e\u0442\u043a\u0440\u043e\u0439\u0442\u0435"
+                + " \u00ab\u041f\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u0442\u044c"
+                + " \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438\u00bb,"
+                + " \u0447\u0442\u043e\u0431\u044b \u0441\u043b\u0435\u0434\u0438\u0442\u044c"
+                + " \u0437\u0430 \u0445\u043e\u0434\u043e\u043c"
+                + " \u0440\u0430\u0431\u043e\u0442\u044b.",
+            "The selected file could not be queued. Review setup and try again.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                + " \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c"
+                + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0439 \u0444\u0430\u0439\u043b"
+                + " \u0432 \u043e\u0447\u0435\u0440\u0435\u0434\u044c."
+                + " \u041f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435"
+                + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438 \u0438"
+                + " \u043f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                + " \u043f\u043e\u043f\u044b\u0442\u043a\u0443.",
+            "The selected file is no longer ready. Check setup and search again.",
+            "\u0412\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0439 \u0444\u0430\u0439\u043b"
+                    + " \u0431\u043e\u043b\u044c\u0448\u0435 \u043d\u0435"
+                    + " \u0433\u043e\u0442\u043e\u0432."
+                    + " \u041f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435"
+                    + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438 \u0438"
+                    + " \u043f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                    + " \u043f\u043e\u0438\u0441\u043a.",
+            "Cannot create selected download storage.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u0441\u043e\u0437\u0434\u0430\u0442\u044c"
+                    + " \u0445\u0440\u0430\u043d\u0438\u043b\u0438\u0449\u0435"
+                    + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u043e\u0433\u043e"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f.",
+            "Cannot inspect selected download storage.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u043f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c"
+                    + " \u0445\u0440\u0430\u043d\u0438\u043b\u0438\u0449\u0435"
+                    + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u043e\u0433\u043e"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f.",
+            "Cannot remove interrupted selected download staging.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u0443\u0434\u0430\u043b\u0438\u0442\u044c"
+                    + " \u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0435"
+                    + " \u0434\u0430\u043d\u043d\u044b\u0435"
+                    + " \u043f\u0440\u0435\u0440\u0432\u0430\u043d\u043d\u043e\u0433\u043e"
+                    + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u043e\u0433\u043e"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f.",
+            "Check the saved file before retry",
+            "\u041f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
+                    + " \u0444\u0430\u0439\u043b \u043f\u0435\u0440\u0435\u0434"
+                    + " \u043f\u043e\u0432\u0442\u043e\u0440\u043d\u043e\u0439"
+                    + " \u043f\u043e\u043f\u044b\u0442\u043a\u043e\u0439",
+            "Checking audio format",
+            "\u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430"
+                    + " \u0430\u0443\u0434\u0438\u043e\u0444\u043e\u0440\u043c\u0430\u0442\u0430",
+            "Choose where copies go before downloading.",
+            "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043c\u0435\u0441\u0442\u043e"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u044f"
+                    + " \u043a\u043e\u043f\u0438\u0439 \u043f\u0435\u0440\u0435\u0434"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435\u043c.",
+            "Confirmation required before retry",
+            "\u041f\u0435\u0440\u0435\u0434 \u043f\u043e\u0432\u0442\u043e\u0440\u043d\u043e\u0439"
+                + " \u043f\u043e\u043f\u044b\u0442\u043a\u043e\u0439 \u043d\u0443\u0436\u043d\u043e"
+                + " \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0438\u0435",
+            "Copy failed",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u0441\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c",
+            "Download cancelled",
+            "\u0421\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435"
+                    + " \u043e\u0442\u043c\u0435\u043d\u0435\u043d\u043e",
+            "Download needs attention",
+            "\u0421\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435"
+                    + " \u0442\u0440\u0435\u0431\u0443\u0435\u0442"
+                    + " \u0432\u043d\u0438\u043c\u0430\u043d\u0438\u044f",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                + " \u043f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c"
+                + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438"
+                + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f."
+                + " \u041f\u0435\u0440\u0435\u0437\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u0435"
+                + " BitChord \u0438 \u043f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                + " \u043f\u043e\u043f\u044b\u0442\u043a\u0443.",
+            "Downloading \u00b7 {0} of {1}",
+            "\u0421\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435 \u00b7 {0} \u0438\u0437"
+                    + " {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "\u0422\u0435\u043a\u0443\u0449\u0438\u0435"
+                + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438"
+                + " \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u043b\u0438"
+                + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f."
+                + " \u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                + " \u043f\u043e\u043f\u044b\u0442\u043a\u0443, \u043a\u043e\u0433\u0434\u0430"
+                + " \u043e\u043d\u0438 \u0431\u0443\u0434\u0443\u0442"
+                + " \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043d\u044b.",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "\u0412\u043a\u043b\u044e\u0447\u0438\u0442\u0435"
+                + " \u00ab\u041d\u0435\u043e\u0444\u0438\u0446\u0438\u0430\u043b\u044c\u043d\u044b\u0439"
+                + " Soulseek\u00bb \u043f\u0435\u0440\u0435\u0434"
+                + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435\u043c"
+                + " \u044d\u0442\u043e\u0433\u043e"
+                + " \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u0430.",
+            "Invalid selected Soulseek reference.",
+            "\u041d\u0435\u0434\u043e\u043f\u0443\u0441\u0442\u0438\u043c\u0430\u044f"
+                    + " \u0441\u0441\u044b\u043b\u043a\u0430 \u043d\u0430"
+                    + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0439"
+                    + " \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442 Soulseek.",
+            "No selected Soulseek downloads.",
+            "\u041d\u0435\u0442 \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0445"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0439 Soulseek.",
+            "Preparing download",
+            "\u041f\u043e\u0434\u0433\u043e\u0442\u043e\u0432\u043a\u0430"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f",
+            "Queued for download",
+            "\u0412 \u043e\u0447\u0435\u0440\u0435\u0434\u0438 \u043d\u0430"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435",
+            "Queued {0}. Open downloads to follow progress.",
+            "\u0412 \u043e\u0447\u0435\u0440\u0435\u0434\u0438: {0}."
+                    + " \u041e\u0442\u043a\u0440\u043e\u0439\u0442\u0435"
+                    + " \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438,"
+                    + " \u0447\u0442\u043e\u0431\u044b \u0441\u043b\u0435\u0434\u0438\u0442\u044c"
+                    + " \u0437\u0430 \u0445\u043e\u0434\u043e\u043c"
+                    + " \u0440\u0430\u0431\u043e\u0442\u044b.",
+            "Saved and verified",
+            "\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e \u0438"
+                    + " \u043f\u0440\u043e\u0432\u0435\u0440\u0435\u043d\u043e",
+            "Saved to all selected destinations",
+            "\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e \u0432\u043e \u0432\u0441\u0435"
+                    + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0435"
+                    + " \u043c\u0435\u0441\u0442\u0430",
+            "Saving file",
+            "\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435"
+                    + " \u0444\u0430\u0439\u043b\u0430",
+            "Saving paused",
+            "\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435"
+                + " \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u043e",
+            "Saving selected copies",
+            "\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435"
+                    + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0445"
+                    + " \u043a\u043e\u043f\u0438\u0439",
+            "Selected audio file",
+            "\u0412\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0439"
+                    + " \u0430\u0443\u0434\u0438\u043e\u0444\u0430\u0439\u043b",
+            "Selected download storage is full. Finish existing copies first.",
+            "\u0425\u0440\u0430\u043d\u0438\u043b\u0438\u0449\u0435"
+                    + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0445"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0439"
+                    + " \u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d\u043e."
+                    + " \u0421\u043d\u0430\u0447\u0430\u043b\u0430"
+                    + " \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435"
+                    + " \u0442\u0435\u043a\u0443\u0449\u0438\u0435 \u043a\u043e\u043f\u0438\u0438.",
+            "Selected files are limited to 256 MiB.",
+            "\u0420\u0430\u0437\u043c\u0435\u0440"
+                + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u043e\u0433\u043e"
+                + " \u0444\u0430\u0439\u043b\u0430 \u043d\u0435 \u043c\u043e\u0436\u0435\u0442"
+                + " \u043f\u0440\u0435\u0432\u044b\u0448\u0430\u0442\u044c 256 \u041c\u0438\u0411.",
+            "Soulseek session changed. Select the result again.",
+            "\u0421\u0435\u0430\u043d\u0441 Soulseek"
+                    + " \u0438\u0437\u043c\u0435\u043d\u0438\u043b\u0441\u044f."
+                    + " \u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435"
+                    + " \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442"
+                    + " \u0441\u043d\u043e\u0432\u0430.",
+            "The selected download could not complete. Try again or choose another result.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u044c"
+                    + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u043e\u0435"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435."
+                    + " \u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                    + " \u043f\u043e\u043f\u044b\u0442\u043a\u0443 \u0438\u043b\u0438"
+                    + " \u0432\u044b\u0431\u0435\u0440\u0438\u0442\u0435"
+                    + " \u0434\u0440\u0443\u0433\u043e\u0439"
+                    + " \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442.",
+            "The selected download queue is full.",
+            "\u041e\u0447\u0435\u0440\u0435\u0434\u044c"
+                    + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0445"
+                    + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0439"
+                    + " \u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d\u0430.",
+            "This Soulseek result expired. Search again.",
+            "\u0421\u0440\u043e\u043a \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f"
+                    + " \u044d\u0442\u043e\u0433\u043e"
+                    + " \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u0430 Soulseek"
+                    + " \u0438\u0441\u0442\u0451\u043a."
+                    + " \u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
+                    + " \u043f\u043e\u0438\u0441\u043a.",
+            "This file did not pass the audio format check. Choose another result.",
+            "\u042d\u0442\u043e\u0442 \u0444\u0430\u0439\u043b \u043d\u0435"
+                    + " \u043f\u0440\u043e\u0448\u0451\u043b"
+                    + " \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0443"
+                    + " \u0430\u0443\u0434\u0438\u043e\u0444\u043e\u0440\u043c\u0430\u0442\u0430."
+                    + " \u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435"
+                    + " \u0434\u0440\u0443\u0433\u043e\u0439"
+                    + " \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442.",
+            "This selected download is already queued.",
+            "\u042d\u0442\u043e \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u043e\u0435"
+                + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435 \u0443\u0436\u0435"
+                + " \u0432 \u043e\u0447\u0435\u0440\u0435\u0434\u0438.",
+            "Uploading file",
+            "\u041e\u0442\u043f\u0440\u0430\u0432\u043a\u0430 \u0444\u0430\u0439\u043b\u0430",
+            "Waiting for peer",
+            "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435"
+                    + " \u0443\u0447\u0430\u0441\u0442\u043d\u0438\u043a\u0430",
+            "Waiting for peer \u00b7 queue position {0}",
+            "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435"
+                    + " \u0443\u0447\u0430\u0441\u0442\u043d\u0438\u043a\u0430 \u00b7"
+                    + " \u043c\u0435\u0441\u0442\u043e \u0432"
+                    + " \u043e\u0447\u0435\u0440\u0435\u0434\u0438: {0}",
+            "Waiting to save",
+            "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u044f",
+            "Waiting to save selected copies",
+            "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u044f"
+                    + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0445"
+                    + " \u043a\u043e\u043f\u0438\u0439",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "\u0424\u043e\u0440\u043c\u0430\u0442: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 \u043a"
+                    + " Soulseek\u2026",
+            "May use YouTube or another enabled source.",
+            "\u041c\u043e\u0436\u0435\u0442"
+                    + " \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"
+                    + " YouTube \u0438\u043b\u0438 \u0434\u0440\u0443\u0433\u043e\u0439"
+                    + " \u0432\u043a\u043b\u044e\u0447\u0451\u043d\u043d\u044b\u0439"
+                    + " \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a.",
         };
     }
 
@@ -44861,6 +48638,253 @@ final class Translations {
             "{0} recent clients",
             "\u0e44\u0e04\u0e25\u0e40\u0e2d\u0e19\u0e15\u0e4c\u0e17\u0e35\u0e48\u0e1e\u0e1a\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14"
                 + " {0} \u0e23\u0e32\u0e22",
+            "Soulseek account",
+            "\u0e1a\u0e31\u0e0d\u0e0a\u0e35 Soulseek",
+            "Signed in as {0}",
+            "\u0e25\u0e07\u0e0a\u0e37\u0e48\u0e2d\u0e40\u0e02\u0e49\u0e32\u0e43\u0e0a\u0e49\u0e40\u0e1b\u0e47\u0e19"
+                + " {0}",
+            "Ready to search",
+            "\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e04\u0e49\u0e19\u0e2b\u0e32",
+            "Sign in to search Soulseek.",
+            "\u0e25\u0e07\u0e0a\u0e37\u0e48\u0e2d\u0e40\u0e02\u0e49\u0e32\u0e43\u0e0a\u0e49\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e43\u0e19"
+                + " Soulseek",
+            "Enable Soulseek to sign in and search.",
+            "\u0e40\u0e1b\u0e34\u0e14 Soulseek"
+                + " \u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e25\u0e07\u0e0a\u0e37\u0e48\u0e2d\u0e40\u0e02\u0e49\u0e32\u0e43\u0e0a\u0e49\u0e41\u0e25\u0e30\u0e04\u0e49\u0e19\u0e2b\u0e32",
+            "Download setup",
+            "\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14",
+            "Choose where copies go before searching.",
+            "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e1b\u0e25\u0e32\u0e22\u0e17\u0e32\u0e07\u0e40\u0e01\u0e47\u0e1a\u0e2a\u0e33\u0e40\u0e19\u0e32\u0e01\u0e48\u0e2d\u0e19\u0e04\u0e49\u0e19\u0e2b\u0e32",
+            "Choose your audio formats before searching.",
+            "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e23\u0e39\u0e1b\u0e41\u0e1a\u0e1a\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e01\u0e48\u0e2d\u0e19\u0e04\u0e49\u0e19\u0e2b\u0e32",
+            "Find music on Soulseek",
+            "\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e40\u0e1e\u0e25\u0e07\u0e1a\u0e19 Soulseek",
+            "{0} formats enabled",
+            "\u0e40\u0e1b\u0e34\u0e14\u0e43\u0e0a\u0e49 {0} \u0e23\u0e39\u0e1b\u0e41\u0e1a\u0e1a",
+            "More download options",
+            "\u0e15\u0e31\u0e27\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e40\u0e1e\u0e34\u0e48\u0e21\u0e40\u0e15\u0e34\u0e21",
+            "Account settings",
+            "\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e1a\u0e31\u0e0d\u0e0a\u0e35",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32 Soulseek"
+                + " \u0e44\u0e21\u0e48\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e43\u0e0a\u0e49\u0e07\u0e32\u0e19"
+                + " \u0e40\u0e23\u0e34\u0e48\u0e21 BitChord"
+                + " \u0e43\u0e2b\u0e21\u0e48\u0e41\u0e25\u0e49\u0e27\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "Other download options are controlled in Patches & tweaks.",
+            "\u0e15\u0e31\u0e27\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e2d\u0e37\u0e48\u0e19\u0e04\u0e27\u0e1a\u0e04\u0e38\u0e21\u0e44\u0e14\u0e49\u0e43\u0e19\u0e41\u0e1e\u0e15\u0e0a\u0e4c\u0e41\u0e25\u0e30\u0e01\u0e32\u0e23\u0e1b\u0e23\u0e31\u0e1a\u0e41\u0e15\u0e48\u0e07",
+            "Source enabled",
+            "\u0e40\u0e1b\u0e34\u0e14\u0e43\u0e0a\u0e49\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e41\u0e25\u0e49\u0e27",
+            "Account actions",
+            "\u0e01\u0e32\u0e23\u0e08\u0e31\u0e14\u0e01\u0e32\u0e23\u0e1a\u0e31\u0e0d\u0e0a\u0e35",
+            "Not chosen yet",
+            "\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e40\u0e25\u0e37\u0e2d\u0e01",
+            "Not signed in",
+            "\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e25\u0e07\u0e0a\u0e37\u0e48\u0e2d\u0e40\u0e02\u0e49\u0e32\u0e43\u0e0a\u0e49",
+            "Finish the open download choice first.",
+            "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e15\u0e31\u0e27\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e17\u0e35\u0e48\u0e40\u0e1b\u0e34\u0e14\u0e2d\u0e22\u0e39\u0e48\u0e43\u0e2b\u0e49\u0e40\u0e2a\u0e23\u0e47\u0e08\u0e01\u0e48\u0e2d\u0e19",
+            "Could not open the download source choice. Try again.",
+            "\u0e40\u0e1b\u0e34\u0e14\u0e15\u0e31\u0e27\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49"
+                + " \u0e42\u0e1b\u0e23\u0e14\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "BitChord could not start this download. Try again.",
+            "BitChord"
+                + " \u0e40\u0e23\u0e34\u0e48\u0e21\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e19\u0e35\u0e49\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49"
+                + " \u0e42\u0e1b\u0e23\u0e14\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e44\u0e1f\u0e25\u0e4c"
+                + " \u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e23\u0e32\u0e22\u0e25\u0e30\u0e40\u0e2d\u0e35\u0e22\u0e14\u0e02\u0e2d\u0e07\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c"
+                + " \u0e41\u0e25\u0e49\u0e27\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e44\u0e1f\u0e25\u0e4c\u0e17\u0e35\u0e48\u0e15\u0e49\u0e2d\u0e07\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14"
+                + " \u0e40\u0e1e\u0e25\u0e07\u0e1b\u0e31\u0e08\u0e08\u0e38\u0e1a\u0e31\u0e19\u0e41\u0e25\u0e30\u0e2a\u0e16\u0e32\u0e19\u0e30\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e02\u0e2d\u0e07\u0e40\u0e1e\u0e25\u0e07\u0e19\u0e31\u0e49\u0e19\u0e08\u0e30\u0e44\u0e21\u0e48\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e41\u0e1b\u0e25\u0e07",
+            "Choose download source",
+            "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek"
+                + " \u0e08\u0e30\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e44\u0e1f\u0e25\u0e4c\u0e41\u0e22\u0e01\u0e15\u0e48\u0e32\u0e07\u0e2b\u0e32\u0e01"
+                + " \u0e2a\u0e48\u0e27\u0e19 BitChord"
+                + " \u0e43\u0e0a\u0e49\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e41\u0e25\u0e30\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e17\u0e35\u0e48\u0e21\u0e35\u0e2d\u0e22\u0e39\u0e48",
+            "Search Soulseek",
+            "\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e43\u0e19 Soulseek",
+            "Continue with BitChord download",
+            "\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e15\u0e48\u0e2d\u0e14\u0e49\u0e27\u0e22"
+                + " BitChord",
+            "This download choice expired. Return to the song and try again.",
+            "\u0e15\u0e31\u0e27\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e19\u0e35\u0e49\u0e2b\u0e21\u0e14\u0e2d\u0e32\u0e22\u0e38\u0e41\u0e25\u0e49\u0e27"
+                + " \u0e01\u0e25\u0e31\u0e1a\u0e44\u0e1b\u0e17\u0e35\u0e48\u0e40\u0e1e\u0e25\u0e07\u0e41\u0e25\u0e49\u0e27\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "Source: Soulseek",
+            "\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25: Soulseek",
+            "Artist and song title",
+            "\u0e28\u0e34\u0e25\u0e1b\u0e34\u0e19\u0e41\u0e25\u0e30\u0e0a\u0e37\u0e48\u0e2d\u0e40\u0e1e\u0e25\u0e07",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e04\u0e49\u0e19\u0e2b\u0e32"
+                + " \u0e08\u0e30\u0e44\u0e21\u0e48\u0e21\u0e35\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e08\u0e19\u0e01\u0e27\u0e48\u0e32\u0e04\u0e38\u0e13\u0e08\u0e30\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e44\u0e1f\u0e25\u0e4c",
+            "Soulseek account and setup",
+            "\u0e1a\u0e31\u0e0d\u0e0a\u0e35\u0e41\u0e25\u0e30\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32"
+                + " Soulseek",
+            "Audio formats and preference order",
+            "\u0e23\u0e39\u0e1b\u0e41\u0e1a\u0e1a\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e41\u0e25\u0e30\u0e25\u0e33\u0e14\u0e31\u0e1a\u0e04\u0e27\u0e32\u0e21\u0e15\u0e49\u0e2d\u0e07\u0e01\u0e32\u0e23",
+            "View downloads",
+            "\u0e14\u0e39\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14",
+            "Choose your audio formats and their order first.",
+            "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e23\u0e39\u0e1b\u0e41\u0e1a\u0e1a\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e41\u0e25\u0e30\u0e08\u0e31\u0e14\u0e25\u0e33\u0e14\u0e31\u0e1a\u0e01\u0e48\u0e2d\u0e19",
+            "Search using 2\u2013256 characters.",
+            "\u0e43\u0e0a\u0e49\u0e02\u0e49\u0e2d\u0e04\u0e27\u0e32\u0e21\u0e04\u0e49\u0e19\u0e2b\u0e32"
+                + " 2\u2013256 \u0e2d\u0e31\u0e01\u0e02\u0e23\u0e30",
+            "Searching Soulseek\u2026",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e43\u0e19"
+                    + " Soulseek\u2026",
+            "Soulseek session changed. Search again.",
+            "\u0e40\u0e0b\u0e2a\u0e0a\u0e31\u0e19 Soulseek"
+                + " \u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e44\u0e1b\u0e41\u0e25\u0e49\u0e27"
+                + " \u0e42\u0e1b\u0e23\u0e14\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "\u0e44\u0e21\u0e48\u0e21\u0e35\u0e44\u0e1f\u0e25\u0e4c\u0e17\u0e35\u0e48\u0e15\u0e23\u0e07\u0e01\u0e31\u0e19"
+                + " \u0e25\u0e2d\u0e07\u0e43\u0e0a\u0e49\u0e04\u0e33\u0e04\u0e49\u0e19\u0e2d\u0e37\u0e48\u0e19"
+                + " \u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e40\u0e23\u0e34\u0e48\u0e21\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e1c\u0e48\u0e32\u0e19"
+                + " BitChord",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e44\u0e1f\u0e25\u0e4c\u0e14\u0e49\u0e32\u0e19\u0e25\u0e48\u0e32\u0e07"
+                + " \u0e0a\u0e37\u0e48\u0e2d\u0e44\u0e1f\u0e25\u0e4c"
+                + " \u0e23\u0e39\u0e1b\u0e41\u0e1a\u0e1a"
+                + " \u0e41\u0e25\u0e30\u0e2a\u0e16\u0e32\u0e19\u0e30\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e17\u0e35\u0e48\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c\u0e41\u0e08\u0e49\u0e07\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e23\u0e31\u0e1a\u0e01\u0e32\u0e23\u0e22\u0e37\u0e19\u0e22\u0e31\u0e19",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e43\u0e19 Soulseek"
+                + " \u0e44\u0e21\u0e48\u0e2a\u0e33\u0e40\u0e23\u0e47\u0e08"
+                + " \u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e01\u0e32\u0e23\u0e25\u0e07\u0e0a\u0e37\u0e48\u0e2d\u0e40\u0e02\u0e49\u0e32\u0e43\u0e0a\u0e49"
+                + " \u0e23\u0e39\u0e1b\u0e41\u0e1a\u0e1a"
+                + " \u0e41\u0e25\u0e30\u0e1b\u0e25\u0e32\u0e22\u0e17\u0e32\u0e07\u0e40\u0e01\u0e47\u0e1a\u0e2a\u0e33\u0e40\u0e19\u0e32"
+                + " \u0e41\u0e25\u0e49\u0e27\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "A previous search is stopping. Try again shortly.",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e2b\u0e22\u0e38\u0e14\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e04\u0e23\u0e31\u0e49\u0e07\u0e01\u0e48\u0e2d\u0e19"
+                + " \u0e42\u0e1b\u0e23\u0e14\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07\u0e43\u0e19\u0e2d\u0e35\u0e01\u0e2a\u0e31\u0e01\u0e04\u0e23\u0e39\u0e48",
+            "Peer: {0}",
+            "\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c: {0}",
+            "File: {0}",
+            "\u0e44\u0e1f\u0e25\u0e4c: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "\u0e23\u0e39\u0e1b\u0e41\u0e1a\u0e1a\u0e17\u0e35\u0e48\u0e23\u0e30\u0e1a\u0e38: {0}"
+                    + " \u00b7 {1} \u0e44\u0e1a\u0e15\u0e4c",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "\u0e23\u0e32\u0e22\u0e25\u0e30\u0e40\u0e2d\u0e35\u0e22\u0e14\u0e40\u0e1b\u0e47\u0e19\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e17\u0e35\u0e48\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c\u0e41\u0e08\u0e49\u0e07\u0e41\u0e25\u0e30\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e23\u0e31\u0e1a\u0e01\u0e32\u0e23\u0e22\u0e37\u0e19\u0e22\u0e31\u0e19"
+                + " \u0e15\u0e31\u0e27\u0e41\u0e1b\u0e25\u0e07\u0e2a\u0e31\u0e0d\u0e0d\u0e32\u0e13\u0e02\u0e2d\u0e07\u0e44\u0e1f\u0e25\u0e4c\u0e17\u0e35\u0e48\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e08\u0e30\u0e44\u0e14\u0e49\u0e23\u0e31\u0e1a\u0e01\u0e32\u0e23\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e01\u0e48\u0e2d\u0e19\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01",
+            "Download this file",
+            "\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e44\u0e1f\u0e25\u0e4c\u0e19\u0e35\u0e49",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25: Soulseek"
+                + " \u0e40\u0e1e\u0e34\u0e48\u0e21\u0e44\u0e1f\u0e25\u0e4c\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e40\u0e02\u0e49\u0e32\u0e04\u0e34\u0e27\u0e41\u0e25\u0e49\u0e27"
+                + " \u0e40\u0e1b\u0e34\u0e14\u0e14\u0e39\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e15\u0e34\u0e14\u0e15\u0e32\u0e21\u0e04\u0e27\u0e32\u0e21\u0e04\u0e37\u0e1a\u0e2b\u0e19\u0e49\u0e32",
+            "The selected file could not be queued. Review setup and try again.",
+            "\u0e40\u0e1e\u0e34\u0e48\u0e21\u0e44\u0e1f\u0e25\u0e4c\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e40\u0e02\u0e49\u0e32\u0e04\u0e34\u0e27\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49"
+                + " \u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e41\u0e25\u0e49\u0e27\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "The selected file is no longer ready. Check setup and search again.",
+            "\u0e44\u0e1f\u0e25\u0e4c\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e44\u0e21\u0e48\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e41\u0e25\u0e49\u0e27"
+                + " \u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e41\u0e25\u0e49\u0e27\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "Cannot create selected download storage.",
+            "\u0e2a\u0e23\u0e49\u0e32\u0e07\u0e1e\u0e37\u0e49\u0e19\u0e17\u0e35\u0e48\u0e40\u0e01\u0e47\u0e1a\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49",
+            "Cannot inspect selected download storage.",
+            "\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e1e\u0e37\u0e49\u0e19\u0e17\u0e35\u0e48\u0e40\u0e01\u0e47\u0e1a\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e02\u0e2d\u0e07\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49",
+            "Cannot remove interrupted selected download staging.",
+            "\u0e25\u0e1a\u0e44\u0e1f\u0e25\u0e4c\u0e0a\u0e31\u0e48\u0e27\u0e04\u0e23\u0e32\u0e27\u0e02\u0e2d\u0e07\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e41\u0e25\u0e30\u0e16\u0e39\u0e01\u0e02\u0e31\u0e14\u0e08\u0e31\u0e07\u0e2b\u0e27\u0e30\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49",
+            "Check the saved file before retry",
+            "\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e44\u0e1f\u0e25\u0e4c\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49\u0e01\u0e48\u0e2d\u0e19\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "Checking audio format",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e23\u0e39\u0e1b\u0e41\u0e1a\u0e1a\u0e40\u0e2a\u0e35\u0e22\u0e07",
+            "Choose where copies go before downloading.",
+            "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e1b\u0e25\u0e32\u0e22\u0e17\u0e32\u0e07\u0e40\u0e01\u0e47\u0e1a\u0e2a\u0e33\u0e40\u0e19\u0e32\u0e01\u0e48\u0e2d\u0e19\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14",
+            "Confirmation required before retry",
+            "\u0e15\u0e49\u0e2d\u0e07\u0e22\u0e37\u0e19\u0e22\u0e31\u0e19\u0e01\u0e48\u0e2d\u0e19\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "Copy failed",
+            "\u0e04\u0e31\u0e14\u0e25\u0e2d\u0e01\u0e44\u0e21\u0e48\u0e2a\u0e33\u0e40\u0e23\u0e47\u0e08",
+            "Download cancelled",
+            "\u0e22\u0e01\u0e40\u0e25\u0e34\u0e01\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e41\u0e25\u0e49\u0e27",
+            "Download needs attention",
+            "\u0e15\u0e49\u0e2d\u0e07\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49"
+                + " \u0e40\u0e23\u0e34\u0e48\u0e21 BitChord"
+                + " \u0e43\u0e2b\u0e21\u0e48\u0e41\u0e25\u0e49\u0e27\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "Downloading \u00b7 {0} of {1}",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14"
+                    + " \u00b7 {0} \u0e08\u0e32\u0e01 {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e1b\u0e31\u0e08\u0e08\u0e38\u0e1a\u0e31\u0e19\u0e17\u0e33\u0e43\u0e2b\u0e49\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e2b\u0e22\u0e38\u0e14\u0e0a\u0e31\u0e48\u0e27\u0e04\u0e23\u0e32\u0e27"
+                + " \u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07\u0e40\u0e21\u0e37\u0e48\u0e2d\u0e2d\u0e19\u0e38\u0e0d\u0e32\u0e15\u0e43\u0e2b\u0e49\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "\u0e40\u0e1b\u0e34\u0e14 Unofficial Soulseek"
+                + " \u0e01\u0e48\u0e2d\u0e19\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e1c\u0e25\u0e25\u0e31\u0e1e\u0e18\u0e4c\u0e19\u0e35\u0e49",
+            "Invalid selected Soulseek reference.",
+            "\u0e01\u0e32\u0e23\u0e2d\u0e49\u0e32\u0e07\u0e2d\u0e34\u0e07 Soulseek"
+                + " \u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e44\u0e21\u0e48\u0e16\u0e39\u0e01\u0e15\u0e49\u0e2d\u0e07",
+            "No selected Soulseek downloads.",
+            "\u0e44\u0e21\u0e48\u0e21\u0e35\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14"
+                + " Soulseek \u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01",
+            "Preparing download",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e40\u0e15\u0e23\u0e35\u0e22\u0e21\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14",
+            "Queued for download",
+            "\u0e2d\u0e22\u0e39\u0e48\u0e43\u0e19\u0e04\u0e34\u0e27\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14",
+            "Queued {0}. Open downloads to follow progress.",
+            "\u0e40\u0e1e\u0e34\u0e48\u0e21 {0}"
+                + " \u0e40\u0e02\u0e49\u0e32\u0e04\u0e34\u0e27\u0e41\u0e25\u0e49\u0e27"
+                + " \u0e40\u0e1b\u0e34\u0e14\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e15\u0e34\u0e14\u0e15\u0e32\u0e21\u0e04\u0e27\u0e32\u0e21\u0e04\u0e37\u0e1a\u0e2b\u0e19\u0e49\u0e32",
+            "Saved and verified",
+            "\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e41\u0e25\u0e30\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e41\u0e25\u0e49\u0e27",
+            "Saved to all selected destinations",
+            "\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e1b\u0e22\u0e31\u0e07\u0e1b\u0e25\u0e32\u0e22\u0e17\u0e32\u0e07\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e17\u0e31\u0e49\u0e07\u0e2b\u0e21\u0e14\u0e41\u0e25\u0e49\u0e27",
+            "Saving file",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e1f\u0e25\u0e4c",
+            "Saving paused",
+            "\u0e2b\u0e22\u0e38\u0e14\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e0a\u0e31\u0e48\u0e27\u0e04\u0e23\u0e32\u0e27",
+            "Saving selected copies",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e2a\u0e33\u0e40\u0e19\u0e32\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01",
+            "Selected audio file",
+            "\u0e44\u0e1f\u0e25\u0e4c\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01",
+            "Selected download storage is full. Finish existing copies first.",
+            "\u0e1e\u0e37\u0e49\u0e19\u0e17\u0e35\u0e48\u0e40\u0e01\u0e47\u0e1a\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e40\u0e15\u0e47\u0e21\u0e41\u0e25\u0e49\u0e27"
+                + " \u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e2a\u0e33\u0e40\u0e19\u0e32\u0e17\u0e35\u0e48\u0e21\u0e35\u0e2d\u0e22\u0e39\u0e48\u0e43\u0e2b\u0e49\u0e40\u0e2a\u0e23\u0e47\u0e08\u0e01\u0e48\u0e2d\u0e19",
+            "Selected files are limited to 256 MiB.",
+            "\u0e44\u0e1f\u0e25\u0e4c\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e21\u0e35\u0e02\u0e19\u0e32\u0e14\u0e44\u0e14\u0e49\u0e44\u0e21\u0e48\u0e40\u0e01\u0e34\u0e19"
+                + " 256 MiB",
+            "Soulseek session changed. Select the result again.",
+            "\u0e40\u0e0b\u0e2a\u0e0a\u0e31\u0e19 Soulseek"
+                + " \u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e44\u0e1b\u0e41\u0e25\u0e49\u0e27"
+                + " \u0e42\u0e1b\u0e23\u0e14\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e1c\u0e25\u0e25\u0e31\u0e1e\u0e18\u0e4c\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "The selected download could not complete. Try again or choose another result.",
+            "\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e44\u0e21\u0e48\u0e2a\u0e33\u0e40\u0e23\u0e47\u0e08"
+                + " \u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07\u0e2b\u0e23\u0e37\u0e2d\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e1c\u0e25\u0e25\u0e31\u0e1e\u0e18\u0e4c\u0e2d\u0e37\u0e48\u0e19",
+            "The selected download queue is full.",
+            "\u0e04\u0e34\u0e27\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e40\u0e15\u0e47\u0e21\u0e41\u0e25\u0e49\u0e27",
+            "This Soulseek result expired. Search again.",
+            "\u0e1c\u0e25\u0e25\u0e31\u0e1e\u0e18\u0e4c Soulseek"
+                + " \u0e19\u0e35\u0e49\u0e2b\u0e21\u0e14\u0e2d\u0e32\u0e22\u0e38\u0e41\u0e25\u0e49\u0e27"
+                + " \u0e42\u0e1b\u0e23\u0e14\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "This file did not pass the audio format check. Choose another result.",
+            "\u0e44\u0e1f\u0e25\u0e4c\u0e19\u0e35\u0e49\u0e44\u0e21\u0e48\u0e1c\u0e48\u0e32\u0e19\u0e01\u0e32\u0e23\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e23\u0e39\u0e1b\u0e41\u0e1a\u0e1a\u0e40\u0e2a\u0e35\u0e22\u0e07"
+                + " \u0e40\u0e25\u0e37\u0e2d\u0e01\u0e1c\u0e25\u0e25\u0e31\u0e1e\u0e18\u0e4c\u0e2d\u0e37\u0e48\u0e19",
+            "This selected download is already queued.",
+            "\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e19\u0e35\u0e49\u0e2d\u0e22\u0e39\u0e48\u0e43\u0e19\u0e04\u0e34\u0e27\u0e41\u0e25\u0e49\u0e27",
+            "Uploading file",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e2d\u0e31\u0e1b\u0e42\u0e2b\u0e25\u0e14\u0e44\u0e1f\u0e25\u0e4c",
+            "Waiting for peer",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c",
+            "Waiting for peer \u00b7 queue position {0}",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c \u00b7"
+                    + " \u0e25\u0e33\u0e14\u0e31\u0e1a\u0e43\u0e19\u0e04\u0e34\u0e27 {0}",
+            "Waiting to save",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01",
+            "Waiting to save selected copies",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e2a\u0e33\u0e40\u0e19\u0e32\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "\u0e23\u0e39\u0e1b\u0e41\u0e1a\u0e1a: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d"
+                    + " Soulseek\u2026",
+            "May use YouTube or another enabled source.",
+            "\u0e2d\u0e32\u0e08\u0e43\u0e0a\u0e49 YouTube"
+                + " \u0e2b\u0e23\u0e37\u0e2d\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e17\u0e35\u0e48\u0e40\u0e1b\u0e34\u0e14\u0e43\u0e0a\u0e49\u0e07\u0e32\u0e19\u0e2d\u0e37\u0e48\u0e19",
         };
     }
 
@@ -47233,6 +51257,214 @@ final class Translations {
             "Aktar\u0131m y\u00f6ntemleri: {0}",
             "{0} recent clients",
             "Yak\u0131n zamanda etkin {0} uygulama",
+            "Soulseek account",
+            "Soulseek hesab\u0131",
+            "Signed in as {0}",
+            "{0} olarak oturum a\u00e7\u0131ld\u0131",
+            "Ready to search",
+            "Aramaya haz\u0131r",
+            "Sign in to search Soulseek.",
+            "Soulseek'te aramak i\u00e7in oturum a\u00e7\u0131n.",
+            "Enable Soulseek to sign in and search.",
+            "Oturum a\u00e7mak ve aramak i\u00e7in Soulseek'i etkinle\u015ftirin.",
+            "Download setup",
+            "\u0130ndirme kurulumu",
+            "Choose where copies go before searching.",
+            "Aramadan \u00f6nce kopyalar\u0131n kaydedilece\u011fi yeri se\u00e7in.",
+            "Choose your audio formats before searching.",
+            "Aramadan \u00f6nce ses bi\u00e7imlerinizi se\u00e7in.",
+            "Find music on Soulseek",
+            "Soulseek'te m\u00fczik bulun",
+            "{0} formats enabled",
+            "{0} bi\u00e7im etkin",
+            "More download options",
+            "Di\u011fer indirme se\u00e7enekleri",
+            "Account settings",
+            "Hesap ayarlar\u0131",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Soulseek ayarlar\u0131 kullan\u0131lam\u0131yor. BitChord'u yeniden ba\u015flat\u0131p"
+                    + " tekrar deneyin.",
+            "Other download options are controlled in Patches & tweaks.",
+            "Di\u011fer indirme se\u00e7enekleri Yamalar ve ince ayarlar b\u00f6l\u00fcm\u00fcnden"
+                    + " y\u00f6netilir.",
+            "Source enabled",
+            "Kaynak etkin",
+            "Account actions",
+            "Hesap i\u015flemleri",
+            "Not chosen yet",
+            "Hen\u00fcz se\u00e7ilmedi",
+            "Not signed in",
+            "Oturum a\u00e7\u0131lmad\u0131",
+            "Finish the open download choice first.",
+            "\u00d6nce a\u00e7\u0131k indirme se\u00e7imini tamamlay\u0131n.",
+            "Could not open the download source choice. Try again.",
+            "\u0130ndirme kayna\u011f\u0131 se\u00e7imi a\u00e7\u0131lamad\u0131. Tekrar deneyin.",
+            "BitChord could not start this download. Try again.",
+            "BitChord bu indirmeyi ba\u015flatamad\u0131. Tekrar deneyin.",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "Bir dosya aray\u0131n, e\u015fin bilgilerini inceleyin ve tam olarak ne"
+                + " indirece\u011finizi se\u00e7in. Ge\u00e7erli \u015fark\u0131n\u0131z ve indirme"
+                + " durumu de\u011fi\u015fmez.",
+            "Choose download source",
+            "\u0130ndirme kayna\u011f\u0131n\u0131 se\u00e7in",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek ayr\u0131 bir dosya arar. BitChord mevcut indirme kaynaklar\u0131n\u0131 ve"
+                    + " ayarlar\u0131n\u0131 kullan\u0131r.",
+            "Search Soulseek",
+            "Soulseek'te ara",
+            "Continue with BitChord download",
+            "BitChord indirmesiyle devam et",
+            "This download choice expired. Return to the song and try again.",
+            "Bu indirme se\u00e7iminin s\u00fcresi doldu. \u015eark\u0131ya d\u00f6n\u00fcp tekrar"
+                    + " deneyin.",
+            "Source: Soulseek",
+            "Kaynak: Soulseek",
+            "Artist and song title",
+            "Sanat\u00e7\u0131 ve \u015fark\u0131 ad\u0131",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "Aramaya haz\u0131r. Bir dosya se\u00e7ene kadar hi\u00e7bir \u015fey indirilmez.",
+            "Soulseek account and setup",
+            "Soulseek hesab\u0131 ve kurulumu",
+            "Audio formats and preference order",
+            "Ses bi\u00e7imleri ve tercih s\u0131ras\u0131",
+            "View downloads",
+            "\u0130ndirmeleri g\u00f6r\u00fcnt\u00fcle",
+            "Choose your audio formats and their order first.",
+            "\u00d6nce ses bi\u00e7imlerinizi ve s\u0131ralar\u0131n\u0131 se\u00e7in.",
+            "Search using 2\u2013256 characters.",
+            "Arama i\u00e7in 2\u2013256 karakter kullan\u0131n.",
+            "Searching Soulseek\u2026",
+            "Soulseek'te aran\u0131yor\u2026",
+            "Soulseek session changed. Search again.",
+            "Soulseek oturumu de\u011fi\u015fti. Yeniden aray\u0131n.",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "E\u015fle\u015fen dosya yok. Farkl\u0131 arama s\u00f6zc\u00fckleri deneyin. BitChord"
+                    + " indirmesi ba\u015flat\u0131lmad\u0131.",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "A\u015fa\u011f\u0131dan bir dosya se\u00e7in. E\u015flerin dosya adlar\u0131,"
+                    + " bi\u00e7imleri ve kullan\u0131labilirli\u011fi"
+                    + " do\u011frulanmam\u0131\u015ft\u0131r.",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "Soulseek aramas\u0131 tamamlanamad\u0131. Oturumu, bi\u00e7imleri ve kopya hedeflerini"
+                    + " kontrol edip tekrar deneyin.",
+            "A previous search is stopping. Try again shortly.",
+            "\u00d6nceki bir arama durduruluyor. Birazdan tekrar deneyin.",
+            "Peer: {0}",
+            "E\u015f: {0}",
+            "File: {0}",
+            "Dosya: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "Bildirilen bi\u00e7im: {0} \u00b7 {1} bayt",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "Ayr\u0131nt\u0131lar e\u015fin beyan\u0131d\u0131r. \u0130ndirilen dosyan\u0131n ses"
+                    + " kodlamas\u0131 kaydedilmeden \u00f6nce kontrol edilir.",
+            "Download this file",
+            "Bu dosyay\u0131 indir",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "Kaynak: Soulseek. Se\u00e7ilen dosya s\u0131raya al\u0131nd\u0131. \u0130lerleme"
+                    + " i\u00e7in \u0130ndirmeleri g\u00f6r\u00fcnt\u00fcle"
+                    + " b\u00f6l\u00fcm\u00fcn\u00fc a\u00e7\u0131n.",
+            "The selected file could not be queued. Review setup and try again.",
+            "Se\u00e7ilen dosya s\u0131raya al\u0131namad\u0131. Kurulumu g\u00f6zden ge\u00e7irip"
+                    + " tekrar deneyin.",
+            "The selected file is no longer ready. Check setup and search again.",
+            "Se\u00e7ilen dosya art\u0131k haz\u0131r de\u011fil. Kurulumu kontrol edip yeniden"
+                    + " aray\u0131n.",
+            "Cannot create selected download storage.",
+            "Se\u00e7ilen indirme i\u00e7in depolama olu\u015fturulam\u0131yor.",
+            "Cannot inspect selected download storage.",
+            "Se\u00e7ilen indirme depolamas\u0131 incelenemiyor.",
+            "Cannot remove interrupted selected download staging.",
+            "Kesintiye u\u011frayan se\u00e7ili indirmenin ge\u00e7ici verileri"
+                    + " kald\u0131r\u0131lam\u0131yor.",
+            "Check the saved file before retry",
+            "Yeniden denemeden \u00f6nce kaydedilen dosyay\u0131 kontrol edin",
+            "Checking audio format",
+            "Ses bi\u00e7imi kontrol ediliyor",
+            "Choose where copies go before downloading.",
+            "\u0130ndirmeden \u00f6nce kopyalar\u0131n kaydedilece\u011fi yeri se\u00e7in.",
+            "Confirmation required before retry",
+            "Yeniden denemeden \u00f6nce onay gerekli",
+            "Copy failed",
+            "Kopyalama ba\u015far\u0131s\u0131z",
+            "Download cancelled",
+            "\u0130ndirme iptal edildi",
+            "Download needs attention",
+            "\u0130ndirmeyle ilgilenmeniz gerekiyor",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "\u0130ndirme ayarlar\u0131 kontrol edilemedi. BitChord'u yeniden ba\u015flat\u0131p"
+                    + " tekrar deneyin.",
+            "Downloading \u00b7 {0} of {1}",
+            "\u0130ndiriliyor \u00b7 {0} / {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "\u0130ndirmeler ge\u00e7erli indirme ayarlar\u0131 nedeniyle duraklat\u0131ld\u0131."
+                    + " \u0130ndirmelere izin verildi\u011finde yeniden deneyin.",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "Bu sonucu indirmeden \u00f6nce Resm\u00ee Olmayan Soulseek'i etkinle\u015ftirin.",
+            "Invalid selected Soulseek reference.",
+            "Ge\u00e7ersiz se\u00e7ili Soulseek ba\u015fvurusu.",
+            "No selected Soulseek downloads.",
+            "Se\u00e7ili Soulseek indirmesi yok.",
+            "Preparing download",
+            "\u0130ndirme haz\u0131rlan\u0131yor",
+            "Queued for download",
+            "\u0130ndirmek i\u00e7in s\u0131raya al\u0131nd\u0131",
+            "Queued {0}. Open downloads to follow progress.",
+            "{0} s\u0131raya al\u0131nd\u0131. \u0130lerlemeyi takip etmek i\u00e7in indirmeleri"
+                    + " a\u00e7\u0131n.",
+            "Saved and verified",
+            "Kaydedildi ve do\u011fruland\u0131",
+            "Saved to all selected destinations",
+            "Se\u00e7ilen t\u00fcm hedeflere kaydedildi",
+            "Saving file",
+            "Dosya kaydediliyor",
+            "Saving paused",
+            "Kaydetme duraklat\u0131ld\u0131",
+            "Saving selected copies",
+            "Se\u00e7ilen kopyalar kaydediliyor",
+            "Selected audio file",
+            "Se\u00e7ilen ses dosyas\u0131",
+            "Selected download storage is full. Finish existing copies first.",
+            "Se\u00e7ilen indirmelerin depolamas\u0131 dolu. \u00d6nce mevcut kopyalar\u0131"
+                    + " tamamlay\u0131n.",
+            "Selected files are limited to 256 MiB.",
+            "Se\u00e7ilen dosyalar en fazla 256 MiB olabilir.",
+            "Soulseek session changed. Select the result again.",
+            "Soulseek oturumu de\u011fi\u015fti. Sonucu yeniden se\u00e7in.",
+            "The selected download could not complete. Try again or choose another result.",
+            "Se\u00e7ilen indirme tamamlanamad\u0131. Tekrar deneyin veya ba\u015fka bir sonu\u00e7"
+                    + " se\u00e7in.",
+            "The selected download queue is full.",
+            "Se\u00e7ilen indirme kuyru\u011fu dolu.",
+            "This Soulseek result expired. Search again.",
+            "Bu Soulseek sonucunun s\u00fcresi doldu. Yeniden aray\u0131n.",
+            "This file did not pass the audio format check. Choose another result.",
+            "Bu dosya ses bi\u00e7imi kontrol\u00fcn\u00fc ge\u00e7emedi. Ba\u015fka bir sonu\u00e7"
+                    + " se\u00e7in.",
+            "This selected download is already queued.",
+            "Bu se\u00e7ili indirme zaten s\u0131rada.",
+            "Uploading file",
+            "Dosya y\u00fckleniyor",
+            "Waiting for peer",
+            "E\u015f bekleniyor",
+            "Waiting for peer \u00b7 queue position {0}",
+            "E\u015f bekleniyor \u00b7 kuyruk konumu {0}",
+            "Waiting to save",
+            "Kaydetmek i\u00e7in bekleniyor",
+            "Waiting to save selected copies",
+            "Se\u00e7ilen kopyalar\u0131 kaydetmek i\u00e7in bekleniyor",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "Bi\u00e7im: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "Soulseek\u2019e ba\u011flan\u0131l\u0131yor\u2026",
+            "May use YouTube or another enabled source.",
+            "YouTube veya etkin ba\u015fka bir kaynak kullan\u0131labilir.",
         };
     }
 
@@ -51460,6 +55692,393 @@ final class Translations {
             "\u062d\u0627\u0644 \u06c1\u06cc \u0645\u06cc\u06ba \u0646\u0638\u0631"
                     + " \u0622\u0646\u06d2 \u0648\u0627\u0644\u06d2 {0}"
                     + " \u06a9\u0644\u0627\u0626\u0646\u0679\u0633",
+            "Soulseek account",
+            "Soulseek \u0627\u06a9\u0627\u0624\u0646\u0679",
+            "Signed in as {0}",
+            "{0} \u06a9\u06d2 \u0637\u0648\u0631 \u067e\u0631 \u0633\u0627\u0626\u0646 \u0627\u0646"
+                    + " \u06c1\u06cc\u06ba",
+            "Ready to search",
+            "\u062a\u0644\u0627\u0634 \u06a9\u06d2 \u0644\u06cc\u06d2 \u062a\u06cc\u0627\u0631",
+            "Sign in to search Soulseek.",
+            "Soulseek \u067e\u0631 \u062a\u0644\u0627\u0634 \u06a9\u0631\u0646\u06d2 \u06a9\u06d2"
+                    + " \u0644\u06cc\u06d2 \u0633\u0627\u0626\u0646 \u0627\u0646"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Enable Soulseek to sign in and search.",
+            "\u0633\u0627\u0626\u0646 \u0627\u0646 \u0627\u0648\u0631 \u062a\u0644\u0627\u0634"
+                    + " \u06a9\u06d2 \u0644\u06cc\u06d2 Soulseek \u0641\u0639\u0627\u0644"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Download setup",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u06a9\u06cc"
+                    + " \u062a\u0631\u062a\u06cc\u0628",
+            "Choose where copies go before searching.",
+            "\u062a\u0644\u0627\u0634 \u0633\u06d2 \u067e\u06c1\u0644\u06d2"
+                    + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba \u06a9\u06c1"
+                    + " \u0646\u0642\u0648\u0644 \u06a9\u06c1\u0627\u06ba"
+                    + " \u0645\u062d\u0641\u0648\u0638 \u06c1\u0648\u06ba\u06d4",
+            "Choose your audio formats before searching.",
+            "\u062a\u0644\u0627\u0634 \u0633\u06d2 \u067e\u06c1\u0644\u06d2"
+                    + " \u0622\u0688\u06cc\u0648 \u0641\u0627\u0631\u0645\u06cc\u0679\u0633"
+                    + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Find music on Soulseek",
+            "Soulseek \u067e\u0631 \u0645\u0648\u0633\u06cc\u0642\u06cc \u062a\u0644\u0627\u0634"
+                    + " \u06a9\u0631\u06cc\u06ba",
+            "{0} formats enabled",
+            "{0} \u0641\u0627\u0631\u0645\u06cc\u0679\u0633 \u0641\u0639\u0627\u0644"
+                    + " \u06c1\u06cc\u06ba",
+            "More download options",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u06a9\u06d2 \u0645\u0632\u06cc\u062f"
+                    + " \u0627\u062e\u062a\u06cc\u0627\u0631\u0627\u062a",
+            "Account settings",
+            "\u0627\u06a9\u0627\u0624\u0646\u0679 \u06a9\u06cc"
+                    + " \u062a\u0631\u062a\u06cc\u0628\u0627\u062a",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Soulseek \u06a9\u06cc \u062a\u0631\u062a\u06cc\u0628\u0627\u062a"
+                + " \u062f\u0633\u062a\u06cc\u0627\u0628 \u0646\u06c1\u06cc\u06ba\u06d4 BitChord"
+                + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u0686\u0644\u0627 \u06a9\u0631"
+                + " \u06a9\u0648\u0634\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Other download options are controlled in Patches & tweaks.",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u06a9\u06d2"
+                + " \u062f\u0648\u0633\u0631\u06d2 \u0627\u062e\u062a\u06cc\u0627\u0631\u0627\u062a"
+                + " \u067e\u06cc\u0686 \u0627\u0648\u0631"
+                + " \u062a\u0628\u062f\u06cc\u0644\u06cc\u0627\u06ba \u0645\u06cc\u06ba"
+                + " \u06a9\u0646\u0679\u0631\u0648\u0644 \u06a9\u06cc\u06d2"
+                + " \u062c\u0627\u062a\u06d2 \u06c1\u06cc\u06ba\u06d4",
+            "Source enabled",
+            "\u0645\u0627\u062e\u0630 \u0641\u0639\u0627\u0644 \u06c1\u06d2",
+            "Account actions",
+            "\u0627\u06a9\u0627\u0624\u0646\u0679 \u06a9\u06cc"
+                    + " \u06a9\u0627\u0631\u0631\u0648\u0627\u0626\u06cc\u0627\u06ba",
+            "Not chosen yet",
+            "\u0627\u0628\u06be\u06cc \u0645\u0646\u062a\u062e\u0628 \u0646\u06c1\u06cc\u06ba"
+                    + " \u06a9\u06cc\u0627 \u06af\u06cc\u0627",
+            "Not signed in",
+            "\u0633\u0627\u0626\u0646 \u0627\u0646 \u0646\u06c1\u06cc\u06ba \u06c1\u06cc\u06ba",
+            "Finish the open download choice first.",
+            "\u067e\u06c1\u0644\u06d2 \u06a9\u06be\u0644\u0627 \u06c1\u0648\u0627"
+                    + " \u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
+                    + " \u0627\u0646\u062a\u062e\u0627\u0628 \u0645\u06a9\u0645\u0644"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Could not open the download source choice. Try again.",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u06a9\u0627 \u0645\u0627\u062e\u0630"
+                    + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u0646\u06d2 \u06a9\u0627"
+                    + " \u0627\u062e\u062a\u06cc\u0627\u0631 \u0646\u06c1\u06cc\u06ba"
+                    + " \u06a9\u06be\u0644 \u0633\u06a9\u0627\u06d4"
+                    + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u06a9\u0648\u0634\u0634"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "BitChord could not start this download. Try again.",
+            "BitChord \u06cc\u06c1 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
+                    + " \u0634\u0631\u0648\u0639 \u0646\u06c1\u06cc\u06ba \u06a9\u0631"
+                    + " \u0633\u06a9\u0627\u06d4 \u062f\u0648\u0628\u0627\u0631\u06c1"
+                    + " \u06a9\u0648\u0634\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "\u0641\u0627\u0626\u0644 \u062a\u0644\u0627\u0634 \u06a9\u0631\u06cc\u06ba\u060c"
+                    + " \u0633\u0627\u062a\u06be\u06cc \u06a9\u06cc"
+                    + " \u062a\u0641\u0635\u06cc\u0644\u0627\u062a"
+                    + " \u062f\u06cc\u06a9\u06be\u06cc\u06ba\u060c \u067e\u06be\u0631"
+                    + " \u0648\u06c1\u06cc \u0641\u0627\u0626\u0644 \u0645\u0646\u062a\u062e\u0628"
+                    + " \u06a9\u0631\u06cc\u06ba \u062c\u0633\u06d2 \u0688\u0627\u0624\u0646"
+                    + " \u0644\u0648\u0688 \u06a9\u0631\u0646\u0627 \u06c1\u06d2\u06d4 \u0622\u067e"
+                    + " \u06a9\u0627 \u0645\u0648\u062c\u0648\u062f\u06c1 \u06af\u0627\u0646\u0627"
+                    + " \u0627\u0648\u0631 \u0627\u0633 \u06a9\u06d2 \u0688\u0627\u0624\u0646"
+                    + " \u0644\u0648\u0688 \u06a9\u06cc \u062d\u0627\u0644\u062a"
+                    + " \u0646\u06c1\u06cc\u06ba \u0628\u062f\u0644\u06cc\u06ba \u06af\u06d2\u06d4",
+            "Choose download source",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u06a9\u0627 \u0645\u0627\u062e\u0630"
+                    + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek \u0627\u0644\u06af \u0641\u0627\u0626\u0644 \u062a\u0644\u0627\u0634"
+                + " \u06a9\u0631\u062a\u0627 \u06c1\u06d2\u06d4 BitChord \u0627\u067e\u0646\u06d2"
+                + " \u0645\u0648\u062c\u0648\u062f\u06c1 \u0688\u0627\u0624\u0646"
+                + " \u0644\u0648\u0688 \u0630\u0631\u0627\u0626\u0639 \u0627\u0648\u0631"
+                + " \u062a\u0631\u062a\u06cc\u0628\u0627\u062a"
+                + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0631\u062a\u0627"
+                + " \u06c1\u06d2\u06d4",
+            "Search Soulseek",
+            "Soulseek \u067e\u0631 \u062a\u0644\u0627\u0634 \u06a9\u0631\u06cc\u06ba",
+            "Continue with BitChord download",
+            "BitChord \u0633\u06d2 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
+                    + " \u062c\u0627\u0631\u06cc \u0631\u06a9\u06be\u06cc\u06ba",
+            "This download choice expired. Return to the song and try again.",
+            "\u0627\u0633 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
+                    + " \u0627\u0646\u062a\u062e\u0627\u0628 \u06a9\u06cc"
+                    + " \u0645\u06cc\u0639\u0627\u062f \u062e\u062a\u0645 \u06c1\u0648"
+                    + " \u06af\u0626\u06cc\u06d4 \u06af\u0627\u0646\u06d2 \u067e\u0631"
+                    + " \u0648\u0627\u067e\u0633 \u062c\u0627 \u06a9\u0631"
+                    + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u06a9\u0648\u0634\u0634"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Source: Soulseek",
+            "\u0645\u0627\u062e\u0630: Soulseek",
+            "Artist and song title",
+            "\u0641\u0646\u06a9\u0627\u0631 \u0627\u0648\u0631 \u06af\u0627\u0646\u06d2"
+                    + " \u06a9\u0627 \u0646\u0627\u0645",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "\u062a\u0644\u0627\u0634 \u06a9\u06d2 \u0644\u06cc\u06d2"
+                    + " \u062a\u06cc\u0627\u0631\u06d4 \u0641\u0627\u0626\u0644"
+                    + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u0646\u06d2 \u062a\u06a9"
+                    + " \u06a9\u0686\u06be \u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
+                    + " \u0646\u06c1\u06cc\u06ba \u06c1\u0648\u06af\u0627\u06d4",
+            "Soulseek account and setup",
+            "Soulseek \u0627\u06a9\u0627\u0624\u0646\u0679 \u0627\u0648\u0631"
+                    + " \u062a\u0631\u062a\u06cc\u0628",
+            "Audio formats and preference order",
+            "\u0622\u0688\u06cc\u0648 \u0641\u0627\u0631\u0645\u06cc\u0679\u0633 \u0627\u0648\u0631"
+                    + " \u062a\u0631\u062c\u06cc\u062d\u06cc \u062a\u0631\u062a\u06cc\u0628",
+            "View downloads",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688\u0632"
+                    + " \u062f\u06cc\u06a9\u06be\u06cc\u06ba",
+            "Choose your audio formats and their order first.",
+            "\u067e\u06c1\u0644\u06d2 \u0622\u0688\u06cc\u0648"
+                    + " \u0641\u0627\u0631\u0645\u06cc\u0679\u0633 \u0627\u0648\u0631 \u0627\u0646"
+                    + " \u06a9\u06cc \u062a\u0631\u062a\u06cc\u0628 \u0645\u0646\u062a\u062e\u0628"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Search using 2\u2013256 characters.",
+            "\u062a\u0644\u0627\u0634 \u06a9\u06d2 \u0644\u06cc\u06d2 2\u2013256"
+                    + " \u062d\u0631\u0648\u0641 \u0627\u0633\u062a\u0639\u0645\u0627\u0644"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Searching Soulseek\u2026",
+            "Soulseek \u067e\u0631 \u062a\u0644\u0627\u0634 \u062c\u0627\u0631\u06cc"
+                    + " \u06c1\u06d2\u2026",
+            "Soulseek session changed. Search again.",
+            "Soulseek \u0633\u06cc\u0634\u0646 \u0628\u062f\u0644 \u06af\u06cc\u0627"
+                    + " \u06c1\u06d2\u06d4 \u062f\u0648\u0628\u0627\u0631\u06c1"
+                    + " \u062a\u0644\u0627\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "\u06a9\u0648\u0626\u06cc \u0645\u0645\u0627\u062b\u0644 \u0641\u0627\u0626\u0644"
+                    + " \u0646\u06c1\u06cc\u06ba \u0645\u0644\u06cc\u06d4"
+                    + " \u062f\u0648\u0633\u0631\u06d2 \u0627\u0644\u0641\u0627\u0638 \u0633\u06d2"
+                    + " \u062a\u0644\u0627\u0634 \u06a9\u0631\u06cc\u06ba\u06d4 BitChord"
+                    + " \u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u0634\u0631\u0648\u0639"
+                    + " \u0646\u06c1\u06cc\u06ba \u06c1\u0648\u0627\u06d4",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "\u0646\u06cc\u0686\u06d2 \u0641\u0627\u0626\u0644 \u0645\u0646\u062a\u062e\u0628"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4 \u0633\u0627\u062a\u06be\u06cc \u06a9\u06d2"
+                    + " \u0628\u062a\u0627\u0626\u06d2 \u06af\u0626\u06d2 \u0641\u0627\u0626\u0644"
+                    + " \u0646\u0627\u0645\u060c \u0641\u0627\u0631\u0645\u06cc\u0679\u0633"
+                    + " \u0627\u0648\u0631 \u062f\u0633\u062a\u06cc\u0627\u0628\u06cc \u06a9\u06cc"
+                    + " \u062a\u0635\u062f\u06cc\u0642 \u0646\u06c1\u06cc\u06ba"
+                    + " \u06c1\u0648\u0626\u06cc\u06d4",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "Soulseek \u06a9\u06cc \u062a\u0644\u0627\u0634 \u0645\u06a9\u0645\u0644"
+                    + " \u0646\u06c1\u06cc\u06ba \u06c1\u0648 \u0633\u06a9\u06cc\u06d4"
+                    + " \u0633\u0627\u0626\u0646 \u0627\u0646\u060c"
+                    + " \u0641\u0627\u0631\u0645\u06cc\u0679\u0633 \u0627\u0648\u0631"
+                    + " \u0646\u0642\u0648\u0644 \u06a9\u06cc \u0645\u0646\u0632\u0644\u06cc\u06ba"
+                    + " \u062f\u06cc\u06a9\u06be \u06a9\u0631 \u062f\u0648\u0628\u0627\u0631\u06c1"
+                    + " \u06a9\u0648\u0634\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "A previous search is stopping. Try again shortly.",
+            "\u067e\u0686\u06be\u0644\u06cc \u062a\u0644\u0627\u0634 \u0631\u0648\u06a9\u06cc"
+                    + " \u062c\u0627 \u0631\u06c1\u06cc \u06c1\u06d2\u06d4 \u06a9\u0686\u06be"
+                    + " \u062f\u06cc\u0631 \u0628\u0639\u062f \u062f\u0648\u0628\u0627\u0631\u06c1"
+                    + " \u06a9\u0648\u0634\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Peer: {0}",
+            "\u0633\u0627\u062a\u06be\u06cc: {0}",
+            "File: {0}",
+            "\u0641\u0627\u0626\u0644: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "\u0628\u062a\u0627\u06cc\u0627 \u06af\u06cc\u0627"
+                    + " \u0641\u0627\u0631\u0645\u06cc\u0679: {0} \u00b7 {1}"
+                    + " \u0628\u0627\u0626\u0679\u0633",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "\u062a\u0641\u0635\u06cc\u0644\u0627\u062a \u0633\u0627\u062a\u06be\u06cc \u06a9\u06d2"
+                    + " \u062f\u0639\u0648\u06d2 \u06c1\u06cc\u06ba\u06d4 \u0688\u0627\u0624\u0646"
+                    + " \u0644\u0648\u0688 \u0634\u062f\u06c1 \u0641\u0627\u0626\u0644 \u06a9\u0627"
+                    + " \u06a9\u0648\u0688\u06cc\u06a9 \u0645\u062d\u0641\u0648\u0638"
+                    + " \u06a9\u0631\u0646\u06d2 \u0633\u06d2 \u067e\u06c1\u0644\u06d2"
+                    + " \u062c\u0627\u0646\u0686\u0627 \u062c\u0627\u062a\u0627 \u06c1\u06d2\u06d4",
+            "Download this file",
+            "\u06cc\u06c1 \u0641\u0627\u0626\u0644 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
+                    + " \u06a9\u0631\u06cc\u06ba",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "\u0645\u0627\u062e\u0630: Soulseek\u06d4 \u0645\u0646\u062a\u062e\u0628"
+                    + " \u0641\u0627\u0626\u0644 \u0642\u0637\u0627\u0631 \u0645\u06cc\u06ba"
+                    + " \u0634\u0627\u0645\u0644 \u06a9\u0631 \u062f\u06cc \u06af\u0626\u06cc\u06d4"
+                    + " \u067e\u06cc\u0634 \u0631\u0641\u062a \u06a9\u06d2 \u0644\u06cc\u06d2"
+                    + " \u201d\u0688\u0627\u0624\u0646 \u0644\u0648\u0688\u0632"
+                    + " \u062f\u06cc\u06a9\u06be\u06cc\u06ba\u201c"
+                    + " \u06a9\u06be\u0648\u0644\u06cc\u06ba\u06d4",
+            "The selected file could not be queued. Review setup and try again.",
+            "\u0645\u0646\u062a\u062e\u0628 \u0641\u0627\u0626\u0644 \u0642\u0637\u0627\u0631"
+                    + " \u0645\u06cc\u06ba \u0634\u0627\u0645\u0644 \u0646\u06c1\u06cc\u06ba"
+                    + " \u06c1\u0648 \u0633\u06a9\u06cc\u06d4 \u062a\u0631\u062a\u06cc\u0628"
+                    + " \u062f\u06cc\u06a9\u06be \u06a9\u0631 \u062f\u0648\u0628\u0627\u0631\u06c1"
+                    + " \u06a9\u0648\u0634\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "The selected file is no longer ready. Check setup and search again.",
+            "\u0645\u0646\u062a\u062e\u0628 \u0641\u0627\u0626\u0644 \u0627\u0628"
+                    + " \u062a\u06cc\u0627\u0631 \u0646\u06c1\u06cc\u06ba \u06c1\u06d2\u06d4"
+                    + " \u062a\u0631\u062a\u06cc\u0628 \u062f\u06cc\u06a9\u06be\u06cc\u06ba"
+                    + " \u0627\u0648\u0631 \u062f\u0648\u0628\u0627\u0631\u06c1"
+                    + " \u062a\u0644\u0627\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Cannot create selected download storage.",
+            "\u0645\u0646\u062a\u062e\u0628 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
+                    + " \u06a9\u06d2 \u0644\u06cc\u06d2 \u0630\u062e\u06cc\u0631\u06c1"
+                    + " \u0646\u06c1\u06cc\u06ba \u0628\u0646\u0627\u06cc\u0627 \u062c\u0627"
+                    + " \u0633\u06a9\u0627\u06d4",
+            "Cannot inspect selected download storage.",
+            "\u0645\u0646\u062a\u062e\u0628 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
+                    + " \u06a9\u0627 \u0630\u062e\u06cc\u0631\u06c1 \u062c\u0627\u0646\u0686\u0627"
+                    + " \u0646\u06c1\u06cc\u06ba \u062c\u0627 \u0633\u06a9\u0627\u06d4",
+            "Cannot remove interrupted selected download staging.",
+            "\u062f\u0631\u0645\u06cc\u0627\u0646 \u0645\u06cc\u06ba \u0631\u06a9\u06d2"
+                    + " \u0645\u0646\u062a\u062e\u0628 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
+                    + " \u06a9\u06cc \u0639\u0627\u0631\u0636\u06cc"
+                    + " \u0641\u0627\u0626\u0644\u06cc\u06ba \u0646\u06c1\u06cc\u06ba"
+                    + " \u06c1\u0679\u0627\u0626\u06cc \u062c\u0627 \u0633\u06a9\u06cc\u06ba\u06d4",
+            "Check the saved file before retry",
+            "\u062f\u0648\u0628\u0627\u0631\u06c1 \u06a9\u0648\u0634\u0634 \u0633\u06d2"
+                    + " \u067e\u06c1\u0644\u06d2 \u0645\u062d\u0641\u0648\u0638"
+                    + " \u0641\u0627\u0626\u0644 \u062f\u06cc\u06a9\u06be\u06cc\u06ba",
+            "Checking audio format",
+            "\u0622\u0688\u06cc\u0648 \u0641\u0627\u0631\u0645\u06cc\u0679"
+                + " \u062c\u0627\u0646\u0686\u0627 \u062c\u0627 \u0631\u06c1\u0627 \u06c1\u06d2",
+            "Choose where copies go before downloading.",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u0633\u06d2 \u067e\u06c1\u0644\u06d2"
+                    + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba \u06a9\u06c1"
+                    + " \u0646\u0642\u0648\u0644 \u06a9\u06c1\u0627\u06ba"
+                    + " \u0645\u062d\u0641\u0648\u0638 \u06c1\u0648\u06ba\u06d4",
+            "Confirmation required before retry",
+            "\u062f\u0648\u0628\u0627\u0631\u06c1 \u06a9\u0648\u0634\u0634 \u0633\u06d2"
+                    + " \u067e\u06c1\u0644\u06d2 \u062a\u0635\u062f\u06cc\u0642"
+                    + " \u062f\u0631\u06a9\u0627\u0631 \u06c1\u06d2",
+            "Copy failed",
+            "\u0646\u0642\u0644 \u0646\u06c1\u06cc\u06ba \u06c1\u0648 \u0633\u06a9\u06cc",
+            "Download cancelled",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u0645\u0646\u0633\u0648\u062e"
+                    + " \u06c1\u0648 \u06af\u06cc\u0627",
+            "Download needs attention",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u067e\u0631 \u062a\u0648\u062c\u06c1"
+                    + " \u062f\u0631\u06a9\u0627\u0631 \u06c1\u06d2",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u06a9\u06cc"
+                + " \u062a\u0631\u062a\u06cc\u0628\u0627\u062a \u0646\u06c1\u06cc\u06ba"
+                + " \u062c\u0627\u0646\u0686\u06cc \u062c\u0627 \u0633\u06a9\u06cc\u06ba\u06d4"
+                + " BitChord \u062f\u0648\u0628\u0627\u0631\u06c1 \u0686\u0644\u0627 \u06a9\u0631"
+                + " \u06a9\u0648\u0634\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Downloading \u00b7 {0} of {1}",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u062c\u0627\u0631\u06cc \u06c1\u06d2"
+                    + " \u00b7 {1} \u0645\u06cc\u06ba \u0633\u06d2 {0}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "\u0645\u0648\u062c\u0648\u062f\u06c1 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
+                    + " \u062a\u0631\u062a\u06cc\u0628\u0627\u062a \u06a9\u06d2"
+                    + " \u0628\u0627\u0639\u062b \u0688\u0627\u0624\u0646 \u0644\u0648\u0688\u0632"
+                    + " \u0645\u0648\u0642\u0648\u0641 \u06c1\u06cc\u06ba\u06d4"
+                    + " \u0627\u062c\u0627\u0632\u062a \u0645\u0644\u0646\u06d2 \u067e\u0631"
+                    + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u06a9\u0648\u0634\u0634"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "\u06cc\u06c1 \u0646\u062a\u06cc\u062c\u06c1 \u0688\u0627\u0624\u0646"
+                    + " \u0644\u0648\u0688 \u06a9\u0631\u0646\u06d2 \u0633\u06d2"
+                    + " \u067e\u06c1\u0644\u06d2 Unofficial Soulseek \u0641\u0639\u0627\u0644"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Invalid selected Soulseek reference.",
+            "\u0645\u0646\u062a\u062e\u0628 Soulseek \u062d\u0648\u0627\u0644\u06c1"
+                    + " \u062f\u0631\u0633\u062a \u0646\u06c1\u06cc\u06ba\u06d4",
+            "No selected Soulseek downloads.",
+            "\u06a9\u0648\u0626\u06cc \u0645\u0646\u062a\u062e\u0628 Soulseek"
+                    + " \u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u0646\u06c1\u06cc\u06ba\u06d4",
+            "Preparing download",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u062a\u06cc\u0627\u0631"
+                    + " \u06a9\u06cc\u0627 \u062c\u0627 \u0631\u06c1\u0627 \u06c1\u06d2",
+            "Queued for download",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u06a9\u06cc \u0642\u0637\u0627\u0631"
+                    + " \u0645\u06cc\u06ba \u06c1\u06d2",
+            "Queued {0}. Open downloads to follow progress.",
+            "{0} \u0642\u0637\u0627\u0631 \u0645\u06cc\u06ba \u0634\u0627\u0645\u0644 \u06a9\u0631"
+                    + " \u062f\u06cc\u0627 \u06af\u06cc\u0627\u06d4 \u067e\u06cc\u0634"
+                    + " \u0631\u0641\u062a \u062f\u06cc\u06a9\u06be\u0646\u06d2 \u06a9\u06d2"
+                    + " \u0644\u06cc\u06d2 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688\u0632"
+                    + " \u06a9\u06be\u0648\u0644\u06cc\u06ba\u06d4",
+            "Saved and verified",
+            "\u0645\u062d\u0641\u0648\u0638 \u0627\u0648\u0631 \u062a\u0635\u062f\u06cc\u0642"
+                    + " \u0634\u062f\u06c1",
+            "Saved to all selected destinations",
+            "\u062a\u0645\u0627\u0645 \u0645\u0646\u062a\u062e\u0628"
+                    + " \u0645\u0646\u0632\u0644\u0648\u06ba \u067e\u0631"
+                    + " \u0645\u062d\u0641\u0648\u0638",
+            "Saving file",
+            "\u0641\u0627\u0626\u0644 \u0645\u062d\u0641\u0648\u0638 \u06a9\u06cc \u062c\u0627"
+                    + " \u0631\u06c1\u06cc \u06c1\u06d2",
+            "Saving paused",
+            "\u0645\u062d\u0641\u0648\u0638 \u06a9\u0631\u0646\u0627 \u0645\u0648\u0642\u0648\u0641"
+                    + " \u06c1\u06d2",
+            "Saving selected copies",
+            "\u0645\u0646\u062a\u062e\u0628 \u0646\u0642\u0648\u0644 \u0645\u062d\u0641\u0648\u0638"
+                    + " \u06a9\u06cc \u062c\u0627 \u0631\u06c1\u06cc \u06c1\u06cc\u06ba",
+            "Selected audio file",
+            "\u0645\u0646\u062a\u062e\u0628 \u0622\u0688\u06cc\u0648 \u0641\u0627\u0626\u0644",
+            "Selected download storage is full. Finish existing copies first.",
+            "\u0645\u0646\u062a\u062e\u0628 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688\u0632"
+                    + " \u06a9\u0627 \u0630\u062e\u06cc\u0631\u06c1 \u0628\u06be\u0631"
+                    + " \u06af\u06cc\u0627 \u06c1\u06d2\u06d4 \u067e\u06c1\u0644\u06d2"
+                    + " \u0645\u0648\u062c\u0648\u062f\u06c1 \u0646\u0642\u0648\u0644"
+                    + " \u0645\u06a9\u0645\u0644 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Selected files are limited to 256 MiB.",
+            "\u0645\u0646\u062a\u062e\u0628 \u0641\u0627\u0626\u0644\u0648\u06ba \u06a9\u06cc"
+                    + " \u062d\u062f 256 MiB \u06c1\u06d2\u06d4",
+            "Soulseek session changed. Select the result again.",
+            "Soulseek \u0633\u06cc\u0634\u0646 \u0628\u062f\u0644 \u06af\u06cc\u0627"
+                    + " \u06c1\u06d2\u06d4 \u0646\u062a\u06cc\u062c\u06c1"
+                    + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u0645\u0646\u062a\u062e\u0628"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "The selected download could not complete. Try again or choose another result.",
+            "\u0645\u0646\u062a\u062e\u0628 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
+                    + " \u0645\u06a9\u0645\u0644 \u0646\u06c1\u06cc\u06ba \u06c1\u0648"
+                    + " \u0633\u06a9\u0627\u06d4 \u062f\u0648\u0628\u0627\u0631\u06c1"
+                    + " \u06a9\u0648\u0634\u0634 \u06a9\u0631\u06cc\u06ba \u06cc\u0627"
+                    + " \u062f\u0648\u0633\u0631\u0627 \u0646\u062a\u06cc\u062c\u06c1"
+                    + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "The selected download queue is full.",
+            "\u0645\u0646\u062a\u062e\u0628 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688\u0632"
+                    + " \u06a9\u06cc \u0642\u0637\u0627\u0631 \u0628\u06be\u0631\u06cc"
+                    + " \u06c1\u0648\u0626\u06cc \u06c1\u06d2\u06d4",
+            "This Soulseek result expired. Search again.",
+            "\u0627\u0633 Soulseek \u0646\u062a\u06cc\u062c\u06d2 \u06a9\u06cc"
+                    + " \u0645\u06cc\u0639\u0627\u062f \u062e\u062a\u0645 \u06c1\u0648"
+                    + " \u06af\u0626\u06cc\u06d4 \u062f\u0648\u0628\u0627\u0631\u06c1"
+                    + " \u062a\u0644\u0627\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "This file did not pass the audio format check. Choose another result.",
+            "\u06cc\u06c1 \u0641\u0627\u0626\u0644 \u0622\u0688\u06cc\u0648"
+                    + " \u0641\u0627\u0631\u0645\u06cc\u0679 \u06a9\u06cc \u062c\u0627\u0646\u0686"
+                    + " \u0645\u06cc\u06ba \u06a9\u0627\u0645\u06cc\u0627\u0628"
+                    + " \u0646\u06c1\u06cc\u06ba \u06c1\u0648\u0626\u06cc\u06d4"
+                    + " \u062f\u0648\u0633\u0631\u0627 \u0646\u062a\u06cc\u062c\u06c1"
+                    + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "This selected download is already queued.",
+            "\u06cc\u06c1 \u0645\u0646\u062a\u062e\u0628 \u0688\u0627\u0624\u0646"
+                    + " \u0644\u0648\u0688 \u067e\u06c1\u0644\u06d2 \u0633\u06d2"
+                    + " \u0642\u0637\u0627\u0631 \u0645\u06cc\u06ba \u06c1\u06d2\u06d4",
+            "Uploading file",
+            "\u0641\u0627\u0626\u0644 \u0627\u067e \u0644\u0648\u0688 \u06c1\u0648"
+                    + " \u0631\u06c1\u06cc \u06c1\u06d2",
+            "Waiting for peer",
+            "\u0633\u0627\u062a\u06be\u06cc \u06a9\u0627 \u0627\u0646\u062a\u0638\u0627\u0631"
+                    + " \u06c1\u06d2",
+            "Waiting for peer \u00b7 queue position {0}",
+            "\u0633\u0627\u062a\u06be\u06cc \u06a9\u0627 \u0627\u0646\u062a\u0638\u0627\u0631"
+                    + " \u06c1\u06d2 \u00b7 \u0642\u0637\u0627\u0631 \u0645\u06cc\u06ba"
+                    + " \u0645\u0642\u0627\u0645 {0}",
+            "Waiting to save",
+            "\u0645\u062d\u0641\u0648\u0638 \u06a9\u0631\u0646\u06d2 \u06a9\u0627"
+                    + " \u0627\u0646\u062a\u0638\u0627\u0631 \u06c1\u06d2",
+            "Waiting to save selected copies",
+            "\u0645\u0646\u062a\u062e\u0628 \u0646\u0642\u0648\u0644 \u0645\u062d\u0641\u0648\u0638"
+                    + " \u06a9\u0631\u0646\u06d2 \u06a9\u0627 \u0627\u0646\u062a\u0638\u0627\u0631"
+                    + " \u06c1\u06d2",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "\u0641\u0627\u0631\u0645\u06cc\u0679: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "Soulseek \u0633\u06d2 \u0631\u0627\u0628\u0637\u06c1 \u06c1\u0648 \u0631\u06c1\u0627"
+                    + " \u06c1\u06d2\u2026",
+            "May use YouTube or another enabled source.",
+            "\u0627\u0633 \u0645\u06cc\u06ba YouTube \u06cc\u0627 \u06a9\u0648\u0626\u06cc"
+                    + " \u062f\u0648\u0633\u0631\u0627 \u0641\u0639\u0627\u0644"
+                    + " \u0645\u0627\u062e\u0630 \u0627\u0633\u062a\u0639\u0645\u0627\u0644"
+                    + " \u06c1\u0648 \u0633\u06a9\u062a\u0627 \u06c1\u06d2\u06d4",
         };
     }
 
@@ -54103,6 +58722,239 @@ final class Translations {
             "Ph\u01b0\u01a1ng th\u1ee9c truy\u1ec1n: {0}",
             "{0} recent clients",
             "{0} \u1ee9ng d\u1ee5ng kh\u00e1ch ho\u1ea1t \u0111\u1ed9ng g\u1ea7n \u0111\u00e2y",
+            "Soulseek account",
+            "T\u00e0i kho\u1ea3n Soulseek",
+            "Signed in as {0}",
+            "\u0110\u00e3 \u0111\u0103ng nh\u1eadp v\u1edbi t\u00ean {0}",
+            "Ready to search",
+            "S\u1eb5n s\u00e0ng t\u00ecm ki\u1ebfm",
+            "Sign in to search Soulseek.",
+            "\u0110\u0103ng nh\u1eadp \u0111\u1ec3 t\u00ecm ki\u1ebfm tr\u00ean Soulseek.",
+            "Enable Soulseek to sign in and search.",
+            "B\u1eadt Soulseek \u0111\u1ec3 \u0111\u0103ng nh\u1eadp v\u00e0 t\u00ecm ki\u1ebfm.",
+            "Download setup",
+            "Thi\u1ebft l\u1eadp t\u1ea3i xu\u1ed1ng",
+            "Choose where copies go before searching.",
+            "Ch\u1ecdn n\u01a1i l\u01b0u b\u1ea3n sao tr\u01b0\u1edbc khi t\u00ecm ki\u1ebfm.",
+            "Choose your audio formats before searching.",
+            "Ch\u1ecdn \u0111\u1ecbnh d\u1ea1ng \u00e2m thanh tr\u01b0\u1edbc khi t\u00ecm"
+                    + " ki\u1ebfm.",
+            "Find music on Soulseek",
+            "T\u00ecm nh\u1ea1c tr\u00ean Soulseek",
+            "{0} formats enabled",
+            "\u0110\u00e3 b\u1eadt {0} \u0111\u1ecbnh d\u1ea1ng",
+            "More download options",
+            "C\u00e1c t\u00f9y ch\u1ecdn t\u1ea3i xu\u1ed1ng kh\u00e1c",
+            "Account settings",
+            "C\u00e0i \u0111\u1eb7t t\u00e0i kho\u1ea3n",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Kh\u00f4ng th\u1ec3 truy c\u1eadp c\u00e0i \u0111\u1eb7t Soulseek. Kh\u1edfi"
+                    + " \u0111\u1ed9ng l\u1ea1i BitChord r\u1ed3i th\u1eed l\u1ea1i.",
+            "Other download options are controlled in Patches & tweaks.",
+            "C\u00e1c t\u00f9y ch\u1ecdn t\u1ea3i xu\u1ed1ng kh\u00e1c \u0111\u01b0\u1ee3c"
+                    + " qu\u1ea3n l\u00fd trong B\u1ea3n v\u00e1 & Tinh ch\u1ec9nh.",
+            "Source enabled",
+            "\u0110\u00e3 b\u1eadt ngu\u1ed3n",
+            "Account actions",
+            "Thao t\u00e1c t\u00e0i kho\u1ea3n",
+            "Not chosen yet",
+            "Ch\u01b0a ch\u1ecdn",
+            "Not signed in",
+            "Ch\u01b0a \u0111\u0103ng nh\u1eadp",
+            "Finish the open download choice first.",
+            "H\u00e3y ho\u00e0n t\u1ea5t l\u1ef1a ch\u1ecdn t\u1ea3i xu\u1ed1ng \u0111ang m\u1edf"
+                    + " tr\u01b0\u1edbc.",
+            "Could not open the download source choice. Try again.",
+            "Kh\u00f4ng th\u1ec3 m\u1edf l\u1ef1a ch\u1ecdn ngu\u1ed3n t\u1ea3i xu\u1ed1ng."
+                    + " H\u00e3y th\u1eed l\u1ea1i.",
+            "BitChord could not start this download. Try again.",
+            "BitChord kh\u00f4ng th\u1ec3 b\u1eaft \u0111\u1ea7u l\u01b0\u1ee3t t\u1ea3i n\u00e0y."
+                    + " H\u00e3y th\u1eed l\u1ea1i.",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "T\u00ecm t\u1ec7p, xem th\u00f4ng tin t\u1eeb thi\u1ebft b\u1ecb kh\u00e1c r\u1ed3i"
+                + " ch\u1ecdn ch\u00ednh x\u00e1c n\u1ed9i dung mu\u1ed1n t\u1ea3i. B\u00e0i"
+                + " h\u00e1t hi\u1ec7n t\u1ea1i v\u00e0 tr\u1ea1ng th\u00e1i t\u1ea3i xu\u1ed1ng"
+                + " c\u1ee7a b\u00e0i h\u00e1t kh\u00f4ng thay \u0111\u1ed5i.",
+            "Choose download source",
+            "Ch\u1ecdn ngu\u1ed3n t\u1ea3i xu\u1ed1ng",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek t\u00ecm m\u1ed9t t\u1ec7p ri\u00eang. BitChord d\u00f9ng c\u00e1c ngu\u1ed3n"
+                    + " t\u1ea3i xu\u1ed1ng v\u00e0 c\u00e0i \u0111\u1eb7t hi\u1ec7n c\u00f3.",
+            "Search Soulseek",
+            "T\u00ecm tr\u00ean Soulseek",
+            "Continue with BitChord download",
+            "Ti\u1ebfp t\u1ee5c t\u1ea3i b\u1eb1ng BitChord",
+            "This download choice expired. Return to the song and try again.",
+            "L\u1ef1a ch\u1ecdn t\u1ea3i xu\u1ed1ng n\u00e0y \u0111\u00e3 h\u1ebft h\u1ea1n. Quay"
+                    + " l\u1ea1i b\u00e0i h\u00e1t r\u1ed3i th\u1eed l\u1ea1i.",
+            "Source: Soulseek",
+            "Ngu\u1ed3n: Soulseek",
+            "Artist and song title",
+            "Ngh\u1ec7 s\u0129 v\u00e0 t\u00ean b\u00e0i h\u00e1t",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "S\u1eb5n s\u00e0ng t\u00ecm ki\u1ebfm. Kh\u00f4ng t\u1ec7p n\u00e0o"
+                    + " \u0111\u01b0\u1ee3c t\u1ea3i cho \u0111\u1ebfn khi b\u1ea1n ch\u1ecdn.",
+            "Soulseek account and setup",
+            "T\u00e0i kho\u1ea3n v\u00e0 thi\u1ebft l\u1eadp Soulseek",
+            "Audio formats and preference order",
+            "\u0110\u1ecbnh d\u1ea1ng \u00e2m thanh v\u00e0 th\u1ee9 t\u1ef1 \u01b0u ti\u00ean",
+            "View downloads",
+            "Xem t\u1ea3i xu\u1ed1ng",
+            "Choose your audio formats and their order first.",
+            "Ch\u1ecdn \u0111\u1ecbnh d\u1ea1ng \u00e2m thanh v\u00e0 th\u1ee9 t\u1ef1 \u01b0u"
+                    + " ti\u00ean tr\u01b0\u1edbc.",
+            "Search using 2\u2013256 characters.",
+            "D\u00f9ng 2\u2013256 k\u00fd t\u1ef1 \u0111\u1ec3 t\u00ecm ki\u1ebfm.",
+            "Searching Soulseek\u2026",
+            "\u0110ang t\u00ecm tr\u00ean Soulseek\u2026",
+            "Soulseek session changed. Search again.",
+            "Phi\u00ean Soulseek \u0111\u00e3 thay \u0111\u1ed5i. H\u00e3y t\u00ecm l\u1ea1i.",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "Kh\u00f4ng c\u00f3 t\u1ec7p ph\u00f9 h\u1ee3p. Th\u1eed t\u1eeb kh\u00f3a kh\u00e1c."
+                    + " Ch\u01b0a b\u1eaft \u0111\u1ea7u t\u1ea3i b\u1eb1ng BitChord.",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "Ch\u1ecdn m\u1ed9t t\u1ec7p b\u00ean d\u01b0\u1edbi. T\u00ean t\u1ec7p, \u0111\u1ecbnh"
+                + " d\u1ea1ng v\u00e0 kh\u1ea3 n\u0103ng cung c\u1ea5p t\u1eeb thi\u1ebft b\u1ecb"
+                + " kh\u00e1c ch\u01b0a \u0111\u01b0\u1ee3c x\u00e1c minh.",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "Kh\u00f4ng th\u1ec3 ho\u00e0n t\u1ea5t t\u00ecm ki\u1ebfm tr\u00ean Soulseek."
+                    + " Ki\u1ec3m tra \u0111\u0103ng nh\u1eadp, \u0111\u1ecbnh d\u1ea1ng v\u00e0"
+                    + " n\u01a1i l\u01b0u b\u1ea3n sao r\u1ed3i th\u1eed l\u1ea1i.",
+            "A previous search is stopping. Try again shortly.",
+            "M\u1ed9t l\u01b0\u1ee3t t\u00ecm ki\u1ebfm tr\u01b0\u1edbc \u0111ang d\u1eebng."
+                    + " H\u00e3y th\u1eed l\u1ea1i sau gi\u00e2y l\u00e1t.",
+            "Peer: {0}",
+            "Thi\u1ebft b\u1ecb kh\u00e1c: {0}",
+            "File: {0}",
+            "T\u1ec7p: {0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "\u0110\u1ecbnh d\u1ea1ng \u0111\u01b0\u1ee3c b\u00e1o: {0} \u00b7 {1} byte",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "Th\u00f4ng tin do thi\u1ebft b\u1ecb kh\u00e1c t\u1ef1 khai b\u00e1o. B\u1ed9 m\u00e3"
+                    + " h\u00f3a v\u00e0 gi\u1ea3i m\u00e3 c\u1ee7a t\u1ec7p t\u1ea3i xu\u1ed1ng"
+                    + " \u0111\u01b0\u1ee3c ki\u1ec3m tra tr\u01b0\u1edbc khi l\u01b0u.",
+            "Download this file",
+            "T\u1ea3i t\u1ec7p n\u00e0y",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "Ngu\u1ed3n: Soulseek. \u0110\u00e3 x\u1ebfp t\u1ec7p \u0111\u00e3 ch\u1ecdn v\u00e0o"
+                    + " h\u00e0ng \u0111\u1ee3i. M\u1edf Xem t\u1ea3i xu\u1ed1ng \u0111\u1ec3 theo"
+                    + " d\u00f5i ti\u1ebfn tr\u00ecnh.",
+            "The selected file could not be queued. Review setup and try again.",
+            "Kh\u00f4ng th\u1ec3 x\u1ebfp t\u1ec7p \u0111\u00e3 ch\u1ecdn v\u00e0o h\u00e0ng"
+                + " \u0111\u1ee3i. Ki\u1ec3m tra thi\u1ebft l\u1eadp r\u1ed3i th\u1eed l\u1ea1i.",
+            "The selected file is no longer ready. Check setup and search again.",
+            "T\u1ec7p \u0111\u00e3 ch\u1ecdn kh\u00f4ng c\u00f2n s\u1eb5n s\u00e0ng. Ki\u1ec3m tra"
+                    + " thi\u1ebft l\u1eadp r\u1ed3i t\u00ecm l\u1ea1i.",
+            "Cannot create selected download storage.",
+            "Kh\u00f4ng th\u1ec3 t\u1ea1o v\u00f9ng l\u01b0u tr\u1eef cho l\u01b0\u1ee3t t\u1ea3i"
+                    + " \u0111\u00e3 ch\u1ecdn.",
+            "Cannot inspect selected download storage.",
+            "Kh\u00f4ng th\u1ec3 ki\u1ec3m tra v\u00f9ng l\u01b0u tr\u1eef c\u1ee7a l\u01b0\u1ee3t"
+                    + " t\u1ea3i \u0111\u00e3 ch\u1ecdn.",
+            "Cannot remove interrupted selected download staging.",
+            "Kh\u00f4ng th\u1ec3 x\u00f3a d\u1eef li\u1ec7u t\u1ea1m c\u1ee7a l\u01b0\u1ee3t"
+                    + " t\u1ea3i \u0111\u00e3 ch\u1ecdn b\u1ecb gi\u00e1n \u0111o\u1ea1n.",
+            "Check the saved file before retry",
+            "Ki\u1ec3m tra t\u1ec7p \u0111\u00e3 l\u01b0u tr\u01b0\u1edbc khi th\u1eed l\u1ea1i",
+            "Checking audio format",
+            "\u0110ang ki\u1ec3m tra \u0111\u1ecbnh d\u1ea1ng \u00e2m thanh",
+            "Choose where copies go before downloading.",
+            "Ch\u1ecdn n\u01a1i l\u01b0u b\u1ea3n sao tr\u01b0\u1edbc khi t\u1ea3i xu\u1ed1ng.",
+            "Confirmation required before retry",
+            "C\u1ea7n x\u00e1c nh\u1eadn tr\u01b0\u1edbc khi th\u1eed l\u1ea1i",
+            "Copy failed",
+            "Sao ch\u00e9p th\u1ea5t b\u1ea1i",
+            "Download cancelled",
+            "\u0110\u00e3 h\u1ee7y t\u1ea3i xu\u1ed1ng",
+            "Download needs attention",
+            "L\u01b0\u1ee3t t\u1ea3i c\u1ea7n \u0111\u01b0\u1ee3c x\u1eed l\u00fd",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "Kh\u00f4ng th\u1ec3 ki\u1ec3m tra c\u00e0i \u0111\u1eb7t t\u1ea3i xu\u1ed1ng."
+                    + " Kh\u1edfi \u0111\u1ed9ng l\u1ea1i BitChord r\u1ed3i th\u1eed l\u1ea1i.",
+            "Downloading \u00b7 {0} of {1}",
+            "\u0110ang t\u1ea3i \u00b7 {0} tr\u00ean {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "C\u00e1c l\u01b0\u1ee3t t\u1ea3i b\u1ecb t\u1ea1m d\u1eebng theo c\u00e0i"
+                    + " \u0111\u1eb7t t\u1ea3i xu\u1ed1ng hi\u1ec7n t\u1ea1i. Th\u1eed l\u1ea1i khi"
+                    + " \u0111\u01b0\u1ee3c ph\u00e9p t\u1ea3i.",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "B\u1eadt Soulseek kh\u00f4ng ch\u00ednh th\u1ee9c tr\u01b0\u1edbc khi t\u1ea3i"
+                    + " k\u1ebft qu\u1ea3 n\u00e0y.",
+            "Invalid selected Soulseek reference.",
+            "Tham chi\u1ebfu k\u1ebft qu\u1ea3 Soulseek \u0111\u00e3 ch\u1ecdn kh\u00f4ng h\u1ee3p"
+                    + " l\u1ec7.",
+            "No selected Soulseek downloads.",
+            "Kh\u00f4ng c\u00f3 l\u01b0\u1ee3t t\u1ea3i Soulseek n\u00e0o \u0111\u01b0\u1ee3c"
+                    + " ch\u1ecdn.",
+            "Preparing download",
+            "\u0110ang chu\u1ea9n b\u1ecb t\u1ea3i xu\u1ed1ng",
+            "Queued for download",
+            "\u0110\u00e3 x\u1ebfp h\u00e0ng \u0111\u1ee3i t\u1ea3i xu\u1ed1ng",
+            "Queued {0}. Open downloads to follow progress.",
+            "\u0110\u00e3 x\u1ebfp {0} v\u00e0o h\u00e0ng \u0111\u1ee3i. M\u1edf t\u1ea3i"
+                    + " xu\u1ed1ng \u0111\u1ec3 theo d\u00f5i ti\u1ebfn tr\u00ecnh.",
+            "Saved and verified",
+            "\u0110\u00e3 l\u01b0u v\u00e0 x\u00e1c minh",
+            "Saved to all selected destinations",
+            "\u0110\u00e3 l\u01b0u v\u00e0o t\u1ea5t c\u1ea3 n\u01a1i \u0111\u01b0\u1ee3c"
+                    + " ch\u1ecdn",
+            "Saving file",
+            "\u0110ang l\u01b0u t\u1ec7p",
+            "Saving paused",
+            "\u0110\u00e3 t\u1ea1m d\u1eebng l\u01b0u",
+            "Saving selected copies",
+            "\u0110ang l\u01b0u c\u00e1c b\u1ea3n sao \u0111\u00e3 ch\u1ecdn",
+            "Selected audio file",
+            "T\u1ec7p \u00e2m thanh \u0111\u00e3 ch\u1ecdn",
+            "Selected download storage is full. Finish existing copies first.",
+            "V\u00f9ng l\u01b0u tr\u1eef c\u1ee7a c\u00e1c l\u01b0\u1ee3t t\u1ea3i \u0111\u00e3"
+                    + " ch\u1ecdn \u0111\u00e3 \u0111\u1ea7y. H\u00e3y ho\u00e0n t\u1ea5t c\u00e1c"
+                    + " b\u1ea3n sao hi\u1ec7n c\u00f3 tr\u01b0\u1edbc.",
+            "Selected files are limited to 256 MiB.",
+            "T\u1ec7p \u0111\u00e3 ch\u1ecdn \u0111\u01b0\u1ee3c gi\u1edbi h\u1ea1n \u1edf 256"
+                    + " MiB.",
+            "Soulseek session changed. Select the result again.",
+            "Phi\u00ean Soulseek \u0111\u00e3 thay \u0111\u1ed5i. H\u00e3y ch\u1ecdn l\u1ea1i"
+                    + " k\u1ebft qu\u1ea3.",
+            "The selected download could not complete. Try again or choose another result.",
+            "Kh\u00f4ng th\u1ec3 ho\u00e0n t\u1ea5t l\u01b0\u1ee3t t\u1ea3i \u0111\u00e3 ch\u1ecdn."
+                    + " Th\u1eed l\u1ea1i ho\u1eb7c ch\u1ecdn k\u1ebft qu\u1ea3 kh\u00e1c.",
+            "The selected download queue is full.",
+            "H\u00e0ng \u0111\u1ee3i c\u00e1c l\u01b0\u1ee3t t\u1ea3i \u0111\u00e3 ch\u1ecdn"
+                    + " \u0111\u00e3 \u0111\u1ea7y.",
+            "This Soulseek result expired. Search again.",
+            "K\u1ebft qu\u1ea3 Soulseek n\u00e0y \u0111\u00e3 h\u1ebft h\u1ea1n. H\u00e3y t\u00ecm"
+                    + " l\u1ea1i.",
+            "This file did not pass the audio format check. Choose another result.",
+            "T\u1ec7p n\u00e0y kh\u00f4ng v\u01b0\u1ee3t qua ki\u1ec3m tra \u0111\u1ecbnh d\u1ea1ng"
+                    + " \u00e2m thanh. H\u00e3y ch\u1ecdn k\u1ebft qu\u1ea3 kh\u00e1c.",
+            "This selected download is already queued.",
+            "L\u01b0\u1ee3t t\u1ea3i \u0111\u00e3 ch\u1ecdn n\u00e0y \u0111\u00e3 c\u00f3 trong"
+                    + " h\u00e0ng \u0111\u1ee3i.",
+            "Uploading file",
+            "\u0110ang t\u1ea3i t\u1ec7p l\u00ean",
+            "Waiting for peer",
+            "\u0110ang ch\u1edd thi\u1ebft b\u1ecb kh\u00e1c",
+            "Waiting for peer \u00b7 queue position {0}",
+            "\u0110ang ch\u1edd thi\u1ebft b\u1ecb kh\u00e1c \u00b7 v\u1ecb tr\u00ed h\u00e0ng"
+                    + " \u0111\u1ee3i {0}",
+            "Waiting to save",
+            "\u0110ang ch\u1edd l\u01b0u",
+            "Waiting to save selected copies",
+            "\u0110ang ch\u1edd l\u01b0u c\u00e1c b\u1ea3n sao \u0111\u00e3 ch\u1ecdn",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "\u0110\u1ecbnh d\u1ea1ng: {0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "\u0110ang k\u1ebft n\u1ed1i v\u1edbi Soulseek\u2026",
+            "May use YouTube or another enabled source.",
+            "C\u00f3 th\u1ec3 d\u00f9ng YouTube ho\u1eb7c ngu\u1ed3n kh\u00e1c \u0111\u00e3"
+                    + " b\u1eadt.",
         };
     }
 
@@ -56346,6 +61198,203 @@ final class Translations {
             "\u50b3\u8f38\u65b9\u5f0f\uff1a{0}",
             "{0} recent clients",
             "{0} \u500b\u8fd1\u671f\u7528\u6236\u7aef",
+            "Soulseek account",
+            "Soulseek \u5e33\u6236",
+            "Signed in as {0}",
+            "\u5df2\u767b\u5165\u70ba {0}",
+            "Ready to search",
+            "\u53ef\u4ee5\u958b\u59cb\u641c\u5c0b",
+            "Sign in to search Soulseek.",
+            "\u767b\u5165\u5f8c\u5373\u53ef\u641c\u5c0b Soulseek\u3002",
+            "Enable Soulseek to sign in and search.",
+            "\u555f\u7528 Soulseek \u5f8c\u5373\u53ef\u767b\u5165\u4e26\u641c\u5c0b\u3002",
+            "Download setup",
+            "\u4e0b\u8f09\u8a2d\u5b9a",
+            "Choose where copies go before searching.",
+            "\u641c\u5c0b\u524d\u8acb\u9078\u64c7\u526f\u672c\u5132\u5b58\u4f4d\u7f6e\u3002",
+            "Choose your audio formats before searching.",
+            "\u641c\u5c0b\u524d\u8acb\u9078\u64c7\u97f3\u8a0a\u683c\u5f0f\u3002",
+            "Find music on Soulseek",
+            "\u5728 Soulseek \u4e0a\u5c0b\u627e\u97f3\u6a02",
+            "{0} formats enabled",
+            "\u5df2\u555f\u7528 {0} \u7a2e\u683c\u5f0f",
+            "More download options",
+            "\u66f4\u591a\u4e0b\u8f09\u9078\u9805",
+            "Account settings",
+            "\u5e33\u6236\u8a2d\u5b9a",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Soulseek \u8a2d\u5b9a\u7121\u6cd5\u4f7f\u7528\u3002\u8acb\u91cd\u65b0\u555f\u52d5"
+                    + " BitChord \u5f8c\u518d\u8a66\u3002",
+            "Other download options are controlled in Patches & tweaks.",
+            "\u5176\u4ed6\u4e0b\u8f09\u9078\u9805\u5728\u300c\u4fee\u88dc\u7a0b\u5f0f\u8207\u8abf\u6574\u300d\u4e2d\u8a2d\u5b9a\u3002",
+            "Source enabled",
+            "\u4f86\u6e90\u5df2\u555f\u7528",
+            "Account actions",
+            "\u5e33\u6236\u64cd\u4f5c",
+            "Not chosen yet",
+            "\u5c1a\u672a\u9078\u64c7",
+            "Not signed in",
+            "\u5c1a\u672a\u767b\u5165",
+            "Finish the open download choice first.",
+            "\u8acb\u5148\u5b8c\u6210\u5df2\u958b\u555f\u7684\u4e0b\u8f09\u9078\u64c7\u3002",
+            "Could not open the download source choice. Try again.",
+            "\u7121\u6cd5\u958b\u555f\u4e0b\u8f09\u4f86\u6e90\u9078\u64c7\u3002\u8acb\u518d\u8a66\u4e00\u6b21\u3002",
+            "BitChord could not start this download. Try again.",
+            "BitChord"
+                + " \u7121\u6cd5\u958b\u59cb\u6b64\u4e0b\u8f09\u3002\u8acb\u518d\u8a66\u4e00\u6b21\u3002",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "\u641c\u5c0b\u6a94\u6848\u3001\u67e5\u770b\u7bc0\u9ede\u8a73\u7d30\u8cc7\u6599\uff0c\u518d\u660e\u78ba\u9078\u64c7\u8981\u4e0b\u8f09\u7684\u6a94\u6848\u3002\u76ee\u524d\u7684\u6b4c\u66f2\u53ca\u5176\u4e0b\u8f09\u72c0\u614b\u6703\u4fdd\u6301\u4e0d\u8b8a\u3002",
+            "Choose download source",
+            "\u9078\u64c7\u4e0b\u8f09\u4f86\u6e90",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek \u6703\u641c\u5c0b\u7368\u7acb\u7684\u6a94\u6848\u3002BitChord"
+                + " \u4f7f\u7528\u73fe\u6709\u7684\u4e0b\u8f09\u4f86\u6e90\u548c\u8a2d\u5b9a\u3002",
+            "Search Soulseek",
+            "\u641c\u5c0b Soulseek",
+            "Continue with BitChord download",
+            "\u7e7c\u7e8c\u4f7f\u7528 BitChord \u4e0b\u8f09",
+            "This download choice expired. Return to the song and try again.",
+            "\u9019\u6b21\u4e0b\u8f09\u9078\u64c7\u5df2\u904e\u671f\u3002\u8acb\u8fd4\u56de\u6b4c\u66f2\u5f8c\u518d\u8a66\u3002",
+            "Source: Soulseek",
+            "\u4f86\u6e90\uff1aSoulseek",
+            "Artist and song title",
+            "\u6f14\u51fa\u8005\u8207\u6b4c\u66f2\u540d\u7a31",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "\u53ef\u4ee5\u958b\u59cb\u641c\u5c0b\u3002\u9078\u64c7\u6a94\u6848\u5f8c\u624d\u6703\u958b\u59cb\u4e0b\u8f09\u3002",
+            "Soulseek account and setup",
+            "Soulseek \u5e33\u6236\u8207\u8a2d\u5b9a",
+            "Audio formats and preference order",
+            "\u97f3\u8a0a\u683c\u5f0f\u8207\u512a\u5148\u9806\u5e8f",
+            "View downloads",
+            "\u6aa2\u8996\u4e0b\u8f09",
+            "Choose your audio formats and their order first.",
+            "\u8acb\u5148\u9078\u64c7\u97f3\u8a0a\u683c\u5f0f\u53ca\u5176\u9806\u5e8f\u3002",
+            "Search using 2\u2013256 characters.",
+            "\u8acb\u8f38\u5165 2\u2013256 \u500b\u5b57\u5143\u9032\u884c\u641c\u5c0b\u3002",
+            "Searching Soulseek\u2026",
+            "\u6b63\u5728\u641c\u5c0b Soulseek\u2026",
+            "Soulseek session changed. Search again.",
+            "Soulseek"
+                + " \u5de5\u4f5c\u968e\u6bb5\u5df2\u8b8a\u66f4\u3002\u8acb\u91cd\u65b0\u641c\u5c0b\u3002",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "\u6c92\u6709\u76f8\u7b26\u7684\u6a94\u6848\u3002\u8acb\u5617\u8a66\u5176\u4ed6\u641c\u5c0b\u5b57\u8a5e\u3002\u5c1a\u672a\u958b\u59cb"
+                + " BitChord \u4e0b\u8f09\u3002",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "\u8acb\u5728\u4e0b\u65b9\u9078\u64c7\u6a94\u6848\u3002\u7bc0\u9ede\u63d0\u4f9b\u7684\u6a94\u6848\u540d\u7a31\u3001\u683c\u5f0f\u548c\u53ef\u7528\u6027\u5c1a\u672a\u9a57\u8b49\u3002",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "\u7121\u6cd5\u5b8c\u6210 Soulseek"
+                + " \u641c\u5c0b\u3002\u8acb\u6aa2\u67e5\u767b\u5165\u72c0\u614b\u3001\u683c\u5f0f\u548c\u526f\u672c\u5132\u5b58\u4f4d\u7f6e\u5f8c\u518d\u8a66\u3002",
+            "A previous search is stopping. Try again shortly.",
+            "\u6b63\u5728\u505c\u6b62\u4e0a\u4e00\u6b21\u641c\u5c0b\u3002\u8acb\u7a0d\u5f8c\u518d\u8a66\u3002",
+            "Peer: {0}",
+            "\u7bc0\u9ede\uff1a{0}",
+            "File: {0}",
+            "\u6a94\u6848\uff1a{0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "\u6a19\u793a\u683c\u5f0f\uff1a{0} \u00b7 {1} \u4f4d\u5143\u7d44",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "\u9019\u4e9b\u8a73\u7d30\u8cc7\u6599\u7531\u7bc0\u9ede\u63d0\u4f9b\uff0c\u5c1a\u672a\u9a57\u8b49\u3002\u4e0b\u8f09\u6a94\u6848\u7684\u7de8\u89e3\u78bc\u5668\u6703\u5728\u5132\u5b58\u524d\u6aa2\u67e5\u3002",
+            "Download this file",
+            "\u4e0b\u8f09\u6b64\u6a94\u6848",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "\u4f86\u6e90\uff1aSoulseek\u3002\u6240\u9078\u6a94\u6848\u5df2\u52a0\u5165\u4f47\u5217\u3002\u8acb\u958b\u555f\u300c\u6aa2\u8996\u4e0b\u8f09\u300d\u8ffd\u8e64\u9032\u5ea6\u3002",
+            "The selected file could not be queued. Review setup and try again.",
+            "\u7121\u6cd5\u5c07\u6240\u9078\u6a94\u6848\u52a0\u5165\u4f47\u5217\u3002\u8acb\u6aa2\u67e5\u8a2d\u5b9a\u5f8c\u518d\u8a66\u3002",
+            "The selected file is no longer ready. Check setup and search again.",
+            "\u6240\u9078\u6a94\u6848\u5df2\u4e0d\u518d\u5c31\u7dd2\u3002\u8acb\u6aa2\u67e5\u8a2d\u5b9a\u4e26\u91cd\u65b0\u641c\u5c0b\u3002",
+            "Cannot create selected download storage.",
+            "\u7121\u6cd5\u5efa\u7acb\u6240\u9078\u4e0b\u8f09\u7684\u5132\u5b58\u7a7a\u9593\u3002",
+            "Cannot inspect selected download storage.",
+            "\u7121\u6cd5\u6aa2\u67e5\u6240\u9078\u4e0b\u8f09\u7684\u5132\u5b58\u7a7a\u9593\u3002",
+            "Cannot remove interrupted selected download staging.",
+            "\u7121\u6cd5\u79fb\u9664\u5df2\u4e2d\u65b7\u7684\u6240\u9078\u4e0b\u8f09\u7684\u66ab\u5b58\u6a94\u6848\u3002",
+            "Check the saved file before retry",
+            "\u91cd\u8a66\u524d\u8acb\u6aa2\u67e5\u5df2\u5132\u5b58\u7684\u6a94\u6848",
+            "Checking audio format",
+            "\u6b63\u5728\u6aa2\u67e5\u97f3\u8a0a\u683c\u5f0f",
+            "Choose where copies go before downloading.",
+            "\u4e0b\u8f09\u524d\u8acb\u9078\u64c7\u526f\u672c\u5132\u5b58\u4f4d\u7f6e\u3002",
+            "Confirmation required before retry",
+            "\u91cd\u8a66\u524d\u9700\u8981\u78ba\u8a8d",
+            "Copy failed",
+            "\u8907\u88fd\u5931\u6557",
+            "Download cancelled",
+            "\u4e0b\u8f09\u5df2\u53d6\u6d88",
+            "Download needs attention",
+            "\u4e0b\u8f09\u9700\u8981\u8655\u7406",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "\u7121\u6cd5\u6aa2\u67e5\u4e0b\u8f09\u8a2d\u5b9a\u3002\u8acb\u91cd\u65b0\u555f\u52d5"
+                    + " BitChord \u5f8c\u518d\u8a66\u3002",
+            "Downloading \u00b7 {0} of {1}",
+            "\u6b63\u5728\u4e0b\u8f09 \u00b7 {0}\uff0c\u5171 {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "\u76ee\u524d\u7684\u4e0b\u8f09\u8a2d\u5b9a\u5df2\u66ab\u505c\u4e0b\u8f09\u3002\u8acb\u5728\u5141\u8a31\u4e0b\u8f09\u6642\u91cd\u8a66\u3002",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "\u4e0b\u8f09\u6b64\u7d50\u679c\u524d\u8acb\u555f\u7528 Unofficial Soulseek\u3002",
+            "Invalid selected Soulseek reference.",
+            "\u6240\u9078 Soulseek \u53c3\u7167\u7121\u6548\u3002",
+            "No selected Soulseek downloads.",
+            "\u6c92\u6709\u5df2\u9078\u64c7\u7684 Soulseek \u4e0b\u8f09\u3002",
+            "Preparing download",
+            "\u6b63\u5728\u6e96\u5099\u4e0b\u8f09",
+            "Queued for download",
+            "\u5df2\u52a0\u5165\u4e0b\u8f09\u4f47\u5217",
+            "Queued {0}. Open downloads to follow progress.",
+            "\u5df2\u5c07 {0}"
+                + " \u52a0\u5165\u4f47\u5217\u3002\u8acb\u958b\u555f\u4e0b\u8f09\u5167\u5bb9\u8ffd\u8e64\u9032\u5ea6\u3002",
+            "Saved and verified",
+            "\u5df2\u5132\u5b58\u4e26\u9a57\u8b49",
+            "Saved to all selected destinations",
+            "\u5df2\u5132\u5b58\u81f3\u6240\u6709\u6240\u9078\u4f4d\u7f6e",
+            "Saving file",
+            "\u6b63\u5728\u5132\u5b58\u6a94\u6848",
+            "Saving paused",
+            "\u5132\u5b58\u5df2\u66ab\u505c",
+            "Saving selected copies",
+            "\u6b63\u5728\u5132\u5b58\u6240\u9078\u526f\u672c",
+            "Selected audio file",
+            "\u6240\u9078\u97f3\u8a0a\u6a94\u6848",
+            "Selected download storage is full. Finish existing copies first.",
+            "\u6240\u9078\u4e0b\u8f09\u7684\u5132\u5b58\u7a7a\u9593\u5df2\u6eff\u3002\u8acb\u5148\u5b8c\u6210\u73fe\u6709\u526f\u672c\u7684\u5132\u5b58\u3002",
+            "Selected files are limited to 256 MiB.",
+            "\u6240\u9078\u6a94\u6848\u7684\u5927\u5c0f\u4e0a\u9650\u70ba 256 MiB\u3002",
+            "Soulseek session changed. Select the result again.",
+            "Soulseek"
+                + " \u5de5\u4f5c\u968e\u6bb5\u5df2\u8b8a\u66f4\u3002\u8acb\u91cd\u65b0\u9078\u64c7\u7d50\u679c\u3002",
+            "The selected download could not complete. Try again or choose another result.",
+            "\u7121\u6cd5\u5b8c\u6210\u6240\u9078\u4e0b\u8f09\u3002\u8acb\u91cd\u8a66\u6216\u9078\u64c7\u5176\u4ed6\u7d50\u679c\u3002",
+            "The selected download queue is full.",
+            "\u6240\u9078\u4e0b\u8f09\u4f47\u5217\u5df2\u6eff\u3002",
+            "This Soulseek result expired. Search again.",
+            "\u6b64 Soulseek"
+                    + " \u7d50\u679c\u5df2\u904e\u671f\u3002\u8acb\u91cd\u65b0\u641c\u5c0b\u3002",
+            "This file did not pass the audio format check. Choose another result.",
+            "\u6b64\u6a94\u6848\u672a\u901a\u904e\u97f3\u8a0a\u683c\u5f0f\u6aa2\u67e5\u3002\u8acb\u9078\u64c7\u5176\u4ed6\u7d50\u679c\u3002",
+            "This selected download is already queued.",
+            "\u6b64\u6240\u9078\u4e0b\u8f09\u5df2\u5728\u4f47\u5217\u4e2d\u3002",
+            "Uploading file",
+            "\u6b63\u5728\u4e0a\u50b3\u6a94\u6848",
+            "Waiting for peer",
+            "\u6b63\u5728\u7b49\u5f85\u7bc0\u9ede",
+            "Waiting for peer \u00b7 queue position {0}",
+            "\u6b63\u5728\u7b49\u5f85\u7bc0\u9ede \u00b7 \u4f47\u5217\u4f4d\u7f6e {0}",
+            "Waiting to save",
+            "\u6b63\u5728\u7b49\u5f85\u5132\u5b58",
+            "Waiting to save selected copies",
+            "\u6b63\u5728\u7b49\u5f85\u5132\u5b58\u6240\u9078\u526f\u672c",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "\u683c\u5f0f\uff1a{0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "\u6b63\u5728\u9023\u7dda\u81f3 Soulseek\u2026",
+            "May use YouTube or another enabled source.",
+            "\u53ef\u80fd\u4f7f\u7528 YouTube"
+                    + " \u6216\u5176\u4ed6\u5df2\u555f\u7528\u7684\u4f86\u6e90\u3002",
         };
     }
 
@@ -58579,6 +63628,201 @@ final class Translations {
             "\u4f20\u8f93\u65b9\u5f0f\uff1a{0}",
             "{0} recent clients",
             "{0} \u4e2a\u8fd1\u671f\u5ba2\u6237\u7aef",
+            "Soulseek account",
+            "Soulseek \u8d26\u6237",
+            "Signed in as {0}",
+            "\u5df2\u767b\u5f55\u4e3a {0}",
+            "Ready to search",
+            "\u53ef\u4ee5\u5f00\u59cb\u641c\u7d22",
+            "Sign in to search Soulseek.",
+            "\u767b\u5f55\u540e\u5373\u53ef\u641c\u7d22 Soulseek\u3002",
+            "Enable Soulseek to sign in and search.",
+            "\u542f\u7528 Soulseek \u540e\u5373\u53ef\u767b\u5f55\u5e76\u641c\u7d22\u3002",
+            "Download setup",
+            "\u4e0b\u8f7d\u8bbe\u7f6e",
+            "Choose where copies go before searching.",
+            "\u641c\u7d22\u524d\u8bf7\u9009\u62e9\u526f\u672c\u4fdd\u5b58\u4f4d\u7f6e\u3002",
+            "Choose your audio formats before searching.",
+            "\u641c\u7d22\u524d\u8bf7\u9009\u62e9\u97f3\u9891\u683c\u5f0f\u3002",
+            "Find music on Soulseek",
+            "\u5728 Soulseek \u4e0a\u67e5\u627e\u97f3\u4e50",
+            "{0} formats enabled",
+            "\u5df2\u542f\u7528 {0} \u79cd\u683c\u5f0f",
+            "More download options",
+            "\u66f4\u591a\u4e0b\u8f7d\u9009\u9879",
+            "Account settings",
+            "\u8d26\u6237\u8bbe\u7f6e",
+            "Soulseek settings unavailable. Restart BitChord and try again.",
+            "Soulseek \u8bbe\u7f6e\u4e0d\u53ef\u7528\u3002\u8bf7\u91cd\u542f BitChord"
+                    + " \u540e\u91cd\u8bd5\u3002",
+            "Other download options are controlled in Patches & tweaks.",
+            "\u5176\u4ed6\u4e0b\u8f7d\u9009\u9879\u5728\u201c\u8865\u4e01\u4e0e\u8c03\u6574\u201d\u4e2d\u8bbe\u7f6e\u3002",
+            "Source enabled",
+            "\u6765\u6e90\u5df2\u542f\u7528",
+            "Account actions",
+            "\u8d26\u6237\u64cd\u4f5c",
+            "Not chosen yet",
+            "\u5c1a\u672a\u9009\u62e9",
+            "Not signed in",
+            "\u672a\u767b\u5f55",
+            "Finish the open download choice first.",
+            "\u8bf7\u5148\u5b8c\u6210\u5df2\u6253\u5f00\u7684\u4e0b\u8f7d\u9009\u62e9\u3002",
+            "Could not open the download source choice. Try again.",
+            "\u65e0\u6cd5\u6253\u5f00\u4e0b\u8f7d\u6765\u6e90\u9009\u62e9\u3002\u8bf7\u91cd\u8bd5\u3002",
+            "BitChord could not start this download. Try again.",
+            "BitChord \u65e0\u6cd5\u542f\u52a8\u6b64\u4e0b\u8f7d\u3002\u8bf7\u91cd\u8bd5\u3002",
+            "Search for a file, review the peer's details, then choose exactly what to download."
+                    + " Your current song and its download status stay unchanged.",
+            "\u641c\u7d22\u6587\u4ef6\uff0c\u67e5\u770b\u8282\u70b9\u8be6\u60c5\uff0c\u518d\u660e\u786e\u9009\u62e9\u8981\u4e0b\u8f7d\u7684\u6587\u4ef6\u3002\u5f53\u524d\u6b4c\u66f2\u53ca\u5176\u4e0b\u8f7d\u72b6\u6001\u4fdd\u6301\u4e0d\u53d8\u3002",
+            "Choose download source",
+            "\u9009\u62e9\u4e0b\u8f7d\u6765\u6e90",
+            "Soulseek searches for a separate file. BitChord uses its existing download sources and"
+                    + " settings.",
+            "Soulseek \u4f1a\u641c\u7d22\u5355\u72ec\u7684\u6587\u4ef6\u3002BitChord"
+                    + " \u4f7f\u7528\u73b0\u6709\u4e0b\u8f7d\u6765\u6e90\u548c\u8bbe\u7f6e\u3002",
+            "Search Soulseek",
+            "\u641c\u7d22 Soulseek",
+            "Continue with BitChord download",
+            "\u7ee7\u7eed\u4f7f\u7528 BitChord \u4e0b\u8f7d",
+            "This download choice expired. Return to the song and try again.",
+            "\u6b64\u6b21\u4e0b\u8f7d\u9009\u62e9\u5df2\u8fc7\u671f\u3002\u8bf7\u8fd4\u56de\u6b4c\u66f2\u540e\u91cd\u8bd5\u3002",
+            "Source: Soulseek",
+            "\u6765\u6e90\uff1aSoulseek",
+            "Artist and song title",
+            "\u6b4c\u624b\u4e0e\u6b4c\u66f2\u540d",
+            "Ready to search. Nothing downloads until you choose a file.",
+            "\u53ef\u4ee5\u5f00\u59cb\u641c\u7d22\u3002\u9009\u62e9\u6587\u4ef6\u540e\u624d\u4f1a\u5f00\u59cb\u4e0b\u8f7d\u3002",
+            "Soulseek account and setup",
+            "Soulseek \u8d26\u6237\u4e0e\u8bbe\u7f6e",
+            "Audio formats and preference order",
+            "\u97f3\u9891\u683c\u5f0f\u4e0e\u4f18\u5148\u987a\u5e8f",
+            "View downloads",
+            "\u67e5\u770b\u4e0b\u8f7d",
+            "Choose your audio formats and their order first.",
+            "\u8bf7\u5148\u9009\u62e9\u97f3\u9891\u683c\u5f0f\u53ca\u5176\u987a\u5e8f\u3002",
+            "Search using 2\u2013256 characters.",
+            "\u8bf7\u8f93\u5165 2\u2013256 \u4e2a\u5b57\u7b26\u8fdb\u884c\u641c\u7d22\u3002",
+            "Searching Soulseek\u2026",
+            "\u6b63\u5728\u641c\u7d22 Soulseek\u2026",
+            "Soulseek session changed. Search again.",
+            "Soulseek \u4f1a\u8bdd\u5df2\u66f4\u6539\u3002\u8bf7\u91cd\u65b0\u641c\u7d22\u3002",
+            "No matching files. Try different search words. BitChord download was not started.",
+            "\u6ca1\u6709\u5339\u914d\u7684\u6587\u4ef6\u3002\u8bf7\u5c1d\u8bd5\u5176\u4ed6\u641c\u7d22\u8bcd\u3002\u5c1a\u672a\u5f00\u59cb"
+                + " BitChord \u4e0b\u8f7d\u3002",
+            "Choose a file below. Peer filenames, formats and availability are unverified.",
+            "\u8bf7\u5728\u4e0b\u65b9\u9009\u62e9\u6587\u4ef6\u3002\u8282\u70b9\u63d0\u4f9b\u7684\u6587\u4ef6\u540d\u3001\u683c\u5f0f\u548c\u53ef\u7528\u6027\u5c1a\u672a\u9a8c\u8bc1\u3002",
+            "Soulseek search could not complete. Check sign-in, formats and copy destinations, then"
+                    + " retry.",
+            "\u65e0\u6cd5\u5b8c\u6210 Soulseek"
+                + " \u641c\u7d22\u3002\u8bf7\u68c0\u67e5\u767b\u5f55\u72b6\u6001\u3001\u683c\u5f0f\u548c\u526f\u672c\u4fdd\u5b58\u4f4d\u7f6e\u540e\u91cd\u8bd5\u3002",
+            "A previous search is stopping. Try again shortly.",
+            "\u6b63\u5728\u505c\u6b62\u4e0a\u4e00\u6b21\u641c\u7d22\u3002\u8bf7\u7a0d\u540e\u91cd\u8bd5\u3002",
+            "Peer: {0}",
+            "\u8282\u70b9\uff1a{0}",
+            "File: {0}",
+            "\u6587\u4ef6\uff1a{0}",
+            "Advertised format: {0} \u00b7 {1} bytes",
+            "\u6807\u79f0\u683c\u5f0f\uff1a{0} \u00b7 {1} \u5b57\u8282",
+            "Details are peer claims. The downloaded file's codec is checked before it is saved.",
+            "\u8fd9\u4e9b\u8be6\u60c5\u7531\u8282\u70b9\u63d0\u4f9b\uff0c\u5c1a\u672a\u9a8c\u8bc1\u3002\u4e0b\u8f7d\u6587\u4ef6\u7684\u7f16\u89e3\u7801\u5668\u4f1a\u5728\u4fdd\u5b58\u524d\u68c0\u67e5\u3002",
+            "Download this file",
+            "\u4e0b\u8f7d\u6b64\u6587\u4ef6",
+            "Source: Soulseek. Selected file queued. Open View downloads for progress.",
+            "\u6765\u6e90\uff1aSoulseek\u3002\u6240\u9009\u6587\u4ef6\u5df2\u52a0\u5165\u961f\u5217\u3002\u8bf7\u6253\u5f00\u201c\u67e5\u770b\u4e0b\u8f7d\u201d\u8ddf\u8e2a\u8fdb\u5ea6\u3002",
+            "The selected file could not be queued. Review setup and try again.",
+            "\u65e0\u6cd5\u5c06\u6240\u9009\u6587\u4ef6\u52a0\u5165\u961f\u5217\u3002\u8bf7\u68c0\u67e5\u8bbe\u7f6e\u540e\u91cd\u8bd5\u3002",
+            "The selected file is no longer ready. Check setup and search again.",
+            "\u6240\u9009\u6587\u4ef6\u5df2\u4e0d\u518d\u5c31\u7eea\u3002\u8bf7\u68c0\u67e5\u8bbe\u7f6e\u5e76\u91cd\u65b0\u641c\u7d22\u3002",
+            "Cannot create selected download storage.",
+            "\u65e0\u6cd5\u521b\u5efa\u6240\u9009\u4e0b\u8f7d\u7684\u5b58\u50a8\u7a7a\u95f4\u3002",
+            "Cannot inspect selected download storage.",
+            "\u65e0\u6cd5\u68c0\u67e5\u6240\u9009\u4e0b\u8f7d\u7684\u5b58\u50a8\u7a7a\u95f4\u3002",
+            "Cannot remove interrupted selected download staging.",
+            "\u65e0\u6cd5\u79fb\u9664\u5df2\u4e2d\u65ad\u7684\u6240\u9009\u4e0b\u8f7d\u7684\u4e34\u65f6\u6587\u4ef6\u3002",
+            "Check the saved file before retry",
+            "\u91cd\u8bd5\u524d\u8bf7\u68c0\u67e5\u5df2\u4fdd\u5b58\u7684\u6587\u4ef6",
+            "Checking audio format",
+            "\u6b63\u5728\u68c0\u67e5\u97f3\u9891\u683c\u5f0f",
+            "Choose where copies go before downloading.",
+            "\u4e0b\u8f7d\u524d\u8bf7\u9009\u62e9\u526f\u672c\u4fdd\u5b58\u4f4d\u7f6e\u3002",
+            "Confirmation required before retry",
+            "\u91cd\u8bd5\u524d\u9700\u8981\u786e\u8ba4",
+            "Copy failed",
+            "\u590d\u5236\u5931\u8d25",
+            "Download cancelled",
+            "\u4e0b\u8f7d\u5df2\u53d6\u6d88",
+            "Download needs attention",
+            "\u4e0b\u8f7d\u9700\u8981\u5904\u7406",
+            "Download settings could not be checked. Restart BitChord and retry.",
+            "\u65e0\u6cd5\u68c0\u67e5\u4e0b\u8f7d\u8bbe\u7f6e\u3002\u8bf7\u91cd\u542f BitChord"
+                    + " \u540e\u91cd\u8bd5\u3002",
+            "Downloading \u00b7 {0} of {1}",
+            "\u6b63\u5728\u4e0b\u8f7d \u00b7 {0}\uff0c\u5171 {1}",
+            "Downloads are paused by the current download settings. Retry when downloads are"
+                    + " allowed.",
+            "\u5f53\u524d\u4e0b\u8f7d\u8bbe\u7f6e\u5df2\u6682\u505c\u4e0b\u8f7d\u3002\u8bf7\u5728\u5141\u8bb8\u4e0b\u8f7d\u65f6\u91cd\u8bd5\u3002",
+            "Enable Unofficial Soulseek before downloading this result.",
+            "\u4e0b\u8f7d\u6b64\u7ed3\u679c\u524d\u8bf7\u542f\u7528 Unofficial Soulseek\u3002",
+            "Invalid selected Soulseek reference.",
+            "\u6240\u9009 Soulseek \u5f15\u7528\u65e0\u6548\u3002",
+            "No selected Soulseek downloads.",
+            "\u6ca1\u6709\u5df2\u9009\u62e9\u7684 Soulseek \u4e0b\u8f7d\u3002",
+            "Preparing download",
+            "\u6b63\u5728\u51c6\u5907\u4e0b\u8f7d",
+            "Queued for download",
+            "\u5df2\u52a0\u5165\u4e0b\u8f7d\u961f\u5217",
+            "Queued {0}. Open downloads to follow progress.",
+            "\u5df2\u5c06 {0}"
+                + " \u52a0\u5165\u961f\u5217\u3002\u8bf7\u6253\u5f00\u4e0b\u8f7d\u5185\u5bb9\u8ddf\u8e2a\u8fdb\u5ea6\u3002",
+            "Saved and verified",
+            "\u5df2\u4fdd\u5b58\u5e76\u9a8c\u8bc1",
+            "Saved to all selected destinations",
+            "\u5df2\u4fdd\u5b58\u5230\u6240\u6709\u6240\u9009\u4f4d\u7f6e",
+            "Saving file",
+            "\u6b63\u5728\u4fdd\u5b58\u6587\u4ef6",
+            "Saving paused",
+            "\u4fdd\u5b58\u5df2\u6682\u505c",
+            "Saving selected copies",
+            "\u6b63\u5728\u4fdd\u5b58\u6240\u9009\u526f\u672c",
+            "Selected audio file",
+            "\u6240\u9009\u97f3\u9891\u6587\u4ef6",
+            "Selected download storage is full. Finish existing copies first.",
+            "\u6240\u9009\u4e0b\u8f7d\u7684\u5b58\u50a8\u7a7a\u95f4\u5df2\u6ee1\u3002\u8bf7\u5148\u5b8c\u6210\u73b0\u6709\u526f\u672c\u7684\u4fdd\u5b58\u3002",
+            "Selected files are limited to 256 MiB.",
+            "\u6240\u9009\u6587\u4ef6\u7684\u5927\u5c0f\u4e0a\u9650\u4e3a 256 MiB\u3002",
+            "Soulseek session changed. Select the result again.",
+            "Soulseek"
+                + " \u4f1a\u8bdd\u5df2\u66f4\u6539\u3002\u8bf7\u91cd\u65b0\u9009\u62e9\u7ed3\u679c\u3002",
+            "The selected download could not complete. Try again or choose another result.",
+            "\u65e0\u6cd5\u5b8c\u6210\u6240\u9009\u4e0b\u8f7d\u3002\u8bf7\u91cd\u8bd5\u6216\u9009\u62e9\u5176\u4ed6\u7ed3\u679c\u3002",
+            "The selected download queue is full.",
+            "\u6240\u9009\u4e0b\u8f7d\u961f\u5217\u5df2\u6ee1\u3002",
+            "This Soulseek result expired. Search again.",
+            "\u6b64 Soulseek"
+                    + " \u7ed3\u679c\u5df2\u8fc7\u671f\u3002\u8bf7\u91cd\u65b0\u641c\u7d22\u3002",
+            "This file did not pass the audio format check. Choose another result.",
+            "\u6b64\u6587\u4ef6\u672a\u901a\u8fc7\u97f3\u9891\u683c\u5f0f\u68c0\u67e5\u3002\u8bf7\u9009\u62e9\u5176\u4ed6\u7ed3\u679c\u3002",
+            "This selected download is already queued.",
+            "\u6b64\u6240\u9009\u4e0b\u8f7d\u5df2\u5728\u961f\u5217\u4e2d\u3002",
+            "Uploading file",
+            "\u6b63\u5728\u4e0a\u4f20\u6587\u4ef6",
+            "Waiting for peer",
+            "\u6b63\u5728\u7b49\u5f85\u8282\u70b9",
+            "Waiting for peer \u00b7 queue position {0}",
+            "\u6b63\u5728\u7b49\u5f85\u8282\u70b9 \u00b7 \u961f\u5217\u4f4d\u7f6e {0}",
+            "Waiting to save",
+            "\u6b63\u5728\u7b49\u5f85\u4fdd\u5b58",
+            "Waiting to save selected copies",
+            "\u6b63\u5728\u7b49\u5f85\u4fdd\u5b58\u6240\u9009\u526f\u672c",
+            "{0} \u00b7 {1}",
+            "{0} \u00b7 {1}",
+            "Format: {0} \u00b7 {1}",
+            "\u683c\u5f0f\uff1a{0} \u00b7 {1}",
+            "Connecting to Soulseek\u2026",
+            "\u6b63\u5728\u8fde\u63a5 Soulseek\u2026",
+            "May use YouTube or another enabled source.",
+            "\u53ef\u80fd\u4f7f\u7528 YouTube"
+                    + " \u6216\u5176\u4ed6\u5df2\u542f\u7528\u7684\u6765\u6e90\u3002",
         };
     }
 }
