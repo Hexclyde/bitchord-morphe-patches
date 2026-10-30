@@ -313,7 +313,13 @@ final class NativeAudio {
                             HostLog.d(
                                     "Unofficial Telegram file "
                                             + id
-                                            + " moved while it was read; looking for it again");
+                                            + " moved or was deleted while it was read; fetching"
+                                            + " it again");
+                        // Asking for the part makes TDLib check the file is still there and
+                        // download it again if it isn't; otherwise it keeps naming the old path.
+                        owner.bridge.call(
+                                new TdApi.DownloadFile(
+                                        id, 32, at, Math.min(limit - at, 4L * 1024 * 1024), false));
                         Thread.sleep(50L * attempt);
                         continue;
                     }

@@ -70,6 +70,11 @@ public class NativeMedia3Test {
                     if (request instanceof TdApi.GetFileDownloadedPrefixSize) {
                         TdApi.FileDownloadedPrefixSize p = new TdApi.FileDownloadedPrefixSize();
                         long offset = ((TdApi.GetFileDownloadedPrefixSize) request).offset;
+                        // A file deleted behind TDLib's back: it still says the part is there.
+                        if (!file.exists()) {
+                            p.size = total - offset;
+                            return p;
+                        }
                         // The first query reports no bytes. DownloadFile writes the requested
                         // range.
                         try (RandomAccessFile f = new RandomAccessFile(file, "r")) {
@@ -101,6 +106,21 @@ public class NativeMedia3Test {
             f.local.path = stalePath;
         }
         return f;
+    }
+
+    @Test
+    public void aFileDeletedWhileReadIsDownloadedAgain() throws Exception {
+        DataSource source = TelegramDataSource.wrap(spy());
+        assertEquals(100_000, source.open(spec(url, 0, 100_000)));
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] b = new byte[4093];
+        while (out.size() < 70_000) out.write(b, 0, source.read(b, 0, b.length));
+        // The cache was trimmed under the reader: the file is gone, and TDLib still names it.
+        assertTrue(file.delete());
+        int n;
+        while ((n = source.read(b, 0, b.length)) != -1) out.write(b, 0, n);
+        source.close();
+        content(out.toByteArray(), 0, 100_000);
     }
 
     @Test

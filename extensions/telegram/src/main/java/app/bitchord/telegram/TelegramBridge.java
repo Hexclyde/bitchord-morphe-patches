@@ -794,7 +794,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.1.0-beta.3"));
+                            "1.1.0-beta.4"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {
@@ -2035,13 +2035,21 @@ public final class TelegramBridge {
         client.send(new TdApi.CancelDownloadFile(id, false), null);
     }
 
+    /** How long a downloaded file is kept from trimming the cache to its size, in seconds. */
+    static final int KEEP_RECENT_SECONDS = 3600;
+
+    /**
+     * Trims TDLib's audio cache to {@code bytes}. Files from the last hour stay, so a song that's
+     * playing or about to (the cache is trimmed as a read starts) isn't deleted under its reader;
+     * clearing the cache ({@code bytes} 0) removes everything.
+     */
     void optimize(long bytes) throws Exception {
         call(
                 new TdApi.OptimizeStorage(
                         bytes,
                         Integer.MAX_VALUE,
                         Integer.MAX_VALUE,
-                        0,
+                        bytes == 0 ? 0 : KEEP_RECENT_SECONDS,
                         new TdApi.FileType[] {
                             new TdApi.FileTypeAudio(), new TdApi.FileTypeDocument()
                         },

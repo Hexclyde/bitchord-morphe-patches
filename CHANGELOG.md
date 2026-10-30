@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0-beta.4
+
+A testing build, on the `testing` branch only.
+
+- **Fixed Telegram copies still failing with "ENOENT" and falling back to YouTube** (reported with "Bring Me To Life"). Each time a Telegram read started, the patch trimmed TDLib's audio cache to its size limit, and could delete the very file being played or about to play; TDLib kept naming the deleted file. Files downloaded in the last hour are now kept when the cache is trimmed; clearing the cache yourself still removes everything. If a file is gone anyway, TDLib is asked to download that part again.
+
 ## 1.1.0-beta.3
 
 A testing build, on the `testing` branch only.
