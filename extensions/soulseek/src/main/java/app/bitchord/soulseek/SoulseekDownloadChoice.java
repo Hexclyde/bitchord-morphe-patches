@@ -50,16 +50,14 @@ public final class SoulseekDownloadChoice {
         if (!(songs instanceof List) || !eligible((List<?>) songs, from))
             return continuation.invoke(songs, from);
         Context app = null;
-        boolean enabled = false;
         try {
             app = SoulseekBridge.get().context;
-            enabled = DownloadSettings.enabled(app, DownloadSettings.SOULSEEK);
         } catch (Exception unavailable) {
             // Before bridge boot the unmodified player remains usable.
         }
         // The original callback may itself throw. Never catch it as a bridge failure
         // and retry a second time: it owns permissions, queue admission and other patches.
-        if (app == null || !enabled) return continuation.invoke(songs, from);
+        if (app == null) return continuation.invoke(songs, from);
         final Context context = app;
         String token = UUID.randomUUID().toString();
         synchronized (pending) {
@@ -77,7 +75,7 @@ public final class SoulseekDownloadChoice {
             String query = (artist + " " + title).trim();
             if (query.length() > 256) query = query.substring(0, 256);
             context.startActivity(
-                    new Intent(context, SoulseekSearchActivity.class)
+                    new Intent(context, DownloadExplorerActivity.class)
                             .putExtra(EXTRA_CHOICE, token)
                             .putExtra(EXTRA_QUERY, query)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));

@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 final class SoulseekDownloads {
     static volatile int fetches;
+    static final java.util.List<String> requests =
+            new java.util.concurrent.CopyOnWriteArrayList<>();
     static volatile String url;
     static volatile CountDownLatch entered, release;
     static volatile boolean pauseBeforeReturn;
@@ -23,6 +25,7 @@ final class SoulseekDownloads {
             CoroutineContext context)
             throws IOException {
         fetches++;
+        requests.add(request);
         url = request;
         if (failure != null) throw new IOException(failure);
         CountDownLatch gate = entered, proceed = release;

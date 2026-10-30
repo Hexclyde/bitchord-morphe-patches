@@ -1,7 +1,6 @@
 package app.bitchord.patches
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
@@ -157,6 +156,8 @@ private val soulseekResources = resourcePatch {
                 listOf(
                     "SoulseekActivity",
                     "SoulseekSearchActivity",
+                    "DownloadExplorerActivity",
+                    "DownloadsHubActivity",
                     "NostrSetupActivity",
                     "PeerDiscoveryActivity",
                     "BulkDownloadsActivity",
@@ -334,6 +335,68 @@ val nativeSoulseekPatch =
                 routeClass.methods.any {
                     it.name == "<init>" && it.parameterTypes == routeParameters + "I"
                 }
+            if (currentRoute) {
+                // Preserve the host's route numbers while inserting one visual tab in both bars.
+                for ((owner, name) in
+                    listOf(
+                        "FloatingBottomBarKt" to "FloatingBottomBar",
+                        "GlassNavBarKt" to "GlassNavBar",
+                    )) {
+                    val bar =
+                        mutableClassDefBy("Lcom/music/bitchord/ui/components/$owner;")
+                            .methods
+                            .single {
+                                it.name == name &&
+                                    it.parameterTypes.take(3) ==
+                                        listOf(
+                                            "Ljava/util/List;",
+                                            "I",
+                                            "Lkotlin/jvm/functions/Function1;",
+                                        )
+                            }
+                    check(bar.accessFlags and 8 != 0 && bar.implementation!!.registerCount >= 8) {
+                        "Navigation bar ABI changed"
+                    }
+                    bar.addInstructions(
+                        0,
+                        """
+                        move-object/from16 v0, p0
+                        move/from16 v1, p1
+                        invoke-static {v0, v1}, ${SOULSEEK}DownloadNavigation;->index(Ljava/lang/Object;I)I
+                        move-result p1
+                        move-object/from16 v1, p2
+                        invoke-static {v0, v1}, ${SOULSEEK}DownloadNavigation;->callback(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+                        move-result-object p2
+                        check-cast p2, Lkotlin/jvm/functions/Function1;
+                        invoke-static/range {p0 .. p0}, ${SOULSEEK}DownloadNavigation;->tabs(Ljava/lang/Object;)Ljava/lang/Object;
+                        move-result-object p0
+                        check-cast p0, Ljava/util/List;
+                    """,
+                    )
+                }
+                val fallback =
+                    mutableClassDefBy("Lcom/music/bitchord/download/Downloads;").methods.single {
+                        it.name == "fromSources"
+                    }
+                check(
+                    fallback.parameterTypes.first() == songType &&
+                        fallback.returnType == "Ljava/lang/Object;"
+                ) {
+                    "Download fallback ABI changed"
+                }
+                val originalFallback = fallback.implementation!!.instructions.first()
+                fallback.addInstructionsWithLabels(
+                    0,
+                    """
+                    invoke-static/range {p1 .. p1}, ${SOULSEEK}HostDownloadAccess;->forbidFallback(Ljava/lang/Object;)Z
+                    move-result v0
+                    if-eqz v0, :unselected_download_fallback
+                    const/4 v0, 0x0
+                    return-object v0
+                """,
+                    ExternalLabel("unselected_download_fallback", originalFallback),
+                )
+            }
             check(
                 routeClass.methods.any {
                     it.name == "<init>" && it.parameterTypes == routeParameters
@@ -721,9 +784,12 @@ val nativeSoulseekPatch =
                     .filter { it.value.opcode == Opcode.RETURN_VOID }
                     .map { it.index }
             check(returns.isNotEmpty()) { "Application startup hook missing" }
-            for (index in returns.reversed()) startup.addInstruction(
+            for (index in returns.reversed()) startup.addInstructions(
                 index,
-                "invoke-static/range {p0 .. p0}, ${SOULSEEK}SoulseekBridge;->boot(Landroid/content/Context;)V",
+                """
+                invoke-static/range {p0 .. p0}, ${SOULSEEK}SoulseekBridge;->boot(Landroid/content/Context;)V
+                invoke-static/range {p0 .. p0}, ${SOULSEEK}HostDownloadAccess;->init(Landroid/content/Context;)V
+                """,
             )
             println(
                 "Installed download-only Soulseek source, selected-file route and playback guard"

@@ -95,6 +95,11 @@ def main():
                 raise ValueError("Patching failed: " + name)
             for checker, values in (
                 ("VerifyDexControlFlow", [str(patched)]),
+                *(
+                    (("VerifyDownloadIntegrationApk", [str(patched)]),)
+                    if version == "1.9"
+                    else ()
+                ),
                 ("VerifyCaptureApk", [str(patched)]),
                 ("VerifyNativeDispatchApk", [str(patched)]),
                 ("VerifyPatchUiApk", [str(patched), "false", "true", "false"]),

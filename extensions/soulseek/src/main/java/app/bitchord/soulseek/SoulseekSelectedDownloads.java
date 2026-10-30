@@ -33,7 +33,7 @@ public final class SoulseekSelectedDownloads {
                     1,
                     30,
                     TimeUnit.SECONDS,
-                    new ArrayBlockingQueue<Runnable>(32),
+                    new LinkedBlockingDeque<Runnable>(32),
                     runnable -> new Thread(runnable, "selected-soulseek-download"));
     private static volatile String lastError = "";
     private static final AtomicLong SEQUENCE = new AtomicLong();
@@ -222,6 +222,11 @@ public final class SoulseekSelectedDownloads {
 
     /** Explicit result-file choice. False means a visible error, never permission to fall back. */
     public static boolean enqueueSelected(Context context, String reference) {
+        return enqueueSelected(context, reference, false);
+    }
+
+    /** A now request moves ahead of waiting work, without interrupting the active transfer. */
+    public static boolean enqueueSelected(Context context, String reference, boolean now) {
         if (context == null) return false;
         final Context app = context.getApplicationContext();
         try {
@@ -283,7 +288,7 @@ public final class SoulseekSelectedDownloads {
             }
             try {
                 BulkTransferService.ensureRunning(app);
-                WORK.execute(
+                Runnable selectedWork =
                         () -> {
                             try {
                                 task.run();
@@ -291,7 +296,12 @@ public final class SoulseekSelectedDownloads {
                                 TASKS.remove(reference, task);
                                 stopMonitorIfIdle();
                             }
-                        });
+                        };
+                synchronized (WORK) {
+                    WORK.execute(selectedWork);
+                    if (now && WORK.getQueue().remove(selectedWork))
+                        ((LinkedBlockingDeque<Runnable>) WORK.getQueue()).addFirst(selectedWork);
+                }
             } catch (RejectedExecutionException full) {
                 TASKS.remove(reference, task);
                 synchronized (HISTORY) {

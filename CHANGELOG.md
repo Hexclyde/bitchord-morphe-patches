@@ -1,3 +1,17 @@
+# 1.1.0-beta.10
+
+- Adds a host-native Downloads icon in both bottom-bar styles on BitChord 1.9.
+- Opens Download Explorer from eligible manual single-track downloads, with live
+  enabled-addon searches, reported row quality and exact Soulseek file choices.
+- Adds next-slot and FIFO admission, preserving active transfers and remote queues.
+- Persists selected-addon source bindings and blocks automatic provider fallback.
+- Adds a Downloads hub with existing host states, Soulseek progress, confirmed
+  phone/Telegram copies and existing paired-peer shares.
+- Preserves the original automatic source path as a separate confirmed action.
+- Adds navigation/source-boundary, queue-priority and APK integration checks.
+
+See docs/DOWNLOAD-MANAGER.md for the implemented scope and remaining work.
+
 # Changelog
 
 ## 1.1.0-beta.9 (testing build)

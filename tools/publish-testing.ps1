@@ -57,7 +57,7 @@ $manifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
 if ($Repo -cne 'Hexclyde/bitchord-morphe-patches' -or $manifest.repository -cne $Repo) {
     throw 'This package is for Hexclyde/bitchord-morphe-patches.'
 }
-if ($manifest.version -cne '1.1.0-beta.9') { throw 'This script requires the 1.1.0-beta.9 publishing package.' }
+if ($manifest.version -cne '1.1.0-beta.10') { throw 'This script requires the 1.1.0-beta.10 publishing package.' }
 $Version = $manifest.version
 $Tag = "v$Version"
 $Mpp = "bitchord-patches-$Version.mpp"

@@ -127,8 +127,8 @@ public final class SourceChoiceTest {
         Continuation disabled = new Continuation();
         SoulseekDownloadChoice.offer(disabled, one(), null);
         check(
-                disabled.calls == 1 && app.launched.isEmpty(),
-                "disabled Soulseek preserves normal download");
+                disabled.calls == 0 && app.launched.size() == 1,
+                "disabled Soulseek still permits an explicit addon download choice");
         SoulseekBridge.instance = null;
         Continuation beforeBoot = new Continuation();
         SoulseekDownloadChoice.offer(beforeBoot, one(), null);
@@ -145,8 +145,8 @@ public final class SourceChoiceTest {
                 "choice holds the manual request before original queue admission");
         Intent launch = app.launched.get(0);
         check(
-                launch.target == SoulseekSearchActivity.class,
-                "choice opens the private Soulseek search page");
+                launch.target == DownloadExplorerActivity.class,
+                "choice opens the private all-source download explorer");
         check(
                 "Fixture artist Fixture song"
                         .equals(launch.getStringExtra(SoulseekDownloadChoice.EXTRA_QUERY)),
@@ -216,6 +216,7 @@ public final class SourceChoiceTest {
     static void thrownOriginalRunsOnce() throws Exception {
         reset();
         DownloadSettings.on = false;
+        SoulseekBridge.instance = null;
         Continuation disabled = new Continuation();
         disabled.fail = true;
         try {

@@ -123,6 +123,7 @@ public final class SoulseekSelectedDownloadsTest {
         BulkDownloads.importRelease = null;
         BulkDownloads.importInterrupted = false;
         SoulseekDownloads.fetches = 0;
+        SoulseekDownloads.requests.clear();
         SoulseekDownloads.entered = null;
         SoulseekDownloads.release = null;
         SoulseekDownloads.pauseBeforeReturn = false;
@@ -289,6 +290,30 @@ public final class SoulseekSelectedDownloadsTest {
         check(
                 SoulseekDownloads.fetches == 1,
                 "Cancelled pending selections never open a native transfer");
+    }
+
+    static void nowPrecedesWaitingQueue() throws Exception {
+        Context app = fresh();
+        SoulseekDownloads.entered = new CountDownLatch(1);
+        SoulseekDownloads.release = new CountDownLatch(1);
+        SoulseekSelectedDownloads.enqueueSelected(app, song(1).videoId, false);
+        check(
+                SoulseekDownloads.entered.await(3, TimeUnit.SECONDS),
+                "First selection starts its peer transfer");
+        SoulseekSelectedDownloads.enqueueSelected(app, song(2).videoId, false);
+        SoulseekSelectedDownloads.enqueueSelected(app, song(3).videoId, false);
+        SoulseekSelectedDownloads.enqueueSelected(app, song(4).videoId, true);
+        check(SoulseekDownloads.fetches == 1, "Download now does not interrupt an active file");
+        SoulseekDownloads.release.countDown();
+        idle();
+        check(
+                SoulseekDownloads.requests.size() == 4,
+                "Every admitted selection transfers exactly once");
+        int[] expected = {1, 4, 2, 3};
+        for (int i = 0; i < expected.length; i++)
+            check(
+                    SoulseekDownloads.requests.get(i).endsWith("/" + id(expected[i])),
+                    "Now takes the next slot, queued files stay FIFO");
     }
 
     static SoulseekSelectedDownloads.Progress progress(String reference) {
@@ -506,6 +531,7 @@ public final class SoulseekSelectedDownloadsTest {
             setupAndBinding();
             verifiedImportAndCleanup();
             boundedQueueAndCancel();
+            nowPrecedesWaitingQueue();
             exactSelectionAndNamedPhases();
             cancelledAndRedactedProgress();
             cancellationHandoffBoundary();

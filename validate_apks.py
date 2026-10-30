@@ -90,6 +90,7 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
     flow.check_returncode()
     for checker, arguments in [
         ("VerifyCaptureApk", [str(output)]),
+        ("VerifyDownloadIntegrationApk", [str(output)]),
         ("VerifyNativeDispatchApk", [str(output)]),
         ("VerifyBeta7Apk", [str(output)]),
         ("VerifyPatchUiApk", [str(output), "true", "true", "true"]),

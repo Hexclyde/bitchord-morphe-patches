@@ -42,6 +42,7 @@ final class SoulseekBridge {static SoulseekBridge instance;final Context context
 static SoulseekBridge get()throws IOException{if(instance==null)throw new IOException("fixture unavailable");return instance;}}
 final class DownloadSettings {static final String SOULSEEK="soulseek";static boolean on=true;static boolean enabled(Context context,String feature){return on;}}
 final class SoulseekSearchActivity {}
+final class DownloadExplorerActivity {}
 """,
 }
 

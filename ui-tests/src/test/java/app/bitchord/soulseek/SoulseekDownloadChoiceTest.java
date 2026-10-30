@@ -128,7 +128,8 @@ public class SoulseekDownloadChoiceTest {
         assertSame(Unit.INSTANCE, SoulseekDownloadChoice.offer(original, songs, null));
         Intent intent = shadowOf(RuntimeEnvironment.getApplication()).getNextStartedActivity();
         assertNotNull("eligible manual selection opens an explicit choice", intent);
-        assertEquals(SoulseekSearchActivity.class.getName(), intent.getComponent().getClassName());
+        assertEquals(
+                DownloadExplorerActivity.class.getName(), intent.getComponent().getClassName());
         assertEquals(
                 Intent.FLAG_ACTIVITY_NEW_TASK, intent.getFlags() & Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
@@ -196,10 +197,10 @@ public class SoulseekDownloadChoiceTest {
         assertEquals(1, collection.calls);
         DownloadSettings.soulseek = false;
         Original disabled = new Original();
-        assertSame(disabled.result, SoulseekDownloadChoice.offer(disabled, one, null));
-        assertEquals(1, disabled.calls);
-        assertTrue(pending().isEmpty());
-        assertNull(shadowOf(RuntimeEnvironment.getApplication()).getNextStartedActivity());
+        assertSame(Unit.INSTANCE, SoulseekDownloadChoice.offer(disabled, one, null));
+        assertEquals(0, disabled.calls);
+        assertEquals(1, pending().size());
+        assertNotNull(shadowOf(RuntimeEnvironment.getApplication()).getNextStartedActivity());
     }
 
     @Test
@@ -222,14 +223,12 @@ public class SoulseekDownloadChoiceTest {
         DownloadSettings.soulseek = false;
         Original original = new Original();
         original.fail = true;
-        try {
-            SoulseekDownloadChoice.offer(
-                    original, Collections.singletonList(new Song("Abc_12-Xy9Z")), null);
-            fail("original failure must propagate with its existing behavior");
-        } catch (IllegalStateException expected) {
-            assertEquals("fixture failure", expected.getMessage());
-        }
-        assertEquals("original flow is invoked exactly once even when it fails", 1, original.calls);
+        Intent intent = offered(original, Collections.singletonList(new Song("Abc_12-Xy9Z")));
+        assertEquals(0, original.calls);
+        assertFalse(
+                SoulseekDownloadChoice.resume(
+                        intent.getStringExtra(SoulseekDownloadChoice.EXTRA_CHOICE), context));
+        assertEquals(1, original.calls);
         assertTrue(pending().isEmpty());
     }
 

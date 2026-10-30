@@ -207,3 +207,6 @@ final class DownloadDestinationActivity extends Activity {}
 final class BulkDownloadsActivity extends Activity {}
 
 final class NostrSetupActivity extends Activity {}
+
+// Navigation endpoint only; production explorer contracts have an independent runner.
+final class DownloadExplorerActivity {}

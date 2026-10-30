@@ -52,7 +52,7 @@
     }
   ],
   "generated_tdapi_sha256": "11155fabc41ca2a6d91bbde4fdf683603d60b50ed51cafab0068728aa7d8d74f",
-  "patch_bundle_version": "1.1.0-beta.9",
+  "patch_bundle_version": "1.1.0-beta.10",
   "native_sha256": {
     "lib/arm64-v8a/libc++_shared.so": "7466ed097631a564ed6bff0b47768caa76bf03270d2047b5a65c03f497b824df",
     "lib/arm64-v8a/libcryptox.so": "9fdc85415c999a2c7383817a204d822f0e509515016b8fee14c45d5a1c40e4d6",
@@ -89,7 +89,7 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "e587f122a7ecbb94de842bcdb4c2133fe0b27d2d0c7236dc69df8233504c1a41",
+  "patch_bundle_sha256": "f34c1ae2fe47b1b0e8fd2a64070d7d9f4d9bda0f1a4a2b34493f2fd3b4e7f74a",
   "soulseek_development": {
     "status": "experimental-local-build",
     "baseline_commit": "3de260f7f1d7967c5a97ce924085d7d42bec18af",
@@ -135,7 +135,9 @@
     "adaptive_soulseek_search": true,
     "discovery_candidate_limit": 512,
     "manual_single_track_source_choice": true,
-    "guided_download_ui": true
+    "guided_download_ui": true,
+    "integrated_downloads_hub": true,
+    "addon_download_explorer": true
   },
   "soulseek_native_sha256": {
     "lib/arm64-v8a/libbitchord_soulseek.so": "9fc8485fe49838258b3e31558bb3a19f31fb746119446586f17827817a4e4e20",
@@ -226,5 +228,5 @@
     "zh",
     "zh-TW"
   ],
-  "ui_translation_phrases": 873
+  "ui_translation_phrases": 1039
 }
