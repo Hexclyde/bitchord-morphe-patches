@@ -18,6 +18,7 @@ for name in (
     "VocalCut.java",
     "ApplicationCredentials.java",
     "LoginCodePolicy.java",
+    "MicroGSignIn.java",
     "CachePolicy.java",
     "InternalAddon.java",
     "NativeAudio.java",
