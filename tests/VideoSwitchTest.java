@@ -81,6 +81,11 @@ public final class VideoSwitchTest {
         VideoSwitch.enabled = false;
         next.videoId = "a-b_c1D2e3F";
         check(!VideoSwitch.needsPreferredVersion(next), "disabled patch does not enforce preference");
+        java.lang.reflect.Field attempt = VideoSwitch.class.getDeclaredField("attempted");
+        attempt.setAccessible(true);
+        attempt.set(null, "dQw4w9WgXcQ|true");
+        VideoSwitch.trackChanged();
+        check(attempt.get(null) == null, "repeated recording gets a fresh preference attempt");
         System.out.println("PASS: " + checks + " audio and video switch checks.");
     }
 }

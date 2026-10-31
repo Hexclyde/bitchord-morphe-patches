@@ -1132,5 +1132,6 @@
   "View · {0}": "View · {0}",
   "Comfy": "Comfy",
   "Category · {0}": "Category · {0}",
-  "Grid": "Grid"
+  "Grid": "Grid",
+  "Current view: {0}. Tap to cycle; hold to choose.": "Current view: {0}. Tap to cycle; hold to choose."
 }

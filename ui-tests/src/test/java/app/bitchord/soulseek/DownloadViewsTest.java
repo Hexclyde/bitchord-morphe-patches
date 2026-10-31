@@ -37,10 +37,19 @@ public class DownloadViewsTest {
             for (int i = 0; i < 4; i++) assertNotNull(rows.findViewWithTag("download-row:" + i));
         }
     }
+    @Test public void iconCyclesAllFiveModesAndLongPressOpensDirectSelection() {
+        View toggle = page.view.findViewWithTag("download-view");
+        for (String label : new String[]{"Detailed", "Grid", "List", "Compact", "Comfy"}) {
+            toggle.performClick();
+            assertTrue(toggle.getContentDescription().toString().contains(label));
+        }
+        assertTrue(toggle.performLongClick());
+        assertNotNull(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog());
+    }
     @Test public void selectedViewSurvivesPageRecreationAndRejectsUnknownValues() {
         page.setViewMode("compact"); page.onDestroy();
         page = new DownloadsHubPage(activity, new Intent()); page.onCreate(new Bundle());
-        assertTrue(((android.widget.Button) page.view.findViewWithTag("download-view")).getText().toString().contains("Compact"));
+        assertTrue(page.view.findViewWithTag("download-view").getContentDescription().toString().contains("Compact"));
         page.setViewMode("unknown");
         assertEquals("compact", activity.getSharedPreferences("bitchord_download_ui", 0).getString("view", ""));
     }

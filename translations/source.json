@@ -237,6 +237,7 @@
   "Create an audio copy in the public sharing inventory. Other Soulseek users can search and download it while sharing is enabled. This copy uses phone storage.",
   "Create your Telegram API credentials ↗",
   "Create your own application with a generic, descriptive name, such as My Client (short name: myclient). Telegram may show that name in sign-in alerts.",
+  "Current view: {0}. Tap to cycle; hold to choose.",
   "DJ mode",
   "DJ mode is listening",
   "Damaged index file",

@@ -26,7 +26,7 @@ final class DownloadsHubPage extends DownloadPage {
                         return thread;
                     });
     private LinearLayout rows;
-    private Button viewButton;
+    private ImageButton viewButton;
     private String viewMode = "comfy";
     private List<Row> currentRows = Collections.emptyList();
     static final String[] VIEW_IDS = {"grid", "list", "compact", "comfy", "detailed"};
@@ -48,16 +48,36 @@ final class DownloadsHubPage extends DownloadPage {
         viewMode = Arrays.asList(VIEW_IDS).contains(savedView) ? savedView : "comfy";
         LinearLayout body = new LinearLayout(this);
         body.setOrientation(LinearLayout.VERTICAL);
-        text(body, PatchStrings.t("Downloads"), 28);
+        LinearLayout titleBar = new LinearLayout(this);
+        titleBar.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        TextView heading = text(titleBar, PatchStrings.t("Downloads"), 28);
+        heading.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1));
+        body.addView(titleBar);
         text(
                 body,
                 PatchStrings.t("Follow downloads, saved files and confirmed destination copies."),
                 15);
-        viewButton = new Button(this);
+        viewButton = new ImageButton(this);
         viewButton.setTag("download-view");
-        viewButton.setText(PatchStrings.f("View · {0}", viewLabel()));
-        viewButton.setOnClickListener(v -> viewDialog());
-        body.addView(viewButton);
+        viewButton.setBackground(downloadStyle.shape(downloadStyle.card, 11, true));
+        viewButton.setPadding(downloadStyle.dp(12), downloadStyle.dp(12), downloadStyle.dp(12), downloadStyle.dp(12));
+        downloadStyle.markCustom(viewButton);
+        updateViewButton();
+        viewButton.setOnClickListener(v -> {
+            int index = Arrays.asList(VIEW_IDS).indexOf(viewMode);
+            setViewMode(VIEW_IDS[(index + 1) % VIEW_IDS.length]);
+            viewButton.announceForAccessibility(viewLabel());
+        });
+        viewButton.setOnLongClickListener(v -> { viewDialog(); return true; });
+        titleBar.addView(viewButton, new LinearLayout.LayoutParams(downloadStyle.dp(48), downloadStyle.dp(48)));
+        ImageButton search = new ImageButton(this);
+        search.setImageDrawable(downloadStyle.viewIcon("search"));
+        search.setBackground(null);
+        search.setPadding(downloadStyle.dp(12), downloadStyle.dp(12), downloadStyle.dp(12), downloadStyle.dp(12));
+        search.setContentDescription(PatchStrings.t("Find available downloads"));
+        search.setOnClickListener(v -> startActivity(new Intent(this, DownloadExplorerActivity.class)));
+        downloadStyle.markCustom(search);
+        titleBar.addView(search, new LinearLayout.LayoutParams(downloadStyle.dp(48), downloadStyle.dp(48)));
         HorizontalScrollView scroll = new HorizontalScrollView(this);
         LinearLayout filters = new LinearLayout(this);
         scroll.addView(filters);
@@ -452,6 +472,11 @@ final class DownloadsHubPage extends DownloadPage {
         return PatchStrings.t(VIEW_LABELS[Arrays.asList(VIEW_IDS).indexOf(viewMode)]);
     }
 
+    private void updateViewButton() {
+        viewButton.setImageDrawable(downloadStyle.viewIcon(viewMode));
+        viewButton.setContentDescription(PatchStrings.f("Current view: {0}. Tap to cycle; hold to choose.", viewLabel()));
+    }
+
     private void viewDialog() {
         String[] labels = new String[VIEW_LABELS.length];
         for (int i = 0; i < labels.length; i++) labels[i] = PatchStrings.t(VIEW_LABELS[i]);
@@ -466,7 +491,7 @@ final class DownloadsHubPage extends DownloadPage {
         if (!Arrays.asList(VIEW_IDS).contains(mode)) return;
         viewMode = mode;
         getSharedPreferences("bitchord_download_ui", 0).edit().putString("view", mode).apply();
-        viewButton.setText(PatchStrings.f("View · {0}", viewLabel()));
+        updateViewButton();
         last = "";
         renderRows(currentRows);
     }

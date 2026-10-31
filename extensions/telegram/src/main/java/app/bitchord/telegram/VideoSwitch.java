@@ -127,6 +127,7 @@ public final class VideoSwitch {
                 controllerType().getMethod("removeListener", listener).invoke(previous, eventListener);
             eventListener = Proxy.newProxyInstance(listener.getClassLoader(), new Class<?>[]{listener},
                     (proxy, method, args) -> {
+                        if (method.getName().equals("onMediaItemTransition")) trackChanged();
                         if (method.getName().equals("onMediaItemTransition")
                                 || method.getName().equals("onEvents")) {
                             main.removeCallbacks(ENFORCE);
@@ -142,6 +143,13 @@ public final class VideoSwitch {
             HostLog.d("Version preference listener unavailable: " + unavailable);
         }
         main.post(ENFORCE);
+    }
+
+    /** Each queue entry gets a fresh attempt, even when the same recording plays again. */
+    static void trackChanged() {
+        attempted = null;
+        missing.clear();
+        if (main != null) main.post(ENFORCE);
     }
 
     static boolean needsPreferredVersion(Object song) {

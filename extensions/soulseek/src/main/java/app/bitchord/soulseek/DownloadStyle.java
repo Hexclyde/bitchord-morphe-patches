@@ -315,6 +315,52 @@ final class DownloadStyle {
         return toggle;
     }
 
+    /** Native vector equivalents of the demo's Grid/List/Rows/Layout/File icons. */
+    Drawable viewIcon(String mode) {
+        return new Drawable() {
+            final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            @Override public void draw(Canvas canvas) {
+                canvas.save();
+                canvas.translate(getBounds().left, getBounds().top);
+                canvas.scale(getBounds().width() / 24f, getBounds().height() / 24f);
+                paint.setColor(foreground);
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(2);
+                paint.setStrokeCap(Paint.Cap.ROUND);
+                paint.setStrokeJoin(Paint.Join.ROUND);
+                if (mode.equals("search")) {
+                    canvas.drawCircle(10.5f, 10.5f, 7, paint);
+                    canvas.drawLine(16, 16, 21, 21, paint);
+                } else if (mode.equals("grid")) {
+                    for (int x : new int[]{3, 14}) for (int y : new int[]{3, 14})
+                        canvas.drawRoundRect(x, y, x + 7, y + 7, 1, 1, paint);
+                } else if (mode.equals("list")) {
+                    for (int y : new int[]{6, 12, 18}) {
+                        canvas.drawPoint(3, y, paint); canvas.drawLine(8, y, 21, y, paint);
+                    }
+                } else if (mode.equals("detailed")) {
+                    Path path = new Path(); path.moveTo(14, 2); path.lineTo(6, 2);
+                    path.quadTo(4, 2, 4, 4); path.lineTo(4, 20); path.quadTo(4, 22, 6, 22);
+                    path.lineTo(18, 22); path.quadTo(20, 22, 20, 20); path.lineTo(20, 8); path.close();
+                    canvas.drawPath(path, paint); canvas.drawLine(14, 2, 14, 8, paint);
+                    canvas.drawLine(14, 8, 20, 8, paint); canvas.drawLine(8, 13, 16, 13, paint);
+                    canvas.drawLine(8, 17, 16, 17, paint);
+                } else {
+                    canvas.drawRoundRect(3, 3, 21, 21, 2, 2, paint);
+                    canvas.drawLine(3, 9, 21, 9, paint);
+                    if (mode.equals("compact")) canvas.drawLine(3, 15, 21, 15, paint);
+                    else canvas.drawLine(9, 9, 9, 21, paint);
+                }
+                canvas.restore();
+            }
+            @Override public int getIntrinsicWidth() { return dp(24); }
+            @Override public int getIntrinsicHeight() { return dp(24); }
+            @Override public void setAlpha(int alpha) { paint.setAlpha(alpha); }
+            @Override public void setColorFilter(ColorFilter filter) { paint.setColorFilter(filter); }
+            @Override public int getOpacity() { return PixelFormat.TRANSLUCENT; }
+        };
+    }
+
     ImageButton backButton(Runnable action) {
         ImageButton result = new ImageButton(activity);
         result.setPadding(0, 0, 0, 0);

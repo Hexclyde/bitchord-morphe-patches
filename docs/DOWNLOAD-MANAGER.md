@@ -113,6 +113,6 @@ in the existing 20-language catalogue.
 
 ## Download views
 
-Use View to choose Grid, List, Compact, Comfy or Detailed. The choice is saved on the device. All five views show the same job set and keep actions in the row menu, including offload and public sharing for confirmed phone files. Grid falls back to one column with large accessibility text. Details shows the full original status when a tight view truncates it.
+Tap the view icon beside Search to cycle Grid, List, Compact, Comfy and Detailed. Hold the icon to choose directly. The choice is saved on the device. All five views show the same job set and keep actions in the row menu, including offload and public sharing for confirmed phone files. Grid falls back to one column with large accessibility text. Details shows the full original status when a tight view truncates it.
 
 The extra navigation tab is installed only with the download add-on patch. Disabling an individual transfer feature or pausing public sharing does not uninstall the add-on or hide its tab.
