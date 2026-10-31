@@ -386,6 +386,7 @@ public final class SoulseekBridge {
         final SoulseekTrack track;
         final long handle;
         int readers;
+        boolean previewOnly;
 
         Transfer(String id, SoulseekTrack track, long handle) {
             this.id = id;
@@ -452,6 +453,21 @@ public final class SoulseekBridge {
         synchronized (this) {
             return openSelected(track(id), sessionTag, position, length);
         }
+    }
+
+    /** Keeps a transfer alive across extractor seeks without granting arbitrary source playback. */
+    synchronized ProgressiveReader holdPreview(SoulseekTrack track, String session) throws IOException {
+        boolean existed = transfers.containsKey(track.id);
+        ProgressiveReader hold = openSelected(track, session, 0, 0);
+        if (!existed) transfers.get(track.id).previewOnly = true;
+        return hold;
+    }
+
+    synchronized ProgressiveReader.Snapshot previewSnapshot(SoulseekTrack track, String session) throws IOException {
+        if (!session.equals(sessionTag)) throw new IOException("Soulseek session changed");
+        Transfer transfer = transfers.get(track.id);
+        if (transfer == null) throw new IOException("Preview transfer expired");
+        return snapshotFor(transfer);
     }
 
     ProgressiveReader openSelected(
@@ -566,8 +582,13 @@ public final class SoulseekBridge {
         if (transfer.readers > 0) transfer.readers--;
         if (transfer.readers != 0 || transfers.get(key) != transfer) return;
         try {
-            if (!snapshotFor(transfer).complete) {
+            ProgressiveReader.Snapshot state = snapshotFor(transfer);
+            if (!state.complete) {
                 SoulseekNative.cancel(transfer.handle, transfer.id);
+                transfers.remove(key);
+            } else if (transfer.previewOnly) {
+                // Native completion is the write/rename barrier. Never unlink a live writer.
+                if (state.file != null) state.file.delete();
                 transfers.remove(key);
             }
         } catch (Exception ignored) {

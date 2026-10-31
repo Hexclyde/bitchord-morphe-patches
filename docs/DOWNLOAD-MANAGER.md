@@ -116,3 +116,7 @@ in the existing 20-language catalogue.
 Tap the view icon beside Search to cycle Grid, List, Compact, Comfy and Detailed. Hold the icon to choose directly. The choice is saved on the device. All five views show the same job set and keep actions in the row menu, including offload and public sharing for confirmed phone files. Grid falls back to one column with large accessibility text. Details shows the full original status when a tight view truncates it.
 
 The extra navigation tab is installed only with the download add-on patch. Disabling an individual transfer feature or pausing public sharing does not uninstall the add-on or hide its tab.
+
+### Optional Soulseek previews (beta.14)
+
+Install **Streamseek previews** alongside the Soulseek download patch and enable its capsule switch to reveal explicit MP3/FLAC Preview actions. Keep download now or queue the same selected transfer from the preview screen. General Soulseek source playback remains guarded. See [preview behavior, local-reference comparison and limits](STREAMSEEK-PREVIEW.md).

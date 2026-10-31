@@ -12,6 +12,7 @@ r = ROOT
 PLAYBACK_PATCHES = set(PATCHES) - {
     "Unofficial Telegram music",
     "Unofficial Soulseek audio",
+    "Streamseek previews",
     "Install as Bitchord+",
     "Sign in with MicroG",
 }
@@ -97,6 +98,7 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
         ("VerifySoulseekApk", [str(output), "enabled", str(mpp)]),
         ("VerifyMixedPlaylistsApk", [str(output)]),
         ("VerifyFlacAddonApk", [str(output)]),
+        ("VerifyStreamseekApk", [str(output)]),
     ]:
         checked = subprocess.run(
             [

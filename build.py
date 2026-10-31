@@ -136,6 +136,8 @@ shared_ui = {
     "MixedPlaylists",
     "MixedSongCodec",
     "FlacAddon",
+    "Fingerprint",
+    "RecordingMatch",
 }
 for source in (OUT / "extension-classes").rglob("*.class"):
     relative = source.relative_to(OUT / "extension-classes")
@@ -190,7 +192,7 @@ run(
     "-Xlint:-options",
     "-cp",
     os.pathsep.join(
-        map(str, [ANDROID, TOOLS / "annotation.jar", stdlib, OUT / "compile-api.jar"])
+        map(str, [ANDROID, TOOLS / "annotation.jar", stdlib, OUT / "patches-ui.jar", OUT / "compile-api.jar"])
     ),
     "-d",
     OUT / "soulseek-classes",
@@ -222,7 +224,7 @@ flags.write_text(
     "package app.bitchord.patches\n\ninternal const val TESTING_CAPTURE = "
     + (
         "true"
-        if VERSION in ("1.1.0-beta.8", "1.1.0-beta.9", "1.1.0-beta.10", "1.1.0-beta.11", "1.1.0-beta.12", "1.1.0-beta.13")
+        if VERSION in ("1.1.0-beta.8", "1.1.0-beta.9", "1.1.0-beta.10", "1.1.0-beta.11", "1.1.0-beta.12", "1.1.0-beta.13", "1.1.0-beta.14")
         else "false"
     )
     + "\n"

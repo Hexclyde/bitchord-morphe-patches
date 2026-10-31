@@ -227,12 +227,16 @@ public final class SoulseekSelectedDownloads {
 
     /** A now request moves ahead of waiting work, without interrupting the active transfer. */
     public static boolean enqueueSelected(Context context, String reference, boolean now) {
-        return enqueueSelected(context, reference, now, null, null);
+        return enqueueSelected(context, reference, now, null, null, null);
     }
 
     static boolean enqueueSelectedFile(
             Context context, SoulseekTrack track, String session, boolean now) {
-        return enqueueSelected(context, PREFIX + track.id, now, track, session);
+        return enqueueSelected(context, PREFIX + track.id, now, track, session, null);
+    }
+
+    static boolean enqueuePreview(Context context, SoulseekTrack track, String session, boolean now, Closeable retained) {
+        return enqueueSelected(context, PREFIX + track.id, now, track, session, retained);
     }
 
     private static boolean enqueueSelected(
@@ -240,8 +244,9 @@ public final class SoulseekSelectedDownloads {
             String reference,
             boolean now,
             SoulseekTrack selected,
-            String expectedSession) {
-        if (context == null) return false;
+            String expectedSession, Closeable retained) {
+        if (context == null) { closeRetained(retained); return false; }
+        boolean accepted = false;
         final Context app = context.getApplicationContext();
         try {
             if (reference == null || !reference.matches("src:soulseek-native::[a-f0-9]{64}"))
@@ -294,7 +299,16 @@ public final class SoulseekSelectedDownloads {
             if (track.size > SoulseekBridge.MAX_CACHE_BYTES)
                 throw new UserFailure("Selected files are limited to 256 MiB.");
             Task task = new Task(app, bridge, track, session, destinations, formats, reference);
-            if (TASKS.putIfAbsent(reference, task) != null) {
+            task.retained = retained;
+            Task existing = TASKS.putIfAbsent(reference, task);
+            if (existing != null) {
+                synchronized (existing) {
+                    if (!existing.cancelled.get() && !existing.handoffStarted && !existing.retentionClosed
+                            && existing.retained == null && retained != null) {
+                        existing.retained = retained;
+                        accepted = true;
+                    }
+                }
                 notice(app, PatchStrings.t("This selected download is already queued."));
                 return true;
             }
@@ -332,6 +346,7 @@ public final class SoulseekSelectedDownloads {
                 }
                 throw unavailable;
             }
+            accepted = true;
             lastError = "";
             notice(
                     app,
@@ -342,7 +357,13 @@ public final class SoulseekSelectedDownloads {
             lastError = safe(failure);
             notice(app, PatchStrings.t(lastError));
             return false;
+        } finally {
+            if (!accepted) closeRetained(retained);
         }
+    }
+
+    private static void closeRetained(Closeable retained) {
+        if (retained != null) try { retained.close(); } catch (IOException ignored) {}
     }
 
     private static final class Task {
@@ -355,6 +376,9 @@ public final class SoulseekSelectedDownloads {
         final Entry entry;
         final AtomicBoolean cancelled = new AtomicBoolean();
         volatile Thread thread;
+        Closeable retained;
+        boolean retentionClosed;
+        synchronized void releaseRetention() { retentionClosed = true; Closeable current = retained; retained = null; closeRetained(current); }
         // Guarded by this task's monitor. Destination journals own cancellation after handoff.
         boolean handoffStarted;
 
@@ -488,6 +512,7 @@ public final class SoulseekSelectedDownloads {
                 }
             } finally {
                 if (source != null) source.delete();
+                releaseRetention();
                 thread = null;
                 Thread.interrupted();
             }
@@ -654,6 +679,7 @@ public final class SoulseekSelectedDownloads {
             task.entry.phase = Phase.CANCELLED;
             thread = task.thread;
         }
+        task.releaseRetention();
         if (thread != null) thread.interrupt();
         return true;
     }
@@ -668,6 +694,7 @@ public final class SoulseekSelectedDownloads {
                 task.entry.phase = Phase.CANCELLED;
             }
         for (Task task : pending) {
+            task.releaseRetention();
             Thread thread = task.thread;
             if (task.cancelled.get() && thread != null) thread.interrupt();
         }

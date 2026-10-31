@@ -91,13 +91,13 @@
   // ---------------------------------------------------------------------------------------
 
   const SOURCE_NAME = 'BitChord Morphe Patches';
-  const PATCHES_VERSION = '1.1.0-beta.13';
+  const PATCHES_VERSION = '1.1.0-beta.14';
   const MORPHE_VERSION = '2.2.0';
   const APP_VERSION = '1.9';
   const ORANGE = '255,137,68';
   const BITCHORD_APK = 'BitChord-v1.9_arm64-v8a.apk';
   const MORPHE_APK = 'morphe-manager-2.2.0.apk';
-  const MPP_FILE = 'bitchord-patches-1.1.0-beta.13.mpp';
+  const MPP_FILE = 'bitchord-patches-1.1.0-beta.14.mpp';
   const REPO_LINK = 'github.com/Hexclyde/bitchord-morphe-patches';
   const TESTING_LINK = 'https://raw.githubusercontent.com/Hexclyde/bitchord-morphe-patches/refs/heads/testing/patches-bundle.json';
   const NOT_DRAWN = 'This part of Morphe isn’t drawn in this guide.';
@@ -187,6 +187,11 @@
     "id": "sleepFade",
     "name": "Sleep timer fade-out",
     "desc": "Fades the song out before the sleep timer pauses it, and fades the end of the last song with the timer's \"After this song\" option. From Prism by Yigder. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "streamseekPreview",
+    "name": "Streamseek previews",
+    "desc": "Preview an explicitly selected Soulseek MP3 or FLAC through Media3 while it transfers. Keep download reuses buffered bytes. Compare an excerpt with a known local reference and export transparent evidence. Optional; enable in Patches & tweaks. No automatic Soulseek playback or Mornye integration."
   },
   {
     "id": "soulseek",

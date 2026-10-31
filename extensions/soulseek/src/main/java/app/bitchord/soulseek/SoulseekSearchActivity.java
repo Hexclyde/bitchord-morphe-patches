@@ -334,6 +334,14 @@ public final class SoulseekSearchActivity extends DownloadActivity {
                         track.advertisedExtension.toUpperCase(java.util.Locale.ROOT),
                         Formatter.formatShortFileSize(this, track.size)),
                 14);
+        if (SoulseekPreview.available(this) && SoulseekPreview.supported(track)) {
+            Button preview = button(item, PatchStrings.t("Preview this file"));
+            preview.setOnClickListener(view -> {
+                if (!active(intent)) return;
+                try { SoulseekPreview.open(this, track, session); }
+                catch (Exception expired) { status.setText(PatchStrings.t("Preview unavailable. Check the selected file and Soulseek session.")); }
+            });
+        }
         Button download = button(item, PatchStrings.t("Download this file"));
         download.setTag("soulseek-search-download-" + track.id);
         download.setOnClickListener(

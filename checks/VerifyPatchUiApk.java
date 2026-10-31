@@ -85,7 +85,9 @@ public final class VerifyPatchUiApk {
                         "VideoSwitch",
                         "MixedPlaylists",
                         "MixedSongCodec",
-                        "FlacAddon");
+                        "FlacAddon",
+                        "Fingerprint",
+                        "RecordingMatch");
         for (ClassDef cls : classes.values()) {
             String simple =
                     cls.getType().startsWith(base)

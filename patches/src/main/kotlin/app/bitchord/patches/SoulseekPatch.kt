@@ -40,6 +40,21 @@ private object SoulseekApplicationCreate :
 
 private class SoulseekPatchMarker
 
+private val streamseekPreviewResources = resourcePatch {
+    execute {
+        document("AndroidManifest.xml").use { doc ->
+            val app = doc.getElementsByTagName("application").item(0) as org.w3c.dom.Element
+            val activity = doc.createElement("activity")
+            activity.setAttributeNS(SOULSEEK_ANDROID, "android:name", "app.bitchord.soulseek.SoulseekPreviewActivity")
+            activity.setAttributeNS(SOULSEEK_ANDROID, "android:exported", "false")
+            activity.setAttributeNS(SOULSEEK_ANDROID, "android:label", "Soulseek preview")
+            activity.setAttributeNS(SOULSEEK_ANDROID, "android:theme", "@android:style/Theme.Material.NoActionBar")
+            app.appendChild(activity)
+        }
+    }
+}
+
+
 private val soulseekResources = resourcePatch {
     execute {
         val supportedAbis = setOf("arm64-v8a", "armeabi-v7a", "x86_64")
@@ -911,3 +926,20 @@ val nativeSoulseekPatch =
             )
         }
     }
+
+@Suppress("unused")
+val streamseekPreviewPatch = bytecodePatch(
+    name = "Streamseek previews",
+    description = "Preview an explicitly selected Soulseek MP3 or FLAC through Media3 while it transfers. Keep download reuses buffered bytes. Compare an excerpt with a known local reference and export transparent evidence. Optional; enable in Patches & tweaks. No automatic Soulseek playback or Mornye integration.",
+    default = false,
+) {
+    compatibleWith(Compatibility(name="BitChord", packageName="com.music.bitchord", apkFileType=ApkFileType.APK, appIconColor=0xFF8944,
+        targets=listOf(AppTarget(version="1.9", isExperimental=true, minSdk=26))))
+    dependsOn(nativeSoulseekPatch, streamseekPreviewResources)
+    execute {
+        val method=mutableClassDefBy("${SOULSEEK}SoulseekPreview;").methods.single { it.name=="installed" && it.parameterTypes.isEmpty() && it.returnType=="Z" }
+        check(method.implementation!!.instructions.count()==2) { "Preview install marker changed" }
+        method.replaceInstruction(0,"const/4 v0, 0x1")
+        println("Enabled explicit Streamseek preview capabilities; automatic playback guard retained")
+    }
+}

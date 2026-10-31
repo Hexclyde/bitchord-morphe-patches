@@ -84,3 +84,7 @@ implemented. Debrid services continue to manage their own cloud transfers.
 
 - Flac Downloader Audio uses flacdownloader.com's internal service API. Protocol fixtures and APK structure are tested; live availability and returned recording quality are not verified. Requested renditions may fail. The adapter does not silently downgrade them.
 - Mixed-source device playlists need the patch to preserve their full file/source metadata; the stock export cannot back up the extra metadata. Deleting or offloading a referenced file does not turn its local playlist entry into a Telegram stream. See [mixed playlists](MIXED-PLAYLISTS.md).
+
+## beta.14 previews
+
+Streamseek previews support selected MP3/FLAC files with an isolated player and temporary native transfer. A preview can receive the complete file; it is not a bandwidth-free stream. The current reference is a user-chosen local file, not captured YouTube audio. Excerpt matching, header inspection and user confirmation do not certify a perfect file, master or lossless origin. Real-phone audio focus, background behavior and remote-peer playback still require device qualification. See [preview behavior and limits](STREAMSEEK-PREVIEW.md).

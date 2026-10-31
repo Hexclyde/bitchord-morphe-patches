@@ -256,12 +256,23 @@ public final class VerifySoulseekApk {
                     if (!(instruction instanceof ReferenceInstruction r)) continue;
                     String reference = r.getReference().toString();
                     if (cls.getType().startsWith(PREFIX)) {
+                        String independentReference = reference;
+                        for (String shared : List.of(
+                                "Lapp/bitchord/telegram/PatchStrings;",
+                                "Lapp/bitchord/telegram/CapturePolicy;",
+                                "Lapp/bitchord/telegram/RecordingMatch;",
+                                "Lapp/bitchord/telegram/RecordingMatch$Reference;"))
+                            independentReference = independentReference.replace(shared, "");
                         boolean sharedUi =
                                 reference.startsWith("Lapp/bitchord/telegram/PatchStrings;")
                                         || reference.startsWith(
-                                                "Lapp/bitchord/telegram/CapturePolicy;");
+                                                "Lapp/bitchord/telegram/CapturePolicy;")
+                                        || reference.startsWith(
+                                                "Lapp/bitchord/telegram/RecordingMatch;")
+                                        || reference.startsWith(
+                                                "Lapp/bitchord/telegram/RecordingMatch$Reference;");
                         check(
-                                !reference.contains("Lapp/bitchord/telegram/") || sharedUi,
+                                !independentReference.contains("Lapp/bitchord/telegram/"),
                                 "Soulseek has no hard dependency on optional Telegram extension");
                         if (sharedUi && r.getReference() instanceof MethodReference sharedCall) {
                             check(

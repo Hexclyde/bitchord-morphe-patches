@@ -79,7 +79,7 @@ public final class FlacAddon {
             throw new IOException("Invalid FLAC source identifier");
         String path = uri.getPath();
         if ("/manifest.json".equals(path)) return new JSONObject().put("id",ID).put("name","Flac Downloader Audio")
-                .put("version","1.1.0-beta.13").put("resources",new JSONArray().put("search").put("stream"))
+                .put("version","1.1.0-beta.14").put("resources",new JSONArray().put("search").put("stream"))
                 .put("description","Independent BitChord adapter · flacdownloader.com · formats requested, not file-verified")
                 .put("allowDownloads",true).put("checkValidLossless",false).toString();
         requireEnabled();

@@ -183,6 +183,13 @@ public final class ExtrasActivity extends Activity {
                                 () -> openDownload("soulseek", "account"));
                         copyActions(parent, "soulseek");
                     });
+            if (optionalInstalled("app.bitchord.soulseek.SoulseekPreview")) {
+                feature("streamseek-preview", Strings.t("Streamseek previews"),
+                        Strings.t("Listen to selected Soulseek MP3 and FLAC files before saving"),
+                        () -> (Boolean) invoke("app.bitchord.soulseek.SoulseekPreview", "enabled", new Class<?>[] {Context.class}, this),
+                        on -> invoke("app.bitchord.soulseek.SoulseekPreview", "setEnabled", new Class<?>[] {Context.class, boolean.class}, this, on),
+                        parent -> paragraph(parent, Strings.t("Preview uses a temporary transfer. Keep download reuses its buffered bytes. Compare with a known local reference and inspect the evidence before confirming a recording.")));
+            }
             downloadFeature(
                     "peer-downloads",
                     Strings.t("Peer downloads"),
@@ -510,6 +517,11 @@ public final class ExtrasActivity extends Activity {
         showExpanded();
     }
 
+    private static boolean optionalInstalled(String type) {
+        try { return Boolean.TRUE.equals(invoke(type, "installed", new Class<?>[] {})); }
+        catch (Exception | LinkageError absent) { return false; }
+    }
+
     private void downloadFeature(String id, String title, String summary, Details details) {
         feature(
                 id,
@@ -705,7 +717,7 @@ public final class ExtrasActivity extends Activity {
         boolean enabled;
 
         Feature(String id, String title, State state) {
-            configurable = !id.equals("battery-saver") && !id.equals("download-quality") && !id.equals("video-switch") && !id.equals("mixed-playlists") && !id.equals("flac-audio");
+            configurable = !id.equals("battery-saver") && !id.equals("download-quality") && !id.equals("video-switch") && !id.equals("mixed-playlists") && !id.equals("flac-audio") && !id.equals("streamseek-preview");
             this.id = id;
             this.title = title;
             this.state = state;

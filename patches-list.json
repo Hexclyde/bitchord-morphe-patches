@@ -1,6 +1,6 @@
 {
   "NOTE": "Generated from the verified MPP by tools/prepare_mobile_source.py; do not hand-edit.",
-  "version": "1.1.0-beta.13",
+  "version": "1.1.0-beta.14",
   "patches": [
     {
       "name": "Audio and video switch",
@@ -420,6 +420,33 @@
     {
       "name": "Sleep timer fade-out",
       "description": "Fades the song out before the sleep timer pauses it, and fades the end of the last song with the timer's \"After this song\" option. From Prism by Yigder. Settings are in Settings, Patches & tweaks.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Streamseek previews",
+      "description": "Preview an explicitly selected Soulseek MP3 or FLAC through Media3 while it transfers. Keep download reuses buffered bytes. Compare an excerpt with a known local reference and export transparent evidence. Optional; enable in Patches & tweaks. No automatic Soulseek playback or Mornye integration.",
       "default": false,
       "category": null,
       "compatiblePackages": [

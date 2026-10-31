@@ -124,3 +124,12 @@ __pycache__/
 /ui-tests/src/test/java/app/bitchord/telegram/MixedPlaylists.java
 /ui-tests/src/test/java/app/bitchord/telegram/MixedSongCodec.java
 /ui-tests/src/test/java/app/bitchord/telegram/FlacAddon.java
+
+/ui-tests/src/test/java/app/bitchord/telegram/RecordingMatch.java
+/ui-tests/src/test/java/app/bitchord/soulseek/ProgressiveReader.java
+/ui-tests/src/test/java/app/bitchord/soulseek/SoulseekPreview.java
+/ui-tests/src/test/java/app/bitchord/soulseek/PreviewDataSource.java
+/ui-tests/src/test/java/app/bitchord/soulseek/PreviewPlayer.java
+/ui-tests/src/test/java/app/bitchord/soulseek/PreviewDecode.java
+/ui-tests/src/test/java/app/bitchord/soulseek/PreviewEvidence.java
+/ui-tests/src/test/java/app/bitchord/soulseek/SoulseekPreviewActivity.java

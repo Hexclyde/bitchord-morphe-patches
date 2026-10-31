@@ -11,7 +11,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Interactive install guide](https://hexclyde.github.io/bitchord-morphe-patches/) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.13, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.14, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > The previous BitChord 1.8.1 Telegram integration was tested on an **arm64-v8a** phone; this 1.9 build still needs on-device testing. The armeabi-v7a and x86_64 builds pass the same automated checks, but haven't been run on a real device. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
 
@@ -19,7 +19,7 @@ The Downloads navigation icon is visible only when the download add-on patch is 
 
 Downloads offers saved Grid, List, Compact, Comfy and Detailed views. The Audio/Video player switch saves your YouTube preference across tracks and restarts. Missing alternate versions leave that preference unchanged.
 
-The combined beta.13 includes all beta.12 changes and the unpublished beta.9–11 Downloads work. It adds optional [mixed-source device playlists](docs/MIXED-PLAYLISTS.md) and the independent [Flac Downloader Audio adapter](docs/FLAC-AUDIO.md) for aztecempire's Spotube source. See [Downloads](docs/DOWNLOAD-MANAGER.md).
+The combined beta.14 retains all beta.13 changes and the unpublished beta.9–12 Downloads work. It adds optional [Streamseek previews](docs/STREAMSEEK-PREVIEW.md) for explicit MP3/FLAC listening and local-reference audio comparison. It also retains optional [mixed-source device playlists](docs/MIXED-PLAYLISTS.md) and the independent [Flac Downloader Audio adapter](docs/FLAC-AUDIO.md) for aztecempire's Spotube source. See [Downloads](docs/DOWNLOAD-MANAGER.md).
 
 ## Patches
 
@@ -27,6 +27,7 @@ The combined beta.13 includes all beta.12 changes and the unpublished beta.9–1
 | --- | --- |
 | **Unofficial Telegram music** | Search and play audio from your own Telegram channels and chats through TDLib, using your own account. Android 8 or newer. |
 | **Unofficial Soulseek audio** | Guided Soulseek search and exact-file downloads, an explicit source choice for eligible single-song Download actions, paired-phone originals and optional debrid links. Saved destination/format choices; download-only. Android 8 or newer. |
+| **Streamseek previews** | Explicit 30-second Soulseek MP3/FLAC previews, reuse for downloads, local-reference excerpt comparison and transparent evidence export. Depends on the Soulseek patch; off by default. |
 | **Install as Bitchord+** | Installs next to your regular BitChord as **Bitchord+**, or under a name you choose. |
 | **Sign in with MicroG** | Signs in to YouTube Music with an account that’s already in [MicroG RE](https://github.com/MorpheApp/MicroG-RE), instead of Google’s sign-in page. Only shows when MicroG RE is installed. |
 | **Sing** | Turns the lead vocal down so you can sing over the song. Ported from [Auris](https://github.com/OreoMuncher45/Auris). Off by default. |
@@ -130,7 +131,7 @@ Step-by-step guides:
 
 - [Installing with Morphe](docs/MOBILE.md)
 - [Interactive installation guide](docs/guide/index.html)
-- [Publishing the combined beta.13 ZIP](docs/PUBLISHING-1.1.0-beta.13.md)
+- [Publishing the combined beta.14 ZIP](docs/PUBLISHING-1.1.0-beta.14.md)
 - [Connecting Telegram](docs/SETUP.md)
 - [Guided Soulseek search and downloads](docs/SOULSEEK.md)
 - [Optional debrid downloads](docs/DEBRID.md)

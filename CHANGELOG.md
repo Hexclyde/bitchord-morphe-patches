@@ -1,3 +1,11 @@
+# 1.1.0-beta.14
+
+- Add optional **Streamseek previews**, depending on the Soulseek download patch; the in-app capsule toggle starts off and has no gear. Preview one selected MP3/FLAC peer file for up to 30 seconds in a separate Media3 player.
+- Share the native temporary transfer with an explicitly retained immediate or queued download. Expiring capabilities, session checks and private activity keep ordinary Soulseek playback download-only.
+- Compare a candidate excerpt with a user-chosen local reference using independent PCM decoding and landmark alignment. Show checked duration, offset and counts; export JSON evidence.
+- Inspect FLAC header fields and compute SHA-256 only after the complete file arrives. User confirmation binds to that checksum and does not certify the master or lossless origin.
+- Retain all beta.13 features. No Mornye integration is included. See [preview behavior and limits](docs/STREAMSEEK-PREVIEW.md).
+
 # 1.1.0-beta.13
 
 - Add an optional, independently written Flac Downloader Audio adapter for the service protocol used by aztecempire's Spotube plugin. Its native Sources toggle starts disabled; enabled results join Addons search, Downloads explorer and batch selection. Requested FLAC/MP3 choices remain explicit and unverified, with bounded preparation polling and no silent format substitution.

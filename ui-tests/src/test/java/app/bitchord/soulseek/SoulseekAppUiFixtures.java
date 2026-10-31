@@ -97,6 +97,24 @@ final class SoulseekBridge {
         throw new IOException("Soulseek result expired. Search again.");
     }
 
+    java.io.File previewFile;
+    long previewDownloaded;
+    boolean previewComplete;
+    int previewReaders, previewStarts;
+    synchronized ProgressiveReader openSelected(SoulseekTrack track, String session, long position, long length) throws IOException {
+        if (!session.equals(sessionTag)) throw new IOException("Changed session");
+        if (previewReaders++ == 0) previewStarts++;
+        return new ProgressiveReader(new ProgressiveReader.Source() {
+            public ProgressiveReader.Snapshot snapshot() throws IOException { return previewSnapshot(track,session); }
+            public void release() { previewReaders--; }
+        },track.size,position,length,200);
+    }
+    ProgressiveReader holdPreview(SoulseekTrack track,String session) throws IOException { return openSelected(track,session,0,0); }
+    ProgressiveReader.Snapshot previewSnapshot(SoulseekTrack track,String session) throws IOException {
+        ready();if (!session.equals(sessionTag)) throw new IOException("Changed session");
+        return new ProgressiveReader.Snapshot(previewFile,previewDownloaded,track.size,previewComplete,previewComplete?"complete":"downloading");
+    }
+
     long beginLogin() {
         return ++logins;
     }
@@ -227,6 +245,11 @@ final class SoulseekSelectedDownloads {
         return enqueueSelected(context, "src:soulseek-native::" + track.id);
     }
 
+    static boolean enqueuePreview(Context context,SoulseekTrack track,String session,boolean now,java.io.Closeable retained) {
+        try { return enqueueSelectedFile(context,track,session,now); }
+        finally { try { retained.close(); } catch (IOException ignored) {} }
+    }
+
     static boolean enqueueSelected(Context context, String ref, boolean now) {
         return enqueueSelected(context, ref);
     }
@@ -339,6 +362,7 @@ final class BulkDownloads {
 }
 
 final class BulkTransferService {
+    static void awaitRunning() {}
     static int starts;
 
     static void ensureRunning(Context c) {

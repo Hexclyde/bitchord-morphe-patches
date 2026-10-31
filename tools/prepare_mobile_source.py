@@ -41,6 +41,7 @@ OFF_BY_DEFAULT = {
     "Audio and video switch",
     "Mixed-source playlists",
     "Flac Downloader Audio",
+    "Streamseek previews",
 }
 
 

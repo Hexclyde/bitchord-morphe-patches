@@ -72,3 +72,6 @@ The build and test tools (Morphe, Kotlin, the JDK, R8, the Android SDK, Media3, 
 ## Flac Downloader Audio protocol reference
 
 The independent BitChord adapter is based on the service interface observed in aztecempire/spotube-plugin-flac-audio, version 2.1.0, commit 4ecc535d57c32fe347a301e8fc54ce9be0430158. No plugin code, Hetu runtime or logo is included. The upstream README states MIT; the inspected tree contains no licence file. See [adapter documentation](docs/FLAC-AUDIO.md) for provenance and behavior.
+# Streamseek design reference
+
+The optional Streamseek previews feature was informed by ndr-brt/streamseek, commit `851efcfcbf66e8b3216191d56616af378e9573b0`, published under GPL-3.0. The Android implementation is independent; it bundles no Streamseek source, Node/Electron runtime or server. Upstream: https://github.com/ndr-brt/streamseek.

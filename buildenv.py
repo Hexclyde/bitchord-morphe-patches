@@ -31,6 +31,7 @@ PATCHES = [
     "Audio and video switch",
     "Mixed-source playlists",
     "Flac Downloader Audio",
+    "Streamseek previews",
 ]
 
 TOOLS = Path(os.environ.get("MORPHE_TOOLS", ROOT / ".deps/tools"))
