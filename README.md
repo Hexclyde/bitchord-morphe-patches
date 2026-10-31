@@ -15,7 +15,7 @@
 >
 > The previous BitChord 1.8.1 Telegram integration was tested on an **arm64-v8a** phone; this 1.9 build still needs on-device testing. The armeabi-v7a and x86_64 builds pass the same automated checks, but haven't been run on a real device. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
 
-The Downloads navigation icon is visible only when the download add-on patch is installed. Patches & tweaks and download controls use BitChord 1.9’s green capsule switches, following the reviewed HTML demo.
+The Downloads navigation icon is visible only when the download add-on patch is installed. Patches & tweaks and download controls use BitChord 1.9’s green capsule switches.
 
 Downloads offers saved Grid, List, Compact, Comfy and Detailed views. The Audio/Video player switch saves your YouTube preference across tracks and restarts. Missing alternate versions leave that preference unchanged.
 

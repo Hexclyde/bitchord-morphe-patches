@@ -4945,6 +4945,8 @@ final class Translations {
             "\u0633\u064a\u0631\u0633\u0644 Telegram \u0631\u0645\u0632\u064b\u0627 \u0622\u062e\u0631 \u0628\u0637\u0631\u064a\u0642\u0629 \u0627\u0644\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0645\u062a\u0627\u062d\u0629.",
             "You can request another code in {0} seconds.",
             "\u064a\u0645\u0643\u0646\u0643 \u0637\u0644\u0628 \u0631\u0645\u0632 \u0622\u062e\u0631 \u0628\u0639\u062f {0} \u062b\u0627\u0646\u064a\u0629.",
+            "Choose an account",
+            "\u0627\u062e\u062a\u064e\u0631 \u062d\u0633\u0627\u0628\u064b\u0627",
         };
     }
 
@@ -10321,6 +10323,8 @@ final class Translations {
             "Telegram \u0989\u09aa\u09b2\u09ac\u09cd\u09a7 \u09aa\u09a6\u09cd\u09a7\u09a4\u09bf\u09a4\u09c7 \u0986\u09b0\u09c7\u0995\u099f\u09bf \u0995\u09cb\u09a1 \u09aa\u09be\u09a0\u09be\u09ac\u09c7\u0964",
             "You can request another code in {0} seconds.",
             "\u0986\u09aa\u09a8\u09bf {0} \u09b8\u09c7\u0995\u09c7\u09a8\u09cd\u09a1 \u09aa\u09b0\u09c7 \u0986\u09b0\u09c7\u0995\u099f\u09bf \u0995\u09cb\u09a1\u09c7\u09b0 \u0985\u09a8\u09c1\u09b0\u09cb\u09a7 \u0995\u09b0\u09a4\u09c7 \u09aa\u09be\u09b0\u09ac\u09c7\u09a8\u0964",
+            "Choose an account",
+            "\u098f\u0995\u099f\u09bf \u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f \u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a8",
         };
     }
 
@@ -13304,6 +13308,8 @@ final class Translations {
             "Telegram sendet einen weiteren Code \u00fcber die verf\u00fcgbare Zustellmethode.",
             "You can request another code in {0} seconds.",
             "Du kannst in {0} Sekunden einen weiteren Code anfordern.",
+            "Choose an account",
+            "Konto ausw\u00e4hlen",
         };
     }
 
@@ -16294,6 +16300,8 @@ final class Translations {
             "Telegram enviar\u00e1 otro c\u00f3digo mediante el m\u00e9todo de entrega disponible.",
             "You can request another code in {0} seconds.",
             "Puedes solicitar otro c\u00f3digo en {0} segundos.",
+            "Choose an account",
+            "Elige una cuenta",
         };
     }
 
@@ -19348,6 +19356,8 @@ final class Translations {
             "Telegram enverra un autre code par le mode d\u2019envoi disponible.",
             "You can request another code in {0} seconds.",
             "Vous pourrez demander un autre code dans {0} secondes.",
+            "Choose an account",
+            "Choisir un compte",
         };
     }
 
@@ -23969,6 +23979,8 @@ final class Translations {
             "Telegram \u05d9\u05e9\u05dc\u05d7 \u05e7\u05d5\u05d3 \u05e0\u05d5\u05e1\u05e3 \u05d1\u05d3\u05e8\u05da \u05d4\u05e9\u05dc\u05d9\u05d7\u05d4 \u05d4\u05d6\u05de\u05d9\u05e0\u05d4.",
             "You can request another code in {0} seconds.",
             "\u05d0\u05e4\u05e9\u05e8 \u05dc\u05d1\u05e7\u05e9 \u05e7\u05d5\u05d3 \u05e0\u05d5\u05e1\u05e3 \u05d1\u05e2\u05d5\u05d3 {0} \u05e9\u05e0\u05d9\u05d5\u05ea.",
+            "Choose an account",
+            "\u05d1\u05d7\u05d9\u05e8\u05ea \u05d7\u05e9\u05d1\u05d5\u05df",
         };
     }
 
@@ -29257,6 +29269,8 @@ final class Translations {
             "Telegram \u0909\u092a\u0932\u092c\u094d\u0927 \u0924\u0930\u0940\u0915\u0947 \u0938\u0947 \u0926\u0942\u0938\u0930\u093e \u0915\u094b\u0921 \u092d\u0947\u091c\u0947\u0917\u093e\u0964",
             "You can request another code in {0} seconds.",
             "\u0906\u092a {0} \u0938\u0947\u0915\u0902\u0921 \u092c\u093e\u0926 \u0926\u0942\u0938\u0930\u093e \u0915\u094b\u0921 \u092e\u093e\u0901\u0917 \u0938\u0915\u0924\u0947 \u0939\u0948\u0902\u0964",
+            "Choose an account",
+            "\u0916\u093e\u0924\u093e \u091a\u0941\u0928\u0947\u0902",
         };
     }
 
@@ -32154,6 +32168,8 @@ final class Translations {
             "Telegram akan mengirim kode lain melalui metode pengiriman yang tersedia.",
             "You can request another code in {0} seconds.",
             "Anda dapat meminta kode lain dalam {0} detik.",
+            "Choose an account",
+            "Pilih akun",
         };
     }
 
@@ -35103,6 +35119,8 @@ final class Translations {
             "Telegram invier\u00e0 un altro codice con il metodo di invio disponibile.",
             "You can request another code in {0} seconds.",
             "Puoi richiedere un altro codice tra {0} secondi.",
+            "Choose an account",
+            "Scegli un account",
         };
     }
 
@@ -38135,6 +38153,8 @@ final class Translations {
             "Telegram \u306f\u5229\u7528\u53ef\u80fd\u306a\u65b9\u6cd5\u3067\u5225\u306e\u30b3\u30fc\u30c9\u3092\u9001\u4fe1\u3057\u307e\u3059\u3002",
             "You can request another code in {0} seconds.",
             "{0} \u79d2\u5f8c\u306b\u5225\u306e\u30b3\u30fc\u30c9\u3092\u30ea\u30af\u30a8\u30b9\u30c8\u3067\u304d\u307e\u3059\u3002",
+            "Choose an account",
+            "\u30a2\u30ab\u30a6\u30f3\u30c8\u3092\u9078\u629e",
         };
     }
 
@@ -41711,6 +41731,8 @@ final class Translations {
             "Telegram\uc5d0\uc11c \uc0ac\uc6a9 \uac00\ub2a5\ud55c \ubc29\ubc95\uc73c\ub85c \uc0c8 \ucf54\ub4dc\ub97c \ubcf4\ub0c5\ub2c8\ub2e4.",
             "You can request another code in {0} seconds.",
             "{0}\ucd08 \ud6c4\uc5d0 \uc0c8 \ucf54\ub4dc\ub97c \uc694\uccad\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.",
+            "Choose an account",
+            "\uacc4\uc815 \uc120\ud0dd",
         };
     }
 
@@ -44742,6 +44764,8 @@ final class Translations {
             "Telegram wy\u015ble kolejny kod dost\u0119pn\u0105 metod\u0105.",
             "You can request another code in {0} seconds.",
             "Mo\u017cesz poprosi\u0107 o kolejny kod za {0} sekund.",
+            "Choose an account",
+            "Wybierz konto",
         };
     }
 
@@ -47733,6 +47757,8 @@ final class Translations {
             "O Telegram enviar\u00e1 outro c\u00f3digo pelo m\u00e9todo de envio dispon\u00edvel.",
             "You can request another code in {0} seconds.",
             "Voc\u00ea pode solicitar outro c\u00f3digo em {0} segundos.",
+            "Choose an account",
+            "Escolha uma conta",
         };
     }
 
@@ -53574,6 +53600,8 @@ final class Translations {
             "Telegram \u043e\u0442\u043f\u0440\u0430\u0432\u0438\u0442 \u043d\u043e\u0432\u044b\u0439 \u043a\u043e\u0434 \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u043c \u0441\u043f\u043e\u0441\u043e\u0431\u043e\u043c.",
             "You can request another code in {0} seconds.",
             "\u041f\u043e\u0432\u0442\u043e\u0440\u043d\u044b\u0439 \u0437\u0430\u043f\u0440\u043e\u0441 \u043a\u043e\u0434\u0430 \u0431\u0443\u0434\u0435\u0442 \u0434\u043e\u0441\u0442\u0443\u043f\u0435\u043d \u0447\u0435\u0440\u0435\u0437 {0} \u0441\u0435\u043a.",
+            "Choose an account",
+            "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0430\u043a\u043a\u0430\u0443\u043d\u0442",
         };
     }
 
@@ -57259,6 +57287,8 @@ final class Translations {
             "Telegram \u0e08\u0e30\u0e2a\u0e48\u0e07\u0e23\u0e2b\u0e31\u0e2a\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07\u0e14\u0e49\u0e27\u0e22\u0e27\u0e34\u0e18\u0e35\u0e17\u0e35\u0e48\u0e43\u0e0a\u0e49\u0e44\u0e14\u0e49",
             "You can request another code in {0} seconds.",
             "\u0e04\u0e38\u0e13\u0e2a\u0e32\u0e21\u0e32\u0e23\u0e16\u0e02\u0e2d\u0e23\u0e2b\u0e31\u0e2a\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07\u0e44\u0e14\u0e49\u0e43\u0e19 {0} \u0e27\u0e34\u0e19\u0e32\u0e17\u0e35",
+            "Choose an account",
+            "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e1a\u0e31\u0e0d\u0e0a\u0e35",
         };
     }
 
@@ -60375,6 +60405,8 @@ final class Translations {
             "Telegram kullan\u0131labilir g\u00f6nderim y\u00f6ntemiyle ba\u015fka bir kod g\u00f6nderecek.",
             "You can request another code in {0} seconds.",
             "{0} saniye sonra ba\u015fka bir kod isteyebilirsiniz.",
+            "Choose an account",
+            "Bir hesap se\u00e7in",
         };
     }
 
@@ -65595,6 +65627,8 @@ final class Translations {
             "Telegram \u062f\u0633\u062a\u06cc\u0627\u0628 \u0637\u0631\u06cc\u0642\u06d2 \u0633\u06d2 \u062f\u0648\u0633\u0631\u0627 \u06a9\u0648\u0688 \u0628\u06be\u06cc\u062c\u06d2 \u06af\u0627\u06d4",
             "You can request another code in {0} seconds.",
             "\u0622\u067e {0} \u0633\u06cc\u06a9\u0646\u0688 \u0628\u0639\u062f \u062f\u0648\u0633\u0631\u0627 \u06a9\u0648\u0688 \u0637\u0644\u0628 \u06a9\u0631 \u0633\u06a9\u062a\u06d2 \u06c1\u06cc\u06ba\u06d4",
+            "Choose an account",
+            "\u0627\u06cc\u06a9 \u0627\u06a9\u0627\u0624\u0646\u0679 \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba",
         };
     }
 
@@ -69014,6 +69048,8 @@ final class Translations {
             "Telegram s\u1ebd g\u1eedi m\u00e3 kh\u00e1c b\u1eb1ng ph\u01b0\u01a1ng th\u1ee9c hi\u1ec7n c\u00f3.",
             "You can request another code in {0} seconds.",
             "B\u1ea1n c\u00f3 th\u1ec3 y\u00eau c\u1ea7u m\u00e3 kh\u00e1c sau {0} gi\u00e2y.",
+            "Choose an account",
+            "Ch\u1ecdn t\u00e0i kho\u1ea3n",
         };
     }
 
@@ -71995,6 +72031,8 @@ final class Translations {
             "Telegram \u5c07\u4f7f\u7528\u53ef\u7528\u7684\u50b3\u9001\u65b9\u5f0f\u518d\u6b21\u50b3\u9001\u9a57\u8b49\u78bc\u3002",
             "You can request another code in {0} seconds.",
             "\u4f60\u53ef\u4ee5\u5728 {0} \u79d2\u5f8c\u8981\u6c42\u65b0\u7684\u9a57\u8b49\u78bc\u3002",
+            "Choose an account",
+            "\u9078\u64c7\u5e33\u865f",
         };
     }
 
@@ -74964,6 +75002,8 @@ final class Translations {
             "Telegram \u5c06\u4f7f\u7528\u53ef\u7528\u7684\u53d1\u9001\u65b9\u5f0f\u518d\u6b21\u53d1\u9001\u9a8c\u8bc1\u7801\u3002",
             "You can request another code in {0} seconds.",
             "\u4f60\u53ef\u4ee5\u5728 {0} \u79d2\u540e\u8bf7\u6c42\u65b0\u7684\u9a8c\u8bc1\u7801\u3002",
+            "Choose an account",
+            "\u9009\u62e9\u8d26\u53f7",
         };
     }
 }

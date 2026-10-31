@@ -1236,5 +1236,6 @@
   "Request a new code": "طلب رمز جديد",
   "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "لم يوفّر Telegram طريقة إرسال أخرى. تحقّق من تطبيق Telegram لديك أو غيّر رقم الهاتف.",
   "Telegram will send another code using its available delivery method.": "سيرسل Telegram رمزًا آخر بطريقة الإرسال المتاحة.",
-  "You can request another code in {0} seconds.": "يمكنك طلب رمز آخر بعد {0} ثانية."
+  "You can request another code in {0} seconds.": "يمكنك طلب رمز آخر بعد {0} ثانية.",
+  "Choose an account": "اختَر حسابًا"
 }

@@ -1236,5 +1236,6 @@
   "Request a new code": "Demander un nouveau code",
   "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram ne propose aucun autre mode d’envoi. Consultez votre application Telegram ou changez de numéro de téléphone.",
   "Telegram will send another code using its available delivery method.": "Telegram enverra un autre code par le mode d’envoi disponible.",
-  "You can request another code in {0} seconds.": "Vous pourrez demander un autre code dans {0} secondes."
+  "You can request another code in {0} seconds.": "Vous pourrez demander un autre code dans {0} secondes.",
+  "Choose an account": "Choisir un compte"
 }

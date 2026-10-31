@@ -1,6 +1,8 @@
 package app.bitchord.telegram;
 
+import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
 import android.accounts.AuthenticatorDescription;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
@@ -11,8 +13,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.net.URLEncoder;
@@ -29,8 +36,9 @@ import java.net.URLEncoder;
  * own sign-in WebView, and from there BitChord carries on as if the page had been used: it waits
  * for YouTube Music to load and asks which channel to use.
  *
- * <p>MicroG RE shows its account chooser, and once its own consent screen. When MicroG RE isn't
- * installed, or anything fails, Google's sign-in page opens as before.
+ * <p>BitChord offers a themed chooser for visible MicroG accounts. MicroG RE handles its own
+ * authentication and consent. Android's add/visibility flow remains available when no account is
+ * visible. When MicroG RE isn't installed or anything fails, Google's sign-in page opens as before.
  */
 public final class MicroGSignIn {
     private MicroGSignIn() {}
@@ -100,16 +108,70 @@ public final class MicroGSignIn {
 
     private static void viaMicroG(Activity activity, WebView view, String url) {
         AccountManager accounts = AccountManager.get(activity);
+        try {
+            Account[] visible = accounts.getAccountsByType(ACCOUNT_TYPE);
+            if (visible.length > 1) {
+                chooseAccount(activity, view, url, visible);
+            } else {
+                requestToken(activity, view, url, visible.length == 1 ? visible[0] : null);
+            }
+        } catch (RuntimeException e) {
+            HostLog.d("MicroG account selection failed: " + e.getClass().getSimpleName());
+            view.loadUrl(url);
+        }
+    }
+
+    /** Keep visible-account selection in a dialog whose foreground and surface agree. */
+    private static void chooseAccount(
+            Activity activity, WebView view, String url, Account[] visible) {
+        TelegramStyle style = new TelegramStyle(activity);
+        TextView title =
+                style.text(Strings.t("Choose an account"), 20, style.foreground, style.semibold);
+        title.setPadding(style.dp(24), style.dp(20), style.dp(24), style.dp(8));
+        ArrayAdapter<Account> rows =
+                new ArrayAdapter<Account>(activity, android.R.layout.simple_list_item_1, visible) {
+                    @Override
+                    public View getView(int position, View recycled, ViewGroup parent) {
+                        TextView row = (TextView) super.getView(position, recycled, parent);
+                        row.setText(getItem(position).name);
+                        row.setTextColor(style.foreground);
+                        row.setTypeface(style.regular);
+                        row.setTextSize(16);
+                        row.setSingleLine(false);
+                        row.setMaxLines(3);
+                        row.setEllipsize(TextUtils.TruncateAt.END);
+                        row.setTextDirection(View.TEXT_DIRECTION_LTR);
+                        row.setPadding(style.dp(24), style.dp(12), style.dp(24), style.dp(12));
+                        row.setMinHeight(style.dp(56));
+                        row.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                        return row;
+                    }
+                };
+        AlertDialog dialog =
+                new AlertDialog.Builder(
+                                activity,
+                                style.dark
+                                        ? android.R.style.Theme_DeviceDefault_Dialog_Alert
+                                        : android.R.style.Theme_DeviceDefault_Light_Dialog_Alert)
+                        .setCustomTitle(title)
+                        .setAdapter(
+                                rows,
+                                (d, index) -> requestToken(activity, view, url, visible[index]))
+                        .setNegativeButton(
+                                Strings.t("Google sign-in page"), (d, w) -> view.loadUrl(url))
+                        .setOnCancelListener(d -> view.loadUrl(url))
+                        .create();
+        dialog.show();
+        dialog.getListView().setBackgroundColor(style.card);
+        style.tuneDialog(dialog);
+    }
+
+    private static void requestToken(
+            Activity activity, WebView view, String url, Account selected) {
+        AccountManager accounts = AccountManager.get(activity);
         HostLog.d("MicroG sign-in: asking MicroG RE for a YouTube Music sign-in link");
         try {
-            // With no account in MicroG RE this opens its sign-in; with several, its chooser.
-            accounts.getAuthTokenByFeatures(
-                    ACCOUNT_TYPE,
-                    tokenType(),
-                    null,
-                    activity,
-                    null,
-                    null,
+            AccountManagerCallback<Bundle> callback =
                     future -> {
                         String link = null;
                         String trouble = null;
@@ -145,8 +207,15 @@ public final class MicroGSignIn {
                         // sign-in page left, so they go first, as MicroG RE does in its own pages.
                         String open = link;
                         clearSignInCookies(() -> view.loadUrl(open));
-                    },
-                    new Handler(Looper.getMainLooper()));
+                    };
+            Handler handler = new Handler(Looper.getMainLooper());
+            if (selected == null) {
+                // Preserve Android's add/visibility-consent flow when no account is visible.
+                accounts.getAuthTokenByFeatures(
+                        ACCOUNT_TYPE, tokenType(), null, activity, null, null, callback, handler);
+            } else {
+                accounts.getAuthToken(selected, tokenType(), null, activity, callback, handler);
+            }
         } catch (RuntimeException e) {
             HostLog.d("MicroG sign-in failed: " + e);
             view.loadUrl(url);

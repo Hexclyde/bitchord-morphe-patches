@@ -1236,5 +1236,6 @@
   "Request a new code": "要求新的驗證碼",
   "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram 未提供其他傳送方式。請查看現有的 Telegram 應用程式或變更電話號碼。",
   "Telegram will send another code using its available delivery method.": "Telegram 將使用可用的傳送方式再次傳送驗證碼。",
-  "You can request another code in {0} seconds.": "你可以在 {0} 秒後要求新的驗證碼。"
+  "You can request another code in {0} seconds.": "你可以在 {0} 秒後要求新的驗證碼。",
+  "Choose an account": "選擇帳號"
 }
