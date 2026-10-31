@@ -4934,17 +4934,28 @@ final class Translations {
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
             "Change phone number",
-            "\u062a\u063a\u064a\u064a\u0631 \u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062a\u0641",
+            "\u062a\u063a\u064a\u064a\u0631 \u0631\u0642\u0645"
+                    + " \u0627\u0644\u0647\u0627\u062a\u0641",
             "Send code to this number",
-            "\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0631\u0645\u0632 \u0625\u0644\u0649 \u0647\u0630\u0627 \u0627\u0644\u0631\u0642\u0645",
+            "\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0631\u0645\u0632 \u0625\u0644\u0649"
+                    + " \u0647\u0630\u0627 \u0627\u0644\u0631\u0642\u0645",
             "Request a new code",
             "\u0637\u0644\u0628 \u0631\u0645\u0632 \u062c\u062f\u064a\u062f",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "\u0644\u0645 \u064a\u0648\u0641\u0651\u0631 Telegram \u0637\u0631\u064a\u0642\u0629 \u0625\u0631\u0633\u0627\u0644 \u0623\u062e\u0631\u0649. \u062a\u062d\u0642\u0651\u0642 \u0645\u0646 \u062a\u0637\u0628\u064a\u0642 Telegram \u0644\u062f\u064a\u0643 \u0623\u0648 \u063a\u064a\u0651\u0631 \u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062a\u0641.",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "\u0644\u0645 \u064a\u0648\u0641\u0651\u0631 Telegram \u0637\u0631\u064a\u0642\u0629"
+                    + " \u0625\u0631\u0633\u0627\u0644 \u0623\u062e\u0631\u0649."
+                    + " \u062a\u062d\u0642\u0651\u0642 \u0645\u0646 \u062a\u0637\u0628\u064a\u0642"
+                    + " Telegram \u0644\u062f\u064a\u0643 \u0623\u0648 \u063a\u064a\u0651\u0631"
+                    + " \u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062a\u0641.",
             "Telegram will send another code using its available delivery method.",
-            "\u0633\u064a\u0631\u0633\u0644 Telegram \u0631\u0645\u0632\u064b\u0627 \u0622\u062e\u0631 \u0628\u0637\u0631\u064a\u0642\u0629 \u0627\u0644\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0645\u062a\u0627\u062d\u0629.",
+            "\u0633\u064a\u0631\u0633\u0644 Telegram \u0631\u0645\u0632\u064b\u0627"
+                    + " \u0622\u062e\u0631 \u0628\u0637\u0631\u064a\u0642\u0629"
+                    + " \u0627\u0644\u0625\u0631\u0633\u0627\u0644"
+                    + " \u0627\u0644\u0645\u062a\u0627\u062d\u0629.",
             "You can request another code in {0} seconds.",
-            "\u064a\u0645\u0643\u0646\u0643 \u0637\u0644\u0628 \u0631\u0645\u0632 \u0622\u062e\u0631 \u0628\u0639\u062f {0} \u062b\u0627\u0646\u064a\u0629.",
+            "\u064a\u0645\u0643\u0646\u0643 \u0637\u0644\u0628 \u0631\u0645\u0632"
+                    + " \u0622\u062e\u0631 \u0628\u0639\u062f {0} \u062b\u0627\u0646\u064a\u0629.",
         };
     }
 
@@ -10310,17 +10321,33 @@ final class Translations {
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
             "Change phone number",
-            "\u09ab\u09cb\u09a8 \u09a8\u09ae\u09cd\u09ac\u09b0 \u09aa\u09b0\u09bf\u09ac\u09b0\u09cd\u09a4\u09a8 \u0995\u09b0\u09c1\u09a8",
+            "\u09ab\u09cb\u09a8 \u09a8\u09ae\u09cd\u09ac\u09b0"
+                    + " \u09aa\u09b0\u09bf\u09ac\u09b0\u09cd\u09a4\u09a8 \u0995\u09b0\u09c1\u09a8",
             "Send code to this number",
-            "\u098f\u0987 \u09a8\u09ae\u09cd\u09ac\u09b0\u09c7 \u0995\u09cb\u09a1 \u09aa\u09be\u09a0\u09be\u09a8",
+            "\u098f\u0987 \u09a8\u09ae\u09cd\u09ac\u09b0\u09c7 \u0995\u09cb\u09a1"
+                    + " \u09aa\u09be\u09a0\u09be\u09a8",
             "Request a new code",
-            "\u09a8\u09a4\u09c1\u09a8 \u0995\u09cb\u09a1\u09c7\u09b0 \u0985\u09a8\u09c1\u09b0\u09cb\u09a7 \u0995\u09b0\u09c1\u09a8",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram \u0985\u09a8\u09cd\u09af \u0995\u09cb\u09a8\u09cb \u09aa\u09be\u09a0\u09be\u09a8\u09cb\u09b0 \u09aa\u09a6\u09cd\u09a7\u09a4\u09bf \u09a6\u09c7\u09af\u09bc\u09a8\u09bf\u0964 \u0986\u09aa\u09a8\u09be\u09b0 Telegram \u0985\u09cd\u09af\u09be\u09aa \u09a6\u09c7\u0996\u09c1\u09a8 \u0985\u09a5\u09ac\u09be \u09ab\u09cb\u09a8 \u09a8\u09ae\u09cd\u09ac\u09b0 \u09aa\u09b0\u09bf\u09ac\u09b0\u09cd\u09a4\u09a8 \u0995\u09b0\u09c1\u09a8\u0964",
+            "\u09a8\u09a4\u09c1\u09a8 \u0995\u09cb\u09a1\u09c7\u09b0"
+                    + " \u0985\u09a8\u09c1\u09b0\u09cb\u09a7 \u0995\u09b0\u09c1\u09a8",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram \u0985\u09a8\u09cd\u09af \u0995\u09cb\u09a8\u09cb"
+                + " \u09aa\u09be\u09a0\u09be\u09a8\u09cb\u09b0 \u09aa\u09a6\u09cd\u09a7\u09a4\u09bf"
+                + " \u09a6\u09c7\u09af\u09bc\u09a8\u09bf\u0964 \u0986\u09aa\u09a8\u09be\u09b0"
+                + " Telegram \u0985\u09cd\u09af\u09be\u09aa \u09a6\u09c7\u0996\u09c1\u09a8"
+                + " \u0985\u09a5\u09ac\u09be \u09ab\u09cb\u09a8 \u09a8\u09ae\u09cd\u09ac\u09b0"
+                + " \u09aa\u09b0\u09bf\u09ac\u09b0\u09cd\u09a4\u09a8"
+                + " \u0995\u09b0\u09c1\u09a8\u0964",
             "Telegram will send another code using its available delivery method.",
-            "Telegram \u0989\u09aa\u09b2\u09ac\u09cd\u09a7 \u09aa\u09a6\u09cd\u09a7\u09a4\u09bf\u09a4\u09c7 \u0986\u09b0\u09c7\u0995\u099f\u09bf \u0995\u09cb\u09a1 \u09aa\u09be\u09a0\u09be\u09ac\u09c7\u0964",
+            "Telegram \u0989\u09aa\u09b2\u09ac\u09cd\u09a7"
+                    + " \u09aa\u09a6\u09cd\u09a7\u09a4\u09bf\u09a4\u09c7"
+                    + " \u0986\u09b0\u09c7\u0995\u099f\u09bf \u0995\u09cb\u09a1"
+                    + " \u09aa\u09be\u09a0\u09be\u09ac\u09c7\u0964",
             "You can request another code in {0} seconds.",
-            "\u0986\u09aa\u09a8\u09bf {0} \u09b8\u09c7\u0995\u09c7\u09a8\u09cd\u09a1 \u09aa\u09b0\u09c7 \u0986\u09b0\u09c7\u0995\u099f\u09bf \u0995\u09cb\u09a1\u09c7\u09b0 \u0985\u09a8\u09c1\u09b0\u09cb\u09a7 \u0995\u09b0\u09a4\u09c7 \u09aa\u09be\u09b0\u09ac\u09c7\u09a8\u0964",
+            "\u0986\u09aa\u09a8\u09bf {0} \u09b8\u09c7\u0995\u09c7\u09a8\u09cd\u09a1"
+                    + " \u09aa\u09b0\u09c7 \u0986\u09b0\u09c7\u0995\u099f\u09bf"
+                    + " \u0995\u09cb\u09a1\u09c7\u09b0 \u0985\u09a8\u09c1\u09b0\u09cb\u09a7"
+                    + " \u0995\u09b0\u09a4\u09c7 \u09aa\u09be\u09b0\u09ac\u09c7\u09a8\u0964",
         };
     }
 
@@ -13298,8 +13325,10 @@ final class Translations {
             "Code an diese Nummer senden",
             "Request a new code",
             "Neuen Code anfordern",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram bietet keine andere Zustellmethode an. Pr\u00fcfe deine Telegram-App oder \u00e4ndere die Telefonnummer.",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram bietet keine andere Zustellmethode an. Pr\u00fcfe deine Telegram-App oder"
+                    + " \u00e4ndere die Telefonnummer.",
             "Telegram will send another code using its available delivery method.",
             "Telegram sendet einen weiteren Code \u00fcber die verf\u00fcgbare Zustellmethode.",
             "You can request another code in {0} seconds.",
@@ -16288,8 +16317,10 @@ final class Translations {
             "Enviar c\u00f3digo a este n\u00famero",
             "Request a new code",
             "Solicitar un c\u00f3digo nuevo",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram no ha ofrecido otro m\u00e9todo de entrega. Revisa tu aplicaci\u00f3n de Telegram o cambia el n\u00famero de tel\u00e9fono.",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram no ha ofrecido otro m\u00e9todo de entrega. Revisa tu aplicaci\u00f3n de"
+                    + " Telegram o cambia el n\u00famero de tel\u00e9fono.",
             "Telegram will send another code using its available delivery method.",
             "Telegram enviar\u00e1 otro c\u00f3digo mediante el m\u00e9todo de entrega disponible.",
             "You can request another code in {0} seconds.",
@@ -19342,8 +19373,10 @@ final class Translations {
             "Envoyer le code \u00e0 ce num\u00e9ro",
             "Request a new code",
             "Demander un nouveau code",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram ne propose aucun autre mode d\u2019envoi. Consultez votre application Telegram ou changez de num\u00e9ro de t\u00e9l\u00e9phone.",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram ne propose aucun autre mode d\u2019envoi. Consultez votre application"
+                    + " Telegram ou changez de num\u00e9ro de t\u00e9l\u00e9phone.",
             "Telegram will send another code using its available delivery method.",
             "Telegram enverra un autre code par le mode d\u2019envoi disponible.",
             "You can request another code in {0} seconds.",
@@ -23958,17 +23991,30 @@ final class Translations {
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
             "Change phone number",
-            "\u05e9\u05d9\u05e0\u05d5\u05d9 \u05de\u05e1\u05e4\u05e8 \u05d8\u05dc\u05e4\u05d5\u05df",
+            "\u05e9\u05d9\u05e0\u05d5\u05d9 \u05de\u05e1\u05e4\u05e8"
+                    + " \u05d8\u05dc\u05e4\u05d5\u05df",
             "Send code to this number",
-            "\u05e9\u05dc\u05d9\u05d7\u05ea \u05e7\u05d5\u05d3 \u05dc\u05de\u05e1\u05e4\u05e8 \u05d4\u05d6\u05d4",
+            "\u05e9\u05dc\u05d9\u05d7\u05ea \u05e7\u05d5\u05d3 \u05dc\u05de\u05e1\u05e4\u05e8"
+                    + " \u05d4\u05d6\u05d4",
             "Request a new code",
             "\u05d1\u05e7\u05e9\u05ea \u05e7\u05d5\u05d3 \u05d7\u05d3\u05e9",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram \u05dc\u05d0 \u05d4\u05e6\u05d9\u05e2 \u05d3\u05e8\u05da \u05e9\u05dc\u05d9\u05d7\u05d4 \u05d0\u05d7\u05e8\u05ea. \u05d9\u05e9 \u05dc\u05d1\u05d3\u05d5\u05e7 \u05d1\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d9\u05ea Telegram \u05d4\u05e7\u05d9\u05d9\u05de\u05ea \u05d0\u05d5 \u05dc\u05e9\u05e0\u05d5\u05ea \u05d0\u05ea \u05de\u05e1\u05e4\u05e8 \u05d4\u05d8\u05dc\u05e4\u05d5\u05df.",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram \u05dc\u05d0 \u05d4\u05e6\u05d9\u05e2 \u05d3\u05e8\u05da"
+                    + " \u05e9\u05dc\u05d9\u05d7\u05d4 \u05d0\u05d7\u05e8\u05ea. \u05d9\u05e9"
+                    + " \u05dc\u05d1\u05d3\u05d5\u05e7"
+                    + " \u05d1\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d9\u05ea Telegram"
+                    + " \u05d4\u05e7\u05d9\u05d9\u05de\u05ea \u05d0\u05d5"
+                    + " \u05dc\u05e9\u05e0\u05d5\u05ea \u05d0\u05ea \u05de\u05e1\u05e4\u05e8"
+                    + " \u05d4\u05d8\u05dc\u05e4\u05d5\u05df.",
             "Telegram will send another code using its available delivery method.",
-            "Telegram \u05d9\u05e9\u05dc\u05d7 \u05e7\u05d5\u05d3 \u05e0\u05d5\u05e1\u05e3 \u05d1\u05d3\u05e8\u05da \u05d4\u05e9\u05dc\u05d9\u05d7\u05d4 \u05d4\u05d6\u05de\u05d9\u05e0\u05d4.",
+            "Telegram \u05d9\u05e9\u05dc\u05d7 \u05e7\u05d5\u05d3 \u05e0\u05d5\u05e1\u05e3"
+                    + " \u05d1\u05d3\u05e8\u05da \u05d4\u05e9\u05dc\u05d9\u05d7\u05d4"
+                    + " \u05d4\u05d6\u05de\u05d9\u05e0\u05d4.",
             "You can request another code in {0} seconds.",
-            "\u05d0\u05e4\u05e9\u05e8 \u05dc\u05d1\u05e7\u05e9 \u05e7\u05d5\u05d3 \u05e0\u05d5\u05e1\u05e3 \u05d1\u05e2\u05d5\u05d3 {0} \u05e9\u05e0\u05d9\u05d5\u05ea.",
+            "\u05d0\u05e4\u05e9\u05e8 \u05dc\u05d1\u05e7\u05e9 \u05e7\u05d5\u05d3"
+                    + " \u05e0\u05d5\u05e1\u05e3 \u05d1\u05e2\u05d5\u05d3 {0}"
+                    + " \u05e9\u05e0\u05d9\u05d5\u05ea.",
         };
     }
 
@@ -29248,15 +29294,26 @@ final class Translations {
             "Change phone number",
             "\u092b\u093c\u094b\u0928 \u0928\u0902\u092c\u0930 \u092c\u0926\u0932\u0947\u0902",
             "Send code to this number",
-            "\u0907\u0938 \u0928\u0902\u092c\u0930 \u092a\u0930 \u0915\u094b\u0921 \u092d\u0947\u091c\u0947\u0902",
+            "\u0907\u0938 \u0928\u0902\u092c\u0930 \u092a\u0930 \u0915\u094b\u0921"
+                    + " \u092d\u0947\u091c\u0947\u0902",
             "Request a new code",
             "\u0928\u092f\u093e \u0915\u094b\u0921 \u092e\u093e\u0901\u0917\u0947\u0902",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram \u0928\u0947 \u0915\u094b\u0921 \u092d\u0947\u091c\u0928\u0947 \u0915\u093e \u0926\u0942\u0938\u0930\u093e \u0924\u0930\u0940\u0915\u093e \u0928\u0939\u0940\u0902 \u0926\u093f\u092f\u093e \u0939\u0948\u0964 \u0905\u092a\u0928\u093e Telegram \u0910\u092a \u0926\u0947\u0916\u0947\u0902 \u092f\u093e \u092b\u093c\u094b\u0928 \u0928\u0902\u092c\u0930 \u092c\u0926\u0932\u0947\u0902\u0964",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram \u0928\u0947 \u0915\u094b\u0921 \u092d\u0947\u091c\u0928\u0947 \u0915\u093e"
+                + " \u0926\u0942\u0938\u0930\u093e \u0924\u0930\u0940\u0915\u093e"
+                + " \u0928\u0939\u0940\u0902 \u0926\u093f\u092f\u093e \u0939\u0948\u0964"
+                + " \u0905\u092a\u0928\u093e Telegram \u0910\u092a \u0926\u0947\u0916\u0947\u0902"
+                + " \u092f\u093e \u092b\u093c\u094b\u0928 \u0928\u0902\u092c\u0930"
+                + " \u092c\u0926\u0932\u0947\u0902\u0964",
             "Telegram will send another code using its available delivery method.",
-            "Telegram \u0909\u092a\u0932\u092c\u094d\u0927 \u0924\u0930\u0940\u0915\u0947 \u0938\u0947 \u0926\u0942\u0938\u0930\u093e \u0915\u094b\u0921 \u092d\u0947\u091c\u0947\u0917\u093e\u0964",
+            "Telegram \u0909\u092a\u0932\u092c\u094d\u0927 \u0924\u0930\u0940\u0915\u0947"
+                    + " \u0938\u0947 \u0926\u0942\u0938\u0930\u093e \u0915\u094b\u0921"
+                    + " \u092d\u0947\u091c\u0947\u0917\u093e\u0964",
             "You can request another code in {0} seconds.",
-            "\u0906\u092a {0} \u0938\u0947\u0915\u0902\u0921 \u092c\u093e\u0926 \u0926\u0942\u0938\u0930\u093e \u0915\u094b\u0921 \u092e\u093e\u0901\u0917 \u0938\u0915\u0924\u0947 \u0939\u0948\u0902\u0964",
+            "\u0906\u092a {0} \u0938\u0947\u0915\u0902\u0921 \u092c\u093e\u0926"
+                    + " \u0926\u0942\u0938\u0930\u093e \u0915\u094b\u0921 \u092e\u093e\u0901\u0917"
+                    + " \u0938\u0915\u0924\u0947 \u0939\u0948\u0902\u0964",
         };
     }
 
@@ -32148,8 +32205,10 @@ final class Translations {
             "Kirim kode ke nomor ini",
             "Request a new code",
             "Minta kode baru",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram belum menyediakan metode pengiriman lain. Periksa aplikasi Telegram Anda atau ubah nomor telepon.",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram belum menyediakan metode pengiriman lain. Periksa aplikasi Telegram Anda atau"
+                    + " ubah nomor telepon.",
             "Telegram will send another code using its available delivery method.",
             "Telegram akan mengirim kode lain melalui metode pengiriman yang tersedia.",
             "You can request another code in {0} seconds.",
@@ -35097,8 +35156,10 @@ final class Translations {
             "Invia il codice a questo numero",
             "Request a new code",
             "Richiedi un nuovo codice",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram non ha offerto un altro metodo di invio. Controlla la tua app Telegram o cambia numero di telefono.",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram non ha offerto un altro metodo di invio. Controlla la tua app Telegram o"
+                    + " cambia numero di telefono.",
             "Telegram will send another code using its available delivery method.",
             "Telegram invier\u00e0 un altro codice con il metodo di invio disponibile.",
             "You can request another code in {0} seconds.",
@@ -38129,10 +38190,15 @@ final class Translations {
             "\u3053\u306e\u756a\u53f7\u306b\u30b3\u30fc\u30c9\u3092\u9001\u4fe1",
             "Request a new code",
             "\u65b0\u3057\u3044\u30b3\u30fc\u30c9\u3092\u30ea\u30af\u30a8\u30b9\u30c8",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram \u304b\u3089\u5225\u306e\u9001\u4fe1\u65b9\u6cd5\u306f\u63d0\u4f9b\u3055\u308c\u3066\u3044\u307e\u305b\u3093\u3002\u65e2\u5b58\u306e Telegram \u30a2\u30d7\u30ea\u3092\u78ba\u8a8d\u3059\u308b\u304b\u3001\u96fb\u8a71\u756a\u53f7\u3092\u5909\u66f4\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram"
+                + " \u304b\u3089\u5225\u306e\u9001\u4fe1\u65b9\u6cd5\u306f\u63d0\u4f9b\u3055\u308c\u3066\u3044\u307e\u305b\u3093\u3002\u65e2\u5b58\u306e"
+                + " Telegram"
+                + " \u30a2\u30d7\u30ea\u3092\u78ba\u8a8d\u3059\u308b\u304b\u3001\u96fb\u8a71\u756a\u53f7\u3092\u5909\u66f4\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "Telegram will send another code using its available delivery method.",
-            "Telegram \u306f\u5229\u7528\u53ef\u80fd\u306a\u65b9\u6cd5\u3067\u5225\u306e\u30b3\u30fc\u30c9\u3092\u9001\u4fe1\u3057\u307e\u3059\u3002",
+            "Telegram"
+                + " \u306f\u5229\u7528\u53ef\u80fd\u306a\u65b9\u6cd5\u3067\u5225\u306e\u30b3\u30fc\u30c9\u3092\u9001\u4fe1\u3057\u307e\u3059\u3002",
             "You can request another code in {0} seconds.",
             "{0} \u79d2\u5f8c\u306b\u5225\u306e\u30b3\u30fc\u30c9\u3092\u30ea\u30af\u30a8\u30b9\u30c8\u3067\u304d\u307e\u3059\u3002",
         };
@@ -41705,12 +41771,18 @@ final class Translations {
             "\uc774 \ubc88\ud638\ub85c \ucf54\ub4dc \ubcf4\ub0b4\uae30",
             "Request a new code",
             "\uc0c8 \ucf54\ub4dc \uc694\uccad",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram\uc5d0\uc11c \ub2e4\ub978 \uc804\uc1a1 \ubc29\ubc95\uc744 \uc81c\uacf5\ud558\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4. \uae30\uc874 Telegram \uc571\uc744 \ud655\uc778\ud558\uac70\ub098 \uc804\ud654\ubc88\ud638\ub97c \ubcc0\uacbd\ud558\uc138\uc694.",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram\uc5d0\uc11c \ub2e4\ub978 \uc804\uc1a1 \ubc29\ubc95\uc744"
+                + " \uc81c\uacf5\ud558\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4. \uae30\uc874 Telegram"
+                + " \uc571\uc744 \ud655\uc778\ud558\uac70\ub098 \uc804\ud654\ubc88\ud638\ub97c"
+                + " \ubcc0\uacbd\ud558\uc138\uc694.",
             "Telegram will send another code using its available delivery method.",
-            "Telegram\uc5d0\uc11c \uc0ac\uc6a9 \uac00\ub2a5\ud55c \ubc29\ubc95\uc73c\ub85c \uc0c8 \ucf54\ub4dc\ub97c \ubcf4\ub0c5\ub2c8\ub2e4.",
+            "Telegram\uc5d0\uc11c \uc0ac\uc6a9 \uac00\ub2a5\ud55c \ubc29\ubc95\uc73c\ub85c \uc0c8"
+                    + " \ucf54\ub4dc\ub97c \ubcf4\ub0c5\ub2c8\ub2e4.",
             "You can request another code in {0} seconds.",
-            "{0}\ucd08 \ud6c4\uc5d0 \uc0c8 \ucf54\ub4dc\ub97c \uc694\uccad\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.",
+            "{0}\ucd08 \ud6c4\uc5d0 \uc0c8 \ucf54\ub4dc\ub97c \uc694\uccad\ud560 \uc218"
+                    + " \uc788\uc2b5\ub2c8\ub2e4.",
         };
     }
 
@@ -44736,8 +44808,10 @@ final class Translations {
             "Wy\u015blij kod na ten numer",
             "Request a new code",
             "Popro\u015b o nowy kod",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram nie udost\u0119pni\u0142 innej metody dostarczenia. Sprawd\u017a aplikacj\u0119 Telegram lub zmie\u0144 numer telefonu.",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram nie udost\u0119pni\u0142 innej metody dostarczenia. Sprawd\u017a"
+                    + " aplikacj\u0119 Telegram lub zmie\u0144 numer telefonu.",
             "Telegram will send another code using its available delivery method.",
             "Telegram wy\u015ble kolejny kod dost\u0119pn\u0105 metod\u0105.",
             "You can request another code in {0} seconds.",
@@ -47727,8 +47801,10 @@ final class Translations {
             "Enviar c\u00f3digo para este n\u00famero",
             "Request a new code",
             "Solicitar um novo c\u00f3digo",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "O Telegram n\u00e3o ofereceu outro m\u00e9todo de envio. Verifique seu aplicativo do Telegram ou altere o n\u00famero de telefone.",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "O Telegram n\u00e3o ofereceu outro m\u00e9todo de envio. Verifique seu aplicativo do"
+                    + " Telegram ou altere o n\u00famero de telefone.",
             "Telegram will send another code using its available delivery method.",
             "O Telegram enviar\u00e1 outro c\u00f3digo pelo m\u00e9todo de envio dispon\u00edvel.",
             "You can request another code in {0} seconds.",
@@ -53563,17 +53639,34 @@ final class Translations {
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
             "Change phone number",
-            "\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c \u043d\u043e\u043c\u0435\u0440 \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430",
+            "\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c \u043d\u043e\u043c\u0435\u0440"
+                    + " \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430",
             "Send code to this number",
-            "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c \u043a\u043e\u0434 \u043d\u0430 \u044d\u0442\u043e\u0442 \u043d\u043e\u043c\u0435\u0440",
+            "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c \u043a\u043e\u0434 \u043d\u0430"
+                    + " \u044d\u0442\u043e\u0442 \u043d\u043e\u043c\u0435\u0440",
             "Request a new code",
-            "\u0417\u0430\u043f\u0440\u043e\u0441\u0438\u0442\u044c \u043d\u043e\u0432\u044b\u0439 \u043a\u043e\u0434",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram \u043d\u0435 \u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0438\u043b \u0434\u0440\u0443\u0433\u043e\u0439 \u0441\u043f\u043e\u0441\u043e\u0431 \u0434\u043e\u0441\u0442\u0430\u0432\u043a\u0438. \u041f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435 Telegram \u0438\u043b\u0438 \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u0435 \u043d\u043e\u043c\u0435\u0440 \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430.",
+            "\u0417\u0430\u043f\u0440\u043e\u0441\u0438\u0442\u044c \u043d\u043e\u0432\u044b\u0439"
+                    + " \u043a\u043e\u0434",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram \u043d\u0435 \u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0438\u043b"
+                    + " \u0434\u0440\u0443\u0433\u043e\u0439 \u0441\u043f\u043e\u0441\u043e\u0431"
+                    + " \u0434\u043e\u0441\u0442\u0430\u0432\u043a\u0438."
+                    + " \u041f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435"
+                    + " \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435 Telegram"
+                    + " \u0438\u043b\u0438 \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u0435"
+                    + " \u043d\u043e\u043c\u0435\u0440"
+                    + " \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430.",
             "Telegram will send another code using its available delivery method.",
-            "Telegram \u043e\u0442\u043f\u0440\u0430\u0432\u0438\u0442 \u043d\u043e\u0432\u044b\u0439 \u043a\u043e\u0434 \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u043c \u0441\u043f\u043e\u0441\u043e\u0431\u043e\u043c.",
+            "Telegram \u043e\u0442\u043f\u0440\u0430\u0432\u0438\u0442"
+                    + " \u043d\u043e\u0432\u044b\u0439 \u043a\u043e\u0434"
+                    + " \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u043c"
+                    + " \u0441\u043f\u043e\u0441\u043e\u0431\u043e\u043c.",
             "You can request another code in {0} seconds.",
-            "\u041f\u043e\u0432\u0442\u043e\u0440\u043d\u044b\u0439 \u0437\u0430\u043f\u0440\u043e\u0441 \u043a\u043e\u0434\u0430 \u0431\u0443\u0434\u0435\u0442 \u0434\u043e\u0441\u0442\u0443\u043f\u0435\u043d \u0447\u0435\u0440\u0435\u0437 {0} \u0441\u0435\u043a.",
+            "\u041f\u043e\u0432\u0442\u043e\u0440\u043d\u044b\u0439"
+                + " \u0437\u0430\u043f\u0440\u043e\u0441 \u043a\u043e\u0434\u0430"
+                + " \u0431\u0443\u0434\u0435\u0442 \u0434\u043e\u0441\u0442\u0443\u043f\u0435\u043d"
+                + " \u0447\u0435\u0440\u0435\u0437 {0} \u0441\u0435\u043a.",
         };
     }
 
@@ -57253,12 +57346,19 @@ final class Translations {
             "\u0e2a\u0e48\u0e07\u0e23\u0e2b\u0e31\u0e2a\u0e44\u0e1b\u0e22\u0e31\u0e07\u0e2b\u0e21\u0e32\u0e22\u0e40\u0e25\u0e02\u0e19\u0e35\u0e49",
             "Request a new code",
             "\u0e02\u0e2d\u0e23\u0e2b\u0e31\u0e2a\u0e43\u0e2b\u0e21\u0e48",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram \u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e27\u0e34\u0e18\u0e35\u0e2a\u0e48\u0e07\u0e2d\u0e37\u0e48\u0e19\u0e43\u0e2b\u0e49\u0e43\u0e0a\u0e49 \u0e42\u0e1b\u0e23\u0e14\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e41\u0e2d\u0e1b Telegram \u0e17\u0e35\u0e48\u0e43\u0e0a\u0e49\u0e2d\u0e22\u0e39\u0e48\u0e2b\u0e23\u0e37\u0e2d\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e2b\u0e21\u0e32\u0e22\u0e40\u0e25\u0e02\u0e42\u0e17\u0e23\u0e28\u0e31\u0e1e\u0e17\u0e4c",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram"
+                + " \u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e27\u0e34\u0e18\u0e35\u0e2a\u0e48\u0e07\u0e2d\u0e37\u0e48\u0e19\u0e43\u0e2b\u0e49\u0e43\u0e0a\u0e49"
+                + " \u0e42\u0e1b\u0e23\u0e14\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e41\u0e2d\u0e1b"
+                + " Telegram"
+                + " \u0e17\u0e35\u0e48\u0e43\u0e0a\u0e49\u0e2d\u0e22\u0e39\u0e48\u0e2b\u0e23\u0e37\u0e2d\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e2b\u0e21\u0e32\u0e22\u0e40\u0e25\u0e02\u0e42\u0e17\u0e23\u0e28\u0e31\u0e1e\u0e17\u0e4c",
             "Telegram will send another code using its available delivery method.",
-            "Telegram \u0e08\u0e30\u0e2a\u0e48\u0e07\u0e23\u0e2b\u0e31\u0e2a\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07\u0e14\u0e49\u0e27\u0e22\u0e27\u0e34\u0e18\u0e35\u0e17\u0e35\u0e48\u0e43\u0e0a\u0e49\u0e44\u0e14\u0e49",
+            "Telegram"
+                + " \u0e08\u0e30\u0e2a\u0e48\u0e07\u0e23\u0e2b\u0e31\u0e2a\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07\u0e14\u0e49\u0e27\u0e22\u0e27\u0e34\u0e18\u0e35\u0e17\u0e35\u0e48\u0e43\u0e0a\u0e49\u0e44\u0e14\u0e49",
             "You can request another code in {0} seconds.",
-            "\u0e04\u0e38\u0e13\u0e2a\u0e32\u0e21\u0e32\u0e23\u0e16\u0e02\u0e2d\u0e23\u0e2b\u0e31\u0e2a\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07\u0e44\u0e14\u0e49\u0e43\u0e19 {0} \u0e27\u0e34\u0e19\u0e32\u0e17\u0e35",
+            "\u0e04\u0e38\u0e13\u0e2a\u0e32\u0e21\u0e32\u0e23\u0e16\u0e02\u0e2d\u0e23\u0e2b\u0e31\u0e2a\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07\u0e44\u0e14\u0e49\u0e43\u0e19"
+                + " {0} \u0e27\u0e34\u0e19\u0e32\u0e17\u0e35",
         };
     }
 
@@ -60369,10 +60469,14 @@ final class Translations {
             "Kodu bu numaraya g\u00f6nder",
             "Request a new code",
             "Yeni kod iste",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram ba\u015fka bir g\u00f6nderim y\u00f6ntemi sunmad\u0131. Telegram uygulaman\u0131z\u0131 kontrol edin veya telefon numaras\u0131n\u0131 de\u011fi\u015ftirin.",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram ba\u015fka bir g\u00f6nderim y\u00f6ntemi sunmad\u0131. Telegram"
+                    + " uygulaman\u0131z\u0131 kontrol edin veya telefon numaras\u0131n\u0131"
+                    + " de\u011fi\u015ftirin.",
             "Telegram will send another code using its available delivery method.",
-            "Telegram kullan\u0131labilir g\u00f6nderim y\u00f6ntemiyle ba\u015fka bir kod g\u00f6nderecek.",
+            "Telegram kullan\u0131labilir g\u00f6nderim y\u00f6ntemiyle ba\u015fka bir kod"
+                    + " g\u00f6nderecek.",
             "You can request another code in {0} seconds.",
             "{0} saniye sonra ba\u015fka bir kod isteyebilirsiniz.",
         };
@@ -65584,17 +65688,30 @@ final class Translations {
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
             "Change phone number",
-            "\u0641\u0648\u0646 \u0646\u0645\u0628\u0631 \u062a\u0628\u062f\u06cc\u0644 \u06a9\u0631\u06cc\u06ba",
+            "\u0641\u0648\u0646 \u0646\u0645\u0628\u0631 \u062a\u0628\u062f\u06cc\u0644"
+                    + " \u06a9\u0631\u06cc\u06ba",
             "Send code to this number",
-            "\u0627\u0633 \u0646\u0645\u0628\u0631 \u067e\u0631 \u06a9\u0648\u0688 \u0628\u06be\u06cc\u062c\u06cc\u06ba",
+            "\u0627\u0633 \u0646\u0645\u0628\u0631 \u067e\u0631 \u06a9\u0648\u0688"
+                    + " \u0628\u06be\u06cc\u062c\u06cc\u06ba",
             "Request a new code",
             "\u0646\u06cc\u0627 \u06a9\u0648\u0688 \u0637\u0644\u0628 \u06a9\u0631\u06cc\u06ba",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram \u0646\u06d2 \u0628\u06be\u06cc\u062c\u0646\u06d2 \u06a9\u0627 \u06a9\u0648\u0626\u06cc \u062f\u0648\u0633\u0631\u0627 \u0637\u0631\u06cc\u0642\u06c1 \u0641\u0631\u0627\u06c1\u0645 \u0646\u06c1\u06cc\u06ba \u06a9\u06cc\u0627\u06d4 \u0627\u067e\u0646\u06cc Telegram \u0627\u06cc\u067e \u062f\u06cc\u06a9\u06be\u06cc\u06ba \u06cc\u0627 \u0641\u0648\u0646 \u0646\u0645\u0628\u0631 \u062a\u0628\u062f\u06cc\u0644 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram \u0646\u06d2 \u0628\u06be\u06cc\u062c\u0646\u06d2 \u06a9\u0627"
+                + " \u06a9\u0648\u0626\u06cc \u062f\u0648\u0633\u0631\u0627"
+                + " \u0637\u0631\u06cc\u0642\u06c1 \u0641\u0631\u0627\u06c1\u0645"
+                + " \u0646\u06c1\u06cc\u06ba \u06a9\u06cc\u0627\u06d4 \u0627\u067e\u0646\u06cc"
+                + " Telegram \u0627\u06cc\u067e \u062f\u06cc\u06a9\u06be\u06cc\u06ba \u06cc\u0627"
+                + " \u0641\u0648\u0646 \u0646\u0645\u0628\u0631 \u062a\u0628\u062f\u06cc\u0644"
+                + " \u06a9\u0631\u06cc\u06ba\u06d4",
             "Telegram will send another code using its available delivery method.",
-            "Telegram \u062f\u0633\u062a\u06cc\u0627\u0628 \u0637\u0631\u06cc\u0642\u06d2 \u0633\u06d2 \u062f\u0648\u0633\u0631\u0627 \u06a9\u0648\u0688 \u0628\u06be\u06cc\u062c\u06d2 \u06af\u0627\u06d4",
+            "Telegram \u062f\u0633\u062a\u06cc\u0627\u0628 \u0637\u0631\u06cc\u0642\u06d2"
+                    + " \u0633\u06d2 \u062f\u0648\u0633\u0631\u0627 \u06a9\u0648\u0688"
+                    + " \u0628\u06be\u06cc\u062c\u06d2 \u06af\u0627\u06d4",
             "You can request another code in {0} seconds.",
-            "\u0622\u067e {0} \u0633\u06cc\u06a9\u0646\u0688 \u0628\u0639\u062f \u062f\u0648\u0633\u0631\u0627 \u06a9\u0648\u0688 \u0637\u0644\u0628 \u06a9\u0631 \u0633\u06a9\u062a\u06d2 \u06c1\u06cc\u06ba\u06d4",
+            "\u0622\u067e {0} \u0633\u06cc\u06a9\u0646\u0688 \u0628\u0639\u062f"
+                    + " \u062f\u0648\u0633\u0631\u0627 \u06a9\u0648\u0688 \u0637\u0644\u0628"
+                    + " \u06a9\u0631 \u0633\u06a9\u062a\u06d2 \u06c1\u06cc\u06ba\u06d4",
         };
     }
 
@@ -69008,10 +69125,14 @@ final class Translations {
             "G\u1eedi m\u00e3 \u0111\u1ebfn s\u1ed1 n\u00e0y",
             "Request a new code",
             "Y\u00eau c\u1ea7u m\u00e3 m\u1edbi",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram ch\u01b0a cung c\u1ea5p ph\u01b0\u01a1ng th\u1ee9c g\u1eedi kh\u00e1c. H\u00e3y ki\u1ec3m tra \u1ee9ng d\u1ee5ng Telegram hi\u1ec7n c\u00f3 ho\u1eb7c \u0111\u1ed5i s\u1ed1 \u0111i\u1ec7n tho\u1ea1i.",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram ch\u01b0a cung c\u1ea5p ph\u01b0\u01a1ng th\u1ee9c g\u1eedi kh\u00e1c."
+                + " H\u00e3y ki\u1ec3m tra \u1ee9ng d\u1ee5ng Telegram hi\u1ec7n c\u00f3 ho\u1eb7c"
+                + " \u0111\u1ed5i s\u1ed1 \u0111i\u1ec7n tho\u1ea1i.",
             "Telegram will send another code using its available delivery method.",
-            "Telegram s\u1ebd g\u1eedi m\u00e3 kh\u00e1c b\u1eb1ng ph\u01b0\u01a1ng th\u1ee9c hi\u1ec7n c\u00f3.",
+            "Telegram s\u1ebd g\u1eedi m\u00e3 kh\u00e1c b\u1eb1ng ph\u01b0\u01a1ng th\u1ee9c"
+                    + " hi\u1ec7n c\u00f3.",
             "You can request another code in {0} seconds.",
             "B\u1ea1n c\u00f3 th\u1ec3 y\u00eau c\u1ea7u m\u00e3 kh\u00e1c sau {0} gi\u00e2y.",
         };
@@ -71989,12 +72110,18 @@ final class Translations {
             "\u50b3\u9001\u9a57\u8b49\u78bc\u81f3\u6b64\u865f\u78bc",
             "Request a new code",
             "\u8981\u6c42\u65b0\u7684\u9a57\u8b49\u78bc",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram \u672a\u63d0\u4f9b\u5176\u4ed6\u50b3\u9001\u65b9\u5f0f\u3002\u8acb\u67e5\u770b\u73fe\u6709\u7684 Telegram \u61c9\u7528\u7a0b\u5f0f\u6216\u8b8a\u66f4\u96fb\u8a71\u865f\u78bc\u3002",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram"
+                + " \u672a\u63d0\u4f9b\u5176\u4ed6\u50b3\u9001\u65b9\u5f0f\u3002\u8acb\u67e5\u770b\u73fe\u6709\u7684"
+                + " Telegram"
+                + " \u61c9\u7528\u7a0b\u5f0f\u6216\u8b8a\u66f4\u96fb\u8a71\u865f\u78bc\u3002",
             "Telegram will send another code using its available delivery method.",
-            "Telegram \u5c07\u4f7f\u7528\u53ef\u7528\u7684\u50b3\u9001\u65b9\u5f0f\u518d\u6b21\u50b3\u9001\u9a57\u8b49\u78bc\u3002",
+            "Telegram"
+                + " \u5c07\u4f7f\u7528\u53ef\u7528\u7684\u50b3\u9001\u65b9\u5f0f\u518d\u6b21\u50b3\u9001\u9a57\u8b49\u78bc\u3002",
             "You can request another code in {0} seconds.",
-            "\u4f60\u53ef\u4ee5\u5728 {0} \u79d2\u5f8c\u8981\u6c42\u65b0\u7684\u9a57\u8b49\u78bc\u3002",
+            "\u4f60\u53ef\u4ee5\u5728 {0}"
+                    + " \u79d2\u5f8c\u8981\u6c42\u65b0\u7684\u9a57\u8b49\u78bc\u3002",
         };
     }
 
@@ -74958,12 +75085,17 @@ final class Translations {
             "\u5411\u6b64\u53f7\u7801\u53d1\u9001\u9a8c\u8bc1\u7801",
             "Request a new code",
             "\u8bf7\u6c42\u65b0\u9a8c\u8bc1\u7801",
-            "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
-            "Telegram \u672a\u63d0\u4f9b\u5176\u4ed6\u53d1\u9001\u65b9\u5f0f\u3002\u8bf7\u67e5\u770b\u73b0\u6709\u7684 Telegram \u5e94\u7528\u6216\u66f4\u6539\u7535\u8bdd\u53f7\u7801\u3002",
+            "Telegram has not offered another delivery method. Check your existing Telegram app or"
+                    + " change the phone number.",
+            "Telegram"
+                + " \u672a\u63d0\u4f9b\u5176\u4ed6\u53d1\u9001\u65b9\u5f0f\u3002\u8bf7\u67e5\u770b\u73b0\u6709\u7684"
+                + " Telegram \u5e94\u7528\u6216\u66f4\u6539\u7535\u8bdd\u53f7\u7801\u3002",
             "Telegram will send another code using its available delivery method.",
-            "Telegram \u5c06\u4f7f\u7528\u53ef\u7528\u7684\u53d1\u9001\u65b9\u5f0f\u518d\u6b21\u53d1\u9001\u9a8c\u8bc1\u7801\u3002",
+            "Telegram"
+                + " \u5c06\u4f7f\u7528\u53ef\u7528\u7684\u53d1\u9001\u65b9\u5f0f\u518d\u6b21\u53d1\u9001\u9a8c\u8bc1\u7801\u3002",
             "You can request another code in {0} seconds.",
-            "\u4f60\u53ef\u4ee5\u5728 {0} \u79d2\u540e\u8bf7\u6c42\u65b0\u7684\u9a8c\u8bc1\u7801\u3002",
+            "\u4f60\u53ef\u4ee5\u5728 {0}"
+                    + " \u79d2\u540e\u8bf7\u6c42\u65b0\u7684\u9a8c\u8bc1\u7801\u3002",
         };
     }
 }
