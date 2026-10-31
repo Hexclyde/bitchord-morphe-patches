@@ -75,3 +75,29 @@ The independent BitChord adapter is based on the service interface observed in a
 # Streamseek design reference
 
 The optional Streamseek previews feature was informed by ndr-brt/streamseek, commit `851efcfcbf66e8b3216191d56616af378e9573b0`, published under GPL-3.0. The Android implementation is independent; it bundles no Streamseek source, Node/Electron runtime or server. Upstream: https://github.com/ndr-brt/streamseek.
+
+## SongMirror native import adaptation
+
+The portable playlist parser conventions and weighted metadata confidence are adapted from [SongMirror](https://github.com/ahnafnafee/songmirror), revision `76d3d27801a786150832c414777c5646803e30e5`. This Android implementation uses BitChord's anonymous catalog search and native recording matcher. It does not bundle the Python server or reproduce every provider integration.
+
+MIT License
+
+Copyright (c) 2026 Ahnaf An Nafee
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

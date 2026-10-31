@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 # The public patches. The playback patches are off until chosen in Morphe.
 ON_BY_DEFAULT = {
+    "Source-independent AutoMix",
     "Unofficial Telegram music",
     "Install as Bitchord+",
     "Sign in with MicroG",

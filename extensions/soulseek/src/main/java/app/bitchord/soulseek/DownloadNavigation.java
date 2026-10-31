@@ -20,6 +20,7 @@ public final class DownloadNavigation {
     private static Object callback, wrapped;
     private static int selected, previousSelected;
     private static boolean selecting;
+    private static java.lang.reflect.Method tabLabelPadding;
 
     static boolean hasPlayer() {
         return callback instanceof Function1;
@@ -40,6 +41,40 @@ public final class DownloadNavigation {
     }
 
     private DownloadNavigation() {}
+
+    /** Keep native capsules, with the demo's wider five-tab bar. */
+    public static float gutter(float original) {
+        return expanded != null && expanded.size() == 5 ? 8f : original;
+    }
+
+    /** Preserve 10sp type and remove extra tracking inside narrow capsule tabs. */
+    public static long labelSpacing(long original) {
+        return expanded != null && expanded.size() == 5 ? 4294967296L : original;
+    }
+
+    /**
+     * Text lays out inside the capsule's curved edge; the surrounding touch target stays full size.
+     */
+    public static Object labelModifier(Object original) {
+        androidx.compose.ui.Modifier base =
+                original instanceof androidx.compose.ui.Modifier
+                        ? (androidx.compose.ui.Modifier) original
+                        : androidx.compose.ui.Modifier.Companion.$$INSTANCE;
+        if (expanded == null || expanded.size() != 5) return base;
+        try {
+            if (tabLabelPadding == null)
+                tabLabelPadding =
+                        Class.forName("androidx.compose.foundation.layout.OffsetKt")
+                                .getMethod(
+                                        "padding-VpY3zN4",
+                                        androidx.compose.ui.Modifier.class,
+                                        float.class,
+                                        float.class);
+            return tabLabelPadding.invoke(null, base, 6f, 0f);
+        } catch (ReflectiveOperationException | LinkageError unavailable) {
+            return base;
+        }
+    }
 
     public static synchronized Object tabs(Object original) {
         if (original == expanded) return original;

@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import android.app.*;
 import android.content.*;
+import android.widget.EditText;
 
 import com.music.bitchord.data.spotify.LocalPlaylistStore;
 
@@ -61,6 +62,65 @@ public class MixedPlaylistTest {
 
     String id(Object p) {
         return MixedSongCodec.text(p, "id");
+    }
+
+    @Test
+    public void importedBatchesAndEditsStayOnDeviceAndSurviveRestore() throws Exception {
+        Object a = stream("abcdefghijk"), b = stream("bcdefghijkl");
+        String id = MixedPlaylists.createAll("Copy", Arrays.asList(a, a, b));
+        Object copy = MixedPlaylists.nativePlaylists().get(0);
+        assertEquals(2, MixedPlaylists.songs(copy).size());
+        MixedPlaylists.edit(id, "Renamed", Arrays.asList(b, a), false);
+        copy = MixedPlaylists.nativePlaylists().get(0);
+        assertEquals("Renamed", MixedSongCodec.text(copy, "title"));
+        assertEquals(
+                "bcdefghijkl", MixedSongCodec.text(MixedPlaylists.songs(copy).get(0), "videoId"));
+        MixedPlaylists.importAll(
+                Arrays.asList(new ImportedPlaylist("Imported", Arrays.asList(a), 0)));
+        assertEquals(2, MixedPlaylists.nativePlaylists().size());
+        LocalPlaylistStore._playlists.setValue(new ArrayList<>());
+        MixedPlaylists.restore();
+        assertEquals(2, MixedPlaylists.nativePlaylists().size());
+        MixedPlaylists.edit(id, "", Collections.emptyList(), true);
+        assertEquals(1, MixedPlaylists.nativePlaylists().size());
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> MixedPlaylists.edit("remote", "Remote", Arrays.asList(a), false));
+    }
+
+    @Test
+    public void createDialogWorksWithTheOptimizedHostFlow() throws Exception {
+        MixedPlaylists.setEnabled(true);
+        Activity activity = Robolectric.buildActivity(Activity.class).setup().get();
+        MixedPlaylists.offerFile(activity, "content://downloads/beanie", "Beanie");
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        Dialog dialog = org.robolectric.shadows.ShadowDialog.getLatestDialog();
+        assertNotNull(dialog);
+        EditText name = findInput(dialog.getWindow().getDecorView());
+        assertNotNull(name);
+        name.setText("test2");
+        dialog.getWindow().getDecorView().findViewWithTag("playlist-create").performClick();
+        assertFalse(dialog.isShowing());
+        List<Object> saved = MixedPlaylists.nativePlaylists();
+        assertEquals(1, saved.size());
+        assertEquals("test2", MixedSongCodec.text(saved.get(0), "title"));
+        assertEquals(
+                "file:content://downloads/beanie",
+                MixedSongCodec.key(MixedPlaylists.songs(saved.get(0)).get(0)));
+        assertFalse(
+                kotlinx.coroutines.flow.MutableStateFlow.class.isInstance(
+                        LocalPlaylistStore._playlists));
+        activity.finish();
+    }
+
+    private static EditText findInput(android.view.View view) {
+        if (view instanceof EditText) return (EditText) view;
+        if (view instanceof android.view.ViewGroup)
+            for (int i = 0; i < ((android.view.ViewGroup) view).getChildCount(); i++) {
+                EditText found = findInput(((android.view.ViewGroup) view).getChildAt(i));
+                if (found != null) return found;
+            }
+        return null;
     }
 
     @Test

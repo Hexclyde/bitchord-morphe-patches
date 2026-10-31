@@ -132,6 +132,56 @@ public class DownloadThemeTest {
     }
 
     @Test
+    public void nativeSwitchRespondsToTouchOnceAndDisabledSwitchIgnoresTouch() {
+        try (ActivityController<Screen> controller =
+                Robolectric.buildActivity(Screen.class).setup().visible()) {
+            Screen screen = controller.get();
+            CompoundButton toggle = screen.downloadStyle.switchButton();
+            int width = screen.downloadStyle.dp(64), height = screen.downloadStyle.dp(48);
+            screen.body.addView(toggle, new LinearLayout.LayoutParams(width, height));
+            toggle.layout(0, 0, width, height);
+            int[] changes = {0};
+            toggle.setOnCheckedChangeListener((view, checked) -> changes[0]++);
+            touch(toggle);
+            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+            assertTrue("A user tap enables the switch", toggle.isChecked());
+            assertEquals(1, changes[0]);
+            toggle.setEnabled(false);
+            touch(toggle);
+            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+            assertTrue(toggle.isChecked());
+            assertEquals("Busy controls cannot change from a tap", 1, changes[0]);
+        }
+    }
+
+    private static void touch(View view) {
+        long now = android.os.SystemClock.uptimeMillis();
+        android.view.MotionEvent down =
+                android.view.MotionEvent.obtain(
+                        now,
+                        now,
+                        android.view.MotionEvent.ACTION_DOWN,
+                        view.getWidth() / 2f,
+                        view.getHeight() / 2f,
+                        0);
+        android.view.MotionEvent up =
+                android.view.MotionEvent.obtain(
+                        now,
+                        now + 30,
+                        android.view.MotionEvent.ACTION_UP,
+                        view.getWidth() / 2f,
+                        view.getHeight() / 2f,
+                        0);
+        try {
+            view.dispatchTouchEvent(down);
+            view.dispatchTouchEvent(up);
+        } finally {
+            down.recycle();
+            up.recycle();
+        }
+    }
+
+    @Test
     public void fileSelectionCheckboxKeepsItsNativeSelectionRole() {
         try (ActivityController<Screen> controller =
                 Robolectric.buildActivity(Screen.class).setup()) {

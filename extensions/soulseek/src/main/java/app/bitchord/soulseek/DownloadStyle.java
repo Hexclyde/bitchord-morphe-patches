@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
@@ -155,6 +156,91 @@ final class DownloadStyle {
         markCustom(button);
     }
 
+    void navigation(Button button) {
+        button(button);
+        button.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+        button.setTypeface(medium);
+        button.setMinimumHeight(dp(56));
+        button.setMinHeight(dp(56));
+        button.setPadding(dp(12), dp(10), dp(12), dp(10));
+        button.setBackground(
+                new RippleDrawable(
+                        ColorStateList.valueOf(dark ? 0x228e8e93 : 0x22000000),
+                        new ColorDrawable(Color.TRANSPARENT),
+                        null));
+        button.setCompoundDrawablePadding(dp(12));
+        button.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                null,
+                null,
+                new Drawable() {
+                    final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+                    public void draw(Canvas canvas) {
+                        paint.setColor(secondary);
+                        paint.setStrokeWidth(dp(1.7f));
+                        paint.setStrokeCap(Paint.Cap.ROUND);
+                        float x = getBounds().exactCenterX(), y = getBounds().exactCenterY();
+                        float direction =
+                                button.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL ? -1 : 1;
+                        canvas.drawLine(
+                                x - direction * dp(3), y - dp(5), x + direction * dp(2), y, paint);
+                        canvas.drawLine(
+                                x + direction * dp(2), y, x - direction * dp(3), y + dp(5), paint);
+                    }
+
+                    public int getIntrinsicWidth() {
+                        return dp(20);
+                    }
+
+                    public int getIntrinsicHeight() {
+                        return dp(20);
+                    }
+
+                    public void setAlpha(int alpha) {
+                        paint.setAlpha(alpha);
+                    }
+
+                    public void setColorFilter(ColorFilter filter) {
+                        paint.setColorFilter(filter);
+                    }
+
+                    public int getOpacity() {
+                        return PixelFormat.TRANSLUCENT;
+                    }
+                },
+                null);
+        if (button.getLayoutParams() instanceof LinearLayout.LayoutParams) {
+            LinearLayout.LayoutParams space = (LinearLayout.LayoutParams) button.getLayoutParams();
+            space.topMargin = 0;
+            space.bottomMargin = 0;
+            button.setLayoutParams(space);
+        }
+        markCustom(button);
+    }
+
+    void textAction(Button button) {
+        button(button);
+        button.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+        button.setTextSize(14);
+        button.setTypeface(medium);
+        button.setTextColor(colors(secondary, secondary));
+        button.setBackground(
+                new RippleDrawable(
+                        ColorStateList.valueOf(dark ? 0x228e8e93 : 0x22000000),
+                        new ColorDrawable(Color.TRANSPARENT),
+                        null));
+        markCustom(button);
+    }
+
+    void inline(Button button, boolean first) {
+        button(button);
+        LinearLayout.LayoutParams space = new LinearLayout.LayoutParams(0, -2, 1);
+        space.topMargin = dp(8);
+        space.bottomMargin = dp(8);
+        if (first) space.rightMargin = dp(8);
+        button.setLayoutParams(space);
+    }
+
     void field(EditText input) {
         input.setTextSize(16);
         input.setTypeface(regular);
@@ -185,6 +271,7 @@ final class DownloadStyle {
      */
     ImageButton settingsButton() {
         ImageButton button = new ImageButton(activity);
+        button.setImageTintList(ColorStateList.valueOf(foreground));
         button.setPadding(0, 0, 0, 0);
         button.setScaleType(ImageView.ScaleType.CENTER);
         button.setImageDrawable(
@@ -311,6 +398,7 @@ final class DownloadStyle {
         toggle.setMinHeight(dp(48));
         toggle.setMinWidth(dp(64));
         toggle.setBackground(null);
+        toggle.setClickable(true);
         toggle.setFocusable(true);
         markCustom(toggle);
         return toggle;
@@ -320,7 +408,112 @@ final class DownloadStyle {
         return new ToggleDrawable();
     }
 
-    /** Native vector equivalents of the demo's Grid/List/Rows/Layout/File icons. */
+    /** Filter and admission icons shared with the Download Explorer demo. */
+    Drawable explorerIcon(String kind, int tint) {
+        return new Drawable() {
+            final Paint ink = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+            @Override
+            public void draw(Canvas canvas) {
+                canvas.save();
+                canvas.translate(getBounds().left, getBounds().top);
+                canvas.scale(getBounds().width() / 24f, getBounds().height() / 24f);
+                ink.setColor(tint);
+                ink.setStrokeWidth(1.7f);
+                ink.setStrokeCap(Paint.Cap.ROUND);
+                ink.setStrokeJoin(Paint.Join.ROUND);
+                if (kind.equals("lossless")) {
+                    ink.setStyle(Paint.Style.STROKE);
+                    for (int row = 0; row < 3; row++) {
+                        Path wave = new Path();
+                        for (int x = 1; x <= 23; x++) {
+                            float y = 12 + (float) Math.sin((x - row * 2) * .72f) * (5 - row * .8f);
+                            if (x == 1) wave.moveTo(x, y);
+                            else wave.lineTo(x, y);
+                        }
+                        canvas.drawPath(wave, ink);
+                    }
+                } else if (kind.equals("preview")) {
+                    ink.setStyle(Paint.Style.FILL);
+                    Path play = new Path();
+                    play.moveTo(8, 4);
+                    play.lineTo(21, 12);
+                    play.lineTo(8, 20);
+                    play.close();
+                    canvas.drawPath(play, ink);
+                } else if (kind.equals("check")) {
+                    ink.setStyle(Paint.Style.STROKE);
+                    Path check = new Path();
+                    check.moveTo(5, 12);
+                    check.lineTo(10, 17);
+                    check.lineTo(20, 6);
+                    canvas.drawPath(check, ink);
+                } else if (kind.equals("available")) {
+                    ink.setStyle(Paint.Style.FILL);
+                    ink.setAlpha(35);
+                    canvas.drawCircle(12, 12, 9, ink);
+                    ink.setAlpha(75);
+                    canvas.drawCircle(12, 12, 6.5f, ink);
+                    ink.setAlpha(255);
+                    canvas.drawCircle(12, 12, 4.5f, ink);
+                } else {
+                    ink.setStyle(Paint.Style.FILL);
+                    Path arrow = new Path();
+                    arrow.moveTo(7, 2);
+                    arrow.lineTo(13, 2);
+                    arrow.lineTo(13, 10);
+                    arrow.lineTo(17, 10);
+                    arrow.lineTo(10, 17);
+                    arrow.lineTo(3, 10);
+                    arrow.lineTo(7, 10);
+                    arrow.close();
+                    canvas.drawPath(arrow, ink);
+                    ink.setStyle(Paint.Style.STROKE);
+                    canvas.drawLine(3, 21, 11, 21, ink);
+                    canvas.drawCircle(17, 17, 5.5f, ink);
+                    if (kind.equals("later")) {
+                        canvas.drawLine(17, 13.5f, 17, 17, ink);
+                        canvas.drawLine(17, 17, 20, 18.5f, ink);
+                    } else {
+                        ink.setStyle(Paint.Style.FILL);
+                        Path play = new Path();
+                        play.moveTo(15.5f, 14);
+                        play.lineTo(19.5f, 17);
+                        play.lineTo(15.5f, 20);
+                        play.close();
+                        canvas.drawPath(play, ink);
+                    }
+                }
+                canvas.restore();
+            }
+
+            @Override
+            public int getIntrinsicWidth() {
+                return dp(22);
+            }
+
+            @Override
+            public int getIntrinsicHeight() {
+                return dp(22);
+            }
+
+            @Override
+            public void setAlpha(int alpha) {
+                ink.setAlpha(alpha);
+            }
+
+            @Override
+            public void setColorFilter(ColorFilter filter) {
+                ink.setColorFilter(filter);
+            }
+
+            @Override
+            public int getOpacity() {
+                return PixelFormat.TRANSLUCENT;
+            }
+        };
+    }
+
     Drawable viewIcon(String mode) {
         return new Drawable() {
             final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -343,6 +536,9 @@ final class DownloadStyle {
                     canvas.drawCircle(10, 17, 4, paint);
                     canvas.drawRoundRect(12, 3, 14, 17, 1, 1, paint);
                     canvas.drawRoundRect(13, 3, 18, 7, 1, 1, paint);
+                } else if (mode.equals("close")) {
+                    canvas.drawLine(6, 6, 18, 18, paint);
+                    canvas.drawLine(18, 6, 6, 18, paint);
                 } else if (mode.equals("search")) {
                     canvas.drawCircle(10.5f, 10.5f, 7, paint);
                     canvas.drawLine(16, 16, 21, 21, paint);
@@ -409,6 +605,7 @@ final class DownloadStyle {
 
     ImageButton backButton(Runnable action) {
         ImageButton result = new ImageButton(activity);
+        result.setImageTintList(ColorStateList.valueOf(foreground));
         result.setPadding(0, 0, 0, 0);
         result.setScaleType(ImageView.ScaleType.CENTER);
         result.setImageDrawable(

@@ -99,7 +99,7 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
         enabled.setContentDescription(
                 PatchStrings.f("Enable {0}", PatchStrings.t("Peer discovery")));
         header.addView(
-                enabled, new LinearLayout.LayoutParams(downloadStyle.dp(52), downloadStyle.dp(48)));
+                enabled, new LinearLayout.LayoutParams(downloadStyle.dp(64), downloadStyle.dp(48)));
         gear = downloadStyle.settingsButton();
         gear.setTag("discovery-gear");
         gear.setContentDescription(PatchStrings.t("Peer discovery settings"));
@@ -120,7 +120,7 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
         advertise.setContentDescription(PatchStrings.t("Discoverable while this page is open"));
         publishing.addView(
                 advertise,
-                new LinearLayout.LayoutParams(downloadStyle.dp(52), downloadStyle.dp(48)));
+                new LinearLayout.LayoutParams(downloadStyle.dp(64), downloadStyle.dp(48)));
         text(
                 details,
                 PatchStrings.t(
@@ -128,11 +128,16 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
                                 + " publish your files, private contacts or connection addresses."),
                 14,
                 false);
-        find = button(details, PatchStrings.t("Find peers"));
+        LinearLayout discoveryActions = new LinearLayout(this);
+        details.addView(discoveryActions);
+        find = button(discoveryActions, PatchStrings.t("Find peers"));
+        downloadStyle.inline(find, true);
         find.setTag("discovery-find");
-        stop = button(details, PatchStrings.t("Stop discovery"));
+        stop = button(discoveryActions, PatchStrings.t("Stop discovery"));
+        downloadStyle.inline(stop, false);
         stop.setTag("discovery-stop");
         clear = button(details, PatchStrings.t("Clear found peers"));
+        downloadStyle.textAction(clear);
         clear.setTag("discovery-clear");
         status = text(details, "", 14, false);
         status.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
@@ -142,6 +147,7 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
         details.addView(candidateRows);
         showing = text(details, "", 13, false);
         more = button(details, PatchStrings.t("Show more"));
+        downloadStyle.textAction(more);
         more.setTag("discovery-more");
 
         enabled.setOnCheckedChangeListener(
@@ -396,6 +402,7 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
                     13,
                     false);
             Button copy = button(row, PatchStrings.t("Copy key for pairing"));
+            downloadStyle.textAction(copy);
             copy.setTag("copy-peer:" + key);
             copy.setOnClickListener(
                     view -> {

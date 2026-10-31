@@ -2425,7 +2425,7 @@ public final class TelegramActivity extends Activity {
     /** Class/frame information only: never exception messages, credentials or account values. */
     static String failureDetails(Throwable failure) {
         StringBuilder details =
-                new StringBuilder("BitChord Telegram page\nPatch 1.1.0-beta.16\nAndroid API ")
+                new StringBuilder("BitChord Telegram page\nPatch 1.1.0-beta.16.4\nAndroid API ")
                         .append(Build.VERSION.SDK_INT)
                         .append('\n');
         Set<Throwable> seen = Collections.newSetFromMap(new IdentityHashMap<>());

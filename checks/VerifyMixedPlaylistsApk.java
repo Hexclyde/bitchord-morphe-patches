@@ -54,6 +54,31 @@ public class VerifyMixedPlaylistsApk {
                                 "newPlaylistAction")
                         == 1,
                 "Library wraps New playlist exactly once");
+        String guest = "Lapp/bitchord/telegram/GuestPlaylists;";
+        Map<String, Integer> hooks = new HashMap<>();
+        for (ClassDef type : types.values())
+            for (Method method : type.getMethods())
+                if (method.getImplementation() != null)
+                    for (Instruction step : method.getImplementation().getInstructions())
+                        if (step instanceof ReferenceInstruction ref
+                                && ref.getReference() instanceof MethodReference call
+                                && call.getDefiningClass().equals(guest))
+                            hooks.merge(call.getName(), 1, Integer::sum);
+        for (String name : List.of("library", "detail", "service", "release"))
+            check(hooks.getOrDefault(name, 0) >= 1, "Guest playlist hook: " + name);
+        check(
+                types.containsKey("Lapp/bitchord/telegram/PlaylistToolsActivity;"),
+                "Native playlist tools retained");
+        check(
+                types.containsKey("Lapp/bitchord/telegram/PlaylistImport;"),
+                "Native playlist importer retained");
+        ClassDef page = types.get("Lcom/music/bitchord/data/YtMusicRepository$SongPage;");
+        check(
+                field(page, "songs") && field(page, "continuation"),
+                "Complete playlist paging ABI retained");
+        check(
+                field(types.get("Lcom/music/bitchord/playback/MusicLink;"), "_pending"),
+                "Native pending page relay retained");
         int guards = 0;
         for (ClassDef type : types.values()) guards += calls(type, "allowPlaylist");
         check(guards == 1, "Only playlist menu eligibility is extended");
@@ -100,6 +125,28 @@ public class VerifyMixedPlaylistsApk {
         check(constructor, "Exact primary Song constructor");
         ClassDef playlists = types.get("Lcom/music/bitchord/data/spotify/LocalPlaylistStore;");
         check(field(playlists, "_playlists"), "Host playlist state is retained");
+        ClassDef concrete = types.get("Lkotlinx/coroutines/flow/StateFlowImpl;");
+        check(
+                concrete != null && (concrete.getAccessFlags() & 1) == 1,
+                "Concrete flow class is public for reflection");
+        for (String name : List.of("getValue", "setValue", "compareAndSet")) {
+            boolean found = false;
+            for (Method method : concrete.getMethods())
+                if (method.getName().equals(name) && (method.getAccessFlags() & 1) == 1)
+                    found = true;
+            check(found, "Concrete optimized playlist flow API retained: " + name);
+        }
+        boolean playlistConstructor = false;
+        for (Method method :
+                types.get("Lcom/music/bitchord/data/spotify/LocalPlaylist;").getMethods())
+            if (method.getName().equals("<init>")
+                    && method.getParameterTypes()
+                            .equals(
+                                    List.of(
+                                            "Ljava/lang/String;",
+                                            "Ljava/lang/String;",
+                                            "Ljava/util/List;"))) playlistConstructor = true;
+        check(playlistConstructor, "Exact native playlist constructor");
         ClassDef playlist = types.get("Lcom/music/bitchord/data/spotify/LocalPlaylist;");
         for (String f : new String[] {"id", "title", "songs"})
             check(field(playlist, f), "Native playlist field " + f);

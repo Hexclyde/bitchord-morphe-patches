@@ -1,6 +1,6 @@
-# Integrated Downloads — beta.16
+# Integrated Downloads — beta.16.4
 
-The original app remains BitChord 1.9. Install the **1.1.0-beta.16 Morphe bundle** and
+The original app remains BitChord 1.9. Install the **1.1.0-beta.16.4 Morphe bundle** and
 apply Unofficial Soulseek audio (plus Unofficial Telegram music for Telegram features).
 All earlier changes, including unpublished beta.9 work, are retained.
 
@@ -43,7 +43,15 @@ quality and duration; Soulseek rows identify a particular peer and file, format 
 size. The explorer bounds each search to 20 addons, 12 rows per addon and 20 displayed
 Soulseek results, with a 25-second addon wait. Slow sources do not block admission.
 
-Choose a result, then **Download now** or **Add to download queue**. Now takes the
+The selector stays at the top-right of every source card, including wrapped provider names.
+Select a card to reveal its inline **Now** and **Later** buttons below a divider;
+unselected cards have no admission buttons. There is no fixed admission footer.
+**All** includes every downloadable match. **Lossless** filters reported lossless formats.
+**Available now** includes only peers reporting a free upload slot and is hidden when
+no results report readiness. Unknown add-on readiness remains under All; a free peer
+slot does not guarantee a successful connection.
+
+Choose a result, then **Now** or **Later**. Now takes the
 next available slot; active files and remote peer queues are not interrupted.
 Explicit addon selections cannot silently fall back to another addon or YouTube.
 BitChord's automatic selection is an independently confirmed single-track action.

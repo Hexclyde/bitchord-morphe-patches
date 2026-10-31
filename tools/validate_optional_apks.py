@@ -22,6 +22,23 @@ def main():
     cp = str(checks) + os.pathsep + str(MORPHE_JAR)
     cases = [
         (
+            "AutoMix",
+            ["Source-independent AutoMix"],
+            [
+                ("VerifySourceAutomixApk", []),
+                ("VerifyTransitionEditorApk", []),
+                ("VerifyPatchUiApk", ["false", "false", "true"]),
+            ],
+        ),
+        (
+            "SwitchOnly",
+            ["Audio and video switch"],
+            [
+                ("VerifyVideoSwitchApk", []),
+                ("VerifyPatchUiApk", ["false", "false", "true"]),
+            ],
+        ),
+        (
             "Streamseek",
             ["Streamseek previews"],
             [

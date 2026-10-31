@@ -6,13 +6,14 @@ The four implementation stages from beta.10 are implemented. The [Downloads guid
 explains the qualified 1.9 player slot, 200-track batch limit, explicit public-share
 inventory and verified Telegram archive/removal/restore flow. Quality claims remain
 reported metadata; initial source plans/queues do not survive process death. Public
-sharing pauses after a restart. Live Android/Waydroid and real-account qualification
-is still required. The older paragraphs below describe the earlier feature boundaries.
+sharing pauses after a restart. Real-account and provider qualification remains
+incomplete. See the [beta.17 verification report](VERIFICATION-1.1.0-beta.17.md) for
+the scoped Waydroid checks. The older paragraphs below describe earlier feature boundaries.
 
 
 These apply to the current release on BitChord 1.9. This version hasn't been widely tested on real phones yet, so behavior may differ between devices.
 
-The Telegram integration was tested on an arm64-v8a device with BitChord 1.8.1; the 1.9 build still needs on-device testing. The armeabi-v7a and x86_64 builds pass the same automated checks but haven't been tried on real hardware. If you run one of them, please [report what you find](../CONTRIBUTING.md).
+Earlier Telegram integration was tested on an arm64-v8a device with BitChord 1.8.1. This release adds scoped BitChord 1.9 testing in x86_64 Waydroid; it does not qualify physical phones. The ARM builds pass structural checks. If you test on real hardware, please [report what you find](../CONTRIBUTING.md).
 
 ## Search and playback
 
@@ -32,7 +33,7 @@ The Telegram integration was tested on an arm64-v8a device with BitChord 1.8.1; 
 - Cue sheet tracks are handed to BitChord as uncompressed WAV, so a downloaded track takes more space than the FLAC would. APE and WavPack albums with a cue sheet aren't supported.
 - Albums Telegram posted together are listed from the chat's newest 5,000 files.
 - Dolby TrueHD Atmos is recognised in .mka files only. Dolby AC-4 files only play on phones with an AC-4 decoder. Dolby Atmos plays with its height sound only on phones and speakers that support it.
-- The patch pages are translated into 20 languages. Error messages that Telegram itself sends stay in English.
+- The existing patch pages have translations in 20 languages. New playlist tools and sync phrases use English fallback where translations have not been supplied. Error messages that Telegram itself sends stay in English.
 
 ## Channel View
 
@@ -105,3 +106,7 @@ services still need Waydroid/device testing.
 The Telegram phone-change/resend fix does not change AutoMix or the audio source.
 A lossless or hi-res label from a community add-on is a provider claim until the
 resolved audio has been inspected; it does not establish recording provenance.
+
+## Native playlist tools in beta.17
+
+External sync currently supports manually reviewed Spotify/YouTube Music membership changes. It requires editable playlists and valid local account connections. Background scheduling, playlist-name/order sync and other service connectors are not included. Spotify personal developer-app restrictions apply. Unavailable items, duplicate recordings and incomplete reads require review before writes. File import supports metadata from other services without adding service connections. See [playlist tools](PLAYLIST-TOOLS.md).

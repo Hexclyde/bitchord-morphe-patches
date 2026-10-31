@@ -105,18 +105,23 @@ public final class MixedPlaylists {
             if (!available()) return original.invoke();
             Activity a = current.get();
             if (a == null || a.isFinishing()) return original.invoke();
-            new AlertDialog.Builder(a)
-                    .setTitle(Strings.t("New playlist"))
-                    .setItems(
-                            new String[] {
-                                Strings.t("On this device · any audio source"),
-                                Strings.t("YouTube Music · YouTube tracks only")
-                            },
-                            (d, i) -> {
-                                if (i == 0) createDialog(a, null);
-                                else original.invoke();
-                            })
-                    .show();
+            PlaylistModal modal = new PlaylistModal(a, Strings.t("New playlist"), null);
+            modal.action(
+                    Strings.t("On this device · any audio source"),
+                    true,
+                    () -> {
+                        modal.dismiss();
+                        createDialog(a, null);
+                    });
+            modal.action(
+                    Strings.t("YouTube Music · YouTube tracks only"),
+                    false,
+                    () -> {
+                        modal.dismiss();
+                        original.invoke();
+                    });
+            modal.action(Strings.t("Cancel"), false, modal::dismiss);
+            modal.show();
             return Unit.INSTANCE;
         };
     }
@@ -143,30 +148,34 @@ public final class MixedPlaylists {
             choose(a, song);
             return;
         }
-        new AlertDialog.Builder(a)
-                .setTitle(Strings.t("Add to playlist"))
-                .setItems(
-                        new String[] {
-                            Strings.t("Device playlists · any audio source"),
-                            Strings.t(
-                                    file
-                                            ? "Offline playlists · files on this device"
-                                            : "YouTube Music playlists")
-                        },
-                        (d, i) -> {
-                            if (i == 0) choose(a, song);
-                            else original.invoke();
-                        })
-                .show();
+        PlaylistModal modal =
+                new PlaylistModal(
+                        a, Strings.t("Add to playlist"), MixedSongCodec.text(song, "title"));
+        modal.action(
+                Strings.t("Device playlists · any audio source"),
+                true,
+                () -> {
+                    modal.dismiss();
+                    choose(a, song);
+                });
+        modal.action(
+                Strings.t(
+                        file
+                                ? "Offline playlists · files on this device"
+                                : "YouTube Music playlists"),
+                false,
+                () -> {
+                    modal.dismiss();
+                    original.invoke();
+                });
+        modal.action(Strings.t("Cancel"), false, modal::dismiss);
+        modal.show();
     }
 
     @SuppressWarnings("unchecked")
     static synchronized List<Object> nativePlaylists() throws Exception {
-        Object flow = flow();
-        Object value =
-                Class.forName("kotlinx.coroutines.flow.StateFlow")
-                        .getMethod("getValue")
-                        .invoke(flow);
+        Object state = flow();
+        Object value = state.getClass().getMethod("getValue").invoke(state);
         return new ArrayList<>((List<Object>) value);
     }
 
@@ -177,9 +186,8 @@ public final class MixedPlaylists {
     }
 
     private static void publish(List<Object> playlists) throws Exception {
-        Class.forName("kotlinx.coroutines.flow.MutableStateFlow")
-                .getMethod("setValue", Object.class)
-                .invoke(flow(), playlists);
+        Object state = flow();
+        state.getClass().getMethod("setValue", Object.class).invoke(state, playlists);
     }
 
     static Object playlist(String id, String title, List<Object> songs) throws Exception {
@@ -240,11 +248,14 @@ public final class MixedPlaylists {
 
     private static synchronized void commit(List<Object> expected, List<Object> playlists)
             throws Exception {
+        Object state = flow();
+        // R8 removes these methods from MutableStateFlow in BitChord 1.9's release APK.
+        // The public concrete StateFlowImpl methods are retained by native host call sites.
         boolean changed =
                 (Boolean)
-                        Class.forName("kotlinx.coroutines.flow.MutableStateFlow")
+                        state.getClass()
                                 .getMethod("compareAndSet", Object.class, Object.class)
-                                .invoke(flow(), expected, playlists);
+                                .invoke(state, expected, playlists);
         if (!changed)
             throw new ConcurrentModificationException("Playlist changed; retry the operation");
         playlists = nativePlaylists();
@@ -255,17 +266,68 @@ public final class MixedPlaylists {
     }
 
     static synchronized String create(String title, Object song) throws Exception {
-        if (title == null || title.trim().isEmpty())
-            throw new IllegalArgumentException("Empty playlist title");
+        return createAll(
+                title, song == null ? Collections.emptyList() : Collections.singletonList(song));
+    }
+
+    static synchronized String createAll(String title, List<Object> songs) throws Exception {
+        if (title == null || title.trim().isEmpty() || title.length() > 300)
+            throw new IllegalArgumentException("Invalid playlist title");
         String id = "bc_mix_" + UUID.randomUUID();
-        List<Object> previous = nativePlaylists();
-        List<Object> list = new ArrayList<>(previous);
-        List<Object> items = new ArrayList<>();
-        if (song != null) items.add(MixedSongCodec.decode(MixedSongCodec.encode(song)));
-        list.add(0, playlist(id, title.trim(), items));
+        List<Object> previous = nativePlaylists(), list = new ArrayList<>(previous);
+        LinkedHashMap<String, Object> unique = new LinkedHashMap<>();
+        for (Object song : songs)
+            unique.putIfAbsent(
+                    MixedSongCodec.key(song), MixedSongCodec.decode(MixedSongCodec.encode(song)));
+        list.add(0, playlist(id, title.trim(), new ArrayList<>(unique.values())));
         managed.add(id);
-        commit(previous, list);
+        try {
+            commit(previous, list);
+        } catch (Exception failure) {
+            managed.remove(id);
+            throw failure;
+        }
         return id;
+    }
+
+    static synchronized void importAll(List<ImportedPlaylist> lists) throws Exception {
+        List<Object> previous = nativePlaylists(), result = new ArrayList<>(previous);
+        Set<String> added = new HashSet<>();
+        for (ImportedPlaylist list : lists) {
+            String id = "bc_mix_" + UUID.randomUUID();
+            List<Object> songs = new ArrayList<>();
+            for (Object song : list.songs)
+                songs.add(MixedSongCodec.decode(MixedSongCodec.encode(song)));
+            result.add(0, playlist(id, list.title, songs));
+            added.add(id);
+        }
+        managed.addAll(added);
+        try {
+            commit(previous, result);
+        } catch (Exception failure) {
+            managed.removeAll(added);
+            throw failure;
+        }
+    }
+
+    static synchronized void edit(String id, String title, List<Object> songs, boolean delete)
+            throws Exception {
+        if (!id.startsWith("bc_mix_"))
+            throw new IllegalArgumentException("This playlist is not owned by this device");
+        if (!delete && (title == null || title.trim().isEmpty() || title.length() > 300))
+            throw new IllegalArgumentException("Invalid playlist title");
+        List<Object> previous = nativePlaylists(), result = new ArrayList<>();
+        boolean found = false;
+        for (Object playlist : previous) {
+            if (!id.equals(MixedSongCodec.text(playlist, "id"))) {
+                result.add(playlist);
+                continue;
+            }
+            found = true;
+            if (!delete) result.add(playlist(id, title.trim(), songs));
+        }
+        if (!found) throw new IllegalArgumentException("Playlist no longer exists");
+        commit(previous, result);
     }
 
     static synchronized void membership(Object song, Set<String> selected) throws Exception {
@@ -326,62 +388,66 @@ public final class MixedPlaylists {
                         break;
                     }
             }
-            new AlertDialog.Builder(a)
-                    .setTitle(Strings.t("Save to device playlists"))
-                    .setMultiChoiceItems(
-                            labels,
-                            checked,
-                            (d, which, on) -> {
-                                String id = MixedSongCodec.text(list.get(which), "id");
-                                if (on) selected.add(id);
-                                else selected.remove(id);
-                            })
-                    .setPositiveButton(
-                            Strings.t("Save"),
-                            (d, which) -> {
-                                try {
-                                    membership(song, selected, visible);
-                                } catch (Exception e) {
-                                    failure(a);
-                                }
-                            })
-                    .setNeutralButton(
-                            Strings.t("New playlist"), (d, which) -> createDialog(a, song))
-                    .setNegativeButton(Strings.t("Cancel"), null)
-                    .show();
-        } catch (Exception e) {
+            PlaylistModal modal =
+                    new PlaylistModal(
+                            a,
+                            Strings.t("Save to device playlists"),
+                            MixedSongCodec.text(song, "title"));
+            modal.choices(
+                    labels,
+                    checked,
+                    (which, on) -> {
+                        String id = MixedSongCodec.text(list.get(which), "id");
+                        if (on) selected.add(id);
+                        else selected.remove(id);
+                    });
+            modal.action(
+                    Strings.t("Save"),
+                    true,
+                    () -> {
+                        try {
+                            membership(song, selected, visible);
+                            modal.dismiss();
+                        } catch (Exception failure) {
+                            failure(a);
+                        }
+                    });
+            modal.action(
+                    Strings.t("New playlist"),
+                    false,
+                    () -> {
+                        modal.dismiss();
+                        createDialog(a, song);
+                    });
+            modal.action(Strings.t("Cancel"), false, modal::dismiss);
+            modal.show();
+        } catch (Exception failure) {
             failure(a);
         }
     }
 
     private static void createDialog(Activity a, Object song) {
-        EditText input = new EditText(a);
-        input.setSingleLine(true);
-        input.setHint(Strings.t("Playlist name"));
-        AlertDialog dialog =
-                new AlertDialog.Builder(a)
-                        .setTitle(Strings.t("New device playlist"))
-                        .setView(input)
-                        .setPositiveButton(Strings.t("Create"), null)
-                        .setNegativeButton(Strings.t("Cancel"), null)
-                        .create();
-        dialog.setOnShowListener(
-                d ->
-                        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                                .setOnClickListener(
-                                        v -> {
-                                            if (input.getText().toString().trim().isEmpty()) {
-                                                input.setError(Strings.t("Enter a playlist name"));
-                                                return;
-                                            }
-                                            try {
-                                                create(input.getText().toString(), song);
-                                                dialog.dismiss();
-                                            } catch (Exception e) {
-                                                failure(a);
-                                            }
-                                        }));
-        dialog.show();
+        PlaylistModal modal = new PlaylistModal(a, Strings.t("New device playlist"), null);
+        EditText input = modal.input(Strings.t("Playlist name"));
+        android.widget.TextView create =
+                modal.action(
+                        Strings.t("Create"),
+                        true,
+                        () -> {
+                            if (input.getText().toString().trim().isEmpty()) {
+                                input.setError(Strings.t("Enter a playlist name"));
+                                return;
+                            }
+                            try {
+                                create(input.getText().toString(), song);
+                                modal.dismiss();
+                            } catch (Exception failure) {
+                                failure(a);
+                            }
+                        });
+        create.setTag("playlist-create");
+        modal.action(Strings.t("Cancel"), false, modal::dismiss);
+        modal.show();
     }
 
     private static void failure(Activity a) {

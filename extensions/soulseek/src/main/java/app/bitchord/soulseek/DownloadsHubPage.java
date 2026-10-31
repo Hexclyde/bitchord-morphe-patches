@@ -36,6 +36,9 @@ final class DownloadsHubPage extends DownloadPage {
     static final String[] VIEW_LABELS = {"Grid", "List", "Compact", "Comfy", "Detailed"};
     private TextView status;
     private String localQuery = "";
+    private LinearLayout localSearchBar;
+    private EditText localSearch;
+    private ImageButton searchToggle;
     private String filter = "All", last = "";
     private final List<TextView> filterViews = new ArrayList<>();
     private final Map<String, Long> fileSizes = new HashMap<>();
@@ -83,6 +86,8 @@ final class DownloadsHubPage extends DownloadPage {
         toolbar.addView(status, new LinearLayout.LayoutParams(0, downloadStyle.dp(48), 1));
         viewButton = new ImageButton(this);
         viewButton.setTag("download-view");
+        viewButton.setImageTintList(
+                android.content.res.ColorStateList.valueOf(downloadStyle.foreground));
         viewButton.setBackground(downloadStyle.shape(downloadStyle.card, 12, false));
         viewButton.setPadding(
                 downloadStyle.dp(12),
@@ -106,6 +111,10 @@ final class DownloadsHubPage extends DownloadPage {
                 viewButton,
                 new LinearLayout.LayoutParams(downloadStyle.dp(44), downloadStyle.dp(44)));
         ImageButton search = new ImageButton(this);
+        searchToggle = search;
+        search.setTag("download-local-clear");
+        search.setImageTintList(
+                android.content.res.ColorStateList.valueOf(downloadStyle.foreground));
         search.setImageDrawable(downloadStyle.viewIcon("search"));
         search.setBackground(null);
         search.setPadding(
@@ -119,36 +128,57 @@ final class DownloadsHubPage extends DownloadPage {
                 search, new LinearLayout.LayoutParams(downloadStyle.dp(48), downloadStyle.dp(48)));
         body.addView(toolbar);
         LinearLayout searchBar = new LinearLayout(this);
+        localSearchBar = searchBar;
         searchBar.setGravity(android.view.Gravity.CENTER_VERTICAL);
         searchBar.setVisibility(View.GONE);
+        searchBar.setBackground(downloadStyle.shape(downloadStyle.card, 28, false));
+        searchBar.setPadding(downloadStyle.dp(14), 0, downloadStyle.dp(14), 0);
+        ImageView searchGlyph = new ImageView(this);
+        searchGlyph.setImageDrawable(downloadStyle.viewIcon("search"));
+        searchGlyph.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        searchBar.addView(
+                searchGlyph,
+                new LinearLayout.LayoutParams(downloadStyle.dp(20), downloadStyle.dp(20)));
         EditText searchField = new EditText(this);
+        localSearch = searchField;
         searchField.setTag("download-local-search");
         searchField.setHint(PatchStrings.t("Search downloads"));
         searchField.setSingleLine(true);
         searchField.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_DONE);
+        searchField.setTextSize(16);
+        searchField.setTypeface(downloadStyle.regular);
+        searchField.setTextColor(downloadStyle.foreground);
+        searchField.setHintTextColor(downloadStyle.secondary);
+        searchField.setMinHeight(downloadStyle.dp(48));
+        searchField.setPadding(downloadStyle.dp(10), downloadStyle.dp(10), 0, downloadStyle.dp(10));
+        searchField.setBackground(null);
+        searchField.setBackgroundTintList(null);
+        downloadStyle.markCustom(searchField);
         searchBar.addView(searchField, new LinearLayout.LayoutParams(0, -2, 1));
-        ImageButton clear = new ImageButton(this);
-        clear.setTag("download-local-clear");
-        clear.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
-        clear.setImageTintList(
-                android.content.res.ColorStateList.valueOf(downloadStyle.foreground));
-        clear.setBackground(null);
-        clear.setContentDescription(PatchStrings.t("Clear search"));
-        clear.setOnClickListener(v -> searchField.setText(""));
-        downloadStyle.markCustom(clear);
-        searchBar.addView(
-                clear, new LinearLayout.LayoutParams(downloadStyle.dp(48), downloadStyle.dp(48)));
-        body.addView(searchBar);
+        LinearLayout.LayoutParams searchSpace = new LinearLayout.LayoutParams(-1, -2);
+        searchSpace.topMargin = downloadStyle.dp(8);
+        searchSpace.bottomMargin = downloadStyle.dp(4);
+        body.addView(searchBar, searchSpace);
         search.setOnClickListener(
                 v -> {
+                    if (searchBar.getVisibility() == View.VISIBLE) {
+                        closeSearch();
+                        return;
+                    }
                     searchBar.setVisibility(View.VISIBLE);
+                    search.setContentDescription(PatchStrings.t("Close"));
+                    search.setImageDrawable(downloadStyle.viewIcon("close"));
+                    search.setImageTintList(
+                            android.content.res.ColorStateList.valueOf(downloadStyle.foreground));
                     searchField.requestFocus();
                     searchField.post(
                             () -> {
                                 android.view.inputmethod.InputMethodManager keyboard =
                                         (android.view.inputmethod.InputMethodManager)
                                                 getSystemService(INPUT_METHOD_SERVICE);
-                                if (keyboard != null)
+                                if (keyboard != null
+                                        && searchBar.getVisibility() == View.VISIBLE
+                                        && searchField.hasFocus())
                                     keyboard.showSoftInput(
                                             searchField,
                                             android.view.inputmethod.InputMethodManager
@@ -258,6 +288,25 @@ final class DownloadsHubPage extends DownloadPage {
     protected void onDestroy() {
         worker.shutdownNow();
         super.onDestroy();
+    }
+
+    private void closeSearch() {
+        localSearchBar.setVisibility(View.GONE);
+        localSearch.setText("");
+        localSearch.clearFocus();
+        searchToggle.setImageDrawable(downloadStyle.viewIcon("search"));
+        searchToggle.setContentDescription(PatchStrings.t("Search downloads"));
+        android.view.inputmethod.InputMethodManager keyboard =
+                (android.view.inputmethod.InputMethodManager)
+                        getSystemService(INPUT_METHOD_SERVICE);
+        if (keyboard != null) keyboard.hideSoftInputFromWindow(localSearch.getWindowToken(), 0);
+    }
+
+    @Override
+    boolean back() {
+        if (localSearchBar == null || localSearchBar.getVisibility() != View.VISIBLE) return false;
+        closeSearch();
+        return true;
     }
 
     static final class Row {

@@ -55,24 +55,19 @@ public final class DebridSetupActivity extends DownloadActivity {
         body.setPadding(p, p, p, p);
         scroll.addView(body);
         setContentView(scroll);
-        button(body, PatchStrings.t("Back")).setOnClickListener(v -> finish());
-        text(body, PatchStrings.t("Debrid download services"), 24);
+        text(body, PatchStrings.t("Debrid services"), 24);
         text(
                 body,
                 PatchStrings.t(
-                        "Each service is optional and starts disabled. Use your own account API"
-                                + " key. Keys are encrypted on this phone and are not included in"
-                                + " backups or peer messages."),
-                16);
-        text(
-                body,
-                PatchStrings.t(
-                        "These services resolve links; they do not search a music catalogue. Files"
-                            + " use your saved Phone, Telegram main channel or Both destination."
-                            + " Service limits, supported hosts and account requirements still"
-                            + " apply."),
+                        "Prepare supported links; debrid services do not search music catalogues."),
                 14);
-        button(body, PatchStrings.t("Open debrid downloads"))
+        text(
+                body,
+                PatchStrings.t(
+                        "Services start disabled. Keys stay encrypted on this phone. Your download"
+                                + " setup controls where files are saved."),
+                14);
+        navigation(body, PatchStrings.t("Open debrid downloads"))
                 .setOnClickListener(
                         v -> startActivity(new Intent(this, DebridDownloadsActivity.class)));
         notice = text(body, PatchStrings.t("Loading protected settings…"), 14);
@@ -90,7 +85,7 @@ public final class DebridSetupActivity extends DownloadActivity {
                                     break;
                                 }
                         });
-        button(body, PatchStrings.t("Remove all saved debrid keys"))
+        secondary(body, PatchStrings.t("Remove all saved debrid keys"))
                 .setOnClickListener(
                         v ->
                                 new AlertDialog.Builder(this)
@@ -232,7 +227,7 @@ public final class DebridSetupActivity extends DownloadActivity {
             enabled.setContentDescription(PatchStrings.f("Enable {0}", kind.label));
             header.addView(
                     enabled,
-                    new LinearLayout.LayoutParams(downloadStyle.dp(52), downloadStyle.dp(48)));
+                    new LinearLayout.LayoutParams(downloadStyle.dp(64), downloadStyle.dp(48)));
             gear = downloadStyle.settingsButton();
             gear.setContentDescription(PatchStrings.f("{0} settings", kind.label));
             header.addView(
@@ -253,7 +248,10 @@ public final class DebridSetupActivity extends DownloadActivity {
             key = keyInput();
             key.setContentDescription(PatchStrings.f("{0} replacement API key", kind.label));
             details.addView(key);
-            Button save = action(details, PatchStrings.t("Save API key"));
+            LinearLayout keyActions = new LinearLayout(DebridSetupActivity.this);
+            details.addView(keyActions);
+            Button save = action(keyActions, PatchStrings.t("Save API key"));
+            downloadStyle.inline(save, true);
             save.setOnClickListener(
                     v -> {
                         String entered = takeKey();
@@ -266,7 +264,8 @@ public final class DebridSetupActivity extends DownloadActivity {
                                 },
                                 true);
                     });
-            Button test = action(details, PatchStrings.t("Test API key"));
+            Button test = action(keyActions, PatchStrings.t("Test API key"));
+            downloadStyle.inline(test, false);
             test.setOnClickListener(
                     v -> {
                         String entered = key.getText().toString().trim();
@@ -286,6 +285,7 @@ public final class DebridSetupActivity extends DownloadActivity {
                                 });
                     });
             Button remove = action(details, PatchStrings.t("Remove API key"));
+            downloadStyle.textAction(remove);
             remove.setOnClickListener(
                     v -> {
                         key.setText("");
@@ -298,6 +298,7 @@ public final class DebridSetupActivity extends DownloadActivity {
                                 });
                     });
             Button account = action(details, PatchStrings.f("Open {0} account", kind.label));
+            downloadStyle.navigation(account);
             account.setOnClickListener(
                     v -> {
                         try {
@@ -467,6 +468,18 @@ public final class DebridSetupActivity extends DownloadActivity {
         view.setPadding(0, 10, 0, 10);
         parent.addView(view);
         return view;
+    }
+
+    private Button navigation(LinearLayout parent, String title) {
+        Button result = button(parent, title);
+        downloadStyle.navigation(result);
+        return result;
+    }
+
+    private Button secondary(LinearLayout parent, String title) {
+        Button result = button(parent, title);
+        downloadStyle.textAction(result);
+        return result;
     }
 
     private Button button(LinearLayout parent, String title) {

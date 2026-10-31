@@ -694,7 +694,8 @@ public final class SoundExtras {
     static boolean offloadWanted() {
         String reason = null;
         if (batterySaver) {
-            if (singEnabled && singLevel > 0) reason = Strings.t("Sing is on");
+            if (SourceAutomix.activeMix()) reason = "AutoMix";
+            else if (singEnabled && singLevel > 0) reason = Strings.t("Sing is on");
             else if (headphoneApplied() && HeadphoneEq.active())
                 reason = Strings.t("Headphone correction is on");
             else if (jamesDspApplied() && EffectsApps.useJamesDsp)

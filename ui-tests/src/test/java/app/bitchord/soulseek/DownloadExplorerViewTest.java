@@ -72,7 +72,7 @@ public class DownloadExplorerViewTest {
                         "MP3 · 320 kbps (reported)",
                         "Availability not reported",
                         false,
-                        false,
+                        null,
                         now -> {},
                         null);
         flac =
@@ -100,7 +100,9 @@ public class DownloadExplorerViewTest {
     public void selectionDoesNotDownloadUntilAnAdmissionAction() {
         assertFalse(view.now.isEnabled());
         assertFalse(view.queue.isEnabled());
+        assertNull(view.footer.getParent());
         flac.card.performClick();
+        assertSame(flac.card, view.footer.getParent());
         assertTrue(flac.radio.isChecked());
         assertFalse(mp3.radio.isChecked());
         assertTrue(view.now.isEnabled());
@@ -161,14 +163,89 @@ public class DownloadExplorerViewTest {
         assertEquals(Collections.singletonList("Audio addon:true"), admissions);
     }
 
+    @Test
+    public void selectingAnotherCardMovesActionsAndLeavesNoGlobalFooter() {
+        flac.card.performClick();
+        assertSame(flac.card, view.footer.getParent());
+        mp3.card.performClick();
+        assertSame(mp3.card, view.footer.getParent());
+        assertEquals("Now", view.now.getText().toString());
+        assertEquals("Later", view.queue.getText().toString());
+        assertTrue(admissions.isEmpty());
+    }
+
+    @Test
+    public void unknownOnlyResultsDoNotShowTheAvailabilityFilter() {
+        view.reset();
+        LinearLayout group = new LinearLayout(activity);
+        view.results.addView(group);
+        view.add(
+                group,
+                new DownloadExplorerView.Option(
+                        "Addon",
+                        "Song",
+                        "Artist",
+                        "FLAC",
+                        "Unverified",
+                        true,
+                        null,
+                        now -> {},
+                        null));
+        assertEquals(
+                View.GONE, view.root.findViewWithTag("explorer-filter:available").getVisibility());
+        assertEquals(
+                View.VISIBLE,
+                view.root.findViewWithTag("explorer-filter:lossless").getVisibility());
+    }
+
+    @Test
+    public void radioStaysInTheTopEndCornerWhenSourceTitleWraps() {
+        view.reset();
+        LinearLayout group = new LinearLayout(activity);
+        group.setOrientation(LinearLayout.VERTICAL);
+        view.results.addView(group);
+        DownloadExplorerView.Option option =
+                new DownloadExplorerView.Option(
+                        "A source with a very long provider name that wraps onto several lines",
+                        "Song",
+                        "Artist",
+                        "FLAC",
+                        "",
+                        true,
+                        null,
+                        now -> {},
+                        null);
+        view.add(group, option);
+        view.root.measure(
+                View.MeasureSpec.makeMeasureSpec(320, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(640, View.MeasureSpec.EXACTLY));
+        view.root.layout(0, 0, 320, 640);
+        android.widget.FrameLayout.LayoutParams placement =
+                (android.widget.FrameLayout.LayoutParams) option.radio.getLayoutParams();
+        assertEquals(android.view.Gravity.TOP | android.view.Gravity.END, placement.gravity);
+        int[] card = new int[2], radio = new int[2];
+        option.card.getLocationOnScreen(card);
+        option.radio.getLocationOnScreen(radio);
+        assertTrue(radio[0] + option.radio.getWidth() / 2 > card[0] + option.card.getWidth() - 32);
+        assertTrue(radio[1] + option.radio.getHeight() / 2 < card[1] + 32);
+    }
+
     void render(String name, int width, int height) throws Exception {
         view.root.measure(
                 View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY));
         view.root.layout(0, 0, width, height);
-        assertEquals(height - view.root.getPaddingBottom(), view.footer.getBottom());
+        org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        view.root.measure(
+                View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY));
+        view.root.layout(0, 0, width, height);
+        assertSame(flac.card, view.footer.getParent());
+        assertSame(view.queue.getParent(), view.now.getParent());
         assertTrue(view.now.getHeight() >= 48);
-        assertTrue(view.now.getBottom() <= view.footer.getHeight());
+        assertEquals(view.now.getTop(), view.queue.getTop());
+        assertNotNull(view.now.getCompoundDrawablesRelative()[0]);
+        assertNotNull(view.queue.getCompoundDrawablesRelative()[0]);
         for (DownloadExplorerView.Option option : new DownloadExplorerView.Option[] {mp3, flac})
             option.radio.jumpDrawablesToCurrentState();
         Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -181,7 +258,7 @@ public class DownloadExplorerViewTest {
     }
 
     @Test
-    public void persistentActionsRenderInLightAndDarkThemes() throws Exception {
+    public void selectedCardActionsRenderInLightAndDarkThemes() throws Exception {
         for (String theme : new String[] {"LIGHT", "DARK"}) {
             create(theme, false);
             flac.card.performClick();
@@ -190,7 +267,7 @@ public class DownloadExplorerViewTest {
     }
 
     @Test
-    public void largeTextKeepsAdmissionControlsInsideTheViewport() throws Exception {
+    public void largeTextKeepsInlineActionsInTheScrollableCard() throws Exception {
         android.content.res.Configuration config =
                 new android.content.res.Configuration(activity.getResources().getConfiguration());
         config.fontScale = 1.5f;

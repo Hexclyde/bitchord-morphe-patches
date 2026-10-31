@@ -116,6 +116,49 @@ private val patchesUiResources = resourcePatch {
                 "@android:style/Theme.Material.NoActionBar",
             )
             app.appendChild(activity)
+            val callback = doc.createElement("activity")
+            callback.setAttributeNS(
+                NS,
+                "android:name",
+                "app.bitchord.telegram.PlaylistAuthActivity",
+            )
+            callback.setAttributeNS(NS, "android:exported", "true")
+            callback.setAttributeNS(NS, "android:excludeFromRecents", "true")
+            val filter = doc.createElement("intent-filter")
+            for ((tag, name) in
+                listOf(
+                    "action" to "android.intent.action.VIEW",
+                    "category" to "android.intent.category.DEFAULT",
+                    "category" to "android.intent.category.BROWSABLE",
+                )) {
+                val element = doc.createElement(tag)
+                element.setAttributeNS(NS, "android:name", name)
+                filter.appendChild(element)
+            }
+            val uri = doc.createElement("data")
+            uri.setAttributeNS(NS, "android:scheme", "app.bitchord.sync")
+            uri.setAttributeNS(NS, "android:host", "spotify")
+            uri.setAttributeNS(NS, "android:path", "/callback")
+            filter.appendChild(uri)
+            callback.appendChild(filter)
+            app.appendChild(callback)
+            for (name in
+                listOf(
+                    "TransitionEditorActivity",
+                    "PlaylistToolsActivity",
+                    "PlaylistImportActivity",
+                    "PlaylistSyncActivity",
+                )) {
+                val extra = doc.createElement("activity")
+                extra.setAttributeNS(NS, "android:name", "app.bitchord.telegram.$name")
+                extra.setAttributeNS(NS, "android:exported", "false")
+                extra.setAttributeNS(
+                    NS,
+                    "android:theme",
+                    "@android:style/Theme.Material.NoActionBar",
+                )
+                app.appendChild(extra)
+            }
         }
     }
 }

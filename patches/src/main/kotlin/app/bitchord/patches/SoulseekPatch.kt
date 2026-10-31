@@ -422,6 +422,121 @@ val nativeSoulseekPatch =
                     )
                 }
 
+                for (name in listOf("FloatingBottomBarKt", "GlassNavBarKt")) {
+                    val bar =
+                        mutableClassDefBy("Lcom/music/bitchord/ui/components/$name;")
+                            .methods
+                            .single {
+                                it.name ==
+                                    if (name == "FloatingBottomBarKt") "FloatingBottomBar"
+                                    else "GlassNavBar"
+                            }
+                    val code = bar.implementation!!.instructions.toList()
+                    val gutters =
+                        code.indices.filter { index ->
+                            val field =
+                                (code[index] as? ReferenceInstruction)?.reference as? FieldReference
+                            code[index].opcode == Opcode.SGET && field?.name == "NAV_BAR_GUTTER"
+                        }
+                    check(gutters.size == 1) { "Native bar gutter ABI changed: $name" }
+                    val at = gutters.single()
+                    val register =
+                        (code[at]
+                                as
+                                com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction)
+                            .registerA
+                    bar.addInstructions(
+                        at + 1,
+                        """
+                        invoke-static/range {v$register .. v$register}, ${SOULSEEK}DownloadNavigation;->gutter(F)F
+                        move-result v$register
+                    """,
+                    )
+                }
+
+                val labelStyle =
+                    mutableClassDefBy("Lcom/music/bitchord/ui/components/FloatingBottomBarKt;")
+                        .methods
+                        .single { it.name == "tabLabelStyle" }
+                val styleCode = labelStyle.implementation!!.instructions.toList()
+                val spacing =
+                    styleCode.indices
+                        .filter { index ->
+                            val call =
+                                (styleCode[index] as? ReferenceInstruction)?.reference
+                                    as? MethodReference
+                            call?.name == "getSp" && call.parameterTypes == listOf("D")
+                        }
+                        .single()
+                check(styleCode[spacing + 1].opcode == Opcode.MOVE_RESULT_WIDE)
+                val packed =
+                    (styleCode[spacing + 1]
+                            as
+                            com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction)
+                        .registerA
+                labelStyle.addInstructions(
+                    spacing + 2,
+                    """
+                    invoke-static/range {v$packed .. v${packed+1}}, ${SOULSEEK}DownloadNavigation;->labelSpacing(J)J
+                    move-result-wide v$packed
+                """,
+                )
+
+                val labelOwners =
+                    listOf(
+                        "Lcom/music/bitchord/ui/components/FloatingBottomBarKt;" to true,
+                        "Lcom/music/bitchord/ui/components/GlassNavBarKt${'$'}${'$'}ExternalSyntheticLambda15;" to
+                            false,
+                    )
+                for ((owner, plain) in labelOwners) {
+                    val method =
+                        mutableClassDefBy(owner).methods.single {
+                            if (plain) it.name.startsWith("BottomBarItem-")
+                            else it.name == "invoke" && it.parameterTypes.size == 2
+                        }
+                    val code = method.implementation!!.instructions.toList()
+                    val text =
+                        code.indices
+                            .filter { index ->
+                                val call =
+                                    (code[index] as? ReferenceInstruction)?.reference
+                                        as? MethodReference
+                                call?.definingClass == "Landroidx/compose/material3/TextKt;" &&
+                                    call.name == "Text--4IGK_g"
+                            }
+                            .single()
+                    val call =
+                        code[text]
+                            as
+                            com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
+                    val modifier = call.startRegister + 1
+                    val mask = call.startRegister + call.registerCount - 1
+                    val defaults =
+                        code.indices
+                            .filter { index ->
+                                val literal =
+                                    code[index]
+                                        as?
+                                        com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
+                                val write =
+                                    code[index]
+                                        as?
+                                        com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
+                                literal?.narrowLiteral == (if (plain) 55290 else 55288) &&
+                                    write?.registerA == mask
+                            }
+                            .single()
+                    method.replaceInstruction(defaults, "const v$mask, 0xd7f8")
+                    method.addInstructions(
+                        text,
+                        """
+                        invoke-static/range {v$modifier .. v$modifier}, ${SOULSEEK}DownloadNavigation;->labelModifier(Ljava/lang/Object;)Ljava/lang/Object;
+                        move-result-object v$modifier
+                        check-cast v$modifier, Landroidx/compose/ui/Modifier;
+                    """,
+                    )
+                }
+
                 // The real player content slot retains measured padding, mini player and both bars.
                 val library =
                     mutableClassDefBy("Lcom/music/bitchord/ui/screens/LibraryScreenKt;")

@@ -4,6 +4,7 @@ import androidx.compose.ui.Modifier;
 
 /** Pinned host size-modifier ABI; view measurement remains Android's responsibility. */
 public final class SizeKt {
+    public static final Modifier FillWholeMaxWidth = new Modifier() {};
     public static final Modifier FillWholeMaxSize = new Modifier() {};
 
     public static final class Fill implements Modifier {

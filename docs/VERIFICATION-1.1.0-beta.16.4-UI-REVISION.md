@@ -1,0 +1,13 @@
+# beta.16.4 verification
+
+Based on the released beta.16.3 testing commit `3fa6c74ad551dcba2972115573107a84326d2273`. This combined revision also covers the reference Explorer layout, top-right radio placement with wrapped titles, conditional readiness filtering and creation of a mixed-source device playlist using the optimized concrete flow API. The package records the final source commit, MPP checksum and patched APK hashes.
+
+- The preceding beta.16.3 UI revision passed 231 Android framework tests in 34 suites, with zero failures, errors or skips. Those UI and playlist source files remain unchanged in beta.16.4. The seven header tests cover reserved height before artwork, separate accessible icon targets, inactive/external-track height removal, reattachment without window siblings, large-text/landscape sizing, pending-swap disabling and production icon rendering. Existing sticky-preference tests remain.
+- Version-lookup calls are isolated in the view tests. Real version-selection and queue behavior retain the existing host regression coverage; no live YouTube lookup qualification is inferred from the component tests.
+- 31 Python tests and the complete host regression passed, including 24 Audio/Video checks and 384 selected-download checks.
+- Ten APK selections: all patches on arm64-v8a, armeabi-v7a and x86_64; playback-only; Streamseek with Soulseek; Soulseek without previews; FLAC alone; mixed playlists alone; Telegram with clone alone; Audio and video switch alone. Checks cover the optimized host ABI, signatures, DEX flow, runtime isolation and unchanged native library bytes.
+- Native slot checks locate one AndroidView call after the completed portrait drag/caption Box and before the weighted artwork, and one inside the landscape main Column after its modifier binding. Exact fill-width, stacking-modifier and AndroidView reflection APIs are verified. The runtime has no Window attachment calls.
+- All 27 native libraries are byte-identical to beta.16.3. Native Rust loopback tests were not rerun; no native source changed.
+- Java AOSP, Kotlin Kotlinlang and Black 26.5.1 formatting passed. All 14 guide files and six badge URLs are preserved.
+
+The included icon images render the production Android component in both selections, using a controlled backdrop. They are not screenshots of a live installed full app. The earlier beta.16.3 Waydroid qualification does not validate this new header layout. This update still requires live-device retesting for full-player placement, gesture transitions and real YouTube version availability. No phone, new Waydroid session, real Telegram account or public Soulseek peer qualification is claimed for beta.16.4.

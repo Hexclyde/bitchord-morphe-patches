@@ -179,6 +179,8 @@ public final class DownloadsShell {
     }
 
     static void back() {
+        Container current = container.get();
+        if (current != null && current.page != null && current.page.back()) return;
         if (route != null
                 && route.getComponent() != null
                 && !route.getComponent()
@@ -328,8 +330,11 @@ public final class DownloadsShell {
                 int id = getResources().getIdentifier("status_bar_height", "dimen", "android");
                 top = id == 0 ? 0 : getResources().getDimensionPixelSize(id);
             }
-            setPadding(0, top, 0, bottom);
-            if (version == generation && page != null) return;
+            setPadding(0, top, 0, 0);
+            if (version == generation && page != null) {
+                page.bottomInset(bottom);
+                return;
+            }
             dispose();
             String name = target.getComponent().getClassName();
             page =
@@ -339,6 +344,7 @@ public final class DownloadsShell {
                                     ? new BatchDownloadPage(activity, target)
                                     : new DownloadsHubPage(activity, target);
             page.onCreate(null);
+            page.bottomInset(bottom);
             addView(page.view, new FrameLayout.LayoutParams(-1, -1));
             version = generation;
             if (isAttachedToWindow() && !stopped) {

@@ -16,6 +16,7 @@ abstract class DownloadPage extends ContextThemeWrapper {
     final Intent intent;
     final DownloadStyle downloadStyle;
     View view;
+    ScrollView contentScroll;
     private boolean destroyed;
 
     DownloadPage(Activity activity, Intent intent) {
@@ -48,6 +49,26 @@ abstract class DownloadPage extends ContextThemeWrapper {
         destroyed = true;
     }
 
+    boolean back() {
+        return false;
+    }
+
+    final void bottomInset(int pixels) {
+        if (contentScroll == null) return;
+        contentScroll.setClipToPadding(false);
+        contentScroll.setPadding(
+                contentScroll.getPaddingLeft(),
+                contentScroll.getPaddingTop(),
+                contentScroll.getPaddingRight(),
+                pixels);
+    }
+
+    final int surfaceColor() {
+        return DownloadsShell.owns(activity)
+                ? android.graphics.Color.TRANSPARENT
+                : downloadStyle.background;
+    }
+
     final Intent getIntent() {
         return intent;
     }
@@ -68,6 +89,7 @@ abstract class DownloadPage extends ContextThemeWrapper {
 
     final void setContentView(View content) {
         ScrollView scroll = new ScrollView(this);
+        contentScroll = scroll;
         LinearLayout body = new LinearLayout(this);
         body.setOrientation(LinearLayout.VERTICAL);
         body.setPadding(
@@ -80,7 +102,7 @@ abstract class DownloadPage extends ContextThemeWrapper {
         body.addView(content);
         scroll.addView(body);
         scroll.setFillViewport(true);
-        scroll.setBackgroundColor(downloadStyle.background);
+        scroll.setBackgroundColor(surfaceColor());
         scroll.setLayoutDirection(
                 PatchStrings.rtl() ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
         scroll.getViewTreeObserver().addOnGlobalLayoutListener(() -> downloadStyle.applyTree(body));

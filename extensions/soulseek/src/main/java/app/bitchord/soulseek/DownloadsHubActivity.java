@@ -16,6 +16,11 @@ public final class DownloadsHubActivity extends Activity {
     }
 
     @Override
+    public void onBackPressed() {
+        if (page == null || !page.back()) super.onBackPressed();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         if (page != null) page.onStart();

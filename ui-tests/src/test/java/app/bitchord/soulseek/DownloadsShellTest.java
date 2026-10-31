@@ -116,6 +116,26 @@ public class DownloadsShellTest {
     }
 
     @Test
+    @GraphicsMode(GraphicsMode.Mode.NATIVE)
+    public void embeddedPageAndFloatingBarClearanceRevealTheHostBackdrop() {
+        root.setBackgroundColor(0xff345678);
+        assertTrue(DownloadsShell.open(new Intent(activity, DownloadsHubActivity.class)));
+        assertTrue(DownloadsShell.compose(null, new Padding(), composer));
+        root.measure(
+                View.MeasureSpec.makeMeasureSpec(480, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(960, View.MeasureSpec.EXACTLY));
+        root.layout(0, 0, 480, 960);
+        android.graphics.Bitmap bitmap =
+                android.graphics.Bitmap.createBitmap(
+                        480, 960, android.graphics.Bitmap.Config.ARGB_8888);
+        root.draw(new android.graphics.Canvas(bitmap));
+        assertEquals(
+                "Embedded page must inherit the host surface", 0xff345678, bitmap.getPixel(1, 100));
+        assertEquals(
+                "Floating bar clearance must not paint black", 0xff345678, bitmap.getPixel(1, 900));
+    }
+
+    @Test
     public void downloadsUseThePlayerContentSlotAndMeasuredPadding() {
         assertTrue(DownloadsShell.open(new Intent(activity, DownloadsHubActivity.class)));
         assertEquals(Arrays.asList(2), selected);
@@ -130,8 +150,15 @@ public class DownloadsShellTest {
                 composer.view.getPaddingTop()
                         < Math.round(90 * activity.getResources().getDisplayMetrics().density));
         assertEquals(
-                Math.round(210 * activity.getResources().getDisplayMetrics().density),
+                "The viewport continues beneath floating controls",
+                0,
                 composer.view.getPaddingBottom());
+        View scroll = ((ViewGroup) composer.view).getChildAt(0);
+        assertTrue(scroll instanceof ScrollView);
+        assertFalse(((ScrollView) scroll).getClipToPadding());
+        assertEquals(
+                Math.round(210 * activity.getResources().getDisplayMetrics().density),
+                scroll.getPaddingBottom());
         assertEquals(2, DownloadNavigation.index(tabs, 2));
         assertEquals("Downloads", DownloadsShell.heading("Library"));
         assertTrue(androidx.compose.runtime.ParcelableSnapshotMutableState.reads > 0);

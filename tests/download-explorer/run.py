@@ -43,6 +43,10 @@ public static void enqueue(android.content.Context c,Object song,String from)thr
 synchronized(lock){pending.put(id,song);}}public static void cancel(String id){pending.remove(id);}}""",
 }
 
+STUBS["androidx/compose/ui/Modifier.java"] = (
+    ROOT / "ui-tests/src/test/java/androidx/compose/ui/Modifier.java"
+).read_text()
+
 with tempfile.TemporaryDirectory(prefix="download-explorer-tests-") as temporary:
     out = Path(temporary)
     fixtures = []

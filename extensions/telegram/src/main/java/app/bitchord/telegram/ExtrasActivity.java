@@ -177,7 +177,7 @@ public final class ExtrasActivity extends Activity {
                                 Strings.t(
                                         "Search Soulseek for audio files and download the version"
                                                 + " you choose."));
-                        action(
+                        navigation(
                                 parent,
                                 Strings.t("Account & download settings"),
                                 () -> openDownload("soulseek", "account"));
@@ -221,11 +221,11 @@ public final class ExtrasActivity extends Activity {
                                 Strings.t(
                                         "Pair a trusted phone and choose files to send or"
                                                 + " download."));
-                        action(
+                        navigation(
                                 parent,
                                 Strings.t("Download queue"),
                                 () -> openDownload("peer-downloads", "downloads"));
-                        action(
+                        navigation(
                                 parent,
                                 Strings.t("Connection setup"),
                                 () -> openDownload("peer-downloads", "connections"));
@@ -241,11 +241,11 @@ public final class ExtrasActivity extends Activity {
                                 Strings.t(
                                         "Choose a service, enter its API key and download selected"
                                                 + " audio from a link."));
-                        action(
+                        navigation(
                                 parent,
                                 Strings.t("Services & API keys"),
                                 () -> openDownload("debrid", "services"));
-                        action(
+                        navigation(
                                 parent,
                                 Strings.t("Link downloads"),
                                 () -> openDownload("debrid", "links"));
@@ -500,6 +500,18 @@ public final class ExtrasActivity extends Activity {
                                                     + " another format explicitly if preparation"
                                                     + " fails.")));
         }
+        if (SourceAutomix.applied()) {
+            section(Strings.t("Automix"));
+            PlaylistRows.add(
+                    body,
+                    style,
+                    Strings.t("Transition editor"),
+                    Strings.t("Timing, volume curves and effects for the next transition"),
+                    () ->
+                            startActivity(
+                                    new android.content.Intent(
+                                            this, TransitionEditorActivity.class)));
+        }
         if (SoundExtras.mixedPlaylistsApplied()) {
             feature(
                     "mixed-playlists",
@@ -507,14 +519,24 @@ public final class ExtrasActivity extends Activity {
                     Strings.t("Keep files and streams together in device playlists"),
                     () -> MixedPlaylists.enabled,
                     MixedPlaylists::setEnabled,
-                    parent ->
-                            paragraph(
-                                    parent,
-                                    Strings.t(
-                                            "Use Add to playlist for a track, or New playlist in"
-                                                + " Library. Device playlists keep file and source"
-                                                + " identities; YouTube Music playlists still"
-                                                + " accept YouTube tracks only.")));
+                    parent -> {
+                        paragraph(
+                                parent,
+                                Strings.t(
+                                        "Use Add to playlist for a track, or New playlist in"
+                                            + " Library. Device playlists keep file and source"
+                                            + " identities; YouTube Music playlists still accept"
+                                            + " YouTube tracks only."));
+                        PlaylistRows.add(
+                                parent,
+                                style,
+                                Strings.t("Playlist tools"),
+                                Strings.t("Saved links, device playlists and imports"),
+                                () ->
+                                        startActivity(
+                                                new android.content.Intent(
+                                                        this, PlaylistToolsActivity.class)));
+                    });
         }
         if (SoundExtras.videoSwitchApplied()) {
             section(Strings.t("Audio and video switch"));
@@ -591,8 +613,10 @@ public final class ExtrasActivity extends Activity {
     }
 
     private void copyActions(LinearLayout parent, String feature) {
-        action(parent, Strings.t("Where copies go"), () -> openDownload(feature, "destinations"));
-        action(parent, Strings.t("Formats, best first"), () -> openDownload(feature, "formats"));
+        navigation(
+                parent, Strings.t("Where copies go"), () -> openDownload(feature, "destinations"));
+        navigation(
+                parent, Strings.t("Formats, best first"), () -> openDownload(feature, "formats"));
     }
 
     private void openDownload(String id, String action) {
@@ -797,6 +821,29 @@ public final class ExtrasActivity extends Activity {
         parent.addView(text);
     }
 
+    private void navigation(LinearLayout parent, String title, Runnable action) {
+        PlaylistRows.add(parent, style, title, "", action);
+    }
+
+    private void actionPair(
+            LinearLayout parent,
+            String first,
+            Runnable firstAction,
+            String second,
+            Runnable secondAction) {
+        LinearLayout row = new LinearLayout(this);
+        TextView left = style.button(first, false, firstAction);
+        TextView right = style.button(second, false, secondAction);
+        LinearLayout.LayoutParams start = new LinearLayout.LayoutParams(0, -2, 1);
+        start.rightMargin = style.dp(8);
+        row.addView(left, start);
+        row.addView(right, new LinearLayout.LayoutParams(0, -2, 1));
+        LinearLayout.LayoutParams space = new LinearLayout.LayoutParams(-1, -2);
+        space.topMargin = style.dp(8);
+        space.bottomMargin = style.dp(8);
+        parent.addView(row, space);
+    }
+
     private void action(LinearLayout parent, String title, Runnable action) {
         TextView button = style.button(title, false, action);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
@@ -986,16 +1033,26 @@ public final class ExtrasActivity extends Activity {
         }
         divider(parent);
         heading(parent, Strings.t("Find your headphones"));
-        EditText query = input(parent, Strings.t("Model, such as “HD 650” or “AirPods Pro”"));
+        LinearLayout queryRow = new LinearLayout(this);
+        queryRow.setGravity(Gravity.CENTER_VERTICAL);
+        parent.addView(queryRow);
+        EditText query = input(queryRow, Strings.t("Model, such as “HD 650” or “AirPods Pro”"));
+        query.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1));
         LinearLayout results = new LinearLayout(this);
         results.setOrientation(LinearLayout.VERTICAL);
         TextView progress = style.text("", 13, style.secondary, style.regular);
         progress.setPadding(0, style.dp(8), 0, 0);
-        action(
-                parent,
-                Strings.t("Search"),
-                () -> searchHeadphones(query.getText().toString(), results, progress, output));
-        action(parent, Strings.t("Paste a profile"), () -> pasteProfile(output));
+        TextView search =
+                style.button(
+                        Strings.t("Search"),
+                        true,
+                        () ->
+                                searchHeadphones(
+                                        query.getText().toString(), results, progress, output));
+        LinearLayout.LayoutParams searchSpace = new LinearLayout.LayoutParams(-2, style.dp(50));
+        searchSpace.leftMargin = style.dp(8);
+        queryRow.addView(search, searchSpace);
+        navigation(parent, Strings.t("Paste a profile"), () -> pasteProfile(output));
         parent.addView(progress);
         parent.addView(results);
         paragraph(
@@ -1178,7 +1235,7 @@ public final class ExtrasActivity extends Activity {
             }
         }
         divider(parent);
-        action(
+        actionPair(
                 parent,
                 Strings.t("Copy code"),
                 () -> {
@@ -1188,8 +1245,9 @@ public final class ExtrasActivity extends Activity {
                     if (clipboard != null)
                         clipboard.setPrimaryClip(ClipData.newPlainText("BitChord equaliser", code));
                     Toast.makeText(this, Strings.f("Copied {0}", code), Toast.LENGTH_SHORT).show();
-                });
-        action(parent, Strings.t("Paste code"), this::pasteCode);
+                },
+                Strings.t("Paste code"),
+                this::pasteCode);
         paragraph(
                 parent,
                 Strings.t(
@@ -1245,7 +1303,7 @@ public final class ExtrasActivity extends Activity {
                                 + " JamesDSP can work on the music. The rootless JamesDSP hears"
                                 + " BitChord through Android’s audio capture, which BitChord"
                                 + " allows."));
-        action(
+        navigation(
                 parent,
                 installed == null ? Strings.t("Get JamesDSP") : Strings.t("Open JamesDSP"),
                 () -> EffectsApps.open(this));
@@ -1273,8 +1331,12 @@ public final class ExtrasActivity extends Activity {
 
     /** Turning the rootless JamesDSP on and off, and its one-time Shizuku or ADB setup. */
     private void rootlessJamesDsp(LinearLayout parent) {
-        action(parent, Strings.t("Start JamesDSP"), () -> jamesPower(true));
-        action(parent, Strings.t("Stop JamesDSP"), () -> jamesPower(false));
+        actionPair(
+                parent,
+                Strings.t("Start JamesDSP"),
+                () -> jamesPower(true),
+                Strings.t("Stop JamesDSP"),
+                () -> jamesPower(false));
         if (EffectsApps.rootlessReady(this)) return;
         divider(parent);
         heading(parent, Strings.t("JamesDSP’s setup"));
@@ -1285,7 +1347,7 @@ public final class ExtrasActivity extends Activity {
                                 + " computer with ADB can grant, once. With Shizuku running, open"
                                 + " JamesDSP and pick Shizuku in its setup. With ADB, run these"
                                 + " commands; the last one lets JamesDSP start without opening."));
-        action(
+        navigation(
                 parent,
                 EffectsApps.shizukuInstalled(this)
                         ? Strings.t("Open Shizuku")

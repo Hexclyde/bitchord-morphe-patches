@@ -190,7 +190,7 @@ final class DownloadExplorerPage extends DownloadPage {
                                                                         quality,
                                                                         duration,
                                                                         reportedLossless(quality),
-                                                                        false,
+                                                                        null,
                                                                         now ->
                                                                                 HostDownloadAccess
                                                                                         .enqueue(

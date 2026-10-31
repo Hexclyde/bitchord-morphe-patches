@@ -1,3 +1,32 @@
+# 1.1.0-beta.17
+
+- Add source-independent analysis through selected playback adapters and complete rendition caches, including picked add-on rows.
+- Pin readers, isolate analysis persistence by rendition, cancel stale/service-ended jobs, and preserve background source diagnostics.
+- Prefer enabled alternatives to YouTube and verify automatic replacement recordings across three fingerprint/timing windows.
+- Preserve the listener's playback speed and pitch throughout AutoMix; use cue/fade/filter transitions without tempo-ramping loop mixes.
+- Make audio offload yield to AutoMix and add source-reader, identity, scheduling, priority, tempo and optimized-APK regressions.
+- Combine beta.16.4 Explorer, playlist and measured player icon controls with Source-independent AutoMix as the twentieth patch.
+- Use a compact Downloads search field with one close control; closing clears its filter and dismisses the keyboard. Back closes search after dismissing the keyboard.
+- Inherit the host background on embedded download pages while keeping standalone page backgrounds. See docs/AUTOMIX.md for analysis limits.
+
+- Add a native transition timeline with directed-pair timing, volume curves, three-band EQ, filter sweeps, preview/restore and saved edits.
+- Add signed-out YouTube playlist bookmarks, complete device copies, queue snapshots and local editing through Playlist tools in Library.
+- Add native portable playlist-file import, anonymous track matching, candidate review and confirmation before saving.
+- Add reviewed two-way Spotify/YouTube Music playlist membership sync, encrypted PKCE credentials, complete-read checks, operation limits and recovery after partial writes. Sync is manual; scheduling, playlist-name/order sync and other service connectors are not included.
+- Blend Audio/Video controls with the player and keep five-tab selected highlights clear of label text.
+- Replace navigation-button stacks on patch pages with grouped setting rows, descriptions and current values. Pair related actions in debrid, peer discovery, headphone and JamesDSP settings; preserve native capsule switches and primary actions.
+- Accept Android playlist MIME types in the import picker and refresh device playlists when returning from import.
+- Fix nested download switches ignoring touch and clipping their native capsule at the edge of the row.
+
+# 1.1.0-beta.16.4
+
+- Match Download Explorer to the supplied reference: pill filters, right-aligned radios, and Now/Later actions inside only the selected card. Hide the availability filter when no result reports readiness; unknown readiness stays under All.
+- Fix device playlist creation, membership and restore against BitChord 1.9’s optimized concrete StateFlow implementation, whose MutableStateFlow interface no longer declares the reflected methods. Preserve existing playlists and source URIs.
+- Replace the window-level Audio/Video overlay with measured AndroidView children in the actual portrait player Column and landscape main pane. Reserve row height before the artwork, inherit the player's insets, movement and stacking, and remove fixed window offsets, elevation chasing and animation-window hooks.
+- Use headphone and video icons with separate 52 × 48 dp touch targets, tooltips, accessible labels and checked states. Keep the saved YouTube preference across tracks and restarts.
+- Release the row's height when the patch is disabled or a local/add-on track plays. Preserve the row during player gestures so artwork does not jump while dragging.
+- Retain every beta.16.3 feature and earlier source history, including Explorer, Streamseek, Telegram recovery, MicroG chooser, downloads, sharing, offloading and mixed playlists.
+
 # 1.1.0-beta.16.3
 
 - Fill the player content slot when embedding Downloads and the song source picker, including when the optimized host passes a null modifier. Prevent the source picker from collapsing into a narrow column.
@@ -7,7 +36,7 @@
 - Keep the Audio/Video player pill above the elevated Compose player, so it is painted and receives taps.
 - Dismiss the full player when opening source selection; do not leave Explorer behind its song menu.
 - Replace recursive rewrapping of the Downloads navigation callback with an idempotent binding.
-- Rebuild Explorer with track context, selectable source cards, reported lossless/availability filters and persistent download/queue actions. Preserve asynchronous searches, explicit file selection and batch review.
+- Rebuild Explorer with track context, selectable source cards, reported lossless/availability filters and download/queue actions. Preserve asynchronous searches, explicit file selection and batch review.
 - Use the host green capsule in nested audio-format settings while preserving native file-selection checkboxes.
 - Add native screen, accessibility, large-text and live Android regressions for these flows.
 

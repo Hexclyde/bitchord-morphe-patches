@@ -2533,8 +2533,8 @@ val videoSwitchPatch =
     }
 
 /**
- * The switch needs BitChord's player connection, which the app's screen reads its state from, and
- * the player sheet's motion, which knows when the player is open.
+ * The switch reads BitChord's player connection and renders measured children in the portrait
+ * player Column and landscape main pane.
  */
 private fun BytecodePatchContext.addVideoSwitch() {
     val remember =
@@ -2546,45 +2546,78 @@ private fun BytecodePatchContext.addVideoSwitch() {
         0,
         "invoke-static/range {p0 .. p0}, $VIDEO_SWITCH->controller(Ljava/lang/Object;)V",
     )
-    val motion = mutableClassDefBy("Lcom/music/bitchord/ui/player/PlayerSheetMotion;")
-    check(motion.fields.any { it.name == "shown" && it.type.startsWith("L") }) {
-        "The player sheet has no shown state"
-    }
-    check(motion.fields.any { it.name == "window" && it.type == "Landroid/view/Window;" }) {
-        "The player sheet has no window"
-    }
-    val init = motion.methods.single { it.name == "<init>" }
-    val returns =
-        init.implementation!!
-            .instructions
-            .withIndex()
-            .filter { it.value.opcode == Opcode.RETURN_VOID }
-            .map { it.index }
-    check(returns.isNotEmpty()) { "The player sheet's constructor doesn't return" }
-    for (index in returns.reversed()) init.addInstruction(
-        index,
-        "invoke-static/range {p0 .. p0}, $VIDEO_SWITCH->motion(Ljava/lang/Object;)V",
-    )
-    // Read LocalView inside the actual full player's composition. Animation-window
-    // tracking is intentionally absent in reduced-motion mode and cannot host UI.
-    val player =
-        mutableClassDefBy("Lcom/music/bitchord/ui/player/NowPlayingScreenKt;").methods.single {
-            it.name.startsWith("NowPlayingScreen-") &&
-                it.parameterTypes.firstOrNull() == "Lcom/music/bitchord/data/model/Song;"
-        }
-    val code = player.implementation!!.instructions.toList()
-    val group =
+    // Insert one AndroidView in the actual portrait Column after its drag/caption Box.
+    // Both branches of the caption conditional meet at endNode, before weight$default.
+    val owner =
+        "Lcom/music/bitchord/ui/player/NowPlayingScreenKt${'$'}${'$'}ExternalSyntheticLambda74;"
+    val portrait = mutableClassDefBy(owner).methods.single { it.name == "invoke" }
+    val code = portrait.implementation!!.instructions.toList()
+    val dim =
         code.indexOfFirst {
-            val call = (it as? ReferenceInstruction)?.reference as? MethodReference
-            call?.definingClass == "Landroidx/compose/runtime/ComposerImpl;" &&
-                call.name == "startRestartGroup"
+            ((it as? ReferenceInstruction)?.reference as? StringReference)?.string ==
+                "spotifyCanvasDim"
         }
-    check(group >= 0) { "Full-player restart group not found" }
-    val composer = (code[group] as FiveRegisterInstruction).registerC
-    val after = if (code[group + 1].opcode == Opcode.MOVE_RESULT_OBJECT) group + 2 else group + 1
-    player.addInstruction(
-        after,
-        "invoke-static/range {v$composer .. v$composer}, $VIDEO_SWITCH->content(Ljava/lang/Object;)V",
+    check(dim >= 0 && portrait.implementation!!.registerCount == 156) {
+        "Portrait player layout changed"
+    }
+    val caption =
+        (dim + 1 until code.size).first { index ->
+            val call = (code[index] as? ReferenceInstruction)?.reference as? MethodReference
+            call?.definingClass == "Lcom/music/bitchord/ui/player/NowPlayingScreenKt;" &&
+                call.name == "WhileShown"
+        }
+    val close =
+        (caption + 1 until code.size).first { index ->
+            val call = (code[index] as? ReferenceInstruction)?.reference as? MethodReference
+            call?.definingClass == "Landroidx/compose/runtime/ComposerImpl;" &&
+                call.name == "endNode"
+        }
+    val weight = (code[close + 2] as? ReferenceInstruction)?.reference as? MethodReference
+    check(
+        weight?.definingClass == "Landroidx/compose/foundation/layout/ColumnScopeInstance;" &&
+            weight.name == "weight${'$'}default"
+    ) {
+        "Header must precede the weighted artwork, outside the drag strip"
+    }
+    val composer = (code[close] as FiveRegisterInstruction).registerC
+    portrait.addInstruction(
+        close + 1,
+        "invoke-static/range {v$composer .. v$composer}, $VIDEO_SWITCH->header(Ljava/lang/Object;)V",
+    )
+
+    // The landscape main pane has its own measured Column; lyrics/queue panes are untouched.
+    val landscape =
+        mutableClassDefBy("Lcom/music/bitchord/ui/player/LandscapePlayerKt;").methods.single {
+            it.name == "LandscapeMainPane"
+        }
+    val landscapeCode = landscape.implementation!!.instructions.toList()
+    val columns =
+        landscapeCode.withIndex().filter { (_, instruction) ->
+            val call = (instruction as? ReferenceInstruction)?.reference as? MethodReference
+            call?.definingClass == "Landroidx/compose/foundation/layout/ColumnKt;" &&
+                call.name == "columnMeasurePolicy"
+        }
+    check(columns.size == 1 && landscape.implementation!!.registerCount == 31) {
+        "Landscape main Column changed"
+    }
+    val modifier =
+        (columns.single().index until landscapeCode.size).first { index ->
+            val field =
+                (landscapeCode[index] as? ReferenceInstruction)?.reference as? FieldReference
+            field?.definingClass == "Landroidx/compose/ui/node/ComposeUiNode${'$'}Companion;" &&
+                field.name == "SetModifier"
+        }
+    val install = modifier + 1
+    val apply = (landscapeCode[install] as? ReferenceInstruction)?.reference as? MethodReference
+    check(
+        apply?.definingClass == "Landroidx/compose/runtime/Updater;" && apply.name == "set-impl"
+    ) {
+        "Landscape Column modifier binding changed"
+    }
+    val landscapeComposer = (landscapeCode[install] as FiveRegisterInstruction).registerC
+    landscape.addInstruction(
+        install + 1,
+        "invoke-static/range {v$landscapeComposer .. v$landscapeComposer}, $VIDEO_SWITCH->header(Ljava/lang/Object;)V",
     )
     println("Added the audio and video switch")
 }
@@ -2652,7 +2685,7 @@ val flacAudioPatch =
 val mixedPlaylistsPatch =
     extrasPatch(
         "Mixed-source playlists",
-        "Adds downloaded files, local audio and streamed tracks to device playlists without a YouTube account. Preserves file and addon source metadata across restarts." +
+        "Adds signed-out playlist links, editable device copies, queue saving, native file import and reviewed two-way Spotify/YouTube Music playlist sync. Keeps files and streams together with full source metadata across restarts." +
             WHERE,
     ) {
         markApplied("mixedPlaylistsApplied")
@@ -2698,6 +2731,59 @@ val mixedPlaylistsPatch =
         move-object/16 p5, v0
     """,
         )
+        val guest = "Lapp/bitchord/telegram/GuestPlaylists;"
+        check(library.parameterTypes[9] == "Lkotlin/jvm/functions/Function0;")
+        library.addInstructions(
+            0,
+            """
+            move-object/from16 v0, p9
+            invoke-static {v0}, $guest->signInAction(Lkotlin/jvm/functions/Function0;)V
+        """,
+        )
+        check(library.parameterTypes[17] == "Ljava/util/ArrayList;") {
+            "Library device shelf ABI changed"
+        }
+        library.addInstructions(
+            0,
+            """
+            move-object/from16 v0, p17
+            invoke-static {v0}, $guest->library(Ljava/util/ArrayList;)Ljava/util/ArrayList;
+            move-result-object v0
+            move-object/16 p17, v0
+        """,
+        )
+        val detail =
+            mutableClassDefBy("Lcom/music/bitchord/ui/MainViewModel;").methods.single {
+                it.name == "openDetail"
+            }
+        check(
+            detail.parameterTypes.first() == "Ljava/lang/String;" &&
+                detail.implementation!!.registerCount > detail.parameterTypes.size + 1
+        )
+        detail.addInstructionsWithLabels(
+            0,
+            """
+            invoke-static/range {p1 .. p1}, $guest->detail(Ljava/lang/String;)Z
+            move-result v0
+            if-eqz v0, :host_detail
+            return-void
+            :host_detail
+            nop
+        """,
+        )
+        val playbackService = mutableClassDefBy("Lcom/music/bitchord/playback/PlaybackService;")
+        playbackService.methods
+            .single { it.name == "onCreate" }
+            .addInstruction(
+                0,
+                "invoke-static/range {p0 .. p0}, $guest->service(Ljava/lang/Object;)V",
+            )
+        playbackService.methods
+            .single { it.name == "onDestroy" }
+            .addInstruction(
+                0,
+                "invoke-static/range {p0 .. p0}, $guest->release(Ljava/lang/Object;)V",
+            )
         // Only the Add to playlist section is expanded. Rating/sign-in gates remain untouched.
         val owners = mutableListOf<Triple<String, String, List<String>>>()
         classDefForEach { type ->

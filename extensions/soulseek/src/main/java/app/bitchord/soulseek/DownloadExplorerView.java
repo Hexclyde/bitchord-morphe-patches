@@ -1,6 +1,5 @@
 package app.bitchord.soulseek;
 
-import android.content.res.ColorStateList;
 import android.view.Gravity;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -12,7 +11,7 @@ import app.bitchord.telegram.PatchStrings;
 
 import java.util.*;
 
-/** Native source selection with a scrolling result area and persistent admission controls. */
+/** Native source selection with a scrolling result area and inline admission controls. */
 final class DownloadExplorerView {
     interface Admission {
         void submit(Option option, boolean now);
@@ -20,12 +19,13 @@ final class DownloadExplorerView {
 
     static final class Option {
         final String source, title, artist, quality, detail;
-        final boolean lossless, reportedAvailable;
+        final boolean lossless, reportedAvailable, availabilityKnown;
         final DownloadExplorerPage.Selection selection;
         final Runnable preview;
         View card;
         RadioButton radio;
         LinearLayout group;
+        View previewAction;
 
         Option(
                 String source,
@@ -34,7 +34,7 @@ final class DownloadExplorerView {
                 String quality,
                 String detail,
                 boolean lossless,
-                boolean reportedAvailable,
+                Boolean reportedAvailable,
                 DownloadExplorerPage.Selection selection,
                 Runnable preview) {
             this.source = source;
@@ -43,7 +43,8 @@ final class DownloadExplorerView {
             this.quality = quality;
             this.detail = detail;
             this.lossless = lossless;
-            this.reportedAvailable = reportedAvailable;
+            this.reportedAvailable = Boolean.TRUE.equals(reportedAvailable);
+            this.availabilityKnown = reportedAvailable != null;
             this.selection = selection;
             this.preview = preview;
         }
@@ -56,7 +57,8 @@ final class DownloadExplorerView {
     private final DownloadPage page;
     private final DownloadStyle style;
     private final LinearLayout searchBar;
-    private final TextView selectedTitle, selectedDetail, empty, admissionNotice;
+    private final TextView empty, admissionNotice;
+    private final TextView availabilityChip;
     private final List<Option> options = new ArrayList<>();
     private final List<TextView> chips = new ArrayList<>();
     private final boolean batch;
@@ -74,8 +76,8 @@ final class DownloadExplorerView {
         this.batch = batch;
         style = page.downloadStyle;
         root = column();
-        root.setPadding(style.dp(18), style.dp(8), style.dp(18), style.dp(8));
-        root.setBackgroundColor(style.background);
+        root.setPadding(style.dp(6), style.dp(8), style.dp(6), style.dp(8));
+        root.setBackgroundColor(page.surfaceColor());
         LinearLayout header = row();
         header.addView(
                 style.backButton(page::finish),
@@ -90,6 +92,7 @@ final class DownloadExplorerView {
         root.addView(header);
 
         ScrollView scroll = new ScrollView(page);
+        page.contentScroll = scroll;
         scroll.setFillViewport(true);
         LinearLayout content = column();
         scroll.addView(content, new ScrollView.LayoutParams(-1, -2));
@@ -153,11 +156,18 @@ final class DownloadExplorerView {
         };
         for (int i = 0; i < ids.length; i++) {
             final String id = ids[i];
-            TextView chip = label(names[i], 13, false);
+            TextView chip = label(names[i], 14, false);
             chip.setTag("explorer-filter:" + id);
-            chip.setMinHeight(style.dp(48));
+            chip.setMinHeight(style.dp(50));
             chip.setGravity(Gravity.CENTER);
             chip.setPadding(style.dp(14), 0, style.dp(14), 0);
+            if (id.equals("lossless"))
+                chip.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        style.explorerIcon("lossless", style.secondary), null, null, null);
+            if (id.equals("available"))
+                chip.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        style.explorerIcon("available", style.secondary), null, null, null);
+            chip.setCompoundDrawablePadding(style.dp(6));
             chip.setClickable(true);
             chip.setFocusable(true);
             chip.setOnClickListener(
@@ -170,6 +180,11 @@ final class DownloadExplorerView {
             filterRow.addView(chip, placement);
             chips.add(chip);
         }
+        availabilityChip = chips.get(2);
+        availabilityChip.setTooltipText(
+                PatchStrings.t(
+                        "Peers reporting a free upload slot. Sources with unknown readiness remain"
+                                + " under All."));
         content.addView(filters);
         status = label(PatchStrings.t("Nothing downloads until you choose a result."), 13, false);
         status.setPadding(0, style.dp(10), 0, style.dp(10));
@@ -191,31 +206,24 @@ final class DownloadExplorerView {
                         false);
         warning.setPadding(0, style.dp(12), 0, style.dp(12));
         content.addView(warning);
-        content.addView(
-                label(PatchStrings.t("Availability is reported and may change."), 12, false));
 
         footer = column();
         footer.setTag("download-explorer-selection");
-        footer.setPadding(0, style.dp(10), 0, 0);
-        selectedTitle = label(PatchStrings.t("Choose a source"), 16, true);
-        selectedDetail =
-                label(PatchStrings.t("Nothing downloads until you choose a result."), 12, false);
-        selectedDetail.setPadding(0, style.dp(4), 0, style.dp(8));
-        footer.addView(selectedTitle);
-        footer.addView(selectedDetail);
-        admissionNotice = label("", 13, false);
-        admissionNotice.setVisibility(View.GONE);
-        admissionNotice.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
-        footer.addView(admissionNotice);
-        now =
-                action(
-                        batch
-                                ? PatchStrings.t("Use for this track")
-                                : PatchStrings.t("Download now"),
-                        true);
-        queue = action(PatchStrings.t("Add to download queue"), false);
+        View divider = new View(page);
+        divider.setBackgroundColor(style.outline);
+        footer.addView(divider, new LinearLayout.LayoutParams(-1, style.dp(1)));
+        LinearLayout actionRow = row();
+        actionRow.setPadding(style.dp(16), style.dp(9), style.dp(16), style.dp(14));
+        now = action(batch ? PatchStrings.t("Use for this track") : PatchStrings.t("Now"), true);
+        queue = action(PatchStrings.t("Later"), false);
         now.setTag("download-explorer-now");
         queue.setTag("download-explorer-queue");
+        now.setContentDescription(
+                batch ? PatchStrings.t("Use for this track") : PatchStrings.t("Download now"));
+        queue.setContentDescription(PatchStrings.t("Add to download queue"));
+        if (batch)
+            now.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    style.explorerIcon("check", style.foreground), null, null, null);
         now.setOnClickListener(
                 v -> {
                     if (selected != null && !busy) admission.submit(selected, true);
@@ -224,13 +232,16 @@ final class DownloadExplorerView {
                 v -> {
                     if (selected != null && !busy) admission.submit(selected, false);
                 });
-        footer.addView(now, new LinearLayout.LayoutParams(-1, -2));
-        if (!batch) {
-            LinearLayout.LayoutParams spacing = new LinearLayout.LayoutParams(-1, -2);
-            spacing.topMargin = style.dp(7);
-            footer.addView(queue, spacing);
-        }
-        root.addView(footer);
+        LinearLayout.LayoutParams first = new LinearLayout.LayoutParams(0, -2, 1);
+        if (!batch) first.setMarginEnd(style.dp(8));
+        actionRow.addView(now, first);
+        if (!batch) actionRow.addView(queue, new LinearLayout.LayoutParams(0, -2, 1));
+        footer.addView(actionRow);
+        admissionNotice = label("", 13, false);
+        admissionNotice.setPadding(style.dp(16), 0, style.dp(16), style.dp(12));
+        admissionNotice.setVisibility(View.GONE);
+        admissionNotice.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
+        footer.addView(admissionNotice);
         root.setLayoutDirection(
                 PatchStrings.rtl() ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
         choose(null);
@@ -246,6 +257,8 @@ final class DownloadExplorerView {
         results.removeAllViews();
         options.clear();
         choose(null);
+        filter = "all";
+        applyFilter();
         empty.setVisibility(View.GONE);
         InputMethodManager keyboard =
                 (InputMethodManager)
@@ -270,21 +283,51 @@ final class DownloadExplorerView {
             group.removeAllViews();
         option.group = group;
         LinearLayout card = column();
-        card.setPadding(style.dp(16), style.dp(8), style.dp(16), style.dp(12));
+        card.setClipToOutline(true);
+        LinearLayout body = column();
+        body.setPadding(style.dp(16), style.dp(8), style.dp(16), style.dp(12));
+        card.addView(body);
         option.card = card;
-        LinearLayout heading = row();
-        heading.addView(label(option.source, 16, true), new LinearLayout.LayoutParams(0, -2, 1));
-        RadioButton radio = new RadioButton(page);
-        radio.setButtonTintList(ColorStateList.valueOf(style.foreground));
+        FrameLayout heading = new FrameLayout(page);
+        TextView source = label(option.source, 16, false);
+        source.setTextColor(style.foreground);
+        source.setGravity(Gravity.CENTER_VERTICAL);
+        source.setMinHeight(style.dp(48));
+        FrameLayout.LayoutParams sourcePlacement = new FrameLayout.LayoutParams(-1, -2);
+        sourcePlacement.setMarginEnd(style.dp(40));
+        heading.addView(source, sourcePlacement);
+        RadioButton radio =
+                new RadioButton(page) {
+                    private final android.graphics.Paint ink =
+                            new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+
+                    @Override
+                    protected void onDraw(android.graphics.Canvas canvas) {
+                        float x = getWidth() / 2f, y = getHeight() / 2f;
+                        ink.setColor(style.foreground);
+                        ink.setStyle(android.graphics.Paint.Style.STROKE);
+                        ink.setStrokeWidth(style.dp(2));
+                        canvas.drawCircle(x, y, style.dp(9), ink);
+                        if (isChecked()) {
+                            ink.setStyle(android.graphics.Paint.Style.FILL);
+                            canvas.drawCircle(x, y, style.dp(5), ink);
+                        }
+                    }
+                };
+        radio.setButtonDrawable((android.graphics.drawable.Drawable) null);
+        radio.setBackground(null);
         radio.setClickable(false);
         radio.setFocusable(false);
         radio.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
-        heading.addView(radio, new LinearLayout.LayoutParams(style.dp(48), style.dp(48)));
+        FrameLayout.LayoutParams radioPlacement =
+                new FrameLayout.LayoutParams(style.dp(32), style.dp(32), Gravity.TOP | Gravity.END);
+        radioPlacement.setMarginEnd(-style.dp(7));
+        heading.addView(radio, radioPlacement);
         option.radio = radio;
-        card.addView(heading);
+        body.addView(heading);
         TextView track = label(join(option.title, option.artist), 14, false);
         track.setMaxLines(2);
-        card.addView(track);
+        body.addView(track);
         TextView quality =
                 label(
                         option.quality.isEmpty()
@@ -293,8 +336,8 @@ final class DownloadExplorerView {
                         14,
                         true);
         quality.setPadding(0, style.dp(9), 0, style.dp(4));
-        card.addView(quality);
-        if (!option.detail.isEmpty()) card.addView(label(option.detail, 12, false));
+        body.addView(quality);
+        if (!option.detail.isEmpty()) body.addView(label(option.detail, 12, false));
         card.setClickable(true);
         card.setFocusable(true);
         card.setOnClickListener(v -> choose(option));
@@ -311,8 +354,12 @@ final class DownloadExplorerView {
                 });
         if (option.preview != null) {
             Button preview = action(PatchStrings.t("Preview this file"), false);
+            preview.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    style.explorerIcon("preview", style.foreground), null, null, null);
             preview.setOnClickListener(v -> option.preview.run());
-            card.addView(preview);
+            preview.setVisibility(View.GONE);
+            option.previewAction = preview;
+            body.addView(preview);
         }
         LinearLayout.LayoutParams placement = new LinearLayout.LayoutParams(-1, -2);
         placement.bottomMargin = style.dp(10);
@@ -322,21 +369,28 @@ final class DownloadExplorerView {
     }
 
     private void choose(Option option) {
+        if (busy && option != null) return;
+        if (footer.getParent() instanceof android.view.ViewGroup)
+            ((android.view.ViewGroup) footer.getParent()).removeView(footer);
         selected = option;
         if (admissionNotice != null) message("");
         for (Option item : options) {
             item.radio.setChecked(item == option);
             item.card.setSelected(item == option);
-            item.card.setBackground(style.shape(style.card, 20, item == option));
+            item.card.setBackground(style.shape(style.card, 22, false));
+            if (item.previewAction != null)
+                item.previewAction.setVisibility(item == option ? View.VISIBLE : View.GONE);
         }
-        selectedTitle.setText(
-                option == null
-                        ? PatchStrings.t("Choose a source")
-                        : PatchStrings.f("Download from {0}", option.source));
-        selectedDetail.setText(
-                option == null
-                        ? PatchStrings.t("Nothing downloads until you choose a result.")
-                        : option.title + "\n" + option.quality);
+        if (option != null) {
+            ((LinearLayout) option.card).addView(footer, new LinearLayout.LayoutParams(-1, -2));
+            option.card.post(
+                    () -> {
+                        android.graphics.Rect bounds =
+                                new android.graphics.Rect(
+                                        0, 0, footer.getWidth(), footer.getHeight());
+                        footer.requestRectangleOnScreen(bounds, false);
+                    });
+        }
         updateActions();
     }
 
@@ -363,16 +417,31 @@ final class DownloadExplorerView {
             item.card.setVisibility(show ? View.VISIBLE : View.GONE);
             groups.put(item.group, groups.getOrDefault(item.group, false) || show);
             if (show) visible++;
-            item.card.setBackground(style.shape(style.card, 20, selected == item));
+            item.card.setBackground(style.shape(style.card, 22, false));
         }
         for (Map.Entry<LinearLayout, Boolean> entry : groups.entrySet())
             entry.getKey().setVisibility(entry.getValue() ? View.VISIBLE : View.GONE);
         for (TextView chip : chips) {
             boolean active = chip.getTag().equals("explorer-filter:" + filter);
             chip.setSelected(active);
-            chip.setTextColor(active ? style.foreground : style.secondary);
-            chip.setBackground(style.shape(active ? style.field : style.background, 22, !active));
+            chip.setTextColor(active ? android.graphics.Color.WHITE : style.secondary);
+            android.graphics.drawable.GradientDrawable shape =
+                    style.shape(active ? 0xff56649f : style.card, 25, false);
+            shape.setStroke(
+                    style.dp(1), active ? 0xff6371ac : (style.dark ? 0xff3b3b40 : style.outline));
+            chip.setBackground(shape);
+            String id = chip.getTag().toString();
+            if (id.endsWith(":lossless") || id.endsWith(":available"))
+                chip.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        style.explorerIcon(
+                                id.endsWith(":lossless") ? "lossless" : "available",
+                                active ? android.graphics.Color.WHITE : style.secondary),
+                        null,
+                        null,
+                        null);
         }
+        boolean knownAvailability = options.stream().anyMatch(item -> item.availabilityKnown);
+        availabilityChip.setVisibility(knownAvailability ? View.VISIBLE : View.GONE);
         empty.setVisibility(!options.isEmpty() && visible == 0 ? View.VISIBLE : View.GONE);
     }
 
@@ -385,6 +454,7 @@ final class DownloadExplorerView {
     private LinearLayout row() {
         LinearLayout view = new LinearLayout(page);
         view.setGravity(Gravity.CENTER_VERTICAL);
+        view.setBaselineAligned(false);
         return view;
     }
 
@@ -397,11 +467,37 @@ final class DownloadExplorerView {
     }
 
     private Button action(String label, boolean primary) {
-        Button button = new Button(page);
+        Button button =
+                new Button(page) {
+                    @Override
+                    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+                        super.onSizeChanged(w, h, oldw, oldh);
+                        float group = getPaint().measureText(getText().toString()) + style.dp(29);
+                        int edge = Math.max(style.dp(10), (int) ((w - group) / 2f) - style.dp(2));
+                        if (getPaddingStart() != edge)
+                            setPaddingRelative(edge, style.dp(8), edge, style.dp(8));
+                    }
+                };
         button.setText(label);
+        button.setSingleLine(true);
         style.button(button);
-        button.setBackground(style.shape(primary ? style.foreground : style.field, 28, false));
-        button.setTextColor(primary ? style.background : style.foreground);
+        button.setTypeface(style.regular);
+        button.setMinHeight(style.dp(48));
+        button.setMinimumHeight(style.dp(48));
+        button.setPadding(style.dp(12), style.dp(8), style.dp(12), style.dp(8));
+        int fill =
+                style.dark
+                        ? (primary ? 0xff282735 : 0xff3e3e40)
+                        : (primary ? 0xffe2e4f5 : style.card);
+        android.graphics.drawable.GradientDrawable shape = style.shape(fill, 24, false);
+        shape.setStroke(
+                style.dp(1), style.dark ? (primary ? 0xff484651 : 0xff66666a) : style.outline);
+        button.setBackground(shape);
+        int ink = primary ? style.foreground : (style.dark ? 0xffb9b9be : style.secondary);
+        button.setTextColor(ink);
+        button.setCompoundDrawablePadding(style.dp(7));
+        button.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                style.explorerIcon(primary ? "now" : "later", ink), null, null, null);
         return button;
     }
 

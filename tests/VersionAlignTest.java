@@ -127,7 +127,8 @@ public final class VersionAlignTest {
             float[] stream, int streamRate, float[] telegram, int rate, long positionMs) {
         Object sink = play(stream, streamRate, positionMs + 400);
         VersionAlign.position(sink, RENDER_OFFSET_US + positionMs * 1000);
-        VersionAlign.Series[] heard = VersionAlign.recent(positionMs, 1f);
+        // The generated samples use a fixed timeline; host scheduling must not advance it.
+        VersionAlign.Series[] heard = VersionAlign.recent(positionMs, 0f);
         check(heard != null, "heard enough");
         check(
                 Math.abs(heard[0].startMs - (positionMs - VersionAlign.HEARD_MS)) <= 5,

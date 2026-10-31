@@ -9,19 +9,17 @@ import android.graphics.RectF;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.WindowInsets;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
 import kotlin.coroutines.EmptyCoroutineContext;
 import kotlin.coroutines.jvm.internal.ContinuationImpl;
-import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function1;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
@@ -34,13 +32,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * Audio and video switch: a Song | Video pill at the top of the player, as in YouTube Music. From
- * 1.9 BitChord can play a song's music video, and switches between the two from the song menu; the
- * pill does the same in one tap. It finds the other version the way BitChord does (its cache first,
- * then YouTube Music) and hands it to BitChord's own version swap, which keeps the place in the
- * queue and lines the two up in time.
- */
+/** Measured audio/video controls using the host's version lookup and queue-preserving swap. */
 public final class VideoSwitch {
     private VideoSwitch() {}
 
@@ -67,31 +59,10 @@ public final class VideoSwitch {
 
     private static volatile SharedPreferences preferences;
     private static volatile WeakReference<Object> controller = new WeakReference<>(null);
-    private static volatile WeakReference<Object> motion = new WeakReference<>(null);
-    private static WeakReference<View> playerAnchor = new WeakReference<>(null);
-    private static WeakReference<View> observedRoot = new WeakReference<>(null);
-    private static final ViewTreeObserver.OnGlobalLayoutListener LAYOUT = VideoSwitch::attach;
-    private static final View.OnAttachStateChangeListener ANCHOR_LIFECYCLE =
-            new View.OnAttachStateChangeListener() {
-                public void onViewAttachedToWindow(View view) {
-                    watchRoot(view);
-                    attach();
-                }
-
-                public void onViewDetachedFromWindow(View view) {
-                    unwatchRoot();
-                    Pill detached = pill.get();
-                    if (main != null)
-                        main.post(
-                                () -> {
-                                    if (detached != null
-                                            && detached.getParent() instanceof ViewGroup)
-                                        ((ViewGroup) detached.getParent()).removeView(detached);
-                                    if (pill.get() == detached) pill = new WeakReference<>(null);
-                                });
-                }
-            };
     private static WeakReference<Pill> pill = new WeakReference<>(null);
+    private static Method androidView;
+    private static Object headerModifier;
+    private static final Function1<Context, View> HEADER_FACTORY = Header::new;
     private static Handler main;
 
     /** Songs with no other version, so the pill doesn't ask again. */
@@ -198,15 +169,6 @@ public final class VideoSwitch {
         switchTo(context, preferredVideo);
     }
 
-    /** The player sheet's motion, made once per screen; it knows when the player is open. */
-    public static void motion(Object playerSheetMotion) {
-        if (!SoundExtras.videoSwitchApplied() || playerSheetMotion == null) return;
-        motion = new WeakReference<>(playerSheetMotion);
-        if (main == null) main = new Handler(Looper.getMainLooper());
-        main.removeCallbacks(ATTACH);
-        main.post(ATTACH);
-    }
-
     // ── What's playing ──────────────────────────────────────────────────────
 
     /** The song playing now, as BitChord's Song, or null. */
@@ -253,23 +215,6 @@ public final class VideoSwitch {
             if (state == null) return false;
             Method method = state.getClass().getMethod("getInParty");
             return Boolean.TRUE.equals(method.invoke(state));
-        } catch (Exception | LinkageError e) {
-            return false;
-        }
-    }
-
-    /** Whether the full player is open and settled, not being dragged. */
-    static boolean playerOpen() {
-        Object sheet = motion.get();
-        if (sheet == null) return false;
-        try {
-            Field shown = sheet.getClass().getDeclaredField("shown");
-            shown.setAccessible(true);
-            Object getter = shown.get(sheet);
-            if (!(getter instanceof Function0)) return false;
-            if (!Boolean.TRUE.equals(((Function0<?>) getter).invoke())) return false;
-            Method holding = sheet.getClass().getMethod("getHolding");
-            return !Boolean.TRUE.equals(holding.invoke(sheet));
         } catch (Exception | LinkageError e) {
             return false;
         }
@@ -430,103 +375,74 @@ public final class VideoSwitch {
 
     // ── The pill ────────────────────────────────────────────────────────────
 
-    private static final Runnable ATTACH = VideoSwitch::attach;
-
-    /** Called inside NowPlayingScreen's restart group, including reduced-motion players. */
-    public static void content(Object composer) {
+    /** A real child of the host player Column, after its drag strip and before its artwork. */
+    public static void header(Object composer) {
         try {
-            Object key =
-                    Class.forName("androidx.compose.ui.platform.AndroidCompositionLocals_androidKt")
-                            .getMethod("getLocalView")
-                            .invoke(null);
-            View view =
-                    (View)
-                            composer.getClass()
-                                    .getMethod(
-                                            "consume",
-                                            Class.forName(
-                                                    "androidx.compose.runtime.ProvidableCompositionLocal"))
-                                    .invoke(composer, key);
-            if (playerAnchor.get() == view) return;
-            if (main == null) main = new Handler(Looper.getMainLooper());
-            main.post(() -> bindContent(view));
-        } catch (ReflectiveOperationException | LinkageError failed) {
-            HostLog.d("Player content view unavailable: " + failed.getClass().getSimpleName());
+            initHeader();
+            int tint = 0xffffffff;
+            try {
+                Object local =
+                        Class.forName("com.music.bitchord.ui.player.PlayerControlsKt")
+                                .getMethod("getLocalPlayerTint")
+                                .invoke(null);
+                Object color =
+                        composer.getClass()
+                                .getMethod(
+                                        "consume",
+                                        Class.forName(
+                                                "androidx.compose.runtime.ProvidableCompositionLocal"))
+                                .invoke(composer, local);
+                long packed = color.getClass().getField("value").getLong(color);
+                if ((packed & 63L) == 0) tint = (int) (packed >>> 32);
+            } catch (ReflectiveOperationException | LinkageError unavailable) {
+                // White is the player's fallback tint over artwork.
+            }
+            final int foreground = tint;
+            Function1<View, Unit> update =
+                    view -> {
+                        Header row = (Header) view;
+                        row.control.tint(foreground);
+                        row.control.refresh();
+                        return Unit.INSTANCE;
+                    };
+            androidView.invoke(null, HEADER_FACTORY, headerModifier, update, composer, 0, 0);
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot embed player mode controls", failure);
         }
     }
 
-    static void bindContent(View view) {
-        if (main == null) main = new Handler(Looper.getMainLooper());
-        View previous = playerAnchor.get();
-        if (previous != view) {
-            if (previous != null) previous.removeOnAttachStateChangeListener(ANCHOR_LIFECYCLE);
-            unwatchRoot();
-            removePill();
-            playerAnchor = new WeakReference<>(view);
-            view.addOnAttachStateChangeListener(ANCHOR_LIFECYCLE);
+    private static synchronized void initHeader() throws ReflectiveOperationException {
+        if (androidView != null) return;
+        Class<?> modifier = Class.forName("androidx.compose.ui.Modifier");
+        Object fill =
+                Class.forName("androidx.compose.foundation.layout.SizeKt")
+                        .getField("FillWholeMaxWidth")
+                        .get(null);
+        Object layer =
+                Class.forName("androidx.compose.ui.ZIndexElement")
+                        .getConstructor(float.class)
+                        .newInstance(1f);
+        Object bounds = modifier.getMethod("then", modifier).invoke(fill, layer);
+        Method found = null;
+        for (Method method :
+                Class.forName("androidx.compose.ui.viewinterop.AndroidView_androidKt").getMethods())
+            if (method.getName().equals("AndroidView") && method.getParameterCount() == 6)
+                found = method;
+        if (found == null) throw new NoSuchMethodException("Player AndroidView ABI");
+        headerModifier = bounds;
+        androidView = found;
+    }
+
+    static final class Header extends FrameLayout {
+        final Pill control;
+
+        Header(Context context) {
+            super(context);
+            setTag("player-mode-header");
+            control = new Pill(context);
+            addView(control, new FrameLayout.LayoutParams(-2, -2, Gravity.CENTER));
+            pill = new WeakReference<>(control);
         }
-        if (view.isAttachedToWindow()) {
-            watchRoot(view);
-            attach();
-        }
-    }
-
-    private static void watchRoot(View anchor) {
-        View root = anchor.getRootView();
-        if (observedRoot.get() == root) return;
-        unwatchRoot();
-        observedRoot = new WeakReference<>(root);
-        root.getViewTreeObserver().addOnGlobalLayoutListener(LAYOUT);
-    }
-
-    private static void unwatchRoot() {
-        View root = observedRoot.get();
-        if (root != null && root.getViewTreeObserver().isAlive())
-            root.getViewTreeObserver().removeOnGlobalLayoutListener(LAYOUT);
-        observedRoot = new WeakReference<>(null);
-    }
-
-    private static void removePill() {
-        Pill old = pill.get();
-        if (old != null && old.getParent() instanceof ViewGroup)
-            ((ViewGroup) old.getParent()).removeView(old);
-        pill = new WeakReference<>(null);
-    }
-
-    static void attach() {
-        View anchor = playerAnchor.get();
-        if (anchor == null || !anchor.isAttachedToWindow()) return;
-        View found = anchor.getRootView().findViewById(android.R.id.content);
-        if (!(found instanceof FrameLayout)) return;
-        FrameLayout content = (FrameLayout) found;
-        Pill old = pill.get();
-        if (old != null && old.getParent() == content) {
-            raiseAbovePlayer(old);
-            return;
-        }
-        removePill();
-        Pill made = new Pill(content.getContext());
-        FrameLayout.LayoutParams lp =
-                new FrameLayout.LayoutParams(-2, -2, Gravity.TOP | Gravity.CENTER_HORIZONTAL);
-        lp.topMargin = Math.round(56 * content.getResources().getDisplayMetrics().density);
-        content.addView(made, lp);
-        pill = new WeakReference<>(made);
-        raiseAbovePlayer(made);
-        made.refresh();
-    }
-
-    private static void raiseAbovePlayer(Pill shown) {
-        if (!(shown.getParent() instanceof ViewGroup)) return;
-        ViewGroup parent = (ViewGroup) shown.getParent();
-        float highest = 0f;
-        for (int i = 0; i < parent.getChildCount(); i++) {
-            View sibling = parent.getChildAt(i);
-            if (sibling != shown) highest = Math.max(highest, sibling.getZ());
-        }
-        // Compose's modal player has elevation; child order alone cannot place a View above it.
-        float above = highest + shown.getResources().getDisplayMetrics().density;
-        if (shown.getZ() != above) shown.setZ(above);
-        if (parent.getChildAt(parent.getChildCount() - 1) != shown) shown.bringToFront();
     }
 
     private static void refreshPill() {
@@ -538,58 +454,46 @@ public final class VideoSwitch {
         Toast.makeText(context.getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
-    /** Song | Video, with headphones and a video frame, as in YouTube Music. */
-    static final class Pill extends View {
+    /** Two 52 × 48 dp targets; only icons are painted, while each exposes its own label. */
+    static final class Pill extends LinearLayout {
         private final float density;
-        private final Paint back = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private final Paint chosen = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private final Paint icon = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private final Paint label = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private final Path path = new Path();
-        private final RectF box = new RectF();
+        private final Paint selection = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Runnable tick = this::refresh;
-        private boolean video, busy, blocked;
+        final ModeIcon audio, video;
+        private boolean busy;
 
         Pill(Context context) {
             super(context);
             density = context.getResources().getDisplayMetrics().density;
-            back.setColor(0xee252528);
-            chosen.setColor(0xff606064);
-            label.setColor(0xffffffff);
-            label.setTextAlign(Paint.Align.CENTER);
-            label.setTypeface(
-                    android.graphics.Typeface.create(
-                            "sans-serif-medium", android.graphics.Typeface.NORMAL));
-            label.setTextSize(14 * density);
-            setClickable(true);
-            setFocusable(true);
-            icon.setStyle(Paint.Style.STROKE);
-            icon.setStrokeCap(Paint.Cap.ROUND);
-            icon.setStrokeJoin(Paint.Join.ROUND);
-            icon.setStrokeWidth(2 * density);
+            setOrientation(HORIZONTAL);
+            setWillNotDraw(false);
+            setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
+            audio = new ModeIcon(context, false);
+            video = new ModeIcon(context, true);
+            addView(
+                    audio,
+                    new LinearLayout.LayoutParams((int) (52 * density), (int) (48 * density)));
+            addView(
+                    video,
+                    new LinearLayout.LayoutParams((int) (52 * density), (int) (48 * density)));
             setVisibility(GONE);
-            setContentDescription(Strings.t("Switch between song and video"));
+            tint(0xffffffff);
         }
 
-        @Override
-        protected void onMeasure(int widthSpec, int heightSpec) {
-            setMeasuredDimension((int) (176 * density), (int) (48 * density));
-        }
-
-        @Override
-        public WindowInsets onApplyWindowInsets(WindowInsets insets) {
-            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) getLayoutParams();
-            if (lp != null) {
-                lp.topMargin = insets.getSystemWindowInsetTop() + (int) (40 * density);
-                setLayoutParams(lp);
-            }
-            return insets;
+        void tint(int color) {
+            selection.setColor(color);
+            selection.setStrokeWidth(2 * density);
+            selection.setStrokeCap(Paint.Cap.ROUND);
+            audio.icon.setColor(color);
+            video.icon.setColor(color);
+            invalidate();
+            audio.invalidate();
+            video.invalidate();
         }
 
         @Override
         protected void onAttachedToWindow() {
             super.onAttachedToWindow();
-            requestApplyInsets();
             post(tick);
         }
 
@@ -601,41 +505,23 @@ public final class VideoSwitch {
 
         void refresh() {
             removeCallbacks(tick);
-            Object now = enabled && playerOpen() ? current() : null;
+            Object now = enabled ? current() : null;
             boolean show = switchable(now);
             setVisibility(show ? VISIBLE : GONE);
-            if (show) {
-                String id = string(now, "videoId");
-                video = preferredVideo;
-                busy = switching != null;
-                blocked = inParty() || missing.contains(id + "|" + preferredVideo);
-                setAlpha(busy || blocked ? 0.5f : 1f);
-                raiseAbovePlayer(this);
-                invalidate();
-            }
-            if (isAttachedToWindow() && getWindowVisibility() == VISIBLE)
-                postDelayed(tick, show ? 300 : 600);
-        }
-
-        @Override
-        public boolean onTouchEvent(MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                setPressed(true);
-                return true;
-            }
-            if (event.getAction() == MotionEvent.ACTION_CANCEL) {
-                setPressed(false);
-                return true;
-            }
-            if (event.getAction() != MotionEvent.ACTION_UP) return true;
-            setPressed(false);
-            super.performClick();
-            choose(event.getX() >= getWidth() / 2f);
-            return true;
+            busy = switching != null;
+            boolean allowed = !busy && !inParty();
+            audio.setEnabled(allowed);
+            video.setEnabled(allowed);
+            audio.setSelected(!preferredVideo);
+            video.setSelected(preferredVideo);
+            String id = string(now, "videoId");
+            audio.setAlpha(!allowed || missing.contains(id + "|false") ? 0.4f : 1f);
+            video.setAlpha(!allowed || missing.contains(id + "|true") ? 0.4f : 1f);
+            invalidate();
+            if (isAttachedToWindow() && getWindowVisibility() == VISIBLE) postDelayed(tick, 300);
         }
 
         private void choose(boolean wantVideo) {
-            setPreferredVideo(wantVideo);
             if (busy) return;
             if (inParty()) {
                 toast(
@@ -643,69 +529,92 @@ public final class VideoSwitch {
                         Strings.t("Versions can’t be switched in a Listen Together party."));
                 return;
             }
+            setPreferredVideo(wantVideo);
             enforcePreference();
         }
 
         @Override
-        public boolean performClick() {
-            super.performClick();
-            choose(!preferredVideo);
-            return true;
-        }
-
-        @Override
-        public void onInitializeAccessibilityNodeInfo(
-                android.view.accessibility.AccessibilityNodeInfo info) {
-            super.onInitializeAccessibilityNodeInfo(info);
-            info.setClassName("android.widget.Switch");
-            info.setCheckable(true);
-            info.setChecked(preferredVideo);
-            info.setText(Strings.t(preferredVideo ? "Video" : "Audio"));
-        }
-
-        @Override
         protected void onDraw(Canvas canvas) {
-            float w = getWidth(), h = 40 * density, top = 4 * density, r = h / 2f;
-            box.set(0, top, w, top + h);
-            canvas.drawRoundRect(box, r, r, back);
-            float pad = 3 * density;
-            box.set(video ? w / 2f : pad, top + pad, video ? w - pad : w / 2f, top + h - pad);
-            canvas.drawRoundRect(box, r - pad, r - pad, chosen);
-            float y = top + h / 2f - (label.ascent() + label.descent()) / 2f;
-            canvas.drawText(Strings.t("Audio"), w / 4f, y, label);
-            canvas.drawText(Strings.t("Video"), w * 3f / 4f, y, label);
+            super.onDraw(canvas);
+            float center = getWidth() * (preferredVideo ? .75f : .25f);
+            canvas.drawLine(
+                    center - 10 * density,
+                    44 * density,
+                    center + 10 * density,
+                    44 * density,
+                    selection);
         }
 
-        private void headphones(Canvas canvas, float cx, float cy) {
-            float s = 8 * density;
-            box.set(cx - s, cy - s, cx + s, cy + s);
-            path.reset();
-            path.addArc(box, 180, 180);
-            canvas.drawPath(path, icon);
-            canvas.drawLine(cx - s, cy, cx - s, cy + s * 0.55f, icon);
-            canvas.drawLine(cx + s, cy, cx + s, cy + s * 0.55f, icon);
-            Paint.Style style = icon.getStyle();
-            icon.setStyle(Paint.Style.FILL_AND_STROKE);
-            box.set(cx - s - density, cy + s * 0.05f, cx - s * 0.45f, cy + s * 0.9f);
-            canvas.drawRoundRect(box, density, density, icon);
-            box.set(cx + s * 0.45f, cy + s * 0.05f, cx + s + density, cy + s * 0.9f);
-            canvas.drawRoundRect(box, density, density, icon);
-            icon.setStyle(style);
-        }
+        final class ModeIcon extends View {
+            final boolean isVideo;
+            final Paint icon = new Paint(Paint.ANTI_ALIAS_FLAG);
+            final Path path = new Path();
+            final RectF bounds = new RectF();
 
-        private void videoFrame(Canvas canvas, float cx, float cy) {
-            float wd = 9 * density, ht = 6.5f * density;
-            box.set(cx - wd, cy - ht, cx + wd, cy + ht);
-            canvas.drawRoundRect(box, 2 * density, 2 * density, icon);
-            path.reset();
-            path.moveTo(cx - 2.5f * density, cy - 3.5f * density);
-            path.lineTo(cx + 3.5f * density, cy);
-            path.lineTo(cx - 2.5f * density, cy + 3.5f * density);
-            path.close();
-            Paint.Style style = icon.getStyle();
-            icon.setStyle(Paint.Style.FILL_AND_STROKE);
-            canvas.drawPath(path, icon);
-            icon.setStyle(style);
+            ModeIcon(Context context, boolean isVideo) {
+                super(context);
+                this.isVideo = isVideo;
+                String label = Strings.t(isVideo ? "Video" : "Audio");
+                setContentDescription(label);
+                setTooltipText(label);
+                setTag(isVideo ? "player-mode-video" : "player-mode-audio");
+                setFocusable(true);
+                setClickable(true);
+                icon.setStyle(Paint.Style.STROKE);
+                icon.setStrokeCap(Paint.Cap.ROUND);
+                icon.setStrokeJoin(Paint.Join.ROUND);
+                icon.setStrokeWidth(2 * density);
+                setOnClickListener(view -> choose(isVideo));
+            }
+
+            @Override
+            public void onInitializeAccessibilityNodeInfo(
+                    android.view.accessibility.AccessibilityNodeInfo info) {
+                super.onInitializeAccessibilityNodeInfo(info);
+                info.setClassName("android.widget.RadioButton");
+                info.setCheckable(true);
+                info.setChecked(preferredVideo == isVideo);
+            }
+
+            @Override
+            protected void onDraw(Canvas canvas) {
+                float cx = getWidth() / 2f, cy = getHeight() / 2f;
+                if (isVideo) {
+                    float wd = 9 * density, ht = 6.5f * density;
+                    bounds.set(cx - wd, cy - ht, cx + wd, cy + ht);
+                    canvas.drawRoundRect(bounds, 2 * density, 2 * density, icon);
+                    path.reset();
+                    path.moveTo(cx - 2.5f * density, cy - 3.5f * density);
+                    path.lineTo(cx + 3.5f * density, cy);
+                    path.lineTo(cx - 2.5f * density, cy + 3.5f * density);
+                    path.close();
+                    icon.setStyle(Paint.Style.FILL);
+                    canvas.drawPath(path, icon);
+                    icon.setStyle(Paint.Style.STROKE);
+                } else {
+                    float size = 8 * density;
+                    bounds.set(cx - size, cy - size, cx + size, cy + size);
+                    path.reset();
+                    path.addArc(bounds, 180, 180);
+                    canvas.drawPath(path, icon);
+                    canvas.drawLine(cx - size, cy, cx - size, cy + size * 0.55f, icon);
+                    canvas.drawLine(cx + size, cy, cx + size, cy + size * 0.55f, icon);
+                    icon.setStyle(Paint.Style.FILL_AND_STROKE);
+                    bounds.set(
+                            cx - size - density,
+                            cy + size * 0.05f,
+                            cx - size * 0.45f,
+                            cy + size * 0.9f);
+                    canvas.drawRoundRect(bounds, density, density, icon);
+                    bounds.set(
+                            cx + size * 0.45f,
+                            cy + size * 0.05f,
+                            cx + size + density,
+                            cy + size * 0.9f);
+                    canvas.drawRoundRect(bounds, density, density, icon);
+                    icon.setStyle(Paint.Style.STROKE);
+                }
+            }
         }
     }
 

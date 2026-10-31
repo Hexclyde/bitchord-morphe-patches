@@ -155,6 +155,41 @@ public class DownloadViewsTest {
     }
 
     @Test
+    public void tappingSearchAgainClosesTheFieldAndRestoresAllRows() {
+        page.renderRows(data);
+        View toggle = findDescription(page.view, "Search downloads");
+        toggle.performClick();
+        EditText query = page.view.findViewWithTag("download-local-search");
+        query.setText("Track 2");
+        toggle.performClick();
+        assertEquals(View.GONE, ((View) query.getParent()).getVisibility());
+        assertEquals("", query.getText().toString());
+        assertNotNull(findText(page.view, "Track 0"));
+    }
+
+    @Test
+    public void theSingleToolbarCloseDismissesSearchAndRestoresAllRows() {
+        page.renderRows(data);
+        findDescription(page.view, "Search downloads").performClick();
+        EditText query = page.view.findViewWithTag("download-local-search");
+        query.setText("Track 2");
+        page.view.findViewWithTag("download-local-clear").performClick();
+        assertEquals(View.GONE, ((View) query.getParent()).getVisibility());
+        assertFalse(query.hasFocus());
+        assertNotNull(findText(page.view, "Track 0"));
+    }
+
+    @Test
+    public void backClosesSearchBeforeLeavingDownloads() {
+        findDescription(page.view, "Search downloads").performClick();
+        EditText query = page.view.findViewWithTag("download-local-search");
+        query.setText("Track 2");
+        assertTrue(page.back());
+        assertEquals(View.GONE, ((View) query.getParent()).getVisibility());
+        assertFalse(page.back());
+    }
+
+    @Test
     public void searchMatchesArtistAndFormatAcrossAllFiveViews() {
         data.get(1).artist = "Sample Artist";
         data.get(1).format = "FLAC";

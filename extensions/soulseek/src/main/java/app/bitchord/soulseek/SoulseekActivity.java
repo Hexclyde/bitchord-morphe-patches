@@ -78,6 +78,7 @@ public final class SoulseekActivity extends DownloadActivity {
         readiness = text(body, "", 14, false);
         readiness.setTag("soulseek-readiness");
         find = button(body, PatchStrings.t("Find music on Soulseek"));
+        downloadStyle.navigation(find);
         find.setTag("soulseek-find");
         find.setOnClickListener(
                 view -> {
@@ -104,11 +105,12 @@ public final class SoulseekActivity extends DownloadActivity {
         enabled.setContentDescription(
                 PatchStrings.f("Enable {0}", PatchStrings.t("Soulseek downloads")));
         header.addView(
-                enabled, new LinearLayout.LayoutParams(downloadStyle.dp(52), downloadStyle.dp(48)));
+                enabled, new LinearLayout.LayoutParams(downloadStyle.dp(64), downloadStyle.dp(48)));
         reconnect = button(account, PatchStrings.t("Reconnect saved account"));
         reconnect.setTag("soulseek-reconnect");
         reconnect.setOnClickListener(view -> reconnect());
         openAccount = button(account, PatchStrings.t("Sign in"));
+        downloadStyle.navigation(openAccount);
         openAccount.setTag("soulseek-open-account");
         openAccount.setOnClickListener(
                 view -> {
@@ -139,11 +141,12 @@ public final class SoulseekActivity extends DownloadActivity {
                 PatchStrings.t("Remember this account on this phone (encrypted)"));
         rememberRow.addView(
                 remember,
-                new LinearLayout.LayoutParams(downloadStyle.dp(52), downloadStyle.dp(48)));
+                new LinearLayout.LayoutParams(downloadStyle.dp(64), downloadStyle.dp(48)));
         connect = button(accountDetails, PatchStrings.t("Sign in"));
         connect.setTag("soulseek-sign-in");
         connect.setOnClickListener(view -> signIn());
         Button actions = button(accountDetails, PatchStrings.t("Account actions"));
+        downloadStyle.textAction(actions);
         actions.setTag("soulseek-account-actions-toggle");
         actions.setOnClickListener(
                 view -> {
@@ -154,12 +157,14 @@ public final class SoulseekActivity extends DownloadActivity {
         accountActions.setTag("soulseek-account-actions");
         accountDetails.addView(accountActions);
         forget = button(accountActions, PatchStrings.t("Sign out and forget account"));
+        downloadStyle.textAction(forget);
         forget.setTag("soulseek-forget");
         forget.setOnClickListener(view -> forget());
         clear =
                 button(
                         accountActions,
                         PatchStrings.t("Clear temporary audio cache and disconnect"));
+        downloadStyle.textAction(clear);
         clear.setTag("soulseek-clear");
         clear.setOnClickListener(view -> clearCache());
         gear.setOnClickListener(
@@ -200,6 +205,7 @@ public final class SoulseekActivity extends DownloadActivity {
         optional = card(body);
         optional.setTag("soulseek-optional");
         Button options = button(optional, PatchStrings.t("More download options"));
+        downloadStyle.navigation(options);
         options.setTag("soulseek-optional-toggle");
         options.setOnClickListener(
                 view -> {
@@ -215,9 +221,11 @@ public final class SoulseekActivity extends DownloadActivity {
                 PatchStrings.t("Other download options are controlled in Patches & tweaks."),
                 14,
                 false);
-        peerSummary = text(optionalDetails, "", 14, false);
         peer = button(optionalDetails, PatchStrings.t("Peer downloads"));
+        downloadStyle.navigation(peer);
         peer.setTag("soulseek-peers");
+        peerSummary = text(optionalDetails, "", 14, false);
+        peerSummary.setPadding(downloadStyle.dp(12), 0, downloadStyle.dp(12), downloadStyle.dp(8));
         peer.setOnClickListener(
                 view -> {
                     if (saved != null && saved.peers)
@@ -228,9 +236,12 @@ public final class SoulseekActivity extends DownloadActivity {
                 PatchStrings.t("Pair a trusted phone and choose files to send or download."),
                 14,
                 false);
-        debridSummary = text(optionalDetails, "", 14, false);
         debrid = button(optionalDetails, PatchStrings.t("Debrid services and API keys"));
+        downloadStyle.navigation(debrid);
         debrid.setTag("soulseek-debrid");
+        debridSummary = text(optionalDetails, "", 14, false);
+        debridSummary.setPadding(
+                downloadStyle.dp(12), 0, downloadStyle.dp(12), downloadStyle.dp(8));
         debrid.setOnClickListener(
                 view -> {
                     if (saved != null && saved.debrid)

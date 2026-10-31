@@ -123,3 +123,9 @@ local copy requires a separate confirmation, a fresh remote check and a matching
 local hash. Receipts retain account/channel/message IDs, source URI, file size and
 hash in private app storage. Restore obtains original bytes through the same account.
 A Telegram copy does not automatically become a public Soulseek share.
+
+## Native playlist import and sync
+
+Playlist files are parsed on the phone. Matching sends track titles, artists and other recording metadata to YouTube Music search. Saved links, device playlists, matching decisions, exclusions and sync verification records remain in app-private storage.
+
+Optional Spotify/YouTube Music sync contacts those services directly. Spotify authorization uses PKCE, with access/refresh tokens encrypted through Android Keystore. YouTube Music uses the account connection already configured in BitChord. Pairing does not upload account credentials to a separate server. Confirmed sync operations change the paired external playlists; imported device copies do not. Revoke service access through the provider's account controls, and disconnect the local connection to remove its saved credentials.

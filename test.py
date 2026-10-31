@@ -93,6 +93,7 @@ SOURCES = [
     "VideoSwitch",
     "MixedSongCodec",
     "RecordingMatch",
+    "RecordingIdentity",
 ]
 TESTS = [
     "BitPerfectTest",
@@ -137,6 +138,7 @@ TESTS = [
     "VideoSwitchTest",
     "MixedSongCodecTest",
     "RecordingMatchTest",
+    "RecordingIdentityTest",
 ]
 
 subprocess.run(

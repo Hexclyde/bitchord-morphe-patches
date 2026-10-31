@@ -11,22 +11,25 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Interactive install guide](https://hexclyde.github.io/bitchord-morphe-patches/) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.16.3, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.17, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
-> The previous BitChord 1.8.1 Telegram integration was tested on an **arm64-v8a** phone; this 1.9 build has also been exercised in Waydroid on x86_64. The arm64-v8a and armeabi-v7a builds pass artifact checks; physical-device testing remains pending. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
+> The previous BitChord 1.8.1 Telegram integration was tested on an **arm64-v8a** phone; the earlier beta.16.3 was exercised in Waydroid on x86_64; beta.17 UI and playback checks use Waydroid on x86_64. The arm64-v8a and armeabi-v7a builds pass artifact checks; physical-device testing remains pending. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
 
 The Downloads navigation icon is visible only when the download add-on patch is installed. Patches & tweaks and download controls use BitChord 1.9’s green capsule switches.
 
 Downloads offers saved Grid, List, Compact, Comfy and Detailed views. The Audio/Video player switch saves your YouTube preference across tracks and restarts. Missing alternate versions leave that preference unchanged.
 
-Beta.16 rebuilds Downloads around the reviewed demo: a compact header, real artwork, thin transfer progress, source/format labels, separate status lines and five saved layouts. Management controls live under its settings gear. The Audio/Video text switch attaches to the actual full-player content, including reduced-motion players, and remembers your YouTube mode across tracks. Unofficial Telegram opens a lightweight page before bridge initialization and reads saved-index counts in the background, with duplicate-opening protection.
+Beta.16 rebuilds Downloads around the reviewed demo: a compact header, real artwork, thin transfer progress, source/format labels, separate status lines and five saved layouts. Management controls live under its settings gear. Beta.16.4 replaces the window overlay with headphone/video icons in measured rows of the native portrait player and landscape main pane. The row reserves space before the artwork and moves with the player; the saved YouTube mode remains persistent. Unofficial Telegram opens a lightweight page before bridge initialization and reads saved-index counts in the background, with duplicate-opening protection.
 
-All 19 patches and the complete beta.9–15 source history are retained, including [Streamseek previews](docs/STREAMSEEK-PREVIEW.md), [mixed-source device playlists](docs/MIXED-PLAYLISTS.md), the independent [Flac Downloader Audio adapter](docs/FLAC-AUDIO.md), public Soulseek sharing and verified Telegram offloading. See [Downloads](docs/DOWNLOAD-MANAGER.md) and [beta.16 verification](docs/VERIFICATION-1.1.0-beta.16.md).
+All 20 patches and beta.9–16.4 features are retained, including [Streamseek previews](docs/STREAMSEEK-PREVIEW.md), [mixed-source device playlists](docs/MIXED-PLAYLISTS.md), the independent [Flac Downloader Audio adapter](docs/FLAC-AUDIO.md), public Soulseek sharing and verified Telegram offloading. See [Downloads](docs/DOWNLOAD-MANAGER.md) and [beta.16 verification](docs/VERIFICATION-1.1.0-beta.16.md).
+
+Beta.17 adds [source-independent AutoMix](docs/AUTOMIX.md), a native [transition editor](docs/TRANSITION-EDITOR.md), and [playlist tools](docs/PLAYLIST-TOOLS.md) for signed-out playlist links, editable device copies, queue saving, native file import and reviewed two-way Spotify/YouTube Music membership sync. All beta.16.4 features are retained. See the verification report for the scope of Waydroid checks; physical-phone qualification remains pending.
 
 ## Patches
 
 | Patch | What it does |
 | --- | --- |
+| **Source-independent AutoMix** | Analyse the selected playable source, verify automatic replacements and preserve chosen speed through transitions. Selected by default. |
 | **Unofficial Telegram music** | Search and play audio from your own Telegram channels and chats through TDLib, using your own account. Android 8 or newer. |
 | **Unofficial Soulseek audio** | Guided Soulseek search and exact-file downloads, an explicit source choice for eligible single-song Download actions, paired-phone originals and optional debrid links. Saved destination/format choices; download-only. Android 8 or newer. |
 | **Streamseek previews** | Explicit 30-second Soulseek MP3/FLAC previews, reuse for downloads, local-reference excerpt comparison and transparent evidence export. Depends on the Soulseek patch; off by default. |
@@ -186,3 +189,5 @@ Bug reports and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.m
 ## License
 
 [GPL-3.0-or-later](LICENSE). Bundled third-party components keep their own licenses. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+Native playlist tools: [guide](docs/PLAYLIST-TOOLS.md). Pair-specific AutoMix editing: [guide](docs/TRANSITION-EDITOR.md).

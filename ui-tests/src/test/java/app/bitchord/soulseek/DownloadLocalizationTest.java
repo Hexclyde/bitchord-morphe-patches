@@ -176,7 +176,7 @@ public class DownloadLocalizationTest {
         activity = controller.get();
         settle();
         layout();
-        translated("Debrid download services");
+        translated("Debrid services");
         CompoundButton enabled = first(root(), CompoundButton.class);
         assertNotEquals("Enable Real-Debrid", enabled.getContentDescription().toString());
         enabled.performClick();

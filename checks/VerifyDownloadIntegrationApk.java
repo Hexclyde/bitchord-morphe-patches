@@ -63,6 +63,15 @@ public final class VerifyDownloadIntegrationApk {
                     && method.getReturnType().equals("V")) close = true;
         }
         check(bindings == 1 && close, "Download navigation can dismiss the covering player");
+        int tabShapes = 0;
+        for (ClassDef type : types.values())
+            if (type.getType().equals("Lcom/music/bitchord/ui/components/FloatingBottomBarKt;")
+                    || type.getType()
+                            .equals(
+                                    "Lcom/music/bitchord/ui/components/floatingtabbar/GlassSelectionPillKt;"))
+                for (Method method : type.getMethods())
+                    tabShapes += calls(method, runtime + "DownloadNavigation;", "tabShape");
+        check(tabShapes == 0, "Navigation preserves the native fully rounded selected-tab shapes");
         for (String[] bar :
                 new String[][] {
                     {"FloatingBottomBarKt", "FloatingBottomBar"}, {"GlassNavBarKt", "GlassNavBar"}
@@ -72,11 +81,34 @@ public final class VerifyDownloadIntegrationApk {
                     types.get("Lcom/music/bitchord/ui/components/" + bar[0] + ";").getMethods())
                 if (method.getName().equals(bar[1])) found = method;
             check(found != null, "Host navigation entry exists");
-            for (String hook : List.of("index", "callback", "tabs"))
+            for (String hook : List.of("index", "callback", "tabs", "gutter"))
                 check(
                         calls(found, runtime + "DownloadNavigation;", hook) == 1,
                         "Navigation has one " + hook + " hook");
         }
+        int spacingHooks = 0;
+        for (Method method :
+                types.get("Lcom/music/bitchord/ui/components/FloatingBottomBarKt;").getMethods())
+            if (method.getName().equals("tabLabelStyle"))
+                spacingHooks += calls(method, runtime + "DownloadNavigation;", "labelSpacing");
+        check(
+                spacingHooks == 1,
+                "Five-tab label tracking adapts without reducing native font size");
+        int labelModifiers = 0;
+        for (ClassDef type : types.values())
+            if (type.getType().startsWith("Lcom/music/bitchord/ui/components/"))
+                for (Method method : type.getMethods())
+                    labelModifiers +=
+                            calls(method, runtime + "DownloadNavigation;", "labelModifier");
+        check(labelModifiers == 2, "Both native bar styles inset labels within their capsules");
+        boolean padding = false;
+        for (Method method :
+                types.get("Landroidx/compose/foundation/layout/OffsetKt;").getMethods())
+            if (method.getName().equals("padding-VpY3zN4")
+                    && method.getParameterTypes()
+                            .equals(List.of("Landroidx/compose/ui/Modifier;", "F", "F"))
+                    && (method.getAccessFlags() & 9) == 9) padding = true;
+        check(padding, "Label padding retains the optimized host ABI");
         ClassDef topBar = types.get("Lcom/music/bitchord/ui/components/FrostedTopBarKt;");
         int chrome = 0;
         for (Method method : topBar.getMethods())
