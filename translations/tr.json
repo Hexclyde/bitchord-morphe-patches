@@ -1119,5 +1119,18 @@
   "There’s no other version of this song.": "Bu şarkının başka sürümü yok.",
   "There’s no song version of this video.": "Bu videonun şarkı sürümü yok.",
   "There’s no video for this song.": "Bu şarkının videosu yok.",
-  "Versions can’t be switched in a Listen Together party.": "“Birlikte dinle” partisinde sürüm değiştirilemez."
+  "Versions can’t be switched in a Listen Together party.": "“Birlikte dinle” partisinde sürüm değiştirilemez.",
+  "Paired devices": "Paired devices",
+  "Download view": "Download view",
+  "Details": "Details",
+  "List": "List",
+  "Private sharing with devices you approve": "Private sharing with devices you approve",
+  "Download view: {0}": "Download view: {0}",
+  "Actions for {0}": "Actions for {0}",
+  "Compact": "Compact",
+  "Detailed": "Detailed",
+  "View · {0}": "View · {0}",
+  "Comfy": "Comfy",
+  "Category · {0}": "Category · {0}",
+  "Grid": "Grid"
 }

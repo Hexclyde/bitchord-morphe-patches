@@ -1119,5 +1119,18 @@
   "There’s no other version of this song.": "এই গানের অন্য কোনো সংস্করণ নেই।",
   "There’s no song version of this video.": "এই ভিডিওর কোনো গান সংস্করণ নেই।",
   "There’s no video for this song.": "এই গানের কোনো ভিডিও নেই।",
-  "Versions can’t be switched in a Listen Together party.": "“Listen together” পার্টিতে সংস্করণ বদলানো যায় না।"
+  "Versions can’t be switched in a Listen Together party.": "“Listen together” পার্টিতে সংস্করণ বদলানো যায় না।",
+  "Paired devices": "Paired devices",
+  "Download view": "Download view",
+  "Details": "Details",
+  "List": "List",
+  "Private sharing with devices you approve": "Private sharing with devices you approve",
+  "Download view: {0}": "Download view: {0}",
+  "Actions for {0}": "Actions for {0}",
+  "Compact": "Compact",
+  "Detailed": "Detailed",
+  "View · {0}": "View · {0}",
+  "Comfy": "Comfy",
+  "Category · {0}": "Category · {0}",
+  "Grid": "Grid"
 }

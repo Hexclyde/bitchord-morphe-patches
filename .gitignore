@@ -119,3 +119,4 @@ __pycache__/
 /ui-tests/src/test/java/app/bitchord/soulseek/HostDownloadAccess.java
 /ui-tests/src/test/java/app/bitchord/soulseek/DownloadArchives.java
 /ui-tests/src/test/java/app/bitchord/soulseek/PublicSoulseekShares.java
+/ui-tests/src/test/java/app/bitchord/telegram/VideoSwitch.java

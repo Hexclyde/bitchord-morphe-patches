@@ -26,6 +26,11 @@ final class DownloadsHubPage extends DownloadPage {
                         return thread;
                     });
     private LinearLayout rows;
+    private Button viewButton;
+    private String viewMode = "comfy";
+    private List<Row> currentRows = Collections.emptyList();
+    static final String[] VIEW_IDS = {"grid", "list", "compact", "comfy", "detailed"};
+    static final String[] VIEW_LABELS = {"Grid", "List", "Compact", "Comfy", "Detailed"};
     private TextView status;
     private String filter = "All", last = "";
     private volatile boolean foreground;
@@ -39,6 +44,8 @@ final class DownloadsHubPage extends DownloadPage {
     public void onCreate(Bundle saved) {
         super.onCreate(saved);
         HostDownloadAccess.init(getApplicationContext());
+        String savedView = getSharedPreferences("bitchord_download_ui", 0).getString("view", "comfy");
+        viewMode = Arrays.asList(VIEW_IDS).contains(savedView) ? savedView : "comfy";
         LinearLayout body = new LinearLayout(this);
         body.setOrientation(LinearLayout.VERTICAL);
         text(body, PatchStrings.t("Downloads"), 28);
@@ -46,6 +53,11 @@ final class DownloadsHubPage extends DownloadPage {
                 body,
                 PatchStrings.t("Follow downloads, saved files and confirmed destination copies."),
                 15);
+        viewButton = new Button(this);
+        viewButton.setTag("download-view");
+        viewButton.setText(PatchStrings.f("View · {0}", viewLabel()));
+        viewButton.setOnClickListener(v -> viewDialog());
+        body.addView(viewButton);
         HorizontalScrollView scroll = new HorizontalScrollView(this);
         LinearLayout filters = new LinearLayout(this);
         scroll.addView(filters);
@@ -63,6 +75,7 @@ final class DownloadsHubPage extends DownloadPage {
         status = text(body, PatchStrings.t("Loading downloads…"), 14);
         rows = new LinearLayout(this);
         rows.setOrientation(LinearLayout.VERTICAL);
+        rows.setTag("download-items");
         body.addView(rows);
         button(
                 body,
@@ -108,7 +121,7 @@ final class DownloadsHubPage extends DownloadPage {
         super.onDestroy();
     }
 
-    private static final class Row {
+    static final class Row {
         final String name, detail, group;
         final Runnable action;
         final String actionName;
@@ -411,7 +424,7 @@ final class DownloadsHubPage extends DownloadPage {
                                 () -> {
                                     if (!foreground || isFinishing()) return;
                                     StringBuilder signature =
-                                            new StringBuilder(filter).append(notice);
+                                            new StringBuilder(filter).append(viewMode).append(notice);
                                     for (Row row : data)
                                         signature
                                                 .append(row.group)
@@ -419,37 +432,8 @@ final class DownloadsHubPage extends DownloadPage {
                                                 .append(row.detail);
                                     if (!last.equals(signature.toString())) {
                                         last = signature.toString();
-                                        rows.removeAllViews();
-                                        int visible = 0;
-                                        for (Row row : data) {
-                                            if (!filter.equals("All") && !filter.equals(row.group))
-                                                continue;
-                                            if (visible++ >= 100) break;
-                                            LinearLayout card = new LinearLayout(this);
-                                            card.setOrientation(LinearLayout.VERTICAL);
-                                            downloadStyle.card(card);
-                                            rows.addView(card);
-                                            text(card, row.name, 18);
-                                            text(card, row.detail, 14);
-                                            if (row.actionName != null)
-                                                button(card, row.actionName, row.action);
-                                            if (!row.savedUri.isEmpty()) {
-                                                button(
-                                                        card,
-                                                        PatchStrings.t("Offload to Telegram"),
-                                                        () -> offloadDialog(row));
-                                                button(
-                                                        card,
-                                                        PatchStrings.t(
-                                                                "Share publicly on Soulseek"),
-                                                        () -> shareFileDialog(row));
-                                            }
-                                        }
-                                        if (visible == 0)
-                                            text(
-                                                    rows,
-                                                    PatchStrings.t("No items in this view."),
-                                                    16);
+                                        currentRows = data;
+                                        int visible = renderRows(data);
                                         status.setText(
                                                 notice.isEmpty()
                                                         ? PatchStrings.f(
@@ -462,6 +446,130 @@ final class DownloadsHubPage extends DownloadPage {
                     });
         } catch (RejectedExecutionException stopped) {
         }
+    }
+
+    private String viewLabel() {
+        return PatchStrings.t(VIEW_LABELS[Arrays.asList(VIEW_IDS).indexOf(viewMode)]);
+    }
+
+    private void viewDialog() {
+        String[] labels = new String[VIEW_LABELS.length];
+        for (int i = 0; i < labels.length; i++) labels[i] = PatchStrings.t(VIEW_LABELS[i]);
+        new AlertDialog.Builder(this).setTitle(PatchStrings.t("Download view"))
+                .setSingleChoiceItems(labels, Arrays.asList(VIEW_IDS).indexOf(viewMode), (dialog, which) -> {
+                    setViewMode(VIEW_IDS[which]);
+                    dialog.dismiss();
+                }).setNegativeButton(PatchStrings.t("Cancel"), null).show();
+    }
+
+    void setViewMode(String mode) {
+        if (!Arrays.asList(VIEW_IDS).contains(mode)) return;
+        viewMode = mode;
+        getSharedPreferences("bitchord_download_ui", 0).edit().putString("view", mode).apply();
+        viewButton.setText(PatchStrings.f("View · {0}", viewLabel()));
+        last = "";
+        renderRows(currentRows);
+    }
+
+    int renderRows(List<Row> data) {
+        currentRows = data;
+        rows.removeAllViews();
+        rows.setContentDescription(PatchStrings.f("Download view: {0}", viewLabel()));
+        int visible = 0;
+        boolean grid = viewMode.equals("grid")
+                && getResources().getConfiguration().fontScale < 1.4f;
+        LinearLayout gridLine = null;
+        for (Row row : data) {
+            if (!filter.equals("All") && !filter.equals(row.group)) continue;
+            if (visible >= 100) break;
+            LinearLayout card = rowView(row);
+            card.setTag("download-row:" + visible);
+            if (grid) {
+                if (visible % 2 == 0) {
+                    gridLine = new LinearLayout(this);
+                    gridLine.setOrientation(LinearLayout.HORIZONTAL);
+                    rows.addView(gridLine);
+                }
+                LinearLayout.LayoutParams placement = new LinearLayout.LayoutParams(0, -2, 1);
+                placement.setMargins(0, 0, downloadStyle.dp(visible % 2 == 0 ? 8 : 0), downloadStyle.dp(10));
+                gridLine.addView(card, placement);
+            } else rows.addView(card);
+            visible++;
+        }
+        if (grid && visible % 2 != 0) gridLine.addView(new android.view.View(this), new LinearLayout.LayoutParams(0, 1, 1));
+        if (visible == 0) text(rows, PatchStrings.t("No items in this view."), 16);
+        return visible;
+    }
+
+    private LinearLayout rowView(Row row) {
+        boolean compact = viewMode.equals("compact"), grid = viewMode.equals("grid"),
+                list = viewMode.equals("list"), detailed = viewMode.equals("detailed");
+        LinearLayout card = new LinearLayout(this);
+        downloadStyle.card(card);
+        int pad = downloadStyle.dp(compact ? 4 : list ? 10 : 15);
+        card.setPadding(pad, pad, pad, pad);
+        if (compact) card.setBackgroundColor(downloadStyle.background);
+        LinearLayout header = new LinearLayout(this);
+        header.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        header.setOrientation(grid ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
+        card.addView(header);
+        if (!compact) {
+            TextView artwork = downloadStyle.text(row.name.isEmpty() ? "♪" : row.name.substring(0, 1), grid ? 30 : 19,
+                    downloadStyle.foreground, downloadStyle.semibold);
+            artwork.setGravity(android.view.Gravity.CENTER);
+            artwork.setImportantForAccessibility(android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            artwork.setBackground(downloadStyle.shape(downloadStyle.outline, 9, false));
+            int size = downloadStyle.dp(grid ? 90 : list ? 34 : 48);
+            LinearLayout.LayoutParams art = new LinearLayout.LayoutParams(grid ? -1 : size, size);
+            if (!grid) art.setMarginEnd(downloadStyle.dp(10));
+            else art.bottomMargin = downloadStyle.dp(9);
+            header.addView(artwork, art);
+        }
+        LinearLayout labels = new LinearLayout(this);
+        labels.setOrientation(LinearLayout.VERTICAL);
+        header.addView(labels, grid ? new LinearLayout.LayoutParams(-1, -2) : new LinearLayout.LayoutParams(0, -2, 1));
+        TextView title = downloadStyle.text(row.name, compact ? 14 : list ? 15 : 17,
+                downloadStyle.foreground, downloadStyle.semibold);
+        title.setMaxLines(grid || detailed ? 2 : 1);
+        title.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        labels.addView(title);
+        TextView detail = downloadStyle.text(row.detail, compact ? 12 : 13,
+                downloadStyle.secondary, downloadStyle.regular);
+        if (!detailed) detail.setMaxLines(compact || list ? 1 : 3);
+        detail.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        labels.addView(detail);
+        Button menu = new Button(this);
+        menu.setText("⋮");
+        menu.setContentDescription(PatchStrings.f("Actions for {0}", row.name));
+        menu.setMinHeight(downloadStyle.dp(48));
+        menu.setMinimumWidth(downloadStyle.dp(48));
+        menu.setOnClickListener(v -> rowActions(row));
+        header.addView(menu, new LinearLayout.LayoutParams(grid ? -1 : downloadStyle.dp(48), downloadStyle.dp(48)));
+        if (detailed) {
+            TextView group = downloadStyle.text(PatchStrings.f("Category · {0}", PatchStrings.t(row.group)), 13,
+                    downloadStyle.secondary, downloadStyle.regular);
+            group.setPadding(0, downloadStyle.dp(10), 0, 0);
+            card.addView(group);
+            if (!row.savedUri.isEmpty()) text(card, PatchStrings.t("Phone copy confirmed"), 13);
+        }
+        return card;
+    }
+
+    private void rowActions(Row row) {
+        List<String> labels = new ArrayList<>();
+        List<Runnable> actions = new ArrayList<>();
+        labels.add(PatchStrings.t("Details"));
+        actions.add(() -> new AlertDialog.Builder(this).setTitle(row.name).setMessage(row.detail)
+                .setPositiveButton(PatchStrings.t("Done"), null).show());
+        if (row.actionName != null && row.action != null) {
+            labels.add(PatchStrings.t(row.actionName)); actions.add(row.action);
+        }
+        if (!row.savedUri.isEmpty()) {
+            labels.add(PatchStrings.t("Offload to Telegram")); actions.add(() -> offloadDialog(row));
+            labels.add(PatchStrings.t("Share publicly on Soulseek")); actions.add(() -> shareFileDialog(row));
+        }
+        new AlertDialog.Builder(this).setTitle(row.name).setItems(labels.toArray(new String[0]),
+                (dialog, which) -> actions.get(which).run()).show();
     }
 
     private String archiveStatus(String phase) {

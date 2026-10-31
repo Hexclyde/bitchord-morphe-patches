@@ -283,6 +283,18 @@ public class ExtrasActivityTest {
     }
 
     @Test
+    public void binaryFeaturesNeverAdvertiseASettingsGear() {
+        assertEquals(View.GONE, gear("battery-saver").getVisibility());
+        toggle("battery-saver").performClick();
+        assertTrue(toggle("battery-saver").isChecked());
+        assertEquals(View.GONE, gear("battery-saver").getVisibility());
+        assertFalse(gear("battery-saver").isEnabled());
+        toggle("sing").performClick();
+        assertEquals(View.VISIBLE, gear("sing").getVisibility());
+        assertEquals(View.GONE, gear("battery-saver").getVisibility());
+    }
+
+    @Test
     public void failedEnableDoesNotExposeDetailsOrEnableGear() {
         activity.feature(
                 "failed",

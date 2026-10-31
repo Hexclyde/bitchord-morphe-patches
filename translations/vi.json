@@ -1119,5 +1119,18 @@
   "There’s no other version of this song.": "Bài hát này không có phiên bản khác.",
   "There’s no song version of this video.": "Video này không có phiên bản bài hát.",
   "There’s no video for this song.": "Bài hát này không có video.",
-  "Versions can’t be switched in a Listen Together party.": "Không thể chuyển phiên bản trong buổi Listen together."
+  "Versions can’t be switched in a Listen Together party.": "Không thể chuyển phiên bản trong buổi Listen together.",
+  "Paired devices": "Paired devices",
+  "Download view": "Download view",
+  "Details": "Details",
+  "List": "List",
+  "Private sharing with devices you approve": "Private sharing with devices you approve",
+  "Download view: {0}": "Download view: {0}",
+  "Actions for {0}": "Actions for {0}",
+  "Compact": "Compact",
+  "Detailed": "Detailed",
+  "View · {0}": "View · {0}",
+  "Comfy": "Comfy",
+  "Category · {0}": "Category · {0}",
+  "Grid": "Grid"
 }

@@ -1119,5 +1119,18 @@
   "There’s no other version of this song.": "इस गाने का कोई दूसरा वर्ज़न नहीं है।",
   "There’s no song version of this video.": "इस वीडियो का कोई गाना वर्ज़न नहीं है।",
   "There’s no video for this song.": "इस गाने का कोई वीडियो नहीं है।",
-  "Versions can’t be switched in a Listen Together party.": "“साथ में सुनें” पार्टी में वर्ज़न नहीं बदले जा सकते।"
+  "Versions can’t be switched in a Listen Together party.": "“साथ में सुनें” पार्टी में वर्ज़न नहीं बदले जा सकते।",
+  "Paired devices": "Paired devices",
+  "Download view": "Download view",
+  "Details": "Details",
+  "List": "List",
+  "Private sharing with devices you approve": "Private sharing with devices you approve",
+  "Download view: {0}": "Download view: {0}",
+  "Actions for {0}": "Actions for {0}",
+  "Compact": "Compact",
+  "Detailed": "Detailed",
+  "View · {0}": "View · {0}",
+  "Comfy": "Comfy",
+  "Category · {0}": "Category · {0}",
+  "Grid": "Grid"
 }

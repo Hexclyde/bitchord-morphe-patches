@@ -30,6 +30,24 @@ public final class VerifyPatchUiApk {
             for (ClassDef cls : dex.getEntry(entry).getDexFile().getClasses())
                 check(classes.put(cls.getType(), cls) == null, "Unique class " + cls.getType());
         String base = "Lapp/bitchord/telegram/";
+        String downloadNav = "Lapp/bitchord/soulseek/DownloadNavigation;";
+        check(classes.containsKey(downloadNav) == downloads,
+                "Downloads navigation runtime exists only with the download addon");
+        for (String owner : List.of("FloatingBottomBarKt", "GlassNavBarKt")) {
+            int navigationHooks = 0;
+            for (Method method : classes.get("Lcom/music/bitchord/ui/components/" + owner + ";").getMethods()) {
+                if (method.getImplementation() == null) continue;
+                for (Instruction instruction : method.getImplementation().getInstructions()) {
+                    if (!(instruction instanceof ReferenceInstruction)) continue;
+                    Reference reference = ((ReferenceInstruction) instruction).getReference();
+                    if (reference instanceof MethodReference
+                            && ((MethodReference) reference).getDefiningClass().equals(downloadNav)
+                            && ((MethodReference) reference).getName().equals("tabs")) navigationHooks++;
+                }
+            }
+            check(navigationHooks == (downloads ? 1 : 0),
+                    "Downloads icon is installed only with download addon: " + owner);
+        }
         check(
                 classes.containsKey(base + "ExtrasActivity;") == runtime,
                 "Shared page matches selection");

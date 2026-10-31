@@ -26,6 +26,7 @@ import kotlin.jvm.functions.Function0;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -59,6 +60,10 @@ public final class VideoSwitch {
     };
 
     static volatile boolean enabled = false;
+    static volatile boolean preferredVideo;
+    private static volatile String attempted;
+    private static Object eventListener;
+    private static final Runnable ENFORCE = VideoSwitch::enforcePreference;
 
     private static volatile SharedPreferences preferences;
     private static volatile WeakReference<Object> controller = new WeakReference<>(null);
@@ -78,12 +83,17 @@ public final class VideoSwitch {
                 context.getApplicationContext()
                         .getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         enabled = preferences.getBoolean("enabled", false);
+        preferredVideo = preferences.getBoolean("preferredVideo", false);
+        if (main == null) main = new Handler(Looper.getMainLooper());
+        main.post(ENFORCE);
     }
 
     static void setEnabled(boolean on) {
         enabled = on;
         SharedPreferences saved = preferences;
         if (saved != null) saved.edit().putBoolean("enabled", on).apply();
+        attempted = null;
+        if (main != null) main.post(ENFORCE);
         Pill shown = pill.get();
         if (shown != null) shown.refresh();
     }
@@ -92,8 +102,60 @@ public final class VideoSwitch {
 
     /** BitChord's player connection, each time the app's screen reads the player's state. */
     public static void controller(Object mediaController) {
-        if (mediaController != null && controller.get() != mediaController)
+        if (mediaController != null && controller.get() != mediaController) {
+            Object previous = controller.get();
             controller = new WeakReference<>(mediaController);
+            if (main == null) main = new Handler(Looper.getMainLooper());
+            main.post(() -> observe(previous, mediaController));
+        }
+    }
+
+    /** A saved YouTube preference, independent of the current song's available versions. */
+    static void setPreferredVideo(boolean video) {
+        preferredVideo = video;
+        attempted = null;
+        SharedPreferences saved = preferences;
+        if (saved != null) saved.edit().putBoolean("preferredVideo", video).apply();
+        if (main != null) main.post(ENFORCE);
+        refreshPill();
+    }
+
+    private static void observe(Object previous, Object current) {
+        try {
+            Class<?> listener = Class.forName("androidx.media3.common.Player$Listener");
+            if (previous != null && eventListener != null)
+                controllerType().getMethod("removeListener", listener).invoke(previous, eventListener);
+            eventListener = Proxy.newProxyInstance(listener.getClassLoader(), new Class<?>[]{listener},
+                    (proxy, method, args) -> {
+                        if (method.getName().equals("onMediaItemTransition")
+                                || method.getName().equals("onEvents")) {
+                            main.removeCallbacks(ENFORCE);
+                            main.post(ENFORCE);
+                        }
+                        if (method.getName().equals("equals")) return proxy == args[0];
+                        if (method.getName().equals("hashCode")) return System.identityHashCode(proxy);
+                        if (method.getName().equals("toString")) return "BitChord version preference";
+                        return null;
+                    });
+            controllerType().getMethod("addListener", listener).invoke(current, eventListener);
+        } catch (Exception | LinkageError unavailable) {
+            HostLog.d("Version preference listener unavailable: " + unavailable);
+        }
+        main.post(ENFORCE);
+    }
+
+    static boolean needsPreferredVersion(Object song) {
+        return enabled && switchable(song) && isVideo(song) != preferredVideo;
+    }
+
+    private static void enforcePreference() {
+        Context context = SoundExtras.app();
+        Object song = current();
+        if (context == null || !needsPreferredVersion(song) || inParty() || switching != null) return;
+        String key = string(song, "videoId") + "|" + preferredVideo;
+        if (key.equals(attempted) || missing.contains(key)) return;
+        attempted = key;
+        switchTo(context, preferredVideo);
     }
 
     /** The player sheet's motion, made once per screen; it knows when the player is open. */
@@ -205,8 +267,9 @@ public final class VideoSwitch {
         try {
             Object playing = current();
             if (playing == null || !from.equals(string(playing, "videoId"))) return;
+            if (!enabled || video != preferredVideo || inParty()) return;
             if (version == null || from.equals(string(version, "videoId"))) {
-                missing.add(from);
+                missing.add(from + "|" + video);
                 toast(
                         context,
                         video
@@ -228,6 +291,7 @@ public final class VideoSwitch {
         } finally {
             switching = null;
             refreshPill();
+            if (main != null) main.post(ENFORCE);
         }
     }
 
@@ -423,9 +487,9 @@ public final class VideoSwitch {
             setVisibility(show ? VISIBLE : GONE);
             if (show) {
                 String id = string(now, "videoId");
-                video = isVideo(now);
+                video = preferredVideo;
                 busy = switching != null;
-                blocked = inParty() || missing.contains(id);
+                blocked = inParty() || missing.contains(id + "|" + preferredVideo);
                 setAlpha(busy || blocked ? 0.5f : 1f);
                 bringToFront();
                 invalidate();
@@ -438,6 +502,8 @@ public final class VideoSwitch {
             if (event.getAction() == MotionEvent.ACTION_DOWN) return true;
             if (event.getAction() != MotionEvent.ACTION_UP) return false;
             boolean wantVideo = event.getX() >= getWidth() / 2f;
+            performClick();
+            setPreferredVideo(wantVideo);
             if (busy) return true;
             if (blocked && wantVideo != video) {
                 toast(
@@ -448,8 +514,7 @@ public final class VideoSwitch {
                                 : Strings.t("There’s no other version of this song."));
                 return true;
             }
-            performClick();
-            switchTo(getContext(), wantVideo);
+            enforcePreference();
             return true;
         }
 

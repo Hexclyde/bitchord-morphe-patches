@@ -64,7 +64,7 @@
           '<tr><td>Most phones</td><td><code>…_arm64-v8a.apk</code></td></tr>' +
           '<tr><td>Older 32-bit phones</td><td><code>…_armeabi-v7a.apk</code></td></tr>' +
           '<tr><td>x86-64 devices</td><td><code>…_x86_64.apk</code></td></tr></table>' +
-          'Use the release marked <strong>Latest</strong>. The <strong>Source code</strong> files won’t work.',
+          'Use the supported <strong>v1.9</strong> release. The <strong>Source code</strong> files won’t work.',
         screen: RELEASES,
         state: { 'browser.tabs': [SITE, RELEASES] },
         target: 'browser.bitchordRelease.assetList'

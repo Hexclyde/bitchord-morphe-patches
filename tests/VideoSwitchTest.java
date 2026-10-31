@@ -7,6 +7,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /** The audio and video switch: which songs it offers, and how it waits for BitChord's lookups. */
 public final class VideoSwitchTest {
+    static final class Song {
+        String videoId = "dQw4w9WgXcQ";
+        String localUri, localPath;
+        boolean isVideo;
+    }
     static int checks;
 
     static void check(boolean okay, String message) {
@@ -15,6 +20,7 @@ public final class VideoSwitchTest {
     }
 
     public static void main(String[] args) throws Exception {
+        check(!VideoSwitch.enabled, "fresh installs leave the player switch off");
         check(VideoSwitch.youTubeId("dQw4w9WgXcQ"), "a YouTube id");
         check(VideoSwitch.youTubeId("a-b_c1D2e3F"), "dashes and underscores");
         check(!VideoSwitch.youTubeId("tg:12345678"), "a Telegram track");
@@ -56,6 +62,25 @@ public final class VideoSwitchTest {
         check("dQw4w9WgXcQ".equals(VideoSwitch.string(song, "videoId")), "reads the id");
         check(VideoSwitch.bool(song, "isVideo"), "reads isVideo");
         check(VideoSwitch.string(song, "localUri") == null, "a missing field");
+        Song first = new Song(), next = new Song();
+        next.videoId = "a-b_c1D2e3F";
+        VideoSwitch.enabled = true;
+        VideoSwitch.setPreferredVideo(true);
+        check(VideoSwitch.needsPreferredVersion(first), "video preference applies to first audio track");
+        check(VideoSwitch.needsPreferredVersion(next), "video preference applies to next audio track");
+        check(VideoSwitch.preferredVideo, "a missing version cannot reset video preference");
+        next.isVideo = true;
+        check(!VideoSwitch.needsPreferredVersion(next), "already-video track needs no conversion");
+        VideoSwitch.setPreferredVideo(false);
+        check(VideoSwitch.needsPreferredVersion(next), "audio preference converts subsequent video");
+        check(!VideoSwitch.needsPreferredVersion(first), "already-audio track remains audio");
+        next.localUri = "content://local/music";
+        check(!VideoSwitch.needsPreferredVersion(next), "local file cannot be converted");
+        next.localUri = null; next.videoId = "tg:12345678";
+        check(!VideoSwitch.needsPreferredVersion(next), "Telegram remains untouched");
+        VideoSwitch.enabled = false;
+        next.videoId = "a-b_c1D2e3F";
+        check(!VideoSwitch.needsPreferredVersion(next), "disabled patch does not enforce preference");
         System.out.println("PASS: " + checks + " audio and video switch checks.");
     }
 }

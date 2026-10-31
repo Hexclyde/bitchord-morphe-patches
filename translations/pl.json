@@ -1119,5 +1119,18 @@
   "There’s no other version of this song.": "Nie ma innej wersji tego utworu.",
   "There’s no song version of this video.": "Nie ma wersji utworu dla tego wideo.",
   "There’s no video for this song.": "Nie ma wideo dla tego utworu.",
-  "Versions can’t be switched in a Listen Together party.": "Podczas imprezy w „Słuchajcie razem” nie można przełączać wersji."
+  "Versions can’t be switched in a Listen Together party.": "Podczas imprezy w „Słuchajcie razem” nie można przełączać wersji.",
+  "Paired devices": "Paired devices",
+  "Download view": "Download view",
+  "Details": "Details",
+  "List": "List",
+  "Private sharing with devices you approve": "Private sharing with devices you approve",
+  "Download view: {0}": "Download view: {0}",
+  "Actions for {0}": "Actions for {0}",
+  "Compact": "Compact",
+  "Detailed": "Detailed",
+  "View · {0}": "View · {0}",
+  "Comfy": "Comfy",
+  "Category · {0}": "Category · {0}",
+  "Grid": "Grid"
 }

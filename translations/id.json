@@ -1119,5 +1119,18 @@
   "There’s no other version of this song.": "Tidak ada versi lain dari lagu ini.",
   "There’s no song version of this video.": "Tidak ada versi lagu dari video ini.",
   "There’s no video for this song.": "Tidak ada video untuk lagu ini.",
-  "Versions can’t be switched in a Listen Together party.": "Versi tidak bisa diganti dalam pesta Dengar bersama."
+  "Versions can’t be switched in a Listen Together party.": "Versi tidak bisa diganti dalam pesta Dengar bersama.",
+  "Paired devices": "Paired devices",
+  "Download view": "Download view",
+  "Details": "Details",
+  "List": "List",
+  "Private sharing with devices you approve": "Private sharing with devices you approve",
+  "Download view: {0}": "Download view: {0}",
+  "Actions for {0}": "Actions for {0}",
+  "Compact": "Compact",
+  "Detailed": "Detailed",
+  "View · {0}": "View · {0}",
+  "Comfy": "Comfy",
+  "Category · {0}": "Category · {0}",
+  "Grid": "Grid"
 }

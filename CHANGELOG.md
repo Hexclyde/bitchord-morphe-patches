@@ -1,8 +1,14 @@
 # 1.1.0-beta.12
 
+- Show settings gears only for features with configurable controls; binary toggles keep contextual help without a settings button.
+
+- Add persistent Grid, List, Compact, Comfy and Detailed download views.
+- Remember Audio/Video as a YouTube playback preference across tracks and restarts; unavailable versions and non-YouTube sources do not change it.
+
 - Merge the Audio and video switch patch, JamesDSP setup/status controls, README badges and interactive Morphe/Telegram installation guide.
 - Retain complete beta.9–11 Downloads integration, batch source selection, public Soulseek sharing and verified Telegram offloading.
 - Audio and video switch starts off; enable it under Patches & tweaks.
+- Match the reviewed HTML demo’s BitChord 1.9 green switches across patch settings and download controls. Keep the Downloads navigation icon exclusive to installs with the download addon.
 - The guide ships under docs/guide. Enable GitHub Pages from testing /docs after publishing.
 
 # 1.1.0-beta.11

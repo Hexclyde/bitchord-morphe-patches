@@ -1119,5 +1119,18 @@
   "There’s no other version of this song.": "這首歌沒有其他版本。",
   "There’s no song version of this video.": "這部影片沒有歌曲版本。",
   "There’s no video for this song.": "這首歌沒有影片。",
-  "Versions can’t be switched in a Listen Together party.": "在「一起聽」派對中無法切換版本。"
+  "Versions can’t be switched in a Listen Together party.": "在「一起聽」派對中無法切換版本。",
+  "Paired devices": "Paired devices",
+  "Download view": "Download view",
+  "Details": "Details",
+  "List": "List",
+  "Private sharing with devices you approve": "Private sharing with devices you approve",
+  "Download view: {0}": "Download view: {0}",
+  "Actions for {0}": "Actions for {0}",
+  "Compact": "Compact",
+  "Detailed": "Detailed",
+  "View · {0}": "View · {0}",
+  "Comfy": "Comfy",
+  "Category · {0}": "Category · {0}",
+  "Grid": "Grid"
 }

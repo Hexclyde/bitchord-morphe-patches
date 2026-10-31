@@ -91,13 +91,13 @@
   // ---------------------------------------------------------------------------------------
 
   const SOURCE_NAME = 'BitChord Morphe Patches';
-  const PATCHES_VERSION = '1.1.0-beta.11';
+  const PATCHES_VERSION = '1.1.0-beta.12';
   const MORPHE_VERSION = '2.2.0';
   const APP_VERSION = '1.9';
   const ORANGE = '255,137,68';
   const BITCHORD_APK = 'BitChord-v1.9_arm64-v8a.apk';
   const MORPHE_APK = 'morphe-manager-2.2.0.apk';
-  const MPP_FILE = 'bitchord-patches-1.1.0-beta.11.mpp';
+  const MPP_FILE = 'bitchord-patches-1.1.0-beta.12.mpp';
   const REPO_LINK = 'github.com/Hexclyde/bitchord-morphe-patches';
   const TESTING_LINK = 'https://raw.githubusercontent.com/Hexclyde/bitchord-morphe-patches/refs/heads/testing/patches-bundle.json';
   const NOT_DRAWN = 'This part of Morphe isn’t drawn in this guide.';

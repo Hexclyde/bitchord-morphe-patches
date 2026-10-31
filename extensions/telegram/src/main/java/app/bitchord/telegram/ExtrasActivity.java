@@ -603,7 +603,7 @@ public final class ExtrasActivity extends Activity {
         LinearLayout header = new LinearLayout(this);
         header.setGravity(Gravity.CENTER_VERTICAL);
         header.setMinimumHeight(style.dp(64));
-        header.setFocusable(true);
+        header.setFocusable(feature.configurable);
         LinearLayout labels = new LinearLayout(this);
         labels.setOrientation(LinearLayout.VERTICAL);
         labels.addView(style.text(title, 16, style.foreground, style.medium));
@@ -634,7 +634,7 @@ public final class ExtrasActivity extends Activity {
         touch.setOnClickListener(view -> toggle.toggle());
         touch.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         header.addView(touch, new LinearLayout.LayoutParams(style.dp(64), style.dp(48)));
-        header.setOnClickListener(view -> focus(feature));
+        if (feature.configurable) header.setOnClickListener(view -> focus(feature));
         card.addView(header);
         LinearLayout content = new LinearLayout(this);
         feature.details = content;
@@ -651,11 +651,11 @@ public final class ExtrasActivity extends Activity {
                         unavailable();
                     }
                     feature.sync();
-                    expanded = on && feature.enabled ? id : null;
+                    expanded = on && feature.enabled && feature.configurable ? id : null;
                     showExpanded();
                 });
         feature.sync();
-        content.setVisibility(id.equals(expanded) && feature.enabled ? View.VISIBLE : View.GONE);
+        content.setVisibility(feature.enabled && (!feature.configurable || id.equals(expanded)) ? View.VISIBLE : View.GONE);
     }
 
     private Feature containing(View view) {
@@ -668,6 +668,7 @@ public final class ExtrasActivity extends Activity {
     }
 
     private void focus(Feature feature) {
+        if (!feature.configurable) return;
         expanded = feature.enabled ? feature.id : null;
         showExpanded();
     }
@@ -676,7 +677,7 @@ public final class ExtrasActivity extends Activity {
         Feature selected = features.get(expanded);
         if (selected == null || !selected.enabled) expanded = null;
         for (Feature feature : features.values()) {
-            boolean open = feature.enabled && feature.id.equals(expanded);
+            boolean open = feature.enabled && (!feature.configurable || feature.id.equals(expanded));
             feature.details.setVisibility(open ? View.VISIBLE : View.GONE);
             feature.gear.setContentDescription(Strings.f("Settings for {0}", feature.title));
         }
@@ -685,12 +686,14 @@ public final class ExtrasActivity extends Activity {
     private final class Feature {
         final String id, title;
         final State state;
+        final boolean configurable;
         LinearLayout card, details;
         TelegramSwitch toggle;
         ImageButton gear;
         boolean enabled;
 
         Feature(String id, String title, State state) {
+            configurable = !id.equals("battery-saver") && !id.equals("download-quality") && !id.equals("video-switch");
             this.id = id;
             this.title = title;
             this.state = state;
@@ -703,7 +706,8 @@ public final class ExtrasActivity extends Activity {
                 enabled = false;
             }
             toggle.setChecked(enabled);
-            gear.setEnabled(enabled);
+            gear.setEnabled(enabled && configurable);
+            gear.setVisibility(enabled && configurable ? View.VISIBLE : View.GONE);
             gear.setAlpha(enabled ? 1f : 0.38f);
         }
     }

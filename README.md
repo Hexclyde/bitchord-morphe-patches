@@ -15,6 +15,10 @@
 >
 > The previous BitChord 1.8.1 Telegram integration was tested on an **arm64-v8a** phone; this 1.9 build still needs on-device testing. The armeabi-v7a and x86_64 builds pass the same automated checks, but haven't been run on a real device. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
 
+The Downloads navigation icon is visible only when the download add-on patch is installed. Patches & tweaks and download controls use BitChord 1.9’s green capsule switches, following the reviewed HTML demo.
+
+Downloads offers saved Grid, List, Compact, Comfy and Detailed views. The Audio/Video player switch saves your YouTube preference across tracks and restarts. Missing alternate versions leave that preference unchanged.
+
 The combined beta.12 retains beta.9–11’s Downloads tab, explicit addon/Soulseek source selection, batch review, public Soulseek sharing and verified Telegram offloading. It adds the Audio and video switch patch, JamesDSP setup improvements and interactive installation guide. See [Downloads](docs/DOWNLOAD-MANAGER.md).
 
 ## Patches
@@ -82,12 +86,7 @@ Install the features you want in Morphe, then open **Settings → Patches & twea
 The page contains the installed download and playback features. Their
 controls follow BitChord's theme, fonts, switches and rounded cards.
 
-Each feature has an enable switch and settings gear. When off, its detailed
-controls are hidden and its gear is disabled. Enabling a feature expands its
-controls; opening another feature collapses the previous one without turning it
-off. Tap an enabled feature's gear to review it again. Disabling a feature keeps
-its saved settings for later. Existing explicitly chosen settings are retained
-when updating. Telegram keeps its existing source toggle and settings page. The thirteen optional
+Each feature has an enable switch. A settings gear appears only when the feature is enabled and has configurable controls. Toggle-only features, including Battery saver, Per-download quality and Audio and video switch, do not show a gear; relevant help or status stays inline. Disabling a feature retains its saved choices. Telegram keeps its existing source toggle and account settings page. The thirteen optional
 patches are:
 
 - **Sing:** turns the lead vocal down so you can sing over the song, from a little to all of it. By default only the voice range is cut, only while someone is singing, and drum hits are left alone; **Whole centre** removes everything in the middle instead, which suits older recordings. Ported from [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45.

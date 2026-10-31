@@ -219,7 +219,7 @@ flags.write_text(
     "package app.bitchord.patches\n\ninternal const val TESTING_CAPTURE = "
     + (
         "true"
-        if VERSION in ("1.1.0-beta.8", "1.1.0-beta.9", "1.1.0-beta.10", "1.1.0-beta.11")
+        if VERSION in ("1.1.0-beta.8", "1.1.0-beta.9", "1.1.0-beta.10", "1.1.0-beta.11", "1.1.0-beta.12")
         else "false"
     )
     + "\n"
