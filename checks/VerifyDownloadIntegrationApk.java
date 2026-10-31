@@ -47,7 +47,8 @@ public final class VerifyDownloadIntegrationApk {
                         "BatchDownloadPage",
                         "DownloadBatch",
                         "PublicSoulseekShares",
-                        "DownloadArchives"))
+                        "DownloadArchives",
+                        "DownloadArtwork"))
             check(types.containsKey(runtime + name + ";"), "Production runtime present: " + name);
         for (String[] bar :
                 new String[][] {
@@ -63,6 +64,25 @@ public final class VerifyDownloadIntegrationApk {
                         calls(found, runtime + "DownloadNavigation;", hook) == 1,
                         "Navigation has one " + hook + " hook");
         }
+        ClassDef topBar = types.get("Lcom/music/bitchord/ui/components/FrostedTopBarKt;");
+        int chrome = 0;
+        for (Method method : topBar.getMethods())
+            if (method.getName().equals("FrostedTopBar"))
+                chrome += calls(method, runtime + "DownloadsShell;", "chromeModifier");
+        check(chrome == 1, "Downloads alone replaces the host top-bar spacing");
+        boolean height = false;
+        for (Method method : types.get("Landroidx/compose/foundation/layout/SizeKt;").getMethods())
+            if (method.getName().equals("height-3ABfNKs")
+                    && method.getParameterTypes()
+                            .equals(List.of("Landroidx/compose/ui/Modifier;", "F"))
+                    && (method.getAccessFlags() & 9) == 9) height = true;
+        check(height, "Zero-height header modifier retains the optimized host ABI");
+        Set<String> metadata = new HashSet<>();
+        for (Field field : types.get("Lcom/music/bitchord/download/SavedSongMetadata;").getFields())
+            metadata.add(field.getName());
+        check(
+                metadata.containsAll(List.of("artist", "thumbnailUrl", "downloadFormat", "uri")),
+                "Artwork, format and local-file metadata are available");
         Method library = null, root = null, batch = null, androidView = null, back = null;
         for (Method method :
                 types.get("Lcom/music/bitchord/ui/screens/LibraryScreenKt;").getMethods())

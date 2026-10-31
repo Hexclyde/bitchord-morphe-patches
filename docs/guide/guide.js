@@ -16,7 +16,7 @@
   'use strict';
 
   const G = window.Guide = window.Guide || {};
-  G.version = '1.1.0-beta.15';
+  G.version = '1.1.0-beta.16';
 
   // The demo screens and the demo tour are for testing the engine only. Open the page with
   // ?demo=1 to turn them on. They stay off otherwise.

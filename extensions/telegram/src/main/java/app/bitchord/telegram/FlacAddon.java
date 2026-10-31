@@ -148,7 +148,7 @@ public final class FlacAddon {
             return new JSONObject()
                     .put("id", ID)
                     .put("name", "Flac Downloader Audio")
-                    .put("version", "1.1.0-beta.15")
+                    .put("version", "1.1.0-beta.16")
                     .put("resources", new JSONArray().put("search").put("stream"))
                     .put(
                             "description",

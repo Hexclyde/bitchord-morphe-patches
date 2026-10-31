@@ -11,7 +11,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Interactive install guide](https://hexclyde.github.io/bitchord-morphe-patches/) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.15, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.16, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > The previous BitChord 1.8.1 Telegram integration was tested on an **arm64-v8a** phone; this 1.9 build still needs on-device testing. The armeabi-v7a and x86_64 builds pass the same automated checks, but haven't been run on a real device. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
 
@@ -19,7 +19,9 @@ The Downloads navigation icon is visible only when the download add-on patch is 
 
 Downloads offers saved Grid, List, Compact, Comfy and Detailed views. The Audio/Video player switch saves your YouTube preference across tracks and restarts. Missing alternate versions leave that preference unchanged.
 
-The combined beta.15 fixes the Downloads navigation crash and restores Audio/Video controls after player-window recreation. It retains all beta.13 changes and the unpublished beta.9–12 Downloads work. It adds optional [Streamseek previews](docs/STREAMSEEK-PREVIEW.md) for explicit MP3/FLAC listening and local-reference audio comparison. It also retains optional [mixed-source device playlists](docs/MIXED-PLAYLISTS.md) and the independent [Flac Downloader Audio adapter](docs/FLAC-AUDIO.md) for aztecempire's Spotube source. See [Downloads](docs/DOWNLOAD-MANAGER.md).
+Beta.16 rebuilds Downloads around the reviewed demo: a compact header, real artwork, thin transfer progress, source/format labels, separate status lines and five saved layouts. Management controls live under its settings gear. The Audio/Video text switch attaches to the actual full-player content, including reduced-motion players, and remembers your YouTube mode across tracks. Unofficial Telegram opens a lightweight page before bridge initialization and reads saved-index counts in the background, with duplicate-opening protection.
+
+All 19 patches and the complete beta.9–15 source history are retained, including [Streamseek previews](docs/STREAMSEEK-PREVIEW.md), [mixed-source device playlists](docs/MIXED-PLAYLISTS.md), the independent [Flac Downloader Audio adapter](docs/FLAC-AUDIO.md), public Soulseek sharing and verified Telegram offloading. See [Downloads](docs/DOWNLOAD-MANAGER.md) and [beta.16 verification](docs/VERIFICATION-1.1.0-beta.16.md).
 
 ## Patches
 
@@ -102,7 +104,7 @@ Each feature has an enable switch. A settings gear appears only when the feature
 - **Equaliser per output:** BitChord's equaliser settings are remembered for each output (the speaker, wired, USB, each Bluetooth device) and put back when that output is in use again. Set the equaliser for the car with the car connected, for earbuds with the earbuds connected. A setting can be copied as a short code and pasted on another phone.
 - **DJ mode:** the next song in the queue is chosen for a key next to the current one on the Camelot wheel and a close tempo, so songs mix well. Songs you queued yourself keep their place, and nothing moves in a Listen Together party. Each song's key and tempo are learned as it plays, and BitChord's own Automix analyses are used when it has them. While Automix is mixing from one song into the next, DJ mode waits until it's done.
 - **JamesDSP:** opens [JamesDSP](https://github.com/timschneeb/RootlessJamesDSP) from BitChord, announces BitChord's audio session to it again, and can hand the effects over: BitChord's equaliser goes off and Battery saver stands down, since a song on the audio chip can't be heard by JamesDSP. The page says what Android lets BitChord see: whether the rootless JamesDSP has finished its one-time setup, whether some app is capturing the sound that plays (that's how the rootless JamesDSP works, though Android doesn't say which app), and when bit-perfect output or Battery saver keep a song out of its reach. It can start and stop the rootless JamesDSP, and until its setup is done it offers [Shizuku](https://github.com/RikkaApps/Shizuku) and copies the three ADB commands JamesDSP's own setup asks for.
-- **Audio and video switch:** BitChord 1.9 can play a song's music video and switches between the two from the song menu. This puts the switch at the top of the player, as in YouTube Music: tap the headphones for the song or the video frame for its music video. It finds the other version the way BitChord's menu does, from BitChord's cache or YouTube Music, and hands it to BitChord's own swap, so the song keeps its place in the queue and, with Smart version alignment on, the two line up in time. It shows for YouTube Music songs only, and greys out in a Listen Together party or when a song has no other version. It can be hidden on the page.
+- **Audio and video switch:** BitChord 1.9 can play a song's music video and switches between the two from the song menu. This puts the switch at the top of the player, as in YouTube Music: tap Audio for the song or Video for its music video. It finds the other version the way BitChord's menu does, from BitChord's cache or YouTube Music, and hands it to BitChord's own swap, so the song keeps its place in the queue and, with Smart version alignment on, the two line up in time. It shows for YouTube Music songs only, and greys out in a Listen Together party or when a song has no other version. It can be hidden on the page.
 
 Everything is at BitChord's own behaviour until you change it, and none of them needs the Telegram patch. Pitch control, Loudness level, Sleep timer fade-out, Headphone correction, Equaliser per output and DJ mode follow features of [Prism](https://github.com/Yigder/Prism) by Yigder; the code is written for BitChord.
 
@@ -132,7 +134,7 @@ Step-by-step guides:
 
 - [Installing with Morphe](docs/MOBILE.md)
 - [Interactive installation guide](docs/guide/index.html)
-- [Publishing the combined beta.15 ZIP](docs/PUBLISHING-1.1.0-beta.15.md)
+- [Publishing the beta.16 ZIP](docs/PUBLISHING-1.1.0-beta.16.md)
 - [Connecting Telegram](docs/SETUP.md)
 - [Guided Soulseek search and downloads](docs/SOULSEEK.md)
 - [Optional debrid downloads](docs/DEBRID.md)

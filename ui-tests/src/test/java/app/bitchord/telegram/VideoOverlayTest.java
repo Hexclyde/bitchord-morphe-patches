@@ -75,48 +75,57 @@ public class VideoOverlayTest {
         second.pause().stop().destroy();
     }
 
-    @Test
-    public void openingAndRecreatingTheWindowRestoresTheVisibleSwitch() throws Exception {
-        VideoSwitch.attach();
-        assertNull(pill());
-        sheet.window = first.get().getWindow();
-        VideoSwitch.attach();
-        View original = pill();
-        assertNotNull(original);
-        assertEquals(View.VISIBLE, original.getVisibility());
-        sheet.window = second.get().getWindow();
-        VideoSwitch.attach();
-        assertNull(original.getParent());
-        assertNotSame(original, pill());
-        assertSame(
-                sheet.window.getDecorView().findViewById(android.R.id.content), pill().getParent());
-        assertEquals(View.VISIBLE, pill().getVisibility());
-        sheet.window = null;
-        View replaced = pill();
-        VideoSwitch.attach();
-        assertNull(replaced.getParent());
-        assertNull(pill());
-        sheet.window = first.get().getWindow();
-        VideoSwitch.attach();
-        assertEquals(View.VISIBLE, pill().getVisibility());
+    private View surface(Activity activity) {
+        android.widget.FrameLayout view = new android.widget.FrameLayout(activity);
+        activity.setContentView(view);
+        return view;
     }
 
     @Test
-    public void duplicateWindowWritesDoNotDuplicateTheSwitch() throws Exception {
+    public void reducedMotionPlayerUsesItsActualContentRatherThanAnAnimationWindow()
+            throws Exception {
+        sheet.window = null;
+        View player = surface(second.get());
+        VideoSwitch.bindContent(player);
+        assertNotNull(pill());
+        assertEquals(View.VISIBLE, pill().getVisibility());
+        assertSame(
+                second.get().getWindow().getDecorView().findViewById(android.R.id.content),
+                pill().getParent());
+        assertFalse(
+                first.get().getWindow().getDecorView().findViewById(android.R.id.content)
+                        == pill().getParent());
+    }
+
+    @Test
+    public void staleAnimationWindowCannotPutTheSwitchBehindThePlayer() throws Exception {
         sheet.window = first.get().getWindow();
-        VideoSwitch.attach();
-        View original = pill();
-        ViewGroup parent = (ViewGroup) original.getParent();
+        VideoSwitch.bindContent(surface(second.get()));
+        assertSame(
+                second.get().getWindow().getDecorView().findViewById(android.R.id.content),
+                pill().getParent());
+    }
+
+    @Test
+    public void replacingThePlayerContentRebindsExactlyOneSwitch() throws Exception {
+        VideoSwitch.bindContent(surface(second.get()));
+        View old = pill();
+        View replacement = surface(second.get());
+        VideoSwitch.bindContent(replacement);
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        assertNull(old.getParent());
+        assertNotNull(pill());
+        ViewGroup parent = (ViewGroup) pill().getParent();
         int count = parent.getChildCount();
+        VideoSwitch.bindContent(replacement);
         VideoSwitch.attach();
-        assertSame(original, pill());
         assertEquals(count, parent.getChildCount());
+        assertEquals(View.VISIBLE, pill().getVisibility());
     }
 
     @Test
     public void closedPlayerAndExternalTracksHideTheControl() throws Exception {
-        sheet.window = first.get().getWindow();
-        VideoSwitch.attach();
+        VideoSwitch.bindContent(surface(second.get()));
         sheet.open = false;
         ((VideoSwitch.Pill) pill()).refresh();
         assertEquals(View.GONE, pill().getVisibility());

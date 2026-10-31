@@ -62,6 +62,16 @@ public class TelegramStartupTest {
         return null;
     }
 
+    void prepared() {
+        try {
+            if (controller.get().preparation != null)
+                controller.get().preparation.get(10, java.util.concurrent.TimeUnit.SECONDS);
+        } catch (Exception failed) {
+            throw new AssertionError(failed);
+        }
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+    }
+
     void assertFailurePage() {
         assertNotNull(
                 text(controller.get().getWindow().getDecorView(), "Telegram page could not open"));
@@ -75,6 +85,7 @@ public class TelegramStartupTest {
         Shadows.shadowOf(RuntimeEnvironment.getApplication())
                 .denyPermissions("android.permission.HIDE_OVERLAY_WINDOWS");
         controller = Robolectric.buildActivity(TelegramActivity.class).setup();
+        prepared();
         assertFailurePage();
     }
 
@@ -84,6 +95,7 @@ public class TelegramStartupTest {
         Shadows.shadowOf(RuntimeEnvironment.getApplication())
                 .grantPermissions("android.permission.HIDE_OVERLAY_WINDOWS");
         controller = Robolectric.buildActivity(TelegramActivity.class).setup();
+        prepared();
         assertFailurePage();
         text(controller.get().getWindow().getDecorView(), "Copy crash details").performClick();
         ClipboardManager clipboard =
@@ -99,6 +111,7 @@ public class TelegramStartupTest {
         Shadows.shadowOf(RuntimeEnvironment.getApplication())
                 .grantPermissions("android.permission.HIDE_OVERLAY_WINDOWS");
         controller = Robolectric.buildActivity(TelegramActivity.class).setup();
+        prepared();
         assertNotNull(
                 text(
                         controller.get().getWindow().getDecorView(),
@@ -112,6 +125,7 @@ public class TelegramStartupTest {
         Shadows.shadowOf(RuntimeEnvironment.getApplication())
                 .grantPermissions("android.permission.HIDE_OVERLAY_WINDOWS");
         controller = Robolectric.buildActivity(TelegramActivity.class).setup();
+        prepared();
         TelegramActivity page = controller.get();
         page.bridge.error = null;
         page.render();

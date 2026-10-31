@@ -177,14 +177,44 @@ public final class TelegramBridge {
         return context.getApplicationInfo().processName.equals(process);
     }
 
+    private static final Object SETUP_LOCK = new Object();
+    private static long setupLaunchAt;
+    private static boolean setupVisible;
+
+    public static void setupOpened() {
+        synchronized (SETUP_LOCK) {
+            setupVisible = true;
+            setupLaunchAt = 0;
+        }
+    }
+
+    public static void setupClosed() {
+        synchronized (SETUP_LOCK) {
+            setupVisible = false;
+            setupLaunchAt = 0;
+        }
+    }
+
     public static void openSetup() {
         Context context = appContext;
-        if (context != null)
+        if (context == null) return;
+        synchronized (SETUP_LOCK) {
+            long now = android.os.SystemClock.elapsedRealtime();
+            if (setupVisible || setupLaunchAt != 0 && now - setupLaunchAt < 10_000) return;
+            setupLaunchAt = now;
+        }
+        try {
             context.startActivity(
                     new Intent(context, TelegramActivity.class)
                             .addFlags(
                                     Intent.FLAG_ACTIVITY_NEW_TASK
                                             | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+        } catch (RuntimeException failed) {
+            synchronized (SETUP_LOCK) {
+                setupLaunchAt = 0;
+            }
+            throw failed;
+        }
     }
 
     public static int resourceId(String name, String type) {
@@ -813,7 +843,7 @@ public final class TelegramBridge {
                             Locale.getDefault().toLanguageTag(),
                             Build.MODEL,
                             Build.VERSION.RELEASE,
-                            "1.1.0-beta.15"));
+                            "1.1.0-beta.16"));
             appliedCredentials = applying;
             error = "";
         } catch (Exception e) {

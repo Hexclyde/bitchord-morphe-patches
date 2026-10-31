@@ -12,6 +12,8 @@ import org.drinkless.tdlib.TdApi;
 import org.json.JSONObject;
 
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Themed application configuration, authorization and music-library screen. */
 public final class TelegramActivity extends Activity {
@@ -26,6 +28,17 @@ public final class TelegramActivity extends Activity {
     String screen = "";
     volatile boolean busy;
     boolean editCredentials, resumed, pageFailed;
+    final ExecutorService pageWork =
+            Executors.newSingleThreadExecutor(
+                    r -> {
+                        Thread thread = new Thread(r, "telegram-page");
+                        thread.setDaemon(true);
+                        return thread;
+                    });
+    Future<?> preparation;
+    private final AtomicBoolean statusPending = new AtomicBoolean();
+    private boolean prepared;
+    private String cachedIndexStatus = "";
     long channelId;
     ChannelView channelView;
     LinearLayout namesList;
@@ -36,32 +49,54 @@ public final class TelegramActivity extends Activity {
     final Runnable indexTicker =
             new Runnable() {
                 public void run() {
-                    TextView copying = importLine;
-                    if (bridge != null
-                            && copying != null
-                            && bridge.importOption("import")
-                            && !bridge.importStatus().isEmpty())
-                        copying.setText(bridge.importStatus());
-                    TextView checked = checkLine;
-                    if (bridge != null && checked != null) {
-                        String text = bridge.checkStatus();
-                        checked.setText(text);
-                        checked.setVisibility(text.isEmpty() ? View.GONE : View.VISIBLE);
+                    if (bridge != null && !pageFailed) {
+                        TextView copying = importLine;
+                        if (copying != null && bridge.importOption("import"))
+                            copying.setText(bridge.importStatus());
+                        TextView checked = checkLine;
+                        if (checked != null) {
+                            String value = bridge.checkStatus();
+                            checked.setText(value);
+                            checked.setVisibility(value.isEmpty() ? View.GONE : View.VISIBLE);
+                        }
+                        requestIndexStatus();
                     }
-                    TextView line = indexLine;
-                    if (bridge != null && line != null && bridge.searchIndex())
-                        bridge.work.execute(
-                                () -> {
-                                    String text = bridge.indexStatus();
-                                    runOnUiThread(
-                                            () -> {
-                                                if (line == indexLine && bridge.searchIndex())
-                                                    line.setText(text);
-                                            });
-                                });
-                    handler.postDelayed(this, 2000);
+                    if (!pageFailed) handler.postDelayed(this, 2000);
                 }
             };
+
+    private void requestIndexStatus() {
+        TelegramBridge target = bridge;
+        if (target == null || !target.searchIndex() || !statusPending.compareAndSet(false, true))
+            return;
+        try {
+            pageWork.execute(
+                    () -> {
+                        try {
+                            String value = target.indexStatus();
+                            handler.post(
+                                    () -> {
+                                        if (isDestroyed()
+                                                || isFinishing()
+                                                || pageFailed
+                                                || bridge != target) return;
+                                        cachedIndexStatus = value;
+                                        if (indexLine != null) indexLine.setText(value);
+                                    });
+                        } catch (RuntimeException | LinkageError failure) {
+                            handler.post(
+                                    () -> {
+                                        if (!isDestroyed() && !isFinishing() && !pageFailed)
+                                            pageFailure(failure);
+                                    });
+                        } finally {
+                            statusPending.set(false);
+                        }
+                    });
+        } catch (RejectedExecutionException closed) {
+            statusPending.set(false);
+        }
+    }
 
     final Runnable refresh =
             new Runnable() {
@@ -87,6 +122,7 @@ public final class TelegramActivity extends Activity {
                                 ? android.R.style.Theme_Material_NoActionBar
                                 : android.R.style.Theme_Material_Light_NoActionBar);
         super.onCreate(saved);
+        TelegramBridge.setupOpened();
         try {
             CapturePolicy.apply(this);
             openPage();
@@ -108,9 +144,6 @@ public final class TelegramActivity extends Activity {
                                 ? 0
                                 : View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                                         | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-        TelegramBridge.init(getApplicationContext());
-        bridge = TelegramBridge.instance;
-        editCredentials = bridge != null && !bridge.credentials().configured();
         scroll = new ScrollView(this);
         scroll.setBackgroundColor(style.background);
         scroll.setFillViewport(true);
@@ -133,7 +166,34 @@ public final class TelegramActivity extends Activity {
                             style.dp(28) + insets.getSystemWindowInsetBottom());
                     return insets;
                 });
-        refresh.run();
+        render();
+        preparation =
+                pageWork.submit(
+                        () -> {
+                            try {
+                                TelegramBridge.init(getApplicationContext());
+                                TelegramBridge found = TelegramBridge.instance;
+                                boolean needsCredentials =
+                                        found != null && !found.credentials().configured();
+                                handler.post(
+                                        () -> {
+                                            if (isDestroyed() || isFinishing() || pageFailed)
+                                                return;
+                                            bridge = found;
+                                            prepared = true;
+                                            editCredentials = needsCredentials;
+                                            screen = "";
+                                            refresh.run();
+                                            requestIndexStatus();
+                                        });
+                            } catch (RuntimeException | LinkageError failure) {
+                                handler.post(
+                                        () -> {
+                                            if (!isDestroyed() && !isFinishing())
+                                                pageFailure(failure);
+                                        });
+                            }
+                        });
     }
 
     @Override
@@ -150,6 +210,9 @@ public final class TelegramActivity extends Activity {
     protected void onDestroy() {
         if (channelView != null) channelView.close();
         handler.removeCallbacks(refresh);
+        handler.removeCallbacks(indexTicker);
+        pageWork.shutdown();
+        TelegramBridge.setupClosed();
         super.onDestroy();
     }
 
@@ -290,7 +353,9 @@ public final class TelegramActivity extends Activity {
         top.addView(subtitle, sl);
         body.addView(top);
         if (bridge == null) {
-            paragraph(card("Connection"), TelegramBridge.startupError);
+            paragraph(
+                    card("Connection"),
+                    prepared ? TelegramBridge.startupError : Strings.t("Opening Telegram…"));
             return;
         }
         if (channelId != 0) {
@@ -601,7 +666,9 @@ public final class TelegramActivity extends Activity {
                 toggle(
                         music,
                         "Saved index",
-                        bridge.indexStatus(),
+                        cachedIndexStatus.isEmpty()
+                                ? Strings.t("Reading saved index…")
+                                : cachedIndexStatus,
                         "Only Telegram’s own search is used",
                         bridge.searchIndex(),
                         bridge::setSearchIndex);
@@ -2272,7 +2339,7 @@ public final class TelegramActivity extends Activity {
     /** Class/frame information only: never exception messages, credentials or account values. */
     static String failureDetails(Throwable failure) {
         StringBuilder details =
-                new StringBuilder("BitChord Telegram page\nPatch 1.1.0-beta.15\nAndroid API ")
+                new StringBuilder("BitChord Telegram page\nPatch 1.1.0-beta.16\nAndroid API ")
                         .append(Build.VERSION.SDK_INT)
                         .append('\n');
         Set<Throwable> seen = Collections.newSetFromMap(new IdentityHashMap<>());

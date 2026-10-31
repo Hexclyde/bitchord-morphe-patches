@@ -75,7 +75,8 @@ abstract class DownloadPage extends ContextThemeWrapper {
                 downloadStyle.dp(16),
                 downloadStyle.dp(20),
                 downloadStyle.dp(28));
-        body.addView(downloadStyle.backButton(this::finish));
+        if (!(this instanceof DownloadsHubPage))
+            body.addView(downloadStyle.backButton(this::finish));
         body.addView(content);
         scroll.addView(body);
         scroll.setFillViewport(true);

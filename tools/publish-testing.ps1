@@ -57,7 +57,7 @@ $manifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
 if ($Repo -cne 'Hexclyde/bitchord-morphe-patches' -or $manifest.repository -cne $Repo) {
     throw 'This package is for Hexclyde/bitchord-morphe-patches.'
 }
-if ($manifest.version -cne '1.1.0-beta.15') { throw 'This script requires the 1.1.0-beta.15 publishing package.' }
+if ($manifest.version -cne '1.1.0-beta.16') { throw 'This script requires the 1.1.0-beta.16 publishing package.' }
 $Version = $manifest.version
 $Tag = "v$Version"
 $Mpp = "bitchord-patches-$Version.mpp"
@@ -126,7 +126,7 @@ $DownloadDirectory = $null
 try {
     Step 'Importing and checking the packaged source'
     Invoke-Git bundle verify $Bundle
-    Invoke-Git fetch --no-tags $Bundle "refs/heads/merged-download-streamseek-beta15:$IncomingRef"
+    Invoke-Git fetch --no-tags $Bundle "refs/heads/native-ui-telegram-speed-beta16:$IncomingRef"
     $Imported = $true
     $tip = (Invoke-Git rev-parse $IncomingRef).Trim()
     if ($tip -cne $ExpectedTip) { throw 'The bundle commit does not match this package.' }

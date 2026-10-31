@@ -12,7 +12,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
+import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -68,6 +68,29 @@ public final class VideoSwitch {
     private static volatile SharedPreferences preferences;
     private static volatile WeakReference<Object> controller = new WeakReference<>(null);
     private static volatile WeakReference<Object> motion = new WeakReference<>(null);
+    private static WeakReference<View> playerAnchor = new WeakReference<>(null);
+    private static WeakReference<View> observedRoot = new WeakReference<>(null);
+    private static final ViewTreeObserver.OnGlobalLayoutListener LAYOUT = VideoSwitch::attach;
+    private static final View.OnAttachStateChangeListener ANCHOR_LIFECYCLE =
+            new View.OnAttachStateChangeListener() {
+                public void onViewAttachedToWindow(View view) {
+                    watchRoot(view);
+                    attach();
+                }
+
+                public void onViewDetachedFromWindow(View view) {
+                    unwatchRoot();
+                    Pill detached = pill.get();
+                    if (main != null)
+                        main.post(
+                                () -> {
+                                    if (detached != null
+                                            && detached.getParent() instanceof ViewGroup)
+                                        ((ViewGroup) detached.getParent()).removeView(detached);
+                                    if (pill.get() == detached) pill = new WeakReference<>(null);
+                                });
+                }
+            };
     private static WeakReference<Pill> pill = new WeakReference<>(null);
     private static Handler main;
 
@@ -409,35 +432,80 @@ public final class VideoSwitch {
 
     private static final Runnable ATTACH = VideoSwitch::attach;
 
-    static void attach() {
-        Object sheet = motion.get();
-        if (sheet == null) return;
-        Window window = null;
+    /** Called inside NowPlayingScreen's restart group, including reduced-motion players. */
+    public static void content(Object composer) {
         try {
-            Field field = sheet.getClass().getDeclaredField("window");
-            field.setAccessible(true);
-            window = (Window) field.get(sheet);
-        } catch (Exception | LinkageError e) {
-            HostLog.d("Player window not found: " + e);
+            Object key =
+                    Class.forName("androidx.compose.ui.platform.AndroidCompositionLocals_androidKt")
+                            .getMethod("getLocalView")
+                            .invoke(null);
+            View view =
+                    (View)
+                            composer.getClass()
+                                    .getMethod(
+                                            "consume",
+                                            Class.forName(
+                                                    "androidx.compose.runtime.ProvidableCompositionLocal"))
+                                    .invoke(composer, key);
+            if (playerAnchor.get() == view) return;
+            if (main == null) main = new Handler(Looper.getMainLooper());
+            main.post(() -> bindContent(view));
+        } catch (ReflectiveOperationException | LinkageError failed) {
+            HostLog.d("Player content view unavailable: " + failed.getClass().getSimpleName());
         }
-        if (window == null) {
-            // The window-write hook calls us again when a player dialog appears.
-            // A closed sheet must release its old overlay, not retain a dead window.
-            Pill old = pill.get();
-            if (old != null && old.getParent() instanceof ViewGroup)
-                ((ViewGroup) old.getParent()).removeView(old);
-            pill = new WeakReference<>(null);
-            return;
+    }
+
+    static void bindContent(View view) {
+        if (main == null) main = new Handler(Looper.getMainLooper());
+        View previous = playerAnchor.get();
+        if (previous != view) {
+            if (previous != null) previous.removeOnAttachStateChangeListener(ANCHOR_LIFECYCLE);
+            unwatchRoot();
+            removePill();
+            playerAnchor = new WeakReference<>(view);
+            view.addOnAttachStateChangeListener(ANCHOR_LIFECYCLE);
         }
-        ViewGroup content = window.getDecorView().findViewById(android.R.id.content);
-        if (content == null) return;
+        if (view.isAttachedToWindow()) {
+            watchRoot(view);
+            attach();
+        }
+    }
+
+    private static void watchRoot(View anchor) {
+        View root = anchor.getRootView();
+        if (observedRoot.get() == root) return;
+        unwatchRoot();
+        observedRoot = new WeakReference<>(root);
+        root.getViewTreeObserver().addOnGlobalLayoutListener(LAYOUT);
+    }
+
+    private static void unwatchRoot() {
+        View root = observedRoot.get();
+        if (root != null && root.getViewTreeObserver().isAlive())
+            root.getViewTreeObserver().removeOnGlobalLayoutListener(LAYOUT);
+        observedRoot = new WeakReference<>(null);
+    }
+
+    private static void removePill() {
         Pill old = pill.get();
-        if (old != null && old.getParent() == content) return;
         if (old != null && old.getParent() instanceof ViewGroup)
             ((ViewGroup) old.getParent()).removeView(old);
+        pill = new WeakReference<>(null);
+    }
+
+    static void attach() {
+        View anchor = playerAnchor.get();
+        if (anchor == null || !anchor.isAttachedToWindow()) return;
+        View found = anchor.getRootView().findViewById(android.R.id.content);
+        if (!(found instanceof FrameLayout)) return;
+        FrameLayout content = (FrameLayout) found;
+        Pill old = pill.get();
+        if (old != null && old.getParent() == content) return;
+        removePill();
         Pill made = new Pill(content.getContext());
         FrameLayout.LayoutParams lp =
                 new FrameLayout.LayoutParams(-2, -2, Gravity.TOP | Gravity.CENTER_HORIZONTAL);
+        lp.topMargin = Math.round(56 * content.getResources().getDisplayMetrics().density);
         content.addView(made, lp);
         pill = new WeakReference<>(made);
         made.refresh();
@@ -458,6 +526,7 @@ public final class VideoSwitch {
         private final Paint back = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Paint chosen = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Paint icon = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint label = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Path path = new Path();
         private final RectF box = new RectF();
         private final Runnable tick = this::refresh;
@@ -466,8 +535,16 @@ public final class VideoSwitch {
         Pill(Context context) {
             super(context);
             density = context.getResources().getDisplayMetrics().density;
-            back.setColor(0x33FFFFFF);
-            chosen.setColor(0x33FFFFFF);
+            back.setColor(0xee252528);
+            chosen.setColor(0xff606064);
+            label.setColor(0xffffffff);
+            label.setTextAlign(Paint.Align.CENTER);
+            label.setTypeface(
+                    android.graphics.Typeface.create(
+                            "sans-serif-medium", android.graphics.Typeface.NORMAL));
+            label.setTextSize(14 * density);
+            setClickable(true);
+            setFocusable(true);
             icon.setStyle(Paint.Style.STROKE);
             icon.setStrokeCap(Paint.Cap.ROUND);
             icon.setStrokeJoin(Paint.Join.ROUND);
@@ -478,14 +555,14 @@ public final class VideoSwitch {
 
         @Override
         protected void onMeasure(int widthSpec, int heightSpec) {
-            setMeasuredDimension((int) (112 * density), (int) (36 * density));
+            setMeasuredDimension((int) (176 * density), (int) (48 * density));
         }
 
         @Override
         public WindowInsets onApplyWindowInsets(WindowInsets insets) {
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) getLayoutParams();
             if (lp != null) {
-                lp.topMargin = insets.getSystemWindowInsetTop() + (int) (12 * density);
+                lp.topMargin = insets.getSystemWindowInsetTop() + (int) (40 * density);
                 setLayoutParams(lp);
             }
             return insets;
@@ -518,47 +595,67 @@ public final class VideoSwitch {
                 bringToFront();
                 invalidate();
             }
-            if (isAttachedToWindow()) postDelayed(tick, show ? 300 : 600);
+            if (isAttachedToWindow() && getWindowVisibility() == VISIBLE)
+                postDelayed(tick, show ? 300 : 600);
         }
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) return true;
-            if (event.getAction() != MotionEvent.ACTION_UP) return false;
-            boolean wantVideo = event.getX() >= getWidth() / 2f;
-            performClick();
-            setPreferredVideo(wantVideo);
-            if (busy) return true;
-            if (blocked && wantVideo != video) {
-                toast(
-                        getContext(),
-                        inParty()
-                                ? Strings.t(
-                                        "Versions can’t be switched in a Listen Together party.")
-                                : Strings.t("There’s no other version of this song."));
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                setPressed(true);
                 return true;
             }
-            enforcePreference();
+            if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                setPressed(false);
+                return true;
+            }
+            if (event.getAction() != MotionEvent.ACTION_UP) return true;
+            setPressed(false);
+            super.performClick();
+            choose(event.getX() >= getWidth() / 2f);
             return true;
+        }
+
+        private void choose(boolean wantVideo) {
+            setPreferredVideo(wantVideo);
+            if (busy) return;
+            if (inParty()) {
+                toast(
+                        getContext(),
+                        Strings.t("Versions can’t be switched in a Listen Together party."));
+                return;
+            }
+            enforcePreference();
         }
 
         @Override
         public boolean performClick() {
-            return super.performClick();
+            super.performClick();
+            choose(!preferredVideo);
+            return true;
+        }
+
+        @Override
+        public void onInitializeAccessibilityNodeInfo(
+                android.view.accessibility.AccessibilityNodeInfo info) {
+            super.onInitializeAccessibilityNodeInfo(info);
+            info.setClassName("android.widget.Switch");
+            info.setCheckable(true);
+            info.setChecked(preferredVideo);
+            info.setText(Strings.t(preferredVideo ? "Video" : "Audio"));
         }
 
         @Override
         protected void onDraw(Canvas canvas) {
-            float w = getWidth(), h = getHeight(), r = h / 2f;
-            box.set(0, 0, w, h);
+            float w = getWidth(), h = 40 * density, top = 4 * density, r = h / 2f;
+            box.set(0, top, w, top + h);
             canvas.drawRoundRect(box, r, r, back);
             float pad = 3 * density;
-            box.set(video ? w / 2f : pad, pad, video ? w - pad : w / 2f, h - pad);
+            box.set(video ? w / 2f : pad, top + pad, video ? w - pad : w / 2f, top + h - pad);
             canvas.drawRoundRect(box, r - pad, r - pad, chosen);
-            icon.setColor(video ? 0xB3FFFFFF : 0xFFFFFFFF);
-            headphones(canvas, w / 4f, h / 2f);
-            icon.setColor(video ? 0xFFFFFFFF : 0xB3FFFFFF);
-            videoFrame(canvas, w * 3f / 4f, h / 2f);
+            float y = top + h / 2f - (label.ascent() + label.descent()) / 2f;
+            canvas.drawText(Strings.t("Audio"), w / 4f, y, label);
+            canvas.drawText(Strings.t("Video"), w * 3f / 4f, y, label);
         }
 
         private void headphones(Canvas canvas, float cx, float cy) {

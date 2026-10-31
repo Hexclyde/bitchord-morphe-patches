@@ -33,6 +33,8 @@ final class DownloadsHubPage extends DownloadPage {
     static final String[] VIEW_LABELS = {"Grid", "List", "Compact", "Comfy", "Detailed"};
     private TextView status;
     private String filter = "All", last = "";
+    private final List<TextView> filterViews = new ArrayList<>();
+    private final Map<String, Long> fileSizes = new HashMap<>();
     private volatile boolean foreground;
     private final Runnable refresh = () -> snapshot();
 
@@ -51,16 +53,33 @@ final class DownloadsHubPage extends DownloadPage {
         body.setOrientation(LinearLayout.VERTICAL);
         LinearLayout titleBar = new LinearLayout(this);
         titleBar.setGravity(android.view.Gravity.CENTER_VERTICAL);
-        TextView heading = text(titleBar, PatchStrings.t("Downloads"), 28);
-        heading.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1));
+        TextView heading =
+                downloadStyle.text(
+                        PatchStrings.t("Downloads"),
+                        28,
+                        downloadStyle.foreground,
+                        downloadStyle.heavy);
+        heading.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        titleBar.addView(heading, new LinearLayout.LayoutParams(0, downloadStyle.dp(52), 1));
+        ImageButton settings = downloadStyle.settingsButton();
+        settings.setContentDescription(PatchStrings.t("Download settings"));
+        settings.setOnClickListener(v -> settingsMenu());
+        titleBar.addView(
+                settings,
+                new LinearLayout.LayoutParams(downloadStyle.dp(48), downloadStyle.dp(48)));
         body.addView(titleBar);
-        text(
-                body,
-                PatchStrings.t("Follow downloads, saved files and confirmed destination copies."),
-                15);
+        LinearLayout toolbar = new LinearLayout(this);
+        toolbar.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        status =
+                downloadStyle.text(
+                        PatchStrings.t("Loading downloads…"),
+                        13,
+                        downloadStyle.secondary,
+                        downloadStyle.regular);
+        toolbar.addView(status, new LinearLayout.LayoutParams(0, downloadStyle.dp(48), 1));
         viewButton = new ImageButton(this);
         viewButton.setTag("download-view");
-        viewButton.setBackground(downloadStyle.shape(downloadStyle.card, 11, true));
+        viewButton.setBackground(downloadStyle.shape(downloadStyle.card, 12, false));
         viewButton.setPadding(
                 downloadStyle.dp(12),
                 downloadStyle.dp(12),
@@ -79,9 +98,9 @@ final class DownloadsHubPage extends DownloadPage {
                     viewDialog();
                     return true;
                 });
-        titleBar.addView(
+        toolbar.addView(
                 viewButton,
-                new LinearLayout.LayoutParams(downloadStyle.dp(48), downloadStyle.dp(48)));
+                new LinearLayout.LayoutParams(downloadStyle.dp(44), downloadStyle.dp(44)));
         ImageButton search = new ImageButton(this);
         search.setImageDrawable(downloadStyle.viewIcon("search"));
         search.setBackground(null);
@@ -94,48 +113,76 @@ final class DownloadsHubPage extends DownloadPage {
         search.setOnClickListener(
                 v -> startActivity(new Intent(this, DownloadExplorerActivity.class)));
         downloadStyle.markCustom(search);
-        titleBar.addView(
+        toolbar.addView(
                 search, new LinearLayout.LayoutParams(downloadStyle.dp(48), downloadStyle.dp(48)));
+        body.addView(toolbar);
         HorizontalScrollView scroll = new HorizontalScrollView(this);
+        scroll.setHorizontalScrollBarEnabled(false);
         LinearLayout filters = new LinearLayout(this);
         scroll.addView(filters);
-        body.addView(scroll);
-        for (String label :
-                new String[] {"All", "Active", "Queue", "On device", "Sharing", "Telegram"})
-            button(
-                    filters,
-                    label,
-                    () -> {
-                        filter = label;
+        LinearLayout.LayoutParams filterSpace = new LinearLayout.LayoutParams(-1, -2);
+        filterSpace.setMargins(0, downloadStyle.dp(8), 0, downloadStyle.dp(14));
+        body.addView(scroll, filterSpace);
+        for (String value :
+                new String[] {"All", "Active", "Queue", "On device", "Sharing", "Telegram"}) {
+            TextView chip =
+                    downloadStyle.text(
+                            PatchStrings.t(value),
+                            13,
+                            downloadStyle.foreground,
+                            downloadStyle.medium);
+            chip.setTag(value);
+            chip.setGravity(android.view.Gravity.CENTER);
+            chip.setPadding(downloadStyle.dp(14), 0, downloadStyle.dp(14), 0);
+            chip.setMinHeight(downloadStyle.dp(44));
+            chip.setClickable(true);
+            chip.setFocusable(true);
+            chip.setOnClickListener(
+                    v -> {
+                        filter = value;
                         last = "";
+                        updateFilters();
+                        renderRows(currentRows);
                         snapshot();
                     });
-        status = text(body, PatchStrings.t("Loading downloads…"), 14);
+            LinearLayout.LayoutParams placement =
+                    new LinearLayout.LayoutParams(-2, downloadStyle.dp(44));
+            placement.setMarginEnd(downloadStyle.dp(7));
+            filters.addView(chip, placement);
+            filterViews.add(chip);
+        }
+        updateFilters();
         rows = new LinearLayout(this);
         rows.setOrientation(LinearLayout.VERTICAL);
         rows.setTag("download-items");
         body.addView(rows);
-        button(
-                body,
-                PatchStrings.t("Find available downloads"),
-                () -> startActivity(new Intent(this, DownloadExplorerActivity.class)));
-        button(
-                body,
-                PatchStrings.t("Copy destinations and Telegram setup"),
-                () -> DownloadDestinations.openSettings(activity));
-        button(
-                body,
-                PatchStrings.t("Peer sharing and transfer controls"),
-                () -> startActivity(new Intent(this, BulkDownloadsActivity.class)));
-        button(
-                body,
-                PatchStrings.t("Debrid link downloads"),
-                () -> startActivity(new Intent(this, DebridDownloadsActivity.class)));
-        button(body, PatchStrings.t("Public upload slots"), this::slotsDialog);
-        button(
-                body,
-                PatchStrings.t("Rescan public sharing inventory"),
-                () -> command(() -> PublicSoulseekShares.reconcile(getApplicationContext())));
+        TextView uploads =
+                downloadStyle.text(
+                        "↑  " + PatchStrings.t("View upload activity") + "  ›",
+                        14,
+                        downloadStyle.secondary,
+                        downloadStyle.medium);
+        uploads.setMinHeight(downloadStyle.dp(48));
+        uploads.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        uploads.setClickable(true);
+        uploads.setFocusable(true);
+        uploads.setOnClickListener(
+                v -> startActivity(new Intent(this, BulkDownloadsActivity.class)));
+        body.addView(uploads);
+        TextView find =
+                downloadStyle.text(
+                        PatchStrings.t("Find available downloads"),
+                        15,
+                        downloadStyle.foreground,
+                        downloadStyle.semibold);
+        find.setMinHeight(downloadStyle.dp(48));
+        find.setGravity(android.view.Gravity.CENTER);
+        find.setBackground(downloadStyle.shape(downloadStyle.card, 24, false));
+        find.setClickable(true);
+        find.setFocusable(true);
+        find.setOnClickListener(
+                v -> startActivity(new Intent(this, DownloadExplorerActivity.class)));
+        body.addView(find);
         setContentView(body);
     }
 
@@ -164,6 +211,9 @@ final class DownloadsHubPage extends DownloadPage {
         final Runnable action;
         final String actionName;
         String savedUri = "", hostId = "";
+        String artist = "", source = "", format = "", artwork = "";
+        long received = -1, total = -1;
+        float fraction = Float.NaN;
 
         Row(String name, String detail, String group, String actionName, Runnable action) {
             this.name = name;
@@ -181,8 +231,10 @@ final class DownloadsHubPage extends DownloadPage {
             worker.execute(
                     () -> {
                         List<Row> data = new ArrayList<>();
+                        Set<String> savedUris = new HashSet<>();
                         String warning = "";
                         try {
+                            Map<?, ?> metadata = HostDownloadAccess.state("_savedMetadata");
                             Map<?, ?> active = HostDownloadAccess.state("active");
                             for (Map.Entry<?, ?> entry : active.entrySet()) {
                                 String id = String.valueOf(entry.getKey());
@@ -191,17 +243,19 @@ final class DownloadsHubPage extends DownloadPage {
                                 String detail = kind;
                                 if (kind.equals("Running")) {
                                     try {
+                                        float fraction =
+                                                ((Number)
+                                                                HostDownloadAccess.propertyObject(
+                                                                        state, "fraction"))
+                                                        .floatValue();
                                         detail =
-                                                PatchStrings.f(
-                                                        "Downloading · {0}%",
-                                                        Math.round(
-                                                                ((Number)
-                                                                                        HostDownloadAccess
-                                                                                                .propertyObject(
-                                                                                                        state,
-                                                                                                        "fraction"))
-                                                                                .floatValue()
-                                                                        * 100));
+                                                Float.isFinite(fraction)
+                                                                && fraction >= 0
+                                                                && fraction <= 1
+                                                        ? PatchStrings.f(
+                                                                "Downloading · {0}%",
+                                                                Math.round(fraction * 100))
+                                                        : PatchStrings.t("Downloading");
                                     } catch (Exception ignored) {
                                     }
                                 } else if (kind.equals("Failed"))
@@ -225,10 +279,10 @@ final class DownloadsHubPage extends DownloadPage {
                                         HostDownloadAccess.selectedTitle(
                                                 getApplicationContext(), id);
                                 if (title.isEmpty()) title = id;
-                                data.add(
+                                Row row =
                                         new Row(
                                                 title,
-                                                source + " · " + detail,
+                                                detail,
                                                 kind.equals("Queued") ? "Queue" : "Active",
                                                 kind.equals("Running") || kind.equals("Queued")
                                                         ? "Cancel"
@@ -237,9 +291,22 @@ final class DownloadsHubPage extends DownloadPage {
                                                         command(
                                                                 () ->
                                                                         HostDownloadAccess.cancel(
-                                                                                reference))));
+                                                                                reference)));
+                                row.source = source;
+                                populateMetadata(row, metadata.get(id));
+                                if (kind.equals("Running"))
+                                    try {
+                                        row.fraction =
+                                                ((Number)
+                                                                HostDownloadAccess.propertyObject(
+                                                                        state, "fraction"))
+                                                        .floatValue();
+                                        if (row.fraction < 0 || row.fraction > 1)
+                                            row.fraction = Float.NaN;
+                                    } catch (Exception ignored) {
+                                    }
+                                data.add(row);
                             }
-                            Map<?, ?> metadata = HostDownloadAccess.state("_savedMetadata");
                             for (Map.Entry<?, ?> entry :
                                     HostDownloadAccess.state("saved").entrySet()) {
                                 String id = String.valueOf(entry.getKey()),
@@ -250,12 +317,28 @@ final class DownloadsHubPage extends DownloadPage {
                                                 : HostDownloadAccess.propertyText(
                                                         metadata.get(id), "title");
                                 if (title.isEmpty()) title = id;
-                                data.add(
-                                        fileRow(
-                                                title,
-                                                PatchStrings.t("Saved by BitChord"),
-                                                id,
-                                                uri));
+                                if (data.size() >= 100) break;
+                                if (!savedUris.add(uri)) continue;
+                                Row row = fileRow(title, PatchStrings.t("On device"), id, uri);
+                                populateMetadata(row, metadata.get(id));
+                                row.source = "YouTube";
+                                if (id.startsWith("src:")) {
+                                    row.source = "BitChord";
+                                    int separator = id.indexOf("::");
+                                    if (separator > 4)
+                                        try {
+                                            Object config =
+                                                    HostDownloadAccess.registry(
+                                                            "config", id.substring(4, separator));
+                                            if (config != null)
+                                                row.source =
+                                                        String.valueOf(
+                                                                HostDownloadAccess.call(
+                                                                        config, "getDisplayName"));
+                                        } catch (Exception ignored) {
+                                        }
+                                }
+                                data.add(row);
                             }
                         } catch (Exception | LinkageError unavailable) {
                             warning = PatchStrings.t("BitChord download state is unavailable.");
@@ -273,17 +356,23 @@ final class DownloadsHubPage extends DownloadPage {
                                                             && progress.needsPhone
                                                     ? "On device"
                                                     : "Active";
-                            data.add(
+                            Row row =
                                     new Row(
                                             progress.name,
-                                            PatchStrings.t("Source: Soulseek")
-                                                    + "\n"
-                                                    + progress.summary(),
+                                            progress.summary(),
                                             group,
                                             progress.canCancel() ? "Cancel" : null,
                                             () ->
                                                     SoulseekSelectedDownloads.cancel(
-                                                            progress.reference)));
+                                                            progress.reference));
+                            row.source = "Soulseek";
+                            row.received = progress.downloaded;
+                            row.total = progress.total;
+                            row.fraction =
+                                    progress.total > 0
+                                            ? progress.downloaded / (float) progress.total
+                                            : Float.NaN;
+                            data.add(row);
                         }
                         BulkDownloads bulk = BulkDownloads.existing();
                         if (bulk == null)
@@ -311,7 +400,8 @@ final class DownloadsHubPage extends DownloadPage {
                             }
                             for (BulkJobStore.Job job : bulk.jobs()) {
                                 if (!job.publishedUri.isEmpty()
-                                        && "complete".equals(job.phoneStatus)) {
+                                        && "complete".equals(job.phoneStatus)
+                                        && savedUris.add(job.publishedUri)) {
                                     final String uri = job.publishedUri;
                                     data.add(
                                             fileRow(
@@ -342,24 +432,6 @@ final class DownloadsHubPage extends DownloadPage {
                                     PublicSoulseekShares.snapshot(getApplicationContext());
                             boolean enabled = sharing.optBoolean("enabled"),
                                     online = sharing.optBoolean("online");
-                            data.add(
-                                    new Row(
-                                            PatchStrings.t("Public Soulseek sharing"),
-                                            enabled
-                                                    ? (online
-                                                            ? PatchStrings.t(
-                                                                    "Enabled · selected files are"
-                                                                            + " public")
-                                                            : PatchStrings.t(
-                                                                    "Enabled · waiting for Soulseek"
-                                                                            + " connection"))
-                                                    : PatchStrings.t(
-                                                            "Paused · files are not advertised"),
-                                            "Sharing",
-                                            enabled
-                                                    ? PatchStrings.t("Pause sharing")
-                                                    : PatchStrings.t("Enable sharing"),
-                                            () -> sharingDialog(enabled)));
                             JSONArray inventory = sharing.getJSONArray("inventory");
                             for (int i = 0; i < inventory.length(); i++) {
                                 JSONObject item = inventory.getJSONObject(i);
@@ -467,6 +539,13 @@ final class DownloadsHubPage extends DownloadPage {
                                                     .append(notice);
                                     for (Row row : data)
                                         signature
+                                                .append(row.artist)
+                                                .append(row.source)
+                                                .append(row.format)
+                                                .append(row.artwork)
+                                                .append(row.fraction)
+                                                .append(row.received)
+                                                .append(row.total)
                                                 .append(row.group)
                                                 .append(row.name)
                                                 .append(row.detail);
@@ -474,11 +553,19 @@ final class DownloadsHubPage extends DownloadPage {
                                         last = signature.toString();
                                         currentRows = data;
                                         int visible = renderRows(data);
+                                        long activeCount =
+                                                data.stream()
+                                                        .filter(row -> row.group.equals("Active"))
+                                                        .count();
+                                        long queuedCount =
+                                                data.stream()
+                                                        .filter(row -> row.group.equals("Queue"))
+                                                        .count();
                                         status.setText(
                                                 notice.isEmpty()
                                                         ? PatchStrings.f(
-                                                                "Showing {0} items",
-                                                                Math.min(visible, 100))
+                                                                "{0} active · {1} queued",
+                                                                activeCount, queuedCount)
                                                         : notice);
                                     }
                                     ui.postDelayed(refresh, 1500);
@@ -532,6 +619,7 @@ final class DownloadsHubPage extends DownloadPage {
                 viewMode.equals("grid") && getResources().getConfiguration().fontScale < 1.4f;
         LinearLayout gridLine = null;
         for (Row row : data) {
+            if (filter.equals("All") && row.group.equals("Sharing")) continue;
             if (!filter.equals("All") && !filter.equals(row.group)) continue;
             if (visible >= 100) break;
             LinearLayout card = rowView(row);
@@ -551,8 +639,79 @@ final class DownloadsHubPage extends DownloadPage {
         }
         if (grid && visible % 2 != 0)
             gridLine.addView(new android.view.View(this), new LinearLayout.LayoutParams(0, 1, 1));
-        if (visible == 0) text(rows, PatchStrings.t("No items in this view."), 16);
+        if (visible == 0) {
+            TextView empty =
+                    downloadStyle.text(
+                            PatchStrings.t("No items in this view."),
+                            16,
+                            downloadStyle.secondary,
+                            downloadStyle.regular);
+            empty.setGravity(android.view.Gravity.CENTER);
+            empty.setPadding(0, downloadStyle.dp(40), 0, downloadStyle.dp(40));
+            rows.addView(empty);
+        }
+        if (status != null) {
+            long active = data.stream().filter(row -> row.group.equals("Active")).count();
+            long queued = data.stream().filter(row -> row.group.equals("Queue")).count();
+            status.setText(PatchStrings.f("{0} active · {1} queued", active, queued));
+        }
         return visible;
+    }
+
+    private void updateFilters() {
+        for (TextView chip : filterViews) {
+            boolean selected = filter.equals(chip.getTag());
+            chip.setSelected(selected);
+            chip.setTextColor(selected ? downloadStyle.background : downloadStyle.secondary);
+            chip.setBackground(
+                    downloadStyle.shape(
+                            selected ? downloadStyle.foreground : downloadStyle.card, 22, false));
+        }
+    }
+
+    private void settingsMenu() {
+        new AlertDialog.Builder(this)
+                .setTitle(PatchStrings.t("Download settings"))
+                .setItems(
+                        new String[] {
+                            PatchStrings.t("Copy destinations and Telegram setup"),
+                            PatchStrings.t("Peer sharing and transfer controls"),
+                            PatchStrings.t("Debrid link downloads"),
+                            PatchStrings.t("Public Soulseek sharing"),
+                            PatchStrings.t("Public upload slots"),
+                            PatchStrings.t("Rescan public sharing inventory")
+                        },
+                        (dialog, which) -> {
+                            if (which == 0) DownloadDestinations.openSettings(activity);
+                            else if (which == 1)
+                                startActivity(new Intent(this, BulkDownloadsActivity.class));
+                            else if (which == 2)
+                                startActivity(new Intent(this, DebridDownloadsActivity.class));
+                            else if (which == 3)
+                                command(
+                                        () -> {
+                                            boolean enabled =
+                                                    PublicSoulseekShares.snapshot(
+                                                                    getApplicationContext())
+                                                            .optBoolean("enabled");
+                                            ui.post(() -> sharingDialog(enabled));
+                                        });
+                            else if (which == 4) slotsDialog();
+                            else
+                                command(
+                                        () ->
+                                                PublicSoulseekShares.reconcile(
+                                                        getApplicationContext()));
+                        })
+                .setNegativeButton(PatchStrings.t("Cancel"), null)
+                .show();
+    }
+
+    private void populateMetadata(Row row, Object metadata) {
+        if (metadata == null) return;
+        row.artist = HostDownloadAccess.propertyText(metadata, "artist");
+        row.artwork = HostDownloadAccess.propertyText(metadata, "thumbnailUrl");
+        row.format = HostDownloadAccess.propertyText(metadata, "downloadFormat");
     }
 
     private LinearLayout rowView(Row row) {
@@ -561,37 +720,30 @@ final class DownloadsHubPage extends DownloadPage {
                 list = viewMode.equals("list"),
                 detailed = viewMode.equals("detailed");
         LinearLayout card = new LinearLayout(this);
-        downloadStyle.card(card);
+        card.setOrientation(LinearLayout.VERTICAL);
         int pad = downloadStyle.dp(compact ? 4 : list ? 10 : 15);
         card.setPadding(pad, pad, pad, pad);
-        if (compact) card.setBackgroundColor(downloadStyle.background);
+        card.setBackground(
+                compact ? null : downloadStyle.shape(downloadStyle.card, grid ? 20 : 28, false));
+        LinearLayout.LayoutParams placement = new LinearLayout.LayoutParams(-1, -2);
+        placement.setMargins(0, 0, 0, downloadStyle.dp(compact ? 2 : 11));
+        card.setLayoutParams(placement);
+        downloadStyle.markCustom(card);
+        if (grid)
+            card.addView(cover(row, 124), new LinearLayout.LayoutParams(-1, downloadStyle.dp(124)));
         LinearLayout header = new LinearLayout(this);
         header.setGravity(android.view.Gravity.CENTER_VERTICAL);
-        header.setOrientation(grid ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
+        if (grid) header.setPadding(0, downloadStyle.dp(8), 0, 0);
         card.addView(header);
-        if (!compact) {
-            TextView artwork =
-                    downloadStyle.text(
-                            row.name.isEmpty() ? "♪" : row.name.substring(0, 1),
-                            grid ? 30 : 19,
-                            downloadStyle.foreground,
-                            downloadStyle.semibold);
-            artwork.setGravity(android.view.Gravity.CENTER);
-            artwork.setImportantForAccessibility(android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO);
-            artwork.setBackground(downloadStyle.shape(downloadStyle.outline, 9, false));
-            int size = downloadStyle.dp(grid ? 90 : list ? 34 : 48);
-            LinearLayout.LayoutParams art = new LinearLayout.LayoutParams(grid ? -1 : size, size);
-            if (!grid) art.setMarginEnd(downloadStyle.dp(10));
-            else art.bottomMargin = downloadStyle.dp(9);
-            header.addView(artwork, art);
+        if (!compact && !grid) {
+            int size = downloadStyle.dp(list ? 36 : 52);
+            LinearLayout.LayoutParams art = new LinearLayout.LayoutParams(size, size);
+            art.setMarginEnd(downloadStyle.dp(12));
+            header.addView(cover(row, list ? 36 : 52), art);
         }
         LinearLayout labels = new LinearLayout(this);
         labels.setOrientation(LinearLayout.VERTICAL);
-        header.addView(
-                labels,
-                grid
-                        ? new LinearLayout.LayoutParams(-1, -2)
-                        : new LinearLayout.LayoutParams(0, -2, 1));
+        header.addView(labels, new LinearLayout.LayoutParams(0, -2, 1));
         TextView title =
                 downloadStyle.text(
                         row.name,
@@ -601,37 +753,122 @@ final class DownloadsHubPage extends DownloadPage {
         title.setMaxLines(grid || detailed ? 2 : 1);
         title.setEllipsize(android.text.TextUtils.TruncateAt.END);
         labels.addView(title);
-        TextView detail =
-                downloadStyle.text(
-                        row.detail,
-                        compact ? 12 : 13,
-                        downloadStyle.secondary,
-                        downloadStyle.regular);
-        if (!detailed) detail.setMaxLines(compact || list ? 1 : 3);
-        detail.setEllipsize(android.text.TextUtils.TruncateAt.END);
-        labels.addView(detail);
-        Button menu = new Button(this);
-        menu.setText("⋮");
-        menu.setContentDescription(PatchStrings.f("Actions for {0}", row.name));
-        menu.setMinHeight(downloadStyle.dp(48));
-        menu.setMinimumWidth(downloadStyle.dp(48));
-        menu.setOnClickListener(v -> rowActions(row));
-        header.addView(
-                menu,
-                new LinearLayout.LayoutParams(
-                        grid ? -1 : downloadStyle.dp(48), downloadStyle.dp(48)));
-        if (detailed) {
-            TextView group =
+        List<String> parts = new ArrayList<>();
+        if (!row.artist.isEmpty()) parts.add(row.artist);
+        if (!detailed && !row.source.isEmpty()) parts.add(row.source);
+        if (!detailed && !row.format.isEmpty()) parts.add(row.format.toUpperCase(Locale.ROOT));
+        if (!compact && !parts.isEmpty()) {
+            TextView subtitle =
                     downloadStyle.text(
-                            PatchStrings.f("Category · {0}", PatchStrings.t(row.group)),
-                            13,
+                            android.text.TextUtils.join(" · ", parts),
+                            compact ? 12 : 13,
                             downloadStyle.secondary,
                             downloadStyle.regular);
-            group.setPadding(0, downloadStyle.dp(10), 0, 0);
-            card.addView(group);
-            if (!row.savedUri.isEmpty()) text(card, PatchStrings.t("Phone copy confirmed"), 13);
+            subtitle.setMaxLines(detailed ? 2 : 1);
+            subtitle.setEllipsize(android.text.TextUtils.TruncateAt.END);
+            subtitle.setPadding(0, downloadStyle.dp(4), 0, 0);
+            labels.addView(subtitle);
+        }
+        ImageButton menu = new ImageButton(this);
+        menu.setImageDrawable(downloadStyle.viewIcon("more"));
+        menu.setBackground(null);
+        menu.setPadding(
+                downloadStyle.dp(13),
+                downloadStyle.dp(13),
+                downloadStyle.dp(13),
+                downloadStyle.dp(13));
+        menu.setContentDescription(PatchStrings.f("Actions for {0}", row.name));
+        menu.setOnClickListener(v -> rowActions(row));
+        downloadStyle.markCustom(menu);
+        header.addView(
+                menu, new LinearLayout.LayoutParams(downloadStyle.dp(44), downloadStyle.dp(48)));
+        boolean downloading = row.group.equals("Active");
+        if (downloading && !compact) {
+            ProgressBar progress =
+                    new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+            progress.setTag("download-progress");
+            progress.setMax(1000);
+            progress.setIndeterminate(!Float.isFinite(row.fraction));
+            if (Float.isFinite(row.fraction))
+                progress.setProgress(Math.round(Math.max(0, Math.min(1, row.fraction)) * 1000));
+            android.content.res.ColorStateList green =
+                    android.content.res.ColorStateList.valueOf(0xff2ed15a);
+            progress.setProgressTintList(green);
+            progress.setIndeterminateTintList(green);
+            progress.setProgressBackgroundTintList(
+                    android.content.res.ColorStateList.valueOf(downloadStyle.outline));
+            LinearLayout.LayoutParams bar = new LinearLayout.LayoutParams(-1, downloadStyle.dp(3));
+            bar.topMargin = downloadStyle.dp(16);
+            card.addView(progress, bar);
+            downloadStyle.markCustom(progress);
+        }
+        String detail = row.detail;
+        if (row.group.equals("On device"))
+            detail =
+                    "✓  "
+                            + PatchStrings.t("On device")
+                            + (row.total > 0
+                                    ? " · "
+                                            + android.text.format.Formatter.formatShortFileSize(
+                                                    this, row.total)
+                                    : "");
+        else if (row.group.equals("Queue")) detail = "◷  " + detail;
+        else if (row.group.equals("Telegram")) detail = "☁  " + detail;
+        if (compact && !parts.isEmpty())
+            detail = android.text.TextUtils.join(" · ", parts) + " · " + detail;
+        TextView state =
+                downloadStyle.text(
+                        detail, compact ? 11 : 12, downloadStyle.secondary, downloadStyle.regular);
+        state.setTag("download-status");
+        state.setMaxLines(compact ? 1 : detailed ? 4 : 2);
+        state.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        state.setPadding(0, downloadStyle.dp(compact ? 2 : downloading ? 9 : 13), 0, 0);
+        if (compact) labels.addView(state);
+        else card.addView(state);
+        if (detailed) {
+            List<String> attributes = new ArrayList<>();
+            if (!row.source.isEmpty()) attributes.add(PatchStrings.f("Source · {0}", row.source));
+            if (!row.format.isEmpty())
+                attributes.add(PatchStrings.f("Format · {0}", row.format.toUpperCase(Locale.ROOT)));
+            if (row.total > 0)
+                attributes.add(
+                        PatchStrings.f(
+                                "Size · {0}",
+                                android.text.format.Formatter.formatShortFileSize(
+                                        this, row.total)));
+            attributes.add(PatchStrings.f("Category · {0}", PatchStrings.t(row.group)));
+            TextView facts =
+                    downloadStyle.text(
+                            android.text.TextUtils.join("\n", attributes),
+                            12,
+                            downloadStyle.secondary,
+                            downloadStyle.regular);
+            facts.setPadding(0, downloadStyle.dp(10), 0, 0);
+            card.addView(facts);
         }
         return card;
+    }
+
+    private android.view.View cover(Row row, int size) {
+        FrameLayout frame = new FrameLayout(this);
+        frame.setTag("download-cover");
+        frame.setBackground(downloadStyle.shape(downloadStyle.outline, 10, false));
+        frame.setClipToOutline(true);
+        TextView note =
+                downloadStyle.text(
+                        "♫", size > 70 ? 34 : 23, downloadStyle.secondary, downloadStyle.medium);
+        note.setGravity(android.view.Gravity.CENTER);
+        note.setImportantForAccessibility(android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        frame.addView(note, new FrameLayout.LayoutParams(-1, -1));
+        ImageView image = new ImageView(this);
+        image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        image.setVisibility(android.view.View.GONE);
+        image.setImportantForAccessibility(android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        frame.addView(image, new FrameLayout.LayoutParams(-1, -1));
+        downloadStyle.markCustom(frame);
+        downloadStyle.markCustom(image);
+        DownloadArtwork.bind(image, row.artwork, row.savedUri);
+        return frame;
     }
 
     private void rowActions(Row row) {
@@ -741,6 +978,19 @@ final class DownloadsHubPage extends DownloadPage {
                         });
         row.savedUri = uri;
         row.hostId = id;
+        Long known = fileSizes.get(uri);
+        if (known == null) {
+            long bytes = -1;
+            if (!uri.endsWith("playlist.m3u8"))
+                try (android.content.res.AssetFileDescriptor file =
+                        getContentResolver().openAssetFileDescriptor(Uri.parse(uri), "r")) {
+                    if (file != null) bytes = file.getLength();
+                } catch (Exception ignored) {
+                }
+            known = bytes;
+            fileSizes.put(uri, known);
+        }
+        row.total = known;
         return row;
     }
 

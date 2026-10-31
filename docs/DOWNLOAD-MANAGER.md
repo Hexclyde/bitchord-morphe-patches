@@ -1,20 +1,38 @@
-# Integrated Downloads — beta.11
+# Integrated Downloads — beta.16
 
-The original app remains BitChord 1.9. Install the **1.1.0-beta.11 Morphe bundle** and
+The original app remains BitChord 1.9. Install the **1.1.0-beta.16 Morphe bundle** and
 apply Unofficial Soulseek audio (plus Unofficial Telegram music for Telegram features).
-Beta.11 is based on beta.10, which includes every unpublished beta.9 change.
+All earlier changes, including unpublished beta.9 work, are retained.
 
 ## Player integration
 
 Downloads is the fifth tab, between Explore and Library, in both native navigation
 styles. It uses BitChord's original Downloads glyph. The hub, Explorer and batch
 review render in the player's content area through its retained AndroidView API.
-BitChord owns the mini-player, playback controls, top bar, bottom bar and their
-measured padding. Back first returns from a download detail to the hub, then to the
+BitChord owns the mini-player, playback controls and bottom navigation. Downloads
+supplies its own compact header while visible, hiding the duplicate host profile
+bar and accounting for the system inset. Back first returns from a download detail to the hub, then to the
 previous player tab. The Compose back handler allows the expanded player and dialogs
 to retain their normal precedence. Existing setup/advanced transfer screens remain
 available as separate settings activities. The older experimental 1.8.1 target uses
 standalone pages; the new player slot and batch hook are qualified for 1.9.
+
+## Views and controls
+
+Tap the view icon to cycle Grid, List, Compact, Comfy and Detailed; hold it to select
+a view directly. The selection survives reopening. Comfy follows the reviewed HTML
+demo with actual thumbnail or embedded artwork when available, a music-note fallback,
+source/format labels, separate status lines and a thin progress bar from real transfer
+data. Compact omits artwork; Detailed shows the known source, format and file size.
+Unknown rates, formats and progress are not fabricated. Saved aliases for the same
+host URI appear once.
+
+The header contains active/queued counts, the view switch and search. Management
+controls live under its settings gear; upload activity and Find available downloads
+remain below the file list. Public-sharing configuration is not presented as a
+completed download. The native Downloads icon remains conditional on installing the
+add-on. The production Android content renders in the ZIP use controlled demo data;
+full-shell placement still requires phone testing.
 
 ## Find and choose sources
 

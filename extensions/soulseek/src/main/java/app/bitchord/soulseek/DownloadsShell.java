@@ -91,6 +91,21 @@ public final class DownloadsShell {
         }
     }
 
+    /** The manager supplies its own header; native account controls must not duplicate it. */
+    public static Object chromeModifier(Object modifier) {
+        if (modifier == null || !visible()) return modifier;
+        try {
+            return Class.forName("androidx.compose.foundation.layout.SizeKt")
+                    .getMethod(
+                            "height-3ABfNKs",
+                            Class.forName("androidx.compose.ui.Modifier"),
+                            float.class)
+                    .invoke(null, modifier, 0f);
+        } catch (ReflectiveOperationException | LinkageError failed) {
+            return modifier;
+        }
+    }
+
     private static void changed() {
         try {
             init();
@@ -281,6 +296,12 @@ public final class DownloadsShell {
                 }
             } catch (ReflectiveOperationException problem) {
                 throw new IllegalStateException(problem);
+            }
+            android.view.WindowInsets insets = getRootWindowInsets();
+            if (insets != null) top = insets.getSystemWindowInsetTop();
+            else {
+                int id = getResources().getIdentifier("status_bar_height", "dimen", "android");
+                top = id == 0 ? 0 : getResources().getDimensionPixelSize(id);
             }
             setPadding(0, top, 0, bottom);
             if (version == generation && page != null) return;

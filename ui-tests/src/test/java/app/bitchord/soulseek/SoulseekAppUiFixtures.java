@@ -296,6 +296,7 @@ final class SoulseekSelectedDownloads {
 
     static class Progress {
         String reference, name = "";
+        long downloaded, total;
         boolean needsPhone;
         Phase phase;
 

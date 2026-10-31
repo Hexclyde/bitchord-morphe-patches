@@ -133,3 +133,5 @@ __pycache__/
 /ui-tests/src/test/java/app/bitchord/soulseek/PreviewDecode.java
 /ui-tests/src/test/java/app/bitchord/soulseek/PreviewEvidence.java
 /ui-tests/src/test/java/app/bitchord/soulseek/SoulseekPreviewActivity.java
+
+/ui-tests/src/test/java/app/bitchord/soulseek/DownloadArtwork.java

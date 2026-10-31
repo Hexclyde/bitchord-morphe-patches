@@ -50,8 +50,25 @@ public final class VerifyTelegramPageApk {
         ClassDef activity = types.get("Lapp/bitchord/telegram/TelegramActivity;");
         check(activity != null, "Telegram page included");
         Set<String> found = new HashSet<>();
+        int backgroundIndexCalls = 0;
+
         for (Method m : activity.getMethods()) {
             found.add(m.getName());
+            if (m.getImplementation() != null)
+                for (Instruction i : m.getImplementation().getInstructions()) {
+                    if (i instanceof ReferenceInstruction r
+                            && r.getReference() instanceof MethodReference call
+                            && call.getDefiningClass()
+                                    .equals("Lapp/bitchord/telegram/TelegramBridge;")
+                            && call.getName().equals("indexStatus")) {
+                        backgroundIndexCalls++;
+                        guarded(m, "indexStatus");
+                        check(
+                                m.getName().contains("lambda$requestIndexStatus"),
+                                "Index reads stay in the background status task");
+                    }
+                }
+
             if (m.getName().equals("onCreate")) guarded(m, "openPage");
             if (m.getName().equals("render")) guarded(m, "renderPage");
             if (m.getName().equals("failureDetails"))
@@ -66,6 +83,9 @@ public final class VerifyTelegramPageApk {
         check(
                 found.containsAll(List.of("pageFailure", "failureDetails", "secureWindow")),
                 "Recovery and protection methods retained");
+        check(
+                backgroundIndexCalls == 1,
+                "One background index status call; no synchronous opening read");
         var manifest = VerifyApk.manifest(apk);
         int declared = 0;
         var nodes = manifest.getElementsByTagName("activity");

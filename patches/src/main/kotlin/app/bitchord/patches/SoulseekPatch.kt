@@ -416,6 +416,25 @@ val nativeSoulseekPatch =
                 ) {
                     "Player content slot ABI changed"
                 }
+                val topBar =
+                    mutableClassDefBy("Lcom/music/bitchord/ui/components/FrostedTopBarKt;")
+                        .methods
+                        .single { it.name == "FrostedTopBar" }
+                check(
+                    topBar.parameterTypes[2] == "Landroidx/compose/ui/Modifier;" &&
+                        topBar.implementation!!.registerCount == 56
+                ) {
+                    "Top-bar modifier ABI changed"
+                }
+                topBar.addInstructions(
+                    0,
+                    """
+                    invoke-static/range {p2 .. p2}, ${SOULSEEK}DownloadsShell;->chromeModifier(Ljava/lang/Object;)Ljava/lang/Object;
+                    move-result-object v0
+                    check-cast v0, Landroidx/compose/ui/Modifier;
+                    move-object/from16 p2, v0
+                """,
+                )
                 val libraryCode = library.implementation!!.instructions.toList()
                 val groupStart =
                     libraryCode.indices.single { index ->

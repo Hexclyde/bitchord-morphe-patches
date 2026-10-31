@@ -2565,41 +2565,27 @@ private fun BytecodePatchContext.addVideoSwitch() {
         index,
         "invoke-static/range {p0 .. p0}, $VIDEO_SWITCH->motion(Ljava/lang/Object;)V",
     )
-    // R8 inlines attachWindow/onSheetGone into other classes. Observe the actual
-    // field writes so every newly created dialog gets the switch, including after
-    // a close/reopen or configuration change.
-    val windowOwners = mutableListOf<String>()
-    classDefForEach { clazz ->
-        if (
-            clazz.methods.any { method ->
-                method.implementation?.instructions?.any { instruction ->
-                    val field = instruction.fieldRef()
-                    instruction.opcode == Opcode.IPUT_OBJECT &&
-                        field?.definingClass == motion.type &&
-                        field.name == "window"
-                } == true
-            }
-        )
-            windowOwners += clazz.type
-    }
-    check(windowOwners.isNotEmpty()) { "Player window lifecycle writes not found" }
-    for (owner in windowOwners) for (method in mutableClassDefBy(owner).methods) {
-        val code = method.implementation?.instructions?.toList() ?: continue
-        val writes =
-            code.indices.filter { index ->
-                val field = code[index].fieldRef()
-                code[index].opcode == Opcode.IPUT_OBJECT &&
-                    field?.definingClass == motion.type &&
-                    field.name == "window"
-            }
-        for (index in writes.reversed()) {
-            val register = (code[index] as TwoRegisterInstruction).registerB
-            method.addInstruction(
-                index + 1,
-                "invoke-static/range {v$register .. v$register}, $VIDEO_SWITCH->motion(Ljava/lang/Object;)V",
-            )
+    // Read LocalView inside the actual full player's composition. Animation-window
+    // tracking is intentionally absent in reduced-motion mode and cannot host UI.
+    val player =
+        mutableClassDefBy("Lcom/music/bitchord/ui/player/NowPlayingScreenKt;").methods.single {
+            it.name.startsWith("NowPlayingScreen-") &&
+                it.parameterTypes.firstOrNull() == "Lcom/music/bitchord/data/model/Song;"
         }
-    }
+    val code = player.implementation!!.instructions.toList()
+    val group =
+        code.indexOfFirst {
+            val call = (it as? ReferenceInstruction)?.reference as? MethodReference
+            call?.definingClass == "Landroidx/compose/runtime/ComposerImpl;" &&
+                call.name == "startRestartGroup"
+        }
+    check(group >= 0) { "Full-player restart group not found" }
+    val composer = (code[group] as FiveRegisterInstruction).registerC
+    val after = if (code[group + 1].opcode == Opcode.MOVE_RESULT_OBJECT) group + 2 else group + 1
+    player.addInstruction(
+        after,
+        "invoke-static/range {v$composer .. v$composer}, $VIDEO_SWITCH->content(Ljava/lang/Object;)V",
+    )
     println("Added the audio and video switch")
 }
 

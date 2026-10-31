@@ -1218,5 +1218,17 @@
   "Copy crash details": "Copy crash details",
   "Back to BitChord": "Back to BitChord",
   "Crash details copied": "Crash details copied",
-  "Crash details could not be copied": "Crash details could not be copied"
+  "Crash details could not be copied": "Crash details could not be copied",
+  "Audio": "Audio",
+  "Download settings": "Download settings",
+  "Downloading": "Downloading",
+  "On device": "On device",
+  "Opening Telegram…": "Opening Telegram…",
+  "Reading saved index…": "Reading saved index…",
+  "Video": "Video",
+  "View upload activity": "View upload activity",
+  "{0} active · {1} queued": "{0} active · {1} queued",
+  "Format · {0}": "Format · {0}",
+  "Size · {0}": "Size · {0}",
+  "Source · {0}": "Source · {0}"
 }

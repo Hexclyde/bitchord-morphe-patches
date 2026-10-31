@@ -330,7 +330,10 @@ final class DownloadStyle {
                 paint.setStrokeWidth(2);
                 paint.setStrokeCap(Paint.Cap.ROUND);
                 paint.setStrokeJoin(Paint.Join.ROUND);
-                if (mode.equals("search")) {
+                if (mode.equals("more")) {
+                    paint.setStyle(Paint.Style.FILL);
+                    for (int y : new int[] {5, 12, 19}) canvas.drawCircle(12, y, 1.6f, paint);
+                } else if (mode.equals("search")) {
                     canvas.drawCircle(10.5f, 10.5f, 7, paint);
                     canvas.drawLine(16, 16, 21, 21, paint);
                 } else if (mode.equals("grid")) {
@@ -459,6 +462,7 @@ final class DownloadStyle {
                         shape(dark ? 0xff0d0d0f : 0xfff7f7f9, 30, true),
                         null));
         result.setBackgroundTintList(null);
+        result.setLayoutParams(new LinearLayout.LayoutParams(dp(48), dp(48)));
         result.setContentDescription(PatchStrings.t("Back"));
         result.setOnClickListener(view -> action.run());
         markCustom(result);

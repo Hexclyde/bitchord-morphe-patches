@@ -82,6 +82,7 @@ for name in (
     )
 for name in (
     "DownloadArchives.java",
+    "DownloadArtwork.java",
     "PublicSoulseekShares.java",
     "DownloadPage.java",
     "DownloadExplorerActivity.java",

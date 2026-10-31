@@ -1218,5 +1218,17 @@
   "Crash details copied",
   "Crash details could not be copied",
   "Telegram page could not open",
-  "Your Telegram data is kept. Copy crash details to help identify the problem, or return to BitChord."
+  "Your Telegram data is kept. Copy crash details to help identify the problem, or return to BitChord.",
+  "Audio",
+  "Download settings",
+  "Downloading",
+  "On device",
+  "Opening Telegram…",
+  "Reading saved index…",
+  "Video",
+  "View upload activity",
+  "{0} active · {1} queued",
+  "Format · {0}",
+  "Size · {0}",
+  "Source · {0}"
 ]

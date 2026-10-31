@@ -1,3 +1,11 @@
+# 1.1.0-beta.16
+
+- Rebuild the production Android Downloads views to follow the reviewed HTML demo: compact controls, real thumbnail/embedded artwork, source/format labels, separate file status, actual thin transfer progress and five saved layouts. Keep management controls under the settings gear, deduplicate saved host aliases, remove the fake public-sharing download row and constrain the back button.
+- Replace the duplicate host header only while Downloads owns the content. Preserve the native player and bottom navigation; Downloads remains conditional on the installed add-on.
+- Bind the Audio/Video text pill to NowPlayingScreen's actual composition view, independent of the animation window. Cover reduced motion, stale background windows and player-content replacement. Retain the persistent YouTube preference.
+- Show Telegram's opening page before native bridge preparation. Run saved-index counts on a separate background worker, cache the visible status and suppress duplicate page launches.
+- Retain all 19 patches, Streamseek and earlier source history, the full README with six badges and all 14 interactive-guide files.
+
 # 1.1.0-beta.15
 
 Merge both beta.14 branches: Streamseek previews and the Downloads/player-window fixes.

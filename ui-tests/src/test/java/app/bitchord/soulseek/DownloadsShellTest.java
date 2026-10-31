@@ -100,9 +100,10 @@ public class DownloadsShellTest {
         assertSame(miniPlayer, root.getChildAt(1));
         assertSame(root, miniPlayer.getParent());
         assertEquals(1, content.getChildCount());
-        assertEquals(
-                Math.round(90 * activity.getResources().getDisplayMetrics().density),
-                composer.view.getPaddingTop());
+        assertTrue(
+                "Manager header replaces native account chrome",
+                composer.view.getPaddingTop()
+                        < Math.round(90 * activity.getResources().getDisplayMetrics().density));
         assertEquals(
                 Math.round(210 * activity.getResources().getDisplayMetrics().density),
                 composer.view.getPaddingBottom());

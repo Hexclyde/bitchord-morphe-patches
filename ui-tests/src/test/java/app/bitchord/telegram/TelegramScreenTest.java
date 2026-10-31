@@ -24,13 +24,17 @@ public class TelegramScreenTest {
     TelegramActivity activity;
 
     @Before
-    public void start() {
+    public void start() throws Exception {
         if (android.os.Build.VERSION.SDK_INT >= 31)
             Shadows.shadowOf(RuntimeEnvironment.getApplication())
                     .grantPermissions("android.permission.HIDE_OVERLAY_WINDOWS");
         TelegramBridge.instance = null;
         controller = Robolectric.buildActivity(TelegramActivity.class).setup();
         activity = controller.get();
+        activity.preparation.get(10, java.util.concurrent.TimeUnit.SECONDS);
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        activity.pageWork.submit(() -> {}).get(10, java.util.concurrent.TimeUnit.SECONDS);
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
         assertTrue(
                 "Telegram screen blocks capture",
                 (activity.getWindow().getAttributes().flags

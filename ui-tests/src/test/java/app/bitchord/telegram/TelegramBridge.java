@@ -147,6 +147,17 @@ public final class TelegramBridge {
     }
 
     String indexStatus() {
+        if (enforceBackgroundStatus
+                && android.os.Looper.myLooper() == android.os.Looper.getMainLooper())
+            throw new AssertionError("Index status must not block the UI thread");
+        if (indexStatusEntered != null) indexStatusEntered.countDown();
+        if (indexStatusRelease != null)
+            try {
+                indexStatusRelease.await(10, java.util.concurrent.TimeUnit.SECONDS);
+            } catch (InterruptedException stopped) {
+                Thread.currentThread().interrupt();
+            }
+
         return "12 files indexed from 1 chat";
     }
 
@@ -346,6 +357,13 @@ public final class TelegramBridge {
     public TdApi.AuthorizationState auth = new TdApi.AuthorizationStateWaitTdlibParameters();
     public String status = "Add your application credentials to connect.", error = "";
     ApplicationCredentials credentials = ApplicationCredentials.empty();
+
+    public static void setupOpened() {}
+
+    public static void setupClosed() {}
+
+    static volatile boolean enforceBackgroundStatus;
+    static volatile java.util.concurrent.CountDownLatch indexStatusEntered, indexStatusRelease;
 
     public static void init(Context context) {
         if (instance == null) instance = new TelegramBridge();
