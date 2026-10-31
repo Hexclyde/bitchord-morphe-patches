@@ -142,7 +142,7 @@ public final class SoulseekSearchActivity extends DownloadActivity {
                 .setOnClickListener(view -> DownloadDestinations.openSettings(this));
         button(form, PatchStrings.t("View downloads"))
                 .setOnClickListener(
-                        view -> startActivity(new Intent(this, BulkDownloadsActivity.class)));
+                        view -> startActivity(new Intent(this, DownloadsHubActivity.class)));
         results = new LinearLayout(this);
         results.setOrientation(LinearLayout.VERTICAL);
         results.setTag("soulseek-search-results");

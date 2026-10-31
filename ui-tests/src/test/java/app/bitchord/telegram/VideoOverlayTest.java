@@ -124,6 +124,19 @@ public class VideoOverlayTest {
     }
 
     @Test
+    public void elevatedComposePlayerCannotCoverTheSwitch() throws Exception {
+        View player = surface(second.get());
+        player.setElevation(24f);
+        VideoSwitch.bindContent(player);
+        assertTrue(
+                "The switch must draw and receive touches above the elevated player",
+                pill().getZ() > player.getZ());
+        player.setElevation(36f);
+        VideoSwitch.attach();
+        assertTrue("Recomposition can change the host layer", pill().getZ() > player.getZ());
+    }
+
+    @Test
     public void closedPlayerAndExternalTracksHideTheControl() throws Exception {
         VideoSwitch.bindContent(surface(second.get()));
         sheet.open = false;

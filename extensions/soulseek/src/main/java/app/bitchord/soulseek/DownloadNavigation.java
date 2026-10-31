@@ -75,7 +75,7 @@ public final class DownloadNavigation {
     @SuppressWarnings("unchecked")
     public static synchronized Object callback(Object originalTabs, Object original) {
         if (originalTabs == expanded || tabs(originalTabs) == originalTabs) return original;
-        if (original == callback) return wrapped;
+        if (original == callback || original == wrapped) return wrapped;
         Function1<Object, Object> delegate = (Function1<Object, Object>) original;
         Function1<Object, Object> result =
                 position -> {

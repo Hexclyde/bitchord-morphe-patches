@@ -81,6 +81,7 @@ public class DownloadsShellTest {
     @After
     public void cleanup() throws Exception {
         DownloadsShell.close();
+        DownloadsShell.player(null);
         owner.pause().stop().destroy();
         for (String name : new String[] {"callback", "wrapped"}) {
             java.lang.reflect.Field f = DownloadNavigation.class.getDeclaredField(name);
@@ -90,12 +91,36 @@ public class DownloadsShellTest {
         SoulseekBridge.instance.work.shutdownNow();
     }
 
+    public static final class PlayerSheet {
+        int closes;
+
+        public void close() {
+            closes++;
+        }
+    }
+
+    @Test
+    public void openingThePickerDismissesTheFullPlayerThatWouldCoverIt() {
+        PlayerSheet player = new PlayerSheet();
+        DownloadsShell.player(player);
+        assertTrue(DownloadsShell.open(new Intent(activity, DownloadExplorerActivity.class)));
+        assertEquals(1, player.closes);
+        assertTrue(DownloadsShell.visible());
+    }
+
+    @Test
+    public void unavailablePlayerDismissalFallsBackToAnActivity() {
+        DownloadsShell.player(new Object());
+        assertFalse(DownloadsShell.open(new Intent(activity, DownloadExplorerActivity.class)));
+        assertFalse(DownloadsShell.visible());
+    }
+
     @Test
     public void downloadsUseThePlayerContentSlotAndMeasuredPadding() {
         assertTrue(DownloadsShell.open(new Intent(activity, DownloadsHubActivity.class)));
         assertEquals(Arrays.asList(2), selected);
         assertTrue(DownloadsShell.compose(null, new Padding(), composer));
-        assertEquals(2, composer.defaults);
+        assertEquals(0, composer.defaults);
         assertNotNull(composer.modifier);
         assertSame(miniPlayer, root.getChildAt(1));
         assertSame(root, miniPlayer.getParent());
@@ -122,8 +147,39 @@ public class DownloadsShellTest {
         DownloadsShell.open(new Intent(activity, DownloadsHubActivity.class));
         androidx.compose.ui.Modifier modifier = new androidx.compose.ui.Modifier() {};
         assertTrue(DownloadsShell.compose(modifier, new Padding(), composer));
-        assertSame(modifier, composer.modifier);
+        assertTrue(composer.modifier instanceof androidx.compose.foundation.layout.SizeKt.Fill);
+        androidx.compose.foundation.layout.SizeKt.Fill fill =
+                (androidx.compose.foundation.layout.SizeKt.Fill) composer.modifier;
+        assertSame(modifier, fill.base);
+        assertEquals(1f, fill.fraction, 0f);
         assertEquals(0, composer.defaults);
+    }
+
+    @Test
+    public void sourcePickerFillsPlayerBoundsWhenHostPassesNullModifier() {
+        DownloadsShell.open(new Intent(activity, DownloadExplorerActivity.class));
+        DownloadsShell.compose(null, new Padding(), composer);
+        assertSame(
+                "The host's empty modifier otherwise shrink-wraps the picker",
+                androidx.compose.foundation.layout.SizeKt.FillWholeMaxSize,
+                composer.modifier);
+        assertEquals(0, composer.defaults);
+    }
+
+    @Test
+    public void recomposingWithAnAlreadyWrappedCallbackKeepsTheExplorerRoute() {
+        Function1<Object, Object> delegate =
+                value -> {
+                    selected.add(((Number) value).intValue());
+                    return Unit.INSTANCE;
+                };
+        Object wrapped = DownloadNavigation.callback(tabs, delegate);
+        DownloadNavigation.callback(tabs, wrapped);
+        assertTrue(DownloadsShell.open(new Intent(activity, DownloadExplorerActivity.class)));
+        DownloadsShell.compose(null, new Padding(), composer);
+        assertNotNull(
+                "Recomposition must not redirect the source picker back to Downloads",
+                composer.view.findViewWithTag("download-explorer-query"));
     }
 
     @Test

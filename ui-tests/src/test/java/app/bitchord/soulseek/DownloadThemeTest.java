@@ -9,6 +9,7 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -32,7 +33,7 @@ public class DownloadThemeTest {
         TextView title;
         Button action, oldBack;
         EditText key;
-        CheckBox enabled;
+        CompoundButton enabled;
 
         @Override
         public void onCreate(Bundle state) {
@@ -53,7 +54,7 @@ public class DownloadThemeTest {
             key.setSaveEnabled(false);
             key.setText("private-test-input");
             body.addView(key);
-            enabled = new CheckBox(this);
+            enabled = downloadStyle.switchButton();
             enabled.setText("Enable service");
             enabled.setChecked(true);
             body.addView(enabled);
@@ -127,6 +128,23 @@ public class DownloadThemeTest {
             assertEquals("private-test-input", screen.key.getText().toString());
             screen.downloadStyle.applyTree(screen.body);
             assertEquals(Color.MAGENTA, custom.getCurrentTextColor());
+        }
+    }
+
+    @Test
+    public void fileSelectionCheckboxKeepsItsNativeSelectionRole() {
+        try (ActivityController<Screen> controller =
+                Robolectric.buildActivity(Screen.class).setup()) {
+            Screen screen = controller.get();
+            CheckBox file = new CheckBox(screen);
+            file.setText("Selected audio file");
+            file.setChecked(true);
+            screen.body.addView(file);
+            screen.downloadStyle.applyTree(file);
+            assertNotNull(file.getButtonDrawable());
+            assertNull(file.getCompoundDrawablesRelative()[2]);
+            assertTrue(file.isChecked());
+            assertEquals("android.widget.CheckBox", file.getAccessibilityClassName());
         }
     }
 }

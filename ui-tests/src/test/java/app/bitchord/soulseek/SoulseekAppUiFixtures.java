@@ -313,6 +313,7 @@ final class SoulseekSelectedDownloads {
         QUEUED,
         COMPLETE,
         CANCELLED,
+        PAUSED,
         FAILED
     }
 

@@ -359,6 +359,27 @@ val nativeSoulseekPatch =
                     it.name == "<init>" && it.parameterTypes == routeParameters + "I"
                 }
             if (currentRoute) {
+                val sheet = mutableClassDefBy("Lcom/music/bitchord/ui/player/PlayerSheetMotion;")
+                check(
+                    sheet.methods.any {
+                        it.name == "close" && it.parameterTypes.isEmpty() && it.returnType == "V"
+                    }
+                ) {
+                    "Player sheet dismissal ABI changed"
+                }
+                val init = sheet.methods.single { it.name == "<init>" }
+                val exits =
+                    init.implementation!!
+                        .instructions
+                        .withIndex()
+                        .filter { it.value.opcode == Opcode.RETURN_VOID }
+                        .map { it.index }
+                check(exits.isNotEmpty()) { "Player sheet constructor does not return" }
+                for (index in exits.reversed()) init.addInstructions(
+                    index,
+                    "invoke-static/range {p0 .. p0}, ${SOULSEEK}DownloadsShell;->player(Ljava/lang/Object;)V",
+                )
+
                 // Preserve the host's route numbers while inserting one visual tab in both bars.
                 for ((owner, name) in
                     listOf(

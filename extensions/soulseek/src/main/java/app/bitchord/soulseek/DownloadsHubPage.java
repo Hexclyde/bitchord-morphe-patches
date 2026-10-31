@@ -6,6 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
 import android.widget.*;
 
 import app.bitchord.telegram.PatchStrings;
@@ -32,6 +35,7 @@ final class DownloadsHubPage extends DownloadPage {
     static final String[] VIEW_IDS = {"grid", "list", "compact", "comfy", "detailed"};
     static final String[] VIEW_LABELS = {"Grid", "List", "Compact", "Comfy", "Detailed"};
     private TextView status;
+    private String localQuery = "";
     private String filter = "All", last = "";
     private final List<TextView> filterViews = new ArrayList<>();
     private final Map<String, Long> fileSizes = new HashMap<>();
@@ -109,13 +113,63 @@ final class DownloadsHubPage extends DownloadPage {
                 downloadStyle.dp(12),
                 downloadStyle.dp(12),
                 downloadStyle.dp(12));
-        search.setContentDescription(PatchStrings.t("Find available downloads"));
-        search.setOnClickListener(
-                v -> startActivity(new Intent(this, DownloadExplorerActivity.class)));
+        search.setContentDescription(PatchStrings.t("Search downloads"));
         downloadStyle.markCustom(search);
         toolbar.addView(
                 search, new LinearLayout.LayoutParams(downloadStyle.dp(48), downloadStyle.dp(48)));
         body.addView(toolbar);
+        LinearLayout searchBar = new LinearLayout(this);
+        searchBar.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        searchBar.setVisibility(View.GONE);
+        EditText searchField = new EditText(this);
+        searchField.setTag("download-local-search");
+        searchField.setHint(PatchStrings.t("Search downloads"));
+        searchField.setSingleLine(true);
+        searchField.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_DONE);
+        searchBar.addView(searchField, new LinearLayout.LayoutParams(0, -2, 1));
+        ImageButton clear = new ImageButton(this);
+        clear.setTag("download-local-clear");
+        clear.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+        clear.setImageTintList(
+                android.content.res.ColorStateList.valueOf(downloadStyle.foreground));
+        clear.setBackground(null);
+        clear.setContentDescription(PatchStrings.t("Clear search"));
+        clear.setOnClickListener(v -> searchField.setText(""));
+        downloadStyle.markCustom(clear);
+        searchBar.addView(
+                clear, new LinearLayout.LayoutParams(downloadStyle.dp(48), downloadStyle.dp(48)));
+        body.addView(searchBar);
+        search.setOnClickListener(
+                v -> {
+                    searchBar.setVisibility(View.VISIBLE);
+                    searchField.requestFocus();
+                    searchField.post(
+                            () -> {
+                                android.view.inputmethod.InputMethodManager keyboard =
+                                        (android.view.inputmethod.InputMethodManager)
+                                                getSystemService(INPUT_METHOD_SERVICE);
+                                if (keyboard != null)
+                                    keyboard.showSoftInput(
+                                            searchField,
+                                            android.view.inputmethod.InputMethodManager
+                                                    .SHOW_IMPLICIT);
+                            });
+                });
+        searchField.addTextChangedListener(
+                new TextWatcher() {
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
+
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        localQuery = s.toString().trim().toLowerCase(Locale.ROOT);
+                        last = "";
+                        CharSequence summary = status.getText();
+                        renderRows(currentRows);
+                        status.setText(summary);
+                    }
+
+                    public void afterTextChanged(Editable value) {}
+                });
         HorizontalScrollView scroll = new HorizontalScrollView(this);
         scroll.setHorizontalScrollBarEnabled(false);
         LinearLayout filters = new LinearLayout(this);
@@ -283,7 +337,11 @@ final class DownloadsHubPage extends DownloadPage {
                                         new Row(
                                                 title,
                                                 detail,
-                                                kind.equals("Queued") ? "Queue" : "Active",
+                                                kind.equals("Queued")
+                                                        ? "Queue"
+                                                        : kind.equals("Failed")
+                                                                ? "Attention"
+                                                                : "Active",
                                                 kind.equals("Running") || kind.equals("Queued")
                                                         ? "Cancel"
                                                         : null,
@@ -352,9 +410,14 @@ final class DownloadsHubPage extends DownloadPage {
                                             ? "Queue"
                                             : progress.phase
                                                                     == SoulseekSelectedDownloads
-                                                                            .Phase.COMPLETE
-                                                            && progress.needsPhone
-                                                    ? "On device"
+                                                                            .Phase.FAILED
+                                                            || progress.phase
+                                                                    == SoulseekSelectedDownloads
+                                                                            .Phase.CANCELLED
+                                                            || progress.phase
+                                                                    == SoulseekSelectedDownloads
+                                                                            .Phase.PAUSED
+                                                    ? "Attention"
                                                     : "Active";
                             Row row =
                                     new Row(
@@ -621,6 +684,7 @@ final class DownloadsHubPage extends DownloadPage {
         for (Row row : data) {
             if (filter.equals("All") && row.group.equals("Sharing")) continue;
             if (!filter.equals("All") && !filter.equals(row.group)) continue;
+            if (!matchesLocalQuery(row)) continue;
             if (visible >= 100) break;
             LinearLayout card = rowView(row);
             card.setTag("download-row:" + visible);
@@ -642,7 +706,9 @@ final class DownloadsHubPage extends DownloadPage {
         if (visible == 0) {
             TextView empty =
                     downloadStyle.text(
-                            PatchStrings.t("No items in this view."),
+                            localQuery.isEmpty()
+                                    ? PatchStrings.t("No items in this view.")
+                                    : PatchStrings.t("No downloads match your search."),
                             16,
                             downloadStyle.secondary,
                             downloadStyle.regular);
@@ -656,6 +722,15 @@ final class DownloadsHubPage extends DownloadPage {
             status.setText(PatchStrings.f("{0} active · {1} queued", active, queued));
         }
         return visible;
+    }
+
+    private boolean matchesLocalQuery(Row row) {
+        if (localQuery.isEmpty()) return true;
+        String description =
+                (row.name + " " + row.artist + " " + row.source + " " + row.format)
+                        .toLowerCase(Locale.ROOT);
+        for (String term : localQuery.split("\\s+")) if (!description.contains(term)) return false;
+        return true;
     }
 
     private void updateFilters() {

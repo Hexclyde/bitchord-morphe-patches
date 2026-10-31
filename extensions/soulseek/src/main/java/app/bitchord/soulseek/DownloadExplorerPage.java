@@ -43,6 +43,7 @@ final class DownloadExplorerPage extends DownloadPage {
                     });
     private final Handler ui = new Handler(Looper.getMainLooper());
     private final AtomicLong revision = new AtomicLong();
+    private DownloadExplorerView explorer;
     private EditText query;
     private LinearLayout results;
     private TextView status;
@@ -62,58 +63,14 @@ final class DownloadExplorerPage extends DownloadPage {
         SoulseekBridge.boot(getApplicationContext());
         HostDownloadAccess.init(getApplicationContext());
         choice = getIntent().getStringExtra(SoulseekDownloadChoice.EXTRA_CHOICE);
-        LinearLayout body = new LinearLayout(this);
-        body.setOrientation(LinearLayout.VERTICAL);
-        text(body, PatchStrings.t("Download Explorer"), 28);
-        text(
-                body,
-                PatchStrings.t(
-                        "Choose a source and reported quality. Your playing source stays"
-                                + " unchanged."),
-                15);
-        query = new EditText(this);
-        query.setSingleLine(true);
-        query.setTag("download-explorer-query");
-        query.setHint(PatchStrings.t("Artist and song title"));
-        query.setText(getIntent().getStringExtra(SoulseekDownloadChoice.EXTRA_QUERY));
-        body.addView(query);
-        button(body, PatchStrings.t("Find available downloads"), this::search);
-        status = text(body, PatchStrings.t("Nothing downloads until you choose a result."), 15);
-        results = new LinearLayout(this);
-        results.setOrientation(LinearLayout.VERTICAL);
-        body.addView(results);
-        if (choice != null && !SoulseekDownloadChoice.isBatch(choice))
-            button(
-                    body,
-                    PatchStrings.t("Use BitChord automatic source selection"),
-                    () ->
-                            new AlertDialog.Builder(this)
-                                    .setMessage(
-                                            PatchStrings.t(
-                                                    "May use YouTube or another enabled source."))
-                                    .setPositiveButton(
-                                            PatchStrings.t("Continue"),
-                                            (dialog, which) -> {
-                                                if (SoulseekDownloadChoice.resume(choice, this))
-                                                    finish();
-                                                else
-                                                    status.setText(
-                                                            PatchStrings.t(
-                                                                    "This download choice expired."
-                                                                        + " Return to the song and"
-                                                                        + " try again."));
-                                            })
-                                    .setNegativeButton(PatchStrings.t("Cancel"), null)
-                                    .show());
-        button(
-                body,
-                PatchStrings.t("View downloads"),
-                () -> startActivity(new Intent(this, DownloadsHubActivity.class)));
-        button(
-                body,
-                PatchStrings.t("Soulseek account and setup"),
-                () -> startActivity(new Intent(this, SoulseekActivity.class)));
-        setContentView(body);
+        boolean batch =
+                getIntent().getIntExtra("download.batch.index", -1) >= 0
+                        && SoulseekDownloadChoice.isBatch(choice);
+        explorer = new DownloadExplorerView(this, batch, this::search, this::settings, this::admit);
+        query = explorer.query;
+        results = explorer.results;
+        status = explorer.status;
+        view = explorer.root;
     }
 
     @Override
@@ -164,7 +121,7 @@ final class DownloadExplorerPage extends DownloadPage {
         }
         long version = revision.incrementAndGet();
         cancelSearches();
-        results.removeAllViews();
+        explorer.reset();
         work.getQueue().clear();
         pending.set(0);
         found = 0;
@@ -221,36 +178,27 @@ final class DownloadExplorerPage extends DownloadPage {
                                                         String quality =
                                                                 HostDownloadAccess.propertyText(
                                                                         song, "sourceQuality");
-                                                        text(group, title + " · " + artist, 16);
-                                                        text(
-                                                                group,
-                                                                quality.isEmpty()
-                                                                        ? PatchStrings.t(
-                                                                                "Reported format"
-                                                                                    + " unavailable")
-                                                                        : quality,
-                                                                14);
                                                         String duration =
                                                                 HostDownloadAccess.propertyText(
                                                                         song, "durationText");
-                                                        if (!duration.isEmpty())
-                                                            text(group, duration, 14);
-                                                        button(
+                                                        explorer.add(
                                                                 group,
-                                                                PatchStrings.t(
-                                                                        "Choose this source"),
-                                                                () ->
-                                                                        confirm(
-                                                                                name + " · "
-                                                                                        + quality,
-                                                                                title,
-                                                                                now ->
-                                                                                        HostDownloadAccess
-                                                                                                .enqueue(
-                                                                                                        application,
-                                                                                                        song,
-                                                                                                        id,
-                                                                                                        now)));
+                                                                new DownloadExplorerView.Option(
+                                                                        name,
+                                                                        title,
+                                                                        artist,
+                                                                        quality,
+                                                                        duration,
+                                                                        reportedLossless(quality),
+                                                                        false,
+                                                                        now ->
+                                                                                HostDownloadAccess
+                                                                                        .enqueue(
+                                                                                                application,
+                                                                                                song,
+                                                                                                id,
+                                                                                                now),
+                                                                        null));
                                                     }
                                                     if (count == 0)
                                                         text(
@@ -316,72 +264,60 @@ final class DownloadExplorerPage extends DownloadPage {
                                         for (SoulseekTrack row : rows) {
                                             if (count++ >= 20) break;
                                             found++;
-                                            text(group, row.title + " · " + row.artist, 16);
-                                            text(
+                                            explorer.add(
                                                     group,
-                                                    row.advertisedExtension.toUpperCase(
-                                                                    java.util.Locale.ROOT)
-                                                            + " · "
-                                                            + android.text.format.Formatter
-                                                                    .formatShortFileSize(
-                                                                            this, row.size),
-                                                    14);
-                                            text(group, PatchStrings.f("Peer: {0}", row.peer), 14);
-                                            if (SoulseekPreview.available(this)
-                                                    && SoulseekPreview.supported(row))
-                                                button(
-                                                        group,
-                                                        PatchStrings.t("Preview this file"),
-                                                        () -> {
-                                                            try {
-                                                                SoulseekPreview.open(
-                                                                        activity, row, session);
-                                                            } catch (Exception expired) {
-                                                                status.setText(
-                                                                        PatchStrings.t(
-                                                                                "Preview"
-                                                                                    + " unavailable."
-                                                                                    + " Check the"
-                                                                                    + " selected"
-                                                                                    + " file and"
-                                                                                    + " Soulseek"
-                                                                                    + " session."));
-                                                            }
-                                                        });
-                                            button(
-                                                    group,
-                                                    PatchStrings.t("Choose this source"),
-                                                    () ->
-                                                            confirm(
-                                                                    "Soulseek · "
-                                                                            + row
-                                                                                    .advertisedExtension
-                                                                                    .toUpperCase(
-                                                                                            java
-                                                                                                    .util
-                                                                                                    .Locale
-                                                                                                    .ROOT),
-                                                                    row.title,
-                                                                    now -> {
-                                                                        if (!session.equals(
-                                                                                bridge.sessionTag))
-                                                                            throw new java.io
-                                                                                    .IOException(
-                                                                                    "Search result"
-                                                                                        + " expired");
-                                                                        if (!SoulseekSelectedDownloads
-                                                                                .enqueueSelectedFile(
-                                                                                        application,
-                                                                                        row,
-                                                                                        session,
-                                                                                        now))
-                                                                            throw new java.io
-                                                                                    .IOException(
-                                                                                    "Selected file"
-                                                                                        + " could"
-                                                                                        + " not be"
-                                                                                        + " queued");
-                                                                    }));
+                                                    new DownloadExplorerView.Option(
+                                                            "Soulseek",
+                                                            row.title,
+                                                            row.artist,
+                                                            row.advertisedExtension.toUpperCase(
+                                                                    java.util.Locale.ROOT),
+                                                            android.text.format.Formatter
+                                                                            .formatShortFileSize(
+                                                                                    this, row.size)
+                                                                    + " · "
+                                                                    + PatchStrings.f(
+                                                                            "Peer: {0}", row.peer),
+                                                            reportedLossless(row.format),
+                                                            row.freeSlots == 1,
+                                                            now -> {
+                                                                if (!session.equals(
+                                                                        bridge.sessionTag))
+                                                                    throw new java.io.IOException(
+                                                                            "Search result"
+                                                                                    + " expired");
+                                                                if (!SoulseekSelectedDownloads
+                                                                        .enqueueSelectedFile(
+                                                                                application,
+                                                                                row,
+                                                                                session,
+                                                                                now))
+                                                                    throw new java.io.IOException(
+                                                                            "Selected file could"
+                                                                                + " not be queued");
+                                                            },
+                                                            SoulseekPreview.available(this)
+                                                                            && SoulseekPreview
+                                                                                    .supported(row)
+                                                                    ? () -> {
+                                                                        try {
+                                                                            SoulseekPreview.open(
+                                                                                    activity, row,
+                                                                                    session);
+                                                                        } catch (
+                                                                                Exception expired) {
+                                                                            status.setText(
+                                                                                    PatchStrings.t(
+                                                                                            "Preview"
+                                                                                                + " unavailable."
+                                                                                                + " Check"
+                                                                                                + " the selected"
+                                                                                                + " file"
+                                                                                                + " and Soulseek"
+                                                                                                + " session."));
+                                                                        }
+                                                                    }
+                                                                    : null));
                                         }
                                     });
                         } catch (Exception | LinkageError failed) {
@@ -403,7 +339,9 @@ final class DownloadExplorerPage extends DownloadPage {
         void start(boolean now) throws Exception;
     }
 
-    private void confirm(String source, String title, Selection selection) {
+    private void admit(DownloadExplorerView.Option option, boolean now) {
+        String source = option.source, title = option.title;
+        Selection selection = option.selection;
         int batchIndex = getIntent().getIntExtra("download.batch.index", -1);
         if (batchIndex >= 0 && SoulseekDownloadChoice.isBatch(choice)) {
             try {
@@ -420,23 +358,13 @@ final class DownloadExplorerPage extends DownloadPage {
                             .putExtra(SoulseekDownloadChoice.EXTRA_CHOICE, choice));
             return;
         }
-        new AlertDialog.Builder(this)
-                .setTitle(source + " · " + title)
-                .setMessage(
-                        PatchStrings.t(
-                                "Download now takes the next available slot. Add to download queue"
-                                        + " appends after waiting items."))
-                .setPositiveButton(
-                        PatchStrings.t("Download now"), (dialog, which) -> select(selection, true))
-                .setNeutralButton(
-                        PatchStrings.t("Add to download queue"),
-                        (dialog, which) -> select(selection, false))
-                .setNegativeButton(PatchStrings.t("Cancel"), null)
-                .show();
+        select(selection, now);
     }
 
     private void select(Selection selection, boolean now) {
         long version = revision.get();
+        explorer.busy(true);
+        explorer.message(PatchStrings.t("Submitting download…"));
         try {
             actions.execute(
                     () -> {
@@ -444,8 +372,9 @@ final class DownloadExplorerPage extends DownloadPage {
                             selection.start(now);
                             ui.post(
                                     () -> {
+                                        explorer.busy(false);
                                         if (current(version))
-                                            status.setText(
+                                            explorer.message(
                                                     PatchStrings.t(
                                                             "Selected download submitted. Open"
                                                                     + " Downloads to follow"
@@ -454,8 +383,9 @@ final class DownloadExplorerPage extends DownloadPage {
                         } catch (Exception failed) {
                             ui.post(
                                     () -> {
+                                        explorer.busy(false);
                                         if (current(version))
-                                            status.setText(
+                                            explorer.message(
                                                     PatchStrings.t(
                                                             "Download action failed. Check the"
                                                                     + " selected source and try"
@@ -464,7 +394,8 @@ final class DownloadExplorerPage extends DownloadPage {
                         }
                     });
         } catch (RejectedExecutionException busy) {
-            status.setText(
+            explorer.busy(false);
+            explorer.message(
                     PatchStrings.t("Search is busy. Wait for current sources and try again."));
         }
     }
@@ -524,24 +455,73 @@ final class DownloadExplorerPage extends DownloadPage {
     private LinearLayout card(String label) {
         LinearLayout group = new LinearLayout(this);
         group.setOrientation(LinearLayout.VERTICAL);
-        downloadStyle.card(group);
-        results.addView(group);
+        results.addView(group, new LinearLayout.LayoutParams(-1, -2));
         text(group, label, 19);
         return group;
     }
 
     private TextView text(LinearLayout parent, String value, int size) {
-        TextView view = new TextView(this);
-        view.setText(value);
-        view.setTextSize(size);
+        TextView view =
+                downloadStyle.text(
+                        value,
+                        size,
+                        size >= 16 ? downloadStyle.foreground : downloadStyle.secondary,
+                        size >= 16 ? downloadStyle.medium : downloadStyle.regular);
+        view.setPadding(0, downloadStyle.dp(5), 0, downloadStyle.dp(5));
         parent.addView(view);
         return view;
     }
 
-    private void button(LinearLayout parent, String label, Runnable action) {
-        Button button = new Button(this);
-        button.setText(PatchStrings.t(label));
-        button.setOnClickListener(v -> action.run());
-        parent.addView(button);
+    static boolean reportedLossless(String quality) {
+        String label = quality.toLowerCase(java.util.Locale.ROOT);
+        return label.contains("lossless")
+                || label.contains("flac")
+                || label.contains("alac")
+                || label.equals("wav")
+                || label.equals("aiff")
+                || label.equals("dsd");
+    }
+
+    private void settings() {
+        java.util.List<String> labels = new java.util.ArrayList<>();
+        labels.add(PatchStrings.t("Edit search"));
+        labels.add(PatchStrings.t("Formats, best first"));
+        labels.add(PatchStrings.t("Soulseek account and setup"));
+        labels.add(PatchStrings.t("View downloads"));
+        boolean automatic = choice != null && !SoulseekDownloadChoice.isBatch(choice);
+        if (automatic) labels.add(PatchStrings.t("Use BitChord automatic source selection"));
+        new AlertDialog.Builder(this)
+                .setItems(
+                        labels.toArray(new String[0]),
+                        (dialog, index) -> {
+                            if (index == 0) explorer.showSearch();
+                            else if (index == 1) AudioFormatPreferences.openSettings(activity);
+                            else if (index == 2)
+                                startActivity(new Intent(this, SoulseekActivity.class));
+                            else if (index == 3)
+                                startActivity(new Intent(this, DownloadsHubActivity.class));
+                            else
+                                new AlertDialog.Builder(this)
+                                        .setMessage(
+                                                PatchStrings.t(
+                                                        "May use YouTube or another enabled"
+                                                                + " source."))
+                                        .setPositiveButton(
+                                                PatchStrings.t("Continue"),
+                                                (d, w) -> {
+                                                    if (SoulseekDownloadChoice.resume(choice, this))
+                                                        finish();
+                                                    else
+                                                        status.setText(
+                                                                PatchStrings.t(
+                                                                        "This download choice"
+                                                                            + " expired. Return to"
+                                                                            + " the song and try"
+                                                                            + " again."));
+                                                })
+                                        .setNegativeButton(PatchStrings.t("Cancel"), null)
+                                        .show();
+                        })
+                .show();
     }
 }

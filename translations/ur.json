@@ -1237,5 +1237,21 @@
   "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram نے بھیجنے کا کوئی دوسرا طریقہ فراہم نہیں کیا۔ اپنی Telegram ایپ دیکھیں یا فون نمبر تبدیل کریں۔",
   "Telegram will send another code using its available delivery method.": "Telegram دستیاب طریقے سے دوسرا کوڈ بھیجے گا۔",
   "You can request another code in {0} seconds.": "آپ {0} سیکنڈ بعد دوسرا کوڈ طلب کر سکتے ہیں۔",
-  "Choose an account": "ایک اکاؤنٹ منتخب کریں"
+  "Choose an account": "ایک اکاؤنٹ منتخب کریں",
+  "Active": "فعال",
+  "All": "سب",
+  "Availability is reported and may change.": "بتائی گئی دستیابی تبدیل ہو سکتی ہے۔",
+  "Available now": "ابھی دستیاب",
+  "Choose a source": "ایک ماخذ منتخب کریں",
+  "Clear search": "تلاش صاف کریں",
+  "Download from {0}": "{0} سے ڈاؤن لوڈ کریں",
+  "Edit search": "تلاش میں ترمیم",
+  "No downloads match your search.": "آپ کی تلاش سے ملتا کوئی ڈاؤن لوڈ نہیں ہے۔",
+  "No sources match this filter.": "اس فلٹر سے کوئی ماخذ مماثل نہیں۔",
+  "Queue": "قطار",
+  "Search downloads": "ڈاؤن لوڈز میں تلاش کریں",
+  "Sharing": "اشتراک",
+  "Submitting download…": "ڈاؤن لوڈ کی درخواست بھیجی جا رہی ہے…",
+  "Telegram": "ٹیلیگرام",
+  "Use for this track": "اس ٹریک کے لیے استعمال کریں"
 }

@@ -1237,5 +1237,21 @@
   "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "لم يوفّر Telegram طريقة إرسال أخرى. تحقّق من تطبيق Telegram لديك أو غيّر رقم الهاتف.",
   "Telegram will send another code using its available delivery method.": "سيرسل Telegram رمزًا آخر بطريقة الإرسال المتاحة.",
   "You can request another code in {0} seconds.": "يمكنك طلب رمز آخر بعد {0} ثانية.",
-  "Choose an account": "اختَر حسابًا"
+  "Choose an account": "اختَر حسابًا",
+  "Active": "نشط",
+  "All": "الكل",
+  "Availability is reported and may change.": "التوفر وفقًا للمصدر وقد يتغير.",
+  "Available now": "متاح الآن",
+  "Choose a source": "اختر مصدرًا",
+  "Clear search": "مسح البحث",
+  "Download from {0}": "التنزيل من {0}",
+  "Edit search": "تعديل البحث",
+  "No downloads match your search.": "لا توجد تنزيلات تطابق بحثك.",
+  "No sources match this filter.": "لا توجد مصادر تطابق هذا الفلتر.",
+  "Queue": "قائمة الانتظار",
+  "Search downloads": "البحث في التنزيلات",
+  "Sharing": "المشاركة",
+  "Submitting download…": "جارٍ إرسال طلب التنزيل…",
+  "Telegram": "تيليجرام",
+  "Use for this track": "استخدام لهذا المقطع"
 }

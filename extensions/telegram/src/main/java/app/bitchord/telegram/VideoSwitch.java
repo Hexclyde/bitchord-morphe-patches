@@ -500,7 +500,10 @@ public final class VideoSwitch {
         if (!(found instanceof FrameLayout)) return;
         FrameLayout content = (FrameLayout) found;
         Pill old = pill.get();
-        if (old != null && old.getParent() == content) return;
+        if (old != null && old.getParent() == content) {
+            raiseAbovePlayer(old);
+            return;
+        }
         removePill();
         Pill made = new Pill(content.getContext());
         FrameLayout.LayoutParams lp =
@@ -508,7 +511,22 @@ public final class VideoSwitch {
         lp.topMargin = Math.round(56 * content.getResources().getDisplayMetrics().density);
         content.addView(made, lp);
         pill = new WeakReference<>(made);
+        raiseAbovePlayer(made);
         made.refresh();
+    }
+
+    private static void raiseAbovePlayer(Pill shown) {
+        if (!(shown.getParent() instanceof ViewGroup)) return;
+        ViewGroup parent = (ViewGroup) shown.getParent();
+        float highest = 0f;
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            View sibling = parent.getChildAt(i);
+            if (sibling != shown) highest = Math.max(highest, sibling.getZ());
+        }
+        // Compose's modal player has elevation; child order alone cannot place a View above it.
+        float above = highest + shown.getResources().getDisplayMetrics().density;
+        if (shown.getZ() != above) shown.setZ(above);
+        if (parent.getChildAt(parent.getChildCount() - 1) != shown) shown.bringToFront();
     }
 
     private static void refreshPill() {
@@ -592,7 +610,7 @@ public final class VideoSwitch {
                 busy = switching != null;
                 blocked = inParty() || missing.contains(id + "|" + preferredVideo);
                 setAlpha(busy || blocked ? 0.5f : 1f);
-                bringToFront();
+                raiseAbovePlayer(this);
                 invalidate();
             }
             if (isAttachedToWindow() && getWindowVisibility() == VISIBLE)

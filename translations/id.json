@@ -1237,5 +1237,21 @@
   "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram belum menyediakan metode pengiriman lain. Periksa aplikasi Telegram Anda atau ubah nomor telepon.",
   "Telegram will send another code using its available delivery method.": "Telegram akan mengirim kode lain melalui metode pengiriman yang tersedia.",
   "You can request another code in {0} seconds.": "Anda dapat meminta kode lain dalam {0} detik.",
-  "Choose an account": "Pilih akun"
+  "Choose an account": "Pilih akun",
+  "Active": "Aktif",
+  "All": "Semua",
+  "Availability is reported and may change.": "Ketersediaan yang dilaporkan dapat berubah.",
+  "Available now": "Tersedia sekarang",
+  "Choose a source": "Pilih sumber",
+  "Clear search": "Hapus pencarian",
+  "Download from {0}": "Unduh dari {0}",
+  "Edit search": "Edit pencarian",
+  "No downloads match your search.": "Tidak ada unduhan yang cocok dengan pencarian Anda.",
+  "No sources match this filter.": "Tidak ada sumber yang cocok dengan filter ini.",
+  "Queue": "Antrean",
+  "Search downloads": "Cari di unduhan",
+  "Sharing": "Berbagi",
+  "Submitting download…": "Mengirim permintaan unduhan…",
+  "Telegram": "Telegram",
+  "Use for this track": "Gunakan untuk lagu ini"
 }

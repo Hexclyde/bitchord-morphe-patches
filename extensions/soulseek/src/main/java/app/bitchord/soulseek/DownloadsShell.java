@@ -18,7 +18,8 @@ import java.util.Objects;
 /** Hosts native download pages in the player's Compose content slot, below its real bars. */
 public final class DownloadsShell {
     private static Object state;
-    private static Method get, set, androidView, backHandler;
+    private static Method get, set, androidView, backHandler, fillMaxSize;
+    private static Object fillWholeMaxSize;
     private static final Function0<Unit> BACK =
             () -> {
                 back();
@@ -28,6 +29,7 @@ public final class DownloadsShell {
     private static WeakReference<Container> container = new WeakReference<>(null);
     private static long revision;
     private static boolean available;
+    private static WeakReference<Object> playerMotion = new WeakReference<>(null);
     private static final Function1<Context, View> FACTORY =
             context -> {
                 Context candidate = context;
@@ -68,6 +70,11 @@ public final class DownloadsShell {
             if (method.getName().equals("AndroidView") && method.getParameterCount() == 6)
                 androidView = method;
         if (androidView == null) throw new NoSuchMethodException("Player AndroidView ABI");
+        Class<?> sizes = Class.forName("androidx.compose.foundation.layout.SizeKt");
+        fillMaxSize =
+                sizes.getMethod(
+                        "fillMaxSize", Class.forName("androidx.compose.ui.Modifier"), float.class);
+        fillWholeMaxSize = sizes.getField("FillWholeMaxSize").get(null);
         backHandler =
                 Class.forName("coil.util.DrawableUtils")
                         .getMethod(
@@ -115,6 +122,22 @@ public final class DownloadsShell {
         }
     }
 
+    /** The host sheet owns its dismissal, including its nested song menu. */
+    public static void player(Object motion) {
+        playerMotion = new WeakReference<>(motion);
+    }
+
+    private static boolean closePlayer() {
+        Object motion = playerMotion.get();
+        if (motion == null) return true;
+        try {
+            motion.getClass().getMethod("close").invoke(motion);
+            return true;
+        } catch (ReflectiveOperationException | LinkageError unavailable) {
+            return false;
+        }
+    }
+
     static boolean open(Intent target) {
         try {
             init();
@@ -122,6 +145,7 @@ public final class DownloadsShell {
             return false;
         }
         if (!available || !DownloadNavigation.hasPlayer()) return false;
+        if (!closePlayer()) return false;
         route = new Intent(target);
         changed();
         DownloadNavigation.selectLibrary();
@@ -191,10 +215,11 @@ public final class DownloadsShell {
                     return Unit.INSTANCE;
                 };
         try {
-            // R8 removes LibraryScreen's default-modifier assignment and its callers
-            // pass null. Ask AndroidView to supply its own default in that case.
-            androidView.invoke(
-                    null, FACTORY, modifier, update, composer, 0, modifier == null ? 2 : 0);
+            // An empty AndroidView modifier measures this page at its intrinsic minimum width.
+            // Fill the player's content slot, including when R8 passes a null host modifier.
+            Object bounds =
+                    modifier == null ? fillWholeMaxSize : fillMaxSize.invoke(null, modifier, 1f);
+            androidView.invoke(null, FACTORY, bounds, update, composer, 0, 0);
             backHandler.invoke(null, true, BACK, composer, 0, 0);
             return true;
         } catch (ReflectiveOperationException problem) {

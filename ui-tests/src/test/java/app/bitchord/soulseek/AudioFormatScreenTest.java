@@ -124,6 +124,25 @@ public class AudioFormatScreenTest {
     }
 
     @Test
+    @GraphicsMode(GraphicsMode.Mode.NATIVE)
+    public void nestedFormatToggleUsesTheHostGreenCapsule() {
+        View toggle = described(root(), "Accept FLAC");
+        android.graphics.Bitmap bitmap =
+                android.graphics.Bitmap.createBitmap(
+                        toggle.getWidth(),
+                        toggle.getHeight(),
+                        android.graphics.Bitmap.Config.ARGB_8888);
+        toggle.draw(new android.graphics.Canvas(bitmap));
+        int track = bitmap.getPixel(8, toggle.getHeight() / 2);
+        assertTrue(
+                "Enabled nested switches must use BitChord green",
+                android.graphics.Color.green(track) > android.graphics.Color.red(track) + 40
+                        && android.graphics.Color.green(track)
+                                > android.graphics.Color.blue(track) + 40);
+        assertTrue("Host switch geometry remains usable", toggle.getWidth() >= 64);
+    }
+
+    @Test
     public void actualPointerDropMovesAcrossMultipleRowsAndKeepsEnabledChoices() {
         described(root(), "Accept ALAC").performClick();
         View handle = described(root(), "Reorder FLAC");

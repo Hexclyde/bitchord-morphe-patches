@@ -1237,5 +1237,21 @@
   "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram chưa cung cấp phương thức gửi khác. Hãy kiểm tra ứng dụng Telegram hiện có hoặc đổi số điện thoại.",
   "Telegram will send another code using its available delivery method.": "Telegram sẽ gửi mã khác bằng phương thức hiện có.",
   "You can request another code in {0} seconds.": "Bạn có thể yêu cầu mã khác sau {0} giây.",
-  "Choose an account": "Chọn tài khoản"
+  "Choose an account": "Chọn tài khoản",
+  "Active": "Đang chạy",
+  "All": "Tất cả",
+  "Availability is reported and may change.": "Tình trạng sẵn có được báo cáo có thể thay đổi.",
+  "Available now": "Hiện có sẵn",
+  "Choose a source": "Chọn nguồn",
+  "Clear search": "Xóa tìm kiếm",
+  "Download from {0}": "Tải từ {0}",
+  "Edit search": "Sửa tìm kiếm",
+  "No downloads match your search.": "Không có nội dung tải xuống nào khớp với tìm kiếm.",
+  "No sources match this filter.": "Không có nguồn khớp với bộ lọc này.",
+  "Queue": "Hàng đợi",
+  "Search downloads": "Tìm trong nội dung tải xuống",
+  "Sharing": "Chia sẻ",
+  "Submitting download…": "Đang gửi yêu cầu tải xuống…",
+  "Telegram": "Telegram",
+  "Use for this track": "Dùng cho bản nhạc này"
 }

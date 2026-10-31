@@ -6,11 +6,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
+import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.LooperMode;
 
@@ -130,6 +132,56 @@ public class DownloadViewsTest {
         assertEquals(4, page.renderRows(files));
         assertNull(
                 findText(page.view.findViewWithTag("download-items"), "Public Soulseek sharing"));
+    }
+
+    @Test
+    public void searchIconFiltersExistingDownloadsWithoutOpeningExplorer() {
+        page.renderRows(data);
+        View search = findDescription(page.view, "Search downloads");
+        assertNotNull("Downloads search must search this page", search);
+        search.performClick();
+        EditText query = page.view.findViewWithTag("download-local-search");
+        assertNotNull(query);
+        query.setText("Track 2");
+        View rows = page.view.findViewWithTag("download-items");
+        assertNotNull(findText(rows, "Track 2"));
+        assertNull(findText(rows, "Track 0"));
+        assertNull(
+                Shadows.shadowOf(org.robolectric.RuntimeEnvironment.getApplication())
+                        .getNextStartedActivity());
+        page.view.findViewWithTag("download-local-clear").performClick();
+        assertEquals("", query.getText().toString());
+        assertNotNull(findText(page.view.findViewWithTag("download-items"), "Track 0"));
+    }
+
+    @Test
+    public void searchMatchesArtistAndFormatAcrossAllFiveViews() {
+        data.get(1).artist = "Sample Artist";
+        data.get(1).format = "FLAC";
+        page.renderRows(data);
+        findDescription(page.view, "Search downloads").performClick();
+        EditText query = page.view.findViewWithTag("download-local-search");
+        query.setText("sample flac");
+        for (String mode : DownloadsHubPage.VIEW_IDS) {
+            page.setViewMode(mode);
+            assertEquals(1, page.renderRows(data));
+            assertNotNull(findText(page.view.findViewWithTag("download-items"), "Track 1"));
+        }
+    }
+
+    @Test
+    public void noMatchesAndLiveRefreshKeepTheSearchText() {
+        page.renderRows(data);
+        findDescription(page.view, "Search downloads").performClick();
+        EditText query = page.view.findViewWithTag("download-local-search");
+        query.setText("missing-recording");
+        assertNotNull(findText(page.view, "No downloads match your search."));
+        List<DownloadsHubPage.Row> refreshed = new ArrayList<>(data);
+        refreshed.add(
+                new DownloadsHubPage.Row(
+                        "missing-recording", "On device", "On device", "Play", () -> {}));
+        assertEquals(1, page.renderRows(refreshed));
+        assertEquals("missing-recording", query.getText().toString());
     }
 
     @Test

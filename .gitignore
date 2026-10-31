@@ -112,6 +112,7 @@ __pycache__/
 /ui-tests/src/test/java/app/bitchord/soulseek/DownloadPage.java
 /ui-tests/src/test/java/app/bitchord/soulseek/DownloadExplorerActivity.java
 /ui-tests/src/test/java/app/bitchord/soulseek/DownloadExplorerPage.java
+/ui-tests/src/test/java/app/bitchord/soulseek/DownloadExplorerView.java
 /ui-tests/src/test/java/app/bitchord/soulseek/DownloadsHubActivity.java
 /ui-tests/src/test/java/app/bitchord/soulseek/DownloadsHubPage.java
 /ui-tests/src/test/java/app/bitchord/soulseek/BatchDownloadActivity.java

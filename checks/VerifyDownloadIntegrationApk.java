@@ -42,6 +42,7 @@ public final class VerifyDownloadIntegrationApk {
                         "DownloadsShell",
                         "DownloadPage",
                         "DownloadExplorerPage",
+                        "DownloadExplorerView",
                         "DownloadsHubPage",
                         "BatchDownloadActivity",
                         "BatchDownloadPage",
@@ -50,6 +51,18 @@ public final class VerifyDownloadIntegrationApk {
                         "DownloadArchives",
                         "DownloadArtwork"))
             check(types.containsKey(runtime + name + ";"), "Production runtime present: " + name);
+        ClassDef sheet = types.get("Lcom/music/bitchord/ui/player/PlayerSheetMotion;");
+        check(sheet != null, "Host player sheet is present");
+        int bindings = 0;
+        boolean close = false;
+        for (Method method : sheet.getMethods()) {
+            if (method.getName().equals("<init>"))
+                bindings += calls(method, runtime + "DownloadsShell;", "player");
+            if (method.getName().equals("close")
+                    && method.getParameterTypes().isEmpty()
+                    && method.getReturnType().equals("V")) close = true;
+        }
+        check(bindings == 1 && close, "Download navigation can dismiss the covering player");
         for (String[] bar :
                 new String[][] {
                     {"FloatingBottomBarKt", "FloatingBottomBar"}, {"GlassNavBarKt", "GlassNavBar"}
@@ -77,6 +90,17 @@ public final class VerifyDownloadIntegrationApk {
                             .equals(List.of("Landroidx/compose/ui/Modifier;", "F"))
                     && (method.getAccessFlags() & 9) == 9) height = true;
         check(height, "Zero-height header modifier retains the optimized host ABI");
+        ClassDef sizes = types.get("Landroidx/compose/foundation/layout/SizeKt;");
+        boolean fill = false, whole = false;
+        for (Method method : sizes.getMethods())
+            if (method.getName().equals("fillMaxSize")
+                    && method.getParameterTypes()
+                            .equals(List.of("Landroidx/compose/ui/Modifier;", "F"))
+                    && (method.getAccessFlags() & 9) == 9) fill = true;
+        for (Field field : sizes.getFields())
+            if (field.getName().equals("FillWholeMaxSize") && (field.getAccessFlags() & 9) == 9)
+                whole = true;
+        check(fill && whole, "Full-size Downloads modifier retains the optimized host ABI");
         Set<String> metadata = new HashSet<>();
         for (Field field : types.get("Lcom/music/bitchord/download/SavedSongMetadata;").getFields())
             metadata.add(field.getName());

@@ -246,6 +246,7 @@ flags.write_text(
             "1.1.0-beta.16",
             "1.1.0-beta.16.1",
             "1.1.0-beta.16.2",
+            "1.1.0-beta.16.3",
         )
         else "false"
     )

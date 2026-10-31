@@ -89,6 +89,7 @@ for name in (
     "DownloadPage.java",
     "DownloadExplorerActivity.java",
     "DownloadExplorerPage.java",
+    "DownloadExplorerView.java",
     "DownloadsHubActivity.java",
     "DownloadsHubPage.java",
     "BatchDownloadActivity.java",

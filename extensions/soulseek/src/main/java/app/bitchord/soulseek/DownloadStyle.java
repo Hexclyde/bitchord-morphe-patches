@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -315,6 +316,10 @@ final class DownloadStyle {
         return toggle;
     }
 
+    Drawable switchDrawable() {
+        return new ToggleDrawable();
+    }
+
     /** Native vector equivalents of the demo's Grid/List/Rows/Layout/File icons. */
     Drawable viewIcon(String mode) {
         return new Drawable() {
@@ -333,6 +338,11 @@ final class DownloadStyle {
                 if (mode.equals("more")) {
                     paint.setStyle(Paint.Style.FILL);
                     for (int y : new int[] {5, 12, 19}) canvas.drawCircle(12, y, 1.6f, paint);
+                } else if (mode.equals("music")) {
+                    paint.setStyle(Paint.Style.FILL);
+                    canvas.drawCircle(10, 17, 4, paint);
+                    canvas.drawRoundRect(12, 3, 14, 17, 1, 1, paint);
+                    canvas.drawRoundRect(13, 3, 18, 7, 1, 1, paint);
                 } else if (mode.equals("search")) {
                     canvas.drawCircle(10.5f, 10.5f, 7, paint);
                     canvas.drawLine(16, 16, 21, 21, paint);
@@ -482,7 +492,7 @@ final class DownloadStyle {
                 toggle.setButtonTintList(colors(foreground, secondary));
                 toggle.setMinHeight(dp(48));
                 toggle.setPadding(dp(4), dp(8), dp(4), dp(8));
-                if (!(view instanceof RadioButton)) {
+                if (!(view instanceof RadioButton) && !(view instanceof CheckBox)) {
                     toggle.setButtonDrawable((Drawable) null);
                     toggle.setCompoundDrawablePadding(dp(12));
                     toggle.setCompoundDrawablesRelativeWithIntrinsicBounds(

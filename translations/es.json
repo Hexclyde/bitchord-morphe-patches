@@ -1237,5 +1237,21 @@
   "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram no ha ofrecido otro método de entrega. Revisa tu aplicación de Telegram o cambia el número de teléfono.",
   "Telegram will send another code using its available delivery method.": "Telegram enviará otro código mediante el método de entrega disponible.",
   "You can request another code in {0} seconds.": "Puedes solicitar otro código en {0} segundos.",
-  "Choose an account": "Elige una cuenta"
+  "Choose an account": "Elige una cuenta",
+  "Active": "Activos",
+  "All": "Todo",
+  "Availability is reported and may change.": "La disponibilidad indicada puede cambiar.",
+  "Available now": "Disponible ahora",
+  "Choose a source": "Elige una fuente",
+  "Clear search": "Borrar búsqueda",
+  "Download from {0}": "Descargar de {0}",
+  "Edit search": "Editar búsqueda",
+  "No downloads match your search.": "Ninguna descarga coincide con tu búsqueda.",
+  "No sources match this filter.": "Ninguna fuente coincide con este filtro.",
+  "Queue": "Cola",
+  "Search downloads": "Buscar en descargas",
+  "Sharing": "Compartir",
+  "Submitting download…": "Enviando solicitud de descarga…",
+  "Telegram": "Telegram",
+  "Use for this track": "Usar para esta canción"
 }

@@ -3,7 +3,6 @@ package app.bitchord.soulseek;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
@@ -337,7 +336,7 @@ public final class AudioFormatSetupActivity extends DownloadActivity {
                                     .show();
                         }
                     });
-            addView(enabled, new LayoutParams(style.dp(52), style.dp(48)));
+            addView(enabled, new LayoutParams(style.dp(64), style.dp(48)));
             handle = new DragHandle(getContext(), format);
             addView(handle, new LayoutParams(style.dp(48), style.dp(48)));
             handle.setOnTouchListener((view, event) -> touchHandle(this, event));
@@ -427,16 +426,16 @@ public final class AudioFormatSetupActivity extends DownloadActivity {
         }
     }
 
-    /** Material 3's 52x32dp switch, centred in a 48dp touch target as on Sources. */
+    /** Shared BitChord capsule geometry, preserving the format draft's explicit click handling. */
     private final class FormatSwitch extends View implements Checkable {
-        private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private final RectF track = new RectF();
+        private final android.graphics.drawable.Drawable glyph = style.switchDrawable();
         private boolean checked;
 
         FormatSwitch(Context context) {
             super(context);
             setClickable(true);
             setFocusable(true);
+            glyph.setCallback(this);
         }
 
         @Override
@@ -447,6 +446,7 @@ public final class AudioFormatSetupActivity extends DownloadActivity {
         @Override
         public void setChecked(boolean value) {
             checked = value;
+            refreshDrawableState();
             invalidate();
             sendAccessibilityEvent(
                     android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED);
@@ -460,25 +460,25 @@ public final class AudioFormatSetupActivity extends DownloadActivity {
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            float top = (getHeight() - style.dp(32)) / 2f;
-            track.set(0, top, getWidth(), top + style.dp(32));
-            paint.setStyle(Paint.Style.FILL);
-            paint.setColor(checked ? style.foreground : style.dark ? 0xff36343b : 0xffe6e0e9);
-            canvas.drawRoundRect(track, style.dp(16), style.dp(16), paint);
-            if (!checked) {
-                paint.setStyle(Paint.Style.STROKE);
-                paint.setColor(style.outline);
-                paint.setStrokeWidth(style.dp(2));
-                track.inset(style.dp(1), style.dp(1));
-                canvas.drawRoundRect(track, style.dp(15), style.dp(15), paint);
-            }
-            paint.setStyle(Paint.Style.FILL);
-            paint.setColor(checked ? style.background : style.secondary);
-            canvas.drawCircle(
-                    checked ? getWidth() - style.dp(16) : style.dp(16),
-                    getHeight() / 2f,
-                    style.dp(checked ? 12 : 8),
-                    paint);
+            int left = (getWidth() - style.dp(64)) / 2;
+            int top = (getHeight() - style.dp(28)) / 2;
+            glyph.setBounds(left, top, left + style.dp(64), top + style.dp(28));
+            glyph.setState(getDrawableState());
+            glyph.draw(canvas);
+        }
+
+        @Override
+        protected int[] onCreateDrawableState(int extra) {
+            int[] state = super.onCreateDrawableState(extra + 1);
+            if (checked) mergeDrawableStates(state, new int[] {android.R.attr.state_checked});
+            return state;
+        }
+
+        @Override
+        protected void drawableStateChanged() {
+            super.drawableStateChanged();
+            if (glyph != null) glyph.setState(getDrawableState());
+            invalidate();
         }
 
         @Override

@@ -93,6 +93,10 @@ public final class SoulseekDownloadChoice {
                                             : DownloadExplorerActivity.class)
                             .putExtra(EXTRA_CHOICE, token)
                             .putExtra(EXTRA_QUERY, query)
+                            .putExtra("download.track.title", title)
+                            .putExtra("download.track.artist", artist)
+                            .putExtra("download.track.artwork", value(song, "getThumbnailUrl"))
+                            .putExtra("download.track.duration", value(song, "getDurationText"))
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             if (!DownloadsShell.open(target)) context.startActivity(target);
         } catch (Exception unavailable) {

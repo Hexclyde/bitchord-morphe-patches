@@ -1237,5 +1237,21 @@
   "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
   "Telegram will send another code using its available delivery method.",
   "You can request another code in {0} seconds.",
-  "Choose an account"
+  "Choose an account",
+  "Active",
+  "All",
+  "Availability is reported and may change.",
+  "Available now",
+  "Choose a source",
+  "Clear search",
+  "Download from {0}",
+  "Edit search",
+  "No downloads match your search.",
+  "No sources match this filter.",
+  "Queue",
+  "Search downloads",
+  "Sharing",
+  "Submitting download…",
+  "Telegram",
+  "Use for this track"
 ]

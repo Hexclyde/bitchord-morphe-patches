@@ -1237,5 +1237,21 @@
   "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram 未提供其他发送方式。请查看现有的 Telegram 应用或更改电话号码。",
   "Telegram will send another code using its available delivery method.": "Telegram 将使用可用的发送方式再次发送验证码。",
   "You can request another code in {0} seconds.": "你可以在 {0} 秒后请求新的验证码。",
-  "Choose an account": "选择账号"
+  "Choose an account": "选择账号",
+  "Active": "进行中",
+  "All": "全部",
+  "Availability is reported and may change.": "来源报告的可用状态可能发生变化。",
+  "Available now": "当前可用",
+  "Choose a source": "选择来源",
+  "Clear search": "清除搜索",
+  "Download from {0}": "从{0}下载",
+  "Edit search": "编辑搜索",
+  "No downloads match your search.": "没有与搜索条件匹配的下载内容。",
+  "No sources match this filter.": "没有符合此筛选条件的来源。",
+  "Queue": "队列",
+  "Search downloads": "搜索下载内容",
+  "Sharing": "共享",
+  "Submitting download…": "正在提交下载请求…",
+  "Telegram": "Telegram",
+  "Use for this track": "用于此曲目"
 }

@@ -1,3 +1,18 @@
+# 1.1.0-beta.16.3
+
+- Fill the player content slot when embedding Downloads and the song source picker, including when the optimized host passes a null modifier. Prevent the source picker from collapsing into a narrow column.
+- Add viewport-modifier regressions and validate the optimized host sizing ABI.
+- Search the displayed downloads locally by title, artist, source and format. Keep source discovery under Find available downloads; retain query filtering across view changes and progress updates.
+
+- Keep the Audio/Video player pill above the elevated Compose player, so it is painted and receives taps.
+- Dismiss the full player when opening source selection; do not leave Explorer behind its song menu.
+- Replace recursive rewrapping of the Downloads navigation callback with an idempotent binding.
+- Rebuild Explorer with track context, selectable source cards, reported lossless/availability filters and persistent download/queue actions. Preserve asynchronous searches, explicit file selection and batch review.
+- Use the host green capsule in nested audio-format settings while preserving native file-selection checkboxes.
+- Add native screen, accessibility, large-text and live Android regressions for these flows.
+
+- Send Soulseek’s progress link to Downloads, and exclude failed, cancelled and paused jobs from the active count.
+
 ## 1.1.0-beta.16.2
 
 - Keep visible MicroG account selection in a native app-themed dialog with explicit title/account text colors, 56dp rows, wrapping and a Google sign-in fallback. Request a login token only for the chosen account. Preserve Android’s account-add/visibility-consent flow when none are visible.

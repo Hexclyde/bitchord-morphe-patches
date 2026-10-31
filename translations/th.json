@@ -1237,5 +1237,21 @@
   "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram ยังไม่มีวิธีส่งอื่นให้ใช้ โปรดตรวจสอบแอป Telegram ที่ใช้อยู่หรือเปลี่ยนหมายเลขโทรศัพท์",
   "Telegram will send another code using its available delivery method.": "Telegram จะส่งรหัสอีกครั้งด้วยวิธีที่ใช้ได้",
   "You can request another code in {0} seconds.": "คุณสามารถขอรหัสอีกครั้งได้ใน {0} วินาที",
-  "Choose an account": "เลือกบัญชี"
+  "Choose an account": "เลือกบัญชี",
+  "Active": "กำลังทำงาน",
+  "All": "ทั้งหมด",
+  "Availability is reported and may change.": "สถานะความพร้อมที่รายงานอาจเปลี่ยนแปลงได้",
+  "Available now": "พร้อมใช้งานตอนนี้",
+  "Choose a source": "เลือกแหล่งที่มา",
+  "Clear search": "ล้างการค้นหา",
+  "Download from {0}": "ดาวน์โหลดจาก {0}",
+  "Edit search": "แก้ไขการค้นหา",
+  "No downloads match your search.": "ไม่มีรายการดาวน์โหลดที่ตรงกับการค้นหา",
+  "No sources match this filter.": "ไม่มีแหล่งที่มาตรงกับตัวกรองนี้",
+  "Queue": "คิว",
+  "Search downloads": "ค้นหาในการดาวน์โหลด",
+  "Sharing": "การแชร์",
+  "Submitting download…": "กำลังส่งคำขอดาวน์โหลด…",
+  "Telegram": "Telegram",
+  "Use for this track": "ใช้กับเพลงนี้"
 }

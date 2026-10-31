@@ -108,6 +108,20 @@ public class SoulseekSearchScreenTest {
         layout();
     }
 
+    @Test
+    public void progressLinkOpensDownloadsInsteadOfPeerSharingSetup() {
+        create();
+        java.util.ArrayList<View> matches = new java.util.ArrayList<>();
+        activity.getWindow()
+                .getDecorView()
+                .findViewsWithText(matches, "View downloads", View.FIND_VIEWS_WITH_TEXT);
+        assertEquals(1, matches.size());
+        matches.get(0).performClick();
+        Intent target = shadowOf(activity).getNextStartedActivity();
+        assertNotNull(target);
+        assertEquals(DownloadsHubActivity.class.getName(), target.getComponent().getClassName());
+    }
+
     private void layout() {
         View decor = activity.getWindow().getDecorView();
         decor.measure(
