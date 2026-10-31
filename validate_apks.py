@@ -91,6 +91,7 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
     for checker, arguments in [
         ("VerifyCaptureApk", [str(output)]),
         ("VerifyDownloadIntegrationApk", [str(output)]),
+        ("VerifyVideoSwitchApk", [str(output)]),
         ("VerifyNativeDispatchApk", [str(output)]),
         ("VerifyBeta7Apk", [str(output)]),
         ("VerifyPatchUiApk", [str(output), "true", "true", "true"]),
@@ -164,7 +165,29 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
             )
         shared.append((playback, "false"))
         for checker in ("VerifyMixedPlaylistsApk", "VerifyFlacAddonApk"):
-            subprocess.run([str(java), "-Xshare:off", "-cp", str(checks)+":"+str(jar), checker, str(playback), "standalone"], check=True)
+            subprocess.run(
+                [
+                    str(java),
+                    "-Xshare:off",
+                    "-cp",
+                    str(checks) + ":" + str(jar),
+                    checker,
+                    str(playback),
+                    "standalone",
+                ],
+                check=True,
+            )
+        subprocess.run(
+            [
+                str(java),
+                "-Xshare:off",
+                "-cp",
+                str(checks) + ":" + str(jar),
+                "VerifyVideoSwitchApk",
+                str(playback),
+            ],
+            check=True,
+        )
     for apk, telegram in shared:
         page = subprocess.run(
             [

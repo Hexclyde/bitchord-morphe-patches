@@ -176,7 +176,10 @@ public final class DownloadsShell {
                     return Unit.INSTANCE;
                 };
         try {
-            androidView.invoke(null, FACTORY, modifier, update, composer, 0, 0);
+            // R8 removes LibraryScreen's default-modifier assignment and its callers
+            // pass null. Ask AndroidView to supply its own default in that case.
+            androidView.invoke(
+                    null, FACTORY, modifier, update, composer, 0, modifier == null ? 2 : 0);
             backHandler.invoke(null, true, BACK, composer, 0, 0);
             return true;
         } catch (ReflectiveOperationException problem) {

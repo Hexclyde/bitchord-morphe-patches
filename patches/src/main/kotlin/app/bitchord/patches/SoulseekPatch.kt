@@ -394,19 +394,50 @@ val nativeSoulseekPatch =
                 ) {
                     "Player content slot ABI changed"
                 }
-                val libraryStart = library.implementation!!.instructions.first()
+                val libraryCode = library.implementation!!.instructions.toList()
+                val groupStart =
+                    libraryCode.indices.single { index ->
+                        val call =
+                            (libraryCode[index] as? ReferenceInstruction)?.reference
+                                as? MethodReference
+                        call?.definingClass == "Landroidx/compose/runtime/ComposerImpl;" &&
+                            call.name == "startRestartGroup"
+                    }
+                val groupEnd =
+                    libraryCode.single { instruction ->
+                        val call =
+                            (instruction as? ReferenceInstruction)?.reference as? MethodReference
+                        call?.definingClass == "Landroidx/compose/runtime/ComposerImpl;" &&
+                            call.name == "endRestartGroup"
+                    }
+                // Keep the host's restart scope and its original captured callback.
+                // Reading route state before that scope loses the subscription, and
+                // returning early bypasses the host's balanced composition lifecycle.
+                // v16..v18 are unused at this point; v0..v3 hold live host arguments.
+                check(
+                    libraryCode.take(groupStart + 1).none { instruction ->
+                        instruction is
+                            com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction &&
+                            instruction.registerA in 16..18
+                    }
+                ) {
+                    "Library content scratch registers changed"
+                }
                 library.addInstructionsWithLabels(
-                    0,
+                    groupStart + 1,
                     """
-                    move-object/from16 v0, p14
-                    move-object/from16 v1, p15
-                    move-object/from16 v2, p19
-                    invoke-static {v0, v1, v2}, ${SOULSEEK}DownloadsShell;->compose(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z
-                    move-result v0
-                    if-eqz v0, :original_library_content
-                    return-void
+                    move-object/from16 v16, p14
+                    move-object/from16 v17, p15
+                    move-object/from16 v18, p19
+                    invoke-static/range {v16 .. v18}, ${SOULSEEK}DownloadsShell;->compose(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z
+                    move-result v16
+                    if-eqz v16, :original_library_content
+                    move-object/from16 v15, p14
+                    move/from16 v19, p18
+                    goto/16 :finish_library_group
                 """,
-                    ExternalLabel("original_library_content", libraryStart),
+                    ExternalLabel("original_library_content", libraryCode[groupStart + 1]),
+                    ExternalLabel("finish_library_group", groupEnd),
                 )
                 val root =
                     mutableClassDefBy("Lcom/music/bitchord/MainActivityKt;").methods.single {

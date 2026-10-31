@@ -70,6 +70,25 @@ public final class VerifyDownloadIntegrationApk {
         check(
                 library != null && calls(library, runtime + "DownloadsShell;", "compose") == 1,
                 "Library content delegates to one embedded downloads page");
+        int startGroup = -1, shell = -1, endGroup = -1, position = 0;
+        for (Instruction instruction : library.getImplementation().getInstructions()) {
+            if (instruction instanceof ReferenceInstruction r
+                    && r.getReference() instanceof MethodReference m) {
+                if (m.getDefiningClass().equals("Landroidx/compose/runtime/ComposerImpl;")) {
+                    if (m.getName().equals("startRestartGroup")) startGroup = position;
+                    if (m.getName().equals("endRestartGroup")) endGroup = position;
+                }
+                if (m.getDefiningClass().equals(runtime + "DownloadsShell;")
+                        && m.getName().equals("compose")) shell = position;
+            }
+            check(
+                    instruction.getOpcode() != Opcode.RETURN_VOID || endGroup >= 0,
+                    "Downloads does not bypass the host restart-group exit");
+            position++;
+        }
+        check(
+                startGroup >= 0 && startGroup < shell && shell < endGroup,
+                "Downloads state read and content remain inside Library's restart scope");
         for (Method method : types.get("Lcom/music/bitchord/MainActivityKt;").getMethods())
             if (method.getName().startsWith("BitChordApp-")) root = method;
         check(

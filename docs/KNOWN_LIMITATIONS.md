@@ -84,3 +84,7 @@ implemented. Debrid services continue to manage their own cloud transfers.
 
 - Flac Downloader Audio uses flacdownloader.com's internal service API. Protocol fixtures and APK structure are tested; live availability and returned recording quality are not verified. Requested renditions may fail. The adapter does not silently downgrade them.
 - Mixed-source device playlists need the patch to preserve their full file/source metadata; the stock export cannot back up the extra metadata. Deleting or offloading a referenced file does not turn its local playlist entry into a Telegram stream. See [mixed playlists](MIXED-PLAYLISTS.md).
+
+## beta.14 fixes
+
+Downloads uses AndroidView's default modifier for the host's optimized null argument and preserves LibraryScreen's restart scope. The player switch follows actual player-window writes rather than only the sheet constructor. Framework tests and patched-APK inspection cover these paths; validation on a physical phone is still required.

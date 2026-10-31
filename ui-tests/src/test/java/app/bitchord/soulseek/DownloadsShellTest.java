@@ -95,6 +95,8 @@ public class DownloadsShellTest {
         assertTrue(DownloadsShell.open(new Intent(activity, DownloadsHubActivity.class)));
         assertEquals(Arrays.asList(2), selected);
         assertTrue(DownloadsShell.compose(null, new Padding(), composer));
+        assertEquals(2, composer.defaults);
+        assertNotNull(composer.modifier);
         assertSame(miniPlayer, root.getChildAt(1));
         assertSame(root, miniPlayer.getParent());
         assertEquals(1, content.getChildCount());
@@ -112,6 +114,15 @@ public class DownloadsShellTest {
         assertFalse(DownloadsShell.visible());
         assertEquals(Arrays.asList(2, 3), selected);
         assertSame(miniPlayer, root.getChildAt(1));
+    }
+
+    @Test
+    public void explicitModifierIsPreservedWithoutDefaulting() {
+        DownloadsShell.open(new Intent(activity, DownloadsHubActivity.class));
+        androidx.compose.ui.Modifier modifier = new androidx.compose.ui.Modifier() {};
+        assertTrue(DownloadsShell.compose(modifier, new Padding(), composer));
+        assertSame(modifier, composer.modifier);
+        assertEquals(0, composer.defaults);
     }
 
     @Test

@@ -1,3 +1,10 @@
+# 1.1.0-beta.14
+
+- Fix the BitChord 1.9 Downloads crash: supply AndroidView's default modifier when R8 passes null, and keep the embedded page and its route-state reads inside LibraryScreen's original restart scope and callback.
+- Restore the song/video switch when the player dialog opens again or its window is recreated. Observe every optimized host write to the player window, release detached overlays, and avoid constructor-only polling.
+- Add null/default-modifier, player-window recreation, duplicate-overlay, and closed/external-track regression checks. Verify the installed DEX hook positions and every window write.
+- Retain all 18 beta.13 patches and all existing native binaries.
+
 # 1.1.0-beta.13
 
 - Add an optional, independently written Flac Downloader Audio adapter for the service protocol used by aztecempire's Spotube plugin. Its native Sources toggle starts disabled; enabled results join Addons search, Downloads explorer and batch selection. Requested FLAC/MP3 choices remain explicit and unverified, with bounded preparation polling and no silent format substitution.
