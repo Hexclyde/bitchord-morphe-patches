@@ -9,10 +9,8 @@ The source descends from the combined beta.15 (`36c1227896e65ddacbe53720d381b051
 - 31 Python tests, the complete host suite including 384 selected-download checks, repository/link checks and Java/Kotlin/Python formatting.
 - Nine patched APK selections: all patches on arm64-v8a, armeabi-v7a and x86_64; playback-only arm64; Streamseek with Soulseek; Soulseek without previews; FLAC Audio alone; mixed playlists alone; Telegram with clone only. Inspections include DEX flow, host reflection ABI, restart scopes, conditional navigation, header binding, credential protection, optional-runtime isolation, signatures and native architectures.
 - All 27 native libraries are byte-identical to beta.13. No native source changed; Rust/native loopback tests were not rerun.
-- All 14 original guide files and all six badge URLs are preserved. Local guide references and JavaScript syntax pass. The ZIP includes the full README, INSTALL.md and Open-Guide.html. No fresh browser interaction pass is claimed.
+- Bundled guide references and JavaScript syntax were checked. Browser interaction was not retested.
 
-The recording shows a delay before Telegram appears. Inspection found synchronous saved-index SQL counts on the opening UI path; those calls now run in the background. Native bridge preparation also runs off-main. This establishes a corrected blocking path, not a trace-based attribution of every second of delay on the user's phone.
+Telegram opening previously performed synchronous saved-index SQL counts on the UI thread. Index counts and native bridge preparation now run in the background. Device opening latency was not measured.
 
 No physical device, real Telegram account, public Soulseek peer, live FLAC service or Android background-playback qualification is claimed. Repatch original BitChord 1.9 with the same Morphe signing key and update the current installation. No data-clearing step is required. Phone retesting is still needed for final shell placement, opening latency and real service behavior.
-
-Nothing is pushed or published to GitHub during package preparation.

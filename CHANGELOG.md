@@ -1,13 +1,13 @@
 # 1.1.0-beta.16.1
 
-- Retain the supplied beta.16 Downloads layouts, artwork, player-window switch and asynchronous Telegram startup improvements.
+- Retain the beta.16 Downloads layouts, artwork, player-window switch and asynchronous Telegram startup improvements.
 - Allow correcting the login phone number while waiting for a Telegram code, without deleting the session or application configuration.
 - Offer code resending only when Telegram provides a delivery method and its cooldown has elapsed. Show the remaining wait and keep typed codes intact during countdown updates.
 - Add login transition and native-screen regressions for correction, cancellation and resend availability.
 
 # 1.1.0-beta.16
 
-- Rebuild the production Android Downloads views to follow the reviewed HTML demo: compact controls, real thumbnail/embedded artwork, source/format labels, separate file status, actual thin transfer progress and five saved layouts. Keep management controls under the settings gear, deduplicate saved host aliases, remove the fake public-sharing download row and constrain the back button.
+- Rebuild the production Android Downloads views with compact controls, real thumbnail/embedded artwork, source/format labels, separate file status, actual thin transfer progress and five saved layouts. Keep management controls under the settings gear, deduplicate saved host aliases, remove the fake public-sharing download row and constrain the back button.
 - Replace the duplicate host header only while Downloads owns the content. Preserve the native player and bottom navigation; Downloads remains conditional on the installed add-on.
 - Bind the Audio/Video text pill to NowPlayingScreen's actual composition view, independent of the animation window. Cover reduced motion, stale background windows and player-content replacement. Retain the persistent YouTube preference.
 - Show Telegram's opening page before native bridge preparation. Run saved-index counts on a separate background worker, cache the visible status and suppress duplicate page launches.
@@ -46,7 +46,7 @@ Merge both beta.14 branches: Streamseek previews and the Downloads/player-window
 - Merge the Audio and video switch patch, JamesDSP setup/status controls, README badges and interactive Morphe/Telegram installation guide.
 - Retain complete beta.9–11 Downloads integration, batch source selection, public Soulseek sharing and verified Telegram offloading.
 - Audio and video switch starts off; enable it under Patches & tweaks.
-- Match the reviewed HTML demo’s BitChord 1.9 green switches across patch settings and download controls. Keep the Downloads navigation icon exclusive to installs with the download addon.
+- Use BitChord 1.9 green switches across patch settings and download controls. Keep the Downloads navigation icon exclusive to installs with the download addon.
 - The guide ships under docs/guide. Enable GitHub Pages from testing /docs after publishing.
 
 # 1.1.0-beta.11
