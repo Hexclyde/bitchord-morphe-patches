@@ -221,7 +221,7 @@ final class BatchDownloadPage extends DownloadPage {
                                 error =
                                         PatchStrings.t(
                                                 "Batch action failed. Review the selections and"
-                                                    + " retry.");
+                                                        + " retry.");
                             }
                             final String result = error;
                             ui.post(

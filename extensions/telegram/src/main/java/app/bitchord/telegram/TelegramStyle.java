@@ -53,7 +53,7 @@ final class TelegramStyle {
             return (activity.getResources().getConfiguration().uiMode
                             & Configuration.UI_MODE_NIGHT_MASK)
                     == Configuration.UI_MODE_NIGHT_YES;
-        } catch (Exception e) {
+        } catch (Exception | LinkageError e) {
             return true;
         }
     }

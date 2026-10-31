@@ -1,1 +1,3 @@
-package androidx.compose.ui;public interface Modifier {}
+package androidx.compose.ui;
+
+public interface Modifier {}

@@ -25,7 +25,7 @@ public final class TelegramActivity extends Activity {
     final Handler handler = new Handler(Looper.getMainLooper());
     String screen = "";
     volatile boolean busy;
-    boolean editCredentials, resumed;
+    boolean editCredentials, resumed, pageFailed;
     long channelId;
     ChannelView channelView;
     LinearLayout namesList;
@@ -67,7 +67,7 @@ public final class TelegramActivity extends Activity {
             new Runnable() {
                 public void run() {
                     render();
-                    handler.postDelayed(this, 500);
+                    if (!pageFailed) handler.postDelayed(this, 500);
                 }
             };
 
@@ -87,8 +87,16 @@ public final class TelegramActivity extends Activity {
                                 ? android.R.style.Theme_Material_NoActionBar
                                 : android.R.style.Theme_Material_Light_NoActionBar);
         super.onCreate(saved);
+        try {
+            CapturePolicy.apply(this);
+            openPage();
+        } catch (RuntimeException | LinkageError failure) {
+            pageFailure(failure);
+        }
+    }
+
+    private void openPage() {
         secureWindow(getWindow());
-        CapturePolicy.apply(this);
         style = new TelegramStyle(this);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         getWindow().setStatusBarColor(style.background);
@@ -132,6 +140,7 @@ public final class TelegramActivity extends Activity {
     protected void onResume() {
         super.onResume();
         resumed = true;
+        if (pageFailed) return;
         if (channelView != null) channelView.resume();
         handler.removeCallbacks(indexTicker);
         handler.postDelayed(indexTicker, 2000);
@@ -174,6 +183,15 @@ public final class TelegramActivity extends Activity {
     String shown = "";
 
     void render() {
+        if (pageFailed) return;
+        try {
+            renderPage();
+        } catch (RuntimeException | LinkageError failure) {
+            pageFailure(failure);
+        }
+    }
+
+    private void renderPage() {
         if (bridge != null && !bridge.ready()) channelId = 0;
         String state =
                 bridge == null
@@ -2164,12 +2182,109 @@ public final class TelegramActivity extends Activity {
         if (namesList != null && !busy && bridge.names.revision() != namesRevision)
             fillTrackNames();
         status.setText((busy ? Strings.t("Working…") + "\n" : "") + Strings.t(bridge.status));
-        error.setText(Strings.t(bridge.error));
-        error.setVisibility(bridge.error.isEmpty() ? View.GONE : View.VISIBLE);
+        String detail = bridge.error == null ? "" : bridge.error;
+        error.setText(Strings.t(detail));
+        error.setVisibility(detail.isEmpty() ? View.GONE : View.VISIBLE);
         for (View v : actions) {
             v.setEnabled(!busy);
             v.setAlpha(busy ? 0.45f : 1f);
         }
+    }
+
+    /** Fail closed before credential entry, keeping the host app and session intact. */
+    private void pageFailure(Throwable failure) {
+        pageFailed = true;
+        handler.removeCallbacks(refresh);
+        handler.removeCallbacks(indexTicker);
+        if (channelView != null) {
+            try {
+                channelView.close();
+            } catch (RuntimeException ignored) {
+            }
+            channelView = null;
+        }
+        secrets.clear();
+        actions.clear();
+        hashVisibility = null;
+        indexLine = importLine = checkLine = null;
+        body = new LinearLayout(this);
+        body.setOrientation(LinearLayout.VERTICAL);
+        int padding = Math.round(20 * getResources().getDisplayMetrics().density);
+        body.setPadding(padding, padding * 2, padding, padding);
+        body.setBackgroundColor(0xff101012);
+        TextView title = new TextView(this);
+        title.setText(failureText("Telegram page could not open"));
+        title.setTextSize(24);
+        title.setTextColor(0xffffffff);
+        body.addView(title);
+        TextView explanation = new TextView(this);
+        explanation.setText(
+                failureText(
+                        "Your Telegram data is kept. Copy crash details to help identify the"
+                                + " problem, or return to BitChord."));
+        explanation.setTextColor(0xffdddddd);
+        explanation.setPadding(0, padding, 0, padding);
+        body.addView(explanation);
+        final String diagnostics = failureDetails(failure);
+        Button copy = new Button(this);
+        copy.setText(failureText("Copy crash details"));
+        copy.setOnClickListener(
+                view -> {
+                    try {
+                        android.content.ClipboardManager clipboard =
+                                (android.content.ClipboardManager)
+                                        getSystemService(CLIPBOARD_SERVICE);
+                        if (clipboard == null) throw new IllegalStateException();
+                        clipboard.setPrimaryClip(
+                                android.content.ClipData.newPlainText(
+                                        "Telegram crash details", diagnostics));
+                        Toast.makeText(
+                                        this,
+                                        failureText("Crash details copied"),
+                                        Toast.LENGTH_SHORT)
+                                .show();
+                    } catch (RuntimeException unavailable) {
+                        Toast.makeText(
+                                        this,
+                                        failureText("Crash details could not be copied"),
+                                        Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
+        body.addView(copy);
+        Button back = new Button(this);
+        back.setText(failureText("Back to BitChord"));
+        back.setOnClickListener(view -> finish());
+        body.addView(back);
+        scroll = new ScrollView(this);
+        scroll.addView(body);
+        setContentView(scroll);
+    }
+
+    private static String failureText(String english) {
+        try {
+            return Strings.t(english);
+        } catch (RuntimeException | LinkageError unavailable) {
+            return english;
+        }
+    }
+
+    /** Class/frame information only: never exception messages, credentials or account values. */
+    static String failureDetails(Throwable failure) {
+        StringBuilder details =
+                new StringBuilder("BitChord Telegram page\nPatch 1.1.0-beta.15\nAndroid API ")
+                        .append(Build.VERSION.SDK_INT)
+                        .append('\n');
+        Set<Throwable> seen = Collections.newSetFromMap(new IdentityHashMap<>());
+        for (int depth = 0;
+                failure != null && depth < 6 && seen.add(failure);
+                depth++, failure = failure.getCause()) {
+            details.append(failure.getClass().getName()).append('\n');
+            StackTraceElement[] frames = failure.getStackTrace();
+            for (int i = 0; i < Math.min(frames.length, 10); i++)
+                details.append("  at ").append(frames[i]).append('\n');
+        }
+        return details.toString();
     }
 
     interface Job {

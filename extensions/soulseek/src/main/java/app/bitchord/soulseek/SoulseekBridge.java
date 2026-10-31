@@ -456,14 +456,16 @@ public final class SoulseekBridge {
     }
 
     /** Keeps a transfer alive across extractor seeks without granting arbitrary source playback. */
-    synchronized ProgressiveReader holdPreview(SoulseekTrack track, String session) throws IOException {
+    synchronized ProgressiveReader holdPreview(SoulseekTrack track, String session)
+            throws IOException {
         boolean existed = transfers.containsKey(track.id);
         ProgressiveReader hold = openSelected(track, session, 0, 0);
         if (!existed) transfers.get(track.id).previewOnly = true;
         return hold;
     }
 
-    synchronized ProgressiveReader.Snapshot previewSnapshot(SoulseekTrack track, String session) throws IOException {
+    synchronized ProgressiveReader.Snapshot previewSnapshot(SoulseekTrack track, String session)
+            throws IOException {
         if (!session.equals(sessionTag)) throw new IOException("Soulseek session changed");
         Transfer transfer = transfers.get(track.id);
         if (transfer == null) throw new IOException("Preview transfer expired");

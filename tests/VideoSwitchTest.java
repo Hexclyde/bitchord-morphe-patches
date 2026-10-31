@@ -12,6 +12,7 @@ public final class VideoSwitchTest {
         String localUri, localPath;
         boolean isVideo;
     }
+
     static int checks;
 
     static void check(boolean okay, String message) {
@@ -66,21 +67,30 @@ public final class VideoSwitchTest {
         next.videoId = "a-b_c1D2e3F";
         VideoSwitch.enabled = true;
         VideoSwitch.setPreferredVideo(true);
-        check(VideoSwitch.needsPreferredVersion(first), "video preference applies to first audio track");
-        check(VideoSwitch.needsPreferredVersion(next), "video preference applies to next audio track");
+        check(
+                VideoSwitch.needsPreferredVersion(first),
+                "video preference applies to first audio track");
+        check(
+                VideoSwitch.needsPreferredVersion(next),
+                "video preference applies to next audio track");
         check(VideoSwitch.preferredVideo, "a missing version cannot reset video preference");
         next.isVideo = true;
         check(!VideoSwitch.needsPreferredVersion(next), "already-video track needs no conversion");
         VideoSwitch.setPreferredVideo(false);
-        check(VideoSwitch.needsPreferredVersion(next), "audio preference converts subsequent video");
+        check(
+                VideoSwitch.needsPreferredVersion(next),
+                "audio preference converts subsequent video");
         check(!VideoSwitch.needsPreferredVersion(first), "already-audio track remains audio");
         next.localUri = "content://local/music";
         check(!VideoSwitch.needsPreferredVersion(next), "local file cannot be converted");
-        next.localUri = null; next.videoId = "tg:12345678";
+        next.localUri = null;
+        next.videoId = "tg:12345678";
         check(!VideoSwitch.needsPreferredVersion(next), "Telegram remains untouched");
         VideoSwitch.enabled = false;
         next.videoId = "a-b_c1D2e3F";
-        check(!VideoSwitch.needsPreferredVersion(next), "disabled patch does not enforce preference");
+        check(
+                !VideoSwitch.needsPreferredVersion(next),
+                "disabled patch does not enforce preference");
         java.lang.reflect.Field attempt = VideoSwitch.class.getDeclaredField("attempted");
         attempt.setAccessible(true);
         attempt.set(null, "dQw4w9WgXcQ|true");

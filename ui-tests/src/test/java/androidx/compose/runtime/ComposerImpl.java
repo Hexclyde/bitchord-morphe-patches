@@ -1,1 +1,14 @@
-package androidx.compose.runtime;public class ComposerImpl {public final android.app.Activity activity;public final android.widget.FrameLayout content;public android.view.View view;public ComposerImpl(android.app.Activity activity,android.widget.FrameLayout content){this.activity=activity;this.content=content;}}
+package androidx.compose.runtime;
+
+public class ComposerImpl {
+    public final android.app.Activity activity;
+    public final android.widget.FrameLayout content;
+    public android.view.View view;
+    public androidx.compose.ui.Modifier modifier;
+    public int defaults;
+
+    public ComposerImpl(android.app.Activity activity, android.widget.FrameLayout content) {
+        this.activity = activity;
+        this.content = content;
+    }
+}

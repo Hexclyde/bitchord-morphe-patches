@@ -257,11 +257,12 @@ public final class VerifySoulseekApk {
                     String reference = r.getReference().toString();
                     if (cls.getType().startsWith(PREFIX)) {
                         String independentReference = reference;
-                        for (String shared : List.of(
-                                "Lapp/bitchord/telegram/PatchStrings;",
-                                "Lapp/bitchord/telegram/CapturePolicy;",
-                                "Lapp/bitchord/telegram/RecordingMatch;",
-                                "Lapp/bitchord/telegram/RecordingMatch$Reference;"))
+                        for (String shared :
+                                List.of(
+                                        "Lapp/bitchord/telegram/PatchStrings;",
+                                        "Lapp/bitchord/telegram/CapturePolicy;",
+                                        "Lapp/bitchord/telegram/RecordingMatch;",
+                                        "Lapp/bitchord/telegram/RecordingMatch$Reference;"))
                             independentReference = independentReference.replace(shared, "");
                         boolean sharedUi =
                                 reference.startsWith("Lapp/bitchord/telegram/PatchStrings;")

@@ -124,9 +124,13 @@ public final class SoundExtras {
         return false;
     }
 
-    public static boolean mixedPlaylistsApplied() { return false; }
+    public static boolean mixedPlaylistsApplied() {
+        return false;
+    }
 
-    public static boolean flacAddonApplied() { return false; }
+    public static boolean flacAddonApplied() {
+        return false;
+    }
 
     public static boolean videoSwitchApplied() {
         return false;

@@ -124,20 +124,28 @@ public final class VideoSwitch {
         try {
             Class<?> listener = Class.forName("androidx.media3.common.Player$Listener");
             if (previous != null && eventListener != null)
-                controllerType().getMethod("removeListener", listener).invoke(previous, eventListener);
-            eventListener = Proxy.newProxyInstance(listener.getClassLoader(), new Class<?>[]{listener},
-                    (proxy, method, args) -> {
-                        if (method.getName().equals("onMediaItemTransition")) trackChanged();
-                        if (method.getName().equals("onMediaItemTransition")
-                                || method.getName().equals("onEvents")) {
-                            main.removeCallbacks(ENFORCE);
-                            main.post(ENFORCE);
-                        }
-                        if (method.getName().equals("equals")) return proxy == args[0];
-                        if (method.getName().equals("hashCode")) return System.identityHashCode(proxy);
-                        if (method.getName().equals("toString")) return "BitChord version preference";
-                        return null;
-                    });
+                controllerType()
+                        .getMethod("removeListener", listener)
+                        .invoke(previous, eventListener);
+            eventListener =
+                    Proxy.newProxyInstance(
+                            listener.getClassLoader(),
+                            new Class<?>[] {listener},
+                            (proxy, method, args) -> {
+                                if (method.getName().equals("onMediaItemTransition"))
+                                    trackChanged();
+                                if (method.getName().equals("onMediaItemTransition")
+                                        || method.getName().equals("onEvents")) {
+                                    main.removeCallbacks(ENFORCE);
+                                    main.post(ENFORCE);
+                                }
+                                if (method.getName().equals("equals")) return proxy == args[0];
+                                if (method.getName().equals("hashCode"))
+                                    return System.identityHashCode(proxy);
+                                if (method.getName().equals("toString"))
+                                    return "BitChord version preference";
+                                return null;
+                            });
             controllerType().getMethod("addListener", listener).invoke(current, eventListener);
         } catch (Exception | LinkageError unavailable) {
             HostLog.d("Version preference listener unavailable: " + unavailable);
@@ -159,7 +167,8 @@ public final class VideoSwitch {
     private static void enforcePreference() {
         Context context = SoundExtras.app();
         Object song = current();
-        if (context == null || !needsPreferredVersion(song) || inParty() || switching != null) return;
+        if (context == null || !needsPreferredVersion(song) || inParty() || switching != null)
+            return;
         String key = string(song, "videoId") + "|" + preferredVideo;
         if (key.equals(attempted) || missing.contains(key)) return;
         attempted = key;
@@ -171,7 +180,8 @@ public final class VideoSwitch {
         if (!SoundExtras.videoSwitchApplied() || playerSheetMotion == null) return;
         motion = new WeakReference<>(playerSheetMotion);
         if (main == null) main = new Handler(Looper.getMainLooper());
-        main.post(VideoSwitch::attach);
+        main.removeCallbacks(ATTACH);
+        main.post(ATTACH);
     }
 
     // ── What's playing ──────────────────────────────────────────────────────
@@ -397,7 +407,9 @@ public final class VideoSwitch {
 
     // ── The pill ────────────────────────────────────────────────────────────
 
-    private static void attach() {
+    private static final Runnable ATTACH = VideoSwitch::attach;
+
+    static void attach() {
         Object sheet = motion.get();
         if (sheet == null) return;
         Window window = null;
@@ -409,8 +421,12 @@ public final class VideoSwitch {
             HostLog.d("Player window not found: " + e);
         }
         if (window == null) {
-            // The player sets its window once it's laid out.
-            main.postDelayed(VideoSwitch::attach, 500);
+            // The window-write hook calls us again when a player dialog appears.
+            // A closed sheet must release its old overlay, not retain a dead window.
+            Pill old = pill.get();
+            if (old != null && old.getParent() instanceof ViewGroup)
+                ((ViewGroup) old.getParent()).removeView(old);
+            pill = new WeakReference<>(null);
             return;
         }
         ViewGroup content = window.getDecorView().findViewById(android.R.id.content);

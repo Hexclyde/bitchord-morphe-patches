@@ -94,3 +94,9 @@ Telegram may return no sponsored messages. If a sponsored card reports a loading
 ## Storage is too high
 
 Stop playback before clearing **Storage → Clear Telegram audio cache** on the Telegram page. Check BitChord's song cache and downloads separately. The cache target can be exceeded by active files, and signing out does not erase saved copies.
+
+## Unofficial Telegram page closes or cannot open
+
+Beta.15 keeps BitChord open when an uncaught Telegram page startup/render error occurs. If overlay protection is refused, the error screen appears before credential entry; it does not bypass that protection. Choose **Copy crash details** and share the resulting exception classes and stack frames. Exception messages and account/API values are excluded. Your Telegram session, application credentials and music data are retained. A native bridge that cannot start still shows its existing Connection error.
+
+The reported phone crash had no trace available. Automated checks reproduce permission-denial, startup-linkage and null-error-detail failures, but do not establish which caused that particular phone crash. Retest opening the page on the phone; if a diagnostic screen appears, its copied details identify the next fix. Do not clear app data as a troubleshooting prerequisite.

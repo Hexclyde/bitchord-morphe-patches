@@ -235,7 +235,8 @@ public final class SoulseekSelectedDownloads {
         return enqueueSelected(context, PREFIX + track.id, now, track, session, null);
     }
 
-    static boolean enqueuePreview(Context context, SoulseekTrack track, String session, boolean now, Closeable retained) {
+    static boolean enqueuePreview(
+            Context context, SoulseekTrack track, String session, boolean now, Closeable retained) {
         return enqueueSelected(context, PREFIX + track.id, now, track, session, retained);
     }
 
@@ -244,8 +245,12 @@ public final class SoulseekSelectedDownloads {
             String reference,
             boolean now,
             SoulseekTrack selected,
-            String expectedSession, Closeable retained) {
-        if (context == null) { closeRetained(retained); return false; }
+            String expectedSession,
+            Closeable retained) {
+        if (context == null) {
+            closeRetained(retained);
+            return false;
+        }
         boolean accepted = false;
         final Context app = context.getApplicationContext();
         try {
@@ -303,8 +308,11 @@ public final class SoulseekSelectedDownloads {
             Task existing = TASKS.putIfAbsent(reference, task);
             if (existing != null) {
                 synchronized (existing) {
-                    if (!existing.cancelled.get() && !existing.handoffStarted && !existing.retentionClosed
-                            && existing.retained == null && retained != null) {
+                    if (!existing.cancelled.get()
+                            && !existing.handoffStarted
+                            && !existing.retentionClosed
+                            && existing.retained == null
+                            && retained != null) {
                         existing.retained = retained;
                         accepted = true;
                     }
@@ -363,7 +371,11 @@ public final class SoulseekSelectedDownloads {
     }
 
     private static void closeRetained(Closeable retained) {
-        if (retained != null) try { retained.close(); } catch (IOException ignored) {}
+        if (retained != null)
+            try {
+                retained.close();
+            } catch (IOException ignored) {
+            }
     }
 
     private static final class Task {
@@ -378,7 +390,14 @@ public final class SoulseekSelectedDownloads {
         volatile Thread thread;
         Closeable retained;
         boolean retentionClosed;
-        synchronized void releaseRetention() { retentionClosed = true; Closeable current = retained; retained = null; closeRetained(current); }
+
+        synchronized void releaseRetention() {
+            retentionClosed = true;
+            Closeable current = retained;
+            retained = null;
+            closeRetained(current);
+        }
+
         // Guarded by this task's monitor. Destination journals own cancellation after handoff.
         boolean handoffStarted;
 

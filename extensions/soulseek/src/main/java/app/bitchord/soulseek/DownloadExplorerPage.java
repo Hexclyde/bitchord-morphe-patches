@@ -327,11 +327,27 @@ final class DownloadExplorerPage extends DownloadPage {
                                                                             this, row.size),
                                                     14);
                                             text(group, PatchStrings.f("Peer: {0}", row.peer), 14);
-                                            if (SoulseekPreview.available(this) && SoulseekPreview.supported(row))
-                                                button(group, PatchStrings.t("Preview this file"), () -> {
-                                                    try { SoulseekPreview.open(activity, row, session); }
-                                                    catch (Exception expired) { status.setText(PatchStrings.t("Preview unavailable. Check the selected file and Soulseek session.")); }
-                                                });
+                                            if (SoulseekPreview.available(this)
+                                                    && SoulseekPreview.supported(row))
+                                                button(
+                                                        group,
+                                                        PatchStrings.t("Preview this file"),
+                                                        () -> {
+                                                            try {
+                                                                SoulseekPreview.open(
+                                                                        activity, row, session);
+                                                            } catch (Exception expired) {
+                                                                status.setText(
+                                                                        PatchStrings.t(
+                                                                                "Preview"
+                                                                                    + " unavailable."
+                                                                                    + " Check the"
+                                                                                    + " selected"
+                                                                                    + " file and"
+                                                                                    + " Soulseek"
+                                                                                    + " session."));
+                                                            }
+                                                        });
                                             button(
                                                     group,
                                                     PatchStrings.t("Choose this source"),
@@ -396,7 +412,7 @@ final class DownloadExplorerPage extends DownloadPage {
                 status.setText(
                         PatchStrings.t(
                                 "This track was submitted or the batch expired. Return to the batch"
-                                    + " to review it."));
+                                        + " to review it."));
                 return;
             }
             startActivity(

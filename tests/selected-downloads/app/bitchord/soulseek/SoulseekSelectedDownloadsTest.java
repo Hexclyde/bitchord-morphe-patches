@@ -546,25 +546,60 @@ public final class SoulseekSelectedDownloadsTest {
     }
 
     static void previewRetention() throws Exception {
-        Context app=fresh();SoulseekTrack track=new SoulseekTrack(id(994),4,"Preview.flac");
-        java.util.concurrent.atomic.AtomicInteger closed=new java.util.concurrent.atomic.AtomicInteger();
-        SoulseekDownloads.entered=new CountDownLatch(1);SoulseekDownloads.release=new CountDownLatch(1);
-        check(SoulseekSelectedDownloads.enqueuePreview(app,track,"old-session",false,()->closed.incrementAndGet()),"Preview can hand its lease to the queue");
-        check(SoulseekDownloads.entered.await(2,TimeUnit.SECONDS),"Retained preview download starts");check(closed.get()==0,"Lease remains owned while receiving");
-        check(SoulseekSelectedDownloads.enqueuePreview(app,track,"old-session",false,()->closed.incrementAndGet()),"Duplicate preview selects existing queued work");check(closed.get()==1,"Duplicate lease is released immediately");
-        check(SoulseekSelectedDownloads.cancel(PREFIX+track.id),"Selected preview download can cancel");check(closed.get()==2,"Cancellation releases retained transfer ownership");SoulseekDownloads.release.countDown();idle();
-        SoulseekDownloads.entered=new CountDownLatch(1);SoulseekDownloads.release=new CountDownLatch(1);
-        SoulseekTrack blocker=new SoulseekTrack(id(995),4,"Blocker.flac");
-        SoulseekTrack queued=new SoulseekTrack(id(996),4,"Already queued.flac");
-        check(SoulseekSelectedDownloads.enqueueSelectedFile(app,blocker,"old-session",false),"Blocker starts");
-        check(SoulseekDownloads.entered.await(2,TimeUnit.SECONDS),"Blocker owns worker");
-        check(SoulseekSelectedDownloads.enqueueSelectedFile(app,queued,"old-session",false),"Ordinary download queues before preview");
-        check(SoulseekSelectedDownloads.enqueuePreview(app,queued,"old-session",false,()->closed.incrementAndGet()),"Preview retains an existing ordinary queue entry");
-        check(closed.get()==2,"Existing queued download adopts preview lease");
-        check(SoulseekSelectedDownloads.cancel(PREFIX+queued.id),"Existing queued selection cancels");
-        check(closed.get()==3,"Adopted lease releases on queued cancellation");
-        SoulseekSelectedDownloads.cancel(PREFIX+blocker.id);SoulseekDownloads.release.countDown();idle();
-        SourceRegistry.enabled=false;check(!SoulseekSelectedDownloads.enqueuePreview(app,track,"old-session",false,()->closed.incrementAndGet()),"Disabled source rejects preview promotion");check(closed.get()==4,"Rejected promotion releases the lease");
+        Context app = fresh();
+        SoulseekTrack track = new SoulseekTrack(id(994), 4, "Preview.flac");
+        java.util.concurrent.atomic.AtomicInteger closed =
+                new java.util.concurrent.atomic.AtomicInteger();
+        SoulseekDownloads.entered = new CountDownLatch(1);
+        SoulseekDownloads.release = new CountDownLatch(1);
+        check(
+                SoulseekSelectedDownloads.enqueuePreview(
+                        app, track, "old-session", false, () -> closed.incrementAndGet()),
+                "Preview can hand its lease to the queue");
+        check(
+                SoulseekDownloads.entered.await(2, TimeUnit.SECONDS),
+                "Retained preview download starts");
+        check(closed.get() == 0, "Lease remains owned while receiving");
+        check(
+                SoulseekSelectedDownloads.enqueuePreview(
+                        app, track, "old-session", false, () -> closed.incrementAndGet()),
+                "Duplicate preview selects existing queued work");
+        check(closed.get() == 1, "Duplicate lease is released immediately");
+        check(
+                SoulseekSelectedDownloads.cancel(PREFIX + track.id),
+                "Selected preview download can cancel");
+        check(closed.get() == 2, "Cancellation releases retained transfer ownership");
+        SoulseekDownloads.release.countDown();
+        idle();
+        SoulseekDownloads.entered = new CountDownLatch(1);
+        SoulseekDownloads.release = new CountDownLatch(1);
+        SoulseekTrack blocker = new SoulseekTrack(id(995), 4, "Blocker.flac");
+        SoulseekTrack queued = new SoulseekTrack(id(996), 4, "Already queued.flac");
+        check(
+                SoulseekSelectedDownloads.enqueueSelectedFile(app, blocker, "old-session", false),
+                "Blocker starts");
+        check(SoulseekDownloads.entered.await(2, TimeUnit.SECONDS), "Blocker owns worker");
+        check(
+                SoulseekSelectedDownloads.enqueueSelectedFile(app, queued, "old-session", false),
+                "Ordinary download queues before preview");
+        check(
+                SoulseekSelectedDownloads.enqueuePreview(
+                        app, queued, "old-session", false, () -> closed.incrementAndGet()),
+                "Preview retains an existing ordinary queue entry");
+        check(closed.get() == 2, "Existing queued download adopts preview lease");
+        check(
+                SoulseekSelectedDownloads.cancel(PREFIX + queued.id),
+                "Existing queued selection cancels");
+        check(closed.get() == 3, "Adopted lease releases on queued cancellation");
+        SoulseekSelectedDownloads.cancel(PREFIX + blocker.id);
+        SoulseekDownloads.release.countDown();
+        idle();
+        SourceRegistry.enabled = false;
+        check(
+                !SoulseekSelectedDownloads.enqueuePreview(
+                        app, track, "old-session", false, () -> closed.incrementAndGet()),
+                "Disabled source rejects preview promotion");
+        check(closed.get() == 4, "Rejected promotion releases the lease");
     }
 
     public static void main(String[] args) throws Exception {

@@ -44,8 +44,11 @@ public final class HostDownloadAccess {
             if ("sourceQuality".equals(name)) {
                 try {
                     String reference = String.valueOf(propertyObject(object, "videoId"));
-                    String exact = (String) Class.forName("app.bitchord.telegram.FlacAddon")
-                            .getMethod("choiceLabel", String.class).invoke(null, reference);
+                    String exact =
+                            (String)
+                                    Class.forName("app.bitchord.telegram.FlacAddon")
+                                            .getMethod("choiceLabel", String.class)
+                                            .invoke(null, reference);
                     if (!exact.isEmpty()) return exact;
                 } catch (ReflectiveOperationException | LinkageError optionalSourceAbsent) {
                     // Optional add-on; other sources keep the native quality label.

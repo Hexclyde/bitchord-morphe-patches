@@ -1,2 +1,6 @@
 package com.music.bitchord.data.sources;
-public enum SourceKind { ADDON,YOUTUBE }
+
+public enum SourceKind {
+    ADDON,
+    YOUTUBE
+}

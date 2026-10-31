@@ -11,7 +11,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Interactive install guide](https://hexclyde.github.io/bitchord-morphe-patches/) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.14, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.15, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > The previous BitChord 1.8.1 Telegram integration was tested on an **arm64-v8a** phone; this 1.9 build still needs on-device testing. The armeabi-v7a and x86_64 builds pass the same automated checks, but haven't been run on a real device. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
 
@@ -19,7 +19,7 @@ The Downloads navigation icon is visible only when the download add-on patch is 
 
 Downloads offers saved Grid, List, Compact, Comfy and Detailed views. The Audio/Video player switch saves your YouTube preference across tracks and restarts. Missing alternate versions leave that preference unchanged.
 
-The combined beta.14 retains all beta.13 changes and the unpublished beta.9–12 Downloads work. It adds optional [Streamseek previews](docs/STREAMSEEK-PREVIEW.md) for explicit MP3/FLAC listening and local-reference audio comparison. It also retains optional [mixed-source device playlists](docs/MIXED-PLAYLISTS.md) and the independent [Flac Downloader Audio adapter](docs/FLAC-AUDIO.md) for aztecempire's Spotube source. See [Downloads](docs/DOWNLOAD-MANAGER.md).
+The combined beta.15 fixes the Downloads navigation crash and restores Audio/Video controls after player-window recreation. It retains all beta.13 changes and the unpublished beta.9–12 Downloads work. It adds optional [Streamseek previews](docs/STREAMSEEK-PREVIEW.md) for explicit MP3/FLAC listening and local-reference audio comparison. It also retains optional [mixed-source device playlists](docs/MIXED-PLAYLISTS.md) and the independent [Flac Downloader Audio adapter](docs/FLAC-AUDIO.md) for aztecempire's Spotube source. See [Downloads](docs/DOWNLOAD-MANAGER.md).
 
 ## Patches
 
@@ -89,8 +89,7 @@ Install the features you want in Morphe, then open **Settings → Patches & twea
 The page contains the installed download and playback features. Their
 controls follow BitChord's theme, fonts, switches and rounded cards.
 
-Each feature has an enable switch. A settings gear appears only when the feature is enabled and has configurable controls. Toggle-only features, including Battery saver, Per-download quality and Audio and video switch, do not show a gear; relevant help or status stays inline. Disabling a feature retains its saved choices. Telegram keeps its existing source toggle and account settings page. The thirteen optional
-patches are:
+Each feature has an enable switch. A settings gear appears only when the feature is enabled and has configurable controls. Toggle-only features, including Battery saver, Per-download quality and Audio and video switch, do not show a gear; relevant help or status stays inline. Disabling a feature retains its saved choices. Telegram keeps its existing source toggle and account settings page. The optional playback patches include:
 
 - **Sing:** turns the lead vocal down so you can sing over the song, from a little to all of it. By default only the voice range is cut, only while someone is singing, and drum hits are left alone; **Whole centre** removes everything in the middle instead, which suits older recordings. Ported from [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45.
 - **Pitch control:** up or down by up to 12 semitones without changing the speed. BitChord's speed setting keeps the pitch you set.
@@ -127,11 +126,13 @@ Testing builds are separate from this source; see [Testing builds](#testing-buil
 
 If the source link doesn't work, download the `.mpp` from the [releases page](https://github.com/Hexclyde/bitchord-morphe-patches/releases) and add it as a Local source.
 
+The ZIP also contains `Open-Guide.html`, which opens the bundled guide offline. Short package instructions are in `INSTALL.md`. GitHub Pages serves the same guide when the repository is configured to publish **testing → /docs**.
+
 Step-by-step guides:
 
 - [Installing with Morphe](docs/MOBILE.md)
 - [Interactive installation guide](docs/guide/index.html)
-- [Publishing the combined beta.14 ZIP](docs/PUBLISHING-1.1.0-beta.14.md)
+- [Publishing the combined beta.15 ZIP](docs/PUBLISHING-1.1.0-beta.15.md)
 - [Connecting Telegram](docs/SETUP.md)
 - [Guided Soulseek search and downloads](docs/SOULSEEK.md)
 - [Optional debrid downloads](docs/DEBRID.md)

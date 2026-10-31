@@ -1212,5 +1212,11 @@
   "Listen to selected Soulseek MP3 and FLAC files before saving": "Listen to selected Soulseek MP3 and FLAC files before saving",
   "No preview report is available": "No preview report is available",
   "Confirmed by you for this complete file hash": "Confirmed by you for this complete file hash",
-  "Preview unavailable. Check the selected file and Soulseek session.": "Preview unavailable. Check the selected file and Soulseek session."
+  "Preview unavailable. Check the selected file and Soulseek session.": "Preview unavailable. Check the selected file and Soulseek session.",
+  "Telegram page could not open": "Telegram page could not open",
+  "Your Telegram data is kept. Copy crash details to help identify the problem, or return to BitChord.": "Your Telegram data is kept. Copy crash details to help identify the problem, or return to BitChord.",
+  "Copy crash details": "Copy crash details",
+  "Back to BitChord": "Back to BitChord",
+  "Crash details copied": "Crash details copied",
+  "Crash details could not be copied": "Crash details could not be copied"
 }

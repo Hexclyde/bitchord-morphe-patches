@@ -1,3 +1,12 @@
+# 1.1.0-beta.15
+
+Merge both beta.14 branches: Streamseek previews and the Downloads/player-window fixes.
+
+- Keep Downloads inside LibraryScreen's balanced Compose restart scope and request AndroidView's default modifier when the optimized host passes null.
+- Restore the Audio/Video control after every player-window open, close and recreation, including inlined host field writes.
+- Retain all 19 selectable patches, explicit Soulseek MP3/FLAC previews, transfer reuse, local-reference excerpt matching, complete-file checksums and evidence export.
+- Retain mixed-source playlists, FLAC Audio, five Downloads views, conditional Downloads navigation and persistent YouTube Audio/Video preference.
+
 # 1.1.0-beta.14
 
 - Add optional **Streamseek previews**, depending on the Soulseek download patch; the in-app capsule toggle starts off and has no gear. Preview one selected MP3/FLAC peer file for up to 30 seconds in a separate Media3 player.

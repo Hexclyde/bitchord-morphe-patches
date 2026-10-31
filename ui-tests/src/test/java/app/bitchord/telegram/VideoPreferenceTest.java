@@ -1,7 +1,9 @@
 package app.bitchord.telegram;
 
 import static org.junit.Assert.*;
+
 import android.content.Context;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RuntimeEnvironment;
@@ -12,7 +14,8 @@ import org.robolectric.annotation.LooperMode;
 @Config(manifest = Config.NONE, sdk = 35)
 @LooperMode(LooperMode.Mode.PAUSED)
 public class VideoPreferenceTest {
-    @Test public void preferenceSurvivesRuntimeReinitializationAndDisabling() throws Exception {
+    @Test
+    public void preferenceSurvivesRuntimeReinitializationAndDisabling() throws Exception {
         Context app = RuntimeEnvironment.getApplication();
         app.getSharedPreferences(VideoSwitch.PREFERENCES, 0).edit().clear().commit();
         java.lang.reflect.Field preferences = VideoSwitch.class.getDeclaredField("preferences");

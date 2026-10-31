@@ -184,11 +184,32 @@ public final class ExtrasActivity extends Activity {
                         copyActions(parent, "soulseek");
                     });
             if (optionalInstalled("app.bitchord.soulseek.SoulseekPreview")) {
-                feature("streamseek-preview", Strings.t("Streamseek previews"),
+                feature(
+                        "streamseek-preview",
+                        Strings.t("Streamseek previews"),
                         Strings.t("Listen to selected Soulseek MP3 and FLAC files before saving"),
-                        () -> (Boolean) invoke("app.bitchord.soulseek.SoulseekPreview", "enabled", new Class<?>[] {Context.class}, this),
-                        on -> invoke("app.bitchord.soulseek.SoulseekPreview", "setEnabled", new Class<?>[] {Context.class, boolean.class}, this, on),
-                        parent -> paragraph(parent, Strings.t("Preview uses a temporary transfer. Keep download reuses its buffered bytes. Compare with a known local reference and inspect the evidence before confirming a recording.")));
+                        () ->
+                                (Boolean)
+                                        invoke(
+                                                "app.bitchord.soulseek.SoulseekPreview",
+                                                "enabled",
+                                                new Class<?>[] {Context.class},
+                                                this),
+                        on ->
+                                invoke(
+                                        "app.bitchord.soulseek.SoulseekPreview",
+                                        "setEnabled",
+                                        new Class<?>[] {Context.class, boolean.class},
+                                        this,
+                                        on),
+                        parent ->
+                                paragraph(
+                                        parent,
+                                        Strings.t(
+                                                "Preview uses a temporary transfer. Keep download"
+                                                    + " reuses its buffered bytes. Compare with a"
+                                                    + " known local reference and inspect the"
+                                                    + " evidence before confirming a recording.")));
             }
             downloadFeature(
                     "peer-downloads",
@@ -464,16 +485,36 @@ public final class ExtrasActivity extends Activity {
                     this::jamesDsp);
         }
         if (SoundExtras.flacAddonApplied()) {
-            feature("flac-audio", "Flac Downloader Audio",
+            feature(
+                    "flac-audio",
+                    "Flac Downloader Audio",
                     Strings.t("Search, stream and download FLAC or MP3 from flacdownloader.com"),
-                    FlacAddon::enabled, FlacAddon::setEnabled,
-                    parent -> paragraph(parent, Strings.t("Also available in Sources. Formats are requested from the service and may be unavailable. Choose another format explicitly if preparation fails.")));
+                    FlacAddon::enabled,
+                    FlacAddon::setEnabled,
+                    parent ->
+                            paragraph(
+                                    parent,
+                                    Strings.t(
+                                            "Also available in Sources. Formats are requested from"
+                                                    + " the service and may be unavailable. Choose"
+                                                    + " another format explicitly if preparation"
+                                                    + " fails.")));
         }
         if (SoundExtras.mixedPlaylistsApplied()) {
-            feature("mixed-playlists", Strings.t("Mixed-source playlists"),
+            feature(
+                    "mixed-playlists",
+                    Strings.t("Mixed-source playlists"),
                     Strings.t("Keep files and streams together in device playlists"),
-                    () -> MixedPlaylists.enabled, MixedPlaylists::setEnabled,
-                    parent -> paragraph(parent, Strings.t("Use Add to playlist for a track, or New playlist in Library. Device playlists keep file and source identities; YouTube Music playlists still accept YouTube tracks only.")));
+                    () -> MixedPlaylists.enabled,
+                    MixedPlaylists::setEnabled,
+                    parent ->
+                            paragraph(
+                                    parent,
+                                    Strings.t(
+                                            "Use Add to playlist for a track, or New playlist in"
+                                                + " Library. Device playlists keep file and source"
+                                                + " identities; YouTube Music playlists still"
+                                                + " accept YouTube tracks only.")));
         }
         if (SoundExtras.videoSwitchApplied()) {
             section(Strings.t("Audio and video switch"));
@@ -518,8 +559,11 @@ public final class ExtrasActivity extends Activity {
     }
 
     private static boolean optionalInstalled(String type) {
-        try { return Boolean.TRUE.equals(invoke(type, "installed", new Class<?>[] {})); }
-        catch (Exception | LinkageError absent) { return false; }
+        try {
+            return Boolean.TRUE.equals(invoke(type, "installed", new Class<?>[] {}));
+        } catch (Exception | LinkageError absent) {
+            return false;
+        }
     }
 
     private void downloadFeature(String id, String title, String summary, Details details) {
@@ -679,7 +723,10 @@ public final class ExtrasActivity extends Activity {
                     showExpanded();
                 });
         feature.sync();
-        content.setVisibility(feature.enabled && (!feature.configurable || id.equals(expanded)) ? View.VISIBLE : View.GONE);
+        content.setVisibility(
+                feature.enabled && (!feature.configurable || id.equals(expanded))
+                        ? View.VISIBLE
+                        : View.GONE);
     }
 
     private Feature containing(View view) {
@@ -701,7 +748,8 @@ public final class ExtrasActivity extends Activity {
         Feature selected = features.get(expanded);
         if (selected == null || !selected.enabled) expanded = null;
         for (Feature feature : features.values()) {
-            boolean open = feature.enabled && (!feature.configurable || feature.id.equals(expanded));
+            boolean open =
+                    feature.enabled && (!feature.configurable || feature.id.equals(expanded));
             feature.details.setVisibility(open ? View.VISIBLE : View.GONE);
             feature.gear.setContentDescription(Strings.f("Settings for {0}", feature.title));
         }
@@ -717,7 +765,13 @@ public final class ExtrasActivity extends Activity {
         boolean enabled;
 
         Feature(String id, String title, State state) {
-            configurable = !id.equals("battery-saver") && !id.equals("download-quality") && !id.equals("video-switch") && !id.equals("mixed-playlists") && !id.equals("flac-audio") && !id.equals("streamseek-preview");
+            configurable =
+                    !id.equals("battery-saver")
+                            && !id.equals("download-quality")
+                            && !id.equals("video-switch")
+                            && !id.equals("mixed-playlists")
+                            && !id.equals("flac-audio")
+                            && !id.equals("streamseek-preview");
             this.id = id;
             this.title = title;
             this.state = state;

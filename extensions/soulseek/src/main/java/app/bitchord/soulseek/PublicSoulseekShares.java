@@ -176,7 +176,7 @@ final class PublicSoulseekShares {
                     || !digest(file).equals(row.getString("sha256")))
                 throw new IOException(
                         "A sharing copy changed or is missing. Remove it from the inventory and add"
-                            + " it again");
+                                + " it again");
         }
         File[] files = root.listFiles();
         if (files == null) throw new IOException("Cannot inspect public inventory");

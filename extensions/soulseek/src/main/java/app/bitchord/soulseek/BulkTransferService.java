@@ -280,12 +280,23 @@ public final class BulkTransferService extends Service {
     }
 
     private static int previewCount() {
-        try { return (Integer) Class.forName("app.bitchord.soulseek.SoulseekPreview").getMethod("activeCount").invoke(null); }
-        catch (ReflectiveOperationException | LinkageError absent) { return 0; }
+        try {
+            return (Integer)
+                    Class.forName("app.bitchord.soulseek.SoulseekPreview")
+                            .getMethod("activeCount")
+                            .invoke(null);
+        } catch (ReflectiveOperationException | LinkageError absent) {
+            return 0;
+        }
     }
+
     private static void stopPreviews() {
-        try { Class.forName("app.bitchord.soulseek.SoulseekPreview").getMethod("stopAll").invoke(null); }
-        catch (ReflectiveOperationException | LinkageError absent) {}
+        try {
+            Class.forName("app.bitchord.soulseek.SoulseekPreview")
+                    .getMethod("stopAll")
+                    .invoke(null);
+        } catch (ReflectiveOperationException | LinkageError absent) {
+        }
     }
 
     private void inspect() {
@@ -307,7 +318,10 @@ public final class BulkTransferService extends Service {
                         || offers > 0
                         || (coordinator != null && coordinator.hasPendingHandshake());
         int shares = publicSharing ? 1 : 0,
-                jobs = SoulseekSelectedDownloads.activeCount() + DownloadArchives.activeCount() + previewCount();
+                jobs =
+                        SoulseekSelectedDownloads.activeCount()
+                                + DownloadArchives.activeCount()
+                                + previewCount();
         if (debrid != null) jobs += debrid.activeCount();
         if (downloads != null) {
             busy |= downloads.hasActiveWork();

@@ -45,15 +45,22 @@ private val streamseekPreviewResources = resourcePatch {
         document("AndroidManifest.xml").use { doc ->
             val app = doc.getElementsByTagName("application").item(0) as org.w3c.dom.Element
             val activity = doc.createElement("activity")
-            activity.setAttributeNS(SOULSEEK_ANDROID, "android:name", "app.bitchord.soulseek.SoulseekPreviewActivity")
+            activity.setAttributeNS(
+                SOULSEEK_ANDROID,
+                "android:name",
+                "app.bitchord.soulseek.SoulseekPreviewActivity",
+            )
             activity.setAttributeNS(SOULSEEK_ANDROID, "android:exported", "false")
             activity.setAttributeNS(SOULSEEK_ANDROID, "android:label", "Soulseek preview")
-            activity.setAttributeNS(SOULSEEK_ANDROID, "android:theme", "@android:style/Theme.Material.NoActionBar")
+            activity.setAttributeNS(
+                SOULSEEK_ANDROID,
+                "android:theme",
+                "@android:style/Theme.Material.NoActionBar",
+            )
             app.appendChild(activity)
         }
     }
 }
-
 
 private val soulseekResources = resourcePatch {
     execute {
@@ -409,19 +416,50 @@ val nativeSoulseekPatch =
                 ) {
                     "Player content slot ABI changed"
                 }
-                val libraryStart = library.implementation!!.instructions.first()
+                val libraryCode = library.implementation!!.instructions.toList()
+                val groupStart =
+                    libraryCode.indices.single { index ->
+                        val call =
+                            (libraryCode[index] as? ReferenceInstruction)?.reference
+                                as? MethodReference
+                        call?.definingClass == "Landroidx/compose/runtime/ComposerImpl;" &&
+                            call.name == "startRestartGroup"
+                    }
+                val groupEnd =
+                    libraryCode.single { instruction ->
+                        val call =
+                            (instruction as? ReferenceInstruction)?.reference as? MethodReference
+                        call?.definingClass == "Landroidx/compose/runtime/ComposerImpl;" &&
+                            call.name == "endRestartGroup"
+                    }
+                // Keep the host's restart scope and its original captured callback.
+                // Reading route state before that scope loses the subscription, and
+                // returning early bypasses the host's balanced composition lifecycle.
+                // v16..v18 are unused at this point; v0..v3 hold live host arguments.
+                check(
+                    libraryCode.take(groupStart + 1).none { instruction ->
+                        instruction is
+                            com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction &&
+                            instruction.registerA in 16..18
+                    }
+                ) {
+                    "Library content scratch registers changed"
+                }
                 library.addInstructionsWithLabels(
-                    0,
+                    groupStart + 1,
                     """
-                    move-object/from16 v0, p14
-                    move-object/from16 v1, p15
-                    move-object/from16 v2, p19
-                    invoke-static {v0, v1, v2}, ${SOULSEEK}DownloadsShell;->compose(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z
-                    move-result v0
-                    if-eqz v0, :original_library_content
-                    return-void
+                    move-object/from16 v16, p14
+                    move-object/from16 v17, p15
+                    move-object/from16 v18, p19
+                    invoke-static/range {v16 .. v18}, ${SOULSEEK}DownloadsShell;->compose(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z
+                    move-result v16
+                    if-eqz v16, :original_library_content
+                    move-object/from16 v15, p14
+                    move/from16 v19, p18
+                    goto/16 :finish_library_group
                 """,
-                    ExternalLabel("original_library_content", libraryStart),
+                    ExternalLabel("original_library_content", libraryCode[groupStart + 1]),
+                    ExternalLabel("finish_library_group", groupEnd),
                 )
                 val root =
                     mutableClassDefBy("Lcom/music/bitchord/MainActivityKt;").methods.single {
@@ -928,18 +966,34 @@ val nativeSoulseekPatch =
     }
 
 @Suppress("unused")
-val streamseekPreviewPatch = bytecodePatch(
-    name = "Streamseek previews",
-    description = "Preview an explicitly selected Soulseek MP3 or FLAC through Media3 while it transfers. Keep download reuses buffered bytes. Compare an excerpt with a known local reference and export transparent evidence. Optional; enable in Patches & tweaks. No automatic Soulseek playback or Mornye integration.",
-    default = false,
-) {
-    compatibleWith(Compatibility(name="BitChord", packageName="com.music.bitchord", apkFileType=ApkFileType.APK, appIconColor=0xFF8944,
-        targets=listOf(AppTarget(version="1.9", isExperimental=true, minSdk=26))))
-    dependsOn(nativeSoulseekPatch, streamseekPreviewResources)
-    execute {
-        val method=mutableClassDefBy("${SOULSEEK}SoulseekPreview;").methods.single { it.name=="installed" && it.parameterTypes.isEmpty() && it.returnType=="Z" }
-        check(method.implementation!!.instructions.count()==2) { "Preview install marker changed" }
-        method.replaceInstruction(0,"const/4 v0, 0x1")
-        println("Enabled explicit Streamseek preview capabilities; automatic playback guard retained")
+val streamseekPreviewPatch =
+    bytecodePatch(
+        name = "Streamseek previews",
+        description =
+            "Preview an explicitly selected Soulseek MP3 or FLAC through Media3 while it transfers. Keep download reuses buffered bytes. Compare an excerpt with a known local reference and export transparent evidence. Optional; enable in Patches & tweaks. No automatic Soulseek playback or Mornye integration.",
+        default = false,
+    ) {
+        compatibleWith(
+            Compatibility(
+                name = "BitChord",
+                packageName = "com.music.bitchord",
+                apkFileType = ApkFileType.APK,
+                appIconColor = 0xFF8944,
+                targets = listOf(AppTarget(version = "1.9", isExperimental = true, minSdk = 26)),
+            )
+        )
+        dependsOn(nativeSoulseekPatch, streamseekPreviewResources)
+        execute {
+            val method =
+                mutableClassDefBy("${SOULSEEK}SoulseekPreview;").methods.single {
+                    it.name == "installed" && it.parameterTypes.isEmpty() && it.returnType == "Z"
+                }
+            check(method.implementation!!.instructions.count() == 2) {
+                "Preview install marker changed"
+            }
+            method.replaceInstruction(0, "const/4 v0, 0x1")
+            println(
+                "Enabled explicit Streamseek preview capabilities; automatic playback guard retained"
+            )
+        }
     }
-}

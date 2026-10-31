@@ -11,8 +11,8 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Checkable;
 
 /**
- * BitChord 1.9's IosSwitch geometry: a 64×28dp track and white 40×24dp capsule,
- * within a 48dp touch target. The enabled colour stays green in either theme.
+ * BitChord 1.9's IosSwitch geometry: a 64×28dp track and white 40×24dp capsule, within a 48dp touch
+ * target. The enabled colour stays green in either theme.
  */
 final class TelegramSwitch extends View implements Checkable {
     interface Listener {

@@ -1,5 +1,7 @@
 package com.music.bitchord.data.model;
+
 import java.util.List;
+
 /** Pinned BitChord 1.9 Song API used by host and framework fixtures. */
 public final class Song {
     public final String videoId;
@@ -30,6 +32,7 @@ public final class Song {
     public final PlaybackSourceType playbackSourceType;
     public final String playbackSourceId;
     public final String feedbackToken;
+
     public Song(
             String videoId,
             String title,
@@ -88,5 +91,36 @@ public final class Song {
         this.playbackSourceId = playbackSourceId;
         this.feedbackToken = feedbackToken;
     }
-    public Song(String videoId, String title, String artist, String durationText) { this(videoId, title, artist, null, durationText, null, java.util.Collections.emptyList(), null, null, false, false, null, QueueTier.CONTEXT, null, null, null, null, null, null, null, null, null, false, null, null, null, null, null); }
+
+    public Song(String videoId, String title, String artist, String durationText) {
+        this(
+                videoId,
+                title,
+                artist,
+                null,
+                durationText,
+                null,
+                java.util.Collections.emptyList(),
+                null,
+                null,
+                false,
+                false,
+                null,
+                QueueTier.CONTEXT,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                false,
+                null,
+                null,
+                null,
+                null,
+                null);
+    }
 }

@@ -1,3 +1,10 @@
 package com.music.bitchord.data.spotify;
-import java.util.*;import kotlinx.coroutines.flow.*;
-public final class LocalPlaylistStore { public static final MutableStateFlow<List<Object>> _playlists=StateFlowKt.MutableStateFlow(new ArrayList<>()); }
+
+import kotlinx.coroutines.flow.*;
+
+import java.util.*;
+
+public final class LocalPlaylistStore {
+    public static final MutableStateFlow<List<Object>> _playlists =
+            StateFlowKt.MutableStateFlow(new ArrayList<>());
+}

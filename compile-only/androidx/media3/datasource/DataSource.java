@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.util.*;
 
 public interface DataSource {
-    interface Factory { DataSource createDataSource(); }
+    interface Factory {
+        DataSource createDataSource();
+    }
+
     void addTransferListener(TransferListener listener);
 
     long open(DataSpec spec) throws IOException;

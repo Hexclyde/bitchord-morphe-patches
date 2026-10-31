@@ -1212,5 +1212,11 @@
   "{0} · {1}",
   "{0} · {1} · Looks like a song that played from another source",
   "{0}% quieter",
-  "{0}, which BitChord already counts as lossless"
+  "{0}, which BitChord already counts as lossless",
+  "Back to BitChord",
+  "Copy crash details",
+  "Crash details copied",
+  "Crash details could not be copied",
+  "Telegram page could not open",
+  "Your Telegram data is kept. Copy crash details to help identify the problem, or return to BitChord."
 ]
