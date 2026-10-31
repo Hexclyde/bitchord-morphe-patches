@@ -75,6 +75,7 @@ public final class TelegramBridge {
     volatile Client client;
     volatile long generation;
     volatile long authorizationRevision;
+    volatile long codeResendDeadline;
     volatile CompletableFuture<Void> clientClosed;
     volatile boolean restarting;
     final NativeAudio audio = new NativeAudio(this);
@@ -769,6 +770,13 @@ public final class TelegramBridge {
         if (obj instanceof TdApi.UpdateAuthorizationState) {
             authorizationRevision++;
             auth = ((TdApi.UpdateAuthorizationState) obj).authorizationState;
+            if (auth instanceof TdApi.AuthorizationStateWaitCode) {
+                TdApi.AuthenticationCodeInfo info =
+                        ((TdApi.AuthorizationStateWaitCode) auth).codeInfo;
+                codeResendDeadline =
+                        android.os.SystemClock.elapsedRealtime()
+                                + (info == null ? 0L : Math.max(0L, info.timeout) * 1000L);
+            } else codeResendDeadline = 0;
             if (auth instanceof TdApi.AuthorizationStateWaitTdlibParameters) {
                 status =
                         credentials.configured()
@@ -907,6 +915,27 @@ public final class TelegramBridge {
             throw new IOException(
                     "This login step isn't supported here. Sign in with an existing Telegram"
                             + " account.");
+    }
+
+    public void changePhone(String number) throws Exception {
+        error = "";
+        call(LoginCodePolicy.phone(auth, number));
+    }
+
+    public int resendWaitSeconds() {
+        return LoginCodePolicy.remaining(
+                codeResendDeadline, android.os.SystemClock.elapsedRealtime());
+    }
+
+    public boolean canResendCode() {
+        return LoginCodePolicy.offered(auth) && resendWaitSeconds() == 0;
+    }
+
+    public void resendCode() throws Exception {
+        error = "";
+        call(
+                LoginCodePolicy.resend(
+                        auth, codeResendDeadline, android.os.SystemClock.elapsedRealtime()));
     }
 
     /** The account's chat folders, as Telegram last sent them. */

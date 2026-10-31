@@ -1,4 +1,5 @@
 /.deps/
+/.deps
 /build/
 /.build.lock
 /native/soulseek/target/
@@ -9,6 +10,7 @@
 /ui-tests/src/test/java/app/bitchord/telegram/TelegramActivity.java
 /ui-tests/src/test/java/app/bitchord/telegram/TelegramStyle.java
 /ui-tests/src/test/java/app/bitchord/telegram/ApplicationCredentials.java
+/ui-tests/src/test/java/app/bitchord/telegram/LoginCodePolicy.java
 /ui-tests/src/test/java/app/bitchord/telegram/CachePolicy.java
 /ui-tests/src/test/java/app/bitchord/telegram/InternalAddon.java
 /ui-tests/src/test/java/app/bitchord/telegram/NativeAudio.java

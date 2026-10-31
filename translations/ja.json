@@ -1230,5 +1230,11 @@
   "{0} active · {1} queued": "{0} active · {1} queued",
   "Format · {0}": "Format · {0}",
   "Size · {0}": "Size · {0}",
-  "Source · {0}": "Source · {0}"
+  "Source · {0}": "Source · {0}",
+  "Change phone number": "電話番号を変更",
+  "Send code to this number": "この番号にコードを送信",
+  "Request a new code": "新しいコードをリクエスト",
+  "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram から別の送信方法は提供されていません。既存の Telegram アプリを確認するか、電話番号を変更してください。",
+  "Telegram will send another code using its available delivery method.": "Telegram は利用可能な方法で別のコードを送信します。",
+  "You can request another code in {0} seconds.": "{0} 秒後に別のコードをリクエストできます。"
 }

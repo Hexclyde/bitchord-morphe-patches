@@ -1230,5 +1230,11 @@
   "{0} active · {1} queued": "{0} active · {1} queued",
   "Format · {0}": "Format · {0}",
   "Size · {0}": "Size · {0}",
-  "Source · {0}": "Source · {0}"
+  "Source · {0}": "Source · {0}",
+  "Change phone number": "Đổi số điện thoại",
+  "Send code to this number": "Gửi mã đến số này",
+  "Request a new code": "Yêu cầu mã mới",
+  "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram chưa cung cấp phương thức gửi khác. Hãy kiểm tra ứng dụng Telegram hiện có hoặc đổi số điện thoại.",
+  "Telegram will send another code using its available delivery method.": "Telegram sẽ gửi mã khác bằng phương thức hiện có.",
+  "You can request another code in {0} seconds.": "Bạn có thể yêu cầu mã khác sau {0} giây."
 }

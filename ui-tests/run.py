@@ -17,6 +17,7 @@ for name in (
     "SoundExtras.java",
     "VocalCut.java",
     "ApplicationCredentials.java",
+    "LoginCodePolicy.java",
     "CachePolicy.java",
     "InternalAddon.java",
     "NativeAudio.java",

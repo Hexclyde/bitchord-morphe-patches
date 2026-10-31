@@ -1,3 +1,10 @@
+# 1.1.0-beta.16.1
+
+- Retain the supplied beta.16 Downloads layouts, artwork, player-window switch and asynchronous Telegram startup improvements.
+- Allow correcting the login phone number while waiting for a Telegram code, without deleting the session or application configuration.
+- Offer code resending only when Telegram provides a delivery method and its cooldown has elapsed. Show the remaining wait and keep typed codes intact during countdown updates.
+- Add login transition and native-screen regressions for correction, cancellation and resend availability.
+
 # 1.1.0-beta.16
 
 - Rebuild the production Android Downloads views to follow the reviewed HTML demo: compact controls, real thumbnail/embedded artwork, source/format labels, separate file status, actual thin transfer progress and five saved layouts. Keep management controls under the settings gear, deduplicate saved host aliases, remove the fake public-sharing download row and constrain the back button.

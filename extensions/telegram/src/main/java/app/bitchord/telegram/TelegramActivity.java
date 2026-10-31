@@ -26,6 +26,8 @@ public final class TelegramActivity extends Activity {
     final List<EditText> secrets = new ArrayList<>();
     final Handler handler = new Handler(Looper.getMainLooper());
     String screen = "";
+    boolean editingPhone;
+    TextView resendControl, resendHint;
     volatile boolean busy;
     boolean editCredentials, resumed, pageFailed;
     final ExecutorService pageWork =
@@ -266,7 +268,14 @@ public final class TelegramActivity extends Activity {
                                         : bridge.auth == null
                                                 ? "starting"
                                                 : bridge.auth.getClass().getSimpleName()
-                                                        + (advanced ? ":advanced" : "");
+                                                        + (advanced ? ":advanced" : "")
+                                                        + (editingPhone ? ":phone" : "")
+                                                        + (bridge.auth
+                                                                        instanceof
+                                                                        TdApi
+                                                                                .AuthorizationStateWaitCode
+                                                                ? ":" + bridge.authorizationRevision
+                                                                : "");
         if (state.equals(screen)) {
             updateStatus();
             return;
@@ -304,6 +313,7 @@ public final class TelegramActivity extends Activity {
         body.removeAllViews();
         namesList = null;
         actions.clear();
+        resendControl = resendHint = null;
         secrets.clear();
         hashVisibility = null;
         LinearLayout top = new LinearLayout(this);
@@ -312,7 +322,11 @@ public final class TelegramActivity extends Activity {
         ImageButton back =
                 style.backButton(
                         () -> {
-                            if (channelId != 0) {
+                            if (editingPhone) {
+                                editingPhone = false;
+                                screen = "";
+                                render();
+                            } else if (channelId != 0) {
                                 channelId = 0;
                                 screen = "";
                                 render();
@@ -555,7 +569,7 @@ public final class TelegramActivity extends Activity {
                 || auth instanceof TdApi.AuthorizationStateWaitPassword
                 || auth instanceof TdApi.AuthorizationStateWaitEmailAddress
                 || auth instanceof TdApi.AuthorizationStateWaitEmailCode) {
-            boolean phone = auth instanceof TdApi.AuthorizationStateWaitPhoneNumber,
+            boolean phone = editingPhone || auth instanceof TdApi.AuthorizationStateWaitPhoneNumber,
                     password = auth instanceof TdApi.AuthorizationStateWaitPassword,
                     email = auth instanceof TdApi.AuthorizationStateWaitEmailAddress;
             String title =
@@ -575,20 +589,73 @@ public final class TelegramActivity extends Activity {
                                             : "Enter the code delivered by Telegram. Check your"
                                                     + " existing Telegram app.");
             EditText field = input(account, title, password || !phone && !email);
-            if (phone) field.setInputType(InputType.TYPE_CLASS_PHONE);
+            if (phone) {
+                field.setInputType(InputType.TYPE_CLASS_PHONE);
+                if (editingPhone && auth instanceof TdApi.AuthorizationStateWaitCode) {
+                    TdApi.AuthenticationCodeInfo info =
+                            ((TdApi.AuthorizationStateWaitCode) auth).codeInfo;
+                    if (info != null && info.phoneNumber != null) field.setText(info.phoneNumber);
+                }
+            }
             if (email)
                 field.setInputType(
                         InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
             action(
                     account,
-                    phone ? "Continue" : "Verify and continue",
+                    editingPhone
+                            ? "Send code to this number"
+                            : phone ? "Continue" : "Verify and continue",
                     true,
                     () -> {
                         String value = field.getText().toString();
                         if (value.trim().isEmpty()) return;
-                        field.setText("");
-                        run(() -> bridge.submit(value));
+                        if (!phone) field.setText("");
+                        if (editingPhone)
+                            run(
+                                    () -> {
+                                        bridge.changePhone(value);
+                                        runOnUiThread(
+                                                () -> {
+                                                    editingPhone = false;
+                                                    screen = "";
+                                                    render();
+                                                });
+                                    });
+                        else run(() -> bridge.submit(value));
                     });
+            if (editingPhone) {
+                action(
+                        account,
+                        "Cancel",
+                        false,
+                        () -> {
+                            editingPhone = false;
+                            screen = "";
+                            render();
+                        });
+            } else if (!phone) {
+                action(
+                        account,
+                        "Change phone number",
+                        false,
+                        () -> {
+                            editingPhone = true;
+                            screen = "";
+                            render();
+                        });
+                if (auth instanceof TdApi.AuthorizationStateWaitCode
+                        || auth instanceof TdApi.AuthorizationStateWaitEmailCode) {
+                    resendControl =
+                            action(
+                                    account,
+                                    "Request a new code",
+                                    false,
+                                    () -> run(() -> bridge.resendCode()));
+                    resendHint = style.text("", 13, style.secondary, style.regular);
+                    resendHint.setPadding(0, style.dp(8), 0, 0);
+                    account.addView(resendHint);
+                }
+            }
         } else if (auth instanceof TdApi.AuthorizationStateWaitOtherDeviceConfirmation) {
             paragraph(account, "Confirm this sign-in from another Telegram device.");
             String link = ((TdApi.AuthorizationStateWaitOtherDeviceConfirmation) auth).link;
@@ -2217,7 +2284,7 @@ public final class TelegramActivity extends Activity {
         return field;
     }
 
-    void action(LinearLayout p, String title, boolean primary, Runnable click) {
+    TextView action(LinearLayout p, String title, boolean primary, Runnable click) {
         TextView b =
                 style.button(
                         Strings.t(title),
@@ -2229,6 +2296,7 @@ public final class TelegramActivity extends Activity {
         lp.topMargin = style.dp(12);
         p.addView(b, lp);
         actions.add(b);
+        return b;
     }
 
     void confirm(String title, String message, String positive, Runnable action) {
@@ -2256,6 +2324,23 @@ public final class TelegramActivity extends Activity {
             v.setEnabled(!busy);
             v.setAlpha(busy ? 0.45f : 1f);
         }
+        if (resendControl != null) {
+            boolean available = !busy && bridge.canResendCode();
+            resendControl.setEnabled(available);
+            resendControl.setAlpha(available ? 1f : 0.45f);
+            int seconds = bridge.resendWaitSeconds();
+            resendHint.setText(
+                    seconds > 0
+                            ? Strings.f("You can request another code in {0} seconds.", seconds)
+                            : LoginCodePolicy.offered(bridge.auth)
+                                    ? Strings.t(
+                                            "Telegram will send another code using its available"
+                                                    + " delivery method.")
+                                    : Strings.t(
+                                            "Telegram has not offered another delivery method."
+                                                + " Check your existing Telegram app or change the"
+                                                + " phone number."));
+        }
     }
 
     /** Fail closed before credential entry, keeping the host app and session intact. */
@@ -2272,6 +2357,7 @@ public final class TelegramActivity extends Activity {
         }
         secrets.clear();
         actions.clear();
+        resendControl = resendHint = null;
         hashVisibility = null;
         indexLine = importLine = checkLine = null;
         body = new LinearLayout(this);

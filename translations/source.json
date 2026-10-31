@@ -1230,5 +1230,11 @@
   "{0} active · {1} queued",
   "Format · {0}",
   "Size · {0}",
-  "Source · {0}"
+  "Source · {0}",
+  "Change phone number",
+  "Send code to this number",
+  "Request a new code",
+  "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.",
+  "Telegram will send another code using its available delivery method.",
+  "You can request another code in {0} seconds."
 ]

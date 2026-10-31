@@ -597,9 +597,10 @@ public final class DebridCoreTest {
             control.start();
             check(f.provider.controlEntered.await(2, TimeUnit.SECONDS), "control active");
             f.engine.stop();
-            check(done.get(), "stop joins provider control request");
             check(!f.engine.hasActiveWork(), "stop leaves no active operation");
+            // stop awaits provider cleanup; the caller's finally runs after prepare returns.
             control.join(1000);
+            check(done.get(), "cancelled provider request returns to its caller");
         }
         try (Fixture f = new Fixture()) {
             for (int i = 0; i < 16; i++) f.prepare();

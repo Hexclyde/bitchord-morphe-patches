@@ -1230,5 +1230,11 @@
   "{0} active · {1} queued": "{0} active · {1} queued",
   "Format · {0}": "Format · {0}",
   "Size · {0}": "Size · {0}",
-  "Source · {0}": "Source · {0}"
+  "Source · {0}": "Source · {0}",
+  "Change phone number": "Telefon numarasını değiştir",
+  "Send code to this number": "Kodu bu numaraya gönder",
+  "Request a new code": "Yeni kod iste",
+  "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram başka bir gönderim yöntemi sunmadı. Telegram uygulamanızı kontrol edin veya telefon numarasını değiştirin.",
+  "Telegram will send another code using its available delivery method.": "Telegram kullanılabilir gönderim yöntemiyle başka bir kod gönderecek.",
+  "You can request another code in {0} seconds.": "{0} saniye sonra başka bir kod isteyebilirsiniz."
 }

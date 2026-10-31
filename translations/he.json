@@ -1230,5 +1230,11 @@
   "{0} active · {1} queued": "{0} active · {1} queued",
   "Format · {0}": "Format · {0}",
   "Size · {0}": "Size · {0}",
-  "Source · {0}": "Source · {0}"
+  "Source · {0}": "Source · {0}",
+  "Change phone number": "שינוי מספר טלפון",
+  "Send code to this number": "שליחת קוד למספר הזה",
+  "Request a new code": "בקשת קוד חדש",
+  "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram לא הציע דרך שליחה אחרת. יש לבדוק באפליקציית Telegram הקיימת או לשנות את מספר הטלפון.",
+  "Telegram will send another code using its available delivery method.": "Telegram ישלח קוד נוסף בדרך השליחה הזמינה.",
+  "You can request another code in {0} seconds.": "אפשר לבקש קוד נוסף בעוד {0} שניות."
 }

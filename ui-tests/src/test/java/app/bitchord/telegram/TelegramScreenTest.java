@@ -184,6 +184,72 @@ public class TelegramScreenTest {
         assertTrue("Back exits first-time setup", activity.isFinishing());
     }
 
+    private void waitingForCode(int seconds, boolean next) {
+        activity.editCredentials = false;
+        activity.bridge.saveCredentials("12345", "0123456789abcdef0123456789abcdef");
+        activity.bridge.auth =
+                new org.drinkless.tdlib.TdApi.AuthorizationStateWaitCode(
+                        new org.drinkless.tdlib.TdApi.AuthenticationCodeInfo(
+                                "+353000000000",
+                                new org.drinkless.tdlib.TdApi.AuthenticationCodeTypeTelegramMessage(
+                                        5),
+                                next
+                                        ? new org.drinkless.tdlib.TdApi.AuthenticationCodeTypeSms(5)
+                                        : null,
+                                seconds));
+        activity.bridge.codeResendDeadline =
+                android.os.SystemClock.elapsedRealtime() + seconds * 1000L;
+        activity.screen = "";
+        activity.render();
+    }
+
+    @Test
+    public void canCorrectThePhoneNumberWhileWaitingForCode() throws Exception {
+        waitingForCode(30, true);
+        click("Change phone number");
+        assertEquals("+353000000000", input("Phone number").getText().toString());
+        input("Phone number").setText("+44 7700 900123");
+        click("Send code to this number");
+        idle();
+        org.drinkless.tdlib.TdApi.AuthorizationStateWaitCode state =
+                (org.drinkless.tdlib.TdApi.AuthorizationStateWaitCode) activity.bridge.auth;
+        assertEquals("+447700900123", state.codeInfo.phoneNumber);
+        assertNotNull(input("Verification code"));
+        assertFalse(activity.editingPhone);
+    }
+
+    @Test
+    public void cancellingPhoneEditKeepsThePendingLogin() {
+        waitingForCode(30, true);
+        Object pending = activity.bridge.auth;
+        click("Change phone number");
+        click("Cancel");
+        assertSame(pending, activity.bridge.auth);
+        assertNotNull(input("Verification code"));
+    }
+
+    @Test
+    public void resendHonorsCooldownWithoutClearingTypedCode() throws Exception {
+        waitingForCode(3, true);
+        EditText code = input("Verification code");
+        code.setText("12345");
+        assertFalse(text(activity.body, "Request a new code").isEnabled());
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idleFor(Duration.ofSeconds(4));
+        assertTrue(text(activity.body, "Request a new code").isEnabled());
+        assertSame(code, input("Verification code"));
+        assertEquals("12345", code.getText().toString());
+        click("Request a new code");
+        idle();
+        assertEquals(1, activity.bridge.resendRequests);
+    }
+
+    @Test
+    public void resendUnavailableStillAllowsPhoneCorrection() {
+        waitingForCode(0, false);
+        assertFalse(text(activity.body, "Request a new code").isEnabled());
+        assertTrue(text(activity.body, "Change phone number").isEnabled());
+    }
+
     @Test
     public void credentialsAndLoginFlow() throws Exception {
         assertNotNull(text(activity.body, "Application setup"));

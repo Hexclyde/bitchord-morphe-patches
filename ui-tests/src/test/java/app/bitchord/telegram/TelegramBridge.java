@@ -355,6 +355,8 @@ public final class TelegramBridge {
     }
 
     public TdApi.AuthorizationState auth = new TdApi.AuthorizationStateWaitTdlibParameters();
+    volatile long authorizationRevision, codeResendDeadline;
+    int resendRequests;
     public String status = "Add your application credentials to connect.", error = "";
     ApplicationCredentials credentials = ApplicationCredentials.empty();
 
@@ -392,6 +394,33 @@ public final class TelegramBridge {
             auth = new TdApi.AuthorizationStateReady();
             status = "Telegram connected.";
         }
+    }
+
+    public void changePhone(String number) throws Exception {
+        TdApi.SetAuthenticationPhoneNumber request = LoginCodePolicy.phone(auth, number);
+        auth =
+                new TdApi.AuthorizationStateWaitCode(
+                        new TdApi.AuthenticationCodeInfo(
+                                request.phoneNumber,
+                                new TdApi.AuthenticationCodeTypeTelegramMessage(5),
+                                new TdApi.AuthenticationCodeTypeSms(5),
+                                30));
+        codeResendDeadline = android.os.SystemClock.elapsedRealtime() + 30000;
+        authorizationRevision++;
+    }
+
+    public int resendWaitSeconds() {
+        return LoginCodePolicy.remaining(
+                codeResendDeadline, android.os.SystemClock.elapsedRealtime());
+    }
+
+    public boolean canResendCode() {
+        return LoginCodePolicy.offered(auth) && resendWaitSeconds() == 0;
+    }
+
+    public void resendCode() throws Exception {
+        LoginCodePolicy.resend(auth, codeResendDeadline, android.os.SystemClock.elapsedRealtime());
+        resendRequests++;
     }
 
     public List<TdApi.Chat> chats() {

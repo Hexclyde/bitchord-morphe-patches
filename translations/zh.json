@@ -1230,5 +1230,11 @@
   "{0} active · {1} queued": "{0} active · {1} queued",
   "Format · {0}": "Format · {0}",
   "Size · {0}": "Size · {0}",
-  "Source · {0}": "Source · {0}"
+  "Source · {0}": "Source · {0}",
+  "Change phone number": "更改电话号码",
+  "Send code to this number": "向此号码发送验证码",
+  "Request a new code": "请求新验证码",
+  "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram 未提供其他发送方式。请查看现有的 Telegram 应用或更改电话号码。",
+  "Telegram will send another code using its available delivery method.": "Telegram 将使用可用的发送方式再次发送验证码。",
+  "You can request another code in {0} seconds.": "你可以在 {0} 秒后请求新的验证码。"
 }

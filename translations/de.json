@@ -1230,5 +1230,11 @@
   "{0} active · {1} queued": "{0} active · {1} queued",
   "Format · {0}": "Format · {0}",
   "Size · {0}": "Size · {0}",
-  "Source · {0}": "Source · {0}"
+  "Source · {0}": "Source · {0}",
+  "Change phone number": "Telefonnummer ändern",
+  "Send code to this number": "Code an diese Nummer senden",
+  "Request a new code": "Neuen Code anfordern",
+  "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram bietet keine andere Zustellmethode an. Prüfe deine Telegram-App oder ändere die Telefonnummer.",
+  "Telegram will send another code using its available delivery method.": "Telegram sendet einen weiteren Code über die verfügbare Zustellmethode.",
+  "You can request another code in {0} seconds.": "Du kannst in {0} Sekunden einen weiteren Code anfordern."
 }

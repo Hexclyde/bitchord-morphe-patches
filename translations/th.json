@@ -1230,5 +1230,11 @@
   "{0} active · {1} queued": "{0} active · {1} queued",
   "Format · {0}": "Format · {0}",
   "Size · {0}": "Size · {0}",
-  "Source · {0}": "Source · {0}"
+  "Source · {0}": "Source · {0}",
+  "Change phone number": "เปลี่ยนหมายเลขโทรศัพท์",
+  "Send code to this number": "ส่งรหัสไปยังหมายเลขนี้",
+  "Request a new code": "ขอรหัสใหม่",
+  "Telegram has not offered another delivery method. Check your existing Telegram app or change the phone number.": "Telegram ยังไม่มีวิธีส่งอื่นให้ใช้ โปรดตรวจสอบแอป Telegram ที่ใช้อยู่หรือเปลี่ยนหมายเลขโทรศัพท์",
+  "Telegram will send another code using its available delivery method.": "Telegram จะส่งรหัสอีกครั้งด้วยวิธีที่ใช้ได้",
+  "You can request another code in {0} seconds.": "คุณสามารถขอรหัสอีกครั้งได้ใน {0} วินาที"
 }

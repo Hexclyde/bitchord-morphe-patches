@@ -92,3 +92,16 @@ Streamseek previews support selected MP3/FLAC files with an isolated player and 
 ## Downloads and player-window fixes (merged in beta.15)
 
 Downloads uses AndroidView's default modifier for the host's optimized null argument and preserves LibraryScreen's restart scope. The player switch follows actual player-window writes rather than only the sheet constructor. Framework tests and patched-APK inspection cover these paths; validation on a physical phone is still required.
+
+## AutoMix with community add-ons (BitChord 1.9)
+
+Tracks selected directly from Add-ons skip AutoMix analysis in the pinned upstream
+TrackAnalyzer. They can use the fixed-length crossfade fallback, but an analysed,
+beat-aware transition is not guaranteed. Other source-backed tracks attempt a
+matched YouTube Opus analysis; a missing match or incomplete analysis also falls
+back. This update preserves that behavior. Actual transitions with signed-in
+services still need Waydroid/device testing.
+
+The Telegram phone-change/resend fix does not change AutoMix or the audio source.
+A lossless or hi-res label from a community add-on is a provider claim until the
+resolved audio has been inspected; it does not establish recording provenance.

@@ -234,13 +234,16 @@ public final class VersionAlignTest {
         VersionAlign.position(old, RENDER_OFFSET_US + Math.round(oldMs * 1000));
         VersionAlign.position(fresh, startUs + 800_000);
         double expected = oldMs - freshMs;
+        // The real player refreshes sink positions while correlation runs on its worker.
+        // This single-threaded fixture must capture the live sink before that CPU work:
+        // its 200 ms freshness window can expire on a busy test machine.
+        VersionAlign.Heard heard = VersionAlign.newest();
+        check(heard != null, "the newest sink is the new copy");
         double[] lag = VersionAlign.lag(1f, 300, 600);
         check(lag != null, "the two sinks compared, " + behindMs + " ms apart");
         check(Math.abs(lag[0] - expected) <= 0.5, "heard " + expected + " ms behind as " + lag[0]);
-        check(VersionAlign.newest() != null, "the newest sink is the new copy");
 
         // The cut is made from the next buffer handed over, after what's already buffered.
-        VersionAlign.Heard heard = VersionAlign.newest();
         heard.catchUp(lag[0] * 1000);
         check(!heard.caughtUp(), "not caught up before the cut is heard");
         long cutAtUs = freshOffsetUs + (long) next * 1_000_000L / rate;
