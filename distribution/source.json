@@ -1,6 +1,6 @@
 {
   "repository": "Hexclyde/bitchord-morphe-patches",
   "name": "BitChord Morphe Patches",
-  "description": "Morphe patches for BitChord 1.9: music from your Telegram channels, a player-integrated Downloads explorer, optional Soulseek downloads and public sharing, Telegram archives, and playback tools. Runs on your phone using your own accounts.",
+  "description": "Morphe patches for BitChord 1.9: Telegram music, an integrated Downloads explorer, Soulseek sharing, Telegram archives, mixed-source device playlists, an optional FLAC Audio source and playback tools.",
   "license": "GPL-3.0-or-later"
 }

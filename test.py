@@ -91,6 +91,7 @@ SOURCES = [
     "BitPerfect",
     "SoundExtras",
     "VideoSwitch",
+    "MixedSongCodec",
 ]
 TESTS = [
     "BitPerfectTest",
@@ -133,6 +134,7 @@ TESTS = [
     "OutputEqTest",
     "DjModeTest",
     "VideoSwitchTest",
+    "MixedSongCodecTest",
 ]
 
 subprocess.run(

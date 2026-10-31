@@ -590,11 +590,32 @@ final class DownloadsHubPage extends DownloadPage {
             labels.add(PatchStrings.t(row.actionName)); actions.add(row.action);
         }
         if (!row.savedUri.isEmpty()) {
+            if (mixedPlaylistsAvailable()) {
+                labels.add(PatchStrings.t("Add to playlist"));
+                actions.add(() -> {
+                    try {
+                        Class.forName("app.bitchord.telegram.MixedPlaylists")
+                                .getMethod("offerFile", android.app.Activity.class, String.class, String.class)
+                                .invoke(null, activity, row.savedUri, row.name);
+                    } catch (ReflectiveOperationException | LinkageError unavailable) {
+                        android.widget.Toast.makeText(activity, PatchStrings.t("Playlist action is unavailable"), android.widget.Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
             labels.add(PatchStrings.t("Offload to Telegram")); actions.add(() -> offloadDialog(row));
             labels.add(PatchStrings.t("Share publicly on Soulseek")); actions.add(() -> shareFileDialog(row));
         }
         new AlertDialog.Builder(this).setTitle(row.name).setItems(labels.toArray(new String[0]),
                 (dialog, which) -> actions.get(which).run()).show();
+    }
+
+    private static boolean mixedPlaylistsAvailable() {
+        try {
+            return Boolean.TRUE.equals(Class.forName("app.bitchord.telegram.MixedPlaylists")
+                    .getMethod("available").invoke(null));
+        } catch (ReflectiveOperationException | LinkageError unavailable) {
+            return false;
+        }
     }
 
     private String archiveStatus(String phase) {

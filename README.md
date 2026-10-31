@@ -11,7 +11,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Interactive install guide](https://hexclyde.github.io/bitchord-morphe-patches/) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.12, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.13, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
 > The previous BitChord 1.8.1 Telegram integration was tested on an **arm64-v8a** phone; this 1.9 build still needs on-device testing. The armeabi-v7a and x86_64 builds pass the same automated checks, but haven't been run on a real device. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
 
@@ -19,7 +19,7 @@ The Downloads navigation icon is visible only when the download add-on patch is 
 
 Downloads offers saved Grid, List, Compact, Comfy and Detailed views. The Audio/Video player switch saves your YouTube preference across tracks and restarts. Missing alternate versions leave that preference unchanged.
 
-The combined beta.12 retains beta.9–11’s Downloads tab, explicit addon/Soulseek source selection, batch review, public Soulseek sharing and verified Telegram offloading. It adds the Audio and video switch patch, JamesDSP setup improvements and interactive installation guide. See [Downloads](docs/DOWNLOAD-MANAGER.md).
+The combined beta.13 includes all beta.12 changes and the unpublished beta.9–11 Downloads work. It adds optional [mixed-source device playlists](docs/MIXED-PLAYLISTS.md) and the independent [Flac Downloader Audio adapter](docs/FLAC-AUDIO.md) for aztecempire's Spotube source. See [Downloads](docs/DOWNLOAD-MANAGER.md).
 
 ## Patches
 
@@ -41,6 +41,8 @@ The combined beta.12 retains beta.9–11’s Downloads tab, explicit addon/Souls
 | **DJ mode** | Plays the queue in an order that mixes well, by key and tempo. Off by default. |
 | **JamesDSP** | Hands BitChord's audio to [JamesDSP](https://github.com/timschneeb/RootlessJamesDSP), shows whether it can hear BitChord and helps with its Shizuku or ADB setup. Off by default. |
 | **Audio and video switch** | A song and video switch at the top of the player, as in YouTube Music. Off by default. |
+| **Mixed-source playlists** | Keep downloaded files, local music, YouTube tracks and addon streams together in BitChord's device playlists. Off by default. |
+| **Flac Downloader Audio** | Native adapter for [aztecempire's Spotube source](https://github.com/aztecempire/spotube-plugin-flac-audio), using flacdownloader.com. Explicit requested FLAC/MP3 formats; source starts disabled. No Spotube runtime required. |
 
 More BitChord add-ons will be added to this repository over time.
 
@@ -128,7 +130,7 @@ Step-by-step guides:
 
 - [Installing with Morphe](docs/MOBILE.md)
 - [Interactive installation guide](docs/guide/index.html)
-- [Publishing the combined beta.12 ZIP](docs/PUBLISHING-1.1.0-beta.12.md)
+- [Publishing the combined beta.13 ZIP](docs/PUBLISHING-1.1.0-beta.13.md)
 - [Connecting Telegram](docs/SETUP.md)
 - [Guided Soulseek search and downloads](docs/SOULSEEK.md)
 - [Optional debrid downloads](docs/DEBRID.md)

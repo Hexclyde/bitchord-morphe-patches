@@ -124,6 +124,10 @@ public final class SoundExtras {
         return false;
     }
 
+    public static boolean mixedPlaylistsApplied() { return false; }
+
+    public static boolean flacAddonApplied() { return false; }
+
     public static boolean videoSwitchApplied() {
         return false;
     }
@@ -177,6 +181,8 @@ public final class SoundExtras {
         if (downloadQualityApplied()) DownloadChoice.init(application);
         if (jamesDspApplied()) EffectsApps.init(application);
         if (videoSwitchApplied()) VideoSwitch.init(application);
+        if (mixedPlaylistsApplied()) MixedPlaylists.init(application);
+        if (flacAddonApplied()) FlacAddon.init();
         Outputs.listen(
                 () -> {
                     rememberBluetooth(Outputs.current());

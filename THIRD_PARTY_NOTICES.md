@@ -69,3 +69,6 @@ The **Pitch control**, **Loudness level**, **Sleep timer fade-out**, **Headphone
 [BitChord](https://github.com/kushagrasinghx/BitChord) is a separate GPL-3.0 app (patched against [`04f64c9`](https://github.com/kushagrasinghx/BitChord/tree/04f64c9f11bd2714d01bbc6da401f146f3d9399f)). This repository doesn't distribute it. If you redistribute a patched APK, BitChord's own license obligations apply.
 
 The build and test tools (Morphe, Kotlin, the JDK, R8, the Android SDK, Media3, Robolectric, JUnit and others) are downloaded separately and are covered by their own licenses. The versions are listed in `PROVENANCE.json`, and the [Apache 2.0](licenses/APACHE-2.0.txt) text is included.
+## Flac Downloader Audio protocol reference
+
+The independent BitChord adapter is based on the service interface observed in aztecempire/spotube-plugin-flac-audio, version 2.1.0, commit 4ecc535d57c32fe347a301e8fc54ce9be0430158. No plugin code, Hetu runtime or logo is included. The upstream README states MIT; the inspected tree contains no licence file. See [adapter documentation](docs/FLAC-AUDIO.md) for provenance and behavior.

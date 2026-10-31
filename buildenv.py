@@ -29,6 +29,8 @@ PATCHES = [
     "DJ mode",
     "JamesDSP",
     "Audio and video switch",
+    "Mixed-source playlists",
+    "Flac Downloader Audio",
 ]
 
 TOOLS = Path(os.environ.get("MORPHE_TOOLS", ROOT / ".deps/tools"))

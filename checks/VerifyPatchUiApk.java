@@ -82,7 +82,10 @@ public final class VerifyPatchUiApk {
                         "DownloadChoice",
                         "EffectsApps",
                         "BitPerfect",
-                        "VideoSwitch");
+                        "VideoSwitch",
+                        "MixedPlaylists",
+                        "MixedSongCodec",
+                        "FlacAddon");
         for (ClassDef cls : classes.values()) {
             String simple =
                     cls.getType().startsWith(base)

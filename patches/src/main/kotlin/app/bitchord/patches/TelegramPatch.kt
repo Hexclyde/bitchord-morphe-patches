@@ -4,6 +4,7 @@ import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.morphe.patcher.extensions.InstructionExtensions.removeInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.*
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
@@ -14,6 +15,7 @@ import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction31c
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
 import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.OffsetInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
@@ -2578,3 +2580,97 @@ val losslessBluetoothPatch =
         addLosslessOverBluetooth()
         markApplied("losslessBluetoothApplied")
     }
+
+
+private const val MIXED_PLAYLISTS = "Lapp/bitchord/telegram/MixedPlaylists;"
+
+/** Spotube .smplug files are not BitChord addons: adapt the observed protocol on device. */
+@Suppress("unused")
+val flacAudioPatch = extrasPatch(
+    "Flac Downloader Audio",
+    "Optional native adapter for aztecempire's Spotube FLAC Audio source. Search, stream and download " +
+        "through flacdownloader.com, with explicit FLAC/MP3 choices. Starts disabled; enable in Sources or Patches & tweaks. " +
+        "Requested quality is not file verification. No Spotube runtime or account is installed.",
+) {
+    markApplied("flacAddonApplied")
+    val owner = "Lcom/music/bitchord/download/Downloads\$run\$2;"
+    val body = mutableClassDefBy(owner).methods.single {
+        it.name == "invokeSuspend\$com\$music\$bitchord\$data\$sources\$addon\$AddonClient\$body\$2" &&
+            it.parameterTypes == listOf("Ljava/lang/Object;") && it.returnType == "Ljava/lang/Object;"
+    }
+    check(body.implementation!!.registerCount == 14) { "Addon IO coroutine registers changed" }
+    check(body.implementation!!.instructions.any {
+        val field = (it as? ReferenceInstruction)?.reference as? FieldReference
+        field?.definingClass == owner && field.name == "L\$0" && field.type == "Ljava/lang/Object;"
+    }) { "Addon request capture changed" }
+    val previous = body.implementation!!.instructions.first()
+    body.addInstructionsWithLabels(0, """
+        iget-object v0, p0, $owner->L${'$'}0:Ljava/lang/Object;
+        check-cast v0, Ljava/lang/String;
+        invoke-static {v0}, Lapp/bitchord/telegram/FlacAddon;->bodyOrNull(Ljava/lang/String;)Ljava/lang/String;
+        move-result-object v0
+        if-eqz v0, :non_flac_addon
+        return-object v0
+    """, ExternalLabel("non_flac_addon", previous))
+}
+
+@Suppress("unused")
+val mixedPlaylistsPatch = extrasPatch(
+    "Mixed-source playlists",
+    "Adds downloaded files, local audio and streamed tracks to device playlists without a YouTube account. Preserves file and addon source metadata across restarts." + WHERE,
+) {
+    markApplied("mixedPlaylistsApplied")
+    val menu = mutableClassDefBy("Lcom/music/bitchord/ui/components/SongActionsMenuKt;").methods.single {
+        it.name == "SongActionsMenu" && it.parameterTypes.firstOrNull() == "Lcom/music/bitchord/data/model/Song;"
+    }
+    check(menu.parameterTypes[10] == "Lkotlin/jvm/functions/Function0;" && menu.implementation!!.registerCount > menu.parameterTypes.size + 2) { "Playlist menu callback ABI changed" }
+    menu.addInstructions(0, """
+        move-object/from16 v0, p0
+        move-object/from16 v1, p10
+        invoke-static {v0, v1}, $MIXED_PLAYLISTS->playlistAction(Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)Lkotlin/jvm/functions/Function0;
+        move-result-object v0
+        move-object/16 p10, v0
+    """)
+    val library = mutableClassDefBy("Lcom/music/bitchord/ui/screens/LibraryScreenKt;").methods.single { it.name == "LibraryScreen" }
+    check(library.parameterTypes[5] == "Lkotlin/jvm/functions/Function0;" && library.implementation!!.registerCount > library.parameterTypes.size + 1) { "New playlist callback ABI changed" }
+    library.addInstructions(0, """
+        move-object/from16 v0, p5
+        invoke-static {v0}, $MIXED_PLAYLISTS->newPlaylistAction(Lkotlin/jvm/functions/Function0;)Lkotlin/jvm/functions/Function0;
+        move-result-object v0
+        move-object/16 p5, v0
+    """)
+    // Only the Add to playlist section is expanded. Rating/sign-in gates remain untouched.
+    val owners = mutableListOf<Triple<String, String, List<String>>>()
+    classDefForEach { type ->
+        if (type.type.startsWith("Lcom/music/bitchord/ui/components/SongActionsMenuKt")) for (method in type.methods) {
+            val found = method.implementation?.instructions?.any { instruction ->
+                val ref = (instruction as? ReferenceInstruction)?.reference as? FieldReference
+                ref?.definingClass == "Lcom/music/bitchord/ui/icons/SfIcons;" && ref.name == "AddToPlaylist\$delegate"
+            } == true
+            if (found) owners.add(Triple(type.type, method.name, method.parameterTypes.map { it.toString() }))
+        }
+    }
+    check(owners.size == 1) { "Playlist row must have one native menu entry" }
+    val (type, name, parameters) = owners.single()
+    val rows = mutableClassDefBy(type).methods.single { it.name == name && it.parameterTypes == parameters }
+    val code = rows.implementation!!.instructions.toList()
+    val icon = code.indexOfFirst { ((it as? ReferenceInstruction)?.reference as? FieldReference)?.name == "AddToPlaylist\$delegate" }
+    val offsets = mutableListOf<Int>(); var address = 0
+    for (instruction in code) { offsets += address; address += instruction.codeUnits }
+    val guard = (0 until icon).lastOrNull { index ->
+        code[index].opcode == Opcode.IF_EQZ && offsets[index] + (code[index] as OffsetInstruction).codeOffset > offsets[icon]
+    } ?: error("Playlist account gate not found")
+    val register = (code[guard] as OneRegisterInstruction).registerA
+    val end = offsets.indexOf(offsets[guard] + (code[guard] as OffsetInstruction).codeOffset)
+    check(register <= 255 && end > icon + 3) { "Playlist gate boundaries changed" }
+    val enter = code[guard + 1]; val skip = code[end]
+    rows.addInstructionsWithLabels(guard, """
+        if-nez v$register, :mixed_playlist_allowed
+        invoke-static {}, $MIXED_PLAYLISTS->allowPlaylist()Z
+        move-result v$register
+        if-eqz v$register, :mixed_playlist_blocked
+        const/16 v$register, 0x0
+        goto :mixed_playlist_allowed
+    """, ExternalLabel("mixed_playlist_allowed", enter), ExternalLabel("mixed_playlist_blocked", skip))
+    rows.removeInstruction(guard + 6)
+}

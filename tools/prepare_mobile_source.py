@@ -39,6 +39,8 @@ OFF_BY_DEFAULT = {
     "DJ mode",
     "JamesDSP",
     "Audio and video switch",
+    "Mixed-source playlists",
+    "Flac Downloader Audio",
 }
 
 

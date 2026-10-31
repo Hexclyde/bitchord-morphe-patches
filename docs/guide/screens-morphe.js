@@ -91,13 +91,13 @@
   // ---------------------------------------------------------------------------------------
 
   const SOURCE_NAME = 'BitChord Morphe Patches';
-  const PATCHES_VERSION = '1.1.0-beta.12';
+  const PATCHES_VERSION = '1.1.0-beta.13';
   const MORPHE_VERSION = '2.2.0';
   const APP_VERSION = '1.9';
   const ORANGE = '255,137,68';
   const BITCHORD_APK = 'BitChord-v1.9_arm64-v8a.apk';
   const MORPHE_APK = 'morphe-manager-2.2.0.apk';
-  const MPP_FILE = 'bitchord-patches-1.1.0-beta.12.mpp';
+  const MPP_FILE = 'bitchord-patches-1.1.0-beta.13.mpp';
   const REPO_LINK = 'github.com/Hexclyde/bitchord-morphe-patches';
   const TESTING_LINK = 'https://raw.githubusercontent.com/Hexclyde/bitchord-morphe-patches/refs/heads/testing/patches-bundle.json';
   const NOT_DRAWN = 'This part of Morphe isn’t drawn in this guide.';
@@ -105,37 +105,102 @@
   // The patch names and descriptions exactly as the source shows them (TelegramPatch.kt).
   const WHERE = ' Settings are in Settings, Patches & tweaks.';
   const PATCHES = [
-    { id: 'telegram', name: 'Unofficial Telegram music', def: true, options: 2,
-      desc: 'Search and play audio from your own Telegram channels, right on your phone. Android 8 or newer.' },
-    { id: 'bitchordPlus', name: 'Install as Bitchord+', def: true, options: 1,
-      desc: 'Installs next to your regular BitChord as Bitchord+, or under a name you choose.' },
-    { id: 'microg', name: 'Sign in with MicroG', def: true,
-      desc: "Offers to sign in to YouTube Music with an account that's already in MicroG RE, instead of Google's sign-in page." },
-    { id: 'sing', name: 'Sing',
-      desc: 'Turns the lead vocal down so you can sing over the song. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord.' + WHERE },
-    { id: 'pitch', name: 'Pitch control',
-      desc: 'Moves the key up or down by up to 12 semitones without changing the speed. From Prism by Yigder.' + WHERE },
-    { id: 'loudness', name: 'Loudness level',
-      desc: 'Sets how loud loudness normalisation plays songs, from -23 to -8 LUFS instead of -14. From Prism by Yigder.' + WHERE },
-    { id: 'sleepFade', name: 'Sleep timer fade-out',
-      desc: 'Fades the song out before the sleep timer pauses it, and fades the end of the last song with the timer\'s "After this song" option. From Prism by Yigder.' + WHERE },
-    { id: 'batterySaver', name: 'Battery saver',
-      desc: "Lets the phone's audio chip decode songs, so long listens use less battery. BitChord's effects don't run on songs played this way." + WHERE },
-    { id: 'perDownload', name: 'Per-download quality',
-      desc: 'Asks which quality to download each song in: Standard, High or Lossless. An album is asked about once. From Stash by Rawnald Clark.' + WHERE },
-    { id: 'headphones', name: 'Headphone correction',
-      desc: "Flattens your headphones' sound with a measured profile, one per output, from AutoEq's thousands of models or pasted in. From Prism by Yigder." + WHERE },
-    { id: 'outputEq', name: 'Equaliser per output',
-      desc: "Remembers BitChord's equaliser for each output (speaker, wired, each Bluetooth device) and puts it back when that output is used; shares settings as codes. From Prism by Yigder." + WHERE },
-    { id: 'djMode', name: 'DJ mode',
-      desc: 'Picks the next song in the queue for a neighbouring key and a close tempo. Keys and tempos are learned as songs play. From Prism by Yigder.' + WHERE },
-    { id: 'jamesdsp', name: 'JamesDSP',
-      desc: "Hands BitChord's audio to JamesDSP, the open-source effect engine: open it from BitChord, announce the audio session again and let it take over the effects." + WHERE },
-    { id: 'videoSwitch', name: 'Audio and video switch',
-      desc: "Adds a song and video switch to the top of the player, as in YouTube Music: one tap plays a song's music video, or the song again, in the same place in the queue." + WHERE },
-    { id: 'losslessBluetooth', name: 'Lossless addons over Bluetooth',
-      desc: 'Keeps addons marked lossless in use over Bluetooth, where BitChord normally skips them. Lossless-first, as in Auris by OreoMuncher45.' + WHERE }
-  ];
+  {
+    "id": "videoSwitch",
+    "name": "Audio and video switch",
+    "desc": "Adds a song and video switch to the top of the player, as in YouTube Music: one tap plays a song's music video, or the song again, in the same place in the queue. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "batterySaver",
+    "name": "Battery saver",
+    "desc": "Lets the phone's audio chip decode songs, so long listens use less battery. BitChord's effects don't run on songs played this way. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "djMode",
+    "name": "DJ mode",
+    "desc": "Picks the next song in the queue for a neighbouring key and a close tempo. Keys and tempos are learned as songs play. From Prism by Yigder. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "outputEq",
+    "name": "Equaliser per output",
+    "desc": "Remembers BitChord's equaliser for each output (speaker, wired, each Bluetooth device) and puts it back when that output is used; shares settings as codes. From Prism by Yigder. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "flacAudio",
+    "name": "Flac Downloader Audio",
+    "desc": "Optional native adapter for aztecempire's Spotube FLAC Audio source. Search, stream and download through flacdownloader.com, with explicit FLAC/MP3 choices. Starts disabled; enable in Sources or Patches & tweaks. Requested quality is not file verification. No Spotube runtime or account is installed."
+  },
+  {
+    "id": "headphones",
+    "name": "Headphone correction",
+    "desc": "Flattens your headphones' sound with a measured profile, one per output, from AutoEq's thousands of models or pasted in. From Prism by Yigder. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "bitchordPlus",
+    "name": "Install as Bitchord+",
+    "desc": "Installs next to your regular BitChord as Bitchord+, or under a name you choose.",
+    "def": true,
+    "options": 1
+  },
+  {
+    "id": "jamesdsp",
+    "name": "JamesDSP",
+    "desc": "Hands BitChord's audio to JamesDSP, the open-source effect engine: open it from BitChord, announce the audio session again and let it take over the effects. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "losslessBluetooth",
+    "name": "Lossless addons over Bluetooth",
+    "desc": "Keeps addons marked lossless in use over Bluetooth, where BitChord normally skips them. Lossless-first, as in Auris by OreoMuncher45. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "loudness",
+    "name": "Loudness level",
+    "desc": "Sets how loud loudness normalisation plays songs, from -23 to -8 LUFS instead of -14. From Prism by Yigder. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "mixedPlaylists",
+    "name": "Mixed-source playlists",
+    "desc": "Adds downloaded files, local audio and streamed tracks to device playlists without a YouTube account. Preserves file and addon source metadata across restarts. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "perDownload",
+    "name": "Per-download quality",
+    "desc": "Asks which quality to download each song in: Standard, High or Lossless. An album is asked about once. From Stash by Rawnald Clark. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "pitch",
+    "name": "Pitch control",
+    "desc": "Moves the key up or down by up to 12 semitones without changing the speed. From Prism by Yigder. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "microg",
+    "name": "Sign in with MicroG",
+    "desc": "Offers to sign in to YouTube Music with an account that's already in MicroG RE, instead of Google's sign-in page.",
+    "def": true
+  },
+  {
+    "id": "sing",
+    "name": "Sing",
+    "desc": "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "sleepFade",
+    "name": "Sleep timer fade-out",
+    "desc": "Fades the song out before the sleep timer pauses it, and fades the end of the last song with the timer's \"After this song\" option. From Prism by Yigder. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "soulseek",
+    "name": "Unofficial Soulseek audio",
+    "desc": "Adds player-integrated Downloads on BitChord 1.9, addon/Soulseek source choices, batch review, selected-file public Soulseek sharing, and verified Telegram archiving/restore. Telegram copies require the optional Telegram patch and your private main channel. Debrid services use your API keys. Live Soulseek playback stays disabled. Settings are in Patches & tweaks. Android 8 or newer."
+  },
+  {
+    "id": "telegram",
+    "name": "Unofficial Telegram music",
+    "desc": "Search and play audio from your own Telegram channels, right on your phone. Android 8 or newer.",
+    "def": true,
+    "options": 2
+  }
+];
   const byName = (a, b) => a.name.localeCompare(b.name);
   // Morphe lists one alphabetical list. The guide draws the three default patches first, then
   // the extras, so each group can be pointed at on its own.

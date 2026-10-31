@@ -80,3 +80,7 @@ can exchange bounded batches of these signed public profiles. Nothing in the
 candidate list adds trust or grants file access. Automatic recording matching,
 automatic file sessions and downloading chunks from multiple providers are not
 implemented. Debrid services continue to manage their own cloud transfers.
+## beta.13 additions
+
+- Flac Downloader Audio uses flacdownloader.com's internal service API. Protocol fixtures and APK structure are tested; live availability and returned recording quality are not verified. Requested renditions may fail. The adapter does not silently downgrade them.
+- Mixed-source device playlists need the patch to preserve their full file/source metadata; the stock export cannot back up the extra metadata. Deleting or offloading a referenced file does not turn its local playlist entry into a Telegram stream. See [mixed playlists](MIXED-PLAYLISTS.md).

@@ -456,6 +456,18 @@ public final class ExtrasActivity extends Activity {
                     },
                     this::jamesDsp);
         }
+        if (SoundExtras.flacAddonApplied()) {
+            feature("flac-audio", "Flac Downloader Audio",
+                    Strings.t("Search, stream and download FLAC or MP3 from flacdownloader.com"),
+                    FlacAddon::enabled, FlacAddon::setEnabled,
+                    parent -> paragraph(parent, Strings.t("Also available in Sources. Formats are requested from the service and may be unavailable. Choose another format explicitly if preparation fails.")));
+        }
+        if (SoundExtras.mixedPlaylistsApplied()) {
+            feature("mixed-playlists", Strings.t("Mixed-source playlists"),
+                    Strings.t("Keep files and streams together in device playlists"),
+                    () -> MixedPlaylists.enabled, MixedPlaylists::setEnabled,
+                    parent -> paragraph(parent, Strings.t("Use Add to playlist for a track, or New playlist in Library. Device playlists keep file and source identities; YouTube Music playlists still accept YouTube tracks only.")));
+        }
         if (SoundExtras.videoSwitchApplied()) {
             section(Strings.t("Audio and video switch"));
             feature(
@@ -693,7 +705,7 @@ public final class ExtrasActivity extends Activity {
         boolean enabled;
 
         Feature(String id, String title, State state) {
-            configurable = !id.equals("battery-saver") && !id.equals("download-quality") && !id.equals("video-switch");
+            configurable = !id.equals("battery-saver") && !id.equals("download-quality") && !id.equals("video-switch") && !id.equals("mixed-playlists") && !id.equals("flac-audio");
             this.id = id;
             this.title = title;
             this.state = state;

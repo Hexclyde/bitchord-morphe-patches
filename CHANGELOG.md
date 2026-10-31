@@ -1,3 +1,9 @@
+# 1.1.0-beta.13
+
+- Add an optional, independently written Flac Downloader Audio adapter for the service protocol used by aztecempire's Spotube plugin. Its native Sources toggle starts disabled; enabled results join Addons search, Downloads explorer and batch selection. Requested FLAC/MP3 choices remain explicit and unverified, with bounded preparation polling and no silent format substitution.
+- Add optional Mixed-source playlists using BitChord's existing on-device Library shelf, playlist pages and player. Preserve file/download URIs and addon source identities across restarts; support membership changes and native rename/delete. Keep the original YouTube Music and offline playlist destinations.
+- Retain every beta.12 UI, player, guide and Downloads improvement. Toggle-only patches have no gear.
+
 # 1.1.0-beta.12
 
 - Show settings gears only for features with configurable controls; binary toggles keep contextual help without a settings button.
