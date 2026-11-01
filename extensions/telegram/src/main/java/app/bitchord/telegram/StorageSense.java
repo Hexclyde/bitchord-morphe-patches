@@ -82,6 +82,7 @@ final class StorageSense {
     /** One real resource, as named by whoever owns it. */
     static final class Item {
         String id = "", title = "", subtitle = "", origin = "", location = "", mediaId = "";
+        String sourceName = "";
         Category category = Category.PATCH_CACHE;
         Effect effect = Effect.NONE;
         Block block = Block.READ_ONLY;

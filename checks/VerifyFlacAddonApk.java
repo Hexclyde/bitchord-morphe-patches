@@ -62,6 +62,14 @@ public class VerifyFlacAddonApk {
         for (Method m : registry.getMethods()) methods.add(m.getName());
         for (String name : new String[] {"publish", "config", "setEnabled"})
             check(methods.contains(name), "Registry ABI " + name);
+        Method playback = null;
+        for (Method method : registry.getMethods())
+            if (method.getName().equals("activeForPlayback")) playback = method;
+        check(playback != null, "Playback catalogue is present");
+        VerifySourcePreparationApk.requireTransform(
+                playback, base + "FlacAddon;", "playbackSources");
+        count++;
+
         if (args.length > 1 && args[1].equals("standalone")) {
             check(!types.containsKey(base + "TelegramBridge;"), "No Telegram account dependency");
             check(!types.containsKey("Lorg/drinkless/tdlib/Client;"), "No TDLib dependency");

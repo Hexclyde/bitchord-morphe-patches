@@ -1,5 +1,9 @@
 ## 1.1.0-beta.18
 
+- Prepare upcoming songs through enabled sources before playback, with recording checks and separate cache identities for duplicate queue entries. Prevent late host upgrades from replacing an already prepared entry.
+- Persist actual provider names per cache rendition and saved file; use them in Stats, Downloads and Storage Sense. Preserve unknown origins.
+- Replace obsolete YouTube playback cache only after a verified better copy plays reliably, protecting active readers and complete offline copies.
+
 - Add optional Play alongside other apps with call pause/recovery, Steady playback with connection-specific buffering and offline retries, and Smart downloads across enabled download sources.
 - Add a local Sing separation-model method with bounded streaming transforms, a separate inference session and filter fallback; provide an offline Spleeter conversion and comparison tool.
 - Add native Storage Sense for cache-resource review, protected cleanup, saved-file deletion and content-hash duplicate review. Cleanup rules start disabled.

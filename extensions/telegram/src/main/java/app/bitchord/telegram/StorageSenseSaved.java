@@ -121,6 +121,8 @@ final class StorageSenseSaved implements StorageSense.Owner {
         item.location = location;
         item.aliases = ids;
         item.mediaId = ids.get(0);
+        AudioOrigin.Source source = AudioOrigin.savedSource(item.mediaId, location);
+        if (source != null && source.name != null) item.sourceName = source.name;
         item.bytes = -1;
         if ("file".equals(uri.getScheme()) && uri.getPath() != null) {
             File file = new File(uri.getPath());

@@ -178,6 +178,30 @@ public class StorageSenseActivityTest {
     }
 
     @Test
+    public void detailsShowTheActualRenditionProvider() throws Exception {
+        StorageSense.Item file =
+                item(
+                        StorageSense.Category.ADDON_CACHE,
+                        StorageSense.Effect.CACHE_RECLAIM,
+                        "cache",
+                        "Mapped song",
+                        2048,
+                        StorageSense.Block.NONE);
+        file.origin = "YOUTUBE";
+        file.sourceName = "Qobuz [Heizenbergg]";
+        cache.items.add(file);
+        StorageSenseActivity activity = open();
+        row(activity, "Addon audio in the song cache").performClick();
+        settle();
+        row(activity, "Mapped song").performClick();
+        settle();
+        String detail = message(latest());
+        assertTrue(detail, detail.contains("Source: Qobuz [Heizenbergg]"));
+        assertFalse(detail, detail.contains("YouTube"));
+        assertTrue(cache.removed.isEmpty());
+    }
+
+    @Test
     public void openingLooksAndRemovesNothing() throws Exception {
         cache.items.add(
                 item(

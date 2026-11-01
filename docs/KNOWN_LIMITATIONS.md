@@ -16,7 +16,7 @@ I target the standard BitChord 1.9 APKs for arm64-v8a, armeabi-v7a and x86_64. I
 ## Telegram and recording details
 
 - I support one Telegram account and existing-account login. I cannot create an account or support every Telegram login method.
-- I search up to 200 tracks across selected, accessible chats. Regular search can still choose YouTube; **Search → Addons** exposes direct Telegram results. BitChord requires **Lossless** streaming quality for add-on playback on the active connection.
+- I search up to 200 tracks across selected, accessible chats. Source preparation checks eligible enabled sources first and retains YouTube when no verified copy is ready or delivery is too slow; **Search → Addons** exposes direct Telegram results. BitChord requires **Lossless** streaming quality for add-on playback on the active connection.
 - I do not play protected, secret or self-destructing media. Cached audio and saved downloads can remain after sign-out or chat removal; I clear those separately.
 - I list albums from a chat's newest 5,000 files. Copying oldest posts first requires an indexed history; newest-first copying can begin immediately. A channel with 200,000 files can take about an hour to index.
 - I inspect FLAC and WAV files, stored zip entries and supported cue albums for lossless-origin clues. I do not certify ALAC, AIFF, APE or WavPack with that check. High-rate MP3 conversions and recordings with naturally limited treble can be inconclusive or misleading.

@@ -178,7 +178,7 @@ public final class SourceAutomix {
                     jobs.put(analyzer, state);
                 }
             }
-            Uri uri = item.localConfiguration.uri;
+            Uri uri = SourceFirst.renditionUri(item);
             if (observed.size() > 128) observed.clear();
             observed.put(item.mediaId, uri);
             String key = identity(uri);

@@ -264,6 +264,8 @@ public final class VerifySoulseekApk {
                                         "Lapp/bitchord/telegram/DownloadControls;",
                                         "Lapp/bitchord/telegram/DownloadSelection;",
                                         "Lapp/bitchord/telegram/FlacAddon;",
+                                        "Lapp/bitchord/telegram/AudioOrigin;",
+                                        "Lapp/bitchord/telegram/AudioOrigin$Source;",
                                         "Lapp/bitchord/telegram/RecordingMatch;",
                                         "Lapp/bitchord/telegram/RecordingMatch$Reference;"))
                             independentReference = independentReference.replace(shared, "");
@@ -276,6 +278,10 @@ public final class VerifySoulseekApk {
                                         || reference.startsWith(
                                                 "Lapp/bitchord/telegram/DownloadSelection;")
                                         || reference.startsWith("Lapp/bitchord/telegram/FlacAddon;")
+                                        || reference.startsWith(
+                                                "Lapp/bitchord/telegram/AudioOrigin;")
+                                        || reference.startsWith(
+                                                "Lapp/bitchord/telegram/AudioOrigin$Source;")
                                         || reference.startsWith(
                                                 "Lapp/bitchord/telegram/RecordingMatch;")
                                         || reference.startsWith(

@@ -467,23 +467,10 @@ final class DownloadsHubPage extends DownloadPage {
                                 if (!savedUris.add(uri)) continue;
                                 Row row = fileRow(title, PatchStrings.t("On device"), id, uri);
                                 populateMetadata(row, metadata.get(id));
-                                row.source = "YouTube";
-                                if (id.startsWith("src:")) {
-                                    row.source = "BitChord";
-                                    int separator = id.indexOf("::");
-                                    if (separator > 4)
-                                        try {
-                                            Object config =
-                                                    HostDownloadAccess.registry(
-                                                            "config", id.substring(4, separator));
-                                            if (config != null)
-                                                row.source =
-                                                        String.valueOf(
-                                                                HostDownloadAccess.call(
-                                                                        config, "getDisplayName"));
-                                        } catch (Exception ignored) {
-                                        }
-                                }
+                                app.bitchord.telegram.AudioOrigin.Source source =
+                                        app.bitchord.telegram.AudioOrigin.savedSource(id, uri);
+                                row.source =
+                                        source == null || source.name == null ? "—" : source.name;
                                 data.add(row);
                             }
                         } catch (Exception | LinkageError unavailable) {

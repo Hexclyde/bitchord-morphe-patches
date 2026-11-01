@@ -28,6 +28,7 @@ private object PatchesApplicationCreate :
 
 /** Shared settings and sound controls contain no Telegram account or TDLib implementation. */
 internal val patchesUiRuntime = bytecodePatch {
+    dependsOn(audioOriginPatch)
     extendWith("extensions/patches-ui.mpe")
     execute {
         val policy = "Lapp/bitchord/telegram/CapturePolicy;"

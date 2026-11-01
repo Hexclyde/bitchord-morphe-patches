@@ -836,6 +836,17 @@ public final class TelegramActivity extends Activity {
         divider(playback);
         toggle(
                 playback,
+                "Play the best source first",
+                "Verified copies from enabled sources take priority",
+                "BitChord selects sources as usual",
+                bridge.sourceFirst(),
+                bridge::setSourceFirst,
+                null,
+                "Upcoming songs are checked against your enabled sources. YouTube is used when"
+                        + " no other copy can play or the connection is too slow.");
+        divider(playback);
+        toggle(
+                playback,
                 "Smooth quality switch",
                 "A better copy fades in without a gap",
                 "BitChord switches copies with a short pause",

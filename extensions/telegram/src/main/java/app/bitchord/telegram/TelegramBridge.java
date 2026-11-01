@@ -440,6 +440,7 @@ public final class TelegramBridge {
         namesFromFiles = config.optBoolean("namesFromFiles", true);
         Downmix.enabled = config.optBoolean("surroundAsStereo", Downmix.enabled);
         SmoothUpgrade.enabled = config.optBoolean("smoothUpgrades", SmoothUpgrade.enabled);
+        SourceFirst.setEnabled(config.optBoolean("sourceFirst", true));
         FormatLegend.enabled = config.optBoolean("formatLegend", FormatLegend.enabled);
         index.enabled = !savedIndexBroken && config.optBoolean("searchIndex", true);
         hideDuplicates = config.optBoolean("hideDuplicates", true);
@@ -1727,6 +1728,16 @@ public final class TelegramBridge {
     public void setSurroundAsStereo(boolean on) throws Exception {
         Downmix.enabled = on;
         config.put("surroundAsStereo", on);
+        saveConfig();
+    }
+
+    public boolean sourceFirst() {
+        return config.optBoolean("sourceFirst", true);
+    }
+
+    public void setSourceFirst(boolean on) throws Exception {
+        config.put("sourceFirst", on);
+        SourceFirst.setEnabled(on);
         saveConfig();
     }
 

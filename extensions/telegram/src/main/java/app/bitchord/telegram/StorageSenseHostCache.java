@@ -117,7 +117,9 @@ final class StorageSenseHostCache implements StorageSense.Owner {
         String title = text(metadata, "bc_title");
         item.title = !title.isEmpty() ? title : !mediaId.isEmpty() ? mediaId : key;
         item.subtitle = text(metadata, "bc_artist");
-        item.origin = origin;
+        item.origin = "1".equals(text(metadata, "bc_src_mixed")) ? "" : origin;
+        if (!"1".equals(text(metadata, "bc_src_mixed")))
+            item.sourceName = text(metadata, "bc_src_name");
         item.bytes = bytes;
         item.lastUsedMs = touched;
         item.contentLength = length(metadata);

@@ -45,6 +45,7 @@ val sourceAutomixPatch =
         )
         dependsOn(extrasSettingsPatch)
         execute {
+            addSourceVerification()
             val timingPair = classDefBy("Lkotlin/Pair;")
             check(
                 setOf("first", "second").all { name ->
@@ -86,166 +87,6 @@ val sourceAutomixPatch =
                 method.addInstructionsWithLabels(0, code)
                 type.methods.add(method)
             }
-            val cache = mutableClassDefBy(CACHE)
-            val renditionType = "Lcom/music/bitchord/playback/AudioCache${'$'}Rendition;"
-            val cachedType = "Lcom/music/bitchord/playback/AudioCache${'$'}CacheMediaDataSource;"
-            add(
-                CACHE,
-                "bitchordAutomixCached",
-                listOf(URI),
-                "Landroid/media/MediaDataSource;",
-                3,
-                """
-            sget-object v0, $CACHE->cache:Landroidx/media3/datasource/cache/SimpleCache;
-            if-eqz v0, :missing
-            invoke-static {p0}, $CACHE->cacheKeyOf($URI)Ljava/lang/String;
-            move-result-object v0
-            invoke-static {v0}, $CACHE->renditionFor(Ljava/lang/String;)$renditionType
-            move-result-object v0
-            if-eqz v0, :missing
-            invoke-virtual {v0}, $renditionType->isComplete()Z
-            move-result v1
-            if-eqz v1, :missing
-            invoke-static {p0, v0}, $CACHE->renditionDataSource($URI$renditionType)$cachedType
-            move-result-object v0
-            return-object v0
-            :missing
-            const/4 v0, 0x0
-            return-object v0
-        """,
-            )
-            add(
-                HOST,
-                "bitchordAutomixCached",
-                listOf(URI),
-                "Landroid/media/MediaDataSource;",
-                1,
-                """
-            invoke-static {p0}, $CACHE->bitchordAutomixCached($URI)Landroid/media/MediaDataSource;
-            move-result-object p0
-            return-object p0
-        """,
-            )
-            val factory = cache.fields.single { it.name == "upstreamFactory" }
-            val source =
-                mutableClassDefBy(factory.type).methods.single {
-                    it.name == "createDataSource" && it.returnType == DS
-                }
-            add(
-                CACHE,
-                "bitchordAutomixSource",
-                emptyList(),
-                DS,
-                1,
-                """
-            sget-object v0, $CACHE->upstreamFactory:${factory.type}
-            if-nez v0, :ready
-            return-object v0
-            :ready
-            invoke-virtual {v0}, ${source.definingClass}->${source.name}()$DS
-            move-result-object v0
-            return-object v0
-        """,
-            )
-            add(
-                HOST,
-                "bitchordAutomixSource",
-                emptyList(),
-                DS,
-                1,
-                """
-            invoke-static {}, $CACHE->bitchordAutomixSource()$DS
-            move-result-object v0
-            return-object v0
-        """,
-            )
-            add(
-                HOST,
-                "bitchordAutomixKey",
-                listOf(URI),
-                "Ljava/lang/String;",
-                1,
-                """
-            invoke-static {p0}, $CACHE->cacheKeyOf($URI)Ljava/lang/String;
-            move-result-object p0
-            return-object p0
-        """,
-            )
-            val service = mutableClassDefBy(HOST)
-            val ranked =
-                mutableClassDefBy("Lcom/music/bitchord/data/sources/SourceRegistry;")
-                    .methods
-                    .single { it.name == "activeForPlayback" }
-            check(ranked.returnType == "Ljava/util/ArrayList;")
-            val rankCode = ranked.implementation!!.instructions.toList()
-            for (index in
-                rankCode.indices
-                    .filter { rankCode[it].opcode == Opcode.RETURN_OBJECT }
-                    .reversed()) {
-                val register = (rankCode[index] as OneRegisterInstruction).registerA
-                ranked.addInstructions(
-                    index,
-                    """
-                invoke-static/range {v$register .. v$register}, $PREF->rank(Ljava/util/ArrayList;)Ljava/util/ArrayList;
-                move-result-object v$register
-            """,
-                )
-            }
-            val predicateOwner = classDefByStrings(" isn't worth swapping '").single()
-            val predicate =
-                mutableClassDefBy(predicateOwner).methods.single {
-                    it.name == "invoke" &&
-                        it.parameterTypes == listOf("Ljava/lang/Object;", "Ljava/lang/Object;")
-                }
-            predicate.addInstructionsWithLabels(
-                0,
-                """
-            invoke-static/range {p0 .. p2}, $PREF->equalUpgrade(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Boolean;
-            move-result-object v0
-            if-eqz v0, :original_quality
-            return-object v0
-            :original_quality
-            nop
-        """,
-            )
-            val resolver = service.fields.single { it.name == "streamResolver" }
-            val resolve =
-                mutableClassDefBy(resolver.type).methods.single {
-                    it.name == "resolveDataSpec" && it.parameterTypes == listOf(SPEC)
-                }
-            add(
-                HOST,
-                "bitchordAutomixResolveWith",
-                listOf("Ljava/lang/Object;", SPEC),
-                SPEC,
-                2,
-                """
-            check-cast p0, ${resolver.type}
-            invoke-virtual {p0, p1}, ${resolver.type}->${resolve.name}($SPEC)$SPEC
-            move-result-object p0
-            return-object p0
-        """,
-            )
-            add(
-                HOST,
-                "bitchordAutomixResolve",
-                listOf("Ljava/lang/Object;", URI),
-                SPEC,
-                4,
-                """
-            check-cast p0, $HOST
-            iget-object v0, p0, $HOST->streamResolver:${resolver.type}
-            if-nez v0, :ready
-            const/4 v0, 0x0
-            return-object v0
-            :ready
-            new-instance v1, $SPEC
-            invoke-direct {v1, p1}, $SPEC-><init>($URI)V
-            invoke-virtual {v0, v1}, ${resolver.type}->${resolve.name}($SPEC)$SPEC
-            move-result-object v0
-            return-object v0
-        """,
-            )
             val speed = mutableClassDefBy(SETTINGS).fields.single { it.name == "playbackSpeed" }
             check(speed.type == "Lkotlinx/coroutines/flow/StateFlowImpl;") {
                 "Speed flow ABI changed"
@@ -291,18 +132,6 @@ val sourceAutomixPatch =
             move-result-object v0
             check-cast v0, Ljava/lang/Boolean;
             invoke-virtual {v0}, Ljava/lang/Boolean;->booleanValue()Z
-            move-result v0
-            return v0
-        """,
-            )
-            add(
-                HOST,
-                "bitchordAutomixStopped",
-                emptyList(),
-                "Z",
-                1,
-                """
-            invoke-static {}, $ANALYZER->getStopped()Z
             move-result v0
             return v0
         """,
@@ -434,18 +263,6 @@ val sourceAutomixPatch =
             )
             analyzer.methods.remove(copy)
             analyzer.methods.add(replacement)
-            service.methods
-                .single { it.name == "onCreate" }
-                .addInstruction(
-                    0,
-                    "invoke-static/range {p0 .. p0}, $MIX->service(Ljava/lang/Object;)V",
-                )
-            service.methods
-                .single { it.name == "onDestroy" }
-                .addInstruction(
-                    0,
-                    "invoke-static/range {p0 .. p0}, $MIX->release(Ljava/lang/Object;)V",
-                )
             val marker = mutableClassDefBy(MIX).methods.single { it.name == "applied" }
             marker.replaceInstruction(0, "const/4 v0, 0x1")
             val enabled =
@@ -459,60 +276,6 @@ val sourceAutomixPatch =
                 "invoke-static {}, $MIX->settingChanged()V",
             )
 
-            // Verify automatic source substitutions at the player's own resolver boundary.
-            val routing = mutableClassDefBy("Landroidx/media3/datasource/ResolvingDataSource;")
-            val open = routing.methods.single { it.name == "open" }
-            val original = open.implementation!!.instructions.toList()
-            val resolved = original.indexOfFirst { it.mixCall()?.name == "resolveDataSpec" }
-            check(resolved >= 0 && original[resolved + 1].opcode == Opcode.MOVE_RESULT_OBJECT)
-            val owner = (original[resolved] as FiveRegisterInstruction).registerC
-            val input = (original[resolved] as FiveRegisterInstruction).registerD
-            open.replaceInstruction(
-                resolved,
-                "invoke-static {v$owner, v$input}, $PREF->resolve(Ljava/lang/Object;$SPEC)$SPEC",
-            )
-
-            val alignment =
-                service.methods.single { it.name == "access${'$'}prepareVersionAlignment" }
-            check(
-                alignment.parameterTypes.take(3) ==
-                    listOf(
-                        HOST,
-                        "Lcom/music/bitchord/data/model/Song;",
-                        "Lcom/music/bitchord/data/model/Song;",
-                    )
-            )
-            alignment.addInstructionsWithLabels(
-                0,
-                """
-            invoke-static/range {p0 .. p2}, $PREF->alignedOffset(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Long;
-            move-result-object v0
-            if-eqz v0, :host_alignment
-            return-object v0
-            :host_alignment
-            nop
-        """,
-            )
-
-            // Analysis/reference reads must never overwrite the audible source label.
-            val stats = mutableClassDefBy("Lcom/music/bitchord/data/NerdStats;")
-            for (method in
-                stats.methods.filter {
-                    it.name in setOf("recordSource", "onSourceStream") && it.returnType == "V"
-                }) {
-                check(method.implementation!!.registerCount > method.parameterTypes.size)
-                method.addInstructionsWithLabels(
-                    0,
-                    """
-                invoke-static {}, $MIX->quiet()Z
-                move-result v0
-                if-eqz v0, :audible
-                return-void
-                :audible
-                nop
-            """,
-                )
-            }
             val controller = mutableClassDefBy("Lcom/music/bitchord/playback/CrossfadeController;")
             val consider = controller.methods.single { it.name == "considerSmartTransition" }
             val code = consider.implementation!!.instructions.toList()

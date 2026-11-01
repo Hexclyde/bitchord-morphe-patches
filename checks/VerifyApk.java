@@ -532,9 +532,17 @@ public class VerifyApk {
                                         && !cls.getType().startsWith("Lapp/bitchord/telegram/")) {
                                     if (target.getName().equals("onState")) {
                                         playingHooks++;
+                                        MethodReference first = call(instructions.get(0));
+                                        boolean preparation =
+                                                first != null
+                                                        && first.getDefiningClass()
+                                                                .equals(
+                                                                        "Lapp/bitchord/telegram/SourceFirst;")
+                                                        && first.getName().equals("playing")
+                                                        && argument(instructions.get(0), 0) == 11;
                                         check(
                                                 method.getName().equals("onIsPlayingChanged")
-                                                        && index == 2
+                                                        && index == (preparation ? 3 : 2)
                                                         && argument(instruction, 0) == 1
                                                         && argument(instruction, 1) == 11,
                                                 "Actual is-playing event passes player and boolean"
@@ -731,7 +739,7 @@ public class VerifyApk {
                                                                                 previous)
                                                                         .getRegisterB(),
                                                 "Upgrade captures the live service before its"
-                                                    + " register is reused");
+                                                        + " register is reused");
                                     }
                                 }
                                 if (target.getDefiningClass()

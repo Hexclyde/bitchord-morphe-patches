@@ -330,6 +330,7 @@ public final class StorageSenseActivity extends Activity {
     }
 
     private static String originLabel(StorageSense.Item item) {
+        if (!item.sourceName.isEmpty()) return item.sourceName;
         switch (item.origin) {
             case "YOUTUBE":
                 return "YouTube";

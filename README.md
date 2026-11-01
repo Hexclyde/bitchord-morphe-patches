@@ -19,7 +19,7 @@ The Downloads navigation icon is visible only when the download add-on patch is 
 
 Downloads offers saved Grid, List, Compact, Comfy and Detailed views, exact-source Pause/Resume/Retry controls, separate Remove from list and confirmed Delete file actions. Resume restarts transfers from the same source. Library’s Downloads shortcut opens this page when the download patch is installed. The Audio/Video player switch saves your YouTube preference across tracks and restarts. Missing alternate versions leave that preference unchanged.
 
-I build Downloads around the reviewed design: a compact header, real artwork, thin transfer progress, source/format labels, separate status lines and five saved layouts. Management controls live under its settings gear. I use measured headphone/video rows in place of the window overlay; this with headphone/video icons in measured rows of the native portrait player and landscape main pane. The row reserves space before the artwork and moves with the player; the saved YouTube mode remains persistent. Unofficial Telegram opens a lightweight page before bridge initialization and reads saved-index counts in the background, with duplicate-opening protection.
+I build Downloads around the reviewed design: a compact header, real artwork, thin transfer progress, source/format labels, separate status lines and five saved layouts. Management controls live under its settings gear. I use measured headphone/video rows in the native portrait player and landscape main pane. The row reserves space before the artwork and moves with the player; the saved YouTube mode remains persistent. Unofficial Telegram opens a lightweight page before bridge initialization and reads saved-index counts in the background, with duplicate-opening protection.
 
 I retain all existing features, including [Streamseek previews](docs/STREAMSEEK-PREVIEW.md), [mixed-source device playlists](docs/MIXED-PLAYLISTS.md), the independent [Flac Downloader Audio adapter](docs/FLAC-AUDIO.md), public Soulseek sharing and verified Telegram offloading. See [Downloads](docs/DOWNLOAD-MANAGER.md) and [verification](docs/VERIFICATION-1.1.0-beta.18.md).
 
@@ -85,6 +85,8 @@ More BitChord add-ons will be added to this repository over time.
 - When a better copy turns up mid-song, it fades in without a gap
 - Fix misnamed files on your phone, with suggestions, without uploading them again
 - Browse channel posts in Channel View
+- Prepare upcoming songs from eligible enabled sources, verify the recording and start from a better copy when ready
+- Keep the actual source with each cached rendition and saved file, including source names in Stats and Storage Sense
 - Control the size of the Telegram audio cache
 - See the playing source and bitrate in **Show stats for nerds**
 - The patch pages in 20 languages, following BitChord's language setting: Spanish, Portuguese, French, German, Italian, Polish, Russian, Turkish, Arabic, Hebrew, Urdu, Hindi, Bengali, Thai, Vietnamese, Indonesian, Chinese (Simplified and Traditional), Japanese and Korean

@@ -1983,6 +1983,7 @@ val nativeTelegramPatch =
             println("Added active-source/bitrate stats and asynchronous lossless bitrate fallback")
             addSurroundDownmix()
             addSmoothUpgrade()
+            addSourcePreparation()
             addFormatLegend()
             addStricterTelegramMatch()
             val method = ApplicationCreate.method

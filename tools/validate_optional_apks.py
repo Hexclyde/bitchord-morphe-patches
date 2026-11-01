@@ -99,6 +99,13 @@ def main():
             )
         )
     for label, selections, inspectors in cases:
+        inspectors.append(("VerifyAudioOriginApk", []))
+        inspectors.append(
+            (
+                "VerifySourcePreparationApk",
+                ["enabled" if label == "TelegramOnly" else "disabled"],
+            )
+        )
         output = outputs / f"BitChord-{label}-{VERSION}-arm64-v8a-test.apk"
         with (ROOT / "build" / f"optional-{VERSION}-{label}.log").open("w") as log:
             subprocess.run(

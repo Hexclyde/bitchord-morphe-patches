@@ -20,13 +20,25 @@ public final class TelegramMatch {
     static final int SAME_TITLE_SEC = 10, CONTAINED_TITLE_SEC = 3;
     static final String TELEGRAM = "src:" + NativeSource.ID + "::";
 
+    /** Song ({@code title|seconds}) and candidate id: this candidate sits this search out. */
+    static volatile java.util.function.BiPredicate<String, String> held;
+
     /** Called first in BitChord's TrackMatcher.best and .ranked. Never throws. */
     public static List<Song> filter(List<Song> candidates, TrackMatcher.Target target) {
         try {
             if (candidates == null || target == null) return candidates;
             List<Song> kept = null;
+            java.util.function.BiPredicate<String, String> holding = held;
             for (int i = 0; i < candidates.size(); i++) {
                 Song song = candidates.get(i);
+                if (holding != null
+                        && song != null
+                        && song.videoId != null
+                        && song.videoId.startsWith("src:")
+                        && holding.test(target.title + "|" + target.durationSec, song.videoId)) {
+                    if (kept == null) kept = new ArrayList<>(candidates.subList(0, i));
+                    continue;
+                }
                 boolean telegram =
                         song != null && song.videoId != null && song.videoId.startsWith(TELEGRAM);
                 boolean ok =

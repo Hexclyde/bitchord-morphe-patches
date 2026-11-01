@@ -16,10 +16,12 @@ import java.io.InterruptedIOException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -45,6 +47,71 @@ public final class SourcePreference {
     private static final long KEPT_NANOS = 600_000_000_000L;
 
     private static final int KEPT = 8, WINDOWS = 3;
+
+    /** A check made before anything plays: who may stop it, and whether anyone is waiting. */
+    private static final class Ahead {
+        final BooleanSupplier cancelled;
+        final boolean background;
+
+        Ahead(BooleanSupplier cancelled, boolean background) {
+            this.cancelled = cancelled;
+            this.background = background;
+        }
+    }
+
+    private static final ThreadLocal<Ahead> ahead = new ThreadLocal<>();
+
+    /** Streams checked ahead for a request: its player may be looking at another reference. */
+    private static final Set<String> verifiedAhead =
+            Collections.newSetFromMap(
+                    new LinkedHashMap<String, Boolean>() {
+                        @Override
+                        protected boolean removeEldestEntry(Map.Entry<String, Boolean> eldest) {
+                            return size() > 256;
+                        }
+                    });
+
+    private static String aheadKey(Uri original, Uri candidate) {
+        return SourcePreparation.withoutEntry(original) + "\n" + candidate;
+    }
+
+    /**
+     * Runs the same check {@link #guard} would, before the request is played. Throws what the guard
+     * would throw, and {@link SourceAudio.Stopped} when cancelled, with its windows kept.
+     */
+    static void verifyAhead(
+            DataSpec requested, DataSpec resolved, BooleanSupplier cancelled, boolean background)
+            throws IOException {
+        ahead.set(new Ahead(cancelled, background));
+        try {
+            guard(requested, resolved);
+            trustAhead(requested, resolved);
+        } finally {
+            ahead.remove();
+        }
+    }
+
+    /** This stream was found to be this request's recording, here or in an earlier session. */
+    static void trustAhead(DataSpec requested, DataSpec resolved) {
+        synchronized (verifiedAhead) {
+            verifiedAhead.add(aheadKey(requested.uri, resolved.uri));
+        }
+    }
+
+    /** Whether a check made ahead found this stream to be another recording. */
+    static boolean rejected(DataSpec requested, DataSpec resolved) {
+        return Boolean.FALSE.equals(decisions.get(decisionKey(requested.uri, resolved.uri, null)));
+    }
+
+    private static String decisionKey(Uri original, Uri candidate, Uri played) {
+        original = SourcePreparation.withoutEntry(original);
+        played = SourcePreparation.withoutEntry(played);
+        return original.toString()
+                + "\n"
+                + candidate.toString()
+                + "\n"
+                + (played == null || played.equals(original) ? "" : played.toString());
+    }
 
     /** One verification, surviving a caller that ran out of time. */
     private static final class Attempt {
@@ -116,12 +183,13 @@ public final class SourcePreference {
         }
 
         /** After each extractor: its read errors were swallowed, and the connection can rest. */
-        void finished() throws IOException {
+        void finished(boolean gotNothing) throws IOException {
             if (audio != null) {
                 audio.rethrowFailure();
                 audio.idle();
             }
-            if (expired()) throw new SourceAudio.Stopped();
+            // What did arrive is kept, however late: the next attempt needn't read it again.
+            if (gotNothing && expired()) throw new SourceAudio.Stopped();
         }
 
         boolean expired() {
@@ -267,13 +335,14 @@ public final class SourcePreference {
                 && host != null
                 && (host.equals("googlevideo.com") || host.endsWith(".googlevideo.com")))
             return resolved;
-        Uri played = mediaId == null ? null : SourceAutomix.observed(mediaId);
-        String key =
-                original.toString()
-                        + "\n"
-                        + candidate.toString()
-                        + "\n"
-                        + (played == null ? "" : played.toString());
+        Ahead asked = ahead.get();
+        if (asked == null) {
+            synchronized (verifiedAhead) {
+                if (verifiedAhead.contains(aheadKey(original, candidate))) return resolved;
+            }
+        }
+        Uri played = mediaId == null || asked != null ? null : SourceAutomix.observed(mediaId);
+        String key = decisionKey(original, candidate, played);
         Boolean known = decisions.get(key);
         if (known != null) return settled(known, key, mediaId, resolved);
         boolean upgrade = upgrade(original, video);
@@ -293,12 +362,13 @@ public final class SourcePreference {
             if (known != null) return settled(known, key, mediaId, resolved);
             // Everything this starts, the extractor's and decoder's work included, yields to the
             // player that's being listened to.
-            if (upgrade) Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+            if (asked != null ? asked.background : upgrade)
+                Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
             return verify(
                     attempt, key, mediaId, video, upgrade, budget, original, played, candidate,
                     resolved);
         } finally {
-            if (upgrade) Process.setThreadPriority(priority);
+            Process.setThreadPriority(priority);
             attempt.lock.unlock();
         }
     }
@@ -328,7 +398,9 @@ public final class SourcePreference {
         SourceAutomix.enterQuiet();
         boolean conclusive = false;
         long started = System.nanoTime();
-        BooleanSupplier stale = upgrade ? () -> !parked(original) : () -> false;
+        Ahead asked = ahead.get();
+        BooleanSupplier stale =
+                asked != null ? asked.cancelled : upgrade ? () -> !parked(original) : () -> false;
         String stage = "reference";
         Copy expectedCopy = null, resolvedCopy = null;
         try {
@@ -511,7 +583,7 @@ public final class SourcePreference {
             method.setAccessible(true);
             found = method.invoke(null, source);
         }
-        copy.finished();
+        copy.finished(!(found instanceof Number));
         return found instanceof Number ? ((Number) found).doubleValue() : 0;
     }
 
@@ -555,7 +627,7 @@ public final class SourcePreference {
             timing = raw.invoke(null, source, from, until, (Function0<Boolean>) copy::expired, tap);
         }
         long decoded = System.nanoTime();
-        copy.finished();
+        copy.finished(timing == null || count[0] == 0);
         if (timing == null || count[0] == 0) return null;
         float[] pcm = new float[count[0]];
         int at = 0;

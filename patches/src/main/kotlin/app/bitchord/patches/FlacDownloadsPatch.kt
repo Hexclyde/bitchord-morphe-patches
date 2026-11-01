@@ -1,6 +1,7 @@
 package app.bitchord.patches
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.*
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.*
@@ -41,11 +42,15 @@ internal fun BytecodePatchContext.addFlacDownloadOnly() {
     check(returns.isNotEmpty()) { "Playback source catalogue has no result" }
     for (index in returns.reversed()) {
         val register = (code[index] as OneRegisterInstruction).registerA
-        playback.addInstructions(
+        playback.replaceInstruction(
             index,
+            "invoke-static/range {v$register .. v$register}, $helper->playbackSources(Ljava/util/ArrayList;)Ljava/util/ArrayList;",
+        )
+        playback.addInstructions(
+            index + 1,
             """
-            invoke-static/range {v$register .. v$register}, $helper->playbackSources(Ljava/util/ArrayList;)Ljava/util/ArrayList;
             move-result-object v$register
+            return-object v$register
         """,
         )
     }

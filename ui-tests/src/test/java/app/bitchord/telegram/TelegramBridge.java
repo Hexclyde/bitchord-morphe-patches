@@ -10,6 +10,16 @@ import java.util.concurrent.*;
 
 /** In-memory bridge for UI tests. */
 public final class TelegramBridge {
+    boolean sourceFirst = true;
+
+    boolean sourceFirst() {
+        return sourceFirst;
+    }
+
+    void setSourceFirst(boolean enabled) {
+        sourceFirst = enabled;
+    }
+
     public static TelegramBridge instance;
     public static String startupError = "";
     public final ExecutorService work = Executors.newSingleThreadExecutor();

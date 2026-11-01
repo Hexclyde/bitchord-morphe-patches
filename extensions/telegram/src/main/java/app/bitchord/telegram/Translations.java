@@ -835,6 +835,9 @@ final class Translations {
             "BitChord sees the corrected names",
             "\u064a\u0631\u0649 BitChord \u0627\u0644\u0623\u0633\u0645\u0627\u0621"
                     + " \u0627\u0644\u0645\u0635\u062d\u0651\u062d\u0629",
+            "BitChord selects sources as usual",
+            "\u064a\u062e\u062a\u0627\u0631 BitChord \u0627\u0644\u0645\u0635\u0627\u062f\u0631"
+                    + " \u0643\u0627\u0644\u0645\u0639\u062a\u0627\u062f",
             "BitChord song cache",
             "\u0630\u0627\u0643\u0631\u0629 \u0627\u0644\u0623\u063a\u0627\u0646\u064a"
                     + " \u0627\u0644\u0645\u0624\u0642\u062a\u0629 \u0641\u064a BitChord",
@@ -3682,6 +3685,9 @@ final class Translations {
             "\u062a\u0634\u063a\u064a\u0644 \u0627\u0644\u0635\u0648\u062a"
                     + " \u0627\u0644\u0645\u062d\u064a\u0637\u064a"
                     + " \u0643\u0633\u062a\u064a\u0631\u064a\u0648",
+            "Play the best source first",
+            "\u0627\u0644\u062a\u0634\u063a\u064a\u0644 \u0645\u0646 \u0623\u0641\u0636\u0644"
+                    + " \u0645\u0635\u062f\u0631 \u0623\u0648\u0644\u064b\u0627",
             "Play the queue in an order that mixes well",
             "\u062a\u0634\u063a\u064a\u0644 \u0642\u0627\u0626\u0645\u0629"
                     + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631"
@@ -6100,6 +6106,20 @@ final class Translations {
             "Up to {0} files an hour",
             "\u062d\u062a\u0649 {0} \u0645\u0644\u0641 \u0641\u064a"
                     + " \u0627\u0644\u0633\u0627\u0639\u0629",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "\u064a\u062a\u0645 \u0627\u0644\u0628\u062d\u062b \u0639\u0646"
+                + " \u0627\u0644\u0623\u063a\u0627\u0646\u064a"
+                + " \u0627\u0644\u062a\u0627\u0644\u064a\u0629 \u0641\u064a"
+                + " \u0627\u0644\u0645\u0635\u0627\u062f\u0631 \u0627\u0644\u062a\u064a"
+                + " \u0641\u0639\u0651\u0644\u062a\u0647\u0627."
+                + " \u064a\u064f\u0633\u062a\u062e\u062f\u0645 YouTube"
+                + " \u0639\u0646\u062f\u0645\u0627 \u0644\u0627 \u062a\u062a\u0648\u0641\u0631"
+                + " \u0646\u0633\u062e\u0629 \u0623\u062e\u0631\u0649"
+                + " \u0642\u0627\u0628\u0644\u0629 \u0644\u0644\u062a\u0634\u063a\u064a\u0644"
+                + " \u0623\u0648 \u0639\u0646\u062f\u0645\u0627 \u064a\u0643\u0648\u0646"
+                + " \u0627\u0644\u0627\u062a\u0635\u0627\u0644 \u0628\u0637\u064a\u0626\u064b\u0627"
+                + " \u062c\u062f\u064b\u0627.",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -6220,6 +6240,12 @@ final class Translations {
             "\u0631\u0645\u0632 \u0627\u0644\u062a\u062d\u0642\u0642",
             "Verified",
             "\u062a\u0645 \u0627\u0644\u062a\u062d\u0642\u0642",
+            "Verified copies from enabled sources take priority",
+            "\u0627\u0644\u0623\u0648\u0644\u0648\u064a\u0629 \u0644\u0644\u0646\u0633\u062e"
+                    + " \u0627\u0644\u062a\u064a \u062a\u0645 \u0627\u0644\u062a\u062d\u0642\u0642"
+                    + " \u0645\u0646\u0647\u0627 \u0645\u0646"
+                    + " \u0627\u0644\u0645\u0635\u0627\u062f\u0631"
+                    + " \u0627\u0644\u0645\u0641\u0639\u0651\u0644\u0629",
             "Verify and continue",
             "\u062a\u062d\u0642\u0642 \u0648\u062a\u0627\u0628\u0639",
             "Verify and remove",
@@ -7727,6 +7753,9 @@ final class Translations {
             "BitChord sees the corrected names",
             "BitChord \u09b8\u0982\u09b6\u09cb\u09a7\u09bf\u09a4 \u09a8\u09be\u09ae"
                     + " \u09a6\u09c7\u0996\u09c7",
+            "BitChord selects sources as usual",
+            "BitChord \u0986\u0997\u09c7\u09b0 \u09ae\u09a4\u09cb\u0987 \u0989\u09ce\u09b8"
+                    + " \u09ac\u09c7\u099b\u09c7 \u09a8\u09c7\u09af\u09bc",
             "BitChord song cache",
             "BitChord-\u098f\u09b0 \u0997\u09be\u09a8\u09c7\u09b0 \u0995\u09cd\u09af\u09be\u09b6",
             "BitChord switches copies with a short pause",
@@ -10810,6 +10839,9 @@ final class Translations {
             "\u09b8\u09be\u09b0\u09be\u0989\u09a8\u09cd\u09a1"
                     + " \u09b8\u09cd\u099f\u09c7\u09b0\u09bf\u0993\u09a4\u09c7"
                     + " \u099a\u09be\u09b2\u09be\u09a8",
+            "Play the best source first",
+            "\u0986\u0997\u09c7 \u09b8\u09c7\u09b0\u09be \u0989\u09ce\u09b8"
+                    + " \u09a5\u09c7\u0995\u09c7 \u099a\u09be\u09b2\u09be\u09a8",
             "Play the queue in an order that mixes well",
             "\u09b8\u09be\u09b0\u09bf\u099f\u09bf \u098f\u09ae\u09a8 \u0995\u09cd\u09b0\u09ae\u09c7"
                     + " \u09ac\u09be\u099c\u09be\u09a8 \u09af\u09be\u09a4\u09c7"
@@ -13383,6 +13415,18 @@ final class Translations {
             "\u0998\u09a3\u09cd\u099f\u09be\u09af\u09bc"
                     + " \u09b8\u09b0\u09cd\u09ac\u09cb\u099a\u09cd\u099a {0}\u099f\u09bf"
                     + " \u09ab\u09be\u0987\u09b2",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "\u09aa\u09b0\u09c7\u09b0 \u0997\u09be\u09a8\u0997\u09c1\u09b2\u09cb"
+                + " \u0986\u09aa\u09a8\u09be\u09b0 \u09b8\u0995\u09cd\u09b0\u09bf\u09af\u09bc"
+                + " \u0989\u09ce\u09b8\u0997\u09c1\u09b2\u09cb\u09a4\u09c7"
+                + " \u0996\u09cb\u0981\u099c\u09be \u09b9\u09af\u09bc\u0964"
+                + " \u0985\u09a8\u09cd\u09af \u0995\u09cb\u09a8\u09cb"
+                + " \u09b8\u0982\u09b8\u09cd\u0995\u09b0\u09a3 \u099a\u09be\u09b2\u09be\u09a8\u09cb"
+                + " \u09a8\u09be \u0997\u09c7\u09b2\u09c7 \u09ac\u09be"
+                + " \u09b8\u0982\u09af\u09cb\u0997 \u0996\u09c1\u09ac \u09a7\u09c0\u09b0"
+                + " \u09b9\u09b2\u09c7 YouTube \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0"
+                + " \u0995\u09b0\u09be \u09b9\u09af\u09bc\u0964",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -13514,6 +13558,12 @@ final class Translations {
             "\u09ad\u09c7\u09b0\u09bf\u09ab\u09bf\u0995\u09c7\u09b6\u09a8 \u0995\u09cb\u09a1",
             "Verified",
             "\u09af\u09be\u099a\u09be\u0987\u0995\u09c3\u09a4",
+            "Verified copies from enabled sources take priority",
+            "\u09b8\u0995\u09cd\u09b0\u09bf\u09af\u09bc \u0989\u09ce\u09b8\u09c7\u09b0"
+                    + " \u09af\u09be\u099a\u09be\u0987\u0995\u09c3\u09a4"
+                    + " \u09b8\u0982\u09b8\u09cd\u0995\u09b0\u09a3\u0997\u09c1\u09b2\u09cb"
+                    + " \u0985\u0997\u09cd\u09b0\u09be\u09a7\u09bf\u0995\u09be\u09b0"
+                    + " \u09aa\u09be\u09af\u09bc",
             "Verify and continue",
             "\u09af\u09be\u099a\u09be\u0987 \u0995\u09b0\u09c7"
                     + " \u099a\u09be\u09b2\u09bf\u09af\u09bc\u09c7 \u09af\u09be\u09a8",
@@ -14703,6 +14753,8 @@ final class Translations {
             "Gespeicherter BitChord-Index von {0}",
             "BitChord sees the corrected names",
             "BitChord sieht die korrigierten Namen",
+            "BitChord selects sources as usual",
+            "BitChord w\u00e4hlt die Quellen wie gewohnt aus",
             "BitChord song cache",
             "BitChord-Song-Cache",
             "BitChord switches copies with a short pause",
@@ -16557,6 +16609,8 @@ final class Translations {
             "Play music from your Telegram channels",
             "Play surround as stereo",
             "Surround als Stereo abspielen",
+            "Play the best source first",
+            "Zuerst von der besten Quelle abspielen",
             "Play the queue in an order that mixes well",
             "Die Warteschlange in einer gut mischbaren Reihenfolge spielen",
             "Playback",
@@ -18095,6 +18149,11 @@ final class Translations {
             "Aktuell: {0} kopiert. Neue Beitr\u00e4ge werden kopiert, sobald sie indexiert sind.",
             "Up to {0} files an hour",
             "Bis zu {0} Dateien pro Stunde",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "F\u00fcr kommende Songs werden deine aktivierten Quellen gepr\u00fcft. YouTube wird"
+                    + " verwendet, wenn keine andere Version abspielbar ist oder die Verbindung zu"
+                    + " langsam ist.",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -18180,6 +18239,8 @@ final class Translations {
             "Best\u00e4tigungscode",
             "Verified",
             "Verifiziert",
+            "Verified copies from enabled sources take priority",
+            "Gepr\u00fcfte Versionen aus aktivierten Quellen haben Vorrang",
             "Verify and continue",
             "Best\u00e4tigen und weiter",
             "Verify and remove",
@@ -19068,6 +19129,8 @@ final class Translations {
             "\u00cdndice guardado de BitChord de {0}",
             "BitChord sees the corrected names",
             "BitChord ve los nombres corregidos",
+            "BitChord selects sources as usual",
+            "BitChord selecciona las fuentes como siempre",
             "BitChord song cache",
             "Cach\u00e9 de canciones de BitChord",
             "BitChord switches copies with a short pause",
@@ -20928,6 +20991,8 @@ final class Translations {
             "Play music from your Telegram channels",
             "Play surround as stereo",
             "Reproducir envolvente como est\u00e9reo",
+            "Play the best source first",
+            "Reproducir primero desde la mejor fuente",
             "Play the queue in an order that mixes well",
             "Reproducir la cola en un orden que mezcle bien",
             "Playback",
@@ -22465,6 +22530,11 @@ final class Translations {
                     + " indexan.",
             "Up to {0} files an hour",
             "Hasta {0} archivos por hora",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "Se buscan las pr\u00f3ximas canciones en tus fuentes habilitadas. Se usa YouTube"
+                + " cuando no se puede reproducir ninguna otra versi\u00f3n o la conexi\u00f3n es"
+                + " demasiado lenta.",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -22551,6 +22621,8 @@ final class Translations {
             "C\u00f3digo de verificaci\u00f3n",
             "Verified",
             "Verificado",
+            "Verified copies from enabled sources take priority",
+            "Las versiones verificadas de las fuentes habilitadas tienen prioridad",
             "Verify and continue",
             "Verificar y continuar",
             "Verify and remove",
@@ -23449,6 +23521,8 @@ final class Translations {
             "Index enregistr\u00e9 BitChord de {0}",
             "BitChord sees the corrected names",
             "BitChord voit les noms corrig\u00e9s",
+            "BitChord selects sources as usual",
+            "BitChord s\u00e9lectionne les sources comme d\u2019habitude",
             "BitChord song cache",
             "Cache des morceaux BitChord",
             "BitChord switches copies with a short pause",
@@ -25346,6 +25420,8 @@ final class Translations {
             "Play music from your Telegram channels",
             "Play surround as stereo",
             "Lire le surround en st\u00e9r\u00e9o",
+            "Play the best source first",
+            "Lire d\u2019abord depuis la meilleure source",
             "Play the queue in an order that mixes well",
             "Lire la file dans un ordre qui s\u2019encha\u00eene bien",
             "Playback",
@@ -26911,6 +26987,11 @@ final class Translations {
                     + " mesure qu\u2019elles sont index\u00e9es.",
             "Up to {0} files an hour",
             "Jusqu\u2019\u00e0 {0} fichiers par heure",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "Les prochains titres sont recherch\u00e9s dans vos sources activ\u00e9es. YouTube est"
+                + " utilis\u00e9 si aucune autre version n\u2019est lisible ou si la connexion est"
+                + " trop lente.",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -26999,6 +27080,8 @@ final class Translations {
             "Code de v\u00e9rification",
             "Verified",
             "V\u00e9rifi\u00e9",
+            "Verified copies from enabled sources take priority",
+            "Les versions v\u00e9rifi\u00e9es des sources activ\u00e9es sont prioritaires",
             "Verify and continue",
             "V\u00e9rifier et continuer",
             "Verify and remove",
@@ -28149,6 +28232,9 @@ final class Translations {
             "BitChord sees the corrected names",
             "BitChord \u05e8\u05d5\u05d0\u05d4 \u05d0\u05ea \u05d4\u05e9\u05de\u05d5\u05ea"
                     + " \u05d4\u05de\u05ea\u05d5\u05e7\u05e0\u05d9\u05dd",
+            "BitChord selects sources as usual",
+            "BitChord \u05d1\u05d5\u05d7\u05e8 \u05de\u05e7\u05d5\u05e8\u05d5\u05ea"
+                    + " \u05db\u05e8\u05d2\u05d9\u05dc",
             "BitChord song cache",
             "\u05de\u05d8\u05de\u05d5\u05df \u05d4\u05e9\u05d9\u05e8\u05d9\u05dd \u05e9\u05dc"
                     + " BitChord",
@@ -30865,6 +30951,10 @@ final class Translations {
             "Play surround as stereo",
             "\u05e0\u05d9\u05d2\u05d5\u05df \u05e1\u05e8\u05d0\u05d5\u05e0\u05d3"
                     + " \u05db\u05e1\u05d8\u05e8\u05d9\u05d0\u05d5",
+            "Play the best source first",
+            "\u05e0\u05d9\u05d2\u05d5\u05df \u05de\u05d4\u05de\u05e7\u05d5\u05e8"
+                    + " \u05d4\u05d8\u05d5\u05d1 \u05d1\u05d9\u05d5\u05ea\u05e8"
+                    + " \u05ea\u05d7\u05d9\u05dc\u05d4",
             "Play the queue in an order that mixes well",
             "\u05d4\u05e9\u05de\u05e2\u05ea \u05d4\u05ea\u05d5\u05e8 \u05d1\u05e1\u05d3\u05e8"
                     + " \u05e9\u05de\u05ea\u05de\u05d6\u05d2 \u05d4\u05d9\u05d8\u05d1",
@@ -33129,6 +33219,16 @@ final class Translations {
                     + " \u05dc\u05d0\u05d9\u05e0\u05d3\u05e7\u05e1.",
             "Up to {0} files an hour",
             "\u05e2\u05d3 {0} \u05e7\u05d1\u05e6\u05d9\u05dd \u05d1\u05e9\u05e2\u05d4",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "\u05d4\u05e9\u05d9\u05e8\u05d9\u05dd \u05d4\u05d1\u05d0\u05d9\u05dd"
+                + " \u05e0\u05d1\u05d3\u05e7\u05d9\u05dd \u05d1\u05de\u05e7\u05d5\u05e8\u05d5\u05ea"
+                + " \u05e9\u05d4\u05e4\u05e2\u05dc\u05ea. YouTube \u05de\u05e9\u05de\u05e9"
+                + " \u05db\u05e9\u05d0\u05d9\u05df \u05d2\u05e8\u05e1\u05d4"
+                + " \u05d0\u05d7\u05e8\u05ea \u05e9\u05e0\u05d9\u05ea\u05df"
+                + " \u05dc\u05e0\u05d2\u05df \u05d0\u05d5"
+                + " \u05db\u05e9\u05d4\u05d7\u05d9\u05d1\u05d5\u05e8 \u05d0\u05d9\u05d8\u05d9"
+                + " \u05de\u05d3\u05d9.",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -33244,6 +33344,11 @@ final class Translations {
             "\u05e7\u05d5\u05d3 \u05d0\u05d9\u05de\u05d5\u05ea",
             "Verified",
             "\u05d0\u05d5\u05de\u05ea",
+            "Verified copies from enabled sources take priority",
+            "\u05e2\u05d3\u05d9\u05e4\u05d5\u05ea \u05dc\u05d2\u05e8\u05e1\u05d0\u05d5\u05ea"
+                    + " \u05de\u05d0\u05d5\u05de\u05ea\u05d5\u05ea"
+                    + " \u05de\u05de\u05e7\u05d5\u05e8\u05d5\u05ea"
+                    + " \u05e4\u05e2\u05d9\u05dc\u05d9\u05dd",
             "Verify and continue",
             "\u05d0\u05d9\u05de\u05d5\u05ea \u05d5\u05d4\u05de\u05e9\u05da",
             "Verify and remove",
@@ -34709,6 +34814,9 @@ final class Translations {
             "BitChord sees the corrected names",
             "BitChord \u0915\u094b \u0938\u0941\u0927\u0930\u0947 \u0939\u0941\u090f"
                     + " \u0928\u093e\u092e \u0926\u093f\u0916\u0924\u0947 \u0939\u0948\u0902",
+            "BitChord selects sources as usual",
+            "BitChord \u0939\u092e\u0947\u0936\u093e \u0915\u0940 \u0924\u0930\u0939"
+                    + " \u0938\u094d\u0930\u094b\u0924 \u091a\u0941\u0928\u0924\u093e \u0939\u0948",
             "BitChord song cache",
             "BitChord \u0915\u093e \u0917\u093e\u0928\u094b\u0902 \u0915\u093e \u0915\u0948\u0936",
             "BitChord switches copies with a short pause",
@@ -37753,6 +37861,9 @@ final class Translations {
             "\u0938\u0930\u093e\u0909\u0902\u0921 \u0915\u094b"
                     + " \u0938\u094d\u091f\u0940\u0930\u093f\u092f\u094b \u092e\u0947\u0902"
                     + " \u091a\u0932\u093e\u090f\u0901",
+            "Play the best source first",
+            "\u092a\u0939\u0932\u0947 \u0938\u092c\u0938\u0947 \u0905\u091a\u094d\u091b\u0947"
+                    + " \u0938\u094d\u0930\u094b\u0924 \u0938\u0947 \u091a\u0932\u093e\u090f\u0901",
             "Play the queue in an order that mixes well",
             "\u0915\u0924\u093e\u0930 \u0915\u094b \u0910\u0938\u0947 \u0915\u094d\u0930\u092e"
                     + " \u092e\u0947\u0902 \u092c\u091c\u093e\u090f\u0901 \u091c\u094b"
@@ -40294,6 +40405,18 @@ final class Translations {
             "Up to {0} files an hour",
             "\u090f\u0915 \u0918\u0902\u091f\u0947 \u092e\u0947\u0902 {0}"
                     + " \u092b\u093c\u093e\u0907\u0932\u094b\u0902 \u0924\u0915",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "\u0906\u0928\u0947 \u0935\u093e\u0932\u0947 \u0917\u093e\u0928\u0947"
+                    + " \u0906\u092a\u0915\u0947 \u091a\u093e\u0932\u0942"
+                    + " \u0938\u094d\u0930\u094b\u0924\u094b\u0902 \u092e\u0947\u0902"
+                    + " \u0916\u094b\u091c\u0947 \u091c\u093e\u0924\u0947 \u0939\u0948\u0902\u0964"
+                    + " YouTube \u0915\u093e \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932"
+                    + " \u0924\u092c \u0939\u094b\u0924\u093e \u0939\u0948 \u091c\u092c"
+                    + " \u0915\u094b\u0908 \u0926\u0942\u0938\u0930\u093e"
+                    + " \u0938\u0902\u0938\u094d\u0915\u0930\u0923 \u0928 \u091a\u0932"
+                    + " \u0938\u0915\u0947 \u092f\u093e \u0915\u0928\u0947\u0915\u094d\u0936\u0928"
+                    + " \u092c\u0939\u0941\u0924 \u0927\u0940\u092e\u093e \u0939\u094b\u0964",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -40427,6 +40550,12 @@ final class Translations {
             "\u0935\u0947\u0930\u093f\u092b\u093c\u093f\u0915\u0947\u0936\u0928 \u0915\u094b\u0921",
             "Verified",
             "\u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924",
+            "Verified copies from enabled sources take priority",
+            "\u091a\u093e\u0932\u0942 \u0938\u094d\u0930\u094b\u0924\u094b\u0902 \u0938\u0947"
+                    + " \u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924"
+                    + " \u0938\u0902\u0938\u094d\u0915\u0930\u0923\u094b\u0902 \u0915\u094b"
+                    + " \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e \u0926\u0940"
+                    + " \u091c\u093e\u0924\u0940 \u0939\u0948",
             "Verify and continue",
             "\u0935\u0947\u0930\u093f\u092b\u093c\u093e\u0908 \u0915\u0930\u0947\u0902 \u0914\u0930"
                     + " \u091c\u093e\u0930\u0940 \u0930\u0916\u0947\u0902",
@@ -41594,6 +41723,8 @@ final class Translations {
             "Indeks tersimpan BitChord dari {0}",
             "BitChord sees the corrected names",
             "BitChord melihat nama yang sudah diperbaiki",
+            "BitChord selects sources as usual",
+            "BitChord memilih sumber seperti biasa",
             "BitChord song cache",
             "Cache lagu BitChord",
             "BitChord switches copies with a short pause",
@@ -43408,6 +43539,8 @@ final class Translations {
             "Play music from your Telegram channels",
             "Play surround as stereo",
             "Putar surround sebagai stereo",
+            "Play the best source first",
+            "Putar dari sumber terbaik terlebih dahulu",
             "Play the queue in an order that mixes well",
             "Putar antrean dalam urutan yang menyatu dengan baik",
             "Playback",
@@ -44908,6 +45041,10 @@ final class Translations {
             "Terbaru: {0} disalin. Postingan baru disalin begitu diindeks.",
             "Up to {0} files an hour",
             "Hingga {0} file per jam",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "Lagu berikutnya dicari di sumber yang Anda aktifkan. YouTube digunakan jika tidak ada"
+                    + " versi lain yang dapat diputar atau koneksi terlalu lambat.",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -44993,6 +45130,8 @@ final class Translations {
             "Kode verifikasi",
             "Verified",
             "Terverifikasi",
+            "Verified copies from enabled sources take priority",
+            "Versi terverifikasi dari sumber yang diaktifkan diprioritaskan",
             "Verify and continue",
             "Verifikasi dan lanjutkan",
             "Verify and remove",
@@ -45866,6 +46005,8 @@ final class Translations {
             "Indice salvato BitChord di {0}",
             "BitChord sees the corrected names",
             "BitChord vede i nomi corretti",
+            "BitChord selects sources as usual",
+            "BitChord seleziona le fonti come al solito",
             "BitChord song cache",
             "Cache dei brani di BitChord",
             "BitChord switches copies with a short pause",
@@ -47703,6 +47844,8 @@ final class Translations {
             "Play music from your Telegram channels",
             "Play surround as stereo",
             "Riproduci il surround in stereo",
+            "Play the best source first",
+            "Riproduci prima dalla fonte migliore",
             "Play the queue in an order that mixes well",
             "Riproduci la coda in un ordine che si mixa bene",
             "Playback",
@@ -49222,6 +49365,11 @@ final class Translations {
                     + " indicizzati.",
             "Up to {0} files an hour",
             "Fino a {0} file all\u2019ora",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "I prossimi brani vengono cercati nelle fonti abilitate. YouTube viene usato quando"
+                + " nessun\u2019altra versione pu\u00f2 essere riprodotta o la connessione \u00e8"
+                + " troppo lenta.",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -49307,6 +49455,8 @@ final class Translations {
             "Codice di verifica",
             "Verified",
             "Verificato",
+            "Verified copies from enabled sources take priority",
+            "Le versioni verificate delle fonti abilitate hanno la priorit\u00e0",
             "Verify and continue",
             "Verifica e continua",
             "Verify and remove",
@@ -50212,6 +50362,8 @@ final class Translations {
             "{0} \u306e BitChord \u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9",
             "BitChord sees the corrected names",
             "BitChord \u306b\u306f\u4fee\u6b63\u5f8c\u306e\u540d\u524d\u3067\u8868\u793a",
+            "BitChord selects sources as usual",
+            "BitChord\u304c\u901a\u5e38\u3069\u304a\u308a\u30bd\u30fc\u30b9\u3092\u9078\u629e\u3057\u307e\u3059",
             "BitChord song cache",
             "BitChord \u306e\u66f2\u30ad\u30e3\u30c3\u30b7\u30e5",
             "BitChord switches copies with a short pause",
@@ -52065,6 +52217,8 @@ final class Translations {
             "Play music from your Telegram channels",
             "Play surround as stereo",
             "\u30b5\u30e9\u30a6\u30f3\u30c9\u3092\u30b9\u30c6\u30ec\u30aa\u3067\u518d\u751f",
+            "Play the best source first",
+            "\u6700\u9069\u306a\u30bd\u30fc\u30b9\u304b\u3089\u512a\u5148\u3057\u3066\u518d\u751f",
             "Play the queue in an order that mixes well",
             "\u3046\u307e\u304f\u3064\u306a\u304c\u308b\u9806\u306b\u30ad\u30e5\u30fc\u3092\u518d\u751f",
             "Playback",
@@ -53634,6 +53788,9 @@ final class Translations {
                 + " \u3092\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f\u3002\u65b0\u3057\u3044\u6295\u7a3f\u306f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u6642\u306b\u30b3\u30d4\u30fc\u3055\u308c\u307e\u3059\u3002",
             "Up to {0} files an hour",
             "1 \u6642\u9593\u306b\u6700\u5927 {0} \u30d5\u30a1\u30a4\u30eb",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "\u6b21\u306b\u518d\u751f\u3059\u308b\u66f2\u3092\u3001\u6709\u52b9\u306b\u3057\u305f\u30bd\u30fc\u30b9\u304b\u3089\u63a2\u3057\u307e\u3059\u3002\u4ed6\u306b\u518d\u751f\u3067\u304d\u308b\u97f3\u6e90\u304c\u306a\u3044\u5834\u5408\u3084\u3001\u63a5\u7d9a\u304c\u9045\u3059\u304e\u308b\u5834\u5408\u306fYouTube\u3092\u4f7f\u7528\u3057\u307e\u3059\u3002",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -53723,6 +53880,8 @@ final class Translations {
             "\u78ba\u8a8d\u30b3\u30fc\u30c9",
             "Verified",
             "\u691c\u8a3c\u6e08\u307f",
+            "Verified copies from enabled sources take priority",
+            "\u6709\u52b9\u306a\u30bd\u30fc\u30b9\u306e\u691c\u8a3c\u6e08\u307f\u97f3\u6e90\u3092\u512a\u5148\u3057\u307e\u3059",
             "Verify and continue",
             "\u78ba\u8a8d\u3057\u3066\u7d9a\u3051\u308b",
             "Verify and remove",
@@ -54709,6 +54868,9 @@ final class Translations {
             "{0}\uc758 BitChord \uc800\uc7a5\ub41c \uc0c9\uc778",
             "BitChord sees the corrected names",
             "BitChord\uac00 \uc218\uc815\ub41c \uc774\ub984\uc744 \uc778\uc2dd\ud574\uc694",
+            "BitChord selects sources as usual",
+            "BitChord\uac00 \ud3c9\uc18c\ucc98\ub7fc \uc18c\uc2a4\ub97c"
+                    + " \uc120\ud0dd\ud569\ub2c8\ub2e4",
             "BitChord song cache",
             "BitChord \uace1 \uce90\uc2dc",
             "BitChord switches copies with a short pause",
@@ -56863,6 +57025,8 @@ final class Translations {
             "Play music from your Telegram channels",
             "Play surround as stereo",
             "\uc11c\ub77c\uc6b4\ub4dc\ub97c \uc2a4\ud14c\ub808\uc624\ub85c \uc7ac\uc0dd",
+            "Play the best source first",
+            "\uac00\uc7a5 \uc88b\uc740 \uc18c\uc2a4\uc5d0\uc11c \uc6b0\uc120 \uc7ac\uc0dd",
             "Play the queue in an order that mixes well",
             "\uc798 \uc774\uc5b4\uc9c0\ub294 \uc21c\uc11c\ub85c \ub300\uae30\uc5f4 \uc7ac\uc0dd",
             "Playback",
@@ -58652,6 +58816,12 @@ final class Translations {
                     + " \uc0c9\uc778\ub418\ub294 \ub300\ub85c \ubcf5\uc0ac\ud574\uc694.",
             "Up to {0} files an hour",
             "\uc2dc\uac04\ub2f9 \ucd5c\ub300 {0}\uac1c \ud30c\uc77c",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "\ub2e4\uc74c \uace1\uc744 \ud65c\uc131\ud654\ub41c \uc18c\uc2a4\uc5d0\uc11c"
+                    + " \ucc3e\uc2b5\ub2c8\ub2e4. \uc7ac\uc0dd \uac00\ub2a5\ud55c \ub2e4\ub978"
+                    + " \uc74c\uc6d0\uc774 \uc5c6\uac70\ub098 \uc5f0\uacb0\uc774 \ub108\ubb34"
+                    + " \ub290\ub9ac\uba74 YouTube\ub97c \uc0ac\uc6a9\ud569\ub2c8\ub2e4.",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -58747,6 +58917,9 @@ final class Translations {
             "\uc778\uc99d \ucf54\ub4dc",
             "Verified",
             "\uac80\uc99d\ub428",
+            "Verified copies from enabled sources take priority",
+            "\ud65c\uc131\ud654\ub41c \uc18c\uc2a4\uc5d0\uc11c \uac80\uc99d\ub41c"
+                    + " \uc74c\uc6d0\uc744 \uc6b0\uc120\ud569\ub2c8\ub2e4",
             "Verify and continue",
             "\uc778\uc99d\ud558\uace0 \uacc4\uc18d",
             "Verify and remove",
@@ -59714,6 +59887,8 @@ final class Translations {
             "Zapisany indeks BitChord dla {0}",
             "BitChord sees the corrected names",
             "BitChord widzi poprawione nazwy",
+            "BitChord selects sources as usual",
+            "BitChord wybiera \u017ar\u00f3d\u0142a jak zwykle",
             "BitChord song cache",
             "Pami\u0119\u0107 podr\u0119czna utwor\u00f3w BitChord",
             "BitChord switches copies with a short pause",
@@ -61608,6 +61783,8 @@ final class Translations {
             "Play music from your Telegram channels",
             "Play surround as stereo",
             "Odtwarzaj surround jako stereo",
+            "Play the best source first",
+            "Najpierw odtwarzaj z najlepszego \u017ar\u00f3d\u0142a",
             "Play the queue in an order that mixes well",
             "Odtwarzaj kolejk\u0119 w kolejno\u015bci, kt\u00f3ra dobrze si\u0119 miksuje",
             "Playback",
@@ -63160,6 +63337,12 @@ final class Translations {
             "Aktualne: skopiowano {0}. Nowe posty s\u0105 kopiowane w miar\u0119 indeksowania.",
             "Up to {0} files an hour",
             "Plik\u00f3w na godzin\u0119: do {0}",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "Nadchodz\u0105ce utwory s\u0105 wyszukiwane we w\u0142\u0105czonych"
+                    + " \u017ar\u00f3d\u0142ach. YouTube jest u\u017cywany, gdy nie mo\u017cna"
+                    + " odtworzy\u0107 \u017cadnej innej wersji lub po\u0142\u0105czenie jest zbyt"
+                    + " wolne.",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -63246,6 +63429,9 @@ final class Translations {
             "Kod weryfikacyjny",
             "Verified",
             "Zweryfikowano",
+            "Verified copies from enabled sources take priority",
+            "Sprawdzone wersje z w\u0142\u0105czonych \u017ar\u00f3de\u0142 maj\u0105"
+                    + " pierwsze\u0144stwo",
             "Verify and continue",
             "Zweryfikuj i kontynuuj",
             "Verify and remove",
@@ -64145,6 +64331,8 @@ final class Translations {
             "\u00cdndice salvo do BitChord de {0}",
             "BitChord sees the corrected names",
             "O BitChord v\u00ea os nomes corrigidos",
+            "BitChord selects sources as usual",
+            "BitChord seleciona as fontes como de costume",
             "BitChord song cache",
             "Cache de m\u00fasicas do BitChord",
             "BitChord switches copies with a short pause",
@@ -66004,6 +66192,8 @@ final class Translations {
             "Play music from your Telegram channels",
             "Play surround as stereo",
             "Tocar surround como est\u00e9reo",
+            "Play the best source first",
+            "Reproduzir primeiro a partir da melhor fonte",
             "Play the queue in an order that mixes well",
             "Tocar a fila em uma ordem que mixa bem",
             "Playback",
@@ -67542,6 +67732,11 @@ final class Translations {
                     + " indexadas.",
             "Up to {0} files an hour",
             "At\u00e9 {0} arquivos por hora",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "As pr\u00f3ximas m\u00fasicas s\u00e3o procuradas nas suas fontes ativadas. O YouTube"
+                    + " \u00e9 usado quando nenhuma outra vers\u00e3o pode ser reproduzida ou a"
+                    + " conex\u00e3o est\u00e1 muito lenta.",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -67628,6 +67823,8 @@ final class Translations {
             "C\u00f3digo de verifica\u00e7\u00e3o",
             "Verified",
             "Verificado",
+            "Verified copies from enabled sources take priority",
+            "As vers\u00f5es verificadas das fontes ativadas t\u00eam prioridade",
             "Verify and continue",
             "Verificar e continuar",
             "Verify and remove",
@@ -68960,6 +69157,10 @@ final class Translations {
             "BitChord \u0432\u0438\u0434\u0438\u0442"
                     + " \u0438\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0435"
                     + " \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044f",
+            "BitChord selects sources as usual",
+            "BitChord \u0432\u044b\u0431\u0438\u0440\u0430\u0435\u0442"
+                    + " \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u0438 \u043a\u0430\u043a"
+                    + " \u043e\u0431\u044b\u0447\u043d\u043e",
             "BitChord song cache",
             "\u041a\u0435\u0448 \u043f\u0435\u0441\u0435\u043d BitChord",
             "BitChord switches copies with a short pause",
@@ -72290,6 +72491,11 @@ final class Translations {
             "\u041c\u043d\u043e\u0433\u043e\u043a\u0430\u043d\u0430\u043b\u044c\u043d\u044b\u0439"
                     + " \u0437\u0432\u0443\u043a \u043a\u0430\u043a"
                     + " \u0441\u0442\u0435\u0440\u0435\u043e",
+            "Play the best source first",
+            "\u0421\u043d\u0430\u0447\u0430\u043b\u0430"
+                + " \u0432\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u044c"
+                + " \u0438\u0437 \u043b\u0443\u0447\u0448\u0435\u0433\u043e"
+                + " \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u0430",
             "Play the queue in an order that mixes well",
             "\u0418\u0433\u0440\u0430\u0442\u044c \u043e\u0447\u0435\u0440\u0435\u0434\u044c \u0432"
                 + " \u043f\u043e\u0440\u044f\u0434\u043a\u0435,"
@@ -75064,6 +75270,21 @@ final class Translations {
                     + " \u0438\u043d\u0434\u0435\u043a\u0441\u0430\u0446\u0438\u0438.",
             "Up to {0} files an hour",
             "\u0414\u043e {0} \u0444\u0430\u0439\u043b\u043e\u0432 \u0432 \u0447\u0430\u0441",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "\u0421\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u0435 \u0442\u0440\u0435\u043a\u0438"
+                + " \u043f\u0440\u043e\u0432\u0435\u0440\u044f\u044e\u0442\u0441\u044f \u0432"
+                + " \u0432\u0430\u0448\u0438\u0445"
+                + " \u0432\u043a\u043b\u044e\u0447\u0451\u043d\u043d\u044b\u0445"
+                + " \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u0430\u0445. YouTube"
+                + " \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442\u0441\u044f,"
+                + " \u0435\u0441\u043b\u0438 \u043d\u0438 \u043e\u0434\u043d\u0430"
+                + " \u0434\u0440\u0443\u0433\u0430\u044f \u0432\u0435\u0440\u0441\u0438\u044f"
+                + " \u043d\u0435"
+                + " \u0432\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0441\u044f"
+                + " \u0438\u043b\u0438 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0435"
+                + " \u0441\u043b\u0438\u0448\u043a\u043e\u043c"
+                + " \u043c\u0435\u0434\u043b\u0435\u043d\u043d\u043e\u0435.",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -75205,6 +75426,13 @@ final class Translations {
                 + " \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0438\u044f",
             "Verified",
             "\u041f\u0440\u043e\u0432\u0435\u0440\u0435\u043d\u043e",
+            "Verified copies from enabled sources take priority",
+            "\u041f\u0440\u043e\u0432\u0435\u0440\u0435\u043d\u043d\u044b\u0435"
+                    + " \u0432\u0435\u0440\u0441\u0438\u0438 \u0438\u0437"
+                    + " \u0432\u043a\u043b\u044e\u0447\u0451\u043d\u043d\u044b\u0445"
+                    + " \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u043e\u0432"
+                    + " \u0438\u043c\u0435\u044e\u0442"
+                    + " \u043f\u0440\u0438\u043e\u0440\u0438\u0442\u0435\u0442",
             "Verify and continue",
             "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044c \u0438"
                     + " \u043f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c",
@@ -76577,6 +76805,9 @@ final class Translations {
             "BitChord sees the corrected names",
             "BitChord"
                 + " \u0e40\u0e2b\u0e47\u0e19\u0e0a\u0e37\u0e48\u0e2d\u0e17\u0e35\u0e48\u0e41\u0e01\u0e49\u0e44\u0e02\u0e41\u0e25\u0e49\u0e27",
+            "BitChord selects sources as usual",
+            "BitChord"
+                + " \u0e40\u0e25\u0e37\u0e2d\u0e01\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e15\u0e32\u0e21\u0e1b\u0e01\u0e15\u0e34",
             "BitChord song cache",
             "\u0e41\u0e04\u0e0a\u0e40\u0e1e\u0e25\u0e07\u0e02\u0e2d\u0e07 BitChord",
             "BitChord switches copies with a short pause",
@@ -78734,6 +78965,8 @@ final class Translations {
             "Play music from your Telegram channels",
             "Play surround as stereo",
             "\u0e40\u0e25\u0e48\u0e19\u0e40\u0e0b\u0e2d\u0e23\u0e4c\u0e23\u0e32\u0e27\u0e14\u0e4c\u0e40\u0e1b\u0e47\u0e19\u0e2a\u0e40\u0e15\u0e2d\u0e23\u0e34\u0e42\u0e2d",
+            "Play the best source first",
+            "\u0e40\u0e25\u0e48\u0e19\u0e08\u0e32\u0e01\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e17\u0e35\u0e48\u0e14\u0e35\u0e17\u0e35\u0e48\u0e2a\u0e38\u0e14\u0e01\u0e48\u0e2d\u0e19",
             "Play the queue in an order that mixes well",
             "\u0e40\u0e25\u0e48\u0e19\u0e04\u0e34\u0e27\u0e15\u0e32\u0e21\u0e25\u0e33\u0e14\u0e31\u0e1a\u0e17\u0e35\u0e48\u0e21\u0e34\u0e01\u0e0b\u0e4c\u0e40\u0e02\u0e49\u0e32\u0e01\u0e31\u0e19\u0e44\u0e14\u0e49\u0e14\u0e35",
             "Playback",
@@ -80576,6 +80809,11 @@ final class Translations {
             "Up to {0} files an hour",
             "\u0e2a\u0e39\u0e07\u0e2a\u0e38\u0e14 {0}"
                 + " \u0e44\u0e1f\u0e25\u0e4c\u0e15\u0e48\u0e2d\u0e0a\u0e31\u0e48\u0e27\u0e42\u0e21\u0e07",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "\u0e23\u0e30\u0e1a\u0e1a\u0e08\u0e30\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e40\u0e1e\u0e25\u0e07\u0e16\u0e31\u0e14\u0e44\u0e1b\u0e43\u0e19\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e17\u0e35\u0e48\u0e04\u0e38\u0e13\u0e40\u0e1b\u0e34\u0e14\u0e43\u0e0a\u0e49\u0e07\u0e32\u0e19"
+                + " \u0e42\u0e14\u0e22\u0e08\u0e30\u0e43\u0e0a\u0e49 YouTube"
+                + " \u0e40\u0e21\u0e37\u0e48\u0e2d\u0e44\u0e21\u0e48\u0e21\u0e35\u0e40\u0e27\u0e2d\u0e23\u0e4c\u0e0a\u0e31\u0e19\u0e2d\u0e37\u0e48\u0e19\u0e17\u0e35\u0e48\u0e40\u0e25\u0e48\u0e19\u0e44\u0e14\u0e49\u0e2b\u0e23\u0e37\u0e2d\u0e01\u0e32\u0e23\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d\u0e0a\u0e49\u0e32\u0e40\u0e01\u0e34\u0e19\u0e44\u0e1b",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -80674,6 +80912,8 @@ final class Translations {
             "\u0e23\u0e2b\u0e31\u0e2a\u0e22\u0e37\u0e19\u0e22\u0e31\u0e19",
             "Verified",
             "\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e41\u0e25\u0e49\u0e27",
+            "Verified copies from enabled sources take priority",
+            "\u0e43\u0e2b\u0e49\u0e04\u0e27\u0e32\u0e21\u0e2a\u0e33\u0e04\u0e31\u0e0d\u0e01\u0e31\u0e1a\u0e40\u0e27\u0e2d\u0e23\u0e4c\u0e0a\u0e31\u0e19\u0e17\u0e35\u0e48\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e41\u0e25\u0e49\u0e27\u0e08\u0e32\u0e01\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e17\u0e35\u0e48\u0e40\u0e1b\u0e34\u0e14\u0e43\u0e0a\u0e49\u0e07\u0e32\u0e19",
             "Verify and continue",
             "\u0e22\u0e37\u0e19\u0e22\u0e31\u0e19\u0e41\u0e25\u0e30\u0e14\u0e33\u0e40\u0e19\u0e34\u0e19\u0e01\u0e32\u0e23\u0e15\u0e48\u0e2d",
             "Verify and remove",
@@ -81687,6 +81927,8 @@ final class Translations {
             "{0} i\u00e7in BitChord kay\u0131tl\u0131 dizini",
             "BitChord sees the corrected names",
             "BitChord d\u00fczeltilmi\u015f adlar\u0131 g\u00f6r\u00fcr",
+            "BitChord selects sources as usual",
+            "BitChord kaynaklar\u0131 her zamanki gibi se\u00e7er",
             "BitChord song cache",
             "BitChord \u015fark\u0131 \u00f6nbelle\u011fi",
             "BitChord switches copies with a short pause",
@@ -83606,6 +83848,8 @@ final class Translations {
             "Play music from your Telegram channels",
             "Play surround as stereo",
             "\u00c7ok kanall\u0131 sesi stereo \u00e7al",
+            "Play the best source first",
+            "\u00d6nce en iyi kaynaktan \u00e7al",
             "Play the queue in an order that mixes well",
             "S\u0131ray\u0131 iyi kar\u0131\u015fan bir d\u00fczende \u00e7al",
             "Playback",
@@ -85196,6 +85440,11 @@ final class Translations {
                     + " kopyalan\u0131r.",
             "Up to {0} files an hour",
             "Saatte en fazla {0} dosya",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "S\u0131radaki \u015fark\u0131lar etkin kaynaklar\u0131n\u0131zda aran\u0131r."
+                    + " Ba\u015fka bir s\u00fcr\u00fcm \u00e7al\u0131nam\u0131yorsa veya"
+                    + " ba\u011flant\u0131 \u00e7ok yava\u015fsa YouTube kullan\u0131l\u0131r.",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -85287,6 +85536,9 @@ final class Translations {
             "Do\u011frulama kodu",
             "Verified",
             "Do\u011fruland\u0131",
+            "Verified copies from enabled sources take priority",
+            "Etkin kaynaklardaki do\u011frulanm\u0131\u015f s\u00fcr\u00fcmlere \u00f6ncelik"
+                    + " verilir",
             "Verify and continue",
             "Do\u011frula ve devam et",
             "Verify and remove",
@@ -86555,6 +86807,10 @@ final class Translations {
             "BitChord sees the corrected names",
             "BitChord \u062f\u0631\u0633\u062a \u06a9\u06cc\u06d2 \u06af\u0626\u06d2"
                     + " \u0646\u0627\u0645 \u062f\u06cc\u06a9\u06be\u062a\u0627 \u06c1\u06d2",
+            "BitChord selects sources as usual",
+            "BitChord \u0645\u0639\u0645\u0648\u0644 \u06a9\u06d2 \u0645\u0637\u0627\u0628\u0642"
+                    + " \u0630\u0631\u0627\u0626\u0639 \u0645\u0646\u062a\u062e\u0628"
+                    + " \u06a9\u0631\u062a\u0627 \u06c1\u06d2",
             "BitChord song cache",
             "BitChord \u06a9\u0627 \u06af\u0627\u0646\u0648\u06ba \u06a9\u0627 \u06a9\u06cc\u0634",
             "BitChord switches copies with a short pause",
@@ -89562,6 +89818,9 @@ final class Translations {
             "\u0633\u0631\u0627\u0624\u0646\u0688 \u06a9\u0648"
                     + " \u0627\u0633\u0679\u06cc\u0631\u06cc\u0648 \u06a9\u06d2 \u0637\u0648\u0631"
                     + " \u067e\u0631 \u0686\u0644\u0627\u0626\u06cc\u06ba",
+            "Play the best source first",
+            "\u067e\u06c1\u0644\u06d2 \u0628\u06c1\u062a\u0631\u06cc\u0646 \u0645\u0627\u062e\u0630"
+                    + " \u0633\u06d2 \u0686\u0644\u0627\u0626\u06cc\u06ba",
             "Play the queue in an order that mixes well",
             "\u0642\u0637\u0627\u0631 \u06a9\u0648 \u0627\u06cc\u0633\u06cc"
                     + " \u062a\u0631\u062a\u06cc\u0628 \u0645\u06cc\u06ba"
@@ -92075,6 +92334,17 @@ final class Translations {
             "\u0641\u06cc \u06af\u06be\u0646\u0679\u06c1 \u0632\u06cc\u0627\u062f\u06c1"
                     + " \u0633\u06d2 \u0632\u06cc\u0627\u062f\u06c1 {0}"
                     + " \u0641\u0627\u0626\u0644\u06cc\u06ba",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "\u0627\u06af\u0644\u06d2 \u06af\u0627\u0646\u06d2 \u0622\u067e \u06a9\u06d2"
+                    + " \u0641\u0639\u0627\u0644 \u0630\u0631\u0627\u0626\u0639 \u0645\u06cc\u06ba"
+                    + " \u062a\u0644\u0627\u0634 \u06a9\u06cc\u06d2 \u062c\u0627\u062a\u06d2"
+                    + " \u06c1\u06cc\u06ba\u06d4 YouTube \u0627\u0633 \u0648\u0642\u062a"
+                    + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06c1\u0648\u062a\u0627"
+                    + " \u06c1\u06d2 \u062c\u0628 \u06a9\u0648\u0626\u06cc"
+                    + " \u062f\u0648\u0633\u0631\u0627 \u0646\u0633\u062e\u06c1 \u0646\u06c1"
+                    + " \u0686\u0644 \u0633\u06a9\u06d2 \u06cc\u0627 \u06a9\u0646\u06a9\u0634\u0646"
+                    + " \u0628\u06c1\u062a \u0633\u0633\u062a \u06c1\u0648\u06d4",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -92209,6 +92479,11 @@ final class Translations {
             "\u062a\u0635\u062f\u06cc\u0642\u06cc \u06a9\u0648\u0688",
             "Verified",
             "\u062a\u0635\u062f\u06cc\u0642 \u0634\u062f\u06c1",
+            "Verified copies from enabled sources take priority",
+            "\u0641\u0639\u0627\u0644 \u0630\u0631\u0627\u0626\u0639 \u0633\u06d2"
+                    + " \u062a\u0635\u062f\u06cc\u0642 \u0634\u062f\u06c1"
+                    + " \u0646\u0633\u062e\u0648\u06ba \u06a9\u0648 \u062a\u0631\u062c\u06cc\u062d"
+                    + " \u062f\u06cc \u062c\u0627\u062a\u06cc \u06c1\u06d2",
             "Verify and continue",
             "\u062a\u0635\u062f\u06cc\u0642 \u06a9\u0631\u06cc\u06ba \u0627\u0648\u0631"
                     + " \u062c\u0627\u0631\u06cc \u0631\u06a9\u06be\u06cc\u06ba",
@@ -93444,6 +93719,8 @@ final class Translations {
             "Ch\u1ec9 m\u1ee5c \u0111\u00e3 l\u01b0u BitChord c\u1ee7a {0}",
             "BitChord sees the corrected names",
             "BitChord th\u1ea5y c\u00e1c t\u00ean \u0111\u00e3 s\u1eeda",
+            "BitChord selects sources as usual",
+            "BitChord ch\u1ecdn ngu\u1ed3n nh\u01b0 b\u00ecnh th\u01b0\u1eddng",
             "BitChord song cache",
             "B\u1ed9 nh\u1edb \u0111\u1ec7m b\u00e0i h\u00e1t c\u1ee7a BitChord",
             "BitChord switches copies with a short pause",
@@ -95525,6 +95802,8 @@ final class Translations {
             "Play music from your Telegram channels",
             "Play surround as stereo",
             "Ph\u00e1t \u00e2m thanh v\u00f2m d\u01b0\u1edbi d\u1ea1ng stereo",
+            "Play the best source first",
+            "Ph\u00e1t t\u1eeb ngu\u1ed3n t\u1ed1t nh\u1ea5t tr\u01b0\u1edbc",
             "Play the queue in an order that mixes well",
             "Ph\u00e1t h\u00e0ng \u0111\u1ee3i theo th\u1ee9 t\u1ef1 chuy\u1ec3n b\u00e0i"
                     + " m\u01b0\u1ee3t m\u00e0",
@@ -97254,6 +97533,13 @@ final class Translations {
                     + " \u0111\u01b0\u1ee3c l\u1eadp ch\u1ec9 m\u1ee5c.",
             "Up to {0} files an hour",
             "T\u1ed1i \u0111a {0} t\u1ec7p m\u1ed7i gi\u1edd",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "C\u00e1c b\u00e0i h\u00e1t s\u1eafp ph\u00e1t \u0111\u01b0\u1ee3c t\u00ecm trong"
+                + " nh\u1eefng ngu\u1ed3n b\u1ea1n \u0111\u00e3 b\u1eadt. YouTube"
+                + " \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng khi kh\u00f4ng c\u00f3 b\u1ea3n n\u00e0o"
+                + " kh\u00e1c ph\u00e1t \u0111\u01b0\u1ee3c ho\u1eb7c k\u1ebft n\u1ed1i qu\u00e1"
+                + " ch\u1eadm.",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -97348,6 +97634,9 @@ final class Translations {
             "M\u00e3 x\u00e1c minh",
             "Verified",
             "\u0110\u00e3 x\u00e1c minh",
+            "Verified copies from enabled sources take priority",
+            "\u01afu ti\u00ean c\u00e1c b\u1ea3n \u0111\u00e3 x\u00e1c minh t\u1eeb nh\u1eefng"
+                    + " ngu\u1ed3n \u0111\u01b0\u1ee3c b\u1eadt",
             "Verify and continue",
             "X\u00e1c minh v\u00e0 ti\u1ebfp t\u1ee5c",
             "Verify and remove",
@@ -98281,6 +98570,8 @@ final class Translations {
             "{0} \u7684 BitChord \u5df2\u5132\u5b58\u7d22\u5f15",
             "BitChord sees the corrected names",
             "BitChord \u770b\u5230\u7684\u662f\u66f4\u6b63\u5f8c\u7684\u540d\u7a31",
+            "BitChord selects sources as usual",
+            "BitChord \u7167\u5e38\u9078\u64c7\u97f3\u6e90",
             "BitChord song cache",
             "BitChord \u6b4c\u66f2\u5feb\u53d6",
             "BitChord switches copies with a short pause",
@@ -100122,6 +100413,8 @@ final class Translations {
             "Play music from your Telegram channels",
             "Play surround as stereo",
             "\u4ee5\u7acb\u9ad4\u8072\u64ad\u653e\u74b0\u7e5e\u8072",
+            "Play the best source first",
+            "\u512a\u5148\u5f9e\u6700\u4f73\u97f3\u6e90\u64ad\u653e",
             "Play the queue in an order that mixes well",
             "\u4ee5\u929c\u63a5\u9806\u66a2\u7684\u9806\u5e8f\u64ad\u653e\u4f47\u5217",
             "Playback",
@@ -101668,6 +101961,10 @@ final class Translations {
                 + " {0}\u3002\u65b0\u8cbc\u6587\u6703\u5728\u7d22\u5f15\u6642\u8907\u88fd\u3002",
             "Up to {0} files an hour",
             "\u6bcf\u5c0f\u6642\u6700\u591a {0} \u500b\u6a94\u6848",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "\u7cfb\u7d71\u6703\u5728\u4f60\u555f\u7528\u7684\u97f3\u6e90\u4e2d\u5c0b\u627e\u5373\u5c07\u64ad\u653e\u7684\u6b4c\u66f2\u3002\u5982\u679c\u6c92\u6709\u5176\u4ed6\u53ef\u64ad\u653e\u7684\u7248\u672c\uff0c\u6216\u7db2\u8def\u9023\u7dda\u592a\u6162\uff0c\u5247\u4f7f\u7528"
+                + " YouTube\u3002",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -101756,6 +102053,8 @@ final class Translations {
             "\u9a57\u8b49\u78bc",
             "Verified",
             "\u5df2\u9a57\u8b49",
+            "Verified copies from enabled sources take priority",
+            "\u512a\u5148\u4f7f\u7528\u5df2\u555f\u7528\u97f3\u6e90\u4e2d\u901a\u904e\u9a57\u8b49\u7684\u7248\u672c",
             "Verify and continue",
             "\u9a57\u8b49\u4e26\u7e7c\u7e8c",
             "Verify and remove",
@@ -102629,6 +102928,8 @@ final class Translations {
             "{0} \u7684 BitChord \u5df2\u4fdd\u5b58\u7d22\u5f15",
             "BitChord sees the corrected names",
             "BitChord \u770b\u5230\u7684\u662f\u66f4\u6b63\u540e\u7684\u540d\u79f0",
+            "BitChord selects sources as usual",
+            "BitChord \u7167\u5e38\u9009\u62e9\u97f3\u6e90",
             "BitChord song cache",
             "BitChord \u6b4c\u66f2\u7f13\u5b58",
             "BitChord switches copies with a short pause",
@@ -104466,6 +104767,8 @@ final class Translations {
             "Play music from your Telegram channels",
             "Play surround as stereo",
             "\u5c06\u73af\u7ed5\u58f0\u4f5c\u4e3a\u7acb\u4f53\u58f0\u64ad\u653e",
+            "Play the best source first",
+            "\u4f18\u5148\u4ece\u6700\u4f73\u97f3\u6e90\u64ad\u653e",
             "Play the queue in an order that mixes well",
             "\u6309\u8854\u63a5\u987a\u7545\u7684\u987a\u5e8f\u64ad\u653e\u961f\u5217",
             "Playback",
@@ -106001,6 +106304,10 @@ final class Translations {
                 + " {0}\u3002\u65b0\u5e16\u5b50\u4f1a\u5728\u7d22\u5f15\u65f6\u590d\u5236\u3002",
             "Up to {0} files an hour",
             "\u6bcf\u5c0f\u65f6\u6700\u591a {0} \u4e2a\u6587\u4ef6",
+            "Upcoming songs are checked against your enabled sources. YouTube is used when no other"
+                    + " copy can play or the connection is too slow.",
+            "\u7cfb\u7edf\u4f1a\u5728\u4f60\u542f\u7528\u7684\u97f3\u6e90\u4e2d\u67e5\u627e\u5373\u5c06\u64ad\u653e\u7684\u6b4c\u66f2\u3002\u5982\u679c\u6ca1\u6709\u5176\u4ed6\u53ef\u64ad\u653e\u7684\u7248\u672c\uff0c\u6216\u7f51\u7edc\u8fde\u63a5\u592a\u6162\uff0c\u5219\u4f7f\u7528"
+                + " YouTube\u3002",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download",
             "Upload original bytes to your private main channel and download them again to verify"
@@ -106089,6 +106396,8 @@ final class Translations {
             "\u9a8c\u8bc1\u7801",
             "Verified",
             "\u5df2\u9a8c\u8bc1",
+            "Verified copies from enabled sources take priority",
+            "\u4f18\u5148\u4f7f\u7528\u5df2\u542f\u7528\u97f3\u6e90\u4e2d\u7ecf\u8fc7\u9a8c\u8bc1\u7684\u7248\u672c",
             "Verify and continue",
             "\u9a8c\u8bc1\u5e76\u7ee7\u7eed",
             "Verify and remove",

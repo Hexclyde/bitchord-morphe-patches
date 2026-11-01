@@ -196,6 +196,9 @@ public class SourcePreferenceTest {
     public void network() throws Exception {
         for (String field : new String[] {"decisions", "offsets", "pendingOffsets", "attempts"})
             clear(field);
+        java.lang.reflect.Field trusted = SourcePreference.class.getDeclaredField("verifiedAhead");
+        trusted.setAccessible(true);
+        ((Set<?>) trusted.get(null)).clear();
         files.clear();
         opens.clear();
         resolves.set(0);
@@ -546,5 +549,156 @@ public class SourcePreferenceTest {
         assertEquals(range.httpRequestHeaders, file.httpRequestHeaders);
         DataSpec already = new DataSpec(Uri.parse(CANDIDATE));
         assertSame(already, SourcePreference.wholeFile(already));
+    }
+
+    // ── Checking ahead ──────────────────────────────────────────────────────
+
+    DataSpec plain() {
+        return new DataSpec(Uri.parse(MARKED));
+    }
+
+    @Test
+    public void aCheckMadeAheadAnswersThePlayersOwnOpen() throws Exception {
+        SourcePreference.verifyAhead(
+                plain(), new DataSpec(Uri.parse(CANDIDATE)), () -> false, true);
+        assertEquals(6, AudioDecoder.windows.size());
+        int before = opensOf(CANDIDATE) + opensOf(REFERENCE);
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        assertSame(resolved, SourcePreference.guard(plain(), resolved));
+        assertEquals("Nothing is read again", before, opensOf(CANDIDATE) + opensOf(REFERENCE));
+    }
+
+    /** The player may be looking at another reference by the time it opens this. */
+    @Test
+    public void aCheckAheadIsAgainstYouTubeWhateverIsObserved() throws Exception {
+        int resolvesBefore = resolves.get();
+        SourcePreference.verifyAhead(
+                plain(), new DataSpec(Uri.parse(CANDIDATE)), () -> false, true);
+        assertEquals(resolvesBefore + 1, resolves.get());
+        assertEquals("No swap shift from it", null, SourcePreference.verifiedOffset("song"));
+    }
+
+    @Test
+    public void aCheckAheadIsNotStoppedByNothingBeingParkedYet() throws Exception {
+        QualityUpgrade.parked = false;
+        SourcePreference.verifyAhead(
+                plain(), new DataSpec(Uri.parse(CANDIDATE)), () -> false, true);
+        assertEquals(6, AudioDecoder.windows.size());
+    }
+
+    @Test
+    public void aCheckAheadStopsWhenCancelledAndKeepsWhatItDecoded() throws Exception {
+        boolean[] cancelled = {false};
+        AudioDecoder.afterWindow = done -> cancelled[0] = done == 3;
+        try {
+            SourcePreference.verifyAhead(
+                    plain(), new DataSpec(Uri.parse(CANDIDATE)), () -> cancelled[0], true);
+            fail("Cancelled");
+        } catch (SourceAudio.Stopped expected) {
+        }
+        assertTrue(AudioDecoder.windows.size() <= 4);
+        assertFalse(SourcePreference.rejected(plain(), new DataSpec(Uri.parse(CANDIDATE))));
+        AudioDecoder.afterWindow = null;
+        SourcePreference.verifyAhead(
+                plain(), new DataSpec(Uri.parse(CANDIDATE)), () -> false, true);
+        assertEquals("Continued, not restarted", 6, AudioDecoder.windows.size());
+    }
+
+    @Test
+    public void aRejectionMadeAheadIsReadableAndStillRefusesThePlayer() throws Exception {
+        files.put(CANDIDATE, AudioDecoder.file(817, 0, 180, 0, false));
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        assertFalse(SourcePreference.rejected(plain(), resolved));
+        try {
+            SourcePreference.verifyAhead(plain(), resolved, () -> false, false);
+            fail();
+        } catch (IOException expected) {
+        }
+        assertTrue(SourcePreference.rejected(plain(), resolved));
+        java.lang.reflect.Field seen = SourceAutomix.class.getDeclaredField("observed");
+        seen.setAccessible(true);
+        ((Map<String, Uri>) seen.get(null)).remove("song");
+        try {
+            SourcePreference.guard(plain(), resolved);
+            fail("Still not the same recording");
+        } catch (IOException expected) {
+            assertTrue(expected.getMessage().contains("did not verify"));
+        }
+    }
+
+    @Test
+    public void aWrongLengthAheadIsStillRefused() throws Exception {
+        files.put(CANDIDATE, AudioDecoder.file(91, 0, 182, 0, false));
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        try {
+            SourcePreference.verifyAhead(plain(), resolved, () -> false, true);
+            fail();
+        } catch (IOException expected) {
+            assertTrue(expected.getMessage().contains("different duration"));
+        }
+        assertTrue(SourcePreference.rejected(plain(), resolved));
+    }
+
+    @Test
+    public void anUndecidedCheckIsNotARejection() throws Exception {
+        files.remove(CANDIDATE);
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        try {
+            SourcePreference.verifyAhead(plain(), resolved, () -> false, true);
+            fail();
+        } catch (IOException expected) {
+        }
+        assertFalse(SourcePreference.rejected(plain(), resolved));
+    }
+
+    @Test
+    public void aCheckAheadYieldsOnlyWhenNobodyIsWaiting() throws Exception {
+        int before = android.os.Process.getThreadPriority(android.os.Process.myTid());
+        int[] during = {before};
+        AudioDecoder.afterWindow =
+                done ->
+                        during[0] =
+                                android.os.Process.getThreadPriority(android.os.Process.myTid());
+        SourcePreference.verifyAhead(
+                plain(), new DataSpec(Uri.parse(CANDIDATE)), () -> false, false);
+        assertEquals("Someone is waiting", before, during[0]);
+        clear("decisions");
+        clear("attempts");
+        AudioDecoder.windows.clear();
+        SourcePreference.verifyAhead(
+                plain(), new DataSpec(Uri.parse(CANDIDATE)), () -> false, true);
+        assertEquals(android.os.Process.THREAD_PRIORITY_BACKGROUND, during[0]);
+        assertEquals(before, android.os.Process.getThreadPriority(android.os.Process.myTid()));
+    }
+
+    @Test
+    public void somethingTrustedFromAnEarlierCheckNeedsNoReading() throws Exception {
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        SourcePreference.trustAhead(plain(), resolved);
+        assertSame(resolved, SourcePreference.guard(plain(), resolved));
+        assertEquals(0, opensOf(CANDIDATE));
+    }
+
+    @Test
+    public void verificationIgnoresOnlyTheSourceNeutralEntryTag() throws Exception {
+        java.lang.reflect.Method key =
+                SourcePreference.class.getDeclaredMethod(
+                        "decisionKey", Uri.class, Uri.class, Uri.class);
+        key.setAccessible(true);
+        Uri a = Uri.parse(MARKED + "&bc_entry=one"), b = Uri.parse(MARKED + "&bc_entry=two");
+        assertEquals(
+                key.invoke(null, a, Uri.parse(CANDIDATE), null),
+                key.invoke(null, b, Uri.parse(CANDIDATE), null));
+        assertNotEquals(
+                key.invoke(null, a, Uri.parse(CANDIDATE), null),
+                key.invoke(
+                        null,
+                        Uri.parse(PLAYED + "&q=hifiDifferent&bc_entry=one"),
+                        Uri.parse(CANDIDATE),
+                        null));
+        SourcePreference.trustAhead(new DataSpec(a), new DataSpec(Uri.parse(CANDIDATE)));
+        assertNotNull(SourcePreference.guard(new DataSpec(b), new DataSpec(Uri.parse(CANDIDATE))));
+        assertEquals(
+                "Previously verified stream needs no second reference fetch", 0, resolves.get());
     }
 }

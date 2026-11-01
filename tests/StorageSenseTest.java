@@ -470,6 +470,7 @@ public final class StorageSenseTest {
         addon.add(new FakeSpan(fragment, true, "s|t", 100, 50, old));
         cache.spans.put("s|t", addon);
         put(cache, "s|t", "bc_origin", "OTHER");
+        put(cache, "s|t", "bc_src_name", "Qobuz [Heizenbergg]");
         put(cache, "s|t", "bc_media_id", "src:s::t");
         TreeSet<FakeSpan> gone = new TreeSet<>();
         gone.add(new FakeSpan(vanished, true, "gone", 0, 999, old));
@@ -478,6 +479,19 @@ public final class StorageSenseTest {
 
         StorageSense.Listing listing = cacheOwner.list(idle(), StorageSense.NEVER);
         check(listing.items.size() == 2, "Files the system deleted and holes aren't counted");
+        check(
+                listing.items.stream()
+                        .anyMatch(
+                                i ->
+                                        i.location.equals("s|t")
+                                                && i.sourceName.equals("Qobuz [Heizenbergg]")),
+                "Configured rendition source is retained in the cache inventory");
+        put(cache, "s|t", "bc_src_mixed", "1");
+        check(
+                cacheOwner.list(idle(), StorageSense.NEVER).items.stream()
+                        .anyMatch(i -> i.location.equals("s|t") && i.sourceName.isEmpty()),
+                "Mixed rendition bytes have no single source label");
+        cache.getContentMetadata("s|t").metadata.remove("bc_src_mixed");
         StorageSense.Item song = null, stream = null;
         for (StorageSense.Item item : listing.items) {
             if (item.location.equals("vid")) song = item;
