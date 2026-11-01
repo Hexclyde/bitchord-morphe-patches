@@ -9,7 +9,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from prepare_mobile_source import load_config, validate_metadata
+from prepare_mobile_source import load_config, validate_metadata, release_urls
 from bootstrap_from_release import verify_bundle
 
 
@@ -21,6 +21,37 @@ class MobileSourceTest(unittest.TestCase):
 
     def validate(self):
         validate_metadata(self.manifest, self.patches, self.source, self.provenance)
+
+    def test_default_release_tag_remains_compatible(self):
+        metadata = dict(self.provenance)
+        metadata.pop("release_tag", None)
+        name, page, url = release_urls(self.source, metadata)
+        self.assertTrue(page.endswith("/v" + metadata["patch_bundle_version"]))
+        self.assertTrue(
+            url.endswith("/v" + metadata["patch_bundle_version"] + "/" + name)
+        )
+
+    def test_revision_tag_preserves_mpp_version_and_filename(self):
+        metadata = dict(
+            self.provenance,
+            release_tag="v" + self.provenance["patch_bundle_version"] + "-r2",
+        )
+        name, page, url = release_urls(self.source, metadata)
+        self.assertEqual(
+            "bitchord-patches-" + metadata["patch_bundle_version"] + ".mpp", name
+        )
+        self.assertTrue(page.endswith(metadata["release_tag"]))
+        self.assertIn("/" + metadata["release_tag"] + "/", url)
+
+    def test_revision_tag_rejects_wrong_version_and_url_injection(self):
+        for tag in [
+            "v9.9.9",
+            "../other",
+            "v" + self.provenance["patch_bundle_version"] + "-r0",
+            "https://example.com/tag",
+        ]:
+            with self.subTest(tag=tag), self.assertRaises(ValueError):
+                release_urls(self.source, dict(self.provenance, release_tag=tag))
 
     def test_current_snapshots_and_hex_identity(self):
         self.validate()

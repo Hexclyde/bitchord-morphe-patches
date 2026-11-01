@@ -261,6 +261,8 @@ public final class VerifySoulseekApk {
                                 List.of(
                                         "Lapp/bitchord/telegram/PatchStrings;",
                                         "Lapp/bitchord/telegram/CapturePolicy;",
+                                        "Lapp/bitchord/telegram/DownloadControls;",
+                                        "Lapp/bitchord/telegram/FlacAddon;",
                                         "Lapp/bitchord/telegram/RecordingMatch;",
                                         "Lapp/bitchord/telegram/RecordingMatch$Reference;"))
                             independentReference = independentReference.replace(shared, "");
@@ -268,6 +270,9 @@ public final class VerifySoulseekApk {
                                 reference.startsWith("Lapp/bitchord/telegram/PatchStrings;")
                                         || reference.startsWith(
                                                 "Lapp/bitchord/telegram/CapturePolicy;")
+                                        || reference.startsWith(
+                                                "Lapp/bitchord/telegram/DownloadControls;")
+                                        || reference.startsWith("Lapp/bitchord/telegram/FlacAddon;")
                                         || reference.startsWith(
                                                 "Lapp/bitchord/telegram/RecordingMatch;")
                                         || reference.startsWith(
@@ -386,15 +391,23 @@ public final class VerifySoulseekApk {
             for (Method method : downloads.getMethods())
                 if (method.getName().equals("enqueue")) {
                     List<Instruction> enqueueCode = code(method);
+                    int start =
+                            namedCall(
+                                            enqueueCode.get(0),
+                                            "Lapp/bitchord/telegram/DownloadControls;",
+                                            "remember")
+                                    ? 1
+                                    : 0;
                     check(
                             namedCall(
-                                    enqueueCode.get(0),
+                                    enqueueCode.get(start),
                                     PREFIX + "SoulseekSelectedDownloads;",
                                     "enqueueOrFalse"),
                             "Selected downloads intercepted before filename adoption");
                     check(
-                            enqueueCode.get(2).getOpcode() == Opcode.IF_EQZ
-                                    && VerifyApk.branchTarget(enqueueCode, 2) == enqueueCode.get(4),
+                            enqueueCode.get(start + 2).getOpcode() == Opcode.IF_EQZ
+                                    && VerifyApk.branchTarget(enqueueCode, start + 2)
+                                            == enqueueCode.get(start + 4),
                             "Other downloads reach original enqueue");
                 }
             Method routing = null;

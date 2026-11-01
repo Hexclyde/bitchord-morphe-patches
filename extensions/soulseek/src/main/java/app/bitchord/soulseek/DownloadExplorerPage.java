@@ -201,6 +201,7 @@ final class DownloadExplorerPage extends DownloadPage {
                                                                                                         id,
                                                                                                         now),
                                                                                 null)
+                                                                        .sourceReference(reference)
                                                                         .fromFamily(
                                                                                 id.equals(
                                                                                                 "telegram-native")
@@ -307,6 +308,7 @@ final class DownloadExplorerPage extends DownloadPage {
                                                                                         + " queued");
                                                                     },
                                                                     null)
+                                                            .soulseekDetails(row)
                                                             .inlinePreview(
                                                                     SoulseekPreview.available(this)
                                                                                     && SoulseekPreview
@@ -339,6 +341,13 @@ final class DownloadExplorerPage extends DownloadPage {
     }
 
     private void admit(DownloadExplorerView.Option option, boolean now) {
+        if (option.sourceReference.startsWith("src:flacdownloader-native::")
+                && app.bitchord.telegram.FlacAddon.needsVerification()) {
+            explorer.message(
+                    PatchStrings.t("Verify the provider, then choose Now or Later again."));
+            app.bitchord.telegram.FlacAddon.verify(activity);
+            return;
+        }
         String source = option.source, title = option.title;
         Selection selection = option.selection;
         int batchIndex = getIntent().getIntExtra("download.batch.index", -1);

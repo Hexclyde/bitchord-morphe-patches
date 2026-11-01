@@ -61,13 +61,20 @@ def load_config():
 
 def release_urls(source, provenance):
     version = provenance["patch_bundle_version"]
-    page = "https://github.com/" + source["repository"] + "/releases/tag/v" + version
+    tag = provenance.get("release_tag", "v" + version)
+    if not isinstance(tag, str) or not re.fullmatch(
+        re.escape("v" + version) + r"(?:-r[1-9][0-9]*)?", tag
+    ):
+        raise ValueError(
+            "Release tag must match the patch version or a numbered revision"
+        )
+    page = "https://github.com/" + source["repository"] + "/releases/tag/" + tag
     name = "bitchord-patches-" + version + ".mpp"
     download = (
         "https://github.com/"
         + source["repository"]
-        + "/releases/download/v"
-        + version
+        + "/releases/download/"
+        + tag
         + "/"
         + name
     )

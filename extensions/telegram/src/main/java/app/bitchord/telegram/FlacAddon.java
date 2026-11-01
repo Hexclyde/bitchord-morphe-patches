@@ -31,6 +31,62 @@ public final class FlacAddon {
     static Transport transport = FlacAddon::http;
     static Pause pause = Thread::sleep;
 
+    interface SessionStore {
+        String read() throws Exception;
+
+        void write(String value) throws Exception;
+    }
+
+    static volatile String providerSession;
+    static SessionStore sessions =
+            new SessionStore() {
+                public String read() throws Exception {
+                    android.content.Context app = SoundExtras.app();
+                    return app == null ? null : new SyncSecrets(app).get("flacdownloader.session");
+                }
+
+                public void write(String value) throws Exception {
+                    android.content.Context app = SoundExtras.app();
+                    if (app == null) throw new IOException("Playback service is not ready");
+                    new SyncSecrets(app).put("flacdownloader.session", value);
+                }
+            };
+
+    public static boolean needsVerification() {
+        return providerSession == null || providerSession.isEmpty();
+    }
+
+    public static void verify(android.app.Activity activity) {
+        activity.startActivity(
+                new android.content.Intent(activity, FlacVerificationActivity.class));
+    }
+
+    static final class VerificationRequired extends IOException {
+        VerificationRequired() {
+            super("Verify flacdownloader.com in provider setup, then retry this file.");
+        }
+    }
+
+    static String session() throws Exception {
+        if (providerSession == null) providerSession = sessions.read();
+        if (providerSession == null || providerSession.isEmpty()) throw new VerificationRequired();
+        return providerSession;
+    }
+
+    static void acceptSession(String pass) throws Exception {
+        if (pass == null
+                || pass.isEmpty()
+                || pass.length() > 8192
+                || pass.contains("\r")
+                || pass.contains("\n")) throw new VerificationRequired();
+        long deadline = System.nanoTime() + 20_000_000_000L;
+        JSONObject proof = request("/prepare", new JSONObject().put("sp", pass), "", deadline);
+        if (proof.optString("t").isEmpty()) throw new VerificationRequired();
+        requireEnabled();
+        sessions.write(pass);
+        providerSession = pass;
+    }
+
     private FlacAddon() {}
 
     public static boolean reserved(String value) {
@@ -148,7 +204,7 @@ public final class FlacAddon {
             return new JSONObject()
                     .put("id", ID)
                     .put("name", "Flac Downloader Audio")
-                    .put("version", "1.1.0-beta.16.4")
+                    .put("version", "1.1.0-beta.17")
                     .put("resources", new JSONArray().put("search").put("stream"))
                     .put(
                             "description",
@@ -159,7 +215,8 @@ public final class FlacAddon {
                     .toString();
         requireEnabled();
         Map<String, String> query = query(uri);
-        long deadline = System.nanoTime() + 45_000_000_000L;
+        long deadline =
+                System.nanoTime() + ("/search".equals(path) ? 45_000_000_000L : 180_000_000_000L);
         if ("/search".equals(path))
             return search(
                             query.getOrDefault("q", ""),
@@ -186,40 +243,51 @@ public final class FlacAddon {
     static JSONObject search(String query, String quality, long deadline) throws Exception {
         JSONArray rows = new JSONArray();
         query = query.trim();
-        if (query.isEmpty() || "LOW".equalsIgnoreCase(quality))
-            return new JSONObject().put("tracks", rows);
+        if (query.isEmpty()) return new JSONObject().put("tracks", rows);
         if (query.length() > 512) throw new IOException("Search query is too long");
-        JSONObject answer =
-                request(
-                        "/api/qobuz/search?q=" + enc(query) + "&offset=0&limit=20",
-                        null,
-                        "",
-                        deadline);
+        if (providerSession == null) {
+            try {
+                providerSession = sessions.read();
+            } catch (Exception unavailable) {
+                providerSession = "";
+            }
+        }
+        JSONObject answer = request("/search?q=" + enc(query) + "&index=0", null, "", deadline);
         JSONArray tracks = answer.optJSONArray("tracks");
         if (tracks == null) throw new IOException("FLAC catalogue response is unavailable");
         Set<String> seen = new HashSet<>();
         for (int i = 0; i < tracks.length() && seen.size() < 8; i++) {
             JSONObject track = tracks.optJSONObject(i);
             if (track == null) continue;
-            String url = track.optString("url"),
+            String url = track.optString("link"),
                     title = track.optString("title"),
                     artist = track.optString("artist");
             if (title.trim().isEmpty()
                     || title.length() > 512
                     || artist.length() > 512
-                    || !catalogueUrl(url)
+                    || !primaryUrl(url)
                     || !seen.add(url)) continue;
-            for (int format : FORMATS) {
-                if ("HIGH".equalsIgnoreCase(quality) && format != 5) continue;
+            for (String format : new String[] {"flac", "mp3_320", "mp3_128"}) {
+                if ("HIGH".equalsIgnoreCase(quality) && !format.equals("mp3_320")) continue;
+                if ("LOW".equalsIgnoreCase(quality) && !format.equals("mp3_128")) continue;
+                String raw =
+                        new JSONObject().put("u", url).put("t", title).put("a", artist).toString();
+                String id =
+                        format
+                                + "."
+                                + Base64.getUrlEncoder()
+                                        .withoutPadding()
+                                        .encodeToString(raw.getBytes(StandardCharsets.UTF_8));
+                if (unavailableFormats.contains(id)) continue;
                 JSONObject row =
                         new JSONObject()
-                                .put("id", identity(url, title, artist, format))
+                                .put("id", id)
                                 .put("title", title)
                                 .put("artist", artist)
                                 .put("album", track.optString("album"))
-                                .put("duration", Math.max(0, track.optLong("durationMs")) / 1000.0)
-                                .put("format", format == 5 ? "mp3" : "flac")
-                                .put("audioQuality", label(format) + " · requested")
+                                .put("duration", Math.max(0, track.optLong("duration")))
+                                .put("format", format.equals("flac") ? "flac" : "mp3")
+                                .put("audioQuality", label(format))
                                 .put("formatVerified", false);
                 String art = track.optString("cover");
                 if (art.startsWith("https://")) row.put("artworkURL", art);
@@ -227,6 +295,38 @@ public final class FlacAddon {
             }
         }
         return new JSONObject().put("tracks", rows);
+    }
+
+    private static final Set<String> unavailableFormats =
+            java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    static boolean primaryUrl(String value) {
+        try {
+            URI uri = new URI(value);
+            return "https".equals(uri.getScheme())
+                    && uri.getUserInfo() == null
+                    && uri.getPort() == -1
+                    && ("www.deezer.com".equals(uri.getHost())
+                            || "deezer.com".equals(uri.getHost()))
+                    && uri.getRawQuery() == null
+                    && uri.getRawFragment() == null
+                    && uri.getPath().matches("/(?:[a-z]{2}/)?track/[0-9]+/?");
+        } catch (Exception invalid) {
+            return false;
+        }
+    }
+
+    static String label(String format) {
+        switch (format) {
+            case "flac":
+                return "FLAC";
+            case "mp3_320":
+                return "MP3 320 kbps";
+            case "mp3_128":
+                return "MP3 128 kbps";
+            default:
+                return label(Integer.parseInt(format));
+        }
     }
 
     static boolean catalogueUrl(String value) {
@@ -258,14 +358,14 @@ public final class FlacAddon {
     }
 
     static JSONObject decode(String id) throws Exception {
-        if (id.length() > 7000 || !id.matches("(?:27|7|6|5)\\.[A-Za-z0-9_-]+"))
+        if (id.length() > 7000 || !id.matches("(?:27|7|6|5|flac|mp3_320|mp3_128)\\.[A-Za-z0-9_-]+"))
             throw new IOException("Invalid FLAC track reference");
         JSONObject row =
                 new JSONObject(
                         new String(
                                 Base64.getUrlDecoder().decode(id.substring(id.indexOf('.') + 1)),
                                 StandardCharsets.UTF_8));
-        if (!catalogueUrl(row.optString("u"))
+        if (!(catalogueUrl(row.optString("u")) || primaryUrl(row.optString("u")))
                 || row.optString("t").trim().isEmpty()
                 || row.optString("t").length() > 512
                 || row.optString("a").length() > 512)
@@ -297,7 +397,7 @@ public final class FlacAddon {
         try {
             String id = reference.substring(prefix.length());
             decode(id);
-            return label(Integer.parseInt(id.substring(0, id.indexOf('.'))))
+            return label(id.substring(0, id.indexOf('.')))
                     + " · requested, availability unverified";
         } catch (Exception invalid) {
             return "";
@@ -306,8 +406,97 @@ public final class FlacAddon {
 
     static JSONObject resolve(String id, long deadline) throws Exception {
         JSONObject row = decode(id);
+        String format = id.substring(0, id.indexOf('.'));
+        if (catalogueUrl(row.getString("u"))) return legacyResolve(id, deadline);
+        if (!Arrays.asList("flac", "mp3_320", "mp3_128").contains(format))
+            throw new IOException("Invalid provider format");
+        String token =
+                request("/prepare", new JSONObject().put("sp", session()), "", deadline)
+                        .optString("t");
+        if (token.isEmpty()
+                || token.length() > 8192
+                || token.contains("\r")
+                || token.contains("\n")) throw new VerificationRequired();
+        JSONObject job =
+                request(
+                        "/download",
+                        new JSONObject()
+                                .put("url", row.getString("u"))
+                                .put("title", row.getString("t"))
+                                .put("artist", row.optString("a"))
+                                .put("format", format)
+                                .put("accept_fallback", false),
+                        token,
+                        deadline);
+        String jobId = job.optString("job_id");
+        if (!jobId.matches("[A-Za-z0-9_-]{1,128}"))
+            throw new IOException("Provider preparation job unavailable");
+        while (System.nanoTime() < deadline) {
+            JSONObject state = request("/status/" + jobId, null, "", deadline);
+            String status = state.optString("status");
+            String actual = state.optString("format", state.optString("quality"));
+            JSONObject mirror = state.optJSONObject("mirror");
+            if (mirror != null && !mirror.optString("calidad").isEmpty())
+                actual = mirror.optString("calidad");
+            if (actual.equals("mp3")) actual = "mp3_320";
+            if ((!actual.isEmpty() && !actual.equals(format)) || state.optBoolean("fallback")) {
+                if (unavailableFormats.size() < 512) unavailableFormats.add(id);
+                throw new IOException(
+                        "Selected provider format is unavailable. Choose another format"
+                                + " explicitly.");
+            }
+            if (status.equals("done")) {
+                String file = state.optString("filename");
+                String extension = format.equals("flac") ? ".flac" : ".mp3";
+                if (!file.matches("[A-Za-z0-9][A-Za-z0-9_. -]{0,255}")
+                        || file.contains("..")
+                        || !file.toLowerCase(Locale.ROOT).endsWith(extension))
+                    throw new IOException("Provider returned a different file format");
+                return new JSONObject()
+                        .put(
+                                "url",
+                                BACKEND
+                                        + "/file/"
+                                        + enc(file)
+                                        + "?name="
+                                        + enc(state.optString("pretty_name", file)))
+                        .put("format", format.equals("flac") ? "flac" : "mp3")
+                        .put("codec", format.equals("flac") ? "flac" : "mp3")
+                        .put("container", format.equals("flac") ? "flac" : "mp3")
+                        .put("encrypted", false)
+                        .put("manifest", "none")
+                        .put(
+                                "headers",
+                                new JSONObject()
+                                        .put("User-Agent", "BitChord/1.9")
+                                        .put("Referer", BACKEND + "/"))
+                        .put("audioQuality", label(format))
+                        .put("formatVerified", false);
+            }
+            if (Arrays.asList("error", "failed", "cancelled").contains(status)) {
+                throw new IOException("Provider preparation failed. Retry the selected format.");
+            }
+            if (!Arrays.asList(
+                            "queued",
+                            "pending",
+                            "processing",
+                            "downloading",
+                            "running",
+                            "converting",
+                            "mirror")
+                    .contains(status))
+                throw new IOException("Unexpected provider preparation status");
+            pause.waitFor(Math.min(1000, Math.max(1, (deadline - System.nanoTime()) / 1_000_000)));
+        }
+        throw new IOException("Provider preparation timed out. Try again later.");
+    }
+
+    static JSONObject legacyResolve(String id, long deadline) throws Exception {
+        JSONObject row = decode(id);
         int format = Integer.parseInt(id.substring(0, id.indexOf('.')));
-        String token = request("/prepare", null, "", deadline).optString("t");
+        String token =
+                request("/prepare", new JSONObject().put("sp", session()), "", deadline)
+                        .optString("t");
         if (token.isEmpty()
                 || token.length() > 8192
                 || token.contains("\r")
@@ -325,7 +514,7 @@ public final class FlacAddon {
         String job = queued.optString("id");
         if (!job.matches("[A-Za-z0-9_-]{1,128}"))
             throw new IOException("FLAC preparation job unavailable");
-        for (int attempt = 0; attempt < 40; attempt++) {
+        for (int attempt = 0; attempt < 180; attempt++) {
             JSONObject state = request("/api/qobuz/jobs/" + job, null, "", deadline);
             String status = state.optString("status");
             if ("done".equals(status)) {
@@ -348,6 +537,11 @@ public final class FlacAddon {
                                 .put("codec", format == 5 ? "mp3" : "flac")
                                 .put("container", format == 5 ? "mp3" : "flac")
                                 .put("mimeType", format == 5 ? "audio/mpeg" : "audio/flac")
+                                .put(
+                                        "headers",
+                                        new JSONObject()
+                                                .put("User-Agent", "BitChord/1.9")
+                                                .put("Referer", BACKEND + "/"))
                                 .put("manifest", "none")
                                 .put("encrypted", false)
                                 .put(
@@ -406,6 +600,7 @@ public final class FlacAddon {
         connection.setReadTimeout(timeout);
         connection.setInstanceFollowRedirects(false);
         connection.setRequestProperty("Accept", "application/json");
+        connection.setRequestProperty("User-Agent", "BitChord/1.9");
         connection.setRequestProperty("Referer", BACKEND + "/");
         connection.setRequestProperty("Origin", BACKEND);
         if (!token.isEmpty()) connection.setRequestProperty("X-DL-Token", token);
@@ -421,6 +616,11 @@ public final class FlacAddon {
                 }
             }
             int status = connection.getResponseCode();
+            if (status == 403 && "/prepare".equals(path)) {
+                providerSession = "";
+                sessions.write(null);
+                throw new VerificationRequired();
+            }
             if (status == 429)
                 throw new IOException("FLAC service is rate limited. Try again later.");
             if (status != 200)

@@ -119,23 +119,7 @@ final class DownloadStyle {
             String[] icons,
             String[] labels,
             java.util.function.IntConsumer selected) {
-        android.app.Dialog dialog =
-                new android.app.Dialog(
-                        activity,
-                        dark
-                                ? android.R.style.Theme_Material_Dialog_NoActionBar
-                                : android.R.style.Theme_Material_Light_Dialog_NoActionBar);
-        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
-        LinearLayout panel = new LinearLayout(activity);
-        panel.setOrientation(LinearLayout.VERTICAL);
-        panel.setTag("download-settings-panel");
-        panel.setPadding(dp(20), dp(22), dp(20), dp(12));
-        TextView heading = text(title, 22, foreground, semibold);
-        if (android.os.Build.VERSION.SDK_INT >= 28) heading.setAccessibilityHeading(true);
-        panel.addView(heading);
-        TextView description = text(message, 14, secondary, regular);
-        description.setPadding(0, dp(6), 0, dp(14));
-        panel.addView(description);
+        android.app.Dialog dialog = newPanelDialog();
         LinearLayout actions = new LinearLayout(activity);
         actions.setOrientation(LinearLayout.VERTICAL);
         for (int i = 0; i < labels.length; i++) {
@@ -184,7 +168,35 @@ final class DownloadStyle {
                     });
             actions.addView(row, new LinearLayout.LayoutParams(-1, -2));
         }
-        panel.addView(actions);
+        return panel(dialog, title, message, actions, "download-settings-panel");
+    }
+
+    android.app.Dialog detailsPanel(String title, String message, View content) {
+        return panel(newPanelDialog(), title, message, content, "download-details-panel");
+    }
+
+    private android.app.Dialog newPanelDialog() {
+        return new android.app.Dialog(
+                activity,
+                dark
+                        ? android.R.style.Theme_Material_Dialog_NoActionBar
+                        : android.R.style.Theme_Material_Light_Dialog_NoActionBar);
+    }
+
+    private android.app.Dialog panel(
+            android.app.Dialog dialog, String title, String message, View content, String tag) {
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
+        LinearLayout panel = new LinearLayout(activity);
+        panel.setOrientation(LinearLayout.VERTICAL);
+        panel.setTag(tag);
+        panel.setPadding(dp(20), dp(22), dp(20), dp(12));
+        TextView heading = text(title, 22, foreground, semibold);
+        if (android.os.Build.VERSION.SDK_INT >= 28) heading.setAccessibilityHeading(true);
+        panel.addView(heading);
+        TextView description = text(message, 14, secondary, regular);
+        description.setPadding(0, dp(6), 0, dp(14));
+        panel.addView(description);
+        panel.addView(content);
         TextView done = text(PatchStrings.t("Done"), 16, foreground, semibold);
         done.setGravity(Gravity.CENTER);
         done.setMinHeight(dp(48));
@@ -658,7 +670,18 @@ final class DownloadStyle {
                 paint.setStrokeWidth(2);
                 paint.setStrokeCap(Paint.Cap.ROUND);
                 paint.setStrokeJoin(Paint.Join.ROUND);
-                if (mode.equals("folder")) {
+                if (mode.equals("pause")) {
+                    canvas.drawLine(8, 5, 8, 19, paint);
+                    canvas.drawLine(16, 5, 16, 19, paint);
+                } else if (mode.equals("minus")) {
+                    canvas.drawLine(5, 12, 19, 12, paint);
+                } else if (mode.equals("trash")) {
+                    canvas.drawLine(4, 6, 20, 6, paint);
+                    canvas.drawLine(9, 3, 15, 3, paint);
+                    canvas.drawRect(6, 7, 18, 21, paint);
+                    canvas.drawLine(10, 10, 10, 18, paint);
+                    canvas.drawLine(14, 10, 14, 18, paint);
+                } else if (mode.equals("folder")) {
                     canvas.drawRoundRect(3, 6, 21, 20, 2, 2, paint);
                     canvas.drawLine(4, 6, 4, 3, paint);
                     canvas.drawLine(4, 3, 10, 3, paint);

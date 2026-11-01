@@ -39,6 +39,14 @@ Public-sharing configuration is not presented as a completed download. The nativ
 add-on. See the [beta.17 verification report](VERIFICATION-1.1.0-beta.17.md) for
 scoped Waydroid checks and remaining physical-phone qualification.
 
+## Transfer and file actions
+
+Active and queued source downloads offer **Pause**; paused entries offer **Resume**, and failures offer **Retry**. The current host and selected Soulseek paths stop their transfer when paused. Resume restarts the same selected file from its beginning; it does not switch providers. Host paused requests survive reopening. Soulseek resume requires the original authenticated session; an expired session requires selecting the result again. Transfers already handed to destination journals use those journals' existing controls.
+
+**Remove from list** hides that entry and keeps its saved file. **Delete file** asks for confirmation before deleting the device copy. A failed deletion keeps the entry. Deleting a device copy does not delete its Telegram copy or replay an upload. Library's Downloads shortcut opens this native hub when the patch is installed.
+
+The result-card **File details** panel shows available filename, folder, exact size, duration, bitrate, sample rate, bit depth, bitrate mode, peer availability and additional numeric attributes. Peer metadata is labeled as unverified; missing values say so. Opening details does not begin a transfer.
+
 ## Find and choose sources
 
 A manual Download on a YouTube catalogue track opens Explorer. It queries the host's

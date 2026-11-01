@@ -26,7 +26,19 @@ final class DownloadExplorerView {
         RadioButton radio;
         LinearLayout group;
         View previewAction, infoAction;
-        SoulseekTrack previewTrack;
+        SoulseekTrack previewTrack, soulseekTrack;
+        String sourceReference = "";
+
+        Option sourceReference(String reference) {
+            sourceReference = reference;
+            return this;
+        }
+
+        Option soulseekDetails(SoulseekTrack track) {
+            soulseekTrack = track;
+            return this;
+        }
+
         String previewSession;
         String family = "addons", filePath = "";
         long bytes = -1;
@@ -773,14 +785,7 @@ final class DownloadExplorerView {
     }
 
     private void details(Option option) {
-        String message =
-                join(option.title, option.artist) + "\n\n" + option.quality + "\n" + option.detail;
-        if (!option.filePath.isEmpty()) message += "\n\n" + option.filePath;
-        new android.app.AlertDialog.Builder(page)
-                .setTitle(option.source)
-                .setMessage(message)
-                .setPositiveButton(PatchStrings.t("Done"), null)
-                .show();
+        DownloadDetails.show(page.activity, option);
     }
 
     private LinearLayout column() {

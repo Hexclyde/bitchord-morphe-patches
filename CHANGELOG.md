@@ -1,5 +1,9 @@
 # 1.1.0-beta.17
 
+- Update FLAC Downloader to provider browser verification and current FLAC/MP3 320/MP3 128 preparation; reject format downgrades.
+- Add exact-source Pause, Resume and Retry, separate history removal and confirmed device-file deletion. Route Library Downloads to the patched hub.
+- Show peer-reported Soulseek file/audio/queue metadata in native details panels. Hide the Audio/Video row in Lyrics and Queue; inset the transition editor below system bars and the keyboard.
+
 - Unwrap boxed Kotlin results from native suspending lookups before reading playlist/search pages. Handle immediate and resumed success/failure results consistently.
 
 - Integrate Soulseek previews into result cards with explicit playback, elapsed time, actual decoded format and transfer reuse. Keep local-reference and recording-evidence tools in an optional compact native panel.

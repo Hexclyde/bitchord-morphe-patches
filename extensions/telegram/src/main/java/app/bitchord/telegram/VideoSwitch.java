@@ -459,6 +459,22 @@ public final class VideoSwitch {
         if (shown != null) shown.refresh();
     }
 
+    private static boolean mainSurface() {
+        try {
+            Field field =
+                    Class.forName("com.music.bitchord.data.settings.AppSettings")
+                            .getDeclaredField("lastPlayerScreen");
+            field.setAccessible(true);
+            Object flow = field.get(null);
+            Method read = flow.getClass().getMethod("getValue");
+            read.setAccessible(true);
+            Object screen = read.invoke(flow);
+            return "MAIN".equals(String.valueOf(screen));
+        } catch (ReflectiveOperationException unavailable) {
+            return false;
+        }
+    }
+
     private static void toast(Context context, String text) {
         Toast.makeText(context.getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
@@ -515,7 +531,7 @@ public final class VideoSwitch {
         void refresh() {
             removeCallbacks(tick);
             Object now = enabled ? current() : null;
-            boolean show = switchable(now);
+            boolean show = mainSurface() && switchable(now);
             setVisibility(show ? VISIBLE : GONE);
             busy = switching != null;
             boolean allowed = !busy && !inParty();

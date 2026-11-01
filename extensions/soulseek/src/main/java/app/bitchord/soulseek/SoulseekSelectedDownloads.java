@@ -141,7 +141,11 @@ public final class SoulseekSelectedDownloads {
                     stage = PatchStrings.t("Saving selected copies");
                     break;
                 case PAUSED:
-                    stage = PatchStrings.t("Saving paused");
+                    stage =
+                            PatchStrings.t(
+                                    handedOff
+                                            ? "Saving paused"
+                                            : "Paused · resume restarts this source");
                     break;
                 case FAILED:
                     stage = PatchStrings.t("Download needs attention");
@@ -180,6 +184,8 @@ public final class SoulseekSelectedDownloads {
 
     private static final class Entry {
         final String reference, name;
+        final SoulseekTrack track;
+        String session;
         final long total;
         final boolean needsPhone, needsTelegram;
         final long order = SEQUENCE.incrementAndGet();
@@ -192,6 +198,7 @@ public final class SoulseekSelectedDownloads {
 
         Entry(String reference, SoulseekTrack track, DownloadDestinations.Snapshot destinations) {
             this.reference = reference;
+            this.track = track;
             String basename =
                     track.path.substring(
                             Math.max(track.path.lastIndexOf('/'), track.path.lastIndexOf('\\'))
@@ -336,6 +343,7 @@ public final class SoulseekSelectedDownloads {
                                 stopMonitorIfIdle();
                             }
                         };
+                task.work = selectedWork;
                 synchronized (WORK) {
                     WORK.execute(selectedWork);
                     if (now && WORK.getQueue().remove(selectedWork))
@@ -387,7 +395,9 @@ public final class SoulseekSelectedDownloads {
         final AudioFormatPreferences.Settings formats;
         final Entry entry;
         final AtomicBoolean cancelled = new AtomicBoolean();
+        volatile boolean pausedByUser;
         volatile Thread thread;
+        volatile Runnable work;
         Closeable retained;
         boolean retentionClosed;
 
@@ -416,6 +426,7 @@ public final class SoulseekSelectedDownloads {
             this.destinations = destinations;
             this.formats = formats;
             entry = new Entry(reference, track, destinations);
+            entry.session = session;
         }
 
         void check() throws IOException {
@@ -522,7 +533,7 @@ public final class SoulseekSelectedDownloads {
                 if (cancelled.get()
                         || failure instanceof InterruptedIOException
                         || Thread.currentThread().isInterrupted()) {
-                    entry.phase = Phase.CANCELLED;
+                    entry.phase = pausedByUser ? Phase.PAUSED : Phase.CANCELLED;
                     entry.error = "";
                 } else {
                     entry.phase = Phase.FAILED;
@@ -685,6 +696,48 @@ public final class SoulseekSelectedDownloads {
 
     public static int activeCount() {
         return TASKS.size();
+    }
+
+    public static boolean pause(String reference) {
+        Task task = TASKS.get(reference);
+        if (task == null) return false;
+        synchronized (task) {
+            if (task.handoffStarted || task.cancelled.get()) return false;
+            task.pausedByUser = true;
+            task.cancelled.set(true);
+            task.entry.phase = Phase.PAUSED;
+        }
+        task.releaseRetention();
+        Runnable work = task.work;
+        if (work != null && WORK.getQueue().remove(work)) {
+            TASKS.remove(reference, task);
+            stopMonitorIfIdle();
+        }
+        Thread thread = task.thread;
+        if (thread != null) thread.interrupt();
+        return true;
+    }
+
+    public static boolean retry(Context app, String reference) {
+        if (TASKS.containsKey(reference)) return false;
+        Entry entry;
+        synchronized (HISTORY) {
+            entry = HISTORY.get(reference);
+        }
+        if (entry == null
+                || entry.jobId != null
+                || !(entry.phase == Phase.PAUSED
+                        || entry.phase == Phase.FAILED
+                        || entry.phase == Phase.CANCELLED)) return false;
+        return enqueueSelected(app, reference, true, entry.track, entry.session, null);
+    }
+
+    public static void remove(String reference) {
+        Task task = TASKS.get(reference);
+        if (task != null && !cancel(reference)) return;
+        synchronized (HISTORY) {
+            HISTORY.remove(reference);
+        }
     }
 
     public static boolean cancel(String reference) {

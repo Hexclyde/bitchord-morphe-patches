@@ -89,7 +89,7 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "483a23bbfcaccd6780d425b40bbf0ebe4c6f2c6940a6f98a098571321075b3ab",
+  "patch_bundle_sha256": "bc9e8fb8bf200f49a967b36da92b24f175556ec9e1dcedcf800b1a24637ac1e7",
   "soulseek_development": {
     "status": "experimental-local-build",
     "baseline_commit": "3de260f7f1d7967c5a97ce924085d7d42bec18af",
@@ -145,9 +145,9 @@
     "native_rebuild_toolchain": "Rust 1.91.1 / Android NDK r27d / API 26"
   },
   "soulseek_native_sha256": {
-    "lib/arm64-v8a/libbitchord_soulseek.so": "8af86f9740fecc9290f06709db07403347e8e8a743154c816898aea186a33064",
-    "lib/armeabi-v7a/libbitchord_soulseek.so": "6176e9371ee44a23fed7137ecce3aa8073aac1de1b28025245561044e64ee9f7",
-    "lib/x86_64/libbitchord_soulseek.so": "37c5bcedc68901870e03b2bc3397776f41a5b24c409c8cfa7405e73b0c12c96a"
+    "lib/arm64-v8a/libbitchord_soulseek.so": "0df54c15b73d25ab8068abd66c34904cea50edda761f6fb4cbd180eb27e63920",
+    "lib/armeabi-v7a/libbitchord_soulseek.so": "8f5ea6dbf7a8524d9d9365887ccd06ae3bf74c7e0d4d0266285adf6b467147cc",
+    "lib/x86_64/libbitchord_soulseek.so": "3662387ac9113431f2e0f7597f73e6d9ab90b89f84d40ed3b45408062c0e1b6b"
   },
   "download_runtime_native_sha256": {
     "lib/arm64-v8a/libbitchord_direct.so": "2696942a2398a6d3514b262beedaf45b2addc54878361c64aea36655659da03e",
@@ -316,5 +316,6 @@
     "network": false,
     "gpl": false,
     "nonfree": false
-  }
+  },
+  "release_tag": "v1.1.0-beta.17-r1"
 }

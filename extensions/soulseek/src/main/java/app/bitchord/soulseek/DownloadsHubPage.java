@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.*;
 
+import app.bitchord.telegram.DownloadControls;
 import app.bitchord.telegram.PatchStrings;
 
 import org.json.*;
@@ -323,7 +324,8 @@ final class DownloadsHubPage extends DownloadPage {
         final String name, detail, group;
         final Runnable action;
         final String actionName;
-        String savedUri = "", hostId = "";
+        String savedUri = "", hostId = "", soulseekReference = "";
+        boolean transfer;
         String artist = "", source = "", format = "", artwork = "";
         long received = -1, total = -1;
         float fraction = Float.NaN;
@@ -401,14 +403,21 @@ final class DownloadsHubPage extends DownloadPage {
                                                         : kind.equals("Failed")
                                                                 ? "Attention"
                                                                 : "Active",
-                                                kind.equals("Running") || kind.equals("Queued")
-                                                        ? "Cancel"
-                                                        : null,
+                                                kind.equals("Failed") ? "Retry" : "Pause",
                                                 () ->
                                                         command(
-                                                                () ->
-                                                                        HostDownloadAccess.cancel(
-                                                                                reference)));
+                                                                () -> {
+                                                                    if (kind.equals("Failed"))
+                                                                        DownloadControls.retry(
+                                                                                getApplicationContext(),
+                                                                                reference);
+                                                                    else
+                                                                        DownloadControls.pause(
+                                                                                getApplicationContext(),
+                                                                                reference);
+                                                                }));
+                                row.hostId = id;
+                                row.transfer = true;
                                 row.source = source;
                                 populateMetadata(row, metadata.get(id));
                                 if (kind.equals("Running"))
@@ -460,6 +469,27 @@ final class DownloadsHubPage extends DownloadPage {
                         } catch (Exception | LinkageError unavailable) {
                             warning = PatchStrings.t("BitChord download state is unavailable.");
                         }
+                        for (JSONObject request :
+                                DownloadControls.paused(getApplicationContext())) {
+                            String id = request.optString("id");
+                            JSONObject song = request.optJSONObject("song");
+                            Row row =
+                                    new Row(
+                                            song == null ? id : song.optString("title", id),
+                                            PatchStrings.t("Paused · resume restarts this source"),
+                                            "Attention",
+                                            "Resume",
+                                            () ->
+                                                    command(
+                                                            () ->
+                                                                    DownloadControls.retry(
+                                                                            getApplicationContext(),
+                                                                            id)));
+                            row.hostId = id;
+                            row.transfer = true;
+                            row.source = "BitChord";
+                            data.add(row);
+                        }
                         for (SoulseekSelectedDownloads.Progress progress :
                                 SoulseekSelectedDownloads.snapshots()) {
                             if (progress.phase == SoulseekSelectedDownloads.Phase.COMPLETE)
@@ -483,10 +513,55 @@ final class DownloadsHubPage extends DownloadPage {
                                             progress.name,
                                             progress.summary(),
                                             group,
-                                            progress.canCancel() ? "Cancel" : null,
+                                            !progress.handedOff
+                                                            && progress.phase
+                                                                    == SoulseekSelectedDownloads
+                                                                            .Phase.PAUSED
+                                                    ? "Resume"
+                                                    : !progress.handedOff
+                                                                    && (progress.phase
+                                                                                    == SoulseekSelectedDownloads
+                                                                                            .Phase
+                                                                                            .FAILED
+                                                                            || progress.phase
+                                                                                    == SoulseekSelectedDownloads
+                                                                                            .Phase
+                                                                                            .CANCELLED)
+                                                            ? "Retry"
+                                                            : progress.canCancel() ? "Pause" : null,
                                             () ->
-                                                    SoulseekSelectedDownloads.cancel(
-                                                            progress.reference));
+                                                    command(
+                                                            () -> {
+                                                                if (progress.phase
+                                                                                == SoulseekSelectedDownloads
+                                                                                        .Phase
+                                                                                        .PAUSED
+                                                                        || progress.phase
+                                                                                == SoulseekSelectedDownloads
+                                                                                        .Phase
+                                                                                        .FAILED
+                                                                        || progress.phase
+                                                                                == SoulseekSelectedDownloads
+                                                                                        .Phase
+                                                                                        .CANCELLED) {
+                                                                    if (!SoulseekSelectedDownloads
+                                                                            .retry(
+                                                                                    getApplicationContext(),
+                                                                                    progress.reference))
+                                                                        throw new java.io
+                                                                                .IOException(
+                                                                                "Select this source"
+                                                                                    + " again to"
+                                                                                    + " retry");
+                                                                } else if (!SoulseekSelectedDownloads
+                                                                        .pause(progress.reference))
+                                                                    throw new java.io.IOException(
+                                                                            "This transfer has"
+                                                                                + " already moved"
+                                                                                + " to saving");
+                                                            }));
+                            row.soulseekReference = progress.handedOff ? "" : progress.reference;
+                            row.transfer = !progress.handedOff;
                             row.source = "Soulseek";
                             row.received = progress.downloaded;
                             row.total = progress.total;
@@ -529,7 +604,7 @@ final class DownloadsHubPage extends DownloadPage {
                                             fileRow(
                                                     job.offer.name,
                                                     PatchStrings.t("Phone copy confirmed"),
-                                                    "",
+                                                    "bulk:" + job.id,
                                                     uri));
                                 }
                                 if (!job.telegramReceipt.isEmpty()
@@ -651,6 +726,13 @@ final class DownloadsHubPage extends DownloadPage {
                                             null,
                                             null));
                         }
+                        data.removeIf(
+                                row ->
+                                        DownloadControls.hidden(
+                                                getApplicationContext(),
+                                                row.soulseekReference.isEmpty()
+                                                        ? row.hostId
+                                                        : row.soulseekReference));
                         final String notice = warning;
                         ui.post(
                                 () -> {
@@ -1145,6 +1227,21 @@ final class DownloadsHubPage extends DownloadPage {
             facts.setPadding(0, downloadStyle.dp(10), 0, 0);
             card.addView(facts);
         }
+        if (row.transfer && row.actionName != null && row.action != null) {
+            TextView control =
+                    downloadStyle.text(
+                            PatchStrings.t(row.actionName),
+                            14,
+                            downloadStyle.foreground,
+                            downloadStyle.semibold);
+            control.setTag("download-transfer-action");
+            control.setGravity(android.view.Gravity.CENTER);
+            control.setMinHeight(downloadStyle.dp(48));
+            control.setBackground(downloadStyle.shape(downloadStyle.background, 24, true));
+            control.setContentDescription(PatchStrings.t(row.actionName) + " · " + row.name);
+            control.setOnClickListener(view -> row.action.run());
+            card.addView(control, new LinearLayout.LayoutParams(-1, -2));
+        }
         return card;
     }
 
@@ -1175,12 +1272,7 @@ final class DownloadsHubPage extends DownloadPage {
         List<Runnable> actions = new ArrayList<>();
         labels.add(PatchStrings.t("Details"));
         actions.add(
-                () ->
-                        new AlertDialog.Builder(this)
-                                .setTitle(row.name)
-                                .setMessage(row.detail)
-                                .setPositiveButton(PatchStrings.t("Done"), null)
-                                .show());
+                () -> downloadStyle.detailsPanel(row.name, row.detail, new LinearLayout(activity)));
         if (row.actionName != null && row.action != null) {
             labels.add(PatchStrings.t(row.actionName));
             actions.add(row.action);
@@ -1212,11 +1304,88 @@ final class DownloadsHubPage extends DownloadPage {
             labels.add(PatchStrings.t("Share publicly on Soulseek"));
             actions.add(() -> shareFileDialog(row));
         }
-        new AlertDialog.Builder(this)
-                .setTitle(row.name)
-                .setItems(
-                        labels.toArray(new String[0]), (dialog, which) -> actions.get(which).run())
-                .show();
+        if (row.transfer && (!row.hostId.isEmpty() || !row.soulseekReference.isEmpty())) {
+            labels.add(PatchStrings.t("Cancel"));
+            actions.add(
+                    () ->
+                            command(
+                                    () -> {
+                                        if (!row.soulseekReference.isEmpty())
+                                            SoulseekSelectedDownloads.cancel(row.soulseekReference);
+                                        else {
+                                            DownloadControls.remove(
+                                                    getApplicationContext(), row.hostId);
+                                        }
+                                    }));
+        }
+        if (!row.hostId.isEmpty() || !row.soulseekReference.isEmpty()) {
+            labels.add(PatchStrings.t("Remove from list"));
+            actions.add(
+                    () ->
+                            command(
+                                    () -> {
+                                        String id =
+                                                row.soulseekReference.isEmpty()
+                                                        ? row.hostId
+                                                        : row.soulseekReference;
+                                        if (!row.soulseekReference.isEmpty())
+                                            SoulseekSelectedDownloads.remove(id);
+                                        DownloadControls.remove(getApplicationContext(), id);
+                                    }));
+        }
+        if (!row.savedUri.isEmpty() && !row.hostId.isEmpty()) {
+            labels.add(PatchStrings.t("Delete file"));
+            actions.add(
+                    () ->
+                            new AlertDialog.Builder(activity)
+                                    .setTitle(PatchStrings.t("Delete downloaded file?"))
+                                    .setMessage(
+                                            PatchStrings.f(
+                                                    "Delete {0} from this device? This cannot be"
+                                                            + " undone.",
+                                                    row.name))
+                                    .setNegativeButton(PatchStrings.t("Cancel"), null)
+                                    .setPositiveButton(
+                                            PatchStrings.t("Delete file"),
+                                            (dialog, which) ->
+                                                    command(
+                                                            () -> {
+                                                                if (!(row.hostId.startsWith("bulk:")
+                                                                        ? DownloadControls
+                                                                                .deleteLocalFile(
+                                                                                        getApplicationContext(),
+                                                                                        row.savedUri)
+                                                                        : DownloadControls.delete(
+                                                                                getApplicationContext(),
+                                                                                row.hostId)))
+                                                                    throw new java.io.IOException(
+                                                                            "File could not be"
+                                                                                    + " deleted");
+                                                                if (row.hostId.startsWith("bulk:"))
+                                                                    DownloadControls.remove(
+                                                                            getApplicationContext(),
+                                                                            row.hostId);
+                                                            }))
+                                    .show());
+        }
+        downloadStyle.settingsPanel(
+                row.name,
+                PatchStrings.t("Removing an entry keeps the saved file."),
+                labels.stream().map(this::actionIcon).toArray(String[]::new),
+                labels.toArray(new String[0]),
+                index -> actions.get(index).run());
+    }
+
+    private String actionIcon(String label) {
+        if (label.equals(PatchStrings.t("Details"))) return "info";
+        if (label.equals(PatchStrings.t("Pause"))) return "pause";
+        if (label.equals(PatchStrings.t("Resume"))) return "preview";
+        if (label.equals(PatchStrings.t("Retry"))) return "refresh";
+        if (label.equals(PatchStrings.t("Delete file"))) return "trash";
+        if (label.equals(PatchStrings.t("Remove from list"))) return "minus";
+        if (label.equals(PatchStrings.t("Cancel"))) return "close";
+        if (label.equals(PatchStrings.t("Add to playlist"))) return "list";
+        return "share";
     }
 
     private static boolean mixedPlaylistsAvailable() {

@@ -38,8 +38,39 @@ public final class TransitionEditorActivity extends Activity {
                 getResources().getConfiguration().orientation
                         == android.content.res.Configuration.ORIENTATION_LANDSCAPE;
         LinearLayout root = column();
+        root.setTag("transition-editor-root");
         root.setPadding(style.dp(16), style.dp(8), style.dp(16), style.dp(8));
         root.setBackgroundColor(style.background);
+        if (android.os.Build.VERSION.SDK_INT >= 30) {
+            getWindow().setDecorFitsSystemWindows(false);
+        }
+        root.setOnApplyWindowInsetsListener(
+                (view, insets) -> {
+                    int left, top, right, bottom;
+                    if (android.os.Build.VERSION.SDK_INT >= 30) {
+                        android.graphics.Insets safe =
+                                insets.getInsets(
+                                        WindowInsets.Type.systemBars()
+                                                | WindowInsets.Type.displayCutout()
+                                                | WindowInsets.Type.ime());
+                        left = safe.left;
+                        top = safe.top;
+                        right = safe.right;
+                        bottom = safe.bottom;
+                    } else {
+                        left = insets.getSystemWindowInsetLeft();
+                        top = insets.getSystemWindowInsetTop();
+                        right = insets.getSystemWindowInsetRight();
+                        bottom = insets.getSystemWindowInsetBottom();
+                    }
+                    view.setPadding(
+                            style.dp(16) + left,
+                            style.dp(8) + top,
+                            style.dp(16) + right,
+                            style.dp(8) + bottom);
+                    return insets;
+                });
+        root.requestApplyInsets();
         LinearLayout header = row();
         header.addView(
                 style.backButton(this::finish),

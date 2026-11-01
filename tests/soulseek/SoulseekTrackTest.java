@@ -86,6 +86,32 @@ public final class SoulseekTrackTest {
                             == 0,
                     "invalid speed ignored: " + invalid);
         }
+        SoulseekTrack rich =
+                new SoulseekTrack(
+                        new JSONObject(hints.toString())
+                                .put("sampleRate", 192000)
+                                .put("bitDepth", 24)
+                                .put("variableBitrate", 1)
+                                .put("queueLength", 7)
+                                .put("attributes", new JSONObject().put("4", 192000).put("9", 42)));
+        check(
+                rich.sampleRate == 192000 && rich.bitDepth == 24 && rich.variableBitrate == 1,
+                "Audio attributes survive the Java bridge");
+        check(
+                rich.queueLength == 7 && rich.attributes.get("9") == 42,
+                "Peer queue and additional attributes survive");
+        check(
+                rich.metadata().getInt("sampleRate") == 192000,
+                "Sample rate is available to details");
+        SoulseekTrack unknown =
+                new SoulseekTrack(
+                        new JSONObject(hints.toString())
+                                .put("sampleRate", "192000")
+                                .put("bitDepth", -1)
+                                .put("variableBitrate", 2));
+        check(
+                unknown.sampleRate == 0 && unknown.bitDepth == 0 && unknown.variableBitrate == -1,
+                "Invalid numeric attributes remain unknown");
         denied(() -> track("one", "a.exe", 1000), "Executables rejected");
         denied(() -> track("one", "a.flac.exe", 1000), "Disguised executable rejected");
         denied(() -> track("one", "a.flac", -1), "Negative size rejected");

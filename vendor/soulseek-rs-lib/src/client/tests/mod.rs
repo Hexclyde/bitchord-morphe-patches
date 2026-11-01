@@ -43,6 +43,7 @@ fn peer_files(count: usize) -> SearchResult {
             .collect(),
         slots: 1,
         speed: 0,
+        queue_length: None,
         username: "bob".to_string(),
     }
 }

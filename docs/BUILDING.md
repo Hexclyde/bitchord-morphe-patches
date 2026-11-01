@@ -97,3 +97,12 @@ When a version passes and works on a phone, set `app_version`, the original APK 
 4. Commit `patches-bundle.json` and `patches-list.json`. Attach the `.mpp`, both JSON files and `SHA256SUMS` to a GitHub release with the matching tag.
 
 Morphe reads `patches-bundle.json` from `main`. With the source's **Pre-release patches** switch on, it also tries a `dev` branch; this repository has none, so that switch changes nothing. Versions on `main` are published as normal GitHub releases, and the newest is marked **Latest**. Testing builds go to the `testing` branch instead, with a version like `1.1.0-beta.1`, and are published as GitHub pre-releases. Testers add `https://raw.githubusercontent.com/Hexclyde/bitchord-morphe-patches/refs/heads/testing/patches-bundle.json` as a second source. It has to be this `refs/heads/` raw link: Morphe rewrites other GitHub branch links to `main` or `dev`. When a version is final, it's committed on top of `testing` and `main` is moved to it.
+
+## Release revisions
+
+`patch_bundle_version` remains the MPP version. An optional `release_tag` in
+`PROVENANCE.json` can name a numbered release revision, such as
+`v1.1.0-beta.17-r1`, while retaining the beta.17 MPP filename and manifest.
+Source metadata and the ZIP publisher validate that tag against the version.
+Omitting it retains the existing `v<version>` workflow. Existing releases and
+tags remain unchanged; corrected artifacts use a new revision tag.

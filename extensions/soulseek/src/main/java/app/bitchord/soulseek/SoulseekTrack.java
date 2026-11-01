@@ -11,7 +11,9 @@ import java.util.Locale;
 final class SoulseekTrack {
     final String id, peer, path, format, advertisedExtension, title, artist, mime;
     final long size;
-    final int duration, bitrate;
+    final int duration, bitrate, sampleRate, bitDepth, variableBitrate;
+    final long queueLength;
+    final java.util.Map<String, Long> attributes;
     // Untrusted advertisements: slots is a boolean flag, not a capacity count.
     // -1 means unknown. Speed is bytes/second; zero means unknown.
     final int freeSlots;
@@ -72,6 +74,23 @@ final class SoulseekTrack {
         bitrate = Math.max(0, Math.min(row.optInt("bitrate"), 100000));
         freeSlots = (int) unsignedHint(row.opt("freeSlots"), 1, -1);
         speed = unsignedHint(row.opt("speed"), 0xffffffffL, 0);
+        sampleRate = (int) unsignedHint(row.opt("sampleRate"), 50_000_000, 0);
+        bitDepth = (int) unsignedHint(row.opt("bitDepth"), 64, 0);
+        variableBitrate = (int) unsignedHint(row.opt("variableBitrate"), 1, -1);
+        queueLength = unsignedHint(row.opt("queueLength"), 0xffffffffL, -1);
+        java.util.TreeMap<String, Long> values = new java.util.TreeMap<>();
+        JSONObject advertised = row.optJSONObject("attributes");
+        if (advertised != null) {
+            java.util.Iterator<String> keys = advertised.keys();
+            while (keys.hasNext() && values.size() < 32) {
+                String key = keys.next();
+                if (!key.matches("[0-9]{1,10}")) continue;
+                long value = unsignedHint(advertised.opt(key), 0xffffffffL, -1);
+                if (value >= 0) values.put(key, value);
+            }
+        }
+        attributes = java.util.Collections.unmodifiableMap(values);
+
         switch (advertisedExtension) {
             case "flac":
                 mime = "audio/flac";
@@ -135,6 +154,13 @@ final class SoulseekTrack {
                 .put("formatVerified", false)
                 .put("freeSlots", freeSlots < 0 ? JSONObject.NULL : freeSlots)
                 .put("speed", speed)
+                .put("sampleRate", sampleRate == 0 ? JSONObject.NULL : sampleRate)
+                .put("bitDepth", bitDepth == 0 ? JSONObject.NULL : bitDepth)
+                .put(
+                        "variableBitrate",
+                        variableBitrate < 0 ? JSONObject.NULL : variableBitrate == 1)
+                .put("queueLength", queueLength < 0 ? JSONObject.NULL : queueLength)
+                .put("attributes", new JSONObject(attributes))
                 .put("peerHintsVerified", false)
                 .put(
                         "formatLabel",

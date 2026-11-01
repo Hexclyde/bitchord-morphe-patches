@@ -62,6 +62,7 @@ pub struct SearchResult {
     pub files: Vec<File>,
     pub slots: u8,
     pub speed: u32,
+    pub queue_length: Option<u32>,
     pub username: String,
 }
 
@@ -164,12 +165,14 @@ impl SearchResult {
         }
         let slots = message.read_int8();
         let speed = message.read_int32();
+        let queue_length = (message.get_pointer() + 4 <= message.get_size()).then(|| message.read_int32());
 
         Ok(Self {
             token,
             files,
             slots,
             speed,
+            queue_length,
             username,
         })
     }
@@ -502,6 +505,22 @@ impl Transfer {
 mod tests {
     use super::*;
 
+    #[test]
+    fn search_response_preserves_optional_peer_queue_length() {
+        for queue in [None, Some(0u32), Some(7u32)] {
+            let mut body = Vec::new();
+            body.extend_from_slice(&4u32.to_le_bytes());
+            body.extend_from_slice(b"peer");
+            body.extend_from_slice(&7u32.to_le_bytes());
+            body.extend_from_slice(&0u32.to_le_bytes());
+            body.push(1);
+            body.extend_from_slice(&1200u32.to_le_bytes());
+            if let Some(value) = queue { body.extend_from_slice(&value.to_le_bytes()); }
+            let mut message = Message::new_with_data(crate::utils::zlib::deflate(&body));
+            assert_eq!(SearchResult::new_from_message(&mut message).unwrap().queue_length, queue);
+        }
+    }
+
     // A FileSearchResponse whose n_files claims ~4 billion entries with no
     // file data must parse to an empty result promptly, not loop into an OOM.
     #[test]
@@ -643,7 +662,7 @@ mod embedded_limits_tests {
         let file = File { username: "peer".into(), name: "a.flac".into(), size: 100, attribs: HashMap::new() };
         let mut search = Search { token: 7, results: Vec::new() };
         for _ in 0..3 {
-            search.accept(SearchResult { token: 7, files: vec![file.clone(); 700], slots: 1, speed: 1, username: "peer".into() });
+            search.accept(SearchResult { token: 7, files: vec![file.clone(); 700], slots: 1, speed: 1, queue_length: None, username: "peer".into() });
         }
         assert_eq!(search.results.iter().map(|r| r.files.len()).sum::<usize>(), MAX_SEARCH_FILES);
     }

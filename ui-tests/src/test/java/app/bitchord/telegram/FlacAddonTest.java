@@ -28,6 +28,7 @@ public class FlacAddonTest {
         }
     }
 
+    static final String PRIMARY = "https://www.deezer.com/track/12345";
     static final String URL = "https://open.qobuz.com/track/12345";
     List<String> paths;
     List<JSONObject> posts;
@@ -45,6 +46,15 @@ public class FlacAddonTest {
         SourceRegistry.configs.setValue(new ArrayList<>());
         FlacAddon.register();
         SourceRegistry.setEnabled(FlacAddon.ID, true);
+        FlacAddon.providerSession = "verified-provider-session";
+        FlacAddon.sessions =
+                new FlacAddon.SessionStore() {
+                    public String read() {
+                        return "verified-provider-session";
+                    }
+
+                    public void write(String value) {}
+                };
         paths = new ArrayList<>();
         posts = new ArrayList<>();
         FlacAddon.pause = ms -> {};
@@ -52,12 +62,12 @@ public class FlacAddonTest {
                 (path, body, token, end) -> {
                     paths.add(path);
                     if (body != null) posts.add(body);
-                    if (path.startsWith("/api/qobuz/search"))
+                    if (path.startsWith("/search?"))
                         return object(
-                                "{tracks:[{url:'"
-                                        + URL
+                                "{tracks:[{link:'"
+                                        + PRIMARY
                                         + "',title:'A /"
-                                        + " B',artist:'Artist',album:'Album',durationMs:180500,cover:'https://art.example/cover.jpg'}]}");
+                                        + " B',artist:'Artist',album:'Album',duration:180,cover:'https://art.example/cover.jpg'}]}");
                     if (path.equals("/prepare")) return object("{t:'ephemeral-token'}");
                     if (path.equals("/api/qobuz/queue")) {
                         assertEquals("ephemeral-token", token);
@@ -72,6 +82,120 @@ public class FlacAddonTest {
         FlacAddon.transport = FlacAddon::http;
         FlacAddon.pause = Thread::sleep;
         Thread.interrupted();
+    }
+
+    String primaryId() throws Exception {
+        return "flac."
+                + java.util.Base64.getUrlEncoder()
+                        .withoutPadding()
+                        .encodeToString(
+                                new JSONObject()
+                                        .put("u", PRIMARY)
+                                        .put("t", "Mask Off")
+                                        .put("a", "Ganja White Night")
+                                        .toString()
+                                        .getBytes(java.nio.charset.StandardCharsets.UTF_8));
+    }
+
+    @Test
+    public void acceptingHumanVerificationNeverStartsDownload() throws Exception {
+        final String[] retained = {""};
+        FlacAddon.sessions =
+                new FlacAddon.SessionStore() {
+                    public String read() {
+                        return retained[0];
+                    }
+
+                    public void write(String value) {
+                        retained[0] = value;
+                    }
+                };
+        FlacAddon.providerSession = "";
+        FlacAddon.transport =
+                (path, post, token, deadline) -> {
+                    paths.add(path);
+                    assertEquals("/prepare", path);
+                    assertEquals("human-verified-session", post.getString("sp"));
+                    return object("{t:'short-lived-token'}");
+                };
+        FlacAddon.acceptSession("human-verified-session");
+        assertEquals("human-verified-session", retained[0]);
+        assertEquals(Collections.singletonList("/prepare"), paths);
+        assertFalse(FlacAddon.needsVerification());
+    }
+
+    @Test
+    public void primaryProtocolUsesVerifiedSessionAndExactFormat() throws Exception {
+        FlacAddon.transport =
+                (path, post, token, deadline) -> {
+                    paths.add(path);
+                    if (path.equals("/prepare")) {
+                        assertEquals("verified-provider-session", post.getString("sp"));
+                        return object("{t:'token'}");
+                    }
+                    if (path.equals("/download")) {
+                        assertEquals("token", token);
+                        assertEquals(PRIMARY, post.getString("url"));
+                        assertEquals("flac", post.getString("format"));
+                        assertFalse(post.getBoolean("accept_fallback"));
+                        return object("{job_id:'mask-off'}");
+                    }
+                    return object(
+                            "{status:'done',filename:'mask-off.flac',pretty_name:'Mask"
+                                    + " Off.flac',format:'flac'}");
+                };
+        JSONObject file = FlacAddon.resolve(primaryId(), deadline());
+        assertEquals("flac", file.getString("format"));
+        assertTrue(file.getString("url").contains("/file/mask-off.flac"));
+        assertEquals(Arrays.asList("/prepare", "/download", "/status/mask-off"), paths);
+    }
+
+    @Test
+    public void missingVerificationNeverQueuesAProviderJob() throws Exception {
+        FlacAddon.providerSession = "";
+        FlacAddon.sessions =
+                new FlacAddon.SessionStore() {
+                    public String read() {
+                        return "";
+                    }
+
+                    public void write(String value) {}
+                };
+        try {
+            FlacAddon.resolve(primaryId(), deadline());
+            fail();
+        } catch (FlacAddon.VerificationRequired expected) {
+            assertTrue(paths.isEmpty());
+        }
+    }
+
+    @Test
+    public void rejectsServerDowngradeAndDoesNotHideTransientFailures() throws Exception {
+        String id = primaryId();
+        FlacAddon.transport =
+                (path, post, token, deadline) -> {
+                    if (path.equals("/prepare")) return object("{t:'token'}");
+                    if (path.equals("/download")) return object("{job_id:'job'}");
+                    return object("{status:'failed'}");
+                };
+        try {
+            FlacAddon.resolve(id, deadline());
+            fail();
+        } catch (IOException expected) {
+            assertTrue(expected.getMessage().contains("Retry"));
+        }
+        FlacAddon.transport =
+                (path, post, token, deadline) -> {
+                    if (path.equals("/prepare")) return object("{t:'token'}");
+                    if (path.equals("/download")) return object("{job_id:'job'}");
+                    return object("{status:'done',filename:'mask-off.mp3',format:'mp3_320'}");
+                };
+        try {
+            FlacAddon.resolve(id, deadline());
+            fail();
+        } catch (IOException expected) {
+            assertTrue(expected.getMessage().contains("another format"));
+        }
     }
 
     @Test
@@ -99,31 +223,33 @@ public class FlacAddonTest {
     public void searchReturnsDistinctExplicitChoicesAndReversibleIds() throws Exception {
         JSONArray rows =
                 FlacAddon.search("Artist A & B", "LOSSLESS", deadline()).getJSONArray("tracks");
-        assertEquals(4, rows.length());
+        assertEquals(3, rows.length());
         Set<String> ids = new HashSet<>();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             JSONObject row = rows.getJSONObject(i);
             assertTrue(ids.add(row.getString("id")));
-            assertEquals(URL, FlacAddon.decode(row.getString("id")).getString("u"));
+            assertEquals(PRIMARY, FlacAddon.decode(row.getString("id")).getString("u"));
             assertFalse(row.getBoolean("formatVerified"));
             assertFalse(
                     FlacAddon.choiceLabel("src:" + FlacAddon.ID + "::" + row.getString("id"))
                             .isEmpty());
-            assertEquals(180.5, row.getDouble("duration"), 0.01);
+            assertEquals(180, row.getDouble("duration"), 0.01);
+            assertFalse(row.getString("audioQuality").contains("kHz"));
         }
         assertTrue(paths.get(0).contains("A%20%26%20B"));
         assertEquals(1, FlacAddon.search("A", "HIGH", deadline()).getJSONArray("tracks").length());
         int count = paths.size();
-        assertEquals(0, FlacAddon.search("A", "LOW", deadline()).getJSONArray("tracks").length());
-        assertEquals(count, paths.size());
+        assertEquals(1, FlacAddon.search("A", "LOW", deadline()).getJSONArray("tracks").length());
+        assertEquals(count + 1, paths.size());
     }
 
     @Test
     public void exactFormatIsQueuedOnceAndFileUrlIsEncoded() throws Exception {
         JSONObject stream =
                 FlacAddon.resolve(FlacAddon.identity(URL, "A / B", "Artist", 7), deadline());
-        assertEquals(7, posts.get(0).getInt("formatId"));
-        assertEquals(1, posts.size());
+        assertEquals("verified-provider-session", posts.get(0).getString("sp"));
+        assertEquals(7, posts.get(1).getInt("formatId"));
+        assertEquals(2, posts.size());
         assertTrue(stream.getString("url").contains("name=A%20%2F%20B.flac"));
         assertEquals("flac", stream.getString("codec"));
         assertFalse(stream.has("bitDepth"));
@@ -146,8 +272,8 @@ public class FlacAddonTest {
         } catch (IOException expected) {
             assertTrue(expected.getMessage().contains("Choose another format"));
         }
-        assertEquals(1, posts.size());
-        assertEquals(27, posts.get(0).getInt("formatId"));
+        assertEquals(2, posts.size());
+        assertEquals(27, posts.get(1).getInt("formatId"));
     }
 
     @Test

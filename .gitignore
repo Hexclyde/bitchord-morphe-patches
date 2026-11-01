@@ -177,3 +177,7 @@ PUBLISH-WINDOWS.md
 /ui-tests/src/test/java/app/bitchord/soulseek/PreviewExtractors.java
 /ui-tests/src/test/java/app/bitchord/soulseek/InlinePreview.java
 /ui-tests/src/test/java/app/bitchord/telegram/TelegramGlyph.java
+
+/ui-tests/src/test/java/app/bitchord/soulseek/DownloadDetails.java
+/ui-tests/src/test/java/app/bitchord/telegram/DownloadControls.java
+/ui-tests/src/test/java/app/bitchord/telegram/FlacVerificationActivity.java

@@ -40,6 +40,19 @@ public final class DownloadNavigation {
             ((Function1<Object, Object>) callback).invoke(previousSelected);
     }
 
+    public static boolean detail(String browseId) {
+        if (!"local:downloads".equals(browseId)) return false;
+        try {
+            android.content.Context context = SoulseekBridge.get().context;
+            Intent target = new Intent(context, DownloadsHubActivity.class);
+            if (!DownloadsShell.open(target))
+                context.startActivity(target.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            return true;
+        } catch (Exception | LinkageError unavailable) {
+            return false;
+        }
+    }
+
     private DownloadNavigation() {}
 
     /** Keep native capsules, with the demo's wider five-tab bar. */

@@ -145,6 +145,7 @@ private val patchesUiResources = resourcePatch {
             for (name in
                 listOf(
                     "TransitionEditorActivity",
+                    "FlacVerificationActivity",
                     "PlaylistToolsActivity",
                     "PlaylistImportActivity",
                     "PlaylistSyncActivity",

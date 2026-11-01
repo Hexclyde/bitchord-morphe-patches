@@ -51,6 +51,7 @@ public class VideoOverlayTest {
 
     @Before
     public void setup() throws Exception {
+        com.music.bitchord.data.settings.AppSettings.lastPlayerScreen.setValue("MAIN");
         owner = Robolectric.buildActivity(Activity.class).setup();
         column = new LinearLayout(owner.get());
         column.setOrientation(LinearLayout.VERTICAL);
@@ -75,6 +76,24 @@ public class VideoOverlayTest {
     private VideoSwitch.Header header() {
         VideoSwitch.header(composer);
         return (VideoSwitch.Header) composer.view;
+    }
+
+    @Test
+    public void lyricsAndQueueHideTheWholeModeRowAndMainRestoresIt() {
+        VideoSwitch.Header row = header();
+        assertEquals(View.VISIBLE, row.control.getVisibility());
+        for (String mode : new String[] {"LYRICS", "QUEUE"}) {
+            com.music.bitchord.data.settings.AppSettings.lastPlayerScreen.setValue(mode);
+            row.control.refresh();
+            assertEquals(mode, View.GONE, row.control.getVisibility());
+            row.measure(
+                    View.MeasureSpec.makeMeasureSpec(393, View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.makeMeasureSpec(852, View.MeasureSpec.AT_MOST));
+            assertEquals("Hidden modes reserve no space", 0, row.getMeasuredHeight());
+        }
+        com.music.bitchord.data.settings.AppSettings.lastPlayerScreen.setValue("MAIN");
+        row.control.refresh();
+        assertEquals(View.VISIBLE, row.control.getVisibility());
     }
 
     private void measure() {

@@ -212,6 +212,20 @@ public final class VerifyDownloadIntegrationApk {
                     present = true;
             check(present, "Public sharing JNI declaration retained: " + name);
         }
+        int detailHooks = 0, controlHooks = 0;
+        for (Method method : types.get("Lcom/music/bitchord/ui/MainViewModel;").getMethods())
+            if (method.getName().equals("openDetail"))
+                detailHooks += calls(method, runtime + "DownloadNavigation;", "detail");
+        for (Method method : types.get("Lcom/music/bitchord/download/Downloads;").getMethods())
+            if (method.getName().equals("enqueue"))
+                controlHooks +=
+                        calls(method, "Lapp/bitchord/telegram/DownloadControls;", "remember");
+        check(
+                detailHooks == 1,
+                "Library Downloads detail redirects once through the installed patch");
+        check(
+                controlHooks == 1,
+                "Download requests retain exact source metadata for explicit resume");
         boolean forget = false;
         for (Method method : types.get("Lcom/music/bitchord/download/Downloads;").getMethods())
             if (method.getName().equals("forget")

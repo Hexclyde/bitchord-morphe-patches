@@ -1535,6 +1535,15 @@ public final class ExtrasActivity extends Activity {
         feature.details.setPadding(style.dp(6), style.dp(12), style.dp(4), style.dp(8));
         feature.details.setVisibility(View.GONE);
         card.addView(feature.details);
+        if (id.equals("flac-audio")) {
+            TextView provider =
+                    style.button(
+                            Strings.t("Provider verification"),
+                            false,
+                            () -> FlacAddon.verify(this));
+            provider.setTag("flac-provider-verification");
+            card.addView(provider, new LinearLayout.LayoutParams(-1, -2));
+        }
         toggle.setListener((button, on) -> change(feature, on, null));
         feature.sync();
         if (!building) applyFilters(false);
@@ -1634,6 +1643,9 @@ public final class ExtrasActivity extends Activity {
             } catch (Exception | LinkageError error) {
                 available = false;
             }
+            View provider =
+                    card == null ? null : card.findViewWithTag("flac-provider-verification");
+            if (provider != null) provider.setVisibility(enabled ? View.VISIBLE : View.GONE);
             toggle.setChecked(enabled);
             toggle.setEnabled(available && !busy);
             gear.setEnabled(enabled && configurable && !busy);

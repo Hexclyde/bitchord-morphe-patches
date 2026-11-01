@@ -100,7 +100,9 @@ for name in (
     "TransitionEditorActivity.java",
     "SourcePreference.java",
     "RecordingIdentity.java",
+    "DownloadControls.java",
     "FlacAddon.java",
+    "FlacVerificationActivity.java",
     "VocalCut.java",
 ):
     dest = SOURCES / "app/bitchord/telegram" / name
@@ -126,6 +128,7 @@ for name in (
     "HostDownloadAccess.java",
     "DownloadActivity.java",
     "DownloadStyle.java",
+    "DownloadDetails.java",
     "AudioFormatSetupActivity.java",
     "AudioFormatPreferences.java",
     "FormatDragOrder.java",

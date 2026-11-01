@@ -335,6 +335,7 @@ val nativeSoulseekPatch =
             enqueue.addInstructionsWithLabels(
                 0,
                 """
+                invoke-static/range {p0 .. p2}, Lapp/bitchord/telegram/DownloadControls;->remember(Landroid/content/Context;Ljava/lang/Object;Ljava/lang/String;)V
                 invoke-static {p0, p1}, ${SOULSEEK}SoulseekSelectedDownloads;->enqueueOrFalse(Landroid/content/Context;Ljava/lang/Object;)Z
                 move-result v0
                 if-eqz v0, :original_soulseek_enqueue
@@ -546,6 +547,26 @@ val nativeSoulseekPatch =
                     """,
                     )
                 }
+
+                val detail =
+                    mutableClassDefBy("Lcom/music/bitchord/ui/MainViewModel;").methods.single {
+                        it.name == "openDetail"
+                    }
+                check(
+                    detail.parameterTypes.first() == "Ljava/lang/String;" &&
+                        detail.returnType == "V"
+                )
+                detail.addInstructionsWithLabels(
+                    0,
+                    """
+                    invoke-static/range {p1 .. p1}, ${SOULSEEK}DownloadNavigation;->detail(Ljava/lang/String;)Z
+                    move-result v0
+                    if-eqz v0, :host_download_detail
+                    return-void
+                    :host_download_detail
+                    nop
+                """,
+                )
 
                 // The real player content slot retains measured padding, mini player and both bars.
                 val library =

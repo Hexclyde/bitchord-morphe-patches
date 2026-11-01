@@ -1,3 +1,46 @@
+# Beta.17 download and player corrections — revision 1
+
+Built 2026-11-01. MPP version **1.1.0-beta.17**; proposed release tag **v1.1.0-beta.17-r1**. The earlier beta.17 tag/release is preserved. No GitHub publication was performed here.
+
+MPP SHA-256: `bc9e8fb8bf200f49a967b36da92b24f175556ec9e1dcedcf800b1a24637ac1e7`.
+
+## Changes
+
+- Add explicit Pause, Resume and Retry for selected source downloads. Resume restarts the same file/source from the beginning; it does not substitute a provider. Host paused requests persist. Soulseek retry keeps the selected metadata and requires the same account session.
+- Separate **Remove from list** from confirmed **Delete file**. Removal keeps the file; deletion hides its entry only after the file is deleted. Existing destination journals retain their controls after transfer handoff.
+- Route Library's Downloads shortcut to the installed download hub. Keep unrelated Library detail navigation unchanged.
+- Display available Soulseek filename/folder, exact size, duration, bitrate, sample rate, bit depth, VBR mode, peer availability/queue and additional numeric attributes in native read-only details. Missing data and unverified peer reports are labeled.
+- Hide and collapse the Audio/Video row in Lyrics and Queue, restoring it in Main. Apply system-bar, cutout and keyboard insets to the transition editor.
+- Update FLAC Downloader to its current catalogue and **FLAC / MP3 320 / MP3 128** choices, official browser verification, exact-format server preparation and downgrade rejection. Remove invented hi-res choices from new searches; preserve older saved references.
+
+## Automated verification
+
+- **339 Android component tests** passed in the complete suite. A subsequent **29-test focused pass** also passed, including two additional regressions for deletion confirmation and verification that never queues a download. These are framework/component tests, not 368 device tests.
+- **34 Python tests** passed, including release revisions, unchanged default release URLs and rejection of mismatched/injected tags. The complete Java host regression passed, including **395 selected-download checks** and **30 peer metadata checks**.
+- **28 native Soulseek runtime tests** and the new wire test for missing/zero/nonzero advertised peer queue lengths passed. The wire test is separate from live peer transfers.
+- **24 exact-MPP APK configurations** passed: all 20 independent patch selections, all-feature arm64-v8a/armeabi-v7a/x86_64 and isolated AutoMix. Checks cover host ABI, DEX control flow, source routing, captured file metadata, native hashes, unchanged-speed transitions and optional-runtime isolation. Additional standalone Soulseek inspection passed without Telegram or other optional patches.
+- Java/Kotlin/Python formatting, strict **1,603-label / 20-language** catalogs, metadata/native hashes and local documentation links passed. New explanatory labels use declared English fallbacks where translations are not yet provided.
+
+## Waydroid: Android 13, x86_64
+
+The APK was installed as an update with the existing signing key. App data and Telegram/Soulseek credentials were retained.
+
+- Real device backend checks: removing an entry kept a disposable file; deleting a registered disposable saved file removed its bytes and record; existing saved-file records were preserved. Unrelated Library detail navigation was left alone; Library Downloads redirected successfully. These were same-certificate device instrumentation checks. Confirmation/Cancel behavior also passed the native dialog component test.
+- GUI screenshots verified the Audio/Video row absent in Lyrics and Queue, and present again in Main. Native transition-editor headers were below the status bar in the unavailable-duration state. Synthetic cutout and IME insets were checked in the Android component test. Full interactive transition audition was not repeated in this follow-up.
+- The official provider page loaded inside the new verification screen. Public catalogue search found the reported **Mask Off — Ganja White Night / Mr. Bill**, provider track `3770147912`.
+
+## Pending live checks and limits
+
+**The reported FLAC Downloader file transfer remains pending human provider verification.** The provider rejects an unverified preparation request with HTTP 403 (`challenge_failed`). Waydroid is left on its official page for the user to complete that verification and choose Continue. No challenge was solved or bypassed. Protocol fixtures pass, but this is not yet proof of a successful live Mask Off download or all three live qualities.
+
+Pause/resume uses cancellation plus an explicit restart, not byte-range continuation. Soulseek requests cannot resume across a changed account session. Live failed-peer retries, all storage-provider deletion/consent paths, full TalkBack use and physical ARM hardware remain unqualified in this follow-up. No upload was initiated by these tests.
+
+The earlier beta.17 qualification below records its original MPP and broader playback/source/decoder tests. Those results remain historical evidence for retained functionality; they were not relabeled as live tests of this corrected MPP.
+
+---
+
+## Earlier beta.17 qualification
+
 # beta.17 verification
 
 Test date: 1 November 2026. Target: original BitChord 1.9, Morphe Desktop 1.19.1 / Patcher 2.0.1.

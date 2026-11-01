@@ -338,6 +338,11 @@ public final class SoulseekSearchActivity extends DownloadActivity {
             item.addView(
                     new InlinePreview(this, track, session), new LinearLayout.LayoutParams(-1, -2));
         }
+        TextView details = text(item, PatchStrings.t("File details"), 15);
+        details.setMinHeight(downloadStyle.dp(48));
+        details.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        details.setFocusable(true);
+        details.setOnClickListener(v -> DownloadDetails.show(this, track));
         Button download = button(item, PatchStrings.t("Download this file"));
         download.setTag("soulseek-search-download-" + track.id);
         download.setOnClickListener(

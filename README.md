@@ -17,7 +17,7 @@
 
 The Downloads navigation icon is visible only when the download add-on patch is installed. Patches & tweaks and download controls use BitChord 1.9’s green capsule switches.
 
-Downloads offers saved Grid, List, Compact, Comfy and Detailed views. The Audio/Video player switch saves your YouTube preference across tracks and restarts. Missing alternate versions leave that preference unchanged.
+Downloads offers saved Grid, List, Compact, Comfy and Detailed views, exact-source Pause/Resume/Retry controls, separate Remove from list and confirmed Delete file actions. Resume restarts transfers from the same source. Library’s Downloads shortcut opens this page when the download patch is installed. The Audio/Video player switch saves your YouTube preference across tracks and restarts. Missing alternate versions leave that preference unchanged.
 
 Beta.16 rebuilds Downloads around the reviewed demo: a compact header, real artwork, thin transfer progress, source/format labels, separate status lines and five saved layouts. Management controls live under its settings gear. Beta.16.4 replaces the window overlay with headphone/video icons in measured rows of the native portrait player and landscape main pane. The row reserves space before the artwork and moves with the player; the saved YouTube mode remains persistent. Unofficial Telegram opens a lightweight page before bridge initialization and reads saved-index counts in the background, with duplicate-opening protection.
 

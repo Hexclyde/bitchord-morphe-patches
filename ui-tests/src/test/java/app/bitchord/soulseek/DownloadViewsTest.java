@@ -52,6 +52,34 @@ public class DownloadViewsTest {
     }
 
     @Test
+    public void deleteFileRequiresConfirmationAndCancelKeepsTheFile() throws Exception {
+        java.io.File file =
+                java.io.File.createTempFile("download-confirm", ".mp3", activity.getCacheDir());
+        DownloadsHubPage.Row row =
+                new DownloadsHubPage.Row("Saved test file", "On device", "On device", null, null);
+        row.hostId = "download-confirm";
+        row.savedUri = android.net.Uri.fromFile(file).toString();
+        java.lang.reflect.Method actions =
+                DownloadsHubPage.class.getDeclaredMethod("rowActions", DownloadsHubPage.Row.class);
+        actions.setAccessible(true);
+        actions.invoke(page, row);
+        android.app.Dialog sheet = org.robolectric.shadows.ShadowDialog.getLatestDialog();
+        View delete = findDescription(sheet.getWindow().getDecorView(), "Delete file");
+        assertNotNull(delete);
+        assertTrue(file.exists());
+        delete.performClick();
+        android.app.AlertDialog confirmation =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        assertTrue(confirmation.isShowing());
+        assertTrue(file.exists());
+        confirmation.getButton(android.content.DialogInterface.BUTTON_NEGATIVE).performClick();
+        org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        assertTrue("Cancel never deletes the saved file", file.exists());
+        assertFalse(confirmation.isShowing());
+        file.delete();
+    }
+
+    @Test
     public void settingsPanelIsReadOnlyUntilAnActionAndDoneDismissesIt() {
         Map<String, ?> before =
                 new HashMap<>(activity.getSharedPreferences("bitchord_download_ui", 0).getAll());

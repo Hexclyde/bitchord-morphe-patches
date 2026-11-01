@@ -428,6 +428,9 @@ fn search_window(
                 "bitrate": file.attribs.get(&0).copied().unwrap_or(0),
                 "sampleRate": file.attribs.get(&4).copied().unwrap_or(0),
                 "bitDepth": file.attribs.get(&5).copied().unwrap_or(0),
+                "variableBitrate": file.attribs.get(&2).copied(),
+                "attributes": file.attribs,
+                "queueLength": response.queue_length,
                 "freeSlots": response.slots, "speed": response.speed,
             })));
         }

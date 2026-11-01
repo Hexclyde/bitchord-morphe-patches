@@ -602,8 +602,47 @@ public final class SoulseekSelectedDownloadsTest {
         check(closed.get() == 4, "Rejected promotion releases the lease");
     }
 
+    static void pauseRetryAndRemoveStayOnTheSelectedSource() throws Exception {
+        Context app = fresh();
+        SoulseekDownloads.entered = new CountDownLatch(1);
+        SoulseekDownloads.release = new CountDownLatch(1);
+        String reference = song(1).videoId;
+        SoulseekSelectedDownloads.enqueueSelected(app, reference);
+        check(
+                SoulseekDownloads.entered.await(5, TimeUnit.SECONDS),
+                "transfer entered before pause");
+        String queued = song(2).videoId;
+        SoulseekSelectedDownloads.enqueueSelected(app, queued);
+        check(SoulseekSelectedDownloads.pause(queued), "queued selection pauses");
+        check(
+                progress(queued).phase == SoulseekSelectedDownloads.Phase.PAUSED,
+                "queued pause is visible");
+        check(SoulseekSelectedDownloads.pause(reference), "active selection pauses");
+        SoulseekDownloads.release.countDown();
+        idle();
+        check(
+                progress(reference).phase == SoulseekSelectedDownloads.Phase.PAUSED,
+                "active pause remains paused after cancellation settles");
+        SoulseekBridge.instance.tracks.clear();
+        SoulseekDownloads.entered = null;
+        SoulseekDownloads.release = null;
+        check(
+                SoulseekSelectedDownloads.retry(app, reference),
+                "explicit resume uses retained exact file metadata");
+        idle();
+        check(
+                progress(reference).phase != SoulseekSelectedDownloads.Phase.FAILED,
+                "resume succeeds after search catalogue eviction");
+        SoulseekSelectedDownloads.remove(queued);
+        check(
+                SoulseekSelectedDownloads.snapshots().stream()
+                        .noneMatch(row -> queued.equals(row.reference)),
+                "remove hides only that entry");
+    }
+
     public static void main(String[] args) throws Exception {
         try {
+            pauseRetryAndRemoveStayOnTheSelectedSource();
             previewRetention();
             sourceOwnership();
             setupAndBinding();

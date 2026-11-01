@@ -271,10 +271,20 @@ final class SoulseekSelectedDownloads {
 
     static void cancel(String ref) {}
 
+    static boolean pause(String ref) {
+        return true;
+    }
+
+    static boolean retry(Context app, String ref) {
+        return enqueueSelected(app, ref);
+    }
+
+    static void remove(String ref) {}
+
     static class Progress {
         String reference, name = "";
         long downloaded, total;
-        boolean needsPhone;
+        boolean needsPhone, handedOff;
         Phase phase;
 
         boolean canCancel() {
@@ -329,7 +339,11 @@ final class SoulseekNative {
 
 final class BulkJobStore {
     static class Job {
-        String publishedUri = "", phoneStatus = "", telegramStatus = "", telegramReceipt = "";
+        String id = "",
+                publishedUri = "",
+                phoneStatus = "",
+                telegramStatus = "",
+                telegramReceipt = "";
         BulkOffer offer;
     }
 }
