@@ -180,31 +180,6 @@ final class SoulseekBridge {
     }
 }
 
-final class DownloadSettings {
-    static final String SOULSEEK = "soulseek", PEERS = "peer-downloads", DEBRID = "debrid";
-    static boolean soulseek = true, peers = true, debrid = true;
-
-    static void reset() {
-        soulseek = peers = debrid = true;
-    }
-
-    static boolean enabled(Context context, String feature) {
-        return SOULSEEK.equals(feature)
-                ? soulseek
-                : PEERS.equals(feature) ? peers : DEBRID.equals(feature) && debrid;
-    }
-
-    static void setEnabled(Context context, String feature, boolean enabled) {
-        if (SOULSEEK.equals(feature)) soulseek = enabled;
-        else if (PEERS.equals(feature)) peers = enabled;
-        else if (DEBRID.equals(feature)) debrid = enabled;
-    }
-
-    static void requireEnabled(Context context, String feature) throws IOException {
-        if (!enabled(context, feature)) throw new IOException("Enable the feature first.");
-    }
-}
-
 final class DownloadDestinations {
     static final String PHONE = "phone", TELEGRAM = "telegram", BOTH = "both";
 
@@ -255,6 +230,7 @@ final class DownloadDestinations {
 }
 
 final class SoulseekSelectedDownloads {
+    static int previewAdmissions;
     static final List<String> selectedReferences = Collections.synchronizedList(new ArrayList<>());
     static boolean accepted = true;
 
@@ -274,6 +250,7 @@ final class SoulseekSelectedDownloads {
             String session,
             boolean now,
             java.io.Closeable retained) {
+        previewAdmissions++;
         try {
             return enqueueSelectedFile(context, track, session, now);
         } finally {

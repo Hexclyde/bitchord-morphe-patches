@@ -25,7 +25,30 @@ final class DownloadExplorerView {
         View card;
         RadioButton radio;
         LinearLayout group;
-        View previewAction;
+        View previewAction, infoAction;
+        SoulseekTrack previewTrack;
+        String previewSession;
+        String family = "addons", filePath = "";
+        long bytes = -1;
+        boolean requested;
+
+        Option inlinePreview(SoulseekTrack track, String session) {
+            previewTrack = track;
+            previewSession = session;
+            return this;
+        }
+
+        Option fromFamily(String family, long bytes, boolean requested) {
+            this.family = family;
+            this.bytes = bytes;
+            this.requested = requested;
+            return this;
+        }
+
+        Option filePath(String path) {
+            filePath = path;
+            return this;
+        }
 
         Option(
                 String source,
@@ -64,7 +87,11 @@ final class DownloadExplorerView {
     private final boolean batch;
     private String filter = "all";
     private Option selected;
-    private boolean busy;
+    private boolean busy, searching, searched;
+    private String family = "all", sort = "order";
+    private Spinner familyPicker;
+    private TextView resultCount, availabilityHint;
+    private final List<String> familyIds = new ArrayList<>();
 
     DownloadExplorerView(
             DownloadPage page,
@@ -129,6 +156,7 @@ final class DownloadExplorerView {
         query.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         query.setText(page.getIntent().getStringExtra(SoulseekDownloadChoice.EXTRA_QUERY));
         style.field(query);
+        query.setBackground(null);
         searchBar.addView(query, new LinearLayout.LayoutParams(0, -2, 1));
         ImageButton find = new ImageButton(page);
         find.setImageDrawable(style.viewIcon("search"));
@@ -186,6 +214,52 @@ final class DownloadExplorerView {
                         "Peers reporting a free upload slot. Sources with unknown readiness remain"
                                 + " under All."));
         content.addView(filters);
+        LinearLayout controls = row();
+        familyPicker = new Spinner(page);
+        familyPicker.setTag("explorer-source-family");
+        familyPicker.setContentDescription(PatchStrings.t("Filter download sources"));
+        familyPicker.setBackground(null);
+        familyPicker.setMinimumHeight(style.dp(48));
+        style.markCustom(familyPicker);
+        controls.addView(familyPicker, new LinearLayout.LayoutParams(-2, style.dp(48)));
+        familyPicker.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    public void onNothingSelected(AdapterView<?> parent) {}
+
+                    public void onItemSelected(
+                            AdapterView<?> parent, View child, int position, long id) {
+                        if (position >= familyIds.size()) return;
+                        String next = familyIds.get(position);
+                        if (!family.equals(next)) {
+                            family = next;
+                            applyFilter();
+                        }
+                    }
+                });
+        resultCount = label("", 12, false);
+        resultCount.setTag("explorer-result-count");
+        resultCount.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
+        resultCount.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
+        controls.addView(resultCount, new LinearLayout.LayoutParams(0, style.dp(48), 1));
+        ImageButton sortButton = new ImageButton(page);
+        sortButton.setImageDrawable(style.viewIcon("sort"));
+        sortButton.setContentDescription(PatchStrings.t("Sort source results"));
+        sortButton.setBackground(null);
+        sortButton.setPadding(style.dp(13), style.dp(13), style.dp(13), style.dp(13));
+        style.markCustom(sortButton);
+        sortButton.setOnClickListener(v -> sortDialog());
+        controls.addView(sortButton, new LinearLayout.LayoutParams(style.dp(48), style.dp(48)));
+        content.addView(controls);
+        availabilityHint =
+                label(
+                        PatchStrings.t(
+                                "Free peer slot reported. Sources with unknown readiness are under"
+                                        + " All."),
+                        12,
+                        false);
+        availabilityHint.setPadding(style.dp(2), 0, style.dp(2), style.dp(10));
+        availabilityHint.setVisibility(View.GONE);
+        content.addView(availabilityHint);
         status = label(PatchStrings.t("Nothing downloads until you choose a result."), 13, false);
         status.setPadding(0, style.dp(10), 0, style.dp(10));
         status.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
@@ -193,10 +267,26 @@ final class DownloadExplorerView {
         results = column();
         results.setTag("download-explorer-results");
         content.addView(results);
-        empty = label(PatchStrings.t("No sources match this filter."), 15, false);
+        empty =
+                label(
+                        PatchStrings.t("No matching sources. Try All formats or another source."),
+                        15,
+                        false);
         empty.setPadding(0, style.dp(24), 0, style.dp(24));
         empty.setVisibility(View.GONE);
         content.addView(empty);
+        TextView clearFilters = label(PatchStrings.t("Clear filters"), 14, true);
+        clearFilters.setTag("explorer-clear-filters");
+        clearFilters.setGravity(Gravity.CENTER);
+        clearFilters.setMinHeight(style.dp(48));
+        clearFilters.setBackground(style.shape(style.card, 24, false));
+        clearFilters.setOnClickListener(
+                v -> {
+                    filter = "all";
+                    family = "all";
+                    applyFilter();
+                });
+        content.addView(clearFilters);
         TextView warning =
                 label(
                         PatchStrings.t(
@@ -244,6 +334,7 @@ final class DownloadExplorerView {
         footer.addView(admissionNotice);
         root.setLayoutDirection(
                 PatchStrings.rtl() ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
+        updateFamilies();
         choose(null);
         applyFilter();
     }
@@ -256,8 +347,11 @@ final class DownloadExplorerView {
     void reset() {
         results.removeAllViews();
         options.clear();
+        searching = true;
+        family = "all";
         choose(null);
         filter = "all";
+        updateFamilies();
         applyFilter();
         empty.setVisibility(View.GONE);
         InputMethodManager keyboard =
@@ -283,16 +377,17 @@ final class DownloadExplorerView {
             group.removeAllViews();
         option.group = group;
         LinearLayout card = column();
-        card.setClipToOutline(true);
         LinearLayout body = column();
-        body.setPadding(style.dp(16), style.dp(8), style.dp(16), style.dp(12));
-        card.addView(body);
+        body.setPadding(style.dp(15), style.dp(15), style.dp(15), style.dp(13));
+        FrameLayout stack = new FrameLayout(page);
+        stack.addView(body, new FrameLayout.LayoutParams(-1, -2));
+        card.addView(stack);
         option.card = card;
         FrameLayout heading = new FrameLayout(page);
         TextView source = label(option.source, 16, false);
         source.setTextColor(style.foreground);
         source.setGravity(Gravity.CENTER_VERTICAL);
-        source.setMinHeight(style.dp(48));
+        source.setMinHeight(style.dp(26));
         FrameLayout.LayoutParams sourcePlacement = new FrameLayout.LayoutParams(-1, -2);
         sourcePlacement.setMarginEnd(style.dp(40));
         heading.addView(source, sourcePlacement);
@@ -304,7 +399,10 @@ final class DownloadExplorerView {
                     @Override
                     protected void onDraw(android.graphics.Canvas canvas) {
                         float x = getWidth() / 2f, y = getHeight() / 2f;
-                        ink.setColor(style.foreground);
+                        ink.setColor(
+                                isChecked()
+                                        ? (style.dark ? 0xffb2bce4 : 0xff586591)
+                                        : (style.dark ? 0xffa7a7af : 0xff787884));
                         ink.setStyle(android.graphics.Paint.Style.STROKE);
                         ink.setStrokeWidth(style.dp(2));
                         canvas.drawCircle(x, y, style.dp(9), ink);
@@ -321,26 +419,97 @@ final class DownloadExplorerView {
         radio.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         FrameLayout.LayoutParams radioPlacement =
                 new FrameLayout.LayoutParams(style.dp(32), style.dp(32), Gravity.TOP | Gravity.END);
-        radioPlacement.setMarginEnd(-style.dp(7));
+        radioPlacement.setMarginEnd(-style.dp(4));
         heading.addView(radio, radioPlacement);
         option.radio = radio;
         body.addView(heading);
-        TextView track = label(join(option.title, option.artist), 14, false);
-        track.setMaxLines(2);
+        TextView track = label(join(option.title, option.artist), 13, false);
+        track.setTag("explorer-track-title");
+        track.setPadding(0, style.dp(5), style.dp(40), 0);
         body.addView(track);
-        TextView quality =
-                label(
-                        option.quality.isEmpty()
-                                ? PatchStrings.t("Reported format unavailable")
-                                : option.quality,
-                        14,
-                        true);
-        quality.setPadding(0, style.dp(9), 0, style.dp(4));
+        String qualityText =
+                option.quality.isEmpty()
+                        ? PatchStrings.t("Reported format unavailable")
+                        : option.quality;
+        int qualifier = qualityText.indexOf(" · ");
+        String qualityLine = qualifier < 0 ? qualityText : qualityText.substring(0, qualifier);
+        String[] formatParts = qualityLine.split("\\s+", 2);
+        String formatName =
+                formatParts[0].matches(
+                                "(?i)FLAC|ALAC|WAV|WAVE|AIFF|AIFC|DSD|DSF|DFF|MP3|AAC|OPUS|VORBIS|OGG|APE|WV|WAVPACK|TTA|TAK|SHN|WMA|PCM")
+                        ? formatParts[0]
+                        : PatchStrings.t("Audio");
+        String qualityValue =
+                formatName.equals(PatchStrings.t("Audio"))
+                        ? qualityLine
+                        : (formatParts.length > 1 ? formatParts[1] : "");
+        LinearLayout quality = row();
+        quality.setPadding(0, style.dp(11), 0, style.dp(4));
+        TextView badge = label(formatName, 11, true);
+        badge.setTag("explorer-format-badge");
+        badge.setPadding(style.dp(6), style.dp(3), style.dp(6), style.dp(3));
+        android.graphics.drawable.GradientDrawable badgeShape =
+                style.shape(style.dark ? 0xff242427 : 0xffffffff, 6, false);
+        badgeShape.setStroke(Math.max(1, style.dp(1)), style.dark ? 0xff484852 : 0xffc7c7d0);
+        badge.setBackground(badgeShape);
+        quality.addView(badge);
+        if (!qualityValue.isEmpty()) {
+            TextView qualityLabel = label(qualityValue, 14, true);
+            qualityLabel.setTag("explorer-track-format");
+            qualityLabel.setPadding(style.dp(8), 0, 0, 0);
+            quality.addView(qualityLabel, new LinearLayout.LayoutParams(0, -2, 1));
+        }
         body.addView(quality);
+        TextView evidence =
+                label(
+                        PatchStrings.t(
+                                option.requested
+                                        ? "Requested quality · availability unverified"
+                                        : "Reported quality · recording unverified"),
+                        12,
+                        false);
+        evidence.setPadding(0, 0, 0, style.dp(8));
+        body.addView(evidence);
         if (!option.detail.isEmpty()) body.addView(label(option.detail, 12, false));
+        String readiness =
+                option.reportedAvailable
+                        ? "Free peer slot reported"
+                        : option.availabilityKnown
+                                ? "Peer slot busy"
+                                : option.requested
+                                        ? "Prepared after selection"
+                                        : "Readiness not reported";
+        TextView ready = label(PatchStrings.t(readiness), 12, false);
+        if (option.reportedAvailable) ready.setTextColor(style.dark ? 0xff9cc8a7 : 0xff386647);
+        ready.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                style.explorerIcon(
+                        option.reportedAvailable ? "available" : "clock",
+                        ready.getCurrentTextColor()),
+                null,
+                null,
+                null);
+        ready.setCompoundDrawablePadding(style.dp(5));
+        ready.setPadding(0, style.dp(2), 0, 0);
+        body.addView(ready);
+        ImageButton info = new ImageButton(page);
+        info.setImageDrawable(style.viewIcon("info"));
+        info.setBackground(null);
+        info.setContentDescription(PatchStrings.f("Details for {0}", option.source));
+        info.setPadding(style.dp(15), style.dp(15), style.dp(15), style.dp(15));
+        style.markCustom(info);
+        info.setOnClickListener(v -> details(option));
+        FrameLayout.LayoutParams infoPlacement =
+                new FrameLayout.LayoutParams(style.dp(48), style.dp(48), Gravity.TOP | Gravity.END);
+        infoPlacement.topMargin = style.dp(38);
+        infoPlacement.setMarginEnd(style.dp(2));
+        stack.addView(info, infoPlacement);
+        info.setVisibility(View.GONE);
+        option.infoAction = info;
         card.setClickable(true);
         card.setFocusable(true);
         card.setOnClickListener(v -> choose(option));
+        body.setOnClickListener(v -> choose(option));
+        body.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         card.setAccessibilityDelegate(
                 new View.AccessibilityDelegate() {
                     @Override
@@ -352,24 +521,37 @@ final class DownloadExplorerView {
                         info.setChecked(selected == option);
                     }
                 });
-        if (option.preview != null) {
-            Button preview = action(PatchStrings.t("Preview this file"), false);
+        if (option.previewTrack != null) {
+            InlinePreview preview =
+                    new InlinePreview(page.activity, option.previewTrack, option.previewSession);
+            preview.setVisibility(View.GONE);
+            option.previewAction = preview;
+            body.addView(preview, new LinearLayout.LayoutParams(-1, -2));
+        } else if (option.preview != null) {
+            Button preview = action(PatchStrings.t("Preview file"), false);
+            preview.setTextSize(13);
+            preview.setBackground(style.shape(android.graphics.Color.TRANSPARENT, 12, true));
             preview.setCompoundDrawablesRelativeWithIntrinsicBounds(
                     style.explorerIcon("preview", style.foreground), null, null, null);
             preview.setOnClickListener(v -> option.preview.run());
             preview.setVisibility(View.GONE);
             option.previewAction = preview;
-            body.addView(preview);
+            LinearLayout.LayoutParams previewPlacement = new LinearLayout.LayoutParams(-1, -2);
+            previewPlacement.topMargin = style.dp(10);
+            body.addView(preview, previewPlacement);
         }
         LinearLayout.LayoutParams placement = new LinearLayout.LayoutParams(-1, -2);
         placement.bottomMargin = style.dp(10);
-        group.addView(card, placement);
+        group.setVisibility(View.GONE);
+        results.addView(card, placement);
         options.add(option);
+        updateFamilies();
         applyFilter();
     }
 
     private void choose(Option option) {
         if (busy && option != null) return;
+        if (selected == option && option != null) return;
         if (footer.getParent() instanceof android.view.ViewGroup)
             ((android.view.ViewGroup) footer.getParent()).removeView(footer);
         selected = option;
@@ -377,7 +559,9 @@ final class DownloadExplorerView {
         for (Option item : options) {
             item.radio.setChecked(item == option);
             item.card.setSelected(item == option);
-            item.card.setBackground(style.shape(style.card, 22, false));
+            surface(item);
+            if (item.infoAction != null)
+                item.infoAction.setVisibility(item == option ? View.VISIBLE : View.GONE);
             if (item.previewAction != null)
                 item.previewAction.setVisibility(item == option ? View.VISIBLE : View.GONE);
         }
@@ -403,30 +587,70 @@ final class DownloadExplorerView {
     }
 
     private boolean matches(Option item) {
-        return filter.equals("all")
-                || filter.equals("lossless") && item.lossless
-                || filter.equals("available") && item.reportedAvailable;
+        return (family.equals("all") || family.equals(item.family))
+                && (filter.equals("all")
+                        || filter.equals("lossless") && item.lossless
+                        || filter.equals("available") && item.reportedAvailable);
     }
 
     private void applyFilter() {
+        if (filter.equals("available")
+                && options.stream()
+                        .noneMatch(
+                                item ->
+                                        (family.equals("all") || family.equals(item.family))
+                                                && item.availabilityKnown)) filter = "all";
         if (selected != null && !matches(selected)) choose(null);
         int visible = 0;
         Map<LinearLayout, Boolean> groups = new HashMap<>();
+        List<Option> ordered = new ArrayList<>(options);
+        if (sort.equals("quality"))
+            ordered.sort(
+                    Comparator.comparing((Option item) -> item.lossless)
+                            .reversed()
+                            .thenComparing(
+                                    Comparator.comparingDouble(
+                                                    (Option item) -> reportedRate(item.quality))
+                                            .reversed()));
+        if (sort.equals("size"))
+            ordered.sort(
+                    Comparator.comparingLong(item -> item.bytes > 0 ? item.bytes : Long.MAX_VALUE));
+        int position = 0;
+        for (Option item : ordered) {
+            if (results.indexOfChild(item.card) != position) {
+                results.removeView(item.card);
+                results.addView(item.card, position);
+            }
+            position++;
+        }
         for (Option item : options) {
             boolean show = matches(item);
             item.card.setVisibility(show ? View.VISIBLE : View.GONE);
             groups.put(item.group, groups.getOrDefault(item.group, false) || show);
             if (show) visible++;
-            item.card.setBackground(style.shape(style.card, 22, false));
+            surface(item);
         }
-        for (Map.Entry<LinearLayout, Boolean> entry : groups.entrySet())
-            entry.getKey().setVisibility(entry.getValue() ? View.VISIBLE : View.GONE);
+        for (int i = 0; i < results.getChildCount(); i++) {
+            View child = results.getChildAt(i);
+            if (child instanceof LinearLayout
+                    && options.stream().noneMatch(item -> item.card == child))
+                child.setVisibility(
+                        !searching && options.isEmpty() && filter.equals("all")
+                                ? View.VISIBLE
+                                : View.GONE);
+        }
         for (TextView chip : chips) {
             boolean active = chip.getTag().equals("explorer-filter:" + filter);
             chip.setSelected(active);
-            chip.setTextColor(active ? android.graphics.Color.WHITE : style.secondary);
+            chip.setTextColor(
+                    active
+                            ? (style.dark ? android.graphics.Color.WHITE : 0xff293251)
+                            : style.secondary);
             android.graphics.drawable.GradientDrawable shape =
-                    style.shape(active ? 0xff56649f : style.card, 25, false);
+                    style.shape(
+                            active ? (style.dark ? 0xff56649f : 0xffe2e6f5) : style.card,
+                            25,
+                            false);
             shape.setStroke(
                     style.dp(1), active ? 0xff6371ac : (style.dark ? 0xff3b3b40 : style.outline));
             chip.setBackground(shape);
@@ -440,9 +664,123 @@ final class DownloadExplorerView {
                         null,
                         null);
         }
-        boolean knownAvailability = options.stream().anyMatch(item -> item.availabilityKnown);
+        resultCount.setText(
+                visible == 1 ? PatchStrings.t("1 result") : PatchStrings.f("{0} results", visible));
+        availabilityHint.setVisibility(filter.equals("available") ? View.VISIBLE : View.GONE);
+        root.findViewWithTag("explorer-clear-filters")
+                .setVisibility(
+                        !searching
+                                        && visible == 0
+                                        && (!filter.equals("all") || !family.equals("all"))
+                                ? View.VISIBLE
+                                : View.GONE);
+        boolean knownAvailability =
+                options.stream()
+                        .anyMatch(
+                                item ->
+                                        (family.equals("all") || family.equals(item.family))
+                                                && item.availabilityKnown);
         availabilityChip.setVisibility(knownAvailability ? View.VISIBLE : View.GONE);
-        empty.setVisibility(!options.isEmpty() && visible == 0 ? View.VISIBLE : View.GONE);
+        empty.setVisibility(searched && !searching && visible == 0 ? View.VISIBLE : View.GONE);
+    }
+
+    void searching(boolean value) {
+        searching = value;
+        if (value) searched = true;
+        status.setVisibility(value ? View.VISIBLE : options.isEmpty() ? View.VISIBLE : View.GONE);
+        applyFilter();
+    }
+
+    private void surface(Option item) {
+        boolean selected = item == this.selected;
+        android.graphics.drawable.GradientDrawable shape =
+                style.shape(
+                        selected ? (style.dark ? 0xff202126 : 0xfff0f2fb) : style.card, 22, false);
+        shape.setStroke(Math.max(1, style.dp(1)), selected ? 0xff6977ac : style.outline);
+        item.card.setBackground(shape);
+    }
+
+    private void updateFamilies() {
+        List<String> next = new ArrayList<>();
+        next.add("all");
+        for (String id : new String[] {"addons", "soulseek", "telegram"})
+            if (options.stream().anyMatch(option -> option.family.equals(id))) next.add(id);
+        if (next.equals(familyIds)) return;
+        familyIds.clear();
+        familyIds.addAll(next);
+        List<String> labels = new ArrayList<>();
+        for (String id : familyIds)
+            labels.add(
+                    PatchStrings.t(
+                            id.equals("all")
+                                    ? "All sources"
+                                    : id.equals("addons")
+                                            ? "Add-ons"
+                                            : id.equals("soulseek") ? "Soulseek" : "Telegram"));
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(page, android.R.layout.simple_spinner_item, labels) {
+                    @Override
+                    public View getView(int at, View recycled, android.view.ViewGroup parent) {
+                        TextView view = (TextView) super.getView(at, recycled, parent);
+                        view.setTextColor(style.foreground);
+                        view.setTextSize(13);
+                        view.setTypeface(style.regular);
+                        android.graphics.drawable.Drawable arrow = style.viewIcon("down");
+                        arrow.setBounds(0, 0, style.dp(14), style.dp(14));
+                        view.setCompoundDrawablesRelative(null, null, arrow, null);
+                        view.setCompoundDrawablePadding(style.dp(7));
+                        return view;
+                    }
+                };
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        familyPicker.setAdapter(adapter);
+        if (!familyIds.contains(family)) family = "all";
+        familyPicker.setSelection(familyIds.indexOf(family));
+    }
+
+    private void sortDialog() {
+        new android.app.AlertDialog.Builder(page)
+                .setTitle(PatchStrings.t("Sort source results"))
+                .setSingleChoiceItems(
+                        new String[] {
+                            PatchStrings.t("Best match"),
+                            PatchStrings.t("Reported quality"),
+                            PatchStrings.t("Smallest reported file")
+                        },
+                        Arrays.asList("order", "quality", "size").indexOf(sort),
+                        (dialog, which) -> {
+                            sort = Arrays.asList("order", "quality", "size").get(which);
+                            applyFilter();
+                            dialog.dismiss();
+                        })
+                .setNegativeButton(PatchStrings.t("Cancel"), null)
+                .show();
+    }
+
+    private static double reportedRate(String quality) {
+        java.util.regex.Matcher match =
+                java.util.regex.Pattern.compile(
+                                "([0-9]+(?:\\.[0-9]+)?)\\s*(kHz|Hz)",
+                                java.util.regex.Pattern.CASE_INSENSITIVE)
+                        .matcher(quality);
+        if (!match.find()) return -1;
+        try {
+            return Double.parseDouble(match.group(1))
+                    * (match.group(2).equalsIgnoreCase("kHz") ? 1000 : 1);
+        } catch (NumberFormatException invalid) {
+            return -1;
+        }
+    }
+
+    private void details(Option option) {
+        String message =
+                join(option.title, option.artist) + "\n\n" + option.quality + "\n" + option.detail;
+        if (!option.filePath.isEmpty()) message += "\n\n" + option.filePath;
+        new android.app.AlertDialog.Builder(page)
+                .setTitle(option.source)
+                .setMessage(message)
+                .setPositiveButton(PatchStrings.t("Done"), null)
+                .show();
     }
 
     private LinearLayout column() {
@@ -487,13 +825,16 @@ final class DownloadExplorerView {
         button.setPadding(style.dp(12), style.dp(8), style.dp(12), style.dp(8));
         int fill =
                 style.dark
-                        ? (primary ? 0xff282735 : 0xff3e3e40)
-                        : (primary ? 0xffe2e4f5 : style.card);
+                        ? (primary ? 0xff30354d : 0xff303033)
+                        : (primary ? 0xffe2e6f5 : 0xffeeeef2);
         android.graphics.drawable.GradientDrawable shape = style.shape(fill, 24, false);
         shape.setStroke(
-                style.dp(1), style.dark ? (primary ? 0xff484651 : 0xff66666a) : style.outline);
+                style.dp(1),
+                style.dark
+                        ? (primary ? 0xff50597e : 0xff505055)
+                        : (primary ? 0xffb9c0dd : 0xffc5c5cd));
         button.setBackground(shape);
-        int ink = primary ? style.foreground : (style.dark ? 0xffb9b9be : style.secondary);
+        int ink = style.dark ? 0xfff5f5f7 : (primary ? 0xff293251 : 0xff36363d);
         button.setTextColor(ink);
         button.setCompoundDrawablePadding(style.dp(7));
         button.setCompoundDrawablesRelativeWithIntrinsicBounds(

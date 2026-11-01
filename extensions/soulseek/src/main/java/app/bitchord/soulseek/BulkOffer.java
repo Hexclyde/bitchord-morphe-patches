@@ -82,7 +82,7 @@ public final class BulkOffer {
         String lower = name.toLowerCase(java.util.Locale.ROOT);
         if (name.isEmpty()
                 || !lower.matches(
-                        ".*\\.(flac|alac|wav|wave|aif|aiff|aifc|dsf|dff|opus|aac|m4a|mp4|ogg|oga|vorbis|mp3)"))
+                        ".*\\.(flac|alac|wav|wave|rf64|w64|aif|aiff|aifc|dsf|dff|dsdiff|ape|wv|tta|tak|shn|wma|caf|mka|dts|dtshd|thd|mlp|opus|aac|m4a|mp4|ogg|oga|vorbis|mp3)"))
             throw new IOException("Choose a supported audio file.");
         return name;
     }

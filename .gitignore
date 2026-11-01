@@ -172,3 +172,8 @@ PUBLISH-WINDOWS.md
 /ui-tests/src/test/java/app/bitchord/telegram/PlaylistSyncActivity.java
 /ui-tests/src/test/java/app/bitchord/telegram/PlaylistAuthActivity.java
 /ui-tests/src/test/java/app/bitchord/telegram/PlaylistRows.java
+
+/ui-tests/src/test/java/app/bitchord/soulseek/NativePreviewAudio.java
+/ui-tests/src/test/java/app/bitchord/soulseek/PreviewExtractors.java
+/ui-tests/src/test/java/app/bitchord/soulseek/InlinePreview.java
+/ui-tests/src/test/java/app/bitchord/telegram/TelegramGlyph.java

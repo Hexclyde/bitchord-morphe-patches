@@ -32,4 +32,4 @@ Battery saver audio offload yields while AutoMix needs decoded audio, including 
 4. Enable AutoMix in playback settings and enable the sources you want to use.
 5. Check mixed queues, including Telegram → YouTube, YouTube → local/downloaded audio and local → Telegram. Check the source/format displayed and test at both 1.0× and a deliberately chosen different speed.
 
-The source ZIP includes the complete Git history bundle, source patch, release assets, checksums and an import/publish script. Physical-phone audio and public-network verification are pending; APK and framework tests are not a substitute for those checks. The custom visual transition editor is a separate feature and is not included in this fix.
+The source ZIP includes a Git bundle for the included changes, the complete source tree, release assets, checksums and a Windows import/publish script. Physical-phone audio and public-network verification are pending; APK and framework tests are not a substitute for those checks. The native visual transition editor is available through AutoMix's settings gear; see [transition editing](TRANSITION-EDITOR.md).

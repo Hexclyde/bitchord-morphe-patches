@@ -32,7 +32,7 @@ Beta.17 adds [source-independent AutoMix](docs/AUTOMIX.md), a native [transition
 | **Source-independent AutoMix** | Analyse the selected playable source, verify automatic replacements and preserve chosen speed through transitions. Selected by default. |
 | **Unofficial Telegram music** | Search and play audio from your own Telegram channels and chats through TDLib, using your own account. Android 8 or newer. |
 | **Unofficial Soulseek audio** | Guided Soulseek search and exact-file downloads, an explicit source choice for eligible single-song Download actions, paired-phone originals and optional debrid links. Saved destination/format choices; download-only. Android 8 or newer. |
-| **Streamseek previews** | Explicit 30-second Soulseek MP3/FLAC previews, reuse for downloads, local-reference excerpt comparison and transparent evidence export. Depends on the Soulseek patch; off by default. |
+| **Streamseek previews** | Inline 30-second Soulseek lossless/MP3 previews with an on-device decoder, transfer reuse and optional local-reference/evidence tools. Depends on the Soulseek patch; off by default. |
 | **Install as Bitchord+** | Installs next to your regular BitChord as **Bitchord+**, or under a name you choose. |
 | **Sign in with MicroG** | Signs in to YouTube Music with an account that’s already in [MicroG RE](https://github.com/MorpheApp/MicroG-RE), instead of Google’s sign-in page. Only shows when MicroG RE is installed. |
 | **Sing** | Turns the lead vocal down so you can sing over the song. Ported from [Auris](https://github.com/OreoMuncher45/Auris). Off by default. |
@@ -91,10 +91,11 @@ Every extra (quality, fake lossless checks, covers, file names, naming by sound,
 ## Patches & tweaks
 
 Install the features you want in Morphe, then open **Settings → Patches & tweaks**.
-The page contains the installed download and playback features. Their
-controls follow BitChord's theme, fonts, switches and rounded cards.
+The page contains controls for installed features, with search, All controls / Enabled,
+and Sources, Playback, Audio and Library filters. Counts follow the actual installed
+controls. Their styling follows BitChord's theme, fonts, switches and rounded cards.
 
-Each feature has an enable switch. A settings gear appears only when the feature is enabled and has configurable controls. Toggle-only features, including Battery saver, Per-download quality and Audio and video switch, do not show a gear; relevant help or status stays inline. Disabling a feature retains its saved choices. Telegram keeps its existing source toggle and account settings page. The optional playback patches include:
+Each feature has an enable switch. A settings gear appears only when the feature is enabled and has configurable controls. Settings open explicitly through the gear and close with Done. Toggle-only features, including Battery saver, Per-download quality and Audio and video switch, do not show a gear. Disabling a feature retains its saved choices. Reversible toggle changes offer Undo; sliders support live values, fine adjustment and native-default Reset. Telegram keeps its existing source toggle and account settings page. See [Patches & tweaks](docs/PATCHES-AND-TWEAKS.md) for dependency and Undo behavior. The optional playback patches include:
 
 - **Sing:** turns the lead vocal down so you can sing over the song, from a little to all of it. By default only the voice range is cut, only while someone is singing, and drum hits are left alone; **Whole centre** removes everything in the middle instead, which suits older recordings. Ported from [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45.
 - **Pitch control:** up or down by up to 12 semitones without changing the speed. BitChord's speed setting keeps the pitch you set.

@@ -22,6 +22,16 @@ public final class DownloadSettings {
 
     private DownloadSettings() {}
 
+    /** Read-only settings presentation; opening the page must not migrate or enable a service. */
+    public static boolean peekEnabled(Context context, String feature) {
+        if (context == null || !known(feature)) return false;
+        synchronized (DownloadSettings.class) {
+            if (stopping.contains(feature) || failures.containsKey(feature)) return false;
+        }
+        if (SOULSEEK.equals(feature)) return SoulseekSource.enabled();
+        return preferences(context).getBoolean(feature, false);
+    }
+
     public static boolean enabled(Context context, String feature) {
         if (context == null || !known(feature)) return false;
         synchronized (DownloadSettings.class) {

@@ -1,5 +1,15 @@
 # 1.1.0-beta.17
 
+- Unwrap boxed Kotlin results from native suspending lookups before reading playlist/search pages. Handle immediate and resumed success/failure results consistently.
+
+- Integrate Soulseek previews into result cards with explicit playback, elapsed time, actual decoded format and transfer reuse. Keep local-reference and recording-evidence tools in an optional compact native panel.
+- Group Unofficial Telegram tasks into native account/music cards and expandable advanced settings. Keep application credentials behind the setup control while preserving login recovery, indexing, storage and upload flows.
+
+- Add native installed-feature search, All controls / Enabled selection, category filters and accurate counts to Patches & tweaks. Build settings lazily through explicit gears, with Done, fine adjustment, Reset and preference-scoped Undo.
+- Keep source-gate writes off the UI thread and avoid migrating download opt-ins while reading the page. Respect Streamseek and JamesDSP dependencies without restoring cancelled transfers or credentials.
+- Refine Downloads with live filter counts, an Attention filter, grouped sections and prominent known transfer percentages. Align Explorer filters and selected-source actions with the native settings styling.
+- Defer native AutoMix model-session release until in-flight inference finishes, including cancellation and service shutdown; keep the UI responsive during cleanup.
+
 - Add source-independent analysis through selected playback adapters and complete rendition caches, including picked add-on rows.
 - Pin readers, isolate analysis persistence by rendition, cancel stale/service-ended jobs, and preserve background source diagnostics.
 - Prefer enabled alternatives to YouTube and verify automatic replacement recordings across three fingerprint/timing windows.
@@ -43,6 +53,9 @@
 - Send Soulseek’s progress link to Downloads, and exclude failed, cancelled and paused jobs from the active count.
 
 ## 1.1.0-beta.16.2
+
+- Expand Streamseek's optional on-device decoder to lossless PCM, ALAC, APE, WavPack, TTA/TAK, WMA Lossless and DSD containers; retain saved format choices and explicit preview controls.
+- Use distinct native vector icons for every installed tweak, including sleep fade, battery saver, DJ mode, AutoMix and the player audio/video switch.
 
 - Keep visible MicroG account selection in a native app-themed dialog with explicit title/account text colors, 56dp rows, wrapping and a Google sign-in fallback. Request a login token only for the chosen account. Preserve Android’s account-add/visibility-consent flow when none are visible.
 - Add light/dark contrast, account-selection, cancellation and invalid-token regression coverage.

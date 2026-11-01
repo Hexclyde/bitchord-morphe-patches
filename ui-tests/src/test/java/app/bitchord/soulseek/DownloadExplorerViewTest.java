@@ -97,6 +97,125 @@ public class DownloadExplorerViewTest {
     }
 
     @Test
+    public void tappingTheTrackTextSelectsItsCardWithoutSubmittingADownload() {
+        View root = view.root;
+        root.measure(
+                View.MeasureSpec.makeMeasureSpec(393, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(852, View.MeasureSpec.EXACTLY));
+        root.layout(0, 0, 393, 852);
+        View title = root.findViewWithTag("explorer-track-title");
+        android.graphics.Rect bounds = new android.graphics.Rect();
+        assertTrue(title.getGlobalVisibleRect(bounds));
+        int[] offset = new int[2];
+        root.getLocationOnScreen(offset);
+        float x = bounds.exactCenterX() - offset[0], y = bounds.exactCenterY() - offset[1];
+        long when = android.os.SystemClock.uptimeMillis();
+        android.view.MotionEvent down =
+                android.view.MotionEvent.obtain(
+                        when, when, android.view.MotionEvent.ACTION_DOWN, x, y, 0);
+        android.view.MotionEvent up =
+                android.view.MotionEvent.obtain(
+                        when, when + 20, android.view.MotionEvent.ACTION_UP, x, y, 0);
+        try {
+            root.dispatchTouchEvent(down);
+            root.dispatchTouchEvent(up);
+        } finally {
+            down.recycle();
+            up.recycle();
+        }
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        assertTrue(mp3.radio.isChecked());
+        assertTrue(view.now.isEnabled());
+        assertTrue(admissions.isEmpty());
+    }
+
+    @Test
+    public void individualSourceCardsShowARealFormatBadgeAndEvidence() {
+        view.reset();
+        LinearLayout source = new LinearLayout(activity);
+        view.results.addView(source);
+        DownloadExplorerView.Option option =
+                new DownloadExplorerView.Option(
+                                "One provider",
+                                "Song",
+                                "Artist",
+                                "FLAC 24-bit / 192 kHz · requested, availability unverified",
+                                "3:25",
+                                true,
+                                null,
+                                now -> {},
+                                null)
+                        .fromFamily("addons", -1, true);
+        view.add(source, option);
+        android.widget.TextView track = option.card.findViewWithTag("explorer-track-title");
+        android.widget.TextView badge = option.card.findViewWithTag("explorer-format-badge");
+        android.widget.TextView format = option.card.findViewWithTag("explorer-track-format");
+        assertEquals("Song · Artist", track.getText().toString());
+        assertEquals("FLAC", badge.getText().toString());
+        assertEquals("24-bit / 192 kHz", format.getText().toString());
+        assertEquals(View.GONE, source.getVisibility());
+        assertEquals(View.GONE, option.infoAction.getVisibility());
+        option.card.performClick();
+        assertEquals(View.VISIBLE, option.infoAction.getVisibility());
+        assertTrue(admissions.isEmpty());
+    }
+
+    @Test
+    public void familyFilteringAndSortingPreserveTheQueryAndDoNotAdmitFiles() {
+        mp3.fromFamily("addons", 100, false);
+        flac.fromFamily("soulseek", 1000, false);
+        // A new result refreshes the actual family catalogue without backend calls.
+        DownloadExplorerView.Option high =
+                new DownloadExplorerView.Option(
+                                "Hi-res addon",
+                                "Song",
+                                "Artist",
+                                "FLAC 24-bit / 192 kHz",
+                                "",
+                                true,
+                                null,
+                                now -> {},
+                                null)
+                        .fromFamily("addons", 2000, false);
+        view.add(group, high);
+        view.showSearch();
+        view.query.setText("My artist and title");
+        view.query.requestFocus();
+        android.widget.Spinner family = view.root.findViewWithTag("explorer-source-family");
+        family.setSelection(2);
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        assertEquals(View.VISIBLE, flac.card.getVisibility());
+        assertEquals(View.GONE, mp3.card.getVisibility());
+        assertEquals(
+                "1 result",
+                ((android.widget.TextView) view.root.findViewWithTag("explorer-result-count"))
+                        .getText()
+                        .toString());
+        family.setSelection(0);
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        assertEquals("My artist and title", view.query.getText().toString());
+        assertTrue(view.query.hasFocus());
+        findDescription(view.root, "Sort source results").performClick();
+        Shadows.shadowOf(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+                .clickOnItem(1);
+        assertTrue(view.results.indexOfChild(high.card) < view.results.indexOfChild(flac.card));
+        assertTrue(view.results.indexOfChild(flac.card) < view.results.indexOfChild(mp3.card));
+        assertTrue(admissions.isEmpty());
+    }
+
+    static View findDescription(View view, String description) {
+        if (description.equals(view.getContentDescription())) return view;
+        if (view instanceof android.view.ViewGroup) {
+            android.view.ViewGroup group = (android.view.ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                View found = findDescription(group.getChildAt(i), description);
+                if (found != null) return found;
+            }
+        }
+        return null;
+    }
+
+    @Test
     public void selectionDoesNotDownloadUntilAnAdmissionAction() {
         assertFalse(view.now.isEnabled());
         assertFalse(view.queue.isEnabled());
@@ -120,6 +239,25 @@ public class DownloadExplorerViewTest {
         assertEquals(View.VISIBLE, flac.card.getVisibility());
         assertFalse(view.now.isEnabled());
         assertFalse(mp3.radio.isChecked());
+        assertTrue(admissions.isEmpty());
+    }
+
+    @Test
+    public void readinessFilterHidesEmptySourceGroupsAndAllRestoresTheirDiagnostics() {
+        LinearLayout unavailable = new LinearLayout(activity);
+        android.widget.TextView message = new android.widget.TextView(activity);
+        message.setText("No matches from this source");
+        unavailable.addView(message);
+        view.results.addView(unavailable);
+        view.root.findViewWithTag("explorer-filter:available").performClick();
+        assertEquals(View.GONE, unavailable.getVisibility());
+        view.root.findViewWithTag("explorer-filter:all").performClick();
+        assertEquals(View.GONE, unavailable.getVisibility());
+        view.reset();
+        view.results.addView(unavailable);
+        view.searching(true);
+        view.searching(false);
+        assertEquals(View.VISIBLE, unavailable.getVisibility());
         assertTrue(admissions.isEmpty());
     }
 

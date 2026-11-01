@@ -473,7 +473,7 @@
     },
     {
       "name": "Streamseek previews",
-      "description": "Preview an explicitly selected Soulseek MP3 or FLAC through Media3 while it transfers. Keep download reuses buffered bytes. Compare an excerpt with a known local reference and export transparent evidence. Optional; enable in Patches & tweaks. No automatic Soulseek playback or Mornye integration.",
+      "description": "Preview explicitly selected Soulseek audio while it transfers: FLAC, WAV/AIFF, ALAC, APE, WavPack, TTA/TAK, WMA Lossless and DSD, plus MP3. A dedicated on-device FFmpeg decoder feeds Media3. Keep download reuses buffered bytes. Compare an excerpt with a known local reference and export transparent evidence. Optional; enable in Patches & tweaks. No automatic Soulseek playback or Mornye integration.",
       "default": false,
       "category": null,
       "compatiblePackages": [

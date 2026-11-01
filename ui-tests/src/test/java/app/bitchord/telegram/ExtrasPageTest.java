@@ -188,9 +188,17 @@ public class ExtrasPageTest {
                     "JamesDSP",
                     "Ask the quality for each download"
                 }) assertTrue(title, texts.contains(title));
-        assertTrue(texts.contains("JamesDSP isn’t installed"));
-        assertTrue(texts.contains("No profile for this output yet."));
-        assertTrue(texts.contains("Connect a Bluetooth output and it will be listed here."));
+        enable("jamesdsp").toggle();
+        described("Settings for JamesDSP").performClick();
+        assertTrue(texts().contains("JamesDSP isn’t installed"));
+        enable("headphone-correction").toggle();
+        described("Settings for Headphone correction").performClick();
+        enable("headphone-correction").toggle();
+        assertTrue(texts().contains("No profile for this output yet."));
+        enable("lossless-bluetooth").toggle();
+        described("Settings for Lossless addons over Bluetooth").performClick();
+        assertTrue(texts().contains("Connect a Bluetooth output and it will be listed here."));
+        enable("lossless-bluetooth").toggle();
 
         // The new features start switched off, and their switches turn them on.
         assertFalse(SoundExtras.sleepFade);
@@ -221,6 +229,8 @@ public class ExtrasPageTest {
         assertTrue(DownloadChoice.ask);
 
         // The equaliser code lands on the clipboard.
+        enable("output-eq").toggle();
+        described("Settings for Equaliser per output").performClick();
         click("Copy code");
         ClipboardManager clipboard =
                 (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);

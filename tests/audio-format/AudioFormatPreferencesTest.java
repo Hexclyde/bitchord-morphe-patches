@@ -288,20 +288,45 @@ public final class AudioFormatPreferencesTest {
     }
 
     public static void main(String[] args) throws Exception {
+        String legacy = "1|MP3:1,FLAC:0,ALAC:0,WAV:1,AIFF:0,DSD:0,OPUS:0,AAC:0,VORBIS:0";
+        AudioFormatPreferences.Settings migrated = AudioFormatPreferences.decode(legacy);
+        check(migrated.order.get(0) == AudioFormatPreferences.Format.MP3, "legacy order retained");
+        check(
+                migrated.enabled.equals(
+                        EnumSet.of(
+                                AudioFormatPreferences.Format.MP3,
+                                AudioFormatPreferences.Format.WAV)),
+                "new formats never silently enabled in saved settings");
+        check(
+                AudioFormatPreferences.decode(AudioFormatPreferences.encode(migrated))
+                        .enabled
+                        .equals(migrated.enabled),
+                "migrated choices round trip");
+        for (String extension :
+                new String[] {
+                    "ape", "wv", "tta", "tak", "shn", "wma", "caf", "w64", "rf64", "mka", "dsdiff"
+                })
+            check(
+                    AudioFormatPreferences.allowsCandidate(
+                            AudioFormatPreferences.defaults(), "Audio." + extension),
+                    "new lossless candidate " + extension);
+
         Memory memory = new Memory();
         AudioFormatPreferences.Settings defaults = AudioFormatPreferences.load(memory);
         check(
                 !defaults.configured
-                        && defaults.order.size() == 9
+                        && defaults.order.size() == 17
                         && defaults.order.get(0) == AudioFormatPreferences.Format.FLAC,
                 "default order and first-run state");
         AudioFormatPreferences.Settings reordered =
-                defaults.move(8, -1).withEnabled(AudioFormatPreferences.Format.FLAC, false);
+                defaults.move(defaults.order.indexOf(AudioFormatPreferences.Format.MP3), -1)
+                        .withEnabled(AudioFormatPreferences.Format.FLAC, false);
         AudioFormatPreferences.save(memory, reordered);
         AudioFormatPreferences.Settings saved = AudioFormatPreferences.load(memory);
         check(
                 saved.configured
-                        && saved.order.get(7) == AudioFormatPreferences.Format.MP3
+                        && saved.order.indexOf(AudioFormatPreferences.Format.MP3)
+                                == defaults.order.indexOf(AudioFormatPreferences.Format.MP3) - 1
                         && !saved.enabled.contains(AudioFormatPreferences.Format.FLAC),
                 "order and disabled choices persist");
         memory.fail = true;

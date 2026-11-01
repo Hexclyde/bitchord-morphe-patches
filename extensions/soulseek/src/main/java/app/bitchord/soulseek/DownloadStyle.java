@@ -113,6 +113,136 @@ final class DownloadStyle {
         return result;
     }
 
+    android.app.Dialog settingsPanel(
+            String title,
+            String message,
+            String[] icons,
+            String[] labels,
+            java.util.function.IntConsumer selected) {
+        android.app.Dialog dialog =
+                new android.app.Dialog(
+                        activity,
+                        dark
+                                ? android.R.style.Theme_Material_Dialog_NoActionBar
+                                : android.R.style.Theme_Material_Light_Dialog_NoActionBar);
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
+        LinearLayout panel = new LinearLayout(activity);
+        panel.setOrientation(LinearLayout.VERTICAL);
+        panel.setTag("download-settings-panel");
+        panel.setPadding(dp(20), dp(22), dp(20), dp(12));
+        TextView heading = text(title, 22, foreground, semibold);
+        if (android.os.Build.VERSION.SDK_INT >= 28) heading.setAccessibilityHeading(true);
+        panel.addView(heading);
+        TextView description = text(message, 14, secondary, regular);
+        description.setPadding(0, dp(6), 0, dp(14));
+        panel.addView(description);
+        LinearLayout actions = new LinearLayout(activity);
+        actions.setOrientation(LinearLayout.VERTICAL);
+        for (int i = 0; i < labels.length; i++) {
+            if (i > 0) {
+                View rule = new View(activity);
+                rule.setBackgroundColor(outline);
+                LinearLayout.LayoutParams spacing = new LinearLayout.LayoutParams(-1, dp(1));
+                spacing.setMargins(dp(36), 0, 0, 0);
+                actions.addView(rule, spacing);
+            }
+            LinearLayout row = new LinearLayout(activity);
+            row.setGravity(Gravity.CENTER_VERTICAL);
+            row.setMinimumHeight(dp(58));
+            row.setPadding(0, dp(12), 0, dp(12));
+            ImageView icon = new ImageView(activity);
+            icon.setImageDrawable(viewIcon(icons[i]));
+            icon.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            row.addView(icon, new LinearLayout.LayoutParams(dp(22), dp(22)));
+            TextView label = text(labels[i], 15, foreground, medium);
+            label.setPadding(dp(14), 0, dp(4), 0);
+            label.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            row.addView(label, new LinearLayout.LayoutParams(0, -2, 1));
+            row.setContentDescription(labels[i]);
+            row.setTag("download-setting:" + i);
+            row.setBackground(
+                    new RippleDrawable(
+                            ColorStateList.valueOf(dark ? 0x22ffffff : 0x17000000),
+                            shape(Color.TRANSPARENT, 12, false),
+                            null));
+            row.setClickable(true);
+            row.setFocusable(true);
+            row.setAccessibilityDelegate(
+                    new View.AccessibilityDelegate() {
+                        @Override
+                        public void onInitializeAccessibilityNodeInfo(
+                                View host, android.view.accessibility.AccessibilityNodeInfo info) {
+                            super.onInitializeAccessibilityNodeInfo(host, info);
+                            info.setClassName(Button.class.getName());
+                        }
+                    });
+            final int index = i;
+            row.setOnClickListener(
+                    v -> {
+                        dialog.dismiss();
+                        selected.accept(index);
+                    });
+            actions.addView(row, new LinearLayout.LayoutParams(-1, -2));
+        }
+        panel.addView(actions);
+        TextView done = text(PatchStrings.t("Done"), 16, foreground, semibold);
+        done.setGravity(Gravity.CENTER);
+        done.setMinHeight(dp(48));
+        done.setBackground(shape(field, 24, false));
+        done.setTag("download-settings-done");
+        done.setFocusable(true);
+        done.setOnClickListener(v -> dialog.dismiss());
+        done.setAccessibilityDelegate(
+                new View.AccessibilityDelegate() {
+                    @Override
+                    public void onInitializeAccessibilityNodeInfo(
+                            View host, android.view.accessibility.AccessibilityNodeInfo info) {
+                        super.onInitializeAccessibilityNodeInfo(host, info);
+                        info.setClassName(Button.class.getName());
+                    }
+                });
+        LinearLayout.LayoutParams doneSpace = new LinearLayout.LayoutParams(-1, -2);
+        doneSpace.topMargin = dp(14);
+        panel.addView(done, doneSpace);
+        android.widget.ScrollView scroll =
+                new android.widget.ScrollView(activity) {
+                    @Override
+                    protected void onMeasure(int width, int height) {
+                        int max =
+                                activity.getResources().getDisplayMetrics().heightPixels * 85 / 100;
+                        super.onMeasure(
+                                width,
+                                View.MeasureSpec.makeMeasureSpec(
+                                        Math.min(max, View.MeasureSpec.getSize(height)),
+                                        View.MeasureSpec.AT_MOST));
+                    }
+                };
+        scroll.addView(panel);
+        dialog.setContentView(scroll);
+        dialog.setCanceledOnTouchOutside(true);
+        android.view.Window window = dialog.getWindow();
+        if (window != null) {
+            boolean blur =
+                    android.os.Build.VERSION.SDK_INT >= 31
+                            && activity.getWindowManager().isCrossWindowBlurEnabled();
+            window.setBackgroundDrawable(
+                    shape(blur ? (dark ? 0xe61c1c1e : 0xf2f2f2f7) : card, 22, false));
+            android.view.WindowManager.LayoutParams attributes = window.getAttributes();
+            attributes.flags |= android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+            window.setAttributes(attributes);
+            window.setDimAmount(.28f);
+            if (blur) window.setBackgroundBlurRadius(dp(24));
+        }
+        dialog.show();
+        if (window != null)
+            window.setLayout(
+                    Math.min(
+                            dp(360),
+                            activity.getResources().getDisplayMetrics().widthPixels - dp(40)),
+                    -2);
+        return dialog;
+    }
+
     /** Custom controls may opt out of the generic first-layout styling pass. */
     void markCustom(View view) {
         styled.put(view, true);
@@ -408,7 +538,7 @@ final class DownloadStyle {
         return new ToggleDrawable();
     }
 
-    /** Filter and admission icons shared with the Download Explorer demo. */
+    /** Native filter and admission symbols. */
     Drawable explorerIcon(String kind, int tint) {
         return new Drawable() {
             final Paint ink = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -424,15 +554,27 @@ final class DownloadStyle {
                 ink.setStrokeJoin(Paint.Join.ROUND);
                 if (kind.equals("lossless")) {
                     ink.setStyle(Paint.Style.STROKE);
-                    for (int row = 0; row < 3; row++) {
-                        Path wave = new Path();
-                        for (int x = 1; x <= 23; x++) {
-                            float y = 12 + (float) Math.sin((x - row * 2) * .72f) * (5 - row * .8f);
-                            if (x == 1) wave.moveTo(x, y);
-                            else wave.lineTo(x, y);
-                        }
-                        canvas.drawPath(wave, ink);
-                    }
+                    canvas.drawLine(4, 9, 4, 15, ink);
+                    canvas.drawLine(9, 5, 9, 19, ink);
+                    canvas.drawLine(14, 2, 14, 22, ink);
+                    canvas.drawLine(19, 7, 19, 17, ink);
+                } else if (kind.equals("search")) {
+                    ink.setStyle(Paint.Style.STROKE);
+                    canvas.drawCircle(10, 10, 6, ink);
+                    canvas.drawLine(15, 15, 21, 21, ink);
+                } else if (kind.equals("upload")) {
+                    ink.setStyle(Paint.Style.STROKE);
+                    canvas.drawLine(12, 3, 12, 17, ink);
+                    canvas.drawLine(7, 8, 12, 3, ink);
+                    canvas.drawLine(17, 8, 12, 3, ink);
+                    canvas.drawLine(4, 17, 4, 21, ink);
+                    canvas.drawLine(4, 21, 20, 21, ink);
+                    canvas.drawLine(20, 17, 20, 21, ink);
+                } else if (kind.equals("clock")) {
+                    ink.setStyle(Paint.Style.STROKE);
+                    canvas.drawCircle(12, 12, 9, ink);
+                    canvas.drawLine(12, 6, 12, 12, ink);
+                    canvas.drawLine(12, 12, 17, 15, ink);
                 } else if (kind.equals("preview")) {
                     ink.setStyle(Paint.Style.FILL);
                     Path play = new Path();
@@ -456,33 +598,21 @@ final class DownloadStyle {
                     canvas.drawCircle(12, 12, 6.5f, ink);
                     ink.setAlpha(255);
                     canvas.drawCircle(12, 12, 4.5f, ink);
-                } else {
-                    ink.setStyle(Paint.Style.FILL);
-                    Path arrow = new Path();
-                    arrow.moveTo(7, 2);
-                    arrow.lineTo(13, 2);
-                    arrow.lineTo(13, 10);
-                    arrow.lineTo(17, 10);
-                    arrow.lineTo(10, 17);
-                    arrow.lineTo(3, 10);
-                    arrow.lineTo(7, 10);
-                    arrow.close();
-                    canvas.drawPath(arrow, ink);
+                } else if (kind.equals("later")) {
                     ink.setStyle(Paint.Style.STROKE);
-                    canvas.drawLine(3, 21, 11, 21, ink);
-                    canvas.drawCircle(17, 17, 5.5f, ink);
-                    if (kind.equals("later")) {
-                        canvas.drawLine(17, 13.5f, 17, 17, ink);
-                        canvas.drawLine(17, 17, 20, 18.5f, ink);
-                    } else {
-                        ink.setStyle(Paint.Style.FILL);
-                        Path play = new Path();
-                        play.moveTo(15.5f, 14);
-                        play.lineTo(19.5f, 17);
-                        play.lineTo(15.5f, 20);
-                        play.close();
-                        canvas.drawPath(play, ink);
-                    }
+                    canvas.drawLine(3, 5, 16, 5, ink);
+                    canvas.drawLine(3, 11, 13, 11, ink);
+                    canvas.drawLine(3, 17, 10, 17, ink);
+                    canvas.drawLine(18, 13, 18, 21, ink);
+                    canvas.drawLine(14, 17, 22, 17, ink);
+                } else {
+                    ink.setStyle(Paint.Style.STROKE);
+                    canvas.drawLine(12, 2, 12, 15, ink);
+                    canvas.drawLine(7, 10, 12, 15, ink);
+                    canvas.drawLine(17, 10, 12, 15, ink);
+                    canvas.drawLine(4, 17, 4, 21, ink);
+                    canvas.drawLine(4, 21, 20, 21, ink);
+                    canvas.drawLine(20, 17, 20, 21, ink);
                 }
                 canvas.restore();
             }
@@ -528,9 +658,54 @@ final class DownloadStyle {
                 paint.setStrokeWidth(2);
                 paint.setStrokeCap(Paint.Cap.ROUND);
                 paint.setStrokeJoin(Paint.Join.ROUND);
-                if (mode.equals("more")) {
+                if (mode.equals("folder")) {
+                    canvas.drawRoundRect(3, 6, 21, 20, 2, 2, paint);
+                    canvas.drawLine(4, 6, 4, 3, paint);
+                    canvas.drawLine(4, 3, 10, 3, paint);
+                    canvas.drawLine(10, 3, 13, 6, paint);
+                } else if (mode.equals("transfers")) {
+                    canvas.drawLine(4, 7, 20, 7, paint);
+                    canvas.drawLine(16, 3, 20, 7, paint);
+                    canvas.drawLine(16, 11, 20, 7, paint);
+                    canvas.drawLine(20, 17, 4, 17, paint);
+                    canvas.drawLine(8, 13, 4, 17, paint);
+                    canvas.drawLine(8, 21, 4, 17, paint);
+                } else if (mode.equals("link")) {
+                    canvas.save();
+                    canvas.rotate(-40, 12, 12);
+                    canvas.drawRoundRect(3, 8, 13, 16, 4, 4, paint);
+                    canvas.drawRoundRect(11, 8, 21, 16, 4, 4, paint);
+                    canvas.restore();
+                } else if (mode.equals("share")) {
+                    canvas.drawLine(6, 12, 18, 5, paint);
+                    canvas.drawLine(6, 12, 18, 19, paint);
+                    canvas.drawCircle(5, 12, 3, paint);
+                    canvas.drawCircle(19, 4, 3, paint);
+                    canvas.drawCircle(19, 20, 3, paint);
+                } else if (mode.equals("slots")) {
+                    for (int y = 5; y <= 19; y += 7) {
+                        canvas.drawLine(3, y, 21, y, paint);
+                        canvas.drawCircle(y == 12 ? 16 : 8, y, 2, paint);
+                    }
+                } else if (mode.equals("refresh")) {
+                    canvas.drawArc(4, 4, 20, 20, 40, 285, false, paint);
+                    canvas.drawLine(20, 3, 20, 9, paint);
+                    canvas.drawLine(14, 9, 20, 9, paint);
+                } else if (mode.equals("more")) {
                     paint.setStyle(Paint.Style.FILL);
                     for (int y : new int[] {5, 12, 19}) canvas.drawCircle(12, y, 1.6f, paint);
+                } else if (mode.equals("sort")) {
+                    canvas.drawLine(3, 7, 21, 7, paint);
+                    canvas.drawLine(3, 17, 21, 17, paint);
+                    canvas.drawLine(8, 4, 8, 10, paint);
+                    canvas.drawLine(16, 14, 16, 20, paint);
+                } else if (mode.equals("down")) {
+                    canvas.drawLine(6, 9, 12, 15, paint);
+                    canvas.drawLine(12, 15, 18, 9, paint);
+                } else if (mode.equals("info")) {
+                    canvas.drawCircle(12, 12, 9, paint);
+                    canvas.drawPoint(12, 7, paint);
+                    canvas.drawLine(12, 11, 12, 17, paint);
                 } else if (mode.equals("music")) {
                     paint.setStyle(Paint.Style.FILL);
                     canvas.drawCircle(10, 17, 4, paint);
@@ -763,7 +938,7 @@ final class DownloadStyle {
         }
     }
 
-    /** BitChord 1.9 IosSwitch, matching Patches & tweaks and the approved HTML demo. */
+    /** BitChord 1.9 capsule switch shared with Patches & tweaks. */
     private final class ToggleDrawable extends Drawable {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 

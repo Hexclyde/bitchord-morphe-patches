@@ -105,13 +105,14 @@ public class TelegramScreenTest {
     }
 
     void idle() throws Exception {
-        activity.bridge.work.submit(() -> {}).get(10, java.util.concurrent.TimeUnit.SECONDS);
-        for (int i = 0; i < 100 && activity.busy; i++) {
-            Thread.sleep(10);
+        for (int i = 0; i < 8; i++) {
+            // Dialog button handlers post the action that enqueues the background job.
             Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+            activity.bridge.work.submit(() -> {}).get(10, java.util.concurrent.TimeUnit.SECONDS);
+            Shadows.shadowOf(android.os.Looper.getMainLooper()).idleFor(Duration.ofMillis(550));
+            if (!activity.busy) return;
         }
-        Shadows.shadowOf(android.os.Looper.getMainLooper()).idleFor(Duration.ofMillis(550));
-        assertFalse(activity.busy);
+        assertFalse("Telegram action did not settle", activity.busy);
     }
 
     void screenshot(String name) throws Exception {
@@ -127,6 +128,62 @@ public class TelegramScreenTest {
         try (FileOutputStream stream = new FileOutputStream(out)) {
             assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream));
         }
+    }
+
+    @Test
+    public void readyOverviewKeepsApplicationDetailsBehindAnExplicitControl() throws Exception {
+        signedIn();
+        View setup = activity.body.findViewWithTag("telegram-application-settings");
+        assertNotNull(setup);
+        assertNull(text(activity.body, "App API ID"));
+        assertNotNull(text(activity.body, "Connected to Telegram"));
+        assertTrue(
+                activity.body.findViewWithTag("telegram-row:Music chats").getMinimumHeight() >= 48);
+        setup.performClick();
+        assertNotNull(input("App API ID"));
+        assertTrue(
+                input("App API hash (secret)").getTransformationMethod()
+                        instanceof PasswordTransformationMethod);
+    }
+
+    @Test
+    public void expandedSectionsAndTabSurviveActivityRecreation() throws Exception {
+        signedIn();
+        activity.advanced = true;
+        activity.screen = "";
+        activity.render();
+        activity.body.findViewWithTag("telegram-section:Storage").performClick();
+        long cache = activity.bridge.cacheLimitBytes();
+        controller.recreate();
+        activity = controller.get();
+        activity.preparation.get(10, java.util.concurrent.TimeUnit.SECONDS);
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        assertTrue(activity.advanced);
+        assertEquals(
+                View.VISIBLE,
+                activity.body.findViewWithTag("telegram-section-content:Storage").getVisibility());
+        assertEquals(cache, activity.bridge.cacheLimitBytes());
+    }
+
+    @Test
+    public void advancedSectionsExpandWithoutChangingTheirSavedSettings() throws Exception {
+        signedIn();
+        long cache = activity.bridge.cacheLimitBytes();
+        boolean importing = activity.bridge.importOption("import");
+        activity.advanced = true;
+        activity.screen = "";
+        activity.render();
+        View storage = activity.body.findViewWithTag("telegram-section-content:Storage");
+        assertEquals(View.GONE, storage.getVisibility());
+        View header = activity.body.findViewWithTag("telegram-section:Storage");
+        header.performClick();
+        assertEquals(View.VISIBLE, storage.getVisibility());
+        assertEquals(cache, activity.bridge.cacheLimitBytes());
+        assertEquals(importing, activity.bridge.importOption("import"));
+        assertEquals("android.widget.Button", header.createAccessibilityNodeInfo().getClassName());
+        header.performClick();
+        assertEquals(View.GONE, storage.getVisibility());
+        assertEquals(cache, activity.bridge.cacheLimitBytes());
     }
 
     @Test
@@ -156,7 +213,7 @@ public class TelegramScreenTest {
 
     @Test
     public void backArrowIsCenteredAndNavigates() throws Exception {
-        View button = ((ViewGroup) activity.body.getChildAt(0)).getChildAt(0);
+        View button = activity.body.findViewWithTag("telegram-back");
         assertTrue(button instanceof ImageButton);
         assertEquals("Back", button.getContentDescription());
         int size = activity.style.dp(48);
@@ -309,6 +366,15 @@ public class TelegramScreenTest {
         click(name);
         Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
         assertTrue(name + " tab open", text(activity.body, name).isSelected());
+        if (name.equals("Advanced")) {
+            for (String title :
+                    new String[] {
+                        "Main channel", "Track details", "Playback", "Storage", "Backup and sharing"
+                    }) {
+                View header = activity.body.findViewWithTag("telegram-section:" + title);
+                if (header != null && !header.isSelected()) header.performClick();
+            }
+        }
     }
 
     void signedIn() {
@@ -321,6 +387,11 @@ public class TelegramScreenTest {
     }
 
     void clickRow(String title) {
+        View row = activity.body.findViewWithTag("telegram-row:" + title);
+        if (row != null) {
+            assertTrue(row.performClick());
+            return;
+        }
         TextView label = text(activity.body, title);
         assertNotNull(title, label);
         assertTrue(((View) label.getParent().getParent()).performClick());
@@ -706,20 +777,28 @@ public class TelegramScreenTest {
     public void trackDetailsToggles() throws Exception {
         TelegramBridge bridge = activity.bridge;
         signedIn();
-        assertNull("Track details are on the Advanced tab", text(activity.body, "TRACK DETAILS"));
+        assertNull(
+                "Track details are on the Advanced tab",
+                activity.body.findViewWithTag("telegram-section:Track details"));
         openTab("Advanced");
-        assertNotNull(text(activity.body, "TRACK DETAILS"));
+        assertNotNull(activity.body.findViewWithTag("telegram-section:Track details"));
         View root = activity.getWindow().getDecorView();
         root.measure(
                 View.MeasureSpec.makeMeasureSpec(393, View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(852, View.MeasureSpec.EXACTLY));
         root.layout(0, 0, 393, 852);
         activity.scroll.scrollTo(
-                0, text(activity.body, "TRACK DETAILS").getTop() - activity.style.dp(8));
+                0,
+                ((View) activity.body.findViewWithTag("telegram-section:Track details").getParent())
+                                .getTop()
+                        - activity.style.dp(8));
         screenshot("track-details");
 
         Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
-        activity.scroll.scrollTo(0, text(activity.body, "TRACK DETAILS").getTop());
+        activity.scroll.scrollTo(
+                0,
+                ((View) activity.body.findViewWithTag("telegram-section:Track details").getParent())
+                        .getTop());
         int scrolled = activity.scroll.getScrollY();
         assertTrue(scrolled > 0);
         TelegramSwitch quality =

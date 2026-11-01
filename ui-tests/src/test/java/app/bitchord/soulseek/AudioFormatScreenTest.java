@@ -150,7 +150,7 @@ public class AudioFormatScreenTest {
         pointer(handle, MotionEvent.ACTION_MOVE, 2000);
         pointer(handle, MotionEvent.ACTION_UP, 2000);
         AudioFormatPreferences.Settings result = draft();
-        assertEquals(AudioFormatPreferences.Format.FLAC, result.order.get(8));
+        assertEquals(AudioFormatPreferences.Format.FLAC, result.order.get(result.order.size() - 1));
         assertEquals(AudioFormatPreferences.Format.ALAC, result.order.get(0));
         assertFalse(result.enabled.contains(AudioFormatPreferences.Format.ALAC));
         assertTrue(result.enabled.contains(AudioFormatPreferences.Format.FLAC));

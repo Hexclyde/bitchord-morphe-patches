@@ -22,10 +22,12 @@ import java.util.concurrent.*;
 public class SourceAutomixTest {
     static class Direct extends AbstractExecutorService {
         int tasks;
+        ExecutorService background;
 
         public void execute(Runnable task) {
             tasks++;
-            task.run();
+            if (background == null) task.run();
+            else background.execute(task);
         }
 
         public void shutdown() {}
@@ -48,7 +50,23 @@ public class SourceAutomixTest {
     }
 
     static class Tracker {
-        public void release() {}
+        final Object lock = new Object();
+        Runnable onRelease, onAttempt;
+
+        public void release() {
+            if (SourceAutomix.deferModelRelease(this)) {
+                if (onAttempt != null) onAttempt.run();
+                return;
+            }
+            synchronized (lock) {
+                try {
+                    if (SourceAutomix.deferModelRelease(this)) return;
+                    if (onRelease != null) onRelease.run();
+                } finally {
+                    if (onAttempt != null) onAttempt.run();
+                }
+            }
+        }
     }
 
     static class Thermal {
@@ -84,9 +102,13 @@ public class SourceAutomixTest {
         public int thermalStatus;
         List<Uri> analyzed = new ArrayList<>();
         boolean fail;
+        java.util.function.Consumer<String> probe;
 
         public Outcome analyze(String id, Uri uri, double duration) {
-            analyzed.add(uri);
+            if (probe != null) probe.accept(id);
+            synchronized (analyzed) {
+                analyzed.add(uri);
+            }
             return new Outcome(fail ? null : new TrackAnalysis(id));
         }
     }
@@ -173,6 +195,113 @@ public class SourceAutomixTest {
         callback.f$0.trackAnalyzer.thermalStatus = 3;
         SourceAutomix.request(callback, item("content://music/9"), 120000L);
         assertEquals(0, callback.f$0.trackAnalyzer.executor.tasks);
+    }
+
+    @Test
+    public void parallelRequestsNeverReleaseSessionsWhileAnotherAnalysisUsesThem()
+            throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        ExecutorService parallel = Executors.newFixedThreadPool(2);
+        analyzer.executor.background = parallel;
+        CountDownLatch firstEntered = new CountDownLatch(1), secondEntered = new CountDownLatch(1);
+        CountDownLatch finishFirst = new CountDownLatch(1), firstReleased = new CountDownLatch(1);
+        java.util.concurrent.atomic.AtomicInteger users =
+                new java.util.concurrent.atomic.AtomicInteger();
+        java.util.concurrent.atomic.AtomicInteger unsafeRelease =
+                new java.util.concurrent.atomic.AtomicInteger();
+        analyzer.probe =
+                id -> {
+                    users.incrementAndGet();
+                    try {
+                        if (id.equals("first")) {
+                            firstEntered.countDown();
+                            assertTrue(finishFirst.await(3, TimeUnit.SECONDS));
+                        } else {
+                            secondEntered.countDown();
+                            assertTrue(firstReleased.await(3, TimeUnit.SECONDS));
+                        }
+                    } catch (InterruptedException interrupted) {
+                        throw new AssertionError(interrupted);
+                    } finally {
+                        users.decrementAndGet();
+                    }
+                };
+        analyzer.tracker.onRelease =
+                () -> {
+                    if (users.get() != 0) unsafeRelease.incrementAndGet();
+                };
+        analyzer.tracker.onAttempt = firstReleased::countDown;
+        try {
+            SourceAutomix.request(
+                    callback,
+                    new MediaItem.Builder().setMediaId("first").setUri("content://music/1").build(),
+                    120000L);
+            assertTrue(firstEntered.await(3, TimeUnit.SECONDS));
+            SourceAutomix.request(
+                    callback,
+                    new MediaItem.Builder()
+                            .setMediaId("second")
+                            .setUri("content://music/2")
+                            .build(),
+                    120000L);
+            secondEntered.await(150, TimeUnit.MILLISECONDS);
+            finishFirst.countDown();
+            parallel.shutdown();
+            assertTrue(parallel.awaitTermination(5, TimeUnit.SECONDS));
+            assertEquals(2, analyzer.analyzed.size());
+            assertEquals(
+                    "An ONNX session cannot be released while another job is using it",
+                    0,
+                    unsafeRelease.get());
+        } finally {
+            finishFirst.countDown();
+            firstReleased.countDown();
+            parallel.shutdownNow();
+        }
+    }
+
+    @Test
+    public void serviceShutdownDefersNativeClosureWithoutBlockingTheUi() throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        ExecutorService background = Executors.newSingleThreadExecutor();
+        analyzer.executor.background = background;
+        CountDownLatch entered = new CountDownLatch(1), finish = new CountDownLatch(1);
+        java.util.concurrent.atomic.AtomicInteger closed =
+                new java.util.concurrent.atomic.AtomicInteger();
+        analyzer.tracker.onRelease = closed::incrementAndGet;
+        analyzer.vocals.onRelease = closed::incrementAndGet;
+        analyzer.probe =
+                id -> {
+                    synchronized (analyzer.tracker.lock) {
+                        entered.countDown();
+                        try {
+                            assertTrue(finish.await(3, TimeUnit.SECONDS));
+                        } catch (InterruptedException interrupted) {
+                            throw new AssertionError(interrupted);
+                        }
+                    }
+                };
+        try {
+            SourceAutomix.request(callback, item("content://music/8"), 120000L);
+            assertTrue(entered.await(3, TimeUnit.SECONDS));
+            long started = System.nanoTime();
+            SourceAutomix.release(callback.f$0);
+            analyzer.tracker.release();
+            analyzer.vocals.release();
+            assertTrue(
+                    "Shutdown must not wait for native inference on the UI thread",
+                    System.nanoTime() - started < TimeUnit.MILLISECONDS.toNanos(500));
+            assertEquals("In-flight native sessions remain alive", 0, closed.get());
+            finish.countDown();
+            background.shutdown();
+            assertTrue(background.awaitTermination(5, TimeUnit.SECONDS));
+            assertEquals(2, closed.get());
+            assertFalse(SourceAutomix.deferModelRelease(analyzer.tracker));
+            assertTrue("Cancelled results must not be published", analyzer.results.isEmpty());
+        } finally {
+            finish.countDown();
+            background.shutdownNow();
+        }
     }
 
     @Test

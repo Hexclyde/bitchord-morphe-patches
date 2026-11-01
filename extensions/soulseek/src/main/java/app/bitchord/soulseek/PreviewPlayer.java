@@ -9,6 +9,7 @@ import androidx.media3.datasource.DataSource;
 final class PreviewPlayer {
     private final Object actual;
     final Player player;
+    private final PreviewExtractors extractors;
 
     PreviewPlayer(Context context, SoulseekPreview.Session session) throws Exception {
         Class<?> builderType = Class.forName("androidx.media3.exoplayer.ExoPlayer$Builder");
@@ -16,10 +17,28 @@ final class PreviewPlayer {
                 builderType
                         .getConstructor(Context.class)
                         .newInstance(context.getApplicationContext());
-        Object extractors =
-                Class.forName("androidx.media3.extractor.DefaultExtractorsFactory")
-                        .getConstructor()
-                        .newInstance();
+        Class<?> renderersType = Class.forName("androidx.media3.exoplayer.DefaultRenderersFactory");
+        Object renderers =
+                renderersType
+                        .getConstructor(Context.class)
+                        .newInstance(context.getApplicationContext());
+        java.lang.reflect.Field floatOutput = renderersType.getDeclaredField("enableFloatOutput");
+        floatOutput.setAccessible(true);
+        floatOutput.setBoolean(renderers, true);
+        Class<?> supplierType = Class.forName("com.google.common.base.Supplier");
+        Object supplier =
+                java.lang.reflect.Proxy.newProxyInstance(
+                        supplierType.getClassLoader(),
+                        new Class<?>[] {supplierType},
+                        (proxy, method, args) -> {
+                            if (method.getName().equals("get")) return renderers;
+                            if (method.getName().equals("hashCode"))
+                                return System.identityHashCode(proxy);
+                            if (method.getName().equals("equals")) return proxy == args[0];
+                            return "Streamseek renderers";
+                        });
+        builderType.getField("renderersFactorySupplier").set(builder, supplier);
+        extractors = new PreviewExtractors(session);
         Object factory =
                 Class.forName("androidx.media3.exoplayer.source.ProgressiveMediaSource$Factory")
                         .getConstructor(
@@ -27,7 +46,7 @@ final class PreviewPlayer {
                                 Class.forName("androidx.media3.extractor.ExtractorsFactory"))
                         .newInstance(
                                 (DataSource.Factory) () -> new PreviewDataSource(session),
-                                extractors);
+                                extractors.factory());
         builderType
                 .getMethod(
                         "setMediaSourceFactory",
@@ -51,6 +70,10 @@ final class PreviewPlayer {
 
     void play() throws Exception {
         Player.class.getMethod("setPlayWhenReady", boolean.class).invoke(player, true);
+    }
+
+    String format() {
+        return extractors.description;
     }
 
     String error() {

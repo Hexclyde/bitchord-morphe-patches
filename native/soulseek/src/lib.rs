@@ -135,6 +135,21 @@ fn extension(path: &str) -> Option<String> {
             | "alac"
             | "dsf"
             | "dff"
+            | "dsdiff"
+            | "rf64"
+            | "w64"
+            | "caf"
+            | "ape"
+            | "wv"
+            | "tta"
+            | "tak"
+            | "shn"
+            | "wma"
+            | "mka"
+            | "dts"
+            | "dtshd"
+            | "thd"
+            | "mlp"
     )
     .then_some(ext)
 }
@@ -1137,6 +1152,17 @@ mod tests {
             "album/track.vorbis",
             "album/track.OPUS",
             "album/uncompressed.AIFC",
+            "album/audio.APE",
+            "album/audio.WV",
+            "album/audio.TTA",
+            "album/audio.TAK",
+            "album/audio.SHN",
+            "album/audio.WMA",
+            "album/audio.CAF",
+            "album/audio.W64",
+            "album/audio.RF64",
+            "album/audio.DSDIFF",
+            "album/audio.MKA",
         ] {
             assert!(validate_remote(path, 1024).is_ok(), "{path}");
             assert!(

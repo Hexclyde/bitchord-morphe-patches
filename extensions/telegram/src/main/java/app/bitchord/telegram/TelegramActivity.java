@@ -27,6 +27,7 @@ public final class TelegramActivity extends Activity {
     final Handler handler = new Handler(Looper.getMainLooper());
     String screen = "";
     boolean editingPhone;
+    final Set<String> expandedSections = new HashSet<>();
     TextView resendControl, resendHint;
     volatile boolean busy;
     boolean editCredentials, resumed, pageFailed;
@@ -124,6 +125,11 @@ public final class TelegramActivity extends Activity {
                                 ? android.R.style.Theme_Material_NoActionBar
                                 : android.R.style.Theme_Material_Light_NoActionBar);
         super.onCreate(saved);
+        if (saved != null) {
+            advanced = saved.getBoolean("telegramAdvanced", false);
+            ArrayList<String> expanded = saved.getStringArrayList("telegramSections");
+            if (expanded != null) expandedSections.addAll(expanded);
+        }
         TelegramBridge.setupOpened();
         try {
             CapturePolicy.apply(this);
@@ -196,6 +202,13 @@ public final class TelegramActivity extends Activity {
                                         });
                             }
                         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle state) {
+        state.putBoolean("telegramAdvanced", advanced);
+        state.putStringArrayList("telegramSections", new ArrayList<>(expandedSections));
+        super.onSaveInstanceState(state);
     }
 
     @Override
@@ -338,7 +351,10 @@ public final class TelegramActivity extends Activity {
                                 render();
                             } else finish();
                         });
-        top.addView(back, new LinearLayout.LayoutParams(style.dp(48), style.dp(48)));
+        LinearLayout heading = new LinearLayout(this);
+        back.setTag("telegram-back");
+        heading.setGravity(Gravity.CENTER_VERTICAL);
+        heading.addView(back, new LinearLayout.LayoutParams(style.dp(48), style.dp(48)));
         TextView title =
                 style.text(
                         Strings.t(
@@ -347,13 +363,33 @@ public final class TelegramActivity extends Activity {
                                         : editCredentials
                                                 ? "Application setup"
                                                 : "Unofficial Telegram"),
-                        34,
+                        24,
                         style.foreground,
                         style.heavy);
         title.setLetterSpacing(-0.025f);
-        LinearLayout.LayoutParams tl = new LinearLayout.LayoutParams(-1, -2);
-        tl.topMargin = style.dp(26);
-        top.addView(title, tl);
+        if (android.os.Build.VERSION.SDK_INT >= 28) title.setAccessibilityHeading(true);
+        LinearLayout.LayoutParams tl = new LinearLayout.LayoutParams(0, -2, 1);
+        tl.setMarginStart(style.dp(12));
+        heading.addView(title, tl);
+        if (bridge != null && bridge.ready() && !editCredentials && channelId == 0) {
+            ImageButton setup = new ImageButton(this);
+            setup.setImageDrawable(new TelegramGlyph(style, "key", style.secondary));
+            setup.setPadding(style.dp(13), style.dp(13), style.dp(13), style.dp(13));
+            setup.setBackground(style.shape(android.graphics.Color.TRANSPARENT, 24, false));
+            setup.setContentDescription(Strings.t("Application setup"));
+            setup.setTag("telegram-application-settings");
+            setup.setOnClickListener(
+                    v -> {
+                        if (!busy) {
+                            editCredentials = true;
+                            screen = "";
+                            render();
+                        }
+                    });
+            heading.addView(setup, new LinearLayout.LayoutParams(style.dp(48), style.dp(48)));
+            actions.add(setup);
+        }
+        top.addView(heading);
         TextView subtitle =
                 style.text(
                         Strings.t(
@@ -385,21 +421,23 @@ public final class TelegramActivity extends Activity {
                 tabs();
                 comeBack();
             }
-            LinearLayout app = card("Application");
-            row(
-                    app,
-                    "App API ID",
-                    bridge.credentials().configured()
-                            ? Integer.toString(bridge.credentials().apiId)
-                            : "Not configured",
-                    "Change",
-                    () -> {
-                        editCredentials = true;
-                        screen = "";
-                        render();
-                    });
-            divider(app);
-            row(app, "App API hash", "••••••••••••••••", null, null);
+            if (!bridge.ready()) {
+                LinearLayout app = card("Application");
+                row(
+                        app,
+                        "App API ID",
+                        bridge.credentials().configured()
+                                ? Integer.toString(bridge.credentials().apiId)
+                                : "Not configured",
+                        "Change",
+                        () -> {
+                            editCredentials = true;
+                            screen = "";
+                            render();
+                        });
+                divider(app);
+                row(app, "App API hash", "••••••••••••••••", null, null);
+            }
             account();
             if (bridge.ready()) {
                 library();
@@ -428,25 +466,44 @@ public final class TelegramActivity extends Activity {
     /** Basic and Advanced: the everyday settings, and the rest. */
     void tabs() {
         LinearLayout bar = new LinearLayout(this);
-        bar.setOrientation(LinearLayout.HORIZONTAL);
+        bar.setGravity(Gravity.CENTER_VERTICAL);
+        bar.setPadding(style.dp(4), style.dp(4), style.dp(4), style.dp(4));
+        bar.setBackground(style.shape(style.card, 28, false));
         String[] names = {"Basic", "Advanced"};
         for (int i = 0; i < 2; i++) {
             boolean open = (i == 1) == advanced, toAdvanced = i == 1;
             TextView tab =
-                    style.button(
+                    style.text(
                             Strings.t(names[i]),
-                            open,
-                            () -> {
-                                if (busy || advanced == toAdvanced) return;
-                                advanced = toAdvanced;
-                                screen = "";
-                                render();
-                            });
-            tab.setContentDescription(Strings.t(names[i]));
+                            14,
+                            open ? style.foreground : style.secondary,
+                            style.medium);
+            tab.setBackground(open ? style.shape(style.field, 24, false) : null);
+            tab.setPadding(style.dp(12), style.dp(8), style.dp(12), style.dp(8));
+            tab.setMinHeight(style.dp(48));
+            tab.setGravity(Gravity.CENTER);
+            tab.setFocusable(true);
             tab.setSelected(open);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, -2, 1);
-            if (i == 1) lp.leftMargin = style.dp(8);
-            bar.addView(tab, lp);
+            tab.setContentDescription(Strings.t(names[i]));
+            tab.setOnClickListener(
+                    v -> {
+                        if (busy || advanced == toAdvanced) return;
+                        advanced = toAdvanced;
+                        screen = "";
+                        render();
+                    });
+            tab.setAccessibilityDelegate(
+                    new View.AccessibilityDelegate() {
+                        @Override
+                        public void onInitializeAccessibilityNodeInfo(
+                                View host, android.view.accessibility.AccessibilityNodeInfo info) {
+                            super.onInitializeAccessibilityNodeInfo(host, info);
+                            info.setClassName(RadioButton.class.getName());
+                            info.setCheckable(true);
+                            info.setChecked(open);
+                        }
+                    });
+            bar.addView(tab, new LinearLayout.LayoutParams(0, -2, 1));
         }
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
         lp.setMargins(style.dp(16), style.dp(4), style.dp(16), style.dp(4));
@@ -2063,26 +2120,146 @@ public final class TelegramActivity extends Activity {
     }
 
     LinearLayout card(String title) {
+        String key = title;
         title = Strings.t(title);
+        if (advanced
+                && bridge != null
+                && bridge.ready()
+                && !editCredentials
+                && channelId == 0
+                && title != null) return settingsSection(key, title);
         if (title != null) {
             TextView label =
                     style.text(
                             title.toUpperCase(Locale.getDefault()),
-                            11,
+                            12,
                             style.secondary,
                             style.semibold);
+            if (android.os.Build.VERSION.SDK_INT >= 28) label.setAccessibilityHeading(true);
             LinearLayout.LayoutParams ll = new LinearLayout.LayoutParams(-1, -2);
-            ll.setMargins(style.dp(20), style.dp(24), style.dp(20), style.dp(8));
+            ll.setMargins(style.dp(20), style.dp(20), style.dp(20), style.dp(8));
             body.addView(label, ll);
         }
         LinearLayout c = new LinearLayout(this);
         c.setOrientation(LinearLayout.VERTICAL);
         c.setPadding(style.dp(16), style.dp(16), style.dp(16), style.dp(16));
-        c.setBackground(style.shape(style.card, 14, false));
+        c.setBackground(style.shape(style.card, 16, false));
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
         lp.setMargins(style.dp(16), title == null ? style.dp(16) : 0, style.dp(16), 0);
         body.addView(c, lp);
         return c;
+    }
+
+    private LinearLayout settingsSection(String key, String title) {
+        LinearLayout group = new LinearLayout(this);
+        group.setOrientation(LinearLayout.VERTICAL);
+        group.setBackground(style.shape(style.card, 16, false));
+        LinearLayout.LayoutParams placement = new LinearLayout.LayoutParams(-1, -2);
+        placement.setMargins(style.dp(16), style.dp(12), style.dp(16), 0);
+        body.addView(group, placement);
+        LinearLayout content = new LinearLayout(this);
+        content.setOrientation(LinearLayout.VERTICAL);
+        content.setPadding(style.dp(16), 0, style.dp(16), style.dp(16));
+        content.setTag("telegram-section-content:" + key);
+        boolean open = expandedSections.contains(key);
+        content.setVisibility(open ? View.VISIBLE : View.GONE);
+        String summary =
+                key.equals("Storage")
+                        ? CachePolicy.label(bridge.cacheLimitBytes())
+                        : key.equals("Main channel")
+                                ? bridge.mainChannel.mainTitle()
+                                : key.equals("Track details")
+                                        ? Strings.t("Report audio quality")
+                                        : key.equals("Playback")
+                                                ? Strings.t("Telegram source")
+                                                : key.equals("Backup and sharing")
+                                                        ? Strings.t("Back up")
+                                                                + " · "
+                                                                + Strings.t("Restore")
+                                                        : "";
+        TextView header = style.text(title, 17, style.foreground, style.semibold);
+        header.setTag("telegram-section:" + key);
+        header.setPadding(style.dp(16), style.dp(16), style.dp(16), style.dp(16));
+        header.setMinHeight(style.dp(64));
+        header.setGravity(Gravity.CENTER_VERTICAL);
+        if (!summary.isEmpty()) {
+            android.text.SpannableString value =
+                    new android.text.SpannableString(title + "\n" + summary);
+            value.setSpan(
+                    new android.text.style.RelativeSizeSpan(.78f),
+                    title.length() + 1,
+                    value.length(),
+                    0);
+            value.setSpan(
+                    new android.text.style.ForegroundColorSpan(style.secondary),
+                    title.length() + 1,
+                    value.length(),
+                    0);
+            header.setText(value);
+        }
+        header.setCompoundDrawablePadding(style.dp(12));
+        header.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                new TelegramGlyph(style, TelegramGlyph.kind(key), style.secondary),
+                null,
+                new TelegramGlyph(style, open ? "down" : "chevron", style.secondary),
+                null);
+        header.setBackground(
+                new android.graphics.drawable.RippleDrawable(
+                        android.content.res.ColorStateList.valueOf(
+                                style.dark ? 0x17ffffff : 0x17000000),
+                        null,
+                        style.shape(style.foreground, 16, false)));
+        header.setFocusable(true);
+        header.setSelected(open);
+        header.setContentDescription(title + (summary.isEmpty() ? "" : ", " + summary));
+        header.setAccessibilityDelegate(
+                new View.AccessibilityDelegate() {
+                    @Override
+                    public boolean performAccessibilityAction(View host, int action, Bundle args) {
+                        if (action == android.view.accessibility.AccessibilityNodeInfo.ACTION_EXPAND
+                                || action
+                                        == android.view.accessibility.AccessibilityNodeInfo
+                                                .ACTION_COLLAPSE) {
+                            boolean expand =
+                                    action
+                                            == android.view.accessibility.AccessibilityNodeInfo
+                                                    .ACTION_EXPAND;
+                            if (expand != (content.getVisibility() == View.VISIBLE))
+                                host.performClick();
+                            return true;
+                        }
+                        return super.performAccessibilityAction(host, action, args);
+                    }
+
+                    @Override
+                    public void onInitializeAccessibilityNodeInfo(
+                            View host, android.view.accessibility.AccessibilityNodeInfo info) {
+                        super.onInitializeAccessibilityNodeInfo(host, info);
+                        info.setClassName(Button.class.getName());
+                        info.addAction(
+                                content.getVisibility() == View.VISIBLE
+                                        ? android.view.accessibility.AccessibilityNodeInfo
+                                                .AccessibilityAction.ACTION_COLLAPSE
+                                        : android.view.accessibility.AccessibilityNodeInfo
+                                                .AccessibilityAction.ACTION_EXPAND);
+                    }
+                });
+        header.setOnClickListener(
+                v -> {
+                    boolean showing = content.getVisibility() != View.VISIBLE;
+                    content.setVisibility(showing ? View.VISIBLE : View.GONE);
+                    if (showing) expandedSections.add(key);
+                    else expandedSections.remove(key);
+                    header.setSelected(showing);
+                    header.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                            new TelegramGlyph(style, TelegramGlyph.kind(key), style.secondary),
+                            null,
+                            new TelegramGlyph(style, showing ? "down" : "chevron", style.secondary),
+                            null);
+                });
+        group.addView(header);
+        group.addView(content);
+        return content;
     }
 
     void paragraph(LinearLayout p, String value) {
@@ -2096,18 +2273,32 @@ public final class TelegramActivity extends Activity {
         View line = new View(this);
         line.setBackgroundColor(style.outline);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, style.dp(1));
-        lp.setMargins(0, style.dp(14), 0, style.dp(14));
+        lp.setMargins(0, style.dp(10), 0, style.dp(10));
         p.addView(line, lp);
     }
 
     /** Fixed text is translated here; a chat's own name passed in is left as it is. */
     void row(LinearLayout p, String title, String subtitle, String more, Runnable click) {
+        String icon = TelegramGlyph.kind(title);
+        String originalTitle = title;
         title = Strings.t(title);
         subtitle = Strings.t(subtitle);
         more = Strings.t(more);
         LinearLayout row = new LinearLayout(this);
         row.setGravity(Gravity.CENTER_VERTICAL);
-        row.setMinimumHeight(style.dp(40));
+        row.setMinimumHeight(style.dp(48));
+        row.setTag("telegram-row:" + originalTitle);
+        if (click != null || "Connected to Telegram".equals(originalTitle)) {
+            ImageView glyph = new ImageView(this);
+            glyph.setImageDrawable(
+                    new TelegramGlyph(
+                            style, icon, "check".equals(icon) ? 0xff30d158 : style.secondary));
+            glyph.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            LinearLayout.LayoutParams size =
+                    new LinearLayout.LayoutParams(style.dp(22), style.dp(22));
+            size.setMarginEnd(style.dp(12));
+            row.addView(glyph, size);
+        }
         LinearLayout labels = new LinearLayout(this);
         labels.setOrientation(LinearLayout.VERTICAL);
         labels.addView(style.text(title, 16, style.foreground, style.medium));
@@ -2116,11 +2307,26 @@ public final class TelegramActivity extends Activity {
         labels.addView(sub);
         row.addView(labels, new LinearLayout.LayoutParams(0, -2, 1));
         if (more != null) {
-            TextView m = style.text(more + "  ›", 14, style.secondary, style.medium);
+            TextView m = style.text(more, 13, style.secondary, style.medium);
             m.setPadding(style.dp(16), style.dp(8), 0, style.dp(8));
             row.addView(m);
         }
         if (click != null) {
+            row.setBackground(
+                    new android.graphics.drawable.RippleDrawable(
+                            android.content.res.ColorStateList.valueOf(
+                                    style.dark ? 0x17ffffff : 0x17000000),
+                            null,
+                            style.shape(style.foreground, 12, false)));
+            row.setAccessibilityDelegate(
+                    new View.AccessibilityDelegate() {
+                        @Override
+                        public void onInitializeAccessibilityNodeInfo(
+                                View host, android.view.accessibility.AccessibilityNodeInfo info) {
+                            super.onInitializeAccessibilityNodeInfo(host, info);
+                            info.setClassName(Button.class.getName());
+                        }
+                    });
             row.setOnClickListener(
                     v -> {
                         if (!busy) click.run();
@@ -2292,8 +2498,29 @@ public final class TelegramActivity extends Activity {
                         () -> {
                             if (!busy) click.run();
                         });
+        if (!primary) {
+            b.setBackground(
+                    new android.graphics.drawable.RippleDrawable(
+                            android.content.res.ColorStateList.valueOf(
+                                    style.dark ? 0x17ffffff : 0x17000000),
+                            null,
+                            style.shape(style.foreground, 12, false)));
+            b.setGravity(Gravity.CENTER_VERTICAL);
+            b.setMinHeight(style.dp(48));
+            b.setPadding(style.dp(4), style.dp(10), style.dp(4), style.dp(10));
+            b.setCompoundDrawablePadding(style.dp(12));
+            b.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    new TelegramGlyph(style, TelegramGlyph.kind(title), style.secondary),
+                    null,
+                    title.startsWith("Choose")
+                                    || title.startsWith("Open")
+                                    || title.contains("settings")
+                            ? new TelegramGlyph(style, "chevron", style.secondary)
+                            : null,
+                    null);
+        }
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
-        lp.topMargin = style.dp(12);
+        lp.topMargin = style.dp(8);
         p.addView(b, lp);
         actions.add(b);
         return b;

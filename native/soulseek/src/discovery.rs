@@ -484,7 +484,7 @@ pub fn poll(handle: i64, timeout_ms: i32) -> Result<String> {
             queue.is_empty()
                 && !session.closed.load(Ordering::Acquire)
                 && !session.finished.load(Ordering::Acquire)
-                    && (session.advertise || !session.read_complete.load(Ordering::Acquire))
+                && (session.advertise || !session.read_complete.load(Ordering::Acquire))
         })
         .map_err(|_| state("Discovery inbox unavailable"))?;
     let now = Timestamp::now().as_secs();

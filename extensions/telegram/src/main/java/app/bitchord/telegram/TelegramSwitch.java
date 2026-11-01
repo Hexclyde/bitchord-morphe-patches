@@ -69,7 +69,7 @@ final class TelegramSwitch extends View implements Checkable {
         }
         checked = value;
         if (animator != null) animator.cancel();
-        if (animate && isAttachedToWindow()) {
+        if (animate && isAttachedToWindow() && motionAllowed()) {
             animator = ValueAnimator.ofFloat(position, value ? 1 : 0);
             animator.setDuration(150);
             animator.addUpdateListener(
@@ -96,11 +96,21 @@ final class TelegramSwitch extends View implements Checkable {
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(blend(uncheckedTrack, style.dark ? 0xff30d158 : 0xff34c759, position));
         canvas.drawRoundRect(track, radius, radius, paint);
-        float width = style.dp(40) * (isPressed() ? 1.18f : 1f);
+        float width = style.dp(40);
         float x = left + style.dp(2) + (style.dp(60) - width) * position;
         track.set(x, top + style.dp(2), x + width, top + style.dp(26));
         paint.setColor(0xffffffff);
         canvas.drawRoundRect(track, style.dp(12), style.dp(12), paint);
+    }
+
+    private boolean motionAllowed() {
+        return android.os.Build.VERSION.SDK_INT >= 26
+                ? ValueAnimator.areAnimatorsEnabled()
+                : android.provider.Settings.Global.getFloat(
+                                getContext().getContentResolver(),
+                                android.provider.Settings.Global.ANIMATOR_DURATION_SCALE,
+                                1f)
+                        != 0f;
     }
 
     @Override

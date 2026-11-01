@@ -12,6 +12,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Explicit, expiring preview capabilities. Ordinary Soulseek source URIs remain download-only. */
 public final class SoulseekPreview {
+    private static final Set<String> FORMATS =
+            Collections.unmodifiableSet(
+                    new HashSet<>(
+                            Arrays.asList(
+                                    "mp3", "flac", "wav", "wave", "rf64", "w64", "aif", "aiff",
+                                    "aifc", "m4a", "mp4", "alac", "caf", "ape", "wv", "tta", "tak",
+                                    "shn", "wma", "dsf", "dff", "dsdiff", "mka", "ogg", "oga",
+                                    "dts", "dtshd", "thd", "mlp")));
     private static final String PREFS = "bitchord_streamseek_preview";
     static final String EXTRA = "streamseek.preview.token";
     private static final Map<String, Offer> offers = new LinkedHashMap<>();
@@ -40,14 +48,20 @@ public final class SoulseekPreview {
     }
 
     static boolean supported(SoulseekTrack track) {
-        return "mp3".equals(track.advertisedExtension) || "flac".equals(track.advertisedExtension);
+        return FORMATS.contains(track.advertisedExtension.toLowerCase(java.util.Locale.ROOT));
     }
 
     static void open(Activity activity, SoulseekTrack track, String session) throws IOException {
+        String token = stage(activity, track, session);
+        activity.startActivity(
+                new Intent(activity, SoulseekPreviewActivity.class).putExtra(EXTRA, token));
+    }
+
+    static String stage(Activity activity, SoulseekTrack track, String session) throws IOException {
         if (!available(activity))
             throw new IOException("Enable Streamseek previews and Soulseek first");
         if (!supported(track))
-            throw new IOException("Preview currently supports MP3 and FLAC files");
+            throw new IOException("This container is not supported by Streamseek previews");
         SoulseekBridge bridge = SoulseekBridge.get();
         if (!session.equals(bridge.sessionTag)) throw new IOException("Soulseek result expired");
         String token = UUID.randomUUID().toString();
@@ -56,8 +70,17 @@ public final class SoulseekPreview {
             if (offers.size() >= 8) offers.remove(offers.keySet().iterator().next());
             offers.put(token, new Offer(track, session, SystemClock.elapsedRealtime() + 600_000));
         }
-        activity.startActivity(
-                new Intent(activity, SoulseekPreviewActivity.class).putExtra(EXTRA, token));
+        return token;
+    }
+
+    static boolean enqueueSelected(
+            Context context, SoulseekTrack track, String session, boolean now) throws IOException {
+        Session preview = active;
+        if (preview != null
+                && !preview.closed.get()
+                && preview.offer.track.id.equals(track.id)
+                && preview.offer.session.equals(session)) return preview.keep(now);
+        return SoulseekSelectedDownloads.enqueueSelectedFile(context, track, session, now);
     }
 
     private static void prune() {

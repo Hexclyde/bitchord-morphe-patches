@@ -101,3 +101,13 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+# Streamseek audio decoder
+
+The optional Streamseek decoder uses FFmpeg 7.1.5 (libavformat, libavcodec,
+libswresample and libavutil), licensed under LGPL-2.1-or-later. No GPL-only,
+nonfree or network components are enabled. The exact unmodified upstream source
+archive is included in `native/preview/vendor/ffmpeg-7.1.5.tar.xz`, with the
+JNI adapter and build instructions alongside it. See
+[native notices](native/preview/NOTICE) and [preview behavior](docs/STREAMSEEK-PREVIEW.md).
+Upstream: https://ffmpeg.org/ .

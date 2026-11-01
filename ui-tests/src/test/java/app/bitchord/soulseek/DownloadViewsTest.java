@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -51,12 +52,98 @@ public class DownloadViewsTest {
     }
 
     @Test
+    public void settingsPanelIsReadOnlyUntilAnActionAndDoneDismissesIt() {
+        Map<String, ?> before =
+                new HashMap<>(activity.getSharedPreferences("bitchord_download_ui", 0).getAll());
+        findDescription(page.view, "Download settings").performClick();
+        android.app.Dialog dialog = org.robolectric.shadows.ShadowDialog.getLatestDialog();
+        assertTrue(dialog.isShowing());
+        android.graphics.drawable.GradientDrawable surface =
+                (android.graphics.drawable.GradientDrawable)
+                        dialog.getWindow().getDecorView().getBackground();
+        assertEquals(255, android.graphics.Color.alpha(surface.getColor().getDefaultColor()));
+        View panel =
+                dialog.findViewById(android.R.id.content)
+                        .findViewWithTag("download-settings-panel");
+        assertNotNull(panel);
+        for (int i = 0; i < 6; i++) {
+            View action = panel.findViewWithTag("download-setting:" + i);
+            assertTrue(action.getMinimumHeight() >= 48);
+            assertTrue(action.isFocusable());
+            assertEquals(
+                    android.widget.Button.class.getName(),
+                    action.createAccessibilityNodeInfo().getClassName());
+        }
+        assertEquals(before, activity.getSharedPreferences("bitchord_download_ui", 0).getAll());
+        panel.findViewWithTag("download-settings-done").performClick();
+        assertFalse(dialog.isShowing());
+    }
+
+    @Test
+    @Config(sdk = 26)
+    public void settingsPanelDispatchesOnlyTheExplicitlyChosenAction() {
+        int[] selected = {-1};
+        android.app.Dialog dialog =
+                new DownloadStyle(activity)
+                        .settingsPanel(
+                                "Settings",
+                                "Help",
+                                new String[] {"folder", "share"},
+                                new String[] {"Files", "Sharing"},
+                                index -> selected[0] = index);
+        assertEquals(-1, selected[0]);
+        dialog.findViewById(android.R.id.content)
+                .findViewWithTag("download-setting:1")
+                .performClick();
+        assertEquals(1, selected[0]);
+        assertFalse(dialog.isShowing());
+    }
+
+    @Test
+    public void downloadScopesKeepTheirPaddingAndThereIsNoDuplicateFindSourcesButton() {
+        page.renderRows(data);
+        TextView scope = page.view.findViewWithTag("All");
+        assertEquals(13, scope.getPaddingStart());
+        assertEquals(13, scope.getPaddingEnd());
+        assertNull(findText(page.view, "Find sources"));
+        assertNotNull(page.view.findViewWithTag("download-local-search"));
+        page.renderRows(Collections.emptyList());
+        assertNull(findText(page.view, "Find sources"));
+    }
+
+    @Test
+    public void displaySortingKeepsTheActualQueueOrder() {
+        DownloadsHubPage.Row first =
+                new DownloadsHubPage.Row("Z first", "Queued", "Queue", null, null);
+        DownloadsHubPage.Row second =
+                new DownloadsHubPage.Row("A second", "Queued", "Queue", null, null);
+        page.renderRows(Arrays.asList(first, second));
+        page.view.findViewWithTag("download-sort").performClick();
+        Shadows.shadowOf(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+                .clickOnItem(1);
+        page.view.findViewWithTag("Queue").performClick();
+        assertFalse(page.view.findViewWithTag("download-sort").isEnabled());
+        assertNotNull(findText(page.view.findViewWithTag("download-row:0"), "Z first"));
+        assertEquals(
+                "title",
+                activity.getSharedPreferences("bitchord_download_ui", 0).getString("sort", ""));
+    }
+
+    @Test
     public void allViewsRetainEveryJobAndGridUsesTwoColumns() {
         for (String mode : DownloadsHubPage.VIEW_IDS) {
             page.setViewMode(mode);
             assertEquals(4, page.renderRows(data));
             LinearLayout rows = page.view.findViewWithTag("download-items");
-            assertEquals(mode.equals("grid") ? 2 : 4, rows.getChildCount());
+            if (mode.equals("grid")) assertEquals(2, rows.getChildCount());
+            else {
+                int cards = 0;
+                for (int at = 0; at < rows.getChildCount(); at++) {
+                    Object tag = rows.getChildAt(at).getTag();
+                    if (tag != null && tag.toString().startsWith("download-row:")) cards++;
+                }
+                assertEquals(4, cards);
+            }
             for (int i = 0; i < 4; i++) assertNotNull(rows.findViewWithTag("download-row:" + i));
         }
     }
@@ -91,6 +178,25 @@ public class DownloadViewsTest {
     }
 
     @Test
+    public void filterCountsAndPercentageReflectOnlyRealTransferData() {
+        page.renderRows(data);
+        assertEquals(
+                "Active 4", ((TextView) page.view.findViewWithTag("Active")).getText().toString());
+        assertEquals(
+                "Queue 0", ((TextView) page.view.findViewWithTag("Queue")).getText().toString());
+        assertEquals(
+                "Issues 0",
+                ((TextView) page.view.findViewWithTag("Attention")).getText().toString());
+        assertNull(page.view.findViewWithTag("download-percent"));
+        data.get(0).fraction = .37f;
+        page.renderRows(data);
+        assertEquals(
+                "37%",
+                ((TextView) page.view.findViewWithTag("download-percent")).getText().toString());
+        assertEquals(48, page.view.findViewWithTag("Attention").getLayoutParams().height);
+    }
+
+    @Test
     public void rootUsesFileCardsAndKeepsManagementActionsInSettings() {
         assertNull(findDescription(page.view, "Back"));
         assertNotNull(findDescription(page.view, "Download settings"));
@@ -110,7 +216,7 @@ public class DownloadViewsTest {
         assertTrue(
                 findDescription(card, "Actions for Track 0") instanceof android.widget.ImageButton);
         assertEquals(
-                28f,
+                22f,
                 ((android.graphics.drawable.GradientDrawable) card.getBackground())
                         .getCornerRadius(),
                 0.01f);
@@ -137,7 +243,7 @@ public class DownloadViewsTest {
     @Test
     public void searchIconFiltersExistingDownloadsWithoutOpeningExplorer() {
         page.renderRows(data);
-        View search = findDescription(page.view, "Search downloads");
+        View search = findDescription(page.view, "Search your downloads");
         assertNotNull("Downloads search must search this page", search);
         search.performClick();
         EditText query = page.view.findViewWithTag("download-local-search");
@@ -155,37 +261,27 @@ public class DownloadViewsTest {
     }
 
     @Test
-    public void tappingSearchAgainClosesTheFieldAndRestoresAllRows() {
+    public void persistentSearchHasOneClearActionAndKeepsTheFieldVisible() {
         page.renderRows(data);
-        View toggle = findDescription(page.view, "Search downloads");
-        toggle.performClick();
         EditText query = page.view.findViewWithTag("download-local-search");
+        assertEquals(View.VISIBLE, ((View) query.getParent()).getVisibility());
+        assertEquals(View.GONE, page.view.findViewWithTag("download-local-clear").getVisibility());
         query.setText("Track 2");
-        toggle.performClick();
-        assertEquals(View.GONE, ((View) query.getParent()).getVisibility());
-        assertEquals("", query.getText().toString());
-        assertNotNull(findText(page.view, "Track 0"));
-    }
-
-    @Test
-    public void theSingleToolbarCloseDismissesSearchAndRestoresAllRows() {
-        page.renderRows(data);
-        findDescription(page.view, "Search downloads").performClick();
-        EditText query = page.view.findViewWithTag("download-local-search");
-        query.setText("Track 2");
+        assertEquals(
+                View.VISIBLE, page.view.findViewWithTag("download-local-clear").getVisibility());
         page.view.findViewWithTag("download-local-clear").performClick();
-        assertEquals(View.GONE, ((View) query.getParent()).getVisibility());
-        assertFalse(query.hasFocus());
+        assertEquals("", query.getText().toString());
+        assertEquals(View.VISIBLE, ((View) query.getParent()).getVisibility());
         assertNotNull(findText(page.view, "Track 0"));
     }
 
     @Test
-    public void backClosesSearchBeforeLeavingDownloads() {
-        findDescription(page.view, "Search downloads").performClick();
+    public void backClearsTheQueryBeforeLeavingDownloads() {
         EditText query = page.view.findViewWithTag("download-local-search");
         query.setText("Track 2");
         assertTrue(page.back());
-        assertEquals(View.GONE, ((View) query.getParent()).getVisibility());
+        assertEquals("", query.getText().toString());
+        assertEquals(View.VISIBLE, ((View) query.getParent()).getVisibility());
         assertFalse(page.back());
     }
 
@@ -194,7 +290,7 @@ public class DownloadViewsTest {
         data.get(1).artist = "Sample Artist";
         data.get(1).format = "FLAC";
         page.renderRows(data);
-        findDescription(page.view, "Search downloads").performClick();
+        findDescription(page.view, "Search your downloads").performClick();
         EditText query = page.view.findViewWithTag("download-local-search");
         query.setText("sample flac");
         for (String mode : DownloadsHubPage.VIEW_IDS) {
@@ -207,10 +303,10 @@ public class DownloadViewsTest {
     @Test
     public void noMatchesAndLiveRefreshKeepTheSearchText() {
         page.renderRows(data);
-        findDescription(page.view, "Search downloads").performClick();
+        findDescription(page.view, "Search your downloads").performClick();
         EditText query = page.view.findViewWithTag("download-local-search");
         query.setText("missing-recording");
-        assertNotNull(findText(page.view, "No downloads match your search."));
+        assertNotNull(findText(page.view, "No matching downloads"));
         List<DownloadsHubPage.Row> refreshed = new ArrayList<>(data);
         refreshed.add(
                 new DownloadsHubPage.Row(

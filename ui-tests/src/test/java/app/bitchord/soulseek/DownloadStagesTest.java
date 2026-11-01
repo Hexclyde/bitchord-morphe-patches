@@ -76,7 +76,8 @@ public class DownloadStagesTest {
             JSONArray rows = DownloadArchives.snapshot(context);
             if (rows.length() > 0) {
                 row = rows.getJSONObject(0);
-                if (phase.equals(row.optString("phase"))) return row;
+                if (phase.equals(row.optString("phase")) && DownloadArchives.activeCount() == 0)
+                    return row;
             }
             Thread.sleep(10);
         }

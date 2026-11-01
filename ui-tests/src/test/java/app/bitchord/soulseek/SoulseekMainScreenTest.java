@@ -174,7 +174,10 @@ public class SoulseekMainScreenTest {
         assertEquals(View.GONE, tagged("soulseek-account-details").getVisibility());
         assertEquals(View.GONE, tagged("soulseek-optional-details").getVisibility());
         assertTrue(contains(tagged("soulseek-destinations"), "Both"));
-        assertTrue(contains(tagged("soulseek-formats"), "9 formats enabled"));
+        assertTrue(
+                contains(
+                        tagged("soulseek-formats"),
+                        AudioFormatPreferences.defaults().enabled.size() + " formats enabled"));
         assertTrue(contains(tagged("soulseek-formats"), "FLAC · ALAC · WAV"));
         assertFalse(contains(activity.getWindow().getDecorView(), "Search Addons"));
         assertEquals(48, tagged("soulseek-account-gear").getHeight());

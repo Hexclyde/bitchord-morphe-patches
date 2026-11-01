@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ABIS = ("arm64-v8a", "armeabi-v7a", "x86_64")
 RUNTIMES = {
     "direct": "libbitchord_direct.so",
+    "preview": "libbitchord_preview.so",
     "i2p": "libbitchord_i2p.so",
     "tor": "libtor.so",
     "ipfs": "libbitchord_ipfs.so",

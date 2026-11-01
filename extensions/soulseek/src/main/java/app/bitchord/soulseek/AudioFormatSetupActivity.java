@@ -497,11 +497,27 @@ public final class AudioFormatSetupActivity extends DownloadActivity {
             case ALAC:
                 return ".m4a (ALAC)";
             case WAV:
-                return ".wav";
+                return ".wav / .rf64 / .w64 / .caf";
             case AIFF:
                 return ".aif / .aiff / .aifc";
             case DSD:
-                return ".dsf / .dff";
+                return ".dsf / .dff / .dsdiff";
+            case APE:
+                return ".ape";
+            case WAVPACK:
+                return ".wv";
+            case TTA:
+                return ".tta";
+            case TAK:
+                return ".tak";
+            case SHORTEN:
+                return ".shn";
+            case WMA_LOSSLESS:
+                return ".wma (lossless codec required)";
+            case DTS:
+                return ".dts / .dtshd / .mka";
+            case TRUEHD:
+                return ".thd / .mlp / .mka";
             case OPUS:
                 return ".opus / .ogg";
             case AAC:

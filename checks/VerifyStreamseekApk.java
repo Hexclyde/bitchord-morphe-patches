@@ -120,11 +120,91 @@ public final class VerifyStreamseekApk {
                 "Landroidx/media3/common/MediaItem;");
         method("Landroidx/media3/common/Player;", "setPlayWhenReady", "V", "Z");
         method("Landroidx/media3/common/Player;", "prepare", "V");
+        method("Landroidx/media3/common/Player;", "getPlayWhenReady", "Z");
+        method("Landroidx/media3/common/Player;", "getCurrentPosition", "J");
+        check(
+                types.containsKey(base + "InlinePreview;"),
+                "Preview is available within native result cards");
         method("Landroidx/media3/exoplayer/ExoPlayer;", "release", "V");
         method(
                 "Landroidx/media3/exoplayer/ExoPlayerImpl;",
                 "getPlayerError",
                 "Landroidx/media3/common/PlaybackException;");
+        method(
+                "Landroidx/media3/exoplayer/DefaultRenderersFactory;",
+                "<init>",
+                "V",
+                "Landroid/content/Context;");
+        method("Landroidx/media3/common/Format$Builder;", "<init>", "V");
+        method(
+                "Landroidx/media3/common/Format$Builder;",
+                "build",
+                "Landroidx/media3/common/Format;");
+        method(
+                "Landroidx/media3/extractor/ExtractorOutput;",
+                "track",
+                "Landroidx/media3/extractor/TrackOutput;",
+                "I",
+                "I");
+        method("Landroidx/media3/extractor/ExtractorOutput;", "endTracks", "V");
+        method(
+                "Landroidx/media3/extractor/ExtractorOutput;",
+                "seekMap",
+                "V",
+                "Landroidx/media3/extractor/SeekMap;");
+        method(
+                "Landroidx/media3/extractor/TrackOutput;",
+                "format",
+                "V",
+                "Landroidx/media3/common/Format;");
+        method(
+                "Landroidx/media3/extractor/TrackOutput;",
+                "sampleData",
+                "V",
+                "Landroidx/media3/common/util/ParsableByteArray;",
+                "I",
+                "I");
+        method(
+                "Landroidx/media3/extractor/TrackOutput;",
+                "sampleMetadata",
+                "V",
+                "J",
+                "I",
+                "I",
+                "I",
+                "Landroidx/media3/extractor/TrackOutput$CryptoData;");
+        method("Landroidx/media3/common/util/ParsableByteArray;", "<init>", "V", "[B");
+        method("Landroidx/media3/extractor/SeekPoint;", "<init>", "V", "J", "J");
+        method(
+                "Landroidx/media3/extractor/SeekMap$SeekPoints;",
+                "<init>",
+                "V",
+                "Landroidx/media3/extractor/SeekPoint;",
+                "Landroidx/media3/extractor/SeekPoint;");
+        for (String name : List.of("sampleMimeType", "sampleRate", "channelCount", "pcmEncoding")) {
+            boolean found = false;
+            for (Field field : types.get("Landroidx/media3/common/Format$Builder;").getFields())
+                if (field.getName().equals(name) && (field.getAccessFlags() & 1) != 0) found = true;
+            check(found, "Public decoded PCM format field " + name);
+        }
+        boolean supplier = false;
+        for (Field field : types.get("Landroidx/media3/exoplayer/ExoPlayer$Builder;").getFields())
+            if (field.getName().equals("renderersFactorySupplier")
+                    && field.getType().equals("Lcom/google/common/base/Supplier;")
+                    && (field.getAccessFlags() & 1) != 0) supplier = true;
+        check(supplier, "Public renderer supplier for high-resolution PCM output");
+        try (java.util.zip.ZipFile archive = new java.util.zip.ZipFile(apk)) {
+            for (String abi : List.of("arm64-v8a", "armeabi-v7a", "x86_64")) {
+                boolean hasAbi =
+                        archive.stream().anyMatch(e -> e.getName().startsWith("lib/" + abi + "/"));
+                if (hasAbi)
+                    check(
+                            (archive.getEntry("lib/" + abi + "/libbitchord_preview.so") != null)
+                                    == selected,
+                            "Decoder belongs only to the selected preview patch: " + abi);
+            }
+        }
+        method("Landroidx/media3/extractor/SeekMap;", "isEstimated", "Z");
         ClassDef routing = types.get(base + "SoulseekDataSource$Routing;");
         check(routing != null, "Ordinary Soulseek source guard retained");
         for (Method m : routing.getMethods())

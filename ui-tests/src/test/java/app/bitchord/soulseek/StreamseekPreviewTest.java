@@ -72,6 +72,21 @@ public class StreamseekPreviewTest {
     }
 
     @Test
+    public void previewSeekingDiscardsOnlyTheRequestedSamples() {
+        assertEquals(0, PreviewExtractors.framesToSkip(100_000, 99_000, 96000, 4096));
+        assertEquals(96, PreviewExtractors.framesToSkip(100_000, 101_000, 96000, 4096));
+        assertEquals(1, PreviewExtractors.framesToSkip(0, 1, 96000, 4096));
+        assertEquals(4096, PreviewExtractors.framesToSkip(0, 1_000_000, 96000, 4096));
+    }
+
+    @Test
+    public void aLargeLosslessFrameCannotExtendTheThirtySecondPreview() {
+        assertEquals(960, PreviewExtractors.framesBeforeLimit(29_990_000, 96000, 65535));
+        assertEquals(0, PreviewExtractors.framesBeforeLimit(30_000_000, 96000, 65535));
+        assertEquals(4096, PreviewExtractors.framesBeforeLimit(0, 384000, 4096));
+    }
+
+    @Test
     public void defaultOffAndSourceGatePreventPreviewTransfers() throws Exception {
         assertFalse(SoulseekPreview.available(context));
         try {
@@ -104,8 +119,44 @@ public class StreamseekPreviewTest {
             fail();
         } catch (IOException expected) {
         }
-        assertFalse(SoulseekPreview.supported(track("Track.m4a", 4)));
+        assertTrue(SoulseekPreview.supported(track("Track.m4a", 4)));
+        try {
+            track("Track.zip", 4);
+            fail("Archives must not be audio candidates");
+        } catch (IOException expected) {
+        }
         assertTrue(SoulseekPreview.supported(track("Track.flac", 4)));
+    }
+
+    @Test
+    public void losslessContainersRetainSelectedFileAndSourceGates() throws Exception {
+        for (String extension :
+                new String[] {
+                    "FLAC", "wav", "rf64", "w64", "aiff", "aifc", "alac", "m4a", "caf", "ape", "wv",
+                    "tta", "tak", "shn", "wma", "dsf", "dff", "mka", "oga"
+                }) {
+            SoulseekTrack candidate = track("Music." + extension, 4);
+            assertTrue(extension, SoulseekPreview.supported(candidate));
+            SoulseekPreview.setEnabled(context, true);
+            try (SoulseekPreview.Session started =
+                    new SoulseekPreview.Session(
+                            context,
+                            new SoulseekPreview.Offer(candidate, bridge.sessionTag, Long.MAX_VALUE),
+                            bridge)) {
+                PreviewDataSource source = new PreviewDataSource(started);
+                source.open(new DataSpec.Builder().setUri(started.uri).build());
+                byte[] bytes = new byte[4];
+                assertEquals(4, source.read(bytes, 0, 4));
+                assertArrayEquals(new byte[] {1, 2, 3, 4}, bytes);
+                source.close();
+            }
+        }
+        for (String extension : new String[] {"zip", "exe", "jpg", "iso", "raw"})
+            try {
+                track("File." + extension, 4);
+                fail(extension);
+            } catch (IOException expected) {
+            }
     }
 
     @Test

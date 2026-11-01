@@ -88,7 +88,7 @@ implemented. Debrid services continue to manage their own cloud transfers.
 
 ## beta.14 previews
 
-Streamseek previews support selected MP3/FLAC files with an isolated player and temporary native transfer. A preview can receive the complete file; it is not a bandwidth-free stream. The current reference is a user-chosen local file, not captured YouTube audio. Excerpt matching, header inspection and user confirmation do not certify a perfect file, master or lossless origin. Real-phone audio focus, background behavior and remote-peer playback still require device qualification. See [preview behavior and limits](STREAMSEEK-PREVIEW.md).
+Streamseek previews support selected lossless and MP3 files through a dedicated on-device decoder with an isolated player and temporary native transfer. A preview can receive the complete file; it is not a bandwidth-free stream. The current reference is a user-chosen local file, not captured YouTube audio. Excerpt matching, header inspection and user confirmation do not certify a perfect file, master or lossless origin. Real-phone audio focus, background behavior and remote-peer playback still require device qualification. See [preview behavior and limits](STREAMSEEK-PREVIEW.md).
 
 ## Downloads and player-window fixes (merged in beta.15)
 

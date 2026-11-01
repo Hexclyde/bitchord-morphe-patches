@@ -20,6 +20,13 @@ public final class VideoSwitchTest {
         if (!okay) throw new AssertionError(message);
     }
 
+    static Object boxed(Object value) throws Exception {
+        java.lang.reflect.Constructor<?> constructor =
+                Class.forName("kotlin.Result").getDeclaredConstructor(Object.class);
+        constructor.setAccessible(true);
+        return constructor.newInstance(value);
+    }
+
     public static void main(String[] args) throws Exception {
         check(!VideoSwitch.enabled, "fresh installs leave the player switch off");
         check(VideoSwitch.youTubeId("dQw4w9WgXcQ"), "a YouTube id");
@@ -54,6 +61,30 @@ public final class VideoSwitchTest {
         // A failed lookup reads as no version.
         Object failure = kotlin.ResultKt.createFailure(new RuntimeException("offline"));
         check(VideoSwitch.await(c -> failure) == null, "a failure");
+        Object wrapped = boxed("wrapped");
+        check("wrapped".equals(VideoSwitch.await(c -> wrapped)), "boxed immediate success");
+        Object wrappedFailure = boxed(failure);
+        check(VideoSwitch.await(c -> wrappedFailure) == null, "boxed immediate failure");
+        for (Object answer : new Object[] {wrapped, wrappedFailure}) {
+            AtomicReference<ContinuationImpl> suspended = new AtomicReference<>();
+            Thread reply =
+                    new Thread(
+                            () -> {
+                                while (suspended.get() == null) Thread.yield();
+                                suspended.get().resumeWith(answer);
+                            });
+            reply.start();
+            Object completed =
+                    VideoSwitch.await(
+                            c -> {
+                                suspended.set(c);
+                                return CoroutineSingletons.COROUTINE_SUSPENDED;
+                            });
+            reply.join();
+            check(
+                    answer == wrapped ? "wrapped".equals(completed) : completed == null,
+                    "boxed suspended " + (answer == wrapped ? "success" : "failure"));
+        }
 
         Object song =
                 new Object() {

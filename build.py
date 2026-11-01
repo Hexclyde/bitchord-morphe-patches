@@ -25,6 +25,7 @@ DOWNLOAD_RUNTIMES = {
     "tor": (ROOT / ".deps/tor", "libtor.so"),
     "ipfs": (ROOT / ".deps/ipfs", "libbitchord_ipfs.so"),
     "direct": (ROOT / ".deps/direct", "libbitchord_direct.so"),
+    "preview": (ROOT / ".deps/preview", "libbitchord_preview.so"),
 }
 OUT = ROOT / "build"
 OUT.mkdir(exist_ok=True)

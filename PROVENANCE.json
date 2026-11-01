@@ -1,5 +1,5 @@
 {
-  "build_date": "2026-10-31",
+  "build_date": "2026-11-01",
   "app_version": "1.9",
   "app_source_commit": "04f64c9f11bd2714d01bbc6da401f146f3d9399f",
   "original_apk_url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.9/BitChord-v1.9_arm64-v8a.apk",
@@ -89,7 +89,7 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "f73339f7dd5d901e57ee75b8b41d083c4d31161152fe0d219f93b768160acc7b",
+  "patch_bundle_sha256": "483a23bbfcaccd6780d425b40bbf0ebe4c6f2c6940a6f98a098571321075b3ab",
   "soulseek_development": {
     "status": "experimental-local-build",
     "baseline_commit": "3de260f7f1d7967c5a97ce924085d7d42bec18af",
@@ -141,12 +141,13 @@
     "player_shell_downloads": true,
     "batch_source_selection": true,
     "public_soulseek_uploads": true,
-    "telegram_verified_offloading": true
+    "telegram_verified_offloading": true,
+    "native_rebuild_toolchain": "Rust 1.91.1 / Android NDK r27d / API 26"
   },
   "soulseek_native_sha256": {
-    "lib/arm64-v8a/libbitchord_soulseek.so": "6e756c81e06b1f8211b9897185026d908053485e0b15e59c99b5eb7009321979",
-    "lib/armeabi-v7a/libbitchord_soulseek.so": "9b65540ab3f50aa54f0f683849493991e40b2d3542e5730ce7fce73cfb164d1b",
-    "lib/x86_64/libbitchord_soulseek.so": "6010ec9d7e3a2a932b96e924f472268eb5cb05a72330e5fd131f1cf175658ccb"
+    "lib/arm64-v8a/libbitchord_soulseek.so": "8af86f9740fecc9290f06709db07403347e8e8a743154c816898aea186a33064",
+    "lib/armeabi-v7a/libbitchord_soulseek.so": "6176e9371ee44a23fed7137ecce3aa8073aac1de1b28025245561044e64ee9f7",
+    "lib/x86_64/libbitchord_soulseek.so": "37c5bcedc68901870e03b2bc3397776f41a5b24c409c8cfa7405e73b0c12c96a"
   },
   "download_runtime_native_sha256": {
     "lib/arm64-v8a/libbitchord_direct.so": "2696942a2398a6d3514b262beedaf45b2addc54878361c64aea36655659da03e",
@@ -160,7 +161,10 @@
     "lib/x86_64/libbitchord_ipfs.so": "b3dfa8cd3021b8153dc1a0107817c2425b953c3ad7d6b89c747e9bce09bf3c60",
     "lib/arm64-v8a/libtor.so": "67ce86a6664c330f49037487f0931498e2a0f82099fbfaf3de7a62c32cf5e996",
     "lib/armeabi-v7a/libtor.so": "a27f80fc60f96d953c8251e9a3ba007a7da0ba941c51968962b525141d416f7c",
-    "lib/x86_64/libtor.so": "dc7f0fecc47ed73397b2f7928ddf2b87d18fac7c6ba1d00d72e3d7772e5eb480"
+    "lib/x86_64/libtor.so": "dc7f0fecc47ed73397b2f7928ddf2b87d18fac7c6ba1d00d72e3d7772e5eb480",
+    "lib/arm64-v8a/libbitchord_preview.so": "9a50b38c5e6b3a91e91c86e081bd29371effdac07f2b11b486d95846223e6aa7",
+    "lib/armeabi-v7a/libbitchord_preview.so": "4da2f0b98d3002cc034003d7417e592c4a0e4b81c84d6cbed40fe33af3ecc384",
+    "lib/x86_64/libbitchord_preview.so": "9b8dce3b5a016d78df410bd45ec67ff75894a55f32aae0dc112658f1aa63c7f9"
   },
   "soulseek_compatibility": {
     "versions": [
@@ -234,7 +238,7 @@
     "zh",
     "zh-TW"
   ],
-  "ui_translation_phrases": 1403,
+  "ui_translation_phrases": 1489,
   "flac_audio_protocol_reference": {
     "repository": "https://github.com/aztecempire/spotube-plugin-flac-audio",
     "commit": "4ecc535d57c32fe347a301e8fc54ce9be0430158",
@@ -242,5 +246,75 @@
     "implementation": "independent BitChord adapter; no upstream code/runtime/assets bundled",
     "backend": "https://flacdownloader.com",
     "live_service_tested": false
+  },
+  "streamseek_decoder": {
+    "source": "native/preview/vendor/ffmpeg-7.1.5.tar.xz",
+    "source_sha256": "de668509caf9e35e3cd162473441fdb29538c6d96ed080292b3cf9e6fc5d558f",
+    "version": "7.1.5",
+    "ndk": "27.3.13750724",
+    "api": 26,
+    "decoders": [
+      "flac",
+      "alac",
+      "ape",
+      "wavpack",
+      "tta",
+      "tak",
+      "shorten",
+      "wmalossless",
+      "als",
+      "dca",
+      "truehd",
+      "mlp",
+      "dst",
+      "dsd_lsbf",
+      "dsd_msbf",
+      "dsd_lsbf_planar",
+      "dsd_msbf_planar",
+      "mp3",
+      "aac",
+      "vorbis",
+      "opus",
+      "pcm_s8",
+      "pcm_u8",
+      "pcm_s16le",
+      "pcm_s16be",
+      "pcm_s24le",
+      "pcm_s24be",
+      "pcm_s32le",
+      "pcm_s32be",
+      "pcm_s64le",
+      "pcm_s64be",
+      "pcm_f32le",
+      "pcm_f32be",
+      "pcm_f64le",
+      "pcm_f64be"
+    ],
+    "demuxers": [
+      "flac",
+      "aiff",
+      "wav",
+      "w64",
+      "mov",
+      "caf",
+      "ape",
+      "wv",
+      "tta",
+      "tak",
+      "shorten",
+      "asf",
+      "dsf",
+      "iff",
+      "matroska",
+      "ogg",
+      "mp3",
+      "dts",
+      "truehd",
+      "mlp"
+    ],
+    "asm": false,
+    "network": false,
+    "gpl": false,
+    "nonfree": false
   }
 }

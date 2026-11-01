@@ -1,35 +1,47 @@
 # beta.17 verification
 
-Test date: 31 October 2026. Target: original BitChord 1.9 APKs pinned in PROVENANCE.json, using Morphe Desktop 1.19.1 / Patcher 2.0.1. This build combines the supplied beta.16.4 UI revision and beta.17 features.
+Test date: 1 November 2026. Target: original BitChord 1.9, Morphe Desktop 1.19.1 / Patcher 2.0.1.
+Release MPP SHA-256: `483a23bbfcaccd6780d425b40bbf0ebe4c6f2c6940a6f98a098571321075b3ab`.
 
-## Automated checks
+## Component and APK verification
 
-- The complete Android framework suite passed **292 tests**, with no failures, errors or skips. It covers login recovery, MicroG selection, download flows, source analysis, playlists, sync planning and recovery, transition automation and player controls. A real touch-dispatch regression checks that nested switches toggle once and ignore touches while disabled.
-- All **31 Python tests** and the full host regression passed. Java, Kotlin and Python formatting, translation catalogs, source links, native/API provenance and release asset checks passed.
-- The exact release MPP passed **24 patch-selection configurations**: all 20 individual selections, complete arm64-v8a/armeabi-v7a/x86_64 bundles, and isolated AutoMix. APK checks cover DEX control flow, optimized host ABI, extension isolation, capture policy, native bytes, downloads, playlists and transition hooks. Structural checks do not qualify ARM playback hardware.
-- Sync fixtures cover complete reads, account changes, interrupted writes, successful responses without actual remote changes, verified additions before removals, operation limits and recovery without repeating successful additions.
+- Fixed a runtime failure in anonymous playlist matching by unwrapping boxed Kotlin lookup results before reading page data. Immediate/resumed success and failure cases now have regression coverage.
+- **330 Android framework tests passed**, zero failures/errors/skips: installed-feature filtering/counts, gear rules, sliders/defaults/persistence, dependencies and scoped Undo; short-window/font/theme/accessibility behavior; downloads, inline previews, playlists, MicroG chooser and Telegram recovery.
+- **31 Python tests**, the complete host regression and **28 native Soulseek tests** passed. Host checks include 147 playback-extras, 135 headphone-correction, 16 per-output EQ, 28 DJ-mode, 28 Audio/Video and 39 patch-control assertions, alongside download/provider/playlist/identity checks. Provider fixtures are component tests, not live account tests.
+- **24 exact-MPP APK configurations passed**: all 20 independent selections, complete arm64-v8a/armeabi-v7a/x86_64 bundles and isolated AutoMix. Checks cover DEX control flow, host ABI, capture policy, optional-runtime isolation, native bytes and ten original-speed transition paths. ARM results are APK inspection, not ARM device playback.
+- Formatting, **1,489 phrases / 20 languages**, documentation links, release/native/API hashes and metadata passed. Some explanatory strings retain declared English fallbacks.
 
-Release MPP SHA-256: `f73339f7dd5d901e57ee75b8b41d083c4d31161152fe0d219f93b768160acc7b`.
+## Waydroid: Android 13, x86_64
 
-## Waydroid checks
+The final APK was installed in place with the existing signing key and app data. Private test instrumentation was kept outside the source/release. Original queue, feature flags, source enablement and test speed were restored; no credentials were entered or exported.
 
-The x86_64 app was updated in place on Android 13 without clearing its data. Telegram and Soulseek credentials were retained; Soulseek reconnected using its saved account. Waydroid was restarted once after its session stopped; this was not attributed to an app crash. Runtime checks below span the merged beta.17 iterations; the final MPP was reinstalled for the final UI and settings checks.
+- All **20 installed controls** passed native toggle/Undo checks; configurable gears expanded real settings and Done closed them, while binary rows had no gear. This validates native controls, not every physical audio effect or external service.
+- Inspected native icons, category labels, rounded bottom selection and Audio/Video controls. Default and 150%/short-window checks were performed during this pass; theme/reduced-motion/accessibility-role behavior also has component coverage. Full TalkBack and physical-device qualification remain pending.
+- Song Download opened Explorer with live results. Tapping a track title selected its card and exposed inline Play/Stop/recording-checks/Now/Later controls without starting a transfer. Source/quality filters and sorting retained explicit admission. The optional recording-checks panel and download-settings panel opened and closed normally.
+- Live MP3/FLAC previews decoded and stopped at 30 seconds. The new inline FLAC player paused/resumed, stayed within the result page and retained its buffered transfer through Now. A completed **17,038,839-byte, 16-bit/44.1 kHz stereo FLAC** was independently inspected. One valid test FLAC remains beside the pre-existing MP3; temporary previews and test playlists were cleared. No upload was initiated.
+- Downloads local search produced an empty state; Clear restored both files. The duplicate Find sources action is absent. Waydroid's unsupported background blur uses a solid themed fallback.
+- Native local playlists passed create/deduplicate, rename/reorder, scoped membership and preference persistence; M3U/CSV/supported JSON parsing, current-queue snapshots and signed-out bookmark add/remove passed. Existing playlists/bookmarks were preserved. Anonymous network matching status: **pass**; complete remote playlist read: **pass**.
+- Installed production Streamseek decoding passed **19 audio fixtures plus ABI/cancellation/invalid-input probes: 22 passes**. Fixtures cover FLAC, ALAC, AIFF, CAF, WAV/RF64/Wave64, WavPack, TTA, DSF/DFF, APE, TAK, Shorten, WMA Lossless and MLP, including 96/192 kHz 24-bit and 384 kHz 32-bit PCM. These are actual decoder tests, separate from live peer playback.
 
-- Patch pages use grouped settings rows, contextual descriptions and current values. Related actions share a row. Playlist tools and Sync use the native typography and surfaces; the empty space below short pages retains the page background. Playlist tools remained readable at 150% text size.
-- A real tap on a nested debrid switch opened the key prompt. Cancelling retained the disabled provider state. No debrid key was entered. The shared capsule has enough row width to draw without clipping.
-- Downloads search opens as a compact rounded field with one close control. An unmatched query produces the empty state; Close clears the query and restores the file. Back first dismisses the keyboard, then closes search.
-- All five native navigation tabs were captured at 100%, 130% and 150% text size. Selected capsules remain rounded; text stays inside their bounds. Downloads fits at the default size and truncates at the largest size.
-- The Audio/Video selector was visible on a YouTube track and blended into the player background. Non-video source visibility also has framework and APK coverage.
-- The transition editor uses grouped timeline, timing, envelope and effects controls, white sliders and separate Preview/Save actions. Portrait, larger text and landscape were inspected; the landscape timeline shows both lanes. Numeric editing uses the translucent modal treatment.
-- Two generated local FLAC tracks played through the real player. Saved eight- and six-second transitions previewed from the outgoing tail into the next track and restored the original paused track/position. Restoration differences were approximately 0.03 and 0.21 seconds under the test load. The existing pitch setting remained audible on both tones; captured output showed outgoing level falling while incoming level rose. This is controlled synthetic audio evidence, not qualification of every provider or recording.
-- The signed-out Library entry and Save queue flow created a device copy of the current and upcoming queue. An M3U selected through Android's file picker reached review and saved a one-song device playlist. Returning to Playlist tools refreshed the saved list; reopening confirmed persistence.
+## Supplied community add-ons
 
-Temporary QA playlists and generated audio files were removed. The original 11-track queue was restored and paused. AutoMix and debrid were restored to their prior disabled settings; text size was restored to normal.
+Each supplied URL was probed as provided, then tested through the native source adapter. The table records manifest/search HTTP status during this pass; services can change.
 
-## Live-test limits
+| Source | HTTP manifest / search | Native result |
+|---|---|---|
+| 1 · soundfean-musics.onrender.com | 404 / 404 | Native searches returned no playable results; live transition unavailable. |
+| 2 · gglos.geisselgottes.cfd | 200 / 200 | Native search, FLAC playback, two-deck overlap and automatic handoff passed at 1.0× and 1.25×. |
+| 3 · bluebit.jucepe0929.workers.dev | 200 / 502 | Native searches returned no playable results; live transition unavailable. |
+| 4 · eljohnzc-mono.de.deplexo.com | 200 / 500 | Native searches returned no playable results; live transition unavailable. |
+| 5 · gglos.ggottes.deno.net | 404 / 404 | Native searches returned no playable results; live transition unavailable. |
+| 6 · lastbabe.velixir.run | 410 / 410 | Native searches returned no playable results; live transition unavailable. |
+| 7 · eljohnzc-addon.de.deplexo.com | 404 / 404 | Native searches returned no playable results; live transition unavailable. |
+| 8 · bitchord-hires-addon.vercel.app | 200 / 200 | HTTP search/stream answered; native playback correctly blocked by its lossless-output requirement. |
 
-Live Spotify/YouTube Music sync is **pending**, as requested for this package. OAuth connections and real external playlist writes were not exercised. Manual two-way membership sync is implemented; scheduling, playlist-name/order sync and other service connectors are not included.
+GGlos played One More Time → Get Lucky with both decks audible at once, changing fader gains and automatic queue handoff. Tests retained **1.0× and 1.25× speed** and the existing **+3-semitone pitch** on both decks. The extended run completed measurement for 2 selected tracks. The host also reported an analysed mix. Server errors, empty catalogues and the Hi-Res route policy are not counted as passed live AutoMix tests. No lossless-output policy was bypassed.
 
-Community endpoint probes returned two successful searches for the test query and one stream resolution. Other probes returned HTTP 404, 410, 429 or timed out. These results do not establish playback, download completion, master provenance or AutoMix operation across all supplied sources. An earlier live Soulseek MP3 download decoded successfully; two FLAC peer attempts failed. Debrid accounts, public-peer transports and every possible addon/quality combination remain unqualified.
+## Pending and limits
 
-No new physical-phone, Bluetooth/DAC, hardware-decoder or subjective audio qualification is claimed. New playlist-tool and sync phrases fall back to English where translations have not been supplied. See [playlist tools](PLAYLIST-TOOLS.md), [AutoMix](AUTOMIX.md) and [transition editor](TRANSITION-EDITOR.md).
+Live Spotify/YouTube Music two-way writes remain **pending**. Fresh Google/MicroG authentication, debrid accounts, public/paired peer transports, external JamesDSP processing, physical ARM phones, Bluetooth/DAC/bit-perfect output and subjective transition quality remain unqualified. Existing Telegram/Soulseek accounts were retained; fresh login/OTP recovery is covered by component tests rather than signing those accounts out.
+
+Streamseek retains its 30-second preview, 256 MiB selected-file limit and transfer bounds. DSD is converted to PCM; the audio route determines output precision/rate. Decoder support is not proof of lossless provenance or bit-perfect output, and compiled DTS/DST/TrueHD variants are not all live-tested. See [preview limits](STREAMSEEK-PREVIEW.md), [patch controls](PATCHES-AND-TWEAKS.md), [AutoMix](AUTOMIX.md) and [earlier verification](VERIFICATION-1.1.0-beta.17-2026-10-31.md).

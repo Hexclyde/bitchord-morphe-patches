@@ -1,0 +1,12 @@
+Streamseek preview decoder uses FFmpeg 7.1.5 (libavformat, libavcodec,
+libswresample and libavutil) under the GNU Lesser General Public License,
+version 2.1 or later. FFmpeg copyright belongs to its respective authors.
+
+The exact, unmodified upstream source archive is supplied in
+native/preview/vendor/ffmpeg-7.1.5.tar.xz. The source of the JNI adapter is
+native/preview/preview_jni.c. Build with tools/build_preview_native.py using
+Android NDK r27d. No GPL-only, nonfree or network components are enabled.
+The patch project and adapter are distributed under this project's GPLv3.
+
+Source: https://ffmpeg.org/releases/ffmpeg-7.1.5.tar.xz
+SHA-256: de668509caf9e35e3cd162473441fdb29538c6d96ed080292b3cf9e6fc5d558f

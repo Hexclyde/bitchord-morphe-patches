@@ -33,6 +33,7 @@ public final class SourceAutomix {
             Collections.synchronizedMap(new WeakHashMap<>());
     private static final Map<String, DataSpec> pinned = new ConcurrentHashMap<>();
     private static final Map<String, Uri> observed = new ConcurrentHashMap<>();
+    private static final Map<Object, Integer> modelUsers = new WeakHashMap<>();
     private static final long BUDGET_NANOS = 90_000_000_000L;
 
     static final class Job {
@@ -231,6 +232,7 @@ public final class SourceAutomix {
     }
 
     private static void analyze(Job job, Map<String, Job> current, Set<String> running) {
+        Object[] models = null;
         active.set(job);
         enterQuiet();
         job.deadline = System.nanoTime() + BUDGET_NANOS;
@@ -244,6 +246,7 @@ public final class SourceAutomix {
             AutomixAccess.restore(job.analyzer, job.storeKey);
             Object result = results.remove(job.storeKey);
             if (result == null) {
+                models = useModels(job.analyzer);
                 Object outcome =
                         invoke(
                                 job.analyzer,
@@ -280,6 +283,7 @@ public final class SourceAutomix {
                     "AutoMix will use a basic fade until audio can be measured: "
                             + error.getClass().getSimpleName());
         } finally {
+            finishModels(models);
             job.retryAfter = System.nanoTime() + 15_000_000_000L;
             job.running = false;
             running.remove(job.id);
@@ -292,6 +296,46 @@ public final class SourceAutomix {
             try {
                 invoke(field(job.analyzer, "vocals"), "release", new Class<?>[0]);
             } catch (Exception ignored) {
+            }
+        }
+    }
+
+    /** Called under the host model's own lock, before its native session is closed. */
+    public static boolean deferModelRelease(Object model) {
+        synchronized (modelUsers) {
+            return modelUsers.getOrDefault(model, 0) > 0;
+        }
+    }
+
+    private static Object[] useModels(Object analyzer) throws Exception {
+        Object tracker = field(analyzer, "tracker"), vocals = field(analyzer, "vocals");
+        Object trackerLock = field(tracker, "lock"), vocalLock = field(vocals, "lock");
+        synchronized (trackerLock) {
+            synchronized (modelUsers) {
+                modelUsers.put(tracker, modelUsers.getOrDefault(tracker, 0) + 1);
+            }
+        }
+        synchronized (vocalLock) {
+            synchronized (modelUsers) {
+                modelUsers.put(vocals, modelUsers.getOrDefault(vocals, 0) + 1);
+            }
+        }
+        return new Object[] {tracker, vocals};
+    }
+
+    private static void finishModels(Object[] models) {
+        if (models == null) return;
+        for (Object model : models) {
+            try {
+                synchronized (field(model, "lock")) {
+                    synchronized (modelUsers) {
+                        int users = modelUsers.getOrDefault(model, 0) - 1;
+                        if (users <= 0) modelUsers.remove(model);
+                        else modelUsers.put(model, users);
+                    }
+                }
+            } catch (Exception unavailable) {
+                HostLog.d("AutoMix model ownership could not be released");
             }
         }
     }

@@ -129,6 +129,7 @@ public class ExtrasActivityTest {
         activity = controller.get();
         assertNotNull(bitPerfectNote(activity.findViewById(android.R.id.content)));
         toggle("sing").performClick();
+        if (toggle("sing").isChecked()) gear("sing").performClick();
         shown("sing");
         assertTrue(gear("sing").isEnabled());
         com.music.bitchord.data.settings.AppSettings.bitPerfectMode.setValue(
@@ -173,13 +174,15 @@ public class ExtrasActivityTest {
     }
 
     @Test
-    public void enablingOpensOnlyOneFeatureAndRetainsIndependentOnStates() {
+    public void explicitGearOpensOnlyOneFeatureAndRetainsIndependentOnStates() {
         toggle("first").performClick();
+        if (toggle("first").isChecked()) gear("first").performClick();
         assertTrue(first);
         shown("first");
         hidden("second");
         assertTrue(gear("first").isEnabled());
         toggle("second").performClick();
+        if (toggle("second").isChecked()) gear("second").performClick();
         assertTrue(first);
         assertTrue(second);
         hidden("first");
@@ -190,6 +193,7 @@ public class ExtrasActivityTest {
         gear("first").performClick();
         shown("first");
         toggle("first").performClick();
+        if (toggle("first").isChecked()) gear("first").performClick();
         assertFalse(first);
         assertTrue(second);
         hidden("first");
@@ -200,24 +204,22 @@ public class ExtrasActivityTest {
     }
 
     @Test
-    public void focusingAnotherFeatureCollapsesPreviousWithoutDisablingIt() {
+    public void onlyTheGearOpensSettingsAndDoneClosesWithoutDisabling() {
         toggle("first").performClick();
-        shown("first");
-        View other = tagged("patch:second");
-        View header = ((LinearLayout) other).getChildAt(0);
-        header.setFocusableInTouchMode(true);
-        assertTrue(header.requestFocus());
         hidden("first");
-        hidden("second");
-        assertTrue(first);
-        assertFalse(second);
+        ((LinearLayout) tagged("patch:first")).getChildAt(0).performClick();
+        hidden("first");
         gear("first").performClick();
         shown("first");
+        tagged("done:first").performClick();
+        hidden("first");
+        assertTrue(first);
     }
 
     @Test
     public void changedSettingsReturningFromSetupUpdateSwitchAndGear() {
         toggle("first").performClick();
+        if (toggle("first").isChecked()) gear("first").performClick();
         shown("first");
         controller.pause();
         first = false;
@@ -230,6 +232,7 @@ public class ExtrasActivityTest {
     @Test
     public void enabledCardAndScrollAreSavedForRecreation() {
         toggle("second").performClick();
+        if (toggle("second").isChecked()) gear("second").performClick();
         shown("second");
         Bundle saved = new Bundle();
         activity.onSaveInstanceState(saved);
@@ -240,8 +243,10 @@ public class ExtrasActivityTest {
     @Test
     public void realInstalledTweaksRestoreEnabledValuesAndExpansionAfterRotation() {
         toggle("sing").performClick();
+        if (toggle("sing").isChecked()) gear("sing").performClick();
         SoundExtras.setSingLevel(80);
         toggle("pitch").performClick();
+        if (toggle("pitch").isChecked()) gear("pitch").performClick();
         SoundExtras.setPitch(4);
         shown("pitch");
         hidden("sing");
@@ -254,6 +259,7 @@ public class ExtrasActivityTest {
         shown("pitch");
         hidden("sing");
         toggle("pitch").performClick();
+        if (toggle("pitch").isChecked()) gear("pitch").performClick();
         hidden("pitch");
         assertEquals(4, SoundExtras.pitchSemitones);
         assertFalse(gear("pitch").isEnabled());
@@ -273,6 +279,7 @@ public class ExtrasActivityTest {
         controller.recreate();
         activity = controller.get();
         toggle("sing").performClick();
+        if (toggle("sing").isChecked()) gear("sing").performClick();
         layoutPage();
         assertEquals(48, gear("sing").getWidth());
         assertEquals(64, toggle("sing").getWidth());
@@ -290,6 +297,7 @@ public class ExtrasActivityTest {
         assertEquals(View.GONE, gear("battery-saver").getVisibility());
         assertFalse(gear("battery-saver").isEnabled());
         toggle("sing").performClick();
+        if (toggle("sing").isChecked()) gear("sing").performClick();
         assertEquals(View.VISIBLE, gear("sing").getVisibility());
         assertEquals(View.GONE, gear("battery-saver").getVisibility());
     }

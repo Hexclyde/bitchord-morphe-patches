@@ -134,7 +134,7 @@ public final class PatchControlsTest {
   Context saved=context();File envelope=new File(saved.getNoBackupFilesDir(),"debrid-downloads/credentials.sealed.json");envelope.getParentFile().mkdirs();Files.write(envelope.toPath(),new byte[]{1});
   DebridCredentials.legacyEnabled=false;check(!DownloadSettings.enabled(saved,DownloadSettings.DEBRID),"saved API key alone does not enable debrid");
   Context legacy=context();File old=new File(legacy.getNoBackupFilesDir(),"debrid-downloads/credentials.sealed.json");old.getParentFile().mkdirs();Files.write(old.toPath(),new byte[]{1});
-  DebridCredentials.legacyEnabled=true;check(DownloadSettings.enabled(legacy,DownloadSettings.DEBRID),"explicit existing provider opt-in migrated");
+  DebridCredentials.legacyEnabled=true;check(!DownloadSettings.peekEnabled(legacy,DownloadSettings.DEBRID),"page reads do not activate legacy provider settings");check(!legacy.getSharedPreferences("bitchord_download_features",0).contains("debrid"),"page reads do not persist a feature gate");check(DownloadSettings.enabled(legacy,DownloadSettings.DEBRID),"explicit existing provider opt-in migrated");
   DownloadSettings.setEnabled(legacy,DownloadSettings.DEBRID,false);until(()->{try{DownloadSettings.setEnabled(legacy,DownloadSettings.DEBRID,true);return true;}catch(IOException e){return false;}});
   check(old.isFile()&&DebridCredentials.legacyEnabled,"disable preserves protected provider settings");
   DownloadSettings.setEnabled(app,DownloadSettings.SOULSEEK,true);check(SoulseekSource.enabled()&&SoulseekBridge.reconnects==1,"Soulseek toggle changes real registry and reconnects saved account");

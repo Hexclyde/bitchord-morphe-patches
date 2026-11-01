@@ -27,6 +27,14 @@ public final class AudioFormatPreferences {
         WAV("WAV", "audio/wav"),
         AIFF("AIFF", "audio/aiff"),
         DSD("DSD", "audio/dsd"),
+        APE("Monkey’s Audio", "audio/x-ape"),
+        WAVPACK("WavPack", "audio/wavpack"),
+        TTA("True Audio", "audio/tta"),
+        TAK("TAK", "audio/x-tak"),
+        SHORTEN("Shorten", "audio/x-shorten"),
+        WMA_LOSSLESS("WMA Lossless", "audio/x-ms-wma"),
+        DTS("DTS / DTS-HD", "audio/vnd.dts"),
+        TRUEHD("TrueHD / MLP", "audio/true-hd"),
         OPUS("Opus", "audio/opus"),
         AAC("AAC", "audio/aac"),
         VORBIS("Vorbis", "audio/ogg"),
@@ -51,7 +59,15 @@ public final class AudioFormatPreferences {
                             Format.OPUS,
                             Format.AAC,
                             Format.VORBIS,
-                            Format.MP3));
+                            Format.MP3,
+                            Format.APE,
+                            Format.WAVPACK,
+                            Format.TTA,
+                            Format.TAK,
+                            Format.SHORTEN,
+                            Format.WMA_LOSSLESS,
+                            Format.DTS,
+                            Format.TRUEHD));
 
     /** Allows persistence logic to be tested independently of Android preferences. */
     public interface Store {
@@ -121,10 +137,11 @@ public final class AudioFormatPreferences {
     }
 
     public static Settings decode(String encoded) throws IOException {
-        if (encoded == null || encoded.length() > 160 || !encoded.startsWith("1|"))
+        if (encoded == null || encoded.length() > 512 || !encoded.startsWith("1|"))
             throw new IOException("Invalid saved audio formats.");
         String[] entries = encoded.substring(2).split(",", -1);
-        if (entries.length != DEFAULT_ORDER.size())
+        boolean legacy = entries.length == 9;
+        if (!legacy && entries.length != DEFAULT_ORDER.size())
             throw new IOException("Invalid saved audio format count.");
         ArrayList<Format> order = new ArrayList<>();
         EnumSet<Format> enabled = EnumSet.noneOf(Format.class);
@@ -138,6 +155,21 @@ public final class AudioFormatPreferences {
                     throw new IllegalArgumentException();
                 order.add(format);
                 if (fields[1].equals("1")) enabled.add(format);
+            }
+            if (legacy) {
+                EnumSet<Format> original =
+                        EnumSet.of(
+                                Format.FLAC,
+                                Format.ALAC,
+                                Format.WAV,
+                                Format.AIFF,
+                                Format.DSD,
+                                Format.OPUS,
+                                Format.AAC,
+                                Format.VORBIS,
+                                Format.MP3);
+                if (!EnumSet.copyOf(order).equals(original)) throw new IllegalArgumentException();
+                for (Format format : DEFAULT_ORDER) if (!order.contains(format)) order.add(format);
             }
             return new Settings(order, enabled, true);
         } catch (IllegalArgumentException invalid) {
@@ -226,6 +258,8 @@ public final class AudioFormatPreferences {
                 return EnumSet.of(Format.ALAC);
             case "wav":
             case "wave":
+            case "rf64":
+            case "w64":
                 return EnumSet.of(Format.WAV);
             case "aif":
             case "aiff":
@@ -233,7 +267,36 @@ public final class AudioFormatPreferences {
                 return EnumSet.of(Format.AIFF);
             case "dsf":
             case "dff":
+            case "dsdiff":
                 return EnumSet.of(Format.DSD);
+            case "dts":
+            case "dtshd":
+                return EnumSet.of(Format.DTS);
+            case "thd":
+            case "mlp":
+                return EnumSet.of(Format.TRUEHD);
+            case "ape":
+                return EnumSet.of(Format.APE);
+            case "wv":
+                return EnumSet.of(Format.WAVPACK);
+            case "tta":
+                return EnumSet.of(Format.TTA);
+            case "tak":
+                return EnumSet.of(Format.TAK);
+            case "shn":
+                return EnumSet.of(Format.SHORTEN);
+            case "wma":
+                return EnumSet.of(Format.WMA_LOSSLESS);
+            case "caf":
+                return EnumSet.of(Format.WAV, Format.ALAC, Format.AAC);
+            case "mka":
+                return EnumSet.of(
+                        Format.FLAC,
+                        Format.WAV,
+                        Format.ALAC,
+                        Format.VORBIS,
+                        Format.OPUS,
+                        Format.AAC);
             case "opus":
                 return EnumSet.of(Format.OPUS);
             case "aac":
@@ -275,11 +338,27 @@ public final class AudioFormatPreferences {
                 case ALAC:
                     return "alac,m4a,mp4";
                 case WAV:
-                    return "wav,wave";
+                    return "wav,wave,rf64,w64,caf";
                 case AIFF:
                     return "aif,aiff,aifc";
                 case DSD:
-                    return "dsf,dff";
+                    return "dsf,dff,dsdiff";
+                case APE:
+                    return "ape";
+                case WAVPACK:
+                    return "wv";
+                case TTA:
+                    return "tta";
+                case TAK:
+                    return "tak";
+                case SHORTEN:
+                    return "shn";
+                case WMA_LOSSLESS:
+                    return "wma";
+                case DTS:
+                    return "dts,dtshd,mka";
+                case TRUEHD:
+                    return "thd,mlp,mka";
                 case OPUS:
                     return "opus,ogg,oga";
                 case AAC:

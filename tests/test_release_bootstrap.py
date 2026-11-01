@@ -107,7 +107,10 @@ class ReleaseBootstrapTest(unittest.TestCase):
         notice.parent.mkdir(parents=True)
         notice.write_bytes(b"obsolete")
         bootstrap.stage_native(path, target / ".deps/tools", target)
-        self.assertEqual(27, len(list((target / ".deps").rglob("*.so"))))
+        self.assertEqual(
+            len(bootstrap.ABIS) * (5 + len(bootstrap.RUNTIMES)),
+            len(list((target / ".deps").rglob("*.so"))),
+        )
         self.assertFalse(stale.exists())
         self.assertFalse(notice.exists())
         self.assertEqual(

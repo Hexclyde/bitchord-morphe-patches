@@ -350,10 +350,19 @@ public final class VideoSwitch {
                 };
         Object returned = body.call(new Step(completion));
         if (returned != kotlin.coroutines.intrinsics.CoroutineSingletons.COROUTINE_SUSPENDED) {
-            return failed(returned) ? null : returned;
+            return lookupResult(returned);
         }
         if (!done.await(30, TimeUnit.SECONDS)) return null;
         Object value = result.get();
+        return lookupResult(value);
+    }
+
+    private static Object lookupResult(Object value) throws ReflectiveOperationException {
+        if (value != null && value.getClass().getName().equals("kotlin.Result")) {
+            Field payload = value.getClass().getDeclaredField("value");
+            payload.setAccessible(true);
+            value = payload.get(value);
+        }
         return failed(value) ? null : value;
     }
 

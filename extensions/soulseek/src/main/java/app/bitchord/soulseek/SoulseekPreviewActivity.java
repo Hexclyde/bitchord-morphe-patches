@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.*;
 import android.provider.OpenableColumns;
+import android.view.View;
 import android.widget.*;
 
 import app.bitchord.telegram.CapturePolicy;
@@ -57,65 +58,65 @@ public final class SoulseekPreviewActivity extends Activity {
 
     @Override
     public void onCreate(Bundle saved) {
+        setTheme(
+                DownloadStyle.isDark(this)
+                        ? android.R.style.Theme_Material_Dialog_NoActionBar
+                        : android.R.style.Theme_Material_Light_Dialog_NoActionBar);
         super.onCreate(saved);
         CapturePolicy.apply(this);
         PatchStrings.refresh(this);
         style = new DownloadStyle(this);
         LinearLayout body = new LinearLayout(this);
         body.setOrientation(LinearLayout.VERTICAL);
-        body.setPadding(style.dp(20), style.dp(18), style.dp(20), style.dp(28));
-        body.addView(style.backButton(this::finish));
-        text(body, PatchStrings.t("Soulseek preview"), 28);
+        body.setPadding(style.dp(20), style.dp(20), style.dp(20), style.dp(16));
+        text(body, PatchStrings.t("Check the recording"), 22);
         try {
             token = getIntent().getStringExtra(SoulseekPreview.EXTRA);
             offer = SoulseekPreview.offer(token, this);
         } catch (Exception unavailable) {
             text(body, PatchStrings.t("Preview expired. Select the file again."), 16);
+            button(body, PatchStrings.t("Done"), this::finish);
             show(body);
             return;
         }
-        text(body, offer.track.title, 22);
-        text(body, offer.track.artist, 16);
-        text(body, PatchStrings.f("Peer: {0}", offer.track.peer), 14);
-        text(
-                body,
-                offer.track.path.substring(
-                        Math.max(
-                                        offer.track.path.lastIndexOf('/'),
-                                        offer.track.path.lastIndexOf('\\'))
-                                + 1),
-                14);
-        text(
-                body,
-                PatchStrings.t(
-                        "Preview uses temporary data and storage. Playback stops after 30 seconds."
-                                + " A fast peer may transfer the complete file."),
-                14);
-        status = text(body, PatchStrings.t("Ready to preview the selected peer and file"), 16);
+        text(body, offer.track.title, 17);
+        text(body, PatchStrings.f("Peer: {0}", offer.track.peer), 12);
+        status = text(body, PatchStrings.t("Ready to preview the selected peer and file"), 14);
         formatText =
                 text(
                         body,
                         PatchStrings.t("Advertised format: ")
                                 + offer.track.advertisedExtension.toUpperCase(Locale.ROOT)
                                 + " · unverified",
-                        14);
-        play = button(body, PatchStrings.t("Start preview"), this::startPreview);
-        button(body, PatchStrings.t("Stop preview"), () -> stopPreview("Preview stopped"));
-        keepNow = button(body, PatchStrings.t("Keep download now"), () -> keep(true));
-        keepQueue = button(body, PatchStrings.t("Add to download queue"), () -> keep(false));
+                        12);
+        text(
+                body,
+                PatchStrings.t(
+                        "Preview uses temporary data and storage. Playback stops after 30 seconds."
+                                + " A fast peer may transfer the complete file."),
+                12);
+        LinearLayout playbackControls = controls(body);
+        play = button(playbackControls, PatchStrings.t("Start preview"), this::startPreview);
+        button(
+                playbackControls,
+                PatchStrings.t("Stop preview"),
+                () -> stopPreview("Preview stopped"));
+        LinearLayout admission = controls(body);
+        keepNow = button(admission, PatchStrings.t("Keep download now"), () -> keep(true));
+        keepQueue = button(admission, PatchStrings.t("Add to download queue"), () -> keep(false));
         keepNow.setEnabled(false);
         keepQueue.setEnabled(false);
-        text(body, PatchStrings.t("Check the recording"), 22);
+        LinearLayout referenceGroup = section(body, "Reference audio");
         referenceText =
                 text(
-                        body,
+                        referenceGroup,
                         PatchStrings.t(
                                 "Choose a known local recording as the reference. This build"
                                     + " compares the beginning of the files; it does not capture"
                                     + " YouTube playback."),
-                        14);
+                        13);
         button(
-                body,
+                referenceGroup,
                 PatchStrings.t("Choose reference audio"),
                 () -> {
                     stopPreview("Choose a reference, then restart the preview");
@@ -125,19 +126,20 @@ public final class SoulseekPreviewActivity extends Activity {
                                     .addCategory(Intent.CATEGORY_OPENABLE),
                             REFERENCE);
                 });
-        compare = button(body, PatchStrings.t("Compare audio excerpt"), this::compare);
+        compare = button(referenceGroup, PatchStrings.t("Compare audio excerpt"), this::compare);
         compare.setEnabled(false);
+        LinearLayout evidence = section(body, "Recording evidence");
         evidenceText =
                 text(
-                        body,
+                        evidence,
                         PatchStrings.t(
                                 "No audio comparison yet. A matching excerpt does not verify the"
                                         + " whole track, master or lossless origin."),
-                        14);
-        button(body, PatchStrings.t("Inspect complete-file checksum"), this::checksum);
+                        13);
+        button(evidence, PatchStrings.t("Inspect complete-file checksum"), this::checksum);
         confirm =
                 button(
-                        body,
+                        evidence,
                         PatchStrings.t("Confirm correct recording"),
                         () -> {
                             if (sha != null) {
@@ -146,34 +148,103 @@ public final class SoulseekPreviewActivity extends Activity {
                             }
                         });
         confirm.setEnabled(false);
-        button(body, PatchStrings.t("Export match report"), this::exportReport);
+        button(evidence, PatchStrings.t("Export match report"), this::exportReport);
+        Button done = button(body, PatchStrings.t("Done"), this::finish);
+        done.setGravity(android.view.Gravity.CENTER);
+        done.setBackground(style.shape(style.field, 24, false));
         show(body);
     }
 
+    private LinearLayout section(LinearLayout parent, String title) {
+        LinearLayout section = new LinearLayout(this);
+        section.setOrientation(LinearLayout.VERTICAL);
+        section.setPadding(0, style.dp(18), 0, 0);
+        View rule = new View(this);
+        rule.setBackgroundColor(style.outline);
+        section.addView(rule, new LinearLayout.LayoutParams(-1, style.dp(1)));
+        text(section, PatchStrings.t(title), 16);
+        parent.addView(section);
+        return section;
+    }
+
+    private LinearLayout controls(LinearLayout parent) {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(
+                getResources().getConfiguration().fontScale > 1.25f
+                        ? LinearLayout.VERTICAL
+                        : LinearLayout.HORIZONTAL);
+        parent.addView(row);
+        return row;
+    }
+
     private void show(LinearLayout body) {
-        ScrollView scroll = new ScrollView(this);
+        ScrollView scroll =
+                new ScrollView(this) {
+                    @Override
+                    protected void onMeasure(int width, int height) {
+                        int max = getResources().getDisplayMetrics().heightPixels * 85 / 100;
+                        super.onMeasure(
+                                width,
+                                View.MeasureSpec.makeMeasureSpec(
+                                        Math.min(max, View.MeasureSpec.getSize(height)),
+                                        View.MeasureSpec.AT_MOST));
+                    }
+                };
         scroll.addView(body);
-        scroll.setFillViewport(true);
-        scroll.setBackgroundColor(style.background);
-        style.applyTree(body);
+        scroll.setClipToOutline(true);
+        scroll.setBackground(style.shape(style.card, 22, false));
         setContentView(scroll);
+        android.view.Window window = getWindow();
+        window.setBackgroundDrawable(style.shape(style.card, 22, false));
+        android.view.WindowManager.LayoutParams attrs = window.getAttributes();
+        attrs.flags |= android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        window.setAttributes(attrs);
+        window.setDimAmount(.28f);
+        window.setLayout(
+                Math.min(
+                        style.dp(360),
+                        getResources().getDisplayMetrics().widthPixels - style.dp(32)),
+                -2);
     }
 
     private TextView text(LinearLayout body, String value, int size) {
-        TextView view = new TextView(this);
-        view.setText(PatchStrings.t(value));
-        view.setTextSize(size);
-        view.setPadding(0, style.dp(8), 0, style.dp(8));
+        TextView view =
+                style.text(
+                        PatchStrings.t(value),
+                        size,
+                        size >= 16 ? style.foreground : style.secondary,
+                        size >= 16 ? style.semibold : style.regular);
+        view.setPadding(0, style.dp(6), 0, style.dp(6));
+        if (size >= 16 && Build.VERSION.SDK_INT >= 28) view.setAccessibilityHeading(true);
         body.addView(view);
         return view;
     }
 
     private Button button(LinearLayout body, String value, Runnable action) {
-        Button b = new Button(this);
-        b.setText(PatchStrings.t(value));
-        b.setOnClickListener(v -> action.run());
-        body.addView(b);
-        return b;
+        Button button = new Button(this);
+        button.setText(PatchStrings.t(value));
+        button.setTextSize(14);
+        button.setTextColor(style.foreground);
+        button.setTypeface(style.medium);
+        button.setAllCaps(false);
+        button.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        button.setMinHeight(style.dp(48));
+        button.setMinimumHeight(style.dp(48));
+        button.setPadding(style.dp(8), style.dp(10), style.dp(8), style.dp(10));
+        button.setBackground(
+                new android.graphics.drawable.RippleDrawable(
+                        android.content.res.ColorStateList.valueOf(
+                                style.dark ? 0x22ffffff : 0x17000000),
+                        style.shape(android.graphics.Color.TRANSPARENT, 12, false),
+                        null));
+        button.setOnClickListener(v -> action.run());
+        LinearLayout.LayoutParams params =
+                body.getOrientation() == LinearLayout.HORIZONTAL
+                        ? new LinearLayout.LayoutParams(0, -2, 1)
+                        : new LinearLayout.LayoutParams(-1, -2);
+        body.addView(button, params);
+        style.markCustom(button);
+        return button;
     }
 
     @Override
@@ -324,6 +395,8 @@ public final class SoulseekPreviewActivity extends Activity {
                                                                 details.optInt("sample_rate_hz"),
                                                                 details.optInt("channels")));
                                             }
+                                            if (!playback.format().isEmpty())
+                                                formatText.setText(playback.format());
                                             String error = playback.error();
                                             if (!error.isEmpty()) {
                                                 stopPreview(error);

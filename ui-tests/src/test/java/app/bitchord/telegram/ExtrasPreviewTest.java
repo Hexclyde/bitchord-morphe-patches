@@ -54,6 +54,7 @@ public class ExtrasPreviewTest {
         TelegramSwitch toggle =
                 activity.findViewById(android.R.id.content).findViewWithTag("enable:sing");
         toggle.performClick();
+        activity.findViewById(android.R.id.content).findViewWithTag("settings:sing").performClick();
         View details = activity.findViewById(android.R.id.content).findViewWithTag("details:sing");
         assertEquals(View.VISIBLE, details.getVisibility());
     }

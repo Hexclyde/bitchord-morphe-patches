@@ -122,6 +122,7 @@ final class DownloadExplorerPage extends DownloadPage {
         long version = revision.incrementAndGet();
         cancelSearches();
         explorer.reset();
+        explorer.searching(true);
         work.getQueue().clear();
         pending.set(0);
         found = 0;
@@ -184,21 +185,30 @@ final class DownloadExplorerPage extends DownloadPage {
                                                         explorer.add(
                                                                 group,
                                                                 new DownloadExplorerView.Option(
-                                                                        name,
-                                                                        title,
-                                                                        artist,
-                                                                        quality,
-                                                                        duration,
-                                                                        reportedLossless(quality),
-                                                                        null,
-                                                                        now ->
-                                                                                HostDownloadAccess
-                                                                                        .enqueue(
-                                                                                                application,
-                                                                                                song,
-                                                                                                id,
-                                                                                                now),
-                                                                        null));
+                                                                                name,
+                                                                                title,
+                                                                                artist,
+                                                                                quality,
+                                                                                duration,
+                                                                                reportedLossless(
+                                                                                        quality),
+                                                                                null,
+                                                                                now ->
+                                                                                        HostDownloadAccess
+                                                                                                .enqueue(
+                                                                                                        application,
+                                                                                                        song,
+                                                                                                        id,
+                                                                                                        now),
+                                                                                null)
+                                                                        .fromFamily(
+                                                                                id.equals(
+                                                                                                "telegram-native")
+                                                                                        ? "telegram"
+                                                                                        : "addons",
+                                                                                -1,
+                                                                                id.equals(
+                                                                                        "flacdownloader-native")));
                                                     }
                                                     if (count == 0)
                                                         text(
@@ -227,16 +237,6 @@ final class DownloadExplorerPage extends DownloadPage {
                                     }
                                 });
                     }
-                    ui.post(
-                            () -> {
-                                if (current(version))
-                                    text(
-                                            results,
-                                            PatchStrings.t(
-                                                    "Reported formats are unverified. Review the"
-                                                        + " recording version before selecting."),
-                                            14);
-                            });
                 });
         if (DownloadSettings.enabled(this, DownloadSettings.SOULSEEK))
             submit(
@@ -267,57 +267,56 @@ final class DownloadExplorerPage extends DownloadPage {
                                             explorer.add(
                                                     group,
                                                     new DownloadExplorerView.Option(
-                                                            "Soulseek",
-                                                            row.title,
-                                                            row.artist,
-                                                            row.advertisedExtension.toUpperCase(
-                                                                    java.util.Locale.ROOT),
-                                                            android.text.format.Formatter
-                                                                            .formatShortFileSize(
-                                                                                    this, row.size)
-                                                                    + " · "
-                                                                    + PatchStrings.f(
-                                                                            "Peer: {0}", row.peer),
-                                                            reportedLossless(row.format),
-                                                            row.freeSlots == 1,
-                                                            now -> {
-                                                                if (!session.equals(
-                                                                        bridge.sessionTag))
-                                                                    throw new java.io.IOException(
-                                                                            "Search result"
-                                                                                    + " expired");
-                                                                if (!SoulseekSelectedDownloads
-                                                                        .enqueueSelectedFile(
-                                                                                application,
-                                                                                row,
-                                                                                session,
-                                                                                now))
-                                                                    throw new java.io.IOException(
-                                                                            "Selected file could"
-                                                                                + " not be queued");
-                                                            },
-                                                            SoulseekPreview.available(this)
-                                                                            && SoulseekPreview
-                                                                                    .supported(row)
-                                                                    ? () -> {
-                                                                        try {
-                                                                            SoulseekPreview.open(
-                                                                                    activity, row,
-                                                                                    session);
-                                                                        } catch (
-                                                                                Exception expired) {
-                                                                            status.setText(
-                                                                                    PatchStrings.t(
-                                                                                            "Preview"
-                                                                                                + " unavailable."
-                                                                                                + " Check"
-                                                                                                + " the selected"
-                                                                                                + " file"
-                                                                                                + " and Soulseek"
-                                                                                                + " session."));
-                                                                        }
-                                                                    }
-                                                                    : null));
+                                                                    "Soulseek",
+                                                                    row.title,
+                                                                    row.artist,
+                                                                    row.advertisedExtension
+                                                                            .toUpperCase(
+                                                                                    java.util.Locale
+                                                                                            .ROOT),
+                                                                    android.text.format.Formatter
+                                                                                    .formatShortFileSize(
+                                                                                            this,
+                                                                                            row.size)
+                                                                            + " · "
+                                                                            + PatchStrings.f(
+                                                                                    "Peer: {0}",
+                                                                                    row.peer),
+                                                                    reportedLossless(row.format),
+                                                                    row.freeSlots < 0
+                                                                            ? null
+                                                                            : row.freeSlots == 1,
+                                                                    now -> {
+                                                                        if (!session.equals(
+                                                                                bridge.sessionTag))
+                                                                            throw new java.io
+                                                                                    .IOException(
+                                                                                    "Search result"
+                                                                                        + " expired");
+                                                                        if (!SoulseekPreview
+                                                                                .enqueueSelected(
+                                                                                        application,
+                                                                                        row,
+                                                                                        session,
+                                                                                        now))
+                                                                            throw new java.io
+                                                                                    .IOException(
+                                                                                    "Selected file"
+                                                                                        + " could"
+                                                                                        + " not be"
+                                                                                        + " queued");
+                                                                    },
+                                                                    null)
+                                                            .inlinePreview(
+                                                                    SoulseekPreview.available(this)
+                                                                                    && SoulseekPreview
+                                                                                            .supported(
+                                                                                                    row)
+                                                                            ? row
+                                                                            : null,
+                                                                    session)
+                                                            .fromFamily("soulseek", row.size, false)
+                                                            .filePath(row.path));
                                         }
                                     });
                         } catch (Exception | LinkageError failed) {
@@ -425,6 +424,7 @@ final class DownloadExplorerPage extends DownloadPage {
                                             () -> {
                                                 if (current(version)) {
                                                     int waiting = pending.decrementAndGet();
+                                                    explorer.searching(waiting > 0);
                                                     status.setText(
                                                             waiting == 0
                                                                     ? PatchStrings.f(
@@ -479,7 +479,18 @@ final class DownloadExplorerPage extends DownloadPage {
                 || label.contains("alac")
                 || label.equals("wav")
                 || label.equals("aiff")
-                || label.equals("dsd");
+                || label.equals("dsd")
+                || label.equals("dsf")
+                || label.equals("dff")
+                || label.equals("ape")
+                || label.equals("wv")
+                || label.equals("wavpack")
+                || label.equals("tta")
+                || label.equals("tak")
+                || label.equals("shn")
+                || label.equals("shorten")
+                || label.equals("truehd")
+                || label.equals("mlp");
     }
 
     private void settings() {

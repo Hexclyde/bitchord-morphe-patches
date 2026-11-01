@@ -32,7 +32,7 @@ final class SoulseekTrack {
         int dot = path.lastIndexOf('.');
         advertisedExtension = dot < 0 ? "" : path.substring(dot + 1).toLowerCase(Locale.ROOT);
         if (!advertisedExtension.matches(
-                "flac|alac|wav|wave|aif|aiff|aifc|dsf|dff|opus|aac|m4a|mp4|ogg|oga|vorbis|mp3"))
+                "flac|alac|wav|wave|rf64|w64|aif|aiff|aifc|dsf|dff|dsdiff|ape|wv|tta|tak|shn|wma|caf|mka|dts|dtshd|thd|mlp|opus|aac|m4a|mp4|ogg|oga|vorbis|mp3"))
             throw new IOException("Unsupported advertised audio filename");
         // These remain peer claims. Ambiguous containers do not acquire a codec
         // label until the completed, selected bytes have been probed.
@@ -41,9 +41,14 @@ final class SoulseekTrack {
             case "mp4":
             case "ogg":
             case "oga":
+            case "caf":
+            case "mka":
+            case "wma":
                 format = "unknown";
                 break;
             case "wave":
+            case "rf64":
+            case "w64":
                 format = "wav";
                 break;
             case "aif":
@@ -52,6 +57,7 @@ final class SoulseekTrack {
                 break;
             case "dsf":
             case "dff":
+            case "dsdiff":
                 format = "dsd";
                 break;
             default:
@@ -77,6 +83,8 @@ final class SoulseekTrack {
                 break;
             case "wav":
             case "wave":
+            case "rf64":
+            case "w64":
                 mime = "audio/wav";
                 break;
             case "aif":
@@ -86,6 +94,7 @@ final class SoulseekTrack {
                 break;
             case "dsf":
             case "dff":
+            case "dsdiff":
                 mime = "audio/dsd";
                 break;
             case "opus":
@@ -99,8 +108,11 @@ final class SoulseekTrack {
             case "vorbis":
                 mime = "audio/ogg";
                 break;
-            default:
+            case "mp3":
                 mime = "audio/mpeg";
+                break;
+            default:
+                mime = "application/octet-stream";
         }
         MessageDigest hash = MessageDigest.getInstance("SHA-256");
         hash.update(peer.getBytes(StandardCharsets.UTF_8));

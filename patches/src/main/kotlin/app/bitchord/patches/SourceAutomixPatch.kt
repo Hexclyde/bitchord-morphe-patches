@@ -349,6 +349,47 @@ val sourceAutomixPatch =
         """,
             )
             val analyzer = mutableClassDefBy(ANALYZER)
+            // Keep native sessions alive until their in-flight inference has returned.
+            for (name in listOf("BeatTracker", "VocalTracker")) {
+                val model = mutableClassDefBy("Lcom/music/bitchord/playback/smart/$name;")
+                check(model.fields.any { it.name == "lock" && it.type == "Ljava/lang/Object;" })
+                val release =
+                    model.methods.single { it.name == "release" && it.parameterTypes.isEmpty() }
+                val code = release.implementation!!.instructions.toList()
+                check(
+                    code[0].opcode == Opcode.IGET_OBJECT &&
+                        code[0].mixField()?.name == "lock" &&
+                        (code[0] as TwoRegisterInstruction).registerA == 0 &&
+                        code[1].opcode == Opcode.MONITOR_ENTER &&
+                        (code[1] as OneRegisterInstruction).registerA == 0 &&
+                        release.implementation!!.registerCount >= 3
+                ) {
+                    "$name release lock ABI changed"
+                }
+                release.addInstructionsWithLabels(
+                    2,
+                    """
+                    invoke-static {p0}, $MIX->deferModelRelease(Ljava/lang/Object;)Z
+                    move-result v1
+                    if-eqz v1, :closeSession
+                    monitor-exit v0
+                    return-void
+                    :closeSession
+                    nop
+                """,
+                )
+                release.addInstructionsWithLabels(
+                    0,
+                    """
+                    invoke-static {p0}, $MIX->deferModelRelease(Ljava/lang/Object;)Z
+                    move-result v0
+                    if-eqz v0, :acquireLock
+                    return-void
+                    :acquireLock
+                    nop
+                    """,
+                )
+            }
             val copy = analyzer.methods.single { it.name == "copyToRead" }
             val copyType = "Lcom/music/bitchord/playback/smart/TrackAnalyzer${'$'}Copy;"
             check(copy.parameterTypes == listOf(URI, "D") && copy.returnType == copyType)

@@ -137,6 +137,37 @@ public final class VerifySourceAutomixApk {
         check(
                 types.containsKey("Lcom/music/bitchord/playback/smart/AudioDecoder;"),
                 "Host decoder retained");
+        for (String name : List.of("BeatTracker", "VocalTracker")) {
+            ClassDef model = types.get("Lcom/music/bitchord/playback/smart/" + name + ";");
+            check(model != null, name + " retained");
+            Method release = null;
+            for (Method method : model.getMethods())
+                if (method.getName().equals("release")) release = method;
+            check(release != null, name + " release exists");
+            List<Instruction> instructions = code(release);
+            int monitor = -1, guard = -1, firstGuard = -1, close = -1, guards = 0;
+            for (int i = 0; i < instructions.size(); i++) {
+                if (instructions.get(i).getOpcode() == Opcode.MONITOR_ENTER && monitor < 0)
+                    monitor = i;
+                MethodReference ref = call(instructions.get(i));
+                if (ref == null) continue;
+                if (ref.getDefiningClass().equals(runtime)
+                        && ref.getName().equals("deferModelRelease")) {
+                    guard = i;
+                    if (firstGuard < 0) firstGuard = i;
+                    guards++;
+                }
+                if (ref.getDefiningClass().equals("Lai/onnxruntime/OrtSession;")
+                        && ref.getName().equals("close")) close = i;
+            }
+            check(
+                    guards == 2 && firstGuard < monitor && guard > monitor && close > guard,
+                    name + " native closure is guarded under its own lock");
+            check(
+                    instructions.get(guard + 3).getOpcode() == Opcode.MONITOR_EXIT
+                            && instructions.get(guard + 4).getOpcode() == Opcode.RETURN_VOID,
+                    name + " deferred closure returns without holding the lock");
+        }
         System.out.println(
                 "PASS: "
                         + checks

@@ -20,19 +20,24 @@ standalone pages; the new player slot and batch hook are qualified for 1.9.
 ## Views and controls
 
 Tap the view icon to cycle Grid, List, Compact, Comfy and Detailed; hold it to select
-a view directly. The selection survives reopening. Comfy follows the reviewed HTML
-demo with actual thumbnail or embedded artwork when available, a music-note fallback,
+a view directly. The selection survives reopening. Comfy shows actual thumbnail
+or embedded artwork when available, a music-note fallback,
 source/format labels, separate status lines and a thin progress bar from real transfer
-data. Compact omits artwork; Detailed shows the known source, format and file size.
+data. Known transfer percentages appear beside a compact status pill; unknown progress stays indeterminate.
+Compact omits artwork; Detailed shows the known source, format and file size.
 Unknown rates, formats and progress are not fabricated. Saved aliases for the same
 host URI appear once.
 
-The header contains active/queued counts, the view switch and search. Management
-controls live under its settings gear; upload activity and Find available downloads
-remain below the file list. Public-sharing configuration is not presented as a
-completed download. The native Downloads icon remains conditional on installing the
-add-on. The production Android content renders in the ZIP use controlled demo data;
-full-shell placement still requires phone testing.
+Downloads has a persistent search field for saved files and transfers, with one
+clear control. Search in the bottom navigation finds music; a track's Download
+action opens source selection. There is no duplicate Find sources button.
+Filters show actual counts. Issues appears when attention is needed. A result
+count, display-sort control and view switch sit above the cards. Sorting only
+changes presentation; Queue keeps its existing order. Management controls remain
+under the settings gear, with a Public sharing link below the file list.
+Public-sharing configuration is not presented as a completed download. The native Downloads icon remains conditional on installing the
+add-on. See the [beta.17 verification report](VERIFICATION-1.1.0-beta.17.md) for
+scoped Waydroid checks and remaining physical-phone qualification.
 
 ## Find and choose sources
 
@@ -139,10 +144,21 @@ in the existing 20-language catalogue.
 
 ## Download views
 
-Tap the view icon beside Search to cycle Grid, List, Compact, Comfy and Detailed. Hold the icon to choose directly. The choice is saved on the device. All five views show the same job set and keep actions in the row menu, including offload and public sharing for confirmed phone files. Grid falls back to one column with large accessibility text. Details shows the full original status when a tight view truncates it.
+Tap the view icon above the result cards to cycle Grid, List, Compact, Comfy and Detailed. Hold the icon to choose directly. The choice is saved on the device. All five views show the same job set and keep actions in the row menu, including offload and public sharing for confirmed phone files. Grid falls back to one column with large accessibility text. Details shows the full original status when a tight view truncates it.
 
 The extra navigation tab is installed only with the download add-on patch. Disabling an individual transfer feature or pausing public sharing does not uninstall the add-on or hide its tab.
 
-### Optional Soulseek previews (beta.14)
+### Optional Soulseek previews
 
-Install **Streamseek previews** alongside the Soulseek download patch and enable its capsule switch to reveal explicit MP3/FLAC Preview actions. Keep download now or queue the same selected transfer from the preview screen. General Soulseek source playback remains guarded. See [preview behavior, local-reference comparison and limits](STREAMSEEK-PREVIEW.md).
+Install **Streamseek previews** alongside the Soulseek download patch and enable its capsule switch to reveal inline audio preview controls in result cards. Play, pause/resume and stop without leaving the result list; choose Now or Later to retain the same selected transfer. Recording checks open only through the separate details control. General Soulseek source playback remains guarded. See [preview behavior, local-reference comparison and limits](STREAMSEEK-PREVIEW.md).
+
+Explorer uses individual source cards: a source-family
+filter, actual result count, reported-quality/file-size sorting, format badges,
+qualification and readiness details, and an information action for the selected
+result. Now and Later appear only on the selected card. Selection, filtering,
+sorting and viewing details never start a transfer. Source-family choices come
+from actual returned results; unknown readiness and file size remain unknown.
+
+The Download settings gear opens a rounded native panel with destinations,
+transfer controls, debrid setup and public-sharing actions. Opening it does not
+change preferences or start work. Choose an action explicitly, or Done to close.

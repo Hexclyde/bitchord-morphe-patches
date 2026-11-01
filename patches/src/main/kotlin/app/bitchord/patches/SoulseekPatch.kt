@@ -42,6 +42,16 @@ private class SoulseekPatchMarker
 
 private val streamseekPreviewResources = resourcePatch {
     execute {
+        for (abi in listOf("arm64-v8a", "armeabi-v7a", "x86_64")) {
+            if (listApkEntries("lib/$abi/").isEmpty()) continue
+            val path = "lib/$abi/libbitchord_preview.so"
+            val output = get(path, false)
+            output.parentFile.mkdirs()
+            val input =
+                SoulseekPatchMarker::class.java.classLoader.getResourceAsStream(path)
+                    ?: error("Streamseek decoder missing from bundle: $abi")
+            input.use { source -> output.outputStream().use { source.copyTo(it) } }
+        }
         document("AndroidManifest.xml").use { doc ->
             val app = doc.getElementsByTagName("application").item(0) as org.w3c.dom.Element
             val activity = doc.createElement("activity")
@@ -1125,7 +1135,7 @@ val streamseekPreviewPatch =
     bytecodePatch(
         name = "Streamseek previews",
         description =
-            "Preview an explicitly selected Soulseek MP3 or FLAC through Media3 while it transfers. Keep download reuses buffered bytes. Compare an excerpt with a known local reference and export transparent evidence. Optional; enable in Patches & tweaks. No automatic Soulseek playback or Mornye integration.",
+            "Preview explicitly selected Soulseek audio while it transfers: FLAC, WAV/AIFF, ALAC, APE, WavPack, TTA/TAK, WMA Lossless and DSD, plus MP3. A dedicated on-device FFmpeg decoder feeds Media3. Keep download reuses buffered bytes. Compare an excerpt with a known local reference and export transparent evidence. Optional; enable in Patches & tweaks. No automatic Soulseek playback or Mornye integration.",
         default = false,
     ) {
         compatibleWith(
