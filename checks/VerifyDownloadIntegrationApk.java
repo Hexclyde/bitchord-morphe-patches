@@ -212,6 +212,21 @@ public final class VerifyDownloadIntegrationApk {
                     present = true;
             check(present, "Public sharing JNI declaration retained: " + name);
         }
+        int filenameHooks = 0;
+        for (Method method : types.get("Lcom/music/bitchord/download/DownloadStore;").getMethods())
+            if (method.getName().equals("fileNameFor")) {
+                check(
+                        calls(method, runtime + "HostDownloadAccess;", "fileNameStart") == 1,
+                        "Filename identity captured before R8 parameter reuse");
+                filenameHooks += calls(method, runtime + "HostDownloadAccess;", "fileNameFinish");
+                int returns = 0;
+                for (Instruction instruction : method.getImplementation().getInstructions())
+                    if (instruction.getOpcode() == Opcode.RETURN_OBJECT) returns++;
+                check(
+                        filenameHooks == returns,
+                        "Every returned filename consumes the selected identity");
+            }
+        check(filenameHooks > 0, "Selected source and quality isolate existing-file adoption");
         int detailHooks = 0, controlHooks = 0;
         for (Method method : types.get("Lcom/music/bitchord/ui/MainViewModel;").getMethods())
             if (method.getName().equals("openDetail"))

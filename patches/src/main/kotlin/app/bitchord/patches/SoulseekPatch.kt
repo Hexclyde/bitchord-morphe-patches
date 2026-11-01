@@ -331,6 +331,37 @@ val nativeSoulseekPatch =
             check(enqueue.accessFlags and 8 != 0 && enqueue.implementation!!.registerCount == 9) {
                 "Download enqueue entry changed"
             }
+            val fileName =
+                mutableClassDefBy("Lcom/music/bitchord/download/DownloadStore;").methods.single {
+                    it.name == "fileNameFor" &&
+                        it.parameterTypes == listOf(songType, "Ljava/lang/String;") &&
+                        it.returnType == "Ljava/lang/String;"
+                }
+            check(
+                fileName.accessFlags and 8 != 0 && fileName.implementation!!.registerCount <= 16
+            ) {
+                "Download filename ABI changed"
+            }
+            val fileNameCode = fileName.implementation!!.instructions.toList()
+            for (index in fileNameCode.indices.reversed()) {
+                if (fileNameCode[index].opcode != Opcode.RETURN_OBJECT) continue
+                val result =
+                    (fileNameCode[index]
+                            as
+                            com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction)
+                        .registerA
+                fileName.addInstructions(
+                    index,
+                    """
+                    invoke-static {v$result}, ${SOULSEEK}HostDownloadAccess;->fileNameFinish(Ljava/lang/String;)Ljava/lang/String;
+                    move-result-object v$result
+                """,
+                )
+            }
+            fileName.addInstructions(
+                0,
+                "invoke-static {p0}, ${SOULSEEK}HostDownloadAccess;->fileNameStart(Ljava/lang/Object;)V",
+            )
             val originalEnqueue = enqueue.implementation!!.instructions.first()
             enqueue.addInstructionsWithLabels(
                 0,

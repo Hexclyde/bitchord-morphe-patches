@@ -121,6 +121,54 @@ public final class HostDownloadAccess {
         return pinned.contains(propertyText(song, "videoId"));
     }
 
+    private static final ThreadLocal<String> filenameSelection = new ThreadLocal<>();
+
+    // R8 reuses the Song parameter register before the host returns its filename.
+    public static void fileNameStart(Object song) {
+        String reference = propertyText(song, "videoId");
+        if (pinned.contains(reference)) filenameSelection.set(reference);
+        else filenameSelection.remove();
+    }
+
+    public static String fileNameFinish(String name) {
+        String reference = filenameSelection.get();
+        filenameSelection.remove();
+        return reference == null ? name : selectedName(reference, name);
+    }
+
+    public static String selectedFileName(Object song, String name) {
+        String reference = propertyText(song, "videoId");
+        return pinned.contains(reference) ? selectedName(reference, name) : name;
+    }
+
+    private static String selectedName(String reference, String name) {
+        try {
+            byte[] digest =
+                    java.security.MessageDigest.getInstance("SHA-256")
+                            .digest(reference.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            StringBuilder key = new StringBuilder();
+            for (int i = 0; i < 8; i++) {
+                key.append("0123456789abcdef".charAt((digest[i] & 255) >>> 4));
+                key.append("0123456789abcdef".charAt(digest[i] & 15));
+            }
+            String suffix = " [" + key + "]";
+            int dot = name.lastIndexOf('.');
+            String extension = dot > 0 ? name.substring(dot) : "";
+            String stem = dot > 0 ? name.substring(0, dot) : name;
+            int end = Math.min(stem.length(), 120 - suffix.length());
+            while (end > 0
+                    && (Character.isHighSurrogate(stem.charAt(end - 1))
+                            || stem.substring(0, end)
+                                            .getBytes(java.nio.charset.StandardCharsets.UTF_8)
+                                            .length
+                                    > 220)) end--;
+            return stem.substring(0, end).trim() + suffix + extension;
+        } catch (java.security.NoSuchAlgorithmException unavailable) {
+            throw new IllegalStateException(
+                    "Selected download identity is unavailable", unavailable);
+        }
+    }
+
     static String selectedTitle(Context context, String reference) {
         return context.getSharedPreferences("bitchord_download_explorer", 0)
                 .getString("title." + reference, reference);

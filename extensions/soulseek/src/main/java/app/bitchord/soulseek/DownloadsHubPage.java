@@ -320,6 +320,11 @@ final class DownloadsHubPage extends DownloadPage {
         return true;
     }
 
+    static String stateKind(Object state) {
+        String name = state.getClass().getName();
+        return name.substring(Math.max(name.lastIndexOf('$'), name.lastIndexOf('.')) + 1);
+    }
+
     static final class Row {
         final String name, detail, group;
         final Runnable action;
@@ -354,7 +359,7 @@ final class DownloadsHubPage extends DownloadPage {
                             for (Map.Entry<?, ?> entry : active.entrySet()) {
                                 String id = String.valueOf(entry.getKey());
                                 Object state = entry.getValue();
-                                String kind = state.getClass().getSimpleName();
+                                String kind = stateKind(state);
                                 String detail = kind;
                                 if (kind.equals("Running")) {
                                     try {
@@ -1138,7 +1143,12 @@ final class DownloadsHubPage extends DownloadPage {
             String stateLabel =
                     PatchStrings.t(
                             row.group.equals("Active")
-                                    ? (row.received > 0 ? "Downloading" : "Preparing")
+                                    ? (row.received > 0
+                                                    || Float.isFinite(row.fraction)
+                                                            && row.fraction >= 0
+                                                            && row.fraction <= 1
+                                            ? "Downloading"
+                                            : "Preparing")
                                     : row.group.equals("Queue")
                                             ? "Queued"
                                             : row.group.equals("Attention")

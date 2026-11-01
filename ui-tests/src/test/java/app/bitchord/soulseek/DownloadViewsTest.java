@@ -52,6 +52,21 @@ public class DownloadViewsTest {
     }
 
     @Test
+    public void knownHostProgressUsesDownloadingBadgeWithoutByteCounters() {
+        data.get(0).fraction = .25f;
+        page.renderRows(data);
+        TextView badge = page.view.findViewWithTag("download-status");
+        assertEquals("Downloading", badge.getText().toString());
+    }
+
+    @Test
+    public void optimizedHostStateNamesAreRecognized() {
+        assertEquals("Failed", DownloadsHubPage.stateKind(new DownloadState$Failed()));
+        assertEquals("Running", DownloadsHubPage.stateKind(new DownloadState$Running()));
+        assertEquals("Queued", DownloadsHubPage.stateKind(new DownloadState$Queued()));
+    }
+
+    @Test
     public void deleteFileRequiresConfirmationAndCancelKeepsTheFile() throws Exception {
         java.io.File file =
                 java.io.File.createTempFile("download-confirm", ".mp3", activity.getCacheDir());
@@ -440,3 +455,9 @@ public class DownloadViewsTest {
         return null;
     }
 }
+
+class DownloadState$Failed {}
+
+class DownloadState$Running {}
+
+class DownloadState$Queued {}

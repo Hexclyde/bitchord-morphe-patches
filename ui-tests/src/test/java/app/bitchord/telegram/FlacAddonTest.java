@@ -98,6 +98,30 @@ public class FlacAddonTest {
     }
 
     @Test
+    public void providerNullProgressAndUppercaseQualityAreNotDowngrades() throws Exception {
+        final int[] polls = {0};
+        FlacAddon.transport =
+                (path, post, token, deadline) -> {
+                    if (path.equals("/prepare")) return object("{t:'token'}");
+                    if (path.equals("/download")) return object("{job_id:'job'}");
+                    if (polls[0]++ == 0)
+                        return new JSONObject()
+                                .put("status", "downloading")
+                                .put("quality", JSONObject.NULL)
+                                .put("filename", JSONObject.NULL)
+                                .put("mirror", JSONObject.NULL);
+                    if (polls[0] == 2)
+                        return new JSONObject()
+                                .put("status", "mirror")
+                                .put("quality", JSONObject.NULL)
+                                .put("mirror", new JSONObject().put("calidad", JSONObject.NULL));
+                    return object("{status:'done',filename:'mask-off.flac',quality:'FLAC'}");
+                };
+        assertEquals("flac", FlacAddon.resolve(primaryId(), deadline()).getString("format"));
+        assertEquals(3, polls[0]);
+    }
+
+    @Test
     public void acceptingHumanVerificationNeverStartsDownload() throws Exception {
         final String[] retained = {""};
         FlacAddon.sessions =

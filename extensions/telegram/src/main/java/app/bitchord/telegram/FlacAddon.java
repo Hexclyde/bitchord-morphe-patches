@@ -404,6 +404,19 @@ public final class FlacAddon {
         }
     }
 
+    private static String reportedFormat(JSONObject response, String key) {
+        Object value = response.opt(key);
+        if (!(value instanceof String)) return "";
+        String name = ((String) value).trim().toLowerCase(Locale.ROOT);
+        if (name.startsWith("flac") || name.equals("lossless")) return "flac";
+        if (name.startsWith("mp3")) {
+            if (name.contains("128")) return "mp3_128";
+            if (name.contains("320")) return "mp3_320";
+            return "mp3";
+        }
+        return "";
+    }
+
     static JSONObject resolve(String id, long deadline) throws Exception {
         JSONObject row = decode(id);
         String format = id.substring(0, id.indexOf('.'));
@@ -434,12 +447,16 @@ public final class FlacAddon {
         while (System.nanoTime() < deadline) {
             JSONObject state = request("/status/" + jobId, null, "", deadline);
             String status = state.optString("status");
-            String actual = state.optString("format", state.optString("quality"));
+            String actual = reportedFormat(state, "format");
+            if (actual.isEmpty()) actual = reportedFormat(state, "quality");
             JSONObject mirror = state.optJSONObject("mirror");
-            if (mirror != null && !mirror.optString("calidad").isEmpty())
-                actual = mirror.optString("calidad");
-            if (actual.equals("mp3")) actual = "mp3_320";
-            if ((!actual.isEmpty() && !actual.equals(format)) || state.optBoolean("fallback")) {
+            String mirrorFormat = mirror == null ? "" : reportedFormat(mirror, "calidad");
+            if (!mirrorFormat.isEmpty()) actual = mirrorFormat;
+            boolean mismatch =
+                    actual.equals("mp3")
+                            ? !format.startsWith("mp3_")
+                            : !actual.isEmpty() && !actual.equals(format);
+            if (mismatch) {
                 if (unavailableFormats.size() < 512) unavailableFormats.add(id);
                 throw new IOException(
                         "Selected provider format is unavailable. Choose another format"

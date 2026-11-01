@@ -131,6 +131,71 @@ public final class DownloadExplorerTest {
         check(
                 HostDownloadAccess.forbidFallback(first),
                 "explicit source selection cannot enter a different provider's fallback walk");
+        String filename = "Artist - Track.mp3";
+        String firstName = HostDownloadAccess.selectedFileName(first, filename);
+        String secondName = HostDownloadAccess.selectedFileName(second, filename);
+        check(
+                !firstName.equals(secondName),
+                "Different selected renditions cannot adopt the same filename");
+        check(
+                firstName.equals(HostDownloadAccess.selectedFileName(first, filename)),
+                "Same selected identity has a stable filename");
+        check(firstName.endsWith(".mp3"), "Selected filename keeps its real extension");
+        check(
+                filename.equals(
+                        HostDownloadAccess.selectedFileName(new Song("ordinary"), filename)),
+                "Ordinary downloads keep their existing names");
+        char[] chars = new char[120];
+        java.util.Arrays.fill(chars, '\u97f3');
+        String unicode = HostDownloadAccess.selectedFileName(first, new String(chars) + ".flac");
+        check(
+                unicode.getBytes(java.nio.charset.StandardCharsets.UTF_8).length <= 255,
+                "Selected Unicode filenames fit Android filesystem bounds");
+        HostDownloadAccess.fileNameStart(first);
+        check(
+                firstName.equals(HostDownloadAccess.fileNameFinish(filename)),
+                "Host return hook keeps the selected identity after parameter reuse");
+        check(
+                filename.equals(HostDownloadAccess.fileNameFinish(filename)),
+                "Filename context is consumed once");
+        HostDownloadAccess.fileNameStart(first);
+        HostDownloadAccess.fileNameStart(new Song("ordinary"));
+        check(
+                filename.equals(HostDownloadAccess.fileNameFinish(filename)),
+                "An ordinary request clears stale filename context");
+        java.util.concurrent.CountDownLatch gate = new java.util.concurrent.CountDownLatch(2);
+        String[] concurrent = new String[2];
+        Thread one =
+                new Thread(
+                        () -> {
+                            HostDownloadAccess.fileNameStart(first);
+                            gate.countDown();
+                            try {
+                                gate.await();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            concurrent[0] = HostDownloadAccess.fileNameFinish(filename);
+                        });
+        Thread two =
+                new Thread(
+                        () -> {
+                            HostDownloadAccess.fileNameStart(second);
+                            gate.countDown();
+                            try {
+                                gate.await();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            concurrent[1] = HostDownloadAccess.fileNameFinish(filename);
+                        });
+        one.start();
+        two.start();
+        one.join(5000);
+        two.join(5000);
+        check(
+                firstName.equals(concurrent[0]) && secondName.equals(concurrent[1]),
+                "Concurrent filename preparation keeps identities isolated");
         Field pins = HostDownloadAccess.class.getDeclaredField("pinned");
         pins.setAccessible(true);
         ((Set<?>) pins.get(null)).clear();
