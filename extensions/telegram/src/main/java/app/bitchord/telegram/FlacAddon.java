@@ -10,7 +10,7 @@ import java.util.*;
 
 /**
  * Independent BitChord adapter for the protocol observed in aztecempire's Spotube plugin. No Hetu
- * code or .smplug runtime is bundled. The host supplies its IO coroutine and player.
+ * code or .smplug runtime is bundled. The host supplies its download IO coroutine.
  */
 public final class FlacAddon {
     public static final String ID = "flacdownloader-native";
@@ -88,6 +88,23 @@ public final class FlacAddon {
     }
 
     private FlacAddon() {}
+
+    /** The provider prepares files for download; it must never enter a playback source walk. */
+    public static ArrayList<Object> playbackSources(ArrayList<?> sources) {
+        ArrayList<Object> result = new ArrayList<>();
+        for (Object source : sources) {
+            try {
+                if (ID.equals(
+                        Class.forName("com.music.bitchord.data.sources.MusicSource")
+                                .getMethod("getConfigId")
+                                .invoke(source))) continue;
+            } catch (ReflectiveOperationException unavailable) {
+                throw new IllegalStateException("Playback source identity changed", unavailable);
+            }
+            result.add(source);
+        }
+        return result;
+    }
 
     public static boolean reserved(String value) {
         try {
@@ -204,7 +221,7 @@ public final class FlacAddon {
             return new JSONObject()
                     .put("id", ID)
                     .put("name", "Flac Downloader Audio")
-                    .put("version", "1.1.0-beta.17")
+                    .put("version", "1.1.0-beta.18")
                     .put("resources", new JSONArray().put("search").put("stream"))
                     .put(
                             "description",
@@ -447,22 +464,22 @@ public final class FlacAddon {
         while (System.nanoTime() < deadline) {
             JSONObject state = request("/status/" + jobId, null, "", deadline);
             String status = state.optString("status");
-            String actual = reportedFormat(state, "format");
-            if (actual.isEmpty()) actual = reportedFormat(state, "quality");
-            JSONObject mirror = state.optJSONObject("mirror");
-            String mirrorFormat = mirror == null ? "" : reportedFormat(mirror, "calidad");
-            if (!mirrorFormat.isEmpty()) actual = mirrorFormat;
-            boolean mismatch =
-                    actual.equals("mp3")
-                            ? !format.startsWith("mp3_")
-                            : !actual.isEmpty() && !actual.equals(format);
-            if (mismatch) {
-                if (unavailableFormats.size() < 512) unavailableFormats.add(id);
-                throw new IOException(
-                        "Selected provider format is unavailable. Choose another format"
-                                + " explicitly.");
-            }
             if (status.equals("done")) {
+                String actual = reportedFormat(state, "format");
+                if (actual.isEmpty()) actual = reportedFormat(state, "quality");
+                JSONObject mirror = state.optJSONObject("mirror");
+                String mirrorFormat = mirror == null ? "" : reportedFormat(mirror, "calidad");
+                if (actual.isEmpty() && !mirrorFormat.isEmpty()) actual = mirrorFormat;
+                boolean mismatch =
+                        actual.equals("mp3")
+                                ? !format.startsWith("mp3_")
+                                : !actual.isEmpty() && !actual.equals(format);
+                if (mismatch) {
+                    if (unavailableFormats.size() < 512) unavailableFormats.add(id);
+                    throw new IOException(
+                            "Selected provider format is unavailable. Choose another format"
+                                    + " explicitly.");
+                }
                 String file = state.optString("filename");
                 String extension = format.equals("flac") ? ".flac" : ".mp3";
                 if (!file.matches("[A-Za-z0-9][A-Za-z0-9_. -]{0,255}")

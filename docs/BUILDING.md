@@ -102,7 +102,7 @@ Morphe reads `patches-bundle.json` from `main`. With the source's **Pre-release 
 
 `patch_bundle_version` remains the MPP version. An optional `release_tag` in
 `PROVENANCE.json` can name a numbered release revision, such as
-`v1.1.0-beta.17-r1`, while retaining the beta.17 MPP filename and manifest.
+`v1.1.0-beta.18-r1`, while retaining the beta.17 MPP filename and manifest.
 Source metadata and the ZIP publisher validate that tag against the version.
 Omitting it retains the existing `v<version>` workflow. Existing releases and
 tags remain unchanged; corrected artifacts use a new revision tag.

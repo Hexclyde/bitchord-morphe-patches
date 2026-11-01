@@ -262,6 +262,7 @@ public final class VerifySoulseekApk {
                                         "Lapp/bitchord/telegram/PatchStrings;",
                                         "Lapp/bitchord/telegram/CapturePolicy;",
                                         "Lapp/bitchord/telegram/DownloadControls;",
+                                        "Lapp/bitchord/telegram/DownloadSelection;",
                                         "Lapp/bitchord/telegram/FlacAddon;",
                                         "Lapp/bitchord/telegram/RecordingMatch;",
                                         "Lapp/bitchord/telegram/RecordingMatch$Reference;"))
@@ -272,6 +273,8 @@ public final class VerifySoulseekApk {
                                                 "Lapp/bitchord/telegram/CapturePolicy;")
                                         || reference.startsWith(
                                                 "Lapp/bitchord/telegram/DownloadControls;")
+                                        || reference.startsWith(
+                                                "Lapp/bitchord/telegram/DownloadSelection;")
                                         || reference.startsWith("Lapp/bitchord/telegram/FlacAddon;")
                                         || reference.startsWith(
                                                 "Lapp/bitchord/telegram/RecordingMatch;")
@@ -394,7 +397,7 @@ public final class VerifySoulseekApk {
                     int start =
                             namedCall(
                                             enqueueCode.get(0),
-                                            "Lapp/bitchord/telegram/DownloadControls;",
+                                            "Lapp/bitchord/telegram/DownloadSelection;",
                                             "remember")
                                     ? 1
                                     : 0;

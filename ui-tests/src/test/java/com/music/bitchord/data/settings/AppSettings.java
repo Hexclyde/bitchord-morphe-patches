@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.StateFlowKt;
 
 /** Host theme setting used by the real native screens under Robolectric. */
 public final class AppSettings {
+    public static final MutableStateFlow<DownloadQuality> downloadQuality =
+            StateFlowKt.MutableStateFlow(DownloadQuality.LOSSLESS);
     public static final MutableStateFlow<String> themeMode = StateFlowKt.MutableStateFlow("SYSTEM");
     public static final MutableStateFlow<String> lastPlayerScreen =
             StateFlowKt.MutableStateFlow("MAIN");

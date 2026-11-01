@@ -5,8 +5,6 @@ import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.StatFs;
 
 import org.json.JSONArray;
@@ -25,13 +23,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Smart downloads: the songs you play most are downloaded by themselves, on Wi-Fi, so they're
- * there when the signal isn't. It reads BitChord's own listening statistics (the monthly files
- * behind its Replay page), picks the most played YouTube Music songs of the last three months and
- * hands them to BitChord's download queue, in BitChord's Download quality. It only adds: a song
- * you delete isn't downloaded again, and nothing you downloaded yourself is touched.
+ * Smart downloads: the songs you play most are downloaded by themselves, on Wi-Fi, so they're there
+ * when the signal isn't. It reads BitChord's own listening statistics (the monthly files behind its
+ * Replay page), picks the most played eligible songs of the last three months and hands them to
+ * BitChord's download queue, in BitChord's Download quality. It only adds: a song you delete isn't
+ * downloaded again, and nothing you downloaded yourself is touched.
  */
 public final class SmartDownloads {
     private SmartDownloads() {}
@@ -89,7 +88,7 @@ public final class SmartDownloads {
         return saved.edit();
     }
 
-    /** Songs Smart downloads has queued, so it never queues one twice. */
+    /** Completed or explicitly cancelled songs, including earlier queue history. */
     static Set<String> queued() {
         SharedPreferences saved = preferences;
         return saved == null
@@ -111,8 +110,7 @@ public final class SmartDownloads {
                 return;
             }
             JobInfo job =
-                    new JobInfo.Builder(
-                                    JOB_ID, new ComponentName(context, SmartDownloadsJob.class))
+                    new JobInfo.Builder(JOB_ID, new ComponentName(context, SmartDownloadsJob.class))
                             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
                             .setRequiresCharging(chargingOnly)
                             .setRequiresStorageNotLow(true)
@@ -124,9 +122,13 @@ public final class SmartDownloads {
         }
     }
 
-    /** One run: queues the most played songs that aren't downloaded yet. Background thread. */
+    /** One run of eligible songs inside the scheduler's worker. */
     static int run(Context context) {
-        if (!enabled || context == null) return 0;
+        return run(context, new AtomicBoolean());
+    }
+
+    static synchronized int run(Context context, AtomicBoolean stopped) {
+        if (!enabled || context == null || stopped.get()) return 0;
         init(context);
         File directory = new File(context.getFilesDir(), "listening");
         List<Track> top = choose(readMonths(directory, YearMonth.now(), MONTHS), count);
@@ -136,44 +138,95 @@ public final class SmartDownloads {
         List<Object> songs = new ArrayList<>();
         List<String> ids = new ArrayList<>();
         for (Track track : top) {
-            if (songs.size() >= PER_RUN) break;
+            if (!enabled
+                    || stopped.get()
+                    || Thread.currentThread().isInterrupted()
+                    || songs.size() >= PER_RUN) break;
             if (saved.contains(track.id) || mine.contains(track.id)) continue;
             if (free < MIN_FREE_BYTES) break;
             try {
-                songs.add(MixedSongCodec.decode(track.song()));
-                ids.add(track.id);
+                Object chosen = SmartDownloadSources.resolve(track);
+                if (chosen != null) {
+                    songs.add(chosen);
+                    ids.add(track.id);
+                }
             } catch (Exception | LinkageError e) {
                 HostLog.d("Smart downloads couldn't describe " + track.id + ": " + e);
             }
         }
-        if (!songs.isEmpty()) enqueue(context, songs);
-        mine.addAll(ids);
+        List<String> accepted =
+                songs.isEmpty() ? Collections.emptyList() : enqueue(context, songs, ids, stopped);
         String result =
                 free < MIN_FREE_BYTES
                         ? Strings.t("Stopped: less than 1 GB free")
-                        : Strings.f("Last run queued {0} songs", String.valueOf(ids.size()));
+                        : Strings.f("Last run handled {0} songs", String.valueOf(accepted.size()));
         lastResult = result;
-        edit().putStringSet("queued", mine).putString("lastResult", result).apply();
-        HostLog.d("Smart downloads queued " + ids.size() + " songs");
-        return ids.size();
+        edit().putString("lastResult", result).apply();
+        HostLog.d("Smart downloads handled " + accepted.size() + " songs");
+        return accepted.size();
     }
 
-    /** Hands the songs to BitChord's download queue, on the main thread like its own buttons. */
-    private static void enqueue(Context context, List<Object> songs) {
-        Runnable queue =
-                () -> {
-                    try {
-                        Class<?> songType = Class.forName("com.music.bitchord.data.model.Song");
-                        Method enqueue =
-                                Class.forName("com.music.bitchord.download.Downloads")
-                                        .getMethod(
-                                                "enqueue", Context.class, songType, String.class);
-                        for (Object song : songs) enqueue.invoke(null, context, song, FROM);
-                    } catch (Exception | LinkageError e) {
-                        HostLog.d("Smart downloads couldn't queue songs: " + e);
-                    }
-                };
-        new Handler(Looper.getMainLooper()).post(queue);
+    /** The scheduler owns this work; no background foreground-service start is needed. */
+    static List<String> enqueue(
+            Context context, List<Object> songs, List<String> ids, AtomicBoolean stopped) {
+        List<Object> ready = new ArrayList<>();
+        List<String> originals = new ArrayList<>();
+        for (int i = 0; i < songs.size(); i++) {
+            if (!enabled || stopped.get() || Thread.currentThread().isInterrupted()) break;
+            try {
+                SmartDownloadSources.prepare(context, songs.get(i));
+                ready.add(songs.get(i));
+                originals.add(ids.get(i));
+            } catch (Exception | LinkageError unavailable) {
+                HostLog.d("Smart download preparation unavailable");
+            }
+        }
+        if (ready.isEmpty() || stopped.get() || !enabled) return Collections.emptyList();
+        Set<String> handled = new HashSet<>();
+        try {
+            handled.addAll(SmartDownloadTransfer.backend.download(context, ready, stopped));
+        } catch (InterruptedException cancelled) {
+            stopped.set(true);
+            Thread.currentThread().interrupt();
+        } catch (Exception | LinkageError failed) {
+            HostLog.d("Smart downloads will retry unfinished files later");
+        }
+        Set<String> saved = savedIds();
+        List<String> accepted = new ArrayList<>();
+        for (int i = 0; i < ready.size(); i++) {
+            Object song = ready.get(i);
+            String selected = MixedSongCodec.text(song, "videoId");
+            if (!handled.contains(selected) && !saved.contains(selected)) continue;
+            accepted.add(originals.get(i));
+            rememberQueued(originals.get(i));
+            try {
+                JSONObject match =
+                        new JSONObject()
+                                .put("selectedId", selected)
+                                .put("title", MixedSongCodec.text(song, "title"))
+                                .put("artist", MixedSongCodec.text(song, "artist"))
+                                .put("quality", MixedSongCodec.text(song, "sourceQuality"))
+                                .put("finishedAt", System.currentTimeMillis());
+                edit().putString(
+                                "match."
+                                        + TransitionRuntime.key(originals.get(i), "smart-download"),
+                                match.toString())
+                        .apply();
+            } catch (Exception unavailable) {
+                HostLog.d("Smart download result could not be described");
+            }
+        }
+        return accepted;
+    }
+
+    private static final Object historyLock = new Object();
+
+    private static void rememberQueued(String id) {
+        synchronized (historyLock) {
+            Set<String> history = queued();
+            history.add(id);
+            edit().putStringSet("queued", history).apply();
+        }
     }
 
     /** Songs BitChord has downloaded, by id. */
@@ -184,12 +237,28 @@ public final class SmartDownloads {
             Field field = type.getDeclaredField("_saved");
             field.setAccessible(true);
             Object flow = field.get(null);
-            Object value = flow.getClass().getMethod("getValue").invoke(flow);
-            if (value instanceof Map) for (Object key : ((Map<?, ?>) value).keySet()) ids.add(String.valueOf(key));
+            Object value = readFlow(flow);
+            if (value instanceof Map)
+                for (Object key : ((Map<?, ?>) value).keySet()) ids.add(String.valueOf(key));
         } catch (Exception | LinkageError e) {
             HostLog.d("Smart downloads couldn't read BitChord's downloads: " + e);
         }
         return ids;
+    }
+
+    private static Object readFlow(Object flow) throws Exception {
+        Method read = flow.getClass().getMethod("getValue");
+        read.setAccessible(true);
+        return read.invoke(flow);
+    }
+
+    static boolean eligibleId(String id) {
+        return VideoSwitch.youTubeId(id)
+                || id != null
+                        && id.length() <= 8192
+                        && id.matches("src:[A-Za-z0-9_-]+::[^\\s]+")
+                        && !id.contains("\r")
+                        && !id.contains("\n");
     }
 
     private static long freeBytes(Context context) {
@@ -198,7 +267,7 @@ public final class SmartDownloads {
             if (where == null) where = context.getFilesDir();
             return new StatFs(where.getPath()).getAvailableBytes();
         } catch (RuntimeException e) {
-            return Long.MAX_VALUE;
+            return 0;
         }
     }
 
@@ -216,7 +285,8 @@ public final class SmartDownloads {
         }
 
         JSONObject song() throws Exception {
-            JSONObject json = new JSONObject().put("videoId", id).put("title", title).put("artist", artist);
+            JSONObject json =
+                    new JSONObject().put("videoId", id).put("title", title).put("artist", artist);
             if (art != null) json.put("thumbnailUrl", art);
             if (album != null) json.put("albumName", album);
             if (albumId != null) json.put("albumId", albumId);
@@ -233,10 +303,18 @@ public final class SmartDownloads {
         if (files == null) return tracks;
         for (File file : files) {
             try {
+                if (!file.isFile()
+                        || file.length() > 8 * 1024 * 1024
+                        || !file.getCanonicalFile()
+                                .getParentFile()
+                                .equals(directory.getCanonicalFile())) continue;
                 String json = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
                 String month = new JSONObject(json).optString("month");
-                // "2026-10" style months compare correctly as text.
-                if (month.isEmpty() || month.compareTo(oldest) < 0) continue;
+                YearMonth.parse(month);
+                if (month.isEmpty()
+                        || month.compareTo(oldest) < 0
+                        || month.compareTo(now.toString()) > 0
+                        || !month.matches("[0-9]{4}-[0-9]{2}")) continue;
                 add(tracks, json);
             } catch (Exception e) {
                 HostLog.d("Smart downloads couldn't read " + file.getName() + ": " + e);
@@ -252,10 +330,14 @@ public final class SmartDownloads {
             JSONObject entry = list.optJSONObject(i);
             if (entry == null) continue;
             String id = entry.optString("id");
-            if (!VideoSwitch.youTubeId(id)) continue;
+            if (!eligibleId(id)) continue;
             Track track = tracks.get(id);
             if (track == null) tracks.put(id, track = new Track(id));
-            track.plays += Math.max(0, entry.optInt("plays"));
+            track.plays =
+                    (int)
+                            Math.min(
+                                    Integer.MAX_VALUE,
+                                    (long) track.plays + Math.max(0, entry.optInt("plays")));
             long last = entry.optLong("last");
             if (last >= track.last) {
                 track.last = last;
@@ -282,7 +364,9 @@ public final class SmartDownloads {
                 (a, b) ->
                         a.plays != b.plays
                                 ? Integer.compare(b.plays, a.plays)
-                                : Long.compare(b.last, a.last));
+                                : b.last != a.last
+                                        ? Long.compare(b.last, a.last)
+                                        : a.id.compareTo(b.id));
         return list.size() > limit ? new ArrayList<>(list.subList(0, limit)) : list;
     }
 }

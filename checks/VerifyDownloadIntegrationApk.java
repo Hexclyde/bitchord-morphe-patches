@@ -216,9 +216,14 @@ public final class VerifyDownloadIntegrationApk {
         for (Method method : types.get("Lcom/music/bitchord/download/DownloadStore;").getMethods())
             if (method.getName().equals("fileNameFor")) {
                 check(
-                        calls(method, runtime + "HostDownloadAccess;", "fileNameStart") == 1,
+                        calls(method, "Lapp/bitchord/telegram/DownloadSelection;", "fileNameStart")
+                                == 1,
                         "Filename identity captured before R8 parameter reuse");
-                filenameHooks += calls(method, runtime + "HostDownloadAccess;", "fileNameFinish");
+                filenameHooks +=
+                        calls(
+                                method,
+                                "Lapp/bitchord/telegram/DownloadSelection;",
+                                "fileNameFinish");
                 int returns = 0;
                 for (Instruction instruction : method.getImplementation().getInstructions())
                     if (instruction.getOpcode() == Opcode.RETURN_OBJECT) returns++;
@@ -234,7 +239,7 @@ public final class VerifyDownloadIntegrationApk {
         for (Method method : types.get("Lcom/music/bitchord/download/Downloads;").getMethods())
             if (method.getName().equals("enqueue"))
                 controlHooks +=
-                        calls(method, "Lapp/bitchord/telegram/DownloadControls;", "remember");
+                        calls(method, "Lapp/bitchord/telegram/DownloadSelection;", "remember");
         check(
                 detailHooks == 1,
                 "Library Downloads detail redirects once through the installed patch");
@@ -250,7 +255,9 @@ public final class VerifyDownloadIntegrationApk {
         boolean guarded = false;
         for (Method method : types.get("Lcom/music/bitchord/download/Downloads;").getMethods())
             if (method.getName().equals("fromSources"))
-                guarded = calls(method, runtime + "HostDownloadAccess;", "forbidFallback") == 1;
+                guarded =
+                        calls(method, "Lapp/bitchord/telegram/DownloadSelection;", "forbidFallback")
+                                == 1;
         check(guarded, "Explicit source bindings guard the fallback entry");
         boolean glyph = false;
         for (Field field : types.get("Lcom/music/bitchord/ui/icons/BitChordIcons;").getFields())

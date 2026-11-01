@@ -692,7 +692,8 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
         move-object/from16 v6, v20
         const/4 v7, 0x0
         move-object/from16 v8, v21
-        const/4 v9, 0x0
+        invoke-static {}, $SMOOTH->measureOffset()Z
+        move-result v9
         move-object v10, v1
         move-object v11, v2
         const/4 v12, 0x0
@@ -717,6 +718,70 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
     )
     service.methods.add(entry)
     check(spare.type == "Landroidx/media3/exoplayer/ExoPlayer;")
+
+    // An audition starts after read-ahead and verification, while the old copy keeps playing.
+    // Its short buffer must start from the current position, rather than the earlier snapshot.
+    val auditionSites = mutableListOf<Triple<String, String, Int>>()
+    val swapPoint = SERVICE.removeSuffix(";") + "\$SwapPoint;"
+    classDefForEach { type ->
+        for (method in type.methods) {
+            val instructions = method.implementation?.instructions?.toList() ?: continue
+            for (index in 0 until (instructions.size - 3)) {
+                val position = instructions[index].fieldRef()
+                val seek = instructions[index + 3].methodRef()
+                if (
+                    instructions[index].opcode == Opcode.IGET_WIDE &&
+                        position?.definingClass == swapPoint &&
+                        position.name == "position" &&
+                        position.type == "J" &&
+                        seek?.name == "seekTo" &&
+                        seek.parameterTypes.map(CharSequence::toString) == listOf("J", "I", "Z")
+                ) {
+                    auditionSites += Triple(type.type, method.name, index)
+                }
+            }
+        }
+    }
+    check(auditionSites.size == 1) { "Quality audition position not found uniquely" }
+    val (auditionType, auditionName, auditionIndex) = auditionSites.single()
+    val audition = mutableClassDefBy(auditionType).methods.single { it.name == auditionName }
+    val auditionCode = audition.implementation!!.instructions.toList()
+    val at = auditionCode[auditionIndex] as TwoRegisterInstruction
+    val currentIndex = auditionCode[auditionIndex + 1].methodRef()
+    val scratch = auditionCode[auditionIndex + 2] as? OneRegisterInstruction
+    val seekAt = auditionCode[auditionIndex + 3] as? FiveRegisterInstruction
+    val itemField =
+        mutableClassDefBy(swapPoint).fields.singleOrNull {
+            it.type == MEDIA_ITEM && it.name == "item"
+        } ?: throw PatchException("Quality audition media item changed")
+    check(
+        currentIndex?.name == "getCurrentMediaItemIndex" &&
+            currentIndex.returnType == "I" &&
+            currentIndex.parameterTypes.isEmpty() &&
+            auditionCode[auditionIndex + 2].opcode == Opcode.MOVE_RESULT &&
+            scratch != null &&
+            scratch.registerA < 16 &&
+            scratch.registerA != at.registerB &&
+            at.registerB < 16 &&
+            at.registerA + 1 < 16 &&
+            scratch.registerA !in at.registerA..at.registerA + 1 &&
+            seekAt != null &&
+            seekAt.registerD == at.registerA &&
+            seekAt.registerE == at.registerA + 1
+    ) {
+        "Quality audition seek registers changed"
+    }
+    audition.addInstructions(
+        auditionIndex + 1,
+        """
+        invoke-static {v${scratch.registerA}, v${at.registerA}, v${at.registerA + 1}}, $SMOOTH->auditionPosition(${MEDIA_ITEM}J)J
+        move-result-wide v${at.registerA}
+        """,
+    )
+    audition.addInstruction(
+        auditionIndex,
+        "iget-object v${scratch.registerA}, v${at.registerB}, ${ref(itemField)}",
+    )
 
     // 3. The upgrade's commit point: replaceMediaItem, seekTo, prepare on the live player.
     val upgrade =
@@ -757,10 +822,15 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
     val seek = call("seekTo", listOf("I", "J"))
     val prepare = call("prepare", emptyList())
     check(replace < seek && seek < prepare) { "Quality upgrade call order changed" }
+    val ownerAt =
+        steps.subList(0, replace).indexOfLast {
+            it.opcode == Opcode.IPUT_OBJECT &&
+                it.fieldRef()?.definingClass == SERVICE &&
+                it.fieldRef()?.name == "swappingMediaId"
+        }
     val owner =
-        steps.subList(0, replace).lastOrNull {
-            it.opcode == Opcode.IPUT_OBJECT && it.fieldRef()?.name == "swappingMediaId"
-        } as? TwoRegisterInstruction ?: throw PatchException("Upgrade service register not found")
+        steps.getOrNull(ownerAt) as? TwoRegisterInstruction
+            ?: throw PatchException("Upgrade service register not found")
     val r = steps[replace] as FiveRegisterInstruction
     val s = steps[seek] as FiveRegisterInstruction
     val p = steps[prepare] as FiveRegisterInstruction
@@ -778,6 +848,11 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
     commit.replaceInstruction(
         replace,
         "invoke-static {v${owner.registerB}, v${r.registerC}, v${r.registerD}, v${r.registerE}}, $SMOOTH->replace(Ljava/lang/Object;${PLAYER}I$MEDIA_ITEM)V",
+    )
+    // R8 reuses this register while building the item; capture the service before that happens.
+    commit.addInstruction(
+        ownerAt + 1,
+        "invoke-static {v${owner.registerB}}, $SMOOTH->captureOwner(Ljava/lang/Object;)V",
     )
     println("Routed quality upgrades through BitChord's two-player version swap")
 
@@ -1803,7 +1878,7 @@ val nativeTelegramPatch =
                 "Rendition measurement callback changed"
             }
             check(
-                classDefBy(measureRef!!.definingClass)
+                classDefBy(measureRef.definingClass)
                     .interfaces
                     .contains("Lkotlin/jvm/functions/Function0;")
             ) {
@@ -2083,9 +2158,9 @@ private fun BytecodePatchContext.addAudioTap() {
         }
     }
     check(tapped == 2) { "Audio chain entries not found ($tapped)" }
-    for (name in listOf("flush", "reset")) sink.methods
+    for ((name, hook) in listOf("flush" to "flush", "reset" to "sinkReset")) sink.methods
         .single { it.name == name && it.parameterTypes.isEmpty() && it.returnType == "V" }
-        .addInstruction(0, "invoke-static/range {p0 .. p0}, $EXTRAS->flush(Ljava/lang/Object;)V")
+        .addInstruction(0, "invoke-static/range {p0 .. p0}, $EXTRAS->$hook(Ljava/lang/Object;)V")
     // BitChord's usual mode plays through Android's media player, with its effects as audio
     // processors; the sink above only runs its own chain in its precision mode. The tap then gets
     // what the equaliser has just written, a 16-bit block.
@@ -2399,12 +2474,331 @@ val singPatch =
     extrasPatch(
         "Sing",
         "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover " +
-            "in Auris by OreoMuncher45, a fork of BitChord." +
+            "in Auris by OreoMuncher45, a fork of BitChord. Choose the filter or on-device separation model." +
             WHERE,
         extrasAudioPatch,
+        extrasPlayersPatch,
     ) {
+        addSingDrain()
         markApplied("singApplied")
     }
+
+private const val SING_OUTPUT = "Lapp/bitchord/telegram/SingOutput;"
+
+/** A method this patch adds to one of BitChord's classes, given the code that makes it up. */
+private fun addedMethod(
+    owner: String,
+    name: String,
+    parameters: List<String>,
+    returns: String,
+    registers: Int,
+    flags: Int = com.android.tools.smali.dexlib2.AccessFlags.PUBLIC.value,
+) =
+    MutableMethod(
+        ImmutableMethod(
+            owner,
+            name,
+            parameters.map {
+                com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter(it, null, null)
+            },
+            returns,
+            flags,
+            null,
+            null,
+            ImmutableMethodImplementation(
+                registers,
+                emptyList<Instruction>(),
+                emptyList(),
+                emptyList(),
+            ),
+        )
+    )
+
+/**
+ * Sing's separation holds audio back. The block tap hands on only the frames due to be played, so
+ * the sink's writes to its delegate need the time those frames really belong to, and the end of a
+ * stream or a change of format has to wait for what the delay still holds. Only Sing needs any of
+ * this, so nothing here runs for the other patches that use the audio tap.
+ */
+private fun BytecodePatchContext.addSingDrain() {
+    val sink = mutableClassDefBy(SINK)
+    fun fieldType(name: String) =
+        sink.fields.singleOrNull { it.name == name }?.type
+            ?: error("Audio sink field changed: $name")
+    val delegate = fieldType("delegate")
+    val block = fieldType("audioBlock")
+    val encoding = fieldType("targetOutputEncoding")
+    val chainType = fieldType("dspChain")
+    check(fieldType("outputByteBuffer") == "Ljava/nio/ByteBuffer;") { "Sink output changed" }
+    check(fieldType("pendingPresentationTimeUs") == "J") { "Sink output time changed" }
+    check(fieldType("pendingAccessUnitCount") == "I") { "Sink access units changed" }
+    check(fieldType("processedEndUs") == "J") { "Sink processed time changed" }
+    val blockFields = classDefBy(block).fields
+    check(
+        blockFields.any { it.name == "terminalBitCount" && it.type == "I" } &&
+            blockFields.any { it.name == "children" } &&
+            blockFields.any { it.name == "symbol" && it.type == "I" }
+    ) {
+        "Audio block changed"
+    }
+    // Each block asks its own sink's delegate whether it's at normal speed and pitch.
+    check(
+        classDefBy(delegate).methods.any {
+            it.name == "getPlaybackParameters" &&
+                it.parameterTypes.isEmpty() &&
+                it.returnType == "Landroidx/media3/common/PlaybackParameters;" &&
+                it.implementation != null
+        } &&
+            classDefBy("Landroidx/media3/common/PlaybackParameters;").fields.let { fields ->
+                fields.any { it.name == "speed" && it.type == "F" } &&
+                    fields.any { it.name == "pitch" && it.type == "F" }
+            }
+    ) {
+        "Audio sink playback parameters changed"
+    }
+    val input =
+        sink.methods.single {
+            it.name == "handleBuffer" &&
+                it.returnType == "Z" &&
+                it.parameterTypes.map(CharSequence::toString) ==
+                    listOf("I", "J", "Ljava/nio/ByteBuffer;")
+        }
+    val inputCode = input.implementation!!.instructions.toList()
+    val write =
+        inputCode
+            .mapNotNull { it.methodRef() }
+            .first { it.definingClass == delegate && it.name == "handleBuffer" }
+    check(
+        write.parameterTypes.map(CharSequence::toString) ==
+            listOf("I", "J", "Ljava/nio/ByteBuffer;")
+    ) {
+        "Audio sink write changed"
+    }
+    val chainStep =
+        inputCode
+            .mapNotNull { it.methodRef() }
+            .first {
+                it.definingClass == chainType &&
+                    it.name == "process" &&
+                    it.parameterTypes.map(CharSequence::toString) == listOf(block)
+            }
+    val encode =
+        inputCode
+            .mapNotNull { it.methodRef() }
+            .first {
+                it.name.startsWith("encode") && it.parameterTypes.firstOrNull()?.toString() == block
+            }
+    check(
+        encode.parameterTypes.map(CharSequence::toString) ==
+            listOf(block, encoding, "Ljava/nio/ByteBuffer;")
+    ) {
+        "Audio encoding call changed"
+    }
+    fun signature(call: MethodReference) =
+        "${call.definingClass}->${call.name}(${call.parameterTypes.joinToString("")})${call.returnType}"
+
+    val writeHook = "$SINK->bitchordSingWrite($delegate" + "IJLjava/nio/ByteBuffer;)Z"
+    // Every write goes through one place, which gives it the time of the frames it really holds.
+    val writer =
+        addedMethod(
+            SINK,
+            "bitchordSingWrite",
+            listOf(delegate, "I", "J", "Ljava/nio/ByteBuffer;"),
+            "Z",
+            8,
+            com.android.tools.smali.dexlib2.AccessFlags.PUBLIC.value or
+                com.android.tools.smali.dexlib2.AccessFlags.STATIC.value,
+        )
+    writer.addInstructionsWithLabels(
+        0,
+        """
+        invoke-static {p0, p2, p3, p4}, $SING_OUTPUT->outputTimeUs(Ljava/lang/Object;JLjava/nio/ByteBuffer;)J
+        move-result-wide v0
+        invoke-static {p0, p4}, $SING_OUTPUT->skipsWrite(Ljava/lang/Object;Ljava/nio/ByteBuffer;)Z
+        move-result v2
+        if-eqz v2, :write
+        const/4 v2, 0x1
+        return v2
+        :write
+        invoke-virtual {p0, p1, v0, v1, p4}, ${signature(write)}
+        move-result v2
+        return v2
+    """,
+    )
+    var writes = 0
+    for (method in sink.methods) {
+        val code = method.implementation?.instructions?.toList() ?: continue
+        for (i in code.indices) {
+            val call = code[i].methodRef() ?: continue
+            if (call.definingClass != delegate || call.name != "handleBuffer") continue
+            val args = code[i] as? FiveRegisterInstruction ?: error("Audio sink write changed form")
+            check(args.registerCount == 5) { "Audio sink write changed form" }
+            method.replaceInstruction(
+                i,
+                "invoke-static {v${args.registerC}, v${args.registerD}, v${args.registerE}, " +
+                    "v${args.registerF}, v${args.registerG}}, $writeHook",
+            )
+            writes++
+        }
+    }
+    check(writes >= 7) { "Audio sink writes not found ($writes)" }
+    sink.methods.add(writer)
+    // One piece of what the delay still holds, by the same steps as any other block.
+    val emit = addedMethod(SINK, "bitchordSingEmit", listOf("J"), "Z", 6)
+    emit.addInstructions(
+        0,
+        """
+        iget-object v0, p0, $SINK->dspChain:$chainType
+        iget-object v1, p0, $SINK->audioBlock:$block
+        invoke-virtual {v0, v1}, ${signature(chainStep)}
+        iget-object v0, p0, $SINK->outputByteBuffer:Ljava/nio/ByteBuffer;
+        invoke-virtual {v0}, Ljava/nio/ByteBuffer;->clear()Ljava/nio/Buffer;
+        iget-object v2, p0, $SINK->targetOutputEncoding:$encoding
+        invoke-static {v1, v2, v0}, ${signature(encode)}
+        invoke-virtual {v0}, Ljava/nio/ByteBuffer;->flip()Ljava/nio/Buffer;
+        iput-wide p1, p0, $SINK->pendingPresentationTimeUs:J
+        const/4 v2, 0x0
+        iput v2, p0, $SINK->pendingAccessUnitCount:I
+        iget-object v1, p0, $SINK->delegate:$delegate
+        invoke-static {v1, v2, p1, p2, v0}, $writeHook
+        move-result v0
+        return v0
+    """,
+    )
+    sink.methods.add(emit)
+    val retry = addedMethod(SINK, "bitchordSingRetry", emptyList(), "Z", 6)
+    retry.addInstructionsWithLabels(
+        0,
+        """
+        iget-object v0, p0, $SINK->outputByteBuffer:Ljava/nio/ByteBuffer;
+        invoke-virtual {v0}, Ljava/nio/Buffer;->hasRemaining()Z
+        move-result v1
+        if-eqz v1, :done
+        iget-object v1, p0, $SINK->delegate:$delegate
+        iget v2, p0, $SINK->pendingAccessUnitCount:I
+        iget-wide v3, p0, $SINK->pendingPresentationTimeUs:J
+        invoke-static {v1, v2, v3, v4, v0}, $writeHook
+        move-result v1
+        return v1
+        :done
+        const/4 v1, 0x1
+        return v1
+    """,
+    )
+    sink.methods.add(retry)
+    fun entry(name: String, vararg parameters: String) =
+        sink.methods.single {
+            it.name == name &&
+                it.parameterTypes.map(CharSequence::toString) == parameters.toList() &&
+                it.implementation != null
+        }
+    fun guard(method: MutableMethod, call: String, whenTrue: String) {
+        check(method.implementation!!.registerCount > method.parameterTypes.size + 1) {
+            "No free register in ${method.name}"
+        }
+        method.addInstructionsWithLabels(
+            0,
+            """
+            $call
+            move-result v0
+            if-eqz v0, :carryOn
+            $whenTrue
+        """,
+            ExternalLabel("carryOn", method.implementation!!.instructions[0]),
+        )
+    }
+    guard(
+        input,
+        "invoke-static/range {p0 .. p0}, $SING_OUTPUT->holdsInput(Ljava/lang/Object;)Z",
+        "const/4 v0, 0x0\nreturn v0",
+    )
+    guard(
+        entry("playToEndOfStream"),
+        "invoke-static/range {p0 .. p0}, $SING_OUTPUT->playToEnd(Ljava/lang/Object;)Z",
+        "return-void",
+    )
+    guard(
+        entry("configure", "Landroidx/media3/exoplayer/audio/AudioSink\$AudioSinkConfig;"),
+        "invoke-static/range {p0 .. p1}, $SING_OUTPUT->configure(Ljava/lang/Object;Ljava/lang/Object;)Z",
+        "return-void",
+    )
+    entry("setOutputStreamOffsetUs", "J")
+        .addInstruction(
+            0,
+            "invoke-static/range {p0 .. p0}, $SING_OUTPUT->streamBoundary(Ljava/lang/Object;)V",
+        )
+    addSingEqualiserDrain()
+    println("Added Sing's output timing and end of stream to $writes writes")
+}
+
+/** The same for the 16-bit path, where Media3's own chain asks for more until it's finished. */
+private fun BytecodePatchContext.addSingEqualiserDrain() {
+    val type = "Lcom/music/bitchord/playback/EqualizerProcessor;"
+    val equaliser = mutableClassDefBy(type)
+    val base = equaliser.superclass!!
+    val inherited = classDefBy(base)
+    for ((name, returns) in
+        listOf(
+            "onQueueEndOfStream" to "V",
+            "getOutput" to "Ljava/nio/ByteBuffer;",
+            "isEnded" to "Z",
+        )) {
+        check(equaliser.methods.none { it.name == name && it.parameterTypes.isEmpty() }) {
+            "BitChord's equaliser already has $name"
+        }
+        check(
+            inherited.methods.any {
+                it.name == name &&
+                    it.parameterTypes.isEmpty() &&
+                    it.returnType == returns &&
+                    it.accessFlags and com.android.tools.smali.dexlib2.AccessFlags.FINAL.value == 0
+            }
+        ) {
+            "BitChord's equaliser can't take over $name"
+        }
+    }
+    val ended = addedMethod(type, "onQueueEndOfStream", emptyList(), "V", 1)
+    ended.addInstructions(
+        0,
+        """
+        invoke-super {p0}, $base->onQueueEndOfStream()V
+        invoke-static {p0}, $SING_OUTPUT->equaliserEnd(Ljava/lang/Object;)V
+        return-void
+    """,
+    )
+    val output = addedMethod(type, "getOutput", emptyList(), "Ljava/nio/ByteBuffer;", 3)
+    output.addInstructionsWithLabels(
+        0,
+        """
+        invoke-super {p0}, $base->getOutput()Ljava/nio/ByteBuffer;
+        move-result-object v0
+        invoke-virtual {v0}, Ljava/nio/Buffer;->hasRemaining()Z
+        move-result v1
+        if-nez v1, :own
+        invoke-static {p0, v0}, $SING_OUTPUT->equaliserOutput(Ljava/lang/Object;Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;
+        move-result-object v0
+        :own
+        return-object v0
+    """,
+    )
+    val finished = addedMethod(type, "isEnded", emptyList(), "Z", 2)
+    finished.addInstructionsWithLabels(
+        0,
+        """
+        invoke-super {p0}, $base->isEnded()Z
+        move-result v0
+        if-eqz v0, :out
+        invoke-static {p0}, $SING_OUTPUT->equaliserHolds(Ljava/lang/Object;)Z
+        move-result v0
+        xor-int/lit8 v0, v0, 0x1
+        :out
+        return v0
+    """,
+    )
+    equaliser.methods.add(ended)
+    equaliser.methods.add(output)
+    equaliser.methods.add(finished)
+}
 
 @Suppress("unused")
 val pitchPatch =
@@ -2536,9 +2930,9 @@ val audioFocusPatch =
 private const val AUDIO_FOCUS = "Lapp/bitchord/telegram/AudioFocus;"
 
 /**
- * BitChord asks Android for audio focus when it builds a player and when it moves focus between
- * its two players (crossfades, casting, version swaps). Both go through AudioFocus, which leaves
- * focus alone while Play alongside other apps is on.
+ * BitChord asks Android for audio focus when it builds a player and when it moves focus between its
+ * two players (crossfades, casting, version swaps). Both go through AudioFocus, which leaves focus
+ * alone while Play alongside other apps is on.
  */
 private fun BytecodePatchContext.addAudioFocus() {
     val builder = "Landroidx/media3/exoplayer/ExoPlayer\$Builder;"
@@ -2550,8 +2944,21 @@ private fun BytecodePatchContext.addAudioFocus() {
     val focus =
         code.indices.single { i ->
             code[i].opcode == Opcode.IPUT_BOOLEAN &&
-                code[i].fieldRef()?.let { it.definingClass == builder && it.name == "handleAudioFocus" } == true
+                code[i].fieldRef()?.let {
+                    it.definingClass == builder && it.name == "handleAudioFocus"
+                } == true
         }
+    // Headphones coming out is the builder's own setting, and has to keep working with focus off.
+    check(
+        code.count {
+            it.opcode == Opcode.IPUT_BOOLEAN &&
+                it.fieldRef()?.let { field ->
+                    field.definingClass == builder && field.name == "handleAudioBecomingNoisy"
+                } == true
+        } == 1
+    ) {
+        "The player builder's headphone setting changed"
+    }
     val put = code[focus] as TwoRegisterInstruction
     // The next instruction overwrites a register without reading it, so it is free here.
     val next = code[focus + 1]
@@ -2560,7 +2967,10 @@ private fun BytecodePatchContext.addAudioFocus() {
     check(free != put.registerA && free != put.registerB && free != next.registerB) {
         "No free register next to the player builder's audio focus"
     }
-    build.replaceInstruction(focus, "iput-boolean v$free, v${put.registerB}, $builder->handleAudioFocus:Z")
+    build.replaceInstruction(
+        focus,
+        "iput-boolean v$free, v${put.registerB}, $builder->handleAudioFocus:Z",
+    )
     build.addInstructions(
         focus,
         """
@@ -2575,11 +2985,16 @@ private fun BytecodePatchContext.addAudioFocus() {
             val instructions = method.implementation?.instructions?.toList() ?: continue
             for (i in instructions.indices) {
                 val ref = instructions[i].methodRef() ?: continue
-                if (ref.definingClass != "Landroidx/media3/common/Player;" ||
-                    ref.name != "setAudioAttributes" ||
-                    ref.parameterTypes.size != 2) continue
+                if (
+                    ref.definingClass != "Landroidx/media3/common/Player;" ||
+                        ref.name != "setAudioAttributes" ||
+                        ref.parameterTypes.size != 2
+                )
+                    continue
                 val call = instructions[i] as FiveRegisterInstruction
-                check(instructions[i].opcode == Opcode.INVOKE_INTERFACE && call.registerCount == 3) {
+                check(
+                    instructions[i].opcode == Opcode.INVOKE_INTERFACE && call.registerCount == 3
+                ) {
                     "Unexpected audio focus call in $type"
                 }
                 method.replaceInstruction(
@@ -2593,7 +3008,40 @@ private fun BytecodePatchContext.addAudioFocus() {
         }
     }
     check(calls == 4) { "BitChord's audio focus changes not found ($calls)" }
-    println("Added Play alongside other apps to the player builder and $calls focus changes")
+    // Pausing a player that's already paused fires no event, so a pause made during a call is only
+    // seen where every play and pause of the player BitChord builds arrives.
+    val playerType = build.returnType
+    val request =
+        mutableClassDefBy(playerType).methods.single {
+            it.name == "setPlayWhenReady" &&
+                it.parameterTypes.joinToString("") == "Z" &&
+                it.returnType == "V" &&
+                it.implementation != null
+        }
+    val base = classDefBy(mutableClassDefBy(playerType).superclass!!)
+    for (name in listOf("pause", "play")) {
+        val shortcut =
+            base.methods.single {
+                it.name == name && it.parameterTypes.isEmpty() && it.returnType == "V"
+            }
+        check(
+            shortcut.implementation!!.instructions.any {
+                it.methodRef()?.let { call ->
+                    call.definingClass == playerType && call.name == request.name
+                } == true
+            }
+        ) {
+            "A player's $name no longer goes through its play request"
+        }
+    }
+    request.addInstruction(
+        0,
+        "invoke-static/range {p0 .. p0}, $AUDIO_FOCUS->playRequested(Ljava/lang/Object;)V",
+    )
+    println(
+        "Added Play alongside other apps to the player builder, $calls focus changes and its " +
+            "play requests"
+    )
 }
 
 @Suppress("unused")
@@ -2612,9 +3060,9 @@ val steadyPlaybackPatch =
 private const val STEADY = "Lapp/bitchord/telegram/SteadyPlayback;"
 
 /**
- * BitChord builds each player's load control with an 8 MB read-ahead; SteadyPlayback keeps each
- * one and changes its limit with the connection. BitChord's load error policy gets the retry
- * count Media3 asks before a song that ran dry stops, which SteadyPlayback raises while offline.
+ * BitChord builds each player's load control with an 8 MB read-ahead; SteadyPlayback keeps each one
+ * and changes its limit with the connection. BitChord's load error policy gets the retry count
+ * Media3 asks before a song that ran dry stops, which SteadyPlayback raises while offline.
  */
 private fun BytecodePatchContext.addSteadyPlayback() {
     val control = "Landroidx/media3/exoplayer/DefaultLoadControl;"
@@ -2627,14 +3075,45 @@ private fun BytecodePatchContext.addSteadyPlayback() {
         code.indices.single { i ->
             code[i].methodRef()?.let { it.definingClass == control && it.name == "<init>" } == true
         }
+    check(
+        code.subList(0, made).any { (it as? NarrowLiteralInstruction)?.narrowLiteral == 8 shl 20 }
+    ) {
+        "BitChord's player no longer reads 8 MB ahead, which is what Steady playback restores"
+    }
     val start = (code[made] as RegisterRangeInstruction).startRegister
     build.addInstruction(
         made + 1,
         "invoke-static/range {v$start .. v$start}, $STEADY->loadControl(Ljava/lang/Object;)V",
     )
-    val policy = mutableClassDefBy("Lcom/music/bitchord/playback/PlaybackService\$PermanentAwareLoadErrorPolicy;")
+    val load =
+        mutableClassDefBy(control).methods.single {
+            it.name == "shouldContinueLoading" &&
+                it.returnType == "Z" &&
+                it.parameterTypes == listOf("Landroidx/media3/exoplayer/LoadControl\$Parameters;")
+        }
+    check(
+        load.implementation!!.instructions.any {
+            it.fieldRef()?.let { field ->
+                field.definingClass == control && field.name == "loadingStates"
+            } == true
+        } &&
+            mutableClassDefBy(control).fields.any {
+                it.name == "targetBufferBytesOverwrite" && it.type == "I"
+            }
+    ) {
+        "Steady playback load control state changed"
+    }
+    load.addInstruction(0, "invoke-static/range {p0 .. p0}, $STEADY->tick(Ljava/lang/Object;)V")
+    val policy =
+        mutableClassDefBy(
+            "Lcom/music/bitchord/playback/PlaybackService\$PermanentAwareLoadErrorPolicy;"
+        )
     val parent = policy.superclass!!
-    check(classDefBy(parent).methods.any { it.name == "getMinimumLoadableRetryCount" && it.parameterTypes == listOf("I") }) {
+    check(
+        classDefBy(parent).methods.any {
+            it.name == "getMinimumLoadableRetryCount" && it.parameterTypes == listOf("I")
+        }
+    ) {
         "BitChord's load error policy has no retry count"
     }
     check(policy.methods.none { it.name == "getMinimumLoadableRetryCount" }) {
@@ -2645,7 +3124,13 @@ private fun BytecodePatchContext.addSteadyPlayback() {
             ImmutableMethod(
                 policy.type,
                 "getMinimumLoadableRetryCount",
-                listOf(com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter("I", null, null)),
+                listOf(
+                    com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter(
+                        "I",
+                        null,
+                        null,
+                    )
+                ),
                 "I",
                 com.android.tools.smali.dexlib2.AccessFlags.PUBLIC.value,
                 null,
@@ -2664,6 +3149,42 @@ private fun BytecodePatchContext.addSteadyPlayback() {
     """,
     )
     policy.methods.add(retries)
+    // The allowance is asked for without saying which load it's for. The count of errors reaches
+    // the retry delay, whose default is a second for each error after the first, up to five.
+    val delay =
+        policy.methods.single {
+            it.name == "getRetryDelayMsFor" && it.parameterTypes.size == 1 && it.returnType == "J"
+        }
+    val info = delay.parameterTypes.single().toString()
+    val backoff =
+        classDefBy(parent)
+            .methods
+            .single {
+                it.name == "getRetryDelayMsFor" &&
+                    it.parameterTypes.map(CharSequence::toString) == listOf(info)
+            }
+            .implementation!!
+            .instructions
+            .toList()
+    val counted =
+        backoff.indices.filter { i ->
+            backoff[i].opcode == Opcode.IGET &&
+                backoff[i].fieldRef()?.let { it.definingClass == info && it.type == "I" } == true &&
+                backoff.getOrNull(i + 1)?.opcode == Opcode.ADD_INT_LIT8 &&
+                (backoff[i + 1] as NarrowLiteralInstruction).narrowLiteral == -1 &&
+                backoff.getOrNull(i + 2)?.opcode == Opcode.MUL_INT_LIT16 &&
+                (backoff[i + 2] as NarrowLiteralInstruction).narrowLiteral == 1000
+        }
+    check(counted.size == 1) { "BitChord's load errors no longer say how many there have been" }
+    check(delay.implementation!!.registerCount > 2) { "No free register in the retry delay" }
+    val count = backoff[counted.single()].fieldRef()!!
+    delay.addInstructions(
+        0,
+        """
+        iget v0, p1, $info->${count.name}:I
+        invoke-static {v0}, $STEADY->loadError(I)V
+    """,
+    )
     println("Added Steady playback to BitChord's load control and load error policy")
 }
 
@@ -2673,8 +3194,16 @@ private val smartDownloadsResources = resourcePatch {
         document("AndroidManifest.xml").use { doc ->
             val app = doc.getElementsByTagName("application").item(0) as org.w3c.dom.Element
             val service = doc.createElement("service")
-            service.setAttributeNS(ANDROID, "android:name", "app.bitchord.telegram.SmartDownloadsJob")
-            service.setAttributeNS(ANDROID, "android:permission", "android.permission.BIND_JOB_SERVICE")
+            service.setAttributeNS(
+                ANDROID,
+                "android:name",
+                "app.bitchord.telegram.SmartDownloadsJob",
+            )
+            service.setAttributeNS(
+                ANDROID,
+                "android:permission",
+                "android.permission.BIND_JOB_SERVICE",
+            )
             service.setAttributeNS(ANDROID, "android:exported", "false")
             app.appendChild(service)
         }
@@ -2691,6 +3220,7 @@ val smartDownloadsPatch =
             WHERE,
         smartDownloadsResources,
     ) {
+        validateSmartDownloadTransfer()
         markApplied("smartDownloadsApplied")
     }
 
@@ -2816,11 +3346,13 @@ private const val MIXED_PLAYLISTS = "Lapp/bitchord/telegram/MixedPlaylists;"
 val flacAudioPatch =
     extrasPatch(
         "Flac Downloader Audio",
-        "Optional native adapter for aztecempire's Spotube FLAC Audio source. Search, stream and download " +
+        "Optional native download adapter for aztecempire's Spotube FLAC Audio source. Search and download " +
             "through flacdownloader.com, with explicit FLAC/MP3 choices. Starts disabled; enable in Sources or Patches & tweaks. " +
-            "Requested quality is not file verification. No Spotube runtime or account is installed.",
+            "Requested quality is not file verification. No Spotube runtime or account is installed." +
+            WHERE,
     ) {
         markApplied("flacAddonApplied")
+        addFlacDownloadOnly()
         val owner = "Lcom/music/bitchord/download/Downloads\$run\$2;"
         val body =
             mutableClassDefBy(owner).methods.single {

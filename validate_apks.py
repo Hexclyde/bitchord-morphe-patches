@@ -102,6 +102,7 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
         ("VerifyFlacAddonApk", [str(output)]),
         ("VerifyStreamseekApk", [str(output)]),
         ("VerifySourceAutomixApk", [str(output)]),
+        ("VerifyTravelFeaturesApk", [str(output), "focus,steady,smart"]),
     ]:
         checked = subprocess.run(
             [

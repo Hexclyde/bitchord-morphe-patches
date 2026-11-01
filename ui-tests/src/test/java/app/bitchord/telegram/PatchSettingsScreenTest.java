@@ -67,6 +67,16 @@ public class PatchSettingsScreenTest {
         preferences = EffectsApps.class.getDeclaredField("preferences");
         preferences.setAccessible(true);
         preferences.set(null, null);
+        for (Class<?> type :
+                new Class<?>[] {AudioFocus.class, SteadyPlayback.class, SmartDownloads.class}) {
+            java.lang.reflect.Field state = type.getDeclaredField("preferences");
+            state.setAccessible(true);
+            state.set(null, null);
+        }
+        for (String store :
+                new String[] {
+                    AudioFocus.PREFERENCES, SteadyPlayback.PREFERENCES, SmartDownloads.PREFERENCES
+                }) app.getSharedPreferences(store, 0).edit().clear().commit();
         controller = Robolectric.buildActivity(ExtrasActivity.class).setup().visible();
         activity = controller.get();
     }
@@ -157,7 +167,9 @@ public class PatchSettingsScreenTest {
 
     View described(View view, String name) {
         if (view.getContentDescription() != null
-                && name.contentEquals(view.getContentDescription())) return view;
+                && (name.contentEquals(view.getContentDescription())
+                        || view.getContentDescription().toString().startsWith(name + ", ")))
+            return view;
         if (view instanceof ViewGroup)
             for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
                 View result = described(((ViewGroup) view).getChildAt(i), name);
@@ -191,7 +203,10 @@ public class PatchSettingsScreenTest {
                     "jamesdsp",
                     "source-automix",
                     "mixed-playlists",
-                    "video-switch"
+                    "video-switch",
+                    "audio-focus",
+                    "steady-playback",
+                    "smart-downloads"
                 }) {
             View icon =
                     activity.findViewById(android.R.id.content).findViewWithTag("patch-icon:" + id);
@@ -215,6 +230,29 @@ public class PatchSettingsScreenTest {
             assertEquals(View.IMPORTANT_FOR_ACCESSIBILITY_NO, icon.getImportantForAccessibility());
             image.recycle();
         }
+    }
+
+    @Test
+    public void travelFeaturesKeepTheirRealControlsAndBinaryFeaturesHaveNoGear() throws Exception {
+        assertEquals(View.GONE, tagged("settings:audio-focus").getVisibility());
+        open("steady-playback");
+        assertNotNull(described(activity.findViewById(android.R.id.content), "On Wi-Fi"));
+        SteadyPlayback.setWifiMb(96);
+        tagged("done:steady-playback").performClick();
+        toggle("steady-playback").performClick();
+        assertEquals(96, SteadyPlayback.wifiMb);
+        tagged("patch-undo").performClick();
+        assertTrue(SteadyPlayback.enabled);
+        assertEquals(96, SteadyPlayback.wifiMb);
+        open("smart-downloads");
+        assertNotNull(
+                described(activity.findViewById(android.R.id.content), "Songs to keep downloaded"));
+        SmartDownloads.setChargingOnly(false);
+        tagged("done:smart-downloads").performClick();
+        toggle("smart-downloads").performClick();
+        assertFalse(SmartDownloads.chargingOnly);
+        assertTrue(
+                app.getSharedPreferences(SmartDownloads.PREFERENCES, 0).contains("chargingOnly"));
     }
 
     @Test

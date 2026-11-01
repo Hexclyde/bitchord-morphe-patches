@@ -395,6 +395,11 @@ final class DownloadsHubPage extends DownloadPage {
                                     }
                                 }
                                 final String reference = id;
+                                final boolean verifyProvider =
+                                        kind.equals("Failed")
+                                                && id.startsWith("src:flacdownloader-native::")
+                                                && app.bitchord.telegram.FlacAddon
+                                                        .needsVerification();
                                 String title =
                                         HostDownloadAccess.selectedTitle(
                                                 getApplicationContext(), id);
@@ -408,8 +413,17 @@ final class DownloadsHubPage extends DownloadPage {
                                                         : kind.equals("Failed")
                                                                 ? "Attention"
                                                                 : "Active",
-                                                kind.equals("Failed") ? "Retry" : "Pause",
-                                                () ->
+                                                verifyProvider
+                                                        ? "Provider verification"
+                                                        : kind.equals("Failed") ? "Retry" : "Pause",
+                                                () -> {
+                                                    if (verifyProvider) {
+                                                        ui.post(
+                                                                () ->
+                                                                        app.bitchord.telegram
+                                                                                .FlacAddon.verify(
+                                                                                activity));
+                                                    } else
                                                         command(
                                                                 () -> {
                                                                     if (kind.equals("Failed"))
@@ -420,7 +434,8 @@ final class DownloadsHubPage extends DownloadPage {
                                                                         DownloadControls.pause(
                                                                                 getApplicationContext(),
                                                                                 reference);
-                                                                }));
+                                                                });
+                                                });
                                 row.hostId = id;
                                 row.transfer = true;
                                 row.source = source;

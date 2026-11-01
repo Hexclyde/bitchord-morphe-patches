@@ -126,6 +126,36 @@ public final class FingerprintTest {
                 !Fingerprint.match(reference, Fingerprint.of(heard, 4000, 48000)).same(),
                 "Too short");
 
+        for (int rate : new int[] {11025, 22050, 96000, 192000, 384000, 44117}) {
+            float[] converted = new float[15 * rate];
+            for (int i = 0; i < converted.length; i++) {
+                double position = i * 48000.0 / rate;
+                int left = (int) position;
+                if (left + 1 >= heard.length) break;
+                converted[i] =
+                        (float)
+                                (heard[left] * (1 - (position - left))
+                                        + heard[left + 1] * (position - left));
+            }
+            Fingerprint.Match match =
+                    Fingerprint.match(reference, Fingerprint.of(converted, converted.length, rate));
+            check(
+                    match.same() && Math.abs(match.offset - 2.0) < 0.1,
+                    "Same recording and position at " + rate + " Hz: " + match);
+            int length = rate / 10;
+            float[] constant = new float[length + 17];
+            java.util.Arrays.fill(constant, 0, length, 0.25f);
+            java.util.Arrays.fill(constant, length, constant.length, Float.NaN);
+            float[] normalized = Fingerprint.resample(constant, length, rate);
+            check(
+                    normalized.length == (int) (length * 8000.0 / rate),
+                    "Requested duration at " + rate + " Hz");
+            boolean level = true;
+            for (float sample : normalized)
+                level &= Float.isFinite(sample) && Math.abs(sample - 0.25f) < 1e-6;
+            check(level, "Boundary normalization ignores trailing data at " + rate + " Hz");
+        }
+
         long begin = System.nanoTime();
         Fingerprint.of(song, (int) (45 * 44100), 44100);
         long millis = (System.nanoTime() - begin) / 1_000_000;

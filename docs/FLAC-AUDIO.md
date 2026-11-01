@@ -2,7 +2,7 @@
 
 Select **Flac Downloader Audio** in Morphe when patching original BitChord 1.9. It is optional and starts disabled. Enable it in **Settings → Sources** or **Settings → Patches & tweaks**. Both switches use the same saved source state; this toggle has no settings gear.
 
-Search through **Search → Addons**. With **Unofficial Soulseek audio** also installed, the Downloads explorer and batch review include this source alongside every other eligible enabled addon. Without that download-manager patch, BitChord's existing download action remains available and the extra Downloads navigation icon stays absent.
+I use this provider only for downloads. It is excluded from playback, AutoMix, quality upgrades and the player’s add-on search. Downloaded files remain playable from the library. With **Unofficial Soulseek audio** also installed, the Downloads explorer and batch review include this source alongside every other eligible enabled addon. Without that download-manager patch, BitChord's existing download action remains available and the extra Downloads navigation icon stays absent.
 
 The current provider offers **FLAC**, **MP3 320 kbps** and **MP3 128 kbps**. Explorer shows these formats without inventing FLAC sample rates or bit depths. Availability is confirmed during preparation; a failed or downgraded format never silently substitutes another quality. Low-quality searches request MP3 128, high-quality searches MP3 320, and lossless searches include the provider's explicit choices.
 

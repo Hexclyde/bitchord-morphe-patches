@@ -6,20 +6,20 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Steady playback, for travelling. BitChord's players stop reading ahead once 8 MB is buffered:
  * about four minutes of a normal YouTube stream, but only a minute of a lossless file. This lets
  * them read further ahead, through the rest of the song and into the next ones in the queue, with
- * separate limits for Wi-Fi and mobile data that follow the connection as it changes. And while
- * the phone has no connection at all, a song that runs out of buffer waits for the signal to come
- * back instead of stopping with an error.
+ * separate limits for Wi-Fi and mobile data that follow the connection as it changes. And while the
+ * phone has no working connection, a song that runs out of buffer waits for the signal to come back
+ * instead of stopping with an error.
+ *
+ * <p>Playback threads only read what Android's network callback last said; asking Android itself
+ * would block them while they're already short of audio.
  */
 public final class SteadyPlayback {
     private SteadyPlayback() {}
@@ -39,7 +39,18 @@ public final class SteadyPlayback {
     private static volatile SharedPreferences preferences;
     private static volatile ConnectivityManager connectivity;
     private static volatile boolean registered;
-    private static final List<WeakReference<Object>> controls = new ArrayList<>();
+
+    /** Until Android says otherwise: the smaller limit, and BitChord's own retries. */
+    private static volatile Link currentLink = Link.METERED;
+
+    private static volatile boolean online = true;
+    private static boolean blocked;
+
+    /** The load controls of BitChord's own players. Any other keeps the limit it was built with. */
+    private static final Map<Object, Integer> controls = new java.util.WeakHashMap<>();
+
+    private static final java.util.concurrent.atomic.AtomicInteger revision =
+            new java.util.concurrent.atomic.AtomicInteger();
 
     static void init(Context context) {
         if (preferences != null || context == null) return;
@@ -50,7 +61,9 @@ public final class SteadyPlayback {
         mobileMb = nearest(saved.getInt("mobileMb", 32), MOBILE_CHOICES);
         preferences = saved;
         connectivity = app.getSystemService(ConnectivityManager.class);
+        readConnection();
         listen();
+        applyAll();
     }
 
     static void setEnabled(boolean on) {
@@ -96,19 +109,54 @@ public final class SteadyPlayback {
         NONE
     }
 
+    /** What Android last said; never asks it. */
     static Link link() {
+        return currentLink;
+    }
+
+    /** Whether the connection has been shown to reach the internet and this app may use it. */
+    static boolean online() {
+        return online;
+    }
+
+    /**
+     * A network counts as working once Android has validated it. A captive portal or a Wi-Fi
+     * network with nothing behind it is still metered or not, for the read-ahead, but it isn't
+     * online.
+     */
+    static synchronized void observed(boolean internet, boolean validated, boolean unmetered) {
+        online = internet && validated && !blocked;
+        Link next = !internet ? Link.NONE : unmetered ? Link.UNMETERED : Link.METERED;
+        if (next == currentLink) return;
+        currentLink = next;
+        applyAll();
+    }
+
+    private static void observed(NetworkCapabilities caps) {
+        observed(
+                caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET),
+                caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED),
+                caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED));
+    }
+
+    private static synchronized void setBlocked(boolean value, NetworkCapabilities caps) {
+        blocked = value;
+        if (caps != null) observed(caps);
+        else online = online && !value;
+    }
+
+    /** Once, as this starts and off every playback thread. Unreadable stays at the safe default. */
+    private static void readConnection() {
         ConnectivityManager manager = connectivity;
-        if (manager == null) return Link.UNMETERED;
+        if (manager == null) return;
         try {
             Network network = manager.getActiveNetwork();
-            NetworkCapabilities caps = network == null ? null : manager.getNetworkCapabilities(network);
-            if (caps == null || !caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET))
-                return Link.NONE;
-            return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
-                    ? Link.UNMETERED
-                    : Link.METERED;
+            NetworkCapabilities caps =
+                    network == null ? null : manager.getNetworkCapabilities(network);
+            if (caps == null) observed(false, false, false);
+            else observed(caps);
         } catch (RuntimeException e) {
-            return Link.UNMETERED;
+            HostLog.d("Steady playback couldn't read the connection: " + e);
         }
     }
 
@@ -126,18 +174,36 @@ public final class SteadyPlayback {
         try {
             manager.registerDefaultNetworkCallback(
                     new ConnectivityManager.NetworkCallback() {
+                        private volatile NetworkCapabilities last;
+
                         @Override
-                        public void onCapabilitiesChanged(Network network, NetworkCapabilities caps) {
-                            applyAll();
+                        public void onCapabilitiesChanged(
+                                Network network, NetworkCapabilities caps) {
+                            last = caps;
+                            observed(caps);
+                        }
+
+                        @Override
+                        public void onBlockedStatusChanged(Network network, boolean isBlocked) {
+                            setBlocked(isBlocked, last);
                         }
 
                         @Override
                         public void onLost(Network network) {
-                            applyAll();
+                            last = null;
+                            setBlocked(false, null);
+                            observed(false, false, false);
                         }
                     });
             registered = true;
         } catch (RuntimeException e) {
+            // Nothing will report a change, so a value read once can't be trusted for long.
+            synchronized (SteadyPlayback.class) {
+                online = true;
+                blocked = false;
+                currentLink = Link.METERED;
+                applyAll();
+            }
             HostLog.d("Steady playback can't follow the connection: " + e);
         }
     }
@@ -148,34 +214,74 @@ public final class SteadyPlayback {
     public static void loadControl(Object control) {
         if (control == null) return;
         synchronized (controls) {
-            controls.removeIf(reference -> reference.get() == null);
-            controls.add(new WeakReference<>(control));
+            controls.put(control, -1);
+        }
+        tick(control);
+    }
+
+    /**
+     * The load errors of one load on one playback thread. BitChord has one retry policy for all its
+     * players, and Media3 asks that policy for the allowance without saying which load it's for,
+     * but a player's loads and their error checks all run on its own playback thread.
+     */
+    private static final class ErrorRun {
+        int lastCount, offlineErrors;
+    }
+
+    private static final ThreadLocal<ErrorRun> runs = new ThreadLocal<>();
+
+    /**
+     * Each load error, with Media3's count for it. That count rises through one load, and starts
+     * again for a new load or once a load has made progress, so a count that doesn't rise means the
+     * errors from the last outage are over.
+     */
+    public static void loadError(int count) {
+        ErrorRun run = runs.get();
+        if (run == null) {
+            if (!enabled) return;
+            run = new ErrorRun();
+            runs.set(run);
+        }
+        if (count <= run.lastCount) run.offlineErrors = 0;
+        run.lastCount = count;
+        if (enabled && !online)
+            run.offlineErrors = Math.min(run.offlineErrors + 1, OFFLINE_RETRIES);
+    }
+
+    /**
+     * How many load errors a song may have before it stops, when it has run out of buffer. BitChord
+     * allows 3; with no working connection this waits for the signal instead. Media3 compares this
+     * with the load's whole count, including what piled up offline, so when the signal returns
+     * those errors stay excused: the load gets BitChord's usual allowance from there, and a server
+     * that keeps refusing still stops it after the same number of errors as ever.
+     */
+    public static int minRetries(int bitchords) {
+        if (enabled && !online) return Math.max(bitchords, OFFLINE_RETRIES);
+        ErrorRun run = runs.get();
+        return run == null ? bitchords : bitchords + run.offlineErrors;
+    }
+
+    private static void applyAll() {
+        revision.incrementAndGet();
+    }
+
+    /**
+     * Runs at Media3's loading decision, on the load control's owning playback thread. That
+     * decision is made for every load control in the app, and only the ones {@link #loadControl}
+     * was given are this feature's to change: BitChord builds others with limits of their own.
+     */
+    public static void tick(Object control) {
+        int current = revision.get();
+        synchronized (controls) {
+            Integer previous = controls.get(control);
+            if (previous == null || previous == current) return;
+            controls.put(control, current);
         }
         apply(control);
     }
 
-    /**
-     * How many load errors a song may have before it stops, when it has run out of buffer.
-     * BitChord allows 3; with no connection at all this waits for the signal instead.
-     */
-    public static int minRetries(int bitchords) {
-        if (!enabled || link() != Link.NONE) return bitchords;
-        return Math.max(bitchords, OFFLINE_RETRIES);
-    }
-
-    private static void applyAll() {
-        List<Object> live = new ArrayList<>();
-        synchronized (controls) {
-            for (WeakReference<Object> reference : controls) {
-                Object control = reference.get();
-                if (control != null) live.add(control);
-            }
-        }
-        for (Object control : live) apply(control);
-    }
-
     private static void apply(Object control) {
-        int bytes = targetBytes(enabled, link(), wifiMb, mobileMb);
+        int bytes = targetBytes(enabled, currentLink, wifiMb, mobileMb);
         try {
             Class<?> type = control.getClass();
             // Players prepared from now on.

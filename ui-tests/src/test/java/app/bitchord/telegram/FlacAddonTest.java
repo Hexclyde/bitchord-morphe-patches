@@ -84,6 +84,40 @@ public class FlacAddonTest {
         Thread.interrupted();
     }
 
+    @Test
+    public void downloadProviderNeverParticipatesInPlayback() {
+        MusicSource telegram = source("telegram-native");
+        MusicSource provider = source(FlacAddon.ID);
+        MusicSource other = source("community");
+        ArrayList<Object> all = new ArrayList<>(Arrays.asList(telegram, provider, other));
+        assertEquals(Arrays.asList(telegram, other), FlacAddon.playbackSources(all));
+        assertEquals(3, all.size());
+        assertTrue(FlacAddon.enabled());
+        assertTrue(SourceRegistry.config(FlacAddon.ID).getAllowDownloads());
+        assertTrue(FlacAddon.playbackSources(new ArrayList<>()).isEmpty());
+    }
+
+    private static MusicSource source(String id) {
+        return new MusicSource() {
+            public String getConfigId() {
+                return id;
+            }
+
+            public SourceKind getKind() {
+                return SourceKind.ADDON;
+            }
+
+            public Object search(
+                    String query,
+                    int limit,
+                    boolean waitForAll,
+                    StreamRequest request,
+                    kotlin.coroutines.Continuation<Object> step) {
+                throw new AssertionError("Filtering must not perform a source request");
+            }
+        };
+    }
+
     String primaryId() throws Exception {
         return "flac."
                 + java.util.Base64.getUrlEncoder()
@@ -172,6 +206,24 @@ public class FlacAddonTest {
         assertEquals("flac", file.getString("format"));
         assertTrue(file.getString("url").contains("/file/mask-off.flac"));
         assertEquals(Arrays.asList("/prepare", "/download", "/status/mask-off"), paths);
+    }
+
+    @Test
+    public void conversionSourceFormatIsNotMistakenForTheFinishedFile() throws Exception {
+        int[] polls = {0};
+        FlacAddon.transport =
+                (path, post, token, end) -> {
+                    if (path.equals("/prepare")) return object("{t:'token'}");
+                    if (path.equals("/download")) return object("{job_id:'conversion'}");
+                    if (polls[0]++ == 0)
+                        return object(
+                                "{status:'converting',format:'flac',mirror:{calidad:'FLAC'}}");
+                    return object(
+                            "{status:'done',filename:'mask-off.mp3',format:'mp3_320',mirror:{calidad:'FLAC'}}");
+                };
+        String id = "mp3_320." + primaryId().substring(primaryId().indexOf('.') + 1);
+        assertEquals("mp3", FlacAddon.resolve(id, deadline()).getString("format"));
+        assertEquals(2, polls[0]);
     }
 
     @Test

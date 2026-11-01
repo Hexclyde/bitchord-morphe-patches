@@ -161,6 +161,17 @@ public final class PlaylistToolsActivity extends Activity {
                         message(Strings.t("No file picker is available."));
                     }
                 });
+        heading(Strings.t("Smart playlists"));
+        action(
+                Strings.t("Create from a description"),
+                Strings.t("Uses songs on this device · review before saving"),
+                () -> {
+                    try {
+                        startActivity(new Intent(this, SmartPlaylistActivity.class));
+                    } catch (ActivityNotFoundException unavailable) {
+                        message(Strings.t("Could not open this page."));
+                    }
+                });
         heading(Strings.t("Connected services"));
         action(
                 Strings.t("Playlist sync"),

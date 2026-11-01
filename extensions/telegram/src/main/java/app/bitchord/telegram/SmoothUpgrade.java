@@ -38,6 +38,59 @@ public final class SmoothUpgrade {
     // The offset measured for the swap about to start, and when: {offsetMs, millis}.
     private static volatile double[] aligned;
 
+    // Whether BitChord's swap asked for that offset: only then is it this swap's to take.
+    private static volatile boolean armed;
+
+    /** The offset the recording check measured for this upgrade, in milliseconds, or null. */
+    static volatile java.util.function.Function<String, Long> verified =
+            SmoothUpgrade::verifiedOffset;
+
+    /** The player being listened to; null when there's none. On the player's thread. */
+    static volatile java.util.function.Supplier<Player> playing = SmoothUpgrade::servicePlayer;
+
+    private static Player servicePlayer() {
+        try {
+            java.lang.reflect.Method owner =
+                    Class.forName("app.bitchord.telegram.SourceAutomix").getDeclaredMethod("owner");
+            owner.setAccessible(true);
+            Object service = owner.invoke(null);
+            java.lang.reflect.Field player = service.getClass().getDeclaredField("player");
+            player.setAccessible(true);
+            return (Player) player.get(service);
+        } catch (Throwable unavailable) {
+            return null;
+        }
+    }
+
+    /**
+     * Replaces where BitChord's audition of an upgrade starts. It's handed the position from when
+     * the upgrade began, before the copy was fetched and checked, but it must then buffer past
+     * where the song is by the time it asks, and it only buffers 40 seconds from its start. A check
+     * that took long enough would leave that out of reach, whatever the connection.
+     */
+    public static long auditionPosition(MediaItem item, long at) {
+        try {
+            Player player = playing.get();
+            MediaItem current = player == null ? null : player.getCurrentMediaItem();
+            if (item == null || current == null || !Objects.equals(item.mediaId, current.mediaId))
+                return at;
+            return Math.max(at, player.getCurrentPosition());
+        } catch (Throwable unavailable) {
+            return at;
+        }
+    }
+
+    private static Long verifiedOffset(String mediaId) {
+        try {
+            return (Long)
+                    Class.forName("app.bitchord.telegram.SourcePreference")
+                            .getMethod("verifiedOffset", String.class)
+                            .invoke(null, mediaId);
+        } catch (Throwable unavailable) {
+            return null;
+        }
+    }
+
     /** How long the new copy may be held back before the crossfade, and listened to at most. */
     static final long SETTLE_MS = 2400, LISTEN_MS = 1500;
 
@@ -49,8 +102,22 @@ public final class SmoothUpgrade {
     /** How long to wait for enough of the song to compare, in seconds of it playing. */
     static final int LISTEN_SECONDS = 25;
 
+    private static final ThreadLocal<Object> commitOwner = new ThreadLocal<>();
+
+    /** Captures the service before the host reuses its register while building the item. */
+    public static void captureOwner(Object service) {
+        commitOwner.set(service);
+    }
+
+    static Object takeOwner() {
+        Object service = commitOwner.get();
+        commitOwner.remove();
+        return service;
+    }
+
     /** Replaces the upgrade's replaceMediaItem call. */
-    public static void replace(Object service, Player player, int index, MediaItem item) {
+    public static void replace(Object ignored, Player player, int index, MediaItem item) {
+        Object service = takeOwner();
         handedOver.remove(player);
         if (enabled && start(service, player, index, item, 0, 0)) {
             handedOver.add(player);
@@ -165,12 +232,34 @@ public final class SmoothUpgrade {
 
     private static boolean swap(Object service, Player player, int index, MediaItem item) {
         try {
-            if (!PlaybackService.bitchordSmoothSwap(service, player, index, item)) return false;
-            settling = new Settling(player);
-            return true;
+            offerVerified(mediaId(item));
+            if (PlaybackService.bitchordSmoothSwap(service, player, index, item)) {
+                settling = new Settling(player);
+                return true;
+            }
         } catch (Throwable ignored) {
-            return false;
+            // Falls back to the original swap, which keeps the old copy's position.
         }
+        aligned = null;
+        armed = false;
+        return false;
+    }
+
+    /** Unless this upgrade was measured here, starts from the recording check's offset. */
+    static void offerVerified(String mediaId) {
+        Long offset = aligned == null ? verified.apply(mediaId) : null;
+        if (offset != null) aligned = new double[] {offset, System.currentTimeMillis()};
+    }
+
+    /**
+     * Called as BitChord's swap is set up, for whether to run its alignment step, which {@link
+     * #alignedOffset} answers first. It otherwise takes the offset between two copies of the same
+     * song as zero and never asks.
+     */
+    public static boolean measureOffset() {
+        double[] found = aligned;
+        armed = found != null && System.currentTimeMillis() - found[1] < 10_000;
+        return armed;
     }
 
     private static String mediaId(MediaItem item) {
@@ -183,8 +272,10 @@ public final class SmoothUpgrade {
      */
     public static Long alignedOffset() {
         double[] found = aligned;
+        boolean asked = armed;
         aligned = null;
-        return found != null && System.currentTimeMillis() - found[1] < 10_000
+        armed = false;
+        return asked && found != null && System.currentTimeMillis() - found[1] < 10_000
                 ? Math.round(found[0])
                 : null;
     }

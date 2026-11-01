@@ -50,6 +50,36 @@ final class Fingerprint {
         double cutoff = 3600.0 / rate;
         int half = (int) Math.ceil(4 / cutoff / 2) * 2;
         half = Math.min(half, 16);
+        int shared = gcd(rate, RATE), phases = RATE / shared, ratio = rate / shared;
+        if (phases <= MAX_PHASES) {
+            // Output samples repeat their place between input samples, so the filter is worked
+            // out once for each place: 80 at 44.1 kHz, 1 at 48 kHz.
+            int taps = 2 * half;
+            double[][] filters = new double[phases][taps];
+            for (int p = 0; p < phases; p++) {
+                double place = (p * (long) ratio % phases) / (double) phases;
+                for (int t = 0; t < taps; t++) {
+                    double x = t - half + 1 - place;
+                    double sinc =
+                            x == 0
+                                    ? 2 * cutoff
+                                    : Math.sin(2 * Math.PI * cutoff * x) / (Math.PI * x);
+                    filters[p][t] = sinc * (0.5 + 0.5 * Math.cos(Math.PI * x / (half + 1)));
+                }
+            }
+            for (int n = 0; n < out; n++) {
+                int first = (int) (n * (long) ratio / phases) - half + 1;
+                double[] filter = filters[n % phases];
+                double sum = 0, weight = 0;
+                int last = Math.min(taps - 1, length - 1 - first);
+                for (int t = Math.max(0, -first); t <= last; t++) {
+                    sum += in[first + t] * filter[t];
+                    weight += filter[t];
+                }
+                result[n] = weight == 0 ? 0 : (float) (sum / weight);
+            }
+            return result;
+        }
         for (int n = 0; n < out; n++) {
             double centre = n * step;
             int first = (int) Math.floor(centre) - half + 1, last = (int) Math.floor(centre) + half;
@@ -66,6 +96,12 @@ final class Fingerprint {
             result[n] = weight == 0 ? 0 : (float) (sum / weight);
         }
         return result;
+    }
+
+    private static final int MAX_PHASES = 2048;
+
+    private static int gcd(int a, int b) {
+        return b == 0 ? a : gcd(b, a % b);
     }
 
     /** Log magnitudes, one row per frame, Hann-windowed. */

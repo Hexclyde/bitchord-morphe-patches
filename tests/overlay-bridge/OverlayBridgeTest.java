@@ -63,6 +63,7 @@ public final class OverlayBridgeTest {
         until(
                 () -> I2pService.closed.get() == beforeClose + 1,
                 "connection close stops both pumps exactly once");
+        until(() -> freeSlots() == 1, "closed bridge releases its slot after transport cleanup");
         OverlayClient.Connection replacement = client.connect("fixture.b32.i2p", 1000);
         replacement.close();
         second.close();
@@ -161,6 +162,16 @@ public final class OverlayBridgeTest {
         check(android.os.Process.kills == 2, "main player process is never killed");
         check(ParcelFileDescriptor.liveCount() == 0, "guard failure leaks no FDs");
         System.out.println("Overlay bridge: " + assertions + " assertions passed");
+    }
+
+    private static int freeSlots() {
+        try {
+            Field slots = OverlayService.class.getDeclaredField("slots");
+            slots.setAccessible(true);
+            return ((java.util.concurrent.Semaphore) slots.get(Context.active)).availablePermits();
+        } catch (ReflectiveOperationException error) {
+            throw new AssertionError(error);
+        }
     }
 
     private static int requestCount() {

@@ -9,8 +9,10 @@ import java.util.function.Function;
 
 /** Test stand-in for the APK-verified host bridges. */
 public final class PlaybackService {
+    public static Function<Uri, android.media.MediaDataSource> cached;
+
     public static android.media.MediaDataSource bitchordAutomixCached(Uri uri) {
-        return null;
+        return cached == null ? null : cached.apply(uri);
     }
 
     public static DataSource.Factory source;

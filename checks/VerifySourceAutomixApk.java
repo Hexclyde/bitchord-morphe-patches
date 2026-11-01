@@ -37,6 +37,25 @@ public final class VerifySourceAutomixApk {
         String runtime = "Lapp/bitchord/telegram/SourceAutomix;",
                 pref = "Lapp/bitchord/telegram/SourcePreference;";
         check(types.containsKey(runtime), "Source-independent runtime is installed");
+        ClassDef timingPair = types.get("Lkotlin/Pair;");
+        check(timingPair != null, "Decoder timing pair is present");
+        Set<String> timingFields = new HashSet<>();
+        for (Field field : timingPair.getFields())
+            if (field.getType().equals("Ljava/lang/Object;")) timingFields.add(field.getName());
+        check(
+                timingFields.containsAll(Set.of("first", "second")),
+                "Decoder timing fields match the recording reader");
+        boolean removedGetter = false;
+        for (Method method : types.get(pref).getMethods())
+            for (Instruction instruction : code(method)) {
+                MethodReference reference = call(instruction);
+                removedGetter |=
+                        reference != null
+                                && reference.getDefiningClass().equals("Lkotlin/Pair;")
+                                && Set.of("getFirst", "getSecond").contains(reference.getName());
+            }
+        check(!removedGetter, "Recording verification never calls removed host pair getters");
+
         int requests = 0,
                 readers = 0,
                 plans = 0,

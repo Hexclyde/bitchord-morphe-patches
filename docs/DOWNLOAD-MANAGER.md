@@ -36,7 +36,7 @@ count, display-sort control and view switch sit above the cards. Sorting only
 changes presentation; Queue keeps its existing order. Management controls remain
 under the settings gear, with a Public sharing link below the file list.
 Public-sharing configuration is not presented as a completed download. The native Downloads icon remains conditional on installing the
-add-on. See the [beta.17 verification report](VERIFICATION-1.1.0-beta.17.md) for
+add-on. See the [beta.17 verification report](VERIFICATION-1.1.0-beta.18.md) for
 scoped Waydroid checks and remaining physical-phone qualification.
 
 ## Transfer and file actions

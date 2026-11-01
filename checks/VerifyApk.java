@@ -281,6 +281,7 @@ public class VerifyApk {
         Set<String> unreachable = new TreeSet<>(), reached = new TreeSet<>();
         int microGHooks = 0, signInLoads = 0; // MicroG RE sign-in hook; Google's sign-in page loads
         boolean smoothEntry = false;
+        int auditionPositionHooks = 0;
         int legendTexts = 0, legendCalls = 0, searchHooks = 0, legendLinks = 0, matchHooks = 0;
         boolean downmixTarget = false;
         boolean liveSearchCall = false, slider = false;
@@ -695,8 +696,44 @@ public class VerifyApk {
                                 }
                                 if (target.getDefiningClass()
                                                 .equals("Lapp/bitchord/telegram/SmoothUpgrade;")
-                                        && !cls.getType().startsWith("Lapp/bitchord/telegram/"))
-                                    smoothHooks.add(cls.getType() + ">" + target.getName());
+                                        && !cls.getType().startsWith("Lapp/bitchord/telegram/")) {
+                                    if (target.getName().equals("auditionPosition"))
+                                        auditionPositionHooks++;
+                                    else smoothHooks.add(cls.getType() + ">" + target.getName());
+                                    if (target.getName().equals("captureOwner")) {
+                                        Instruction previous =
+                                                index == 0 ? null : instructions.get(index - 1);
+                                        check(
+                                                previous != null
+                                                        && previous.getOpcode()
+                                                                == Opcode.IPUT_OBJECT
+                                                        && previous
+                                                                instanceof TwoRegisterInstruction
+                                                        && previous instanceof ReferenceInstruction
+                                                        && ((ReferenceInstruction) previous)
+                                                                        .getReference()
+                                                                instanceof FieldReference
+                                                        && ((FieldReference)
+                                                                        ((ReferenceInstruction)
+                                                                                        previous)
+                                                                                .getReference())
+                                                                .getDefiningClass()
+                                                                .equals(
+                                                                        "Lcom/music/bitchord/playback/PlaybackService;")
+                                                        && ((FieldReference)
+                                                                        ((ReferenceInstruction)
+                                                                                        previous)
+                                                                                .getReference())
+                                                                .getName()
+                                                                .equals("swappingMediaId")
+                                                        && argument(instruction, 0)
+                                                                == ((TwoRegisterInstruction)
+                                                                                previous)
+                                                                        .getRegisterB(),
+                                                "Upgrade captures the live service before its"
+                                                    + " register is reused");
+                                    }
+                                }
                                 if (target.getDefiningClass()
                                                 .equals("Lapp/bitchord/telegram/VersionAlign;")
                                         && !cls.getType().startsWith("Lapp/bitchord/telegram/"))
@@ -1115,10 +1152,13 @@ public class VerifyApk {
                             + " Compose links");
             check(
                     smoothEntry
+                            && auditionPositionHooks == 1
                             && smoothHooks.equals(
                                     new TreeSet<>(
                                             List.of(
                                                     "Lcom/music/bitchord/playback/PlaybackService;>alignedOffset",
+                                                    "Lcom/music/bitchord/playback/PlaybackService;>measureOffset",
+                                                    "Lcom/music/bitchord/playback/PlaybackService$swapIn$6;>captureOwner",
                                                     "Lcom/music/bitchord/playback/PlaybackService$swapIn$6;>prepare",
                                                     "Lcom/music/bitchord/playback/PlaybackService$swapIn$6;>replace",
                                                     "Lcom/music/bitchord/playback/PlaybackService$smoothSwapCurrentTrackVersion$1;>settled",

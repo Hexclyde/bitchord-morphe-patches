@@ -1,6 +1,6 @@
 # Install with Morphe
 
-You can do all of this on your phone. No computer or root access is needed.
+I install the beta.18 MPP with Morphe on my phone, without a computer or root access. For this local build I use **Sources → + → Local** and select the supplied MPP; the published feed remains unchanged.
 
 ## 1. Download Morphe and BitChord
 
@@ -14,7 +14,7 @@ Choose the APK for your phone:
 | Older 32-bit ARM phones running Android 8+ | `BitChord-v1.9_armeabi-v7a.apk` |
 | x86-64 Android devices or emulators | `BitChord-v1.9_x86_64.apk` |
 
-The Telegram integration was tested on an arm64-v8a phone with BitChord 1.8.1. The 1.9 build still needs on-device testing. If you're on armeabi-v7a or x86_64, it should work the same way, but please [report any problems](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) and mention your architecture.
+I verify the three supported APK architectures structurally and run scoped playback and interface tests in x86_64 Waydroid. I have not qualified BitChord 1.9 on physical ARM phones; I include the exact limits in the [verification report](VERIFICATION-1.1.0-beta.18.md).
 
 Use the normal Android APK. TV, Wear OS, split APK packages and already patched APKs are not suitable inputs. Keep the original APK in Downloads; you will select it in Morphe.
 
@@ -57,7 +57,7 @@ See [source download problems](TROUBLESHOOTING.md#the-source-shows-unnamed-or-me
    - **Unofficial Telegram music**
    - **Install as Bitchord+**
    - **Sign in with MicroG**, if you use MicroG RE. It's harmless without it: the option just doesn't show.
-   - Any of the extra patches you want: **Sing**, **Pitch control**, **Loudness level**, **Sleep timer fade-out**, **Battery saver**, **Lossless addons over Bluetooth**, **Per-download quality**, **Headphone correction**, **Equaliser per output**, **DJ mode**, **JamesDSP** and **Audio and video switch**. They're off by default. Their settings are under **Settings → Patches & tweaks**.
+   - Any of the extra patches you want: **Sing**, **Pitch control**, **Loudness level**, **Sleep timer fade-out**, **Battery saver**, **Lossless addons over Bluetooth**, **Per-download quality**, **Headphone correction**, **Equaliser per output**, **DJ mode**, **JamesDSP**, **Audio and video switch**, **Play alongside other apps**, **Steady playback**, **Smart downloads**, **Mixed-source playlists**, **Flac Downloader Audio**, **Unofficial Soulseek audio**, **Streamseek previews** and **Source-independent AutoMix**. They're off by default. Their settings are under **Settings → Patches & tweaks**.
 
 3. Leave **Telegram application API ID** at **0** and **Telegram application API hash** empty. Enter your personal details in BitChord after installation.
 4. Open **Install as Bitchord+ → Installation name** to choose an app name. Leave it empty for **Bitchord+**. Names can contain up to 80 characters and must fit on one line. A name containing Telegram must include **Unofficial Telegram**.

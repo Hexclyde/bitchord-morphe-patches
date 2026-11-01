@@ -20,6 +20,7 @@ public Set<String> getStringSet(String n,Set<String>d){return new HashSet<>(save
 public Prefs putStringSet(String k,Set<String> s){if(success)saved=new HashSet<>(s);return this;}public boolean commit(){return success;}}}""",
     "android/content/Intent.java": """package android.content;public class Intent{public static final int FLAG_ACTIVITY_NEW_TASK=1;
 public Intent(Context c,Class<?> t){}public Intent addFlags(int f){return this;}}""",
+    "app/bitchord/telegram/DownloadControls.java": "package app.bitchord.telegram;public class DownloadControls{public static void remember(android.content.Context c,Object s,String f){}}",
     "app/bitchord/telegram/PatchStrings.java": """package app.bitchord.telegram;public class PatchStrings{public static String t(String s){return s;}}""",
     "app/bitchord/soulseek/Fixtures.java": """package app.bitchord.soulseek;
 class DownloadsHubActivity{} class DownloadsShell {static boolean visible(){return false;}static boolean open(android.content.Intent i){return false;}static void close(){}} class SoulseekBridge{static SoulseekBridge instance;final android.content.Context context;
@@ -68,6 +69,10 @@ with tempfile.TemporaryDirectory(prefix="download-explorer-tests-") as temporary
             str(out),
             str(production / "DownloadNavigation.java"),
             str(production / "HostDownloadAccess.java"),
+            str(
+                ROOT
+                / "extensions/telegram/src/main/java/app/bitchord/telegram/DownloadSelection.java"
+            ),
             str(Path(__file__).with_name("DownloadExplorerTest.java")),
             *fixtures,
         ],

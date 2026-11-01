@@ -8,6 +8,26 @@ public final class SourceRegistry {
     public static final MutableStateFlow<List<SourceConfig>> configs =
             StateFlowKt.MutableStateFlow(new ArrayList<>());
 
+    public static final List<MusicSource> downloadSources = new ArrayList<>();
+
+    public static List<MusicSource> active() {
+        List<MusicSource> active = new ArrayList<>();
+        for (MusicSource source : downloadSources) {
+            SourceConfig config = config(source.getConfigId());
+            if (config != null && config.enabled) active.add(source);
+        }
+        return active;
+    }
+
+    public static List<MusicSource> activeForDownload() {
+        List<MusicSource> active = new ArrayList<>();
+        for (MusicSource source : downloadSources) {
+            SourceConfig config = config(source.getConfigId());
+            if (config != null && config.enabled && config.allowDownloads) active.add(source);
+        }
+        return active;
+    }
+
     public static void publish(ArrayList<SourceConfig> next, boolean persist) {
         if (!persist) throw new AssertionError();
         configs.setValue(next);

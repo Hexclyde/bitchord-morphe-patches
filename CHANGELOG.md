@@ -1,3 +1,14 @@
+## 1.1.0-beta.18
+
+- Add optional Play alongside other apps with call pause/recovery, Steady playback with connection-specific buffering and offline retries, and Smart downloads across enabled download sources.
+- Add a local Sing separation-model method with bounded streaming transforms, a separate inference session and filter fallback; provide an offline Spleeter conversion and comparison tool.
+- Add native Storage Sense for cache-resource review, protected cleanup, saved-file deletion and content-hash duplicate review. Cleanup rules start disabled.
+- Integrate patch download controls with BitChord's existing Downloads settings. Preserve native quality, Wi-Fi, export and playlist-sync controls.
+- Generate Smart playlists locally from the device library by default, with reviewed matches and an explicit optional text-service mode.
+- Stabilize Peer downloads row identity and background refresh; group actions and move secondary controls into native menus.
+- Fix Telegram recording verification on bounded and cached reads, start auditions from the live position and preserve the service across reused registers for the two-player upgrade. Keep FLAC Downloader exclusive to downloads.
+- Preserve previous download, playlist, player, Telegram, source-independent AutoMix and transition-speed fixes. Isolate selected source/format filenames across independent patch selections and validate finished provider formats after conversion.
+
 # 1.1.0-beta.17
 
 - Update FLAC Downloader to provider browser verification and current FLAC/MP3 320/MP3 128 preparation; reject format downgrades.

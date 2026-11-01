@@ -12,23 +12,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /** Version-qualified bridge to the host registry. Selected rows cannot enter its fallback walk. */
 public final class HostDownloadAccess {
-    private static final Set<String> pinned = ConcurrentHashMap.newKeySet();
-    private static volatile boolean loaded;
-
     private HostDownloadAccess() {}
 
-    public static synchronized void init(Context context) {
-        if (loaded) return;
-        pinned.addAll(
-                context.getSharedPreferences("bitchord_download_explorer", 0)
-                        .getStringSet("pinned", Collections.emptySet()));
-        loaded = true;
+    public static void init(Context context) {
+        app.bitchord.telegram.DownloadSelection.init(context);
     }
 
     static Object propertyObject(Object object, String name) throws Exception {
@@ -118,55 +110,19 @@ public final class HostDownloadAccess {
 
     /** Called at the host's fallback entry, before another provider or YouTube can be searched. */
     public static boolean forbidFallback(Object song) {
-        return pinned.contains(propertyText(song, "videoId"));
+        return app.bitchord.telegram.DownloadSelection.forbidFallback(song);
     }
 
-    private static final ThreadLocal<String> filenameSelection = new ThreadLocal<>();
-
-    // R8 reuses the Song parameter register before the host returns its filename.
     public static void fileNameStart(Object song) {
-        String reference = propertyText(song, "videoId");
-        if (pinned.contains(reference)) filenameSelection.set(reference);
-        else filenameSelection.remove();
+        app.bitchord.telegram.DownloadSelection.fileNameStart(song);
     }
 
     public static String fileNameFinish(String name) {
-        String reference = filenameSelection.get();
-        filenameSelection.remove();
-        return reference == null ? name : selectedName(reference, name);
+        return app.bitchord.telegram.DownloadSelection.fileNameFinish(name);
     }
 
     public static String selectedFileName(Object song, String name) {
-        String reference = propertyText(song, "videoId");
-        return pinned.contains(reference) ? selectedName(reference, name) : name;
-    }
-
-    private static String selectedName(String reference, String name) {
-        try {
-            byte[] digest =
-                    java.security.MessageDigest.getInstance("SHA-256")
-                            .digest(reference.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-            StringBuilder key = new StringBuilder();
-            for (int i = 0; i < 8; i++) {
-                key.append("0123456789abcdef".charAt((digest[i] & 255) >>> 4));
-                key.append("0123456789abcdef".charAt(digest[i] & 15));
-            }
-            String suffix = " [" + key + "]";
-            int dot = name.lastIndexOf('.');
-            String extension = dot > 0 ? name.substring(dot) : "";
-            String stem = dot > 0 ? name.substring(0, dot) : name;
-            int end = Math.min(stem.length(), 120 - suffix.length());
-            while (end > 0
-                    && (Character.isHighSurrogate(stem.charAt(end - 1))
-                            || stem.substring(0, end)
-                                            .getBytes(java.nio.charset.StandardCharsets.UTF_8)
-                                            .length
-                                    > 220)) end--;
-            return stem.substring(0, end).trim() + suffix + extension;
-        } catch (java.security.NoSuchAlgorithmException unavailable) {
-            throw new IllegalStateException(
-                    "Selected download identity is unavailable", unavailable);
-        }
+        return app.bitchord.telegram.DownloadSelection.selectedFileName(song, name);
     }
 
     static String selectedTitle(Context context, String reference) {
@@ -185,16 +141,7 @@ public final class HostDownloadAccess {
                 || !Boolean.TRUE.equals(call(config, "getEnabled"))
                 || !Boolean.TRUE.equals(call(config, "getAllowDownloads")))
             throw new IOException("This source no longer permits downloads");
-        synchronized (HostDownloadAccess.class) {
-            if (pinned.size() >= 4096 && !pinned.contains(reference))
-                throw new IOException("Download selection history is full");
-            pinned.add(reference);
-            if (!context.getSharedPreferences("bitchord_download_explorer", 0)
-                    .edit()
-                    .putStringSet("pinned", new HashSet<>(pinned))
-                    .putString("title." + reference, propertyText(song, "title"))
-                    .commit()) throw new IOException("Could not save the selected source");
-        }
+        app.bitchord.telegram.DownloadSelection.keep(context, song);
         Class<?> host = Class.forName("com.music.bitchord.download.Downloads");
         call(host, "enqueue", context, song, null);
         if (now) {

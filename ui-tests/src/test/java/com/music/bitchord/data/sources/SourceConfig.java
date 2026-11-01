@@ -31,6 +31,10 @@ public final class SourceConfig {
         return enabled;
     }
 
+    public boolean getAllowDownloads() {
+        return allowDownloads;
+    }
+
     public String getBaseUrl() {
         return baseUrl;
     }

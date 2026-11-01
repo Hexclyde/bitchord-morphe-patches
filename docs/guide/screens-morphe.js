@@ -91,13 +91,13 @@
   // ---------------------------------------------------------------------------------------
 
   const SOURCE_NAME = 'BitChord Morphe Patches';
-  const PATCHES_VERSION = '1.1.0-beta.16.4';
+  const PATCHES_VERSION = '1.1.0-beta.18';
   const MORPHE_VERSION = '2.2.0';
   const APP_VERSION = '1.9';
   const ORANGE = '255,137,68';
   const BITCHORD_APK = 'BitChord-v1.9_arm64-v8a.apk';
   const MORPHE_APK = 'morphe-manager-2.2.0.apk';
-  const MPP_FILE = 'bitchord-patches-1.1.0-beta.16.4.mpp';
+  const MPP_FILE = 'bitchord-patches-1.1.0-beta.18.mpp';
   const REPO_LINK = 'github.com/Hexclyde/bitchord-morphe-patches';
   const TESTING_LINK = 'https://raw.githubusercontent.com/Hexclyde/bitchord-morphe-patches/refs/heads/testing/patches-bundle.json';
   const NOT_DRAWN = 'This part of Morphe isn’t drawn in this guide.';
@@ -128,7 +128,7 @@
   {
     "id": "flacAudio",
     "name": "Flac Downloader Audio",
-    "desc": "Optional native adapter for aztecempire's Spotube FLAC Audio source. Search, stream and download through flacdownloader.com, with explicit FLAC/MP3 choices. Starts disabled; enable in Sources or Patches & tweaks. Requested quality is not file verification. No Spotube runtime or account is installed."
+    "desc": "Optional native download adapter for aztecempire's Spotube FLAC Audio source. Search and download through flacdownloader.com, with explicit FLAC/MP3 choices. Starts disabled; enable in Sources or Patches & tweaks. Requested quality is not file verification. No Spotube runtime or account is installed. Settings are in Settings, Patches & tweaks."
   },
   {
     "id": "headphones",
@@ -160,7 +160,7 @@
   {
     "id": "mixedPlaylists",
     "name": "Mixed-source playlists",
-    "desc": "Adds downloaded files, local audio and streamed tracks to device playlists without a YouTube account. Preserves file and addon source metadata across restarts. Settings are in Settings, Patches & tweaks."
+    "desc": "Adds signed-out playlist links, editable device copies, queue saving, native file import and reviewed two-way Spotify/YouTube Music playlist sync. Keeps files and streams together with full source metadata across restarts. Settings are in Settings, Patches & tweaks."
   },
   {
     "id": "perDownload",
@@ -173,6 +173,11 @@
     "desc": "Moves the key up or down by up to 12 semitones without changing the speed. From Prism by Yigder. Settings are in Settings, Patches & tweaks."
   },
   {
+    "id": "audioFocus",
+    "name": "Play alongside other apps",
+    "desc": "Keeps the music playing when another app plays sound, such as a reel or a video, instead of pausing. Calls still pause it. Settings are in Settings, Patches & tweaks."
+  },
+  {
     "id": "microg",
     "name": "Sign in with MicroG",
     "desc": "Offers to sign in to YouTube Music with an account that's already in MicroG RE, instead of Google's sign-in page.",
@@ -181,7 +186,7 @@
   {
     "id": "sing",
     "name": "Sing",
-    "desc": "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord. Settings are in Settings, Patches & tweaks."
+    "desc": "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord. Choose the filter or on-device separation model. Settings are in Settings, Patches & tweaks."
   },
   {
     "id": "sleepFade",
@@ -189,9 +194,25 @@
     "desc": "Fades the song out before the sleep timer pauses it, and fades the end of the last song with the timer's \"After this song\" option. From Prism by Yigder. Settings are in Settings, Patches & tweaks."
   },
   {
+    "id": "smartDownloads",
+    "name": "Smart downloads",
+    "desc": "Downloads the songs you play most, on Wi-Fi, so they're there without a signal. Uses BitChord's listening statistics and its Download quality; songs you delete aren't downloaded again. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "sourceAutomix",
+    "name": "Source-independent AutoMix",
+    "desc": "Measures the selected playable source, verifies automatic replacements, preserves playback speed and adds a native, pair-specific transition timeline with volume, EQ, filter controls and preview. BitChord 1.9.",
+    "def": true
+  },
+  {
+    "id": "steadyPlayback",
+    "name": "Steady playback",
+    "desc": "Reads further ahead, through the rest of the song and into the next ones, with separate limits for Wi-Fi and mobile data, and waits through a lost signal instead of stopping. Settings are in Settings, Patches & tweaks."
+  },
+  {
     "id": "streamseekPreview",
     "name": "Streamseek previews",
-    "desc": "Preview an explicitly selected Soulseek MP3 or FLAC through Media3 while it transfers. Keep download reuses buffered bytes. Compare an excerpt with a known local reference and export transparent evidence. Optional; enable in Patches & tweaks. No automatic Soulseek playback or Mornye integration."
+    "desc": "Preview explicitly selected Soulseek audio while it transfers: FLAC, WAV/AIFF, ALAC, APE, WavPack, TTA/TAK, WMA Lossless and DSD, plus MP3. A dedicated on-device FFmpeg decoder feeds Media3. Keep download reuses buffered bytes. Compare an excerpt with a known local reference and export transparent evidence. Optional; enable in Patches & tweaks. No automatic Soulseek playback or Mornye integration."
   },
   {
     "id": "soulseek",
@@ -207,10 +228,13 @@
   }
 ];
   const byName = (a, b) => a.name.localeCompare(b.name);
-  // Morphe lists one alphabetical list. The guide draws the three default patches first, then
+  // Morphe lists one alphabetical list. The guide draws the default patches first, then
   // the extras, so each group can be pointed at on its own.
   const DEFAULT_PATCHES = PATCHES.filter((p) => p.def).sort(byName);
   const EXTRA_PATCHES = PATCHES.filter((p) => !p.def).sort(byName);
+  const catalogDefaults = {};
+  PATCHES.forEach((p) => { catalogDefaults['morphe.patch.' + p.id] = !!p.def; });
+  G.defineState(catalogDefaults);
   const PATCH_BY_ID = {};
   PATCHES.forEach((p) => { PATCH_BY_ID[p.id] = p; });
 
@@ -902,7 +926,7 @@
         '<p class="m-list-head">' + (on ? 'Brought by this source' : 'Left out of this source') + '</p>' +
         '<button type="button" class="m-sa-row" role="checkbox" aria-checked="' + on + '" data-bind="' + key + '" data-tg="morphe.sourceApps.bitchordRow">' +
           '<span class="m-sa-check">' + icon(on ? 'checkCircleFilled' : 'circle', { size: 24 }) + '</span>' + appIcon(40) +
-          '<span class="m-sa-app"><span class="m-sa-app-name">BitChord</span><span class="m-sa-app-sub">15 patches</span></span></button>' +
+          '<span class="m-sa-app"><span class="m-sa-app-name">BitChord</span><span class="m-sa-app-sub">' + PATCHES.length + ' patches</span></span></button>' +
         btn('Close', { cls: 'm-btn-wide', tg: 'morphe.sourceApps.closeButton', close: true }),
         { cls: 'm-dlg-top m-dlg-left' });
     }

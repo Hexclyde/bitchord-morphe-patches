@@ -147,6 +147,9 @@ private val patchesUiResources = resourcePatch {
                     "TransitionEditorActivity",
                     "FlacVerificationActivity",
                     "PlaylistToolsActivity",
+                    "DownloadsSettingsActivity",
+                    "StorageSenseActivity",
+                    "SmartPlaylistActivity",
                     "PlaylistImportActivity",
                     "PlaylistSyncActivity",
                 )) {
@@ -183,8 +186,30 @@ private fun registers(instruction: Instruction): List<Int> =
 
 /** One shared entry, regardless of the order in which optional patches were selected. */
 internal val extrasSettingsPatch = bytecodePatch {
-    dependsOn(patchesUiRuntime, patchesUiResources)
+    dependsOn(patchesUiRuntime, patchesUiResources, selectedDownloadsPatch)
     execute {
+        addDownloadsSettingsRow()
+        val playback =
+            mutableClassDefBy("Lcom/music/bitchord/playback/PlaybackService;").methods.single {
+                it.name == "onCreate" && it.parameterTypes.isEmpty() && it.returnType == "V"
+            }
+        check(playback.implementation != null && playback.accessFlags and 8 == 0) {
+            "Storage playback lifecycle changed"
+        }
+        playback.addInstruction(
+            0,
+            "invoke-static/range {p0 .. p0}, Lapp/bitchord/telegram/StorageSenseActive;->playbackService(Ljava/lang/Object;)V",
+        )
+        val storageMarker =
+            mutableClassDefBy("Lapp/bitchord/telegram/StorageSenseActive;").methods.single {
+                it.name == "playbackHookApplied" &&
+                    it.parameterTypes.isEmpty() &&
+                    it.returnType == "Z"
+            }
+        check(storageMarker.implementation!!.instructions.first().opcode == Opcode.CONST_4) {
+            "Storage playback marker changed"
+        }
+        storageMarker.replaceInstruction(0, "const/4 v0, 0x1")
         val screen = mutableClassDefBy("Lcom/music/bitchord/ui/screens/SettingsSheetKt;")
         val method = screen.methods.single { it.name.startsWith("SettingsScreen-") }
         val code = method.implementation!!.instructions.toList()

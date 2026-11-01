@@ -424,6 +424,66 @@ public final class ExtrasActivity extends Activity {
                                                 : Strings.f("{0}% quieter", String.valueOf(level)),
                                 SoundExtras::setSingLevel);
                         divider(parent);
+                        LinearLayout methods = new LinearLayout(this);
+                        for (int value : new int[] {VocalCut.VOICE_GATE, SeparationModel.METHOD}) {
+                            final int selectedMethod = value;
+                            TextView choice =
+                                    style.button(
+                                            Strings.t(
+                                                    value == SeparationModel.METHOD
+                                                            ? "Separation model"
+                                                            : "Filter"),
+                                            SoundExtras.singMethod == value
+                                                    || value == VocalCut.VOICE_GATE
+                                                            && SoundExtras.singMethod
+                                                                    == VocalCut.CENTRE,
+                                            () -> {
+                                                SoundExtras.setSingMethod(selectedMethod);
+                                                rebuild();
+                                            });
+                            choice.setTag(
+                                    value == SeparationModel.METHOD
+                                            ? "sing-method-model"
+                                            : "sing-method-filter");
+                            methods.addView(choice, new LinearLayout.LayoutParams(0, -2, 1));
+                        }
+                        parent.addView(methods);
+                        TextView modelStatus =
+                                new TextView(this) {
+                                    private final Runnable update =
+                                            new Runnable() {
+                                                public void run() {
+                                                    String value =
+                                                            Strings.t(SeparationModel.status());
+                                                    if (!value.contentEquals(getText()))
+                                                        setText(value);
+                                                    if (isAttachedToWindow())
+                                                        postDelayed(this, 500);
+                                                }
+                                            };
+
+                                    protected void onAttachedToWindow() {
+                                        super.onAttachedToWindow();
+                                        post(update);
+                                    }
+
+                                    protected void onDetachedFromWindow() {
+                                        removeCallbacks(update);
+                                        super.onDetachedFromWindow();
+                                    }
+                                };
+                        modelStatus.setText(Strings.t(SeparationModel.status()));
+                        modelStatus.setTextColor(style.secondary);
+                        modelStatus.setTextSize(14);
+                        modelStatus.setTag("sing-model-status");
+                        modelStatus.setAccessibilityLiveRegion(
+                                View.ACCESSIBILITY_LIVE_REGION_POLITE);
+                        parent.addView(modelStatus);
+                        paragraph(
+                                parent,
+                                Strings.t(
+                                        "Separation adds about 1.6 seconds of audio delay. The"
+                                                + " filter is used when the model cannot run."));
                         option(
                                 parent,
                                 Strings.t("Whole centre"),
@@ -606,7 +666,7 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "flac-audio",
                     "Flac Downloader Audio",
-                    Strings.t("Search, stream and download FLAC or MP3 from flacdownloader.com"),
+                    Strings.t("Download FLAC or MP3 from flacdownloader.com"),
                     FlacAddon::enabled,
                     FlacAddon::setEnabled,
                     parent ->
@@ -799,7 +859,7 @@ public final class ExtrasActivity extends Activity {
                 () ->
                         status.setText(
                                 Strings.f(
-                                                "{0} songs downloaded by Smart downloads so far",
+                                                "{0} songs remembered by Smart downloads",
                                                 String.valueOf(SmartDownloads.queued().size()))
                                         + (SmartDownloads.lastResult.isEmpty()
                                                 ? ""
@@ -815,7 +875,10 @@ public final class ExtrasActivity extends Activity {
                                 SmartDownloads.run(context);
                                 handler.post(show);
                             });
-                    Toast.makeText(this, Strings.t("Looking for songs to download…"), Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                                    this,
+                                    Strings.t("Looking for songs to download…"),
+                                    Toast.LENGTH_SHORT)
                             .show();
                 });
     }
@@ -828,7 +891,8 @@ public final class ExtrasActivity extends Activity {
     /** A buffer size with roughly how much lossless music it holds (16-bit FLAC, ~6.5 MB/min). */
     static String bufferLabel(int mb) {
         int minutes = Math.max(1, Math.round(mb / 6.5f));
-        return Strings.f("{0} MB, about {1} min of lossless", String.valueOf(mb), String.valueOf(minutes));
+        return Strings.f(
+                "{0} MB, about {1} min of lossless", String.valueOf(mb), String.valueOf(minutes));
     }
 
     private static boolean optionalInstalled(String type) {
@@ -923,6 +987,21 @@ public final class ExtrasActivity extends Activity {
                 style.text(Strings.t("Patches & tweaks"), 26, style.foreground, style.heavy);
         title.setPadding(style.dp(12), 0, 0, 0);
         header.addView(title, new LinearLayout.LayoutParams(0, -2, 1));
+        android.widget.FrameLayout downloads = new android.widget.FrameLayout(this);
+        downloads.setTag("patch-download-settings");
+        downloads.setContentDescription(Strings.t("Download settings"));
+        downloads.setFocusable(true);
+        downloads.setClickable(true);
+        downloads.setBackground(style.shape(style.field, 24, false));
+        android.widget.FrameLayout.LayoutParams iconPlace =
+                new android.widget.FrameLayout.LayoutParams(
+                        style.dp(24), style.dp(28), Gravity.CENTER);
+        downloads.addView(new PatchIcon("download-quality"), iconPlace);
+        downloads.setOnClickListener(
+                v ->
+                        startActivity(
+                                new android.content.Intent(this, DownloadsSettingsActivity.class)));
+        header.addView(downloads, new LinearLayout.LayoutParams(style.dp(48), style.dp(48)));
         root.addView(header);
         LinearLayout field = new LinearLayout(this);
         field.setGravity(Gravity.CENTER_VERTICAL);
@@ -1505,7 +1584,9 @@ public final class ExtrasActivity extends Activity {
                     // A download arrow over a star.
                     line(canvas, 12, 2, 12, 12);
                     path(canvas, 8, 8, 12, 12, 16, 8);
-                    path(canvas, 12, 15, 13.5f, 18, 16.5f, 18.5f, 14.2f, 20.5f, 15, 23.5f, 12, 22, 9, 23.5f, 9.8f, 20.5f, 7.5f, 18.5f, 10.5f, 18, 12, 15);
+                    path(
+                            canvas, 12, 15, 13.5f, 18, 16.5f, 18.5f, 14.2f, 20.5f, 15, 23.5f, 12,
+                            22, 9, 23.5f, 9.8f, 20.5f, 7.5f, 18.5f, 10.5f, 18, 12, 15);
                     line(canvas, 3, 14, 3, 20);
                     line(canvas, 21, 14, 21, 20);
                     break;

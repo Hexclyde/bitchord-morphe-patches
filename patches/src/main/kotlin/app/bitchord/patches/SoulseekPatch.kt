@@ -331,42 +331,10 @@ val nativeSoulseekPatch =
             check(enqueue.accessFlags and 8 != 0 && enqueue.implementation!!.registerCount == 9) {
                 "Download enqueue entry changed"
             }
-            val fileName =
-                mutableClassDefBy("Lcom/music/bitchord/download/DownloadStore;").methods.single {
-                    it.name == "fileNameFor" &&
-                        it.parameterTypes == listOf(songType, "Ljava/lang/String;") &&
-                        it.returnType == "Ljava/lang/String;"
-                }
-            check(
-                fileName.accessFlags and 8 != 0 && fileName.implementation!!.registerCount <= 16
-            ) {
-                "Download filename ABI changed"
-            }
-            val fileNameCode = fileName.implementation!!.instructions.toList()
-            for (index in fileNameCode.indices.reversed()) {
-                if (fileNameCode[index].opcode != Opcode.RETURN_OBJECT) continue
-                val result =
-                    (fileNameCode[index]
-                            as
-                            com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction)
-                        .registerA
-                fileName.addInstructions(
-                    index,
-                    """
-                    invoke-static {v$result}, ${SOULSEEK}HostDownloadAccess;->fileNameFinish(Ljava/lang/String;)Ljava/lang/String;
-                    move-result-object v$result
-                """,
-                )
-            }
-            fileName.addInstructions(
-                0,
-                "invoke-static {p0}, ${SOULSEEK}HostDownloadAccess;->fileNameStart(Ljava/lang/Object;)V",
-            )
             val originalEnqueue = enqueue.implementation!!.instructions.first()
             enqueue.addInstructionsWithLabels(
                 0,
                 """
-                invoke-static/range {p0 .. p2}, Lapp/bitchord/telegram/DownloadControls;->remember(Landroid/content/Context;Ljava/lang/Object;Ljava/lang/String;)V
                 invoke-static {p0, p1}, ${SOULSEEK}SoulseekSelectedDownloads;->enqueueOrFalse(Landroid/content/Context;Ljava/lang/Object;)Z
                 move-result v0
                 if-eqz v0, :original_soulseek_enqueue
@@ -758,28 +726,6 @@ val nativeSoulseekPatch =
                     return-object v0
                 """,
                     ExternalLabel("original_manual_batch", batchStart),
-                )
-                val fallback =
-                    mutableClassDefBy("Lcom/music/bitchord/download/Downloads;").methods.single {
-                        it.name == "fromSources"
-                    }
-                check(
-                    fallback.parameterTypes.first() == songType &&
-                        fallback.returnType == "Ljava/lang/Object;"
-                ) {
-                    "Download fallback ABI changed"
-                }
-                val originalFallback = fallback.implementation!!.instructions.first()
-                fallback.addInstructionsWithLabels(
-                    0,
-                    """
-                    invoke-static/range {p1 .. p1}, ${SOULSEEK}HostDownloadAccess;->forbidFallback(Ljava/lang/Object;)Z
-                    move-result v0
-                    if-eqz v0, :unselected_download_fallback
-                    const/4 v0, 0x0
-                    return-object v0
-                """,
-                    ExternalLabel("unselected_download_fallback", originalFallback),
                 )
             }
             check(

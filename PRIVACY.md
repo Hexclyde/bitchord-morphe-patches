@@ -129,3 +129,13 @@ A Telegram copy does not automatically become a public Soulseek share.
 Playlist files are parsed on the phone. Matching sends track titles, artists and other recording metadata to YouTube Music search. Saved links, device playlists, matching decisions, exclusions and sync verification records remain in app-private storage.
 
 Optional Spotify/YouTube Music sync contacts those services directly. Spotify authorization uses PKCE, with access/refresh tokens encrypted through Android Keystore. YouTube Music uses the account connection already configured in BitChord. Pairing does not upload account credentials to a separate server. Confirmed sync operations change the paired external playlists; imported device copies do not. Revoke service access through the provider's account controls, and disconnect the local connection to remove its saved credentials.
+
+## Optional smart playlists
+
+I keep normal playlists available without an external text service. If I configure one, I store its address, model and optional key as a single encrypted local record with no plaintext fallback. I bind the saved key to that service's origin and remove it on explicit disconnect.
+
+I send the typed playlist description and selected preferences only after Generate. I contact the configured service for a model list only after Choose model. I do not upload audio, my library or listening history. I search installed sources for the suggested titles and artists when matching the reply, and review matches before saving a device playlist. I use HTTPS, refuse embedded credentials and redirects, bound replies and suppress service bodies from error messages. No project-operated server is involved.
+
+I keep Storage Sense scans and content-hash duplicate comparisons on the device. I leave cleanup rules off until I choose one. Smart downloads reads the app's existing listening statistics locally; its searches contact only my enabled download sources, and the selected identity stays in private preferences.
+
+I generate local Smart playlists entirely on the device by default, using existing library, playlist and listening metadata. This mode sends no description or audio to an external text service and performs no source search. I select an external service explicitly if I want network suggestions.

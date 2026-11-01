@@ -44,6 +44,21 @@ public class ExtrasPageTest {
     @Implements(value = SoundExtras.class, isInAndroidSdk = false)
     public static class EverythingInstalled {
         @Implementation
+        protected static boolean audioFocusApplied() {
+            return true;
+        }
+
+        @Implementation
+        protected static boolean steadyPlaybackApplied() {
+            return true;
+        }
+
+        @Implementation
+        protected static boolean smartDownloadsApplied() {
+            return true;
+        }
+
+        @Implementation
         protected static boolean singApplied() {
             return true;
         }

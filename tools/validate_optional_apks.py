@@ -82,6 +82,22 @@ def main():
             ],
         ),
     ]
+    for label, patch, markers in [
+        ("Alongside", "Play alongside other apps", "focus"),
+        ("Steady", "Steady playback", "steady"),
+        ("SmartDownloads", "Smart downloads", "smart"),
+        ("Sing", "Sing", ""),
+    ]:
+        cases.append(
+            (
+                label,
+                [patch],
+                [
+                    ("VerifyTravelFeaturesApk", [markers]),
+                    ("VerifyPatchUiApk", ["false", "false", "true"]),
+                ],
+            )
+        )
     for label, selections, inspectors in cases:
         output = outputs / f"BitChord-{label}-{VERSION}-arm64-v8a-test.apk"
         with (ROOT / "build" / f"optional-{VERSION}-{label}.log").open("w") as log:

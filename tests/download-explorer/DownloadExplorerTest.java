@@ -196,12 +196,9 @@ public final class DownloadExplorerTest {
         check(
                 firstName.equals(concurrent[0]) && secondName.equals(concurrent[1]),
                 "Concurrent filename preparation keeps identities isolated");
-        Field pins = HostDownloadAccess.class.getDeclaredField("pinned");
+        Field pins = app.bitchord.telegram.DownloadSelection.class.getDeclaredField("pinned");
         pins.setAccessible(true);
         ((Set<?>) pins.get(null)).clear();
-        Field loaded = HostDownloadAccess.class.getDeclaredField("loaded");
-        loaded.setAccessible(true);
-        loaded.set(null, false);
         HostDownloadAccess.init(context);
         check(
                 HostDownloadAccess.forbidFallback(first),

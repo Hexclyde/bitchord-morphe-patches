@@ -5,17 +5,24 @@ import android.app.job.JobService;
 
 /** Android's scheduled run of Smart downloads; the work happens on its own thread. */
 public final class SmartDownloadsJob extends JobService {
+    private volatile Thread worker;
+    private final java.util.concurrent.atomic.AtomicBoolean stopped =
+            new java.util.concurrent.atomic.AtomicBoolean();
+
     @Override
     public boolean onStartJob(JobParameters params) {
-        Thread worker =
+        if (worker != null && worker.isAlive()) return false;
+        stopped.set(false);
+        worker =
                 new Thread(
                         () -> {
                             try {
-                                SmartDownloads.run(getApplicationContext());
+                                SmartDownloads.init(getApplicationContext());
+                                SmartDownloads.run(getApplicationContext(), stopped);
                             } catch (RuntimeException e) {
                                 HostLog.d("Smart downloads run failed: " + e);
                             } finally {
-                                jobFinished(params, false);
+                                if (!stopped.get()) jobFinished(params, false);
                             }
                         },
                         "bitchord-smart-downloads");
@@ -25,6 +32,9 @@ public final class SmartDownloadsJob extends JobService {
 
     @Override
     public boolean onStopJob(JobParameters params) {
+        stopped.set(true);
+        Thread current = worker;
+        if (current != null) current.interrupt();
         return false;
     }
 }

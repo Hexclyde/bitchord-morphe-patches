@@ -1,6 +1,6 @@
 # Source-independent AutoMix
 
-The **Source-independent AutoMix** patch in beta.17 fixes the source-specific analysis path in BitChord 1.9. Select it in Morphe alongside any sources and other patches you already use, then enable AutoMix in BitChord's playback settings.
+I use the **Source-independent AutoMix** patch in beta.18 to correct the source-specific analysis path in BitChord 1.9. Select it in Morphe alongside any sources and other patches you already use, then enable AutoMix in BitChord's playback settings.
 
 ## Playback and analysis
 
@@ -26,7 +26,7 @@ Battery saver audio offload yields while AutoMix needs decoded audio, including 
 
 ## Installation
 
-1. Import `bitchord-patches-1.1.0-beta.17.mpp` as a Local source in Morphe.
+1. Import `bitchord-patches-1.1.0-beta.18.mpp` as a Local source in Morphe.
 2. Patch an original BitChord **1.9** APK matching your architecture, keeping your existing selections and adding **Source-independent AutoMix** (selected by default).
 3. Update the installed application with the same signing key. Do not uninstall or clear data.
 4. Enable AutoMix in playback settings and enable the sources you want to use.

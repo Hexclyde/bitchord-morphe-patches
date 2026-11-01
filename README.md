@@ -11,19 +11,19 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Interactive install guide](https://hexclyde.github.io/bitchord-morphe-patches/) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.17, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
+> **Status:** experimental (1.1.0-beta.18, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
 >
-> The previous BitChord 1.8.1 Telegram integration was tested on an **arm64-v8a** phone; the earlier beta.16.3 was exercised in Waydroid on x86_64; beta.17 UI and playback checks use Waydroid on x86_64. The arm64-v8a and armeabi-v7a builds pass artifact checks; physical-device testing remains pending. The new Soulseek, paired-download and debrid features still need phone and public-network testing on all three architectures. Please [open an issue](https://github.com/Hexclyde/bitchord-morphe-patches/issues/new/choose) if you run into problems.
+> I target BitChord 1.9 and test with x86_64 Waydroid. I report component, APK and device results separately in the [verification report](docs/VERIFICATION-1.1.0-beta.18.md); physical-phone qualification remains pending.
 
 The Downloads navigation icon is visible only when the download add-on patch is installed. Patches & tweaks and download controls use BitChord 1.9’s green capsule switches.
 
 Downloads offers saved Grid, List, Compact, Comfy and Detailed views, exact-source Pause/Resume/Retry controls, separate Remove from list and confirmed Delete file actions. Resume restarts transfers from the same source. Library’s Downloads shortcut opens this page when the download patch is installed. The Audio/Video player switch saves your YouTube preference across tracks and restarts. Missing alternate versions leave that preference unchanged.
 
-Beta.16 rebuilds Downloads around the reviewed demo: a compact header, real artwork, thin transfer progress, source/format labels, separate status lines and five saved layouts. Management controls live under its settings gear. Beta.16.4 replaces the window overlay with headphone/video icons in measured rows of the native portrait player and landscape main pane. The row reserves space before the artwork and moves with the player; the saved YouTube mode remains persistent. Unofficial Telegram opens a lightweight page before bridge initialization and reads saved-index counts in the background, with duplicate-opening protection.
+I build Downloads around the reviewed design: a compact header, real artwork, thin transfer progress, source/format labels, separate status lines and five saved layouts. Management controls live under its settings gear. I use measured headphone/video rows in place of the window overlay; this with headphone/video icons in measured rows of the native portrait player and landscape main pane. The row reserves space before the artwork and moves with the player; the saved YouTube mode remains persistent. Unofficial Telegram opens a lightweight page before bridge initialization and reads saved-index counts in the background, with duplicate-opening protection.
 
-All 20 patches and beta.9–16.4 features are retained, including [Streamseek previews](docs/STREAMSEEK-PREVIEW.md), [mixed-source device playlists](docs/MIXED-PLAYLISTS.md), the independent [Flac Downloader Audio adapter](docs/FLAC-AUDIO.md), public Soulseek sharing and verified Telegram offloading. See [Downloads](docs/DOWNLOAD-MANAGER.md) and [beta.16 verification](docs/VERIFICATION-1.1.0-beta.16.md).
+I retain all existing features, including [Streamseek previews](docs/STREAMSEEK-PREVIEW.md), [mixed-source device playlists](docs/MIXED-PLAYLISTS.md), the independent [Flac Downloader Audio adapter](docs/FLAC-AUDIO.md), public Soulseek sharing and verified Telegram offloading. See [Downloads](docs/DOWNLOAD-MANAGER.md) and [verification](docs/VERIFICATION-1.1.0-beta.18.md).
 
-Beta.17 adds [source-independent AutoMix](docs/AUTOMIX.md), a native [transition editor](docs/TRANSITION-EDITOR.md), and [playlist tools](docs/PLAYLIST-TOOLS.md) for signed-out playlist links, editable device copies, queue saving, native file import and reviewed two-way Spotify/YouTube Music membership sync. All beta.16.4 features are retained. See the verification report for the scope of Waydroid checks; physical-phone qualification remains pending.
+I include [source-independent AutoMix](docs/AUTOMIX.md), a native [transition editor](docs/TRANSITION-EDITOR.md), and [playlist tools](docs/PLAYLIST-TOOLS.md) for signed-out links, device copies, queue saving, file import and reviewed two-way Spotify/YouTube Music membership sync. In beta.18 I add Play alongside other apps, Steady playback and source-independent Smart downloads, plus Sing's local separation model. I bring patch download controls into BitChord's Downloads settings and provide [Storage Sense and smart playlists](docs/BETA18-FEATURES.md). I keep cleanup rules and external playlist generation off until explicitly requested.
 
 ## Patches
 
@@ -35,7 +35,10 @@ Beta.17 adds [source-independent AutoMix](docs/AUTOMIX.md), a native [transition
 | **Streamseek previews** | Inline 30-second Soulseek lossless/MP3 previews with an on-device decoder, transfer reuse and optional local-reference/evidence tools. Depends on the Soulseek patch; off by default. |
 | **Install as Bitchord+** | Installs next to your regular BitChord as **Bitchord+**, or under a name you choose. |
 | **Sign in with MicroG** | Signs in to YouTube Music with an account that’s already in [MicroG RE](https://github.com/MorpheApp/MicroG-RE), instead of Google’s sign-in page. Only shows when MicroG RE is installed. |
-| **Sing** | Turns the lead vocal down so you can sing over the song. Ported from [Auris](https://github.com/OreoMuncher45/Auris). Off by default. |
+| **Sing** | Filter or local separation model with adjustable vocal removal. The filter follows [Auris](https://github.com/OreoMuncher45/Auris); the model is BitChord's bundled Open-Unmix export. Off by default. |
+| **Play alongside other apps** | Keep playing over other apps' audio and pause for calls. Off by default. |
+| **Steady playback** | Separate Wi-Fi/mobile read-ahead limits and offline retries. Off by default. |
+| **Smart downloads** | Queue frequently played songs through enabled download sources in the selected download quality. Off by default. |
 | **Pitch control** | Moves the key up or down without changing the speed. Off by default. |
 | **Loudness level** | Sets how loud loudness normalisation plays songs. Off by default. |
 | **Sleep timer fade-out** | Fades the song out before the sleep timer pauses it, and fades the end of the last song. Off by default. |
@@ -48,7 +51,7 @@ Beta.17 adds [source-independent AutoMix](docs/AUTOMIX.md), a native [transition
 | **JamesDSP** | Hands BitChord's audio to [JamesDSP](https://github.com/timschneeb/RootlessJamesDSP), shows whether it can hear BitChord and helps with its Shizuku or ADB setup. Off by default. |
 | **Audio and video switch** | A song and video switch at the top of the player, as in YouTube Music. Off by default. |
 | **Mixed-source playlists** | Keep downloaded files, local music, YouTube tracks and addon streams together in BitChord's device playlists. Off by default. |
-| **Flac Downloader Audio** | Native adapter for [aztecempire's Spotube source](https://github.com/aztecempire/spotube-plugin-flac-audio), using flacdownloader.com. Explicit requested FLAC/MP3 formats; source starts disabled. No Spotube runtime required. |
+| **Flac Downloader Audio** | Native adapter for [aztecempire's Spotube source](https://github.com/aztecempire/spotube-plugin-flac-audio), using flacdownloader.com. Download-only FLAC/MP3 formats; source starts disabled. No Spotube runtime required. |
 
 More BitChord add-ons will be added to this repository over time.
 
@@ -138,7 +141,7 @@ Step-by-step guides:
 
 - [Installing with Morphe](docs/MOBILE.md)
 - [Interactive installation guide](docs/guide/index.html)
-- [Publishing the beta.16 ZIP](docs/PUBLISHING-1.1.0-beta.16.md)
+- [Build and release instructions](docs/BUILDING.md#releasing)
 - [Connecting Telegram](docs/SETUP.md)
 - [Guided Soulseek search and downloads](docs/SOULSEEK.md)
 - [Optional debrid downloads](docs/DEBRID.md)
@@ -179,6 +182,9 @@ This is an independent project and isn't affiliated with BitChord, Telegram or M
 Bug reports and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) first. Translation fixes go in `translations/<language>.json`; `python3 tools/translations.py` rebuilds the table the add-on reads. If you want to build from source, see [docs/BUILDING.md](docs/BUILDING.md).
 
 ## Credits
+
+- [Open-Unmix](https://github.com/sigsep/open-unmix-pytorch) by sigsep, for the vocal separation technique and BitChord's existing model; [Spleeter](https://github.com/deezer/spleeter) by Deezer Research, for the optional checkpoint conversion tool. Their code is MIT licensed; I document model provenance in the [feature guide](docs/BETA18-FEATURES.md).
+- [PixelMusic](https://github.com/ianshulyadav/PixelMusic) by ianshulyadav, for the Storage Sense, duplicate review and prompt-to-playlist ideas. I wrote native implementations for BitChord; I port its GPL-3.0 local playlist language processing and ranking with attribution; my storage adapters are independent implementations.
 
 - [BitChord](https://github.com/kushagrasinghx/BitChord) by kushagra (kushagrasinghx) and its contributors, the app these patches are for.
 - [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45, a fork of BitChord. Sing is ported from its vocal remover.

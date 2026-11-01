@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import java.util.List;
 
 public final class DownloadControls {
+    public static void remember(Context app, Object song, String from) {}
+
     public static boolean hidden(Context app, String id) {
         return false;
     }

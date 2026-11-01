@@ -111,3 +111,11 @@ archive is included in `native/preview/vendor/ffmpeg-7.1.5.tar.xz`, with the
 JNI adapter and build instructions alongside it. See
 [native notices](native/preview/NOTICE) and [preview behavior](docs/STREAMSEEK-PREVIEW.md).
 Upstream: https://ffmpeg.org/ .
+
+## Separation and native storage tools
+
+I credit [Open-Unmix](https://github.com/sigsep/open-unmix-pytorch) by sigsep (MIT code) for vocal separation. I reuse the model already present in the host APK and do not redistribute its quantized weights in this source package. I record the pinned export and its licence-metadata limitation in [the beta.18 feature guide](docs/BETA18-FEATURES.md).
+
+I credit [Spleeter](https://github.com/deezer/spleeter) by Deezer Research, copyright 2019-present Deezer SA, for the optional offline 2stems conversion tool. Spleeter code and pretrained models are MIT licensed; the [paper](https://doi.org/10.21105/joss.02154) states this explicitly. Converted weights stay outside the MPP.
+
+I credit [PixelMusic](https://github.com/ianshulyadav/PixelMusic) by ianshulyadav (Anshul Yadav, GPL-3.0), commit `991f7c5abc0eac64fc281414319f5aaaa2a3e76b`. I port its `NlpText`, `NlpLexicon`, `MoodProfile`, `GenreTaxonomy`, `PlaylistIntentEngine` and `LibraryIndex` language-processing data and ranking logic into `LocalPlaylistLexicon`, `LocalPlaylistEngine` and `LocalPlaylist`. I retain attribution in these Java files and retain PixelMusic’s GPL-3.0 licence for the adapted implementation. I also credit its Storage Sense, duplicate-review and on-demand tempo-reading ideas; my storage adapters and tag reader are independent implementations.

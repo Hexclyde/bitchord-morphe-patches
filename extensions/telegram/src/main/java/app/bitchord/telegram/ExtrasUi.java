@@ -69,6 +69,8 @@ public final class ExtrasUi {
     public static void start(Context app) {
         context = app.getApplicationContext();
         Strings.init(context);
+        DownloadSelection.init(context);
+        StorageSenseAuto.start(context);
         SoundExtras.init(app);
     }
 

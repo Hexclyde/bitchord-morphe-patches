@@ -1,6 +1,6 @@
 {
   "NOTE": "Generated from the verified MPP by tools/prepare_mobile_source.py; do not hand-edit.",
-  "version": "1.1.0-beta.17",
+  "version": "1.1.0-beta.18",
   "patches": [
     {
       "name": "Audio and video switch",
@@ -112,7 +112,7 @@
     },
     {
       "name": "Flac Downloader Audio",
-      "description": "Optional native adapter for aztecempire's Spotube FLAC Audio source. Search, stream and download through flacdownloader.com, with explicit FLAC/MP3 choices. Starts disabled; enable in Sources or Patches & tweaks. Requested quality is not file verification. No Spotube runtime or account is installed.",
+      "description": "Optional native download adapter for aztecempire's Spotube FLAC Audio source. Search and download through flacdownloader.com, with explicit FLAC/MP3 choices. Starts disabled; enable in Sources or Patches & tweaks. Requested quality is not file verification. No Spotube runtime or account is installed. Settings are in Settings, Patches & tweaks.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -364,6 +364,33 @@
       "options": []
     },
     {
+      "name": "Play alongside other apps",
+      "description": "Keeps the music playing when another app plays sound, such as a reel or a video, instead of pausing. Calls still pause it. Settings are in Settings, Patches & tweaks.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Sign in with MicroG",
       "description": "Offers to sign in to YouTube Music with an account that's already in MicroG RE, instead of Google's sign-in page.",
       "default": true,
@@ -392,7 +419,7 @@
     },
     {
       "name": "Sing",
-      "description": "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord. Settings are in Settings, Patches & tweaks.",
+      "description": "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord. Choose the filter or on-device separation model. Settings are in Settings, Patches & tweaks.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -445,9 +472,63 @@
       "options": []
     },
     {
+      "name": "Smart downloads",
+      "description": "Downloads the songs you play most, on Wi-Fi, so they're there without a signal. Uses BitChord's listening statistics and its Download quality; songs you delete aren't downloaded again. Settings are in Settings, Patches & tweaks.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Source-independent AutoMix",
       "description": "Measures the selected playable source, verifies automatic replacements, preserves playback speed and adds a native, pair-specific transition timeline with volume, EQ, filter controls and preview. BitChord 1.9.",
       "default": true,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Steady playback",
+      "description": "Reads further ahead, through the rest of the song and into the next ones, with separate limits for Wi-Fi and mobile data, and waits through a lost signal instead of stopping. Settings are in Settings, Patches & tweaks.",
+      "default": false,
       "category": null,
       "compatiblePackages": [
         {

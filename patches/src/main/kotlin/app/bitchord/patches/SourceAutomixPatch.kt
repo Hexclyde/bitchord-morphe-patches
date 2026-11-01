@@ -45,6 +45,14 @@ val sourceAutomixPatch =
         )
         dependsOn(extrasSettingsPatch)
         execute {
+            val timingPair = classDefBy("Lkotlin/Pair;")
+            check(
+                setOf("first", "second").all { name ->
+                    timingPair.fields.any { it.name == name && it.type == "Ljava/lang/Object;" }
+                }
+            ) {
+                "Recording decoder timing fields changed in BitChord"
+            }
             fun add(
                 owner: String,
                 name: String,

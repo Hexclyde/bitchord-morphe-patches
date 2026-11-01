@@ -161,9 +161,10 @@ public final class SoundExtras {
         int previousSingLevel = clamp(saved.getInt("singLevel", 0), 0, 100);
         singLevel = clamp(saved.getInt("singLevel", 50), 0, 100);
         singMethod =
-                saved.getInt("singMethod", VocalCut.VOICE_GATE) == VocalCut.CENTRE
-                        ? VocalCut.CENTRE
-                        : VocalCut.VOICE_GATE;
+                clamp(
+                        saved.getInt("singMethod", VocalCut.VOICE_GATE),
+                        VocalCut.VOICE_GATE,
+                        SeparationModel.METHOD);
         pitchSemitones = clamp(saved.getInt("pitch", 0), MIN_PITCH, MAX_PITCH);
         targetLufs =
                 clamp(
@@ -197,6 +198,7 @@ public final class SoundExtras {
         if (downloadQualityApplied()) DownloadChoice.init(application);
         if (jamesDspApplied()) EffectsApps.init(application);
         if (videoSwitchApplied()) VideoSwitch.init(application);
+        if (singApplied()) SeparationModel.configure();
         if (audioFocusApplied()) AudioFocus.init(application);
         if (steadyPlaybackApplied()) SteadyPlayback.init(application);
         if (smartDownloadsApplied()) SmartDownloads.init(application);
@@ -233,6 +235,7 @@ public final class SoundExtras {
         singEnabled = on;
         save("singEnabled", on);
         if (!on) singers.clear();
+        SeparationModel.configure();
         effectsChanged();
     }
 
@@ -249,8 +252,9 @@ public final class SoundExtras {
     }
 
     static void setSingMethod(int method) {
-        singMethod = method == VocalCut.CENTRE ? VocalCut.CENTRE : VocalCut.VOICE_GATE;
+        singMethod = clamp(method, VocalCut.VOICE_GATE, SeparationModel.METHOD);
         save("singMethod", singMethod);
+        SeparationModel.configure();
     }
 
     static void setPitch(int semitones) {
@@ -370,6 +374,7 @@ public final class SoundExtras {
                 && !(headphoneApplied() && HeadphoneEq.active())
                 && !djEnabled()) {
             if (!singers.isEmpty()) singers.remove(sink);
+            singPassed(sink);
             return;
         }
         int rate;
@@ -405,6 +410,7 @@ public final class SoundExtras {
         boolean dj = djApplied() && DjMode.enabled;
         if (!sing && !headphones && !dj) {
             if (!singers.isEmpty()) singers.remove(sink);
+            singPassed(sink);
             return;
         }
         try {
@@ -415,9 +421,22 @@ public final class SoundExtras {
             if (samples == null || frames <= 0 || channels <= 0) return;
             int count = Math.min(samples.length, frames * channels);
             if (dj) DjMode.tap(sink, samples, count, channels, sampleRate);
-            if (sing && channels == 2)
-                singer(sink, sampleRate).process(samples, count, singLevel / 100f);
-            if (headphones) HeadphoneEq.process(sink, samples, count, channels, sampleRate);
+            if (sing && channels == 2) {
+                int skipped = processSing(sink, samples, count, sampleRate, true);
+                SeparatedSing engine = SeparationModel.engine(sink);
+                if (engine != null && engine.ranLastBlock())
+                    SingOutput.block(
+                            sink, engine, frames, engine.inputFrames() - frames, sampleRate);
+                else SingOutput.bypassed(sink);
+                if (skipped > 0) {
+                    // These stand for time before the stream began, so they aren't played at all.
+                    count -= skipped * 2;
+                    System.arraycopy(samples, skipped * 2, samples, 0, count);
+                    framesField.setInt(block, frames - skipped);
+                }
+            } else singPassed(sink);
+            if (headphones && count > 0)
+                HeadphoneEq.process(sink, samples, count, channels, sampleRate);
         } catch (Exception e) {
             HostLog.d("Playback extras stopped on this block: " + e);
             singLevel = 0;
@@ -438,6 +457,7 @@ public final class SoundExtras {
         boolean dj = djApplied() && DjMode.enabled;
         if (!sing && !headphones && !dj) {
             if (!sing && !singers.isEmpty()) singers.remove(equaliser);
+            SeparationModel.bypass(equaliser);
             return;
         }
         try {
@@ -451,17 +471,52 @@ public final class SoundExtras {
             }
             for (int i = 0; i < count; i++) samples[i] = pcm.getShort(start + 2 * i) / 32768f;
             if (dj) DjMode.tap(equaliser, samples, count, channels, rate);
+            if (!sing) SeparationModel.bypass(equaliser);
             if (!sing && !headphones) return;
-            if (sing) singer(equaliser, rate).process(samples, count, singLevel / 100f);
+            int skipped = sing ? processSing(equaliser, samples, count, rate, false) : 0;
             if (headphones) HeadphoneEq.process(equaliser, samples, count, channels, rate);
-            for (int i = 0; i < count; i++)
-                pcm.putShort(
-                        start + 2 * i,
-                        (short) Math.max(-32768, Math.min(32767, Math.round(samples[i] * 32768f))));
+            for (int i = 0; i < count; i++) pcm.putShort(start + 2 * i, toPcm16(samples[i]));
+            // Frames standing for time before the stream began stay out of what's handed on.
+            if (skipped > 0) block.position(start + skipped * 2 * channels);
         } catch (RuntimeException e) {
             HostLog.d("Playback extras stopped on this block: " + e);
             singLevel = 0;
         }
+    }
+
+    static short toPcm16(float sample) {
+        return (short) Math.max(-32768, Math.min(32767, Math.round(sample * 32768f)));
+    }
+
+    /** Returns how many frames at the start of the block aren't to be played. */
+    private static int processSing(
+            Object key, float[] samples, int count, int rate, boolean ownSink) {
+        VocalCut filter = singer(key, rate);
+        // The equaliser has no sink to ask, and the speed is changed downstream of it.
+        if (singMethod == SeparationModel.METHOD)
+            return SeparationModel.process(
+                    key,
+                    samples,
+                    count,
+                    rate,
+                    singLevel / 100f,
+                    filter,
+                    !ownSink || SingOutput.playsNormally(key));
+        filter.process(samples, count, singLevel / 100f);
+        SeparationModel.bypass(key);
+        return 0;
+    }
+
+    /** Sing wasn't asked for on this block, so whatever it was holding back is out of date. */
+    private static void singPassed(Object sink) {
+        SeparationModel.bypass(sink);
+        SingOutput.bypassed(sink);
+    }
+
+    /** What comes after Sing in the tap, for audio that left the delay later. */
+    static void afterSing(Object key, float[] samples, int count, int channels, int rate) {
+        if (headphoneApplied() && HeadphoneEq.active())
+            HeadphoneEq.process(key, samples, count, channels, rate);
     }
 
     private static VocalCut singer(Object key, int sampleRate) {
@@ -498,9 +553,17 @@ public final class SoundExtras {
 
     /** The sink or equaliser was flushed or reset: a seek or a new song. */
     public static void flush(Object sink) {
+        SingOutput.flushed(sink);
+        SeparationModel.flush(sink);
         VocalCut singer = singers.get(sink);
         if (singer != null) singer.reset();
         if (headphoneApplied()) HeadphoneEq.flush(sink);
+    }
+
+    /** The sink was reset: unlike a flush, a format it was told about goes too. */
+    public static void sinkReset(Object sink) {
+        SingOutput.wasReset(sink);
+        flush(sink);
     }
 
     // ── Loudness level ───────────────────────────────────────────────────────
@@ -526,7 +589,7 @@ public final class SoundExtras {
             players.removeIf(reference -> reference.get() == null);
             players.add(new WeakReference<>(player));
         }
-        if (sleepFadeApplied() || djApplied() || batterySaverApplied())
+        if (singApplied() || sleepFadeApplied() || djApplied() || batterySaverApplied())
             try {
                 player.addListener(new Watcher(player));
             } catch (RuntimeException | LinkageError e) {

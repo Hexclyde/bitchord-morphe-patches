@@ -66022,12 +66022,12 @@ public class TdApi {
     }
 
     /**
-     * The ability to compose text with AI.
+     * The ability to compose text with text composition.
      */
     public static class PremiumFeatureTextComposition extends PremiumFeature {
 
         /**
-         * The ability to compose text with AI.
+         * The ability to compose text with text composition.
          */
         public PremiumFeatureTextComposition() {
         }
@@ -113811,7 +113811,7 @@ public class TdApi {
     }
 
     /**
-     * Changes a rich message using an AI model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+     * Changes a rich message using a text model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
      *
      * <p> Returns {@link RichMessage RichMessage} </p>
      */
@@ -113838,7 +113838,7 @@ public class TdApi {
         public boolean addEmojis;
 
         /**
-         * Default constructor for a function, which changes a rich message using an AI model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+         * Default constructor for a function, which changes a rich message using a text model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
          *
          * <p> Returns {@link RichMessage RichMessage} </p>
          */
@@ -113846,7 +113846,7 @@ public class TdApi {
         }
 
         /**
-         * Creates a function, which changes a rich message using an AI model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+         * Creates a function, which changes a rich message using a text model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
          *
          * <p> Returns {@link RichMessage RichMessage} </p>
          *
@@ -113879,7 +113879,7 @@ public class TdApi {
     }
 
     /**
-     * Changes text using an AI model; must not be used in secret chats. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+     * Changes text using a text model; must not be used in secret chats. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
      *
      * <p> Returns {@link FormattedText FormattedText} </p>
      */
@@ -113902,7 +113902,7 @@ public class TdApi {
         public boolean addEmojis;
 
         /**
-         * Default constructor for a function, which changes text using an AI model; must not be used in secret chats. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+         * Default constructor for a function, which changes text using a text model; must not be used in secret chats. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
          *
          * <p> Returns {@link FormattedText FormattedText} </p>
          */
@@ -113910,7 +113910,7 @@ public class TdApi {
         }
 
         /**
-         * Creates a function, which changes text using an AI model; must not be used in secret chats. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+         * Creates a function, which changes text using a text model; must not be used in secret chats. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
          *
          * <p> Returns {@link FormattedText FormattedText} </p>
          *
@@ -115285,7 +115285,7 @@ public class TdApi {
     }
 
     /**
-     * Creates a new rich message using an AI model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+     * Creates a new rich message using a text model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
      *
      * <p> Returns {@link RichMessage RichMessage} </p>
      */
@@ -115304,7 +115304,7 @@ public class TdApi {
         public boolean addEmojis;
 
         /**
-         * Default constructor for a function, which creates a new rich message using an AI model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+         * Default constructor for a function, which creates a new rich message using a text model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
          *
          * <p> Returns {@link RichMessage RichMessage} </p>
          */
@@ -115312,7 +115312,7 @@ public class TdApi {
         }
 
         /**
-         * Creates a function, which creates a new rich message using an AI model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+         * Creates a function, which creates a new rich message using a text model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
          *
          * <p> Returns {@link RichMessage RichMessage} </p>
          *
@@ -121712,7 +121712,7 @@ public class TdApi {
     }
 
     /**
-     * Fixes a rich message using an AI model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+     * Fixes a rich message using a text model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
      *
      * <p> Returns {@link RichMessage RichMessage} </p>
      */
@@ -121723,7 +121723,7 @@ public class TdApi {
         public InputRichMessage message;
 
         /**
-         * Default constructor for a function, which fixes a rich message using an AI model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+         * Default constructor for a function, which fixes a rich message using a text model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
          *
          * <p> Returns {@link RichMessage RichMessage} </p>
          */
@@ -121731,7 +121731,7 @@ public class TdApi {
         }
 
         /**
-         * Creates a function, which fixes a rich message using an AI model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+         * Creates a function, which fixes a rich message using a text model. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
          *
          * <p> Returns {@link RichMessage RichMessage} </p>
          *
@@ -121756,7 +121756,7 @@ public class TdApi {
     }
 
     /**
-     * Fixes text using an AI model; must not be used in secret chats. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+     * Fixes text using a text model; must not be used in secret chats. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
      *
      * <p> Returns {@link FixedText FixedText} </p>
      */
@@ -121767,7 +121767,7 @@ public class TdApi {
         public FormattedText text;
 
         /**
-         * Default constructor for a function, which fixes text using an AI model; must not be used in secret chats. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+         * Default constructor for a function, which fixes text using a text model; must not be used in secret chats. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
          *
          * <p> Returns {@link FixedText FixedText} </p>
          */
@@ -121775,7 +121775,7 @@ public class TdApi {
         }
 
         /**
-         * Creates a function, which fixes text using an AI model; must not be used in secret chats. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
+         * Creates a function, which fixes text using a text model; must not be used in secret chats. May return an error with a message &quot;AICOMPOSE_FLOOD_PREMIUM&quot; if Telegram Premium is required to send further requests.
          *
          * <p> Returns {@link FixedText FixedText} </p>
          *
