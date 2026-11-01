@@ -132,6 +132,18 @@ public final class SoundExtras {
         return false;
     }
 
+    public static boolean smartDownloadsApplied() {
+        return false;
+    }
+
+    public static boolean steadyPlaybackApplied() {
+        return false;
+    }
+
+    public static boolean audioFocusApplied() {
+        return false;
+    }
+
     public static boolean videoSwitchApplied() {
         return false;
     }
@@ -185,6 +197,9 @@ public final class SoundExtras {
         if (downloadQualityApplied()) DownloadChoice.init(application);
         if (jamesDspApplied()) EffectsApps.init(application);
         if (videoSwitchApplied()) VideoSwitch.init(application);
+        if (audioFocusApplied()) AudioFocus.init(application);
+        if (steadyPlaybackApplied()) SteadyPlayback.init(application);
+        if (smartDownloadsApplied()) SmartDownloads.init(application);
         if (mixedPlaylistsApplied()) MixedPlaylists.init(application);
         if (flacAddonApplied()) FlacAddon.init();
         Outputs.listen(
@@ -517,6 +532,7 @@ public final class SoundExtras {
             } catch (RuntimeException | LinkageError e) {
                 HostLog.d("Playback extras couldn't watch the player: " + e);
             }
+        if (audioFocusApplied()) AudioFocus.player(player);
         if (pitchApplied()) applyPitch(player);
         if (batterySaverApplied()) applyOffload(player);
     }

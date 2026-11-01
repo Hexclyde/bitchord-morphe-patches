@@ -63,6 +63,12 @@ public interface Player {
 
     void pause();
 
+    void play();
+
+    AudioAttributes getAudioAttributes();
+
+    void setAudioAttributes(AudioAttributes audioAttributes, boolean handleAudioFocus);
+
     float getVolume();
 
     void setVolume(float volume);

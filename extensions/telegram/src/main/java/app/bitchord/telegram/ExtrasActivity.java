@@ -661,6 +661,41 @@ public final class ExtrasActivity extends Activity {
                                                         this, PlaylistToolsActivity.class)));
                     });
         }
+        if (SoundExtras.steadyPlaybackApplied()) {
+            feature(
+                    "steady-playback",
+                    Strings.t("Steady playback"),
+                    Strings.t("Read further ahead and wait through a lost signal"),
+                    () -> SteadyPlayback.enabled,
+                    SteadyPlayback::setEnabled,
+                    this::steadyPlayback);
+        }
+        if (SoundExtras.smartDownloadsApplied()) {
+            feature(
+                    "smart-downloads",
+                    Strings.t("Smart downloads"),
+                    Strings.t("Download the songs you play most, on Wi-Fi"),
+                    () -> SmartDownloads.enabled,
+                    SmartDownloads::setEnabled,
+                    this::smartDownloads);
+        }
+        if (SoundExtras.audioFocusApplied()) {
+            feature(
+                    "audio-focus",
+                    Strings.t("Play alongside other apps"),
+                    Strings.t("Keep playing when a reel or video has sound"),
+                    () -> AudioFocus.alongside,
+                    AudioFocus::setAlongside,
+                    parent ->
+                            paragraph(
+                                    parent,
+                                    Strings.t(
+                                            "Normally BitChord pauses when another app plays"
+                                                    + " sound. With this on, both play together."
+                                                    + " Calls still pause the music, and it plays"
+                                                    + " again when the call ends. Navigation"
+                                                    + " prompts no longer lower its volume.")));
+        }
         if (SoundExtras.videoSwitchApplied()) {
             feature(
                     "video-switch",
@@ -699,6 +734,101 @@ public final class ExtrasActivity extends Activity {
                                                             + " Rawnald Clark.")));
         }
         showExpanded();
+    }
+
+    private void steadyPlayback(LinearLayout parent) {
+        paragraph(
+                parent,
+                Strings.t(
+                        "BitChord normally reads 8 MB ahead: about four minutes of a YouTube"
+                                + " stream, but only a minute of a lossless song. This reads"
+                                + " further, through the rest of the song and into the next ones"
+                                + " in the queue, so tunnels and patchy mobile data don't"
+                                + " interrupt it."));
+        slider(
+                parent,
+                Strings.t("On Wi-Fi"),
+                0,
+                SteadyPlayback.WIFI_CHOICES.length - 1,
+                indexOf(SteadyPlayback.WIFI_CHOICES, SteadyPlayback.wifiMb),
+                index -> bufferLabel(SteadyPlayback.WIFI_CHOICES[index]),
+                index -> SteadyPlayback.setWifiMb(SteadyPlayback.WIFI_CHOICES[index]));
+        slider(
+                parent,
+                Strings.t("On mobile data"),
+                0,
+                SteadyPlayback.MOBILE_CHOICES.length - 1,
+                indexOf(SteadyPlayback.MOBILE_CHOICES, SteadyPlayback.mobileMb),
+                index -> bufferLabel(SteadyPlayback.MOBILE_CHOICES[index]),
+                index -> SteadyPlayback.setMobileMb(SteadyPlayback.MOBILE_CHOICES[index]));
+        paragraph(
+                parent,
+                Strings.t(
+                        "Without a signal, a song that runs out of buffer waits for it to come"
+                                + " back instead of stopping. The buffer is kept in memory, so"
+                                + " the largest sizes suit phones with plenty of it. Mobile"
+                                + " data is only used for songs you'd have played anyway,"
+                                + " unless you skip them."));
+    }
+
+    private void smartDownloads(LinearLayout parent) {
+        paragraph(
+                parent,
+                Strings.t(
+                        "About twice a day on Wi-Fi, the songs you've played most in the last three"
+                                + " months are downloaded in BitChord's Download quality. A song"
+                                + " needs at least three plays. They appear in Downloads as usual;"
+                                + " a song you delete there isn't downloaded again."));
+        slider(
+                parent,
+                Strings.t("Songs to keep downloaded"),
+                0,
+                SmartDownloads.COUNT_CHOICES.length - 1,
+                indexOf(SmartDownloads.COUNT_CHOICES, SmartDownloads.count),
+                index -> String.valueOf(SmartDownloads.COUNT_CHOICES[index]),
+                index -> SmartDownloads.setCount(SmartDownloads.COUNT_CHOICES[index]));
+        option(
+                parent,
+                Strings.t("Only while charging"),
+                Strings.t("Waits until the phone is charging, too"),
+                Strings.t("Any time the phone is on Wi-Fi"),
+                SmartDownloads.chargingOnly,
+                SmartDownloads::setChargingOnly);
+        TextView status = status(parent);
+        Runnable show =
+                () ->
+                        status.setText(
+                                Strings.f(
+                                                "{0} songs downloaded by Smart downloads so far",
+                                                String.valueOf(SmartDownloads.queued().size()))
+                                        + (SmartDownloads.lastResult.isEmpty()
+                                                ? ""
+                                                : " · " + SmartDownloads.lastResult));
+        show.run();
+        action(
+                parent,
+                Strings.t("Download now"),
+                () -> {
+                    Context context = getApplicationContext();
+                    worker.execute(
+                            () -> {
+                                SmartDownloads.run(context);
+                                handler.post(show);
+                            });
+                    Toast.makeText(this, Strings.t("Looking for songs to download…"), Toast.LENGTH_SHORT)
+                            .show();
+                });
+    }
+
+    private static int indexOf(int[] values, int value) {
+        for (int i = 0; i < values.length; i++) if (values[i] == value) return i;
+        return 0;
+    }
+
+    /** A buffer size with roughly how much lossless music it holds (16-bit FLAC, ~6.5 MB/min). */
+    static String bufferLabel(int mb) {
+        int minutes = Math.max(1, Math.round(mb / 6.5f));
+        return Strings.f("{0} MB, about {1} min of lossless", String.valueOf(mb), String.valueOf(minutes));
     }
 
     private static boolean optionalInstalled(String type) {
@@ -1371,6 +1501,29 @@ public final class ExtrasActivity extends Activity {
                     line(canvas, 12, 10, 12, 20);
                     line(canvas, 15, 12, 15, 18);
                     break;
+                case "smart-downloads":
+                    // A download arrow over a star.
+                    line(canvas, 12, 2, 12, 12);
+                    path(canvas, 8, 8, 12, 12, 16, 8);
+                    path(canvas, 12, 15, 13.5f, 18, 16.5f, 18.5f, 14.2f, 20.5f, 15, 23.5f, 12, 22, 9, 23.5f, 9.8f, 20.5f, 7.5f, 18.5f, 10.5f, 18, 12, 15);
+                    line(canvas, 3, 14, 3, 20);
+                    line(canvas, 21, 14, 21, 20);
+                    break;
+                case "steady-playback":
+                    // A signal arc above a long buffer bar.
+                    canvas.drawRoundRect(2, 15, 22, 21, 2, 2, ink);
+                    line(canvas, 5, 18, 15, 18);
+                    path(canvas, 7, 9, 12, 6, 17, 9);
+                    path(canvas, 4, 6, 12, 1, 20, 6);
+                    canvas.drawCircle(12, 11, 1, ink);
+                    break;
+                case "audio-focus":
+                    // Two overlapping speakers: two sounds at once.
+                    path(canvas, 2, 9, 5, 9, 9, 5, 9, 19, 5, 15, 2, 15, 2, 9);
+                    path(canvas, 12, 8, 14, 10, 14, 14, 12, 16);
+                    path(canvas, 16, 5, 19, 8, 19, 16, 16, 19);
+                    path(canvas, 20, 3, 23, 7, 23, 17, 20, 21);
+                    break;
                 case "output-eq":
                     for (int x : new int[] {4, 12, 20}) {
                         float y = x == 12 ? 15 : 8;
@@ -1427,7 +1580,11 @@ public final class ExtrasActivity extends Activity {
             case "sleep-fade":
             case "battery-saver":
             case "video-switch":
+            case "audio-focus":
+            case "steady-playback":
                 return "playback";
+            case "smart-downloads":
+                return "library";
             case "mixed-playlists":
                 return "library";
             default:
@@ -1618,6 +1775,7 @@ public final class ExtrasActivity extends Activity {
                     !id.equals("battery-saver")
                             && !id.equals("download-quality")
                             && !id.equals("video-switch")
+                            && !id.equals("audio-focus")
                             && !id.equals("flac-audio")
                             && !id.equals("streamseek-preview");
             asynchronous =

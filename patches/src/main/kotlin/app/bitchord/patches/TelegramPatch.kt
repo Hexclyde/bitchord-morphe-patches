@@ -2521,6 +2521,180 @@ val jamesDspPatch =
     }
 
 @Suppress("unused")
+val audioFocusPatch =
+    extrasPatch(
+        "Play alongside other apps",
+        "Keeps the music playing when another app plays sound, such as a reel or a video, " +
+            "instead of pausing. Calls still pause it." +
+            WHERE,
+        extrasPlayersPatch,
+    ) {
+        addAudioFocus()
+        markApplied("audioFocusApplied")
+    }
+
+private const val AUDIO_FOCUS = "Lapp/bitchord/telegram/AudioFocus;"
+
+/**
+ * BitChord asks Android for audio focus when it builds a player and when it moves focus between
+ * its two players (crossfades, casting, version swaps). Both go through AudioFocus, which leaves
+ * focus alone while Play alongside other apps is on.
+ */
+private fun BytecodePatchContext.addAudioFocus() {
+    val builder = "Landroidx/media3/exoplayer/ExoPlayer\$Builder;"
+    val build =
+        mutableClassDefBy(SERVICE).methods.single {
+            it.name == "buildPlayer" && it.returnType.startsWith("Landroidx/media3/exoplayer/")
+        }
+    val code = build.implementation!!.instructions.toList()
+    val focus =
+        code.indices.single { i ->
+            code[i].opcode == Opcode.IPUT_BOOLEAN &&
+                code[i].fieldRef()?.let { it.definingClass == builder && it.name == "handleAudioFocus" } == true
+        }
+    val put = code[focus] as TwoRegisterInstruction
+    // The next instruction overwrites a register without reading it, so it is free here.
+    val next = code[focus + 1]
+    check(next.opcode == Opcode.IGET_BOOLEAN) { "Player builder changed after its audio focus" }
+    val free = (next as TwoRegisterInstruction).registerA
+    check(free != put.registerA && free != put.registerB && free != next.registerB) {
+        "No free register next to the player builder's audio focus"
+    }
+    build.replaceInstruction(focus, "iput-boolean v$free, v${put.registerB}, $builder->handleAudioFocus:Z")
+    build.addInstructions(
+        focus,
+        """
+        invoke-static {v${put.registerA}}, $AUDIO_FOCUS->built(Z)Z
+        move-result v$free
+    """,
+    )
+    var calls = 0
+    for (type in classesCalling("Landroidx/media3/common/Player;", "setAudioAttributes")) {
+        if (!type.startsWith("Lcom/music/bitchord/")) continue
+        for (method in mutableClassDefBy(type).methods) {
+            val instructions = method.implementation?.instructions?.toList() ?: continue
+            for (i in instructions.indices) {
+                val ref = instructions[i].methodRef() ?: continue
+                if (ref.definingClass != "Landroidx/media3/common/Player;" ||
+                    ref.name != "setAudioAttributes" ||
+                    ref.parameterTypes.size != 2) continue
+                val call = instructions[i] as FiveRegisterInstruction
+                check(instructions[i].opcode == Opcode.INVOKE_INTERFACE && call.registerCount == 3) {
+                    "Unexpected audio focus call in $type"
+                }
+                method.replaceInstruction(
+                    i,
+                    "invoke-static {v${call.registerC}, v${call.registerD}, v${call.registerE}}, " +
+                        "$AUDIO_FOCUS->setAudioAttributes(Landroidx/media3/common/Player;" +
+                        "Landroidx/media3/common/AudioAttributes;Z)V",
+                )
+                calls++
+            }
+        }
+    }
+    check(calls == 4) { "BitChord's audio focus changes not found ($calls)" }
+    println("Added Play alongside other apps to the player builder and $calls focus changes")
+}
+
+@Suppress("unused")
+val steadyPlaybackPatch =
+    extrasPatch(
+        "Steady playback",
+        "Reads further ahead, through the rest of the song and into the next ones, with " +
+            "separate limits for Wi-Fi and mobile data, and waits through a lost signal instead " +
+            "of stopping." +
+            WHERE,
+    ) {
+        addSteadyPlayback()
+        markApplied("steadyPlaybackApplied")
+    }
+
+private const val STEADY = "Lapp/bitchord/telegram/SteadyPlayback;"
+
+/**
+ * BitChord builds each player's load control with an 8 MB read-ahead; SteadyPlayback keeps each
+ * one and changes its limit with the connection. BitChord's load error policy gets the retry
+ * count Media3 asks before a song that ran dry stops, which SteadyPlayback raises while offline.
+ */
+private fun BytecodePatchContext.addSteadyPlayback() {
+    val control = "Landroidx/media3/exoplayer/DefaultLoadControl;"
+    val build =
+        mutableClassDefBy(SERVICE).methods.single {
+            it.name == "buildPlayer" && it.returnType.startsWith("Landroidx/media3/exoplayer/")
+        }
+    val code = build.implementation!!.instructions.toList()
+    val made =
+        code.indices.single { i ->
+            code[i].methodRef()?.let { it.definingClass == control && it.name == "<init>" } == true
+        }
+    val start = (code[made] as RegisterRangeInstruction).startRegister
+    build.addInstruction(
+        made + 1,
+        "invoke-static/range {v$start .. v$start}, $STEADY->loadControl(Ljava/lang/Object;)V",
+    )
+    val policy = mutableClassDefBy("Lcom/music/bitchord/playback/PlaybackService\$PermanentAwareLoadErrorPolicy;")
+    val parent = policy.superclass!!
+    check(classDefBy(parent).methods.any { it.name == "getMinimumLoadableRetryCount" && it.parameterTypes == listOf("I") }) {
+        "BitChord's load error policy has no retry count"
+    }
+    check(policy.methods.none { it.name == "getMinimumLoadableRetryCount" }) {
+        "BitChord's load error policy already sets its retry count"
+    }
+    val retries =
+        MutableMethod(
+            ImmutableMethod(
+                policy.type,
+                "getMinimumLoadableRetryCount",
+                listOf(com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter("I", null, null)),
+                "I",
+                com.android.tools.smali.dexlib2.AccessFlags.PUBLIC.value,
+                null,
+                null,
+                ImmutableMethodImplementation(3, emptyList<Instruction>(), emptyList(), emptyList()),
+            )
+        )
+    retries.addInstructions(
+        0,
+        """
+        invoke-super {p0, p1}, $parent->getMinimumLoadableRetryCount(I)I
+        move-result v0
+        invoke-static {v0}, $STEADY->minRetries(I)I
+        move-result v0
+        return v0
+    """,
+    )
+    policy.methods.add(retries)
+    println("Added Steady playback to BitChord's load control and load error policy")
+}
+
+/** The job Android runs for Smart downloads. */
+private val smartDownloadsResources = resourcePatch {
+    execute {
+        document("AndroidManifest.xml").use { doc ->
+            val app = doc.getElementsByTagName("application").item(0) as org.w3c.dom.Element
+            val service = doc.createElement("service")
+            service.setAttributeNS(ANDROID, "android:name", "app.bitchord.telegram.SmartDownloadsJob")
+            service.setAttributeNS(ANDROID, "android:permission", "android.permission.BIND_JOB_SERVICE")
+            service.setAttributeNS(ANDROID, "android:exported", "false")
+            app.appendChild(service)
+        }
+    }
+}
+
+@Suppress("unused")
+val smartDownloadsPatch =
+    extrasPatch(
+        "Smart downloads",
+        "Downloads the songs you play most, on Wi-Fi, so they're there without a signal. Uses " +
+            "BitChord's listening statistics and its Download quality; songs you delete aren't " +
+            "downloaded again." +
+            WHERE,
+        smartDownloadsResources,
+    ) {
+        markApplied("smartDownloadsApplied")
+    }
+
+@Suppress("unused")
 val videoSwitchPatch =
     extrasPatch(
         "Audio and video switch",
