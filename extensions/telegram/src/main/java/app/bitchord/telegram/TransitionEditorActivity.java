@@ -418,6 +418,13 @@ public final class TransitionEditorActivity extends Activity {
         bar.setProgressTintList(ColorStateList.valueOf(style.foreground));
         bar.setProgressBackgroundTintList(ColorStateList.valueOf(style.outline));
         bar.setContentDescription(title);
+        Value describe =
+                value -> {
+                    String spoken = number(value) + unit;
+                    if (android.os.Build.VERSION.SDK_INT >= 30) bar.setStateDescription(spoken);
+                    else bar.setContentDescription(title + " · " + spoken);
+                };
+        describe.set(initial);
         bar.setProgress(
                 upper == min ? 0 : (int) Math.round((initial - min) * 1000 / (upper - min)));
         group.addView(caption);
@@ -437,6 +444,7 @@ public final class TransitionEditorActivity extends Activity {
                             current[0] = actual;
                             change.set(actual);
                             caption.setText(title + " · " + number(actual) + unit);
+                            describe.set(actual);
                         }
                     }
                 });
