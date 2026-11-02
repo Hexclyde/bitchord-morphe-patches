@@ -146,6 +146,7 @@ __pycache__/
 /ui-tests/src/test/java/app/bitchord/soulseek/DownloadArtwork.java
 publish-testing.ps1
 PUBLISH-WINDOWS.md
+remove-beta18-branch.ps1
 
 /ui-tests/src/test/java/app/bitchord/telegram/DownloadUploadBridge.java
 /ui-tests/src/test/java/app/bitchord/telegram/ExtrasUi.java
