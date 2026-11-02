@@ -54,15 +54,15 @@
   "generated_tdapi_sha256": "d4f776a6f323f125458ca131aaf0fa8059c39a8ff37afc225b0431348b9b4206",
   "patch_bundle_version": "1.1.0-beta.18",
   "native_sha256": {
-    "lib/arm64-v8a/libc++_shared.so": "7466ed097631a564ed6bff0b47768caa76bf03270d2047b5a65c03f497b824df",
+    "lib/arm64-v8a/libc++_shared.so": "dad01c816be6eaaee4ff3b9fac0f479ce472d4b7e2409f6f2195b3a4ee3dd361",
     "lib/arm64-v8a/libcryptox.so": "9fdc85415c999a2c7383817a204d822f0e509515016b8fee14c45d5a1c40e4d6",
     "lib/arm64-v8a/libsslx.so": "48194dfff5be214af8a50be0f13c020c9fdafc82f01ccf324e86056d841a5cb5",
     "lib/arm64-v8a/libtdjni.so": "aab54f0e7d0bd478b36e2b9d23e46464bc50c15691085573975243ac33e6a2a0",
-    "lib/armeabi-v7a/libc++_shared.so": "2ee592c9ba3372da027384deb1070def5ae76f3ea2246bd447360faa73ac22f4",
+    "lib/armeabi-v7a/libc++_shared.so": "0a85b5c39712fbc422c1b599a8029d2376bc268ec73347d69edbb7655fad9bda",
     "lib/armeabi-v7a/libcryptox.so": "c7061edd2d45570e27ff0c6e447f545d7999d0669206e7e6350eac52f3d5af9e",
     "lib/armeabi-v7a/libsslx.so": "edfa2435d30126a4a2389c6843cf7e752270ffafd2b5a8565abfc1fce84a39dd",
     "lib/armeabi-v7a/libtdjni.so": "17132a62fcc85ed275f7af55a04c266abc61e66cba79d94ff40be3027691eabe",
-    "lib/x86_64/libc++_shared.so": "7918ebd0b8074c312d0c610205d49760b98c008026e6b817cd92103a3e12241b",
+    "lib/x86_64/libc++_shared.so": "dacdab6a39eb66adf9b8a21795e96e2d4a30681443890afe1fde53c6dae6ebc9",
     "lib/x86_64/libcryptox.so": "6f52a70151a187dc8185c298caccbcd6c3f376d1a3c2c75c79510cb87728435c",
     "lib/x86_64/libsslx.so": "4cac7d6efbfa233aa10a88220fe42f28a6fffabbdd28c7cbd89b367ae64cb77a",
     "lib/x86_64/libtdjni.so": "84f99e5f191e6b0a1eb106611fc94582552cc323d2b669ce59e153650d1e490d"
@@ -89,7 +89,7 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "d6ecb9ef5bf6d9aeb2642baeab56e14cc0346aa074034397bde965ffbed1bb62",
+  "patch_bundle_sha256": "7e05e42ca0f034000befe610364ec5235cbf64e323911564735b684140b5cdc3",
   "soulseek_development": {
     "status": "experimental-local-build",
     "baseline_commit": "3de260f7f1d7967c5a97ce924085d7d42bec18af",

@@ -1,6 +1,6 @@
 {
-  "created_at": "2026-11-02T04:42:12",
-  "description": "Morphe patches for BitChord 1.9: Telegram music, an integrated Downloads explorer, Soulseek sharing, Telegram archives, mixed-source device playlists, an optional FLAC Audio source and playback tools.",
+  "created_at": "2026-11-02T22:17:58",
+  "description": "Morphe patches for BitChord 1.9: Telegram music, a Downloads explorer, Soulseek sharing, Telegram archives, mixed-source playlists, source-independent AutoMix and playback tools.",
   "download_url": "https://github.com/Hexclyde/bitchord-morphe-patches/releases/download/v1.1.0-beta.18/bitchord-patches-1.1.0-beta.18.mpp",
   "signature_download_url": "",
   "version": "1.1.0-beta.18",
