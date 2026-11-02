@@ -59,6 +59,59 @@ public final class RecordingIdentityTest {
         check(
                 RecordingIdentity.match(a, same, Double.NaN, 40) == null,
                 "Unknown durations cannot certify a timeline");
+
+        check(
+                RecordingIdentity.matchesPrepared(a, same, 40, 40.25),
+                "Preparation retains a verified constant leading offset");
+        RecordingIdentity.Window[] spaced = {
+            window(song, 0, 0), window(song, 13, 98.981), window(song, 26, 196.941)
+        };
+        RecordingIdentity.Window[] clock = {
+            window(song, 0, 0), window(song, 13, 99.0665), window(song, 26, 197.101)
+        };
+        check(
+                RecordingIdentity.match(spaced, clock, 213.941, 214.073791) == null,
+                "The measured 160 ms drift still cannot authorize a constant-offset swap");
+        check(
+                RecordingIdentity.matchesPrepared(spaced, clock, 213.941, 214.073791),
+                "Matching whole tracks tolerate duration-explained timing drift before playback");
+        check(
+                !RecordingIdentity.matchesPrepared(a, changed, 40, 40.25),
+                "Prepared copies still require their middle to match");
+        check(
+                !RecordingIdentity.matchesPrepared(spaced, clock, 213.941, 215),
+                "Preparation retains the duration bound");
+        check(
+                !RecordingIdentity.matchesPrepared(a, drifting, 40, 40),
+                "A changed middle cannot be explained by equal total durations");
+        RecordingIdentity.Window[] unexplained = {
+            window(song, 0, 0), window(song, 13, 13.1), window(song, 26, 26.2)
+        };
+        check(
+                !RecordingIdentity.matchesPrepared(a, unexplained, 40, 40),
+                "An arbitrary fitted slope cannot replace measured durations");
+        check(
+                !RecordingIdentity.matchesPrepared(spaced, clock, 214.073791, 213.941),
+                "The duration ratio must explain the observed direction of drift");
+        check(
+                !RecordingIdentity.matchesPrepared(a, same, Double.NaN, 40),
+                "Unknown prepared durations do not verify");
+        check(
+                !RecordingIdentity.matchesPrepared(
+                        new RecordingIdentity.Window[] {silence, silence, silence}, same, 40, 40),
+                "Preparation does not accept silence as recording evidence");
+        check(
+                RecordingIdentity.match(spaced, clock, 213.941, 214.073791) == null,
+                "Preparation never changes the strict swap's decision");
+        RecordingIdentity.Window[] invalid = {window(song, 0, Double.NaN), spaced[1], spaced[2]};
+        check(
+                !RecordingIdentity.matchesPrepared(invalid, clock, 213.941, 214.073791),
+                "Invalid decoder timestamps cannot certify a prepared recording");
+        String measurements = RecordingIdentity.describe(spaced, clock, 213.941, 214.073791);
+        check(
+                measurements.contains("offset span 160 ms")
+                        && measurements.contains("duration-normalized span 38 ms"),
+                "Comparison logs distinguish raw drift from duration-explained drift");
         System.out.println("PASS: " + checks + " multi-window recording identity checks");
     }
 }

@@ -6,8 +6,10 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.YearMonth;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.LongSupplier;
 
 /** Play alongside other apps, Steady playback and Smart downloads. */
 public final class TravelFeaturesTest {
@@ -200,6 +202,180 @@ public final class TravelFeaturesTest {
         check(SteadyPlayback.online(), "validated");
     }
 
+    static final class Allocator {
+        int allocatedCount, availableCount;
+        int individualAllocationSize = 65_536;
+        int targetBufferSize;
+    }
+
+    static final class LoadingState {
+        int targetBufferBytes;
+
+        LoadingState(int bytes) {
+            targetBufferBytes = bytes;
+        }
+    }
+
+    static final class Control {
+        int targetBufferBytesOverwrite;
+        final Allocator allocator = new Allocator();
+        final Map<Object, LoadingState> loadingStates = new LinkedHashMap<>();
+
+        Control(int target) {
+            targetBufferBytesOverwrite = target;
+            loadingStates.put(new Object(), new LoadingState(target));
+            updateAllocator();
+        }
+
+        void updateAllocator() {
+            allocator.targetBufferSize = 0;
+            for (LoadingState state : loadingStates.values())
+                allocator.targetBufferSize += state.targetBufferBytes;
+        }
+    }
+
+    static final class Parameters {
+        long bufferedDurationUs = 3_000_000;
+    }
+
+    static boolean admitted(Control control, Parameters parameters) throws Exception {
+        try {
+            return (Boolean)
+                    SteadyPlayback.class
+                            .getMethod("allowLoading", Object.class, Object.class)
+                            .invoke(null, control, parameters);
+        } catch (NoSuchMethodException beforeGate) {
+            SteadyPlayback.tick(control);
+            return true;
+        }
+    }
+
+    static long allocated(Control... controls) {
+        long total = 0;
+        for (Control control : controls)
+            total +=
+                    (long) (control.allocator.allocatedCount + control.allocator.availableCount)
+                            * control.allocator.individualAllocationSize;
+        return total;
+    }
+
+    static void clearControls() throws Exception {
+        for (String name : new String[] {"controls", "observedControls"})
+            try {
+                java.lang.reflect.Field field = SteadyPlayback.class.getDeclaredField(name);
+                field.setAccessible(true);
+                ((Map<?, ?>) field.get(null)).clear();
+            } catch (NoSuchFieldException beforeGate) {
+            }
+    }
+
+    static void bufferMemory() throws Exception {
+        int mb = 1 << 20;
+        boolean enabled = SteadyPlayback.enabled;
+        int wifi = SteadyPlayback.wifiMb, mobile = SteadyPlayback.mobileMb;
+        java.lang.reflect.Field heap = null;
+        Object previousHeap = null;
+        try {
+            try {
+                heap = SteadyPlayback.class.getDeclaredField("heapBytes");
+                heap.setAccessible(true);
+                previousHeap = heap.get(null);
+                heap.set(null, (LongSupplier) () -> 192L << 20);
+            } catch (NoSuchFieldException beforeGate) {
+            }
+            clearControls();
+            SteadyPlayback.setEnabled(true);
+            SteadyPlayback.setWifiMb(64);
+            SteadyPlayback.observed(true, true, true);
+            Control main = new Control(8 * mb), spare = new Control(8 * mb);
+            Control canvas = new Control(131_203_072);
+            canvas.targetBufferBytesOverwrite = -1;
+            int nativeCanvasTarget = canvas.targetBufferBytesOverwrite;
+            SteadyPlayback.loadControl(main);
+            SteadyPlayback.loadControl(spare);
+            Parameters ready = new Parameters();
+            admitted(canvas, ready);
+            Control[] players = {main, spare, canvas};
+            for (int pass = 0; pass < 5000; pass++) {
+                boolean grew = false;
+                for (Control control : players)
+                    if (admitted(control, ready)
+                            && (long) control.allocator.allocatedCount * 65_536
+                                    < control.allocator.targetBufferSize) {
+                        control.allocator.allocatedCount++;
+                        grew = true;
+                    }
+                if (!grew) break;
+            }
+            check(
+                    allocated(players) <= 96L * mb,
+                    "A 192 MiB app must leave half its heap for application work: "
+                            + allocated(players));
+            check(
+                    (long) canvas.allocator.allocatedCount * 65_536 <= 16L * mb,
+                    "Animated artwork must not fill the native 125 MiB video allowance");
+            check(
+                    canvas.targetBufferBytesOverwrite == nativeCanvasTarget,
+                    "The auxiliary player's native target is retained");
+            check(
+                    main.targetBufferBytesOverwrite >= 8 * mb
+                            && main.targetBufferBytesOverwrite <= 40 * mb,
+                    "Both primary players retain at least the native floor within the budget");
+            check(SteadyPlayback.wifiMb == 64, "Memory pressure does not change the saved choice");
+            main.loadingStates.put(new Object(), new LoadingState(8 * mb));
+            SteadyPlayback.tick(main);
+            check(
+                    main.allocator.targetBufferSize <= 40 * mb,
+                    "Additional native loading states share the same primary allowance");
+            int used = canvas.allocator.allocatedCount;
+            canvas.allocator.allocatedCount = 0;
+            canvas.allocator.availableCount = used;
+            check(
+                    admitted(canvas, ready),
+                    "The ready artwork player can refill from its own pool without new heap");
+            canvas.allocator.availableCount = 0;
+            main.allocator.availableCount = used;
+            check(
+                    !admitted(canvas, ready),
+                    "Other players' retained pools prevent a new auxiliary allocation");
+            main.allocator.availableCount = 0;
+            canvas.allocator.allocatedCount = used;
+            int primaryUsed = main.allocator.allocatedCount;
+            main.allocator.allocatedCount = 0;
+            main.allocator.availableCount = primaryUsed;
+            check(
+                    admitted(main, ready),
+                    "The primary can maintain read-ahead by reusing its existing pool");
+            main.allocator.availableCount = 0;
+            main.allocator.allocatedCount = primaryUsed;
+            ready.bufferedDurationUs = 1_500_000;
+            check(
+                    admitted(canvas, ready),
+                    "Initial audio/video readiness is allowed below two seconds");
+            ready.bufferedDurationUs = 2_000_000;
+            check(
+                    !admitted(canvas, ready),
+                    "Once ready, the artwork buffer stops at its allowance");
+            SteadyPlayback.setEnabled(false);
+            check(admitted(canvas, ready), "Off leaves the auxiliary loading decision unchanged");
+            SteadyPlayback.tick(main);
+            SteadyPlayback.tick(spare);
+            check(
+                    main.targetBufferBytesOverwrite == 8 * mb
+                            && spare.targetBufferBytesOverwrite == 8 * mb,
+                    "Off restores each primary's native target");
+            check(
+                    canvas.targetBufferBytesOverwrite == nativeCanvasTarget,
+                    "Off preserves the original auxiliary target");
+        } finally {
+            clearControls();
+            if (heap != null) heap.set(null, previousHeap);
+            SteadyPlayback.setWifiMb(wifi);
+            SteadyPlayback.setMobileMb(mobile);
+            SteadyPlayback.setEnabled(enabled);
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         // Play alongside other apps.
         check(AudioFocus.takesFocus(true, false), "BitChord's focus when off");
@@ -243,6 +419,7 @@ public final class TravelFeaturesTest {
         check(SteadyPlayback.nearest(1, SteadyPlayback.MOBILE_CHOICES) == 8, "smallest choice");
         check(SteadyPlayback.minRetries(3) == 3, "BitChord's retries while off or online");
         retries();
+        bufferMemory();
 
         // Smart downloads.
         File dir = Files.createTempDirectory("listening").toFile();

@@ -1,5 +1,5 @@
 {
-  "build_date": "2026-11-01",
+  "build_date": "2026-11-02",
   "app_version": "1.9",
   "app_source_commit": "04f64c9f11bd2714d01bbc6da401f146f3d9399f",
   "original_apk_url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.9/BitChord-v1.9_arm64-v8a.apk",
@@ -89,7 +89,7 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "4ffd8b47463ec0df506fca3c5ec0361769d503147317c5edf069394829fbae47",
+  "patch_bundle_sha256": "23fd39054023342ffe40035fc61c6c25314874f88909a399e6245cc3bdc2b16f",
   "soulseek_development": {
     "status": "experimental-local-build",
     "baseline_commit": "3de260f7f1d7967c5a97ce924085d7d42bec18af",
@@ -238,15 +238,18 @@
     "zh",
     "zh-TW"
   ],
-  "ui_translation_phrases": 1882,
+  "ui_translation_phrases": 1886,
   "flac_audio_protocol_reference": {
     "repository": "https://github.com/aztecempire/spotube-plugin-flac-audio",
     "commit": "4ecc535d57c32fe347a301e8fc54ce9be0430158",
     "plugin_version": "2.1.0",
     "implementation": "independent BitChord adapter; no upstream code/runtime/assets bundled",
     "backend": "https://flacdownloader.com",
-    "live_service_tested": false,
-    "download_only": true
+    "live_service_tested": true,
+    "download_only": true,
+    "live_formats_tested": [
+      "FLAC"
+    ]
   },
   "streamseek_decoder": {
     "source": "native/preview/vendor/ffmpeg-7.1.5.tar.xz",
@@ -336,5 +339,6 @@
       "LocalPlaylistEngine.java"
     ],
     "storage_implementation": "independent adapters inspired by storage-review and duplicate-review ideas"
-  }
+  },
+  "release_tag": "v1.1.0-beta.18-r1"
 }

@@ -85,6 +85,7 @@ public final class TelegramBridge {
     public volatile String error = "";
     volatile boolean paramsSent;
     volatile long mediaRevision;
+    final TelegramMediaChanges mediaChanges = new TelegramMediaChanges();
     final ChannelSponsorship sponsorship = new ChannelSponsorship(request -> callAny(request));
     private volatile boolean foreground;
     private final LinkedHashMap<String, Boolean> playbackRead = new LinkedHashMap<>();
@@ -713,6 +714,7 @@ public final class TelegramBridge {
         final long current = ++generation;
         remoteSearch.clear();
         sponsorship.clear(current);
+        mediaChanges.reset();
         mediaRevision++;
         final CompletableFuture<Void> closed = new CompletableFuture<>();
         clientClosed = closed;
@@ -793,7 +795,9 @@ public final class TelegramBridge {
         } else if (obj instanceof TdApi.UpdateChatHasProtectedContent
                 || obj instanceof TdApi.UpdateMessageContent
                 || obj instanceof TdApi.UpdateDeleteMessages) {
-            mediaRevision++;
+            synchronized (mediaChanges) {
+                if (TelegramMediaUpdates.changed(mediaChanges, obj)) mediaRevision++;
+            }
             remoteSearch.clear();
         } else if (obj instanceof TdApi.UpdateChatFolders) {
             TdApi.ChatFolderInfo[] list = ((TdApi.UpdateChatFolders) obj).chatFolders;
@@ -2208,6 +2212,7 @@ public final class TelegramBridge {
             heard.clear();
         }
         sponsorship.clear(++generation);
+        mediaChanges.reset();
         mediaRevision++;
         saveConfig();
     }

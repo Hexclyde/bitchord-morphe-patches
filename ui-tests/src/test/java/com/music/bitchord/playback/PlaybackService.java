@@ -9,6 +9,65 @@ import java.util.function.Function;
 
 /** Test stand-in for the APK-verified host bridges. */
 public final class PlaybackService {
+    public static boolean realMix;
+
+    public static boolean bitchordAutomixRealMix() {
+        return realMix;
+    }
+
+    public interface DspDecoder {
+        Object decode(
+                android.media.MediaDataSource source,
+                double end,
+                kotlin.jvm.functions.Function0<Boolean> abort,
+                kotlin.jvm.functions.Function4<
+                                java.nio.ByteBuffer,
+                                android.media.MediaCodec.BufferInfo,
+                                Integer,
+                                Integer,
+                                kotlin.Unit>
+                        chunks);
+    }
+
+    public static DspDecoder dspDecoder;
+    public static java.util.function.BiFunction<float[], Double, Object> dspFeatures;
+
+    public static Object bitchordDspDecode(
+            android.media.MediaDataSource source,
+            double end,
+            kotlin.jvm.functions.Function0<Boolean> abort,
+            kotlin.jvm.functions.Function4<
+                            java.nio.ByteBuffer,
+                            android.media.MediaCodec.BufferInfo,
+                            Integer,
+                            Integer,
+                            kotlin.Unit>
+                    chunks) {
+        return dspDecoder == null ? null : dspDecoder.decode(source, end, abort, chunks);
+    }
+
+    public static float[] bitchordDspMono(
+            java.nio.ByteBuffer buffer, android.media.MediaCodec.BufferInfo info, int channels) {
+        java.nio.ByteBuffer pcm = buffer.duplicate().order(java.nio.ByteOrder.LITTLE_ENDIAN);
+        pcm.position(info.offset);
+        pcm.limit(info.offset + info.size);
+        float[] mono = new float[info.size / (channels * 2)];
+        for (int i = 0; i < mono.length; i++) {
+            float sum = 0;
+            for (int c = 0; c < channels; c++) sum += pcm.getShort() / 32768f;
+            mono[i] = sum / channels;
+        }
+        return mono;
+    }
+
+    public static Object bitchordDspFeatures(float[] mono, double seconds) {
+        return dspFeatures == null ? null : dspFeatures.apply(mono, seconds);
+    }
+
+    public static Object bitchordDspResult(Object features, String id, double seconds) {
+        return features == null ? null : new com.music.bitchord.playback.smart.TrackAnalysis(id);
+    }
+
     public static Function<Uri, android.media.MediaDataSource> cached;
 
     public static android.media.MediaDataSource bitchordAutomixCached(Uri uri) {
@@ -23,6 +82,12 @@ public final class PlaybackService {
 
     public static DataSource bitchordAutomixSource() {
         return source == null ? null : source.createDataSource();
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static kotlin.coroutines.CoroutineContext bitchordPreparedContext(
+            String token, ThreadLocal<?> local) {
+        return new kotlinx.coroutines.internal.ThreadLocalElement(token, local);
     }
 
     public static DataSpec bitchordAutomixResolve(Object service, Uri uri) {

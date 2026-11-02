@@ -6,7 +6,7 @@ I build beta.18 for BitChord 1.9. I keep every new selectable playback patch off
 
 I use **Play alongside other apps** when I want music to continue over other apps' audio. I preserve the host's requested focus per player, keep its noisy-headphone policy, and pause during ringing, phone and communication modes. I discard automatic recovery when the track changes or the feature is disabled during a call.
 
-I use **Steady playback** to raise the host's 8 MiB buffer limit. I offer 16/32/64/96 MiB on unmetered connections and 8/16/32/64 MiB on metered connections. I apply changed limits at Media3's next loading decision on its playback thread. I retain settings when disabled and restore the host's limit. I increase retries only while the network is absent; I preserve normal online error handling.
+I use **Steady playback** to raise the host's 8 MiB buffer limit. I offer 16/32/64/96 MiB on unmetered connections and 8/16/32/64 MiB on metered connections. I apply changed limits at Media3's next loading decision on its playback thread. I treat the selected sizes as upper limits and bound combined music, spare-player and animated-artwork buffering against the Java heap. I retain settings when disabled and restore the host's limit. I increase retries only while the network is absent; I preserve normal online error handling.
 
 I use **Smart downloads** to consider songs with at least three plays in the last three months. I search enabled download-capable sources, check recording metadata through BitChord's matcher, and rank matches in the selected Download quality. I pin the selected source and format, record the selected identity, and skip previously queued or saved songs. I never automatically delete music or download a song again after it has been removed. I consider at most 25 songs per run, about twice daily on an unmetered network, with charging required by default and a free-space guard. I run transfers inside Android’s scheduled job, without relying on a background foreground-service start. I stop my coroutine scope if Android cancels the job or the feature is disabled. I retain unsuccessful songs for a later retry and remember completed or explicitly cancelled songs. I do not cancel unrelated transfers.
 
@@ -14,11 +14,23 @@ I use **Smart downloads** to consider songs with at least three plays in the las
 
 I use **Play the best source first** in Unofficial Telegram settings to prepare upcoming songs against eligible enabled sources, including community add-ons. This enhancement is enabled with the integration; the three newly selectable playback patches remain off by default. I check the recording and delivery before choosing a copy, respect source selections and quality limits, and use YouTube when no other verified copy can play or delivery is too slow. I keep FLAC Downloader exclusively in the download catalogue.
 
+I prepare the next two queued songs. For whole-track selection before playback, I retain all three fingerprint checks and the 0.75-second duration limit. I can account for a small timing difference explained by the container durations, with at most 80 ms of unexplained residual drift. I retain the original strict timeline check for a live swap, never derive a live-swap offset from this preparation result, and leave playback speed and pitch unchanged. I keep decisions, background read scopes and persisted proofs separate for these purposes. I reuse an exact, unexpired preparation approval for its authorized background cache read, while fresh recording checks and live swaps retain their own verification. I invalidate Telegram preparation for changes to the selected message, its chat protection or its session; an unrelated message edit does not discard the copy.
+
+I keep the first-open wait for the selected track bounded at 20 seconds. A confirmed upcoming entry outside either protected player deck can wait up to 60 seconds for its existing preparation job. If it becomes selected, I shorten its deadline from the original read start. Routine queue updates retain the awaited job instead of completing it as unavailable. I keep background work subject to battery, thermal and network rules.
+
 I retain each queue entry’s chosen rendition while it plays. A duplicate song can prepare a better copy without changing the bytes or source identity of an entry already playing. I bound preparation to two upcoming songs, perform network and recording checks away from the main thread, and discard stale work when sources or settings change.
+
+I serialize background recording checks and transition decoding, resolve sources before admitting heavy analysis, and stop stale cached reads. I inspect the actual audio format and available memory before analysis; when its working set cannot fit, I retain BitChord’s basic fade and keep the chosen playback source unchanged.
 
 I retain a complete YouTube cache copy until the verified replacement is complete. I protect active readers, keep encodings in separate cache resources, and never remove a saved download as part of replacement. I fill eligible departed replacements in bounded chunks before reclaiming obsolete YouTube playback cache resources.
 
 I record the actual source name separately for each cached rendition and completed saved file. Stats, Downloads and Storage Sense use those records; unknown or mixed provenance stays unknown. I distinguish advertised format information from measured details and keep source URLs and credentials out of these records.
+
+## AutoMix analysis
+
+I keep the native planner and use full model analysis when its working set fits. On a smaller heap, I stream the selected recording into continuously resampled 11.025 kHz mono and reuse BitChord's measured DSP features. I bound temporary storage, PCM allocation and decoder work; I hold the memory allowance until native processing finishes. I retain the planner's confidence checks and leave model beat and vocal evidence absent in this path.
+
+I use a basic fade when neither analysis path can run safely or the recording lacks sufficient evidence. I label that transition **Crossfade**, reserving the native **Mixing** label for the planner's qualifying mixes. I preserve speed, pitch, source selection and saved transition edits.
 
 ## Sing: separation model
 

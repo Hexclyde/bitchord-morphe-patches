@@ -226,3 +226,5 @@ PUBLISH-WINDOWS.md
 /ui-tests/src/test/java/app/bitchord/telegram/AudioOriginSaved.java
 /ui-tests/src/test/java/app/bitchord/telegram/SourceFirst.java
 /ui-tests/src/test/java/app/bitchord/telegram/SourcePreparation.java
+/ui-tests/src/test/java/app/bitchord/telegram/TelegramMediaChanges.java
+/ui-tests/src/test/java/app/bitchord/telegram/DspAnalysis.java

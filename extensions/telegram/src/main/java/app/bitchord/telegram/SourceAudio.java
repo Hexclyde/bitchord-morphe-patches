@@ -1,6 +1,8 @@
 package app.bitchord.telegram;
 
 import android.media.MediaDataSource;
+import android.media.MediaExtractor;
+import android.media.MediaFormat;
 import android.net.Uri;
 
 import androidx.media3.datasource.DataSource;
@@ -15,7 +17,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BooleanSupplier;
+import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -27,6 +32,300 @@ import java.util.function.Supplier;
  * and only a longer jump asks for a new one.
  */
 public final class SourceAudio extends MediaDataSource {
+    interface AnalysisFormat extends AutoCloseable {
+        MediaFormat read(MediaDataSource source) throws IOException;
+
+        void close();
+    }
+
+    static Supplier<AnalysisFormat> analysisFormats =
+            () -> {
+                MediaExtractor extractor = new MediaExtractor();
+                return new AnalysisFormat() {
+                    public MediaFormat read(MediaDataSource source) throws IOException {
+                        extractor.setDataSource(source);
+                        for (int i = 0; i < extractor.getTrackCount(); i++) {
+                            MediaFormat format = extractor.getTrackFormat(i);
+                            String mime = format.getString(MediaFormat.KEY_MIME);
+                            if (mime != null && mime.startsWith("audio/")) return format;
+                        }
+                        return null;
+                    }
+
+                    public void close() {
+                        extractor.release();
+                    }
+                };
+            };
+
+    /** Playback buffers may grow after analysis starts, so their share stays reserved. */
+    static long analysisAvailable(long maximum, long used) {
+        if (maximum <= 0 || used < 0 || used >= maximum) return 0;
+        long available = maximum - used;
+        return Math.max(0, available - maximum / 2);
+    }
+
+    static final class AnalysisInfo {
+        final int sampleRate;
+        final double seconds;
+
+        AnalysisInfo(int sampleRate, double seconds) {
+            this.sampleRate = sampleRate;
+            this.seconds = seconds;
+        }
+    }
+
+    /** Inspect the pinned source without taking ownership of its reader. */
+    static AnalysisInfo analysisInfo(MediaDataSource source, double requestedSeconds)
+            throws IOException {
+        if (source == null || !Double.isFinite(requestedSeconds))
+            throw new IOException("Selected audio duration or source is unknown");
+        try (AnalysisFormat probe = analysisFormats.get()) {
+            MediaFormat format = probe.read(source);
+            if (format == null || !format.containsKey(MediaFormat.KEY_SAMPLE_RATE))
+                throw new IOException("Selected audio sample rate is unknown");
+            String mime = format.getString(MediaFormat.KEY_MIME);
+            if (mime == null || !mime.startsWith("audio/"))
+                throw new IOException("Selected audio format is unknown");
+            int rate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE);
+            double seconds = Math.max(0, requestedSeconds);
+            if (format.containsKey(MediaFormat.KEY_DURATION))
+                seconds = Math.max(seconds, format.getLong(MediaFormat.KEY_DURATION) / 1_000_000d);
+            if (rate <= 0 || !Double.isFinite(seconds) || seconds <= 0)
+                throw new IOException("Selected audio duration or sample rate is unusable");
+            return new AnalysisInfo(rate, seconds);
+        } catch (RuntimeException | LinkageError unavailable) {
+            throw new IOException("Selected audio format could not be inspected", unavailable);
+        }
+    }
+
+    private static final long DSP_MARGIN = 8L << 20, STOCK_PLAYER_RESERVE = 141L << 20;
+
+    private static long dspAvailable(long maximum, long used, long growth) {
+        if (maximum <= 0 || used < 0 || used >= maximum) return 0;
+        if (growth < 0) growth = Math.max(maximum / 2, STOCK_PLAYER_RESERVE);
+        long free = maximum - used;
+        if (growth >= free) return 0;
+        return Math.max(0, free - growth - DSP_MARGIN);
+    }
+
+    static long dspAvailable(long maximum, long used) {
+        long growth = -1;
+        try {
+            growth = SteadyPlayback.analysisGrowth(maximum);
+        } catch (RuntimeException | LinkageError unavailable) {
+            // Independent patch selections retain the ordinary player's full possible growth.
+        }
+        return dspAvailable(maximum, used, growth);
+    }
+
+    /** A relaxed estimate is valid only while the native loading ceiling stays pinned. */
+    static final class DspMemory implements AutoCloseable {
+        final long available;
+        private final long maximum;
+        private final AutoCloseable lease;
+        private final LongSupplier growth;
+        private final BooleanSupplier stopped;
+        private volatile boolean closed;
+
+        private DspMemory(
+                long maximum,
+                long used,
+                AutoCloseable lease,
+                LongSupplier growth,
+                BooleanSupplier stopped) {
+            this.maximum = maximum;
+            this.lease = lease;
+            this.growth = growth;
+            this.stopped = stopped;
+            available = available(maximum, used);
+        }
+
+        long available() {
+            return available;
+        }
+
+        long available(long currentMaximum, long used) {
+            if (closed || currentMaximum != maximum || cancelled()) return 0;
+            try {
+                long future = growth.getAsLong();
+                if (cancelled() || lease != null && future < 0) return 0;
+                return dspAvailable(maximum, used, future);
+            } catch (RuntimeException | LinkageError unavailable) {
+                return 0;
+            }
+        }
+
+        boolean cancelled() {
+            if (closed) return true;
+            try {
+                return stopped.getAsBoolean();
+            } catch (RuntimeException | LinkageError unavailable) {
+                return true;
+            }
+        }
+
+        @Override
+        public synchronized void close() {
+            if (closed) return;
+            closed = true;
+            if (lease != null)
+                try {
+                    lease.close();
+                } catch (Exception | LinkageError unavailable) {
+                    HostLog.d("AutoMix memory allowance could not be released");
+                }
+        }
+    }
+
+    static DspMemory dspMemory(long maximum, long used) {
+        try {
+            SteadyPlayback.AnalysisLease lease = SteadyPlayback.analysisLease(maximum);
+            if (lease != null) {
+                try {
+                    return new DspMemory(maximum, used, lease, lease, lease);
+                } catch (RuntimeException | Error failure) {
+                    lease.close();
+                    throw failure;
+                }
+            }
+        } catch (RuntimeException | LinkageError unavailable) {
+            // The conservative calculation needs no optional runtime or loading hooks.
+        }
+        return new DspMemory(maximum, used, null, () -> -1, () -> false);
+    }
+
+    /** Peak live Java PCM, with room for DSP reduction, model tensors and read overhead. */
+    static long analysisBytes(int sampleRate, double seconds) {
+        if (sampleRate <= 0 || !Double.isFinite(seconds) || seconds <= 0) return -1;
+        // decodeRegion keeps chunks while flattening; structure then resamples to 11.025 kHz.
+        double structure = sampleRate * seconds * 8 + 11_025d * seconds * 4;
+        // Stereo chunks + flattened channels + mono, then the bounded model tensor copies.
+        double region = sampleRate * Math.min(seconds, 30) * 20 + (64L << 20);
+        double required = Math.max(structure, region) + (16L << 20);
+        return !Double.isFinite(required) || required >= Long.MAX_VALUE
+                ? -1
+                : (long) Math.ceil(required);
+    }
+
+    static String analysisLimit(MediaDataSource source, double requestedSeconds, long available) {
+        if (available <= (16L << 20)) return "not enough Java heap for analysis";
+        if (source == null) return "selected audio cannot be inspected";
+        if (!Double.isFinite(requestedSeconds)) return "selected audio duration is unknown";
+        try (AnalysisFormat probe = analysisFormats.get()) {
+            MediaFormat format = probe.read(source);
+            if (format == null || !format.containsKey(MediaFormat.KEY_SAMPLE_RATE))
+                return "selected audio sample rate is unknown";
+            String mime = format.getString(MediaFormat.KEY_MIME);
+            if (mime == null || !mime.startsWith("audio/"))
+                return "selected audio format is unknown";
+            double seconds = Math.max(0, requestedSeconds);
+            if (format.containsKey(MediaFormat.KEY_DURATION))
+                seconds = Math.max(seconds, format.getLong(MediaFormat.KEY_DURATION) / 1_000_000d);
+            long required = analysisBytes(format.getInteger(MediaFormat.KEY_SAMPLE_RATE), seconds);
+            if (required < 0) return "selected audio duration or sample rate is unusable";
+            return required <= available
+                    ? null
+                    : "not enough Java heap for selected audio (estimated "
+                            + required / (1 << 20)
+                            + " MiB, available "
+                            + available / (1 << 20)
+                            + " MiB)";
+        } catch (IOException | RuntimeException | LinkageError unavailable) {
+            return "selected audio format could not be inspected";
+        }
+    }
+
+    private static final ReentrantLock decoding = new ReentrantLock(true);
+
+    /** One background PCM working set at a time, including nested verification on this thread. */
+    static final class Decoding implements AutoCloseable {
+        private final long deadline;
+        private final BooleanSupplier cancelled;
+        private boolean released;
+
+        private Decoding(long deadline, BooleanSupplier cancelled) {
+            this.deadline = deadline;
+            this.cancelled = cancelled;
+        }
+
+        void check() throws IOException {
+            if (Thread.currentThread().isInterrupted()
+                    || AutomixAccess.stopped()
+                    || cancelled.getAsBoolean()
+                    || System.nanoTime() >= deadline) throw new Stopped();
+        }
+
+        @Override
+        public void close() {
+            if (!released) {
+                released = true;
+                decoding.unlock();
+            }
+        }
+    }
+
+    static Decoding decode(long deadline, BooleanSupplier cancelled) throws IOException {
+        Decoding permit = new Decoding(deadline, cancelled);
+        while (true) {
+            permit.check();
+            try {
+                if (decoding.tryLock(
+                        Math.min(deadline - System.nanoTime(), TimeUnit.MILLISECONDS.toNanos(50)),
+                        TimeUnit.NANOSECONDS)) {
+                    try {
+                        permit.check();
+                        return permit;
+                    } catch (IOException stopped) {
+                        decoding.unlock();
+                        throw stopped;
+                    }
+                }
+            } catch (InterruptedException interrupted) {
+                Thread.currentThread().interrupt();
+                throw new Stopped();
+            }
+        }
+    }
+
+    /**
+     * Cached analysis must still stop when its job or deadline ends, without another byte cache.
+     */
+    static MediaDataSource bounded(
+            MediaDataSource source, long deadline, BooleanSupplier cancelled) {
+        return new MediaDataSource() {
+            private boolean closed;
+
+            private void check() throws IOException {
+                if (closed
+                        || Thread.currentThread().isInterrupted()
+                        || AutomixAccess.stopped()
+                        || cancelled.getAsBoolean()
+                        || System.nanoTime() >= deadline) throw new Stopped();
+            }
+
+            @Override
+            public synchronized int readAt(long at, byte[] bytes, int offset, int length)
+                    throws IOException {
+                check();
+                return source.readAt(at, bytes, offset, length);
+            }
+
+            @Override
+            public synchronized long getSize() throws IOException {
+                check();
+                return source.getSize();
+            }
+
+            @Override
+            public synchronized void close() throws IOException {
+                if (closed) return;
+                closed = true;
+                source.close();
+            }
+        };
+    }
+
     /** Analysis ran out of time, was cancelled or closed: not a fault in the audio. */
     static final class Stopped extends IOException {
         Stopped() {

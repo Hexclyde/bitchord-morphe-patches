@@ -311,6 +311,69 @@ private fun MethodReference.takes(vararg types: String) =
  */
 internal fun BytecodePatchContext.addSourcePreparation() {
     addSourceVerification()
+    val local = "Ljava/lang/ThreadLocal;"
+    val context = "Lkotlin/coroutines/CoroutineContext;"
+    val elements = mutableListOf<String>()
+    classDefForEach { type ->
+        if (
+            type.interfaces.contains("Lkotlinx/coroutines/ThreadContextElement;") &&
+                type.fields.any { it.type == local } &&
+                type.methods.count {
+                    it.name == "<init>" && it.takes("Ljava/lang/String;", local)
+                } == 1
+        ) {
+            val update =
+                type.methods.count { method ->
+                    val calls = method.implementation?.instructions?.mapNotNull { it.mixCall() }
+                    method.takes(context) &&
+                        method.returnType == "Ljava/lang/Object;" &&
+                        calls?.any { it.definingClass == local && it.name == "get" } == true &&
+                        calls.any { it.definingClass == local && it.name == "set" }
+                }
+            val restore =
+                type.methods.count { method ->
+                    method.takes("Ljava/lang/Object;") &&
+                        method.returnType == "V" &&
+                        method.implementation?.instructions?.any {
+                            it.mixCall()?.let { call ->
+                                call.definingClass == local && call.name == "set"
+                            } == true
+                        } == true
+                }
+            if (update == 1 && restore == 1) elements.add(type.type)
+        }
+    }
+    check(elements.size == 1) {
+        "BitChord's native thread-local coroutine context changed: ${elements.size} matches"
+    }
+    val contextOwner = mutableClassDefBy(HOST)
+    check(contextOwner.methods.none { it.name == "bitchordPreparedContext" }) {
+        "Source preparation's native context bridge already exists"
+    }
+    val bridge =
+        MutableMethod(
+            ImmutableMethod(
+                HOST,
+                "bitchordPreparedContext",
+                listOf("Ljava/lang/String;", local).map {
+                    ImmutableMethodParameter(it, null, null)
+                },
+                context,
+                AccessFlags.PUBLIC.value or AccessFlags.STATIC.value,
+                null,
+                null,
+                ImmutableMethodImplementation(3, emptyList<Instruction>(), emptyList(), emptyList()),
+            )
+        )
+    bridge.addInstructions(
+        0,
+        """
+        new-instance v0, ${elements.single()}
+        invoke-direct {v0, p0, p1}, ${elements.single()}-><init>(Ljava/lang/String;$local)V
+        return-object v0
+        """,
+    )
+    contextOwner.methods.add(bridge)
     fun needs(owner: String, name: String, parameters: List<String>) {
         check(
             classDefBy(owner).methods.any {

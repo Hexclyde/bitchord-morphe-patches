@@ -122,6 +122,18 @@ public class ChannelViewTest {
         }
     }
 
+    TextView awaitText(View view, String value) throws Exception {
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
+        do {
+            drain();
+            TextView found = text(view, value);
+            if (found != null) return found;
+            Thread.sleep(10);
+        } while (System.nanoTime() < deadline);
+        fail("Channel response did not render: " + value);
+        return null;
+    }
+
     ChannelView open() throws Exception {
         activity.reopenChannel(-100);
         drain();
@@ -291,9 +303,8 @@ public class ChannelViewTest {
         ads = new TdApi.SponsoredMessages(new TdApi.SponsoredMessage[0], 0);
         bridge.sponsorship.clear(++bridge.generation);
         activity.reopenChannel(-100);
-        drain();
         assertNotNull(
-                text(
+                awaitText(
                         activity.channelView,
                         "Telegram returned no sponsored messages for this view."));
         assertEquals(0, views);

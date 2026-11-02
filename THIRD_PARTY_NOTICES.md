@@ -56,6 +56,7 @@ The existing Rust standard-library notices apply to all embedded Rust outputs.
 | Project | What | License |
 | --- | --- | --- |
 | [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45 and the BitChord contributors, a fork of [BitChord](https://github.com/kushagrasinghx/BitChord) by kushagra | Sing (`VocalCut.java`), from `VocalCutDsp.kt` and `VocalCutOriginal.kt` at [`4c07477`](https://github.com/OreoMuncher45/Auris/tree/4c07477533d8ce9fb0f2ba7f5cc33e070e4d8f1f), translated to Java | [GPL-3.0](licenses/GPL-3.0.txt) |
+| [Orchard](https://github.com/SFG5453/Orchard) by SFG545 and [BitChord](https://github.com/kushagrasinghx/BitChord) by Kushagra Singh | I adapt the Blackman polyphase resampler from BitChord `native/analyzer/resampler.cpp` at [`04f64c9`](https://github.com/kushagrasinghx/BitChord/tree/04f64c9f11bd2714d01bbc6da401f146f3d9399f) into continuous, bounded DSP analysis in `DspAnalysis.java`; I retain both original copyright notices | [AGPL-3.0-or-later](licenses/AGPL-3.0.txt) |
 
 The **Pitch control**, **Loudness level**, **Sleep timer fade-out**, **Headphone correction**, **Equaliser per output** and **DJ mode** patches follow features of [Prism](https://github.com/Yigder/Prism) by Yigder (GPL-3.0-or-later), **Per-download quality** follows [Stash](https://github.com/rawnaldclark/Stash) by Rawnald Clark (GPL-3.0), and **Lossless addons over Bluetooth** follows Auris's lossless-first approach. Their code is written for BitChord; nothing was copied from Prism or Stash.
 

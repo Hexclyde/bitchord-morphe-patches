@@ -370,6 +370,123 @@ public final class VerifyAudioOriginApk {
                 !reachableWithout(publish, build, item),
                 "Every snapshot construction path captures its current MediaItem");
         site(method(ORIGIN, "statsName", STRING), ORIGIN, "activeSource");
+        if (!types.containsKey(BASE + "PlaybackStats;")) return;
+        site(publish, BASE + "PlaybackStats;", "measureLossless");
+        List<Method> measurement = new ArrayList<>();
+        for (ClassDef owner : types.values()) {
+            if (!owner.getInterfaces().contains("Lkotlin/jvm/functions/Function0;")) continue;
+            for (Method candidate : owner.getMethods()) {
+                if (!candidate.getName().equals("invoke")
+                        || !candidate.getParameterTypes().isEmpty()
+                        || candidate.getImplementation() == null) continue;
+                boolean cache = false, pending = false;
+                for (Instruction line : code(candidate)) {
+                    FieldReference member = field(line);
+                    if (member != null && member.getDefiningClass().equals(SERVICE)) {
+                        cache |= member.getName().equals("measuredBitrateCache");
+                        pending |= member.getName().equals("measuringBitrate");
+                    }
+                }
+                if (cache && pending) measurement.add(candidate);
+            }
+        }
+        check(measurement.size() == 1, "One asynchronous bitrate measurement callback");
+        bitrateMeasurement(measurement.get(0));
+    }
+
+    static void bitrateMeasurement(Method callback) {
+        List<Instruction> lines = code(callback);
+        String prepare = BASE + "SourceFirst;";
+        int canonical = site(callback, prepare, "renditionUri");
+        int stringify = site(callback, URI, "toString");
+        int[] uri = registers(lines.get(canonical));
+        check(
+                uri.length == 1 && parameters(call(lines.get(canonical))).equals(List.of(URI)),
+                "Bitrate maps the exact playback URI");
+        check(
+                value(callback, uri[0], canonical)
+                        .equals(ITEM.substring(0, ITEM.length() - 1) + "$LocalConfiguration;->uri"),
+                "Bitrate canonicalization starts with the player's own entry URI");
+        check(
+                lines.get(canonical + 1).getOpcode() == Opcode.MOVE_RESULT_OBJECT,
+                "Bitrate consumes the canonical URI result");
+        onlyPredecessor(
+                callback,
+                canonical + 1,
+                canonical,
+                "Bitrate URI result cannot bypass its canonical call");
+        check(
+                value(callback, registers(lines.get(stringify))[0], stringify)
+                        .equals(prepare + "->renditionUri"),
+                "Bitrate measurement key describes the selected rendition");
+        check(
+                !reachableWithout(callback, stringify, canonical)
+                        && !reachableWithout(callback, stringify, canonical + 1),
+                "Every bitrate key path maps its selected rendition first");
+        List<String> arguments =
+                List.of(URI, "J", SERVICE, STRING, "Lkotlin/coroutines/Continuation;");
+        List<Integer> constructors = new ArrayList<>(), cacheReads = new ArrayList<>();
+        for (int i = 0; i < lines.size(); i++) {
+            MethodReference target = call(lines.get(i));
+            if (target == null) continue;
+            if (target.getName().equals("<init>") && parameters(target).equals(arguments))
+                constructors.add(i);
+            if (target.getDefiningClass().equals("Ljava/util/concurrent/ConcurrentHashMap;")
+                    && target.getName().equals("get")
+                    && value(callback, registers(lines.get(i))[0], i)
+                            .equals(SERVICE + "->measuredBitrateCache")) cacheReads.add(i);
+        }
+        check(
+                constructors.size() == 1 && cacheReads.size() == 1,
+                "One keyed bitrate lookup and one asynchronous size measurement");
+        int construct = constructors.get(0), cached = cacheReads.get(0);
+        int[] captured = registers(lines.get(construct));
+        check(
+                captured.length == 7
+                        && value(callback, captured[1], construct)
+                                .equals(prepare + "->renditionUri")
+                        && value(callback, captured[5], construct).equals(URI + "->toString")
+                        && value(callback, registers(lines.get(cached))[1], cached)
+                                .equals(URI + "->toString"),
+                "The worker URI and both bitrate cache keys describe the same canonical rendition");
+        for (int consumer : List.of(construct, cached))
+            check(
+                    !reachableWithout(callback, consumer, canonical + 1)
+                            && !reachableWithout(callback, consumer, stringify + 1),
+                    "No branch can capture an old bitrate URI or key");
+        String worker = call(lines.get(construct)).getDefiningClass();
+        Method constructor = method(worker, "<init>", arguments.toArray(new String[0]));
+        String uriField = null;
+        for (Instruction line : code(constructor)) {
+            if (line.getOpcode() == Opcode.IPUT_OBJECT
+                    && ((TwoRegisterInstruction) line).getRegisterA()
+                            == parameterRegister(constructor, 0)) {
+                check(uriField == null, "Worker captures its URI once");
+                uriField = field(line).getName();
+            }
+        }
+        check(uriField != null, "Worker retains its URI constructor argument");
+        String capturedField = worker + "->" + uriField;
+        Method create = method(worker, "create", OBJECT, "Lkotlin/coroutines/Continuation;");
+        List<Integer> clones = new ArrayList<>();
+        List<Instruction> creation = code(create);
+        for (int i = 0; i < creation.size(); i++) {
+            MethodReference target = call(creation.get(i));
+            if (target != null
+                    && target.getDefiningClass().equals(worker)
+                    && target.getName().equals("<init>")
+                    && parameters(target).equals(arguments)) clones.add(i);
+        }
+        check(clones.size() == 1, "One size-measurement coroutine clone");
+        int clone = clones.get(0);
+        check(
+                value(create, registers(code(create).get(clone))[1], clone).equals(capturedField),
+                "The coroutine clone preserves the exact captured URI");
+        Method read = method(worker, "invokeSuspend", OBJECT);
+        int length = site(read, CACHE, "contentLengthOf");
+        check(
+                value(read, registers(code(read).get(length))[0], length).equals(capturedField),
+                "The asynchronous measurement reads its captured rendition's actual content size");
     }
 
     /** Actual incoming edges, including switches and exception handlers, rather than layout. */

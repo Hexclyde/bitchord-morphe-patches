@@ -173,7 +173,7 @@ The patch creates a normal Telegram client session on your phone. You can revoke
 
 **Use these patches responsibly.** They're free to use and provided as-is, without any warranty. I'm not responsible or liable in any way for what happens to your Telegram account or channels while you use them, including your account being limited or banned, or a channel being taken down.
 
-By downloading, installing or using these patches, you accept these terms. If you don't agree with them, don't use them. The [GPL license](LICENSE) they're released under also says they come with no warranty.
+By downloading, installing or using these patches, you accept these terms. If you don't agree with them, don't use them. The [GPL licence](LICENSE) and [third-party licences](THIRD_PARTY_NOTICES.md) also provide no warranty.
 
 This project doesn't provide any music. You're responsible for what you upload and play, so only use recordings you own or have permission to use. The patches don't unlock premium features or get around paid or protected content.
 
@@ -185,6 +185,7 @@ Bug reports and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.m
 
 ## Credits
 
+- [Orchard](https://github.com/SFG5453/Orchard) by SFG545 and [BitChord](https://github.com/kushagrasinghx/BitChord) by Kushagra Singh, for the Blackman polyphase resampler I adapt for bounded DSP analysis. I retain their copyright notices and [AGPL-3.0-or-later licence](licenses/AGPL-3.0.txt).
 - [Open-Unmix](https://github.com/sigsep/open-unmix-pytorch) by sigsep, for the vocal separation technique and BitChord's existing model; [Spleeter](https://github.com/deezer/spleeter) by Deezer Research, for the optional checkpoint conversion tool. Their code is MIT licensed; I document model provenance in the [feature guide](docs/BETA18-FEATURES.md).
 - [PixelMusic](https://github.com/ianshulyadav/PixelMusic) by ianshulyadav, for the Storage Sense, duplicate review and prompt-to-playlist ideas. I wrote native implementations for BitChord; I port its GPL-3.0 local playlist language processing and ranking with attribution; my storage adapters are independent implementations.
 

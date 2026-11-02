@@ -4,6 +4,12 @@ I use the **Source-independent AutoMix** patch in beta.18 to correct the source-
 
 ## Playback and analysis
 
+I reuse valid stored analysis for the exact rendition and use full model analysis for a fresh measurement when memory permits. On smaller heaps I use bounded DSP analysis. The DSP path keeps the native confidence rules and measures the selected recording; it supplies no invented model beats or vocal evidence. Its temporary loading allowance protects both analysis and playback without changing the saved buffer setting.
+
+I bound DSP measurement to recordings of at most 15 minutes and sample rates up to 384 kHz. These are background-analysis limits; longer recordings and other playable formats retain ordinary playback and crossfading.
+
+I show **Crossfade** for an ordinary volume overlap and retain **Mixing** for the native planner's qualifying mixes. I preserve explicit transition-editor settings. A low-confidence or unsupported recording can legitimately use a plain fade.
+
 The host analyzer reads the selected audio through the same source router as playback. Telegram/add-on search rows, files, content-provider downloads, HTTP and SMB audio all enter that path. The router's native Telegram and other enabled source adapters remain responsible for opening their own files. Soulseek's download-only and isolated preview rules are unchanged; completed downloads are local audio.
 
 An exact, complete cached rendition is read without a network fetch. Otherwise, analysis resolves and pins the selected source, including its request headers, and uses independent random-access readers. Different encodings never share a byte-cache entry. A quality/source change invalidates the previous analysis; stored analyses use a versioned rendition key. Analysis never replaces audible playback or writes a YouTube label over another playing source.

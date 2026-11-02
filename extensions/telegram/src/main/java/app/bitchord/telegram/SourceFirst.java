@@ -210,6 +210,12 @@ public final class SourceFirst {
                 && running.preparedEntry(item.localConfiguration.uri);
     }
 
+    /** A preparation approval can be consumed only by this entry's exact selected rendition. */
+    public static boolean isPreparedUri(Uri uri) {
+        SourcePreparation running = active;
+        return running != null && running.isPreparedUri(uri);
+    }
+
     /** Replaces the open of BitChord's playback source, above its cache. */
     public static long open(Object period, DataSource source, DataSpec spec) throws IOException {
         SourcePreparation running = active;

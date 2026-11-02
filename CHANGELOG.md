@@ -1,5 +1,13 @@
 ## 1.1.0-beta.18
 
+- Measure average bitrate against each prepared rendition and preserve verified Telegram copies when messages leave only the local cache.
+- Recognize duration-explained timing differences when preparing verified whole tracks, retain strict live-swap alignment and isolate preparation proofs and scoped cache reads. Report rejected matches accurately.
+- Serialize background recording checks and AutoMix decoding, honor cancelled cached reads, and check analysis memory requirements before decoding long or high-resolution tracks.
+- Keep file descriptions attached to the exact stream instance so equal streams cannot overwrite each other's metadata.
+- Retain exact prepared-read approvals without repeated decoding, revoke conclusive rejected aliases precisely, and invalidate prepared Telegram files only when their own message, chat protection or session changes.
+- Reserve room for player buffering before detailed analysis, and bound combined music and animated-artwork buffers on smaller heaps.
+- Add bounded DSP analysis for smaller heaps, retain native confidence-based transition planning, and distinguish basic crossfading from analyzed mixing.
+
 - Prepare upcoming songs through enabled sources before playback, with recording checks and separate cache identities for duplicate queue entries. Prevent late host upgrades from replacing an already prepared entry.
 - Persist actual provider names per cache rendition and saved file; use them in Stats, Downloads and Storage Sense. Preserve unknown origins.
 - Replace obsolete YouTube playback cache only after a verified better copy plays reliably, protecting active readers and complete offline copies.

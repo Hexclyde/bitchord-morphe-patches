@@ -38,6 +38,67 @@ public final class VerifyTravelFeaturesApk {
         return false;
     }
 
+    private static void loadingGate(Map<String, ClassDef> classes, boolean steady) {
+        ClassDef type = classes.get("Landroidx/media3/exoplayer/DefaultLoadControl;");
+        Method loading = null;
+        for (Method method : type.getMethods())
+            if (method.getName().equals("shouldContinueLoading")
+                    && method.getParameterTypes()
+                            .equals(
+                                    List.of(
+                                            "Landroidx/media3/exoplayer/LoadControl$Parameters;"))) {
+                check(loading == null, "One native loading decision exists");
+                loading = method;
+            }
+        check(loading != null, "Native loading decision exists");
+        if (!steady) return;
+        List<Instruction> code = new ArrayList<>();
+        loading.getImplementation().getInstructions().forEach(code::add);
+        check(code.size() > 6, "The buffer gate retains the native loading body");
+        int registers = loading.getImplementation().getRegisterCount();
+        check(
+                code.get(0).getOpcode() == Opcode.INVOKE_STATIC_RANGE
+                        && code.get(0) instanceof RegisterRangeInstruction range
+                        && range.getStartRegister() == registers - 2
+                        && range.getRegisterCount() == 2
+                        && ((ReferenceInstruction) code.get(0)).getReference()
+                                instanceof MethodReference call
+                        && call.getDefiningClass().equals(BASE + "SteadyPlayback;")
+                        && call.getName().equals("allowLoading")
+                        && call.getParameterTypes()
+                                .equals(List.of("Ljava/lang/Object;", "Ljava/lang/Object;"))
+                        && call.getReturnType().equals("Z"),
+                "Every player loading decision enters the exact control/parameter gate");
+        check(
+                code.get(1).getOpcode() == Opcode.MOVE_RESULT
+                        && ((OneRegisterInstruction) code.get(1)).getRegisterA() == 0
+                        && code.get(2).getOpcode() == Opcode.IF_NEZ
+                        && ((OneRegisterInstruction) code.get(2)).getRegisterA() == 0,
+                "An allowed buffer read follows the original decision");
+        check(
+                code.get(3).getOpcode() == Opcode.CONST_4
+                        && ((OneRegisterInstruction) code.get(3)).getRegisterA() == 0
+                        && ((NarrowLiteralInstruction) code.get(3)).getNarrowLiteral() == 0
+                        && code.get(4).getOpcode() == Opcode.RETURN
+                        && ((OneRegisterInstruction) code.get(4)).getRegisterA() == 0,
+                "A full buffer returns false without entering the native loader");
+        int branch = code.get(0).getCodeUnits() + code.get(1).getCodeUnits();
+        int original = branch;
+        for (int i = 2; i < 5; i++) original += code.get(i).getCodeUnits();
+        check(
+                branch + ((OffsetInstruction) code.get(2)).getCodeOffset() == original
+                        && code.get(5).getOpcode() == Opcode.NOP
+                        && code.get(6).getOpcode() == Opcode.IGET_OBJECT
+                        && ((TwoRegisterInstruction) code.get(6)).getRegisterA() == 0
+                        && ((TwoRegisterInstruction) code.get(6)).getRegisterB() == registers - 1
+                        && ((ReferenceInstruction) code.get(6)).getReference()
+                                instanceof FieldReference field
+                        && field.getDefiningClass()
+                                .equals("Landroidx/media3/exoplayer/LoadControl$Parameters;")
+                        && field.getName().equals("playerId"),
+                "The gate preserves native entry labels and overwrites only its dead local");
+    }
+
     public static void main(String[] args) throws Exception {
         Map<String, ClassDef> classes = new HashMap<>();
         var dex = DexFileFactory.loadDexContainer(new File(args[0]), Opcodes.getDefault());
@@ -71,7 +132,7 @@ public final class VerifyTravelFeaturesApk {
                     moved += calls(method, BASE + "AudioFocus;", "setAudioAttributes");
                     playRequested += calls(method, BASE + "AudioFocus;", "playRequested");
                     control += calls(method, BASE + "SteadyPlayback;", "loadControl");
-                    tick += calls(method, BASE + "SteadyPlayback;", "tick");
+                    tick += calls(method, BASE + "SteadyPlayback;", "allowLoading");
                     retries += calls(method, BASE + "SteadyPlayback;", "minRetries");
                     loadErrors += calls(method, BASE + "SteadyPlayback;", "loadError");
                     singEnd += calls(method, BASE + "SingOutput;", "playToEnd");
@@ -120,7 +181,8 @@ public final class VerifyTravelFeaturesApk {
         check(moved == (focus ? 4 : 0), "All four focus changes match installed marker");
         check(playRequested == (focus ? 1 : 0), "Explicit pause clears call recovery tickets");
         check(control == (steady ? 1 : 0), "Steady load control hook matches installed marker");
-        check(tick == (steady ? 1 : 0), "Buffer mutations run at the playback loading decision");
+        check(tick == (steady ? 1 : 0), "Buffer admission runs at every native loading decision");
+        loadingGate(classes, steady);
         check(retries == (steady ? 1 : 0), "Offline retry policy matches installed marker");
         check(
                 loadErrors == (steady ? 1 : 0),

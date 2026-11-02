@@ -501,6 +501,176 @@ private fun BytecodePatchContext.classesCalling(owner: String, name: String): Li
 
 private fun Instruction.fieldRef() = (this as? ReferenceInstruction)?.reference as? FieldReference
 
+/** The queued entry retains its original URI; size telemetry must read its chosen rendition. */
+private fun BytecodePatchContext.canonicalizeStatsMeasurement(owner: String) {
+    val uriType = "Landroid/net/Uri;"
+    val service = "Lcom/music/bitchord/playback/PlaybackService;"
+    val measurement =
+        mutableClassDefBy(owner).methods.singleOrNull {
+            it.name == "invoke" && it.parameterTypes.isEmpty() && it.implementation != null
+        } ?: throw PatchException("BitChord's bitrate measurement callback changed")
+    val code = measurement.implementation!!.instructions.toList()
+    fun one(label: String, predicate: (Instruction) -> Boolean): Int {
+        val found = code.indices.filter { predicate(code[it]) }
+        check(found.size == 1) { "BitChord's bitrate $label changed (${found.size})" }
+        return found.single()
+    }
+    val read =
+        one("entry URI") {
+            it.opcode == Opcode.IGET_OBJECT &&
+                it.fieldRef()?.let { member ->
+                    member.definingClass ==
+                        "Landroidx/media3/common/MediaItem\$LocalConfiguration;" &&
+                        member.name == "uri" &&
+                        member.type == uriType
+                } == true
+        }
+    val uri = (code[read] as TwoRegisterInstruction).registerA
+    val stringify =
+        one("URI key") {
+            it.methodRef()?.let { call ->
+                call.definingClass == uriType && call.name == "toString"
+            } == true
+        }
+    val workerArgs =
+        listOf(uriType, "J", service, "Ljava/lang/String;", "Lkotlin/coroutines/Continuation;")
+    val construct =
+        one("size worker") {
+            it.methodRef()?.let { call ->
+                call.name == "<init>" &&
+                    call.parameterTypes.map(CharSequence::toString) == workerArgs
+            } == true
+        }
+    check(
+        read < stringify &&
+            stringify + 1 < construct &&
+            uri < 256 &&
+            argumentRegisters(code[stringify]) == listOf(uri) &&
+            code[stringify + 1].opcode == Opcode.MOVE_RESULT_OBJECT
+    ) {
+        "BitChord's bitrate URI/key flow changed"
+    }
+    val key = (code[stringify + 1] as OneRegisterInstruction).registerA
+    val capture = argumentRegisters(code[construct])
+    check(
+        capture.size == 7 &&
+            capture[1] == uri &&
+            capture[5] == key &&
+            (read + 1 until construct).none {
+                code[it].opcode.setsRegister() &&
+                    (code[it] as? OneRegisterInstruction)?.registerA == uri
+            } &&
+            (stringify + 2 until construct).none {
+                code[it].opcode.setsRegister() &&
+                    (code[it] as? OneRegisterInstruction)?.registerA == key
+            }
+    ) {
+        "BitChord's bitrate worker no longer captures the same URI and key"
+    }
+    val cached =
+        one("cached measurement") {
+            it.methodRef()?.let { call ->
+                call.definingClass == "Ljava/util/concurrent/ConcurrentHashMap;" &&
+                    call.name == "get"
+            } == true
+        }
+    check(
+        cached > stringify &&
+            argumentRegisters(code[cached]).getOrNull(1) == key &&
+            code.any {
+                it.fieldRef()?.let { f ->
+                    f.definingClass == service && f.name == "measuredBitrateCache"
+                } == true
+            } &&
+            code.any {
+                it.fieldRef()?.let { f ->
+                    f.definingClass == service && f.name == "measuringBitrate"
+                } == true
+            }
+    ) {
+        "BitChord's asynchronous bitrate cache changed"
+    }
+    val workerType = code[construct].methodRef()!!.definingClass
+    val worker = mutableClassDefBy(workerType)
+    val constructor =
+        worker.methods.singleOrNull {
+            it.name == "<init>" && it.parameterTypes.map(CharSequence::toString) == workerArgs
+        } ?: throw PatchException("BitChord's bitrate worker constructor changed")
+    val uriParameter =
+        constructor.implementation!!.registerCount -
+            workerArgs.sumOf { if (it == "J" || it == "D") 2 else 1 }
+    val fields =
+        constructor.implementation!!
+            .instructions
+            .filter {
+                it.opcode == Opcode.IPUT_OBJECT &&
+                    (it as TwoRegisterInstruction).registerA == uriParameter
+            }
+            .map { it.fieldRef()!! }
+            .toList()
+    check(fields.size == 1) { "BitChord's bitrate worker URI capture changed" }
+    fun fromField(lines: List<Instruction>, register: Int, before: Int): FieldReference? {
+        for (i in before - 1 downTo 0) {
+            val line = lines[i]
+            if ((line as? OneRegisterInstruction)?.registerA != register) continue
+            if (line.opcode == Opcode.CHECK_CAST) continue
+            if (
+                line.opcode in
+                    setOf(Opcode.MOVE_OBJECT, Opcode.MOVE_OBJECT_FROM16, Opcode.MOVE_OBJECT_16)
+            )
+                return fromField(lines, (line as TwoRegisterInstruction).registerB, i)
+            if (line.opcode == Opcode.IGET_OBJECT) return line.fieldRef()
+            if (line.opcode.setsRegister()) return null
+        }
+        return null
+    }
+    val resume =
+        worker.methods.singleOrNull { it.name == "invokeSuspend" }
+            ?: throw PatchException("BitChord's bitrate size worker changed")
+    val reads = resume.implementation!!.instructions.toList()
+    val lengths =
+        reads.indices.filter {
+            reads[it].methodRef()?.let { c ->
+                c.definingClass == "Lcom/music/bitchord/playback/AudioCache;" &&
+                    c.name == "contentLengthOf"
+            } == true
+        }
+    check(
+        lengths.size == 1 &&
+            fromField(
+                reads,
+                argumentRegisters(reads[lengths.single()]).single(),
+                lengths.single(),
+            ) == fields.single()
+    ) {
+        "BitChord's bitrate worker no longer measures its captured URI"
+    }
+    val create =
+        worker.methods.singleOrNull { it.name == "create" }
+            ?: throw PatchException("BitChord's bitrate coroutine clone changed")
+    val creation = create.implementation!!.instructions.toList()
+    val clones =
+        creation.indices.filter {
+            creation[it].methodRef()?.let { c ->
+                c.definingClass == workerType &&
+                    c.name == "<init>" &&
+                    c.parameterTypes.map(CharSequence::toString) == workerArgs
+            } == true
+        }
+    check(
+        clones.size == 1 &&
+            fromField(creation, argumentRegisters(creation[clones.single()])[1], clones.single()) ==
+                fields.single()
+    ) {
+        "BitChord's bitrate coroutine no longer preserves its captured URI"
+    }
+    measurement.addInstructions(
+        read + 1,
+        "invoke-static/range {v$uri .. v$uri}, Lapp/bitchord/telegram/SourceFirst;->renditionUri($uriType)$uriType\n" +
+            "move-result-object v$uri",
+    )
+}
+
 /**
  * Routes BitChord's automatic quality upgrade through its own two-player version swap, so a better
  * copy is crossfaded in instead of replacing the source under the live player. Every reference is
@@ -1884,6 +2054,7 @@ val nativeTelegramPatch =
             ) {
                 "Measurement callback is not Function0"
             }
+            canonicalizeStatsMeasurement(measureRef.definingClass)
             val lambdaRegister = argumentRegisters(measureCall).single()
             publish.replaceInstruction(
                 blankIndex,
@@ -3104,7 +3275,42 @@ private fun BytecodePatchContext.addSteadyPlayback() {
     ) {
         "Steady playback load control state changed"
     }
-    load.addInstruction(0, "invoke-static/range {p0 .. p0}, $STEADY->tick(Ljava/lang/Object;)V")
+    val parameters = "Landroidx/media3/exoplayer/LoadControl\$Parameters;"
+    val allocator = "Landroidx/media3/exoplayer/upstream/DefaultAllocator;"
+    check(
+        classDefBy(parameters).fields.any { it.name == "bufferedDurationUs" && it.type == "J" } &&
+            classDefBy(control).fields.any { it.name == "allocator" && it.type == allocator } &&
+            listOf("allocatedCount", "availableCount", "individualAllocationSize").all { name ->
+                classDefBy(allocator).fields.any { it.name == name && it.type == "I" }
+            }
+    ) {
+        "Steady playback's native allocator or buffered-duration fields changed"
+    }
+    val loadingCode = load.implementation!!.instructions.toList()
+    val firstLoading = loadingCode.firstOrNull() as? TwoRegisterInstruction
+    check(
+        load.implementation!!.registerCount > 2 &&
+            loadingCode.firstOrNull()?.opcode == Opcode.IGET_OBJECT &&
+            firstLoading?.registerA == 0 &&
+            firstLoading.registerB == load.implementation!!.registerCount - 1 &&
+            loadingCode[0].fieldRef()?.let {
+                it.definingClass == parameters && it.name == "playerId"
+            } == true
+    ) {
+        "Steady playback's loading-entry scratch register changed"
+    }
+    load.addInstructionsWithLabels(
+        0,
+        """
+        invoke-static/range {p0 .. p1}, $STEADY->allowLoading(Ljava/lang/Object;Ljava/lang/Object;)Z
+        move-result v0
+        if-nez v0, :native_loading
+        const/4 v0, 0x0
+        return v0
+        :native_loading
+        nop
+    """,
+    )
     val policy =
         mutableClassDefBy(
             "Lcom/music/bitchord/playback/PlaybackService\$PermanentAwareLoadErrorPolicy;"

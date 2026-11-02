@@ -8,7 +8,12 @@ import android.net.NetworkCapabilities;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
+import java.util.function.LongSupplier;
 
 /**
  * Steady playback, for travelling. BitChord's players stop reading ahead once 8 MB is buffered:
@@ -18,8 +23,9 @@ import java.util.Map;
  * phone has no working connection, a song that runs out of buffer waits for the signal to come back
  * instead of stopping with an error.
  *
- * <p>Playback threads only read what Android's network callback last said; asking Android itself
- * would block them while they're already short of audio.
+ * <p>The players share a heap allowance, including animated artwork. Playback threads only read
+ * what Android's network callback last said; asking Android itself would block them while they're
+ * already short of audio.
  */
 public final class SteadyPlayback {
     private SteadyPlayback() {}
@@ -49,8 +55,13 @@ public final class SteadyPlayback {
     /** The load controls of BitChord's own players. Any other keeps the limit it was built with. */
     private static final Map<Object, Integer> controls = new java.util.WeakHashMap<>();
 
-    private static final java.util.concurrent.atomic.AtomicInteger revision =
-            new java.util.concurrent.atomic.AtomicInteger();
+    private static final Map<Object, Boolean> observedControls = new java.util.WeakHashMap<>();
+    private static final List<AnalysisLease> analysisLeases = new ArrayList<>();
+    private static boolean gateObserved;
+    private static long configurationEpoch;
+    static LongSupplier heapBytes = () -> Runtime.getRuntime().maxMemory();
+    private static final long READY_US = 2_000_000;
+    private static final int AUXILIARY_BYTES = 16 << 20;
 
     static void init(Context context) {
         if (preferences != null || context == null) return;
@@ -67,7 +78,11 @@ public final class SteadyPlayback {
     }
 
     static void setEnabled(boolean on) {
-        enabled = on;
+        synchronized (controls) {
+            if (enabled != on) configurationEpoch++;
+            enabled = on;
+            if (!on) cancelAnalysis();
+        }
         save("enabled", on);
         applyAll();
     }
@@ -215,6 +230,9 @@ public final class SteadyPlayback {
         if (control == null) return;
         synchronized (controls) {
             controls.put(control, -1);
+            observedControls.put(control, true);
+            configurationEpoch++;
+            controls.replaceAll((owner, previous) -> -1);
         }
         tick(control);
     }
@@ -262,7 +280,9 @@ public final class SteadyPlayback {
     }
 
     private static void applyAll() {
-        revision.incrementAndGet();
+        synchronized (controls) {
+            controls.replaceAll((owner, previous) -> -1);
+        }
     }
 
     /**
@@ -271,17 +291,221 @@ public final class SteadyPlayback {
      * was given are this feature's to change: BitChord builds others with limits of their own.
      */
     public static void tick(Object control) {
-        int current = revision.get();
         synchronized (controls) {
-            Integer previous = controls.get(control);
-            if (previous == null || previous == current) return;
-            controls.put(control, current);
+            if (!controls.containsKey(control)) return;
         }
-        apply(control);
+        try {
+            int bytes = targetBytes(enabled, currentLink, wifiMb, mobileMb);
+            if (enabled) {
+                bytes = Math.min(bytes, allowance(control));
+                Object states = read(control, "loadingStates");
+                int players = states instanceof Map ? Math.max(1, ((Map<?, ?>) states).size()) : 1;
+                bytes = Math.max(1, bytes / players);
+            }
+            synchronized (controls) {
+                Integer previous = controls.get(control);
+                if (previous == null || previous == bytes) return;
+                controls.put(control, bytes);
+            }
+            apply(control, bytes);
+        } catch (Exception | LinkageError unavailable) {
+            HostLog.d("Steady playback couldn't qualify the buffer allowance");
+        }
     }
 
-    private static void apply(Object control) {
-        int bytes = targetBytes(enabled, currentLink, wifiMb, mobileMb);
+    private static Object read(Object value, String name) throws ReflectiveOperationException {
+        Field field = value.getClass().getDeclaredField(name);
+        field.setAccessible(true);
+        return field.get(value);
+    }
+
+    private static List<Object> observed() {
+        synchronized (controls) {
+            return new ArrayList<>(observedControls.keySet());
+        }
+    }
+
+    private static int allowance(Object control) {
+        synchronized (controls) {
+            long budget = loadingBudget();
+            int primary = controls.size();
+            int auxiliary = Math.max(0, observedControls.size() - primary);
+            long auxiliaryShare =
+                    Math.min(
+                            AUXILIARY_BYTES,
+                            Math.max(
+                                    HOST_BUFFER_MB << 20,
+                                    budget / Math.max(4, primary + auxiliary)));
+            if (!controls.containsKey(control)) return (int) auxiliaryShare;
+            long share = (budget - auxiliaryShare * auxiliary) / Math.max(1, primary);
+            return (int) Math.min(Integer.MAX_VALUE, Math.max(HOST_BUFFER_MB << 20, share));
+        }
+    }
+
+    private static long[] allocation(Object allocator) throws ReflectiveOperationException {
+        synchronized (allocator) {
+            long used = ((Number) read(allocator, "allocatedCount")).longValue();
+            long pooled = ((Number) read(allocator, "availableCount")).longValue();
+            long size = ((Number) read(allocator, "individualAllocationSize")).longValue();
+            if (used < 0 || pooled < 0 || size <= 0)
+                throw new IllegalStateException("Invalid native buffer allocation");
+            return new long[] {Math.multiplyExact(used, size), Math.multiplyExact(pooled, size)};
+        }
+    }
+
+    private static long retained(List<Object> known) throws ReflectiveOperationException {
+        long total = 0;
+        Map<Object, Boolean> counted = new IdentityHashMap<>();
+        for (Object control : known) {
+            Object allocator = read(control, "allocator");
+            if (counted.put(allocator, true) == null) {
+                long[] usage = allocation(allocator);
+                total = Math.addExact(total, Math.addExact(usage[0], usage[1]));
+            }
+        }
+        return total;
+    }
+
+    /** During DSP, only growth toward a temporary quarter-heap ceiling needs reserving. */
+    static long analysisGrowth(long maximum) {
+        long epoch;
+        List<Object> known;
+        synchronized (controls) {
+            if (maximum <= 0
+                    || !enabled
+                    || !gateObserved
+                    || controls.isEmpty()
+                    || observedControls.isEmpty()) return -1;
+            epoch = configurationEpoch;
+            known = new ArrayList<>(observedControls.keySet());
+        }
+        try {
+            long bytes = retained(known);
+            synchronized (controls) {
+                if (!enabled || configurationEpoch != epoch) return -1;
+            }
+            return Math.max(0, maximum / 4 - bytes);
+        } catch (Exception | LinkageError unavailable) {
+            return -1;
+        }
+    }
+
+    /** Pins the already-installed loading ceiling until the actual analysis work returns. */
+    static final class AnalysisLease implements AutoCloseable, LongSupplier, BooleanSupplier {
+        private final long budget;
+        private volatile boolean cancelled, closed;
+
+        private AnalysisLease(long maximum) {
+            budget = maximum / 4;
+        }
+
+        @Override
+        public long getAsLong() {
+            if (closed || cancelled) return -1;
+            try {
+                return Math.max(0, budget - retained(observed()));
+            } catch (Exception | LinkageError unavailable) {
+                cancelled = true;
+                return -1;
+            }
+        }
+
+        @Override
+        public boolean getAsBoolean() {
+            return closed || cancelled;
+        }
+
+        @Override
+        public void close() {
+            synchronized (controls) {
+                if (closed) return;
+                closed = true;
+                analysisLeases.remove(this);
+                controls.replaceAll((owner, previous) -> -1);
+            }
+        }
+    }
+
+    static AnalysisLease analysisLease(long maximum) {
+        long epoch;
+        synchronized (controls) {
+            epoch = configurationEpoch;
+        }
+        if (analysisGrowth(maximum) < 0) return null;
+        synchronized (controls) {
+            if (!enabled || configurationEpoch != epoch) return null;
+            AnalysisLease lease = new AnalysisLease(maximum);
+            analysisLeases.add(lease);
+            controls.replaceAll((owner, previous) -> -1);
+            return lease;
+        }
+    }
+
+    private static boolean analysisActive() {
+        synchronized (controls) {
+            return !analysisLeases.isEmpty();
+        }
+    }
+
+    private static void cancelAnalysis() {
+        synchronized (controls) {
+            for (AnalysisLease lease : analysisLeases) lease.cancelled = true;
+        }
+    }
+
+    private static long loadingBudget() {
+        synchronized (controls) {
+            long budget = Math.max(0, heapBytes.getAsLong() / 2);
+            for (AnalysisLease lease : analysisLeases) budget = Math.min(budget, lease.budget);
+            return budget;
+        }
+    }
+
+    /** The native loading decision keeps its time policy after a bounded startup allowance. */
+    public static boolean allowLoading(Object control, Object parameters) {
+        if (control == null) {
+            if (!analysisActive()) return true;
+            cancelAnalysis();
+            return false;
+        }
+        synchronized (controls) {
+            gateObserved = true;
+            if (!observedControls.containsKey(control)) {
+                observedControls.put(control, true);
+                configurationEpoch++;
+                controls.replaceAll((owner, previous) -> -1);
+            }
+        }
+        tick(control);
+        boolean leased = analysisActive();
+        if (!enabled && !leased) return true;
+        try {
+            boolean starting =
+                    ((Number) read(parameters, "bufferedDurationUs")).longValue() < READY_US;
+            if (starting && !leased) return true;
+            Object own = read(control, "allocator");
+            long[] ownUsage = allocation(own);
+            if (leased && ownUsage[1] > 0) return true;
+            if (ownUsage[0] >= allowance(control)) {
+                if (starting && leased) cancelAnalysis();
+                return false;
+            }
+            // Reusing an owned block sustains read-ahead without increasing the live heap.
+            if (ownUsage[1] > 0) return true;
+            boolean allowed = retained(observed()) < loadingBudget();
+            if (!allowed && starting && leased) cancelAnalysis();
+            return allowed;
+        } catch (Exception | LinkageError unavailable) {
+            HostLog.d("Steady playback couldn't inspect the loading allowance");
+            if (analysisActive()) {
+                cancelAnalysis();
+                return false;
+            }
+            return true;
+        }
+    }
+
+    private static void apply(Object control, int bytes) {
         try {
             Class<?> type = control.getClass();
             // Players prepared from now on.

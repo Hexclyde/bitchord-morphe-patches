@@ -20,6 +20,77 @@ import java.util.function.BooleanSupplier;
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, sdk = 35)
 public class SourcePreparationTest {
+    static final class EqualStream {
+        final String file;
+
+        EqualStream(String file) {
+            this.file = file;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return other instanceof EqualStream && file.equals(((EqualStream) other).file);
+        }
+
+        @Override
+        public int hashCode() {
+            return file.hashCode();
+        }
+    }
+
+    @Test
+    public void equalStreamInstancesKeepIndependentMetadataSnapshots() throws Exception {
+        SourcePreparation.WeakIdentitySnapshots<EqualStream, org.json.JSONObject> snapshots =
+                new SourcePreparation.WeakIdentitySnapshots<>();
+        EqualStream first = new EqualStream("same-file"), second = new EqualStream("same-file");
+        assertEquals(first, second);
+        assertNotSame(first, second);
+        org.json.JSONObject firstRow = new org.json.JSONObject().put("revision", 1);
+        org.json.JSONObject secondRow = new org.json.JSONObject().put("revision", 2);
+        snapshots.put(first, firstRow);
+        snapshots.put(second, secondRow);
+        assertSame(
+                "A later equal object cannot overwrite this stream's snapshot",
+                firstRow,
+                snapshots.get(first));
+        assertSame(secondRow, snapshots.get(second));
+        org.json.JSONObject refreshed = new org.json.JSONObject().put("revision", 3);
+        snapshots.put(first, refreshed);
+        assertSame(
+                "Describing this exact stream again replaces its snapshot",
+                refreshed,
+                snapshots.get(first));
+        assertSame("The equal but distinct stream is unchanged", secondRow, snapshots.get(second));
+    }
+
+    @Test
+    public void clearedWeakSnapshotKeysAreRemovedWithoutDroppingAnEqualLiveStream()
+            throws Exception {
+        SourcePreparation.WeakIdentitySnapshots<EqualStream, org.json.JSONObject> snapshots =
+                new SourcePreparation.WeakIdentitySnapshots<>();
+        EqualStream first = new EqualStream("same-file"), second = new EqualStream("same-file");
+        org.json.JSONObject liveRow = new org.json.JSONObject().put("revision", 2);
+        snapshots.put(first, new org.json.JSONObject().put("revision", 1));
+        snapshots.put(second, liveRow);
+        java.lang.reflect.Field field = snapshots.getClass().getDeclaredField("entries");
+        field.setAccessible(true);
+        List<?> entries = (List<?>) field.get(snapshots);
+        assertEquals(2, entries.size());
+        assertTrue(
+                "Keys are weak, not strong references",
+                entries.get(0) instanceof java.lang.ref.WeakReference);
+        java.lang.ref.Reference<?> dead = (java.lang.ref.Reference<?>) entries.get(0);
+        assertSame(first, dead.get());
+        dead.clear(); // Deterministically model collection; do not depend on System.gc().
+        snapshots.cleanup();
+        assertEquals("The dead entry and its snapshot were removed", 1, entries.size());
+        assertNull(snapshots.get(first));
+        assertSame(
+                "The distinct equal stream still owns its snapshot",
+                liveRow,
+                snapshots.get(second));
+    }
+
     static Uri song(String id) {
         return Uri.parse("bitchord://watch?v=" + id + "&n=" + id + "&a=artist&d=180");
     }
@@ -65,6 +136,7 @@ public class SourcePreparationTest {
         final List<String> trusted = Collections.synchronizedList(new ArrayList<>());
         final List<String> warmed = Collections.synchronizedList(new ArrayList<>());
         final List<Boolean> backgrounds = Collections.synchronizedList(new ArrayList<>());
+        final List<String> messages = Collections.synchronizedList(new ArrayList<>());
         final List<Runnable> later = Collections.synchronizedList(new ArrayList<>());
         final Map<String, CountDownLatch> gates = new ConcurrentHashMap<>();
         final AtomicInteger running = new AtomicInteger(), mostRunning = new AtomicInteger();
@@ -269,6 +341,7 @@ public class SourcePreparationTest {
 
         public void log(String line) {
             assertFalse("No addresses in the log: " + line, line.contains("tg://"));
+            messages.add(line);
         }
 
         void runLater() {
@@ -494,12 +567,102 @@ public class SourcePreparationTest {
     }
 
     @Test
+    public void exhaustingRejectedMatchesDoesNotClaimNoSourceHasTheSong() throws Exception {
+        preparation.close();
+        host =
+                new Fake() {
+                    @Override
+                    public Object lookup(Object target) {
+                        String id = (String) target;
+                        lookups.add(id);
+                        return preparation.holds(id + "|180", "src:x::" + id + "_0")
+                                ? null
+                                : "tg://" + id + "_0";
+                    }
+                };
+        preparation = new SourcePreparation(host, 300);
+        preparation.playing(true);
+        host.rejectedFiles.add("a_0");
+
+        assertEquals(song("a").toString(), read("a"));
+        idle();
+
+        assertEquals("The matching file was checked once", Arrays.asList("a_0"), host.verified);
+        assertEquals(
+                "The filtered retry found no other file", Arrays.asList("a", "a"), host.lookups);
+        assertTrue(preparation.holds("a|180", "src:x::a_0"));
+        assertTrue("The unverified copy is never parked", host.parked.isEmpty());
+        assertFalse("YouTube remains eligible", preparation.holds("a|180", "a"));
+        assertFalse(
+                "A source had this song but its file did not pass: " + host.messages,
+                host.messages.stream()
+                        .anyMatch(line -> line.contains("no other source has this song")));
+        assertTrue(
+                host.messages.toString(),
+                host.messages.stream()
+                        .anyMatch(
+                                line ->
+                                        line.contains(
+                                                "no verified replacement was available after the"
+                                                        + " recording check")));
+    }
+
+    @Test
+    public void anEmptyLookupReportsNoUsableReturnedFile() throws Exception {
+        host.noCopy.add("a");
+
+        assertEquals(song("a").toString(), read("a"));
+        idle();
+
+        assertEquals(Arrays.asList("a"), host.lookups);
+        assertTrue(host.verified.isEmpty());
+        assertTrue(host.parked.isEmpty());
+        assertTrue(
+                host.messages.toString(),
+                host.messages.stream()
+                        .anyMatch(line -> line.contains("no usable matching file was returned")));
+        assertFalse(
+                host.messages.toString(),
+                host.messages.stream().anyMatch(line -> line.contains("recording check")));
+    }
+
+    @Test
+    public void anUnfinishedCheckIsReportedSeparatelyFromRejectedMatches() throws Exception {
+        host.undecided = true;
+
+        assertEquals(song("a").toString(), read("a"));
+        idle();
+
+        assertEquals(Arrays.asList("a_0"), host.verified);
+        assertTrue(host.rejectedFiles.isEmpty());
+        assertTrue(host.parked.isEmpty());
+        assertTrue(
+                host.messages.toString(),
+                host.messages.stream().anyMatch(line -> line.contains("it couldn't be checked")));
+        assertFalse(
+                host.messages.toString(),
+                host.messages.stream()
+                        .anyMatch(
+                                line ->
+                                        line.contains("no usable matching file")
+                                                || line.contains("no verified replacement")
+                                                || line.contains("not the same recording")));
+    }
+
+    @Test
     public void onlyTwoCopiesAreTriedThenTheHostDecides() throws Exception {
         host.rejectedFiles.addAll(Arrays.asList("a_0", "a_1", "a_2"));
         assertEquals(song("a").toString(), read("a"));
         assertEquals(Arrays.asList("a_0", "a_1"), host.verified);
         assertTrue("Other sources sit this song out", preparation.holds("a|180", "src:y::z"));
         assertFalse("YouTube never does", preparation.holds("a|180", "a"));
+        assertTrue(
+                host.messages.toString(),
+                host.messages.stream()
+                        .anyMatch(
+                                line ->
+                                        line.contains(
+                                                "the recording check did not verify this copy")));
     }
 
     @Test
@@ -524,6 +687,260 @@ public class SourcePreparationTest {
         assertFalse(preparation.holds("a|180", "src:x::a_0"));
         assertEquals(hifi("a"), read("a"));
         assertEquals(1, host.verified.size());
+    }
+
+    private void checking(String file) throws Exception {
+        long until = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
+        while (!host.verified.contains(file) && System.nanoTime() < until) Thread.sleep(2);
+        assertTrue("Verification started for " + file, host.verified.contains(file));
+    }
+
+    private Future<DataSpec> opening(
+            ExecutorService loader, Object period, Uri item, CountDownLatch entered)
+            throws Exception {
+        Future<DataSpec> opened =
+                loader.submit(
+                        () -> {
+                            entered.countDown();
+                            return preparation.route(period, new DataSpec(item));
+                        });
+        assertTrue("The loader started its open", entered.await(5, TimeUnit.SECONDS));
+        return opened;
+    }
+
+    @Test
+    public void anUpcomingPeriodCanFinishCheckingAfterTheForegroundWaitExpires() throws Exception {
+        Uri current = entry("a", "playing"), next = entry("b", "future");
+        preparation.retainCurrentEntries(Collections.singletonList(current));
+        host.gates.put("b", new CountDownLatch(1));
+        preparation.upcoming(Collections.singletonList(next));
+        checking("b_0");
+        ExecutorService loader = Executors.newSingleThreadExecutor();
+        try {
+            Future<DataSpec> opened = opening(loader, new Object(), next, new CountDownLatch(1));
+            Thread.sleep(450);
+            assertFalse(
+                    "An upcoming loader is not limited to the foreground wait", opened.isDone());
+            host.gates.get("b").countDown();
+            Uri selected = opened.get(2, TimeUnit.SECONDS).uri;
+            assertNotEquals(next, selected);
+            assertTrue(preparation.isPreparedUri(selected));
+            assertEquals(Collections.singletonList(true), host.backgrounds);
+        } finally {
+            host.gates.get("b").countDown();
+            loader.shutdownNow();
+        }
+    }
+
+    @Test
+    public void anUpcomingDuplicateWaitDoesNotUseThePlayingDuplicatesDeadline() throws Exception {
+        Uri current = entry("a", "playing"), next = entry("a", "future");
+        host.foreground = false;
+        assertEquals(current, preparation.route(new Object(), new DataSpec(current)).uri);
+        preparation.cacheKey(current, "a");
+        host.foreground = true;
+        preparation.retainCurrentEntries(Collections.singletonList(current));
+        host.gates.put("a", new CountDownLatch(1));
+        preparation.upcoming(Collections.singletonList(next));
+        checking("a_0");
+        ExecutorService loader = Executors.newSingleThreadExecutor();
+        try {
+            Future<DataSpec> opened = opening(loader, new Object(), next, new CountDownLatch(1));
+            Thread.sleep(450);
+            assertFalse("The future entry has its own wait budget", opened.isDone());
+            host.gates.get("a").countDown();
+            assertNotEquals(next, opened.get(2, TimeUnit.SECONDS).uri);
+            assertEquals(current, preparation.renditionUri(current));
+            assertEquals("a", preparation.cacheKey(current, "a#alt-noatmos"));
+        } finally {
+            host.gates.get("a").countDown();
+            loader.shutdownNow();
+        }
+    }
+
+    @Test
+    public void selectingAnUpcomingWaitUsesItsOriginalForegroundDeadline() throws Exception {
+        Uri current = entry("a", "playing"), next = entry("b", "future");
+        preparation.retainCurrentEntries(Collections.singletonList(current));
+        host.gates.put("b", new CountDownLatch(1));
+        preparation.upcoming(Collections.singletonList(next));
+        checking("b_0");
+        ExecutorService loader = Executors.newSingleThreadExecutor();
+        Object period = new Object();
+        try {
+            Future<DataSpec> opened = opening(loader, period, next, new CountDownLatch(1));
+            Thread.sleep(450);
+            assertFalse("The future entry is still waiting", opened.isDone());
+            preparation.retainCurrentEntries(Collections.singletonList(next));
+            preparation.upcoming(Collections.emptyList());
+            assertEquals(
+                    "Selecting it does not start a fresh wait",
+                    next,
+                    opened.get(250, TimeUnit.MILLISECONDS).uri);
+            host.gates.get("b").countDown();
+            idle();
+            assertEquals(
+                    "The active period keeps its plain file",
+                    next,
+                    preparation.route(period, new DataSpec(next)).uri);
+            assertEquals(
+                    "A late answer cannot change the chosen entry",
+                    next,
+                    preparation.renditionUri(next));
+        } finally {
+            host.gates.get("b").countDown();
+            loader.shutdownNow();
+        }
+    }
+
+    @Test
+    public void aForegroundOpenNeverGainsAnUpcomingDeadline() throws Exception {
+        Uri current = entry("b", "selected"), later = entry("a", "playing");
+        preparation.retainCurrentEntries(Collections.singletonList(current));
+        host.gates.put("b", new CountDownLatch(1));
+        ExecutorService loader = Executors.newSingleThreadExecutor();
+        try {
+            Future<DataSpec> opened = opening(loader, new Object(), current, new CountDownLatch(1));
+            checking("b_0");
+            preparation.retainCurrentEntries(Collections.singletonList(later));
+            preparation.upcoming(Collections.singletonList(current));
+            assertEquals(current, opened.get(600, TimeUnit.MILLISECONDS).uri);
+            assertEquals(Collections.singletonList(false), host.backgrounds);
+        } finally {
+            host.gates.get("b").countDown();
+            loader.shutdownNow();
+        }
+    }
+
+    @Test
+    public void anUpcomingOpenDoesNotPromoteBackgroundWorkPastItsPolicyGate() throws Exception {
+        Uri current = entry("a", "playing"), next = entry("b", "future");
+        host.background = false;
+        preparation.retainCurrentEntries(Collections.singletonList(current));
+        preparation.upcoming(Collections.singletonList(next));
+        idle();
+
+        assertEquals(next, preparation.route(new Object(), new DataSpec(next)).uri);
+        assertTrue("The future loader does not bypass background policy", host.lookups.isEmpty());
+        assertTrue(host.verified.isEmpty());
+    }
+
+    @Test
+    public void anUnknownCurrentDeckKeepsForegroundPolicyAndItsOriginalWaitCap() throws Exception {
+        Uri item = entry("b", "unknown-current");
+        host.background = false;
+        host.gates.put("b", new CountDownLatch(1));
+        preparation.upcoming(Collections.singletonList(item));
+        idle();
+        ExecutorService loader = Executors.newSingleThreadExecutor();
+        try {
+            Future<DataSpec> opened = opening(loader, new Object(), item, new CountDownLatch(1));
+            checking("b_0");
+            assertEquals(item, opened.get(600, TimeUnit.MILLISECONDS).uri);
+            assertEquals(
+                    "No current deck confirms this is background work",
+                    Collections.singletonList(false),
+                    host.backgrounds);
+        } finally {
+            host.gates.get("b").countDown();
+            loader.shutdownNow();
+        }
+    }
+
+    @Test
+    public void anUntaggedLoaderKeepsForegroundPolicyAndItsOriginalWaitCap() throws Exception {
+        Uri current = entry("a", "playing"), item = song("b");
+        host.background = false;
+        host.gates.put("b", new CountDownLatch(1));
+        preparation.retainCurrentEntries(Collections.singletonList(current));
+        preparation.upcoming(Collections.singletonList(item));
+        idle();
+        ExecutorService loader = Executors.newSingleThreadExecutor();
+        try {
+            Future<DataSpec> opened = opening(loader, new Object(), item, new CountDownLatch(1));
+            checking("b_0");
+            assertEquals(item, opened.get(600, TimeUnit.MILLISECONDS).uri);
+            assertEquals(
+                    "An untagged entry has no exact future identity",
+                    Collections.singletonList(false),
+                    host.backgrounds);
+        } finally {
+            host.gates.get("b").countDown();
+            loader.shutdownNow();
+        }
+    }
+
+    @Test
+    public void aSpareProtectedEntryKeepsTheForegroundWaitCap() throws Exception {
+        Uri current = entry("a", "playing"), spare = entry("b", "spare");
+        preparation.retainCurrentEntries(Arrays.asList(current, spare));
+        host.gates.put("b", new CountDownLatch(1));
+        preparation.upcoming(Collections.singletonList(spare));
+        checking("b_0");
+        ExecutorService loader = Executors.newSingleThreadExecutor();
+        Object period = new Object();
+        try {
+            Future<DataSpec> opened = opening(loader, period, spare, new CountDownLatch(1));
+            assertEquals(spare, opened.get(600, TimeUnit.MILLISECONDS).uri);
+            host.gates.get("b").countDown();
+            idle();
+            assertEquals(spare, preparation.route(period, new DataSpec(spare)).uri);
+        } finally {
+            host.gates.get("b").countDown();
+            loader.shutdownNow();
+        }
+    }
+
+    @Test
+    public void aQueueRefreshKeepsTheAwaitedJobBehindAnActiveForegroundCheck() throws Exception {
+        preparation.close();
+        preparation = new SourcePreparation(host, 1000);
+        preparation.playing(true);
+        Uri current = entry("a", "playing"), next = entry("b", "future");
+        preparation.retainCurrentEntries(Collections.singletonList(current));
+        host.gates.put("a", new CountDownLatch(1));
+        host.gates.put("b", new CountDownLatch(1));
+        ExecutorService loader = Executors.newFixedThreadPool(2);
+        try {
+            opening(loader, new Object(), current, new CountDownLatch(1));
+            checking("a_0");
+            preparation.upcoming(Collections.singletonList(next));
+            CountDownLatch entered = new CountDownLatch(1);
+            Thread[] waiting = new Thread[1];
+            Future<DataSpec> opened =
+                    loader.submit(
+                            () -> {
+                                waiting[0] = Thread.currentThread();
+                                entered.countDown();
+                                return preparation.route(new Object(), new DataSpec(next));
+                            });
+            assertTrue(entered.await(5, TimeUnit.SECONDS));
+            long until = System.nanoTime() + TimeUnit.SECONDS.toNanos(2);
+            while (!opened.isDone()
+                    && waiting[0].getState() != Thread.State.TIMED_WAITING
+                    && System.nanoTime() < until) Thread.sleep(2);
+            assertFalse(opened.isDone());
+            assertEquals(
+                    "The future loader is waiting on its queued job",
+                    Thread.State.TIMED_WAITING,
+                    waiting[0].getState());
+            assertFalse(
+                    "It did not cancel the active foreground check", host.verified.contains("b_0"));
+
+            preparation.upcoming(Collections.singletonList(next));
+            preparation.upcoming(Collections.singletonList(next));
+            assertFalse("Refreshing the same queue preserves its pending result", opened.isDone());
+            host.gates.get("a").countDown();
+            checking("b_0");
+            host.gates.get("b").countDown();
+            assertNotEquals(next, opened.get(2, TimeUnit.SECONDS).uri);
+            assertEquals(Arrays.asList("a_0", "b_0"), host.verified);
+            assertEquals(Arrays.asList(false, true), host.backgrounds);
+        } finally {
+            host.gates.get("a").countDown();
+            host.gates.get("b").countDown();
+            loader.shutdownNow();
+        }
     }
 
     /** Metered isn't poor: it's what arrives that counts. */
@@ -908,6 +1325,37 @@ public class SourcePreparationTest {
     }
 
     @Test
+    public void aPreviousProofNamespaceCannotApproveANewPreparation() throws Exception {
+        read("a");
+        preparation.close();
+        assertTrue(host.savedText.contains("verified3"));
+        host.savedText = host.savedText.replace("verified3", "verified2");
+        host.parked.clear();
+        host.verified.clear();
+        preparation = new SourcePreparation(host, 300);
+
+        assertEquals(hifi("a"), read("a"));
+        assertEquals(
+                "The old namespace requires a fresh check", Arrays.asList("a_0"), host.verified);
+        assertTrue(host.trusted.isEmpty());
+    }
+
+    @Test
+    public void aPreviousOfflineProofNamespaceCannotSelectCachedAudio() throws Exception {
+        host.completeRenditions.add(hifi("a"));
+        playBetter("a");
+        proved();
+        preparation.close();
+        assertTrue(host.savedText.contains("known3"));
+        host.savedText = host.savedText.replace("known3", "known2");
+        host.foreground = false;
+        host.parked.clear();
+        preparation = new SourcePreparation(host, 300);
+
+        assertEquals(song("a"), preparation.route(new Object(), open("a")).uri);
+    }
+
+    @Test
     public void whatsSavedHoldsNoAddress() throws Exception {
         read("a");
         assertFalse(host.savedText, host.savedText.contains("tg://"));
@@ -1007,7 +1455,7 @@ public class SourcePreparationTest {
         assertNotEquals(first.getQueryParameter("q"), second.getQueryParameter("q"));
         assertEquals(2, host.verified.size());
         assertTrue(host.trusted.isEmpty());
-        assertFalse(host.savedText.contains("verified2"));
+        assertFalse(host.savedText.contains("verified3"));
     }
 
     @Test

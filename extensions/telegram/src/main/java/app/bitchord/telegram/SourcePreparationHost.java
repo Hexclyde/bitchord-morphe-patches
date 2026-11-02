@@ -65,8 +65,8 @@ final class SourcePreparationHost implements SourcePreparation.Host {
     private final Map<String, String> claims = new HashMap<>(), parkedIdentities = new HashMap<>();
     private java.util.function.BiPredicate<String, String> holding;
     private volatile boolean detached;
-    private final Map<Object, JSONObject> described =
-            java.util.Collections.synchronizedMap(new java.util.WeakHashMap<>());
+    private final SourcePreparation.WeakIdentitySnapshots<Object, JSONObject> described =
+            new SourcePreparation.WeakIdentitySnapshots<>();
 
     @Override
     public void describe(Object stream) throws Exception {
@@ -75,17 +75,25 @@ final class SourcePreparationHost implements SourcePreparation.Host {
             long generation = bridge.generation, revision = bridge.mediaRevision;
             String session = bridge.sessionTag;
             JSONObject row = bridge.resolveTrack(InternalAddon.audioId(bridge, url(stream)));
-            if (generation != bridge.generation
-                    || revision != bridge.mediaRevision
-                    || !java.util.Objects.equals(session, bridge.sessionTag))
-                throw new IOException("Source changed while describing its file");
-            if (row != null)
-                described.put(
-                        stream,
-                        new JSONObject(row.toString())
-                                .put("_generation", generation)
-                                .put("_revision", revision)
-                                .put("_session", session));
+            JSONObject snapshot = row == null ? null : new JSONObject(row.toString());
+            synchronized (bridge.mediaChanges) {
+                if (generation != bridge.generation
+                        || revision != bridge.mediaRevision
+                        || !java.util.Objects.equals(session, bridge.sessionTag))
+                    throw new IOException("Source changed while describing its file");
+                if (snapshot != null) {
+                    TelegramMediaChanges.Watch watch =
+                            bridge.mediaChanges.watch(
+                                    snapshot.getLong("chat"), snapshot.getLong("message"));
+                    if (!watch.valid) throw new IOException("Too many prepared file descriptions");
+                    described.put(
+                            stream,
+                            snapshot.put("_generation", generation)
+                                    .put("_revision", revision)
+                                    .put("_session", session)
+                                    .put("_watch", watch));
+                }
+            }
         }
     }
 
@@ -304,16 +312,10 @@ final class SourcePreparationHost implements SourcePreparation.Host {
             if (row == null
                     || !bridge.selected.contains(row.getLong("chat"))
                     || row.optLong("_generation") != bridge.generation
-                    || row.optLong("_revision") != bridge.mediaRevision
-                    || !java.util.Objects.equals(row.optString("_session"), bridge.sessionTag))
-                return null;
-            return policy
-                    + ":"
-                    + bridge.generation
-                    + ":"
-                    + bridge.sessionTag
-                    + ":"
-                    + bridge.mediaRevision;
+                    || !java.util.Objects.equals(row.optString("_session"), bridge.sessionTag)
+                    || !(row.opt("_watch") instanceof TelegramMediaChanges.Watch)
+                    || !((TelegramMediaChanges.Watch) row.opt("_watch")).valid) return null;
+            return policy + ":" + bridge.generation + ":" + bridge.sessionTag;
         } catch (Exception unavailable) {
             return null;
         }
@@ -510,12 +512,12 @@ final class SourcePreparationHost implements SourcePreparation.Host {
     public void verify(Uri marked, Object stream, BooleanSupplier cancelled, boolean background)
             throws IOException {
         try {
-            SourcePreference.verifyAhead(
+            SourcePreference.verifyPrepared(
                     new DataSpec(marked),
+                    spec(stream),
                     verificationSpec(stream, cancelled),
                     cancelled,
                     background);
-            SourcePreference.trustAhead(new DataSpec(marked), spec(stream));
         } catch (IOException failed) {
             throw failed;
         } catch (Exception unavailable) {
@@ -526,7 +528,7 @@ final class SourcePreparationHost implements SourcePreparation.Host {
     @Override
     public void trust(Uri marked, Object stream) {
         try {
-            SourcePreference.trustAhead(new DataSpec(marked), spec(stream));
+            SourcePreference.trustPrepared(new DataSpec(marked), spec(stream));
         } catch (Exception unavailable) {
             throw new IllegalStateException(unavailable);
         }
@@ -535,7 +537,7 @@ final class SourcePreparationHost implements SourcePreparation.Host {
     @Override
     public boolean rejected(Uri marked, Object stream) {
         try {
-            return SourcePreference.rejected(new DataSpec(marked), spec(stream));
+            return SourcePreference.rejectedPrepared(new DataSpec(marked), spec(stream));
         } catch (Exception unavailable) {
             return false;
         }
@@ -762,26 +764,35 @@ final class SourcePreparationHost implements SourcePreparation.Host {
         for (Method method : cache.getClass().getMethods())
             if (method.getName().equals("warmRange")) warm = method;
         if (warm == null) throw new NoSuchMethodException("warmRange");
-        long began = System.nanoTime();
-        CountDownLatch done = new CountDownLatch(1);
-        AtomicReference<Object> ignored = new AtomicReference<>();
-        Continuation<Object> completion =
-                new Continuation<Object>() {
-                    @Override
-                    public CoroutineContext getContext() {
-                        return EmptyCoroutineContext.INSTANCE;
-                    }
+        Object stream = forced().get(marked.getQueryParameter("v"));
+        if (stream == null) throw new IOException("The prepared cache source is no longer parked");
+        try (SourcePreference.PreparedRead read =
+                SourcePreference.preparedRead(new DataSpec(marked), spec(stream))) {
+            long began = System.nanoTime();
+            CountDownLatch done = new CountDownLatch(1);
+            AtomicReference<Object> result = new AtomicReference<>();
+            Continuation<Object> completion =
+                    new Continuation<Object>() {
+                        @Override
+                        public CoroutineContext getContext() {
+                            return read.context();
+                        }
 
-                    @Override
-                    public void resumeWith(Object value) {
-                        ignored.set(value);
-                        done.countDown();
-                    }
-                };
-        Object returned = warm.invoke(cache, marked, bytes, new Step(completion));
-        if (returned == kotlin.coroutines.intrinsics.CoroutineSingletons.COROUTINE_SUSPENDED
-                && !done.await(30, TimeUnit.SECONDS)) throw new IOException("Too slow to read");
-        return (System.nanoTime() - began) / 1_000_000;
+                        @Override
+                        public void resumeWith(Object value) {
+                            result.set(value);
+                            done.countDown();
+                        }
+                    };
+            Object returned = warm.invoke(cache, marked, bytes, new Step(completion));
+            if (returned == kotlin.coroutines.intrinsics.CoroutineSingletons.COROUTINE_SUSPENDED) {
+                if (!done.await(30, TimeUnit.SECONDS)) throw new IOException("Too slow to read");
+                returned = result.get();
+            }
+            if (returned != null && returned.getClass().getName().equals("kotlin.Result$Failure"))
+                throw new IOException("The prepared cache read did not finish");
+            return (System.nanoTime() - began) / 1_000_000;
+        }
     }
 
     @Override

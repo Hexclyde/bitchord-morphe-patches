@@ -8,6 +8,7 @@ import android.os.Process;
 import androidx.media3.datasource.DataSpec;
 
 import kotlin.Unit;
+import kotlin.coroutines.CoroutineContext;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function4;
 
@@ -22,6 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -47,22 +49,58 @@ public final class SourcePreference {
     private static final long KEPT_NANOS = 600_000_000_000L;
 
     private static final int KEPT = 8, WINDOWS = 3;
+    private static final String STRICT = "strict\n", PREPARED = "prepared-v1\n";
 
     /** A check made before anything plays: who may stop it, and whether anyone is waiting. */
     private static final class Ahead {
         final BooleanSupplier cancelled;
-        final boolean background;
+        final boolean background, prepared, approvedRead;
+        final Uri original, candidate;
 
-        Ahead(BooleanSupplier cancelled, boolean background) {
+        Ahead(
+                BooleanSupplier cancelled,
+                boolean background,
+                boolean prepared,
+                Uri original,
+                Uri candidate) {
+            this(cancelled, background, prepared, original, candidate, false);
+        }
+
+        Ahead(
+                BooleanSupplier cancelled,
+                boolean background,
+                boolean prepared,
+                Uri original,
+                Uri candidate,
+                boolean approvedRead) {
             this.cancelled = cancelled;
             this.background = background;
+            this.prepared = prepared;
+            this.original = original;
+            this.candidate = candidate;
+            this.approvedRead = approvedRead;
+        }
+
+        boolean applies(Uri requested, Uri resolved) {
+            return original.equals(requested) && candidate.equals(resolved);
         }
     }
 
     private static final ThreadLocal<Ahead> ahead = new ThreadLocal<>();
+    private static final ThreadLocal<String> warming = new ThreadLocal<>();
+    private static final Map<String, PreparedRead> reads = new LinkedHashMap<>();
 
     /** Streams checked ahead for a request: its player may be looking at another reference. */
     private static final Set<String> verifiedAhead =
+            Collections.newSetFromMap(
+                    new LinkedHashMap<String, Boolean>() {
+                        @Override
+                        protected boolean removeEldestEntry(Map.Entry<String, Boolean> eldest) {
+                            return size() > 256;
+                        }
+                    });
+
+    private static final Set<String> verifiedPrepared =
             Collections.newSetFromMap(
                     new LinkedHashMap<String, Boolean>() {
                         @Override
@@ -82,12 +120,13 @@ public final class SourcePreference {
     static void verifyAhead(
             DataSpec requested, DataSpec resolved, BooleanSupplier cancelled, boolean background)
             throws IOException {
-        ahead.set(new Ahead(cancelled, background));
+        Ahead previous = ahead.get();
+        ahead.set(new Ahead(cancelled, background, false, requested.uri, resolved.uri));
         try {
             guard(requested, resolved);
             trustAhead(requested, resolved);
         } finally {
-            ahead.remove();
+            restoreAhead(previous);
         }
     }
 
@@ -103,10 +142,143 @@ public final class SourcePreference {
         return Boolean.FALSE.equals(decisions.get(decisionKey(requested.uri, resolved.uri, null)));
     }
 
+    /** A complete recording can be selected before playback without certifying a live swap. */
+    static void verifyPrepared(
+            DataSpec requested, DataSpec resolved, BooleanSupplier cancelled, boolean background)
+            throws IOException {
+        Ahead previous = ahead.get();
+        ahead.set(new Ahead(cancelled, background, true, requested.uri, resolved.uri));
+        try {
+            guard(requested, resolved);
+            trustPrepared(requested, resolved);
+        } catch (IOException failed) {
+            if (rejectedPrepared(requested, resolved))
+                synchronized (verifiedPrepared) {
+                    verifiedPrepared.remove(aheadKey(requested.uri, resolved.uri));
+                }
+            throw failed;
+        } finally {
+            restoreAhead(previous);
+        }
+    }
+
+    /** A manifest is checked through its assembled file, then read through its playback request. */
+    static void verifyPrepared(
+            DataSpec requested,
+            DataSpec playback,
+            DataSpec checked,
+            BooleanSupplier cancelled,
+            boolean background)
+            throws IOException {
+        try {
+            verifyPrepared(requested, checked, cancelled, background);
+        } catch (IOException failed) {
+            if (!(failed instanceof SourceAudio.Stopped)
+                    && !(failed instanceof InterruptedIOException)
+                    && rejectedPrepared(requested, checked)) {
+                decisions.put(decisionKey(requested.uri, playback.uri, null, true), false);
+                synchronized (verifiedPrepared) {
+                    verifiedPrepared.remove(aheadKey(requested.uri, playback.uri));
+                }
+            }
+            throw failed;
+        }
+        decisions.remove(decisionKey(requested.uri, playback.uri, null, true), false);
+        trustPrepared(requested, playback);
+    }
+
+    private static void restoreAhead(Ahead previous) {
+        if (previous == null) ahead.remove();
+        else ahead.set(previous);
+    }
+
+    static void trustPrepared(DataSpec requested, DataSpec resolved) {
+        synchronized (verifiedPrepared) {
+            verifiedPrepared.add(aheadKey(requested.uri, resolved.uri));
+        }
+    }
+
+    static boolean rejectedPrepared(DataSpec requested, DataSpec resolved) {
+        return Boolean.FALSE.equals(
+                decisions.get(decisionKey(requested.uri, resolved.uri, null, true)));
+    }
+
+    /** Permission belongs only to this already approved cache read and its coroutine. */
+    static final class PreparedRead implements AutoCloseable {
+        private final String token = UUID.randomUUID().toString(), previous;
+        private final long until = System.nanoTime() + BUDGET;
+        private final Thread owner = Thread.currentThread();
+        private final Ahead scope;
+        private final CoroutineContext context;
+        private volatile boolean closed;
+
+        private PreparedRead(DataSpec requested, DataSpec resolved) throws IOException {
+            synchronized (verifiedPrepared) {
+                if (!verifiedPrepared.contains(aheadKey(requested.uri, resolved.uri)))
+                    throw new IOException("The cache read has no preparation proof");
+            }
+            scope =
+                    new Ahead(
+                            () -> closed || System.nanoTime() > until,
+                            true,
+                            true,
+                            requested.uri,
+                            resolved.uri,
+                            true);
+            context = AutomixAccess.context(token, warming);
+            if (context == null) throw new IOException("The cache read context is unavailable");
+            synchronized (reads) {
+                reads.values().removeIf(read -> read.closed || System.nanoTime() > read.until);
+                if (reads.size() >= KEPT) throw new IOException("Too many prepared cache reads");
+                reads.put(token, this);
+            }
+            previous = warming.get();
+            warming.set(token);
+        }
+
+        CoroutineContext context() {
+            return context;
+        }
+
+        @Override
+        public void close() {
+            closed = true;
+            synchronized (reads) {
+                reads.remove(token);
+            }
+            if (Thread.currentThread() == owner && token.equals(warming.get())) {
+                if (previous == null) warming.remove();
+                else warming.set(previous);
+            }
+        }
+    }
+
+    static PreparedRead preparedRead(DataSpec requested, DataSpec resolved) throws IOException {
+        return new PreparedRead(requested, resolved);
+    }
+
+    private static Ahead scope(Uri original, Uri candidate) throws IOException {
+        Ahead direct = ahead.get();
+        if (direct != null) return direct.applies(original, candidate) ? direct : null;
+        String token = warming.get();
+        if (token == null) return null;
+        synchronized (reads) {
+            PreparedRead read = reads.get(token);
+            if (read == null || read.closed || System.nanoTime() > read.until)
+                throw new SourceAudio.Stopped();
+            return read.scope.applies(original, candidate) ? read.scope : null;
+        }
+    }
+
     private static String decisionKey(Uri original, Uri candidate, Uri played) {
+        return decisionKey(original, candidate, played, false);
+    }
+
+    private static String decisionKey(Uri original, Uri candidate, Uri played, boolean prepared) {
         original = SourcePreparation.withoutEntry(original);
         played = SourcePreparation.withoutEntry(played);
-        return original.toString()
+        return (prepared ? PREPARED : STRICT)
+                + original.toString()
                 + "\n"
                 + candidate.toString()
                 + "\n"
@@ -335,48 +507,82 @@ public final class SourcePreference {
                 && host != null
                 && (host.equals("googlevideo.com") || host.endsWith(".googlevideo.com")))
             return resolved;
-        Ahead asked = ahead.get();
+        Ahead asked = scope(original, candidate);
+        boolean prepared = asked != null && asked.prepared;
+        if (prepared && asked.cancelled.getAsBoolean()) throw new SourceAudio.Stopped();
+        if (prepared && asked.approvedRead) {
+            synchronized (verifiedPrepared) {
+                if (!verifiedPrepared.contains(aheadKey(original, candidate)))
+                    throw new IOException(
+                            "The cache read preparation proof is no longer available");
+            }
+            return resolved;
+        }
         if (asked == null) {
             synchronized (verifiedAhead) {
                 if (verifiedAhead.contains(aheadKey(original, candidate))) return resolved;
             }
+            if (SourceFirst.isPreparedUri(original))
+                synchronized (verifiedPrepared) {
+                    if (verifiedPrepared.contains(aheadKey(original, candidate))) return resolved;
+                }
         }
         Uri played = mediaId == null || asked != null ? null : SourceAutomix.observed(mediaId);
-        String key = decisionKey(original, candidate, played);
+        String key = decisionKey(original, candidate, played, prepared);
         Boolean known = decisions.get(key);
-        if (known != null) return settled(known, key, mediaId, resolved);
+        if (known != null) return settled(known, key, mediaId, resolved, prepared);
         boolean upgrade = upgrade(original, video);
         long budget = upgrade ? UPGRADE_BUDGET : BUDGET;
+        long deadline = System.nanoTime() + budget;
+        BooleanSupplier cancelled =
+                asked != null ? asked.cancelled : upgrade ? () -> !parked(original) : () -> false;
         Attempt attempt = attempt(key);
-        try {
-            if (!attempt.lock.tryLock(budget, TimeUnit.NANOSECONDS))
-                throw new SourceAudio.Stopped();
+        // The shared permit precedes the per-recording lock, including analyzer re-entry.
+        try (SourceAudio.Decoding decoding = SourceAudio.decode(deadline, cancelled)) {
+            while (true) {
+                decoding.check();
+                if (attempt.lock.tryLock(
+                        Math.min(deadline - System.nanoTime(), TimeUnit.MILLISECONDS.toNanos(50)),
+                        TimeUnit.NANOSECONDS)) break;
+            }
+            int priority = Process.getThreadPriority(Process.myTid());
+            try {
+                decoding.check();
+                // Whoever held the lock may have answered this already.
+                known = decisions.get(key);
+                if (known != null) return settled(known, key, mediaId, resolved, prepared);
+                // Everything this starts, the extractor's and decoder's work included, yields to
+                // the
+                // player that's being listened to.
+                if (asked != null ? asked.background : upgrade)
+                    Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+                return verify(
+                        attempt,
+                        key,
+                        mediaId,
+                        video,
+                        upgrade,
+                        deadline - System.nanoTime(),
+                        original,
+                        played,
+                        candidate,
+                        resolved,
+                        asked);
+            } finally {
+                Process.setThreadPriority(priority);
+                attempt.lock.unlock();
+            }
         } catch (InterruptedException interrupted) {
             Thread.currentThread().interrupt();
             throw new InterruptedIOException("Recording verification interrupted");
         }
-        int priority = Process.getThreadPriority(Process.myTid());
-        try {
-            // Whoever held the lock may have answered this already.
-            known = decisions.get(key);
-            if (known != null) return settled(known, key, mediaId, resolved);
-            // Everything this starts, the extractor's and decoder's work included, yields to the
-            // player that's being listened to.
-            if (asked != null ? asked.background : upgrade)
-                Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-            return verify(
-                    attempt, key, mediaId, video, upgrade, budget, original, played, candidate,
-                    resolved);
-        } finally {
-            Process.setThreadPriority(priority);
-            attempt.lock.unlock();
-        }
     }
 
-    private static DataSpec settled(boolean same, String key, String mediaId, DataSpec resolved)
+    private static DataSpec settled(
+            boolean same, String key, String mediaId, DataSpec resolved, boolean prepared)
             throws IOException {
         if (!same) throw new IOException("Alternative audio did not verify as the same recording");
-        Double offset = offsets.get(key);
+        Double offset = prepared ? null : offsets.get(key);
         if (mediaId != null && offset != null)
             pendingOffsets.put(mediaId, new double[] {offset * 1000, System.currentTimeMillis()});
         return resolved;
@@ -392,13 +598,14 @@ public final class SourcePreference {
             Uri original,
             Uri played,
             Uri candidate,
-            DataSpec resolved)
+            DataSpec resolved,
+            Ahead asked)
             throws IOException {
         verifying.set(true);
         SourceAutomix.enterQuiet();
         boolean conclusive = false;
         long started = System.nanoTime();
-        Ahead asked = ahead.get();
+        boolean prepared = asked != null && asked.prepared;
         BooleanSupplier stale =
                 asked != null ? asked.cancelled : upgrade ? () -> !parked(original) : () -> false;
         String stage = "reference";
@@ -461,13 +668,34 @@ public final class SourcePreference {
                                             Math.min(points[i] + 16, durationB)));
             }
             stage = "comparison";
-            Double offset = RecordingIdentity.match(attempt.a, attempt.b, durationA, durationB);
+            Double offset =
+                    prepared
+                            ? null
+                            : RecordingIdentity.match(attempt.a, attempt.b, durationA, durationB);
+            HostLog.d(
+                    "Recording check policy "
+                            + (prepared ? "prepared" : "strict")
+                            + ": "
+                            + RecordingIdentity.describe(
+                                    attempt.a, attempt.b, durationA, durationB));
             // A mismatched/inconclusive replacement must leave the original playback intact.
-            boolean same = offset != null;
+            boolean same =
+                    prepared
+                            ? RecordingIdentity.matchesPrepared(
+                                    attempt.a, attempt.b, durationA, durationB)
+                            : offset != null;
             if (decisions.size() > 256) {
-                decisions.clear();
-                offsets.clear();
-                pendingOffsets.clear();
+                String domain = prepared ? PREPARED : STRICT;
+                int count = 0;
+                for (String remembered : decisions.keySet())
+                    if (remembered.startsWith(domain)) count++;
+                if (count > 256) {
+                    decisions.keySet().removeIf(remembered -> remembered.startsWith(domain));
+                    if (!prepared) {
+                        offsets.clear();
+                        pendingOffsets.clear();
+                    }
+                }
             }
             decisions.put(key, same);
             conclusive = true;
@@ -475,20 +703,22 @@ public final class SourcePreference {
                 throw new IOException("Alternative audio failed fingerprint/timeline verification");
             // Only an upgrade measured against the actually selected old URI supplies a swap
             // offset.
-            if (played != null && !played.equals(original)) {
+            if (!prepared && played != null && !played.equals(original)) {
                 offsets.put(key, offset);
                 pendingOffsets.put(
                         mediaId, new double[] {offset * 1000, System.currentTimeMillis()});
             }
             HostLog.d("Automatic source replacement verified across three audio windows");
-            HostLog.d(
-                    String.format(
-                            Locale.US,
-                            "Recording check measured a %+.0f ms shift; %s",
-                            offset * 1000,
-                            played != null && !played.equals(original)
-                                    ? "the swap starts from it"
-                                    : "not used: measured against YouTube, not what's playing"));
+            if (!prepared)
+                HostLog.d(
+                        String.format(
+                                Locale.US,
+                                "Recording check measured a %+.0f ms shift; %s",
+                                offset * 1000,
+                                played != null && !played.equals(original)
+                                        ? "the swap starts from it"
+                                        : "not used: measured against YouTube, not what's"
+                                                + " playing"));
             report("passed", stage, started, attempt, expectedCopy, resolvedCopy, null);
             return resolved;
         } catch (IOException error) {

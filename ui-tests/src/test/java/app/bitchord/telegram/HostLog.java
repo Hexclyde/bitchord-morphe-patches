@@ -4,7 +4,11 @@ package app.bitchord.telegram;
 final class HostLog {
     private HostLog() {}
 
-    static void d(String message) {}
+    static java.util.function.Consumer<String> observer;
+
+    static void d(String message) {
+        if (observer != null) observer.accept(message);
+    }
 
     static String length(int seconds) {
         return seconds <= 0 ? "?" : seconds / 60 + ":" + String.format("%02d", seconds % 60);

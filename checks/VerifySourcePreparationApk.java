@@ -444,6 +444,7 @@ public final class VerifySourcePreparationApk {
         publicStatic("renditionUri", URI, URI);
         publicStatic("cacheKey", STRING, URI, STRING);
         publicStatic("preparedEntry", "Z", ITEM);
+        publicStatic("isPreparedUri", "Z", URI);
         check(
                 method(CORE, "cacheKey", URI, STRING).getReturnType().equals(STRING),
                 "Core cache identity return ABI");
@@ -471,6 +472,61 @@ public final class VerifySourcePreparationApk {
                                                             "Lapp/bitchord/telegram/TelegramMatch;"),
                             "Common facade has no typed optional runtime field dependency");
                 }
+    }
+
+    private static void nativeContext() {
+        String local = "Ljava/lang/ThreadLocal;";
+        String context = "Lkotlin/coroutines/CoroutineContext;";
+        Method bridge = method(SERVICE, "bitchordPreparedContext", STRING, local);
+        check(
+                bridge.getReturnType().equals(context)
+                        && (bridge.getAccessFlags() & AccessFlags.STATIC.getValue()) != 0,
+                "Preparation context bridge returns the host coroutine context");
+        List<Instruction> body = code(bridge);
+        check(
+                body.size() == 3
+                        && bridge.getImplementation().getRegisterCount() == 3
+                        && body.get(0).getOpcode() == Opcode.NEW_INSTANCE
+                        && body.get(1).getOpcode() == Opcode.INVOKE_DIRECT
+                        && body.get(2).getOpcode() == Opcode.RETURN_OBJECT,
+                "Preparation context constructs the native element without extra effects");
+        String owner =
+                ((TypeReference) ((ReferenceInstruction) body.get(0)).getReference()).getType();
+        MethodReference constructor = call(body.get(1));
+        check(
+                constructor != null
+                        && constructor.getDefiningClass().equals(owner)
+                        && constructor.getName().equals("<init>")
+                        && args(constructor).equals(List.of(STRING, local))
+                        && Arrays.equals(registers(body.get(1)), new int[] {0, 1, 2})
+                        && ((OneRegisterInstruction) body.get(0)).getRegisterA() == 0
+                        && ((OneRegisterInstruction) body.get(2)).getRegisterA() == 0,
+                "Native context retains the exact token and ThreadLocal constructor inputs");
+        ClassDef element = type(owner);
+        check(
+                element.getInterfaces().contains("Lkotlinx/coroutines/ThreadContextElement;"),
+                "Preparation uses the host's native context element");
+        method(owner, "<init>", STRING, local);
+        boolean reads = false, restores = false;
+        for (Method candidate : element.getMethods())
+            if (candidate.getImplementation() != null) {
+                boolean get = false, set = false;
+                for (Instruction instruction : candidate.getImplementation().getInstructions()) {
+                    get |= calls(instruction, local, "get");
+                    set |= calls(instruction, local, "set");
+                }
+                reads |= args(candidate).equals(List.of(context)) && get && set;
+                restores |=
+                        args(candidate).equals(List.of("Ljava/lang/Object;"))
+                                && candidate.getReturnType().equals("V")
+                                && set;
+            }
+        check(reads && restores, "Native context can install and restore its ThreadLocal value");
+        Method access = method("Lapp/bitchord/telegram/AutomixAccess;", "context", STRING, local);
+        check(
+                code(access).stream()
+                        .anyMatch(line -> calls(line, SERVICE, "bitchordPreparedContext")),
+                "Preparation read scopes reach the qualified native context bridge");
     }
 
     private static void reflectionAbi() {
@@ -539,6 +595,7 @@ public final class VerifySourcePreparationApk {
             factory();
             taggingAndRanking();
             upgradeGuard();
+            nativeContext();
             runtimeAbi();
             reflectionAbi();
         }

@@ -1,5 +1,6 @@
 package app.bitchord.telegram;
 
+import android.content.Context;
 import android.media.MediaDataSource;
 import android.net.Uri;
 import android.os.Process;
@@ -21,6 +22,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.function.LongSupplier;
 
 /** All source types use the same host analyzer; this runtime never selects audible playback. */
 public final class SourceAutomix {
@@ -35,6 +37,9 @@ public final class SourceAutomix {
     private static final Map<String, Uri> observed = new ConcurrentHashMap<>();
     private static final Map<Object, Integer> modelUsers = new WeakHashMap<>();
     private static final long BUDGET_NANOS = 90_000_000_000L;
+    static LongSupplier heapMaximum = () -> Runtime.getRuntime().maxMemory();
+    static LongSupplier heapUsed =
+            () -> Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
     static final class Job {
         final Object service, analyzer;
@@ -42,6 +47,8 @@ public final class SourceAutomix {
         final Uri uri;
         final double duration;
         volatile DataSpec spec;
+        SourceAudio.AnalysisInfo format;
+        boolean cachedOnly;
         volatile boolean running, done, cancelled;
         volatile int attempts;
         volatile long retryAfter;
@@ -64,6 +71,10 @@ public final class SourceAutomix {
 
     public static void settingChanged() {
         SoundExtras.effectsChanged();
+    }
+
+    public static String mixLabel(String original) {
+        return AutomixAccess.mixLabel(original);
     }
 
     public static void release(Object owner) {
@@ -233,6 +244,8 @@ public final class SourceAutomix {
 
     private static void analyze(Job job, Map<String, Job> current, Set<String> running) {
         Object[] models = null;
+        SourceAudio.Decoding decoding = null;
+        String stage = "starting";
         active.set(job);
         enterQuiet();
         job.deadline = System.nanoTime() + BUDGET_NANOS;
@@ -243,20 +256,91 @@ public final class SourceAutomix {
             if (((Number) field(job.analyzer, "thermalStatus")).intValue() >= 3) return;
             job.attempts++;
             Map<String, Object> results = (Map<String, Object>) field(job.analyzer, "results");
+            stage = "restore";
             AutomixAccess.restore(job.analyzer, job.storeKey);
             Object result = results.remove(job.storeKey);
+            boolean restored = result != null, measuredDsp = false;
             if (result == null) {
-                models = useModels(job.analyzer);
-                Object outcome =
-                        invoke(
-                                job.analyzer,
-                                "analyze",
-                                new Class<?>[] {String.class, Uri.class, double.class},
-                                job.id,
-                                job.uri,
-                                job.duration);
-                result = outcome == null ? null : field(outcome, "flags");
+                stage = "memory-preview";
+                if (job.format != null) {
+                    long maximum = heapMaximum.getAsLong(), used = heapUsed.getAsLong();
+                    long full =
+                            SourceAudio.analysisBytes(job.format.sampleRate, job.format.seconds);
+                    long bounded = DspAnalysis.bytes(job.format.sampleRate, job.format.seconds);
+                    long available = SourceAudio.dspAvailable(maximum, used);
+                    if (full > SourceAudio.analysisAvailable(maximum, used)
+                            && bounded >= 0
+                            && bounded > available)
+                        throw new DspAnalysis.Deferred(bounded, available, false);
+                }
+                // Resolve before owning the PCM permit: the host resolver may dispatch coroutines.
+                stage = "source-resolution";
+                try (MediaDataSource cached = AutomixAccess.cached(job.uri)) {
+                    job.cachedOnly = cached != null;
+                }
+                if (!job.cachedOnly) job.spec = resolve(job.uri);
+                stage = "decode-admission";
+                decoding =
+                        SourceAudio.decode(
+                                job.deadline, () -> job.cancelled || current.get(job.id) != job);
+                String memoryLimit;
+                Function0<MediaDataSource> input = opener(job.uri);
+                stage = "model-preflight";
+                try (MediaDataSource source = input.invoke()) {
+                    long available =
+                            SourceAudio.analysisAvailable(
+                                    heapMaximum.getAsLong(), heapUsed.getAsLong());
+                    memoryLimit = SourceAudio.analysisLimit(source, job.duration, available);
+                }
+                if (memoryLimit != null) {
+                    stage = "format-probe";
+                    SourceAudio.AnalysisInfo format;
+                    try (MediaDataSource source = input.invoke()) {
+                        format = SourceAudio.analysisInfo(source, job.duration);
+                    }
+                    job.format = format;
+                    stage = "bounded-DSP";
+                    try (SourceAudio.DspMemory memory =
+                            SourceAudio.dspMemory(heapMaximum.getAsLong(), heapUsed.getAsLong())) {
+                        result =
+                                DspAnalysis.analyze(
+                                        job.id,
+                                        ((Context) job.service).getCacheDir(),
+                                        input::invoke,
+                                        format.sampleRate,
+                                        format.seconds,
+                                        () ->
+                                                job.cancelled
+                                                        || current.get(job.id) != job
+                                                        || memory.cancelled()
+                                                        || AutomixAccess.stopped()
+                                                        || System.nanoTime() >= job.deadline,
+                                        () ->
+                                                memory.available(
+                                                        heapMaximum.getAsLong(),
+                                                        heapUsed.getAsLong()));
+                    }
+                    if (result == null) {
+                        HostLog.d("AutoMix analysis deferred: " + memoryLimit);
+                        return;
+                    }
+                    measuredDsp = true;
+                } else {
+                    stage = "model-analysis";
+                    decoding.check();
+                    models = useModels(job.analyzer);
+                    Object outcome =
+                            invoke(
+                                    job.analyzer,
+                                    "analyze",
+                                    new Class<?>[] {String.class, Uri.class, double.class},
+                                    job.id,
+                                    job.uri,
+                                    job.duration);
+                    result = outcome == null ? null : field(outcome, "flags");
+                }
             }
+            stage = "result";
             if (result == null
                     || !"com.music.bitchord.playback.smart.TrackAnalysis"
                             .equals(result.getClass().getName())
@@ -270,6 +354,7 @@ public final class SourceAutomix {
                 results.put(job.id, result);
             }
             Object store = field(job.analyzer, "store");
+            stage = "save";
             invoke(
                     store,
                     "save",
@@ -277,27 +362,66 @@ public final class SourceAutomix {
                     job.storeKey,
                     result);
             job.done = true;
-            HostLog.d("AutoMix measured selected audio; source=" + job.uri.getScheme());
+            HostLog.d(
+                    (restored
+                                    ? "AutoMix restored selected-audio analysis; source="
+                                    : measuredDsp
+                                            ? "AutoMix measured the selected audio with DSP;"
+                                                    + " source="
+                                            : "AutoMix measured selected audio; source=")
+                            + job.uri.getScheme());
+        } catch (DspAnalysis.Deferred waitingForMemory) {
+            if (!waitingForMemory.decoded) job.attempts = Math.max(0, job.attempts - 1);
+            HostLog.d(
+                    "AutoMix analysis is waiting for memory: stage="
+                            + (waitingForMemory.decoded ? "after-decode" : "before-decode")
+                            + ", neededKiB="
+                            + waitingForMemory.required / 1024
+                            + ", availableKiB="
+                            + Math.max(0, waitingForMemory.available) / 1024
+                            + ", decoded="
+                            + waitingForMemory.decoded);
         } catch (Throwable error) {
             HostLog.d(
-                    "AutoMix will use a basic fade until audio can be measured: "
-                            + error.getClass().getSimpleName());
+                    "AutoMix will use a basic fade until audio can be measured: stage="
+                            + stage
+                            + ", error="
+                            + error.getClass().getSimpleName()
+                            + dspFailureSite(error));
         } finally {
-            finishModels(models);
-            job.retryAfter = System.nanoTime() + 15_000_000_000L;
-            job.running = false;
-            running.remove(job.id);
-            active.remove();
-            leaveQuiet();
             try {
-                invoke(field(job.analyzer, "tracker"), "release", new Class<?>[0]);
-            } catch (Exception ignored) {
-            }
-            try {
-                invoke(field(job.analyzer, "vocals"), "release", new Class<?>[0]);
-            } catch (Exception ignored) {
+                finishModels(models);
+                job.retryAfter = System.nanoTime() + 15_000_000_000L;
+                job.running = false;
+                running.remove(job.id);
+                active.remove();
+                leaveQuiet();
+                try {
+                    invoke(field(job.analyzer, "tracker"), "release", new Class<?>[0]);
+                } catch (Exception ignored) {
+                }
+                try {
+                    invoke(field(job.analyzer, "vocals"), "release", new Class<?>[0]);
+                } catch (Exception ignored) {
+                }
+            } finally {
+                if (decoding != null) decoding.close();
             }
         }
+    }
+
+    private static String dspFailureSite(Throwable error) {
+        for (int depth = 0; error != null && depth < 4; depth++, error = error.getCause())
+            for (StackTraceElement frame : error.getStackTrace())
+                if ((frame.getClassName().equals(DspAnalysis.class.getName())
+                                || frame.getClassName()
+                                        .startsWith(DspAnalysis.class.getName() + "$"))
+                        && frame.getMethodName().matches("[A-Za-z_$][A-Za-z0-9_$]*"))
+                    return ", site="
+                            + frame.getMethodName()
+                            + ":"
+                            + Math.max(0, frame.getLineNumber());
+        return "";
     }
 
     /** Called under the host model's own lock, before its native session is closed. */
@@ -355,12 +479,17 @@ public final class SourceAutomix {
         return () -> {
             enterQuiet();
             try {
-                MediaDataSource cached = AutomixAccess.cached(uri);
-                if (cached != null) return cached;
                 Job job = active.get();
+                if (job != null && !uri.equals(job.uri)) return null;
+                long deadline = job == null ? System.nanoTime() + BUDGET_NANOS : job.deadline;
+                java.util.function.BooleanSupplier cancelled = () -> job != null && job.cancelled;
+                MediaDataSource cached = AutomixAccess.cached(uri);
+                if (cached != null) return SourceAudio.bounded(cached, deadline, cancelled);
                 DataSpec spec;
                 if (job != null && uri.equals(job.uri)) {
-                    if (job.spec == null) job.spec = resolve(uri);
+                    // A disappearing complete cache is retried later, never resolved under
+                    // admission.
+                    if (job.cachedOnly || job.spec == null) return null;
                     spec = job.spec;
                     if (pinned.size() > 128) pinned.clear();
                     pinned.put(job.rendition, spec);
@@ -373,10 +502,7 @@ public final class SourceAutomix {
                         pinned.put(key, spec);
                     }
                 }
-                return new SourceAudio(
-                        spec,
-                        job == null ? System.nanoTime() + BUDGET_NANOS : job.deadline,
-                        () -> job != null && job.cancelled);
+                return new SourceAudio(spec, deadline, cancelled);
             } catch (Exception error) {
                 return null;
             } finally {

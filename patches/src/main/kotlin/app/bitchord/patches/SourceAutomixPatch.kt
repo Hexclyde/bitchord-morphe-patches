@@ -87,6 +87,329 @@ val sourceAutomixPatch =
                 method.addInstructionsWithLabels(0, code)
                 type.methods.add(method)
             }
+            val decoder = "Lcom/music/bitchord/playback/smart/AudioDecoder;"
+            val featuresOwner = "Lcom/music/bitchord/playback/smart/TrackFeatures;"
+            val features = "Lcom/music/bitchord/playback/smart/TrackFeatures${'$'}Features;"
+            val analysis = "Lcom/music/bitchord/playback/smart/TrackAnalysis;"
+            val source = "Landroid/media/MediaDataSource;"
+            val function0 = "Lkotlin/jvm/functions/Function0;"
+            val function4 = "Lkotlin/jvm/functions/Function4;"
+            val byteBuffer = "Ljava/nio/ByteBuffer;"
+            val info = "Landroid/media/MediaCodec${'$'}BufferInfo;"
+            fun staticMethod(owner: String, args: List<String>, result: String): MethodReference {
+                val matches =
+                    classDefBy(owner).methods.filter {
+                        it.parameterTypes == args &&
+                            it.returnType == result &&
+                            it.accessFlags and AccessFlags.STATIC.value != 0
+                    }
+                check(matches.size == 1) {
+                    "Bounded AutoMix native API changed: $owner$args$result"
+                }
+                return matches.single()
+            }
+            val decoded =
+                staticMethod(
+                    decoder,
+                    listOf(source, "D", "D", function0, function4),
+                    "Lkotlin/Pair;",
+                )
+            val decodeCode =
+                classDefBy(decoder)
+                    .methods
+                    .single { it == decoded }
+                    .implementation!!
+                    .instructions
+                    .toList()
+            check(
+                listOf(
+                        "Landroid/media/MediaExtractor;" to "setDataSource",
+                        "Landroid/media/MediaCodec;" to "getOutputBuffer",
+                        function0 to "invoke",
+                        function4 to "invoke",
+                    )
+                    .all { (owner, name) ->
+                        decodeCode.any {
+                            it.mixCall()?.let { call ->
+                                call.definingClass == owner && call.name == name
+                            } == true
+                        }
+                    }
+            ) {
+                "Bounded AutoMix decoder no longer streams cancellable codec buffers"
+            }
+            val mono = staticMethod(decoder, listOf(byteBuffer, info, "I"), "[F")
+            check(
+                classDefBy(decoder)
+                    .methods
+                    .single { it == mono }
+                    .implementation!!
+                    .instructions
+                    .any {
+                        it.mixCall()?.let { call ->
+                            call.definingClass == byteBuffer && call.name == "asShortBuffer"
+                        } == true
+                    }
+            ) {
+                "Bounded AutoMix native mono conversion changed"
+            }
+            val measured = staticMethod(featuresOwner, listOf("[F", "D"), features)
+            check(
+                classDefBy(featuresOwner)
+                    .methods
+                    .single { it == measured }
+                    .implementation!!
+                    .instructions
+                    .any {
+                        it.mixCall()?.let { call ->
+                            call.definingClass == featuresOwner &&
+                                call.parameterTypes == listOf("[F", "D", "D") &&
+                                call.returnType == "Ljava/lang/String;"
+                        } == true
+                    }
+            ) {
+                "Bounded AutoMix no longer reaches the native structural analyzer"
+            }
+            add(
+                HOST,
+                "bitchordDspDecode",
+                listOf(source, "D", function0, function4),
+                "Ljava/lang/Object;",
+                12,
+                """
+                move-object/from16 v0, p0
+                const-wide/16 v1, 0x0
+                move-wide/from16 v3, p1
+                move-object/from16 v5, p3
+                move-object/from16 v6, p4
+                invoke-static/range {v0 .. v6}, $decoded
+                move-result-object v0
+                return-object v0
+                """,
+            )
+            add(
+                HOST,
+                "bitchordDspMono",
+                listOf(byteBuffer, info, "I"),
+                "[F",
+                4,
+                """
+                invoke-static/range {p0 .. p2}, $mono
+                move-result-object v0
+                return-object v0
+                """,
+            )
+            add(
+                HOST,
+                "bitchordDspFeatures",
+                listOf("[F", "D"),
+                "Ljava/lang/Object;",
+                4,
+                """
+                invoke-static/range {p0 .. p2}, $measured
+                move-result-object v0
+                return-object v0
+                """,
+            )
+            val list = "Ljava/util/List;"
+            val boxed = "Ljava/lang/Double;"
+            val string = "Ljava/lang/String;"
+            val beat = "Lcom/music/bitchord/playback/smart/BeatSide;"
+            val resultFields =
+                listOf(
+                    "status" to string,
+                    "trackId" to string,
+                    "duration" to "D",
+                    "bpm" to "D",
+                    "beatInterval" to "D",
+                    "beatConfidence" to "D",
+                    "downbeats" to list,
+                    "phraseBoundaries" to list,
+                    "firstBeat" to "D",
+                    "key" to string,
+                    "keyConfidence" to "D",
+                    "audibleStartTime" to boxed,
+                    "pickupTime" to boxed,
+                    "introEndTime" to "D",
+                    "contentEndTime" to "D",
+                    "outroStartTime" to "D",
+                    "mixInTime" to "D",
+                    "mixOutTime" to "D",
+                    "mixInCandidates" to list,
+                    "mixOutCandidates" to list,
+                    "energyCurve" to list,
+                    "lowEnergyCurve" to list,
+                    "vocalActivityMask" to list,
+                    "vocalProbability" to "D",
+                    "headBeats" to beat,
+                    "tailBeats" to beat,
+                    "vocalWindows" to list,
+                    "levelWindows" to list,
+                )
+            val constructor =
+                classDefBy(analysis).methods.filter {
+                    it.name == "<init>" &&
+                        it.parameterTypes == resultFields.map { field -> field.second }
+                }
+            check(constructor.size == 1) { "Bounded AutoMix analysis result constructor changed" }
+            val construct = constructor.single()
+            val words = 1 + resultFields.sumOf { if (it.second == "D") 2 else 1 }
+            val origins = mutableMapOf<Int, Int>()
+            val registers = construct.implementation!!.registerCount
+            for (word in 0 until words) origins[registers - words + word] = word
+            val assignments = mutableMapOf<String, Int?>()
+            for (step in construct.implementation!!.instructions) {
+                if (step.opcode.name.startsWith("move") && step is TwoRegisterInstruction) {
+                    origins[step.registerA] = origins[step.registerB] ?: -1
+                    if (step.opcode.setsWideRegister())
+                        origins[step.registerA + 1] = origins[step.registerB + 1] ?: -1
+                } else if (step.opcode.name.startsWith("iput") && step is TwoRegisterInstruction) {
+                    val field = step.mixField()
+                    if (field?.definingClass == analysis) {
+                        check(
+                            !assignments.containsKey(field.name) && origins[step.registerB] == 0
+                        ) {
+                            "Bounded AutoMix result field ownership changed: ${field.name}"
+                        }
+                        assignments[field.name] = origins[step.registerA]
+                    }
+                } else if (step.opcode.setsRegister() && step is OneRegisterInstruction) {
+                    origins.remove(step.registerA)
+                    if (step.opcode.setsWideRegister()) origins.remove(step.registerA + 1)
+                }
+            }
+            var argument = 1
+            for ((name, type) in resultFields) {
+                check(
+                    assignments[name] == argument &&
+                        classDefBy(analysis).fields.any { it.name == name && it.type == type }
+                ) {
+                    "Bounded AutoMix analysis field mapping changed: $name"
+                }
+                argument += if (type == "D") 2 else 1
+            }
+            var destination = 5
+            val resultCode =
+                StringBuilder(
+                    "move-object/from16 v0, p0\ncheck-cast v0, $features\nnew-instance v4, $analysis\n"
+                )
+            for ((name, type) in resultFields) {
+                when (name) {
+                    "status" ->
+                        resultCode.append(
+                            "const-string v1, \"ready\"\nmove-object/from16 v$destination, v1\n"
+                        )
+                    "trackId" -> resultCode.append("move-object/from16 v$destination, p1\n")
+                    "duration" -> resultCode.append("move-wide/from16 v$destination, p2\n")
+                    "headBeats",
+                    "tailBeats" ->
+                        resultCode.append("const/4 v1, 0x0\nmove-object/from16 v$destination, v1\n")
+                    "vocalActivityMask",
+                    "vocalWindows",
+                    "levelWindows" ->
+                        resultCode.append(
+                            "invoke-static {}, Ljava/util/Collections;->emptyList()Ljava/util/List;\nmove-result-object v1\nmove-object/from16 v$destination, v1\n"
+                        )
+                    else -> {
+                        val field = classDefBy(features).fields.singleOrNull { it.name == name }
+                        val expected = if (type == boxed) "D" else type
+                        check(
+                            field != null &&
+                                (field.type == expected ||
+                                    type == list && field.type == "Ljava/lang/Object;")
+                        ) {
+                            "Bounded AutoMix structural feature changed: $name"
+                        }
+                        if (expected == "D") {
+                            resultCode.append("iget-wide v1, v0, $field\n")
+                            if (type == boxed)
+                                resultCode.append(
+                                    "invoke-static {v1, v2}, Ljava/lang/Double;->valueOf(D)Ljava/lang/Double;\nmove-result-object v1\nmove-object/from16 v$destination, v1\n"
+                                )
+                            else resultCode.append("move-wide/from16 v$destination, v1\n")
+                        } else {
+                            resultCode.append("iget-object v1, v0, $field\n")
+                            if (field.type != type) resultCode.append("check-cast v1, $type\n")
+                            resultCode.append("move-object/from16 v$destination, v1\n")
+                        }
+                    }
+                }
+                destination += if (type == "D") 2 else 1
+            }
+            resultCode.append(
+                "invoke-direct/range {v4 .. v${destination - 1}}, $construct\nreturn-object v4\n"
+            )
+            add(
+                HOST,
+                "bitchordDspResult",
+                listOf("Ljava/lang/Object;", string, "D"),
+                "Ljava/lang/Object;",
+                destination + 4,
+                resultCode.toString(),
+            )
+            val realMix =
+                classDefBy(SETTINGS).fields.singleOrNull { it.name == "smartMixInProgress" }
+            check(realMix?.type == "Lkotlinx/coroutines/flow/StateFlowImpl;") {
+                "AutoMix's analyzed mix state changed"
+            }
+            add(
+                HOST,
+                "bitchordAutomixRealMix",
+                emptyList(),
+                "Z",
+                1,
+                """
+                sget-object v0, $realMix
+                invoke-virtual {v0}, ${realMix.type}->getValue()Ljava/lang/Object;
+                move-result-object v0
+                check-cast v0, Ljava/lang/Boolean;
+                invoke-virtual {v0}, Ljava/lang/Boolean;->booleanValue()Z
+                move-result v0
+                return v0
+                """,
+            )
+            val labelClass = mutableClassDefBy("Lcom/music/bitchord/ui/player/PlayerControlsKt;")
+            val labels =
+                labelClass.methods.filter { method ->
+                    method.returnType == "V" &&
+                        method.parameterTypes ==
+                            listOf(
+                                "Lcom/music/bitchord/ui/player/MixPulse;",
+                                "Landroidx/compose/ui/Modifier;",
+                                "Landroidx/compose/runtime/ComposerImpl;",
+                                "I",
+                            ) &&
+                        method.implementation?.instructions?.any {
+                            it.mixField()?.name == "mixing${'$'}delegate"
+                        } == true
+                }
+            check(labels.size == 1) { "AutoMix's native blend label changed" }
+            val label = labels.single()
+            val labelCode = label.implementation!!.instructions.toList()
+            val textCalls =
+                labelCode.indices.filter { index ->
+                    labelCode[index].mixCall()?.let {
+                        it.definingClass == "Lcom/music/bitchord/ui/AppUi;" &&
+                            it.name == "stringResource" &&
+                            it.returnType == string
+                    } == true
+                }
+            check(
+                textCalls.size == 1 &&
+                    labelCode[textCalls.single() + 1].opcode == Opcode.MOVE_RESULT_OBJECT
+            ) {
+                "AutoMix's localized blend label no longer has one native string result"
+            }
+            val textAt = textCalls.single() + 1
+            val textRegister = (labelCode[textAt] as OneRegisterInstruction).registerA
+            label.addInstructions(
+                textAt + 1,
+                """
+                invoke-static/range {v$textRegister .. v$textRegister}, $MIX->mixLabel(Ljava/lang/String;)Ljava/lang/String;
+                move-result-object v$textRegister
+                """,
+            )
+
             val speed = mutableClassDefBy(SETTINGS).fields.single { it.name == "playbackSpeed" }
             check(speed.type == "Lkotlinx/coroutines/flow/StateFlowImpl;") {
                 "Speed flow ABI changed"

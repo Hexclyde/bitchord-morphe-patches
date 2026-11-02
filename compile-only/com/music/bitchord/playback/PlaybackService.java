@@ -13,6 +13,11 @@ public final class PlaybackService {
         return null;
     }
 
+    public static kotlin.coroutines.CoroutineContext bitchordPreparedContext(
+            String token, ThreadLocal<?> local) {
+        return null;
+    }
+
     public static androidx.media3.datasource.DataSpec bitchordAutomixResolve(
             Object service, android.net.Uri uri) {
         return null;
@@ -40,6 +45,37 @@ public final class PlaybackService {
     }
 
     public static void bitchordAutomixRestore(Object analyzer, String key) {}
+
+    public static Object bitchordDspDecode(
+            android.media.MediaDataSource source,
+            double endSeconds,
+            kotlin.jvm.functions.Function0<Boolean> abort,
+            kotlin.jvm.functions.Function4<
+                            java.nio.ByteBuffer,
+                            android.media.MediaCodec.BufferInfo,
+                            Integer,
+                            Integer,
+                            kotlin.Unit>
+                    onBuffer) {
+        return null;
+    }
+
+    public static float[] bitchordDspMono(
+            java.nio.ByteBuffer buffer, android.media.MediaCodec.BufferInfo info, int channels) {
+        return null;
+    }
+
+    public static Object bitchordDspFeatures(float[] samples, double duration) {
+        return null;
+    }
+
+    public static Object bitchordDspResult(Object features, String id, double actualDuration) {
+        return null;
+    }
+
+    public static boolean bitchordAutomixRealMix() {
+        return false;
+    }
 
     /** Starts BitChord's two-player version swap; false when it can't run right now. */
     public static boolean bitchordSmoothSwap(

@@ -7,6 +7,7 @@ import androidx.media3.datasource.DataSpec;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayDeque;
@@ -44,6 +45,41 @@ import java.util.function.BooleanSupplier;
  * <p>{@link SourceFirst} connects this to BitChord.
  */
 final class SourcePreparation {
+    static final class WeakIdentitySnapshots<K, V> {
+        private static final class Snapshot<K, V> extends WeakReference<K> {
+            V value;
+
+            Snapshot(K key, V value) {
+                super(key);
+                this.value = value;
+            }
+        }
+
+        private final List<Snapshot<K, V>> entries = new ArrayList<>();
+
+        synchronized V get(K key) {
+            cleanup();
+            if (key == null) return null;
+            for (Snapshot<K, V> entry : entries) if (entry.get() == key) return entry.value;
+            return null;
+        }
+
+        synchronized void put(K key, V value) {
+            java.util.Objects.requireNonNull(key);
+            cleanup();
+            for (Snapshot<K, V> entry : entries)
+                if (entry.get() == key) {
+                    entry.value = value;
+                    return;
+                }
+            entries.add(new Snapshot<>(key, value));
+        }
+
+        synchronized void cleanup() {
+            entries.removeIf(entry -> entry.get() == null);
+        }
+    }
+
     /** Everything outside this class. */
     interface Host {
         default void attach(SourcePreparation engine) {}
@@ -190,7 +226,7 @@ final class SourcePreparation {
     private final Map<String, Integer> cleanTries = new HashMap<>(), fillTries = new HashMap<>();
     private final Set<String> proving = new HashSet<>(), cleaned = new HashSet<>();
     private final Map<String, Mapped> toFill = new HashMap<>();
-    private Set<String> upcoming = Collections.emptySet();
+    private Set<String> upcoming = Collections.emptySet(), upcomingEntries = Collections.emptySet();
     private Thread worker;
     private Work running;
     private boolean closed, on = true, listening;
@@ -299,8 +335,28 @@ final class SourcePreparation {
             if (item != null && item.getQueryParameter(ENTRY) != null) keep.add(entryKey(item));
         synchronized (lock) {
             currentEntries = keep;
+            if (running instanceof Job) promoteCurrentWaiter((Job) running);
+            for (Work work : waiting) if (work instanceof Job) promoteCurrentWaiter((Job) work);
             trimEntries();
+            lock.notifyAll();
         }
+    }
+
+    private void promoteCurrentWaiter(Job job) {
+        for (String entry : job.waiters.keySet())
+            if (currentEntries.contains(entry)) {
+                job.foreground = true;
+                return;
+            }
+    }
+
+    private boolean future(Uri uri, String id) {
+        String entry = entryKey(uri);
+        return uri.getQueryParameter(ENTRY) != null
+                && !currentEntries.isEmpty()
+                && upcoming.contains(id)
+                && upcomingEntries.contains(entry)
+                && !currentEntries.contains(entry);
     }
 
     private void trimEntries() {
@@ -383,6 +439,15 @@ final class SourcePreparation {
         }
     }
 
+    boolean isPreparedUri(Uri item) {
+        if (item == null) return false;
+        synchronized (lock) {
+            if (closed) return false;
+            Object bound = entries.get(entryKey(item));
+            return bound instanceof Mapped && item.equals(((Mapped) bound).marked);
+        }
+    }
+
     private static String songKey(Uri item) {
         String seconds = item.getQueryParameter("d");
         Integer parsed = null;
@@ -426,15 +491,19 @@ final class SourcePreparation {
             if (decided == PLAIN) return spec;
             Mapped choice = (Mapped) decided;
             String id = uri.getQueryParameter("v");
-            if (choice.stream != null
-                    && (!choice.url.equals(host.parked(id))
-                            || !java.util.Objects.equals(
-                                    choice.identity, host.contentIdentity(choice.stream))
-                            || !java.util.Objects.equals(
-                                    choice.terms, host.terms(choice.stream)))) {
-                // Reading on could join another file to this one.
-                host.log("Source preparation: the chosen copy changed while it was read");
-                throw new IOException("The chosen copy is no longer available");
+            if (choice.stream != null) {
+                String changed = null;
+                if (!choice.url.equals(host.parked(id))) changed = "the pinned stream changed";
+                else if (!java.util.Objects.equals(
+                        choice.identity, host.contentIdentity(choice.stream)))
+                    changed = "the file identity changed";
+                else if (!java.util.Objects.equals(choice.terms, host.terms(choice.stream)))
+                    changed = "source permissions or quality settings changed";
+                if (changed != null) {
+                    // Reading on could join another file to this one.
+                    host.log("Source preparation: " + changed + " while it was read");
+                    throw new IOException("The chosen copy is no longer available");
+                }
             }
             if (choice.stream != null && host.manifest(choice.stream)) {
                 if (!host.reopenManifest(uri, choice.marked, choice.stream))
@@ -514,10 +583,33 @@ final class SourcePreparation {
 
     /** Asks for a song to be prepared first and waits, within reason, off the player's thread. */
     private Prepared wait(Uri uri, String id) {
-        Job job = foregroundJob(uri, id);
+        long began = System.nanoTime(), budget = TimeUnit.MILLISECONDS.toNanos(firstWaitMs);
+        boolean future;
+        Job job;
+        synchronized (lock) {
+            future = future(uri, id);
+            job = foregroundJob(uri, id, !future);
+        }
         if (job == null) return null;
         try {
-            return job.done.get(firstWaitMs, TimeUnit.MILLISECONDS);
+            while (true) {
+                synchronized (lock) {
+                    if (closed || !on || job.cancelled) return null;
+                    if (!future(uri, id)) {
+                        future = false;
+                        job.foreground = true;
+                    }
+                }
+                long remaining = budget * (future ? 3 : 1) - (System.nanoTime() - began);
+                if (remaining <= 0) throw new TimeoutException();
+                try {
+                    return job.done.get(
+                            Math.min(remaining, TimeUnit.MILLISECONDS.toNanos(50)),
+                            TimeUnit.NANOSECONDS);
+                } catch (TimeoutException poll) {
+                    // Queue changes can make a future period current while this loader waits.
+                }
+            }
         } catch (TimeoutException slow) {
             // It keeps going, for next time. Until it answers, nothing else offers this song a
             // copy that would only wait on the same check.
@@ -528,33 +620,49 @@ final class SourcePreparation {
             return null;
         } catch (Exception failed) {
             return null;
+        } finally {
+            synchronized (lock) {
+                job.waiters.computeIfPresent(
+                        entryKey(uri), (entry, count) -> count == 1 ? null : count - 1);
+            }
         }
     }
 
-    private Job foregroundJob(Uri uri, String id) {
+    private Job foregroundJob(Uri uri, String id, boolean foreground) {
         synchronized (lock) {
             if (closed) return null;
             if (running instanceof Job && ((Job) running).id.equals(id)) {
-                ((Job) running).foreground = true;
-                return (Job) running;
+                Job job = (Job) running;
+                job.foreground |= foreground;
+                job.waiters.merge(entryKey(uri), 1, Integer::sum);
+                return job;
             }
-            if (running != null && (running instanceof Job || running.background()))
-                running.cancel();
+            if (running != null
+                    && (foreground || running.background())
+                    && !(running instanceof Job
+                            && !foreground
+                            && !((Job) running).waiters.isEmpty())) running.cancel();
             Job queued = null;
             for (Iterator<Work> it = waiting.iterator(); it.hasNext(); ) {
                 Work work = it.next();
                 if (work instanceof Job) {
                     Job job = (Job) work;
-                    if (job.id.equals(id)) queued = job;
-                    if (job.id.equals(id) || job.isForeground()) {
+                    if (job.id.equals(id)) {
+                        queued = job;
+                        if (foreground) it.remove();
+                    } else if (foreground && job.isForeground()) {
                         it.remove();
-                        if (!job.id.equals(id)) job.finish(null);
+                        job.finish(null);
                     }
                 }
             }
             Job job = queued != null ? queued : new Job(uri, id);
-            job.foreground = true;
-            waiting.addFirst(job);
+            job.foreground |= foreground;
+            job.waiters.merge(entryKey(uri), 1, Integer::sum);
+            if (queued == null || foreground) {
+                if (foreground) waiting.addFirst(job);
+                else waiting.addLast(job);
+            }
             start();
             lock.notifyAll();
             return job;
@@ -603,6 +711,7 @@ final class SourcePreparation {
         Uri marked;
         final String id, song;
         final CompletableFuture<Prepared> done = new CompletableFuture<>();
+        final Map<String, Integer> waiters = new HashMap<>();
         volatile boolean foreground, cancelled;
 
         Job(Uri uri, String id) {
@@ -658,7 +767,14 @@ final class SourcePreparation {
                 Object stream = host.lookup(host.target(uri));
                 if (stop()) return;
                 if (stream == null) {
-                    decline(id, song, DECLINED_MS, "no other source has this song");
+                    decline(
+                            id,
+                            song,
+                            DECLINED_MS,
+                            copy == 0
+                                    ? "no usable matching file was returned"
+                                    : "no verified replacement was available after the recording"
+                                            + " check");
                     return;
                 }
                 host.describe(stream);
@@ -687,7 +803,11 @@ final class SourcePreparation {
                             }
                             continue;
                         }
-                        decline(id, song, DECLINED_MS, "not the same recording");
+                        decline(
+                                id,
+                                song,
+                                DECLINED_MS,
+                                "the recording check did not verify this copy");
                     } else decline(id, song, DECLINED_MS, "it couldn't be checked");
                     return;
                 }
@@ -715,7 +835,7 @@ final class SourcePreparation {
                     prepared.put(id, ready);
                     declined.remove(id);
                 }
-                if (content != null) remember("verified2", proofKey(stream, content), null);
+                if (content != null) remember("verified3", proofKey(stream, content), null);
                 finish(ready);
                 return;
             }
@@ -723,11 +843,17 @@ final class SourcePreparation {
 
         /** The check itself, unless this exact file passed it before. */
         private String proofKey(Object stream, String content) {
-            return hash(withoutEntry(uri) + "\n" + host.source(stream) + "\n" + content);
+            return hash(
+                    "prepared-v1\n"
+                            + withoutEntry(uri)
+                            + "\n"
+                            + host.source(stream)
+                            + "\n"
+                            + content);
         }
 
         private boolean checked(Object stream, String content) {
-            if (content != null && isSaved("verified2", proofKey(stream, content))) {
+            if (content != null && isSaved("verified3", proofKey(stream, content))) {
                 host.trust(marked, stream);
                 return true;
             }
@@ -759,16 +885,27 @@ final class SourcePreparation {
         synchronized (lock) {
             if (closed || !on) return;
             Set<String> wanted = new HashSet<>();
+            Set<String> wantedEntries = new HashSet<>();
             List<Uri> next = new ArrayList<>();
             for (Uri item : items.subList(0, Math.min(LOOKAHEAD, items.size()))) {
                 if (!eligible(item)) continue;
                 wanted.add(item.getQueryParameter("v"));
+                wantedEntries.add(entryKey(item));
                 next.add(item);
             }
             upcoming = wanted;
+            upcomingEntries = wantedEntries;
             for (Iterator<Work> it = waiting.iterator(); it.hasNext(); ) {
                 Work work = it.next();
                 if (work instanceof Job && !((Job) work).isForeground()) {
+                    Job job = (Job) work;
+                    boolean awaited = false;
+                    for (String entry : job.waiters.keySet())
+                        if (wantedEntries.contains(entry) || currentEntries.contains(entry)) {
+                            awaited = true;
+                            break;
+                        }
+                    if (awaited) continue;
                     ((Job) work).finish(null);
                     it.remove();
                 }
@@ -782,6 +919,13 @@ final class SourcePreparation {
                 Long until = declined.get(id);
                 if (until != null && System.nanoTime() < until) continue;
                 if (running instanceof Job && ((Job) running).id.equals(id)) continue;
+                boolean queued = false;
+                for (Work work : waiting)
+                    if (work instanceof Job && ((Job) work).id.equals(id)) {
+                        queued = true;
+                        break;
+                    }
+                if (queued) continue;
                 waiting.addLast(new Job(item, id));
                 start();
             }
@@ -978,7 +1122,7 @@ final class SourcePreparation {
                 if (cache != null)
                     try {
                         remember(
-                                "known2",
+                                "known3",
                                 id,
                                 new JSONObject()
                                         .put("source", copy.source)
@@ -1105,7 +1249,7 @@ final class SourcePreparation {
 
     private JSONObject knownCopy(String id) {
         synchronized (lock) {
-            JSONObject known = saved().optJSONObject("known2");
+            JSONObject known = saved().optJSONObject("known3");
             if (known == null) return null;
             try {
                 JSONObject record = new JSONObject(known.optString(id));
