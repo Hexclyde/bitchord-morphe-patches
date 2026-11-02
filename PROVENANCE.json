@@ -341,5 +341,5 @@
     "storage_implementation": "independent adapters inspired by storage-review and duplicate-review ideas"
   },
   "release_tag": "v1.1.0-beta.18",
-  "package_id": "1.1.0-beta.18-r1"
+  "package_id": "1.1.0-beta.18-r2"
 }
