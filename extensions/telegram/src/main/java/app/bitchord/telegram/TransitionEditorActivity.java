@@ -406,13 +406,13 @@ public final class TransitionEditorActivity extends Activity {
         LinearLayout group = column();
         group.setPadding(style.dp(4), style.dp(6), style.dp(4), style.dp(6));
         TextView caption = label(title + " · " + number(initial) + unit, 15, true);
-        caption.setMinHeight(style.dp(40));
+        caption.setMinHeight(style.dp(48));
         caption.setGravity(Gravity.CENTER_VERTICAL);
         caption.setClickable(true);
         caption.setFocusable(true);
         SeekBar bar = new SeekBar(this);
         bar.setMax(1000);
-        bar.setMinHeight(style.dp(32));
+        bar.setMinHeight(style.dp(48));
         bar.setPadding(style.dp(8), 0, style.dp(8), 0);
         bar.setThumbTintList(ColorStateList.valueOf(style.foreground));
         bar.setProgressTintList(ColorStateList.valueOf(style.foreground));
@@ -421,7 +421,7 @@ public final class TransitionEditorActivity extends Activity {
         bar.setProgress(
                 upper == min ? 0 : (int) Math.round((initial - min) * 1000 / (upper - min)));
         group.addView(caption);
-        group.addView(bar, new LinearLayout.LayoutParams(-1, style.dp(32)));
+        group.addView(bar, new LinearLayout.LayoutParams(-1, style.dp(48)));
         parent.addView(group);
         bar.setOnSeekBarChangeListener(
                 new SeekBar.OnSeekBarChangeListener() {
