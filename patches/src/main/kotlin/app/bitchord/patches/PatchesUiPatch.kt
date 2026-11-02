@@ -31,6 +31,53 @@ internal val patchesUiRuntime = bytecodePatch {
     dependsOn(audioOriginPatch)
     extendWith("extensions/patches-ui.mpe")
     execute {
+        val sourceConfig = classDefBy("Lcom/music/bitchord/data/sources/SourceConfig;")
+        for (getter in listOf("getId", "getBaseUrl")) {
+            check(
+                sourceConfig.methods.count {
+                    it.name == getter &&
+                        it.parameterTypes.isEmpty() &&
+                        it.returnType == "Ljava/lang/String;" &&
+                        it.accessFlags and 1 != 0 &&
+                        it.accessFlags and 8 == 0 &&
+                        it.implementation != null
+                } == 1
+            ) {
+                "Source configuration $getter identity getter changed"
+            }
+        }
+        val registry = mutableClassDefBy("Lcom/music/bitchord/data/sources/SourceRegistry;")
+        val publication =
+            registry.methods.singleOrNull {
+                it.name == "publish" &&
+                    it.parameterTypes == listOf("Ljava/util/ArrayList;", "Z") &&
+                    it.returnType == "V" &&
+                    it.accessFlags and 8 != 0 &&
+                    it.implementation != null
+            }
+        check(publication != null) { "Source configuration publication changed" }
+        val publicationCode = publication.implementation!!.instructions.toList()
+        check(
+            publicationCode.any { instruction ->
+                val field = (instruction as? ReferenceInstruction)?.reference as? FieldReference
+                field?.definingClass == registry.type && field.name == "configs"
+            } &&
+                publicationCode.any { instruction ->
+                    val call = (instruction as? ReferenceInstruction)?.reference as? MethodReference
+                    call?.definingClass == "Landroid/content/SharedPreferences${'$'}Editor;" &&
+                        call.name == "putString"
+                } &&
+                publication.implementation!!.registerCount >= 2
+        ) {
+            "Source configuration publication no longer updates the native catalogue and storage"
+        }
+        publication.addInstructions(
+            0,
+            """
+            invoke-static/range {p0 .. p0}, Lapp/bitchord/telegram/FlacAddon;->availableConfigs(Ljava/util/ArrayList;)Ljava/util/ArrayList;
+            move-result-object p0
+            """,
+        )
         val policy = "Lapp/bitchord/telegram/CapturePolicy;"
         val marker =
             mutableClassDefBy(policy).methods.single {
@@ -66,6 +113,14 @@ internal val patchesUiRuntime = bytecodePatch {
 
 private val patchesUiResources = resourcePatch {
     execute {
+        get("res/drawable/patches_tweaks.xml", false).apply {
+            parentFile.mkdirs()
+            writeText(
+                """<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+                <path android:fillColor="@android:color/transparent" android:strokeColor="#FFFFFFFF" android:strokeWidth="1.7" android:strokeLineCap="round" android:pathData="M3,5H6M10,5H21M3,12H14M18,12H21M3,19H6M10,19H21M10,5A2,2 0,1 1,6 5A2,2 0,1 1,10 5M18,12A2,2 0,1 1,14 12A2,2 0,1 1,18 12M10,19A2,2 0,1 1,6 19A2,2 0,1 1,10 19"/>
+                </vector>"""
+            )
+        }
         // ReAndroid derives a value's resource type from its XML filename. Append
         // to styles.xml so the new entries are registered as styles while the
         // original BitChord styles remain intact.
@@ -281,6 +336,55 @@ internal val extrasSettingsPatch = bytecodePatch {
         )
         ui.methods.remove(original)
         ui.methods.add(replacement)
+
+        val painters = mutableListOf<com.android.tools.smali.dexlib2.iface.Method>()
+        classDefForEach { clazz ->
+            painters +=
+                clazz.methods.filter {
+                    it.name == "painterResource" &&
+                        it.parameterTypes ==
+                            listOf("I", "Landroidx/compose/runtime/ComposerImpl;") &&
+                        it.returnType == "Landroidx/compose/ui/graphics/painter/Painter;" &&
+                        it.accessFlags and 8 != 0 &&
+                        it.implementation != null
+                }
+        }
+        check(painters.size == 1) {
+            "Patches settings painterResource is not unique (${painters.size})"
+        }
+        val painter = painters.single()
+        val iconBridge =
+            ui.methods.singleOrNull {
+                it.name == "hostPainter" &&
+                    it.parameterTypes == listOf("I", "Landroidx/compose/runtime/ComposerImpl;") &&
+                    it.returnType == "Landroidx/compose/ui/graphics/painter/Painter;" &&
+                    it.accessFlags and 8 != 0
+            }
+        check(iconBridge != null) { "Patches settings icon bridge changed" }
+        val linkedPainter =
+            MutableMethod(
+                ImmutableMethod(
+                    iconBridge.definingClass,
+                    iconBridge.name,
+                    iconBridge.parameters,
+                    iconBridge.returnType,
+                    iconBridge.accessFlags,
+                    iconBridge.annotations,
+                    iconBridge.hiddenApiRestrictions,
+                    ImmutableMethodImplementation(
+                        3,
+                        emptyList<Instruction>(),
+                        emptyList(),
+                        emptyList(),
+                    ),
+                )
+            )
+        linkedPainter.addInstructions(
+            0,
+            "invoke-static/range {p0 .. p1}, ${painter.definingClass}->${painter.name}(ILandroidx/compose/runtime/ComposerImpl;)Landroidx/compose/ui/graphics/painter/Painter;\nmove-result-object p0\nreturn-object p0",
+        )
+        ui.methods.remove(iconBridge)
+        ui.methods.add(linkedPainter)
 
         val start = PatchesApplicationCreate.method
         val returns =

@@ -44,6 +44,11 @@ public class ExtrasPageTest {
     @Implements(value = SoundExtras.class, isInAndroidSdk = false)
     public static class EverythingInstalled {
         @Implementation
+        protected static boolean videoSwitchApplied() {
+            return true;
+        }
+
+        @Implementation
         protected static boolean audioFocusApplied() {
             return true;
         }

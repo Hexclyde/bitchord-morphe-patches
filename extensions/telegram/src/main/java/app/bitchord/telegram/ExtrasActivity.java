@@ -53,6 +53,7 @@ public final class ExtrasActivity extends Activity {
     private EditText search;
     private TextView counts, empty, feedbackText;
     private ImageButton clearSearch;
+    private View storageShortcut;
     private ModeSelector selector;
     private final LinkedHashMap<String, Group> groups = new LinkedHashMap<>();
     private final LinkedHashMap<String, TextView> categoryButtons = new LinkedHashMap<>();
@@ -266,7 +267,7 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "telegram",
                     Strings.t("Telegram music"),
-                    Strings.t("Play music from your Telegram channels"),
+                    Strings.t("Play audio from Telegram channels after signing in"),
                     () -> sourceEnabled("telegram-native"),
                     on -> setSourceEnabled("telegram-native", on),
                     parent ->
@@ -290,7 +291,7 @@ public final class ExtrasActivity extends Activity {
             downloadFeature(
                     "soulseek",
                     Strings.t("Soulseek downloads"),
-                    Strings.t("Find audio and save a complete copy"),
+                    Strings.t("Search shared audio files with your Soulseek account"),
                     parent -> {
                         paragraph(
                                 parent,
@@ -307,9 +308,7 @@ public final class ExtrasActivity extends Activity {
                 feature(
                         "streamseek-preview",
                         Strings.t("Streamseek previews"),
-                        Strings.t(
-                                "Listen to selected Soulseek lossless audio and MP3 files before"
-                                        + " saving"),
+                        Strings.t("Listen through a temporary Soulseek transfer before saving"),
                         () ->
                                 (Boolean)
                                         invoke(
@@ -402,7 +401,7 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "sing",
                     Strings.t("Sing"),
-                    Strings.t("Turn the singer down"),
+                    Strings.t("Reduce vocals with a filter or separation model"),
                     () -> SoundExtras.singEnabled,
                     SoundExtras::setSingEnabled,
                     parent -> {
@@ -528,7 +527,7 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "loudness",
                     Strings.t("Loudness level"),
-                    Strings.t("Adjust the normalised playback level"),
+                    Strings.t("Set the target volume when loudness normalisation is on"),
                     () -> SoundExtras.loudnessEnabled,
                     SoundExtras::setLoudnessEnabled,
                     parent -> {
@@ -586,7 +585,7 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "battery-saver",
                     Strings.t("Battery saver"),
-                    Strings.t("Let the phone’s audio chip decode songs"),
+                    Strings.t("Use hardware decoding when available; effects and crossfade pause"),
                     () -> SoundExtras.batterySaver,
                     on -> {
                         SoundExtras.setBatterySaver(on);
@@ -609,7 +608,8 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "lossless-bluetooth",
                     Strings.t("Lossless addons over Bluetooth"),
-                    Strings.t("Keep lossless sources available over Bluetooth"),
+                    Strings.t(
+                            "Allow lossless source files over Bluetooth; its codec still applies"),
                     () -> SoundExtras.losslessBluetoothEnabled,
                     SoundExtras::setLosslessBluetoothEnabled,
                     this::bluetooth);
@@ -618,7 +618,7 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "headphone-correction",
                     Strings.t("Headphone correction"),
-                    Strings.t("Flatten your headphones’ own sound"),
+                    Strings.t("Apply an AutoEq profile for your headphone model"),
                     () -> HeadphoneEq.enabled,
                     on -> {
                         HeadphoneEq.setEnabled(on);
@@ -630,7 +630,7 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "output-eq",
                     Strings.t("Equaliser per output"),
-                    Strings.t("Remember the equaliser for each output"),
+                    Strings.t("Save a different equaliser for each audio output"),
                     OutputEq::enabled,
                     OutputEq::setEnabled,
                     this::outputEq);
@@ -639,7 +639,7 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "dj-mode",
                     Strings.t("DJ mode"),
-                    Strings.t("Play the queue in an order that mixes well"),
+                    Strings.t("Reorder queued songs using their musical analysis"),
                     () -> DjMode.enabled,
                     on -> {
                         DjMode.setEnabled(on);
@@ -652,7 +652,7 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "jamesdsp",
                     "JamesDSP",
-                    Strings.t("Let JamesDSP do the effects"),
+                    Strings.t("Send audio effects to the installed JamesDSP app"),
                     () -> EffectsApps.useJamesDsp,
                     on -> {
                         if (on && EffectsApps.hostEqualiserOn(this))
@@ -666,7 +666,8 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "flac-audio",
                     "Flac Downloader Audio",
-                    Strings.t("Download FLAC or MP3 from flacdownloader.com"),
+                    Strings.t(
+                            "Download available FLAC or MP3 files; this is not a streaming source"),
                     FlacAddon::enabled,
                     FlacAddon::setEnabled,
                     parent ->
@@ -682,18 +683,27 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "source-automix",
                     Strings.t("Source-independent AutoMix"),
-                    Strings.t("Analyse and blend tracks from supported sources"),
+                    Strings.t("Extend BitChord’s AutoMix to the audio from supported sources"),
                     () -> hostBoolean("getSmartFadeEnabled"),
                     on -> setHostBoolean("setSmartFadeEnabled", on),
-                    parent ->
-                            navigation(
-                                    parent,
-                                    Strings.t("Transition editor"),
-                                    () ->
-                                            startActivity(
-                                                    new android.content.Intent(
-                                                            this,
-                                                            TransitionEditorActivity.class))));
+                    parent -> {
+                        paragraph(
+                                parent,
+                                Strings.t(
+                                        "BitChord’s AutoMix analyses the audio that will play from"
+                                            + " each source. It uses that analysis to choose entry"
+                                            + " points and transitions. The transition editor"
+                                            + " adjusts the blend, while your chosen playback speed"
+                                            + " and pitch stay unchanged. Songs without suitable"
+                                            + " analysis use a crossfade."));
+                        navigation(
+                                parent,
+                                Strings.t("Transition editor"),
+                                () ->
+                                        startActivity(
+                                                new android.content.Intent(
+                                                        this, TransitionEditorActivity.class)));
+                    });
         }
         if (SoundExtras.mixedPlaylistsApplied()) {
             feature(
@@ -734,7 +744,9 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "smart-downloads",
                     Strings.t("Smart downloads"),
-                    Strings.t("Download the songs you play most, on Wi-Fi"),
+                    Strings.t(
+                            "Save frequently played songs from available download sources on"
+                                    + " Wi-Fi"),
                     () -> SmartDownloads.enabled,
                     SmartDownloads::setEnabled,
                     this::smartDownloads);
@@ -743,7 +755,7 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "audio-focus",
                     Strings.t("Play alongside other apps"),
-                    Strings.t("Keep playing when a reel or video has sound"),
+                    Strings.t("Play over other apps’ sound; calls still pause the music"),
                     () -> AudioFocus.alongside,
                     AudioFocus::setAlongside,
                     parent ->
@@ -760,7 +772,9 @@ public final class ExtrasActivity extends Activity {
             feature(
                     "video-switch",
                     Strings.t("Song and video switch on the player"),
-                    Strings.t("Shown at the top of the player"),
+                    Strings.t(
+                            "Switch YouTube songs and videos on the player, outside lyrics and"
+                                    + " queue"),
                     () -> VideoSwitch.enabled,
                     VideoSwitch::setEnabled,
                     parent ->
@@ -800,11 +814,10 @@ public final class ExtrasActivity extends Activity {
         paragraph(
                 parent,
                 Strings.t(
-                        "BitChord normally reads 8 MB ahead: about four minutes of a YouTube"
-                                + " stream, but only a minute of a lossless song. This reads"
-                                + " further, through the rest of the song and into the next ones"
-                                + " in the queue, so tunnels and patchy mobile data don't"
-                                + " interrupt it."));
+                        "Choose how much audio to keep ready on Wi-Fi and mobile data. BitChord"
+                                + " reads ahead in the current song and queue while memory allows."
+                                + " The actual buffer can be smaller than your limit when playback"
+                                + " or analysis needs more memory."));
         slider(
                 parent,
                 Strings.t("On Wi-Fi"),
@@ -835,10 +848,11 @@ public final class ExtrasActivity extends Activity {
         paragraph(
                 parent,
                 Strings.t(
-                        "About twice a day on Wi-Fi, the songs you've played most in the last three"
-                                + " months are downloaded in BitChord's Download quality. A song"
-                                + " needs at least three plays. They appear in Downloads as usual;"
-                                + " a song you delete there isn't downloaded again."));
+                        "About twice a day on Wi-Fi, songs with at least three plays in the last"
+                                + " three months are saved from available download sources using"
+                                + " BitChord's Download quality. Accounts and source permissions"
+                                + " still apply. They appear in Downloads; a song you delete there"
+                                + " isn't downloaded again."));
         slider(
                 parent,
                 Strings.t("Songs to keep downloaded"),
@@ -985,6 +999,11 @@ public final class ExtrasActivity extends Activity {
                 new LinearLayout.LayoutParams(style.dp(48), style.dp(48)));
         TextView title =
                 style.text(Strings.t("Patches & tweaks"), 26, style.foreground, style.heavy);
+        title.setTag("patch-page-title");
+        TelegramGlyph tweaks = new TelegramGlyph(style, "tweaks", style.secondary);
+        tweaks.setBounds(0, 0, style.dp(24), style.dp(24));
+        title.setCompoundDrawablesRelative(tweaks, null, null, null);
+        title.setCompoundDrawablePadding(style.dp(10));
         title.setPadding(style.dp(12), 0, 0, 0);
         header.addView(title, new LinearLayout.LayoutParams(0, -2, 1));
         android.widget.FrameLayout downloads = new android.widget.FrameLayout(this);
@@ -1079,6 +1098,32 @@ public final class ExtrasActivity extends Activity {
         }
         categories.addView(row);
         root.addView(categories);
+        if (exists("app.bitchord.telegram.StorageSenseActivity")) {
+            LinearLayout utilities = new LinearLayout(this);
+            utilities.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams utilitySpace = new LinearLayout.LayoutParams(-1, -2);
+            utilitySpace.setMargins(style.dp(16), style.dp(6), style.dp(16), style.dp(4));
+            root.addView(utilities, utilitySpace);
+            storageShortcut =
+                    PlaylistRows.add(
+                            utilities,
+                            style,
+                            Strings.t("Storage Sense"),
+                            Strings.t("Review cached audio, saved files and cleanup rules"),
+                            () ->
+                                    startActivity(
+                                            new android.content.Intent(
+                                                    this, StorageSenseActivity.class)));
+            storageShortcut.setTag("patch-storage-sense");
+            android.widget.ImageView storageIcon = new android.widget.ImageView(this);
+            storageIcon.setImageDrawable(new TelegramGlyph(style, "storage", style.secondary));
+            storageIcon.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            LinearLayout.LayoutParams iconSpace =
+                    new LinearLayout.LayoutParams(style.dp(24), style.dp(28));
+            iconSpace.setMarginEnd(style.dp(12));
+            ((LinearLayout) storageShortcut).addView(storageIcon, 0, iconSpace);
+            utilities.setBackground(style.shape(style.card, 16, false));
+        }
         counts = style.text("", 13, style.secondary, style.regular);
         counts.setTag("patch-counts");
         counts.setPadding(style.dp(24), style.dp(4), style.dp(24), 0);
@@ -1163,8 +1208,24 @@ public final class ExtrasActivity extends Activity {
         }
         counts.setText(
                 Strings.f("{0} of {1} enabled · {2} shown", enabled, features.size(), shown));
+        boolean storageVisible =
+                storageShortcut != null
+                        && !enabledOnly
+                        && (category.equals("all") || category.equals("library"));
+        String storageText =
+                searchable(
+                        Strings.t("Storage Sense")
+                                + " "
+                                + Strings.t("Review cached audio, saved files and cleanup rules")
+                                + " "
+                                + categoryLabel("library"));
+        for (String term : terms)
+            if (!term.isEmpty() && !storageText.contains(term)) storageVisible = false;
+        if (storageShortcut != null)
+            ((View) storageShortcut.getParent())
+                    .setVisibility(storageVisible ? View.VISIBLE : View.GONE);
         if (empty != null) {
-            empty.setVisibility(shown == 0 ? View.VISIBLE : View.GONE);
+            empty.setVisibility(shown == 0 && !storageVisible ? View.VISIBLE : View.GONE);
             empty.setText(
                     features.isEmpty()
                             ? Strings.t("No optional patches installed.")
@@ -1743,6 +1804,7 @@ public final class ExtrasActivity extends Activity {
         labels.setPadding(style.dp(10), 0, style.dp(6), 0);
         labels.addView(style.text(title, 16, style.foreground, style.medium));
         feature.subtitle = style.text(summary, 13, style.secondary, style.regular);
+        feature.subtitle.setTag("summary:" + id);
         feature.subtitle.setPadding(0, style.dp(3), 0, 0);
         labels.addView(feature.subtitle);
         header.addView(labels, new LinearLayout.LayoutParams(0, -2, 1));

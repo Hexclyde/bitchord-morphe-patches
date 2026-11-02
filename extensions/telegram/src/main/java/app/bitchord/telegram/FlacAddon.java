@@ -38,6 +38,7 @@ public final class FlacAddon {
     }
 
     static volatile String providerSession;
+    private static volatile boolean configurationRemoved;
     static SessionStore sessions =
             new SessionStore() {
                 public String read() throws Exception {
@@ -53,10 +54,12 @@ public final class FlacAddon {
             };
 
     public static boolean needsVerification() {
-        return providerSession == null || providerSession.isEmpty();
+        return SoundExtras.flacAddonApplied()
+                && (providerSession == null || providerSession.isEmpty());
     }
 
     public static void verify(android.app.Activity activity) {
+        if (!SoundExtras.flacAddonApplied()) return;
         activity.startActivity(
                 new android.content.Intent(activity, FlacVerificationActivity.class));
     }
@@ -114,12 +117,50 @@ public final class FlacAddon {
         }
     }
 
-    /** Registered off on first installation; preserve order and the user's native source switch. */
+    /** Remove a previous installation's source when its patch is unavailable. */
     public static void init() {
         try {
-            register();
+            if (SoundExtras.flacAddonApplied()) register();
+            else {
+                Class<?> registry = Class.forName("com.music.bitchord.data.sources.SourceRegistry");
+                Object flow = registry.getField("configs").get(null);
+                List<?> current =
+                        (List<?>)
+                                Class.forName("kotlinx.coroutines.flow.StateFlow")
+                                        .getMethod("getValue")
+                                        .invoke(flow);
+                ArrayList<Object> snapshot = new ArrayList<>(current);
+                ArrayList<Object> next = availableConfigs(snapshot);
+                if (next != snapshot || configurationRemoved) {
+                    registry.getMethod("publish", ArrayList.class, boolean.class)
+                            .invoke(null, next, true);
+                    configurationRemoved = false;
+                }
+            }
         } catch (Exception | LinkageError unavailable) {
-            HostLog.d("Flac Downloader Audio could not register");
+            HostLog.d("Flac Downloader Audio source settings are unavailable");
+        }
+    }
+
+    /** The exact owned identity and address distinguish it from user-added sources. */
+    @SuppressWarnings("unchecked")
+    public static ArrayList<Object> availableConfigs(ArrayList<?> current) {
+        if (SoundExtras.flacAddonApplied()) return (ArrayList<Object>) current;
+        try {
+            Class<?> config = Class.forName("com.music.bitchord.data.sources.SourceConfig");
+            java.lang.reflect.Method id = config.getMethod("getId");
+            java.lang.reflect.Method base = config.getMethod("getBaseUrl");
+            ArrayList<Object> next = null;
+            for (int index = 0; index < current.size(); index++) {
+                Object row = current.get(index);
+                if (ID.equals(id.invoke(row)) && ORIGIN.equals(base.invoke(row))) {
+                    configurationRemoved = true;
+                    if (next == null) next = new ArrayList<>(current.subList(0, index));
+                } else if (next != null) next.add(row);
+            }
+            return next == null ? (ArrayList<Object>) current : next;
+        } catch (ReflectiveOperationException unavailable) {
+            throw new IllegalStateException("Source configuration identity changed", unavailable);
         }
     }
 

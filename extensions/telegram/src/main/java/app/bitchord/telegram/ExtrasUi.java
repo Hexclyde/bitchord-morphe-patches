@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import androidx.compose.runtime.ComposerImpl;
 import androidx.compose.runtime.internal.ComposableLambdaImpl;
+import androidx.compose.ui.graphics.painter.Painter;
 
 import com.music.bitchord.ui.screens.SettingsSheetKt;
 
@@ -24,12 +25,12 @@ public final class ExtrasUi {
                 SettingsSheetKt.SettingsRow(
                         null,
                         Strings.t("Patches & tweaks"),
-                        Strings.t("Settings of the patches you added"),
+                        Strings.t("Choose what each installed patch does"),
                         null,
                         null,
                         null,
                         true,
-                        null,
+                        hostPainter(tweaksIcon(), composer),
                         OPEN,
                         null,
                         composer,
@@ -43,6 +44,14 @@ public final class ExtrasUi {
     static volatile Context context;
 
     private ExtrasUi() {}
+
+    private static int tweaksIcon() {
+        Context app = context;
+        return app == null
+                ? 0
+                : app.getResources()
+                        .getIdentifier("patches_tweaks", "drawable", app.getPackageName());
+    }
 
     public static void tweaksSection(ComposerImpl composer) {
         hostGroup(
@@ -87,5 +96,9 @@ public final class ExtrasUi {
             int flags,
             int defaults) {
         // Morphe replaces this body with the pinned host SettingsGroup call.
+    }
+
+    public static Painter hostPainter(int resource, ComposerImpl composer) {
+        return null; // Morphe supplies the host's painterResource call.
     }
 }

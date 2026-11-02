@@ -43,6 +43,7 @@ public final class BulkDownloadsActivity extends DownloadActivity {
     private TextView status, selectedHeading, shareNote;
     private Button shareButton, peerPicker;
     private LinearLayout content, connection, incoming, shared, jobs, selected;
+    private PeerDownloadRows.Tasks tasks;
     private PeerDownloadRows stableRows;
     private PeerDownloadRows.ScrollAnchor anchor;
     private PeerDownloadRows.Refresher<Snapshot> refresher;
@@ -50,7 +51,6 @@ public final class BulkDownloadsActivity extends DownloadActivity {
     private Dialog openDialog;
     private boolean recipientSuggested;
     private volatile boolean peersStale = true;
-    private volatile boolean stoppedByRequest;
     private volatile List<String> savedPeers = Collections.emptyList();
     private volatile String actionStatus = "";
     private final Handler ui = new Handler(Looper.getMainLooper());
@@ -208,6 +208,15 @@ public final class BulkDownloadsActivity extends DownloadActivity {
         title.setTextSize(24);
         if (Build.VERSION.SDK_INT >= 28) title.setAccessibilityHeading(true);
         body.addView(title);
+        TextView purpose =
+                downloadStyle.text(
+                        PatchStrings.t(
+                                "Receive audio from another BitChord phone, or share your files."),
+                        15,
+                        downloadStyle.secondary,
+                        downloadStyle.regular);
+        purpose.setPadding(0, downloadStyle.dp(8), 0, downloadStyle.dp(16));
+        body.addView(purpose);
         connection = section(body);
         // Nothing below is shown until real state arrives, so empty rows cannot flash.
         content = new LinearLayout(this);
@@ -215,15 +224,30 @@ public final class BulkDownloadsActivity extends DownloadActivity {
         content.setVisibility(View.GONE);
         downloadStyle.markCustom(content);
         body.addView(content, new LinearLayout.LayoutParams(-1, -2));
-        sectionHeading(content, PatchStrings.t("Incoming offers"));
-        incoming = section(content);
-        sectionHeading(content, PatchStrings.t("Download queue"));
-        jobs = section(content);
-        sectionHeading(content, PatchStrings.t("Share files"));
-        buildShareForm(content);
-        shared = section(content);
-        selectedHeading = sectionHeading(content, PatchStrings.t("Soulseek downloads"));
-        selected = section(content);
+        LinearLayout receivePage = page(content),
+                sharePage = page(content),
+                transfersPage = page(content);
+        sectionHeading(receivePage, PatchStrings.t("Incoming offers"));
+        incoming = section(receivePage);
+        sectionHeading(transfersPage, PatchStrings.t("Download queue"));
+        jobs = section(transfersPage);
+        sectionHeading(sharePage, PatchStrings.t("Share files"));
+        buildShareForm(sharePage);
+        shared = section(sharePage);
+        selectedHeading = sectionHeading(transfersPage, PatchStrings.t("Soulseek downloads"));
+        selected = section(transfersPage);
+        tasks =
+                new PeerDownloadRows.Tasks(
+                        downloadStyle,
+                        new String[] {
+                            PatchStrings.t("Receive"),
+                            PatchStrings.t("Share"),
+                            PatchStrings.t("Transfers")
+                        },
+                        new View[] {receivePage, sharePage, transfersPage},
+                        saved == null ? 0 : saved.getInt("peer-task", 0));
+        body.addView(
+                tasks.view, body.indexOfChild(connection), new LinearLayout.LayoutParams(-1, -2));
         refresher =
                 new PeerDownloadRows.Refresher<>(
                         snapshots,
@@ -247,6 +271,19 @@ public final class BulkDownloadsActivity extends DownloadActivity {
         renderConnection(null);
     }
 
+    private LinearLayout page(LinearLayout parent) {
+        LinearLayout page = new LinearLayout(this);
+        page.setOrientation(LinearLayout.VERTICAL);
+        parent.addView(page, new LinearLayout.LayoutParams(-1, -2));
+        return page;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle state) {
+        if (tasks != null) state.putInt("peer-task", tasks.selected());
+        super.onSaveInstanceState(state);
+    }
+
     private LinearLayout section(LinearLayout parent) {
         LinearLayout group = new LinearLayout(this);
         group.setOrientation(LinearLayout.VERTICAL);
@@ -268,6 +305,21 @@ public final class BulkDownloadsActivity extends DownloadActivity {
         LinearLayout form = new LinearLayout(this);
         downloadStyle.card(form);
         parent.addView(form);
+        TextView help =
+                downloadStyle.text(
+                        PatchStrings.t(
+                                "Choose a paired phone, then select audio files. Nothing is shared"
+                                        + " until you choose the files."),
+                        14,
+                        downloadStyle.secondary,
+                        downloadStyle.regular);
+        form.addView(help);
+        form.addView(
+                downloadStyle.text(
+                        PatchStrings.t("Recipient"),
+                        14,
+                        downloadStyle.foreground,
+                        downloadStyle.medium));
         recipient = new EditText(this);
         recipient.setHint(PatchStrings.t("Saved peer's 64-character app public key"));
         recipient.setContentDescription(PatchStrings.t("Saved peer's 64-character app public key"));
@@ -365,8 +417,8 @@ public final class BulkDownloadsActivity extends DownloadActivity {
             if (snapshot.peers.isEmpty())
                 stableRows.action(
                         strip,
-                        PatchStrings.t("Pair a peer"),
-                        PatchStrings.t("Pair a peer"),
+                        PatchStrings.t("Pair a phone"),
+                        PatchStrings.t("Pair a phone"),
                         true,
                         () -> startActivity(new Intent(this, NostrSetupActivity.class)));
             else if (snapshot.running)
@@ -383,7 +435,6 @@ public final class BulkDownloadsActivity extends DownloadActivity {
                         PatchStrings.t("Start download connections"),
                         true,
                         () -> {
-                            stoppedByRequest = false;
                             command("Starting connections", () -> open().start());
                         });
         }
@@ -420,24 +471,35 @@ public final class BulkDownloadsActivity extends DownloadActivity {
     private String statusLine(Snapshot snapshot) {
         if (snapshot == null)
             return PatchStrings.t("Loading…") + (actionStatus.isEmpty() ? "" : "\n" + actionStatus);
-        boolean stopped = stoppedByRequest && !snapshot.running;
         String main =
-                stopped
-                        ? PatchStrings.t(
-                                "Peer connections are stopped. Resume paused jobs explicitly.")
-                        : PatchStrings.t(snapshot.coordinatorStatus);
-        String runtime =
-                stopped || snapshot.runtimeStatus.isEmpty()
-                        ? ""
-                        : "\n" + PatchStrings.t(snapshot.runtimeStatus);
-        return main + runtime + (actionStatus.isEmpty() ? "" : "\n" + actionStatus);
+                snapshot.peers.isEmpty()
+                        ? PatchStrings.t("Pair a phone to begin.")
+                        : !snapshot.running
+                                ? PatchStrings.t(
+                                        "Peer connections are stopped. Resume paused jobs"
+                                                + " explicitly.")
+                                : !snapshot.offers.isEmpty()
+                                        ? PatchStrings.t("File offers are waiting in Receive.")
+                                        : PatchStrings.t(
+                                                "Connections started. Waiting for file offers.");
+        return main + (actionStatus.isEmpty() ? "" : "\n" + actionStatus);
     }
 
     private void renderOffers(Snapshot snapshot) {
         stableRows.begin(incoming);
         if (snapshot.offers.isEmpty())
             stableRows.text(
-                    stableRows.row(incoming, "empty"), PatchStrings.t("No pending offers."), 14);
+                    stableRows.row(incoming, "empty"),
+                    PatchStrings.t(
+                            snapshot.peers.isEmpty()
+                                    ? "Pair the phones using their app keys. The sender chooses"
+                                            + " files, and you approve the offer here."
+                                    : !snapshot.running
+                                            ? "Start connections on both phones to receive file"
+                                                    + " offers."
+                                            : "No file offers yet. Ask the paired phone to choose"
+                                                    + " audio files to share."),
+                    14);
         for (OfferRow offer : snapshot.offers) {
             LinearLayout entry = stableRows.row(incoming, offer.session);
             stableRows.text(entry, offer.name, 16);
@@ -466,7 +528,11 @@ public final class BulkDownloadsActivity extends DownloadActivity {
         stableRows.begin(jobs);
         if (snapshot.jobs.isEmpty())
             stableRows.text(
-                    stableRows.row(jobs, "empty"), PatchStrings.t("No queued downloads."), 14);
+                    stableRows.row(jobs, "empty"),
+                    PatchStrings.t(
+                            "No transfers yet. Accepted downloads appear here with their progress"
+                                    + " and controls."),
+                    14);
         for (JobRow job : snapshot.jobs) {
             LinearLayout entry = stableRows.row(jobs, job.id);
             stableRows.text(entry, job.name, 16);
@@ -506,7 +572,7 @@ public final class BulkDownloadsActivity extends DownloadActivity {
                                 ? "Only selected files are copied into private sharing storage."
                                         + " Revoke a shared file to stop serving it. Recipients"
                                         + " must approve each offer within two minutes."
-                                : "Pair a peer before sharing files.");
+                                : "Pair a phone before sharing files.");
         if (!note.contentEquals(shareNote.getText())) shareNote.setText(note);
         // Offer the only saved key, once; sharing still requires choosing files explicitly.
         if (!recipientSuggested && snapshot.peers.size() == 1 && recipient.length() == 0) {
@@ -604,7 +670,7 @@ public final class BulkDownloadsActivity extends DownloadActivity {
                 PatchStrings.t("Peer downloads"),
                 PatchStrings.t("Connection, storage and related download settings."),
                 new String[] {
-                    PatchStrings.t("Connection keys and relays"),
+                    PatchStrings.t("Pairing and advanced connections"),
                     PatchStrings.t("Where copies go"),
                     PatchStrings.t("Formats, best first"),
                     PatchStrings.t("Debrid services and API keys"),
@@ -620,6 +686,13 @@ public final class BulkDownloadsActivity extends DownloadActivity {
     }
 
     private void showPrivacy() {
+        String connectionState =
+                latest == null
+                        ? ""
+                        : "\n\n"
+                                + PatchStrings.t(latest.coordinatorStatus)
+                                + "\n"
+                                + PatchStrings.t(latest.runtimeStatus);
         remember(
                 downloadStyle.detailsPanel(
                         PatchStrings.t("Privacy and routes"),
@@ -632,10 +705,11 @@ public final class BulkDownloadsActivity extends DownloadActivity {
                                 + "\n\n"
                                 + PatchStrings.t(
                                         "Direct connections reveal your IP address to the paired"
-                                                + " phone. Your Telegram phone number and personal"
-                                                + " account are not used for coordination. Public"
+                                                + " phone. Your Telegram account stays separate"
+                                                + " from coordination. Public"
                                                 + " STUN services and Nostr relays are used to"
-                                                + " establish connections."),
+                                                + " establish connections.")
+                                + connectionState,
                         new LinearLayout(this)));
     }
 
@@ -700,7 +774,6 @@ public final class BulkDownloadsActivity extends DownloadActivity {
                                 "Stopping connections",
                                 () -> {
                                     open().disablePeers();
-                                    stoppedByRequest = true;
                                 }));
     }
 

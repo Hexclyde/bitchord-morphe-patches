@@ -33,7 +33,6 @@ PATCHES = [
     "Steady playback",
     "Smart downloads",
     "Mixed-source playlists",
-    "Flac Downloader Audio",
     "Streamseek previews",
     "Source-independent AutoMix",
 ]

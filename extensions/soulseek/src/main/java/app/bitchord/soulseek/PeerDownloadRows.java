@@ -48,6 +48,69 @@ final class PeerDownloadRows {
         this.style = style;
     }
 
+    static final class Tasks {
+        final LinearLayout view;
+        final Button[] buttons;
+        private final DownloadStyle style;
+        private final View[] pages;
+        private int selected;
+
+        Tasks(DownloadStyle style, String[] labels, View[] pages, int selected) {
+            if (labels.length != pages.length || labels.length == 0)
+                throw new IllegalArgumentException("Task pages must match their labels");
+            this.style = style;
+            this.pages = pages;
+            view = new LinearLayout(pages[0].getContext());
+            boolean stacked = view.getResources().getConfiguration().fontScale > 1.3f;
+            view.setOrientation(stacked ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
+            view.setPadding(style.dp(4), style.dp(4), style.dp(4), style.dp(4));
+            view.setBackground(style.shape(style.field, 28, false));
+            style.markCustom(view);
+            buttons = new Button[labels.length];
+            for (int i = 0; i < labels.length; i++) {
+                final int task = i;
+                Button button = new Button(view.getContext());
+                style.button(button);
+                button.setText(labels[i]);
+                button.setContentDescription(labels[i]);
+                button.setTextSize(14);
+                button.setMinWidth(0);
+                button.setMinimumWidth(0);
+                button.setPadding(style.dp(8), style.dp(10), style.dp(8), style.dp(10));
+                button.setTag("peer-task:" + i);
+                button.setOnClickListener(v -> select(task));
+                LinearLayout.LayoutParams place =
+                        stacked
+                                ? new LinearLayout.LayoutParams(-1, -2)
+                                : new LinearLayout.LayoutParams(0, -2, 1);
+                view.addView(button, place);
+                buttons[i] = button;
+            }
+            select(selected);
+        }
+
+        int selected() {
+            return selected;
+        }
+
+        private void select(int task) {
+            selected = Math.max(0, Math.min(pages.length - 1, task));
+            for (int i = 0; i < pages.length; i++) {
+                boolean active = i == selected;
+                pages[i].setVisibility(active ? View.VISIBLE : View.GONE);
+                Button button = buttons[i];
+                button.setSelected(active);
+                button.setTextColor(active ? style.background : style.foreground);
+                button.setTypeface(active ? style.semibold : style.medium);
+                button.setBackground(
+                        new RippleDrawable(
+                                ColorStateList.valueOf(style.outline),
+                                style.shape(active ? style.foreground : style.field, 24, false),
+                                null));
+            }
+        }
+    }
+
     /** Draws hairlines between a section's rows; removing a row can never orphan a divider. */
     void group(LinearLayout section) {
         style.card(section);

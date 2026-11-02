@@ -105,6 +105,61 @@ public class PatchSettingsScreenTest {
     }
 
     @Test
+    public void pageTitleHasATweaksIconAndBinaryRowsExplainTheirEffect() {
+        TextView title = text("patch-page-title");
+        assertNotNull(title.getCompoundDrawablesRelative()[0]);
+        assertEquals("Patches & tweaks", title.getText().toString());
+        assertTrue(text("summary:audio-focus").getText().toString().contains("calls"));
+        assertTrue(text("summary:video-switch").getText().toString().contains("player"));
+        String preview = text("summary:streamseek-preview").getText().toString();
+        assertTrue(preview.contains("temporary") || preview.equals("Requires Soulseek downloads"));
+        assertFalse(toggle("audio-focus").isChecked());
+        assertEquals(View.GONE, tagged("settings:audio-focus").getVisibility());
+    }
+
+    @Test
+    public void autoMixExplainsNativeAnalysisAndChosenSpeedBeforeTheEditor() {
+        try {
+            open("source-automix");
+            View details = tagged("details:source-automix");
+            java.util.List<View> contents = new java.util.ArrayList<>();
+            ExtrasPageTest.collect(details, contents);
+            StringBuilder copy = new StringBuilder();
+            for (View item : contents)
+                if (item instanceof TextView) copy.append(((TextView) item).getText()).append('\n');
+            assertTrue(copy.toString().contains("BitChord’s AutoMix"));
+            assertTrue(copy.toString().contains("audio that will play"));
+            assertTrue(copy.toString().contains("chosen playback speed"));
+            assertTrue(copy.toString().contains("Transition editor"));
+        } finally {
+            com.music.bitchord.data.settings.AppSettings.setSmartFadeEnabled(false);
+        }
+    }
+
+    @Test
+    public void storageSenseIsASearchableUtilityWithoutAnEnableSwitch() {
+        Map<String, ?> before = app.getSharedPreferences(SoundExtras.PREFERENCES, 0).getAll();
+        View storage = tagged("patch-storage-sense");
+        assertNull(
+                activity.findViewById(android.R.id.content)
+                        .findViewWithTag("enable:storage-sense"));
+        search().setText("cached audio");
+        assertEquals(View.VISIBLE, ((View) storage.getParent()).getVisibility());
+        assertEquals(View.GONE, tagged("patch:pitch").getVisibility());
+        assertEquals(View.GONE, tagged("patch-empty").getVisibility());
+        assertTrue(text("patch-counts").getText().toString().endsWith("0 shown"));
+        storage.performClick();
+        android.content.Intent opened = Shadows.shadowOf(activity).getNextStartedActivity();
+        assertEquals(StorageSenseActivity.class.getName(), opened.getComponent().getClassName());
+        assertEquals(before, app.getSharedPreferences(SoundExtras.PREFERENCES, 0).getAll());
+        search().setText("");
+        tagged("patch-category:audio").performClick();
+        assertEquals(View.GONE, ((View) storage.getParent()).getVisibility());
+        tagged("patch-category:library").performClick();
+        assertEquals(View.VISIBLE, ((View) storage.getParent()).getVisibility());
+    }
+
+    @Test
     public void categoryLabelsRetainBreathingRoomAcrossSelectionAndSearch() {
         for (String id : new String[] {"audio", "playback", "library", "sources", "all", "audio"}) {
             tagged("patch-category:" + id).performClick();

@@ -203,7 +203,7 @@ public final class SoundExtras {
         if (steadyPlaybackApplied()) SteadyPlayback.init(application);
         if (smartDownloadsApplied()) SmartDownloads.init(application);
         if (mixedPlaylistsApplied()) MixedPlaylists.init(application);
-        if (flacAddonApplied()) FlacAddon.init();
+        FlacAddon.init();
         Outputs.listen(
                 () -> {
                     rememberBluetooth(Outputs.current());

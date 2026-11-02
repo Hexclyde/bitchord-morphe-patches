@@ -14,7 +14,7 @@ Android schedules up to 25 songs about twice daily on an unmetered network, with
 
 ## Prepared sources and cache identity
 
-Enable **Play the best source first** in Unofficial Telegram settings to prepare the next two queued songs through eligible enabled sources. Recording checks, source selections, quality limits and delivery speed govern the choice. YouTube supplies playback when no verified alternative is ready or delivery is too slow. FLAC Downloader serves downloads only.
+Enable **Play the best source first** in Unofficial Telegram settings to prepare the next two queued songs through eligible enabled sources. Recording checks, source selections, quality limits and delivery speed govern the choice. YouTube supplies playback when no verified alternative is ready or delivery is too slow.
 
 Whole-track preparation compares opening, middle and ending fingerprints with a 0.75-second duration limit. File durations can explain small timing differences; unexplained residual drift is limited to 80 ms. Live swaps use a separate strict timeline check and never take an offset from whole-track preparation. Neither path changes speed or pitch.
 
@@ -44,7 +44,7 @@ I credit [Open-Unmix](https://github.com/sigsep/open-unmix-pytorch) by sigsep fo
 
 BitChord’s Downloads settings contain quality, Wi-Fi restriction, export location and downloaded-playlist synchronization, followed by **Patch downloads**. The same controls are accessible from Patches & tweaks.
 
-**Storage Sense** lists cache resources with stored ranges and completeness. Telegram cache lists indexed music files. Cleanup uses the owning cache or TDLib API and protects playing, upcoming, queued, downloading and recently used resources. Locations without a safe removal path are read-only, including Soulseek’s transfer cache.
+Open **Storage Sense** directly from **Patches & tweaks → Library**, or from **Settings → Downloads → Patch downloads**. It lists cache resources with stored ranges and completeness. Telegram cache lists indexed music files. Cleanup uses the owning cache or TDLib API and protects playing, upcoming, queued, downloading and recently used resources. Locations without a safe removal path are read-only, including Soulseek’s transfer cache.
 
 Saved-file deletion requires separate confirmation. Duplicate review compares file contents by SHA-256 with bounded, cancellable work. Names alone never justify removal. Session data, credentials, model files, unknown locations and active transfers are protected.
 

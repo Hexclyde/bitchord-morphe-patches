@@ -111,33 +111,6 @@
       "options": []
     },
     {
-      "name": "Flac Downloader Audio",
-      "description": "Optional native download adapter for aztecempire's Spotube FLAC Audio source. Search and download through flacdownloader.com, with explicit FLAC/MP3 choices. Starts disabled; enable in Sources or Patches & tweaks. Requested quality is not file verification. No Spotube runtime or account is installed. Settings are in Settings, Patches & tweaks.",
-      "default": false,
-      "category": null,
-      "compatiblePackages": [
-        {
-          "packageName": "com.music.bitchord",
-          "name": "BitChord",
-          "description": null,
-          "apkFileType": "APK",
-          "appIconColor": "#FF8944",
-          "signatures": null,
-          "formFactor": "MOBILE",
-          "targets": [
-            {
-              "version": "1.9",
-              "versionCodes": null,
-              "isExperimental": true,
-              "minSdk": 26,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
       "name": "Headphone correction",
       "description": "Flattens your headphones' sound with a measured profile, one per output, from AutoEq's thousands of models or pasted in. From Prism by Yigder. Settings are in Settings, Patches & tweaks.",
       "default": false,

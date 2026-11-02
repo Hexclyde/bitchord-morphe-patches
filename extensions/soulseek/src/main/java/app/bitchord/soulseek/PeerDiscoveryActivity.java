@@ -42,7 +42,7 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
     private volatile PeerDiscovery discovery;
     private volatile boolean foreground = true, destroyed;
     private PeerDiscovery.Snapshot saved;
-    private boolean busy, rendering, expanded, refreshQueued;
+    private boolean busy, rendering, expanded, refreshQueued, technical;
     private int visibleLimit = 50;
     private String renderedCandidates = "";
     private LinearLayout card, details, candidateRows;
@@ -67,6 +67,7 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
         if (Build.VERSION.SDK_INT >= 31) getWindow().setHideOverlayWindows(true);
         if (state != null) {
             expanded = state.getBoolean("expanded");
+            technical = state.getBoolean("technical");
             visibleLimit = Math.max(50, Math.min(512, state.getInt("visible", 50)));
         }
         ScrollView scroll = new ScrollView(this);
@@ -77,8 +78,8 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
         text(
                 body,
                 PatchStrings.t(
-                        "Find compatible clients through public relays and peer exchange. Found"
-                            + " keys are not trusted contacts and do not grant access to files."),
+                        "Find other BitChord phones. Compare a full app key before pairing;"
+                                + " finding a key does not give access to files."),
                 15,
                 false);
         notice = text(body, PatchStrings.t("Loading peer discovery…"), 14, false);
@@ -93,7 +94,7 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
         LinearLayout labels = column();
         header.addView(labels, new LinearLayout.LayoutParams(0, -2, 1));
         text(labels, PatchStrings.t("Discover compatible peers"), 17, true);
-        summary = text(labels, PatchStrings.t("Public discovery and peer exchange"), 13, false);
+        summary = text(labels, PatchStrings.t("Look for phones to pair"), 13, false);
         enabled = downloadStyle.switchButton();
         enabled.setTag("discovery-enabled");
         enabled.setContentDescription(
@@ -142,6 +143,17 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
         status = text(details, "", 14, false);
         status.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
         counts = text(details, "", 13, false);
+        counts.setTag("discovery-network-counts");
+        Button connectionDetails = button(details, PatchStrings.t("Connection details"));
+        connectionDetails.setTag("discovery-connection-details");
+        connectionDetails.setSelected(technical);
+        downloadStyle.textAction(connectionDetails);
+        connectionDetails.setOnClickListener(
+                view -> {
+                    technical = !technical;
+                    connectionDetails.setSelected(technical);
+                    render();
+                });
         text(details, PatchStrings.t("Recent clients"), 17, true);
         candidateRows = column();
         details.addView(candidateRows);
@@ -222,6 +234,7 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
     @Override
     protected void onSaveInstanceState(Bundle state) {
         state.putBoolean("expanded", expanded);
+        state.putBoolean("technical", technical);
         state.putInt("visible", visibleLimit);
         super.onSaveInstanceState(state);
     }
@@ -336,8 +349,8 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
         find.setEnabled(on && !busy && !saved.running && foreground);
         stop.setEnabled(on && !busy && saved.running && foreground);
         clear.setEnabled(on && !busy && foreground);
-        summary.setText(
-                on ? PatchStrings.t("Public discovery and peer exchange") : PatchStrings.t("Off"));
+        summary.setText(on ? PatchStrings.t("Look for phones to pair") : PatchStrings.t("Off"));
+        counts.setVisibility(technical ? View.VISIBLE : View.GONE);
         if (saved != null) {
             String label = PatchStrings.t(saved.status);
             if (!label.contentEquals(status.getText())) status.setText(label);
@@ -354,7 +367,11 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
         List<PeerDiscovery.Candidate> found = saved.candidates;
         int shown = Math.min(visibleLimit, found.size());
         StringBuilder signature =
-                new StringBuilder().append(shown).append('/').append(found.size());
+                new StringBuilder()
+                        .append(shown)
+                        .append('/')
+                        .append(found.size())
+                        .append(technical);
         for (int index = 0; index < shown; index++) {
             PeerDiscovery.Candidate peer = found.get(index);
             signature
@@ -373,7 +390,13 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
         Object focusTag = focused == null ? null : focused.getTag();
         candidateRows.removeAllViews();
         if (found.isEmpty())
-            text(candidateRows, PatchStrings.t("No recent clients found yet."), 14, false);
+            text(
+                    candidateRows,
+                    PatchStrings.t(
+                            "No recent peers. Choose Find peers, or pair directly using the other"
+                                    + " phone's app key."),
+                    14,
+                    false);
         DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, PatchStrings.locale());
         for (int index = 0; index < shown; index++) {
             PeerDiscovery.Candidate peer = found.get(index);
@@ -389,11 +412,13 @@ public final class PeerDiscoveryActivity extends DownloadActivity {
                             true);
             identity.setTextDirection(View.TEXT_DIRECTION_LTR);
             identity.setTextIsSelectable(true);
-            text(
-                    row,
-                    PatchStrings.f("Transports: {0}", transportLabels(peer.transports)),
-                    13,
-                    false);
+            TextView transport =
+                    text(
+                            row,
+                            PatchStrings.f("Transports: {0}", transportLabels(peer.transports)),
+                            13,
+                            false);
+            transport.setVisibility(technical ? View.VISIBLE : View.GONE);
             text(
                     row,
                     PatchStrings.f(

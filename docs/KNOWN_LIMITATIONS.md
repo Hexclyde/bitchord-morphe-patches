@@ -27,7 +27,7 @@ The patches target original BitChord 1.9 APKs for arm64-v8a, armeabi-v7a and x86
 
 ## Downloads and storage
 
-- FLAC Downloader supplies downloads only, using its FLAC, MP3 320 and MP3 128 choices. Provider verification, preparation and availability can change. A failed request never silently selects a lower quality.
+- FLAC Downloader is unavailable in the patch catalogue. Existing saved files remain accessible from Downloads.
 - Batch download selection is limited to 200 tracks. Initial source plans do not survive process death, and public sharing pauses after a restart. See [Downloads](DOWNLOAD-MANAGER.md).
 - Per-download quality asks during eligible manual downloads. Scheduled playlist synchronization uses the global quality without a dialog.
 - Smart downloads considers enabled eligible sources and the selected quality. Android can defer its unmetered-network job. Failed transfers can retry; deleted downloads are skipped, and the feature never deletes music automatically.

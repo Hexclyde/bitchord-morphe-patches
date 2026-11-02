@@ -143,10 +143,13 @@ final class TelegramGlyph extends Drawable {
                 p.moveTo(8, 14);
                 p.lineTo(16, 19);
                 break;
+            case "tweaks":
             default:
                 for (int y = 5; y <= 19; y += 7) {
-                    canvas.drawLine(3, y, 21, y, paint);
-                    canvas.drawCircle(y == 12 ? 16 : 8, y, 2, paint);
+                    int knob = y == 12 ? 16 : 8;
+                    canvas.drawLine(3, y, knob - 2, y, paint);
+                    canvas.drawLine(knob + 2, y, 21, y, paint);
+                    canvas.drawCircle(knob, y, 2, paint);
                 }
         }
         canvas.drawPath(p, paint);

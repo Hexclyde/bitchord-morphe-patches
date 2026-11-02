@@ -101,7 +101,7 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
         ("VerifyPatchUiApk", [str(output), "true", "true", "true"]),
         ("VerifySoulseekApk", [str(output), "enabled", str(mpp)]),
         ("VerifyMixedPlaylistsApk", [str(output)]),
-        ("VerifyFlacAddonApk", [str(output)]),
+        ("VerifyFlacAddonApk", [str(output), "disabled", str(mpp), "--regressions"]),
         ("VerifyStreamseekApk", [str(output)]),
         ("VerifySourceAutomixApk", [str(output)]),
         ("VerifyTravelFeaturesApk", [str(output), "focus,steady,smart"]),
@@ -181,6 +181,7 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
                     checker,
                     str(playback),
                     "standalone",
+                    *([str(mpp)] if checker == "VerifyFlacAddonApk" else []),
                 ],
                 check=True,
             )

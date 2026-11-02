@@ -44,7 +44,6 @@ OFF_BY_DEFAULT = {
     "Steady playback",
     "Smart downloads",
     "Mixed-source playlists",
-    "Flac Downloader Audio",
     "Streamseek previews",
 }
 

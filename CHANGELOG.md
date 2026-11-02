@@ -1,5 +1,6 @@
 ## 1.1.0-beta.18
 
+- **Patches & tweaks** has a sliders icon, clearer feature descriptions and a searchable shortcut to Storage Sense.
 - **Stats** shows the average bitrate of the prepared rendition and its actual source. Old or ambiguous cache entries show an unknown source.
 - **Play the best source first** prepares upcoming songs through enabled sources with recording and timing checks. Separate queue entries can use different copies without changing an entry already playing.
 - Complete verified replacements reclaim obsolete YouTube playback cache while protecting active readers and saved **downloads**.
@@ -12,8 +13,8 @@
 - **Storage Sense** lists audio caches, protects active resources and offers confirmed file deletion and content-hash duplicate review. Cleanup rules start disabled.
 - Downloads settings contain patch controls alongside BitChord’s quality, Wi-Fi, export and playlist-sync options. Selected-source filenames and converted formats stay consistent across patch selections.
 - **Smart playlists** creates local library matches by default, with a separate optional text-service connection and review before saving.
-- Peer downloads uses stable rows, background refresh, grouped actions and native menus.
-- **FLAC Downloader** serves downloads only, with explicit provider formats and no silent downgrade.
+- **Peer downloads** separates Receive, Share and Transfers, with pairing instructions, stable progress rows and connection details behind an explicit action.
+- **FLAC Downloader** is unavailable in the patch catalogue. Existing saved files remain accessible from Downloads.
 
 ## 1.1.0-beta.17
 

@@ -26,6 +26,10 @@ public final class FlacVerificationActivity extends Activity {
                         ? android.R.style.Theme_Material_NoActionBar
                         : android.R.style.Theme_Material_Light_NoActionBar);
         super.onCreate(state);
+        if (!SoundExtras.flacAddonApplied()) {
+            finish();
+            return;
+        }
         Strings.refresh(this);
         CapturePolicy.apply(this);
         TelegramStyle style = new TelegramStyle(this);

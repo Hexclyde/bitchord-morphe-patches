@@ -126,11 +126,6 @@
     "desc": "Remembers BitChord's equaliser for each output (speaker, wired, each Bluetooth device) and puts it back when that output is used; shares settings as codes. From Prism by Yigder. Settings are in Settings, Patches & tweaks."
   },
   {
-    "id": "flacAudio",
-    "name": "Flac Downloader Audio",
-    "desc": "Optional native download adapter for aztecempire's Spotube FLAC Audio source. Search and download through flacdownloader.com, with explicit FLAC/MP3 choices. Starts disabled; enable in Sources or Patches & tweaks. Requested quality is not file verification. No Spotube runtime or account is installed. Settings are in Settings, Patches & tweaks."
-  },
-  {
     "id": "headphones",
     "name": "Headphone correction",
     "desc": "Flattens your headphones' sound with a measured profile, one per output, from AutoEq's thousands of models or pasted in. From Prism by Yigder. Settings are in Settings, Patches & tweaks."

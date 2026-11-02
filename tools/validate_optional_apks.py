@@ -57,14 +57,6 @@ def main():
             ],
         ),
         (
-            "FLAC",
-            ["Flac Downloader Audio"],
-            [
-                ("VerifyFlacAddonApk", ["standalone"]),
-                ("VerifyPatchUiApk", ["false", "false", "true"]),
-            ],
-        ),
-        (
             "MixedPlaylists",
             ["Mixed-source playlists"],
             [
@@ -99,6 +91,9 @@ def main():
             )
         )
     for label, selections, inspectors in cases:
+        inspectors.append(
+            ("VerifyFlacAddonApk", ["disabled", str(ROOT / "build" / BUNDLE_NAME)])
+        )
         inspectors.append(("VerifyAudioOriginApk", []))
         inspectors.append(
             (

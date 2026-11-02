@@ -3550,7 +3550,7 @@ private const val MIXED_PLAYLISTS = "Lapp/bitchord/telegram/MixedPlaylists;"
 
 /** Spotube .smplug files are not BitChord addons: adapt the observed protocol on device. */
 @Suppress("unused")
-val flacAudioPatch =
+private val flacAudioPatch =
     extrasPatch(
         "Flac Downloader Audio",
         "Optional native download adapter for aztecempire's Spotube FLAC Audio source. Search and download " +

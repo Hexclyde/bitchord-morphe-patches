@@ -9,6 +9,7 @@ public final class SourceRegistry {
             StateFlowKt.MutableStateFlow(new ArrayList<>());
 
     public static final List<MusicSource> downloadSources = new ArrayList<>();
+    public static List<SourceConfig> persistedConfigs = new ArrayList<>();
 
     public static List<MusicSource> active() {
         List<MusicSource> active = new ArrayList<>();
@@ -29,8 +30,8 @@ public final class SourceRegistry {
     }
 
     public static void publish(ArrayList<SourceConfig> next, boolean persist) {
-        if (!persist) throw new AssertionError();
         configs.setValue(next);
+        if (persist) persistedConfigs = new ArrayList<>(next);
     }
 
     public static SourceConfig config(String id) {

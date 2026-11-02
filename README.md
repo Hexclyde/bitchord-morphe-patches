@@ -45,7 +45,6 @@
 | **JamesDSP** | Hands BitChord's audio to [JamesDSP](https://github.com/timschneeb/RootlessJamesDSP), shows whether it can hear BitChord and helps with its Shizuku or ADB setup. Off by default. |
 | **Audio and video switch** | A song and video switch at the top of the player, as in YouTube Music. Off by default. |
 | **Mixed-source playlists** | Keep downloaded files, local music, YouTube tracks and addon streams together in BitChord's device playlists. Off by default. |
-| **Flac Downloader Audio** | Native adapter for [aztecempire's Spotube source](https://github.com/aztecempire/spotube-plugin-flac-audio), using flacdownloader.com. Download-only FLAC/MP3 formats; source starts disabled. No Spotube runtime required. |
 
 <p>
   <img src="docs/screenshots/application-setup.png" width="200" alt="API credentials screen">

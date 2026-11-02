@@ -145,6 +145,25 @@ public class PeerDiscoveryScreenTest {
         assertEquals(View.GONE, tagged("discovery-details").getVisibility());
         assertEquals(0, service.starts);
         assertEquals(0, service.advertised);
+        assertTrue(hasText(activity.getWindow().getDecorView(), "Find other BitChord phones."));
+        assertEquals(View.GONE, tagged("discovery-network-counts").getVisibility());
+    }
+
+    @Test
+    public void connectionDetailsAreExplicitAndDoNotStartDiscovery() throws Exception {
+        service.enabled = true;
+        service.candidates.add(new PeerDiscovery.Candidate(8));
+        create();
+        tagged("discovery-gear").performClick();
+        assertEquals(View.GONE, tagged("discovery-network-counts").getVisibility());
+        tagged("discovery-connection-details").performClick();
+        assertTrue(tagged("discovery-connection-details").isSelected());
+        assertEquals(View.VISIBLE, tagged("discovery-network-counts").getVisibility());
+        assertEquals(0, service.starts);
+        assertEquals(0, service.advertised);
+        tagged("discovery-connection-details").performClick();
+        assertEquals(View.GONE, tagged("discovery-network-counts").getVisibility());
+        assertEquals(1, copyButtons(activity.getWindow().getDecorView()));
     }
 
     @Test
