@@ -2,7 +2,7 @@
 
 Install the patch first using the [Morphe guide](MOBILE.md). These steps use the default app name, **Bitchord+**; open your chosen name if you changed it during patching.
 
-You need an existing Telegram account and audio you have permission to access. No server or bot is required.
+You need an existing Telegram account and audio you have permission to access. No dedicated server is required.
 
 ## 1. Get your Telegram API details
 
@@ -20,7 +20,7 @@ You need an existing Telegram account and audio you have permission to access. N
 
 4. Find **App api_id** and **App api_hash**. Keep the page open while you enter them in Bitchord+.
 
-The API ID is a number. The API hash is a 32-character value. They identify your Telegram application; signing in to your account is a separate step. A bot token, phone number or verification code will not work in these fields.
+The API ID is a number. The API hash is a 32-character value. They identify your Telegram application; signing in to your account is a separate step. These fields require the application ID and hash, not account login details.
 
 Use your own details and keep the hash private. Telegram controls application registration and may show your registered app title in sign-in alerts. See Telegram's [API registration instructions](https://core.telegram.org/api/obtaining_api_id) if the form fails.
 
@@ -75,7 +75,7 @@ Regular BitChord search may still play from another provider. Use **Addons** whe
 
 On the Telegram page, tap **Music library → Channel View → Browse** and select a channel.
 
-Channel View shows recent posts. **Load older posts** extends the visible history, up to 150 retained posts. Ordinary channel videos open in an installed Telegram client through **Open message in Telegram**.
+Channel View shows recent posts. **Load older posts** extends the visible history, up to 150 saved posts. Ordinary channel videos open in an installed Telegram client through **Open message in Telegram**.
 
 Telegram may return an official **Sponsored** or **Recommended** card alongside the posts. Its **•••** menu provides sponsor information and reporting options when available. External websites ask for confirmation before opening. There is no local switch to hide returned sponsored messages, and no sponsored card is added to the audio player.
 
@@ -85,7 +85,7 @@ Channel View currently opens selected, accessible, unprotected channels. Other s
 
 On the Telegram page's **Advanced** tab, adjust **Storage → Telegram audio cache target**, then tap **Apply cache size**. The range is **64 MiB to 16 GiB**, with a default of **256 MiB**.
 
-This setting controls retained Telegram audio. It does not reserve space or download your entire channel. Active files can temporarily exceed the target. Increasing it does not improve audio quality.
+This setting controls saved Telegram audio. It does not reserve space or download your entire channel. Active files can temporarily exceed the target. Increasing it does not improve audio quality.
 
 To free space, stop playback and tap **Clear Telegram audio cache**. BitChord also has its own song cache and downloads; clear those separately if needed.
 

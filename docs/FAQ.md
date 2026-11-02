@@ -6,7 +6,7 @@ No. Your phone connects directly to Telegram. The audio stays in your Telegram c
 
 ## Why do I need API credentials and a login?
 
-The API ID and hash identify your Telegram application. Your account login gives that application access to your account. Both are needed. A bot token cannot replace them. Follow the [setup guide](SETUP.md).
+The API ID and hash identify your Telegram application. Your account login gives that application access to your account. Both are needed. Both application credentials are required. Follow the [setup guide](SETUP.md).
 
 ## Can I use a private channel?
 

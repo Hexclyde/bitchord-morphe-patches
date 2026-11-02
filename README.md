@@ -7,23 +7,17 @@
 [![Downloads](https://img.shields.io/github/downloads/Hexclyde/bitchord-morphe-patches/total)](https://github.com/Hexclyde/bitchord-morphe-patches/releases)
 [![Licence](https://img.shields.io/github/license/Hexclyde/bitchord-morphe-patches)](LICENSE)
 
-[Morphe](https://morphe.software) patches for the [BitChord](https://github.com/kushagrasinghx/BitChord) Android music player. The main one, **Unofficial Telegram music**, lets BitChord search and play music from your own Telegram channels, in its original quality, entirely on your phone. No server, bot or hosting is involved.
+[Morphe](https://morphe.software) patches for the [BitChord](https://github.com/kushagrasinghx/BitChord) Android music player. The main one, **Unofficial Telegram music**, lets BitChord search and play music from your own Telegram channels, in its original quality, entirely on your phone. No dedicated server or hosting is required.
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Interactive install guide](https://hexclyde.github.io/bitchord-morphe-patches/) · [Setup guide](docs/MOBILE.md)
 
-> **Status:** experimental (1.1.0-beta.18, a testing build). The combined patches target BitChord **1.9**. Check the [known limitations](docs/KNOWN_LIMITATIONS.md) before installing.
->
-> I target BitChord 1.9 and test with x86_64 Waydroid. I report component, APK and device results separately in the [verification report](docs/VERIFICATION-1.1.0-beta.18.md); physical-phone qualification remains pending.
+**Status:** experimental 1.1.0-beta.18 for BitChord **1.9**. See [known limitations](docs/KNOWN_LIMITATIONS.md).
 
-The Downloads navigation icon is visible only when the download add-on patch is installed. Patches & tweaks and download controls use BitChord 1.9’s green capsule switches.
+[Downloads](docs/DOWNLOAD-MANAGER.md) offers Grid, List, Compact, Comfy and Detailed layouts, local search, exact-source Pause/Resume/Retry, list removal and confirmed file deletion. Library’s Downloads shortcut opens this page when its patch is installed. The player’s Audio/Video switch saves the YouTube mode preference and appears outside Lyrics and Queue.
 
-Downloads offers saved Grid, List, Compact, Comfy and Detailed views, exact-source Pause/Resume/Retry controls, separate Remove from list and confirmed Delete file actions. Resume restarts transfers from the same source. Library’s Downloads shortcut opens this page when the download patch is installed. The Audio/Video player switch saves your YouTube preference across tracks and restarts. Missing alternate versions leave that preference unchanged.
+[Source-independent AutoMix](docs/AUTOMIX.md) measures the selected recording for BitChord’s transition planner. Its [transition editor](docs/TRANSITION-EDITOR.md) saves timing, volume, EQ and filter edits for each track pair. [Playlist tools](docs/PLAYLIST-TOOLS.md) support signed-out links, device copies, queue saving, metadata-file import and manual Spotify/YouTube Music membership sync.
 
-I build Downloads around the reviewed design: a compact header, real artwork, thin transfer progress, source/format labels, separate status lines and five saved layouts. Management controls live under its settings gear. I use measured headphone/video rows in the native portrait player and landscape main pane. The row reserves space before the artwork and moves with the player; the saved YouTube mode remains persistent. Unofficial Telegram opens a lightweight page before bridge initialization and reads saved-index counts in the background, with duplicate-opening protection.
-
-I retain all existing features, including [Streamseek previews](docs/STREAMSEEK-PREVIEW.md), [mixed-source device playlists](docs/MIXED-PLAYLISTS.md), the independent [Flac Downloader Audio adapter](docs/FLAC-AUDIO.md), public Soulseek sharing and verified Telegram offloading. See [Downloads](docs/DOWNLOAD-MANAGER.md) and [verification](docs/VERIFICATION-1.1.0-beta.18.md).
-
-I include [source-independent AutoMix](docs/AUTOMIX.md), a native [transition editor](docs/TRANSITION-EDITOR.md), and [playlist tools](docs/PLAYLIST-TOOLS.md) for signed-out links, device copies, queue saving, file import and reviewed two-way Spotify/YouTube Music membership sync. In beta.18 I add Play alongside other apps, Steady playback and source-independent Smart downloads, plus Sing's local separation model. I bring patch download controls into BitChord's Downloads settings and provide [Storage Sense and smart playlists](docs/BETA18-FEATURES.md). I keep cleanup rules and external playlist generation off until explicitly requested.
+[Playback, storage and playlist settings](docs/BETA18-FEATURES.md) include Play alongside other apps, Steady playback, Smart downloads, Sing separation, cache management and local Smart playlists. Patch download controls also appear in BitChord’s Downloads settings. Cleanup rules and external playlist suggestions require explicit activation.
 
 ## Patches
 
@@ -53,8 +47,6 @@ I include [source-independent AutoMix](docs/AUTOMIX.md), a native [transition ed
 | **Mixed-source playlists** | Keep downloaded files, local music, YouTube tracks and addon streams together in BitChord's device playlists. Off by default. |
 | **Flac Downloader Audio** | Native adapter for [aztecempire's Spotube source](https://github.com/aztecempire/spotube-plugin-flac-audio), using flacdownloader.com. Download-only FLAC/MP3 formats; source starts disabled. No Spotube runtime required. |
 
-More BitChord add-ons will be added to this repository over time.
-
 <p>
   <img src="docs/screenshots/application-setup.png" width="200" alt="API credentials screen">
   <img src="docs/screenshots/connected-library.png" width="200" alt="Connected library">
@@ -82,7 +74,7 @@ More BitChord add-ons will be added to this repository over time.
 - 5.1 and 7.1 files play as proper stereo, mixed inside the player without converting the file
 - A small format legend next to song titles (FLAC 24bit, Dolby Atmos, DD+ 5.1, MP3 320kbps, …), in the main search too
 - Dolby Digital, Dolby Digital Plus and Dolby Atmos files, with Atmos passed on to BitChord as Atmos
-- When a better copy turns up mid-song, it fades in without a gap
+- A verified better copy can fade in while the song continues
 - Fix misnamed files on your phone, with suggestions, without uploading them again
 - Browse channel posts in Channel View
 - Prepare upcoming songs from eligible enabled sources, verify the recording and start from a better copy when ready
@@ -100,7 +92,7 @@ The page contains controls for installed features, with search, All controls / E
 and Sources, Playback, Audio and Library filters. Counts follow the actual installed
 controls. Their styling follows BitChord's theme, fonts, switches and rounded cards.
 
-Each feature has an enable switch. A settings gear appears only when the feature is enabled and has configurable controls. Settings open explicitly through the gear and close with Done. Toggle-only features, including Battery saver, Per-download quality and Audio and video switch, do not show a gear. Disabling a feature retains its saved choices. Reversible toggle changes offer Undo; sliders support live values, fine adjustment and native-default Reset. Telegram keeps its existing source toggle and account settings page. See [Patches & tweaks](docs/PATCHES-AND-TWEAKS.md) for dependency and Undo behavior. The optional playback patches include:
+Each feature has an enable switch. A settings gear appears only when the feature is enabled and has configurable controls. Settings open explicitly through the gear and close with Done. Toggle-only features, including Battery saver, Per-download quality and Audio and video switch, do not show a gear. Disabling a feature leaves its configured choices unchanged. Reversible toggle changes offer Undo; sliders support live values, fine adjustment and native-default Reset. Telegram keeps its existing source toggle and account settings page. See [Patches & tweaks](docs/PATCHES-AND-TWEAKS.md) for dependency and Undo behavior. The optional playback patches include:
 
 - **Sing:** turns the lead vocal down so you can sing over the song, from a little to all of it. By default only the voice range is cut, only while someone is singing, and drum hits are left alone; **Whole centre** removes everything in the middle instead, which suits older recordings. Ported from [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45.
 - **Pitch control:** up or down by up to 12 semitones without changing the speed. BitChord's speed setting keeps the pitch you set.
@@ -137,8 +129,6 @@ Testing builds are separate from this source; see [Testing builds](#testing-buil
 
 If the source link doesn't work, download the `.mpp` from the [releases page](https://github.com/Hexclyde/bitchord-morphe-patches/releases) and add it as a Local source.
 
-The ZIP also contains `Open-Guide.html`, which opens the bundled guide offline. Short package instructions are in `INSTALL.md`. GitHub Pages serves the same guide when the repository is configured to publish **testing → /docs**.
-
 Step-by-step guides:
 
 - [Installing with Morphe](docs/MOBILE.md)
@@ -153,7 +143,7 @@ Step-by-step guides:
 
 ## Testing builds
 
-New versions go to a `testing` branch first, as GitHub pre-releases with versions like `1.1.0-beta.1`. The normal source above only gets a version once it's out of testing, whatever its **Pre-release patches** switch is set to.
+The `testing` source exposes experimental patches separately from the normal source. Morphe’s **Pre-release patches** switch does not select that branch.
 
 To try a testing build, add a second source in Morphe with this URL and turn on **Experimental app versions** on it:
 
@@ -185,13 +175,13 @@ Bug reports and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.m
 
 ## Credits
 
-- [Orchard](https://github.com/SFG5453/Orchard) by SFG545 and [BitChord](https://github.com/kushagrasinghx/BitChord) by Kushagra Singh, for the Blackman polyphase resampler I adapt for bounded DSP analysis. I retain their copyright notices and [AGPL-3.0-or-later licence](licenses/AGPL-3.0.txt).
+- [Orchard](https://github.com/SFG5453/Orchard) by SFG545 and [BitChord](https://github.com/kushagrasinghx/BitChord) by Kushagra Singh, for the Blackman polyphase resampler I adapt for bounded DSP analysis. I preserve their copyright notices and [AGPL-3.0-or-later licence](licenses/AGPL-3.0.txt).
 - [Open-Unmix](https://github.com/sigsep/open-unmix-pytorch) by sigsep, for the vocal separation technique and BitChord's existing model; [Spleeter](https://github.com/deezer/spleeter) by Deezer Research, for the optional checkpoint conversion tool. Their code is MIT licensed; I document model provenance in the [feature guide](docs/BETA18-FEATURES.md).
-- [PixelMusic](https://github.com/ianshulyadav/PixelMusic) by ianshulyadav, for the Storage Sense, duplicate review and prompt-to-playlist ideas. I wrote native implementations for BitChord; I port its GPL-3.0 local playlist language processing and ranking with attribution; my storage adapters are independent implementations.
+- [PixelMusic](https://github.com/ianshulyadav/PixelMusic) by ianshulyadav, for the Storage Sense, duplicate review and description-to-playlist ideas. I wrote native implementations for BitChord; I port its GPL-3.0 local playlist language processing and ranking with attribution; my storage adapters are independent implementations.
 
 - [BitChord](https://github.com/kushagrasinghx/BitChord) by kushagra (kushagrasinghx) and its contributors, the app these patches are for.
 - [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45, a fork of BitChord. Sing is ported from its vocal remover.
-- [Prism](https://github.com/Yigder/Prism) by Yigder and [Stash](https://github.com/rawnaldclark/Stash) by Rawnald Clark, with Evo (ParaliyzedEvo). Their pitch, loudness, sleep fade, headphone correction, per-output equaliser, DJ mode and per-download quality features shaped the playback patches; no code was taken from them.
+- [Prism](https://github.com/Yigder/Prism) by Yigder and [Stash](https://github.com/rawnaldclark/Stash) by Rawnald Clark, with Evo (ParaliyzedEvo). Their pitch, loudness, sleep fade, headphone correction, per-output equaliser, DJ mode and per-download quality features shaped the playback patches.
 - [AutoEq](https://github.com/jaakkopasanen/AutoEq) by Jaakko Pasanen, whose headphone measurements Headphone correction fetches.
 - [JamesDSP](https://github.com/timschneeb/RootlessJamesDSP) by Tim Schneeberger and [James Fung](https://github.com/james34602/JamesDSPManager), the effect engine the JamesDSP patch works with.
 - [MicroG RE](https://github.com/MorpheApp/MicroG-RE) and [Morphe](https://morphe.software) by the Morphe team.

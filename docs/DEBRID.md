@@ -1,8 +1,7 @@
 # Optional debrid downloads
 
-Build **1.1.0-beta.9** retains optional Real-Debrid, AllDebrid, Premiumize and
-TorBox downloads. These adapters use the provider routes described below. Live
-accounts and every provider-supported host have not been qualified.
+The download patch supports optional Real-Debrid, AllDebrid, Premiumize and
+TorBox downloads. These adapters use the provider routes described below.
 
 Each provider has its own enable switch and API key. All four start **off**.
 Choose the provider for each link explicitly; a failure does not automatically
@@ -12,7 +11,7 @@ links and cloud transfers; it is not a music search index.
 
 ## Setup
 
-1. Install the testing bundle with **Unofficial Soulseek audio**, which contains
+1. Select the patch with **Unofficial Soulseek audio**, which contains
    these download settings. Add **Unofficial Telegram music** if Telegram saving
    is wanted. A Soulseek account is not needed for the debrid path.
 2. Open **Settings → Patches & tweaks**, enable **Debrid downloads**, then
@@ -29,7 +28,7 @@ links and cloud transfers; it is not a music search index.
 
 No Soulseek login or Nostr pairing is needed for a debrid link download. The
 integration makes HTTPS requests from the phone to the selected service; it does
-not require a custom server, bot or companion app.
+not require a custom server or companion app.
 
 ## Resolve and save a link
 
@@ -39,14 +38,14 @@ not require a custom server, bot or companion app.
    If it is still preparing, use **Refresh provider transfer** to obtain its
    current state and file list.
 3. Select the audio entries to save. Filename hints filter the list against
-   enabled formats; a container extension does not prove its codec or source
+   enabled formats; a file extension does not prove its codec or source
    quality. Non-audio entries are not downloaded through this workflow.
 4. Select **Download selected audio**. The job records the provider, chosen file,
    destination and format choices. It stages the complete original privately and
    checks its encoding before handing it to the same copy publisher used by
    Soulseek and paired downloads.
 5. Open the copy queue to inspect Phone and Telegram results. With Both, a
-   completed copy is retained while an unfinished copy is retried.
+   completed copy is saved while an unfinished copy is retried.
 
 Some services require file selection before they begin preparing the transfer.
 If a queued item shows that it is waiting for the provider, refresh that transfer
@@ -80,9 +79,9 @@ the selected provider's response.
 ## Keys, cancellation and transfer routes
 
 API keys are encrypted with Android Keystore and kept in no-backup app storage.
-They are not included in Nostr offers, channel metadata, ordinary backups or the
+They stay outside Nostr offers, channel metadata, ordinary backups and the
 source package. The **Debrid downloads** master switch pauses local debrid work without deleting
-saved keys. Each provider also retains its own switch. Remove a provider's key to disable it; rotating or disabling a
+saved keys. Each provider has its own enable switch. Remove a provider's key to disable it; rotating or disabling a
 provider invalidates work using the older credential revision.
 
 Pause and cancel control the phone's fetching. A cloud transfer already created
@@ -92,7 +91,7 @@ been accepted.
 
 Resume restarts incomplete debrid file capture rather than combining ranges from
 different expiring URLs. Prepared links and source-fetch state are kept in memory;
-process death before the verified handoff requires preparing the source again.
+process death before the verified transfer requires preparing the source again.
 Check the provider dashboard first because its earlier cloud transfer may still
 exist. Once handed to the copy queue, the completed original uses the publisher's
 durable destination journal and receipts.
@@ -107,20 +106,4 @@ Peer discovery and PEX do not change the provider's swarm, cloud queue or
 download speed. The phone still resolves and downloads through the explicitly
 selected provider.
 
-## Qualification
-
-Local fixtures exercise provider response handling and the app's credential,
-selection, cancellation and publication boundaries without genuine account keys.
-Live account authorization, paid/account-specific limits, provider-side queue
-behavior and Android background operation still require device testing. Codec
-checks identify encoding; they do not prove that a lossless file was never made
-from a lossy source.
-
-Focused local fixtures can be run without account keys:
-
-```bash
-python3 tests/debrid-settings/run.py
-python3 tests/debrid-rdad/run.py
-python3 tests/debrid-pmtb/run.py
-python3 tests/debrid-tls/run.py
-```
+Account limits, provider queues and background behavior depend on the selected service. Encoding checks cannot prove lossless origin. See [known limitations](KNOWN_LIMITATIONS.md).

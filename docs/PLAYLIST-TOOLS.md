@@ -3,7 +3,7 @@
 Enable **Mixed-source playlists** in Patches & tweaks, then open **Playlist tools** from Library or the patch settings.
 
 - **Open playlist link** accepts public or unlisted YouTube playlist links. Choose Open, Keep in library, or Save a device copy. A saved link follows the source playlist; a device copy is independent and editable.
-- **Save queue** saves the current track and the remaining retained queue in playback order, excluding played history and duplicate track identities.
+- **Save queue** saves the current track and the remaining queue in playback order, excluding played history and duplicate track identities.
 - Device playlists support renaming, moving tracks, removing tracks and deletion. These actions change the device copy only.
 
 These tools store metadata, not downloaded audio. YouTube playback still needs a working connection and accessible content. Private playlists require the appropriate account. Radio mixes cannot be bookmarked. Copies are limited to 5,000 unique tracks; a failed continuation prevents saving a partial copy.

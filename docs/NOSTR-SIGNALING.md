@@ -1,11 +1,10 @@
 # Download connection coordination
 
 The Soulseek patch includes opt-in Nostr coordination between explicitly paired
-phones. It uses a separate generated identity and does not send Telegram messages.
+phones. It uses a separate app identity and does not send Telegram messages.
 It carries encrypted peer checks, selected-file offers, recipient authorization
 and direct UDP candidates. File bytes use the direct or fallback transport;
-Nostr does not discover music or carry the audio. Beta.9 also adds a separate,
-opt-in public profile scan to find compatible app keys; see
+Nostr does not discover music or carry the audio. An opt-in public profile scan finds compatible app keys; see
 [peer discovery](PEER-DISCOVERY.md). Public keys still require explicit pairing.
 
 ## Setup
@@ -73,7 +72,7 @@ reply echoes the request nonce and recipient identity. Only a matching grant
 queues the receiver's download. A failed direct punch can still permit fallback.
 
 The direct descriptor contains a bounded IPv4 candidate list and the provider's
-exact certificate. STUN discovery and QUIC use the same retained UDP socket.
+exact certificate. STUN discovery and QUIC use the same UDP socket.
 Both phones open their mappings, then the receiver attempts certificate-pinned
 QUIC. This is a bounded direct connection path, not a full ICE/TURN implementation;
 some carrier-grade or endpoint-dependent NATs will still prevent it. The download
@@ -103,7 +102,7 @@ Allowed message types are `hello`, `offer`, `answer`, `candidate`, `cancel`,
 `ping`, `pong`, `pex_request` and `pex_response`. The two PEX messages are sent
 only to already trusted peers after a compatible `app.bitchord.pex/1` hello.
 Their bounded payloads carry original signed public profiles, never private offers
-or grants. Older clients retain the existing hello/file-transfer behavior.
+or grants. Clients without discovery support can use the hello/file-transfer protocol.
 Session IDs are 32 lowercase hexadecimal characters; payloads are JSON objects limited to 8 KiB. The engine bounds queued commands, incoming
 messages, replay history, peer traffic and WebSocket frames. It rejects malformed,
 untrusted, expired, replayed or incorrectly signed events before delivery.
@@ -112,16 +111,16 @@ File messages use an inner `app.bitchord.bulk-signal/1` envelope. `offer` carrie
 the immutable `app.bitchord.bulk/1` file metadata; `answer` carries `request` or
 `grant`, and `cancel` revokes a pending offer. Approval sessions are bounded to
 two minutes and are cleared when coordination stops. Already accepted durable
-jobs retain their authenticated file binding. Expiration does not revoke bytes
+jobs preserve their authenticated file binding. Expiration does not revoke bytes
 or capabilities already delivered to an authorized recipient.
 
 Public STUN candidates are configured separately from signaling. The candidate
 source is [mondain's list](https://gist.github.com/mondain/b0ec1cf5f60ae726202e),
 revision `2d2b96b4508a38d342e0228d46eab84dad2398a3`. The parser bounds imports,
 deduplicates entries and selects at most three hosts from the bundled snapshot
-when the user starts a direct runtime. The list is not downloaded at startup.
-Google and Cloudflare endpoints are retained as candidate defaults if the bundled
-snapshot cannot be read. Discovery sends bounded STUN requests, retains the
+when you start a direct runtime. The list is not downloaded at startup.
+Google and Cloudflare endpoints are saved as candidate defaults if the bundled
+snapshot cannot be read. Discovery sends bounded STUN requests, stores the
 mapped socket for QUIC and stops direct I/O when the active network changes.
 
 ## Public app discovery and PEX
@@ -134,7 +133,7 @@ The app enforces signatures, strict fields/tags and a validity period of at most
 300 seconds. A profile advertises supported transport names, not endpoint
 addresses, files or current reachability. Publishing is a separate explicit
 opt-in and ends when discovery is stopped or its screen leaves the foreground.
-Relays can retain previously published data after local shutdown or expiration.
+Relays can preserve previously published data after local shutdown or expiration.
 
 A ten-second scan can start with zero paired peers. PEX supplements it only when
 an existing paired connection negotiates support. Each response contains at most
@@ -174,31 +173,4 @@ configured relays before filling free slots, up to three active relays. Paired
 phones still need a common working relay; replacing established relays requires
 coordinating the change with the other phone and checking paired delivery.
 
-Regenerate the pinned candidate snapshot with:
-
-```bash
-python3 tools/update_nostr_relays.py --offline --check
-```
-
-## Checks
-
-Native tests use a local relay fixture rather than public accounts or messages.
-They cover two-session delivery, authentication failures, message bounds,
-expiration, replay, cancellation and shutdown. Application tests also cover
-offer consent, session/source/file/nonce binding, IPFS grants, direct candidate
-bounds, destination/format snapshots and duplicate-grant rejection. Direct
-transport tests cover real loopback QUIC and the same-socket STUN boundary.
-Android Keystore operation, public-relay acceptance, real NAT traversal and device
-lifecycle still require phone testing.
-
-```bash
-python3 tests/soulseek/run.py
-python3 tests/coordination/run.py
-python3 tests/bulk-coordination/run.py
-python3 native/direct/test_runtime.py
-cargo test --locked --manifest-path native/soulseek/Cargo.toml
-```
-
-References: [NIP-01](https://github.com/nostr-protocol/nips/blob/master/01.md),
-[NIP-44](https://github.com/nostr-protocol/nips/blob/master/44.md),
-[NIP-40](https://github.com/nostr-protocol/nips/blob/master/40.md).
+References: [NIP-01](https://github.com/nostr-protocol/nips/blob/master/01.md), [NIP-44](https://github.com/nostr-protocol/nips/blob/master/44.md), [NIP-40](https://github.com/nostr-protocol/nips/blob/master/40.md).

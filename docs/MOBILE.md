@@ -1,6 +1,6 @@
 # Install with Morphe
 
-I install the beta.18 MPP with Morphe on my phone, without a computer or root access. For this local build I use **Sources → + → Local** and select the supplied MPP; the published feed remains unchanged.
+Install the patches with Morphe on Android, without root access. To install an MPP file directly, choose **Sources → + → Local** and select the file.
 
 ## 1. Download Morphe and BitChord
 
@@ -12,9 +12,9 @@ Choose the APK for your phone:
 | --- | --- |
 | Most current Android phones | `BitChord-v1.9_arm64-v8a.apk` |
 | Older 32-bit ARM phones running Android 8+ | `BitChord-v1.9_armeabi-v7a.apk` |
-| x86-64 Android devices or emulators | `BitChord-v1.9_x86_64.apk` |
+| x86-64 Android devices | `BitChord-v1.9_x86_64.apk` |
 
-I verify the three supported APK architectures structurally and run scoped playback and interface tests in x86_64 Waydroid. I have not qualified BitChord 1.9 on physical ARM phones; I include the exact limits in the [verification report](VERIFICATION-1.1.0-beta.18.md).
+See [known limitations](KNOWN_LIMITATIONS.md).
 
 Use the normal Android APK. TV, Wear OS, split APK packages and already patched APKs are not suitable inputs. Keep the original APK in Downloads; you will select it in Morphe.
 
@@ -24,7 +24,7 @@ Open this link on your phone:
 
 [Add BitChord Morphe Patches to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)
 
-Accept Morphe's prompt. You can also add it manually under **Sources → + → Remote** with:
+Accept Morphe's confirmation. You can also add it manually under **Sources → + → Remote** with:
 
 ```text
 https://github.com/Hexclyde/bitchord-morphe-patches
@@ -57,7 +57,7 @@ See [source download problems](TROUBLESHOOTING.md#the-source-shows-unnamed-or-me
    - **Unofficial Telegram music**
    - **Install as Bitchord+**
    - **Sign in with MicroG**, if you use MicroG RE. It's harmless without it: the option just doesn't show.
-   - Any of the extra patches you want: **Sing**, **Pitch control**, **Loudness level**, **Sleep timer fade-out**, **Battery saver**, **Lossless addons over Bluetooth**, **Per-download quality**, **Headphone correction**, **Equaliser per output**, **DJ mode**, **JamesDSP**, **Audio and video switch**, **Play alongside other apps**, **Steady playback**, **Smart downloads**, **Mixed-source playlists**, **Flac Downloader Audio**, **Unofficial Soulseek audio**, **Streamseek previews** and **Source-independent AutoMix**. I leave new playback features off by default. Source-independent AutoMix retains its existing enabled default. Their settings are under **Settings → Patches & tweaks**.
+   - Any of the extra patches you want: **Sing**, **Pitch control**, **Loudness level**, **Sleep timer fade-out**, **Battery saver**, **Lossless addons over Bluetooth**, **Per-download quality**, **Headphone correction**, **Equaliser per output**, **DJ mode**, **JamesDSP**, **Audio and video switch**, **Play alongside other apps**, **Steady playback**, **Smart downloads**, **Mixed-source playlists**, **Flac Downloader Audio**, **Unofficial Soulseek audio**, **Streamseek previews** and **Source-independent AutoMix**. I leave new playback features off by default. Source-independent AutoMix is selected by default. Their settings are under **Settings → Patches & tweaks**.
 
 3. Leave **Telegram application API ID** at **0** and **Telegram application API hash** empty. Enter your personal details in BitChord after installation.
 4. Open **Install as Bitchord+ → Installation name** to choose an app name. Leave it empty for **Bitchord+**. Names can contain up to 80 characters and must fit on one line. A name containing Telegram must include **Unofficial Telegram**.
@@ -87,4 +87,4 @@ Installing an update with the same package and key keeps the app's existing data
 
 ## Testing builds
 
-New versions are tried out on a separate `testing` branch before they reach this source. To help test one, add `https://raw.githubusercontent.com/Hexclyde/bitchord-morphe-patches/refs/heads/testing/patches-bundle.json` as a second source in Morphe and turn on **Experimental app versions** on it. Patch from that source with the normal one turned off, and keep using the same signing key. When the version is released, the normal source offers it as an update. The README's [Testing builds](../README.md#testing-builds) section has more.
+For experimental patches from the `testing` source, add `https://raw.githubusercontent.com/Hexclyde/bitchord-morphe-patches/refs/heads/testing/patches-bundle.json` as a second source in Morphe and turn on **Experimental app versions** on it. Patch from that source with the normal one turned off, and keep using the same signing key. The README's [Testing builds](../README.md#testing-builds) section has more.

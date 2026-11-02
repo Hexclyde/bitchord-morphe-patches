@@ -6,12 +6,6 @@ paired-phone files are downloaded completely and verified before saving. They do
 not supply live playback or automatically replace YouTube. Completed phone copies
 can be played through the normal local-file workflow.
 
-The `1.1.0-beta.9` testing update builds on the combined BitChord 1.9 beta.8
-release. It adds guided Soulseek setup, a dedicated search screen, an explicit
-source choice for eligible manual single-track downloads, adaptive search and
-opt-in compatible-peer discovery.
-See [testing instructions](SOULSEEK-TESTING.md).
-
 ## Current implementation
 
 | Feature | Behavior |
@@ -21,17 +15,16 @@ See [testing instructions](SOULSEEK-TESTING.md).
 | First setup | Choose Phone, Telegram main channel or Both, then enable and order audio formats |
 | Paired sharing | Explicitly select complete local audio files; send offers to saved app public keys |
 | Coordination | Signed, encrypted Nostr offer, recipient request and source grant |
-| Direct path | Retained-socket public STUN discovery, reciprocal UDP punching and certificate-pinned QUIC |
+| Direct path | Same-socket public STUN discovery, reciprocal UDP punching and certificate-pinned QUIC |
 | Fallback paths | Embedded I2P streams, Tor onion streams and paired IPFS Bitswap |
 | Transfer state | Per-item journals, verified chunk checkpoints, pause, cancel and explicit restart recovery |
 | Publication | Byte-preserving phone files and confirmed original-document Telegram uploads |
 
-The runtimes execute inside the patched app. No VPS, custom gateway, bot or
-companion app is required. Public STUN servers, Nostr relays and the existing
+The runtimes execute inside the patched app. No VPS, custom gateway or companion app is required. Public STUN servers, Nostr relays and the existing
 Soulseek, I2P, Tor and Telegram networks still provide infrastructure. The
 Soulseek patch works without the Telegram patch when Phone is selected.
 
-The build also includes [optional debrid downloads](DEBRID.md). Those use
+The patch also provides [optional debrid downloads](DEBRID.md). Those use
 an explicitly selected service account to resolve a supplied link or magnet and
 save selected audio through the same destination publisher. Their keys and cloud
 transfers are separate from Nostr pairing and native transport fallback.
@@ -89,7 +82,7 @@ AAC, Vorbis and MP3. Each numbered row has an enable switch and drag handle,
 like BitChord's Sources list. Drag rows to change their priority, or use the
 handle's accessible move actions. At least one format must remain enabled.
 Save the choices to apply the new order. Filename extensions provide search hints. Completed files
-are inspected for their actual encoding before publication. Container names can
+are inspected for their actual encoding before publication. File extensions can
 be ambiguous: an M4A may contain ALAC or AAC, and Ogg may contain Vorbis or Opus.
 Changing preferences does not rewrite the policy captured by an accepted job.
 Encoding checks do not prove the artist, recording, mastering history or an
@@ -110,7 +103,7 @@ and start Download again if it has expired. Back, cancellation and process death
 never start that original continuation automatically.
 
 This source choice is scoped to the manual single-track path. Album/playlist
-loops, retry-manager work and the existing cached-folder export branch retain
+loops, retry-manager work and the existing cached-folder export branch preserve
 their existing behavior. Explicit addon and local-file selections, including
 Telegram and Soulseek files, keep their selected source rather than entering a
 fresh search. The action does not
@@ -162,9 +155,9 @@ a different original or append unverified bytes.
 
 | Route | Implementation and limits |
 | --- | --- |
-| Direct | STUN and QUIC share the same retained IPv4 UDP socket. Nostr carries endpoint candidates and the provider's certificate; the receiver pins that certificate. Reciprocal punching precedes connection attempts. Restrictive NATs can still prevent a connection. |
+| Direct | STUN and QUIC share the same IPv4 UDP socket. Nostr carries endpoint candidates and the provider's certificate; the receiver pins that certificate. Reciprocal punching precedes connection attempts. Restrictive NATs can still prevent a connection. |
 | I2P | Embedded i2pd with authenticated reseed certificates and reliable I2P streams. A non-exported private Android service process owns the router. |
-| Tor | Bundled Guardian Tor, authenticated local control and an ephemeral v3 onion service. A separate non-exported process owns the runtime; no Ricochet desktop client is included. |
+| Tor | Bundled Guardian Tor, authenticated local control and an ephemeral v3 onion service. A separate non-exported process owns the runtime; the embedded runtime runs independently of the Ricochet desktop client. |
 | IPFS | Standard Bitswap over libp2p Noise/Yamux/TCP, restricted to paired peers and per-file publication grants. It needs a reachable provider endpoint. |
 
 IPFS currently has no public DHT, mDNS, gateway, relay or DCUtR. It is not a
@@ -191,14 +184,14 @@ containing each block's hash and length. The manifest hash is bound to the signe
 offer. Every received chunk and the complete file are verified. A CID authenticates
 bytes, not their recording metadata.
 
-Per-item journals retain the source binding, destination, format choices and
+Per-item journals preserve the source binding, destination, format choices and
 verified checkpoint. Recovery rechecks persisted data and discards an unverified
 tail. One bulk writer owns staging at a time; route changes cannot append from
 two writers concurrently. Restarted jobs wait for explicit Resume. Pause and
 Cancel stop active I/O and prevent old work from publishing a result.
 
 Each source file is limited to 256 MiB. Application sharing/download staging is
-bounded separately from the IPFS native store, which can retain up to 512 MiB of
+bounded separately from the IPFS native store, which can preserve up to 512 MiB of
 blocks in addition to application staging. Soulseek has its own bounded transfer
 cache. Publication and Telegram upload can require additional temporary space.
 Insufficient storage is reported before a new complete file is accepted.
@@ -236,12 +229,7 @@ audio bytes travel over the selected download route. Relays are not a music
 index. A transfer fallback does not restore a failed signaling channel, and a
 new grant requires a working shared relay.
 
-The four native transports are built for all three supported ABIs. Local
-protocol, JNI, stream and transfer fixtures check framing, authorization,
-corruption, cancellation, chunk recovery and publication behavior. Public Tor
-and I2P bootstrap, real carrier/router NAT traversal, Android background behavior,
-Keystore operation and live Telegram delivery still need phone qualification.
-Compilation and loopback success do not establish public-network reachability.
+Network reachability depends on the paired phones, relays and selected transport. See [known limitations](KNOWN_LIMITATIONS.md#soulseek-and-compatible-peers).
 
 ## Sources and licenses
 
@@ -258,5 +246,4 @@ The adapter is GPL-3.0-or-later. Notices and locked dependency inventories are i
 [SeekerAndroid](https://github.com/jackBonadies/SeekerAndroid) at
 `b2dda3d552186071744f29014b635264d1867187` and
 [StreamSeek](https://github.com/ndr-brt/streamseek) at
-`851efcfcbf66e8b3216191d56616af378e9573b0` were references; their applications
-and .NET/Node runtimes are not bundled. Ricochet Refresh is a Tor design reference.
+`851efcfcbf66e8b3216191d56616af378e9573b0` inspire the search and preview design. Ricochet Refresh informs the Tor design.

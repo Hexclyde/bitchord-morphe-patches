@@ -32,7 +32,7 @@ Save the patch log if Morphe fails. Read it for private information before shari
 
 ## API details are rejected
 
-Copy **App api_id** and **App api_hash** from your own application at [my.telegram.org/apps](https://my.telegram.org/apps). Use the numeric ID and its matching 32-character hash. The app title, short name, phone number, bot token and login code do not belong in these fields.
+Copy **App api_id** and **App api_hash** from your own application at [my.telegram.org/apps](https://my.telegram.org/apps). Use the numeric ID and its matching 32-character hash. The app title, short name, phone number and login code do not belong in these fields.
 
 If Telegram's registration form fails, follow its displayed requirements. Use your existing application if one is already registered. Repeated submissions or a different example name do not guarantee acceptance.
 
@@ -97,6 +97,6 @@ Stop playback before clearing **Storage → Clear Telegram audio cache** on the 
 
 ## Unofficial Telegram page closes or cannot open
 
-Beta.15 keeps BitChord open when an uncaught Telegram page startup/render error occurs. If overlay protection is refused, the error screen appears before credential entry; it does not bypass that protection. Choose **Copy crash details** and share the resulting exception classes and stack frames. Exception messages and account/API values are excluded. Your Telegram session, application credentials and music data are retained. A native bridge that cannot start still shows its existing Connection error.
+The Telegram page displays a diagnostic screen for startup or rendering errors. **Copy crash details** copies exception classes and stack frames without account/API values or exception messages. If screen protection fails, this screen appears before credential entry. A native bridge startup failure shows **Connection error**.
 
-The reported phone crash had no trace available. Automated checks reproduce permission-denial, startup-linkage and null-error-detail failures, but do not establish which caused that particular phone crash. Retest opening the page on the phone; if a diagnostic screen appears, its copied details identify the next fix. Do not clear app data as a troubleshooting prerequisite.
+Do not clear app data as a troubleshooting prerequisite.

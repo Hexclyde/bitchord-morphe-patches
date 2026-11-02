@@ -1,21 +1,18 @@
-# Integrated Downloads — beta.16.4
+# Downloads and Download Explorer
 
-The original app remains BitChord 1.9. Install the **1.1.0-beta.16.4 Morphe bundle** and
-apply Unofficial Soulseek audio (plus Unofficial Telegram music for Telegram features).
-All earlier changes, including unpublished beta.9 work, are retained.
+Select **Unofficial Soulseek audio** in Morphe for BitChord 1.9, then open Downloads from the bottom navigation or Library.
 
 ## Player integration
 
 Downloads is the fifth tab, between Explore and Library, in both native navigation
 styles. It uses BitChord's original Downloads glyph. The hub, Explorer and batch
-review render in the player's content area through its retained AndroidView API.
+review render in the player's content area through its native AndroidView API.
 BitChord owns the mini-player, playback controls and bottom navigation. Downloads
 supplies its own compact header while visible, hiding the duplicate host profile
 bar and accounting for the system inset. Back first returns from a download detail to the hub, then to the
 previous player tab. The Compose back handler allows the expanded player and dialogs
-to retain their normal precedence. Existing setup/advanced transfer screens remain
-available as separate settings activities. The older experimental 1.8.1 target uses
-standalone pages; the new player slot and batch hook are qualified for 1.9.
+to preserve their normal precedence. Existing setup/advanced transfer screens remain
+available as separate settings activities.
 
 ## Views and controls
 
@@ -36,8 +33,7 @@ count, display-sort control and view switch sit above the cards. Sorting only
 changes presentation; Queue keeps its existing order. Management controls remain
 under the settings gear, with a Public sharing link below the file list.
 Public-sharing configuration is not presented as a completed download. The native Downloads icon remains conditional on installing the
-add-on. See the [beta.17 verification report](VERIFICATION-1.1.0-beta.18.md) for
-scoped Waydroid checks and remaining physical-phone qualification.
+add-on. See [known limitations](KNOWN_LIMITATIONS.md).
 
 ## Transfer and file actions
 
@@ -51,7 +47,7 @@ The result-card **File details** panel shows available filename, folder, exact s
 
 A manual Download on a YouTube catalogue track opens Explorer. It queries the host's
 active-for-download addon registry and optional Soulseek account. Disabled and
-streaming-only sources are excluded. Addon rows retain their source IDs, reported
+streaming-only sources are excluded. Addon rows preserve their source IDs, reported
 quality and duration; Soulseek rows identify a particular peer and file, format and
 size. The explorer bounds each search to 20 addons, 12 rows per addon and 20 displayed
 Soulseek results, with a 25-second addon wait. Slow sources do not block admission.
@@ -77,12 +73,12 @@ unique normalized title-and-artist matches. Multiple matches and missing tracks
 remain unselected. Review all selections before submitting the selected rows now
 or to the queue. Already submitted rows are excluded from retries; failed rows can
 be reselected. Batch plans expire after 30 minutes or process death without starting
-anything. Saved Soulseek metadata is retained with the choice so a later search
+anything. Soulseek metadata is stored with the choice so a later search
 cannot replace its peer/file. There are up to 256 waiting selected Soulseek files.
 
 Reported quality is not proof of provenance, a bit-perfect recording match or an
 independently enumerated rendition. Host addon downloads still use BitChord's
-quality setting. Soulseek validates the selected completed audio container before
+quality setting. Soulseek validates the selected completed audio file before
 publishing original bytes; it never silently substitutes another file.
 
 ## Downloads and public sharing
@@ -133,22 +129,14 @@ retry. Files are limited to 256 MiB and upload/read-back needs temporary free sp
 The optional Telegram patch must be present. A remote copy is only available while
 the message/channel/account remains accessible.
 
-## Background work and qualification
+## Background work
 
 Explicit sharing and archive actions start the existing data-sync foreground
 service. Its notification opens Downloads. Stop and Android's background timeout
-pause archive work, cancel upload grants and retain journals/originals for review.
+pause archive work, cancel upload grants and preserve journals/originals for review.
 The service is not started to advertise files at boot. The host's initial queues
 and unsubmitted source plans remain process-local; destination and archive journals
 are durable and explicitly resumed.
-
-Automated coverage includes Android view/controller and lifecycle checks, partial
-batch submission, retained Soulseek choices, real loopback peer browse/withdrawal,
-upload receipt/read-back failures, local-file preservation and original-byte restore.
-Each patched 1.9 ABI is checked for the exact host method/field descriptors. These
-checks do not replace installation on a connected Android/Waydroid device or actual
-account/remote-peer/NAT tests. New phrases currently use English fallback entries
-in the existing 20-language catalogue.
 
 ## Download views
 
@@ -158,7 +146,7 @@ The extra navigation tab is installed only with the download add-on patch. Disab
 
 ### Optional Soulseek previews
 
-Install **Streamseek previews** alongside the Soulseek download patch and enable its capsule switch to reveal inline audio preview controls in result cards. Play, pause/resume and stop without leaving the result list; choose Now or Later to retain the same selected transfer. Recording checks open only through the separate details control. General Soulseek source playback remains guarded. See [preview behavior, local-reference comparison and limits](STREAMSEEK-PREVIEW.md).
+Install **Streamseek previews** alongside the Soulseek download patch and enable its capsule switch to reveal inline audio preview controls in result cards. Play, pause/resume and stop without leaving the result list; choose Now or Later to preserve the same selected transfer. Recording checks open only through the separate details control. General Soulseek source playback remains guarded. See [preview behavior, local-reference comparison and limits](STREAMSEEK-PREVIEW.md).
 
 Explorer uses individual source cards: a source-family
 filter, actual result count, reported-quality/file-size sorting, format badges,

@@ -1,6 +1,6 @@
 # Compatible-peer discovery
 
-Beta.9 can find recent public profiles from other compatible app clients. It
+The download patch can find recent public profiles from other compatible app clients. It
 combines an explicit Nostr relay scan with small peer-exchange referrals from
 phones you have already paired. Both use the original signed public profile.
 A result proves control of that app key, not the person's identity, current
@@ -24,12 +24,12 @@ BitTorrent swarms. Soulseek's manual music search remains a separate path.
    keys, advertised transports and expiry; it does not label a key online.
 6. Use **Copy key for pairing**, compare the complete key through a trusted
    channel, then explicitly add it to **Trusted peers** in Connection setup.
-   Pairing and selected-file offers retain their existing consent checks.
+   Pairing and selected-file offers preserve their existing consent checks.
 
 The list initially shows up to 50 rows. **Show more** reveals another 50, up to
 the 512-profile cache limit. A profile is valid for no more than five minutes;
 expired and invalid profiles are removed from results. A relay may reject this
-application protocol or retain no recent profiles, so an empty scan does not
+application protocol or store no recent profiles, so an empty scan does not
 mean that all relays are offline.
 
 **Stop discovery** ends local reading/publication. Leaving the screen also stops
@@ -50,7 +50,7 @@ Publishing continues only during the explicitly started session while the
 discovery screen is open. Stopping discovery or closing the page stops profile
 renewals immediately; it does not retract an already signed profile. That
 profile can remain discoverable on relays and in peer caches until its signed
-expiry, at most five minutes after creation. Relays may retain stored copies
+expiry, at most five minutes after creation. Relays may store copies
 longer, but this app rejects expired profiles. See [privacy](../PRIVACY.md).
 
 ## How peer exchange helps
@@ -59,7 +59,7 @@ A relay scan supplies the starting public profiles even with zero paired peers.
 If paired coordination is running and discovery is active, compatible trusted
 peers can negotiate the app's PEX capability and exchange bounded batches of
 public profiles they have already verified. This can widen the candidate list
-without a separate relay lookup for each referral. Older paired builds retain
+without a separate relay lookup for each referral. Older paired builds preserve
 normal file-transfer behavior without receiving unsupported PEX messages.
 
 Each response carries at most eight signed profiles within an 8 KiB payload.
@@ -84,6 +84,4 @@ existing Direct → I2P → Tor → IPFS route selection applies only to routes 
 in the authenticated offer. Discovery does not match profiles to requested songs,
 create file sessions automatically or combine chunks from several providers.
 
-See [Nostr signaling](NOSTR-SIGNALING.md), [download behavior](SOULSEEK.md) and
-[the testing checklist](SOULSEEK-TESTING.md). Public-relay acceptance, NAT paths,
-Android background behavior and physical-device UI still require phone testing.
+See [Nostr signaling](NOSTR-SIGNALING.md), [download behavior](SOULSEEK.md) and [known limitations](KNOWN_LIMITATIONS.md#soulseek-and-compatible-peers).
