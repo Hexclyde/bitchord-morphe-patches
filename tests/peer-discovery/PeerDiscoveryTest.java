@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 
 /** Network-free tests exercise real coordinator boundaries through its native adapter seam. */
@@ -319,8 +320,17 @@ public final class PeerDiscoveryTest {
         Block opened = new Block();
         f.nativeApi.openBlock = opened;
         f.discovery.setEnabled(true);
-        f.discovery.startScan();
-        opened.reached();
+        AtomicReference<Throwable> startFailure = new AtomicReference<>();
+        // startScan may wait for its worker while announcing paired peers.
+        Thread start =
+                new Thread(
+                        () -> {
+                            try {
+                                f.discovery.startScan();
+                            } catch (Throwable failure) {
+                                startFailure.set(failure);
+                            }
+                        });
         CountDownLatch stopped = new CountDownLatch(1);
         Thread stop =
                 new Thread(
@@ -328,19 +338,32 @@ public final class PeerDiscoveryTest {
                             f.discovery.stop();
                             stopped.countDown();
                         });
-        stop.start();
-        check(
-                !stopped.await(30, TimeUnit.MILLISECONDS),
-                "stop waits for local open ownership to resolve");
-        opened.release.countDown();
-        check(
-                stopped.await(3, TimeUnit.SECONDS),
-                "stop closes the handle created by in-flight open");
-        check(
-                f.nativeApi.opens.get() == 1
-                        && f.nativeApi.closes.get() == 1
-                        && !f.discovery.snapshot().running,
-                "native open/stop has no leaked handle");
+        try {
+            start.start();
+            opened.reached();
+            stop.start();
+            check(
+                    !stopped.await(30, TimeUnit.MILLISECONDS),
+                    "stop waits for local open ownership to resolve");
+            opened.release.countDown();
+            check(
+                    stopped.await(3, TimeUnit.SECONDS),
+                    "stop closes the handle created by in-flight open");
+            start.join(3000);
+            check(!start.isAlive(), "in-flight start returns after native open resolves");
+            if (startFailure.get() != null)
+                throw new AssertionError("in-flight start failed", startFailure.get());
+            check(
+                    f.nativeApi.opens.get() == 1
+                            && f.nativeApi.closes.get() == 1
+                            && !f.discovery.snapshot().running,
+                    "native open/stop has no leaked handle");
+        } finally {
+            opened.release.countDown();
+            start.join(3000);
+            stop.join(3000);
+            f.discovery.stop();
+        }
 
         Fixture close = new Fixture();
         close.start();
