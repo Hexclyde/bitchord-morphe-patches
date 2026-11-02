@@ -229,6 +229,7 @@ public final class SteadyPlayback {
     public static void loadControl(Object control) {
         if (control == null) return;
         synchronized (controls) {
+            if (!observedControls.containsKey(control)) cancelAnalysis();
             controls.put(control, -1);
             observedControls.put(control, true);
             configurationEpoch++;
@@ -371,18 +372,15 @@ public final class SteadyPlayback {
         long epoch;
         List<Object> known;
         synchronized (controls) {
-            if (maximum <= 0
-                    || !enabled
-                    || !gateObserved
-                    || controls.isEmpty()
-                    || observedControls.isEmpty()) return -1;
+            if (maximum <= 0 || !gateObserved || controls.isEmpty() || observedControls.isEmpty())
+                return -1;
             epoch = configurationEpoch;
             known = new ArrayList<>(observedControls.keySet());
         }
         try {
             long bytes = retained(known);
             synchronized (controls) {
-                if (!enabled || configurationEpoch != epoch) return -1;
+                if (configurationEpoch != epoch) return -1;
             }
             return Math.max(0, maximum / 4 - bytes);
         } catch (Exception | LinkageError unavailable) {
@@ -433,7 +431,7 @@ public final class SteadyPlayback {
         }
         if (analysisGrowth(maximum) < 0) return null;
         synchronized (controls) {
-            if (!enabled || configurationEpoch != epoch) return null;
+            if (configurationEpoch != epoch) return null;
             AnalysisLease lease = new AnalysisLease(maximum);
             analysisLeases.add(lease);
             controls.replaceAll((owner, previous) -> -1);
@@ -473,6 +471,7 @@ public final class SteadyPlayback {
             if (!observedControls.containsKey(control)) {
                 observedControls.put(control, true);
                 configurationEpoch++;
+                cancelAnalysis();
                 controls.replaceAll((owner, previous) -> -1);
             }
         }

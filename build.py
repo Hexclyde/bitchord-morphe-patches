@@ -13,6 +13,7 @@ from buildenv import (
     TOOLS,
     VERSION,
     jdk,
+    patch_version_source,
 )
 
 JDK = jdk()
@@ -42,11 +43,13 @@ def run(*args):
     subprocess.run([str(a) for a in args], check=True, env=ENV)
 
 
-def jar(path, base):
+def jar(path, base, *, compresslevel=None):
     # Publish completed archives atomically; readers never see a partly written JAR/MPP.
     with tempfile.TemporaryDirectory(prefix="telegram-archive-") as temp:
         staged = Path(temp) / path.name
-        with zipfile.ZipFile(staged, "w", zipfile.ZIP_DEFLATED) as z:
+        with zipfile.ZipFile(
+            staged, "w", zipfile.ZIP_DEFLATED, compresslevel=compresslevel
+        ) as z:
             for file in sorted(base.rglob("*")):
                 if file.is_file() and not any(
                     part.startswith(".") for part in file.relative_to(base).parts
@@ -92,6 +95,9 @@ jar(OUT / "compile-api.jar", OUT / "compile-api")
 sources = list((ROOT / "extensions/telegram/src/main/java").rglob("*.java")) + list(
     (TD / "src/main/java").rglob("*.java")
 )
+version_source = OUT / "PatchVersion.java"
+version_source.write_text(patch_version_source())
+sources.append(version_source)
 run(
     JAVAC,
     "-J-Xshare:off",
@@ -489,6 +495,6 @@ shutil.copy2(
     f"Manifest-Version: 1.0\nName: BitChord Morphe Patches\nVersion: {VERSION}\nPatcher-Version: {PATCHER_VERSION}\n\n"
 )
 output = OUT / BUNDLE_NAME
-jar(output, bundle)
+jar(output, bundle, compresslevel=9)
 print(f"Built {output} ({output.stat().st_size:,} bytes)")
 print(hashlib.sha256(output.read_bytes()).hexdigest())

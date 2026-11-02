@@ -43,7 +43,7 @@ val sourceAutomixPatch =
                 targets = listOf(AppTarget(version = "1.9", isExperimental = true, minSdk = 26)),
             )
         )
-        dependsOn(extrasSettingsPatch)
+        dependsOn(extrasSettingsPatch, playbackBufferGatePatch)
         execute {
             addSourceVerification()
             val timingPair = classDefBy("Lkotlin/Pair;")

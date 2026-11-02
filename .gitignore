@@ -13,6 +13,7 @@
 /ui-tests/src/test/java/app/bitchord/telegram/SourcePreference.java
 /ui-tests/src/test/java/app/bitchord/telegram/RecordingIdentity.java
 /ui-tests/src/test/java/app/bitchord/telegram/TelegramActivity.java
+/ui-tests/src/test/java/app/bitchord/telegram/PatchVersion.java
 /ui-tests/src/test/java/app/bitchord/telegram/TelegramStyle.java
 /ui-tests/src/test/java/app/bitchord/telegram/ApplicationCredentials.java
 /ui-tests/src/test/java/app/bitchord/telegram/LoginCodePolicy.java

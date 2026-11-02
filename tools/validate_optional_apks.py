@@ -26,6 +26,7 @@ def main():
             ["Source-independent AutoMix"],
             [
                 ("VerifySourceAutomixApk", []),
+                ("VerifyTravelFeaturesApk", [""]),
                 ("VerifyTransitionEditorApk", []),
                 ("VerifyPatchUiApk", ["false", "false", "true"]),
             ],

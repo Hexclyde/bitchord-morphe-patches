@@ -249,6 +249,40 @@ public class SourceAutomixTest {
     }
 
     @Test
+    public void boundedAnalysisRemainsAvailableWithReadAheadDisabled() throws Exception {
+        guardedLowMemory();
+        SteadyPlayback.setEnabled(false);
+        assertTrue(SteadyPlayback.allowLoading(dspControl, new DspParameters()));
+        SourceAutomix.heapMaximum = () -> 256L << 20;
+        SourceAutomix.heapUsed = () -> 120L << 20;
+        SteadyPlayback.heapBytes = SourceAutomix.heapMaximum;
+        SourceAudio.analysisFormats = () -> format(48000, 183_000_000);
+        java.util.concurrent.atomic.AtomicInteger decoded =
+                new java.util.concurrent.atomic.AtomicInteger();
+        java.util.List<String> messages = new java.util.ArrayList<>();
+        HostLog.observer = messages::add;
+        PlaybackService.dspDecoder =
+                (source, end, abort, chunks) -> {
+                    decoded.incrementAndGet();
+                    assertFalse(SteadyPlayback.enabled);
+                    assertEquals(8 << 20, dspControl.targetBufferBytesOverwrite);
+                    dspControl.allocator.allocatedCount = 1024;
+                    assertFalse(
+                            "The live analysis lease must stop further native allocation",
+                            SteadyPlayback.allowLoading(dspControl, new DspParameters()));
+                    dspControl.allocator.allocatedCount = 0;
+                    return null;
+                };
+        SourceAutomix.request(callback, item("content://music/phone-budget"), 183000L);
+        assertEquals(String.join("\n", messages), 1, decoded.get());
+        assertFalse(SteadyPlayback.enabled);
+        assertEquals(8 << 20, dspControl.targetBufferBytesOverwrite);
+        java.lang.reflect.Field leases = SteadyPlayback.class.getDeclaredField("analysisLeases");
+        leases.setAccessible(true);
+        assertTrue(((java.util.List<?>) leases.get(null)).isEmpty());
+    }
+
+    @Test
     public void lowMemoryUsesMeasuredDspInsteadOfSilentlyLosingEverySmartTransition() {
         guardedLowMemory();
         SourceAudio.analysisFormats = () -> format(48000, 2_000_000);

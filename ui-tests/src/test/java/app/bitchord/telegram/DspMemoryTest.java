@@ -294,6 +294,98 @@ public class DspMemoryTest {
     }
 
     @Test
+    public void newAuxiliaryOwnerCancelsAnalysisWithoutDroppingItsCeiling() throws Exception {
+        Control primary = register(new Allocator());
+        SteadyPlayback.setEnabled(false);
+        assertTrue(SteadyPlayback.allowLoading(primary, new Parameters()));
+        SourceAudio.DspMemory memory = memory(38 * MB);
+        Control artwork = new Control(new Allocator());
+        artwork.targetBufferBytesOverwrite = 125 << 20;
+        nativeControls.add(artwork);
+        SteadyPlayback.allowLoading(artwork, new Parameters());
+        assertTrue("An analysis lease cannot relax unknown new-owner growth", memory.cancelled());
+        assertEquals(0, memory.available(MAXIMUM, 38 * MB));
+        Method budget = SteadyPlayback.class.getDeclaredMethod("loadingBudget");
+        budget.setAccessible(true);
+        assertEquals(48 * MB, ((Number) budget.invoke(null)).longValue());
+        memory.close();
+        assertTrue(SteadyPlayback.allowLoading(artwork, new Parameters()));
+        assertEquals(125 << 20, artwork.targetBufferBytesOverwrite);
+        assertFalse(SteadyPlayback.enabled);
+    }
+
+    @Test
+    public void newMusicOwnerCancelsAnalysisBeforeItsLoadingPolicyChanges() throws Exception {
+        Control first = register(new Allocator());
+        SteadyPlayback.setEnabled(false);
+        SteadyPlayback.allowLoading(first, new Parameters());
+        SourceAudio.DspMemory memory = memory(38 * MB);
+        Control next = new Control(new Allocator());
+        nativeControls.add(next);
+        SteadyPlayback.loadControl(next);
+        assertTrue(memory.cancelled());
+        assertEquals(0, memory.available(MAXIMUM, 38 * MB));
+        assertEquals(8 << 20, next.targetBufferBytesOverwrite);
+        assertFalse(SteadyPlayback.enabled);
+        memory.close();
+        assertTrue(SteadyPlayback.allowLoading(next, new Parameters()));
+    }
+
+    @Test
+    public void disabledReadAheadLeaseAccountsForArtworkPoolsAndConcurrentMusicDecisions()
+            throws Exception {
+        Allocator a = new Allocator(), b = new Allocator(), art = new Allocator();
+        a.allocatedCount = b.allocatedCount = 8;
+        art.allocatedCount = art.availableCount = 16;
+        Control first = register(a), second = register(b), artwork = new Control(art);
+        artwork.targetBufferBytesOverwrite = 125 << 20;
+        nativeControls.add(artwork);
+        SteadyPlayback.allowLoading(artwork, new Parameters());
+        SteadyPlayback.setEnabled(false);
+        SteadyPlayback.allowLoading(first, new Parameters());
+        SteadyPlayback.allowLoading(second, new Parameters());
+        SourceAudio.DspMemory memory = memory(62 * MB);
+        assertFalse(memory.cancelled());
+        java.util.concurrent.CyclicBarrier barrier = new java.util.concurrent.CyclicBarrier(3);
+        java.util.concurrent.ExecutorService workers =
+                java.util.concurrent.Executors.newFixedThreadPool(3);
+        try {
+            List<java.util.concurrent.Future<Boolean>> decisions = new ArrayList<>();
+            for (Control control : new Control[] {first, second, artwork})
+                decisions.add(
+                        workers.submit(
+                                () -> {
+                                    barrier.await(10, java.util.concurrent.TimeUnit.SECONDS);
+                                    return SteadyPlayback.allowLoading(control, new Parameters());
+                                }));
+            assertFalse(decisions.get(0).get(10, java.util.concurrent.TimeUnit.SECONDS));
+            assertFalse(decisions.get(1).get(10, java.util.concurrent.TimeUnit.SECONDS));
+            assertTrue(
+                    "Owned pooled blocks can be reused without growing the heap",
+                    decisions.get(2).get(10, java.util.concurrent.TimeUnit.SECONDS));
+        } finally {
+            workers.shutdownNow();
+        }
+        while (art.availableCount > 0) {
+            assertTrue(SteadyPlayback.allowLoading(artwork, new Parameters()));
+            synchronized (art) {
+                art.availableCount--;
+                art.allocatedCount++;
+            }
+        }
+        assertFalse(SteadyPlayback.allowLoading(artwork, new Parameters()));
+        assertEquals(48, a.allocatedCount + b.allocatedCount + art.allocatedCount);
+        assertEquals(8 << 20, first.targetBufferBytesOverwrite);
+        assertEquals(8 << 20, second.targetBufferBytesOverwrite);
+        assertEquals(125 << 20, artwork.targetBufferBytesOverwrite);
+        memory.close();
+        assertTrue(SteadyPlayback.allowLoading(first, new Parameters()));
+        assertTrue(SteadyPlayback.allowLoading(second, new Parameters()));
+        assertTrue(SteadyPlayback.allowLoading(artwork, new Parameters()));
+        assertFalse(SteadyPlayback.enabled);
+    }
+
+    @Test
     public void inspectionFailureCannotOpenTheGateWhileDspStillOwnsMemory() {
         Control control = register(new Allocator());
         SourceAudio.DspMemory memory = memory(38 * MB);

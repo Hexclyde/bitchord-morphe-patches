@@ -3216,6 +3216,11 @@ private fun BytecodePatchContext.addAudioFocus() {
     )
 }
 
+internal val playbackBufferGatePatch = bytecodePatch {
+    dependsOn(extrasSettingsPatch)
+    execute { addPlaybackBufferGate() }
+}
+
 @Suppress("unused")
 val steadyPlaybackPatch =
     extrasPatch(
@@ -3224,6 +3229,7 @@ val steadyPlaybackPatch =
             "separate limits for Wi-Fi and mobile data, and waits through a lost signal instead " +
             "of stopping." +
             WHERE,
+        playbackBufferGatePatch,
     ) {
         addSteadyPlayback()
         markApplied("steadyPlaybackApplied")
@@ -3231,12 +3237,8 @@ val steadyPlaybackPatch =
 
 private const val STEADY = "Lapp/bitchord/telegram/SteadyPlayback;"
 
-/**
- * BitChord builds each player's load control with an 8 MB read-ahead; SteadyPlayback keeps each one
- * and changes its limit with the connection. BitChord's load error policy gets the retry count
- * Media3 asks before a song that ran dry stops, which SteadyPlayback raises while offline.
- */
-private fun BytecodePatchContext.addSteadyPlayback() {
+/** Observe native playback allocations without changing the ordinary loading policy. */
+private fun BytecodePatchContext.addPlaybackBufferGate() {
     val control = "Landroidx/media3/exoplayer/DefaultLoadControl;"
     val build =
         mutableClassDefBy(SERVICE).methods.single {
@@ -3250,7 +3252,7 @@ private fun BytecodePatchContext.addSteadyPlayback() {
     check(
         code.subList(0, made).any { (it as? NarrowLiteralInstruction)?.narrowLiteral == 8 shl 20 }
     ) {
-        "BitChord's player no longer reads 8 MB ahead, which is what Steady playback restores"
+        "BitChord's player no longer constructs its 8 MB loading policy"
     }
     val start = (code[made] as RegisterRangeInstruction).startRegister
     build.addInstruction(
@@ -3273,7 +3275,7 @@ private fun BytecodePatchContext.addSteadyPlayback() {
                 it.name == "targetBufferBytesOverwrite" && it.type == "I"
             }
     ) {
-        "Steady playback load control state changed"
+        "Playback loading control state changed"
     }
     val parameters = "Landroidx/media3/exoplayer/LoadControl\$Parameters;"
     val allocator = "Landroidx/media3/exoplayer/upstream/DefaultAllocator;"
@@ -3284,7 +3286,7 @@ private fun BytecodePatchContext.addSteadyPlayback() {
                 classDefBy(allocator).fields.any { it.name == name && it.type == "I" }
             }
     ) {
-        "Steady playback's native allocator or buffered-duration fields changed"
+        "Playback allocator or buffered-duration fields changed"
     }
     val loadingCode = load.implementation!!.instructions.toList()
     val firstLoading = loadingCode.firstOrNull() as? TwoRegisterInstruction
@@ -3297,7 +3299,7 @@ private fun BytecodePatchContext.addSteadyPlayback() {
                 it.definingClass == parameters && it.name == "playerId"
             } == true
     ) {
-        "Steady playback's loading-entry scratch register changed"
+        "Playback loading-entry scratch register changed"
     }
     load.addInstructionsWithLabels(
         0,
@@ -3311,6 +3313,10 @@ private fun BytecodePatchContext.addSteadyPlayback() {
         nop
     """,
     )
+    println("Added the shared playback analysis buffer gate")
+}
+
+private fun BytecodePatchContext.addSteadyPlayback() {
     val policy =
         mutableClassDefBy(
             "Lcom/music/bitchord/playback/PlaybackService\$PermanentAwareLoadErrorPolicy;"
@@ -3392,7 +3398,7 @@ private fun BytecodePatchContext.addSteadyPlayback() {
         invoke-static {v0}, $STEADY->loadError(I)V
     """,
     )
-    println("Added Steady playback to BitChord's load control and load error policy")
+    println("Added Steady playback to BitChord's load error policy")
 }
 
 /** The job Android runs for Smart downloads. */

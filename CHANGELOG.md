@@ -6,7 +6,7 @@
 - **Play the best source first** prepares upcoming songs through enabled sources with recording and timing checks. Separate queue entries can use different copies without changing an entry already playing.
 - Complete verified replacements reclaim obsolete YouTube playback cache while protecting active readers and saved **downloads**.
 - **Unofficial Telegram music** handles cached and bounded recording reads without crashing during two-player quality upgrades. Local message-cache eviction does not invalidate an unchanged remote file.
-- **Source-independent AutoMix** measures the selected recording with bounded DSP when full analysis cannot fit. Low-confidence analysis uses a basic crossfade without changing playback speed or pitch.
+- **Source-independent AutoMix** measures the selected recording with bounded DSP when full analysis cannot fit, including when Steady playback is off or not installed. Low-confidence analysis uses a basic crossfade without changing playback speed or pitch.
 - **Play alongside other apps** (new, off by default) continues music over other apps and pauses for calls, with recovery for the same track.
 - **Steady playback** (new, off by default) offers connection-specific read-ahead and offline retries, with combined music and artwork buffers bounded on smaller heaps.
 - **Smart downloads** (new, off by default) queues frequently played songs through enabled download sources in the selected quality.

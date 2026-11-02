@@ -4,7 +4,7 @@
 
 ## Playback and analysis
 
-I reuse valid stored analysis for the exact rendition and use full model analysis for a fresh measurement when memory permits. On smaller heaps I use bounded DSP analysis. The DSP path keeps the native confidence rules and measures the selected recording; it supplies no invented model beats or vocal evidence. Its temporary loading allowance protects both analysis and playback without changing the saved buffer setting.
+I reuse valid stored analysis for the exact rendition and use full model analysis for a fresh measurement when memory permits. On smaller heaps I use bounded DSP analysis. The DSP path keeps the native confidence rules and measures the selected recording; it supplies no invented model beats or vocal evidence. I enforce a temporary loading allowance during that analysis even when Steady playback is off or not installed, without changing its saved buffer settings or the ordinary playback policy. When the native loading hook cannot be qualified, analysis uses the conservative memory reserve.
 
 I bound DSP measurement to recordings of at most 15 minutes and sample rates up to 384 kHz. These are background-analysis limits; longer recordings and other playable formats preserve ordinary playback and crossfading.
 

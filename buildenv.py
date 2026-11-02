@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -12,6 +13,24 @@ VERSION = PROVENANCE["patch_bundle_version"]
 PATCHER_VERSION = PROVENANCE["patcher_version"]
 APP_VERSION = PROVENANCE["app_version"]
 BUNDLE_NAME = f"bitchord-patches-{VERSION}.mpp"
+
+
+def patch_version_source(version=None):
+    value = VERSION if version is None else version
+    if not isinstance(value, str) or not re.fullmatch(
+        r"[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?(?:\+[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?",
+        value,
+    ):
+        raise ValueError("Invalid patch bundle version")
+    return (
+        "package app.bitchord.telegram;\n\n"
+        "final class PatchVersion {\n"
+        f"    static final String VALUE = {json.dumps(value)};\n\n"
+        "    private PatchVersion() {}\n"
+        "}\n"
+    )
+
+
 PATCHES = [
     "Unofficial Telegram music",
     "Unofficial Soulseek audio",

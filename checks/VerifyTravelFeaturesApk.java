@@ -28,7 +28,11 @@ public final class VerifyTravelFeaturesApk {
     }
 
     private static boolean applied(Map<String, ClassDef> classes, String marker) {
-        ClassDef extras = classes.get(BASE + "SoundExtras;");
+        return applied(classes, BASE + "SoundExtras;", marker);
+    }
+
+    private static boolean applied(Map<String, ClassDef> classes, String owner, String marker) {
+        ClassDef extras = classes.get(owner);
         if (extras == null) return false;
         for (Method method : extras.getMethods())
             if (method.getName().equals(marker))
@@ -38,7 +42,7 @@ public final class VerifyTravelFeaturesApk {
         return false;
     }
 
-    private static void loadingGate(Map<String, ClassDef> classes, boolean steady) {
+    private static void loadingGate(Map<String, ClassDef> classes, boolean present) {
         ClassDef type = classes.get("Landroidx/media3/exoplayer/DefaultLoadControl;");
         Method loading = null;
         for (Method method : type.getMethods())
@@ -51,7 +55,7 @@ public final class VerifyTravelFeaturesApk {
                 loading = method;
             }
         check(loading != null, "Native loading decision exists");
-        if (!steady) return;
+        if (!present) return;
         List<Instruction> code = new ArrayList<>();
         loading.getImplementation().getInstructions().forEach(code::add);
         check(code.size() > 6, "The buffer gate retains the native loading body");
@@ -107,6 +111,7 @@ public final class VerifyTravelFeaturesApk {
                 classes.put(type.getType(), type);
         boolean focus = applied(classes, "audioFocusApplied");
         boolean steady = applied(classes, "steadyPlaybackApplied");
+        boolean bufferGate = steady || applied(classes, BASE + "SourceAutomix;", "applied");
         boolean smart = applied(classes, "smartDownloadsApplied");
         boolean sing = applied(classes, "singApplied");
         int built = 0,
@@ -180,9 +185,13 @@ public final class VerifyTravelFeaturesApk {
         check(built == (focus ? 1 : 0), "Alongside builder hook matches installed marker");
         check(moved == (focus ? 4 : 0), "All four focus changes match installed marker");
         check(playRequested == (focus ? 1 : 0), "Explicit pause clears call recovery tickets");
-        check(control == (steady ? 1 : 0), "Steady load control hook matches installed marker");
-        check(tick == (steady ? 1 : 0), "Buffer admission runs at every native loading decision");
-        loadingGate(classes, steady);
+        check(
+                control == (bufferGate ? 1 : 0),
+                "Shared load control hook matches installed features");
+        check(
+                tick == (bufferGate ? 1 : 0),
+                "Buffer admission runs at every native loading decision");
+        loadingGate(classes, bufferGate);
         check(retries == (steady ? 1 : 0), "Offline retry policy matches installed marker");
         check(
                 loadErrors == (steady ? 1 : 0),

@@ -9,6 +9,12 @@ import os, shutil, subprocess, urllib.request, zipfile, io, hashlib, sys
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 SOURCES = HERE / "src/test/java"
+sys.path.insert(0, str(ROOT))
+from buildenv import patch_version_source
+
+version_source = SOURCES / "app/bitchord/telegram/PatchVersion.java"
+version_source.parent.mkdir(parents=True, exist_ok=True)
+version_source.write_text(patch_version_source())
 for name in (
     "TelegramActivity.java",
     "TelegramStyle.java",
