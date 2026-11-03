@@ -160,6 +160,7 @@ TESTS = [
     "OutputEqTest",
     "DjModeTest",
     "VideoSwitchTest",
+    "VideoSwitchLyricsTest",
     "TravelFeaturesTest",
     "AudioOriginTest",
     "StorageSenseTest",

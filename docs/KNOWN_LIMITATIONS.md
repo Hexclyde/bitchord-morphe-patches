@@ -13,6 +13,7 @@ The patches target original BitChord 1.9 APKs for arm64-v8a, armeabi-v7a and x86
 - Sing separation adds about 1.60 seconds of latency. Enabling it or returning from a different speed or pitch needs fresh audio history and can cause a discontinuity. The filter handles unavailable or late inference. Physical-phone listening and thermal behavior remain unchecked. See [Sing settings](BETA18-FEATURES.md#sing-separation-model).
 - Android's capture notification cannot identify JamesDSP as the capturing app. **Start JamesDSP** needs its optional auto-start permission; otherwise BitChord opens it directly.
 - The Audio/Video switch applies to eligible YouTube Music songs outside Lyrics and Queue. Add-on tracks and local files have no paired video version.
+- Lyrics timing depends on the provider's result for the active version. Different edits can need a timing offset; keeping a provider choice does not establish that its timestamps match every edit.
 
 ## Telegram and recording details
 

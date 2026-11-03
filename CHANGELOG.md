@@ -1,6 +1,7 @@
 ## 1.1.0-beta.18
 
 - **Transition editor** gives sliders and numeric entry controls larger touch targets. Screen readers announce adjustment values with their units.
+- **Audio and video switch** carries a manual lyrics-provider choice between versions of the same queued song. Lyrics load again for the active version.
 - **Patches & tweaks** has a sliders icon, clearer feature descriptions and a searchable shortcut to Storage Sense.
 - **Stats** shows the average bitrate of the prepared rendition and its actual source. Old or ambiguous cache entries show an unknown source.
 - **Play the best source first** prepares upcoming songs through enabled sources with recording and timing checks. Separate queue entries can use different copies without changing an entry already playing.

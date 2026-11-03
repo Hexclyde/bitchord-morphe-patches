@@ -8,6 +8,7 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -25,8 +26,11 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -71,6 +75,153 @@ public final class VideoSwitch {
     /** The video id being switched from while a switch runs, or null. */
     private static volatile String switching;
 
+    private static final long VERSION_WAIT_MS = 30_000;
+    private static LyricsSwitch lyricsSwitch;
+
+    private static final class LyricsSwitch {
+        final String from, target, entry;
+        final boolean video;
+        final long deadline;
+        WeakReference<Object> model = new WeakReference<>(null);
+        Object provider;
+        List<?> key;
+        long generation;
+        boolean retryScheduled;
+
+        LyricsSwitch(Object source, Object replacement, long now) {
+            from = string(source, "videoId");
+            target = string(replacement, "videoId");
+            entry = string(source, "queueEntryId");
+            video = isVideo(replacement);
+            deadline = now + VERSION_WAIT_MS;
+        }
+
+        boolean belongs(Object playing, long now) {
+            return enabled
+                    && video == preferredVideo
+                    && now < deadline
+                    && entry != null
+                    && entry.equals(string(playing, "queueEntryId"))
+                    && (target.equals(string(playing, "videoId"))
+                            || from.equals(string(playing, "videoId")));
+        }
+    }
+
+    static void pendingLyricsSwitch(Object from, Object target, long now) {
+        lyricsSwitch = null;
+        String entry = string(from, "queueEntryId");
+        if (enabled
+                && entry != null
+                && entry.equals(string(target, "queueEntryId"))
+                && string(from, "videoId") != null
+                && string(target, "videoId") != null
+                && !Objects.equals(string(from, "videoId"), string(target, "videoId")))
+            lyricsSwitch = new LyricsSwitch(from, target, now);
+    }
+
+    /** The native lookup still clears its results, jobs and old timed lyrics. */
+    public static void lyricsBeforeReset(Object model, Object nextKey) {
+        boolean onMain =
+                Looper.getMainLooper() != null && Looper.myLooper() == Looper.getMainLooper();
+        beforeLyrics(
+                model,
+                nextKey,
+                onMain ? current() : null,
+                SystemClock.elapsedRealtime(),
+                onMain && !inParty());
+    }
+
+    public static void lyricsReady(Object model) {
+        boolean onMain =
+                Looper.getMainLooper() != null && Looper.myLooper() == Looper.getMainLooper();
+        LyricsSwitch pending = lyricsSwitch;
+        boolean waiting =
+                afterLyrics(
+                        model,
+                        onMain ? current() : null,
+                        SystemClock.elapsedRealtime(),
+                        onMain && !inParty());
+        if (waiting && pending != null && main != null && !pending.retryScheduled) {
+            pending.retryScheduled = true;
+            main.postDelayed(
+                    () -> {
+                        pending.retryScheduled = false;
+                        if (lyricsSwitch != pending) return;
+                        Object owner = pending.model.get();
+                        if (owner == null) lyricsSwitch = null;
+                        else lyricsReady(owner);
+                    },
+                    100);
+        }
+    }
+
+    static void beforeLyrics(
+            Object model, Object nextKey, Object playing, long now, boolean onMain) {
+        LyricsSwitch pending = lyricsSwitch;
+        if (pending == null) return;
+        try {
+            if (!onMain || !pending.belongs(playing, now) || !(nextKey instanceof List))
+                throw new IllegalStateException();
+            List<?> old = (List<?>) read(model, "lyricsFor");
+            List<?> next = (List<?>) nextKey;
+            Object provider = read(model, "selectedLyricsSource");
+            if (old == null
+                    || old.size() != 4
+                    || next.size() != 4
+                    || provider == null
+                    || !pending.from.equals(old.get(0))
+                    || !pending.target.equals(next.get(0))
+                    || !old.subList(1, 4).equals(next.subList(1, 4))
+                    || !pending.from.equals(string(read(model, "currentLyricsRequest"), "videoId")))
+                throw new IllegalStateException();
+            pending.key =
+                    java.util.Arrays.asList(
+                            next.get(0),
+                            new HashSet<>((Set<?>) next.get(1)),
+                            new ArrayList<>((List<?>) next.get(2)),
+                            next.get(3));
+            pending.model = new WeakReference<>(model);
+            pending.provider = provider;
+            pending.generation = ((Number) read(model, "lyricsGeneration")).longValue() + 1;
+        } catch (Exception | LinkageError unavailable) {
+            lyricsSwitch = null;
+        }
+    }
+
+    static boolean afterLyrics(Object model, Object playing, long now, boolean onMain) {
+        LyricsSwitch pending = lyricsSwitch;
+        if (pending == null) return false;
+        try {
+            if (!onMain
+                    || !pending.belongs(playing, now)
+                    || pending.model.get() != model
+                    || pending.provider == null
+                    || pending.key == null
+                    || !pending.key.equals(read(model, "lyricsFor"))
+                    || pending.generation != ((Number) read(model, "lyricsGeneration")).longValue()
+                    || read(model, "selectedLyricsSource") != null
+                    || !pending.target.equals(
+                            string(read(model, "currentLyricsRequest"), "videoId"))) {
+                lyricsSwitch = null;
+                return false;
+            }
+            if (!pending.target.equals(string(playing, "videoId"))) return true;
+            lyricsSwitch = null;
+            // This bridge invokes the provider chooser captured by BitChord's player UI.
+            model.getClass()
+                    .getMethod("bitchordSelectLyricsProvider", Object.class)
+                    .invoke(model, pending.provider);
+        } catch (Exception | LinkageError unavailable) {
+            if (lyricsSwitch == pending) lyricsSwitch = null;
+            HostLog.d("Version lyrics selection unavailable: " + unavailable);
+        }
+        return false;
+    }
+
+    private static Object read(Object owner, String name) throws ReflectiveOperationException {
+        return owner.getClass().getField(name).get(owner);
+    }
+
     static void init(Context context) {
         if (preferences != null || context == null) return;
         preferences =
@@ -84,6 +235,7 @@ public final class VideoSwitch {
 
     static void setEnabled(boolean on) {
         enabled = on;
+        if (!on) lyricsSwitch = null;
         SharedPreferences saved = preferences;
         if (saved != null) saved.edit().putBoolean("enabled", on).apply();
         attempted = null;
@@ -97,6 +249,7 @@ public final class VideoSwitch {
     /** BitChord's player connection, each time the app's screen reads the player's state. */
     public static void controller(Object mediaController) {
         if (mediaController != null && controller.get() != mediaController) {
+            lyricsSwitch = null;
             Object previous = controller.get();
             controller = new WeakReference<>(mediaController);
             if (main == null) main = new Handler(Looper.getMainLooper());
@@ -107,6 +260,7 @@ public final class VideoSwitch {
     /** A saved YouTube preference, independent of the current song's available versions. */
     static void setPreferredVideo(boolean video) {
         preferredVideo = video;
+        if (lyricsSwitch != null && lyricsSwitch.video != video) lyricsSwitch = null;
         attempted = null;
         SharedPreferences saved = preferences;
         if (saved != null) saved.edit().putBoolean("preferredVideo", video).apply();
@@ -151,6 +305,10 @@ public final class VideoSwitch {
     static void trackChanged() {
         attempted = null;
         missing.clear();
+        LyricsSwitch pending = lyricsSwitch;
+        Object playing = current();
+        if (pending != null && (!pending.belongs(playing, SystemClock.elapsedRealtime())))
+            lyricsSwitch = null;
         if (main != null) main.post(ENFORCE);
     }
 
@@ -253,6 +411,8 @@ public final class VideoSwitch {
         try {
             Object playing = current();
             if (playing == null || !from.equals(string(playing, "videoId"))) return;
+            String entry = string(now, "queueEntryId");
+            if (entry != null && !entry.equals(string(playing, "queueEntryId"))) return;
             if (!enabled || video != preferredVideo || inParty()) return;
             if (version == null || from.equals(string(version, "videoId"))) {
                 missing.add(from + "|" + video);
@@ -267,11 +427,13 @@ public final class VideoSwitch {
             Object mediaController = controller.get();
             if (mediaController == null) return;
             Class<?> songType = Class.forName(SONG);
+            pendingLyricsSwitch(now, replacement, SystemClock.elapsedRealtime());
             Class.forName(CONNECTION)
                     .getMethod("swapToVersion", controllerType(), songType)
                     .invoke(null, mediaController, replacement);
-            HostLog.d("Switched to the " + (video ? "video" : "song") + " of " + from);
+            HostLog.d("Requested the " + (video ? "video" : "song") + " version of " + from);
         } catch (Exception | LinkageError e) {
+            lyricsSwitch = null;
             HostLog.d("Version switch failed: " + e);
             toast(context, Strings.t("Couldn’t switch versions."));
         } finally {
@@ -352,7 +514,7 @@ public final class VideoSwitch {
         if (returned != kotlin.coroutines.intrinsics.CoroutineSingletons.COROUTINE_SUSPENDED) {
             return lookupResult(returned);
         }
-        if (!done.await(30, TimeUnit.SECONDS)) return null;
+        if (!done.await(VERSION_WAIT_MS, TimeUnit.MILLISECONDS)) return null;
         Object value = result.get();
         return lookupResult(value);
     }

@@ -19,11 +19,13 @@ import com.android.tools.smali.dexlib2.iface.instruction.OffsetInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.SwitchPayload
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.WideLiteralInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
+import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodImplementation
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableStringReference
@@ -3454,6 +3456,7 @@ val videoSwitchPatch =
  * player Column and landscape main pane.
  */
 private fun BytecodePatchContext.addVideoSwitch() {
+    addVersionLyricsSelection()
     val remember =
         mutableClassDefBy("Lcom/music/bitchord/playback/PlayerConnectionKt;").methods.single {
             it.name == "rememberPlayerState" &&
@@ -3537,6 +3540,302 @@ private fun BytecodePatchContext.addVideoSwitch() {
         "invoke-static/range {v$landscapeComposer .. v$landscapeComposer}, $VIDEO_SWITCH->header(Ljava/lang/Object;)V",
     )
     println("Added the audio and video switch")
+}
+
+private fun BytecodePatchContext.addVersionLyricsSelection() {
+    val model = "Lcom/music/bitchord/ui/MainViewModel;"
+    val source = "Lcom/music/bitchord/data/lyrics/LyricsSource;"
+    val request = model.removeSuffix(";") + "\$LyricsRequest;"
+    val signature = "selectLyricsProvider($source)V"
+    val constructorTypes =
+        listOf(
+            "I",
+            "Ljava/lang/Object;",
+            "Ljava/lang/Class;",
+            "Ljava/lang/String;",
+            "Ljava/lang/String;",
+            "I",
+            "I",
+        )
+    data class Site(val method: MethodReference, val code: List<Instruction>, val index: Int)
+    val bindings = mutableListOf<Site>()
+    val lookups = mutableListOf<Site>()
+    classDefForEach { type ->
+        for (method in type.methods) {
+            val code = method.implementation?.instructions?.toList() ?: continue
+            for (index in code.indices) {
+                if (
+                    ((code[index] as? ReferenceInstruction)?.reference as? StringReference)
+                        ?.string == signature
+                )
+                    bindings += Site(method, code, index)
+                if (
+                    code[index].opcode != Opcode.IPUT_OBJECT ||
+                        code[index].fieldRef()?.let {
+                            it.definingClass == model &&
+                                it.name == "lyricsFor" &&
+                                it.type == "Ljava/util/List;"
+                        } != true
+                )
+                    continue
+                val following = code.drop(index + 1).take(120)
+                if (
+                    following.any {
+                        it.opcode == Opcode.IPUT_WIDE && it.fieldRef()?.name == "lyricsGeneration"
+                    } &&
+                        following.any {
+                            it.opcode == Opcode.IPUT_OBJECT &&
+                                it.fieldRef()?.name == "selectedLyricsSource"
+                        } &&
+                        following.any {
+                            it.opcode == Opcode.IPUT_OBJECT && it.fieldRef()?.name == "lyricsJob"
+                        }
+                )
+                    lookups += Site(method, code, index)
+            }
+        }
+    }
+    check(bindings.size == 1) { "The player lyrics-provider callback is not unique" }
+    check(lookups.size == 1) { "The native rendition lyrics reset is not unique" }
+    val binding = bindings.single()
+    val constructions =
+        (binding.index + 1..binding.index + 3).filter { index ->
+            binding.code.getOrNull(index)?.methodRef()?.let {
+                it.name == "<init>" && it.parameterTypes == constructorTypes
+            } == true
+        }
+    check(constructions.size == 1) { "The player lyrics callback construction changed" }
+    val constructorAt = constructions.single()
+    val constructor = binding.code[constructorAt].methodRef()!!
+    check(binding.code[constructorAt].opcode == Opcode.INVOKE_DIRECT_RANGE) {
+        "Lyrics callback construction changed"
+    }
+    val first = (binding.code[constructorAt] as RegisterRangeInstruction).startRegister
+    fun producer(register: Int): Instruction =
+        binding.code.take(constructorAt).lastOrNull {
+            it.opcode.setsRegister() && (it as? OneRegisterInstruction)?.registerA == register
+        } ?: error("Lyrics callback argument is not assigned")
+    fun literal(register: Int) = (producer(register) as? NarrowLiteralInstruction)?.narrowLiteral
+    check(
+        literal(first + 1) == 1 &&
+            literal(first + 6) == 0 &&
+            ((producer(first + 3) as? ReferenceInstruction)?.reference as? TypeReference)?.type ==
+                model &&
+            ((producer(first + 4) as? ReferenceInstruction)?.reference as? StringReference)
+                ?.string == "selectLyricsProvider"
+    ) {
+        "The player lyrics callback no longer captures its view model"
+    }
+    val arm = literal(first + 7) ?: error("Lyrics callback arm is not a constant")
+    check(arm in Short.MIN_VALUE..Short.MAX_VALUE) {
+        "Lyrics callback dispatch value is out of range"
+    }
+    val callback = classDefBy(constructor.definingClass)
+    val made =
+        callback.methods.single { it.name == "<init>" && it.parameterTypes == constructorTypes }
+    val madeCode = made.implementation!!.instructions.toList()
+    val tag = madeCode.first().fieldRef()
+    check(
+        madeCode.first().opcode == Opcode.IPUT &&
+            tag?.type == "I" &&
+            tag.definingClass == constructor.definingClass &&
+            (madeCode.first() as TwoRegisterInstruction).registerA ==
+                made.implementation!!.registerCount - 1
+    ) {
+        "Lyrics callback dispatch construction changed"
+    }
+    val invoke =
+        callback.methods.single {
+            it.name == "invoke" &&
+                it.parameterTypes == listOf("Ljava/lang/Object;") &&
+                it.returnType == "Ljava/lang/Object;"
+        }
+    fun callable(access: Int, type: String) =
+        access and 1 != 0 ||
+            (access and 2 == 0 && type.substringBeforeLast('/') == model.substringBeforeLast('/'))
+    check(
+        callable(callback.accessFlags, callback.type) &&
+            callable(made.accessFlags, callback.type) &&
+            callable(invoke.accessFlags, callback.type)
+    ) {
+        "The native lyrics callback is inaccessible from its view model"
+    }
+    val dispatch = invoke.implementation!!.instructions.toList()
+    fun offsets(code: List<Instruction>): List<Int> {
+        var address = 0
+        return code.map { instruction -> address.also { address += instruction.codeUnits } }
+    }
+    fun targets(code: List<Instruction>, at: Int): Map<Int, Int> {
+        val addresses = offsets(code)
+        val payload = addresses.indexOf(addresses[at] + (code[at] as OffsetInstruction).codeOffset)
+        check(payload >= 0 && code[payload] is SwitchPayload) { "Lyrics dispatch table changed" }
+        return (code[payload] as SwitchPayload).switchElements.associate {
+            it.key to addresses.indexOf(addresses[at] + it.offset)
+        }
+    }
+    val switchAt = dispatch.indices.single { dispatch[it].opcode == Opcode.PACKED_SWITCH }
+    val selector = (dispatch[switchAt] as OneRegisterInstruction).registerA
+    check(
+        dispatch.take(switchAt).any {
+            it.opcode == Opcode.IGET &&
+                it.fieldRef() == tag &&
+                (it as TwoRegisterInstruction).registerA == selector
+        }
+    ) {
+        "Lyrics callback dispatch field changed"
+    }
+    val start =
+        targets(dispatch, switchAt)[arm] ?: error("The player lyrics callback arm is missing")
+    check(start >= 0) { "Lyrics callback arm target changed" }
+    val end = (start until dispatch.size).first { dispatch[it].opcode == Opcode.RETURN_OBJECT }
+    val chosen = dispatch.subList(start, end)
+    check(
+        chosen.count {
+            it.opcode == Opcode.IPUT_OBJECT &&
+                it.fieldRef()?.let { field ->
+                    field.definingClass == model &&
+                        field.name == "selectedLyricsSource" &&
+                        field.type == source
+                } == true
+        } == 3 &&
+            chosen.any {
+                it.methodRef()?.let { call ->
+                    call.definingClass == model &&
+                        call.parameterTypes == listOf(request, "J", source) &&
+                        call.returnType == "V"
+                } == true
+            } &&
+            listOf(model, source).all { expected ->
+                chosen.any {
+                    it.opcode == Opcode.CHECK_CAST &&
+                        ((it as ReferenceInstruction).reference as? TypeReference)?.type == expected
+                }
+            }
+    ) {
+        "The player callback no longer performs native lyrics-provider selection"
+    }
+    val owner = mutableClassDefBy(model)
+    check(owner.methods.none { it.name == "bitchordSelectLyricsProvider" }) {
+        "Lyrics selection bridge already exists"
+    }
+    val bridge =
+        addedMethod(model, "bitchordSelectLyricsProvider", listOf("Ljava/lang/Object;"), "V", 10)
+    bridge.addInstructions(
+        0,
+        """
+        new-instance v0, ${constructor.definingClass}
+        const/4 v1, 0x1
+        move-object/from16 v2, p0
+        const-class v3, $model
+        const-string v4, "selectLyricsProvider"
+        const-string v5, "$signature"
+        const/4 v6, 0x0
+        const/16 v7, $arm
+        invoke-direct/range {v0 .. v7}, $constructor
+        invoke-virtual {v0, p1}, ${invoke.definingClass}->${invoke.name}(Ljava/lang/Object;)Ljava/lang/Object;
+        return-void
+    """,
+    )
+    owner.methods.add(bridge)
+    val lookup = lookups.single()
+    val code = lookup.code
+    val key = code[lookup.index] as TwoRegisterInstruction
+    val reset =
+        (lookup.index + 1 until minOf(code.size, lookup.index + 40)).single { index ->
+            code[index].opcode == Opcode.IPUT_OBJECT &&
+                code[index].fieldRef()?.let {
+                    it.definingClass == model &&
+                        it.name == "selectedLyricsSource" &&
+                        it.type == source
+                } == true
+        }
+    val nullRegister = (code[reset] as TwoRegisterInstruction).registerA
+    val entrySwitch = code.indexOfFirst { it.opcode == Opcode.PACKED_SWITCH }
+    check(
+        entrySwitch >= 0 &&
+            code.take(entrySwitch).any {
+                it is NarrowLiteralInstruction &&
+                    it.narrowLiteral == 0 &&
+                    (it as? OneRegisterInstruction)?.registerA == nullRegister
+            }
+    ) {
+        "The native lyrics reset no longer clears its provider"
+    }
+    val block =
+        targets(code, entrySwitch).values.filter { it in 0..lookup.index }.maxOrNull()
+            ?: error("The native lyrics reset branch is missing")
+    check(
+        code.subList(block, reset).none {
+            it.opcode.setsRegister() && (it as? OneRegisterInstruction)?.registerA == nullRegister
+        } &&
+            code.take(lookup.index).takeLast(40).any {
+                it.opcode == Opcode.FILLED_NEW_ARRAY &&
+                    (it as FiveRegisterInstruction).registerCount == 4
+            }
+    ) {
+        "The native lyrics lookup key or reset value changed"
+    }
+    val ready =
+        (reset + 1 until minOf(code.size, lookup.index + 120)).single { index ->
+            code[index].opcode == Opcode.IPUT_OBJECT &&
+                code[index].fieldRef()?.let {
+                    it.definingClass == model && it.name == "lyricsJob"
+                } == true
+        }
+    val resetCode = code.subList(lookup.index, ready)
+    val requiredFields =
+        mapOf(
+            "lyricsFor" to "Ljava/util/List;",
+            "selectedLyricsSource" to source,
+            "lyricsGeneration" to "J",
+            "currentLyricsRequest" to request,
+        )
+    check(
+        code[ready - 1].opcode == Opcode.MOVE_RESULT_OBJECT &&
+            code[ready - 2].methodRef()?.let {
+                it.definingClass == "Lkotlinx/coroutines/JobKt;" && it.name == "launch\$default"
+            } == true &&
+            (code[reset] as TwoRegisterInstruction).registerB == key.registerB &&
+            (code[ready] as TwoRegisterInstruction).registerB == key.registerB &&
+            maxOf(key.registerA, key.registerB) < 16 &&
+            requiredFields.all { (name, type) ->
+                owner.fields.any { it.name == name && it.type == type && it.accessFlags and 1 != 0 }
+            } &&
+            classDefBy(request).fields.any {
+                it.name == "videoId" && it.type == "Ljava/lang/String;" && it.accessFlags and 1 != 0
+            } &&
+            listOf("Ljava/util/LinkedHashMap;", "Ljava/util/concurrent/ConcurrentHashMap;").all {
+                type ->
+                resetCode.any {
+                    it.methodRef()?.let { call ->
+                        call.definingClass == type && call.name == "clear"
+                    } == true
+                }
+            } &&
+            listOf("_lyrics", "_lyricsSource").all { name ->
+                resetCode.any {
+                    it.fieldRef()?.let { field ->
+                        field.definingClass == model && field.name == name
+                    } == true
+                }
+            }
+    ) {
+        "The native lyrics lookup startup or bridge access changed"
+    }
+    val mutable =
+        mutableClassDefBy(lookup.method.definingClass).methods.single {
+            it.name == lookup.method.name &&
+                it.parameterTypes == lookup.method.parameterTypes &&
+                it.returnType == lookup.method.returnType
+        }
+    mutable.addInstruction(
+        ready + 1,
+        "invoke-static/range {v${key.registerB} .. v${key.registerB}}, $VIDEO_SWITCH->lyricsReady(Ljava/lang/Object;)V",
+    )
+    mutable.addInstruction(
+        lookup.index,
+        "invoke-static {v${key.registerB}, v${key.registerA}}, $VIDEO_SWITCH->lyricsBeforeReset(Ljava/lang/Object;Ljava/lang/Object;)V",
+    )
 }
 
 @Suppress("unused")
