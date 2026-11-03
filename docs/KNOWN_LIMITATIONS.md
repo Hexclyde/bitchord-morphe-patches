@@ -9,6 +9,7 @@ The patches target original BitChord 1.9 APKs for arm64-v8a, armeabi-v7a and x86
 - Steady playback uses Java memory for read-ahead. Larger settings consume more memory, including spare and artwork players. Extended offline retries apply to progressive loading; HLS and DASH errors can still stop playback.
 - BitChord already provides add-on crossfading. Source-independent AutoMix measures the selected rendition for its planner. Unsupported, incomplete or unavailable analysis uses a basic crossfade. Provider availability and evidence determine which transitions are possible.
 - Automatic source replacement checks opening, middle and ending audio windows, duration and timing. This adds traffic and can delay an upgrade while the existing copy plays. It cannot certify an identical master or lossless origin. A failed check or insufficient buffering leaves the current source playing.
+- With **Play the best source first** on, an unprepared song can spend up to 20 seconds checking sources before falling back. A prepared queue entry skips that wait; subsequent network resolution can add time.
 - Sing separation adds about 1.60 seconds of latency. Enabling it or returning from a different speed or pitch needs fresh audio history and can cause a discontinuity. The filter handles unavailable or late inference. Physical-phone listening and thermal behavior remain unchecked. See [Sing settings](BETA18-FEATURES.md#sing-separation-model).
 - Android's capture notification cannot identify JamesDSP as the capturing app. **Start JamesDSP** needs its optional auto-start permission; otherwise BitChord opens it directly.
 - The Audio/Video switch applies to eligible YouTube Music songs outside Lyrics and Queue. Add-on tracks and local files have no paired video version.
@@ -30,6 +31,7 @@ The patches target original BitChord 1.9 APKs for arm64-v8a, armeabi-v7a and x86
 - FLAC Downloader is unavailable in the patch catalogue. Existing saved files remain accessible from Downloads.
 - Batch download selection is limited to 200 tracks. Initial source plans do not survive process death, and public sharing pauses after a restart. See [Downloads](DOWNLOAD-MANAGER.md).
 - Per-download quality asks during eligible manual downloads. Scheduled playlist synchronization uses the global quality without a dialog.
+- Resuming a paused HTTP download can restart the transfer from the beginning rather than continue from a byte offset.
 - Smart downloads considers enabled eligible sources and the selected quality. Android can defer its unmetered-network job. Failed transfers can retry; deleted downloads are skipped, and the feature never deletes music automatically.
 - Storage Sense protects playing, queued, downloading and recently used resources, including resources with unknown state. Media3 has no atomic check-and-remove operation: a reader can start after the final check and fetch missing cache bytes again.
 - Cleanup rules start disabled. Saved-file deletion is permanent and separate from cache cleanup. Unsupported patch caches and Soulseek's transfer cache are read-only. Populated Telegram cache cleanup needs further device checking.
