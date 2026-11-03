@@ -81,7 +81,8 @@ public final class VerifyVideoSwitchApk {
         }
         check(
                 keyAt < generation && generation < selection && selection < jobAt,
-                "Native key, generation, provider reset and job startup follow their expected order");
+                "Native key, generation, provider reset and job startup follow their expected"
+                    + " order");
         int owner = ((TwoRegisterInstruction) code.get(keyAt)).getRegisterB();
         FiveRegisterInstruction capture = (FiveRegisterInstruction) code.get(start.index());
         check(
