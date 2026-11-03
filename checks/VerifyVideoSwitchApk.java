@@ -29,6 +29,73 @@ public final class VerifyVideoSwitchApk {
 
     record Hook(Method method, List<Instruction> code, int index) {}
 
+    static List<Set<Integer>> successors(Method method, List<Instruction> code) {
+        Map<Integer, Integer> indices = new HashMap<>();
+        int[] offsets = new int[code.size()];
+        int address = 0;
+        for (int i = 0; i < code.size(); i++) {
+            offsets[i] = address;
+            indices.put(address, i);
+            address += code.get(i).getCodeUnits();
+        }
+        List<Set<Integer>> edges = new ArrayList<>();
+        for (int i = 0; i < code.size(); i++) edges.add(new HashSet<>());
+        for (int i = 0; i < code.size(); i++) {
+            Instruction instruction = code.get(i);
+            Opcode opcode = instruction.getOpcode();
+            if (opcode.canContinue() && i + 1 < code.size()) edges.get(i).add(i + 1);
+            if (opcode == Opcode.PACKED_SWITCH || opcode == Opcode.SPARSE_SWITCH) {
+                Integer payload =
+                        indices.get(offsets[i] + ((OffsetInstruction) instruction).getCodeOffset());
+                check(
+                        payload != null && code.get(payload) instanceof SwitchPayload,
+                        "Native switch has a valid payload");
+                for (SwitchElement branch :
+                        ((SwitchPayload) code.get(payload)).getSwitchElements()) {
+                    Integer target = indices.get(offsets[i] + branch.getOffset());
+                    check(target != null, "Native switch targets an instruction boundary");
+                    edges.get(i).add(target);
+                }
+            } else if (opcode.name().startsWith("IF_") || opcode.name().startsWith("GOTO")) {
+                Integer target =
+                        indices.get(offsets[i] + ((OffsetInstruction) instruction).getCodeOffset());
+                check(target != null, "Native branch targets an instruction boundary");
+                edges.get(i).add(target);
+            }
+        }
+        for (TryBlock<? extends ExceptionHandler> block : method.getImplementation().getTryBlocks())
+            for (ExceptionHandler handler : block.getExceptionHandlers()) {
+                Integer target = indices.get(handler.getHandlerCodeAddress());
+                check(target != null, "Native handler targets an instruction boundary");
+                int end = block.getStartCodeAddress() + block.getCodeUnitCount();
+                for (int i = 0; i < code.size(); i++)
+                    if (offsets[i] >= block.getStartCodeAddress()
+                            && offsets[i] < end
+                            && code.get(i).getOpcode().canThrow()) edges.get(i).add(target);
+            }
+        return edges;
+    }
+
+    static void verifyCaptureFlow(Hook capture, int keyAt) {
+        List<Set<Integer>> edges = successors(capture.method(), capture.code());
+        Set<Integer> predecessors = new HashSet<>();
+        for (int i = 0; i < edges.size(); i++)
+            if (edges.get(i).contains(keyAt)) predecessors.add(i);
+        check(
+                predecessors.equals(Set.of(capture.index())),
+                "Every lyrics key-store predecessor is the capture hook; found " + predecessors);
+        Set<Integer> reachable = new HashSet<>();
+        ArrayDeque<Integer> pending = new ArrayDeque<>();
+        pending.add(0);
+        while (!pending.isEmpty()) {
+            int at = pending.removeFirst();
+            if (reachable.add(at)) pending.addAll(edges.get(at));
+        }
+        check(
+                reachable.contains(capture.index()) && reachable.contains(keyAt),
+                "Lyrics capture and key store are reachable from native lookup entry");
+    }
+
     static void verifyLyrics(Map<String, ClassDef> types) {
         List<Hook> before = new ArrayList<>(), ready = new ArrayList<>();
         for (ClassDef type : types.values()) {
@@ -63,6 +130,7 @@ public final class VerifyVideoSwitchApk {
                         && key.getName().equals("lyricsFor")
                         && key.getType().equals("Ljava/util/List;"),
                 "Capture precedes the native lyrics key store");
+        verifyCaptureFlow(start, keyAt);
         String model = key.getDefiningClass();
         check(
                 code.get(jobAt).getOpcode() == Opcode.IPUT_OBJECT

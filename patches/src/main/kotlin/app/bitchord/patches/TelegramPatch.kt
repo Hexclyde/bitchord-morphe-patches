@@ -3832,9 +3832,14 @@ private fun BytecodePatchContext.addVersionLyricsSelection() {
         ready + 1,
         "invoke-static/range {v${key.registerB} .. v${key.registerB}}, $VIDEO_SWITCH->lyricsReady(Ljava/lang/Object;)V",
     )
-    mutable.addInstruction(
+    // Incoming lookup branches must enter the hook before clearing their provider.
+    mutable.replaceInstruction(
         lookup.index,
         "invoke-static {v${key.registerB}, v${key.registerA}}, $VIDEO_SWITCH->lyricsBeforeReset(Ljava/lang/Object;Ljava/lang/Object;)V",
+    )
+    mutable.addInstruction(
+        lookup.index + 1,
+        "iput-object v${key.registerA}, v${key.registerB}, $model->lyricsFor:Ljava/util/List;",
     )
 }
 
