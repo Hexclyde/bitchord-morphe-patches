@@ -22,6 +22,31 @@ def main():
     cp = str(checks) + os.pathsep + str(MORPHE_JAR)
     cases = [
         (
+            "DjOnly",
+            ["DJ mode"],
+            [
+                ("VerifyDjJourneyApk", [str(original)]),
+                ("VerifyPatchUiApk", ["false", "false", "true"]),
+            ],
+        ),
+        (
+            "DjAutoMix",
+            ["Source-independent AutoMix", "DJ mode"],
+            [
+                ("VerifyDjJourneyApk", [str(original)]),
+                ("VerifySourceAutomixApk", []),
+                ("VerifyPatchUiApk", ["false", "false", "true"]),
+            ],
+        ),
+        (
+            "Diagnostics",
+            ["Diagnostics"],
+            [
+                ("VerifyDiagnosticsApk", ["true"]),
+                ("VerifyPatchUiApk", ["false", "false", "true"]),
+            ],
+        ),
+        (
             "AutoMix",
             ["Source-independent AutoMix"],
             [
@@ -70,6 +95,7 @@ def main():
             ["Unofficial Telegram music", "Install as Bitchord+"],
             [
                 ("VerifyTelegramPageApk", ["standalone"]),
+                ("VerifyTelegramCatalogueApk", []),
                 ("VerifyCaptureApk", []),
                 ("VerifyPatchUiApk", ["true", "false", "false"]),
             ],
@@ -79,7 +105,7 @@ def main():
         ("Alongside", "Play alongside other apps", "focus"),
         ("Steady", "Steady playback", "steady"),
         ("SmartDownloads", "Smart downloads", "smart"),
-        ("Sing", "Sing", ""),
+        ("Karaoke", "Karaoke", ""),
     ]:
         cases.append(
             (
@@ -91,7 +117,24 @@ def main():
                 ],
             )
         )
+    cases.append(
+        (
+            "KaraokeSwitch",
+            ["Karaoke", "Audio and video switch"],
+            [
+                ("VerifyVideoSwitchApk", []),
+                ("VerifyPatchUiApk", ["false", "false", "true"]),
+            ],
+        )
+    )
     for label, selections, inspectors in cases:
+        inspectors.append(("VerifyPlayerDownloadApk", []))
+        inspectors.append(
+            (
+                "VerifyKaraokeLyricsApk",
+                ["present" if "Karaoke" in selections else "absent"],
+            )
+        )
         inspectors.append(
             ("VerifyFlacAddonApk", ["disabled", str(ROOT / "build" / BUNDLE_NAME)])
         )

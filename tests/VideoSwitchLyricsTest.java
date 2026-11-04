@@ -183,6 +183,8 @@ public final class VideoSwitchLyricsTest {
         check(
                 uncommitted.requests == 1,
                 "delayed target commit restores only its fresh provider request");
+        Song other = new Song("otherother1", "entry-0", false);
+        VideoSwitch.noteCurrent(other, 100);
         Model missing = new Model();
         VideoSwitch.pendingLyricsSwitch(AUDIO, new Song(VIDEO.videoId, null, true), 100);
         VideoSwitch.beforeLyrics(missing, next, VIDEO, 110, true);
@@ -197,6 +199,55 @@ public final class VideoSwitchLyricsTest {
         VideoSwitch.setEnabled(true);
         VideoSwitch.afterLyrics(abort, VIDEO, 120, true);
         check(abort.choices == 0, "disabling cancels pending provider selection permanently");
+
+        for (boolean wantVideo : new boolean[] {true, false}) {
+            for (boolean listenerFirst : new boolean[] {false, true}) {
+                VideoSwitch.setEnabled(false);
+                VideoSwitch.setEnabled(true);
+                VideoSwitch.preferredVideo = !wantVideo;
+                Song from = wantVideo ? AUDIO : VIDEO;
+                Song to = wantVideo ? VIDEO : AUDIO;
+                Model swapped = new Model();
+                swapped.lyricsFor = key(from.videoId);
+                swapped.currentLyricsRequest = new Request(from.videoId);
+                List<Object> target = key(to.videoId);
+                VideoSwitch.noteCurrent(other, 400);
+                VideoSwitch.noteCurrent(from, 410);
+                if (listenerFirst) VideoSwitch.noteCurrent(to, 420);
+                VideoSwitch.beforeLyrics(swapped, target, to, 430, true);
+                swapped.reset(target);
+                VideoSwitch.afterLyrics(swapped, to, 440, true);
+                check(
+                        swapped.requests == 1 && to.videoId.equals(swapped.requestedId),
+                        "a swap made by BitChord keeps the provider ("
+                                + wantVideo
+                                + ", "
+                                + listenerFirst
+                                + ")");
+                check(
+                        "Manual".equals(swapped.selectedLyricsSource),
+                        "the provider outlives the stale saved preference");
+            }
+        }
+        VideoSwitch.setEnabled(false);
+        VideoSwitch.setEnabled(true);
+        VideoSwitch.noteCurrent(other, 500);
+        VideoSwitch.noteCurrent(AUDIO, 510);
+        Model elsewhere = new Model();
+        VideoSwitch.beforeLyrics(
+                elsewhere, key(VIDEO.videoId), new Song(VIDEO.videoId, "entry-2", true), 520, true);
+        elsewhere.reset(key(VIDEO.videoId));
+        VideoSwitch.afterLyrics(elsewhere, new Song(VIDEO.videoId, "entry-2", true), 530, true);
+        check(elsewhere.choices == 0, "another queue entry never inherits the provider");
+        VideoSwitch.setEnabled(false);
+        VideoSwitch.noteCurrent(other, 600);
+        VideoSwitch.noteCurrent(AUDIO, 610);
+        Model off = new Model();
+        VideoSwitch.beforeLyrics(off, key(VIDEO.videoId), VIDEO, 620, true);
+        off.reset(key(VIDEO.videoId));
+        VideoSwitch.afterLyrics(off, VIDEO, 630, true);
+        check(off.choices == 0, "no host swap pins a provider while the switch is off");
+        VideoSwitch.setEnabled(true);
         System.out.println("PASS: " + checks + " native lyrics-choice switch checks.");
     }
 }

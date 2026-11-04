@@ -32,6 +32,15 @@ with zipfile.ZipFile(TOOLS / "platform35.zip") as archive:
     member = next(n for n in archive.namelist() if n.endswith("/android.jar"))
     (TOOLS / "android.jar").write_bytes(archive.read(member))
 with zipfile.ZipFile(TOOLS / "ndk.zip") as archive:
+    member = next(
+        n
+        for n in archive.namelist()
+        if n.endswith("/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-objcopy")
+    )
+    strip = TOOLS / "native-strip/llvm-strip"
+    strip.parent.mkdir(parents=True, exist_ok=True)
+    strip.write_bytes(archive.read(member))
+    strip.chmod(0o755)
     for abi, target in {
         "arm64-v8a": "aarch64-linux-android",
         "armeabi-v7a": "arm-linux-androideabi",

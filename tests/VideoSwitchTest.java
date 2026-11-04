@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class VideoSwitchTest {
     static final class Song {
         String videoId = "dQw4w9WgXcQ";
+        String queueEntryId;
         String localUri, localPath;
         boolean isVideo;
     }
@@ -127,6 +128,107 @@ public final class VideoSwitchTest {
         attempt.set(null, "dQw4w9WgXcQ|true");
         VideoSwitch.trackChanged();
         check(attempt.get(null) == null, "repeated recording gets a fresh preference attempt");
+
+        // Automatic enforcement yields to BitChord's music-only preference; a tap does not.
+        VideoSwitch.enabled = true;
+        Song row = new Song();
+        row.queueEntryId = "entry-1";
+        VideoSwitch.setPreferredVideo(true);
+        check(!VideoSwitch.hostMusicOnly(), "a BitChord without music-only reads as off");
+        VideoSwitch.nativeMusicOnly = () -> false;
+        check(VideoSwitch.claim(row, false), "automatic pass switches when music-only is off");
+        check(!VideoSwitch.claim(row, false), "automatic pass tries a row once");
+        VideoSwitch.setPreferredVideo(true);
+        VideoSwitch.nativeMusicOnly = () -> true;
+        check(!VideoSwitch.claim(row, false), "automatic pass leaves the row to music-only");
+        check(VideoSwitch.preferredVideo, "yielding keeps the saved preference");
+        check(!VideoSwitch.shownVideo(row), "the switch shows the audio music-only plays");
+        check(VideoSwitch.claim(row, true), "a tap switches while music-only is on");
+        VideoSwitch.nativeMusicOnly = () -> false;
+        check(VideoSwitch.shownVideo(row) == VideoSwitch.preferredVideo, "saved choice shown");
+        VideoSwitch.setPreferredVideo(false);
+        Song clip = new Song();
+        clip.videoId = "a-b_c1D2e3F";
+        clip.queueEntryId = "entry-2";
+        clip.isVideo = true;
+        VideoSwitch.nativeMusicOnly = () -> true;
+        check(!VideoSwitch.claim(clip, false), "audio preference does not race music-only");
+        check(VideoSwitch.claim(clip, true), "a tap to audio still switches a kept video");
+        VideoSwitch.nativeMusicOnly = () -> false;
+
+        // A version BitChord swaps in for the same queue entry is not switched back.
+        VideoSwitch.setPreferredVideo(false);
+        Song swappedAudio = new Song();
+        swappedAudio.videoId = "songSong001";
+        swappedAudio.queueEntryId = "entry-9";
+        Song video = new Song();
+        video.videoId = "videoVid002";
+        video.queueEntryId = "entry-9";
+        video.isVideo = true;
+        VideoSwitch.noteCurrent(swappedAudio, 1);
+        VideoSwitch.noteCurrent(video, 2);
+        check(!VideoSwitch.claim(video, false), "a native swap to video stands over audio");
+        VideoSwitch.setPreferredVideo(false);
+        check(VideoSwitch.claim(video, true), "a tap can still choose audio afterwards");
+        Song following = new Song();
+        following.videoId = "videoVid003";
+        following.queueEntryId = "entry-10";
+        following.isVideo = true;
+        VideoSwitch.noteCurrent(following, 3);
+        VideoSwitch.setPreferredVideo(false);
+        check(VideoSwitch.claim(following, false), "the next queue entry follows the preference");
+
+        // Fullscreen follows what the window did, not the request.
+        check(!VideoSwitch.Fullscreen.show(false), "portrait shows the portrait player");
+        check(VideoSwitch.Fullscreen.show(true), "landscape shows fullscreen as the host does");
+        check(!VideoSwitch.Fullscreen.show(false), "a rotation back leaves fullscreen");
+        VideoSwitch.Fullscreen.ask(true);
+        VideoSwitch.Fullscreen.settle();
+        check(VideoSwitch.Fullscreen.show(false), "a landscape request the window ignored");
+        check(VideoSwitch.Fullscreen.show(false), "and it stays until something changes");
+        VideoSwitch.Fullscreen.ask(false);
+        VideoSwitch.Fullscreen.settle();
+        check(!VideoSwitch.Fullscreen.show(false), "exit in a portrait window shows portrait");
+        VideoSwitch.Fullscreen.ask(true);
+        VideoSwitch.Fullscreen.settle();
+        VideoSwitch.Fullscreen.reset();
+        check(!VideoSwitch.Fullscreen.show(false), "a new track clears an ignored request");
+        check(VideoSwitch.Fullscreen.show(true), "a landscape window starts as the host has it");
+        VideoSwitch.Fullscreen.ask(false);
+        VideoSwitch.Fullscreen.settle();
+        check(
+                !VideoSwitch.Fullscreen.show(true),
+                "exit the window ignored shows the landscape layout");
+        VideoSwitch.Fullscreen.ask(true);
+        VideoSwitch.Fullscreen.settle();
+        check(VideoSwitch.Fullscreen.show(true), "fullscreen asked in that layout is honoured");
+        VideoSwitch.Fullscreen.ask(false);
+        VideoSwitch.Fullscreen.settle();
+        check(!VideoSwitch.Fullscreen.show(true), "left again");
+        check(!VideoSwitch.Fullscreen.show(false), "a rotation hands the choice back to the host");
+        check(VideoSwitch.Fullscreen.show(true), "and back in landscape");
+        VideoSwitch.Fullscreen.ask(false);
+        VideoSwitch.Fullscreen.settle();
+        VideoSwitch.Fullscreen.ask(false);
+        VideoSwitch.Fullscreen.show(false);
+        VideoSwitch.Fullscreen.settle();
+        check(!VideoSwitch.Fullscreen.show(false), "a request the window followed changes nothing");
+
+        VideoSwitch.Fullscreen.reset();
+        VideoSwitch.Fullscreen.ask(true);
+        VideoSwitch.Fullscreen.show(false);
+        VideoSwitch.Fullscreen.settle();
+        check(VideoSwitch.Fullscreen.mode == VideoSwitch.Fullscreen.ON, "held for back");
+        VideoSwitch.Fullscreen.LEAVE.invoke();
+        check(!VideoSwitch.Fullscreen.show(false), "the back handler's action leaves it");
+        check(VideoSwitch.Fullscreen.mode == VideoSwitch.Fullscreen.AUTO, "and hands it back");
+
+        String timing = VideoSwitch.timing(true, new long[] {100, 130, 930}, false, 1000);
+        check(
+                timing.equals(
+                        "Switch timing to=video gate=30 lookup=800 cache=miss main=70 total=900"),
+                "switch timing: " + timing);
+        VideoSwitch.setEnabled(false);
         System.out.println("PASS: " + checks + " audio and video switch checks.");
     }
 }

@@ -5,8 +5,6 @@ import android.content.Intent;
 
 import androidx.compose.runtime.ComposerImpl;
 
-import com.music.bitchord.ui.screens.SettingsSheetKt;
-
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
@@ -28,19 +26,12 @@ public final class DownloadsSettingsUi {
 
     /** Called by Morphe from the composable that draws BitChord's sync-playlists control. */
     public static void row(ComposerImpl composer) {
-        SettingsSheetKt.SettingsRow(
-                null,
+        HostSettingsRow.call(
                 Strings.t("Patch downloads"),
                 Strings.t("Smart downloads, sources and Storage Sense"),
-                null,
-                null,
-                null,
                 true,
                 null,
                 OPEN,
-                null,
-                composer,
-                0,
-                0);
+                composer);
     }
 }

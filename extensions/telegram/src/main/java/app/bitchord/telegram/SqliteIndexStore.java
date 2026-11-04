@@ -26,6 +26,12 @@ final class SqliteIndexStore implements IndexStore {
                         + " message INTEGER NOT NULL, entry INTEGER NOT NULL DEFAULT 0, generation"
                         + " INTEGER NOT NULL, row TEXT NOT NULL, UNIQUE (chat, message, entry))");
         upgrade();
+        boolean ownsSource = false;
+        try (Cursor c = db.rawQuery("PRAGMA table_info(files)", null)) {
+            while (c.moveToNext()) if (c.getString(1).equals("owner_message")) ownsSource = true;
+        }
+        if (!ownsSource)
+            db.execSQL("ALTER TABLE files ADD COLUMN owner_message INTEGER NOT NULL DEFAULT 0");
         db.execSQL("CREATE VIRTUAL TABLE IF NOT EXISTS words USING fts4(text)");
         db.execSQL(
                 "CREATE TABLE IF NOT EXISTS zips (chat INTEGER NOT NULL, message INTEGER NOT NULL,"
@@ -37,7 +43,200 @@ final class SqliteIndexStore implements IndexStore {
         db.execSQL(
                 "CREATE TABLE IF NOT EXISTS found (kind TEXT NOT NULL, key TEXT NOT NULL, value"
                         + " TEXT NOT NULL, PRIMARY KEY (kind, key))");
+        db.execSQL(
+                "CREATE TABLE IF NOT EXISTS message_changes (chat INTEGER NOT NULL, message INTEGER"
+                        + " NOT NULL, revision INTEGER NOT NULL, deleted INTEGER NOT NULL, PRIMARY"
+                        + " KEY (chat, message))");
+        db.execSQL(
+                "CREATE TABLE IF NOT EXISTS index_clock (id INTEGER PRIMARY KEY, epoch INTEGER NOT"
+                        + " NULL, cleared INTEGER NOT NULL)");
+        db.execSQL("INSERT OR IGNORE INTO index_clock VALUES (1, 0, 0)");
+        db.execSQL(
+                "CREATE TABLE IF NOT EXISTS chat_clocks (chat INTEGER PRIMARY KEY, epoch INTEGER"
+                        + " NOT NULL)");
         retryLostZips();
+    }
+
+    @Override
+    public synchronized void atomic(Change change) throws Exception {
+        db.beginTransaction();
+        try {
+            change.run();
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    @Override
+    public long epoch() {
+        try (Cursor c = db.rawQuery("SELECT epoch FROM index_clock WHERE id = 1", null)) {
+            return c.moveToFirst() ? c.getLong(0) : 0;
+        }
+    }
+
+    @Override
+    public long revision(long chat, long message) {
+        long revision = chatEpoch(chat);
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT revision FROM message_changes WHERE chat = ? AND message = ?",
+                        new String[] {Long.toString(chat), Long.toString(message)})) {
+            if (c.moveToFirst()) revision = Math.max(revision, c.getLong(0));
+        }
+        return revision;
+    }
+
+    @Override
+    public long chatEpoch(long chat) {
+        long epoch = 0;
+        try (Cursor c = db.rawQuery("SELECT cleared FROM index_clock WHERE id = 1", null)) {
+            if (c.moveToFirst()) epoch = c.getLong(0);
+        }
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT epoch FROM chat_clocks WHERE chat = ?",
+                        new String[] {Long.toString(chat)})) {
+            if (c.moveToFirst()) epoch = Math.max(epoch, c.getLong(0));
+        }
+        return epoch;
+    }
+
+    @Override
+    public boolean changed(long chat, long message) {
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT 1 FROM message_changes WHERE chat = ? AND message = ?",
+                        new String[] {Long.toString(chat), Long.toString(message)})) {
+            return c.moveToFirst();
+        }
+    }
+
+    @Override
+    public boolean deleted(long chat, long message) {
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT deleted FROM message_changes WHERE chat = ? AND message = ?",
+                        new String[] {Long.toString(chat), Long.toString(message)})) {
+            return c.moveToFirst() && c.getInt(0) == 1;
+        }
+    }
+
+    @Override
+    public boolean unavailable(long chat, long message) {
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT deleted FROM message_changes WHERE chat = ? AND message = ?",
+                        new String[] {Long.toString(chat), Long.toString(message)})) {
+            return c.moveToFirst() && c.getInt(0) != 0;
+        }
+    }
+
+    @Override
+    public void available(long chat, long message) {
+        db.execSQL(
+                "UPDATE message_changes SET deleted = 0 WHERE chat = ? AND message = ? AND deleted"
+                        + " = 2",
+                new String[] {Long.toString(chat), Long.toString(message)});
+    }
+
+    @Override
+    public void advance(long chat, long message, int unavailable) {
+        db.execSQL("UPDATE index_clock SET epoch = epoch + 1 WHERE id = 1");
+        ContentValues values = new ContentValues();
+        values.put("chat", chat);
+        values.put("message", message);
+        values.put("revision", epoch());
+        values.put("deleted", unavailable);
+        db.insertWithOnConflict("message_changes", null, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    @Override
+    public JSONObject zip(long chat, long message) throws Exception {
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT row FROM zips WHERE chat = ? AND message = ?",
+                        new String[] {Long.toString(chat), Long.toString(message)})) {
+            return c.moveToFirst() ? new JSONObject(c.getString(0)) : null;
+        }
+    }
+
+    @Override
+    public boolean zipPending(long chat, long message) {
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT 1 FROM zips WHERE chat = ? AND message = ? AND done = 0",
+                        new String[] {Long.toString(chat), Long.toString(message)})) {
+            return c.moveToFirst();
+        }
+    }
+
+    @Override
+    public void resetChat(long chat) throws Exception {
+        List<Long> messages = new ArrayList<>();
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT DISTINCT message FROM files WHERE chat = ?",
+                        new String[] {Long.toString(chat)})) {
+            while (c.moveToNext()) messages.add(c.getLong(0));
+        }
+        for (long message : messages) removeMessage(chat, message);
+        String[] key = {Long.toString(chat)};
+        db.delete("chats", "chat = ?", key);
+        db.delete("zips", "chat = ?", key);
+        db.execSQL("UPDATE index_clock SET epoch = epoch + 1 WHERE id = 1");
+        ContentValues clock = new ContentValues();
+        clock.put("chat", chat);
+        clock.put("epoch", epoch());
+        db.insertWithOnConflict("chat_clocks", null, clock, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    @Override
+    public void removeMessage(long chat, long message) throws Exception {
+        String[] owner = {Long.toString(chat), Long.toString(message), Long.toString(message)};
+        List<JSONObject> removed = new ArrayList<>();
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT row FROM files WHERE chat = ? AND (message = ? OR owner_message ="
+                                + " ?)",
+                        owner)) {
+            while (c.moveToNext()) removed.add(new JSONObject(c.getString(0)));
+        }
+        db.execSQL(
+                "DELETE FROM words WHERE docid IN (SELECT id FROM files WHERE chat = ? AND"
+                        + " (message = ? OR owner_message = ?))",
+                owner);
+        db.execSQL(
+                "DELETE FROM files WHERE chat = ? AND (message = ? OR owner_message = ?)", owner);
+        db.delete(
+                "zips",
+                "chat = ? AND message = ?",
+                new String[] {Long.toString(chat), Long.toString(message)});
+        String prefix = chat + "_" + message;
+        db.delete(
+                "found",
+                "key = ? OR substr(key, 1, ?) = ?",
+                new String[] {prefix, Integer.toString(prefix.length() + 1), prefix + "_"});
+        for (JSONObject row : removed)
+            for (String kind : new String[] {"check", "names"}) {
+                String key = kind.equals("check") ? LosslessCheck.key(row) : row.optString("id");
+                boolean referenced = false;
+                try (Cursor c =
+                        db.rawQuery(
+                                "SELECT row FROM files WHERE chat = ? AND message = ?",
+                                new String[] {
+                                    Long.toString(row.optLong("chat")),
+                                    Long.toString(row.optLong("message"))
+                                })) {
+                    while (c.moveToNext())
+                        if (IndexStore.belongs(new JSONObject(c.getString(0)), kind, key)) {
+                            referenced = true;
+                            break;
+                        }
+                }
+                if (!referenced)
+                    db.delete("found", "kind = ? AND key = ?", new String[] {kind, key});
+            }
     }
 
     /**
@@ -135,19 +334,23 @@ final class SqliteIndexStore implements IndexStore {
     }
 
     @Override
-    public State state(long chat) throws Exception {
+    public synchronized State state(long chat) throws Exception {
         try (Cursor c =
                 db.rawQuery(
                         "SELECT state FROM chats WHERE chat = ?",
                         new String[] {Long.toString(chat)})) {
-            return c.moveToFirst()
-                    ? State.fromJson(chat, new JSONObject(c.getString(0)))
-                    : new State(chat);
+            State state =
+                    c.moveToFirst()
+                            ? State.fromJson(chat, new JSONObject(c.getString(0)))
+                            : new State(chat);
+            state.epoch = chatEpoch(chat);
+            return state;
         }
     }
 
     @Override
-    public void save(State state) throws Exception {
+    public synchronized void save(State state) throws Exception {
+        if (state.epoch != chatEpoch(state.chat)) return;
         ContentValues values = new ContentValues();
         values.put("chat", state.chat);
         values.put("state", state.toJson().toString());
@@ -158,7 +361,10 @@ final class SqliteIndexStore implements IndexStore {
     public void put(long chat, List<JSONObject> rows, long generation) throws Exception {
         db.beginTransaction();
         try {
-            for (JSONObject row : rows) {
+            for (JSONObject input : rows) {
+                JSONObject row = IndexStore.persisted(input);
+                if (!current(chat, row)) continue;
+                row.put(REVISION, revision(chat, row.optLong("message")));
                 IndexStore.withFound(this, row, true);
                 long message = row.optLong("message");
                 int entry = row.optInt("entry");
@@ -176,6 +382,7 @@ final class SqliteIndexStore implements IndexStore {
                 ContentValues file = new ContentValues();
                 file.put("generation", generation);
                 file.put("row", row.toString());
+                file.put("owner_message", row.optLong(SOURCE_MESSAGE));
                 ContentValues words = new ContentValues();
                 words.put("text", IndexStore.text(row));
                 if (id >= 0) {
@@ -323,10 +530,13 @@ final class SqliteIndexStore implements IndexStore {
     }
 
     @Override
-    public void queueZips(long chat, List<JSONObject> zips, long generation) {
+    public void queueZips(long chat, List<JSONObject> zips, long generation) throws Exception {
         db.beginTransaction();
         try {
-            for (JSONObject zip : zips) {
+            for (JSONObject input : zips) {
+                JSONObject zip = IndexStore.persisted(input);
+                if (!current(chat, zip)) continue;
+                zip.put(REVISION, revision(chat, zip.optLong("message")));
                 String[] key = {Long.toString(chat), Long.toString(zip.optLong("message"))};
                 boolean known;
                 try (Cursor c =
@@ -343,8 +553,12 @@ final class SqliteIndexStore implements IndexStore {
                     // A cue sheet's tracks are filed under its album's post: read it again.
                     ContentValues values = new ContentValues();
                     values.put("done", 0);
+                    values.put("row", zip.toString());
                     db.update("zips", values, "chat = ? AND message = ?", key);
                 } else {
+                    ContentValues descriptor = new ContentValues();
+                    descriptor.put("row", zip.toString());
+                    db.update("zips", descriptor, "chat = ? AND message = ?", key);
                     ContentValues values = new ContentValues();
                     values.put("generation", generation);
                     db.update("files", values, "chat = ? AND message = ? AND entry > 0", key);
@@ -424,9 +638,14 @@ final class SqliteIndexStore implements IndexStore {
         try {
             db.execSQL(
                     "DELETE FROM words WHERE docid IN (SELECT id FROM files WHERE chat = ? AND"
-                            + " generation < ?)",
+                        + " generation < ? AND NOT EXISTS (SELECT 1 FROM message_changes c WHERE"
+                        + " c.chat = files.chat AND c.message = files.message))",
                     args);
-            db.execSQL("DELETE FROM files WHERE chat = ? AND generation < ?", args);
+            db.execSQL(
+                    "DELETE FROM files WHERE chat = ? AND generation < ? AND NOT EXISTS (SELECT 1"
+                            + " FROM message_changes c WHERE c.chat = files.chat AND c.message ="
+                            + " files.message)",
+                    args);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -442,6 +661,10 @@ final class SqliteIndexStore implements IndexStore {
             db.execSQL("DELETE FROM chats");
             db.execSQL("DELETE FROM zips");
             db.execSQL("DELETE FROM found");
+            db.execSQL("DELETE FROM message_changes");
+            db.execSQL("DELETE FROM chat_clocks");
+            db.execSQL(
+                    "UPDATE index_clock SET epoch = epoch + 1, cleared = epoch + 1 WHERE id = 1");
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();

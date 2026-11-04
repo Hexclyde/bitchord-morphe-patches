@@ -7,11 +7,254 @@ import java.util.*;
 
 /** Where the saved index keeps its files: SQLite on the phone, memory in tests. */
 interface IndexStore {
+    String REVISION = "_indexRevision";
+    String SOURCE_MESSAGE = "_indexSourceMessage";
+    String SOURCE_REVISION = "_indexSourceRevision";
+    String SCANNED = "_indexScanned";
+
+    interface Change {
+        void run() throws Exception;
+    }
+
+    void atomic(Change change) throws Exception;
+
+    long epoch() throws Exception;
+
+    long chatEpoch(long chat) throws Exception;
+
+    long revision(long chat, long message) throws Exception;
+
+    boolean changed(long chat, long message) throws Exception;
+
+    boolean deleted(long chat, long message) throws Exception;
+
+    boolean unavailable(long chat, long message) throws Exception;
+
+    void available(long chat, long message) throws Exception;
+
+    void advance(long chat, long message, int unavailable) throws Exception;
+
+    void resetChat(long chat) throws Exception;
+
+    JSONObject zip(long chat, long message) throws Exception;
+
+    boolean zipPending(long chat, long message) throws Exception;
+
+    void removeMessage(long chat, long message) throws Exception;
+
+    default boolean frontier(long chat, long message) throws Exception {
+        JSONObject audio = row(chat, message, 0);
+        if (audio != null) return audio.optBoolean(SCANNED, true);
+        JSONObject archive = zip(chat, message);
+        return archive != null
+                ? archive.optBoolean(SCANNED, true)
+                : has(chat, message) && !changed(chat, message);
+    }
+
+    static JSONObject local(JSONObject input, long revision) throws Exception {
+        JSONObject row = new JSONObject(input.toString());
+        List<String> remove = new ArrayList<>();
+        Iterator<String> keys = row.keys();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            if (key.startsWith("_index")) remove.add(key);
+        }
+        for (String key : remove) row.remove(key);
+        return row.put(REVISION, revision);
+    }
+
+    static JSONObject persisted(JSONObject input) throws Exception {
+        JSONObject row = local(input, input.optLong(REVISION));
+        for (String key : new String[] {SOURCE_MESSAGE, SOURCE_REVISION, SCANNED})
+            if (input.has(key)) row.put(key, input.get(key));
+        return row;
+    }
+
+    default boolean current(long chat, JSONObject row) throws Exception {
+        long message = row.getLong("message"), revision = revision(chat, message);
+        if (unavailable(chat, message) || row.optLong(REVISION) != revision) return false;
+        long source = row.optLong(SOURCE_MESSAGE);
+        return source == 0
+                || (!unavailable(chat, source)
+                        && row.optLong(SOURCE_REVISION) == revision(chat, source));
+    }
+
+    static String content(Object value) throws Exception {
+        if (value instanceof JSONObject) {
+            JSONObject object = (JSONObject) value;
+            List<String> keys = new ArrayList<>();
+            Iterator<String> names = object.keys();
+            while (names.hasNext()) {
+                String key = names.next();
+                if (!key.startsWith("_index") && !key.equals("check") && !key.equals("recognized"))
+                    keys.add(key);
+            }
+            Collections.sort(keys);
+            StringBuilder text = new StringBuilder("{");
+            for (String key : keys)
+                text.append(JSONObject.quote(key))
+                        .append(':')
+                        .append(content(object.get(key)))
+                        .append(',');
+            return text.append('}').toString();
+        }
+        if (value instanceof JSONArray) {
+            JSONArray array = (JSONArray) value;
+            StringBuilder text = new StringBuilder("[");
+            for (int i = 0; i < array.length(); i++) text.append(content(array.get(i))).append(',');
+            return text.append(']').toString();
+        }
+        return value instanceof String ? JSONObject.quote((String) value) : String.valueOf(value);
+    }
+
+    default boolean replaceMessage(
+            long chat,
+            long message,
+            List<JSONObject> rows,
+            List<JSONObject> jobs,
+            long generation,
+            int unavailable)
+            throws Exception {
+        if (chat == 0 || message <= 0) throw new IllegalArgumentException("Invalid message");
+        for (JSONObject row : rows)
+            if (row.getLong("chat") != chat || row.getLong("message") != message)
+                throw new IllegalArgumentException("A replacement belongs to another message");
+        for (JSONObject job : jobs)
+            if (job.getLong("chat") != chat || job.getLong("message") != message)
+                throw new IllegalArgumentException("An archive belongs to another message");
+        boolean[] changed = {false};
+        synchronized (this) {
+            atomic(
+                    () -> {
+                        if (deleted(chat, message) && unavailable != 1) return;
+                        if (unavailable == 0 && !unavailable(chat, message)) {
+                            JSONObject previous = zip(chat, message);
+                            if (jobs.size() == 1
+                                    && previous != null
+                                    && content(previous).equals(content(jobs.get(0)))) {
+                                JSONObject audio = row(chat, message, 0);
+                                if ((rows.isEmpty() && audio == null)
+                                        || (rows.size() == 1
+                                                && audio != null
+                                                && content(audio).equals(content(rows.get(0)))))
+                                    return;
+                            }
+                        }
+                        advance(chat, message, unavailable);
+                        removeMessage(chat, message);
+                        changed[0] = true;
+                        if (unavailable != 0) return;
+                        long revision = revision(chat, message);
+                        List<JSONObject> files = new ArrayList<>(), archives = new ArrayList<>();
+                        for (JSONObject row : rows)
+                            files.add(local(row, revision).put(SCANNED, false));
+                        for (JSONObject job : jobs)
+                            archives.add(local(job, revision).put(SCANNED, false));
+                        put(chat, files, generation);
+                        queueZips(chat, archives, generation);
+                    });
+        }
+        return changed[0];
+    }
+
+    default void putPage(
+            long chat,
+            List<JSONObject> rows,
+            List<JSONObject> jobs,
+            long generation,
+            long readEpoch)
+            throws Exception {
+        synchronized (this) {
+            atomic(
+                    () -> {
+                        List<JSONObject> files = new ArrayList<>(), archives = new ArrayList<>();
+                        for (JSONObject row : rows) {
+                            long message = row.getLong("message");
+                            if (!deleted(chat, message) && revision(chat, message) <= readEpoch) {
+                                available(chat, message);
+                                files.add(local(row, revision(chat, message)).put(SCANNED, true));
+                            }
+                        }
+                        for (JSONObject job : jobs) {
+                            long message = job.getLong("message");
+                            if (!deleted(chat, message) && revision(chat, message) <= readEpoch) {
+                                available(chat, message);
+                                archives.add(
+                                        local(job, revision(chat, message)).put(SCANNED, true));
+                            }
+                        }
+                        put(chat, files, generation);
+                        queueZips(chat, archives, generation);
+                    });
+        }
+    }
+
+    default boolean finishZip(JSONObject job, List<JSONObject> rows, long generation, boolean defer)
+            throws Exception {
+        boolean[] accepted = {false};
+        synchronized (this) {
+            atomic(
+                    () -> {
+                        long chat = job.getLong("chat"), message = job.getLong("message");
+                        if (!current(chat, job) || !zipPending(chat, message)) return;
+                        List<JSONObject> files = new ArrayList<>();
+                        for (JSONObject input : rows) {
+                            JSONObject row = new JSONObject(input.toString());
+                            if (row.getLong("chat") != chat) return;
+                            if (row.getLong("message") == message)
+                                row.put(REVISION, job.optLong(REVISION));
+                            else {
+                                if (!current(chat, row)) return;
+                                row.put(SOURCE_MESSAGE, message)
+                                        .put(SOURCE_REVISION, job.optLong(REVISION));
+                            }
+                            row.put(SCANNED, job.optBoolean(SCANNED, true));
+                            files.add(row);
+                        }
+                        put(chat, files, generation);
+                        if (defer) deferZip(chat, message);
+                        else zipDone(chat, message);
+                        accepted[0] = true;
+                    });
+        }
+        return accepted[0];
+    }
+
+    default void putFound(JSONObject row, String kind, String key, JSONObject value)
+            throws Exception {
+        synchronized (this) {
+            atomic(
+                    () -> {
+                        long chat = row.getLong("chat");
+                        if (current(chat, row))
+                            putFound(chat, row.getLong("message"), kind, key, value);
+                    });
+        }
+    }
+
+    default void fileFound(JSONObject row, long generation) throws Exception {
+        synchronized (this) {
+            atomic(
+                    () -> {
+                        long chat = row.getLong("chat");
+                        if (current(chat, row)) {
+                            JSONObject file = persisted(row);
+                            if (row(chat, row.getLong("message"), row.optInt("entry")) == null)
+                                file.put(SCANNED, false);
+                            put(chat, Collections.singletonList(file), generation);
+                        }
+                    });
+        }
+    }
+
     /** How far one chat's index has got. */
     final class State {
         final long chat;
+        long epoch;
         // Building: the oldest message reached so far for each kind (0 = from the newest).
         final long[] cursor = new long[TelegramIndex.KINDS];
+        final long[] topCursor = new long[TelegramIndex.KINDS];
+        final boolean[] topComplete = new boolean[TelegramIndex.KINDS];
         final boolean[] complete = new boolean[TelegramIndex.KINDS];
         // Telegram's own count of each kind (-1 until known), and how many of those this build has
         // gone through.
@@ -38,6 +281,8 @@ interface IndexStore {
         JSONObject toJson() throws Exception {
             return new JSONObject()
                     .put("cursor", new JSONArray(cursor))
+                    .put("topCursor", new JSONArray(topCursor))
+                    .put("topComplete", new JSONArray(topComplete))
                     .put("complete", new JSONArray(complete))
                     .put("total", new JSONArray(total))
                     .put("scanned", new JSONArray(scanned))
@@ -61,6 +306,10 @@ interface IndexStore {
                 if (s.total[k] == 0 && !s.complete[k] && saved.optJSONArray("scanned") == null)
                     s.total[k] = -1; // 1.0.8 wrote 0 for "not known".
                 if (scanned != null) s.scanned[k] = scanned.optInt(k);
+                JSONArray top = saved.optJSONArray("topCursor"),
+                        done = saved.optJSONArray("topComplete");
+                if (top != null) s.topCursor[k] = top.optLong(k);
+                if (done != null) s.topComplete[k] = done.optBoolean(k);
             }
             s.builtAt = saved.optLong("builtAt");
             s.refreshed = saved.optLong("refreshed");
@@ -246,6 +495,130 @@ interface IndexStore {
         private final Map<Long, TreeMap<Long, String>> zips = new HashMap<>();
         private final Set<String> zipsDone = new HashSet<>(), zipsDeferred = new HashSet<>();
         private final Map<String, String> found = new HashMap<>();
+        private final Map<Long, Map<Long, long[]>> changes = new HashMap<>();
+        private final Map<Long, Long> chatEpochs = new HashMap<>();
+        private long epoch, cleared;
+
+        @Override
+        public synchronized void atomic(Change change) throws Exception {
+            change.run();
+        }
+
+        @Override
+        public synchronized long epoch() {
+            return epoch;
+        }
+
+        @Override
+        public synchronized long chatEpoch(long chat) {
+            return Math.max(cleared, chatEpochs.getOrDefault(chat, 0L));
+        }
+
+        @Override
+        public synchronized long revision(long chat, long message) {
+            long[] change = changes.getOrDefault(chat, Collections.emptyMap()).get(message);
+            return Math.max(chatEpoch(chat), change == null ? 0 : change[0]);
+        }
+
+        @Override
+        public synchronized boolean changed(long chat, long message) {
+            return changes.getOrDefault(chat, Collections.emptyMap()).containsKey(message);
+        }
+
+        @Override
+        public synchronized boolean deleted(long chat, long message) {
+            long[] change = changes.getOrDefault(chat, Collections.emptyMap()).get(message);
+            return change != null && change[1] == 1;
+        }
+
+        @Override
+        public synchronized boolean unavailable(long chat, long message) {
+            long[] change = changes.getOrDefault(chat, Collections.emptyMap()).get(message);
+            return change != null && change[1] != 0;
+        }
+
+        @Override
+        public synchronized void available(long chat, long message) {
+            long[] change = changes.getOrDefault(chat, Collections.emptyMap()).get(message);
+            if (change != null && change[1] == 2) change[1] = 0;
+        }
+
+        @Override
+        public synchronized void advance(long chat, long message, int unavailable) {
+            changes.computeIfAbsent(chat, ignored -> new HashMap<>())
+                    .put(message, new long[] {++epoch, unavailable});
+        }
+
+        @Override
+        public synchronized JSONObject zip(long chat, long message) throws Exception {
+            String saved = zips.getOrDefault(chat, new TreeMap<>()).get(message);
+            return saved == null ? null : new JSONObject(saved);
+        }
+
+        @Override
+        public synchronized boolean zipPending(long chat, long message) {
+            String key = chat + "_" + message;
+            return zips.getOrDefault(chat, new TreeMap<>()).containsKey(message)
+                    && !zipsDone.contains(key)
+                    && !zipsDeferred.contains(key);
+        }
+
+        @Override
+        public synchronized void resetChat(long chat) throws Exception {
+            Set<Long> messages = new HashSet<>();
+            for (Entry entry : files.getOrDefault(chat, new TreeMap<>()).values())
+                messages.add(new JSONObject(entry.row).getLong("message"));
+            for (long message : messages) removeMessage(chat, message);
+            files.remove(chat);
+            zips.remove(chat);
+            zipsDone.removeIf(key -> key.startsWith(chat + "_"));
+            zipsDeferred.removeIf(key -> key.startsWith(chat + "_"));
+            states.remove(chat);
+            chatEpochs.put(chat, ++epoch);
+        }
+
+        @Override
+        public synchronized void removeMessage(long chat, long message) throws Exception {
+            TreeMap<Long, Entry> saved = files.get(chat);
+            List<JSONObject> removed = new ArrayList<>();
+            if (saved != null) {
+                Iterator<Entry> entries = saved.values().iterator();
+                while (entries.hasNext()) {
+                    Entry entry = entries.next();
+                    JSONObject row = new JSONObject(entry.row);
+                    if (row.optLong("message") == message
+                            || row.optLong(SOURCE_MESSAGE) == message) {
+                        removed.add(row);
+                        entries.remove();
+                    }
+                }
+            }
+            TreeMap<Long, String> jobs = zips.get(chat);
+            if (jobs != null) jobs.remove(message);
+            zipsDone.remove(chat + "_" + message);
+            zipsDeferred.remove(chat + "_" + message);
+            String prefix = chat + "_" + message;
+            found.keySet()
+                    .removeIf(
+                            key ->
+                                    key.equals("check:" + prefix)
+                                            || key.equals("names:" + prefix)
+                                            || key.startsWith("check:" + prefix + "_")
+                                            || key.startsWith("names:" + prefix + "_"));
+            Set<String> checks = new HashSet<>(), names = new HashSet<>();
+            for (JSONObject row : removed) {
+                checks.add(LosslessCheck.key(row));
+                names.add(row.optString("id"));
+            }
+            if (saved != null)
+                for (Entry entry : saved.values()) {
+                    JSONObject row = new JSONObject(entry.row);
+                    checks.remove(LosslessCheck.key(row));
+                    names.remove(row.optString("id"));
+                }
+            for (String key : checks) found.remove("check:" + key);
+            for (String key : names) found.remove("names:" + key);
+        }
 
         private static long key(long message, int entry) {
             return message * 65536 + entry;
@@ -254,11 +627,15 @@ interface IndexStore {
         @Override
         public synchronized State state(long chat) throws Exception {
             String saved = states.get(chat);
-            return saved == null ? new State(chat) : State.fromJson(chat, new JSONObject(saved));
+            State state =
+                    saved == null ? new State(chat) : State.fromJson(chat, new JSONObject(saved));
+            state.epoch = chatEpoch(chat);
+            return state;
         }
 
         @Override
         public synchronized void save(State state) throws Exception {
+            if (state.epoch != chatEpoch(state.chat)) return;
             states.put(state.chat, state.toJson().toString());
         }
 
@@ -266,7 +643,10 @@ interface IndexStore {
         public synchronized void put(long chat, List<JSONObject> rows, long generation)
                 throws Exception {
             TreeMap<Long, Entry> chatFiles = files.computeIfAbsent(chat, c -> new TreeMap<>());
-            for (JSONObject row : rows) {
+            for (JSONObject input : rows) {
+                JSONObject row = persisted(input);
+                if (!current(chat, row)) continue;
+                row.put(REVISION, revision(chat, row.optLong("message")));
                 withFound(this, row, true);
                 chatFiles.put(
                         key(row.optLong("message"), row.optInt("entry")),
@@ -388,16 +768,22 @@ interface IndexStore {
         }
 
         @Override
-        public synchronized void queueZips(long chat, List<JSONObject> list, long generation) {
+        public synchronized void queueZips(long chat, List<JSONObject> list, long generation)
+                throws Exception {
             TreeMap<Long, String> chatZips = zips.computeIfAbsent(chat, c -> new TreeMap<>());
-            for (JSONObject zip : list) {
+            for (JSONObject input : list) {
+                JSONObject zip = persisted(input);
                 long message = zip.optLong("message");
+                if (!current(chat, zip)) continue;
+                zip.put(REVISION, revision(chat, message));
                 if (!chatZips.containsKey(message)) chatZips.put(message, zip.toString());
                 else if (zip.optString("kind").equals("cue")) {
+                    chatZips.put(message, zip.toString());
                     // A cue sheet's tracks are filed under its album's post: read it again.
                     zipsDone.remove(chat + "_" + message);
                     zipsDeferred.remove(chat + "_" + message);
                 } else {
+                    chatZips.put(message, zip.toString());
                     TreeMap<Long, Entry> chatFiles = files.get(chat);
                     if (chatFiles == null) continue;
                     for (Map.Entry<Long, Entry> e :
@@ -446,7 +832,13 @@ interface IndexStore {
         @Override
         public synchronized void prune(long chat, long generation) {
             TreeMap<Long, Entry> chatFiles = files.get(chat);
-            if (chatFiles != null) chatFiles.values().removeIf(e -> e.generation < generation);
+            if (chatFiles != null)
+                chatFiles
+                        .entrySet()
+                        .removeIf(
+                                e ->
+                                        e.getValue().generation < generation
+                                                && !changed(chat, e.getKey() / 65536));
         }
 
         @Override
@@ -457,6 +849,9 @@ interface IndexStore {
             zipsDone.clear();
             zipsDeferred.clear();
             found.clear();
+            changes.clear();
+            chatEpochs.clear();
+            cleared = ++epoch;
         }
     }
 }

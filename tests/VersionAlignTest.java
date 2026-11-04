@@ -2,6 +2,7 @@ package app.bitchord.telegram;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -232,14 +233,18 @@ public final class VersionAlignTest {
         long startUs = freshOffsetUs + (long) start * 1_000_000L / rate;
         double freshMs = start * 1000.0 / rate + 800;
         int next = feed(fresh, telegram, rate, start, (long) freshMs + 300, freshOffsetUs, false);
+        long sampleNanos = System.nanoTime();
         VersionAlign.position(old, RENDER_OFFSET_US + Math.round(oldMs * 1000));
         VersionAlign.position(fresh, startUs + 800_000);
         double expected = oldMs - freshMs;
         // The real player refreshes sink positions while correlation runs on its worker.
-        // This single-threaded fixture must capture the live sink before that CPU work:
-        // its 200 ms freshness window can expire on a busy test machine.
+        // Both sample positions describe one instant, before correlation.
         VersionAlign.Heard heard = VersionAlign.newest();
         check(heard != null, "the newest sink is the new copy");
+        List<VersionAlign.Heard> playing = VersionAlign.playing(sampleNanos);
+        VersionAlign.Heard oldHeard = playing.get(playing.size() - 2);
+        oldHeard.position(RENDER_OFFSET_US + Math.round(oldMs * 1000), sampleNanos);
+        heard.position(startUs + 800_000, sampleNanos);
         double[] lag = VersionAlign.lag(1f, 300, 600);
         check(lag != null, "the two sinks compared, " + behindMs + " ms apart");
         check(Math.abs(lag[0] - expected) <= 0.5, "heard " + expected + " ms behind as " + lag[0]);
@@ -271,8 +276,9 @@ public final class VersionAlignTest {
                 (long) (oldMs + laterMs + 500),
                 RENDER_OFFSET_US,
                 false);
-        VersionAlign.position(old, RENDER_OFFSET_US + Math.round((oldMs + laterMs) * 1000));
-        VersionAlign.position(fresh, raw); // read together, as the player does
+        sampleNanos = System.nanoTime();
+        oldHeard.position(RENDER_OFFSET_US + Math.round((oldMs + laterMs) * 1000), sampleNanos);
+        heard.position(raw, sampleNanos);
         check(heard.caughtUp(), "caught up once the cut is heard");
         double[] left = VersionAlign.lag(1f, 100, 400);
         check(left != null, "compared again");

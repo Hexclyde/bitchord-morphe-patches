@@ -17,6 +17,34 @@ private const val UI = "Lapp/bitchord/telegram/ExtrasUi;"
 private const val GROUP =
     "Ljava/lang/String;Ljava/lang/String;FLandroidx/compose/runtime/internal/ComposableLambdaImpl;Landroidx/compose/runtime/ComposerImpl;II"
 private const val NS = "http://schemas.android.com/apk/res/android"
+private const val SOURCE_CONFIG = "Lcom/music/bitchord/data/sources/SourceConfig;"
+private const val STRING = "Ljava/lang/String;"
+private const val FUNCTION0 = "Lkotlin/jvm/functions/Function0;"
+private const val FUNCTION1 = "Lkotlin/jvm/functions/Function1;"
+
+// BitChord 1.9 builds a source row from seven values.
+private val SOURCE_CONFIG_LEGACY_CONSTRUCTOR =
+    listOf(STRING, "Lcom/music/bitchord/data/sources/SourceKind;", STRING, STRING, "Z", "Z", "Z")
+
+// Addons that publish quality choices add the list and the picked value.
+private val SOURCE_CONFIG_QUALITY_CONSTRUCTOR =
+    SOURCE_CONFIG_LEGACY_CONSTRUCTOR + listOf("Ljava/util/List;", STRING)
+
+private val SOURCES_SCREEN_PREFIX = listOf("Landroidx/compose/foundation/layout/PaddingValuesImpl;")
+private val SOURCES_SCREEN_SUFFIX =
+    listOf("Landroidx/compose/ui/Modifier;", "Landroidx/compose/runtime/ComposerImpl;", "I")
+
+// Edit, WebDAV, SMB and JioSaavn callbacks.
+private val SOURCES_SCREEN_LEGACY =
+    SOURCES_SCREEN_PREFIX +
+        listOf(FUNCTION1, FUNCTION0, FUNCTION0, FUNCTION0) +
+        SOURCES_SCREEN_SUFFIX
+
+// The quality chooser callback follows the edit callback.
+private val SOURCES_SCREEN_QUALITY =
+    SOURCES_SCREEN_PREFIX +
+        listOf(FUNCTION1, FUNCTION1, FUNCTION0, FUNCTION0, FUNCTION0) +
+        SOURCES_SCREEN_SUFFIX
 
 private object PatchesApplicationCreate :
     Fingerprint(
@@ -26,11 +54,43 @@ private object PatchesApplicationCreate :
         returnType = "V",
     )
 
+/** Whether SourceConfig carries the quality options, from its constructor and fields. */
+internal fun BytecodePatchContext.qualitySourceShape(): Boolean {
+    val config = classDefBy(SOURCE_CONFIG)
+    val legacyConfig =
+        config.methods.count {
+            it.name == "<init>" &&
+                it.accessFlags and 1 != 0 &&
+                it.parameterTypes == SOURCE_CONFIG_LEGACY_CONSTRUCTOR
+        }
+    val qualityConfig =
+        config.methods.count {
+            it.name == "<init>" &&
+                it.accessFlags and 1 != 0 &&
+                it.parameterTypes == SOURCE_CONFIG_QUALITY_CONSTRUCTOR
+        }
+    val qualityFields =
+        config.fields.count {
+            (it.name == "qualityOptions" && it.type == "Ljava/util/List;") ||
+                (it.name == "pickedQuality" && it.type == STRING)
+        }
+    check(
+        (legacyConfig == 1 && qualityConfig == 0 && qualityFields == 0) ||
+            (legacyConfig == 0 && qualityConfig == 1 && qualityFields == 2)
+    ) {
+        "Source configuration constructor is not a known BitChord shape"
+    }
+    return qualityConfig == 1
+}
+
 /** Shared settings and sound controls contain no Telegram account or TDLib implementation. */
 internal val patchesUiRuntime = bytecodePatch {
-    dependsOn(audioOriginPatch)
+    dependsOn(audioOriginPatch, selectedDownloadsPatch)
     extendWith("extensions/patches-ui.mpe")
     execute {
+        addYouTubeControls()
+        addLoginNavigationHooks()
+        addPlayerDownloadHooks()
         val sourceConfig = classDefBy("Lcom/music/bitchord/data/sources/SourceConfig;")
         for (getter in listOf("getId", "getBaseUrl")) {
             check(
@@ -46,6 +106,7 @@ internal val patchesUiRuntime = bytecodePatch {
                 "Source configuration $getter identity getter changed"
             }
         }
+        qualitySourceShape()
         val registry = mutableClassDefBy("Lcom/music/bitchord/data/sources/SourceRegistry;")
         val publication =
             registry.methods.singleOrNull {
@@ -172,6 +233,17 @@ private val patchesUiResources = resourcePatch {
                 "@android:style/Theme.Material.NoActionBar",
             )
             app.appendChild(activity)
+            val reports = doc.createElement("provider")
+            reports.setAttributeNS(NS, "android:name", "app.bitchord.telegram.DiagnosticFiles")
+            reports.setAttributeNS(
+                NS,
+                "android:authorities",
+                doc.documentElement.getAttribute("package") + ".diagnostics",
+            )
+            reports.setAttributeNS(NS, "android:exported", "false")
+            reports.setAttributeNS(NS, "android:grantUriPermissions", "true")
+            app.appendChild(reports)
+
             val callback = doc.createElement("activity")
             callback.setAttributeNS(
                 NS,
@@ -205,6 +277,7 @@ private val patchesUiResources = resourcePatch {
                     "PlaylistToolsActivity",
                     "DownloadsSettingsActivity",
                     "StorageSenseActivity",
+                    "DiagnosticsActivity",
                     "SmartPlaylistActivity",
                     "PlaylistImportActivity",
                     "PlaylistSyncActivity",
@@ -240,10 +313,47 @@ private fun registers(instruction: Instruction): List<Int> =
         else -> error("Unexpected settings call encoding")
     }
 
+internal fun BytecodePatchContext.checkHostSettingsRow() {
+    val lead =
+        listOf(
+            "Landroidx/compose/ui/graphics/vector/ImageVector;",
+            STRING,
+            STRING,
+            "Lkotlin/jvm/functions/Function2;",
+            STRING,
+            STRING,
+            "Z",
+            "Landroidx/compose/ui/graphics/painter/Painter;",
+        )
+    val trailing =
+        listOf(
+            FUNCTION0,
+            "Lkotlin/jvm/functions/Function2;",
+            "Landroidx/compose/runtime/ComposerImpl;",
+            "I",
+            "I",
+        )
+    val shapes =
+        listOf(lead + trailing, lead + listOf("Lkotlin/jvm/functions/Function2;") + trailing + "I")
+    val rows =
+        classDefBy("Lcom/music/bitchord/ui/screens/SettingsSheetKt;").methods.filter {
+            it.name == "SettingsRow"
+        }
+    check(
+        rows.size == 1 &&
+            rows.single().accessFlags and 9 == 9 &&
+            rows.single().returnType == "V" &&
+            rows.single().parameterTypes.map { it.toString() } in shapes
+    ) {
+        "The native settings row signature is unknown or ambiguous"
+    }
+}
+
 /** One shared entry, regardless of the order in which optional patches were selected. */
 internal val extrasSettingsPatch = bytecodePatch {
     dependsOn(patchesUiRuntime, patchesUiResources, selectedDownloadsPatch)
     execute {
+        checkHostSettingsRow()
         addDownloadsSettingsRow()
         val playback =
             mutableClassDefBy("Lcom/music/bitchord/playback/PlaybackService;").methods.single {
@@ -399,7 +509,7 @@ internal val extrasSettingsPatch = bytecodePatch {
             "invoke-static/range {p0 .. p0}, $UI->start(Landroid/content/Context;)V",
         )
 
-        // R8 merges SourcesScreen into different ScreenKt classes in 1.8.1/1.9.
+        // R8 merges SourcesScreen into different ScreenKt classes in 1.9/1.9.1.
         // Wrap only its collected UI state. The registry, playback resolver and search
         // retain their original source configurations and enabled state.
         val sourceOwners = mutableListOf<String>()
@@ -410,16 +520,8 @@ internal val extrasSettingsPatch = bytecodePatch {
                         it.name == "SourcesScreen" &&
                             it.returnType == "V" &&
                             it.parameterTypes ==
-                                listOf(
-                                    "Landroidx/compose/foundation/layout/PaddingValuesImpl;",
-                                    "Lkotlin/jvm/functions/Function1;",
-                                    "Lkotlin/jvm/functions/Function0;",
-                                    "Lkotlin/jvm/functions/Function0;",
-                                    "Lkotlin/jvm/functions/Function0;",
-                                    "Landroidx/compose/ui/Modifier;",
-                                    "Landroidx/compose/runtime/ComposerImpl;",
-                                    "I",
-                                )
+                                (if (qualitySourceShape()) SOURCES_SCREEN_QUALITY
+                                else SOURCES_SCREEN_LEGACY)
                     }
             )
                 sourceOwners.add(candidate.type)

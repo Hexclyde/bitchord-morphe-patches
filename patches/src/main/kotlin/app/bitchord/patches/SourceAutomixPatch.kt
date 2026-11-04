@@ -26,12 +26,29 @@ private fun Instruction.mixCall() = (this as? ReferenceInstruction)?.reference a
 
 private fun Instruction.mixField() = (this as? ReferenceInstruction)?.reference as? FieldReference
 
+private object AutomixNotices
+
+private val automixResources = resourcePatch {
+    execute {
+        for (name in listOf("AUTOMIX-COMPONENTS.txt", "GPL-3.0.txt")) {
+            get("assets/bitchord/automix/licenses/$name", false).apply {
+                parentFile.mkdirs()
+                AutomixNotices::class
+                    .java
+                    .classLoader
+                    .getResourceAsStream("licenses/$name")!!
+                    .use { input -> outputStream().use { input.copyTo(it) } }
+            }
+        }
+    }
+}
+
 @Suppress("unused")
 val sourceAutomixPatch =
     bytecodePatch(
         name = "Source-independent AutoMix",
         description =
-            "Measures the selected playable source, verifies automatic replacements, preserves playback speed and adds a native, pair-specific transition timeline with volume, EQ, filter controls and preview. BitChord 1.9.",
+            "Measures the selected playable source, verifies automatic replacements, preserves playback speed and adds a native, pair-specific transition timeline with volume, EQ, filter controls and preview.",
         default = true,
     ) {
         compatibleWith(
@@ -40,10 +57,14 @@ val sourceAutomixPatch =
                 packageName = "com.music.bitchord",
                 apkFileType = ApkFileType.APK,
                 appIconColor = 0xFF8944,
-                targets = listOf(AppTarget(version = "1.9", isExperimental = true, minSdk = 26)),
+                targets =
+                    listOf(
+                        AppTarget(version = "1.9", isExperimental = true, minSdk = 26),
+                        AppTarget(version = "1.9.1-beta1", isExperimental = true, minSdk = 26),
+                    ),
             )
         )
-        dependsOn(extrasSettingsPatch, playbackBufferGatePatch)
+        dependsOn(extrasSettingsPatch, playbackBufferGatePatch, automixResources)
         execute {
             addSourceVerification()
             val timingPair = classDefBy("Lkotlin/Pair;")
@@ -114,6 +135,24 @@ val sourceAutomixPatch =
                     listOf(source, "D", "D", function0, function4),
                     "Lkotlin/Pair;",
                 )
+            add(
+                HOST,
+                "bitchordWaveDecode",
+                listOf(source, "D", "D", function0, function4),
+                "Ljava/lang/Object;",
+                14,
+                """
+                move-object/from16 v0, p0
+                move-wide/from16 v1, p1
+                move-wide/from16 v3, p3
+                move-object/from16 v5, p5
+                move-object/from16 v6, p6
+                invoke-static/range {v0 .. v6}, $decoded
+                move-result-object v0
+                return-object v0
+                """
+                    .trimIndent(),
+            )
             val decodeCode =
                 classDefBy(decoder)
                     .methods
@@ -588,18 +627,26 @@ val sourceAutomixPatch =
             analyzer.methods.add(replacement)
             val marker = mutableClassDefBy(MIX).methods.single { it.name == "applied" }
             marker.replaceInstruction(0, "const/4 v0, 0x1")
-            val enabled =
-                mutableClassDefBy(SETTINGS).methods.single { it.name == "setSmartFadeEnabled" }
-            val enableCode = enabled.implementation!!.instructions.toList()
-            for (index in
-                enableCode.indices
-                    .filter { enableCode[it].opcode == Opcode.RETURN_VOID }
-                    .reversed()) enabled.addInstruction(
-                index,
-                "invoke-static {}, $MIX->settingChanged()V",
-            )
+            addSmartFadeReconcile()
 
             val controller = mutableClassDefBy("Lcom/music/bitchord/playback/CrossfadeController;")
+            installPlayerHeader("Lapp/bitchord/telegram/VideoSwitch;")
+            val bands = classDefBy("Lcom/music/bitchord/playback/smart/MixWaveform${'$'}Bands;")
+            for (name in listOf("low", "mid", "high")) check(
+                bands.fields.any { it.name == name && it.type == "[F" }
+            ) {
+                "Editor waveform band ABI changed: $name"
+            }
+            val waveReader = controller.fields.single { it.name == "mixWaveform" }
+            check(
+                classDefBy(waveReader.type).methods.any {
+                    it.name == "invoke" &&
+                        it.parameterTypes.size == 5 &&
+                        it.returnType == "Ljava/lang/Object;"
+                }
+            ) {
+                "Editor selected-source waveform reader changed"
+            }
             val consider = controller.methods.single { it.name == "considerSmartTransition" }
             val code = consider.implementation!!.instructions.toList()
             val saved =
@@ -622,24 +669,156 @@ val sourceAutomixPatch =
                 index,
                 "const/16 v${(code[index] as OneRegisterInstruction).registerA}, 0x0",
             )
-            consider.addInstruction(
+            val publication = code[saved] as TwoRegisterInstruction
+            val planField = code[saved].mixField()!!
+            consider.replaceInstruction(
                 saved,
                 "invoke-static/range {v$planRegister .. v$planRegister}, $MIX->plan(Ljava/lang/Object;)V",
             )
-            val edit = "Lapp/bitchord/telegram/TransitionRuntime;"
             consider.addInstruction(
-                0,
-                "invoke-static/range {p0 .. p0}, $edit->bind(Ljava/lang/Object;)V",
+                saved + 1,
+                "iput-object v${publication.registerA}, v${publication.registerB}, " +
+                    "${planField.definingClass}->${planField.name}:${planField.type}",
             )
+            val edit = "Lapp/bitchord/telegram/TransitionRuntime;"
+            val considerWords =
+                1 + consider.parameterTypes.sumOf { if (it == "D" || it == "J") 2 else 1 }
+            check(
+                consider.returnType == "V" &&
+                    consider.implementation!!.registerCount > considerWords
+            )
+            consider.addInstructionsWithLabels(
+                0,
+                """
+                invoke-static/range {p0 .. p0}, $edit->bind(Ljava/lang/Object;)V
+                invoke-static/range {p0 .. p0}, $edit->holdPlanner(Ljava/lang/Object;)Z
+                move-result v0
+                if-eqz v0, :plan_current_queue
+                return-void
+                :plan_current_queue
+                nop
+                """,
+            )
+            fun previewApi(owner: String, name: String, args: List<String>, result: String) {
+                check(
+                    classDefBy(owner).methods.any {
+                        it.name == name &&
+                            it.parameterTypes == args &&
+                            it.returnType == result &&
+                            it.accessFlags and AccessFlags.PUBLIC.value != 0
+                    }
+                ) {
+                    "Independent AutoMix preview API changed: $owner->$name"
+                }
+            }
+            val previewProcessors =
+                listOf(
+                        "SpatialAudioProcessor",
+                        "EqualizerProcessor",
+                        "TransitionFilterProcessor",
+                        "LoudnessProcessor",
+                    )
+                    .map { "Lcom/music/bitchord/playback/$it;" }
+            for (type in previewProcessors) previewApi(type, "<init>", emptyList(), "V")
+            previewApi(
+                "Lcom/music/bitchord/playback/PlaybackService${'$'}silenceSkippingRenderers${'$'}1;",
+                "<init>",
+                listOf(HOST) + previewProcessors,
+                "V",
+            )
+            val previewBuilder = "Landroidx/media3/exoplayer/ExoPlayer${'$'}Builder;"
+            previewApi(previewBuilder, "<init>", listOf("Landroid/content/Context;"), "V")
+            previewApi(
+                previewBuilder,
+                "setMediaSourceFactory",
+                listOf("Landroidx/media3/exoplayer/source/MediaSource${'$'}Factory;"),
+                "V",
+            )
+            previewApi(
+                previewBuilder,
+                "build",
+                emptyList(),
+                "Landroidx/media3/exoplayer/ExoPlayerImpl;",
+            )
+            for ((name, type) in
+                listOf(
+                    "renderersFactorySupplier" to "Lcom/google/common/base/Supplier;",
+                    "loadControlSupplier" to "Lcom/google/common/base/Supplier;",
+                    "handleAudioFocus" to "Z",
+                    "handleAudioBecomingNoisy" to "Z",
+                )) check(
+                classDefBy(previewBuilder).fields.any {
+                    it.name == name &&
+                        it.type == type &&
+                        it.accessFlags and AccessFlags.PUBLIC.value != 0
+                }
+            )
+            val allocator = "Landroidx/media3/exoplayer/upstream/DefaultAllocator;"
+            previewApi(allocator, "<init>", emptyList(), "V")
+            previewApi(
+                "Landroidx/media3/exoplayer/DefaultLoadControl;",
+                "<init>",
+                listOf(allocator) + List(9) { "I" } + listOf("Z", "I", "Z", "Ljava/util/Map;"),
+                "V",
+            )
+            val previewPlayer = "Landroidx/media3/common/Player;"
+            for (name in
+                listOf(
+                    "setRepeatMode",
+                    "setShuffleModeEnabled",
+                    "setMediaItem",
+                    "setPlayWhenReady",
+                )) {
+                val type =
+                    if (name == "setMediaItem") "Landroidx/media3/common/MediaItem;"
+                    else if (name == "setRepeatMode") "I" else "Z"
+                previewApi(previewPlayer, name, listOf(type), "V")
+            }
+            previewApi(
+                previewPlayer,
+                "getPlayerError",
+                emptyList(),
+                "Landroidx/media3/common/PlaybackException;",
+            )
+            previewApi("Landroidx/media3/exoplayer/ExoPlayer;", "release", emptyList(), "V")
+            previewApi(controller.type, "isTransitioning", emptyList(), "Z")
+            for ((name, type) in
+                listOf(
+                    "mediaSourceFactory" to
+                        "Landroidx/media3/exoplayer/source/DefaultMediaSourceFactory;",
+                    "spatialAudioProcessorA" to previewProcessors[0],
+                    "equalizerProcessorA" to previewProcessors[1],
+                    "loudnessA" to previewProcessors[3],
+                )) check(classDefBy(HOST).fields.any { it.name == name && it.type == type })
+            for ((type, name, fieldType) in
+                listOf(
+                    Triple(previewProcessors[0], "enabled", "Z"),
+                    Triple(
+                        previewProcessors[1],
+                        "target",
+                        "Lcom/music/bitchord/playback/EqualizerProcessor${'$'}Tuning;",
+                    ),
+                    Triple(previewProcessors[3], "gainFor", "Lkotlin/jvm/functions/Function1;"),
+                    Triple(previewProcessors[3], "mediaId", "Ljava/lang/String;"),
+                )) check(classDefBy(type).fields.any { it.name == name && it.type == fieldType })
             val begin = controller.methods.single { it.name == "begin" }
             check(
-                begin.parameterTypes.last() == "Lcom/music/bitchord/playback/smart/TransitionPlan;"
+                begin.returnType == "Z" &&
+                    begin.parameterTypes.last() ==
+                        "Lcom/music/bitchord/playback/smart/TransitionPlan;"
             )
             val beginWords = 1 + begin.parameterTypes.sumOf { if (it == "J" || it == "D") 2 else 1 }
             check(begin.implementation!!.registerCount >= beginWords + 2)
-            begin.addInstructions(
+            begin.addInstructionsWithLabels(
                 0,
                 """
+                invoke-static/range {p0 .. p0}, $edit->previewHolding(Ljava/lang/Object;)Z
+                move-result v0
+                if-eqz v0, :audition_does_not_hold_queue
+                const/4 v0, 0x0
+                return v0
+                :audition_does_not_hold_queue
+                nop
                 move-object/from16 v0, p0
                 move-object/from16 v1, p${beginWords-1}
                 invoke-static {v0, v1}, $edit->arm(Ljava/lang/Object;Ljava/lang/Object;)V

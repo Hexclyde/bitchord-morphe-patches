@@ -7,8 +7,6 @@ import androidx.compose.runtime.ComposerImpl;
 import androidx.compose.runtime.internal.ComposableLambdaImpl;
 import androidx.compose.ui.graphics.painter.Painter;
 
-import com.music.bitchord.ui.screens.SettingsSheetKt;
-
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function2;
@@ -22,20 +20,13 @@ public final class ExtrasUi {
             };
     private static final Function2<ComposerImpl, Integer, Unit> CONTENT =
             (composer, flags) -> {
-                SettingsSheetKt.SettingsRow(
-                        null,
+                HostSettingsRow.call(
                         Strings.t("Patches & tweaks"),
                         Strings.t("Choose what each installed patch does"),
-                        null,
-                        null,
-                        null,
                         true,
                         hostPainter(tweaksIcon(), composer),
                         OPEN,
-                        null,
-                        composer,
-                        0,
-                        0);
+                        composer);
                 return Unit.INSTANCE;
             };
     private static final ComposableLambdaImpl GROUP_CONTENT =

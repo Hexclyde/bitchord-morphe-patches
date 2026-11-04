@@ -139,6 +139,10 @@ final class BatchDownloadPage extends DownloadPage {
                             + " · "
                             + HostDownloadAccess.propertyText(song, "artist"),
                     17);
+            String duration =
+                    DownloadDetails.referenceDuration(
+                            HostDownloadAccess.propertyText(song, "durationText"));
+            text(card, PatchStrings.t("Duration") + " · " + duration, 14);
             text(
                     card,
                     choice == null
@@ -164,7 +168,18 @@ final class BatchDownloadPage extends DownloadPage {
                                                     SoulseekDownloadChoice.EXTRA_QUERY,
                                                     query.substring(
                                                             0, Math.min(query.length(), 256)))
-                                            .putExtra("download.batch.index", index));
+                                            .putExtra("download.batch.index", index)
+                                            .putExtra(
+                                                    "download.track.title",
+                                                    HostDownloadAccess.propertyText(song, "title"))
+                                            .putExtra(
+                                                    "download.track.artist",
+                                                    HostDownloadAccess.propertyText(song, "artist"))
+                                            .putExtra(
+                                                    "download.track.artwork",
+                                                    HostDownloadAccess.propertyText(
+                                                            song, "thumbnailUrl"))
+                                            .putExtra("download.track.duration", duration));
                         });
                 if (choice != null)
                     button(

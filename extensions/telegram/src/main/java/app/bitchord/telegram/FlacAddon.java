@@ -167,7 +167,6 @@ public final class FlacAddon {
     static void register() throws Exception {
         Class<?> registry = Class.forName("com.music.bitchord.data.sources.SourceRegistry");
         Class<?> config = Class.forName("com.music.bitchord.data.sources.SourceConfig");
-        Class<?> kind = Class.forName("com.music.bitchord.data.sources.SourceKind");
         Object flow = registry.getField("configs").get(null);
         List<?> current =
                 (List<?>)
@@ -185,41 +184,18 @@ public final class FlacAddon {
             found = true;
             if ((ORIGIN).equals(config.getMethod("getBaseUrl").invoke(row))) return;
             next.add(
-                    config.getConstructor(
-                                    String.class,
-                                    kind,
-                                    String.class,
-                                    String.class,
-                                    boolean.class,
-                                    boolean.class,
-                                    boolean.class)
-                            .newInstance(
-                                    ID,
-                                    kind.getField("ADDON").get(null),
-                                    "Flac Downloader Audio",
-                                    ORIGIN,
-                                    config.getMethod("getEnabled").invoke(row),
-                                    true,
-                                    false));
+                    NativeSourceConfig.addon(
+                            ID,
+                            "Flac Downloader Audio",
+                            ORIGIN,
+                            (Boolean) config.getMethod("getEnabled").invoke(row),
+                            true,
+                            false));
         }
         if (!found)
             next.add(
-                    config.getConstructor(
-                                    String.class,
-                                    kind,
-                                    String.class,
-                                    String.class,
-                                    boolean.class,
-                                    boolean.class,
-                                    boolean.class)
-                            .newInstance(
-                                    ID,
-                                    kind.getField("ADDON").get(null),
-                                    "Flac Downloader Audio",
-                                    ORIGIN,
-                                    false,
-                                    true,
-                                    false));
+                    NativeSourceConfig.addon(
+                            ID, "Flac Downloader Audio", ORIGIN, false, true, false));
         registry.getMethod("publish", ArrayList.class, boolean.class).invoke(null, next, true);
     }
 

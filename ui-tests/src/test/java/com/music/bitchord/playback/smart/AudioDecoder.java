@@ -28,6 +28,11 @@ public final class AudioDecoder {
 
     private AudioDecoder() {}
 
+    /** Builds the synthetic PCM before a worker's measured behavior starts. */
+    public static void prepareRecording(long seed, int seconds) {
+        tune(seed, seconds);
+    }
+
     /** A file's bytes: a header naming the recording, then a position-dependent pattern. */
     public static byte[] file(long seed, long middleSeed, int seconds, int leadMs, boolean walks) {
         byte[] out = new byte[HEADER + seconds * BYTES_PER_SECOND];

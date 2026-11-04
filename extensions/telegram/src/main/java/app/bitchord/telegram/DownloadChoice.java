@@ -102,7 +102,7 @@ public final class DownloadChoice {
      * to ask in, and the song hasn't been answered for already.
      */
     public static boolean hold(Context context, Song song, String from) {
-        if (!ask || song == null || song.videoId == null) return false;
+        if (!ask || song == null || song.videoId == null || PlayerDownload.owns(song)) return false;
         // An explicitly selected native file keeps its original encoding. These paths
         // bypass catalogue quality selection and cannot produce a different rendition.
         if (song.videoId.startsWith("src:soulseek-native::")

@@ -22,4 +22,15 @@ public final class AppSettings {
     }
 
     public static final Flow<Mode> bitPerfectMode = new Flow<>(Mode.OFF);
+
+    private static final kotlinx.coroutines.flow.MutableStateFlow<Boolean> smartFade =
+            kotlinx.coroutines.flow.StateFlowKt.MutableStateFlow(false);
+
+    public static kotlinx.coroutines.flow.StateFlow<Boolean> getSmartFadeEnabled() {
+        return smartFade;
+    }
+
+    public static void setSmartFadeEnabled(boolean on) {
+        smartFade.setValue(on);
+    }
 }

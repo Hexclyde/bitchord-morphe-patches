@@ -25,7 +25,91 @@ public final class LiveSearchTest {
         return new TdApi.FoundChatMessages(messages.length, messages, 0);
     }
 
+    private static void metadataCooldown() throws Exception {
+        AtomicLong now = new AtomicLong(1000);
+        AtomicInteger gatewayCalls = new AtomicInteger(), metadataCalls = new AtomicInteger();
+        try (LiveSearch search =
+                new LiveSearch(
+                        (request, timeout) -> {
+                            gatewayCalls.incrementAndGet();
+                            return found();
+                        },
+                        now::get,
+                        12000)) {
+            try {
+                search.metadata(
+                        () -> {
+                            metadataCalls.incrementAndGet();
+                            throw new LiveSearch.RateLimited(10);
+                        });
+                throw new AssertionError("Metadata flood wait must propagate");
+            } catch (LiveSearch.RateLimited expected) {
+                check(
+                        expected.retrySeconds == 10,
+                        "Metadata preserves the declared retry interval");
+            }
+            for (int kind = 0; kind < 3; kind++) {
+                try {
+                    if (kind == 0)
+                        search.metadata(
+                                () -> {
+                                    metadataCalls.incrementAndGet();
+                                    return 7;
+                                });
+                    else if (kind == 1) search.page(-10, 0, 0);
+                    else search.search(chats(-10), "uncached query", 1);
+                    throw new AssertionError("Every lookup must share the metadata pause");
+                } catch (LiveSearch.RateLimited expected) {
+                    check(
+                            expected.retrySeconds == 10,
+                            "Metadata pauses searches and index pages too");
+                }
+            }
+            check(
+                    metadataCalls.get() == 1 && gatewayCalls.get() == 0,
+                    "A shared pause invokes neither metadata nor search transport");
+            now.set(11000);
+            check(
+                    search.metadata(
+                                    () -> {
+                                        metadataCalls.incrementAndGet();
+                                        return 7;
+                                    })
+                            == 7,
+                    "Metadata runs when the shared monotonic deadline expires");
+            search.page(-10, 0, 0);
+            check(
+                    gatewayCalls.get() == 1 && metadataCalls.get() == 2,
+                    "Metadata and index transport both resume at the same deadline");
+        }
+        try (LiveSearch search =
+                new LiveSearch(
+                        (request, timeout) -> {
+                            throw new LiveSearch.RateLimited(4);
+                        },
+                        now::get,
+                        12000)) {
+            try {
+                search.page(-10, 0, 0);
+            } catch (LiveSearch.RateLimited expected) {
+            }
+            try {
+                search.metadata(
+                        () -> {
+                            metadataCalls.incrementAndGet();
+                            return 1;
+                        });
+                throw new AssertionError("An index flood wait must also pause metadata");
+            } catch (LiveSearch.RateLimited expected) {
+                check(
+                        expected.retrySeconds == 4 && metadataCalls.get() == 2,
+                        "An index-page pause blocks metadata without invoking its request");
+            }
+        }
+    }
+
     public static void main(String[] args) throws Exception {
+        metadataCooldown();
         // The remote fixture models a channel with 223,657 tracks; only the matching old message is
         // returned.
         AtomicInteger calls = new AtomicInteger();

@@ -9,6 +9,9 @@ import kotlin.jvm.functions.Function1;
 
 /** Mirrors the host default mask: a null modifier with no default is invalid. */
 public final class AndroidView_androidKt {
+    /** When set, the next AndroidView calls throw it, as a changed host ABI would. */
+    public static Error failure;
+
     public static void AndroidView(
             Function1 factory,
             Modifier modifier,
@@ -16,6 +19,7 @@ public final class AndroidView_androidKt {
             ComposerImpl composer,
             int changed,
             int defaults) {
+        if (failure != null) throw failure;
         if ((defaults & 2) != 0) modifier = new Modifier() {};
         if (modifier == null) throw new NullPointerException("modifier");
         composer.modifier = modifier;

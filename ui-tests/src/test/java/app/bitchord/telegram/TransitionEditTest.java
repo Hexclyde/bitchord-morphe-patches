@@ -17,6 +17,27 @@ public class TransitionEditTest {
     }
 
     @Test
+    public void independentDeckVolumesAndCurvesPersistWithoutChangingLegacyDefaults()
+            throws Exception {
+        TransitionEdit edit = new TransitionEdit();
+        edit.volume[0] = .25;
+        edit.volume[1] = .8;
+        edit.deckCurve[0] = TransitionEdit.LINEAR;
+        edit.deckCurve[1] = TransitionEdit.SMOOTH;
+        TransitionEdit restored = edit.copy();
+        assertEquals(.1875, restored.gain(0, .25), 1e-9);
+        assertEquals(.125, restored.gain(1, .25), 1e-9);
+        org.json.JSONObject legacy = new org.json.JSONObject(edit.encode());
+        legacy.remove("volume");
+        legacy.remove("deckCurve");
+        TransitionEdit old = TransitionEdit.decode(legacy.toString());
+        assertEquals(1, old.gain(0, 0), 0);
+        assertEquals(1, old.gain(1, 1), 0);
+        restored.volume[0] = Double.NaN;
+        assertThrows(IllegalArgumentException.class, restored::validate);
+    }
+
+    @Test
     public void pcmEqProcessesMutableOutputFromReadOnlyCodecInputWithoutMovingItsCursor()
             throws Exception {
         TransitionRuntime.release();
@@ -59,6 +80,41 @@ public class TransitionEditTest {
         edit.times[0][1] = TransitionEdit.MIN_GAP;
         edit.times[0][2] = 2 * TransitionEdit.MIN_GAP;
         edit.validate();
+    }
+
+    @Test
+    public void flatEqMetersBothChannelsWithoutChangingPcmOrTheBufferCursor() throws Exception {
+        TransitionRuntime.release();
+        PcmProcessor processor = new PcmProcessor();
+        java.lang.reflect.Field a = TransitionRuntime.class.getDeclaredField("assigning"),
+                s = TransitionRuntime.class.getDeclaredField("assigningSide");
+        a.setAccessible(true);
+        s.setAccessible(true);
+        ThreadLocal<double[]> gains = (ThreadLocal<double[]>) a.get(null);
+        ThreadLocal<Integer> side = (ThreadLocal<Integer>) s.get(null);
+        gains.set(new double[] {0, 0, 0});
+        side.set(1);
+        TransitionRuntime.assign(processor);
+        gains.remove();
+        side.remove();
+        java.nio.ByteBuffer audio =
+                java.nio.ByteBuffer.allocate(8).order(java.nio.ByteOrder.nativeOrder());
+        audio.putShort((short) 16384)
+                .putShort((short) -32768)
+                .putShort((short) 0)
+                .putShort((short) 0)
+                .flip();
+        byte[] original = audio.array().clone();
+        TransitionRuntime.pcm16(processor, audio);
+        assertArrayEquals(original, audio.array());
+        assertEquals(0, audio.position());
+        assertEquals(8, audio.limit());
+        float[] meter = TransitionRuntime.meter(1);
+        assertNotNull(meter);
+        assertEquals(-6.0206, meter[0], 1e-4);
+        assertEquals(0, meter[1], 0);
+        assertEquals(1, meter[4], 0);
+        TransitionRuntime.release();
     }
 
     @Test

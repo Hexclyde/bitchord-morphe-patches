@@ -6,7 +6,7 @@ import com.android.tools.smali.dexlib2.iface.reference.*;
 import java.io.File;
 import java.util.*;
 
-/** Verifies the retained, optimized audio paths used by the transition editor. */
+/** Verifies the available, optimized audio paths used by the transition editor. */
 public final class VerifyTransitionEditorApk {
     static int checks;
     static final String RUNTIME = "Lapp/bitchord/telegram/TransitionRuntime;";
@@ -47,18 +47,119 @@ public final class VerifyTransitionEditorApk {
         for (String entry : apk.getDexEntryNames())
             for (ClassDef type : apk.getEntry(entry).getDexFile().getClasses())
                 types.put(type.getType(), type);
-        require(types.containsKey(RUNTIME), "Transition runtime retained");
+        require(types.containsKey(RUNTIME), "Transition runtime available");
         require(
                 types.containsKey("Lapp/bitchord/telegram/TransitionEditorActivity;"),
-                "Native editor retained");
+                "Native editor available");
+        for (String name :
+                List.of(
+                        "MixTools",
+                        "DeckMeter",
+                        "TransitionWaveform",
+                        "TransitionWaveCache",
+                        "TransitionPreview",
+                        "TransitionAnalysis",
+                        "TransitionStore"))
+            require(
+                    types.containsKey("Lapp/bitchord/telegram/" + name + ";"),
+                    "Standalone helper available: " + name);
+        ClassDef editor = types.get("Lapp/bitchord/telegram/TransitionEditorActivity;");
+        int optionRows = 0;
+        for (Instruction step :
+                method(editor, "buildLayout").getImplementation().getInstructions()) {
+            MethodReference ref = call(step);
+            if (ref != null
+                    && ref.getDefiningClass().equals(editor.getType())
+                    && ref.getName().equals("optionRow")) optionRows++;
+        }
+        require(
+                optionRows == 2,
+                "Auto-save and Auto-apply show visible labels beside their switches");
+        ClassDef host = types.get("Lcom/music/bitchord/playback/PlaybackService;");
+        Method wave = method(host, "bitchordWaveDecode");
+        require(
+                wave.getParameterTypes()
+                        .equals(
+                                List.of(
+                                        "Landroid/media/MediaDataSource;",
+                                        "D",
+                                        "D",
+                                        "Lkotlin/jvm/functions/Function0;",
+                                        "Lkotlin/jvm/functions/Function4;")),
+                "Selected-source waveform bridge passes region, cancellation and streaming PCM");
+        boolean directDecode = false;
+        for (Instruction step : wave.getImplementation().getInstructions()) {
+            MethodReference ref = call(step);
+            if (ref != null
+                    && ref.getDefiningClass()
+                            .equals("Lcom/music/bitchord/playback/smart/AudioDecoder;"))
+                directDecode = true;
+        }
+        require(
+                directDecode,
+                "Waveform calls the available decoder directly without substituting an analysis"
+                        + " URI");
+        try (java.util.zip.ZipFile zip = new java.util.zip.ZipFile(args[0])) {
+            require(
+                    zip.getEntry("assets/bitchord/automix/licenses/AUTOMIX-COMPONENTS.txt") != null,
+                    "Component notices are present in standalone and combined APKs");
+        }
         ClassDef controller = types.get("Lcom/music/bitchord/playback/CrossfadeController;");
+        String playerHeader = "Lapp/bitchord/telegram/VideoSwitch;";
+        int landscape = 0, entries = 0;
+        for (ClassDef owner : types.values())
+            for (Method method : owner.getMethods()) {
+                if (method.getImplementation() == null) continue;
+                for (Instruction step : method.getImplementation().getInstructions()) {
+                    MethodReference ref = call(step);
+                    if (ref != null
+                            && ref.getDefiningClass().equals(playerHeader)
+                            && ref.getName().equals("header")) {
+                        entries++;
+                        if (owner.getType()
+                                        .equals("Lcom/music/bitchord/ui/player/LandscapePlayerKt;")
+                                && method.getName().equals("LandscapeMainPane")) landscape++;
+                    }
+                }
+            }
+        require(
+                entries == 1 && landscape == 1,
+                "Exactly one pair slot, in the landscape player's main pane");
+        VerifyVideoSwitchApk.verifyPlayerIcons(types);
+        require(
+                types.containsKey("Lapp/bitchord/telegram/PlayerIcons$EditorEntry;"),
+                "Editor icon available independently of mode-switch selection");
+        ClassDef bands = types.get("Lcom/music/bitchord/playback/smart/MixWaveform$Bands;");
+        for (String name : List.of("low", "mid", "high")) {
+            boolean available = false;
+            for (Field field : bands.getFields())
+                if (field.getName().equals(name) && field.getType().equals("[F")) available = true;
+            require(available, "Real host waveform band " + name);
+        }
+        for (Field field : controller.getFields())
+            if (field.getName().equals("mixWaveform"))
+                require(
+                        types.get(field.getType())
+                                .getInterfaces()
+                                .contains("Lkotlin/jvm/functions/Function5;"),
+                        "Waveform callback passes the five-argument callable interface");
         first(controller, "mixRise", "incoming", "Ljava/lang/Float;");
         first(controller, "mixFall", "outgoing", "Ljava/lang/Float;");
         first(controller, "rideFilters", "filters", "Z");
         Method begin = method(controller, "begin");
         java.util.List<Instruction> beginCode = new java.util.ArrayList<>();
         begin.getImplementation().getInstructions().forEach(beginCode::add);
-        MethodReference arm = call(beginCode.get(2));
+        MethodReference guard = call(beginCode.get(0));
+        require(
+                guard != null
+                        && guard.getDefiningClass().equals(RUNTIME)
+                        && guard.getName().equals("previewHolding")
+                        && beginCode.get(2).getOpcode() == Opcode.IF_EQZ
+                        && beginCode.get(3).getOpcode() == Opcode.CONST_4
+                        && beginCode.get(4).getOpcode() == Opcode.RETURN
+                        && begin.getReturnType().equals("Z"),
+                "A pending live transition cannot start during an independent audition");
+        MethodReference arm = call(beginCode.get(8));
         require(
                 arm != null
                         && arm.getDefiningClass().equals(RUNTIME)
@@ -69,6 +170,34 @@ public final class VerifyTransitionEditorApk {
                                                 "Ljava/lang/Object;", "Ljava/lang/Object;")),
                 "Arming is bound to this controller and its exact smart plan");
         first(controller, "considerSmartTransition", "bind", "V");
+        Method considering = method(controller, "considerSmartTransition");
+        java.util.List<Instruction> planning = new java.util.ArrayList<>();
+        considering.getImplementation().getInstructions().forEach(planning::add);
+        require(
+                call(planning.get(1)).getName().equals("holdPlanner")
+                        && planning.get(4).getOpcode() == Opcode.RETURN_VOID,
+                "Live planning waits for the pair database and stays paused throughout editing");
+        ClassDef session = types.get("Lapp/bitchord/telegram/TransitionPreview$Session;");
+        boolean mutatesQueue = false;
+        for (Method method : session.getMethods())
+            if (method.getImplementation() != null)
+                for (Instruction step : method.getImplementation().getInstructions()) {
+                    MethodReference ref = call(step);
+                    if (ref != null
+                            && Set.of(
+                                            "seekTo",
+                                            "setMediaItem",
+                                            "setMediaItems",
+                                            "replaceMediaItem",
+                                            "moveMediaItems")
+                                    .contains(ref.getName())) mutatesQueue = true;
+                }
+        require(!mutatesQueue, "The listening snapshot never seeks or mutates the real queue");
+        require(
+                types.get("Lapp/bitchord/telegram/TransitionStore$Helper;")
+                        .getSuperclass()
+                        .equals("Landroid/database/sqlite/SQLiteOpenHelper;"),
+                "Applied transitions use the persistent app database");
         first(controller, "finish", "finish", "V");
         first(controller, "release", "release", "V");
         Method pcm =

@@ -98,20 +98,22 @@ class MobileSourceTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.validate()
 
-    def test_only_soulseek_can_advertise_the_additional_181_target(self):
+    def test_soulseek_uses_current_hosts_and_rejects_181(self):
         soulseek = next(
             p
             for p in self.patches["patches"]
             if p["name"] == "Unofficial Soulseek audio"
         )
         targets = soulseek["compatiblePackages"][0]["targets"]
-        self.assertEqual(["1.8.1", "1.9"], [t["version"] for t in targets])
+        self.assertEqual(["1.9", "1.9.1-beta1"], [t["version"] for t in targets])
         other = next(p for p in self.patches["patches"] if p is not soulseek)
         self.assertEqual(
-            ["1.9"],
+            ["1.9", "1.9.1-beta1"],
             [t["version"] for t in other["compatiblePackages"][0]["targets"]],
         )
-        other["compatiblePackages"][0]["targets"].append(copy.deepcopy(targets[0]))
+        unsupported = copy.deepcopy(targets[0])
+        unsupported["version"] = "1.8.1"
+        targets.insert(0, unsupported)
         with self.assertRaises(ValueError):
             self.validate()
 

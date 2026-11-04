@@ -113,8 +113,8 @@ public class VideoOverlayTest {
         measure();
         assertSame(column, row.getParent());
         assertEquals(32, row.getTop());
-        assertEquals(48, row.getHeight());
-        assertEquals(80, artwork.getTop());
+        assertEquals("the pair row plus the caption's target gap", 48 + 14, row.getHeight());
+        assertEquals(32 + 62, artwork.getTop());
         FrameLayout window = owner.get().findViewById(android.R.id.content);
         assertEquals("No floating sibling is added to the window", 1, window.getChildCount());
         assertEquals("The normal layout has no status-bar offset", 0, row.getTranslationY(), 0.01);
@@ -168,7 +168,7 @@ public class VideoOverlayTest {
     public void hidingThePatchOrPlayingExternalAudioReleasesItsLayoutSpace() {
         VideoSwitch.Header row = header();
         measure();
-        assertEquals(48, row.getHeight());
+        assertEquals(48 + 14, row.getHeight());
         VideoSwitch.setEnabled(false);
         measure();
         assertEquals(0, row.getHeight());
@@ -201,7 +201,7 @@ public class VideoOverlayTest {
         org.robolectric.RuntimeEnvironment.setFontScale(2f);
         VideoSwitch.Header row = header();
         measure();
-        assertEquals(48, row.getHeight());
+        assertEquals(48 + 6, row.getHeight());
         assertEquals(104, row.control.getWidth());
         assertTrue(row.control.audio.getWidth() >= 48);
         assertTrue(row.control.video.getWidth() >= 48);
@@ -225,10 +225,19 @@ public class VideoOverlayTest {
             assertEquals(
                     "No gray plate covers the artwork", 0xff2d1938, image.getPixel(start + 2, 24));
             int selectedCenter = start + (video ? 78 : 26);
+            int idleCenter = start + (video ? 26 : 78);
+            // The lit tile is the player tint at 0.62 over the artwork, with the glyph cut out.
+            int tile = image.getPixel(selectedCenter - 15, 24 - 15);
+            for (int shift : new int[] {16, 8, 0}) {
+                int bg = (0xff2d1938 >> shift) & 0xff, ink = (0xffefbb77 >> shift) & 0xff;
+                assertEquals(
+                        "Selected mode follows the native player tint",
+                        Math.round(bg * 0.38f + ink * 0.62f),
+                        (tile >> shift) & 0xff,
+                        2);
+            }
             assertEquals(
-                    "Selected mode follows the native player tint",
-                    0xffefbb77,
-                    image.getPixel(selectedCenter, 44));
+                    "The other mode has no tile", 0xff2d1938, image.getPixel(idleCenter - 15, 9));
         }
     }
 

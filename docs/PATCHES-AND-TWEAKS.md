@@ -21,7 +21,7 @@ supported unit at a time; **Reset** is an explicit action using the native defau
 
 | Control | Range | Reset |
 | --- | --- | --- |
-| Sing voice reduction | 0–100% | 50% |
+| Karaoke vocal removal | 0–100% | 50% |
 | Pitch | −12 to +12 semitones | 0 |
 | Loudness target | −23 to −8 LUFS | −14 LUFS |
 | Sleep fade | 3–60 seconds | 10 seconds |
@@ -30,6 +30,25 @@ supported unit at a time; **Reset** is an explicit action using the native defau
 Opening the page or a configuration does not apply a slider value. Enabling
 Source-independent AutoMix uses BitChord's existing Automix setting; it does not
 change playback speed or the saved pitch.
+
+## Controls that work together
+
+The player's Audio/Video pair is centred between the drag handle and the playback-origin caption. The AutoMix Editor icon is separate, below the stats at the foot of the artwork. These controls use BitChord's player colours and blend setting and hide while Lyrics or Queue is open.
+
+I keep the player Download control beside the favourite/menu actions. It prefers the current downloadable non-YouTube stream, then the highest-quality matching alternative, and uses YouTube only as a last fallback while enabled. It uses the existing transfer queue rather than the per-download quality dialog.
+
+Returning from video to audio clears the video-origin flag used by native AutoMix. It preserves the AutoMix setting, so a disabled feature stays disabled. Fullscreen uses the native video view even when rotation is ignored; its Back handler ends with the player composition.
+
+Sources and Patches & tweaks open the same source settings. Changing either entry
+updates the same enabled state and account configuration.
+
+| Controls | Playback behavior |
+| --- | --- |
+| Native AutoMix and Source-independent AutoMix | Share one native AutoMix switch and transition engine. The patch analyses the selected recording for that engine. |
+| DJ mode and queue shuffle | Shuffle controls queue order while enabled; DJ does not reorder the shuffled queue. |
+| Battery saver and AutoMix | Audio offload stands down while AutoMix needs decoded audio, including without the source-analysis patch. |
+| Equaliser per output and JamesDSP | Per-output settings stay saved while JamesDSP holds the native equaliser off. Turning JamesDSP off restores the saved output configuration. |
+| Audio and video switch and music-only playback | Automatic video preference yields to music-only playback. An explicit version change applies to the current queue entry. |
 
 ## Undo and dependencies
 

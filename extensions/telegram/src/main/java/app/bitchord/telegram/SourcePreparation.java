@@ -88,6 +88,10 @@ final class SourcePreparation {
 
         boolean sourcesAvailable();
 
+        default boolean catalogueAvailable() {
+            return false;
+        }
+
         boolean backgroundAllowed();
 
         boolean foregroundAllowed();
@@ -230,6 +234,8 @@ final class SourcePreparation {
     private Thread worker;
     private Work running;
     private boolean closed, on = true, listening;
+    private long catalogueEpoch;
+    private Runnable catalogueWake;
     private JSONObject saved;
 
     SourcePreparation(Host host, long firstWaitMs) {
@@ -321,7 +327,10 @@ final class SourcePreparation {
                 || computed.isEmpty()) return computed;
         synchronized (lock) {
             String entry = entryKey(item), known = cacheKeys.get(entry);
-            if (known != null) return known;
+            // A key chosen while YouTube Music was on cannot serve a song YouTube Music may not
+            // play.
+            if (known != null && (known.equals(computed) || !YouTubePolicy.refusesKey(known)))
+                return known;
             cacheKeys.put(entry, computed);
             trimEntries();
             return computed;
@@ -696,10 +705,14 @@ final class SourcePreparation {
                 host.log("Source preparation stopped: " + error.getClass().getSimpleName());
                 next.cancel();
             } finally {
+                Runnable refresh = null;
                 synchronized (lock) {
                     running = null;
+                    if (next instanceof Job && ((Job) next).catalogue != catalogueEpoch)
+                        refresh = catalogueWake;
                     lock.notifyAll();
                 }
+                if (refresh != null) host.later(refresh, 0);
             }
         }
     }
@@ -710,6 +723,7 @@ final class SourcePreparation {
         final Uri uri;
         Uri marked;
         final String id, song;
+        final long catalogue;
         final CompletableFuture<Prepared> done = new CompletableFuture<>();
         final Map<String, Integer> waiters = new HashMap<>();
         volatile boolean foreground, cancelled;
@@ -719,6 +733,13 @@ final class SourcePreparation {
             this.id = id;
             marked = marked(uri, session + "|pending|" + id);
             song = songKey(uri);
+            synchronized (lock) {
+                catalogue = catalogueEpoch;
+            }
+        }
+
+        private void decline(String id, String song, long millis, String why) {
+            SourcePreparation.this.decline(id, song, millis, why, catalogue);
         }
 
         boolean isForeground() {
@@ -799,7 +820,8 @@ final class SourcePreparation {
                         String candidate = host.candidate(stream);
                         if (candidate != null && copy + 1 < COPIES) {
                             synchronized (lock) {
-                                rejectedCopies.add(song + "\n" + candidate);
+                                if (catalogue == catalogueEpoch)
+                                    rejectedCopies.add(song + "\n" + candidate);
                             }
                             continue;
                         }
@@ -933,6 +955,25 @@ final class SourcePreparation {
         }
     }
 
+    void catalogueChanged(Runnable wake) {
+        if (!host.catalogueAvailable()) return;
+        boolean schedule;
+        synchronized (lock) {
+            if (closed) return;
+            schedule = on;
+            catalogueEpoch++;
+            catalogueWake = wake;
+            declined.clear();
+            songsDeclined.clear();
+            rejectedCopies.removeIf(
+                    value ->
+                            value.substring(value.lastIndexOf('\n') + 1)
+                                    .startsWith("src:telegram-native::"));
+            lock.notifyAll();
+        }
+        if (schedule) host.later(wake, 0);
+    }
+
     void playing(boolean isPlaying) {
         synchronized (lock) {
             listening = isPlaying;
@@ -997,9 +1038,10 @@ final class SourcePreparation {
         host.log("Source preparation: this copy failed to play, so it's no longer offered");
     }
 
-    private void decline(String id, String song, long millis, String why) {
+    private void decline(String id, String song, long millis, String why, long catalogue) {
         long until = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(millis);
         synchronized (lock) {
+            if (catalogue != catalogueEpoch) return;
             declined.put(id, until);
             if (song != null) songsDeclined.put(song, until);
         }

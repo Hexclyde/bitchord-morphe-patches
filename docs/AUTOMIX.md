@@ -32,9 +32,9 @@ Battery saver audio offload yields while AutoMix needs decoded audio, including 
 
 ## Installation
 
-1. Import `bitchord-patches-1.1.0-beta.18.mpp` as a Local source in Morphe.
+1. Import `bitchord-patches-1.1.0-beta.19.mpp` as a Local source in Morphe.
 2. Patch an original BitChord **1.9** APK matching your architecture, keeping your existing selections and adding **Source-independent AutoMix** (selected by default).
 3. Update the installed application with the same signing key. Do not uninstall or clear data.
 4. Enable AutoMix in playback settings and enable the sources you want to use.
 
-Open the native transition editor through AutoMix’s settings gear; see [transition editing](TRANSITION-EDITOR.md). Playback and provider limits are in [known limitations](KNOWN_LIMITATIONS.md#playback-and-effects).
+Open Automix Editor from the waveform icon below the player's stats at the foot of the artwork, or through AutoMix’s settings gear; see [transition editing](TRANSITION-EDITOR.md). The icon is available with stats hidden. Playback and provider limits are in [known limitations](KNOWN_LIMITATIONS.md#playback-and-effects).

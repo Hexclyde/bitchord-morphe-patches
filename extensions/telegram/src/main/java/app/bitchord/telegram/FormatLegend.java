@@ -13,7 +13,6 @@ import com.music.bitchord.data.sources.StreamFormat;
 
 import org.json.JSONObject;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -44,8 +43,7 @@ public final class FormatLegend {
     private static ParcelableSnapshotMutableState revision;
     private static int changes;
     private static Object chip;
-    private static volatile List<JSONObject> recent = Collections.emptyList();
-    private static volatile String recentQuery = "";
+    private static final TelegramLegendRows recent = new TelegramLegendRows();
     private static final ExecutorService matching =
             Executors.newSingleThreadExecutor(
                     r -> {
@@ -93,21 +91,41 @@ public final class FormatLegend {
         TelegramBridge bridge = TelegramBridge.instance;
         if (!enabled || bridge == null || query == null || query.trim().isEmpty()) return;
         String wanted = query.trim();
-        if (wanted.equalsIgnoreCase(recentQuery)) return;
-        recentQuery = wanted;
+        final Object epoch = recent.begin(wanted);
+        if (epoch == null) return;
         matching.execute(
                 () -> {
                     try {
                         if (!bridge.ready() || bridge.selected.isEmpty()) return;
                         List<JSONObject> rows = bridge.searchTracks(wanted, true);
                         bridge.decorate(rows);
-                        if (!wanted.equals(recentQuery)) return;
-                        recent = rows;
-                        changed();
+                        publishRecent(epoch, wanted, rows);
                     } catch (Exception ignored) {
                         // No match is no legend.
                     }
                 });
+    }
+
+    static boolean publishRecent(Object epoch, String query, List<JSONObject> rows) {
+        if (!recent.publish(epoch, query, rows)) return false;
+        changed();
+        return true;
+    }
+
+    public static void forgetMessages(long chat, long[] messages) {
+        if (chat == 0 || messages == null || messages.length == 0) return;
+        java.util.Set<Long> removed = new java.util.HashSet<>();
+        for (long message : messages) if (message > 0) removed.add(message);
+        if (!removed.isEmpty()) forget(chat, removed);
+    }
+
+    public static void forgetChat(long chat) {
+        if (chat != 0) forget(chat, null);
+    }
+
+    private static void forget(long chat, java.util.Set<Long> messages) {
+        recent.forget(chat, messages);
+        changed();
     }
 
     static String label(Song song) {
@@ -131,11 +149,19 @@ public final class FormatLegend {
         if (bridge == null) return "";
         String remembered = bridge.legends.get(id);
         if (!remembered.isEmpty()) return remembered;
-        JSONObject row = LegendMatch.match(song.title, song.artist, song.durationText, recent);
+        TelegramLegendRows.Snapshot snapshot = recent.snapshot();
+        JSONObject row =
+                LegendMatch.match(song.title, song.artist, song.durationText, snapshot.rows);
         if (row == null) return "";
         String label = LegendMatch.row(row, bridge.formats.get(row.optString("id")));
-        if (bridge.legends.put(id, label)) bridge.work.execute(bridge.legends::save);
-        return label;
+        return recent.commit(
+                        snapshot,
+                        () -> {
+                            if (bridge.legends.put(id, label))
+                                bridge.work.execute(bridge.legends::save);
+                        })
+                ? label
+                : "";
     }
 
     /** Reads the Compose state that changes when legends do, so title rows recompose. */

@@ -1,3 +1,21 @@
+## 1.1.0-beta.19
+
+- **Karaoke** (formerly Sing) adds a microphone control at the bottom right of the lyrics. Tapping it switches on separation-model vocal removal and opens a vertical slider linked to the settings slider; after it closes, the microphone fades until its place is tapped again.
+- **Diagnostics** records app and patch events for startup and sign-in troubleshooting. Start and stop capture explicitly, then share a compressed report through Android’s share menu.
+- **Audio and video switch** carries a manual lyrics-provider choice between versions of the same queued song and reloads lyrics for the active version.
+- Returning to audio clears the video-origin flag so native AutoMix can analyse and blend the song again. Fullscreen can follow the player's request when the window ignores rotation, with Back handled in the player's scope.
+- The player's **Download** control uses the current downloadable non-YouTube stream first, then matching alternatives ranked by quality. YouTube is the last fallback when enabled; the control shows the download queue's reported percentage.
+- Playlist source selection carries each song's original duration into its picker and keeps the selected quality and reported duration visible afterward. Soulseek candidates show their reported duration when available.
+- **Transition editor** restores the full waveform when scrolling back to the top, offers an overlap slider and separates draft saving from applying a transition.
+- Fixed: Google sign-in handles links to other apps without opening an unknown-scheme error page.
+- **YouTube Music** can be turned off from Sources. Playback only stops YouTube audio and Full disable also stops its search and browsing; songs use saved files, matching local music or another enabled source, with **No audio track found** shown when none has playable audio.
+- **DJ mode** orders upcoming tracks by key and tempo with Steady, Build up and Wind down choices. Compatible keys receive longer blends; Save DJ order updates a local playlist after confirmation.
+- **Unofficial Telegram music** updates the saved index when audio and ZIP posts arrive, change or disappear while connected.
+- **DJ mode** leaves queue order to native shuffle while shuffle is on. **Audio and video switch** respects music-only playback and manual version changes.
+- **Battery saver** stands down for native AutoMix even without Source-independent AutoMix installed. **Equaliser per output** leaves the native equaliser off while JamesDSP controls effects.
+- Supports the experimental BitChord **1.9.1-beta1** build alongside 1.9.
+- The player's **Audio/Video** pair is centred above the playback-origin caption. **Automix Editor** opens from a separate waveform icon below the stats; the icons follow BitChord's player colours and blending.
+
 ## 1.1.0-beta.18
 
 - **Transition editor** gives sliders and numeric entry controls larger touch targets. Screen readers announce adjustment values with their units.

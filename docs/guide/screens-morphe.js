@@ -91,13 +91,13 @@
   // ---------------------------------------------------------------------------------------
 
   const SOURCE_NAME = 'BitChord Morphe Patches';
-  const PATCHES_VERSION = '1.1.0-beta.18';
+  const PATCHES_VERSION = '1.1.0-beta.19';
   const MORPHE_VERSION = '2.2.0';
   const APP_VERSION = '1.9';
   const ORANGE = '255,137,68';
   const BITCHORD_APK = 'BitChord-v1.9_arm64-v8a.apk';
   const MORPHE_APK = 'morphe-manager-2.2.0.apk';
-  const MPP_FILE = 'bitchord-patches-1.1.0-beta.18.mpp';
+  const MPP_FILE = 'bitchord-patches-1.1.0-beta.19.mpp';
   const REPO_LINK = 'github.com/Hexclyde/bitchord-morphe-patches';
   const TESTING_LINK = 'https://raw.githubusercontent.com/Hexclyde/bitchord-morphe-patches/refs/heads/testing/patches-bundle.json';
   const NOT_DRAWN = 'This part of Morphe isn’t drawn in this guide.';
@@ -118,7 +118,12 @@
   {
     "id": "djMode",
     "name": "DJ mode",
-    "desc": "Picks the next song in the queue for a neighbouring key and a close tempo. Keys and tempos are learned as songs play. From Prism by Yigder. Settings are in Settings, Patches & tweaks."
+    "desc": "Orders upcoming tracks by measured key and tempo. Choose Steady, Build up or Wind down, use longer AutoMix blends for compatible keys, or save the order to a local playlist. From Prism by Yigder. Settings are in Settings, Patches & tweaks."
+  },
+  {
+    "id": "diagnostics",
+    "name": "Diagnostics",
+    "desc": "Records bounded application and patch events for troubleshooting, including startup and sign-in failures. Recording starts only when requested and stops after 15 minutes. Settings are in Settings, Patches & tweaks."
   },
   {
     "id": "outputEq",
@@ -180,8 +185,8 @@
   },
   {
     "id": "sing",
-    "name": "Sing",
-    "desc": "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord. Choose the filter or on-device separation model. Settings are in Settings, Patches & tweaks."
+    "name": "Karaoke",
+    "desc": "Turns the lead vocal down so you can sing over the song, with a Karaoke control at the bottom right of the lyrics. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord. Choose the filter or on-device separation model. Settings are in Settings, Patches & tweaks."
   },
   {
     "id": "sleepFade",
@@ -196,7 +201,7 @@
   {
     "id": "sourceAutomix",
     "name": "Source-independent AutoMix",
-    "desc": "Measures the selected playable source, verifies automatic replacements, preserves playback speed and adds a native, pair-specific transition timeline with volume, EQ, filter controls and preview. BitChord 1.9.",
+    "desc": "Measures the selected playable source, verifies automatic replacements, preserves playback speed and adds a native, pair-specific transition timeline with volume, EQ, filter controls and preview.",
     "def": true
   },
   {
@@ -576,7 +581,7 @@
         notices += '<button type="button" class="m-notice m-notice-warn" data-key="n-outdated" data-toast="Update Morphe Manager from its releases page.">' + icon('installPhone', { size: 20 }) +
           '<span>This source is built for patcher 2.1.0, but Morphe ' + MORPHE_VERSION + ' includes patcher 2.0.1. Update Morphe to use it</span></button>';
       }
-      rows = infoRow('info', 'Patches', ready ? '14' : '0', { action: 'patchesRow', data: { count: ready ? '14' : '0' }, chevron: ready }) +
+      rows = infoRow('info', 'Patches', ready ? String(PATCHES.length) : '0', { action: 'patchesRow', data: { count: ready ? String(PATCHES.length) : '0' }, chevron: ready }) +
         infoRow('history', 'Version', ready ? PATCHES_VERSION : 'N/A', { tg: 'morphe.sourceCard.versionRow', action: 'versionRow', data: { card: 'bitchord' } }) +
         (ready ? infoRow('apps', 'Apps', s['morphe.sourceAppBitchord'] ? '1' : '0/1', { tg: 'morphe.sourceCard.appsRow', open: 'morphe.sourceApps', params: { card: 'bitchord' } }) : '');
       links = linkPills('bitchord', true);
@@ -598,7 +603,7 @@
         : '<span class="m-avatar m-avatar-owner">' + icon('person', { size: 24 }) + '</span>';
       meta = metaLine(PATCHES_VERSION, '1 min. ago');
       badges = badge(local ? 'Local' : 'Remote') + (s['morphe.testingEnabled'] ? '' : badge('Disabled', 'neutral', { icon: 'power' }));
-      rows = infoRow('info', 'Patches', '14', { action: 'patchesRow', data: { count: '14' } }) +
+      rows = infoRow('info', 'Patches', String(PATCHES.length), { action: 'patchesRow', data: { count: String(PATCHES.length) } }) +
         infoRow('history', 'Version', PATCHES_VERSION, { tg: 'morphe.testingCard.versionRow', action: 'versionRow', data: { card: 'testing' } }) +
         infoRow('apps', 'Apps', s['morphe.testingAppBitchord'] ? '1' : '0/1', { tg: 'morphe.testingCard.appsRow', open: 'morphe.sourceApps', params: { card: 'testing' } });
       links = local ? '' : linkPills('testing', false);

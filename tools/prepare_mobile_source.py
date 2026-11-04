@@ -27,8 +27,9 @@ ON_BY_DEFAULT = {
     "Sign in with MicroG",
 }
 OFF_BY_DEFAULT = {
+    "Diagnostics",
     "Unofficial Soulseek audio",
-    "Sing",
+    "Karaoke",
     "Pitch control",
     "Loudness level",
     "Sleep timer fade-out",
@@ -146,11 +147,7 @@ def validate_metadata(manifest, patches, source, provenance):
         app = patch["compatiblePackages"][0]
         if app["packageName"] != "com.music.bitchord" or app["apkFileType"] != "APK":
             raise ValueError("Unexpected target app/file type")
-        versions = (
-            ["1.8.1", "1.9"]
-            if patch["name"] == "Unofficial Soulseek audio"
-            else ["1.9"]
-        )
+        versions = ["1.9", "1.9.1-beta1"]
         if [target["version"] for target in app["targets"]] != versions or any(
             target["minSdk"] != 26 or not target["isExperimental"]
             for target in app["targets"]

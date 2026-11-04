@@ -38,7 +38,6 @@ final class SoulseekSource {
 
     static void register(String url) throws Exception {
         Class<?> config = Class.forName("com.music.bitchord.data.sources.SourceConfig");
-        Class<?> kind = Class.forName("com.music.bitchord.data.sources.SourceKind");
         Class<?> registry = Class.forName("com.music.bitchord.data.sources.SourceRegistry");
         Class<?> state = Class.forName("kotlinx.coroutines.flow.StateFlow");
         Object flow = registry.getField("configs").get(null);
@@ -50,22 +49,8 @@ final class SoulseekSource {
                 if (url.equals(config.getMethod("getBaseUrl").invoke(value))) return;
             }
         Object source =
-                config.getConstructor(
-                                String.class,
-                                kind,
-                                String.class,
-                                String.class,
-                                boolean.class,
-                                boolean.class,
-                                boolean.class)
-                        .newInstance(
-                                ID,
-                                kind.getField("ADDON").get(null),
-                                "Unofficial Soulseek",
-                                url,
-                                enabled,
-                                true,
-                                false);
+                app.bitchord.telegram.NativeSourceConfig.addon(
+                        ID, "Unofficial Soulseek", url, enabled, true, false);
         ArrayList<Object> next = new ArrayList<>();
         for (Object value : existing)
             if (!ID.equals(config.getMethod("getId").invoke(value))) next.add(value);

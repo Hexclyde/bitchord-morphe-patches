@@ -22,6 +22,13 @@ final class FormatProbe {
     static final int MAX_KNOWN = 3000;
 
     private final File store;
+    private final Map<String, Object> probes =
+            new LinkedHashMap<String, Object>(16, 0.75f, true) {
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<String, Object> eldest) {
+                    return size() > MAX_KNOWN;
+                }
+            };
 
     /** Told when a header has been read, so legends on screen can update. */
     volatile Runnable onChange;
@@ -77,27 +84,53 @@ final class FormatProbe {
      * opens when they're all done.
      */
     CountDownLatch probe(List<JSONObject> rows, Artwork.Download download, int max) {
+        return probe(rows, download, max, row -> true);
+    }
+
+    CountDownLatch probe(
+            List<JSONObject> rows,
+            Artwork.Download download,
+            int max,
+            java.util.function.Predicate<JSONObject> current) {
         java.util.List<JSONObject> wanted = new java.util.ArrayList<>();
-        for (JSONObject row : rows)
-            if ((row.has("zip") || row.has("cue")) && row.optJSONObject("header") != null)
-                record(row.optString("id"), row.optJSONObject("header"));
-        for (JSONObject row : rows)
-            if (wanted.size() < max && probable(row) && get(row.optString("id")) == null)
-                wanted.add(row);
-        CountDownLatch done = new CountDownLatch(wanted.size());
-        for (JSONObject row : wanted) {
+        java.util.List<Object> tokens = new java.util.ArrayList<>();
+        for (JSONObject row : rows) {
             String id = row.optString("id");
+            Object token = probeToken(id);
+            if (!current(current, row)) continue;
+            if ((row.has("zip") || row.has("cue")) && row.optJSONObject("header") != null)
+                record(id, token, row.optJSONObject("header"));
+            if (wanted.size() < max && probable(row) && get(id) == null) {
+                wanted.add(row);
+                tokens.add(token);
+            }
+        }
+        CountDownLatch done = new CountDownLatch(wanted.size());
+        for (int at = 0; at < wanted.size(); at++) {
+            JSONObject row = wanted.get(at);
+            String id = row.optString("id");
+            final Object token = tokens.get(at);
             download.start(
                     row.optInt("file"),
                     path -> {
                         try {
-                            if (path != null) record(id, read(new File(path)));
+                            if (path != null && current(current, row))
+                                record(id, token, read(new File(path)));
                         } finally {
                             done.countDown();
                         }
                     });
         }
         return done;
+    }
+
+    private static boolean current(
+            java.util.function.Predicate<JSONObject> predicate, JSONObject row) {
+        try {
+            return predicate.test(row);
+        } catch (RuntimeException unavailable) {
+            return false;
+        }
     }
 
     /** Adds what's known to the rows: bits, rate and channels. */
@@ -130,8 +163,50 @@ final class FormatProbe {
         if (listener != null) listener.run();
     }
 
+    private synchronized Object probeToken(String id) {
+        Object token = probes.get(id);
+        if (token == null) probes.put(id, token = new Object());
+        return token;
+    }
+
+    private synchronized void record(String id, Object token, JSONObject header) {
+        if (probes.get(id) == token) record(id, header);
+    }
+
+    synchronized int forgetMessage(long chat, long message) {
+        return forgetMessages(chat, new long[] {message});
+    }
+
+    synchronized int forgetMessages(long chat, long[] messages) {
+        if (chat == 0 || messages == null || messages.length == 0) return 0;
+        java.util.Set<String> families = new java.util.HashSet<>();
+        for (long message : messages) if (message > 0) families.add(chat + "_" + message);
+        return forget(families, null);
+    }
+
+    synchronized int forgetChat(long chat) {
+        return chat == 0 ? 0 : forget(java.util.Collections.emptySet(), chat + "_");
+    }
+
+    private int forget(java.util.Set<String> families, String chatPrefix) {
+        java.util.function.Predicate<String> matches =
+                id -> {
+                    if (chatPrefix != null) return id.startsWith(chatPrefix);
+                    for (String family : families)
+                        if (id.equals(family) || id.startsWith(family + "_")) return true;
+                    return false;
+                };
+        int before = known.size();
+        known.keySet().removeIf(matches);
+        probes.keySet().removeIf(matches);
+        int removed = before - known.size();
+        if (removed > 0) save();
+        return removed;
+    }
+
     synchronized void clear() {
         known.clear();
+        probes.clear();
         if (store != null) store.delete();
     }
 

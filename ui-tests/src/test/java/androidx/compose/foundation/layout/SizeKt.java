@@ -17,6 +17,35 @@ public final class SizeKt {
         }
     }
 
+    public static final class Wrap implements Modifier {
+        public final androidx.compose.ui.BiasAlignment.Horizontal alignment;
+        public final boolean unbounded;
+
+        Wrap(androidx.compose.ui.BiasAlignment.Horizontal alignment, boolean unbounded) {
+            this.alignment = alignment;
+            this.unbounded = unbounded;
+        }
+    }
+
+    public static final class Side implements Modifier {
+        public final float dp;
+
+        Side(float dp) {
+            this.dp = dp;
+        }
+    }
+
+    public static Modifier wrapContentWidth(
+            Modifier base,
+            androidx.compose.ui.BiasAlignment.Horizontal alignment,
+            boolean unbounded) {
+        return base.then(new Wrap(alignment, unbounded));
+    }
+
+    public static Modifier size(Modifier base, float dp) {
+        return base.then(new Side(dp));
+    }
+
     public static Modifier fillMaxSize(Modifier base, float fraction) {
         return new Fill(base, fraction);
     }

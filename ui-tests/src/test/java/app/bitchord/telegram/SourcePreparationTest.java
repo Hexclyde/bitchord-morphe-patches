@@ -110,6 +110,7 @@ public class SourcePreparationTest {
     /** The host, with each answer and what was done to it on show. */
     class Fake implements SourcePreparation.Host {
         boolean sources = true, background = true, foreground = true, sourceOn = true, manifest;
+        boolean catalogue;
         boolean honest = true, claimable = true, unknownQuality;
         String terms = "session", content = "v1", provider = "telegram";
         boolean stableIdentity = true;
@@ -140,6 +141,10 @@ public class SourcePreparationTest {
         final List<Runnable> later = Collections.synchronizedList(new ArrayList<>());
         final Map<String, CountDownLatch> gates = new ConcurrentHashMap<>();
         final AtomicInteger running = new AtomicInteger(), mostRunning = new AtomicInteger();
+
+        public boolean catalogueAvailable() {
+            return catalogue;
+        }
 
         public boolean sourcesAvailable() {
             return sources;
@@ -1739,6 +1744,57 @@ public class SourcePreparationTest {
     }
 
     @Test
+    public void aFrozenKeyThatLeadsToYouTubeGivesWayWhileYouTubeMusicIsOff() {
+        boolean[] on = {true};
+        String[] origin = {"YOUTUBE"};
+        YouTubePolicy.reset();
+        YouTubePolicy.use(
+                new YouTubePolicy.Registry() {
+                    @Override
+                    public YouTubePolicy.Row youtube() {
+                        return new YouTubePolicy.Row("yt", on[0]);
+                    }
+
+                    @Override
+                    public void setEnabled(String id, boolean enabled) {}
+
+                    @Override
+                    public String origin(androidx.media3.datasource.DataSpec spec) {
+                        return null;
+                    }
+
+                    @Override
+                    public String active(androidx.media3.common.MediaItem item) {
+                        return null;
+                    }
+
+                    @Override
+                    public void dropChoices() {}
+
+                    @Override
+                    public String keyOrigin(String key) {
+                        return origin[0];
+                    }
+                });
+        YouTubePolicy.init(org.robolectric.RuntimeEnvironment.getApplication());
+        YouTubePolicy.loaded();
+        try {
+            Uri a = entry("a", "audible");
+            assertEquals("a", preparation.cacheKey(a, "a"));
+            assertEquals("while on the key stays", "a", preparation.cacheKey(a, "a#alt"));
+            on[0] = false;
+            assertEquals(
+                    "off: the key that leads to YouTube is replaced",
+                    "a#alt",
+                    preparation.cacheKey(a, "a#alt"));
+            origin[0] = "OTHER";
+            assertEquals("the new key is the frozen one", "a#alt", preparation.cacheKey(a, "a"));
+        } finally {
+            YouTubePolicy.reset();
+        }
+    }
+
+    @Test
     public void duplicateEntriesFreezeDifferentKeysIndependently() {
         Uri first = entry("a", "before-policy"), next = entry("a", "after-policy");
         assertEquals("a", preparation.cacheKey(first, "a"));
@@ -1820,5 +1876,113 @@ public class SourcePreparationTest {
         } finally {
             active.set(null, before);
         }
+    }
+
+    @Test
+    public void catalogueChangeRetriesMissesWithoutReplacingOpenOrPreparedCopies()
+            throws Exception {
+        host.catalogue = true;
+        host.noCopy.add("missing");
+        queue("ready", "missing");
+        idle();
+        DataSpec opened = preparation.route(period, open("ready"));
+        int verified = host.verified.size();
+        host.noCopy.remove("missing");
+        preparation.catalogueChanged(() -> queue("ready", "missing"));
+        host.runLater();
+        idle();
+        assertEquals(opened.uri, preparation.route(period, open("ready")).uri);
+        assertEquals(hifi("missing"), read("missing"));
+        assertEquals(
+                "The prepared positive copy was not checked again",
+                verified + 1,
+                host.verified.size());
+        assertEquals("tg://ready_0", host.parked.get("ready"));
+    }
+
+    @Test
+    public void anInactiveTelegramCatalogueDoesNotWakeOrClearMisses() throws Exception {
+        host.noCopy.add("missing");
+        queue("missing");
+        idle();
+        int lookups = host.lookups.size();
+        host.noCopy.remove("missing");
+        preparation.catalogueChanged(() -> queue("missing"));
+        host.runLater();
+        queue("missing");
+        idle();
+        assertEquals(lookups, host.lookups.size());
+    }
+
+    @Test
+    public void aCatalogueChangeFencesLateMissAndWakesAfterTheOldJobSettles() throws Exception {
+        CountDownLatch entered = new CountDownLatch(1), release = new CountDownLatch(1);
+        AtomicInteger attempts = new AtomicInteger();
+        preparation.close();
+        host =
+                new Fake() {
+                    @Override
+                    public Object lookup(Object target) {
+                        if (attempts.getAndIncrement() == 0) {
+                            lookups.add((String) target);
+                            entered.countDown();
+                            try {
+                                assertTrue(release.await(5, TimeUnit.SECONDS));
+                            } catch (InterruptedException error) {
+                                throw new AssertionError(error);
+                            }
+                            return null;
+                        }
+                        return super.lookup(target);
+                    }
+                };
+        host.catalogue = true;
+        preparation = new SourcePreparation(host, 300);
+        preparation.playing(true);
+        queue("a");
+        assertTrue(entered.await(5, TimeUnit.SECONDS));
+        try {
+            preparation.catalogueChanged(() -> queue("a"));
+            host.runLater();
+        } finally {
+            release.countDown();
+        }
+        idle();
+        host.runLater();
+        idle();
+        assertEquals(2, attempts.get());
+        assertEquals(hifi("a"), read("a"));
+    }
+
+    @Test
+    public void catalogueChangeDropsOnlyTelegramRecordingRejections() throws Exception {
+        host.catalogue = true;
+        java.lang.reflect.Field field = SourcePreparation.class.getDeclaredField("rejectedCopies");
+        field.setAccessible(true);
+        @SuppressWarnings("unchecked")
+        Set<String> rejected = (Set<String>) field.get(preparation);
+        rejected.add("song\nsrc:telegram-native::-10_1");
+        rejected.add("song\nsrc:other::copy");
+        preparation.catalogueChanged(() -> {});
+        assertFalse(preparation.holds("song", "src:telegram-native::-10_1"));
+        assertTrue(preparation.holds("song", "src:other::copy"));
+    }
+
+    @Test
+    public void aCatalogueChangeWhilePreparationIsOffRefreshesMissesWithoutStartingWork()
+            throws Exception {
+        host.catalogue = true;
+        host.noCopy.add("missing");
+        queue("missing");
+        idle();
+        preparation.switched(false);
+        host.later.clear();
+        preparation.catalogueChanged(() -> queue("missing"));
+        assertTrue("Disabled preparation does not schedule work", host.later.isEmpty());
+        host.noCopy.remove("missing");
+        preparation.switched(true);
+        queue("missing");
+        idle();
+        assertEquals(hifi("missing"), read("missing"));
     }
 }

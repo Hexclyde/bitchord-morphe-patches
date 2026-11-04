@@ -101,7 +101,7 @@ final class StorageSensePatchCaches implements StorageSense.Owner {
         rows.add(
                 new Unmanaged(
                         Strings.t("Separation models"),
-                        Strings.t("Removed from the Sing settings, never from here."),
+                        Strings.t("Removed from the Karaoke settings, never from here."),
                         measure(new File(files, "sing-models"), cancel)));
         rows.add(
                 new Unmanaged(

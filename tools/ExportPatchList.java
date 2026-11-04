@@ -124,16 +124,6 @@ public final class ExportPatchList {
                             options));
         }
         Files.writeString(
-                Path.of(args[1]),
-                json(
-                                fields(
-                                        "NOTE",
-                                        "Generated from the verified MPP by"
-                                            + " tools/prepare_mobile_source.py; do not hand-edit.",
-                                        "version",
-                                        version,
-                                        "patches",
-                                        exported))
-                        + "\n");
+                Path.of(args[1]), json(fields("version", version, "patches", exported)) + "\n");
     }
 }

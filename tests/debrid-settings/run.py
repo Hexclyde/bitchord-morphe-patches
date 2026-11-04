@@ -82,6 +82,10 @@ with tempfile.TemporaryDirectory(prefix="bitchord-debrid-settings-") as director
             sdk_classpath,
             "-d",
             str(production),
+            str(
+                ROOT
+                / "extensions/telegram/src/main/java/app/bitchord/telegram/NativeSourceConfig.java"
+            ),
             *map(str, (ROOT / "extensions/soulseek/src/main/java").rglob("*.java")),
         ],
         check=True,

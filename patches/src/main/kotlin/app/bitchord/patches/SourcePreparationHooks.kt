@@ -724,7 +724,12 @@ internal fun BytecodePatchContext.addSourcePreparation() {
                 continue
             for (index in read until code.size) {
                 val call = code[index].mixCall() ?: continue
-                if (call.definingClass == DS && call.name == "open" && call.takes(SPEC))
+                if (
+                    call.name == "open" &&
+                        ((call.definingClass == DS && call.takes(SPEC)) ||
+                            (call.definingClass == "Lapp/bitchord/telegram/YouTubePolicy;" &&
+                                call.takes(DS, SPEC)))
+                )
                     opens += Triple(type.type, method.name, index)
             }
         }

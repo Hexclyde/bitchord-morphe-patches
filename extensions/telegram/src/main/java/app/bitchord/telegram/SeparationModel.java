@@ -36,6 +36,8 @@ final class SeparationModel {
     private static volatile boolean playingNormal = true;
 
     private static volatile String state = "Filter";
+    private static final java.util.List<Runnable> watchers =
+            new java.util.concurrent.CopyOnWriteArrayList<>();
     private static volatile long lastInferenceMs;
     private static Method tensorFactory, run, floatBuffer;
 
@@ -75,8 +77,39 @@ final class SeparationModel {
         tooSlow = false;
         slowRuns = 0;
         backoffMs = FIRST_BACKOFF_MS;
-        state = fake == null ? "Filter" : "Model ready";
+        setState(fake == null ? "Filter" : "Model ready");
         reset(true);
+    }
+
+    /** Told whenever the model's status changes; the lyrics control shows it without polling. */
+    static void watch(Runnable listener) {
+        if (listener != null) watchers.add(listener);
+    }
+
+    /** Removes this very listener; another one that was added since stays. */
+    static void unwatch(Runnable listener) {
+        watchers.remove(listener);
+    }
+
+    /** A listener that fails is dropped; it never reaches the model or the audio worker. */
+    /** Karaoke's own settings changed from a page or the lyrics; listeners show them again. */
+    static void announce() {
+        changed();
+    }
+
+    private static void changed() {
+        for (Runnable listener : watchers) {
+            try {
+                listener.run();
+            } catch (RuntimeException | LinkageError failed) {
+                watchers.remove(listener);
+            }
+        }
+    }
+
+    private static void setState(String value) {
+        state = value;
+        changed();
     }
 
     static boolean tooSlow() {
@@ -93,7 +126,7 @@ final class SeparationModel {
                 /** Runs on the worker, so the inference that ran out has already finished. */
                 @Override
                 public void failed() {
-                    state = UNAVAILABLE;
+                    setState(UNAVAILABLE);
                     reset(true);
                     closeSession();
                 }
@@ -126,20 +159,20 @@ final class SeparationModel {
                     try {
                         if (!wanted) {
                             closeSession();
-                            state = "Filter";
+                            setState("Filter");
                             return;
                         }
                         if (session == null) {
-                            state = "Model loading";
+                            setState("Model loading");
                             load();
                         }
                         if (!wanted) {
                             closeSession();
-                            state = "Filter";
+                            setState("Filter");
                         }
                     } catch (Exception | LinkageError | OutOfMemoryError failure) {
                         closeSession();
-                        state = UNAVAILABLE;
+                        setState(UNAVAILABLE);
                     } finally {
                         reconcilePending.set(false);
                         if (changed != revision.get()) configure();
@@ -171,7 +204,7 @@ final class SeparationModel {
             if (tooSlow && System.currentTimeMillis() >= retryAtMs) {
                 tooSlow = false;
                 slowRuns = 0;
-                if (session != null) state = "Model ready";
+                if (session != null) setState("Model ready");
             }
             keep = keep && !tooSlow;
         }
@@ -215,7 +248,10 @@ final class SeparationModel {
             bypass(key);
             return 0;
         }
-        playingNormal = normal;
+        if (playingNormal != normal) {
+            playingNormal = normal;
+            changed();
+        }
         if (!wanted || !normal || rate < 8000 || rate > SeparatedSing.MAX_RATE) {
             bypass(key);
             if (!normal)
@@ -283,7 +319,7 @@ final class SeparationModel {
             return created;
         } catch (OutOfMemoryError pressure) {
             if (created != null) created.close();
-            state = UNAVAILABLE;
+            setState(UNAVAILABLE);
             reset(true);
             worker.execute(SeparationModel::closeSession);
             return null;
@@ -346,7 +382,7 @@ final class SeparationModel {
                 floatBuffer =
                         Class.forName("ai.onnxruntime.OnnxTensor").getMethod("getFloatBuffer");
                 session = created;
-                state = "Model ready";
+                setState("Model ready");
             } catch (Exception | LinkageError failure) {
                 close(created);
                 throw failure;
@@ -389,7 +425,7 @@ final class SeparationModel {
                         worker.execute(
                                 () -> {
                                     closeSession();
-                                    state = wanted ? UNAVAILABLE : "Filter";
+                                    setState(wanted ? UNAVAILABLE : "Filter");
                                 });
                     }
                 });
@@ -418,7 +454,7 @@ final class SeparationModel {
             tooSlow = true;
             retryAtMs = System.currentTimeMillis() + backoffMs;
             backoffMs = Math.min(backoffMs * 2, LAST_BACKOFF_MS);
-            state = TOO_SLOW;
+            setState(TOO_SLOW);
         }
     }
 
@@ -459,7 +495,7 @@ final class SeparationModel {
             close(tensor);
             if (failed) {
                 closeSession();
-                state = UNAVAILABLE;
+                setState(UNAVAILABLE);
             }
         }
     }

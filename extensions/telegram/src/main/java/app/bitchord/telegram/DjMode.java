@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -26,12 +27,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * DJ mode: the queue is played in an order that mixes well, each next song chosen for a key that
- * sits next to the current one on the Camelot wheel and a tempo close to it. Songs you queued
- * yourself keep their place. The key and tempo of a song are learned as it plays, and BitChord's
- * own Automix analyses are used when it has them. The idea is from Prism by Yigder.
+ * Harmonic queue ordering with steady, rising or falling tempo. Explicit queue anchors stay put.
+ * Musical analysis is measured on the device; the idea is from Prism by Yigder.
  */
-final class DjMode {
+public final class DjMode {
     private DjMode() {}
 
     static final String PREFERENCES = "bitchord_dj_mode";
@@ -108,18 +107,28 @@ final class DjMode {
     private static volatile SharedPreferences preferences;
     private static volatile File store;
     static volatile boolean enabled;
+    static volatile int journey;
+    private static final java.util.concurrent.atomic.AtomicLong arrangements =
+            new java.util.concurrent.atomic.AtomicLong();
+    private static volatile String arrangedQueue;
     private static final Map<String, Info> known = new ConcurrentHashMap<>();
     private static volatile boolean loaded;
     private static volatile ExecutorService worker;
     private static volatile Handler main;
     private static volatile Object service;
     static volatile String lastArrangement = "";
+    // The pass after a reorder finds nothing left to move; it mustn't hide what was just done.
+    private static volatile boolean reordered;
 
     static void init(Context context) {
         if (preferences != null || context == null) return;
         Context app = context.getApplicationContext();
         preferences = app.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         enabled = preferences.getBoolean("enabled", false);
+        journey =
+                Math.max(
+                        DjOrder.STEADY,
+                        Math.min(DjOrder.WIND_DOWN, preferences.getInt("journey", DjOrder.STEADY)));
         store = new File(app.getNoBackupFilesDir(), "dj-mode.json");
         worker().execute(DjMode::load);
     }
@@ -145,10 +154,24 @@ final class DjMode {
 
     static void setEnabled(boolean on) {
         enabled = on;
+        arrangements.incrementAndGet();
+        arrangedQueue = null;
+        reordered = false;
         SharedPreferences saved = preferences;
         if (saved != null) saved.edit().putBoolean("enabled", on).apply();
         HostLog.d("DJ mode " + (on ? "on" : "off"));
         if (on) pollSoon();
+    }
+
+    static void setJourney(int value) {
+        if (value < DjOrder.STEADY || value > DjOrder.WIND_DOWN)
+            throw new IllegalArgumentException("Invalid DJ journey");
+        journey = value;
+        if (preferences != null) preferences.edit().putInt("journey", value).apply();
+        arrangedQueue = null;
+        reordered = false;
+        arrangements.incrementAndGet();
+        if (enabled) pollSoon();
     }
 
     /** BitChord's playback service, for its Automix analyses. */
@@ -380,6 +403,7 @@ final class DjMode {
                 MediaItem item = p.getCurrentMediaItem();
                 String id = item == null ? null : item.mediaId;
                 if (p.isPlaying() || id == null) playing(id);
+                arrange(p);
             } catch (RuntimeException e) {
                 // Not on its thread, or gone.
             }
@@ -580,44 +604,138 @@ final class DjMode {
                     handler.postDelayed(() -> arrange(player, waited + 1), 1_000);
                 return;
             }
-            int at = player.getCurrentMediaItemIndex();
-            int count = player.getMediaItemCount();
-            if (at < 0 || at + 2 > count) return;
+            int at = player.getCurrentMediaItemIndex(), count = player.getMediaItemCount();
+            if (at < 0 || at + 1 >= count) return;
+            if (shuffled(player)) return;
             MediaItem current = player.getMediaItemAt(at);
             Info now = info(current.mediaId);
-            if (now == null) {
-                lastArrangement = Strings.t("The current song isn’t known yet");
-                return;
-            }
+            List<MediaItem> snapshot = new ArrayList<>();
             List<Info> upcoming = new ArrayList<>();
             List<Boolean> user = new ArrayList<>();
-            int end = Math.min(count, at + 1 + LOOK_AHEAD);
-            for (int i = at + 1; i < end; i++) {
+            StringBuilder identity =
+                    new StringBuilder(
+                            at
+                                    + ":"
+                                    + journey
+                                    + ":"
+                                    + current.mediaId
+                                    + ":"
+                                    + (now == null ? "" : now.toJson()));
+            for (int i = at + 1; i < count; i++) {
                 MediaItem item = player.getMediaItemAt(i);
-                upcoming.add(info(item.mediaId));
+                Info measured = info(item.mediaId);
+                snapshot.add(item);
+                upcoming.add(measured);
                 user.add(userQueued(item));
+                identity.append('|')
+                        .append(item.mediaId)
+                        .append(':')
+                        .append(item.localConfiguration == null ? "" : item.localConfiguration.uri)
+                        .append(':')
+                        .append(measured == null ? "" : measured.toJson())
+                        .append(':')
+                        .append(user.get(user.size() - 1));
             }
-            int pick = pick(now, upcoming, user);
-            if (pick < 0) {
-                lastArrangement = Strings.t("The next song already fits");
-                return;
-            }
-            int from = at + 1 + pick;
-            player.moveMediaItems(from, from + 1, at + 1);
-            Info chosen = upcoming.get(pick);
-            lastArrangement =
-                    Strings.f("Moved up a song in {0}", chosen == null ? "?" : chosen.describe());
-            HostLog.d(
-                    "DJ mode: moved item "
-                            + from
-                            + " to "
-                            + (at + 1)
-                            + ", "
-                            + now.describe()
-                            + " → "
-                            + chosen.describe());
+            String stamp = identity.toString();
+            if (stamp.equals(arrangedQueue)) return;
+            arrangedQueue = stamp;
+            long revision = arrangements.incrementAndGet();
+            final int mode = journey;
+            worker().execute(
+                            () -> {
+                                if (!enabled || revision != arrangements.get()) return;
+                                List<Integer> order = DjOrder.order(now, upcoming, user, mode);
+                                Handler ui = main;
+                                if (ui != null)
+                                    ui.post(
+                                            () ->
+                                                    applyOrder(
+                                                            player, at, current, snapshot, order,
+                                                            revision));
+                            });
         } catch (RuntimeException e) {
             HostLog.d("DJ mode couldn't arrange the queue: " + e);
+        }
+    }
+
+    private static void applyOrder(
+            Player player,
+            int at,
+            MediaItem current,
+            List<MediaItem> snapshot,
+            List<Integer> order,
+            long revision) {
+        if (!enabled || revision != arrangements.get()) return;
+        if (!isSessionPlayer(player) || inParty() || transitioning()) {
+            arrangedQueue = null;
+            return;
+        }
+        try {
+            // A dropped order must not leave its stamp behind: the queue may change back.
+            if (shuffled(player)
+                    || player.getCurrentMediaItemIndex() != at
+                    || player.getMediaItemCount() != at + 1 + snapshot.size()
+                    || !current.equals(player.getMediaItemAt(at))) {
+                arrangedQueue = null;
+                return;
+            }
+            for (int i = 0; i < snapshot.size(); i++)
+                if (!snapshot.get(i).equals(player.getMediaItemAt(at + 1 + i))) {
+                    arrangedQueue = null;
+                    return;
+                }
+            List<Integer> positions = new ArrayList<>();
+            for (int i = 0; i < snapshot.size(); i++) positions.add(i);
+            int moved = 0;
+            for (int target = 0; target < order.size(); target++) {
+                int from = positions.indexOf(order.get(target));
+                if (from == target) continue;
+                player.moveMediaItems(at + 1 + from, at + 2 + from, at + 1 + target);
+                positions.add(target, positions.remove(from));
+                moved++;
+            }
+            if (moved > 0) lastArrangement = Strings.f("Reordered {0} upcoming tracks", moved);
+            else if (!reordered) lastArrangement = Strings.t("The next song already fits");
+            reordered = moved > 0;
+            if (moved > 0) {
+                arrangedQueue = null;
+                SourceFirst.queueChanged(service, player);
+            }
+        } catch (RuntimeException changed) {
+            arrangedQueue = null;
+            HostLog.d("DJ queue changed before its order could be applied");
+        }
+    }
+
+    public static void plan(Object plan) {
+        if (!enabled || SourceAutomix.applied() || inParty()) return;
+        try {
+            Object owner = sessionPlayer();
+            if (!(owner instanceof Player)) return;
+            Player player = (Player) owner;
+            int at = player.getCurrentMediaItemIndex();
+            int next =
+                    ((Number) Player.class.getMethod("getNextMediaItemIndex").invoke(player))
+                            .intValue();
+            if (at < 0 || next < 0) return;
+            MediaItem from = player.getCurrentMediaItem(), to = player.getMediaItemAt(next);
+            TransitionRuntime.Pair pair =
+                    new TransitionRuntime.Pair(
+                            from.mediaId,
+                            to.mediaId,
+                            "",
+                            "",
+                            player.getDuration() / 1000d,
+                            TransitionRuntime.duration(to),
+                            at);
+            if (pair.outgoingDuration <= 0 || pair.incomingDuration <= 0) return;
+            TransitionRuntime.djBlend(
+                    plan,
+                    pair,
+                    player,
+                    ((Number) TransitionRuntime.field(plan, "fadeSeconds")).doubleValue());
+        } catch (Exception changed) {
+            HostLog.d("DJ blend is unavailable for this transition");
         }
     }
 
@@ -627,6 +745,32 @@ final class DjMode {
             Bundle extras = item.mediaMetadata == null ? null : item.mediaMetadata.extras;
             return extras != null && "USER_QUEUE".equals(extras.getString(TIER_KEY));
         } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
+    /**
+     * True while the queue's order belongs to a shuffle: the player's own shuffle mode picks the
+     * next song by its own order and moving items re-seeds it, and BitChord's queue shuffle
+     * rewrites the queue itself.
+     */
+    static boolean shuffled(Player player) {
+        return player.getShuffleModeEnabled() || queueShuffleOn();
+    }
+
+    /** BitChord's in-app shuffle; false when this build has no such state. */
+    static boolean queueShuffleOn() {
+        try {
+            Class<?> type = Class.forName("com.music.bitchord.playback.QueueShuffle");
+            Method read = type.getMethod("getEnabled");
+            Object flow =
+                    read.invoke(
+                            Modifier.isStatic(read.getModifiers())
+                                    ? null
+                                    : type.getField("INSTANCE").get(null));
+            Method value = Class.forName("kotlinx.coroutines.flow.StateFlow").getMethod("getValue");
+            return flow != null && Boolean.TRUE.equals(value.invoke(flow));
+        } catch (ReflectiveOperationException | LinkageError absent) {
             return false;
         }
     }

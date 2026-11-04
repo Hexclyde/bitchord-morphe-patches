@@ -51,6 +51,25 @@ public final class SourceFirst {
         running.close();
     }
 
+    public static void catalogueChanged() {
+        SourcePreparation running = active;
+        Object owner = service;
+        if (running == null || owner == null) return;
+        running.catalogueChanged(
+                () -> {
+                    if (active != running || service != owner) return;
+                    try {
+                        Field field = owner.getClass().getDeclaredField("player");
+                        field.setAccessible(true);
+                        queueChanged(owner, field.get(owner));
+                    } catch (ReflectiveOperationException unavailable) {
+                        HostLog.d(
+                                "Source catalogue refresh skipped: "
+                                        + unavailable.getClass().getSimpleName());
+                    }
+                });
+    }
+
     /** Whether playing better copies first is switched on. */
     public static void setEnabled(boolean enabled) {
         switchedOn = enabled;
@@ -219,6 +238,6 @@ public final class SourceFirst {
     /** Replaces the open of BitChord's playback source, above its cache. */
     public static long open(Object period, DataSource source, DataSpec spec) throws IOException {
         SourcePreparation running = active;
-        return source.open(running == null ? spec : running.route(period, spec));
+        return YouTubePolicy.open(source, running == null ? spec : running.route(period, spec));
     }
 }

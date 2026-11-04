@@ -64,12 +64,11 @@ public final class VerifyNativeDispatchApk {
         int dispatchers = 0, cases = 0;
         for (String entry : dex.getDexEntryNames())
             for (ClassDef cls : dex.getEntry(entry).getDexFile().getClasses()) {
-                if (!cls.getType().equals("Lcom/music/bitchord/wear/WearBridge$sendToWatch$1;"))
-                    continue;
                 for (Method method : cls.getMethods()) {
                     if (method.getImplementation() == null) continue;
                     List<Instruction> code = new ArrayList<>();
                     method.getImplementation().getInstructions().forEach(code::add);
+                    if (code.stream().noneMatch(i -> owner(call(i), "fetch") != null)) continue;
                     Set<String> handlers = new HashSet<>();
                     int start = -1;
                     for (int i = 0; i < code.size(); i++) {

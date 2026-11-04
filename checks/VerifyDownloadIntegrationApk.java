@@ -170,12 +170,18 @@ public final class VerifyDownloadIntegrationApk {
         check(
                 root != null && calls(root, runtime + "DownloadsShell;", "heading") == 2,
                 "Player heading follows downloads while Library keeps its tab");
-        for (Method method :
-                types.get("Lcom/music/bitchord/MainActivityKt$$ExternalSyntheticLambda109;")
-                        .getMethods()) if (method.getName().equals("invoke")) batch = method;
+        int batchHooks = 0;
+        for (ClassDef type : types.values())
+            for (Method method : type.getMethods())
+                if (method.getName().equals("invoke")
+                        && method.getImplementation() != null
+                        && calls(method, runtime + "SoulseekDownloadChoice;", "interceptBatch")
+                                == 1) {
+                    batch = method;
+                    batchHooks++;
+                }
         check(
-                batch != null
-                        && calls(batch, runtime + "SoulseekDownloadChoice;", "interceptBatch") == 1,
+                batch != null && batchHooks == 1,
                 "Manual release callback has one bounded batch choice hook");
         for (Method method :
                 types.get("Landroidx/compose/ui/viewinterop/AndroidView_androidKt;").getMethods())

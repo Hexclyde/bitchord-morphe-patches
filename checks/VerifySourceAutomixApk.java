@@ -995,6 +995,7 @@ public final class VerifySourceAutomixApk {
 
         int requests = 0,
                 readers = 0,
+                editorReaders = 0,
                 preflights = 0,
                 plans = 0,
                 speeds = 0,
@@ -1038,6 +1039,20 @@ public final class VerifySourceAutomixApk {
                                 preflight(code(method), method);
                                 if (args.length > 1 && args[1].equals("--regressions"))
                                     preflightRegressions(code(method), method);
+                            } else if (type.getType()
+                                    .equals("Lapp/bitchord/telegram/TransitionWaveform;")) {
+                                editorReaders++;
+                                check(
+                                        method.getName().equals("read")
+                                                && method.getParameterTypes()
+                                                        .equals(
+                                                                List.of(
+                                                                        "Landroid/net/Uri;",
+                                                                        "D",
+                                                                        "D",
+                                                                        "I")),
+                                        "Only the bounded editor waveform reads its frozen selected"
+                                                + " URI");
                             } else {
                                 readers++;
                                 check(
@@ -1069,8 +1084,13 @@ public final class VerifySourceAutomixApk {
                 }
             }
         check(
-                requests == 1 && readers == 1 && preflights == 1 && plans == 1,
-                "Request, source reader and tempo-neutral plan are reachable exactly once");
+                requests == 1
+                        && readers == 1
+                        && editorReaders == 1
+                        && preflights == 1
+                        && plans == 1,
+                "Request, selected-source readers and tempo-neutral plan are reachable exactly"
+                        + " once");
         check(
                 speeds >= 8 && unprotectedSpeeds == 0,
                 "Every transition/ramp/settlement speed path preserves user speed");

@@ -100,3 +100,24 @@ Stop playback before clearing **Storage → Clear Telegram audio cache** on the 
 The Telegram page displays a diagnostic screen for startup or rendering errors. **Copy crash details** copies exception classes and stack frames without account/API values or exception messages. If screen protection fails, this screen appears before credential entry. A native bridge startup failure shows **Connection error**.
 
 Do not clear app data as a troubleshooting prerequisite.
+
+
+## App startup or Google sign-in fails
+
+Select **Diagnostics** when patching, then open **Patches & tweaks → Diagnostics**. Choose **Start**, reproduce the problem and return to **Stop** capture. **Share** packages the report as a ZIP and opens Android’s share menu for any installed app that accepts attachments. **Save** writes a report to a location you choose. Recording lasts up to 15 minutes and continues after an app restart. **Delete** removes the saved report and exported archives. Sharing starts only when you choose a destination.
+
+The report contains bounded, classified app and patch events, WebView page/error/renderer states, Android and patch versions, and visible Google/MicroG service versions. It excludes free-text log messages, account values, page contents, URL parameters and credentials. Unknown errors may therefore need a separate capture. It cannot read another app’s private logs or recover events from before recording started.
+
+For Google/MicroG service diagnostics, connect the phone to a computer with Python 3 and Android SDK Platform Tools, authorize USB debugging and run:
+
+```sh
+python tools/capture_diagnostics.py --serial DEVICE_SERIAL --package com.music.bitchord.telegramtest --duration 180 --output bitchord-report
+```
+
+Use the installed BitChord package name and the serial shown by `adb devices`. Reproduce the problem during capture. Share `events.jsonl` and `capture.json` with the in-app report. The capture reads accessible logs for BitChord and installed Google/MicroG/WebView services without clearing app data or log buffers. Suppressed, rotated and inaccessible logs are unavailable.
+
+`--private-local-text` also saves original scoped log text in `PRIVATE-LOCAL-TEXT.txt`. That file can contain account details or tokens. Review and redact it separately before sharing; it is never uploaded by the tool.
+
+## No audio track found
+
+YouTube Music is off and no playable copy was found in saved downloads, the readable local music library or enabled sources. Check the source connections and music-library permission, or choose another recording. A lower-quality copy can play when lossless audio is unavailable. Turning YouTube Music back on permits its audio again.

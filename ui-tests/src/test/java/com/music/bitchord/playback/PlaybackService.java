@@ -9,6 +9,38 @@ import java.util.function.Function;
 
 /** Test stand-in for the APK-verified host bridges. */
 public final class PlaybackService {
+    public interface WaveDecoder {
+        Object decode(
+                android.media.MediaDataSource source,
+                double from,
+                double to,
+                kotlin.jvm.functions.Function0<Boolean> abort,
+                kotlin.jvm.functions.Function4<
+                                java.nio.ByteBuffer,
+                                android.media.MediaCodec.BufferInfo,
+                                Integer,
+                                Integer,
+                                kotlin.Unit>
+                        onBuffer);
+    }
+
+    public static WaveDecoder waveDecoder;
+
+    public static Object bitchordWaveDecode(
+            android.media.MediaDataSource source,
+            double from,
+            double to,
+            kotlin.jvm.functions.Function0<Boolean> abort,
+            kotlin.jvm.functions.Function4<
+                            java.nio.ByteBuffer,
+                            android.media.MediaCodec.BufferInfo,
+                            Integer,
+                            Integer,
+                            kotlin.Unit>
+                    onBuffer) {
+        return waveDecoder == null ? null : waveDecoder.decode(source, from, to, abort, onBuffer);
+    }
+
     public static boolean realMix;
 
     public static boolean bitchordAutomixRealMix() {

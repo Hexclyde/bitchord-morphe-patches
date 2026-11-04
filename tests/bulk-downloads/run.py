@@ -73,6 +73,10 @@ with tempfile.TemporaryDirectory(prefix="bitchord-bulk-tests-") as output:
             classpath,
             "-d",
             output,
+            str(
+                ROOT
+                / "extensions/telegram/src/main/java/app/bitchord/telegram/NativeSourceConfig.java"
+            ),
             *map(str, (ROOT / "extensions/soulseek/src/main/java").rglob("*.java")),
             str(Path(__file__).with_name("BulkRunTest.java")),
         ],

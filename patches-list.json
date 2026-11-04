@@ -1,6 +1,5 @@
 {
-  "NOTE": "Generated from the verified MPP by tools/prepare_mobile_source.py; do not hand-edit.",
-  "version": "1.1.0-beta.18",
+  "version": "1.1.0-beta.19",
   "patches": [
     {
       "name": "Audio and video switch",
@@ -19,6 +18,13 @@
           "targets": [
             {
               "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
               "versionCodes": null,
               "isExperimental": true,
               "minSdk": 26,
@@ -50,6 +56,13 @@
               "isExperimental": true,
               "minSdk": 26,
               "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
             }
           ]
         }
@@ -58,7 +71,7 @@
     },
     {
       "name": "DJ mode",
-      "description": "Picks the next song in the queue for a neighbouring key and a close tempo. Keys and tempos are learned as songs play. From Prism by Yigder. Settings are in Settings, Patches & tweaks.",
+      "description": "Orders upcoming tracks by measured key and tempo. Choose Steady, Build up or Wind down, use longer AutoMix blends for compatible keys, or save the order to a local playlist. From Prism by Yigder. Settings are in Settings, Patches & tweaks.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -73,6 +86,47 @@
           "targets": [
             {
               "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Diagnostics",
+      "description": "Records bounded application and patch events for troubleshooting, including startup and sign-in failures. Recording starts only when requested and stops after 15 minutes. Settings are in Settings, Patches & tweaks.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
               "versionCodes": null,
               "isExperimental": true,
               "minSdk": 26,
@@ -104,6 +158,13 @@
               "isExperimental": true,
               "minSdk": 26,
               "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
             }
           ]
         }
@@ -131,6 +192,13 @@
               "isExperimental": true,
               "minSdk": 26,
               "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
             }
           ]
         }
@@ -154,6 +222,13 @@
           "targets": [
             {
               "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
               "versionCodes": null,
               "isExperimental": true,
               "minSdk": 26,
@@ -195,6 +270,47 @@
               "isExperimental": true,
               "minSdk": 26,
               "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Karaoke",
+      "description": "Turns the lead vocal down so you can sing over the song, with a Karaoke control at the bottom right of the lyrics. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord. Choose the filter or on-device separation model. Settings are in Settings, Patches & tweaks.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
             }
           ]
         }
@@ -218,6 +334,13 @@
           "targets": [
             {
               "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
               "versionCodes": null,
               "isExperimental": true,
               "minSdk": 26,
@@ -249,6 +372,13 @@
               "isExperimental": true,
               "minSdk": 26,
               "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
             }
           ]
         }
@@ -272,6 +402,13 @@
           "targets": [
             {
               "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
               "versionCodes": null,
               "isExperimental": true,
               "minSdk": 26,
@@ -303,6 +440,13 @@
               "isExperimental": true,
               "minSdk": 26,
               "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
             }
           ]
         }
@@ -326,6 +470,13 @@
           "targets": [
             {
               "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
               "versionCodes": null,
               "isExperimental": true,
               "minSdk": 26,
@@ -357,6 +508,13 @@
               "isExperimental": true,
               "minSdk": 26,
               "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
             }
           ]
         }
@@ -384,29 +542,9 @@
               "isExperimental": true,
               "minSdk": 26,
               "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
-      "name": "Sing",
-      "description": "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover in Auris by OreoMuncher45, a fork of BitChord. Choose the filter or on-device separation model. Settings are in Settings, Patches & tweaks.",
-      "default": false,
-      "category": null,
-      "compatiblePackages": [
-        {
-          "packageName": "com.music.bitchord",
-          "name": "BitChord",
-          "description": null,
-          "apkFileType": "APK",
-          "appIconColor": "#FF8944",
-          "signatures": null,
-          "formFactor": "MOBILE",
-          "targets": [
+            },
             {
-              "version": "1.9",
+              "version": "1.9.1-beta1",
               "versionCodes": null,
               "isExperimental": true,
               "minSdk": 26,
@@ -438,6 +576,13 @@
               "isExperimental": true,
               "minSdk": 26,
               "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
             }
           ]
         }
@@ -465,6 +610,13 @@
               "isExperimental": true,
               "minSdk": 26,
               "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
             }
           ]
         }
@@ -473,7 +625,7 @@
     },
     {
       "name": "Source-independent AutoMix",
-      "description": "Measures the selected playable source, verifies automatic replacements, preserves playback speed and adds a native, pair-specific transition timeline with volume, EQ, filter controls and preview. BitChord 1.9.",
+      "description": "Measures the selected playable source, verifies automatic replacements, preserves playback speed and adds a native, pair-specific transition timeline with volume, EQ, filter controls and preview.",
       "default": true,
       "category": null,
       "compatiblePackages": [
@@ -488,6 +640,13 @@
           "targets": [
             {
               "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
               "versionCodes": null,
               "isExperimental": true,
               "minSdk": 26,
@@ -519,6 +678,13 @@
               "isExperimental": true,
               "minSdk": 26,
               "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
             }
           ]
         }
@@ -546,6 +712,13 @@
               "isExperimental": true,
               "minSdk": 26,
               "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
             }
           ]
         }
@@ -568,14 +741,14 @@
           "formFactor": "MOBILE",
           "targets": [
             {
-              "version": "1.8.1",
+              "version": "1.9",
               "versionCodes": null,
               "isExperimental": true,
               "minSdk": 26,
               "description": null
             },
             {
-              "version": "1.9",
+              "version": "1.9.1-beta1",
               "versionCodes": null,
               "isExperimental": true,
               "minSdk": 26,
@@ -603,6 +776,13 @@
           "targets": [
             {
               "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
               "versionCodes": null,
               "isExperimental": true,
               "minSdk": 26,

@@ -110,7 +110,28 @@ final class DownloadDetails {
                 details.content);
     }
 
-    private static String duration(int seconds) {
+    static String referenceDuration(String text) {
+        if (text == null || text.trim().isEmpty()) return PatchStrings.t("Not reported");
+        String value = text.trim();
+        String[] parts = value.split(":", -1);
+        if (parts.length > 3) return PatchStrings.t("Not reported");
+        long total = 0;
+        try {
+            for (int i = 0; i < parts.length; i++) {
+                if (!parts[i].matches("[0-9]+")) return PatchStrings.t("Not reported");
+                int component = Integer.parseInt(parts[i]);
+                if (i > 0 && component >= 60) return PatchStrings.t("Not reported");
+                total = total * 60 + component;
+                if (total > Integer.MAX_VALUE) return PatchStrings.t("Not reported");
+            }
+        } catch (NumberFormatException invalid) {
+            return PatchStrings.t("Not reported");
+        }
+        return total > 0 ? value : PatchStrings.t("Not reported");
+    }
+
+    static String duration(int seconds) {
+        if (seconds <= 0) return PatchStrings.t("Not reported");
         return seconds >= 3600
                 ? String.format(
                         java.util.Locale.getDefault(),

@@ -19,5 +19,12 @@
     "url": "https://dl.google.com/dl/android/maven2/androidx/media3/media3-database/1.11.0/media3-database-1.11.0.aar",
     "aar_sha256": "520e6f814e42a7d428db187ac073b453c0fcba0f4f5f4edd1cf33fafd2cfb740",
     "classes_sha256": "d4b0509ee93605d4d43da2d458e78bbf728f865dbcd00aa2a726f4daf91d5da2"
+  },
+  {
+    "artifact": "media3-exoplayer",
+    "version": "1.11.0",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/media3/media3-exoplayer/1.11.0/media3-exoplayer-1.11.0.aar",
+    "aar_sha256": "29d4827d9bcf5316b9c69821453a67ad83b7a3bd928ef17eaedc0c97e63df8e8",
+    "classes_sha256": "ba370a2ab5955cc4a0d1ee0e296812d8a8264678579c4c5c655111a41fa8f8c0"
   }
 ]

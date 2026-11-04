@@ -3,11 +3,13 @@
 
 from pathlib import Path
 import os, subprocess, zipfile, hashlib, shutil, fcntl, tempfile, uuid, struct, json
+from tools.strip_native_runtime import strip_debug
 
 from buildenv import (
     BUNDLE_NAME,
     MORPHE_JAR as MORPHE,
     PATCHER_VERSION,
+    PROVENANCE,
     ROOT,
     TDLIB as TD,
     TOOLS,
@@ -120,18 +122,31 @@ jar(OUT / "extension.jar", OUT / "extension-classes")
 shared_ui = {
     "ExtrasActivity",
     "ExtrasUi",
+    "HostSettingsRow",
     "SoundExtras",
     "TelegramStyle",
     "TelegramSwitch",
     "Strings",
     "PatchStrings",
     "CapturePolicy",
+    "DiagnosticRecord",
+    "DiagnosticStore",
+    "DiagnosticArchive",
+    "DiagnosticFiles",
+    "Diagnostics",
+    "DiagnosticsActivity",
+    "LoginNavigation",
+    "YouTubePolicy",
+    "SourceFallback",
+    "NativeSourceConfig",
     "Translations",
     "HostLog",
     "VocalCut",
     "SeparatedSing",
     "SeparationModel",
     "SingOutput",
+    "KaraokeLyrics",
+    "KaraokeCapsule",
     "PatchSources",
     "Outputs",
     "SleepFade",
@@ -139,10 +154,15 @@ shared_ui = {
     "OutputEq",
     "KeyTempo",
     "DjMode",
+    "DjOrder",
+    "DjPlaylists",
     "DownloadChoice",
+    "PlayerDownload",
+    "PlayerDownloadHost",
     "EffectsApps",
     "BitPerfect",
     "VideoSwitch",
+    "PlayerIcons",
     "AudioOrigin",
     "AudioOriginHost",
     "AudioOriginSaved",
@@ -207,6 +227,13 @@ shared_ui = {
     "DspAnalysis",
     "SourceAutomix",
     "TransitionEdit",
+    "MixTools",
+    "DeckMeter",
+    "TransitionWaveform",
+    "TransitionWaveCache",
+    "TransitionPreview",
+    "TransitionAnalysis",
+    "TransitionStore",
     "TransitionRuntime",
     "TransitionEditorActivity",
     "SourcePreference",
@@ -322,6 +349,7 @@ flags.write_text(
             "1.1.0-beta.16.3",
             "1.1.0-beta.16.4",
             "1.1.0-beta.18",
+            "1.1.0-beta.19",
         )
         else "false"
     )
@@ -396,6 +424,11 @@ for abi in ("arm64-v8a", "armeabi-v7a", "x86_64"):
         TOOLS / "libcxx" / abi / "libc++_shared.so",
     ]:
         shutil.copy2(src, libs / src.name)
+    strip_debug(
+        libs / "libc++_shared.so",
+        PROVENANCE["native_sha256"][f"lib/{abi}/libc++_shared.so"],
+        TOOLS,
+    )
 # Check the ELF architecture before packaging each cross-compiled Android input.
 for abi, machine in (("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)):
     native = SOULSEEK_NATIVE / abi / "libbitchord_soulseek.so"

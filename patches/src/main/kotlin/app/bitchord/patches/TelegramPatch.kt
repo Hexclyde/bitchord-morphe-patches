@@ -79,7 +79,11 @@ private val target =
         packageName = "com.music.bitchord",
         apkFileType = ApkFileType.APK,
         appIconColor = 0xFF8944,
-        targets = listOf(AppTarget(version = "1.9", isExperimental = true, minSdk = 26)),
+        targets =
+            listOf(
+                AppTarget(version = "1.9", isExperimental = true, minSdk = 26),
+                AppTarget(version = "1.9.1-beta1", isExperimental = true, minSdk = 26),
+            ),
     )
 
 private object ApplicationCreate :
@@ -1529,27 +1533,8 @@ val nativeTelegramPatch =
             // AddonClient's original coroutine still supplies Dispatchers.IO. Only
             // the reserved native identifier is answered directly; external addons
             // retain their original HTTP implementation.
-            val addonBodyClass = "Lcom/music/bitchord/download/Downloads\$run\$2;"
-            val addonBody =
-                mutableClassDefBy(addonBodyClass).methods.single {
-                    it.name ==
-                        "invokeSuspend\$com\$music\$bitchord\$data\$sources\$addon\$AddonClient\$body\$2" &&
-                        it.parameterTypes == listOf("Ljava/lang/Object;") &&
-                        it.returnType == "Ljava/lang/Object;"
-                }
-            check(addonBody.implementation!!.registerCount == 14) {
-                "Addon IO coroutine registers changed"
-            }
-            check(
-                addonBody.implementation!!.instructions.any {
-                    val ref = (it as? ReferenceInstruction)?.reference as? FieldReference
-                    ref?.definingClass == addonBodyClass &&
-                        ref.name == "L\$0" &&
-                        ref.type == "Ljava/lang/Object;"
-                }
-            ) {
-                "Addon request capture changed"
-            }
+            val addonBodyHost = addonBodyHost()
+            val addonBody = addonBodyHost.method
             // Continuations are existing host instructions, not labels at the end
             // of a separately assembled snippet. The latter have snippet-relative
             // locations and corrupt branches inserted at nonzero code addresses.
@@ -1557,7 +1542,7 @@ val nativeTelegramPatch =
             addonBody.addInstructionsWithLabels(
                 0,
                 """
-            iget-object v0, p0, $addonBodyClass->L${'$'}0:Ljava/lang/Object;
+            iget-object v0, p0, ${addonBodyHost.url.definingClass}->${addonBodyHost.url.name}:${addonBodyHost.url.type}
             check-cast v0, Ljava/lang/String;
             invoke-static {v0}, Lapp/bitchord/telegram/InternalAddon;->bodyOrNull(Ljava/lang/String;)Ljava/lang/String;
             move-result-object v0
@@ -1566,6 +1551,7 @@ val nativeTelegramPatch =
         """,
                 ExternalLabel("external_addon", externalAddon),
             )
+            addTelegramCatalogueCalls()
             // Wrap the downstream after resolution. Placing a router above the
             // resolver would miss Telegram substitutes for ordinary YouTube items.
             val resolving = mutableClassDefBy("Landroidx/media3/datasource/ResolvingDataSource;")
@@ -1587,138 +1573,22 @@ val nativeTelegramPatch =
             move-result-object p1
         """,
             )
-            // R8 merged fetchDirect into this coroutine. Keep its original IO
+            // R8 merged fetchDirect into another coroutine. Keep its original IO
             // dispatcher, cancellation context, sink and progress callback.
-            val downloadClass = "Lcom/music/bitchord/wear/WearBridge\$sendToWatch\$1;"
-            val directDownload =
-                mutableClassDefBy(downloadClass).methods.single { it.name == "invokeSuspend" }
-            val directCode = directDownload.implementation!!.instructions.toList()
-            // The branch starts by building the request for the URL it was given, right after it
-            // reads its coroutine scope into v0.
-            val downloadIndex =
-                directCode.indices.single { i ->
-                    directCode[i].opcode == Opcode.NEW_INSTANCE &&
-                        (directCode[i] as ReferenceInstruction).reference.toString() ==
-                            "Lokhttp3/Request\$Builder;" &&
-                        directCode.getOrNull(i + 2)?.fieldRef()?.name == "\$path"
-                }
-            // A selected Soulseek patch may already have installed its native dispatch
-            // before this HTTP branch. Inspect the original captured scope through that
-            // bounded dispatch instead of requiring it immediately before the request.
-            check(
-                (maxOf(0, downloadIndex - 40) until downloadIndex - 1).any {
-                    val field = directCode[it].fieldRef()
-                    val read = directCode[it] as? TwoRegisterInstruction
-                    val cast = directCode[it + 1]
-                    directCode[it].opcode == Opcode.IGET_OBJECT &&
-                        field?.definingClass == downloadClass &&
-                        field.name == "L\$0" &&
-                        read?.registerA == 0 &&
-                        read.registerB == 1 &&
-                        cast.opcode == Opcode.CHECK_CAST &&
-                        (cast as OneRegisterInstruction).registerA == 0 &&
-                        (cast as ReferenceInstruction).reference.toString() ==
-                            "Lkotlinx/coroutines/CoroutineScope;"
-                }
-            ) {
-                "Direct download scope or receiver changed"
-            }
-            check(directDownload.implementation!!.registerCount >= 10) {
-                "Direct download registers changed"
-            }
-            for ((name, type) in
-                listOf(
-                    "\$path" to "Ljava/lang/String;",
-                    "\$app" to "Ljava/io/OutputStream;",
-                    "\$payload" to "Lkotlin/jvm/functions/Function2;",
-                )) {
-                check(
-                    (downloadIndex until minOf(downloadIndex + 40, directCode.size - 1)).any {
-                        val field = directCode[it].fieldRef()
-                        val read = directCode[it] as? TwoRegisterInstruction
-                        val cast = directCode[it + 1]
-                        directCode[it].opcode == Opcode.IGET_OBJECT &&
-                            field?.definingClass == downloadClass &&
-                            field.name == name &&
-                            read?.registerB == 1 &&
-                            cast.opcode == Opcode.CHECK_CAST &&
-                            (cast as OneRegisterInstruction).registerA == read.registerA &&
-                            (cast as ReferenceInstruction).reference.toString() == type
-                    }
-                ) {
-                    "Direct download capture changed: $name"
-                }
-            }
-            check(
-                directCode.subList(downloadIndex, downloadIndex + 140).any {
-                    ((it as? ReferenceInstruction)?.reference as? StringReference)?.string ==
-                        "fetched "
-                }
-            ) {
-                "Direct download body changed"
-            }
-            check(
-                classDefBy("Lkotlinx/coroutines/JobKt;").methods.any {
-                    it.name == "ensureActive" &&
-                        it.parameterTypes == listOf("Lkotlin/coroutines/CoroutineContext;")
-                }
-            )
-            // Prepend to a previously installed native dispatcher, rather than to
-            // its HTTP fallback. Otherwise that dispatcher's unowned-URL branch
-            // would jump past this new handler and bypass it entirely.
-            val nativeDispatches =
-                (maxOf(0, downloadIndex - 40) until downloadIndex - 2).filter { index ->
-                    val read = directCode[index] as? TwoRegisterInstruction
-                    val field = directCode[index].fieldRef()
-                    val cast = directCode[index + 1]
-                    val call = directCode[index + 2]
-                    directCode[index].opcode == Opcode.IGET_OBJECT &&
-                        field?.definingClass == downloadClass &&
-                        field.name == "\$path" &&
-                        read?.registerA == 4 &&
-                        read.registerB == 1 &&
-                        cast.opcode == Opcode.CHECK_CAST &&
-                        (cast as OneRegisterInstruction).registerA == 4 &&
-                        (cast as ReferenceInstruction).reference.toString() ==
-                            "Ljava/lang/String;" &&
-                        call.opcode == Opcode.INVOKE_STATIC &&
-                        call.methodRef()?.let {
-                            it.definingClass == "Lapp/bitchord/soulseek/SoulseekAddon;" &&
-                                it.name == "reserved" &&
-                                it.parameterTypes == listOf("Ljava/lang/String;") &&
-                                it.returnType == "Z"
-                        } == true &&
-                        argumentRegisters(call) == listOf(4)
-                }
-            check(nativeDispatches.size <= 1) { "Existing native download dispatch is not unique" }
-            val nativeDownloadIndex = nativeDispatches.singleOrNull() ?: downloadIndex
-            directDownload.addInstructionsWithLabels(
-                nativeDownloadIndex,
-                """
-            iget-object v4, v1, $downloadClass->${'$'}path:Ljava/lang/Object;
-            check-cast v4, Ljava/lang/String;
-            invoke-static {v4}, Lapp/bitchord/telegram/InternalAddon;->reserved(Ljava/lang/String;)Z
-            move-result v5
-            if-eqz v5, :external_download
-            iget-object v5, v1, $downloadClass->${'$'}app:Ljava/lang/Object;
-            check-cast v5, Ljava/io/OutputStream;
-            iget-object v6, v1, $downloadClass->${'$'}payload:Ljava/lang/Object;
-            check-cast v6, Lkotlin/jvm/functions/Function2;
-            invoke-interface {v0}, Lkotlinx/coroutines/CoroutineScope;->getCoroutineContext()Lkotlin/coroutines/CoroutineContext;
-            move-result-object v7
-            invoke-static {v4, v5, v6, v7}, Lapp/bitchord/telegram/NativeDownloads;->fetch(Ljava/lang/String;Ljava/io/OutputStream;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/CoroutineContext;)Ljava/lang/Long;
-            move-result-object v4
-            return-object v4
-        """,
-                ExternalLabel("external_download", directCode[nativeDownloadIndex]),
-            )
+            directDownloadHost()
+                .install(
+                    "Lapp/bitchord/telegram/InternalAddon;",
+                    "Lapp/bitchord/telegram/NativeDownloads;",
+                    "external_download",
+                    setOf("Lapp/bitchord/soulseek/SoulseekAddon;"),
+                )
             addDownloadProbe()
             println(
                 "Installed internal Telegram metadata calls and Media3 data source; no local HTTP listener"
             )
             // The UI shim links only to these verified, host-provided Compose signatures.
             val settings = classDefBy("Lcom/music/bitchord/ui/screens/SettingsSheetKt;")
-            val rowParameters =
+            val rowLead =
                 listOf(
                     "Landroidx/compose/ui/graphics/vector/ImageVector;",
                     "Ljava/lang/String;",
@@ -1728,16 +1598,34 @@ val nativeTelegramPatch =
                     "Ljava/lang/String;",
                     "Z",
                     "Landroidx/compose/ui/graphics/painter/Painter;",
-                    "Lkotlin/jvm/functions/Function0;",
-                    "Lkotlin/jvm/functions/Function2;",
-                    "Landroidx/compose/runtime/ComposerImpl;",
-                    "I",
-                    "I",
+                )
+            val composer = "Landroidx/compose/runtime/ComposerImpl;"
+            // HostSettingsRow picks between these two shapes; any other layout must stop the patch.
+            val rowShapes =
+                listOf(
+                    rowLead +
+                        listOf(
+                            "Lkotlin/jvm/functions/Function0;",
+                            "Lkotlin/jvm/functions/Function2;",
+                            composer,
+                            "I",
+                            "I",
+                        ),
+                    rowLead +
+                        listOf(
+                            "Lkotlin/jvm/functions/Function2;",
+                            "Lkotlin/jvm/functions/Function0;",
+                            "Lkotlin/jvm/functions/Function2;",
+                            composer,
+                            "I",
+                            "I",
+                            "I",
+                        ),
                 )
             check(
                 settings.methods.any {
                     it.name == "SettingsRow" &&
-                        it.parameterTypes == rowParameters &&
+                        it.parameterTypes.map { type -> type.toString() } in rowShapes &&
                         it.returnType == "V"
                 }
             ) {
@@ -1900,68 +1788,7 @@ val nativeTelegramPatch =
             // the generic editor, which would only show the internal add-on address.
             // R8 numbers the screen's lambdas, so the row's click lambda is the one that decides
             // on SourceKind.needsServer.
-            val rowLambdas = mutableListOf<String>()
-            classDefForEach { clazz ->
-                if (
-                    clazz.type.startsWith(
-                        "Lcom/music/bitchord/ui/screens/SourcesScreenKt\$\$ExternalSyntheticLambda"
-                    ) &&
-                        clazz.methods.any { method ->
-                            method.name == "invoke" &&
-                                method.parameterTypes.size == 5 &&
-                                method.implementation?.instructions?.any {
-                                    it.fieldRef()?.let { ref ->
-                                        ref.definingClass ==
-                                            "Lcom/music/bitchord/data/sources/SourceKind;" &&
-                                            ref.name == "needsServer"
-                                    } == true
-                                } == true
-                        }
-                )
-                    rowLambdas += clazz.type
-            }
-            check(rowLambdas.size == 1) {
-                "Source row click lambda not unique (${rowLambdas.size})"
-            }
-            val rowLambda = mutableClassDefBy(rowLambdas.single())
-            val rowInvoke =
-                rowLambda.methods.single { it.name == "invoke" && it.parameterTypes.size == 5 }
-            val rowCode = rowInvoke.implementation!!.instructions.toList()
-            val needsServer =
-                rowCode.indexOfFirst {
-                    val ref = (it as? ReferenceInstruction)?.reference as? FieldReference
-                    ref?.definingClass == "Lcom/music/bitchord/data/sources/SourceKind;" &&
-                        ref.name == "needsServer"
-                }
-            check(needsServer >= 0) { "Source row click decision missing" }
-            val editorLoad =
-                (needsServer + 1 until minOf(needsServer + 8, rowCode.size)).single {
-                    val ref = (rowCode[it] as? ReferenceInstruction)?.reference as? FieldReference
-                    rowCode[it].opcode == Opcode.IGET_OBJECT &&
-                        ref?.definingClass == rowLambda.type &&
-                        ref.type == "Lkotlin/jvm/functions/Function1;"
-                }
-            val editor = (rowCode[editorLoad] as TwoRegisterInstruction).registerA
-            val clickLambda =
-                (editorLoad + 1 until minOf(editorLoad + 24, rowCode.size)).single {
-                    val ref = (rowCode[it] as? ReferenceInstruction)?.reference as? MethodReference
-                    rowCode[it].opcode == Opcode.INVOKE_DIRECT &&
-                        ref?.name == "<init>" &&
-                        ref.parameterTypes ==
-                            listOf("Ljava/lang/Object;", "Ljava/lang/Object;", "I")
-                }
-            check(
-                editor < 16 && (rowCode[clickLambda] as FiveRegisterInstruction).registerD == editor
-            ) {
-                "Source row click callback register changed"
-            }
-            rowInvoke.addInstructions(
-                editorLoad + 1,
-                """
-                invoke-static {v$editor}, Lapp/bitchord/telegram/SourceEditorRoute;->wrap(Lkotlin/jvm/functions/Function1;)Lkotlin/jvm/functions/Function1;
-                move-result-object v$editor
-            """,
-            )
+            wrapSourceRowEditor("Lapp/bitchord/telegram/SourceEditorRoute;")
             val playback = mutableClassDefBy("Lcom/music/bitchord/playback/PlaybackService;")
             // Actual player events, not metadata reads/download prefetch, acknowledge direct
             // Telegram items.
@@ -1977,7 +1804,7 @@ val nativeTelegramPatch =
                     }
             val playingCode = playing.implementation!!.instructions.toList()
             check(
-                playing.implementation!!.registerCount == 12 &&
+                playing.localRegisters() >= 2 &&
                     playingCode.size > 4 &&
                     playingCode[3].opcode == Opcode.RETURN_VOID
             ) {
@@ -2446,6 +2273,45 @@ private fun BytecodePatchContext.addPlayerSettings() {
     println("Added pitch and battery saver to BitChord's $hooked players")
 }
 
+/** Battery saver follows BitChord's Automix switch on the players it has already built. */
+internal fun BytecodePatchContext.addSmartFadeReconcile() {
+    val setter =
+        mutableClassDefBy("Lcom/music/bitchord/data/settings/AppSettings;").methods.single {
+            it.name == "setSmartFadeEnabled" &&
+                it.parameterTypes == listOf("Z") &&
+                it.returnType == "V" &&
+                it.accessFlags and 8 != 0
+        }
+    val code = setter.implementation!!.instructions.toList()
+    val returns = code.indices.filter { code[it].opcode == Opcode.RETURN_VOID }
+    check(returns.isNotEmpty()) { "Automix switch setter has no return" }
+    val hooks =
+        code.indices.filter {
+            code[it].opcode == Opcode.INVOKE_STATIC &&
+                code[it].methodRef()?.let { ref ->
+                    ref.definingClass == EXTRAS &&
+                        ref.name == "smartFadeChanged" &&
+                        ref.parameterTypes.isEmpty() &&
+                        ref.returnType == "V"
+                } == true
+        }
+    if (hooks.isNotEmpty()) {
+        check(hooks.size == returns.size && returns.all { it - 1 in hooks }) {
+            "Automix switch refresh is only partly installed"
+        }
+        return
+    }
+    val targets =
+        code
+            .filterIsInstance<com.android.tools.smali.dexlib2.builder.BuilderOffsetInstruction>()
+            .map { it.target.location.index }
+            .toSet()
+    for (index in returns.reversed()) {
+        check(index !in targets) { "Automix switch return is a branch target" }
+        setter.addInstruction(index, "invoke-static {}, $EXTRAS->smartFadeChanged()V")
+    }
+}
+
 /** The sleep timer's pause at the end of its time becomes a fade, then the pause. */
 private fun BytecodePatchContext.addSleepFade() {
     val method =
@@ -2643,17 +2509,50 @@ private fun extrasPatch(
 
 private const val WHERE = " Settings are in Settings, Patches & tweaks."
 
+private val diagnosticsResources = resourcePatch {
+    execute {
+        document("AndroidManifest.xml").use { doc ->
+            val queries = doc.createElement("queries")
+            for (name in
+                listOf(
+                    "com.google.android.gms",
+                    "com.android.vending",
+                    "app.revanced.android.gms",
+                )) {
+                val entry = doc.createElement("package")
+                entry.setAttributeNS(ANDROID, "android:name", name)
+                queries.appendChild(entry)
+            }
+            doc.documentElement.appendChild(queries)
+        }
+    }
+}
+
+@Suppress("unused")
+val diagnosticsPatch =
+    extrasPatch(
+        "Diagnostics",
+        "Records bounded application and patch events for troubleshooting, including startup and sign-in failures. Recording starts only when requested and stops after 15 minutes." +
+            WHERE,
+        diagnosticsResources,
+    ) {
+        markApplied("diagnosticsApplied")
+        addDiagnosticsHooks(ApplicationCreate.method)
+    }
+
 @Suppress("unused")
 val singPatch =
     extrasPatch(
-        "Sing",
-        "Turns the lead vocal down so you can sing over the song. Ported from the vocal remover " +
-            "in Auris by OreoMuncher45, a fork of BitChord. Choose the filter or on-device separation model." +
+        "Karaoke",
+        "Turns the lead vocal down so you can sing over the song, with a Karaoke control at the bottom " +
+            "right of the lyrics. Ported from the vocal remover in Auris by OreoMuncher45, a fork of " +
+            "BitChord. Choose the filter or on-device separation model." +
             WHERE,
         extrasAudioPatch,
         extrasPlayersPatch,
     ) {
         addSingDrain()
+        addKaraokeLyrics()
         markApplied("singApplied")
     }
 
@@ -3021,6 +2920,7 @@ val batterySaverPatch =
         extrasPlayersPatch,
         extrasOutputsPatch,
     ) {
+        addSmartFadeReconcile()
         markApplied("batterySaverApplied")
     }
 
@@ -3066,13 +2966,14 @@ val outputEqualiserPatch =
 val djModePatch =
     extrasPatch(
         "DJ mode",
-        "Picks the next song in the queue for a neighbouring key and a close tempo. Keys " +
-            "and tempos are learned as songs play. From Prism by Yigder." +
+        "Orders upcoming tracks by measured key and tempo. Choose Steady, Build up or Wind down, " +
+            "use longer AutoMix blends for compatible keys, or save the order to a local playlist. From Prism by Yigder." +
             WHERE,
         extrasPlayersPatch,
         extrasAudioPatch,
         extrasServicePatch,
     ) {
+        addDjJourney()
         markApplied("djApplied")
     }
 
@@ -3466,79 +3367,8 @@ private fun BytecodePatchContext.addVideoSwitch() {
         0,
         "invoke-static/range {p0 .. p0}, $VIDEO_SWITCH->controller(Ljava/lang/Object;)V",
     )
-    // Insert one AndroidView in the actual portrait Column after its drag/caption Box.
-    // Both branches of the caption conditional meet at endNode, before weight$default.
-    val owner =
-        "Lcom/music/bitchord/ui/player/NowPlayingScreenKt${'$'}${'$'}ExternalSyntheticLambda74;"
-    val portrait = mutableClassDefBy(owner).methods.single { it.name == "invoke" }
-    val code = portrait.implementation!!.instructions.toList()
-    val dim =
-        code.indexOfFirst {
-            ((it as? ReferenceInstruction)?.reference as? StringReference)?.string ==
-                "spotifyCanvasDim"
-        }
-    check(dim >= 0 && portrait.implementation!!.registerCount == 156) {
-        "Portrait player layout changed"
-    }
-    val caption =
-        (dim + 1 until code.size).first { index ->
-            val call = (code[index] as? ReferenceInstruction)?.reference as? MethodReference
-            call?.definingClass == "Lcom/music/bitchord/ui/player/NowPlayingScreenKt;" &&
-                call.name == "WhileShown"
-        }
-    val close =
-        (caption + 1 until code.size).first { index ->
-            val call = (code[index] as? ReferenceInstruction)?.reference as? MethodReference
-            call?.definingClass == "Landroidx/compose/runtime/ComposerImpl;" &&
-                call.name == "endNode"
-        }
-    val weight = (code[close + 2] as? ReferenceInstruction)?.reference as? MethodReference
-    check(
-        weight?.definingClass == "Landroidx/compose/foundation/layout/ColumnScopeInstance;" &&
-            weight.name == "weight${'$'}default"
-    ) {
-        "Header must precede the weighted artwork, outside the drag strip"
-    }
-    val composer = (code[close] as FiveRegisterInstruction).registerC
-    portrait.addInstruction(
-        close + 1,
-        "invoke-static/range {v$composer .. v$composer}, $VIDEO_SWITCH->header(Ljava/lang/Object;)V",
-    )
-
-    // The landscape main pane has its own measured Column; lyrics/queue panes are untouched.
-    val landscape =
-        mutableClassDefBy("Lcom/music/bitchord/ui/player/LandscapePlayerKt;").methods.single {
-            it.name == "LandscapeMainPane"
-        }
-    val landscapeCode = landscape.implementation!!.instructions.toList()
-    val columns =
-        landscapeCode.withIndex().filter { (_, instruction) ->
-            val call = (instruction as? ReferenceInstruction)?.reference as? MethodReference
-            call?.definingClass == "Landroidx/compose/foundation/layout/ColumnKt;" &&
-                call.name == "columnMeasurePolicy"
-        }
-    check(columns.size == 1 && landscape.implementation!!.registerCount == 31) {
-        "Landscape main Column changed"
-    }
-    val modifier =
-        (columns.single().index until landscapeCode.size).first { index ->
-            val field =
-                (landscapeCode[index] as? ReferenceInstruction)?.reference as? FieldReference
-            field?.definingClass == "Landroidx/compose/ui/node/ComposeUiNode${'$'}Companion;" &&
-                field.name == "SetModifier"
-        }
-    val install = modifier + 1
-    val apply = (landscapeCode[install] as? ReferenceInstruction)?.reference as? MethodReference
-    check(
-        apply?.definingClass == "Landroidx/compose/runtime/Updater;" && apply.name == "set-impl"
-    ) {
-        "Landscape Column modifier binding changed"
-    }
-    val landscapeComposer = (landscapeCode[install] as FiveRegisterInstruction).registerC
-    landscape.addInstruction(
-        install + 1,
-        "invoke-static/range {v$landscapeComposer .. v$landscapeComposer}, $VIDEO_SWITCH->header(Ljava/lang/Object;)V",
-    )
+    installPlayerHeader(VIDEO_SWITCH)
+    installVideoFullscreen()
     println("Added the audio and video switch")
 }
 

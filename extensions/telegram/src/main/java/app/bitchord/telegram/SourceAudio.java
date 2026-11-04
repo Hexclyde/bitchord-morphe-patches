@@ -250,10 +250,10 @@ public final class SourceAudio extends MediaDataSource {
         }
 
         void check() throws IOException {
-            if (Thread.currentThread().isInterrupted()
-                    || AutomixAccess.stopped()
-                    || cancelled.getAsBoolean()
-                    || System.nanoTime() >= deadline) throw new Stopped();
+            if (Thread.currentThread().isInterrupted()) throw new Stopped(StopReason.INTERRUPTED);
+            if (AutomixAccess.stopped()) throw new Stopped(StopReason.PLAYBACK_STOPPED);
+            if (cancelled.getAsBoolean()) throw new Stopped(StopReason.CANCELLED);
+            if (System.nanoTime() >= deadline) throw new Stopped(StopReason.DEADLINE);
         }
 
         @Override
@@ -283,7 +283,7 @@ public final class SourceAudio extends MediaDataSource {
                 }
             } catch (InterruptedException interrupted) {
                 Thread.currentThread().interrupt();
-                throw new Stopped();
+                throw new Stopped(StopReason.INTERRUPTED);
             }
         }
     }
@@ -297,11 +297,12 @@ public final class SourceAudio extends MediaDataSource {
             private boolean closed;
 
             private void check() throws IOException {
-                if (closed
-                        || Thread.currentThread().isInterrupted()
-                        || AutomixAccess.stopped()
-                        || cancelled.getAsBoolean()
-                        || System.nanoTime() >= deadline) throw new Stopped();
+                if (closed) throw new Stopped(StopReason.CLOSED);
+                if (Thread.currentThread().isInterrupted())
+                    throw new Stopped(StopReason.INTERRUPTED);
+                if (AutomixAccess.stopped()) throw new Stopped(StopReason.PLAYBACK_STOPPED);
+                if (cancelled.getAsBoolean()) throw new Stopped(StopReason.CANCELLED);
+                if (System.nanoTime() >= deadline) throw new Stopped(StopReason.DEADLINE);
             }
 
             @Override
@@ -327,9 +328,28 @@ public final class SourceAudio extends MediaDataSource {
     }
 
     /** Analysis ran out of time, was cancelled or closed: not a fault in the audio. */
+    enum StopReason {
+        UNSPECIFIED,
+        CLOSED,
+        INTERRUPTED,
+        PLAYBACK_STOPPED,
+        CANCELLED,
+        DEADLINE,
+        BYTE_LIMIT,
+        READER_RELEASED,
+        READ_PERMISSION
+    }
+
     static final class Stopped extends IOException {
+        final StopReason reason;
+
         Stopped() {
+            this(StopReason.UNSPECIFIED);
+        }
+
+        Stopped(StopReason reason) {
             super("Background audio analysis stopped");
+            this.reason = reason;
         }
     }
 
@@ -429,12 +449,12 @@ public final class SourceAudio extends MediaDataSource {
     }
 
     private void check() throws IOException {
-        if (closed
-                || Thread.currentThread().isInterrupted()
-                || AutomixAccess.stopped()
-                || cancelled.getAsBoolean()
-                || System.nanoTime() > deadline
-                || spent > MAX_BYTES) throw new Stopped();
+        if (closed) throw new Stopped(StopReason.CLOSED);
+        if (Thread.currentThread().isInterrupted()) throw new Stopped(StopReason.INTERRUPTED);
+        if (AutomixAccess.stopped()) throw new Stopped(StopReason.PLAYBACK_STOPPED);
+        if (cancelled.getAsBoolean()) throw new Stopped(StopReason.CANCELLED);
+        if (System.nanoTime() > deadline) throw new Stopped(StopReason.DEADLINE);
+        if (spent > MAX_BYTES) throw new Stopped(StopReason.BYTE_LIMIT);
     }
 
     private void reopen(long at) throws IOException {
@@ -594,7 +614,7 @@ public final class SourceAudio extends MediaDataSource {
 
             @Override
             public int readAt(long at, byte[] bytes, int offset, int length) throws IOException {
-                if (released) throw new Stopped();
+                if (released) throw new Stopped(StopReason.READER_RELEASED);
                 return SourceAudio.this.readAt(at, bytes, offset, length);
             }
 

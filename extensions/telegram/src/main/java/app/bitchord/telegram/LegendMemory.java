@@ -62,6 +62,35 @@ final class LegendMemory {
         return true;
     }
 
+    synchronized int forgetMessages(long chat, long[] messages) {
+        if (chat == 0 || messages == null) return 0;
+        java.util.Set<String> families = new java.util.HashSet<>();
+        for (long message : messages)
+            if (message > 0) families.add("src:telegram-native::" + chat + "_" + message);
+        return forget(families, null);
+    }
+
+    synchronized int forgetChat(long chat) {
+        return chat == 0
+                ? 0
+                : forget(java.util.Collections.emptySet(), "src:telegram-native::" + chat + "_");
+    }
+
+    private int forget(java.util.Set<String> families, String prefix) {
+        int before = labels.size();
+        labels.keySet()
+                .removeIf(
+                        id -> {
+                            if (prefix != null) return id.startsWith(prefix);
+                            for (String family : families)
+                                if (id.equals(family) || id.startsWith(family + "_")) return true;
+                            return false;
+                        });
+        int removed = before - labels.size();
+        if (removed > 0) save();
+        return removed;
+    }
+
     synchronized void clear() {
         labels.clear();
         if (store != null) store.delete();

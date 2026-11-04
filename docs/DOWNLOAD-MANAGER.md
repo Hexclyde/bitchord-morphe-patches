@@ -4,6 +4,10 @@ Select **Unofficial Soulseek audio** in Morphe for BitChord 1.9, then open Downl
 
 ## Player integration
 
+I place a Download control beside the player's favourite/menu actions. It first uses the current non-YouTube stream when downloadable, then checks other enabled sources and readable local music for a matching recording and duration. Alternatives are ranked by reported audio quality; YouTube is the last fallback and remains unavailable when disabled under Sources. A known transfer percentage appears inside the control. Source lookup and missing transfer totals do not produce estimated percentages.
+
+Playlist source selection shows each original song's duration and carries that song's title, artist, artwork and duration into the picker. I keep the chosen candidate's quality and reported duration in the batch review. A source that supplies no duration is labelled **Not reported**; file size and bitrate are not used to invent one.
+
 Downloads is the fifth tab, between Explore and Library, in both native navigation
 styles. It uses BitChord's original Downloads glyph. The hub, Explorer and batch
 review render in the player's content area through its native AndroidView API.

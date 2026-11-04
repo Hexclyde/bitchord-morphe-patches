@@ -403,4 +403,126 @@ public class SourceAudioTest {
             }
         }
     }
+
+    private static String stopReason(IOException failure) throws Exception {
+        try {
+            return String.valueOf(failure.getClass().getDeclaredField("reason").get(failure));
+        } catch (NoSuchFieldException missing) {
+            return "";
+        }
+    }
+
+    @Test
+    public void stopReasonsPreserveCancellationShortCircuiting() throws Exception {
+        java.util.concurrent.atomic.AtomicInteger calls =
+                new java.util.concurrent.atomic.AtomicInteger();
+        SourceAudio closed =
+                new SourceAudio(
+                        new DataSpec(Uri.parse("https://host/a")),
+                        System.nanoTime() + 120_000_000_000L,
+                        () -> {
+                            calls.incrementAndGet();
+                            return false;
+                        });
+        closed.close();
+        calls.set(0);
+        try {
+            closed.readAt(0, new byte[1], 0, 1);
+            fail();
+        } catch (IOException stopped) {
+            assertEquals("CLOSED", stopReason(stopped));
+        }
+        assertEquals(0, calls.get());
+        try {
+            new SourceAudio(
+                    new DataSpec(Uri.parse("https://host/a")),
+                    0,
+                    () -> {
+                        calls.incrementAndGet();
+                        return false;
+                    });
+            fail();
+        } catch (IOException stopped) {
+            assertEquals("DEADLINE", stopReason(stopped));
+        }
+        assertEquals(1, calls.get());
+        calls.set(0);
+        try {
+            new SourceAudio(
+                    new DataSpec(Uri.parse("https://host/a")),
+                    Long.MAX_VALUE,
+                    () -> {
+                        calls.incrementAndGet();
+                        return true;
+                    });
+            fail();
+        } catch (IOException stopped) {
+            assertEquals("CANCELLED", stopReason(stopped));
+        }
+        assertEquals(1, calls.get());
+    }
+
+    @Test
+    public void interruptionAndHostStopDoNotEvaluateCancellation() throws Exception {
+        java.util.concurrent.atomic.AtomicInteger calls =
+                new java.util.concurrent.atomic.AtomicInteger();
+        try {
+            Thread.currentThread().interrupt();
+            try {
+                new SourceAudio(
+                        new DataSpec(Uri.parse("https://host/a")),
+                        Long.MAX_VALUE,
+                        () -> {
+                            calls.incrementAndGet();
+                            return false;
+                        });
+                fail();
+            } catch (IOException stopped) {
+                assertEquals("INTERRUPTED", stopReason(stopped));
+            }
+        } finally {
+            Thread.interrupted();
+        }
+        assertEquals(0, calls.get());
+        boolean previous = PlaybackService.stopped;
+        PlaybackService.stopped = true;
+        try {
+            new SourceAudio(
+                    new DataSpec(Uri.parse("https://host/a")),
+                    Long.MAX_VALUE,
+                    () -> {
+                        calls.incrementAndGet();
+                        return false;
+                    });
+            fail();
+        } catch (IOException stopped) {
+            assertEquals("PLAYBACK_STOPPED", stopReason(stopped));
+        } finally {
+            PlaybackService.stopped = previous;
+        }
+        assertEquals(0, calls.get());
+    }
+
+    @Test
+    public void readerReleaseAndByteBudgetHaveSeparateReasons() throws Exception {
+        try (SourceAudio input = open("https://host/a")) {
+            android.media.MediaDataSource view = input.view();
+            view.close();
+            try {
+                view.readAt(0, new byte[1], 0, 1);
+                fail();
+            } catch (IOException stopped) {
+                assertEquals("READER_RELEASED", stopReason(stopped));
+            }
+            java.lang.reflect.Field spent = SourceAudio.class.getDeclaredField("spent");
+            spent.setAccessible(true);
+            spent.setLong(input, 256L * 1024 * 1024 + 1);
+            try {
+                input.readAt(0, new byte[1], 0, 1);
+                fail();
+            } catch (IOException stopped) {
+                assertEquals("BYTE_LIMIT", stopReason(stopped));
+            }
+        }
+    }
 }

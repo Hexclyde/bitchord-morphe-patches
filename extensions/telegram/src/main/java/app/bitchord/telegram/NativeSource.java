@@ -10,7 +10,6 @@ public final class NativeSource {
 
     public static boolean register(String url) throws Exception {
         Class<?> configType = Class.forName("com.music.bitchord.data.sources.SourceConfig");
-        Class<?> kindType = Class.forName("com.music.bitchord.data.sources.SourceKind");
         Class<?> registry = Class.forName("com.music.bitchord.data.sources.SourceRegistry");
         Class<?> stateFlow = Class.forName("kotlinx.coroutines.flow.StateFlow");
         Object flow = registry.getField("configs").get(null);
@@ -25,18 +24,8 @@ public final class NativeSource {
             }
         if (previous != null && url.equals(configType.getMethod("getBaseUrl").invoke(previous)))
             return false;
-        Object kind = kindType.getField("ADDON").get(null);
         Object source =
-                configType
-                        .getConstructor(
-                                String.class,
-                                kindType,
-                                String.class,
-                                String.class,
-                                boolean.class,
-                                boolean.class,
-                                boolean.class)
-                        .newInstance(ID, kind, "Unofficial Telegram", url, enabled, true, false);
+                NativeSourceConfig.addon(ID, "Unofficial Telegram", url, enabled, true, false);
         ArrayList<Object> next = new ArrayList<>();
         boolean inserted = false;
         for (Object row : existing) {

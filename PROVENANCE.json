@@ -1,5 +1,5 @@
 {
-  "build_date": "2026-11-03",
+  "build_date": "2026-11-04",
   "app_version": "1.9",
   "app_source_commit": "04f64c9f11bd2714d01bbc6da401f146f3d9399f",
   "original_apk_url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.9/BitChord-v1.9_arm64-v8a.apk",
@@ -52,7 +52,7 @@
     }
   ],
   "generated_tdapi_sha256": "d4f776a6f323f125458ca131aaf0fa8059c39a8ff37afc225b0431348b9b4206",
-  "patch_bundle_version": "1.1.0-beta.18",
+  "patch_bundle_version": "1.1.0-beta.19",
   "native_sha256": {
     "lib/arm64-v8a/libc++_shared.so": "dad01c816be6eaaee4ff3b9fac0f479ce472d4b7e2409f6f2195b3a4ee3dd361",
     "lib/arm64-v8a/libcryptox.so": "9fdc85415c999a2c7383817a204d822f0e509515016b8fee14c45d5a1c40e4d6",
@@ -89,7 +89,7 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "9b041b6d37f9bf890d6dcfc458fb373456ce0a7c30a2b828ca1d73fdb7ee6f18",
+  "patch_bundle_sha256": "8111fe71c2d2647731760d479bb71b05034dd045ef59a9a692ef6c0ed255b930",
   "soulseek_development": {
     "status": "experimental-local-build",
     "baseline_commit": "3de260f7f1d7967c5a97ce924085d7d42bec18af",
@@ -168,8 +168,8 @@
   },
   "soulseek_compatibility": {
     "versions": [
-      "1.8.1",
-      "1.9"
+      "1.9",
+      "1.9.1-beta1"
     ],
     "scope": "Unofficial Soulseek audio and its shared settings dependency only",
     "upstream_source_commit": "04f64c9f11bd2714d01bbc6da401f146f3d9399f",
@@ -238,7 +238,7 @@
     "zh",
     "zh-TW"
   ],
-  "ui_translation_phrases": 1886,
+  "ui_translation_phrases": 2041,
   "flac_audio_protocol_reference": {
     "repository": "https://github.com/aztecempire/spotube-plugin-flac-audio",
     "commit": "4ecc535d57c32fe347a301e8fc54ce9be0430158",
@@ -340,6 +340,13 @@
     ],
     "storage_implementation": "independent adapters inspired by storage-review and duplicate-review ideas"
   },
-  "release_tag": "v1.1.0-beta.18",
-  "package_id": "1.1.0-beta.18-r2"
+  "release_tag": "v1.1.0-beta.19",
+  "package_id": "1.1.0-beta.19",
+  "experimental_app_build": {
+    "version": "1.9.1-beta1",
+    "version_code": 37,
+    "source_commit": "ee9129d43d7edccef28c53ba54fe091db14489f1",
+    "source_url": "https://github.com/kushagrasinghx/BitChord/tree/v1.9.1",
+    "apk_origin": "source build"
+  }
 }

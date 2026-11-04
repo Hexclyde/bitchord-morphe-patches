@@ -2,10 +2,10 @@ package app.bitchord.telegram;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.media3.common.MediaItem;
+
+import kotlin.jvm.functions.Function5;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.*;
@@ -21,17 +21,20 @@ public final class TransitionRuntime {
     private static WeakReference<Object> controller = new WeakReference<>(null);
     private static volatile TransitionEdit prepared, armed;
     private static volatile Object preparedPlan, armedOwner;
-    private static volatile String previewKey;
-    private static volatile TransitionEdit previewEdit;
-    private static final Map<String, TransitionEdit> cache = new ConcurrentHashMap<>();
+    private static volatile TransitionEdit automaticEdit;
+    private static volatile String automaticKey;
     private static final Map<Object, EqState> equalizers = new ConcurrentHashMap<>();
     private static final ThreadLocal<double[]> assigning = new ThreadLocal<>();
+    private static final ThreadLocal<Integer> assigningSide = new ThreadLocal<>();
+    private static final DeckMeter[] meters = {new DeckMeter(), new DeckMeter()};
     private static final Map<String, Field> fields = new ConcurrentHashMap<>();
 
     static final class Pair {
         final String outgoingId, incomingId, outgoingTitle, incomingTitle, key;
         final double outgoingDuration, incomingDuration;
         final int index;
+        MediaItem outgoing, incoming;
+        private String recording;
 
         Pair(String a, String b, String at, String bt, double ad, double bd, int index) {
             outgoingId = a;
@@ -44,15 +47,44 @@ public final class TransitionRuntime {
             key = key(a, b);
         }
 
+        String recording() {
+            if (recording == null)
+                recording =
+                        key(
+                                rendition(outgoing, outgoingId, outgoingDuration),
+                                rendition(incoming, incomingId, incomingDuration));
+            return recording;
+        }
+
         double maximumOverlap(TransitionEdit edit) {
             return Math.max(
                     .5,
                     Math.min(
-                            30,
+                            TransitionEdit.MAX_OVERLAP,
                             Math.min(
                                     outgoingDuration - edit.outgoingTrim,
                                     (incomingDuration - edit.incomingCue) / 3)));
         }
+    }
+
+    static String rendition(MediaItem item, String id, double duration) {
+        android.net.Uri uri = SourceFirst.renditionUri(item);
+        if (uri != null
+                && uri.isHierarchical()
+                && uri.getQueryParameter(SourcePreparation.ENTRY) != null) {
+            android.net.Uri.Builder clean = uri.buildUpon().clearQuery();
+            for (String name : new TreeSet<>(uri.getQueryParameterNames())) {
+                if (SourcePreparation.ENTRY.equals(name)) continue;
+                for (String value : uri.getQueryParameters(name))
+                    clean.appendQueryParameter(name, value);
+            }
+            uri = clean.build();
+        }
+        return id
+                + "|"
+                + (uri == null ? "unknown" : SourceAutomix.identity(uri))
+                + "|"
+                + Math.round(duration * 1000);
     }
 
     static String key(String a, String b) {
@@ -77,37 +109,56 @@ public final class TransitionRuntime {
     }
 
     static TransitionEdit load(Pair pair) {
-        String raw = preferences().getString(pair.key, null);
-        if (raw == null) return null;
+        TransitionStore.Entry entry = TransitionStore.get().lookup(pair);
+        return entry.known && entry.error == null ? entry.edit() : null;
+    }
+
+    static void validateSave(Pair pair, TransitionEdit edit) {
+        if (edit != null) {
+            edit.validate();
+            if (pair.outgoingDuration <= 0
+                    || pair.incomingDuration <= 0
+                    || edit.overlap > pair.maximumOverlap(edit) + .001
+                    || edit.incomingCue + edit.overlap * 3 > pair.incomingDuration + .001
+                    || edit.outgoingTrim + edit.overlap > pair.outgoingDuration + .001)
+                throw new IllegalArgumentException("Transition exceeds the available audio");
+        }
         try {
-            return TransitionEdit.decode(raw);
-        } catch (IllegalArgumentException invalid) {
-            return null;
+            Pair current = pair();
+            if (current == null || !current.recording().equals(pair.recording()))
+                throw new IllegalArgumentException("The queue changed; reopen this transition");
+        } catch (IllegalArgumentException changed) {
+            throw changed;
+        } catch (Exception unavailable) {
+            throw new IllegalArgumentException("Playback service is not ready", unavailable);
         }
     }
 
     static void save(Pair pair, TransitionEdit edit) {
-        edit.validate();
-        if (pair.outgoingDuration <= 0
-                || pair.incomingDuration <= 0
-                || edit.overlap > pair.maximumOverlap(edit) + .001
-                || edit.incomingCue + edit.overlap * 3 > pair.incomingDuration + .001
-                || edit.outgoingTrim + edit.overlap > pair.outgoingDuration + .001)
-            throw new IllegalArgumentException("Transition exceeds the available audio");
-        SharedPreferences prefs = preferences();
-        SharedPreferences.Editor write = prefs.edit();
-        if (prefs.getAll().size() >= 200 && !prefs.contains(pair.key)) {
-            String oldest = prefs.getAll().keySet().iterator().next();
-            write.remove(oldest);
-            cache.remove(oldest);
-        }
-        write.putString(pair.key, edit.encode()).apply();
-        cache.put(pair.key, edit.copy());
+        validateSave(pair, edit);
+        TransitionStore.get().write(pair, edit, error -> {});
     }
 
     static void remove(Pair pair) {
-        preferences().edit().remove(pair.key).apply();
-        cache.remove(pair.key);
+        validateSave(pair, null);
+        TransitionStore.get().write(pair, null, error -> {});
+    }
+
+    /**
+     * Hold planning until the stored pair is known, and while the real song is paused for editing.
+     */
+    public static boolean holdPlanner(Object owner) {
+        if (TransitionPreview.holding(owner)) return true;
+        try {
+            Pair pair = pair();
+            return pair != null && !TransitionStore.get().lookup(pair).known;
+        } catch (Exception unavailable) {
+            return false;
+        }
+    }
+
+    public static boolean previewHolding(Object owner) {
+        return TransitionPreview.holding(owner);
     }
 
     static Object player() throws Exception {
@@ -123,7 +174,7 @@ public final class TransitionRuntime {
         return method.invoke(target, args);
     }
 
-    private static Object pcall(Object player, String name, Class<?>[] types, Object... args)
+    static Object pcall(Object player, String name, Class<?>[] types, Object... args)
             throws Exception {
         return Class.forName("androidx.media3.common.Player")
                 .getMethod(name, types)
@@ -154,14 +205,156 @@ public final class TransitionRuntime {
             return null;
         double duration =
                 ((Number) pcall(player, "getDuration", new Class<?>[0])).longValue() / 1000d;
-        return new Pair(
-                outgoing.mediaId,
-                incoming.mediaId,
-                title(outgoing),
-                title(incoming),
-                duration,
-                duration(incoming),
-                index);
+        Pair pair =
+                new Pair(
+                        outgoing.mediaId,
+                        incoming.mediaId,
+                        title(outgoing),
+                        title(incoming),
+                        duration,
+                        duration(incoming),
+                        index);
+        pair.outgoing = outgoing;
+        pair.incoming = incoming;
+        pair.recording();
+        return pair;
+    }
+
+    static Object analysis(Pair pair, int side) {
+        try {
+            Object analyzer = field(SourceAutomix.owner(), "trackAnalyzer");
+            Object results = field(analyzer, "results");
+            return ((Map<?, ?>) results).get(side == 0 ? pair.outgoingId : pair.incomingId);
+        } catch (Exception unavailable) {
+            return null;
+        }
+    }
+
+    static TransitionEdit automaticDraft(Pair pair) {
+        TransitionEdit edit = pair.key.equals(automaticKey) ? automaticEdit : null;
+        return edit == null || !pair.recording().equals(edit.recording)
+                ? new TransitionEdit()
+                : edit.copy();
+    }
+
+    /** Explicit, editable suggestion. Keeps native fallback when analysis is incomplete. */
+    static TransitionEdit suggest(Pair pair, TransitionEdit original) {
+        Object a = analysis(pair, 0), b = analysis(pair, 1);
+        if (measured(a, "beatConfidence") < .5 || measured(b, "beatConfidence") < .5)
+            throw new IllegalStateException("A measured beat grid is required");
+        MixTools.Grid from = original.grid(0, measured(a, "bpm"), measured(a, "firstBeat"));
+        MixTools.Grid to = original.grid(1, measured(b, "bpm"), measured(b, "firstBeat"));
+        double earliest = Math.max(0, measured(b, "audibleStartTime"));
+        double limit = measured(a, "contentEndTime");
+        if (limit <= 0 || limit > pair.outgoingDuration) limit = pair.outgoingDuration;
+        MixTools.Plan plan =
+                MixTools.unmatched(
+                        from,
+                        to,
+                        limit,
+                        earliest,
+                        measured(b, "introEndTime"),
+                        original.bars > 0 ? original.bars : 8);
+        if (plan == null) throw new IllegalStateException("No transition fits this audio");
+        TransitionEdit edit = original.copy();
+        edit.overlap = plan.end - plan.start;
+        edit.outgoingTrim = pair.outgoingDuration - plan.end;
+        edit.incomingCue = plan.cue;
+        edit.bars =
+                plan.bars == 2 || plan.bars == 4 || plan.bars == 8 || plan.bars == 16
+                        ? plan.bars
+                        : 0;
+        if (edit.overlap > pair.maximumOverlap(edit) || edit.outgoingTrim > 120)
+            throw new IllegalStateException("No transition fits this audio");
+        edit.validate();
+        return edit;
+    }
+
+    static float[] meter(int side) {
+        return meters[side].reading(System.nanoTime());
+    }
+
+    static double measured(Object analysis, String name) {
+        try {
+            if (!"ready".equals(field(analysis, "status"))) return 0;
+            Object value = field(analysis, name);
+            double number = value instanceof Number ? ((Number) value).doubleValue() : 0;
+            return Double.isFinite(number) ? number : 0;
+        } catch (Exception unavailable) {
+            return 0;
+        }
+    }
+
+    static String musicalKey(Object analysis) {
+        try {
+            double confidence = measured(analysis, "keyConfidence");
+            if (!(confidence >= TransitionAnalysis.KEY_CONFIDENCE && confidence <= 1)) return null;
+            return KeyTempo.camelotOf((String) field(analysis, "key"));
+        } catch (Exception unavailable) {
+            return null;
+        }
+    }
+
+    /** Real selected-source bands; created on the player thread and decoded on a worker. */
+    static final class WaveRequest {
+        final Object reader;
+        final MediaItem item;
+        final long duration;
+        final double from, to;
+
+        WaveRequest(Object reader, MediaItem item, double duration, double from, double to) {
+            this.reader = reader;
+            this.item = item;
+            this.duration = Math.round(duration * 1000);
+            this.from = Math.max(0, from);
+            this.to = Math.min(duration, to);
+        }
+
+        float[][] read() throws Exception {
+            if (item == null || to <= from || Thread.currentThread().isInterrupted()) return null;
+            SourceAutomix.enterQuiet();
+            try {
+                Object result = ((Function5) reader).invoke(item, duration, from, to, 512);
+                if (result == null || Thread.currentThread().isInterrupted()) return null;
+                float[][] bands = {
+                    (float[]) field(result, "low"),
+                    (float[]) field(result, "mid"),
+                    (float[]) field(result, "high")
+                };
+                int size = bands[0].length;
+                if (size < 2 || size > 4096 || bands[1].length != size || bands[2].length != size)
+                    return null;
+                for (float[] band : bands)
+                    for (float value : band) if (!Float.isFinite(value) || value < 0) return null;
+                return bands;
+            } finally {
+                SourceAutomix.leaveQuiet();
+            }
+        }
+    }
+
+    static WaveRequest waveform(Pair pair, int side, double from, double to) {
+        try {
+            MediaItem item = side == 0 ? pair.outgoing : pair.incoming;
+            android.net.Uri uri = SourceFirst.renditionUri(item);
+            if (uri == null) return null;
+            Function5<MediaItem, Long, Double, Double, Integer, Object> reader =
+                    (selected, duration, start, end, bins) -> {
+                        try {
+                            return TransitionWaveform.read(uri, start, end, bins);
+                        } catch (java.io.IOException failed) {
+                            throw new IllegalStateException(failed);
+                        }
+                    };
+            return new WaveRequest(
+                    reader,
+                    item,
+                    side == 0 ? pair.outgoingDuration : pair.incomingDuration,
+                    from,
+                    to);
+        } catch (Exception unavailable) {
+            return null;
+        }
     }
 
     static String title(MediaItem item) {
@@ -190,6 +383,36 @@ public final class TransitionRuntime {
         controller = new WeakReference<>(value);
     }
 
+    static double djBlend(Object plan, Pair pair, Object player, double normal) throws Exception {
+        if (Boolean.TRUE.equals(field(plan, "blocked"))) return normal;
+        double end = ((Number) field(plan, "transitionEnd")).doubleValue();
+        double cue = ((Number) field(plan, "incomingCueTime")).doubleValue();
+        double switchTime = ((Number) field(plan, "incomingHandoffTime")).doubleValue();
+        double fraction = (switchTime - cue) / normal;
+        if (!Double.isFinite(fraction) || fraction < 0 || fraction > 1) return normal;
+        TransitionEdit bounds = new TransitionEdit();
+        bounds.outgoingTrim = Math.max(0, Math.min(120, pair.outgoingDuration - end));
+        bounds.incomingCue = Math.max(0, Math.min(3600, cue));
+        double span =
+                DjOrder.blend(
+                        DjMode.info(pair.outgoingId),
+                        DjMode.info(pair.incomingId),
+                        normal,
+                        pair.maximumOverlap(bounds));
+        if (!Double.isFinite(span)
+                || span <= normal
+                || end - span < 0
+                || cue + span > pair.incomingDuration) return normal;
+        SourceAutomix.set(plan, "fadeSeconds", span);
+        SourceAutomix.set(plan, "transitionStart", end - span);
+        SourceAutomix.set(plan, "incomingHandoffTime", cue + span * fraction);
+        double now =
+                ((Number) pcall(player, "getCurrentPosition", new Class<?>[0])).doubleValue()
+                        / 1000;
+        SourceAutomix.set(plan, "shouldStart", now >= end - span);
+        return span;
+    }
+
     public static void apply(Object plan) {
         prepared = null;
         preparedPlan = null;
@@ -197,7 +420,32 @@ public final class TransitionRuntime {
             if (Boolean.TRUE.equals(field(plan, "blocked"))) return;
             Pair pair = pair();
             if (pair == null || pair.outgoingDuration <= 0 || pair.incomingDuration <= 0) return;
-            TransitionEdit edit = pair.key.equals(previewKey) ? previewEdit : load(pair);
+            TransitionEdit nativeEdit = new TransitionEdit();
+            double nativeSpan = ((Number) field(plan, "fadeSeconds")).doubleValue();
+            if (SoundExtras.djApplied() && DjMode.enabled)
+                nativeSpan = djBlend(plan, pair, player(), nativeSpan);
+            if (nativeSpan >= .5 && nativeSpan <= pair.maximumOverlap(nativeEdit)) {
+                nativeEdit.overlap = nativeSpan;
+                nativeEdit.outgoingTrim =
+                        Math.max(
+                                0,
+                                Math.min(
+                                        120,
+                                        pair.outgoingDuration
+                                                - ((Number) field(plan, "transitionEnd"))
+                                                        .doubleValue()));
+                nativeEdit.incomingCue =
+                        Math.max(
+                                0,
+                                Math.min(
+                                        3600,
+                                        ((Number) field(plan, "incomingCueTime")).doubleValue()));
+                nativeEdit.overlap = Math.min(nativeEdit.overlap, pair.maximumOverlap(nativeEdit));
+                nativeEdit.recording = pair.recording();
+                automaticEdit = nativeEdit;
+                automaticKey = pair.key;
+            }
+            TransitionEdit edit = load(pair);
             if (edit == null) return;
             edit = edit.copy();
             edit.overlap = Math.min(edit.overlap, pair.maximumOverlap(edit));
@@ -265,6 +513,8 @@ public final class TransitionRuntime {
         if (controller.get() == owner) {
             prepared = null;
             preparedPlan = null;
+            automaticKey = null;
+            automaticEdit = null;
             controller.clear();
         }
     }
@@ -273,8 +523,10 @@ public final class TransitionRuntime {
         finish();
         prepared = null;
         preparedPlan = null;
+        automaticKey = null;
+        automaticEdit = null;
+        TransitionPreview.releaseService();
         controller.clear();
-        cache.clear();
     }
 
     public static Float incoming(Object owner, float progress) {
@@ -296,6 +548,7 @@ public final class TransitionRuntime {
                 if (side == 0 && outgoing == null) continue;
                 float[] hz = edit.cutoffs(side, side == 1 ? incoming : outgoing);
                 assigning.set(edit.eq[side]);
+                assigningSide.set(side);
                 try {
                     call(
                             tracks,
@@ -305,6 +558,7 @@ public final class TransitionRuntime {
                             Math.min(2000, hz[1]));
                 } finally {
                     assigning.remove();
+                    assigningSide.remove();
                 }
             }
             return true;
@@ -314,24 +568,44 @@ public final class TransitionRuntime {
         }
     }
 
+    static void previewProcessor(Object processor, TransitionEdit edit, int side) {
+        assigning.set(edit.eq[side]);
+        assigningSide.set(side);
+        try {
+            assign(processor);
+        } finally {
+            assigning.remove();
+            assigningSide.remove();
+        }
+    }
+
+    static void detachProcessor(Object processor) {
+        equalizers.remove(processor);
+    }
+
     public static void assign(Object processor) {
         double[] gains = assigning.get();
-        if (gains == null || Arrays.stream(gains).allMatch(value -> value == 0)) {
+        if (gains == null) {
             equalizers.remove(processor);
             return;
         }
         EqState previous = equalizers.get(processor);
-        if (previous == null || !Arrays.equals(previous.db, gains))
-            equalizers.put(processor, new EqState(gains.clone()));
+        int side = assigningSide.get() == null ? -1 : assigningSide.get();
+        if (previous == null || !Arrays.equals(previous.db, gains) || previous.side != side)
+            equalizers.put(processor, new EqState(gains.clone(), side));
     }
 
     private static final class EqState {
         final double[] db;
+        final int side;
+        final boolean flat;
         TransitionEdit.Equalizer filter;
         int rate, channels;
 
-        EqState(double[] db) {
+        EqState(double[] db, int side) {
             this.db = db;
+            this.side = side;
+            flat = Arrays.stream(db).allMatch(value -> value == 0);
         }
 
         void configure(int rate, int channels) {
@@ -349,16 +623,27 @@ public final class TransitionRuntime {
         try {
             int rate = ((Number) field(processor, "sampleRate")).intValue(),
                     channels = ((Number) field(processor, "channelCount")).intValue();
-            if (rate < 1 || channels < 1) return;
+            if (rate < 1 || channels < 1 || channels > 32) return;
             state.configure(rate, channels);
             bytes.order(ByteOrder.nativeOrder());
             int count = bytes.remaining() / (2 * channels) * channels;
+            DeckMeter meter = state.side < 0 ? null : meters[state.side];
+            if (meter != null) meter.begin();
+            float left = 0;
             for (int i = 0; i < count; i++) {
                 int at = bytes.position() + i * 2;
-                float value = state.filter.sample(bytes.getShort(at) / 32768f, i % channels);
-                bytes.putShort(
-                        at, (short) Math.max(-32768, Math.min(32767, Math.round(value * 32768))));
+                float value = bytes.getShort(at) / 32768f;
+                if (!state.flat) value = state.filter.sample(value, i % channels);
+                if (i % channels == 0) {
+                    left = value;
+                    if (channels == 1 && meter != null) meter.frame(value, value);
+                } else if (i % channels == 1 && meter != null) meter.frame(left, value);
+                if (!state.flat)
+                    bytes.putShort(
+                            at,
+                            (short) Math.max(-32768, Math.min(32767, Math.round(value * 32768))));
             }
+            if (meter != null) meter.end(System.nanoTime());
         } catch (Exception unavailable) {
             equalizers.remove(processor);
         }
@@ -376,157 +661,32 @@ public final class TransitionRuntime {
                     frames = ((Number) field(block, "terminalBitCount")).intValue();
             if (rate < 1
                     || channels < 1
+                    || channels > 32
                     || frames < 0
                     || frames > ((float[]) samples).length / channels) return;
             state.configure(rate, channels);
-            state.filter.process((float[]) samples, frames, channels);
+            float[] audio = (float[]) samples;
+            if (!state.flat) state.filter.process(audio, frames, channels);
+            if (state.side >= 0) {
+                DeckMeter meter = meters[state.side];
+                meter.begin();
+                for (int i = 0; i < frames; i++)
+                    meter.frame(audio[i * channels], audio[i * channels + (channels == 1 ? 0 : 1)]);
+                meter.end(System.nanoTime());
+            }
         } catch (Exception unavailable) {
             /* Unrelated merged block types have no transition processing. */
         }
     }
 
-    static final class Preview {
-        final Pair pair;
-        final List<String> queue;
-        final int index;
-        final long position;
-        final boolean playing;
-        final Object speed;
-        final Handler handler = new Handler(Looper.getMainLooper());
-        boolean stopping, closed;
-        Runnable done;
-
-        Preview(Pair pair, TransitionEdit edit, Runnable done) throws Exception {
-            edit.validate();
-            this.pair = pair;
-            this.done = done;
-            Object player = player();
-            queue = queue(player);
-            index = pair.index;
-            position = ((Number) pcall(player, "getCurrentPosition", new Class<?>[0])).longValue();
-            playing = (Boolean) pcall(player, "getPlayWhenReady", new Class<?>[0]);
-            speed = pcall(player, "getPlaybackParameters", new Class<?>[0]);
-            if (!AutomixAccess.enabled())
-                throw new IllegalStateException("Enable Automix in Playback settings first");
-            previewKey = pair.key;
-            previewEdit = edit.copy();
-            try {
-                pcall(
-                        player,
-                        "seekTo",
-                        new Class<?>[] {int.class, long.class},
-                        index,
-                        Math.round(Math.max(0, edit.start(pair.outgoingDuration) - 2) * 1000));
-                pcall(player, "play", new Class<?>[0]);
-            } catch (Exception failure) {
-                previewKey = null;
-                previewEdit = null;
-                throw failure;
-            }
-            long limit = System.currentTimeMillis() + 90000;
-            handler.postDelayed(
-                    new Runnable() {
-                        public void run() {
-                            if (closed || stopping) return;
-                            try {
-                                Object current = player();
-                                int at =
-                                        ((Number)
-                                                        pcall(
-                                                                current,
-                                                                "getCurrentMediaItemIndex",
-                                                                new Class<?>[0]))
-                                                .intValue();
-                                long pos =
-                                        ((Number)
-                                                        pcall(
-                                                                current,
-                                                                "getCurrentPosition",
-                                                                new Class<?>[0]))
-                                                .longValue();
-                                if (System.currentTimeMillis() > limit
-                                        || !queue.equals(queue(current))
-                                        || (at != index
-                                                && pos
-                                                        > (edit.incomingCue + edit.overlap + 2)
-                                                                * 1000)) {
-                                    stop();
-                                    return;
-                                }
-                            } catch (Exception unavailable) {
-                                stop();
-                                return;
-                            }
-                            handler.postDelayed(this, 100);
-                        }
-                    },
-                    100);
-        }
-
-        void stop() {
-            if (stopping || closed) return;
-            stopping = true;
-            previewKey = null;
-            previewEdit = null;
-            try {
-                Object player = player();
-                pcall(player, "pause", new Class<?>[0]);
-                Object control = controller.get();
-                if (control != null) call(control, "onSkipRequested", new Class<?>[0]);
-            } catch (Exception ignored) {
-            }
-            long limit = System.currentTimeMillis() + 2000;
-            handler.post(
-                    new Runnable() {
-                        public void run() {
-                            try {
-                                Object control = controller.get();
-                                if (control != null
-                                        && Boolean.TRUE.equals(
-                                                call(control, "isTransitioning", new Class<?>[0]))
-                                        && System.currentTimeMillis() < limit) {
-                                    handler.postDelayed(this, 40);
-                                    return;
-                                }
-                                Object current = player();
-                                if (queue.equals(queue(current))) {
-                                    pcall(
-                                            current,
-                                            "seekTo",
-                                            new Class<?>[] {int.class, long.class},
-                                            index,
-                                            position);
-                                    pcall(
-                                            current,
-                                            "setPlaybackParameters",
-                                            new Class<?>[] {
-                                                Class.forName(
-                                                        "androidx.media3.common.PlaybackParameters")
-                                            },
-                                            speed);
-                                    pcall(
-                                            current,
-                                            "setPlayWhenReady",
-                                            new Class<?>[] {boolean.class},
-                                            playing);
-                                }
-                            } catch (Exception ignored) {
-                            }
-                            closed = true;
-                            finish();
-                            if (done != null) done.run();
-                        }
-                    });
-        }
-    }
-
-    private static List<String> queue(Object player) throws Exception {
+    static List<String> queue(Object player) throws Exception {
         int count = ((Number) pcall(player, "getMediaItemCount", new Class<?>[0])).intValue();
         List<String> ids = new ArrayList<>();
-        for (int i = 0; i < count; i++)
-            ids.add(
-                    ((MediaItem) pcall(player, "getMediaItemAt", new Class<?>[] {int.class}, i))
-                            .mediaId);
+        for (int i = 0; i < count; i++) {
+            MediaItem item =
+                    (MediaItem) pcall(player, "getMediaItemAt", new Class<?>[] {int.class}, i);
+            ids.add(item.mediaId + "|" + SourceFirst.renditionUri(item));
+        }
         return ids;
     }
 }

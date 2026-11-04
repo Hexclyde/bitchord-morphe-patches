@@ -41,20 +41,13 @@ public final class TelegramUi {
     private static void row(String title, ComposerImpl composer) {
         Painter icon =
                 hostPainter(TelegramBridge.resourceId("telegram_native", "drawable"), composer);
-        SettingsSheetKt.SettingsRow(
-                null,
+        HostSettingsRow.call(
                 title,
                 Strings.t("Sign in, search music chats and manage cache"),
-                null,
-                null,
-                null,
                 true,
                 icon,
                 OPEN,
-                null,
-                composer,
-                0,
-                0);
+                composer);
     }
 
     /**

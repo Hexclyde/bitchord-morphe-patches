@@ -71,6 +71,7 @@ public final class VerifyPatchUiApk {
                 Set.of(
                         "ExtrasActivity",
                         "ExtrasUi",
+                        "HostSettingsRow",
                         "SoundExtras",
                         "AutomixAccess",
                         "SourceAudio",
@@ -83,12 +84,24 @@ public final class VerifyPatchUiApk {
                         "Strings",
                         "PatchStrings",
                         "CapturePolicy",
+                        "DiagnosticRecord",
+                        "DiagnosticStore",
+                        "DiagnosticArchive",
+                        "DiagnosticFiles",
+                        "Diagnostics",
+                        "DiagnosticsActivity",
+                        "LoginNavigation",
+                        "YouTubePolicy",
+                        "SourceFallback",
+                        "NativeSourceConfig",
                         "Translations",
                         "HostLog",
                         "VocalCut",
                         "SeparatedSing",
                         "SeparationModel",
                         "SingOutput",
+                        "KaraokeLyrics",
+                        "KaraokeCapsule",
                         "PatchSources",
                         "Outputs",
                         "SleepFade",
@@ -96,10 +109,15 @@ public final class VerifyPatchUiApk {
                         "OutputEq",
                         "KeyTempo",
                         "DjMode",
+                        "DjOrder",
+                        "DjPlaylists",
                         "DownloadChoice",
+                        "PlayerDownload",
+                        "PlayerDownloadHost",
                         "EffectsApps",
                         "BitPerfect",
                         "VideoSwitch",
+                        "PlayerIcons",
                         "DownloadSelection",
                         "StorageSense",
                         "StorageSenseActive",
@@ -155,6 +173,13 @@ public final class VerifyPatchUiApk {
                         "PlaylistImportActivity",
                         "PlaylistToolsActivity",
                         "TransitionEdit",
+                        "MixTools",
+                        "DeckMeter",
+                        "TransitionWaveform",
+                        "TransitionWaveCache",
+                        "TransitionPreview",
+                        "TransitionAnalysis",
+                        "TransitionStore",
                         "TransitionRuntime",
                         "TransitionEditorActivity",
                         "MixedSongCodec",
@@ -388,12 +413,12 @@ public final class VerifyPatchUiApk {
                                 "Settings row resolves its vector with the live composer");
                         pending = "painter";
                     }
-                    if (call.getName().equals("SettingsRow")
+                    if (call.getName().equals("call")
                             && call.getDefiningClass()
-                                    .equals("Lcom/music/bitchord/ui/screens/SettingsSheetKt;")) {
+                                    .equals("Lapp/bitchord/telegram/HostSettingsRow;")) {
                         check(
-                                "painter".equals(values.get(args.get(7)))
-                                        && "composer".equals(values.get(args.get(10))),
+                                "painter".equals(values.get(args.get(3)))
+                                        && "composer".equals(values.get(args.get(5))),
                                 "Settings row receives the native icon painter and live composer");
                         rows++;
                     }
@@ -547,8 +572,11 @@ public final class VerifyPatchUiApk {
                     rejectIcon(
                             apk, withCode(classes, method, typed), "integer icon read as object");
                 }
-                if (call != null && call.getName().equals("SettingsRow")) {
-                    int painter = registers(code.get(index)).get(7);
+                if (call != null
+                        && call.getName().equals("call")
+                        && call.getDefiningClass()
+                                .equals("Lapp/bitchord/telegram/HostSettingsRow;")) {
+                    int painter = registers(code.get(index)).get(3);
                     code.add(index, new ImmutableInstruction21s(Opcode.CONST_16, painter, 0));
                     rejectIcon(apk, withCode(classes, method, code), "row receives no painter");
                     break;

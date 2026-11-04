@@ -52,6 +52,7 @@ public final class SourceAutomix {
         volatile boolean running, done, cancelled;
         volatile int attempts;
         volatile long retryAfter;
+        volatile String phase = "queued";
         long deadline;
 
         Job(Object service, Object analyzer, String id, Uri uri, double duration, String key) {
@@ -173,11 +174,58 @@ public final class SourceAutomix {
     /** Called only for the request-analysis arm of the optimized callback. No I/O on its caller. */
     public static boolean request(Object callback, Object value, Object runtime) {
         if (!(value instanceof MediaItem) || !(runtime instanceof Long)) return false;
-        MediaItem item = (MediaItem) value;
+        try {
+            return enqueue(field(callback, "f$0"), (MediaItem) value, (Long) runtime, false);
+        } catch (Throwable unavailable) {
+            HostLog.d(
+                    "AutoMix analysis request unavailable: "
+                            + unavailable.getClass().getSimpleName());
+            return true;
+        }
+    }
+
+    /**
+     * Opening the editor requests both selected recordings even while normal playback is paused.
+     */
+    static void requestEditor(TransitionRuntime.Pair pair, boolean retry) {
+        if (pair == null || !AutomixAccess.enabled()) return;
+        Object owner = owner();
+        if (owner == null) return;
+        for (int side = 0; side < 2; side++) {
+            try {
+                if ("ready".equals(field(TransitionRuntime.analysis(pair, side), "status")))
+                    continue;
+            } catch (Exception pending) {
+            }
+            double seconds = side == 0 ? pair.outgoingDuration : pair.incomingDuration;
+            if (Double.isFinite(seconds) && seconds > 0)
+                enqueue(
+                        owner,
+                        side == 0 ? pair.outgoing : pair.incoming,
+                        Math.round(seconds * 1000),
+                        retry);
+        }
+    }
+
+    static String analysisPhase(String id) {
+        if (!AutomixAccess.enabled()) return "disabled";
+        try {
+            Object analyzer = field(owner(), "trackAnalyzer");
+            synchronized (jobs) {
+                Map<String, Job> state = jobs.get(analyzer);
+                Job job = state == null ? null : state.get(id);
+                return job == null ? "waiting" : job.phase;
+            }
+        } catch (Exception unavailable) {
+            return "unavailable";
+        }
+    }
+
+    private static boolean enqueue(Object owner, MediaItem item, long runtime, boolean retry) {
+        if (item == null) return true;
         if (item.localConfiguration == null || item.mediaId == null || item.mediaId.isEmpty())
             return true;
         try {
-            Object owner = field(callback, "f$0");
             service(owner);
             Object analyzer = field(owner, "trackAnalyzer");
             if (AutomixAccess.stopped()) return true;
@@ -199,13 +247,7 @@ public final class SourceAutomix {
                 if (old == null || !old.rendition.equals(key)) {
                     if (old != null) old.cancelled = true;
                     Job replacement =
-                            new Job(
-                                    owner,
-                                    analyzer,
-                                    item.mediaId,
-                                    uri,
-                                    ((Long) runtime) / 1000.0,
-                                    key);
+                            new Job(owner, analyzer, item.mediaId, uri, runtime / 1000.0, key);
                     state.put(item.mediaId, replacement);
                     ((Map<?, ?>) field(analyzer, "results")).remove(item.mediaId);
                     old = replacement;
@@ -219,19 +261,28 @@ public final class SourceAutomix {
                 }
             }
             Job job = old;
+            if (retry && !job.running && !job.done) {
+                job.attempts = 0;
+                job.retryAfter = 0;
+            }
             if (job.done || job.running || job.attempts >= 3 || System.nanoTime() < job.retryAfter)
                 return true;
-            if (((Number) field(analyzer, "thermalStatus")).intValue() >= 3) return true;
+            if (((Number) field(analyzer, "thermalStatus")).intValue() >= 3) {
+                job.phase = "thermal";
+                return true;
+            }
             ((Map<String, Uri>) field(analyzer, "sourceAnalysisUris")).put(item.mediaId, uri);
             Set<String> running = (Set<String>) field(analyzer, "running");
             if (!running.add(item.mediaId)) return true;
             job.running = true;
+            job.phase = "analyzing";
             Map<String, Job> current = state;
             try {
                 ((ExecutorService) field(analyzer, "executor"))
                         .execute(() -> analyze(job, current, running));
             } catch (RuntimeException error) {
                 job.running = false;
+                job.phase = "unavailable";
                 running.remove(item.mediaId);
                 throw error;
             }
@@ -253,7 +304,10 @@ public final class SourceAutomix {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
             if (AutomixAccess.stopped() || job.cancelled || current.get(job.id) != job) return;
             invoke(field(job.analyzer, "thermalWatch$delegate"), "getValue", new Class<?>[0]);
-            if (((Number) field(job.analyzer, "thermalStatus")).intValue() >= 3) return;
+            if (((Number) field(job.analyzer, "thermalStatus")).intValue() >= 3) {
+                job.phase = "thermal";
+                return;
+            }
             job.attempts++;
             Map<String, Object> results = (Map<String, Object>) field(job.analyzer, "results");
             stage = "restore";
@@ -321,6 +375,7 @@ public final class SourceAutomix {
                                                         heapUsed.getAsLong()));
                     }
                     if (result == null) {
+                        job.phase = "unavailable";
                         HostLog.d("AutoMix analysis deferred: " + memoryLimit);
                         return;
                     }
@@ -344,7 +399,10 @@ public final class SourceAutomix {
             if (result == null
                     || !"com.music.bitchord.playback.smart.TrackAnalysis"
                             .equals(result.getClass().getName())
-                    || ((Number) field(result, "bpm")).doubleValue() <= 0) return;
+                    || ((Number) field(result, "bpm")).doubleValue() <= 0) {
+                job.phase = "unavailable";
+                return;
+            }
             if (current.get(job.id) != job
                     || !job.rendition.equals(identity(job.uri))
                     || AutomixAccess.stopped()) return;
@@ -362,6 +420,7 @@ public final class SourceAutomix {
                     job.storeKey,
                     result);
             job.done = true;
+            job.phase = "ready";
             HostLog.d(
                     (restored
                                     ? "AutoMix restored selected-audio analysis; source="
@@ -371,6 +430,7 @@ public final class SourceAutomix {
                                             : "AutoMix measured selected audio; source=")
                             + job.uri.getScheme());
         } catch (DspAnalysis.Deferred waitingForMemory) {
+            job.phase = "memory";
             if (!waitingForMemory.decoded) job.attempts = Math.max(0, job.attempts - 1);
             HostLog.d(
                     "AutoMix analysis is waiting for memory: stage="
@@ -382,6 +442,7 @@ public final class SourceAutomix {
                             + ", decoded="
                             + waitingForMemory.decoded);
         } catch (Throwable error) {
+            job.phase = "unavailable";
             HostLog.d(
                     "AutoMix will use a basic fade until audio can be measured: stage="
                             + stage

@@ -90,11 +90,16 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
     print(abi, flow.stdout, flow.stderr, flush=True)
     flow.check_returncode()
     for checker, arguments in [
+        ("VerifyHostContractsApk", [str(output), str(original)]),
         ("VerifyCaptureApk", [str(output)]),
         ("VerifyAudioOriginApk", [str(output)]),
         ("VerifySourcePreparationApk", [str(output)]),
         ("VerifyDownloadIntegrationApk", [str(output)]),
+        ("VerifyPlayerDownloadApk", [str(output)]),
         ("VerifyVideoSwitchApk", [str(output)]),
+        ("VerifyTelegramCatalogueApk", [str(output)]),
+        ("VerifyDiagnosticsApk", [str(output), "true"]),
+        ("VerifyYouTubeControlsApk", [str(original), str(output), "--combined"]),
         ("VerifyTelegramPageApk", [str(output)]),
         ("VerifyNativeDispatchApk", [str(output)]),
         ("VerifyBeta7Apk", [str(output)]),
@@ -104,7 +109,10 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
         ("VerifyFlacAddonApk", [str(output), "disabled", str(mpp), "--regressions"]),
         ("VerifyStreamseekApk", [str(output)]),
         ("VerifySourceAutomixApk", [str(output)]),
+        ("VerifyDjJourneyApk", [str(output), str(original)]),
+        ("VerifyTransitionEditorApk", [str(output)]),
         ("VerifyTravelFeaturesApk", [str(output), "focus,steady,smart"]),
+        ("VerifyKaraokeLyricsApk", [str(output), "present"]),
     ]:
         checked = subprocess.run(
             [
@@ -185,17 +193,18 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
                 ],
                 check=True,
             )
-        subprocess.run(
-            [
-                str(java),
-                "-Xshare:off",
-                "-cp",
-                str(checks) + ":" + str(jar),
-                "VerifyVideoSwitchApk",
-                str(playback),
-            ],
-            check=True,
-        )
+        for checker in ("VerifyVideoSwitchApk", "VerifyPlayerDownloadApk"):
+            subprocess.run(
+                [
+                    str(java),
+                    "-Xshare:off",
+                    "-cp",
+                    str(checks) + ":" + str(jar),
+                    checker,
+                    str(playback),
+                ],
+                check=True,
+            )
     for apk, telegram in shared:
         page = subprocess.run(
             [

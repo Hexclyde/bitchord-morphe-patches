@@ -23,6 +23,7 @@ import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
@@ -85,7 +86,13 @@ public final class TelegramBridge {
     public volatile String error = "";
     volatile boolean paramsSent;
     volatile long mediaRevision;
+    final AtomicLong catalogueRevision = new AtomicLong();
+    private volatile Set<Long> catalogueAuxiliary = Collections.emptySet();
     final TelegramMediaChanges mediaChanges = new TelegramMediaChanges();
+    final TelegramCatalogueUpdates catalogueUpdates;
+    private final Object catalogueState = new Object(), indexSignal = new Object();
+    private final Object clientState = new Object();
+    private boolean indexWake;
     final ChannelSponsorship sponsorship = new ChannelSponsorship(request -> callAny(request));
     private volatile boolean foreground;
     private final LinkedHashMap<String, Boolean> playbackRead = new LinkedHashMap<>();
@@ -403,12 +410,19 @@ public final class TelegramBridge {
         }
         config = readJson(new File(home, "config.json"));
         applyConfig();
+        indexedChats();
+        catalogueUpdates = new TelegramCatalogueUpdates(this::catalogueSelected, index::holdChat);
+        index.onExpanded = (chat, message) -> catalogueUpdates.published(chat, message, generation);
         // Legacy catalogue files are left on disk for rollback, but are no longer loaded or
         // required.
         saveConfig();
         // No logs of phone numbers, codes, passwords or session data.
         Client.execute(new TdApi.SetLogVerbosityLevel(0));
         startClient();
+        Thread catalogue = new Thread(this::runCatalogueUpdates, "Telegram catalogue");
+        catalogue.setDaemon(true);
+        catalogue.setPriority(Thread.MIN_PRIORITY);
+        catalogue.start();
         Thread indexing = new Thread(this::runIndex, "Telegram index");
         indexing.setDaemon(true);
         indexing.setPriority(Thread.MIN_PRIORITY);
@@ -514,7 +528,7 @@ public final class TelegramBridge {
                 config = restored;
                 applyConfig();
                 saveConfig();
-                remoteSearch.clear();
+                clearCatalogueLookups();
             }
             JSONObject trackNames = settings.optJSONObject("trackNames");
             if (trackNames != null) {
@@ -530,6 +544,8 @@ public final class TelegramBridge {
         int files = 0;
         for (IndexTransfer.Section section : contents.sections)
             files += index.importSection(section);
+        indexedChats();
+        clearCatalogueLookups();
         status =
                 settings != null
                         ? Strings.f(
@@ -693,6 +709,7 @@ public final class TelegramBridge {
                     for (IndexTransfer.Section section : IndexTransfer.read(in).sections)
                         if (section.chat == chat) added += index.importSection(section);
                 }
+                if (added > 0) clearCatalogueLookups();
                 HostLog.d(
                         "Unofficial Telegram used a shared index for chat "
                                 + chat
@@ -711,8 +728,12 @@ public final class TelegramBridge {
     }
 
     private void startClient() throws Exception {
-        final long current = ++generation;
-        remoteSearch.clear();
+        final long current;
+        synchronized (clientState) {
+            current = ++generation;
+            catalogueUpdates.sessionChanged(current);
+        }
+        clearCatalogueLookups();
         sponsorship.clear(current);
         mediaChanges.reset();
         mediaRevision++;
@@ -731,7 +752,9 @@ public final class TelegramBridge {
                                     && ((TdApi.UpdateAuthorizationState) object).authorizationState
                                             instanceof TdApi.AuthorizationStateClosed)
                                 closed.complete(null);
-                            if (current == generation) update(object);
+                            synchronized (clientState) {
+                                if (current == generation) update(object, current);
+                            }
                         },
                         e -> error = "Telegram update failed",
                         e -> error = "Telegram callback failed");
@@ -768,7 +791,7 @@ public final class TelegramBridge {
         else configure();
     }
 
-    private void update(TdApi.Object obj) {
+    private void update(TdApi.Object obj, long clientGeneration) {
         DownloadUploadBridge.onUpdate(this, obj);
         if (obj instanceof TdApi.UpdateAuthorizationState) {
             authorizationRevision++;
@@ -795,10 +818,12 @@ public final class TelegramBridge {
         } else if (obj instanceof TdApi.UpdateChatHasProtectedContent
                 || obj instanceof TdApi.UpdateMessageContent
                 || obj instanceof TdApi.UpdateDeleteMessages) {
+            boolean changed;
             synchronized (mediaChanges) {
-                if (TelegramMediaUpdates.changed(mediaChanges, obj)) mediaRevision++;
+                changed = TelegramMediaUpdates.changed(mediaChanges, obj);
+                if (changed) mediaRevision++;
             }
-            remoteSearch.clear();
+            if (changed) clearCatalogueLookups();
         } else if (obj instanceof TdApi.UpdateChatFolders) {
             TdApi.ChatFolderInfo[] list = ((TdApi.UpdateChatFolders) obj).chatFolders;
             folders = list == null ? new TdApi.ChatFolderInfo[0] : list;
@@ -808,6 +833,109 @@ public final class TelegramBridge {
             if (colors != null)
                 for (TdApi.AccentColor color : colors) accentColors.put(color.id, color);
         }
+        catalogueUpdates.accept(obj, clientGeneration);
+    }
+
+    private void runCatalogueUpdates() {
+        TelegramCatalogueWorker worker =
+                new TelegramCatalogueWorker(
+                        index,
+                        catalogueUpdates,
+                        new TelegramCatalogueWorker.Host() {
+                            @Override
+                            public boolean ready() {
+                                return TelegramBridge.this.ready();
+                            }
+
+                            @Override
+                            public long generation() {
+                                return generation;
+                            }
+
+                            @Override
+                            public boolean selected(long chat) {
+                                return catalogueSelected(chat);
+                            }
+
+                            @Override
+                            public TdApi.Message lookup(long chat, long message) throws Exception {
+                                return remoteSearch.metadata(
+                                        () -> {
+                                            try {
+                                                return call(
+                                                        new TdApi.GetMessage(chat, message), 15000);
+                                            } catch (TelegramFailure gone) {
+                                                if (gone.code != 404) throw rateLimitOr(gone);
+                                                return null;
+                                            }
+                                        });
+                            }
+
+                            @Override
+                            public void changed(Map<Long, Set<Long>> changes) throws Exception {
+                                catalogueChanged(changes);
+                            }
+
+                            @Override
+                            public void failed(Exception failure) {
+                                HostLog.d(
+                                        "Unofficial Telegram catalogue update deferred: "
+                                                + failure.getClass().getSimpleName());
+                            }
+                        },
+                        catalogueState);
+        while (true) {
+            try {
+                TelegramCatalogueWorker.Outcome outcome = worker.drain();
+                if (outcome == TelegramCatalogueWorker.Outcome.DEFERRED || !ready())
+                    Thread.sleep(1000);
+                else if (outcome == TelegramCatalogueWorker.Outcome.IDLE)
+                    catalogueUpdates.await(5000);
+            } catch (InterruptedException stopped) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+    }
+
+    private void catalogueChanged(Map<Long, Set<Long>> changes) throws Exception {
+        for (Map.Entry<Long, Set<Long>> entry : changes.entrySet()) {
+            if (entry.getValue().contains(0L)) {
+                FormatLegend.forgetChat(entry.getKey());
+                legends.forgetChat(entry.getKey());
+                formats.forgetChat(entry.getKey());
+            } else {
+                long[] ids = new long[entry.getValue().size()];
+                int at = 0;
+                for (long id : entry.getValue()) ids[at++] = id;
+                FormatLegend.forgetMessages(entry.getKey(), ids);
+                legends.forgetMessages(entry.getKey(), ids);
+                formats.forgetMessages(entry.getKey(), ids);
+            }
+        }
+        clearCatalogueLookups();
+    }
+
+    private void clearCatalogueLookups() {
+        remoteSearch.clear();
+        TelegramCatalogueCalls.changed(nextCatalogueRevision());
+        SourceFirst.catalogueChanged();
+        wakeIndex();
+    }
+
+    private void wakeIndex() {
+        synchronized (indexSignal) {
+            indexWake = true;
+            indexSignal.notifyAll();
+        }
+    }
+
+    private long nextCatalogueRevision() {
+        return catalogueRevision.incrementAndGet();
+    }
+
+    private boolean catalogueSelected(long chat) {
+        return selected.contains(chat) || catalogueAuxiliary.contains(chat);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -1010,7 +1138,7 @@ public final class TelegramBridge {
                     "Protected content and secret chats are not supported by this cached audio"
                             + " player.");
         selected.add(chat.id);
-        remoteSearch.clear();
+        clearCatalogueLookups();
         saveConfig();
         status = Strings.f("Selected {0}. Search in BitChord → Addons.", chat.title);
     }
@@ -1018,7 +1146,7 @@ public final class TelegramBridge {
     public void toggle(long id, boolean checked) throws Exception {
         if (checked) selected.add(id);
         else selected.remove(id);
-        remoteSearch.clear();
+        clearCatalogueLookups();
         saveConfig();
     }
 
@@ -1028,7 +1156,7 @@ public final class TelegramBridge {
             if (checked[i]) selected.add(id);
             else selected.remove(id);
         }
-        remoteSearch.clear();
+        clearCatalogueLookups();
         saveConfig();
         status =
                 Strings.f(
@@ -1073,6 +1201,18 @@ public final class TelegramBridge {
      * answer: rate limited, busy or timed out.
      */
     private LiveSearch.Result search(String query, long session, boolean background)
+            throws Exception {
+        long revision = catalogueRevision.get();
+        LiveSearch.Result found = searchCurrent(query, session, background);
+        List<JSONObject> rows = new ArrayList<>();
+        for (JSONObject row : found.tracks)
+            rows.add(new JSONObject(row.toString()).put("_indexCatalogueEpoch", revision));
+        if (revision != catalogueRevision.get() || session != generation)
+            throw new IOException("Telegram catalogue changed. Search again.");
+        return new LiveSearch.Result(rows, found.warning);
+    }
+
+    private LiveSearch.Result searchCurrent(String query, long session, boolean background)
             throws Exception {
         Set<Long> chats = new HashSet<>(selected);
         // Once every selected chat is indexed, the index answers without asking Telegram. A
@@ -1276,6 +1416,7 @@ public final class TelegramBridge {
     private void runIndex() {
         while (true) {
             long wait = pace;
+            boolean wakeable = true;
             try {
                 if (!ready() || !index.enabled) wait = 5000;
                 else if (!indexPause().isEmpty()) wait = 30000;
@@ -1286,11 +1427,21 @@ public final class TelegramBridge {
             } catch (LiveSearch.RateLimited e) {
                 pace = Math.min(SLOWEST_PACE, pace * 2);
                 wait = 1000L * e.retrySeconds + 1000;
+                wakeable = false;
             } catch (Exception e) {
                 wait = 30000;
+                wakeable = false;
             }
             try {
-                Thread.sleep(wait);
+                long earliest = android.os.SystemClock.elapsedRealtime() + Math.min(wait, pace);
+                if (wakeable) {
+                    synchronized (indexSignal) {
+                        if (!indexWake) indexSignal.wait(wait);
+                        indexWake = false;
+                    }
+                    long remaining = earliest - android.os.SystemClock.elapsedRealtime();
+                    if (remaining > 0) Thread.sleep(remaining);
+                } else Thread.sleep(wait);
             } catch (InterruptedException e) {
                 return;
             }
@@ -1330,9 +1481,12 @@ public final class TelegramBridge {
      * community channels too.
      */
     Set<Long> indexedChats() {
+        Set<Long> auxiliary = new HashSet<>();
+        if (mainChannel.main() != 0) auxiliary.add(mainChannel.main());
+        if (mainChannel.option("import")) auxiliary.addAll(mainChannel.indexed());
+        catalogueAuxiliary = Collections.unmodifiableSet(auxiliary);
         Set<Long> chats = new HashSet<>(selected);
-        if (mainChannel.main() != 0) chats.add(mainChannel.main());
-        if (mainChannel.option("import")) chats.addAll(mainChannel.indexed());
+        chats.addAll(auxiliary);
         return chats;
     }
 
@@ -1472,12 +1626,16 @@ public final class TelegramBridge {
         List<Long> community = mainChannel.community();
         community.remove(chat.id);
         mainChannel.setCommunity(community);
+        indexedChats();
+        clearCatalogueLookups();
     }
 
     public void setCommunity(List<TdApi.Chat> chats, boolean[] checked) throws Exception {
         List<Long> ids = new ArrayList<>();
         for (int i = 0; i < chats.size(); i++) if (checked[i]) ids.add(chats.get(i).id);
         mainChannel.setCommunity(ids);
+        indexedChats();
+        clearCatalogueLookups();
     }
 
     public boolean importOption(String name) {
@@ -1493,6 +1651,8 @@ public final class TelegramBridge {
                 throw new IOException("Turn on Saved index first. The files to copy come from it.");
         }
         mainChannel.setOption(name, on);
+        indexedChats();
+        clearCatalogueLookups();
     }
 
     public int importPerHour() {
@@ -1579,6 +1739,7 @@ public final class TelegramBridge {
         else indexChargingOnly = on;
         config.put(name.equals("wifi") ? "indexWifiOnly" : "indexChargingOnly", on);
         saveConfig();
+        wakeIndex();
     }
 
     public String indexStatus() {
@@ -1595,19 +1756,24 @@ public final class TelegramBridge {
     public void setSearchIndex(boolean on) throws Exception {
         if (on && savedIndexBroken)
             throw new IOException("The index's database couldn't be opened on this phone.");
-        index.enabled = on;
-        if (!on) index.clear();
+        synchronized (catalogueState) {
+            index.enabled = on;
+            if (!on) index.clear();
+        }
         config.put("searchIndex", on);
         saveConfig();
+        clearCatalogueLookups();
     }
 
     /** Rows from the selected chats, as copies, with names from file names if that's on. */
     private List<JSONObject> present(List<JSONObject> found) throws Exception {
         List<JSONObject> rows = new ArrayList<>();
         for (JSONObject row : found)
-            if (selected.contains(row.getLong("chat"))) {
+            if (selected.contains(row.getLong("chat")) && index.current(row)) {
+                long revision = row.optLong("_indexCatalogueEpoch", catalogueRevision.get());
                 // What a check or a recognition found, for files Telegram's own search returned.
                 JSONObject known = index.withFound(new JSONObject(row.toString()));
+                known.put("_indexCatalogueEpoch", revision);
                 rows.add(namesFromFiles ? TrackDetails.withFileName(known) : known);
             }
         return rows;
@@ -1617,18 +1783,30 @@ public final class TelegramBridge {
      * Adds album covers and lossless format details to search results, waiting up to a second for
      * ones that aren't known yet. The rest arrive in the background for later searches.
      */
+    private boolean currentCatalogueRow(JSONObject row) {
+        return row.optLong("_indexCatalogueEpoch", catalogueRevision.get())
+                        == catalogueRevision.get()
+                && index.current(row);
+    }
+
     void decorate(List<JSONObject> rows) {
+        List<JSONObject> current = new ArrayList<>();
+        for (JSONObject row : rows) if (currentCatalogueRow(row)) current.add(row);
         Client target = client;
         if (target == null) return;
         long started = System.currentTimeMillis();
         java.util.concurrent.CountDownLatch probes =
                 formatLegend() || reportQuality
-                        ? formats.probe(rows, (file, done) -> probe(target, file, done), 8)
+                        ? formats.probe(
+                                current,
+                                (file, done) -> probe(target, file, done),
+                                8,
+                                this::currentCatalogueRow)
                         : new java.util.concurrent.CountDownLatch(0);
         if (showArtwork)
             try {
                 artwork.fill(
-                        rows,
+                        current,
                         (file, done) ->
                                 target.send(
                                         new TdApi.DownloadFile(file, 4, 0, 0, true),
@@ -1651,13 +1829,14 @@ public final class TelegramBridge {
             }
         FormatProbe.await(probes, 1000 - (System.currentTimeMillis() - started));
         try {
-            formats.annotate(rows);
+            formats.annotate(current);
             boolean changed = false;
-            for (JSONObject row : rows)
-                changed |=
-                        legends.put(
-                                FormatLegend.TELEGRAM + row.optString("id"),
-                                LegendMatch.row(row, formats.get(row.optString("id"))));
+            for (JSONObject row : current)
+                if (currentCatalogueRow(row))
+                    changed |=
+                            legends.put(
+                                    FormatLegend.TELEGRAM + row.optString("id"),
+                                    LegendMatch.row(row, formats.get(row.optString("id"))));
             if (changed) {
                 legends.save();
                 FormatLegend.changed();
@@ -1691,7 +1870,8 @@ public final class TelegramBridge {
             formats.probe(
                     java.util.Collections.singletonList(row),
                     (file, done) -> probe(target, file, done),
-                    1);
+                    1,
+                    this::currentCatalogueRow);
     }
 
     public boolean formatLegend() {
@@ -1863,6 +2043,7 @@ public final class TelegramBridge {
     public JSONObject resolveTrack(String id) throws Exception {
         requireReady();
         long session = generation;
+        long revision = catalogueRevision.get();
         JSONObject row =
                 ZipAlbums.validId(id)
                         ? zipSong(id)
@@ -1877,7 +2058,9 @@ public final class TelegramBridge {
         }
         requireReady();
         if (session != generation) throw new IOException("Telegram session changed. Try again.");
-        return row == null ? null : index.withFound(row);
+        return row == null || !index.current(row)
+                ? null
+                : index.withFound(row).put("_indexCatalogueEpoch", revision);
     }
 
     /** A message the player may read: from an allowed chat, and allowed to be saved. */
@@ -2195,10 +2378,13 @@ public final class TelegramBridge {
     public void logout() throws Exception {
         if (audio.active()) throw new IOException("Stop playback before signing out");
         call(new TdApi.LogOut());
-        auth = null;
-        selected.clear();
-        remoteSearch.clear();
-        index.clear();
+        synchronized (catalogueState) {
+            auth = null;
+            selected.clear();
+            catalogueAuxiliary = Collections.emptySet();
+            clearCatalogueLookups();
+            index.clear();
+        }
         soundCheck.clear();
         checks.clear();
         // An older backup isn't offered after a sign-out without one.

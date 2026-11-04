@@ -798,10 +798,9 @@ public final class TelegramActivity extends Activity {
                         bridge::setSearchIndex);
         paragraph(
                 music,
-                "Keeps a list of the music in your selected chats on this phone, built slowly in"
-                        + " the background and topped up every few hours. It answers when"
-                        + " Telegram’s search is rate limited or busy, and the format legend uses"
-                        + " it instead of searching Telegram. Turning it off deletes it.");
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off deletes the index.");
         divider(music);
         toggle(
                 music,

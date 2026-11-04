@@ -155,6 +155,17 @@ final class SourcePreparationHost implements SourcePreparation.Host {
     }
 
     @Override
+    public boolean catalogueAvailable() {
+        try {
+            for (Object source : activeSources())
+                if ("telegram-native".equals(sourceId(source))) return true;
+        } catch (Exception unavailable) {
+            return false;
+        }
+        return false;
+    }
+
+    @Override
     public boolean sourcesAvailable() {
         try {
             for (Object source : activeSources()) {

@@ -159,6 +159,7 @@ with tempfile.TemporaryDirectory(prefix="bitchord-patch-controls-") as temporary
         for relative in (
             "extensions/telegram/src/main/java/app/bitchord/telegram/PatchSources.java",
             "extensions/telegram/src/main/java/app/bitchord/telegram/NativeSource.java",
+            "extensions/telegram/src/main/java/app/bitchord/telegram/NativeSourceConfig.java",
             "extensions/soulseek/src/main/java/app/bitchord/soulseek/DownloadSettings.java",
             "extensions/soulseek/src/main/java/app/bitchord/soulseek/SoulseekSource.java",
         )

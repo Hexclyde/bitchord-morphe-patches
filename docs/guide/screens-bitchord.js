@@ -1556,7 +1556,7 @@
     let text = 'This phone’s audio chip can play: AAC, MP3, Opus.';
     if (s['tweaks.battery.on']) {
       let held = null;
-      if (Number(s['tweaks.sing.voice']) > 0) held = 'Sing is on';
+      if (Number(s['tweaks.sing.voice']) > 0) held = 'Karaoke is on';
       else if (s['tweaks.headphones.profile']) held = 'Headphone correction is on';
       else if (s['tweaks.jamesdsp.effects']) held = 'JamesDSP has the audio';
       else if (s['tweaks.dj.on']) held = 'DJ mode is listening';
@@ -1604,13 +1604,13 @@
 
   const SECTIONS = {
     sing(s) {
-      return twCard('Sing',
+      return twCard('Karaoke',
         twP('Turns the singer down so you can sing over the song. Works best on studio recordings with the voice in the middle.') +
         twSlider({ id: 'sing-voice', tg: 'tweaks.sing.voiceSlider', bind: 'tweaks.sing.voice', title: 'Voice', min: 0, max: 100, step: 10, text: (v) => v === 0 ? 'Off' : v + '% quieter' }) +
         twDiv() +
         twToggle({ id: 'sing-centre', bind: 'tweaks.sing.wholeCentre', tg: 'tweaks.sing.wholeCentreToggle', title: 'Whole centre',
           yes: 'Removes everything in the middle, drums included', no: 'Only the voice range, and only while someone sings', details: 'The cleaner choice for older recordings.' }) +
-        twP('Sing is ported from Auris by OreoMuncher45, a fork of BitChord.', { cls: 'b-tw-p-top' }),
+        twP('Karaoke is ported from Auris by OreoMuncher45, a fork of BitChord.', { cls: 'b-tw-p-top' }),
         { key: 'sing', tg: 'tweaks.sing.card' });
     },
     pitch() {
@@ -1704,7 +1704,7 @@
       return twCard('Battery saver',
         twToggle({ id: 'battery', bind: 'tweaks.battery.on', tg: 'tweaks.battery.toggle', title: 'Battery saver',
           yes: 'The phone’s audio chip plays songs it can decode', no: 'BitChord decodes every song', detailsTg: 'tweaks.battery.details',
-          details: 'Saves battery on long listens. While a song plays this way, BitChord’s equaliser, loudness normalisation, Sing, spatial audio and crossfade don’t work on it. Android decides which songs and devices can; the rest play as before.' }) +
+          details: 'Saves battery on long listens. While a song plays this way, BitChord’s equaliser, loudness normalisation, Karaoke, spatial audio and crossfade don’t work on it. Android decides which songs and devices can; the rest play as before.' }) +
         twP(batteryStatus(s), { tg: 'tweaks.battery.status', cls: 'b-tw-p-top', live: true }),
         { key: 'battery', tg: 'tweaks.battery.card' });
     },

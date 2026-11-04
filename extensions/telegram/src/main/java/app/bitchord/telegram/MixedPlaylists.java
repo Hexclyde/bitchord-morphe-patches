@@ -330,6 +330,47 @@ public final class MixedPlaylists {
         commit(previous, result);
     }
 
+    static synchronized void reorder(Object expected, List<Object> reordered) throws Exception {
+        String id = MixedSongCodec.text(expected, "id");
+        List<Object> previous = nativePlaylists(), result = new ArrayList<>();
+        boolean found = false;
+        for (Object playlist : previous) {
+            if (!id.equals(MixedSongCodec.text(playlist, "id"))) {
+                result.add(playlist);
+                continue;
+            }
+            if (!encodePlaylist(playlist).toString().equals(encodePlaylist(expected).toString()))
+                throw new ConcurrentModificationException("Playlist changed; retry the operation");
+            Map<String, Integer> counts = new HashMap<>();
+            for (Object song : songs(playlist)) {
+                String key = MixedSongCodec.encode(song).toString();
+                counts.put(key, counts.getOrDefault(key, 0) + 1);
+            }
+            for (Object song : reordered) {
+                String key = MixedSongCodec.encode(song).toString();
+                int count = counts.getOrDefault(key, 0);
+                if (count == 0)
+                    throw new IllegalArgumentException("The DJ order must preserve every track");
+                if (count == 1) counts.remove(key);
+                else counts.put(key, count - 1);
+            }
+            if (!counts.isEmpty()) throw new IllegalArgumentException("The DJ order is incomplete");
+            result.add(playlist(id, MixedSongCodec.text(playlist, "title"), reordered));
+            found = true;
+        }
+        if (!found) throw new IllegalArgumentException("Playlist no longer exists");
+        if (prefs == null) {
+            Context app = SoundExtras.app();
+            if (app == null) throw new IllegalStateException("Playlist storage is unavailable");
+            prefs = app.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+            hostPrefs = app.getSharedPreferences(HOST_PREFERENCES, Context.MODE_PRIVATE);
+            JSONArray saved = new JSONArray(prefs.getString("playlists", "[]"));
+            for (int i = 0; i < saved.length(); i++)
+                managed.add(saved.getJSONObject(i).getString("id"));
+        }
+        commit(previous, result);
+    }
+
     static synchronized void membership(Object song, Set<String> selected) throws Exception {
         membership(song, selected, null);
     }

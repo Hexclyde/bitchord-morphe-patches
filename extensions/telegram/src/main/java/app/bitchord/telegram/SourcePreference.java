@@ -33,6 +33,14 @@ import java.util.function.BooleanSupplier;
 public final class SourcePreference {
     private SourcePreference() {}
 
+    private enum CheckReason {
+        UNCLASSIFIED,
+        PASSED,
+        DURATION_INSUFFICIENT,
+        DURATION_MISMATCH,
+        IDENTITY_MISMATCH
+    }
+
     private static final ThreadLocal<Boolean> verifying = new ThreadLocal<>();
     private static final Map<String, Boolean> decisions = new ConcurrentHashMap<>();
     private static final Map<String, Double> offsets = new ConcurrentHashMap<>();
@@ -265,7 +273,7 @@ public final class SourcePreference {
         synchronized (reads) {
             PreparedRead read = reads.get(token);
             if (read == null || read.closed || System.nanoTime() > read.until)
-                throw new SourceAudio.Stopped();
+                throw new SourceAudio.Stopped(SourceAudio.StopReason.READ_PERMISSION);
             return read.scope.applies(original, candidate) ? read.scope : null;
         }
     }
@@ -361,7 +369,12 @@ public final class SourcePreference {
                 audio.idle();
             }
             // What did arrive is kept, however late: the next attempt needn't read it again.
-            if (gotNothing && expired()) throw new SourceAudio.Stopped();
+            if (gotNothing) {
+                if (System.nanoTime() > deadline)
+                    throw new SourceAudio.Stopped(SourceAudio.StopReason.DEADLINE);
+                if (stale.getAsBoolean())
+                    throw new SourceAudio.Stopped(SourceAudio.StopReason.CANCELLED);
+            }
         }
 
         boolean expired() {
@@ -509,7 +522,8 @@ public final class SourcePreference {
             return resolved;
         Ahead asked = scope(original, candidate);
         boolean prepared = asked != null && asked.prepared;
-        if (prepared && asked.cancelled.getAsBoolean()) throw new SourceAudio.Stopped();
+        if (prepared && asked.cancelled.getAsBoolean())
+            throw new SourceAudio.Stopped(SourceAudio.StopReason.CANCELLED);
         if (prepared && asked.approvedRead) {
             synchronized (verifiedPrepared) {
                 if (!verifiedPrepared.contains(aheadKey(original, candidate)))
@@ -526,6 +540,13 @@ public final class SourcePreference {
                 synchronized (verifiedPrepared) {
                     if (verifiedPrepared.contains(aheadKey(original, candidate))) return resolved;
                 }
+        }
+        if (video != null && YouTubePolicy.ready() && YouTubePolicy.playbackBlocked()) {
+            // Initial playback uses the provider's metadata match without a YouTube audio
+            // reference.
+            if (asked == null && !upgrade(original, video)) return resolved;
+            if (YouTubePolicy.catalogueBlocked())
+                throw new IOException("Recording comparison needs YouTube Music enabled");
         }
         Uri played = mediaId == null || asked != null ? null : SourceAutomix.observed(mediaId);
         String key = decisionKey(original, candidate, played, prepared);
@@ -609,6 +630,7 @@ public final class SourcePreference {
         BooleanSupplier stale =
                 asked != null ? asked.cancelled : upgrade ? () -> !parked(original) : () -> false;
         String stage = "reference";
+        CheckReason reason = CheckReason.UNCLASSIFIED;
         Copy expectedCopy = null, resolvedCopy = null;
         try {
             Uri reference =
@@ -640,11 +662,14 @@ public final class SourcePreference {
             if (attempt.durationB < 0) attempt.durationB = duration(resolvedCopy);
             double durationA = attempt.durationA, durationB = attempt.durationB;
             if (!(durationA >= RecordingIdentity.MIN_SECONDS
-                    && durationB >= RecordingIdentity.MIN_SECONDS))
+                    && durationB >= RecordingIdentity.MIN_SECONDS)) {
+                reason = CheckReason.DURATION_INSUFFICIENT;
                 throw new IOException("Not enough audio to verify an automatic source replacement");
+            }
             if (Math.abs(durationA - durationB) > RecordingIdentity.MAX_DURATION_DIFFERENCE) {
                 decisions.put(key, false);
                 conclusive = true;
+                reason = CheckReason.DURATION_MISMATCH;
                 throw new IOException("Alternative recording has a different duration");
             }
             double[] points = {0, Math.max(0, durationA / 2 - 8), Math.max(0, durationA - 17)};
@@ -699,8 +724,10 @@ public final class SourcePreference {
             }
             decisions.put(key, same);
             conclusive = true;
-            if (!same)
+            if (!same) {
+                reason = CheckReason.IDENTITY_MISMATCH;
                 throw new IOException("Alternative audio failed fingerprint/timeline verification");
+            }
             // Only an upgrade measured against the actually selected old URI supplies a swap
             // offset.
             if (!prepared && played != null && !played.equals(original)) {
@@ -719,15 +746,23 @@ public final class SourcePreference {
                                         ? "the swap starts from it"
                                         : "not used: measured against YouTube, not what's"
                                                 + " playing"));
-            report("passed", stage, started, attempt, expectedCopy, resolvedCopy, null);
+            report(
+                    "passed",
+                    stage,
+                    started,
+                    attempt,
+                    expectedCopy,
+                    resolvedCopy,
+                    null,
+                    CheckReason.PASSED);
             return resolved;
         } catch (IOException error) {
-            report("stopped", stage, started, attempt, expectedCopy, resolvedCopy, error);
+            report("stopped", stage, started, attempt, expectedCopy, resolvedCopy, error, reason);
             // Time ran out or nobody's waiting: what was decoded is still good for the next caller.
             if (!(error instanceof SourceAudio.Stopped)) forget(key);
             throw error;
         } catch (Exception error) {
-            report("stopped", stage, started, attempt, expectedCopy, resolvedCopy, error);
+            report("stopped", stage, started, attempt, expectedCopy, resolvedCopy, error, reason);
             forget(key);
             throw new IOException("Could not verify automatic source replacement", error);
         } finally {
@@ -748,7 +783,8 @@ public final class SourcePreference {
             Attempt attempt,
             Copy expected,
             Copy resolved,
-            Exception error) {
+            Exception error,
+            CheckReason reason) {
         HostLog.d(
                 String.format(
                         Locale.US,
@@ -761,7 +797,33 @@ public final class SourcePreference {
                         WINDOWS * 2,
                         expected == null ? "-" : expected.summary(),
                         resolved == null ? "-" : resolved.summary(),
-                        error == null ? "" : "; " + error.getClass().getSimpleName()));
+                        (error == null ? "" : "; " + error.getClass().getSimpleName())
+                                + "; reason="
+                                + (reason == CheckReason.UNCLASSIFIED
+                                        ? diagnosticError(error)
+                                        : reason.name())));
+    }
+
+    static String diagnosticError(Throwable error) {
+        Throwable current = error;
+        for (int depth = 0; current != null && depth < 8; depth++) {
+            if (current instanceof SourceAudio.Stopped)
+                return "STOP_" + ((SourceAudio.Stopped) current).reason.name();
+            if (current instanceof java.net.SocketTimeoutException) return "NETWORK_TIMEOUT";
+            if (current instanceof java.net.UnknownHostException) return "DNS_FAILURE";
+            if (current instanceof java.net.ConnectException) return "CONNECT_FAILURE";
+            if (current instanceof javax.net.ssl.SSLException) return "TLS_FAILURE";
+            if (current instanceof InterruptedIOException) return "IO_INTERRUPTED";
+            if (current instanceof java.io.EOFException) return "UNEXPECTED_EOF";
+            if (current instanceof java.io.FileNotFoundException) return "FILE_MISSING";
+            if (current instanceof MediaCodec.CodecException) return "DECODE_FAILURE";
+            Throwable cause = current.getCause();
+            if (cause == current) break;
+            current = cause;
+        }
+        return error == null
+                ? "NONE"
+                : error instanceof IOException ? "IO_UNCLASSIFIED" : "INTERNAL_UNCLASSIFIED";
     }
 
     private static RecordingIdentity.Window measurable(RecordingIdentity.Window window)

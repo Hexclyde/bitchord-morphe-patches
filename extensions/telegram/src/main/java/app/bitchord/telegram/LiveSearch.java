@@ -279,6 +279,19 @@ public final class LiveSearch implements AutoCloseable {
         }
     }
 
+    /** Metadata lookups share the search pause without taking a search slot. */
+    <T> T metadata(java.util.concurrent.Callable<T> request) throws Exception {
+        long remaining = cooldownUntil.get() - clock.millis();
+        if (remaining > 0)
+            throw new RateLimited((int) Math.min(Integer.MAX_VALUE, (remaining + 999) / 1000));
+        try {
+            return request.call();
+        } catch (RateLimited limited) {
+            rateLimited(limited.retrySeconds);
+            throw limited;
+        }
+    }
+
     /** The index's two passes: music sent as audio, then everything sent as a file. */
     static TdApi.SearchMessagesFilter filter(int kind) {
         return kind == 0

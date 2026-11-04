@@ -2,13 +2,35 @@
 """Compile and run the host tests. Run build.py first."""
 
 import os
+import shutil
 import subprocess
 import sys
 
-from buildenv import MORPHE_JAR, ROOT, TOOLS, jdk
+from buildenv import (
+    BUNDLE_NAME,
+    MORPHE_JAR,
+    PATCHES,
+    PROVENANCE,
+    ROOT,
+    TOOLS,
+    VERSION,
+    jdk,
+)
+
+sys.path.insert(0, str(ROOT / "tools"))
+from prepare_mobile_source import export_patches
 
 JDK = jdk()
+catalogue = export_patches(ROOT / "build" / BUNDLE_NAME, PROVENANCE, False)
+names = [patch["name"] for patch in catalogue["patches"]]
+assert catalogue["version"] == VERSION
+assert len(names) == len(set(names)) and set(PATCHES).issubset(names)
+print(
+    "PASS: built patch catalogue loads with its complete dependency graph", flush=True
+)
 OUT = ROOT / "build/host-tests"
+if OUT.exists():
+    shutil.rmtree(OUT)
 OUT.mkdir(parents=True, exist_ok=True)
 CP = os.pathsep.join(
     str(p)
@@ -30,6 +52,12 @@ SOURCES = [
     "ChannelContent",
     "TelegramMediaChanges",
     "TelegramMediaUpdates",
+    "TelegramCatalogueUpdates",
+    "TelegramCatalogueWorker",
+    "TelegramCatalogueCalls",
+    "TelegramLegendRows",
+    "DiagnosticRecord",
+    "DiagnosticStore",
     "CachePolicy",
     "TrackMetadata",
     "TrackNames",
@@ -77,6 +105,8 @@ SOURCES = [
     "NativeDownloads",
     "TelegramUi",
     "NativeSource",
+    "NativeSourceConfig",
+    "HostSettingsRow",
     "SourceEditorRoute",
     "ApplicationCredentials",
     "CredentialCipher",
@@ -90,12 +120,16 @@ SOURCES = [
     "HeadphoneEq",
     "OutputEq",
     "KeyTempo",
+    "DjOrder",
     "DjMode",
     "DownloadChoice",
+    "PlayerDownload",
+    "PlayerDownloadHost",
     "EffectsApps",
     "BitPerfect",
     "SoundExtras",
     "VideoSwitch",
+    "PlayerIcons",
     "AudioOrigin",
     "AudioOriginHost",
     "AudioOriginSaved",
@@ -119,16 +153,24 @@ SOURCES = [
     "RecordingIdentity",
 ]
 TESTS = [
+    "DiagnosticRecordTest",
+    "DiagnosticStoreTest",
     "BitPerfectTest",
     "DownloadProbeTest",
     "NativeAudioTest",
     "NavigationTest",
+    "HostSettingsRowTest",
     "CredentialsTest",
     "LiveSearchTest",
     "CachePolicyTest",
     "PlaybackStatsTest",
     "PolicyTest",
     "TelegramMediaChangesTest",
+    "TelegramCatalogueUpdatesTest",
+    "TelegramCatalogueWorkerTest",
+    "TelegramCatalogueCallsTest",
+    "FormatProbeInvalidationTest",
+    "TelegramLegendInvalidationTest",
     "TrackNamesTest",
     "TrackDetailsTest",
     "DownmixTest",
@@ -158,7 +200,9 @@ TESTS = [
     "KeyTempoTest",
     "HeadphoneEqTest",
     "OutputEqTest",
+    "OffloadTest",
     "DjModeTest",
+    "DjOrderTest",
     "VideoSwitchTest",
     "VideoSwitchLyricsTest",
     "TravelFeaturesTest",
@@ -190,6 +234,8 @@ subprocess.run(
             for path in (ROOT / "tests").rglob("*.java")
             if path.relative_to(ROOT / "tests").parts[0]
             not in {
+                "source-config",
+                "video-rendition",
                 "soulseek",
                 "soulseek-wire",
                 "coordination",
@@ -256,5 +302,9 @@ for suite in (
     "debrid-settings",
     "debrid-tls",
     "patch-controls",
+    "source-config",
+    "player-icon-anchors",
+    "video-rendition",
+    "player-download-hooks",
 ):
     subprocess.run([sys.executable, str(ROOT / "tests" / suite / "run.py")], check=True)

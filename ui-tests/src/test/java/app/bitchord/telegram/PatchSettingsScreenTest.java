@@ -105,6 +105,34 @@ public class PatchSettingsScreenTest {
     }
 
     @Test
+    public void installedFeaturesKeepOneRowAndOneToggleWhenSearching() throws Exception {
+        java.lang.reflect.Field catalogue = ExtrasActivity.class.getDeclaredField("features");
+        catalogue.setAccessible(true);
+        Map<?, ?> features = (Map<?, ?>) catalogue.get(activity);
+        assertFalse(features.isEmpty());
+        for (String query : new String[] {"", "audio", "telegram", ""}) {
+            search().setText(query);
+            idle();
+            java.util.List<View> views = new java.util.ArrayList<>();
+            ExtrasPageTest.collect(activity.findViewById(android.R.id.content), views);
+            java.util.Set<String> rows = new java.util.HashSet<>();
+            java.util.Set<String> toggles = new java.util.HashSet<>();
+            for (View view : views) {
+                Object tag = view.getTag();
+                if (!(tag instanceof String)) continue;
+                String value = (String) tag;
+                if (value.startsWith("patch:"))
+                    assertTrue("Repeated feature row: " + value, rows.add(value.substring(6)));
+                if (value.startsWith("enable:"))
+                    assertTrue(
+                            "Repeated feature toggle: " + value, toggles.add(value.substring(7)));
+            }
+            assertEquals(features.keySet(), rows);
+            assertEquals(features.keySet(), toggles);
+        }
+    }
+
+    @Test
     public void pageTitleHasATweaksIconAndBinaryRowsExplainTheirEffect() {
         TextView title = text("patch-page-title");
         assertNotNull(title.getCompoundDrawablesRelative()[0]);
@@ -130,7 +158,7 @@ public class PatchSettingsScreenTest {
             assertTrue(copy.toString().contains("BitChord’s AutoMix"));
             assertTrue(copy.toString().contains("audio that will play"));
             assertTrue(copy.toString().contains("chosen playback speed"));
-            assertTrue(copy.toString().contains("Transition editor"));
+            assertTrue(copy.toString().contains("Automix Editor"));
         } finally {
             com.music.bitchord.data.settings.AppSettings.setSmartFadeEnabled(false);
         }

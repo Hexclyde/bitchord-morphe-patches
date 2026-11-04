@@ -25,7 +25,7 @@ MODES = {
     "telegram": ["Unofficial Telegram music", "Sign in with MicroG"],
     "soulseek": ["Unofficial Soulseek audio"],
     "tweaks": [
-        "Sing",
+        "Karaoke",
         "Pitch control",
         "Loudness level",
         "Sleep timer fade-out",

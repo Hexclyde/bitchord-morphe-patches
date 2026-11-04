@@ -55,6 +55,7 @@ final class EffectsApps {
         useJamesDsp = on;
         SharedPreferences saved = preferences;
         if (saved != null) saved.edit().putBoolean("useJamesDsp", on).apply();
+        if (!on) OutputEq.jamesDspChanged();
     }
 
     /** The JamesDSP package that's installed, or null. */

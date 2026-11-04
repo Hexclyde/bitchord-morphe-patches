@@ -17,6 +17,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -51,6 +52,9 @@ public final class SoundExtras {
     static final int MIN_PITCH = -12, MAX_PITCH = 12;
     static final int FADE_SECONDS = 10;
 
+    /** Where Karaoke starts and what its Reset goes back to. */
+    static final int SING_DEFAULT = 50;
+
     static volatile int singLevel = 0; // 0 to 100
     static volatile int singMethod = VocalCut.VOICE_GATE;
     static volatile int pitchSemitones = 0;
@@ -79,6 +83,10 @@ public final class SoundExtras {
     // ── Which patches were added ─────────────────────────────────────────────
 
     // Each answers true once its patch is added; the patch replaces the body.
+
+    public static boolean diagnosticsApplied() {
+        return false;
+    }
 
     public static boolean singApplied() {
         return false;
@@ -159,7 +167,7 @@ public final class SoundExtras {
         // Preserve a user's earlier adjustments when introducing the enable switches.
         // A fresh install starts off, with a useful voice level ready when enabled.
         int previousSingLevel = clamp(saved.getInt("singLevel", 0), 0, 100);
-        singLevel = clamp(saved.getInt("singLevel", 50), 0, 100);
+        singLevel = clamp(saved.getInt("singLevel", SING_DEFAULT), 0, 100);
         singMethod =
                 clamp(
                         saved.getInt("singMethod", VocalCut.VOICE_GATE),
@@ -229,6 +237,7 @@ public final class SoundExtras {
         singLevel = clamp(level, 0, 100);
         save("singLevel", singLevel);
         if (was != singLevel > 0 && batterySaverApplied()) onPlayers(SoundExtras::applyOffload);
+        SeparationModel.announce();
     }
 
     static void setSingEnabled(boolean on) {
@@ -237,6 +246,7 @@ public final class SoundExtras {
         if (!on) singers.clear();
         SeparationModel.configure();
         effectsChanged();
+        SeparationModel.announce();
     }
 
     static void setPitchEnabled(boolean on) {
@@ -255,6 +265,7 @@ public final class SoundExtras {
         singMethod = clamp(method, VocalCut.VOICE_GATE, SeparationModel.METHOD);
         save("singMethod", singMethod);
         SeparationModel.configure();
+        SeparationModel.announce();
     }
 
     static void setPitch(int semitones) {
@@ -767,14 +778,39 @@ public final class SoundExtras {
     static volatile String offloadHeldBack;
 
     /**
+     * BitChord's own Automix switch. It is read from the setting, so it holds whether or not the
+     * Source-independent AutoMix patch is added.
+     */
+    static boolean nativeSmartFade() {
+        try {
+            Method get =
+                    Class.forName("com.music.bitchord.data.settings.AppSettings")
+                            .getMethod("getSmartFadeEnabled");
+            if (!Modifier.isStatic(get.getModifiers())) return false;
+            Object flow = get.invoke(null);
+            return Boolean.TRUE.equals(
+                    Class.forName("kotlinx.coroutines.flow.StateFlow")
+                            .getMethod("getValue")
+                            .invoke(flow));
+        } catch (ReflectiveOperationException | LinkageError unreadable) {
+            return false;
+        }
+    }
+
+    /** BitChord's Automix switch changed: players already built get the new Battery saver state. */
+    public static void smartFadeChanged() {
+        effectsChanged();
+    }
+
+    /**
      * Whether Battery saver should ask for the audio chip now: not while an effect of the patches
      * needs the decoded audio, since the chip plays the file as it is.
      */
     static boolean offloadWanted() {
         String reason = null;
         if (batterySaver) {
-            if (SourceAutomix.activeMix()) reason = "AutoMix";
-            else if (singEnabled && singLevel > 0) reason = Strings.t("Sing is on");
+            if (SourceAutomix.activeMix() || nativeSmartFade()) reason = "AutoMix";
+            else if (singEnabled && singLevel > 0) reason = Strings.t("Karaoke is on");
             else if (headphoneApplied() && HeadphoneEq.active())
                 reason = Strings.t("Headphone correction is on");
             else if (jamesDspApplied() && EffectsApps.useJamesDsp)

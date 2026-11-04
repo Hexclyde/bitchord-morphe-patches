@@ -413,7 +413,9 @@ public class VerifyApk {
                 for (Method method : cls.getMethods()) {
                     // R8 moves Compose's painterResource into whichever class it merges.
                     if (cls.getType().equals("Lcom/music/bitchord/ui/screens/SettingsSheetKt;")
-                            || method.getName().equals("painterResource"))
+                            || method.getName().equals("painterResource")
+                            || (cls.getType().equals("Lapp/bitchord/telegram/HostSettingsRow;")
+                                    && method.getName().equals("call")))
                         uiDefinitions.add(signature(method));
                     if (cls.getType().equals("Lapp/bitchord/telegram/TelegramUi;")
                             && (method.getName().equals("hostGroup")
@@ -675,7 +677,11 @@ public class VerifyApk {
                                         && (target.getDefiningClass()
                                                         .equals(
                                                                 "Lcom/music/bitchord/ui/screens/SettingsSheetKt;")
-                                                || target.getName().equals("painterResource")))
+                                                || target.getName().equals("painterResource")
+                                                || (target.getDefiningClass()
+                                                                .equals(
+                                                                        "Lapp/bitchord/telegram/HostSettingsRow;")
+                                                        && target.getName().equals("call"))))
                                     uiReferences.add(signature(target));
                                 if (target.getDefiningClass()
                                                 .equals("Lapp/bitchord/telegram/TelegramUi;")
@@ -1205,7 +1211,16 @@ public class VerifyApk {
                     "Telegram source row opens Telegram settings, not the address editor");
             check(
                     uiReferences.size() == 3 && uiDefinitions.containsAll(uiReferences),
-                    "UI shim resolves real host group, row and painter signatures");
+                    "UI shim resolves the native group and painter plus the shared row adapter");
+            check(
+                    uiDefinitions.stream()
+                                    .filter(
+                                            definition ->
+                                                    definition.startsWith(
+                                                            "Lcom/music/bitchord/ui/screens/SettingsSheetKt;->SettingsRow["))
+                                    .count()
+                            == 1,
+                    "The shared adapter has one native settings-row target");
             check(
                     types.contains("Lapp/bitchord/telegram/NativeSource;"),
                     "Automatic registration adapter included");

@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 
 /**
  * A list of the music files in each selected chat, kept on the phone.
@@ -64,6 +65,7 @@ final class TelegramIndex {
     static final long REBUILD_MILLIS = 30 * 24 * 3600 * 1000L;
 
     volatile boolean enabled = true;
+    volatile BiConsumer<Long, Long> onExpanded = (chat, message) -> {};
     // Messages read over time, for the time-left estimate: {millis, messages read so far}.
     private final ArrayDeque<long[]> pace = new ArrayDeque<>();
     private long read;
@@ -74,14 +76,59 @@ final class TelegramIndex {
     private final Pages pages;
     private final Clock clock;
     private final Map<Long, IndexStore.State> states = new ConcurrentHashMap<>();
-    // Topping up: where each kind has got to, and whether it has reached known posts.
-    private final Map<Long, long[]> top = new ConcurrentHashMap<>();
-    private final Map<Long, boolean[]> fresh = new ConcurrentHashMap<>();
+    private final Set<Long> held = ConcurrentHashMap.newKeySet();
+    private final Object stateLock = new Object();
 
     TelegramIndex(IndexStore store, Pages pages, Clock clock) {
         this.store = store;
         this.pages = pages;
         this.clock = clock;
+    }
+
+    boolean message(TdApi.Message message) throws Exception {
+        if (!enabled || message == null || message.chatId == 0 || message.id <= 0) return false;
+        TdApi.FoundChatMessages found = new TdApi.FoundChatMessages();
+        found.messages = new TdApi.Message[] {message};
+        List<JSONObject> rows = new ArrayList<>(), jobs = new ArrayList<>();
+        read(message.chatId, found, rows, jobs);
+        return store.replaceMessage(
+                message.chatId, message.id, rows, jobs, store.state(message.chatId).generation, 0);
+    }
+
+    void deleted(long chat, long[] messages, boolean permanent) throws Exception {
+        if (!enabled || chat == 0 || messages == null) return;
+        synchronized (store) {
+            store.atomic(
+                    () -> {
+                        long generation = store.state(chat).generation;
+                        for (long message : messages)
+                            if (message > 0)
+                                store.replaceMessage(
+                                        chat,
+                                        message,
+                                        Collections.emptyList(),
+                                        Collections.emptyList(),
+                                        generation,
+                                        permanent ? 1 : 2);
+                    });
+        }
+    }
+
+    void holdChat(long chat) {
+        if (chat != 0) held.add(chat);
+    }
+
+    void invalidateChat(long chat) throws Exception {
+        if (chat == 0) return;
+        holdChat(chat);
+        synchronized (stateLock) {
+            synchronized (store) {
+                store.atomic(() -> store.resetChat(chat));
+            }
+            states.remove(chat);
+            asked.remove(Long.toString(chat));
+        }
+        held.remove(chat);
     }
 
     /**
@@ -107,7 +154,7 @@ final class TelegramIndex {
         IndexStore.State due = null;
         long now = clock.millis();
         for (long id : new TreeSet<>(selected)) {
-            if (id == 0) continue;
+            if (id == 0 || held.contains(id)) continue;
             IndexStore.State chat = state(id);
             // Rebuilt monthly, and once after an update that reads more of each post (1.0.14:
             // cue sheets and albums).
@@ -163,65 +210,80 @@ final class TelegramIndex {
     }
 
     private void build(IndexStore.State chat, int kind) throws Exception {
+        long readEpoch = store.epoch();
+        if (held.contains(chat.chat) || store.chatEpoch(chat.chat) != chat.epoch) return;
+        int[] totals = chat.total.clone(), scanned = chat.scanned.clone();
         // Both totals are asked for once per run, before the first page, so progress has a
         // percentage from the start. A build started by 1.0.8 has neither number yet.
         if (asked.add(Long.toString(chat.chat)))
             for (int k = 0; k < KINDS; k++)
                 try {
-                    if (chat.total[k] < 0) chat.total[k] = Math.max(0, pages.count(chat.chat, k));
-                    if (chat.scanned[k] == 0 && chat.cursor[k] != 0)
-                        chat.scanned[k] = Math.max(0, pages.position(chat.chat, k, chat.cursor[k]));
+                    if (totals[k] < 0) totals[k] = Math.max(0, pages.count(chat.chat, k));
+                    if (scanned[k] == 0 && chat.cursor[k] != 0)
+                        scanned[k] = Math.max(0, pages.position(chat.chat, k, chat.cursor[k]));
                 } catch (LiveSearch.RateLimited e) {
                     throw e;
                 } catch (Exception e) {
                     // Progress then shows without a percentage.
                 }
         TdApi.FoundChatMessages found = pages.page(chat.chat, kind, chat.cursor[kind]);
-        if (chat.total[kind] < 0 && found != null && found.totalCount >= 0)
-            chat.total[kind] = found.totalCount;
         List<JSONObject> rows = new ArrayList<>(), zips = new ArrayList<>();
         long oldest = read(chat.chat, found, rows, zips);
-        store.put(chat.chat, rows, chat.generation);
-        store.queueZips(chat.chat, zips, chat.generation);
-        int messages = found == null || found.messages == null ? 0 : found.messages.length;
-        chat.scanned[kind] += messages;
-        progressed(messages);
-        if (++pagesSinceLog >= LOG_EVERY) {
-            long now = clock.millis();
-            HostLog.d(
-                    String.format(
-                            Locale.US,
-                            "Unofficial Telegram index: chat %d, %s, %,d of %,d messages read, %,d"
-                                    + " files kept; the last %d pages took %d s",
-                            chat.chat,
-                            kind == 0 ? "music" : "other files",
-                            chat.scanned[kind],
-                            chat.total[kind],
-                            store.count(chat.chat),
-                            pagesSinceLog,
-                            (now - loggedAt) / 1000));
-            pagesSinceLog = 0;
-            loggedAt = now;
+        synchronized (store) {
+            store.atomic(
+                    () -> {
+                        if (held.contains(chat.chat)
+                                || store.chatEpoch(chat.chat) != chat.epoch
+                                || store.chatEpoch(chat.chat) > readEpoch) return;
+                        System.arraycopy(totals, 0, chat.total, 0, KINDS);
+                        System.arraycopy(scanned, 0, chat.scanned, 0, KINDS);
+                        if (chat.total[kind] < 0 && found != null && found.totalCount >= 0)
+                            chat.total[kind] = found.totalCount;
+                        store.putPage(chat.chat, rows, zips, chat.generation, readEpoch);
+                        int messages =
+                                found == null || found.messages == null ? 0 : found.messages.length;
+                        chat.scanned[kind] += messages;
+                        progressed(messages);
+                        if (++pagesSinceLog >= LOG_EVERY) {
+                            long now = clock.millis();
+                            HostLog.d(
+                                    String.format(
+                                            Locale.US,
+                                            "Unofficial Telegram index: chat %d, %s, %,d of %,d"
+                                                    + " messages read, %,d files kept; the last %d"
+                                                    + " pages took %d s",
+                                            chat.chat,
+                                            kind == 0 ? "music" : "other files",
+                                            chat.scanned[kind],
+                                            chat.total[kind],
+                                            store.count(chat.chat),
+                                            pagesSinceLog,
+                                            (now - loggedAt) / 1000));
+                            pagesSinceLog = 0;
+                            loggedAt = now;
+                        }
+                        if (oldest == 0 || oldest == chat.cursor[kind]) {
+                            chat.complete[kind] = true;
+                            if (chat.built()) {
+                                if (chat.rebuilding) store.prune(chat.chat, chat.generation);
+                                chat.rebuilding = false;
+                                chat.builtAt = chat.refreshed = clock.millis();
+                                chat.version = VERSION;
+                                // Cue sheets whose album wasn't found yet: the whole chat is here
+                                // now.
+                                store.wakeZips(chat.chat);
+                                HostLog.d(
+                                        "Unofficial Telegram index has "
+                                                + store.count(chat.chat)
+                                                + " files for chat "
+                                                + chat.chat);
+                            }
+                        } else {
+                            chat.cursor[kind] = oldest;
+                        }
+                        store.save(chat);
+                    });
         }
-        if (oldest == 0 || oldest == chat.cursor[kind]) {
-            chat.complete[kind] = true;
-            if (chat.built()) {
-                if (chat.rebuilding) store.prune(chat.chat, chat.generation);
-                chat.rebuilding = false;
-                chat.builtAt = chat.refreshed = clock.millis();
-                chat.version = VERSION;
-                // Cue sheets whose album wasn't found yet: the whole chat is here now.
-                store.wakeZips(chat.chat);
-                HostLog.d(
-                        "Unofficial Telegram index has "
-                                + store.count(chat.chat)
-                                + " files for chat "
-                                + chat.chat);
-            }
-        } else {
-            chat.cursor[kind] = oldest;
-        }
-        store.save(chat);
     }
 
     private boolean zipTurn;
@@ -232,7 +294,7 @@ final class TelegramIndex {
      */
     private boolean openZip(Collection<Long> selected) throws Exception {
         List<Long> chats = new ArrayList<>();
-        for (long id : selected) if (id != 0) chats.add(id);
+        for (long id : selected) if (id != 0 && !held.contains(id)) chats.add(id);
         JSONObject zip = store.nextZip(chats);
         if (zip == null) return false;
         long chat = zip.getLong("chat"), message = zip.getLong("message");
@@ -249,17 +311,31 @@ final class TelegramIndex {
                             "Unofficial Telegram couldn't look into "
                                     + zip.optString("fileName")
                                     + ": it's no longer on Telegram");
-                    store.zipDone(chat, message);
+                    store.finishZip(zip, Collections.emptyList(), state(chat).generation, false);
                     return true;
                 }
                 zip.put("file", file);
                 songs = look(zip);
             }
             if (songs == null) {
-                store.deferZip(chat, message);
+                store.finishZip(zip, Collections.emptyList(), state(chat).generation, true);
                 return true;
             }
-            store.put(chat, songs, state(chat).generation);
+            if (held.contains(chat) || !store.finishZip(zip, songs, state(chat).generation, false))
+                return true;
+            if (!songs.isEmpty()
+                    && zip.optLong(IndexStore.REVISION) > 0
+                    && store.changed(chat, message)) {
+                Set<Long> messages = new LinkedHashSet<>();
+                messages.add(message);
+                for (JSONObject song : songs) messages.add(song.getLong("message"));
+                for (long family : messages)
+                    try {
+                        onExpanded.accept(chat, family);
+                    } catch (RuntimeException unavailable) {
+                        HostLog.d("Unofficial Telegram archive update could not be published");
+                    }
+            }
             HostLog.d(
                     "Unofficial Telegram found "
                             + songs.size()
@@ -276,11 +352,11 @@ final class TelegramIndex {
                             + e.getMessage());
             if (telegramCode(e) > 0) {
                 // Telegram had a problem, not the zip: try again after the chat's next pass.
-                store.deferZip(chat, message);
+                store.finishZip(zip, Collections.emptyList(), state(chat).generation, true);
                 return true;
             }
         }
-        store.zipDone(chat, message);
+        store.finishZip(zip, Collections.emptyList(), state(chat).generation, false);
         return true;
     }
 
@@ -361,12 +437,16 @@ final class TelegramIndex {
         CueAlbums.Media media =
                 CueAlbums.media((o, n) -> pages.range(file, o, n), album.getLong("size"));
         if (media == null) return new ArrayList<>();
-        return CueAlbums.tracks(sheet, media, album, 0, CueAlbums.base(job.optString("fileName")));
+        List<JSONObject> rows =
+                CueAlbums.tracks(sheet, media, album, 0, CueAlbums.base(job.optString("fileName")));
+        for (JSONObject row : rows)
+            row.put(IndexStore.REVISION, album.optLong(IndexStore.REVISION));
+        return rows;
     }
 
     /** One file of a chat, or null: a song inside a zip has an entry from 1. */
     JSONObject row(long chat, long message, int entry) throws Exception {
-        return enabled ? store.row(chat, message, entry) : null;
+        return enabled && !held.contains(chat) ? store.row(chat, message, entry) : null;
     }
 
     private synchronized void progressed(int messages) {
@@ -389,33 +469,52 @@ final class TelegramIndex {
     }
 
     private void topUp(IndexStore.State chat) throws Exception {
-        long[] where = top.computeIfAbsent(chat.chat, c -> new long[KINDS]);
-        boolean[] done = fresh.computeIfAbsent(chat.chat, c -> new boolean[KINDS]);
+        long[] where = chat.topCursor;
+        boolean[] done = chat.topComplete;
         for (int kind = 0; kind < KINDS; kind++) {
             if (done[kind]) continue;
+            long readEpoch = store.epoch();
             TdApi.FoundChatMessages found = pages.page(chat.chat, kind, where[kind]);
+            if (held.contains(chat.chat)
+                    || store.chatEpoch(chat.chat) != chat.epoch
+                    || store.chatEpoch(chat.chat) > readEpoch) return;
             boolean known = false;
             if (found != null && found.messages != null)
                 for (TdApi.Message m : found.messages)
-                    if (m != null && store.has(chat.chat, m.id)) known = true;
+                    if (m != null && store.frontier(chat.chat, m.id)) known = true;
             List<JSONObject> rows = new ArrayList<>(), zips = new ArrayList<>();
             long oldest = read(chat.chat, found, rows, zips);
-            store.put(chat.chat, rows, chat.generation);
-            store.queueZips(chat.chat, zips, chat.generation);
-            if (known || oldest == 0 || oldest == where[kind]) {
-                done[kind] = true;
-                where[kind] = 0;
-            } else {
-                where[kind] = oldest;
+            int pageKind = kind;
+            boolean reached = known || oldest == 0 || oldest == where[kind];
+            synchronized (store) {
+                store.atomic(
+                        () -> {
+                            if (held.contains(chat.chat)
+                                    || store.chatEpoch(chat.chat) != chat.epoch
+                                    || store.chatEpoch(chat.chat) > readEpoch) return;
+                            store.putPage(chat.chat, rows, zips, chat.generation, readEpoch);
+                            if (reached) {
+                                done[pageKind] = true;
+                                where[pageKind] = 0;
+                            } else where[pageKind] = oldest;
+                            store.save(chat);
+                        });
             }
             break;
         }
         boolean all = true;
         for (boolean d : done) all &= d;
         if (all) {
-            Arrays.fill(done, false);
-            chat.refreshed = clock.millis();
-            store.save(chat);
+            synchronized (store) {
+                store.atomic(
+                        () -> {
+                            if (held.contains(chat.chat)
+                                    || store.chatEpoch(chat.chat) != chat.epoch) return;
+                            Arrays.fill(done, false);
+                            chat.refreshed = clock.millis();
+                            store.save(chat);
+                        });
+            }
         }
     }
 
@@ -461,6 +560,7 @@ final class TelegramIndex {
         boolean any = false;
         for (long id : new TreeSet<>(selected)) {
             if (id == 0) continue;
+            if (held.contains(id)) return null;
             IndexStore.State chat = state(id);
             if (complete && chat.builtAt == 0) return null;
             if (!any && (chat.builtAt > 0 || store.count(id) > 0)) any = true;
@@ -477,7 +577,7 @@ final class TelegramIndex {
      * or the chat hasn't been indexed yet.
      */
     List<JSONObject> newest(long chat, int limit) throws Exception {
-        if (!enabled || state(chat).builtAt == 0) return null;
+        if (!enabled || held.contains(chat) || state(chat).builtAt == 0) return null;
         List<JSONObject> rows = store.newest(chat, limit);
         Collections.reverse(rows);
         return rows;
@@ -485,12 +585,12 @@ final class TelegramIndex {
 
     /** One chat's files posted after a message, oldest first; null until the chat is indexed. */
     List<JSONObject> after(long chat, long message, int limit) throws Exception {
-        if (!enabled || state(chat).builtAt == 0) return null;
+        if (!enabled || held.contains(chat) || state(chat).builtAt == 0) return null;
         return store.after(chat, message, limit);
     }
 
     int countAfter(long chat, long message) throws Exception {
-        return store.countAfter(chat, message);
+        return held.contains(chat) ? 0 : store.countAfter(chat, message);
     }
 
     /**
@@ -498,25 +598,90 @@ final class TelegramIndex {
      * here while the rest of the chat is still being indexed.
      */
     long newestMessage(long chat) throws Exception {
-        if (!enabled) return 0;
+        if (!enabled || held.contains(chat)) return 0;
         List<JSONObject> rows = store.newest(chat, 1);
         return rows.isEmpty() ? 0 : rows.get(0).optLong("message");
     }
 
     /** Files after a message, oldest first, whether or not the chat has been built. */
     List<JSONObject> afterAny(long chat, long message, int limit) throws Exception {
-        return enabled ? store.after(chat, message, limit) : new ArrayList<>();
+        return enabled && !held.contains(chat)
+                ? store.after(chat, message, limit)
+                : new ArrayList<>();
     }
 
     /** Files before a message, newest first, as far as the index has got. */
     List<JSONObject> before(long chat, long message, int limit) throws Exception {
-        return enabled ? store.before(chat, message, limit) : new ArrayList<>();
+        return enabled && !held.contains(chat)
+                ? store.before(chat, message, limit)
+                : new ArrayList<>();
+    }
+
+    /** Late metadata reads must still describe this message's current file. */
+    boolean current(JSONObject row) {
+        if (row == null) return false;
+        boolean stamped = row.has(IndexStore.REVISION);
+        if (!enabled) return !stamped;
+        long chat = row.optLong("chat"), message = row.optLong("message");
+        if (chat == 0 || message <= 0 || held.contains(chat)) return false;
+        try {
+            synchronized (store) {
+                if (store.unavailable(chat, message)) return false;
+                if (stamped) return !held.contains(chat) && store.current(chat, row);
+                if (!store.changed(chat, message) && store.revision(chat, message) == 0)
+                    return !held.contains(chat);
+                JSONObject local = store.row(chat, message, row.optInt("entry"));
+                return local != null
+                        && !held.contains(chat)
+                        && store.current(chat, local)
+                        && sameFile(row, local);
+            }
+        } catch (Exception unavailable) {
+            return false;
+        }
+    }
+
+    private static boolean sameFile(JSONObject row, JSONObject local) {
+        boolean occurrence =
+                row.optLong("chat") == local.optLong("chat")
+                        && row.optLong("message") == local.optLong("message")
+                        && row.optInt("entry") == local.optInt("entry")
+                        && !row.optString("id").isEmpty()
+                        && row.optString("id").equals(local.optString("id"))
+                        && row.optLong("size", -1) == local.optLong("size", -1);
+        if (!occurrence) return false;
+        String unique = row.optString("unique"), previous = local.optString("unique");
+        if (!unique.isEmpty() || !previous.isEmpty())
+            return !unique.isEmpty() && unique.equals(previous);
+        return row.optInt("file") > 0 && row.optInt("file") == local.optInt("file");
     }
 
     /** The row with what listening to its file found: a check, or names recognised by sound. */
     JSONObject withFound(JSONObject row) {
         try {
-            return IndexStore.withFound(store, row, false);
+            synchronized (store) {
+                if (!current(row)) return row;
+                if (enabled) {
+                    JSONObject local =
+                            store.row(
+                                    row.optLong("chat"),
+                                    row.optLong("message"),
+                                    row.optInt("entry"));
+                    if (local != null && sameFile(row, local)) {
+                        for (String key :
+                                new String[] {
+                                    IndexStore.REVISION,
+                                    IndexStore.SOURCE_MESSAGE,
+                                    IndexStore.SOURCE_REVISION,
+                                    IndexStore.SCANNED
+                                }) {
+                            row.remove(key);
+                            if (local.has(key)) row.put(key, local.get(key));
+                        }
+                    }
+                }
+                return IndexStore.withFound(store, row, false);
+            }
         } catch (Exception e) {
             return row;
         }
@@ -534,11 +699,11 @@ final class TelegramIndex {
     /** Remembers what listening to a file found, for its rows too. */
     void putFound(JSONObject row, String kind, JSONObject value) throws Exception {
         String key = kind.equals("check") ? LosslessCheck.key(row) : row.optString("id");
-        store.putFound(row.optLong("chat"), row.optLong("message"), kind, key, value);
+        if (!held.contains(row.optLong("chat"))) store.putFound(row, kind, key, value);
     }
 
     int countBefore(long chat, long message) throws Exception {
-        return store.countBefore(chat, message);
+        return held.contains(chat) ? 0 : store.countBefore(chat, message);
     }
 
     /** A chat's part of an index file: its files, and how far its index has got. */
@@ -553,7 +718,18 @@ final class TelegramIndex {
 
     /** One chat's files after a message, oldest first, for writing an index file. */
     List<JSONObject> exportRows(long chat, long message, int limit) throws Exception {
-        return store.after(chat, message, limit);
+        if (held.contains(chat)) return Collections.emptyList();
+        List<JSONObject> rows = store.after(chat, message, limit);
+        for (JSONObject row : rows) {
+            List<String> remove = new ArrayList<>();
+            Iterator<String> keys = row.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                if (key.startsWith("_index")) remove.add(key);
+            }
+            for (String key : remove) row.remove(key);
+        }
+        return rows;
     }
 
     /**
@@ -564,13 +740,26 @@ final class TelegramIndex {
     synchronized int importSection(IndexTransfer.Section section) throws Exception {
         if (!enabled) return 0;
         long chat = section.chat;
+        if (held.contains(chat)) return 0;
         IndexStore.State state = state(chat);
+        if (store.chatEpoch(chat) > 0 && state.builtAt == 0) return 0;
+        long readEpoch = store.epoch();
+        if (state.epoch != store.chatEpoch(chat)) return 0;
         List<JSONObject> fresh = new ArrayList<>();
-        for (JSONObject row : section.rows)
-            if (store.row(chat, row.getLong("message"), row.getInt("entry")) == null)
+        for (JSONObject input : section.rows) {
+            JSONObject row = IndexTransfer.clean(input, chat);
+            if (row != null
+                    && !store.changed(chat, row.getLong("message"))
+                    && store.row(chat, row.getLong("message"), row.getInt("entry")) == null)
                 fresh.add(row);
+        }
         for (int i = 0; i < fresh.size(); i += 1000)
-            store.put(chat, fresh.subList(i, Math.min(fresh.size(), i + 1000)), state.generation);
+            store.putPage(
+                    chat,
+                    fresh.subList(i, Math.min(fresh.size(), i + 1000)),
+                    Collections.emptyList(),
+                    state.generation,
+                    readEpoch);
         if (section.complete && state.builtAt == 0) {
             Arrays.fill(state.complete, true);
             Arrays.fill(state.cursor, 0);
@@ -594,10 +783,11 @@ final class TelegramIndex {
      * kept, so its format can be read like any other's.
      */
     void fileFound(JSONObject row, int file) throws Exception {
-        if (!enabled || file == 0) return;
+        if (!enabled || file == 0 || held.contains(row.optLong("chat"))) return;
         long chat = row.getLong("chat");
+        withFound(row);
         row.put("file", file);
-        store.put(chat, Collections.singletonList(row), state(chat).generation);
+        store.fileFound(row, state(chat).generation);
     }
 
     /** Whether every one of these chats has been built at least once. */
@@ -607,11 +797,11 @@ final class TelegramIndex {
     }
 
     boolean built(long chat) throws Exception {
-        return enabled && state(chat).builtAt > 0;
+        return enabled && !held.contains(chat) && state(chat).builtAt > 0;
     }
 
     int count(long chat) throws Exception {
-        return store.count(chat);
+        return held.contains(chat) ? 0 : store.count(chat);
     }
 
     static boolean matches(JSONObject row, List<String> wanted) {
@@ -747,16 +937,17 @@ final class TelegramIndex {
     synchronized void clear() throws Exception {
         states.clear();
         asked.clear();
-        top.clear();
-        fresh.clear();
+        held.clear();
         store.clear();
     }
 
     private IndexStore.State state(long chat) throws Exception {
-        IndexStore.State known = states.get(chat);
-        if (known != null) return known;
-        IndexStore.State loaded = store.state(chat);
-        IndexStore.State raced = states.putIfAbsent(chat, loaded);
-        return raced == null ? loaded : raced;
+        synchronized (stateLock) {
+            IndexStore.State known = states.get(chat);
+            if (known != null) return known;
+            IndexStore.State loaded = store.state(chat);
+            states.put(chat, loaded);
+            return loaded;
+        }
     }
 }

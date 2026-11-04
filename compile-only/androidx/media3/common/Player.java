@@ -18,6 +18,8 @@ public interface Player {
 
         default void onPlayWhenReadyChanged(int reason, boolean playWhenReady) {}
 
+        default void onPlayerError(PlaybackException error) {}
+
         default void onPositionDiscontinuity(int reason) {}
 
         default void onPositionDiscontinuity(
@@ -33,6 +35,8 @@ public interface Player {
 
     boolean getPlayWhenReady();
 
+    boolean getShuffleModeEnabled();
+
     long getDuration();
 
     long getCurrentPosition();
@@ -42,6 +46,10 @@ public interface Player {
     void seekTo(int mediaItemIndex, long positionMs);
 
     void prepare();
+
+    void stop();
+
+    PlaybackException getPlayerError();
 
     int getCurrentMediaItemIndex();
 

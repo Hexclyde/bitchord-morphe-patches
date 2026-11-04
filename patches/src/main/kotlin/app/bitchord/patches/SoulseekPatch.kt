@@ -7,12 +7,15 @@ import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.*
 import app.morphe.patcher.util.smali.ExternalLabel
 import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.builder.BuilderOffsetInstruction
+import com.android.tools.smali.dexlib2.builder.instruction.BuilderPackedSwitchPayload
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.Instruction
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
-import com.android.tools.smali.dexlib2.iface.reference.StringReference
 
 private const val SOULSEEK_ANDROID = "http://schemas.android.com/apk/res/android"
 private const val SOULSEEK = "Lapp/bitchord/soulseek/"
@@ -25,8 +28,8 @@ private val soulseekTarget =
         appIconColor = 0xFF8944,
         targets =
             listOf(
-                AppTarget(version = "1.8.1", isExperimental = true, minSdk = 26),
                 AppTarget(version = "1.9", isExperimental = true, minSdk = 26),
+                AppTarget(version = "1.9.1-beta1", isExperimental = true, minSdk = 26),
             ),
     )
 
@@ -266,57 +269,64 @@ val nativeSoulseekPatch =
             // downloadSong branch by its duration backfill and singleton-list dispatch;
             // albums, cached-folder exports, permission continuations and retries never
             // pass this call site. No queue-wide or stack-trace heuristic is involved.
-            val manual =
-                mutableClassDefBy("Lcom/dokar/quickjs/QuickJs\$\$ExternalSyntheticLambda0;")
-                    .methods
-                    .single {
-                        it.name == "invoke" &&
-                            it.parameterTypes == listOf("Ljava/lang/Object;") &&
-                            it.returnType == "Ljava/lang/Object;"
+            fun Instruction.call() = (this as? ReferenceInstruction)?.reference as? MethodReference
+            fun dispatchAfterDuration(code: List<Instruction>): Int? {
+                val durations =
+                    code.indices.filter { index ->
+                        val call = code[index].call()
+                        call?.definingClass == "Lcom/music/bitchord/data/model/ModelsKt;" &&
+                            call.name == "durationMillis" &&
+                            call.parameterTypes == listOf(songType) &&
+                            call.returnType == "J"
                     }
-            check(manual.accessFlags == 17 && manual.implementation!!.registerCount == 48) {
-                "Manual single-song download callback changed"
-            }
-            val manualCode = manual.implementation!!.instructions.toList()
-            val durationAt =
-                manualCode.indices.single { index ->
-                    val call =
-                        (manualCode[index] as? ReferenceInstruction)?.reference as? MethodReference
-                    call?.definingClass == "Lcom/music/bitchord/data/model/ModelsKt;" &&
-                        call.name == "durationMillis" &&
-                        call.parameterTypes == listOf(songType) &&
-                        call.returnType == "J"
+                if (durations.size != 1) return null
+                val dispatchAt =
+                    ((durations.single() + 1) until minOf(durations.single() + 100, code.size))
+                        .firstOrNull { index ->
+                            val call = code[index].call()
+                            call?.definingClass == "Lkotlin/jvm/functions/Function2;" &&
+                                call.name == "invoke" &&
+                                call.parameterTypes ==
+                                    listOf("Ljava/lang/Object;", "Ljava/lang/Object;") &&
+                                call.returnType == "Ljava/lang/Object;"
+                        } ?: return null
+                val dispatch = code[dispatchAt] as? FiveRegisterInstruction ?: return null
+                val singleton = code[dispatchAt - 2].call()
+                val stored = code[dispatchAt - 1] as? OneRegisterInstruction
+                return dispatchAt.takeIf {
+                    code[it].opcode == Opcode.INVOKE_INTERFACE &&
+                        dispatch.registerCount == 3 &&
+                        code[it - 1].opcode == Opcode.MOVE_RESULT_OBJECT &&
+                        stored?.registerA == dispatch.registerD &&
+                        singleton?.name == "listOf" &&
+                        singleton.parameterTypes == listOf("Ljava/lang/Object;") &&
+                        singleton.returnType == "Ljava/util/List;" &&
+                        code[it + 1].opcode == Opcode.SGET_OBJECT &&
+                        code[it + 2].opcode == Opcode.RETURN_OBJECT
                 }
-            val dispatchAt =
-                ((durationAt + 1) until minOf(durationAt + 100, manualCode.size)).first { index ->
-                    val call =
-                        (manualCode[index] as? ReferenceInstruction)?.reference as? MethodReference
-                    call?.definingClass == "Lkotlin/jvm/functions/Function2;" &&
-                        call.name == "invoke" &&
-                        call.parameterTypes == listOf("Ljava/lang/Object;", "Ljava/lang/Object;") &&
-                        call.returnType == "Ljava/lang/Object;"
-                }
-            val dispatch = manualCode[dispatchAt] as FiveRegisterInstruction
-            val singleton =
-                (manualCode[dispatchAt - 2] as? ReferenceInstruction)?.reference as? MethodReference
-            check(
-                manualCode[dispatchAt].opcode == Opcode.INVOKE_INTERFACE &&
-                    dispatch.registerCount == 3 &&
-                    manualCode[dispatchAt - 1].opcode == Opcode.MOVE_RESULT_OBJECT &&
-                    (manualCode[dispatchAt - 1]
-                            as
-                            com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction)
-                        .registerA == dispatch.registerD &&
-                    singleton?.name == "listOf" &&
-                    singleton.parameterTypes == listOf("Ljava/lang/Object;") &&
-                    singleton.returnType == "Ljava/util/List;" &&
-                    singleton.definingClass in
-                        setOf("Lkotlin/io/TextStreamsKt;", "Lcoil/util/-Collections;") &&
-                    manualCode[dispatchAt + 1].opcode == Opcode.SGET_OBJECT &&
-                    manualCode[dispatchAt + 2].opcode == Opcode.RETURN_OBJECT
-            ) {
-                "Manual single-song singleton dispatch changed"
             }
+            val manualSites =
+                mutableListOf<Triple<String, com.android.tools.smali.dexlib2.iface.Method, Int>>()
+            classDefForEach { clazz ->
+                for (candidate in clazz.methods) {
+                    val code = candidate.implementation?.instructions?.toList() ?: continue
+                    dispatchAfterDuration(code)?.let {
+                        manualSites += Triple(clazz.type, candidate, it)
+                    }
+                }
+            }
+            check(manualSites.size == 1) {
+                "Manual single-song download dispatch is not unique (${manualSites.size})"
+            }
+            val (manualClass, manualMethod, dispatchAt) = manualSites.single()
+            val manual =
+                mutableClassDefBy(manualClass).methods.single {
+                    it.name == manualMethod.name &&
+                        it.parameterTypes == manualMethod.parameterTypes &&
+                        it.returnType == manualMethod.returnType
+                }
+            val dispatch =
+                manual.implementation!!.instructions.toList()[dispatchAt] as FiveRegisterInstruction
             manual.replaceInstruction(
                 dispatchAt,
                 "invoke-static {v${dispatch.registerC}, v${dispatch.registerD}, v${dispatch.registerE}}, ${SOULSEEK}SoulseekDownloadChoice;->offer(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
@@ -328,7 +338,7 @@ val nativeSoulseekPatch =
                             listOf("Landroid/content/Context;", songType, "Ljava/lang/String;") &&
                         it.returnType == "V"
                 }
-            check(enqueue.accessFlags and 8 != 0 && enqueue.implementation!!.registerCount == 9) {
+            check(enqueue.accessFlags and 8 != 0 && enqueue.localRegisters() >= 1) {
                 "Download enqueue entry changed"
             }
             val originalEnqueue = enqueue.implementation!!.instructions.first()
@@ -578,7 +588,7 @@ val nativeSoulseekPatch =
                         library.parameterTypes[15] ==
                             "Landroidx/compose/foundation/layout/PaddingValuesImpl;" &&
                         library.parameterTypes[19] == "Landroidx/compose/runtime/ComposerImpl;" &&
-                        library.implementation!!.registerCount == 46
+                        library.localRegisters() >= 19
                 ) {
                     "Player content slot ABI changed"
                 }
@@ -588,7 +598,7 @@ val nativeSoulseekPatch =
                         .single { it.name == "FrostedTopBar" }
                 check(
                     topBar.parameterTypes[2] == "Landroidx/compose/ui/Modifier;" &&
-                        topBar.implementation!!.registerCount == 56
+                        topBar.localRegisters() >= 1
                 ) {
                     "Top-bar modifier ABI changed"
                 }
@@ -689,35 +699,80 @@ val nativeSoulseekPatch =
                 ) {
                     "Player Compose back handler changed"
                 }
-                // Exact R8 branch for the manual release/selection callback; sync/retry paths stay
-                // independent.
-                val batch =
-                    mutableClassDefBy(
-                            "Lcom/music/bitchord/MainActivityKt\$\$ExternalSyntheticLambda109;"
-                        )
-                        .methods
-                        .single {
-                            it.name == "invoke" &&
-                                it.parameterTypes ==
-                                    listOf("Ljava/lang/Object;", "Ljava/lang/Object;")
-                        }
-                check(
-                    batch.implementation!!.instructions.any { instruction ->
-                        val method =
-                            (instruction as? ReferenceInstruction)?.reference as? MethodReference
-                        method?.definingClass == "Lcom/music/bitchord/download/Downloads;" &&
-                            method.name == "rememberCollection"
+                // The manual release/selection callback is the merged lambda branch that stores
+                // the collection with Downloads.rememberCollection; sync and retry branches stay
+                // independent. R8 numbers the merged branches, so the id is read from the
+                // switch case that holds the call.
+                val rememberCollection = { instruction: Instruction ->
+                    instruction.call().let {
+                        it?.definingClass == "Lcom/music/bitchord/download/Downloads;" &&
+                            it.name == "rememberCollection"
                     }
-                ) {
-                    "Manual batch callback changed"
                 }
-                val batchStart = batch.implementation!!.instructions.first()
+                val batchOwners = mutableListOf<String>()
+                classDefForEach { clazz ->
+                    if (
+                        clazz.fields.any { it.name == "\$r8\$classId" && it.type == "I" } &&
+                            clazz.methods.any { method ->
+                                method.name == "invoke" &&
+                                    method.parameterTypes ==
+                                        listOf("Ljava/lang/Object;", "Ljava/lang/Object;") &&
+                                    method.implementation?.instructions?.any(rememberCollection) ==
+                                        true
+                            }
+                    )
+                        batchOwners += clazz.type
+                }
+                check(batchOwners.size == 1) { "Manual batch callback changed" }
+                val batchOwner = batchOwners.single()
+                val batch =
+                    mutableClassDefBy(batchOwner).methods.single {
+                        it.name == "invoke" &&
+                            it.parameterTypes == listOf("Ljava/lang/Object;", "Ljava/lang/Object;")
+                    }
+                val batchCode = batch.implementation!!.instructions.toList()
+                val batchCall = batchCode.indices.single { rememberCollection(batchCode[it]) }
+                val classIdRead =
+                    batchCode.indexOfFirst {
+                        it.opcode == Opcode.IGET &&
+                            (it as ReferenceInstruction).reference.let { ref ->
+                                ref is FieldReference &&
+                                    ref.definingClass == batchOwner &&
+                                    ref.name == "\$r8\$classId"
+                            }
+                    }
+                val batchSwitch =
+                    (classIdRead + 1 until batchCode.size).firstOrNull {
+                        batchCode[it].opcode == Opcode.PACKED_SWITCH
+                    }
+                check(classIdRead >= 0 && batchSwitch != null && batchSwitch < batchCall) {
+                    "Manual batch callback dispatch changed"
+                }
+                check(
+                    (batchCode[classIdRead] as OneRegisterInstruction).registerA ==
+                        (batchCode[batchSwitch!!] as OneRegisterInstruction).registerA
+                ) {
+                    "Manual batch callback dispatch register changed"
+                }
+                val cases =
+                    (batchCode[
+                            (batchCode[batchSwitch] as BuilderOffsetInstruction)
+                                .target
+                                .location
+                                .index]
+                            as BuilderPackedSwitchPayload)
+                        .switchElements
+                        .map { it.key to it.target.location.index }
+                val branchStart = cases.filter { it.second <= batchCall }.maxOf { it.second }
+                val branchKeys = cases.filter { it.second == branchStart }.map { it.first }
+                check(branchKeys.size == 1) { "Manual batch callback branch is not unique" }
+                val batchStart = batchCode.first()
                 batch.addInstructionsWithLabels(
                     0,
                     """
                     move-object/from16 v0, p0
-                    iget v0, v0, Lcom/music/bitchord/MainActivityKt${'$'}${'$'}ExternalSyntheticLambda109;->${'$'}r8${'$'}classId:I
-                    const/4 v1, 0x1
+                    iget v0, v0, $batchOwner->${'$'}r8${'$'}classId:I
+                    ${if (branchKeys.single() in -8..7) "const/4" else "const/16"} v1, ${branchKeys.single()}
                     if-ne v0, v1, :original_manual_batch
                     invoke-static/range {p0 .. p2}, ${SOULSEEK}SoulseekDownloadChoice;->interceptBatch(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z
                     move-result v0
@@ -782,10 +837,7 @@ val nativeSoulseekPatch =
                             ) &&
                         it.returnType == "Ljava/lang/Object;"
                 }
-            check(
-                selectedRoute.accessFlags and 8 != 0 &&
-                    selectedRoute.implementation!!.registerCount == if (currentRoute) 18 else 25
-            ) {
+            check(selectedRoute.accessFlags and 8 != 0 && selectedRoute.localRegisters() >= 1) {
                 "Explicit download route registers changed"
             }
             val originalRoute = selectedRoute.implementation!!.instructions.first()
@@ -820,7 +872,7 @@ val nativeSoulseekPatch =
                             ) &&
                         it.returnType == "Ljava/lang/Object;"
                 }
-            check(tagger.accessFlags and 8 == 0 && tagger.implementation!!.registerCount == 13) {
+            check(tagger.accessFlags and 8 == 0 && tagger.localRegisters() >= 1) {
                 "Download metadata writer registers changed"
             }
             val originalTagger = tagger.implementation!!.instructions.first()
@@ -863,9 +915,7 @@ val nativeSoulseekPatch =
                             ) &&
                         it.returnType == "Ljava/lang/Object;"
                 }
-            check(search.implementation!!.registerCount == 13) {
-                "Addon source search registers changed"
-            }
+            check(search.localRegisters() >= 2) { "Addon source search registers changed" }
             val originalSearch = search.implementation!!.instructions.first()
             search.addInstructionsWithLabels(
                 0,
@@ -887,30 +937,13 @@ val nativeSoulseekPatch =
 
             // Each native source returns null for identifiers it does not own. Keeping the
             // original entry as an external label makes this chain with Telegram in either order.
-            val addonType = "Lcom/music/bitchord/download/Downloads\$run\$2;"
-            val body =
-                mutableClassDefBy(addonType).methods.single {
-                    it.name ==
-                        "invokeSuspend\$com\$music\$bitchord\$data\$sources\$addon\$AddonClient\$body\$2" &&
-                        it.parameterTypes == listOf("Ljava/lang/Object;") &&
-                        it.returnType == "Ljava/lang/Object;"
-                }
-            check(body.implementation!!.registerCount == 14) { "Addon IO registers changed" }
-            check(
-                body.implementation!!.instructions.any {
-                    val ref = (it as? ReferenceInstruction)?.reference as? FieldReference
-                    ref?.definingClass == addonType &&
-                        ref.name == "L\$0" &&
-                        ref.type == "Ljava/lang/Object;"
-                }
-            ) {
-                "Addon URL capture changed"
-            }
+            val bodyHost = addonBodyHost()
+            val body = bodyHost.method
             val externalBody = body.implementation!!.instructions.first()
             body.addInstructionsWithLabels(
                 0,
                 """
-                iget-object v0, p0, $addonType->L${'$'}0:Ljava/lang/Object;
+                iget-object v0, p0, ${bodyHost.url.definingClass}->${bodyHost.url.name}:${bodyHost.url.type}
                 check-cast v0, Ljava/lang/String;
                 invoke-static {v0}, ${SOULSEEK}SoulseekAddon;->bodyOrNull(Ljava/lang/String;)Ljava/lang/String;
                 move-result-object v0
@@ -940,172 +973,17 @@ val nativeSoulseekPatch =
             )
 
             // The host still owns the IO coroutine, output stream, progress and cancellation.
-            val downloadType = "Lcom/music/bitchord/wear/WearBridge\$sendToWatch\$1;"
-            val download =
-                mutableClassDefBy(downloadType).methods.single { it.name == "invokeSuspend" }
-            val code = download.implementation!!.instructions.toList()
-            check(download.implementation!!.registerCount == if (currentRoute) 27 else 29) {
-                "Download IO registers changed"
-            }
-            val anchors =
-                code.indices.filter { index ->
-                    code[index].opcode == Opcode.NEW_INSTANCE &&
-                        (code[index] as? ReferenceInstruction)?.reference.toString() ==
-                            "Lokhttp3/Request\$Builder;" &&
-                        code.subList(index, minOf(index + 140, code.size)).any {
-                            ((it as? ReferenceInstruction)?.reference as? StringReference)
-                                ?.string == "fetched "
-                        }
-                }
-            check(anchors.size == 1) { "Native download insertion point changed" }
-            val downloadIndex = anchors.single()
-            // Both supported APKs use v1 for this merged coroutine and v0 for its IO scope
-            // at this branch. Validate those live values before reusing its scratch locals.
-            val scopeRead =
-                code
-                    // An independently selected Telegram hook may precede this same HTTP site.
-                    .subList(maxOf(0, downloadIndex - 32), downloadIndex)
-                    .filterIsInstance<ReferenceInstruction>()
-            check(
-                scopeRead.any {
-                    val field = it.reference as? FieldReference
-                    it.opcode == Opcode.IGET_OBJECT &&
-                        field?.definingClass == downloadType &&
-                        field.name == "L\$0" &&
-                        (it as TwoRegisterInstruction).registerA == 0 &&
-                        it.registerB == 1
-                } &&
-                    scopeRead.any {
-                        it.opcode == Opcode.CHECK_CAST &&
-                            it.reference.toString() == "Lkotlinx/coroutines/CoroutineScope;"
-                    }
-            ) {
-                "Download IO coroutine scope changed"
-            }
-            for ((fieldName, castType) in
-                listOf(
-                    "\$path" to "Ljava/lang/String;",
-                    "\$app" to "Ljava/io/OutputStream;",
-                    "\$payload" to "Lkotlin/jvm/functions/Function2;",
-                )) {
-                check(
-                    (downloadIndex until minOf(downloadIndex + 40, code.size - 1)).any { index ->
-                        val field =
-                            (code[index] as? ReferenceInstruction)?.reference as? FieldReference
-                        code[index].opcode == Opcode.IGET_OBJECT &&
-                            field?.definingClass == downloadType &&
-                            field.name == fieldName &&
-                            (code[index] as TwoRegisterInstruction).registerB == 1 &&
-                            code[index + 1].opcode == Opcode.CHECK_CAST &&
-                            (code[index + 1] as ReferenceInstruction).reference.toString() ==
-                                castType
-                    }
-                ) {
-                    "Download IO capture changed: $fieldName"
-                }
-            }
-            check(
-                classDefBy("Lkotlinx/coroutines/JobKt;").methods.any {
-                    it.name == "ensureActive" &&
-                        it.parameterTypes == listOf("Lkotlin/coroutines/CoroutineContext;")
-                }
-            ) {
-                "Download cancellation helper changed"
-            }
-            // Keep native dispatchers in one chain in either selection order.
-            // The existing handler's fallback already targets the HTTP builder;
-            // inserting after it would make that branch skip this handler.
-            val nativeDispatches =
-                (maxOf(0, downloadIndex - 40) until downloadIndex - 2).filter { index ->
-                    val read = code[index] as? TwoRegisterInstruction
-                    val field = (code[index] as? ReferenceInstruction)?.reference as? FieldReference
-                    val cast = code[index + 1]
-                    val call = code[index + 2]
-                    val target = (call as? ReferenceInstruction)?.reference as? MethodReference
-                    code[index].opcode == Opcode.IGET_OBJECT &&
-                        field?.definingClass == downloadType &&
-                        field.name == "\$path" &&
-                        read?.registerA == 4 &&
-                        read.registerB == 1 &&
-                        cast.opcode == Opcode.CHECK_CAST &&
-                        (cast
-                                as
-                                com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction)
-                            .registerA == 4 &&
-                        (cast as ReferenceInstruction).reference.toString() ==
-                            "Ljava/lang/String;" &&
-                        call.opcode == Opcode.INVOKE_STATIC &&
-                        target?.definingClass == "Lapp/bitchord/telegram/InternalAddon;" &&
-                        target.name == "reserved" &&
-                        target.parameterTypes == listOf("Ljava/lang/String;") &&
-                        target.returnType == "Z" &&
-                        (call as FiveRegisterInstruction).registerCount == 1 &&
-                        call.registerC == 4
-                }
-            check(nativeDispatches.size <= 1) { "Existing native download dispatch is not unique" }
-            val nativeDownloadIndex = nativeDispatches.singleOrNull() ?: downloadIndex
-            download.addInstructionsWithLabels(
-                nativeDownloadIndex,
-                """
-                iget-object v4, v1, $downloadType->${'$'}path:Ljava/lang/Object;
-                check-cast v4, Ljava/lang/String;
-                invoke-static {v4}, ${SOULSEEK}SoulseekAddon;->reserved(Ljava/lang/String;)Z
-                move-result v5
-                if-eqz v5, :external_soulseek_download
-                iget-object v5, v1, $downloadType->${'$'}app:Ljava/lang/Object;
-                check-cast v5, Ljava/io/OutputStream;
-                iget-object v6, v1, $downloadType->${'$'}payload:Ljava/lang/Object;
-                check-cast v6, Lkotlin/jvm/functions/Function2;
-                invoke-interface {v0}, Lkotlinx/coroutines/CoroutineScope;->getCoroutineContext()Lkotlin/coroutines/CoroutineContext;
-                move-result-object v7
-                invoke-static {v4, v5, v6, v7}, ${SOULSEEK}SoulseekDownloads;->fetch(Ljava/lang/String;Ljava/io/OutputStream;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/CoroutineContext;)Ljava/lang/Long;
-                move-result-object v4
-                return-object v4
-                """,
-                ExternalLabel("external_soulseek_download", code[nativeDownloadIndex]),
-            )
+            directDownloadHost()
+                .install(
+                    "${SOULSEEK}SoulseekAddon;",
+                    "${SOULSEEK}SoulseekDownloads;",
+                    "external_soulseek_download",
+                    setOf("Lapp/bitchord/telegram/InternalAddon;"),
+                )
 
             // Registering as an ADDON gives the source its normal Sources row. Intercept only
             // that row's editor callback; other sources retain their own editor or wrapper.
-            val row =
-                mutableClassDefBy(
-                    "Lcom/music/bitchord/ui/screens/SourcesScreenKt\$\$ExternalSyntheticLambda32;"
-                )
-            val invoke = row.methods.single { it.name == "invoke" && it.parameterTypes.size == 5 }
-            val rowCode = invoke.implementation!!.instructions.toList()
-            val decision =
-                rowCode.indexOfFirst {
-                    val ref = (it as? ReferenceInstruction)?.reference as? FieldReference
-                    ref?.definingClass == "Lcom/music/bitchord/data/sources/SourceKind;" &&
-                        ref.name == "needsServer"
-                }
-            check(decision >= 0) { "Source-row click decision missing" }
-            val load =
-                (decision + 1 until minOf(decision + 8, rowCode.size)).single {
-                    val ref = (rowCode[it] as? ReferenceInstruction)?.reference as? FieldReference
-                    rowCode[it].opcode == Opcode.IGET_OBJECT &&
-                        ref?.definingClass == row.type &&
-                        ref.type == "Lkotlin/jvm/functions/Function1;"
-                }
-            val editor = (rowCode[load] as TwoRegisterInstruction).registerA
-            val click =
-                (load + 1 until minOf(load + 24, rowCode.size)).single {
-                    val ref = (rowCode[it] as? ReferenceInstruction)?.reference as? MethodReference
-                    rowCode[it].opcode == Opcode.INVOKE_DIRECT &&
-                        ref?.name == "<init>" &&
-                        ref.parameterTypes ==
-                            listOf("Ljava/lang/Object;", "Ljava/lang/Object;", "I")
-                }
-            check(editor < 16 && (rowCode[click] as FiveRegisterInstruction).registerD == editor) {
-                "Source-row callback registers changed"
-            }
-            invoke.addInstructions(
-                load + 1,
-                """
-                invoke-static {v$editor}, ${SOULSEEK}SoulseekSourceEditorRoute;->wrap(Lkotlin/jvm/functions/Function1;)Lkotlin/jvm/functions/Function1;
-                move-result-object v$editor
-                """,
-            )
+            wrapSourceRowEditor("${SOULSEEK}SoulseekSourceEditorRoute;")
 
             val startup = SoulseekApplicationCreate.method
             val returns =
@@ -1142,7 +1020,11 @@ val streamseekPreviewPatch =
                 packageName = "com.music.bitchord",
                 apkFileType = ApkFileType.APK,
                 appIconColor = 0xFF8944,
-                targets = listOf(AppTarget(version = "1.9", isExperimental = true, minSdk = 26)),
+                targets =
+                    listOf(
+                        AppTarget(version = "1.9", isExperimental = true, minSdk = 26),
+                        AppTarget(version = "1.9.1-beta1", isExperimental = true, minSdk = 26),
+                    ),
             )
         )
         dependsOn(nativeSoulseekPatch, streamseekPreviewResources)

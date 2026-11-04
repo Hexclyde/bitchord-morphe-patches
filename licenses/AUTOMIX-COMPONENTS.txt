@@ -1,0 +1,84 @@
+AutoMix component adaptations
+============================
+
+The Java adaptations are distributed under GPL-3.0-or-later, with the
+permission of the GPL-2.0-or-later and GPL-3.0-or-later upstream licences.
+The complete GPL version 3 text accompanies this file as GPL-3.0.txt.
+The MIT component retains its original permission notice below.
+
+DJ Sugar / Mixxx
+---------------
+https://github.com/winnerspiros/djsugar
+Revision: 2e1f03eda5e273ba7d732d3620246bad5891e1be
+Files: src/library/autodj/smart/phrasealign.cpp and phrasealign.h
+Adaptation: MixTools.java grid interpolation, beat jumps and unmatched-tempo
+phrase planning. Android UI and host integration are new BitChord code.
+
+https://github.com/mixxxdj/mixxx
+Revision: bc49961fd3e5a46cd46588090c652a0d7ec44e18
+File: src/engine/enginexfader.cpp
+Adaptation: MixTools.java calibrated constant-power crossfader transform.
+
+Upstream copyright and licence statement:
+Copyright (C) 2001-2026 Mixxx Development Team
+Mixxx is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+Mixxx is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+DJ Sugar is a fork of Mixxx; its contributors retain copyright in their
+additions. This adaptation does not include Qt, skins, extractors, native
+engines, controllers or other third-party Mixxx libraries.
+
+SideDeck
+--------
+https://github.com/manueljpy/SideDeck
+Revision: bfd58fdf2246eab4a814fb550a77ee50258c8533
+File: lib/state/dj_controller.dart
+Adaptation: TransitionEdit.java bounded grid nudge and native editor
+controls for 5 ms grid movement and phase-preserving four-beat cue jumps.
+SideDeck contributors; upstream distributed under GPL-3.0-or-later.
+No Flutter, Oboe, Queen Mary, Signalsmith or codec library is included by
+this adaptation.
+
+DJM-Rec for Android
+-------------------
+https://github.com/P2GR/DJM-Rec-for-Android
+Revision: 2f36d11b837f5d627740c77f3acc9b130c24b04f
+Files: app/src/main/cpp/MeterCalculator.h, WaveformAnalyzer.cpp and WaveformAnalyzer.h
+Adaptation: TransitionWaveform.java second-order Butterworth filter bank and
+independent channel peak extraction, with timestamped bounded display bins.
+The upstream recorder ring and fitted display curves are not included.
+DeckMeter.java stereo peak/RMS calculations, -60 dBFS display
+floor and 0.966 clipping threshold, with bounded UI hold/expiry. Independent
+deck measurements are taken before the faders, not at the mixed output.
+
+MIT License
+
+Copyright (c) 2026 P2GR
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Algoriddim / djay
+----------------
+Product inspiration only. No proprietary algorithms, code, artwork, models,
+names for our algorithms or other Algoriddim assets are included.

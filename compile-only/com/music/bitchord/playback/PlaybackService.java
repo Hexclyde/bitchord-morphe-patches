@@ -5,6 +5,21 @@ import androidx.media3.common.Player;
 
 /** Compile-only host signature; the method is added by the patch. Never packaged. */
 public final class PlaybackService {
+    public static Object bitchordWaveDecode(
+            android.media.MediaDataSource source,
+            double from,
+            double to,
+            kotlin.jvm.functions.Function0<Boolean> abort,
+            kotlin.jvm.functions.Function4<
+                            java.nio.ByteBuffer,
+                            android.media.MediaCodec.BufferInfo,
+                            Integer,
+                            Integer,
+                            kotlin.Unit>
+                    onBuffer) {
+        return null;
+    }
+
     public static android.media.MediaDataSource bitchordAutomixCached(android.net.Uri uri) {
         return null;
     }

@@ -5,10 +5,20 @@ import org.json.JSONObject;
 
 /** One directed track pair; timeline values are seconds and EQ values are dB. */
 final class TransitionEdit {
-    static final int LINEAR = 0, POWER = 1, SMOOTH = 2, CUSTOM = 3;
+    static final int LINEAR = 0, POWER = 1, SMOOTH = 2, CUSTOM = 3, DJ = 4;
+    static final int FADE = 0, RISE = 1, BLEND = 2, WAVE = 3, MELT = 4, SLAM = 5;
+    static final double MAX_OVERLAP = 120;
     static final double MIN_GAP = .001;
     double overlap = 8, outgoingTrim, incomingCue;
     int curve = POWER;
+    int preset = FADE;
+    int bars;
+    String recording;
+    double faderSharpness = 1;
+    final double[] volume = {1, 1};
+    final int[] deckCurve = {-1, -1};
+    final double[] gridOffset = {0, 0}, tempoScale = {1, 1};
+    final double[][] cues = {{-1, -1, -1, -1}, {-1, -1, -1, -1}};
     final double[][] levels = {{1, .75, .35, 0}, {0, .35, .75, 1}};
     final double[][] times = {{0, 1d / 3, 2d / 3, 1}, {0, 1d / 3, 2d / 3, 1}};
     final double[][] eq = {{0, 0, 0}, {0, 0, 0}};
@@ -20,12 +30,25 @@ final class TransitionEdit {
     }
 
     void validate() {
-        require(overlap, .5, 30);
+        require(overlap, .5, MAX_OVERLAP);
         require(outgoingTrim, 0, 120);
         require(incomingCue, 0, 3600);
-        if (curve < LINEAR || curve > CUSTOM)
-            throw new IllegalArgumentException("Invalid fade curve");
+        if (curve < LINEAR || curve > DJ) throw new IllegalArgumentException("Invalid fade curve");
+        require(faderSharpness, 1, 10);
+        if (recording != null && !recording.matches("[0-9a-f]{64}"))
+            throw new IllegalArgumentException("Invalid recording identity");
+        if (preset < -1
+                || preset > SLAM
+                || (bars != 0 && bars != 2 && bars != 4 && bars != 8 && bars != 16))
+            throw new IllegalArgumentException("Invalid transition preset or bar count");
         for (int side = 0; side < 2; side++) {
+            require(volume[side], 0, 1);
+            if (deckCurve[side] < -1 || deckCurve[side] > DJ)
+                throw new IllegalArgumentException("Invalid deck curve");
+            require(gridOffset[side], -8, 8);
+            if (tempoScale[side] != .5 && tempoScale[side] != 1 && tempoScale[side] != 2)
+                throw new IllegalArgumentException("Invalid beat grid scale");
+            for (double cue : cues[side]) require(cue, -1, 86400);
             if (times[side][0] != 0 || times[side][3] != 1)
                 throw new IllegalArgumentException("Fade endpoints must bound the transition");
             for (int i = 0; i < 4; i++) {
@@ -45,11 +68,113 @@ final class TransitionEdit {
         return Math.max(0, duration - outgoingTrim - overlap);
     }
 
+    /** Our presets describe real fader/filter moves; none changes either deck's tempo. */
+    void preset(int value) {
+        if (value < FADE || value > SLAM) throw new IllegalArgumentException("Unknown preset");
+        preset = value;
+        curve = value == FADE ? POWER : CUSTOM;
+        for (int deck = 0; deck < 2; deck++) {
+            volume[deck] = 1;
+            deckCurve[deck] = -1;
+            for (int band = 0; band < 3; band++) eq[deck][band] = 0;
+            filter[deck] = 0;
+            cutoff[deck] = 300;
+            times[deck][0] = 0;
+            times[deck][3] = 1;
+            levels[deck][0] = deck == 0 ? 1 : 0;
+            levels[deck][3] = deck == 0 ? 0 : 1;
+        }
+        double outA = .33, outB = .67, inA = .33, inB = .67;
+        double[] out = {.75, .35}, in = {.35, .75};
+        if (value == RISE) {
+            outA = .55;
+            outB = .88;
+            inA = .2;
+            inB = .65;
+            out = new double[] {1, .55};
+            in = new double[] {.5, 1};
+            filter[1] = 2;
+            cutoff[1] = 1500;
+        } else if (value == BLEND) {
+            outA = .55;
+            outB = .82;
+            inA = .18;
+            inB = .45;
+            out = new double[] {1, .6};
+            in = new double[] {.6, 1};
+            eq[0][0] = -6;
+            eq[1][0] = -6;
+        } else if (value == WAVE) {
+            outA = .35;
+            outB = .65;
+            inA = .35;
+            inB = .65;
+            out = new double[] {.45, .8};
+            in = new double[] {.8, .45};
+        } else if (value == MELT) {
+            outA = .2;
+            outB = .65;
+            inA = .35;
+            inB = .8;
+            out = new double[] {.85, .25};
+            in = new double[] {.25, .85};
+            filter[0] = 1;
+            cutoff[0] = 350;
+        } else if (value == SLAM) {
+            outA = .49;
+            outB = .51;
+            inA = .49;
+            inB = .51;
+            out = new double[] {1, 0};
+            in = new double[] {0, 1};
+        }
+        times[0][1] = outA;
+        times[0][2] = outB;
+        times[1][1] = inA;
+        times[1][2] = inB;
+        levels[0][1] = out[0];
+        levels[0][2] = out[1];
+        levels[1][1] = in[0];
+        levels[1][2] = in[1];
+    }
+
+    static double secondsForBars(int bars, double bpm) {
+        if ((bars != 2 && bars != 4 && bars != 8 && bars != 16)
+                || !Double.isFinite(bpm)
+                || bpm < 15
+                || bpm > 600) throw new IllegalArgumentException("A measured tempo is required");
+        return bars * 240d / bpm;
+    }
+
+    static double snap(double seconds, double bpm, double firstBeat) {
+        if (!Double.isFinite(bpm) || bpm < 30 || bpm > 300) return seconds;
+        double beat = 60 / bpm;
+        return firstBeat + Math.rint((seconds - firstBeat) / beat) * beat;
+    }
+
+    MixTools.Grid grid(int side, double bpm, double firstBeat) {
+        return new MixTools.Grid(firstBeat + gridOffset[side], bpm * tempoScale[side]);
+    }
+
+    /**
+     * SideDeck dj_controller.dart grid controls, GPL-3.0-or-later,
+     * bfd58fdf2246eab4a814fb550a77ee50258c8533.
+     */
+    void nudgeGrid(int side, double seconds) {
+        gridOffset[side] = Math.max(-8, Math.min(8, gridOffset[side] + seconds));
+    }
+
     double gain(int side, double progress) {
+        return volume[side] * baseGain(side, progress);
+    }
+
+    double baseGain(int side, double progress) {
+        int curve = deckCurve[side] < 0 ? this.curve : deckCurve[side];
         double p = Math.max(0, Math.min(1, progress));
         if (curve == LINEAR) return side == 1 ? p : 1 - p;
         if (curve == POWER)
             return side == 1 ? Math.sin(p * Math.PI / 2) : Math.cos(p * Math.PI / 2);
+        if (curve == DJ) return MixTools.crossfader(side, p, faderSharpness);
         if (curve == SMOOTH) {
             double smooth = p * p * (3 - 2 * p);
             return side == 1 ? smooth : 1 - smooth;
@@ -86,6 +211,15 @@ final class TransitionEdit {
                             .put("trim", outgoingTrim)
                             .put("cue", incomingCue)
                             .put("curve", curve);
+            value.put("preset", preset)
+                    .put("bars", bars)
+                    .put("volume", new JSONArray(volume))
+                    .put("deckCurve", new JSONArray(deckCurve));
+            value.put("recording", recording)
+                    .put("sharpness", faderSharpness)
+                    .put("gridOffset", new JSONArray(gridOffset))
+                    .put("tempoScale", new JSONArray(tempoScale))
+                    .put("cues", new JSONArray(cues));
             value.put("levels", new JSONArray(levels))
                     .put("times", new JSONArray(times))
                     .put("eq", new JSONArray(eq));
@@ -106,7 +240,23 @@ final class TransitionEdit {
             edit.outgoingTrim = value.getDouble("trim");
             edit.incomingCue = value.getDouble("cue");
             edit.curve = value.getInt("curve");
+            edit.preset = value.optInt("preset", edit.curve == POWER ? FADE : -1);
+            edit.bars = value.optInt("bars", 0);
+            edit.recording = value.isNull("recording") ? null : value.optString("recording", null);
+            edit.faderSharpness = value.optDouble("sharpness", 1);
             for (int side = 0; side < 2; side++) {
+                if (value.has("volume"))
+                    edit.volume[side] = value.getJSONArray("volume").getDouble(side);
+                if (value.has("deckCurve"))
+                    edit.deckCurve[side] = value.getJSONArray("deckCurve").getInt(side);
+                if (value.has("gridOffset"))
+                    edit.gridOffset[side] = value.getJSONArray("gridOffset").getDouble(side);
+                if (value.has("tempoScale"))
+                    edit.tempoScale[side] = value.getJSONArray("tempoScale").getDouble(side);
+                if (value.has("cues"))
+                    for (int i = 0; i < 4; i++)
+                        edit.cues[side][i] =
+                                value.getJSONArray("cues").getJSONArray(side).getDouble(i);
                 for (int i = 0; i < 4; i++) {
                     edit.levels[side][i] =
                             value.getJSONArray("levels").getJSONArray(side).getDouble(i);

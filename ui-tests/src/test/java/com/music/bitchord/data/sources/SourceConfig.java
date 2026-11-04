@@ -27,6 +27,10 @@ public final class SourceConfig {
         return id;
     }
 
+    public SourceKind getKind() {
+        return kind;
+    }
+
     public boolean getEnabled() {
         return enabled;
     }

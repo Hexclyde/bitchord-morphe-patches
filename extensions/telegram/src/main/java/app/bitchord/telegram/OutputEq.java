@@ -239,6 +239,9 @@ final class OutputEq {
         if (saved == null) return;
         Outputs.Output output = Outputs.current();
         Snapshot now = current();
+        // JamesDSP has the effects, so BitChord's equaliser reads off; the output keeps its own.
+        Snapshot kept = saved(output.key);
+        if (EffectsApps.useJamesDsp && !now.enabled && kept != null) now.enabled = kept.enabled;
         saved.edit()
                 .putString("eq." + output.key, now.toJson())
                 .putString("name." + output.key, output.name)
@@ -250,7 +253,7 @@ final class OutputEq {
         if (output.key.equals(currentOutput)) return;
         currentOutput = output.key;
         if (!enabled) return;
-        Snapshot wanted = saved(output.key);
+        Snapshot wanted = effective(saved(output.key));
         if (wanted == null) {
             // A new output starts from what's set now, and keeps its own from here.
             remember();
@@ -261,8 +264,29 @@ final class OutputEq {
         apply(wanted);
     }
 
+    /** The snapshot as BitChord should have it now: off while JamesDSP has the effects. */
+    private static Snapshot effective(Snapshot s) {
+        if (s == null || !s.enabled || !EffectsApps.useJamesDsp) return s;
+        Snapshot off = new Snapshot();
+        off.mode = s.mode;
+        off.toneX = s.toneX;
+        off.toneY = s.toneY;
+        off.focused = s.focused;
+        off.balance = s.balance;
+        off.bands = s.bands.clone();
+        return off;
+    }
+
+    /** JamesDSP was handed the effects or gave them back: the current output's setting follows. */
+    static void jamesDspChanged() {
+        if (!enabled) return;
+        Snapshot wanted = effective(saved(Outputs.current().key));
+        if (wanted != null && !wanted.sameAs(current())) apply(wanted);
+    }
+
     /** Puts a snapshot into BitChord: its flows and its preferences, as its setters do. */
-    static void apply(Snapshot s) {
+    static void apply(Snapshot snapshot) {
+        Snapshot s = effective(snapshot);
         Runnable run =
                 () -> {
                     applying = true;
@@ -327,6 +351,9 @@ final class OutputEq {
         Object flow = field.get(target);
         if (flow == null) flow = field.get(null);
         if (flow == null) return;
-        flow.getClass().getMethod("setValue", Object.class).invoke(flow, value);
+        // R8 leaves setValue on the state flow class itself, not on the MutableStateFlow interface.
+        Method set = flow.getClass().getMethod("setValue", Object.class);
+        set.setAccessible(true);
+        set.invoke(flow, value);
     }
 }

@@ -695,6 +695,23 @@ public final class AudioOrigin {
         if (route != null && source != null) routes.put(route, source);
     }
 
+    static void localRoute(Object route, String uri) {
+        if (route == null || uri == null) return;
+        Uri file = Uri.parse(uri);
+        if (!"file".equals(file.getScheme()) && !"content".equals(file.getScheme())) return;
+        routes.put(
+                route,
+                new Source(
+                        "local",
+                        Strings.t("This device"),
+                        "LOCAL",
+                        PROOF_DOWNLOAD,
+                        null,
+                        null,
+                        null,
+                        null));
+    }
+
     /** The host's own YouTube download route, its last resort when no source had the track. */
     public static void youtubeRoute(Object route) {
         try {

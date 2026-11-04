@@ -63,18 +63,26 @@ public final class VerifySoulseekApk {
     }
 
     static void manualChoiceScope(Map<String, ClassDef> classes) {
-        ClassDef owner = classes.get("Lcom/dokar/quickjs/QuickJs$$ExternalSyntheticLambda0;");
-        check(owner != null, "Manual download callback retained");
-        Method manual = null;
-        for (Method method : owner.getMethods())
-            if (method.getName().equals("invoke")
-                    && method.getParameterTypes().equals(List.of("Ljava/lang/Object;"))
-                    && method.getReturnType().equals("Ljava/lang/Object;")) manual = method;
+        List<Method> candidates = new ArrayList<>();
+        for (ClassDef owner : classes.values()) {
+            if (owner.getType().startsWith(PREFIX)) continue;
+            for (Method method : owner.getMethods())
+                if (code(method).stream()
+                        .anyMatch(
+                                instruction ->
+                                        namedCall(
+                                                instruction,
+                                                PREFIX + "SoulseekDownloadChoice;",
+                                                "offer"))) candidates.add(method);
+        }
+        check(candidates.size() == 1, "Exactly one native manual download callback");
+        Method manual = candidates.get(0);
         check(
-                manual != null
+                manual.getName().equals("invoke")
+                        && manual.getParameterTypes().equals(List.of("Ljava/lang/Object;"))
+                        && manual.getReturnType().equals("Ljava/lang/Object;")
                         && manual.getImplementation() != null
-                        && manual.getAccessFlags() == 17
-                        && manual.getImplementation().getRegisterCount() == 48,
+                        && manual.getAccessFlags() == 17,
                 "Manual download callback ABI retained");
         List<Instruction> instructions = code(manual);
         int offered = 0;
@@ -103,8 +111,6 @@ public final class VerifySoulseekApk {
                             && singleton.getName().equals("listOf")
                             && singleton.getParameterTypes().equals(List.of("Ljava/lang/Object;"))
                             && singleton.getReturnType().equals("Ljava/util/List;")
-                            && Set.of("Lkotlin/io/TextStreamsKt;", "Lcoil/util/-Collections;")
-                                    .contains(singleton.getDefiningClass())
                             && instructions.get(i - 1).getOpcode() == Opcode.MOVE_RESULT_OBJECT
                             && ((OneRegisterInstruction) instructions.get(i - 1)).getRegisterA()
                                     == dispatch.getRegisterD(),
@@ -261,16 +267,20 @@ public final class VerifySoulseekApk {
                                 List.of(
                                         "Lapp/bitchord/telegram/PatchStrings;",
                                         "Lapp/bitchord/telegram/CapturePolicy;",
+                                        "Lapp/bitchord/telegram/NativeSourceConfig;",
                                         "Lapp/bitchord/telegram/DownloadControls;",
                                         "Lapp/bitchord/telegram/DownloadSelection;",
                                         "Lapp/bitchord/telegram/FlacAddon;",
                                         "Lapp/bitchord/telegram/AudioOrigin;",
+                                        "Lapp/bitchord/telegram/NativeSourceConfig;",
                                         "Lapp/bitchord/telegram/AudioOrigin$Source;",
                                         "Lapp/bitchord/telegram/RecordingMatch;",
                                         "Lapp/bitchord/telegram/RecordingMatch$Reference;"))
                             independentReference = independentReference.replace(shared, "");
                         boolean sharedUi =
                                 reference.startsWith("Lapp/bitchord/telegram/PatchStrings;")
+                                        || reference.startsWith(
+                                                "Lapp/bitchord/telegram/NativeSourceConfig;")
                                         || reference.startsWith(
                                                 "Lapp/bitchord/telegram/CapturePolicy;")
                                         || reference.startsWith(
@@ -424,8 +434,10 @@ public final class VerifySoulseekApk {
                 if (method.getName().equals("access$routeFor")) routing = method;
             check(routing != null, "Selected-file route method retained");
             check(
-                    routing.getImplementation().getRegisterCount() == (maskedRoute ? 18 : 25),
-                    "Selected-file hook retains the inspected route register ABI");
+                    routing.getImplementation().getRegisterCount()
+                                    - routing.getParameterTypes().size()
+                            >= 1,
+                    "Selected-file hook has a local register for its prologue");
             List<Instruction> routeCode = code(routing);
             check(
                     routeCode.get(1).getOpcode() == Opcode.IF_EQZ
@@ -458,16 +470,22 @@ public final class VerifySoulseekApk {
                             if (!namedCall(body.get(i), PREFIX + "SoulseekDownloads;", "fetch"))
                                 continue;
                             check(
-                                    method.getImplementation().getRegisterCount()
-                                            == (maskedRoute ? 27 : 29),
-                                    "Direct download hook retains inspected coroutine registers");
-                            check(
-                                    body.get(i) instanceof FiveRegisterInstruction call
+                                    i >= 1
+                                            && body.get(i) instanceof FiveRegisterInstruction call
                                             && call.getRegisterCount() == 4
-                                            && call.getRegisterC() == 4
-                                            && call.getRegisterD() == 5
-                                            && call.getRegisterE() == 6
-                                            && call.getRegisterF() == 7,
+                                            && Set.of(
+                                                                    call.getRegisterC(),
+                                                                    call.getRegisterD(),
+                                                                    call.getRegisterE(),
+                                                                    call.getRegisterF())
+                                                            .size()
+                                                    == 4
+                                            && call.getRegisterC() < 16
+                                            && call.getRegisterD() < 16
+                                            && call.getRegisterE() < 16
+                                            && call.getRegisterF() < 16
+                                            && body.get(i - 1) instanceof OneRegisterInstruction ctx
+                                            && ctx.getRegisterA() == call.getRegisterF(),
                                     "Native download receives URL, output, progress and job"
                                             + " context");
                             check(
@@ -513,17 +531,18 @@ public final class VerifySoulseekApk {
         check(search != null, "Host addon search retained");
         List<Instruction> searchCode = code(search);
         if (enabled) {
-            check(
-                    search.getImplementation().getRegisterCount() == 13,
-                    "Search register layout retained");
+            int searchRegisters = search.getImplementation().getRegisterCount();
+            check(searchRegisters - 6 >= 2, "Search has the locals its guard writes");
             check(
                     searchCode.get(0).getOpcode() == Opcode.IF_EQZ
-                            && ((OneRegisterInstruction) searchCode.get(0)).getRegisterA() == 11,
+                            && ((OneRegisterInstruction) searchCode.get(0)).getRegisterA()
+                                    == searchRegisters - 2,
                     "Manual null StreamRequest branches past automatic guard");
             check(
                     searchCode.get(1).getOpcode() == Opcode.IGET_OBJECT
                             && ((TwoRegisterInstruction) searchCode.get(1)).getRegisterA() == 0
-                            && ((TwoRegisterInstruction) searchCode.get(1)).getRegisterB() == 7,
+                            && ((TwoRegisterInstruction) searchCode.get(1)).getRegisterB()
+                                    == searchRegisters - 6,
                     "Guard reads this source configuration, not another source");
             check(
                     namedCall(

@@ -147,6 +147,7 @@ public class SourcePreferenceTest {
     final Map<String, AtomicInteger> opens = new ConcurrentHashMap<>();
     final AtomicInteger resolves = new AtomicInteger();
     java.util.function.Supplier<SourceAudio.AnalysisFormat> originalAnalysisFormats;
+    java.util.function.LongSupplier originalHeapMaximum, originalHeapUsed;
 
     class Remote implements DataSource {
         byte[] file;
@@ -196,6 +197,11 @@ public class SourcePreferenceTest {
     @Before
     public void network() throws Exception {
         originalAnalysisFormats = SourceAudio.analysisFormats;
+        originalHeapMaximum = SourceAutomix.heapMaximum;
+        originalHeapUsed = SourceAutomix.heapUsed;
+        // Concurrency checks need enough headroom to enter the mocked analyzer.
+        SourceAutomix.heapMaximum = () -> 512L << 20;
+        SourceAutomix.heapUsed = () -> 32L << 20;
         SourceAudio.analysisFormats = () -> SourceAutomixTest.format(48000, 120_000_000);
         for (String field : new String[] {"decisions", "offsets", "pendingOffsets", "attempts"})
             clear(field);
@@ -230,12 +236,27 @@ public class SourcePreferenceTest {
     @After
     public void restoreAnalysisFormats() {
         SourceAudio.analysisFormats = originalAnalysisFormats;
+        SourceAutomix.heapMaximum = originalHeapMaximum;
+        SourceAutomix.heapUsed = originalHeapUsed;
     }
 
     DataSpec verify() throws IOException {
         DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
         assertSame(resolved, SourcePreference.guard(new DataSpec(Uri.parse(MARKED)), resolved));
         return resolved;
+    }
+
+    String analysisState(String id) {
+        long maximum = SourceAutomix.heapMaximum.getAsLong();
+        long used = SourceAutomix.heapUsed.getAsLong();
+        return "phase="
+                + SourceAutomix.analysisPhase(id)
+                + ", heap="
+                + used
+                + "/"
+                + maximum
+                + ", analysis available="
+                + SourceAudio.analysisAvailable(maximum, used);
     }
 
     @Test
@@ -278,7 +299,8 @@ public class SourcePreferenceTest {
                     analyzing.await(200, TimeUnit.MILLISECONDS));
             finish.countDown();
             checked.get(30, TimeUnit.SECONDS);
-            assertTrue(analyzing.await(10, TimeUnit.SECONDS));
+            boolean completed = analyzing.await(10, TimeUnit.SECONDS);
+            assertTrue(analysisState("other-recording"), completed);
         } finally {
             finish.countDown();
             AudioDecoder.afterWindow = null;
@@ -408,9 +430,11 @@ public class SourcePreferenceTest {
                             .setUri("content://music/resolve-first")
                             .build(),
                     120000L);
+            boolean completed = analyzed.await(20, TimeUnit.SECONDS);
             assertTrue(
-                    "A resolver coroutine must not wait on its owning analyzer",
-                    analyzed.await(20, TimeUnit.SECONDS));
+                    "A resolver coroutine must not wait on its owning analyzer: "
+                            + analysisState("resolved-off-thread"),
+                    completed);
             assertEquals(6, AudioDecoder.windows.size());
         } finally {
             SourceAutomix.release(callback.f$0);
@@ -1420,6 +1444,9 @@ public class SourcePreferenceTest {
     @Test
     public void aRejectedAssembledManifestAllowsPreparationToTryTheNextCandidate()
             throws Exception {
+        AudioDecoder.prepareRecording(91, 180);
+        AudioDecoder.prepareRecording(817, 180);
+        assertTrue("Fixture preparation does not decode windows", AudioDecoder.windows.isEmpty());
         SourcePreparationTest fixture = new SourcePreparationTest();
         fixture.host =
                 fixture.new Fake() {
@@ -1597,6 +1624,174 @@ public class SourcePreferenceTest {
             expired.close();
             dispatcher.close();
             executor.shutdownNow();
+        }
+    }
+
+    private String failureReport(byte[] candidate) throws Exception {
+        if (candidate == null) files.remove(CANDIDATE);
+        else files.put(CANDIDATE, candidate);
+        List<String> reports = new ArrayList<>();
+        java.util.function.Consumer<String> previous = HostLog.observer;
+        HostLog.observer =
+                line -> {
+                    if (line.startsWith("Recording check stopped at")) reports.add(line);
+                };
+        try {
+            SourcePreference.verifyAhead(
+                    plain(), new DataSpec(Uri.parse(CANDIDATE)), () -> false, true);
+            fail("The fixture copy must not verify");
+        } catch (IOException expected) {
+        } finally {
+            HostLog.observer = previous;
+        }
+        assertEquals(1, reports.size());
+        return reports.get(0);
+    }
+
+    @Test
+    public void durationRejectionHasAFixedDiagnosticReason() throws Exception {
+        String report = failureReport(AudioDecoder.file(91, 0, 182, 0, false));
+        assertTrue(report, report.contains("reason=DURATION_MISMATCH"));
+        assertTrue(SourcePreference.rejected(plain(), new DataSpec(Uri.parse(CANDIDATE))));
+        assertFalse(report, report.contains(CANDIDATE) || report.contains(REFERENCE));
+    }
+
+    @Test
+    public void fingerprintRejectionHasAFixedDiagnosticReason() throws Exception {
+        String report = failureReport(AudioDecoder.file(817, 0, 180, 0, false));
+        assertTrue(report, report.contains("reason=IDENTITY_MISMATCH"));
+        assertTrue(SourcePreference.rejected(plain(), new DataSpec(Uri.parse(CANDIDATE))));
+    }
+
+    @Test
+    public void inconclusiveIoIsDistinctFromPolicyRejection() throws Exception {
+        String report = failureReport(null);
+        assertTrue(report, report.contains("reason=IO_UNCLASSIFIED"));
+        assertFalse(SourcePreference.rejected(plain(), new DataSpec(Uri.parse(CANDIDATE))));
+        assertFalse(report, report.contains("Not found"));
+    }
+
+    @Test
+    public void diagnosticCategoriesNeverIncludeExceptionMessages() {
+        String secret = "https://name:private@example.invalid/file?token=private";
+        Throwable[] failures = {
+            new java.net.SocketTimeoutException(secret), new java.net.UnknownHostException(secret),
+            new java.net.ConnectException(secret), new javax.net.ssl.SSLException(secret),
+            new java.io.InterruptedIOException(secret), new java.io.EOFException(secret),
+            new java.io.FileNotFoundException(secret), new IOException(secret),
+            new IllegalStateException(secret)
+        };
+        String[] reasons = {
+            "NETWORK_TIMEOUT",
+            "DNS_FAILURE",
+            "CONNECT_FAILURE",
+            "TLS_FAILURE",
+            "IO_INTERRUPTED",
+            "UNEXPECTED_EOF",
+            "FILE_MISSING",
+            "IO_UNCLASSIFIED",
+            "INTERNAL_UNCLASSIFIED"
+        };
+        for (int at = 0; at < failures.length; at++)
+            assertEquals(reasons[at], SourcePreference.diagnosticError(failures[at]));
+        assertEquals(
+                "DNS_FAILURE",
+                SourcePreference.diagnosticError(
+                        new IOException(secret, new java.net.UnknownHostException(secret))));
+        assertEquals(
+                "STOP_CANCELLED",
+                SourcePreference.diagnosticError(
+                        new SourceAudio.Stopped(SourceAudio.StopReason.CANCELLED)));
+        assertEquals("NONE", SourcePreference.diagnosticError(null));
+    }
+
+    private void youtubeOff(String mode) {
+        YouTubePolicy.use(
+                new YouTubePolicy.Registry() {
+                    public YouTubePolicy.Row youtube() {
+                        return new YouTubePolicy.Row("youtube", false);
+                    }
+
+                    public void setEnabled(String id, boolean enabled) {}
+
+                    public String origin(DataSpec spec) {
+                        return null;
+                    }
+
+                    public String active(androidx.media3.common.MediaItem item) {
+                        return null;
+                    }
+
+                    public void dropChoices() {}
+                });
+        YouTubePolicy.init(org.robolectric.RuntimeEnvironment.getApplication());
+        YouTubePolicy.loaded();
+        YouTubePolicy.disable("youtube", mode);
+    }
+
+    @Test
+    public void youtubeOffUsesNativeProviderMatchWithoutReadingReference() throws Exception {
+        for (String mode : new String[] {YouTubePolicy.PLAYBACK_ONLY, YouTubePolicy.FULL}) {
+            youtubeOff(mode);
+            try {
+                files.clear();
+                DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+                assertSame(
+                        resolved,
+                        SourcePreference.guard(
+                                new DataSpec(Uri.parse("bitchord://watch?v=song")), resolved));
+                assertEquals(0, resolves.get());
+                assertTrue(opens.isEmpty());
+            } finally {
+                YouTubePolicy.reset();
+            }
+        }
+    }
+
+    @Test
+    public void youtubeOffMatchDoesNotBecomeAReusableFingerprintProof() throws Exception {
+        youtubeOff(YouTubePolicy.PLAYBACK_ONLY);
+        try {
+            DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+            assertSame(
+                    resolved,
+                    SourcePreference.guard(
+                            new DataSpec(Uri.parse("bitchord://watch?v=song")), resolved));
+            YouTubePolicy.reset();
+            files.put(CANDIDATE, AudioDecoder.file(999, 0, 180, 0, false));
+            refused(
+                    () ->
+                            SourcePreference.guard(
+                                    new DataSpec(Uri.parse("bitchord://watch?v=song")), resolved));
+            assertTrue(resolves.get() > 0);
+        } finally {
+            YouTubePolicy.reset();
+        }
+    }
+
+    @Test
+    public void fullDisableDoesNotFetchReferenceForUnverifiedPreparation() throws Exception {
+        youtubeOff(YouTubePolicy.FULL);
+        try {
+            DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+            refused(() -> SourcePreference.verifyPrepared(plain(), resolved, () -> false, true));
+            assertEquals(0, resolves.get());
+            assertTrue(opens.isEmpty());
+        } finally {
+            YouTubePolicy.reset();
+        }
+    }
+
+    @Test
+    public void youtubeOffDoesNotApproveAMidSongUpgradeFromMetadataAlone() throws Exception {
+        youtubeOff(YouTubePolicy.PLAYBACK_ONLY);
+        try {
+            files.put(CANDIDATE, AudioDecoder.file(999, 0, 180, 0, false));
+            DataSpec upgraded = new DataSpec(Uri.parse(MARKED));
+            refused(() -> SourcePreference.guard(upgraded, new DataSpec(Uri.parse(CANDIDATE))));
+            assertTrue(resolves.get() > 0);
+        } finally {
+            YouTubePolicy.reset();
         }
     }
 }

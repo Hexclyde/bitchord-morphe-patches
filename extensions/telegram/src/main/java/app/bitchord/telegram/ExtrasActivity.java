@@ -400,7 +400,7 @@ public final class ExtrasActivity extends Activity {
         if (SoundExtras.singApplied()) {
             feature(
                     "sing",
-                    Strings.t("Sing"),
+                    Strings.t("Karaoke"),
                     Strings.t("Reduce vocals with a filter or separation model"),
                     () -> SoundExtras.singEnabled,
                     SoundExtras::setSingEnabled,
@@ -496,7 +496,7 @@ public final class ExtrasActivity extends Activity {
                         paragraph(
                                 parent,
                                 Strings.t(
-                                        "Sing is ported from Auris by OreoMuncher45, a fork of"
+                                        "Karaoke is ported from Auris by OreoMuncher45, a fork of"
                                                 + " BitChord."));
                     });
         }
@@ -597,7 +597,7 @@ public final class ExtrasActivity extends Activity {
                                 Strings.t(
                                         "Saves battery on long listens. While a song plays this"
                                                 + " way, BitChord’s equaliser, loudness"
-                                                + " normalisation, Sing, spatial audio and"
+                                                + " normalisation, Karaoke, spatial audio and"
                                                 + " crossfade don’t work on it. Android decides"
                                                 + " which songs and devices can; the rest play as"
                                                 + " before."));
@@ -655,9 +655,9 @@ public final class ExtrasActivity extends Activity {
                     Strings.t("Send audio effects to the installed JamesDSP app"),
                     () -> EffectsApps.useJamesDsp,
                     on -> {
-                        if (on && EffectsApps.hostEqualiserOn(this))
-                            setHostBoolean("setEqualizerEnabled", false);
+                        boolean equaliserOn = on && EffectsApps.hostEqualiserOn(this);
                         EffectsApps.setUseJamesDsp(on);
+                        if (equaliserOn) setHostBoolean("setEqualizerEnabled", false);
                         SoundExtras.effectsChanged();
                     },
                     this::jamesDsp);
@@ -698,7 +698,7 @@ public final class ExtrasActivity extends Activity {
                                             + " analysis use a crossfade."));
                         navigation(
                                 parent,
-                                Strings.t("Transition editor"),
+                                Strings.t("Automix Editor"),
                                 () ->
                                         startActivity(
                                                 new android.content.Intent(
@@ -1123,6 +1123,32 @@ public final class ExtrasActivity extends Activity {
             iconSpace.setMarginEnd(style.dp(12));
             ((LinearLayout) storageShortcut).addView(storageIcon, 0, iconSpace);
             utilities.setBackground(style.shape(style.card, 16, false));
+        }
+        if (SoundExtras.diagnosticsApplied()) {
+            LinearLayout tools = new LinearLayout(this);
+            tools.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams space = new LinearLayout.LayoutParams(-1, -2);
+            space.setMargins(style.dp(16), style.dp(6), style.dp(16), style.dp(4));
+            tools.setBackground(style.shape(style.card, 16, false));
+            root.addView(tools, space);
+            View entry =
+                    PlaylistRows.add(
+                            tools,
+                            style,
+                            Strings.t("Diagnostics"),
+                            Strings.t("Record app and patch events to diagnose a problem"),
+                            () ->
+                                    startActivity(
+                                            new android.content.Intent(
+                                                    this, DiagnosticsActivity.class)));
+            entry.setTag("patch-diagnostics");
+            android.widget.ImageView icon = new android.widget.ImageView(this);
+            icon.setImageDrawable(new TelegramGlyph(style, "diagnostics", style.secondary));
+            icon.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            LinearLayout.LayoutParams iconSpace =
+                    new LinearLayout.LayoutParams(style.dp(24), style.dp(28));
+            iconSpace.setMarginEnd(style.dp(12));
+            ((LinearLayout) entry).addView(icon, 0, iconSpace);
         }
         counts = style.text("", 13, style.secondary, style.regular);
         counts.setTag("patch-counts");
@@ -2083,7 +2109,7 @@ public final class ExtrasActivity extends Activity {
     private Integer sliderDefault(String id) {
         switch (id) {
             case "sing":
-                return 50;
+                return SoundExtras.SING_DEFAULT;
             case "pitch":
                 return 0;
             case "loudness":
@@ -2477,6 +2503,27 @@ public final class ExtrasActivity extends Activity {
     }
 
     private void dj(LinearLayout parent) {
+        String[] modes = {Strings.t("Steady"), Strings.t("Build up"), Strings.t("Wind down")};
+        heading(parent, Strings.t("DJ journey"));
+        android.widget.RadioGroup journeys = new android.widget.RadioGroup(this);
+        journeys.setOrientation(android.widget.RadioGroup.HORIZONTAL);
+        for (int i = 0; i < modes.length; i++) {
+            final int value = i;
+            android.widget.RadioButton choice = new android.widget.RadioButton(this);
+            choice.setId(View.generateViewId());
+            choice.setTag("dj-journey:" + i);
+            choice.setText(modes[i]);
+            choice.setTextColor(style.foreground);
+            choice.setTextSize(14);
+            choice.setMinHeight(style.dp(48));
+            choice.setButtonTintList(ColorStateList.valueOf(style.dark ? 0xff30d158 : 0xff34c759));
+            journeys.addView(choice, new android.widget.RadioGroup.LayoutParams(0, -2, 1));
+            choice.setChecked(DjMode.journey == i);
+            choice.setOnClickListener(view -> DjMode.setJourney(value));
+        }
+        parent.addView(journeys);
+
+        navigation(parent, Strings.t("Save DJ order"), () -> DjPlaylists.choose(this));
         paragraph(
                 parent,
                 Strings.t(

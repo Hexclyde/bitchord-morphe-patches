@@ -50,6 +50,17 @@ final class TelegramGlyph extends Drawable {
         paint.setColor(color);
         Path p = new Path();
         switch (kind) {
+            case "diagnostics":
+                p.moveTo(3, 4);
+                p.lineTo(3, 20);
+                p.lineTo(21, 20);
+                p.moveTo(5, 12);
+                p.lineTo(8, 12);
+                p.lineTo(10, 7);
+                p.lineTo(13, 17);
+                p.lineTo(16, 10);
+                p.lineTo(21, 10);
+                break;
             case "chevron":
                 p.moveTo(9, 5);
                 p.lineTo(16, 12);

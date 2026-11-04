@@ -275,14 +275,7 @@ final class DownloadExplorerPage extends DownloadPage {
                                                                             .toUpperCase(
                                                                                     java.util.Locale
                                                                                             .ROOT),
-                                                                    android.text.format.Formatter
-                                                                                    .formatShortFileSize(
-                                                                                            this,
-                                                                                            row.size)
-                                                                            + " · "
-                                                                            + PatchStrings.f(
-                                                                                    "Peer: {0}",
-                                                                                    row.peer),
+                                                                    soulseekDetail(this, row),
                                                                     reportedLossless(row.format),
                                                                     row.freeSlots < 0
                                                                             ? null
@@ -348,12 +341,11 @@ final class DownloadExplorerPage extends DownloadPage {
             app.bitchord.telegram.FlacAddon.verify(activity);
             return;
         }
-        String source = option.source, title = option.title;
         Selection selection = option.selection;
         int batchIndex = getIntent().getIntExtra("download.batch.index", -1);
         if (batchIndex >= 0 && SoulseekDownloadChoice.isBatch(choice)) {
             try {
-                DownloadBatch.select(choice, batchIndex, source + " · " + title, selection);
+                DownloadBatch.select(choice, batchIndex, selectionDetail(option), selection);
             } catch (IllegalStateException expired) {
                 status.setText(
                         PatchStrings.t(
@@ -367,6 +359,27 @@ final class DownloadExplorerPage extends DownloadPage {
             return;
         }
         select(selection, now);
+    }
+
+    static String soulseekDetail(android.content.Context context, SoulseekTrack row) {
+        return android.text.format.Formatter.formatShortFileSize(context, row.size)
+                + " · "
+                + PatchStrings.t("Duration")
+                + ": "
+                + DownloadDetails.duration(row.duration)
+                + " · "
+                + PatchStrings.f("Peer: {0}", row.peer);
+    }
+
+    static String selectionDetail(DownloadExplorerView.Option option) {
+        java.util.Set<String> parts = new java.util.LinkedHashSet<>();
+        for (String value :
+                new String[] {option.source, option.title, option.quality, option.detail}) {
+            if (value == null) continue;
+            for (String part : value.split(" · "))
+                if (!part.trim().isEmpty()) parts.add(part.trim());
+        }
+        return String.join(" · ", parts);
     }
 
     private void select(Selection selection, boolean now) {
