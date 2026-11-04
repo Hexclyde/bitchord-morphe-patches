@@ -128,10 +128,37 @@ final class PlayerDownloadHost {
         }
     }
 
+    static CoroutineContext.Key<?> jobKey(Class<?> jobType, Class<?> keyType)
+            throws ReflectiveOperationException {
+        Field selected;
+        try {
+            selected = jobType.getField("Key");
+            if (!Modifier.isStatic(selected.getModifiers()))
+                throw new IllegalStateException("Download coroutine key changed");
+        } catch (NoSuchFieldException shrunk) {
+            if (!CoroutineContext.Key.class.isAssignableFrom(keyType))
+                throw new IllegalStateException("Download coroutine key changed");
+            selected = null;
+            for (Field field : keyType.getDeclaredFields()) {
+                if (!Modifier.isStatic(field.getModifiers()) || field.getType() != keyType)
+                    continue;
+                if (selected != null)
+                    throw new IllegalStateException("Ambiguous download coroutine key");
+                selected = field;
+            }
+            if (selected == null) throw new IllegalStateException("Download coroutine key changed");
+        }
+        selected.setAccessible(true);
+        Object value = selected.get(null);
+        if (!(value instanceof CoroutineContext.Key))
+            throw new IllegalStateException("Download coroutine key changed");
+        return (CoroutineContext.Key<?>) value;
+    }
+
     void check() throws Exception {
         if (Thread.currentThread().isInterrupted()) throw new InterruptedException();
         Class<?> jobType = Class.forName("kotlinx.coroutines.Job");
-        Object key = jobType.getField("Key").get(null);
+        Object key = jobKey(jobType, Class.forName("kotlinx.coroutines.Job$Key"));
         Object job = coroutine.get((CoroutineContext.Key) key);
         if (job != null && !Boolean.TRUE.equals(call(job, "isActive")))
             throw new CancellationException();
@@ -144,7 +171,7 @@ final class PlayerDownloadHost {
     Object await(Suspended action) throws Exception {
         check();
         Class<?> jobType = Class.forName("kotlinx.coroutines.Job");
-        Object key = jobType.getField("Key").get(null);
+        Object key = jobKey(jobType, Class.forName("kotlinx.coroutines.Job$Key"));
         Object parent = coroutine.get((CoroutineContext.Key) key);
         Object child =
                 Class.forName("kotlinx.coroutines.JobImpl")

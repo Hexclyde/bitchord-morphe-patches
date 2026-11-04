@@ -501,6 +501,28 @@ public final class VerifyPlayerDownloadApk {
                 SONG,
                 "Lcom/music/bitchord/data/settings/DownloadQuality;",
                 continuation);
+        String job = "Lkotlinx/coroutines/Job;", key = "Lkotlinx/coroutines/Job$Key;";
+        ClassDef keyType = classes.get(key);
+        int singletons = 0;
+        boolean accessible = false;
+        if (keyType != null) {
+            for (Field field : keyType.getFields()) {
+                if (!field.getType().equals(key) || (field.getAccessFlags() & 8) == 0) continue;
+                singletons++;
+                accessible = (field.getAccessFlags() & 25) == 25;
+            }
+        }
+        check(
+                keyType != null
+                        && keyType.getInterfaces()
+                                .contains("Lkotlin/coroutines/CoroutineContext$Key;")
+                        && (keyType.getAccessFlags() & 1) != 0
+                        && singletons == 1
+                        && accessible,
+                "Native download coroutine key has one typed public singleton");
+        hostMethod(job, "isActive", "Z", false);
+        hostMethod(job, "cancel", "V", false, "Ljava/util/concurrent/CancellationException;");
+        hostMethod("Lkotlinx/coroutines/JobImpl;", "<init>", "V", false, job);
         String running = "Lcom/music/bitchord/download/DownloadState$Running;";
         hostField(running, "fraction", "F");
         boolean publicFraction = false;

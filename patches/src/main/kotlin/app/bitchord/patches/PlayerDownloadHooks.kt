@@ -702,6 +702,20 @@ internal fun validatePlayerDownloadReflectedHost(all: List<ClassDef>) {
     field("Lcom/music/bitchord/download/DownloadState\$Running;", "fraction", "F")
     field("Lcom/music/bitchord/download/DownloadState\$Failed;", "reason", string)
     method("Lcom/music/bitchord/download/DownloadState\$Failed;", "<init>", "V", false, string)
+    val job = "Lkotlinx/coroutines/Job;"
+    val key = "Lkotlinx/coroutines/Job\$Key;"
+    val keyType = type(key)
+    check(
+        "Lkotlin/coroutines/CoroutineContext\$Key;" in keyType.interfaces &&
+            keyType.accessFlags and 1 != 0 &&
+            keyType.fields.count { it.type == key && it.accessFlags and 8 != 0 } == 1 &&
+            keyType.fields.any { it.type == key && it.accessFlags and 25 == 25 }
+    ) {
+        "$DOWNLOAD_LAYOUT_CHANGED: native download coroutine key singleton"
+    }
+    method(job, "isActive", "Z", false)
+    method(job, "cancel", "V", false, "Ljava/util/concurrent/CancellationException;")
+    method("Lkotlinx/coroutines/JobImpl;", "<init>", "V", false, job)
     val downloads = type("Lcom/music/bitchord/download/Downloads;")
     for (name in listOf("_active", "_saved")) check(
         downloads.fields.any {
