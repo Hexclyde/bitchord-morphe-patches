@@ -29,12 +29,18 @@ public final class KaraokeLyrics {
     static final int DEFAULT_LEVEL = SoundExtras.SING_DEFAULT;
 
     /**
-     * Where the capsule sits in the lyrics box: portrait lines up with the right edge of the host's
-     * translate button and clears its 34 dp height and a 12 dp gap; landscape has no button there.
+     * The host's translate button is a bare 34 dp disc. The capsule paints a 34 dp disc standing on
+     * the bottom of its 48 dp target, 48 dp from the button's centre, so both discs share one
+     * baseline with a 14 dp gap. Portrait puts the target 41 dp from the box's end (34 + 14 - 7).
      */
-    private static final int PORTRAIT_END_DP = 0, PORTRAIT_BOTTOM_DP = 46;
+    static final int PORTRAIT_END_DP = 41, PORTRAIT_BOTTOM_DP = 0;
 
-    private static final int LANDSCAPE_END_DP = 12, LANDSCAPE_BOTTOM_DP = 12;
+    static final int CENTRE_SEPARATION_DP = 48, TRANSLATE_DP = 34;
+
+    /** The status line gives up this much each side: the target's far edge from its slot. */
+    static final int LANDSCAPE_RESERVE_DP =
+            CENTRE_SEPARATION_DP + KaraokeCapsule.BASE_DP / 2 - TRANSLATE_DP / 2;
+
     private static final int GROUP_KEY = 0x4B415241;
 
     private static volatile WeakReference<Object> haze = new WeakReference<>(null);
@@ -65,10 +71,6 @@ public final class KaraokeLyrics {
         if (!SoundExtras.singEnabled) SoundExtras.setSingEnabled(true);
     }
 
-    static void deactivate() {
-        if (SoundExtras.singEnabled) SoundExtras.setSingEnabled(false);
-    }
-
     static int level() {
         return SoundExtras.singLevel;
     }
@@ -87,9 +89,9 @@ public final class KaraokeLyrics {
         return Strings.f("{0}%", level());
     }
 
-    /** A short line under the number when the model is not simply doing its job. */
+    /** A short line under the number when the model is not simply doing its job; none when off. */
     static String note() {
-        if (!modelOn()) return Strings.t("Off");
+        if (!modelOn()) return "";
         String status = SeparationModel.status();
         if ("Model loading".equals(status)) return Strings.t("Loading");
         if (!"Model ready".equals(status)) return Strings.t("Filter");
@@ -112,16 +114,16 @@ public final class KaraokeLyrics {
     }
 
     /**
-     * Portrait lyrics: a child of the box holding the lyrics, above the translation button, while
+     * Portrait lyrics: a child of the box holding the lyrics, beside the translation button, while
      * the lyrics are on screen. It stays whether or not the host's own lyric controls are shown.
      */
     public static void portrait(Object composer, boolean lyricsVisible) {
-        embed(composer, PORTRAIT_END_DP, PORTRAIT_BOTTOM_DP, lyricsVisible);
+        embed(composer, false, lyricsVisible);
     }
 
     /** The same, held back while the host is picking lyric lines to share. */
     public static void portrait(Object composer, boolean lyricsVisible, Object picker) {
-        embed(composer, PORTRAIT_END_DP, PORTRAIT_BOTTOM_DP, lyricsVisible && !picking(picker));
+        embed(composer, false, lyricsVisible && !picking(picker));
     }
 
     private static boolean picking(Object picker) {
@@ -133,16 +135,32 @@ public final class KaraokeLyrics {
         }
     }
 
-    /** Landscape lyrics: last child of the box holding the lyrics. */
+    /**
+     * Landscape lyrics: a child of the translation slot below the lyrics. The slot is 34 dp and
+     * centred in the row whatever the status line makes of its height, so the capsule is moved from
+     * there.
+     */
     public static void landscape(Object composer) {
-        embed(composer, LANDSCAPE_END_DP, LANDSCAPE_BOTTOM_DP, true);
+        embed(composer, true, true);
     }
 
-    private static void embed(Object composer, int endDp, int bottomDp, boolean show) {
+    /** The translation slot's offset for a capsule this tall, packed as the host's IntOffset. */
+    static long landscapeOffset(float density, int measuredHeightPx) {
+        int x = -Math.round(CENTRE_SEPARATION_DP * density);
+        int y = Math.round((KaraokeCapsule.DISC_DP / 2f) * density) - measuredHeightPx / 2;
+        return ((long) x << 32) | (y & 0xffffffffL);
+    }
+
+    /** The status line's side margin in dp: wide enough to leave the capsule's target alone. */
+    public static float landscapeReserve(float marginDp) {
+        return applied() ? Math.max(marginDp, LANDSCAPE_RESERVE_DP) : marginDp;
+    }
+
+    private static void embed(Object composer, boolean landscape, boolean show) {
         if (!applied() || composeFailed) return;
         try {
             Compose c = compose();
-            if (c == null) return;
+            if (c == null || landscape && !c.hasSlot()) return;
             // Its own group, so the capsule coming and going never shifts what the host composes.
             c.startGroup.invoke(composer, GROUP_KEY);
             try {
@@ -150,10 +168,15 @@ public final class KaraokeLyrics {
                 final int tint = c.tint(composer);
                 final Object frost = c.frost(haze.get(), tint, c.visible());
                 final boolean blurred = frost != null;
-                Object modifier = c.modifier(endDp, bottomDp, frost);
+                KaraokeCapsule[] control = new KaraokeCapsule[1];
+                Object modifier =
+                        landscape
+                                ? c.slotModifier(frost, control)
+                                : c.modifier(PORTRAIT_END_DP, PORTRAIT_BOTTOM_DP, frost, control);
                 Function1<View, Unit> update =
                         view -> {
                             KaraokeCapsule capsule = (KaraokeCapsule) view;
+                            control[0] = capsule;
                             capsule.tint(tint);
                             capsule.blurred(blurred);
                             return Unit.INSTANCE;
@@ -180,7 +203,7 @@ public final class KaraokeLyrics {
                 return capsule;
             };
 
-    /** Follows the capsule so the host blur is drawn only while the microphone is. */
+    /** Drops the host blur when the microphone dims to its resting state. */
     private static void visible(boolean visible) {
         Compose c = compose;
         if (c != null) c.visible(visible);
@@ -217,15 +240,17 @@ public final class KaraokeLyrics {
      * The parts of Compose and BitChord's UI that the capsule needs, bound from {@link #symbols}.
      */
     static final class Compose {
-        final Method androidView, then, padding, clip, hazeEffect, frostStyle, shapeFactory;
-        final Method startGroup, endGroup, consumeLocal, picking;
+        final Method androidView, then, padding, hazeEffect, frostStyle;
+        final Method drawContent, drawContext, contextCanvas, nativeCanvas;
+        final Constructor<?> drawElement;
+        final Method startGroup, endGroup, consumeLocal, picking, requiredSize, offsetBy;
+        final Constructor<?> intOffset;
         final Class<?> modifierType;
         final Object companion, alignment;
         final Constructor<?> childData;
         final Field tintField;
         private final Object visibleState;
         private final Method readVisible, writeVisible;
-        private Object shape;
 
         Compose(String table) throws ReflectiveOperationException {
             Map<String, String> refs = new HashMap<>();
@@ -245,15 +270,29 @@ public final class KaraokeLyrics {
             picking = refs.containsKey("picking") ? method(refs.get("picking")) : null;
             startGroup = method(refs.get("startGroup"));
             endGroup = method(refs.get("endGroup"));
+            if (refs.containsKey("requiredSize")) {
+                requiredSize = method(refs.get("requiredSize"));
+                offsetBy = method(refs.get("offsetBy"));
+                intOffset = constructor(refs.get("intOffset"));
+            } else {
+                requiredSize = offsetBy = null;
+                intOffset = null;
+            }
             tintField = refs.containsKey("tint") ? field(refs.get("tint")) : null;
             consumeLocal = refs.containsKey("consume") ? method(refs.get("consume")) : null;
-            if (refs.containsKey("clip")) {
-                clip = method(refs.get("clip"));
-                shapeFactory = method(refs.get("shape"));
+            if (refs.containsKey("hazeEffect")) {
                 hazeEffect = method(refs.get("hazeEffect"));
                 frostStyle = method(refs.get("frost"));
+                drawElement = constructor(refs.get("drawElement"));
+                drawContent = method(refs.get("drawContent"));
+                drawContext = method(refs.get("drawContext"));
+                contextCanvas = method(refs.get("contextCanvas"));
+                nativeCanvas = method(refs.get("nativeCanvas"));
             } else {
-                clip = shapeFactory = hazeEffect = frostStyle = null;
+                hazeEffect =
+                        frostStyle =
+                                drawContent = drawContext = contextCanvas = nativeCanvas = null;
+                drawElement = null;
             }
             Class<?> intState =
                     Class.forName("androidx.compose.runtime.ParcelableSnapshotMutableIntState");
@@ -355,11 +394,11 @@ public final class KaraokeLyrics {
             }
         }
 
-        private boolean tintFailed;
+        private boolean tintFailed, drawingFailed;
 
         /** BitChord's frosted-glass modifier for the capsule, or null without it. */
         Object frost(Object state, int tint, boolean shown) throws ReflectiveOperationException {
-            if (state == null || hazeEffect == null || !shown) return null;
+            if (state == null || hazeEffect == null || !shown || drawingFailed) return null;
             // The helper keeps the colour it is given as the glass's own background and as its
             // no-blur fallback, so that colour must already be nearly clear; the float is the
             // strength of the tint laid over the blur.
@@ -369,7 +408,49 @@ public final class KaraokeLyrics {
             return hazeEffect.invoke(null, companion, state, style, none);
         }
 
-        Object modifier(int endDp, int bottomDp, Object frost) throws ReflectiveOperationException {
+        boolean hasSlot() {
+            return requiredSize != null;
+        }
+
+        /**
+         * Inside the 34 dp translation slot: the target is 48 dp wide and as tall as the capsule
+         * wants (an unspecified maximum would inherit the slot's 34 dp), centred in the slot, then
+         * moved beside the button. The offset reads the height measured for this frame.
+         */
+        Object slotModifier(Object frost, KaraokeCapsule[] control)
+                throws ReflectiveOperationException {
+            float base = KaraokeCapsule.BASE_DP;
+            // Every bound is given, so the mask of arguments left to their defaults is empty.
+            Object sized =
+                    requiredSize.invoke(
+                            null, companion, base, base, base, Float.POSITIVE_INFINITY, 0);
+            Function1<Object, Object> moved =
+                    density -> {
+                        KaraokeCapsule capsule = control[0];
+                        if (capsule == null) return zero();
+                        try {
+                            return intOffset.newInstance(
+                                    landscapeOffset(
+                                            capsule.getResources().getDisplayMetrics().density,
+                                            capsule.getMeasuredHeight()));
+                        } catch (ReflectiveOperationException failed) {
+                            throw new IllegalStateException(failed);
+                        }
+                    };
+            Object placed = offsetBy.invoke(null, sized, moved);
+            return withFrost(placed, frost, control);
+        }
+
+        private Object zero() {
+            try {
+                return intOffset.newInstance(0L);
+            } catch (ReflectiveOperationException failed) {
+                throw new IllegalStateException(failed);
+            }
+        }
+
+        Object modifier(int endDp, int bottomDp, Object frost, KaraokeCapsule[] control)
+                throws ReflectiveOperationException {
             Object aligned = then.invoke(companion, childData.newInstance(alignment, false));
             Object[] values = {aligned, 0f, 0f, endDp * 1f, bottomDp * 1f, 0};
             // The host's padding takes a mask of arguments left to their defaults; none are.
@@ -379,9 +460,40 @@ public final class KaraokeLyrics {
                             padding.getParameterCount() == 6
                                     ? values
                                     : java.util.Arrays.copyOf(values, 5));
-            if (frost == null || clip == null) return spaced;
-            if (shape == null) shape = shapeFactory.invoke(null, KaraokeCapsule.BASE_DP / 2f);
-            Object clipped = clip.invoke(null, spaced, shape);
+            return withFrost(spaced, frost, control);
+        }
+
+        private Object withFrost(Object spaced, Object frost, KaraokeCapsule[] control)
+                throws ReflectiveOperationException {
+            if (frost == null || drawElement == null) return spaced;
+            Function1<Object, Unit> drawing =
+                    scope -> {
+                        try {
+                            android.graphics.Canvas canvas =
+                                    (android.graphics.Canvas)
+                                            nativeCanvas.invoke(
+                                                    null,
+                                                    contextCanvas.invoke(
+                                                            drawContext.invoke(scope)));
+                            int saved = canvas.save();
+                            try {
+                                if (control[0] != null) control[0].clipVisual(canvas);
+                                drawContent.invoke(scope);
+                            } finally {
+                                canvas.restoreToCount(saved);
+                            }
+                            return Unit.INSTANCE;
+                        } catch (ReflectiveOperationException
+                                | RuntimeException
+                                | LinkageError failure) {
+                            if (!drawingFailed) HostLog.d("Karaoke blur unavailable: " + failure);
+                            drawingFailed = true;
+                            visible(false);
+                            return Unit.INSTANCE;
+                        }
+                    };
+            // A drawing boundary leaves the full native activation target available.
+            Object clipped = then.invoke(spaced, drawElement.newInstance(drawing));
             return then.invoke(clipped, frost);
         }
     }

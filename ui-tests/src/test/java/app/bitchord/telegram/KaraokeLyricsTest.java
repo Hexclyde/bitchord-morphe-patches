@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 
 import androidx.compose.foundation.layout.BoxChildDataElement;
 import androidx.compose.foundation.layout.OffsetKt;
+import androidx.compose.foundation.layout.SizeKt;
 import androidx.compose.runtime.ComposerImpl;
 import androidx.compose.ui.Alignment;
 import androidx.compose.ui.Modifier;
@@ -73,12 +74,20 @@ public class KaraokeLyricsTest {
                     "tint=Lcom/music/bitchord/ui/player/PlayerControlsKt;->LocalPlayerTint:Landroidx/compose/runtime/DynamicProvidableCompositionLocal;",
                     "consume=Landroidx/compose/runtime/ComposerImpl;->consume(Landroidx/compose/runtime/ProvidableCompositionLocal;)Ljava/lang/Object;",
                     "picking=Lapp/bitchord/telegram/KaraokeLyricsTest$Picker;->getPicking()Z",
+                    "requiredSize=Landroidx/compose/foundation/layout/SizeKt;->requiredSizeIn$default(Landroidx/compose/ui/Modifier;FFFFI)Landroidx/compose/ui/Modifier;",
+                    "offsetBy=Landroidx/compose/foundation/layout/OffsetKt;->offset(Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function1;)Landroidx/compose/ui/Modifier;",
+                    "intOffset=Landroidx/compose/ui/unit/IntOffset;-><init>(J)V",
                     "startGroup=Landroidx/compose/runtime/ComposerImpl;->startReplaceGroup(I)V",
                     "endGroup=Landroidx/compose/runtime/ComposerImpl;->endReplaceGroup()V",
                     "shape=Landroidx/compose/foundation/shape/RoundedCornerShapeKt;->RoundedCornerShape(F)Landroidx/compose/foundation/shape/RoundedCornerShape;",
                     "clip=Landroidx/compose/ui/draw/BlurKt;->clip(Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;",
                     "hazeEffect=Lcom/music/bitchord/ui/components/OptimizedHazeKt;->optimizedHazeEffect(Landroidx/compose/ui/Modifier;Ldev/chrisbanes/haze/HazeState;Ldev/chrisbanes/haze/HazeStyle;Lkotlin/jvm/functions/Function1;)Landroidx/compose/ui/Modifier;",
-                    "frost=Lcom/music/bitchord/ui/components/OptimizedHazeKt;->menuFrost(FJ)Ldev/chrisbanes/haze/HazeStyle;");
+                    "frost=Lcom/music/bitchord/ui/components/OptimizedHazeKt;->menuFrost(FJ)Ldev/chrisbanes/haze/HazeStyle;",
+                    "drawElement=Landroidx/compose/ui/draw/DrawWithContentElement;-><init>(Lkotlin/jvm/functions/Function1;)V",
+                    "drawContent=Lapp/bitchord/telegram/KaraokeLyricsTest$Drawing;->drawContent()V",
+                    "drawContext=Lapp/bitchord/telegram/KaraokeLyricsTest$Drawing;->getDrawContext()Lapp/bitchord/telegram/KaraokeLyricsTest$Drawing;",
+                    "contextCanvas=Lapp/bitchord/telegram/KaraokeLyricsTest$Drawing;->getCanvas()Lapp/bitchord/telegram/KaraokeLyricsTest$Drawing;",
+                    "nativeCanvas=Lapp/bitchord/telegram/KaraokeLyricsTest$Drawing;->nativeCanvas(Lapp/bitchord/telegram/KaraokeLyricsTest$Drawing;)Landroid/graphics/Canvas;");
 
     ActivityController<Activity> owner;
     FrameLayout content;
@@ -153,7 +162,15 @@ public class KaraokeLyricsTest {
                 View.MeasureSpec.makeMeasureSpec(Math.round(400 * dp), View.MeasureSpec.AT_MOST),
                 View.MeasureSpec.makeMeasureSpec(
                         Math.round(availableDp * dp), View.MeasureSpec.AT_MOST));
-        capsule.layout(0, 0, capsule.getMeasuredWidth(), capsule.getMeasuredHeight());
+        // The capsule stands on the bottom of a tall window, as it does on the lyrics.
+        int bottom = px(852);
+        capsule.layout(0, bottom - capsule.getMeasuredHeight(), capsule.getMeasuredWidth(), bottom);
+    }
+
+    private static void assertResting(KaraokeCapsule capsule) {
+        assertTrue(capsule.iconShown());
+        assertEquals(0.3f, capsule.iconAlpha(), 0.001f);
+        assertFalse(capsule.expanded());
     }
 
     private int px(float dp) {
@@ -189,8 +206,43 @@ public class KaraokeLyricsTest {
         assertEquals(0, content.getChildCount());
     }
 
+    /** A pixel rectangle, left/top/right/bottom, in the lyrics box's coordinates. */
+    private static final class Box {
+        final float left, top, right, bottom;
+
+        Box(float left, float top, float right, float bottom) {
+            this.left = left;
+            this.top = top;
+            this.right = right;
+            this.bottom = bottom;
+        }
+
+        float centreX() {
+            return (left + right) / 2f;
+        }
+
+        float centreY() {
+            return (top + bottom) / 2f;
+        }
+
+        boolean overlaps(Box other) {
+            return left < other.right
+                    && other.left < right
+                    && top < other.bottom
+                    && other.top < bottom;
+        }
+    }
+
+    /** The painted disc of a laid-out capsule, moved to where the capsule sits. */
+    private static Box disc(KaraokeCapsule capsule, float left, float top) {
+        android.graphics.RectF visual = new android.graphics.RectF();
+        capsule.visualBounds(visual);
+        return new Box(
+                left + visual.left, top + visual.top, left + visual.right, top + visual.bottom);
+    }
+
     @Test
-    public void withTheMarkerOneCapsuleSitsAtTheBottomEndAboveTheTranslationButton() {
+    public void withTheMarkerOneCapsuleSitsAtTheBottomEndBesideTheTranslationButton() {
         KaraokeCapsule capsule = embed();
         assertNotNull(capsule);
         assertEquals(1, content.getChildCount());
@@ -198,19 +250,224 @@ public class KaraokeLyricsTest {
         assertSame(Alignment.Companion.BottomEnd, place.alignment);
         assertFalse(place.matchParentSize);
         OffsetKt.Padding spacing = find(composer.modifier, OffsetKt.Padding.class);
-        // Lined up with the translate button's right edge, a 34 dp button and a 12 dp gap up.
-        assertEquals(0f, spacing.end, 0f);
-        assertEquals(46f, spacing.bottom, 0f);
+        // The 34 dp translate button, a 14 dp gap and the 7 dp the 48 dp target keeps round the
+        // disc.
+        assertEquals(41f, spacing.end, 0f);
+        assertEquals(0f, spacing.bottom, 0f);
         // A size modifier here would make the capsule a cover over the lyrics.
         assertNull(find(composer.modifier, androidx.compose.foundation.layout.SizeKt.Fill.class));
     }
 
-    @Test
-    public void landscapeKeepsOnlyTheEdgeMargin() {
-        KaraokeLyrics.landscape(composer);
+    /** The native lyrics box: translate is a bare 34 dp disc in its bottom-end corner. */
+    private void assertPortraitBesideTranslate(float fontScale) {
+        org.robolectric.RuntimeEnvironment.setFontScale(fontScale);
+        KaraokeCapsule capsule = embed();
+        lay(capsule, 700);
         OffsetKt.Padding spacing = find(composer.modifier, OffsetKt.Padding.class);
-        assertEquals(12f, spacing.bottom, 0f);
-        assertEquals(12f, spacing.end, 0f);
+        float boxWidth = px(393), boxHeight = px(500);
+        Box translate = new Box(boxWidth - px(34), boxHeight - px(34), boxWidth, boxHeight);
+        float left = boxWidth - px(spacing.end) - capsule.getWidth();
+        float top = boxHeight - px(spacing.bottom) - capsule.getHeight();
+        Box target = new Box(left, top, left + capsule.getWidth(), top + capsule.getHeight());
+        Box disc = disc(capsule, left, top);
+        assertEquals("the native 48 dp target", px(48), capsule.getWidth());
+        assertEquals("the native 48 dp target", px(48), capsule.getHeight());
+        assertEquals("a 34 dp painted disc", px(34), disc.right - disc.left, 1f);
+        assertEquals("one baseline", translate.centreY(), disc.centreY(), 1f);
+        assertEquals("48 dp between centres", px(48), translate.centreX() - disc.centreX(), 1f);
+        assertEquals("a 14 dp painted gap", px(14), translate.left - disc.right, 1f);
+        assertFalse("the target stays clear of translate", target.overlaps(translate));
+    }
+
+    @Test
+    public void portraitDiscSharesTranslatesBaselineAtNormalText() {
+        assertPortraitBesideTranslate(1f);
+    }
+
+    @Test
+    public void portraitDiscSharesTranslatesBaselineAtDoubleText() {
+        assertPortraitBesideTranslate(2f);
+    }
+
+    // ── Landscape: the native row below the lyrics ───────────────────────────
+
+    /** The slot's tight 34 dp constraints, as {minW, maxW, minH, maxH}. */
+    private int[] slotLimits() {
+        return new int[] {px(34), px(34), px(34), px(34)};
+    }
+
+    /** Measures the capsule with the limits the native size node hands a child of the slot. */
+    private int[] measureInSlot(KaraokeCapsule capsule, SizeKt.RequiredSizeIn required) {
+        float density = context.getResources().getDisplayMetrics().density;
+        int[] limits = required.childConstraints(slotLimits(), density);
+        int width =
+                limits[0] == limits[1]
+                        ? View.MeasureSpec.makeMeasureSpec(limits[0], View.MeasureSpec.EXACTLY)
+                        : View.MeasureSpec.makeMeasureSpec(limits[1], View.MeasureSpec.AT_MOST);
+        int height =
+                limits[3] == Integer.MAX_VALUE
+                        ? View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                        : View.MeasureSpec.makeMeasureSpec(limits[3], View.MeasureSpec.AT_MOST);
+        capsule.measure(width, height);
+        return limits;
+    }
+
+    private KaraokeCapsule embedLandscape() {
+        KaraokeLyrics.landscape(composer);
+        return (KaraokeCapsule) composer.view;
+    }
+
+    private static int offsetOf(OffsetKt.OffsetBy shift, boolean x) {
+        Object boxed = shift.offset.invoke(null);
+        long packed = ((androidx.compose.ui.unit.IntOffset) boxed).packed;
+        return x ? (int) (packed >> 32) : (int) packed;
+    }
+
+    /**
+     * The native pane under the lyrics: a row with 34 dp slots at both ends, centred vertically, as
+     * tall as its status line wants. The capsule is a child of the translate slot, measured with
+     * the limits the real size node gives it, centred in the slot and then moved by the extension's
+     * offset, which reads the height measured for this frame.
+     */
+    private void assertLandscapeBesideTranslate(float rowDp, boolean open) {
+        KaraokeCapsule capsule = embedLandscape();
+        SizeKt.RequiredSizeIn required = find(composer.modifier, SizeKt.RequiredSizeIn.class);
+        OffsetKt.OffsetBy shift = find(composer.modifier, OffsetKt.OffsetBy.class);
+        assertNotNull(required);
+        assertNotNull(shift);
+        // The previous frame stands on the bottom of a tall window.
+        capsule.layout(0, px(852) - px(48), px(48), px(852));
+        if (open != capsule.expanded()) capsule.microphone().performClick();
+        measureInSlot(capsule, required);
+        float row = px(rowDp), slot = px(34), paneWidth = px(852);
+        float slotTop = (row - slot) / 2f, slotLeft = paneWidth - slot;
+        Box translate = new Box(slotLeft, slotTop, paneWidth, slotTop + slot);
+        int width = capsule.getMeasuredWidth(), height = capsule.getMeasuredHeight();
+        // Measured, not yet laid out: the offset must already use this frame's height.
+        assertEquals(px(48), capsule.getHeight());
+        float left = slotLeft + (slot - width) / 2f + offsetOf(shift, true);
+        float top = slotTop + (slot - height) / 2f + offsetOf(shift, false);
+        Box target = new Box(left, top, left + width, top + height);
+        Box statusText =
+                new Box(
+                        slot + px(KaraokeLyrics.landscapeReserve(12f)),
+                        0,
+                        slotLeft - px(KaraokeLyrics.landscapeReserve(12f)),
+                        row);
+        String where = "row " + rowDp + "dp, " + (open ? "open" : "closed");
+        assertEquals(
+                where + ": bottom stays on the disc line",
+                translate.centreY() + px(17),
+                target.bottom,
+                1f);
+        assertEquals(where + ": 48 dp target", px(48), width);
+        assertEquals(where + ": open height", open ? px(320) : px(48), height);
+        assertFalse(where + ": clear of translate", target.overlaps(translate));
+        assertFalse(where + ": clear of the status line", target.overlaps(statusText));
+        assertEquals(
+                where + ": the reserve is the same on both sides",
+                statusText.left - slot,
+                slotLeft - statusText.right,
+                0.5f);
+        Box disc = disc(capsule, left, top);
+        float glyphY = top + height - px(17);
+        assertEquals(where + ": the glyph stays on one baseline", translate.centreY(), glyphY, 1f);
+        if (!open) {
+            assertEquals(where + ": one baseline", translate.centreY(), disc.centreY(), 1f);
+            assertEquals(where + ": 14 dp gap", px(14), translate.left - disc.right, 1f);
+            assertEquals(where + ": 34 dp disc", px(34), disc.right - disc.left, 1f);
+        }
+    }
+
+    @Test
+    public void theSlotLetsTheTargetOpenTallerThanTheSlot() {
+        KaraokeCapsule capsule = embedLandscape();
+        SizeKt.RequiredSizeIn required = find(composer.modifier, SizeKt.RequiredSizeIn.class);
+        float density = context.getResources().getDisplayMetrics().density;
+        int[] limits = required.childConstraints(slotLimits(), density);
+        assertEquals("48 dp wide", px(48), limits[0]);
+        assertEquals("48 dp wide", px(48), limits[1]);
+        assertEquals("at least the 48 dp target", px(48), limits[2]);
+        assertEquals("no height limit of the slot's", Integer.MAX_VALUE, limits[3]);
+        capsule.microphone().performClick();
+        measureInSlot(capsule, required);
+        assertTrue(capsule.getMeasuredHeight() > px(34));
+        assertEquals(px(320), capsule.getMeasuredHeight());
+        // The slot itself is not resized: the parent sees the child held to its 34 dp limits.
+        assertEquals(
+                px(34),
+                SizeKt.RequiredSizeIn.reported(capsule.getMeasuredHeight(), px(34), px(34)));
+    }
+
+    @Test
+    public void anUnspecifiedMaximumWouldInheritTheSlotAndCouldNotOpen() {
+        float density = context.getResources().getDisplayMetrics().density;
+        Modifier inherits =
+                SizeKt.requiredSizeIn$default(
+                        Modifier.Companion.$$INSTANCE, 48f, 48f, 48f, Float.NaN, 8);
+        int[] limits =
+                find(inherits, SizeKt.RequiredSizeIn.class).childConstraints(slotLimits(), density);
+        assertEquals(px(48), limits[3]);
+    }
+
+    @Test
+    public void landscapeDiscSharesTranslatesBaselineWhateverTheRowHeight() {
+        // 34 dp slots alone, a one-line status at 1.3x and 2x text, and a wrapped large-text row.
+        for (float row : new float[] {34f, 40f, 58f, 96f})
+            assertLandscapeBesideTranslate(row, false);
+    }
+
+    @Test
+    public void landscapeOpenSliderKeepsItsBottomOnTheDiscLine() {
+        for (float row : new float[] {34f, 58f, 96f}) assertLandscapeBesideTranslate(row, true);
+    }
+
+    @Test
+    public void landscapeReserveOnlyGrowsTheStatusMargin() {
+        assertTrue(KaraokeLyrics.landscapeReserve(12f) > 12f);
+        assertEquals(80f, KaraokeLyrics.landscapeReserve(80f), 0f);
+        Marker.installed = false;
+        assertEquals(
+                "nothing changes without the patch", 12f, KaraokeLyrics.landscapeReserve(12f), 0f);
+    }
+
+    @Test
+    public void anOpenSliderIsCappedByTheRoomAboveItsAnchorWithoutCompounding() {
+        KaraokeCapsule capsule = new KaraokeCapsule(context);
+        FrameLayout.LayoutParams place =
+                new FrameLayout.LayoutParams(
+                        px(48), px(48), android.view.Gravity.TOP | android.view.Gravity.START);
+        place.topMargin = px(152);
+        content.addView(capsule, place);
+        content.measure(
+                View.MeasureSpec.makeMeasureSpec(px(393), View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(px(852), View.MeasureSpec.EXACTLY));
+        content.layout(0, 0, px(393), px(852));
+        int[] at = new int[2];
+        capsule.getLocationInWindow(at);
+        int anchor = at[1] + capsule.getHeight();
+        capsule.microphone().performClick();
+        // The host hands the view an unbounded height.
+        int unbounded = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int exact = View.MeasureSpec.makeMeasureSpec(px(48), View.MeasureSpec.EXACTLY);
+        capsule.measure(exact, unbounded);
+        int first = capsule.getMeasuredHeight();
+        assertTrue("held inside the window above the anchor", first <= anchor - px(8));
+        assertTrue("and shorter than the 320 dp it wants", first < px(320));
+        assertTrue(first >= px(48));
+        assertEquals(px(48), capsule.getMeasuredWidth());
+        // Laid out on the same bottom edge, the next frame measures the same, not more or less.
+        int left = capsule.getLeft(), bottom = capsule.getBottom();
+        capsule.layout(left, bottom - first, left + px(48), bottom);
+        capsule.measure(exact, unbounded);
+        assertEquals(first, capsule.getMeasuredHeight());
+    }
+
+    @Test
+    public void landscapeAddsOneCapsuleWithItsOwnGroup() {
+        KaraokeLyrics.landscape(composer);
+        assertEquals(1, content.getChildCount());
+        assertTrue(composer.view instanceof KaraokeCapsule);
     }
 
     @Test
@@ -457,19 +714,28 @@ public class KaraokeLyricsTest {
     }
 
     @Test
-    public void offUsesTheSameSetterAndKeepsTheSavedLevel() {
+    public void theExpandedSliderHasNoOffChildAndTheSettingsOwnTheDisable() {
         SoundExtras.singLevel = 64;
         KaraokeCapsule capsule = embed();
         capsule.microphone().performClick();
         lay(capsule, 700);
-        assertEquals(View.VISIBLE, capsule.offButton().getVisibility());
-        assertTrue(px(48) <= capsule.offButton().getHeight());
-        capsule.offButton().performClick();
-        assertFalse(SoundExtras.singEnabled);
+        assertEquals("only the slider and the microphone", 2, capsule.getChildCount());
+        assertNull(capsule.findViewWithTag("karaoke-off"));
+        for (int i = 0; i < capsule.getChildCount(); i++) {
+            CharSequence said = capsule.getChildAt(i).getContentDescription();
+            assertFalse(said != null && said.toString().contains("off"));
+        }
+        assertNotEquals("Off", KaraokeLyrics.note());
+        // Turned off in the settings, the level is kept and the capsule just rests.
+        SoundExtras.setSingEnabled(false);
+        assertFalse(KaraokeLyrics.modelOn());
+        assertEquals("", KaraokeLyrics.note());
+        assertEquals("Off", KaraokeLyrics.spoken());
         assertEquals(64, SoundExtras.singLevel);
-        assertEquals("Off", KaraokeLyrics.note());
-        assertFalse(capsule.expanded());
-        assertFalse(capsule.iconShown());
+        capsule.close(true);
+        lay(capsule, 700);
+        assertResting(capsule);
+        assertEquals(2, capsule.getChildCount());
     }
 
     @Test
@@ -492,7 +758,45 @@ public class KaraokeLyricsTest {
     // ── Fading and the touch target ──────────────────────────────────────────
 
     @Test
-    public void closingFadesTheIconButTheZoneKeepsItsTargetAndDescription() {
+    public void microphoneUsesTheNativeActionScaleWithAnAccessibleTarget() {
+        KaraokeCapsule capsule = embed();
+        lay(capsule, 700);
+        assertEquals(px(48), capsule.getWidth());
+        assertEquals(px(48), capsule.microphone().getHeight());
+        assertEquals(19, KaraokeCapsule.ICON_DP);
+        assertTrue(capsule.microphone().isClickable());
+    }
+
+    @Test
+    public void aFadedMicrophoneReopensFromItsOriginalTouchCoordinates() {
+        KaraokeCapsule capsule = embed();
+        lay(capsule, 700);
+        capsule.microphone().performClick();
+        capsule.close(true);
+        lay(capsule, 700);
+        assertResting(capsule);
+        long now = android.os.SystemClock.uptimeMillis();
+        float x = capsule.getWidth() / 2f, y = capsule.getHeight() / 2f;
+        android.view.MotionEvent down =
+                android.view.MotionEvent.obtain(
+                        now, now, android.view.MotionEvent.ACTION_DOWN, x, y, 0);
+        android.view.MotionEvent up =
+                android.view.MotionEvent.obtain(
+                        now, now + 30, android.view.MotionEvent.ACTION_UP, x, y, 0);
+        try {
+            assertTrue(capsule.dispatchTouchEvent(down));
+            assertTrue(capsule.dispatchTouchEvent(up));
+            idle(40);
+            assertTrue(capsule.expanded());
+            assertTrue(capsule.iconShown());
+        } finally {
+            down.recycle();
+            up.recycle();
+        }
+    }
+
+    @Test
+    public void closingDimsTheIconAndKeepsItsTargetAndDescription() {
         KaraokeCapsule capsule = embed();
         capsule.microphone().performClick();
         lay(capsule, 700);
@@ -500,8 +804,8 @@ public class KaraokeLyricsTest {
         capsule.microphone().performClick();
         lay(capsule, 700);
         assertFalse(capsule.expanded());
-        assertFalse(capsule.iconShown());
-        assertEquals(0f, capsule.iconAlpha(), 0f);
+        assertResting(capsule);
+        assertEquals(0.3f, capsule.iconAlpha(), 0.001f);
         // The view itself is not made transparent, hidden or shrunk.
         assertEquals(1f, capsule.getAlpha(), 0f);
         assertEquals(1f, capsule.microphone().getAlpha(), 0f);
@@ -509,8 +813,8 @@ public class KaraokeLyricsTest {
         assertEquals(View.VISIBLE, capsule.microphone().getVisibility());
         assertTrue(capsule.microphone().isClickable());
         assertTrue(capsule.microphone().isFocusable());
-        assertEquals(px(76), capsule.getWidth());
-        assertEquals(px(76), capsule.getHeight());
+        assertEquals(px(48), capsule.getWidth());
+        assertEquals(px(48), capsule.getHeight());
         assertTrue(capsule.microphone().getWidth() >= px(48));
         assertTrue(capsule.microphone().getHeight() >= px(48));
         assertEquals("Karaoke", capsule.microphone().getContentDescription().toString());
@@ -519,7 +823,6 @@ public class KaraokeLyricsTest {
                 capsule.microphone().getImportantForAccessibility());
         // The slider is gone from touch and accessibility; only the microphone's place is left.
         assertNotEquals(View.VISIBLE, capsule.slider().getVisibility());
-        assertNotEquals(View.VISIBLE, capsule.offButton().getVisibility());
         // Tapping the same place brings it back and opens the slider.
         capsule.microphone().performClick();
         assertTrue(capsule.iconShown());
@@ -551,14 +854,14 @@ public class KaraokeLyricsTest {
         capsule.close(true);
         assertTrue("the microphone stays until the slider has gone", capsule.iconShown());
         idle(1_500);
-        assertFalse(capsule.iconShown());
+        assertResting(capsule);
         assertEquals(0f, capsule.openFraction(), 0f);
         // With the system's animators off the same change is immediate.
         ValueAnimator.setDurationScale(0f);
         capsule.microphone().performClick();
         assertEquals(1f, capsule.openFraction(), 0f);
         capsule.close(true);
-        assertEquals(0f, capsule.iconAlpha(), 0f);
+        assertEquals(0.3f, capsule.iconAlpha(), 0.001f);
     }
 
     @Test
@@ -566,7 +869,7 @@ public class KaraokeLyricsTest {
         KaraokeCapsule capsule = embed();
         capsule.microphone().performClick();
         capsule.close(true);
-        assertFalse(capsule.iconShown());
+        assertResting(capsule);
         capsule.microphone()
                 .performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
         assertTrue(capsule.iconShown());
@@ -575,11 +878,11 @@ public class KaraokeLyricsTest {
                 .performAccessibilityAction(
                         AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS, null);
         idle(10);
-        assertFalse(capsule.iconShown());
+        assertResting(capsule);
         capsule.microphone().getOnFocusChangeListener().onFocusChange(capsule.microphone(), true);
         assertTrue(capsule.iconShown());
         capsule.microphone().getOnFocusChangeListener().onFocusChange(capsule.microphone(), false);
-        assertFalse(capsule.iconShown());
+        assertResting(capsule);
     }
 
     // ── Auto-close ───────────────────────────────────────────────────────────
@@ -592,7 +895,7 @@ public class KaraokeLyricsTest {
         assertTrue(capsule.expanded());
         idle(20);
         assertFalse(capsule.expanded());
-        assertFalse(capsule.iconShown());
+        assertResting(capsule);
         assertTrue(SoundExtras.singEnabled);
     }
 
@@ -694,7 +997,7 @@ public class KaraokeLyricsTest {
         KaraokeCapsule first = embed();
         first.microphone().performClick();
         first.close(true);
-        assertFalse(first.iconShown());
+        assertResting(first);
         ComposerImpl again = new ComposerImpl(owner.get(), content);
         KaraokeLyrics.portrait(again, true);
         KaraokeCapsule second = (KaraokeCapsule) again.view;
@@ -705,18 +1008,140 @@ public class KaraokeLyricsTest {
 
     // ── Blur ─────────────────────────────────────────────────────────────────
 
+    public static final class Drawing {
+        final android.graphics.Canvas canvas;
+
+        Drawing(android.graphics.Canvas canvas) {
+            this.canvas = canvas;
+        }
+
+        public Drawing getDrawContext() {
+            return this;
+        }
+
+        public Drawing getCanvas() {
+            return this;
+        }
+
+        static boolean unavailable;
+
+        public static android.graphics.Canvas nativeCanvas(Drawing scope) {
+            if (unavailable) throw new IllegalStateException("Canvas adapter unavailable");
+            return scope.canvas;
+        }
+
+        public void drawContent() {
+            canvas.drawColor(android.graphics.Color.WHITE);
+        }
+    }
+
     @Test
-    public void theHostBlurIsUsedWhileTheIconShowsAndDroppedWhenItHasFaded() {
+    @org.robolectric.annotation.GraphicsMode(org.robolectric.annotation.GraphicsMode.Mode.NATIVE)
+    public void theHostFrostFitsThe34dpDiscWithoutClippingIts48dpTouchTarget() {
+        KaraokeLyrics.haze(new dev.chrisbanes.haze.HazeState());
+        KaraokeCapsule capsule = embed();
+        lay(capsule, 700);
+        androidx.compose.ui.draw.DrawWithContentElement visual =
+                find(composer.modifier, androidx.compose.ui.draw.DrawWithContentElement.class);
+        assertNotNull("the frost has a drawing-only boundary", visual);
+        assertNull(
+                "a smaller layer clip would cut the activation target",
+                find(composer.modifier, BlurKt.Clip.class));
+        android.graphics.Bitmap bitmap =
+                android.graphics.Bitmap.createBitmap(
+                        capsule.getWidth(),
+                        capsule.getHeight(),
+                        android.graphics.Bitmap.Config.ARGB_8888);
+        android.graphics.Canvas surface = new android.graphics.Canvas(bitmap);
+        visual.onDraw.invoke(new Drawing(surface));
+        int middle = bitmap.getWidth() / 2;
+        // The disc sits on the bottom of its target: its widest row is 17 dp above the bottom.
+        int row = px(48 - 17);
+        assertEquals(0, android.graphics.Color.alpha(bitmap.getPixel(px(2), row)));
+        assertEquals(255, android.graphics.Color.alpha(bitmap.getPixel(middle, row)));
+        int first = -1, last = -1;
+        for (int x = 0; x < bitmap.getWidth(); x++)
+            if (android.graphics.Color.alpha(bitmap.getPixel(x, row)) > 0) {
+                if (first < 0) first = x;
+                last = x;
+            }
+        assertEquals(px(7), first);
+        assertEquals(px(34), last - first + 1);
+        android.graphics.Paint outside = new android.graphics.Paint();
+        outside.setColor(android.graphics.Color.RED);
+        surface.drawRect(0, row, px(4), row + 1, outside);
+        assertEquals(
+                "the clip never leaks into later drawing",
+                255,
+                android.graphics.Color.alpha(bitmap.getPixel(px(2), row)));
+
+        assertEquals(px(48), capsule.microphone().getWidth());
+        assertEquals(px(48), capsule.microphone().getHeight());
+        long time = android.os.SystemClock.uptimeMillis();
+        android.view.MotionEvent down =
+                android.view.MotionEvent.obtain(
+                        time, time, android.view.MotionEvent.ACTION_DOWN, px(2), row, 0);
+        android.view.MotionEvent up =
+                android.view.MotionEvent.obtain(
+                        time, time + 20, android.view.MotionEvent.ACTION_UP, px(2), row, 0);
+        try {
+            assertTrue(capsule.dispatchTouchEvent(down));
+            assertTrue(capsule.dispatchTouchEvent(up));
+            idle(40);
+            assertTrue("the invisible outer touch area still opens the slider", capsule.expanded());
+            lay(capsule, 700);
+            android.graphics.Bitmap expanded =
+                    android.graphics.Bitmap.createBitmap(
+                            capsule.getWidth(),
+                            capsule.getHeight(),
+                            android.graphics.Bitmap.Config.ARGB_8888);
+            try {
+                visual.onDraw.invoke(new Drawing(new android.graphics.Canvas(expanded)));
+                assertEquals(255, android.graphics.Color.alpha(expanded.getPixel(px(24), px(80))));
+                assertEquals(0, android.graphics.Color.alpha(expanded.getPixel(px(1), px(1))));
+                assertEquals(px(48), capsule.slider().getWidth());
+                assertEquals(32, KaraokeCapsule.TRACK_DP);
+            } finally {
+                expanded.recycle();
+            }
+        } finally {
+            down.recycle();
+            up.recycle();
+            bitmap.recycle();
+        }
+    }
+
+    @Test
+    public void anUnavailableCanvasAdapterFallsBackWithoutLosingTheControl() {
+        KaraokeLyrics.haze(new HazeState());
+        KaraokeCapsule capsule = embed();
+        lay(capsule, 700);
+        androidx.compose.ui.draw.DrawWithContentElement visual =
+                find(composer.modifier, androidx.compose.ui.draw.DrawWithContentElement.class);
+        Drawing.unavailable = true;
+        try {
+            visual.onDraw.invoke(new Drawing(new android.graphics.Canvas()));
+        } finally {
+            Drawing.unavailable = false;
+        }
+        KaraokeLyrics.portrait(composer, true);
+        assertSame(capsule, composer.view);
+        assertNull(find(composer.modifier, OptimizedHazeKt.Frost.class));
+        assertNull(find(composer.modifier, androidx.compose.ui.draw.DrawWithContentElement.class));
+        capsule.microphone().performClick();
+        assertTrue(capsule.expanded());
+    }
+
+    @Test
+    public void theHostBlurIsUsedWhileOpenAndDroppedForTheRestingIcon() {
         KaraokeLyrics.haze(new HazeState());
         KaraokeCapsule capsule = embed();
         idle(10);
         OptimizedHazeKt.Frost frost = find(composer.modifier, OptimizedHazeKt.Frost.class);
         assertNotNull(frost);
-        BlurKt.Clip clip = find(composer.modifier, BlurKt.Clip.class);
-        assertEquals(
-                38f,
-                ((androidx.compose.foundation.shape.RoundedCornerShape) clip.shape).radiusDp,
-                0f);
+        assertNull(find(composer.modifier, BlurKt.Clip.class));
+        assertNotNull(
+                find(composer.modifier, androidx.compose.ui.draw.DrawWithContentElement.class));
         assertEquals("a light tint over the blur", 0.06f, frost.style.alpha, 0f);
         // The helper keeps this colour as the glass's background and no-blur fallback: nearly
         // clear.
@@ -760,23 +1185,23 @@ public class KaraokeLyricsTest {
     // ── Size, font scale, short screens ──────────────────────────────────────
 
     @Test
-    public void collapsedItIsTheDemoCapsuleAndOpenItIsAsTallAsTheViewportAllows() {
+    public void collapsedItMatchesPlayerActionsAndOpenItFitsTheViewport() {
         KaraokeCapsule capsule = embed();
         lay(capsule, 700);
-        assertEquals(px(76), capsule.getWidth());
-        assertEquals(px(76), capsule.getHeight());
+        assertEquals(px(48), capsule.getWidth());
+        assertEquals(px(48), capsule.getHeight());
         capsule.microphone().performClick();
         lay(capsule, 700);
         assertEquals(px(320), capsule.getHeight());
-        assertEquals(px(76), capsule.getWidth());
+        assertEquals(px(48), capsule.getWidth());
         capsule.close(false);
         lay(capsule, 700);
         // A short viewport holds the open capsule to what is there.
         capsule.microphone().performClick();
         lay(capsule, 200);
         assertTrue(capsule.getHeight() <= px(200));
-        assertTrue(capsule.getHeight() >= px(76));
-        assertEquals(px(76), capsule.microphone().getHeight());
+        assertTrue(capsule.getHeight() >= px(48));
+        assertEquals(px(48), capsule.microphone().getHeight());
         assertTrue(capsule.slider().getHeight() >= 0);
     }
 
@@ -790,8 +1215,6 @@ public class KaraokeLyricsTest {
         assertTrue(capsule.getHeight() <= px(300));
         assertTrue(capsule.microphone().getWidth() >= px(48));
         assertTrue(capsule.microphone().getHeight() >= px(48));
-        assertTrue(capsule.offButton().getHeight() >= px(48));
-        assertTrue(capsule.offButton().getWidth() >= px(48));
         assertTrue(capsule.slider().getWidth() >= px(48));
     }
 

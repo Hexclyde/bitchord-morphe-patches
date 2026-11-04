@@ -350,7 +350,7 @@ fun main() {
 
     // What an earlier install left behind.
     holds("nothing installed", IconCounts().needsInstall())
-    holds("everything installed", !IconCounts(1, 1, 1, 1, 1, 1, 0, 0, 1).needsInstall())
+    holds("everything installed", !IconCounts(1, 1, 1, 1, 1, 1, 0, 0, 1, 1).needsInstall())
     fails("the old editor inside the sleeve", "inside the sleeve") {
         IconCounts(1, 1, 0, 0, 1, 1, 2, 0, 1).needsInstall()
     }
@@ -362,6 +362,125 @@ fun main() {
     }
     fails("the pair left in the portrait column", "partly installed") {
         IconCounts(1, 1, 1, 1, 1, 1, 0, 1, 1).needsInstall()
+    }
+    val caption =
+        listOf(
+            ImmutableInstruction21c(Opcode.CONST_STRING, 0, ImmutableStringReference("text")),
+            ImmutableInstruction21c(Opcode.CONST_STRING, 0, ImmutableStringReference("onClick")),
+            ImmutableInstruction21c(
+                Opcode.SGET_OBJECT,
+                0,
+                ImmutableFieldReference(
+                    "Landroidx/compose/material3/Typography;",
+                    "labelSmall",
+                    "Landroidx/compose/ui/text/TextStyle;",
+                ),
+            ),
+            ImmutableInstruction22x(Opcode.MOVE_OBJECT_FROM16, 5, 29),
+            ImmutableInstruction22x(Opcode.MOVE_OBJECT_FROM16, 8, 31),
+            ImmutableInstruction3rc(
+                Opcode.INVOKE_STATIC_RANGE,
+                1,
+                6,
+                method(
+                    "Lnative/Merged;",
+                    "clickable-oSLSa3U\$default",
+                    MOD,
+                    MOD,
+                    "Z",
+                    "Ljava/lang/String;",
+                    "Landroidx/compose/ui/semantics/Role;",
+                    "Lkotlin/jvm/functions/Function0;",
+                    "I",
+                ),
+            ),
+            result(2),
+            ImmutableInstruction22x(Opcode.MOVE_OBJECT_FROM16, 23, 1),
+            call(
+                Opcode.INVOKE_STATIC,
+                method(
+                    "Lnative/Merged;",
+                    "padding",
+                    MOD,
+                    MOD,
+                    "Landroidx/compose/foundation/layout/PaddingValues;",
+                ),
+                2,
+                8,
+            ),
+            result(1),
+            ImmutableInstruction3rc(
+                Opcode.INVOKE_STATIC_RANGE,
+                0,
+                2,
+                method(
+                    "Landroidx/compose/material3/TextKt;",
+                    "Text-native",
+                    "V",
+                    "Ljava/lang/String;",
+                    MOD,
+                ),
+            ),
+            ImmutableInstruction10x(Opcode.RETURN_VOID),
+        )
+    val captionSite = originCaptionSite(caption, 36)
+    holds(
+        "caption wraps click result before padding",
+        captionSite.at == 8 && captionSite.modifier == 2,
+    )
+    val inplace =
+        caption.toMutableList().apply {
+            add(5, ImmutableInstruction12x(Opcode.MOVE_OBJECT, 12, 1))
+            this[7] = result(1)
+            this[8] = ImmutableInstruction22x(Opcode.MOVE_OBJECT_FROM16, 23, 12)
+            this[9] =
+                call(
+                    Opcode.INVOKE_STATIC,
+                    method(
+                        "Lnative/Merged;",
+                        "padding",
+                        MOD,
+                        MOD,
+                        "Landroidx/compose/foundation/layout/PaddingValues;",
+                    ),
+                    1,
+                    8,
+                )
+        }
+    holds(
+        "caption accepts an in-place click result with its original modifier saved",
+        originCaptionSite(inplace, 36).modifier == 1,
+    )
+    fails("caption callback replaced", "ownership") {
+        originCaptionSite(
+            caption.toMutableList().apply {
+                this[3] = ImmutableInstruction22x(Opcode.MOVE_OBJECT_FROM16, 5, 30)
+            },
+            36,
+        )
+    }
+    fails("caption padding replaced", "ownership") {
+        originCaptionSite(
+            caption.toMutableList().apply {
+                this[4] = ImmutableInstruction22x(Opcode.MOVE_OBJECT_FROM16, 8, 32)
+            },
+            36,
+        )
+    }
+    fails("caption click result overwritten", "ownership") {
+        originCaptionSite(
+            caption.toMutableList().apply { add(7, ImmutableInstruction11n(Opcode.CONST_4, 2, 0)) },
+            36,
+        )
+    }
+    fails("caption style changed", "text style") {
+        originCaptionSite(caption.toMutableList().apply { removeAt(2) }, 36)
+    }
+    fails("caption text renderer changed", "text rendering") {
+        originCaptionSite(caption.toMutableList().apply { removeAt(10) }, 36)
+    }
+    fails("caption modifier missing from installed icons", "partly installed") {
+        IconCounts(1, 1, 1, 1, 1, 1, 0, 0, 1).needsInstall()
     }
     fullscreenChecks()
     println("PASS: $passed player icon anchor checks")

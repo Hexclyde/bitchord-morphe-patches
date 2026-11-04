@@ -78,6 +78,7 @@ public class PlayerIconsTest {
                     "endGroup=Landroidx/compose/runtime/ComposerImpl;->endReplaceGroup()V",
                     "offset=Landroidx/compose/foundation/layout/OffsetKt;->offset(Landroidx/compose/ui/Modifier;FF)Landroidx/compose/ui/Modifier;",
                     "wrapWidth=Landroidx/compose/foundation/layout/SizeKt;->wrapContentWidth(Landroidx/compose/ui/Modifier;Landroidx/compose/ui/BiasAlignment$Horizontal;Z)Landroidx/compose/ui/Modifier;",
+                    "captionHeight=Landroidx/compose/foundation/layout/SizeKt;->heightIn(Landroidx/compose/ui/Modifier;FF)Landroidx/compose/ui/Modifier;",
                     "size=Landroidx/compose/foundation/layout/SizeKt;->size(Landroidx/compose/ui/Modifier;F)Landroidx/compose/ui/Modifier;",
                     "centerH=Landroidx/compose/ui/Alignment$Companion;->CenterHorizontally:Landroidx/compose/ui/BiasAlignment$Horizontal;",
                     "zIndex=Landroidx/compose/ui/ZIndexElement;-><init>(F)V",
@@ -203,7 +204,7 @@ public class PlayerIconsTest {
     public void theStripKeepsItsNativeHeightUnlessThePairShows() {
         assertEquals(32f, PlayerIcons.strip(32f, 1f), 0);
         PlayerIcons.pairShown(true);
-        assertEquals(92f, PlayerIcons.strip(32f, 1f), 0);
+        assertEquals(107f, PlayerIcons.strip(32f, 1f), 0);
         assertEquals("a taller native strip is never shrunk", 120f, PlayerIcons.strip(120f, 1f), 0);
         PlayerIcons.pairShown(false);
         assertEquals(32f, PlayerIcons.strip(32f, 2f), 0);
@@ -212,7 +213,7 @@ public class PlayerIconsTest {
     @Test
     public void theStripGrowsOnlyOnTheMainPlayerWithAudioVideoOnAndASwitchableSong() {
         VideoSwitch.Header row = modes();
-        assertEquals(92f, PlayerIcons.strip(32f, 1f), 0);
+        assertEquals(107f, PlayerIcons.strip(32f, 1f), 0);
         for (String mode : new String[] {"LYRICS", "QUEUE"}) {
             com.music.bitchord.data.settings.AppSettings.lastPlayerScreen.setValue(mode);
             row.control.refresh();
@@ -220,7 +221,7 @@ public class PlayerIconsTest {
         }
         com.music.bitchord.data.settings.AppSettings.lastPlayerScreen.setValue("MAIN");
         row.control.refresh();
-        assertEquals(92f, PlayerIcons.strip(32f, 1f), 0);
+        assertEquals(107f, PlayerIcons.strip(32f, 1f), 0);
         VideoSwitch.setEnabled(false);
         assertEquals("Audio/Video off", 32f, PlayerIcons.strip(32f, 1f), 0);
         VideoSwitch.setEnabled(true);
@@ -231,17 +232,16 @@ public class PlayerIconsTest {
 
     @Test
     public void theCaptionsTouchTargetStartsBelowThePairAtEveryFontSize() {
-        float[] expected = {92f, 94f, 100f};
+        float[] expected = {107f, 107f, 107f};
         float[] scales = {1f, 1.3f, 2f};
         PlayerIcons.pairShown(true);
         for (int i = 0; i < 3; i++) {
             float strip = PlayerIcons.strip(32f, scales[i]);
             assertEquals("strip at " + scales[i], expected[i], strip, 0);
-            // The caption's line sits on the strip's bottom edge; its target is at least 48 dp tall
-            // and centred on the line.
+            // The caption's real minimum-height target sits below the pair.
             float line = 16 * scales[i] + 1;
             float target = Math.max(48, line);
-            float targetTop = strip - line / 2 - target / 2;
+            float targetTop = strip - target;
             float pairBottom = PlayerIcons.HANDLE_DP + PlayerIcons.PAIR_DP;
             assertTrue("fontScale " + scales[i], targetTop >= pairBottom);
             assertTrue("the handle's own target ends above the pair", PlayerIcons.HANDLE_DP <= 11);
@@ -256,8 +256,7 @@ public class PlayerIconsTest {
             float target = Math.max(48, line);
             float gap = PlayerIcons.captionGap(scale);
             assertEquals("whole dp", Math.ceil(gap), gap, 0);
-            // The caption starts under the pair row plus the gap.
-            float targetTop = 48 + gap + line / 2 - target / 2;
+            float targetTop = 48 + gap;
             assertTrue("fontScale " + scale, targetTop >= 48);
             assertTrue("no more space than needed", gap < (target - line) / 2 + 1);
         }
@@ -270,7 +269,7 @@ public class PlayerIconsTest {
         VideoSwitch.Header row = new VideoSwitch.Header(owner.get(), true);
         content.addView(row);
         measure(row, 852, 400);
-        assertEquals(48 + 14, row.getMeasuredHeight());
+        assertEquals(48, row.getMeasuredHeight());
         VideoSwitch.setEnabled(false);
         row.refresh();
         measure(row, 852, 400);
@@ -686,5 +685,49 @@ public class PlayerIconsTest {
         assertNull(row.control.getAnimation());
         assertNull(entry.getAnimation());
         assertFalse(row.control.audio.animate().getStartDelay() != 0);
+    }
+
+    @Test
+    public void captionTextSitsCloseToThePairWithSeparateFullSizeTouchTargets() throws Exception {
+        PlayerIcons.pairShown(true);
+        for (float scale : new float[] {1f, 1.3f, 2f, 4f}) {
+            Modifier changed = (Modifier) PlayerIcons.caption(TITLE);
+            androidx.compose.foundation.layout.SizeElement minimum =
+                    find(changed, androidx.compose.foundation.layout.SizeElement.class);
+            float minHeight = 0;
+            if (minimum != null) {
+                Field field = minimum.getClass().getDeclaredField("minHeight");
+                field.setAccessible(true);
+                minHeight = field.getFloat(minimum);
+            }
+            float line = 16 * scale + 1;
+            float height = Math.max(line, minHeight);
+            float textTop = PlayerIcons.strip(32, scale) - height;
+            float targetTop = textTop - Math.max(0, (48 - height) / 2);
+            float pairBottom = PlayerIcons.HANDLE_DP + 48;
+            float paintedBottom = PlayerIcons.HANDLE_DP + 24 + 17;
+            assertTrue(
+                    "The caption must sit near the pair at font " + scale,
+                    textTop - paintedBottom <= 8);
+            assertTrue("Caption and pair targets remain separate", targetTop >= pairBottom);
+            assertTrue("The native caption owns a real full-size target", minHeight >= 48);
+        }
+    }
+
+    @Test
+    public void captionSizingPreservesTheNativeModifierAndHasNoMaximumHeight() throws Exception {
+        PlayerIcons.pairShown(false);
+        assertSame(TITLE, PlayerIcons.caption(TITLE));
+        PlayerIcons.pairShown(true);
+        Modifier sized = (Modifier) PlayerIcons.caption(TITLE);
+        assertSame(TITLE, chain(sized).get(0));
+        androidx.compose.foundation.layout.SizeElement element =
+                find(sized, androidx.compose.foundation.layout.SizeElement.class);
+        Field maximum = element.getClass().getDeclaredField("maxHeight");
+        maximum.setAccessible(true);
+        assertEquals(Float.POSITIVE_INFINITY, maximum.getFloat(element), 0);
+        assertEquals("The original native modifier is not changed", 1, chain(TITLE).size());
+        PlayerIcons.pairShown(false);
+        assertSame(TITLE, PlayerIcons.caption(TITLE));
     }
 }

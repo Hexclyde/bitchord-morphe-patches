@@ -1472,7 +1472,7 @@ val secondInstallationPatch =
     ) {
         compatibleWith(target)
         installationNameOption()
-        dependsOn(cloneResources)
+        dependsOn(cloneResources, cipherMemoryRuntime)
         execute {
             var changed = 0
             for (originalClass in getAllClassesWithStrings()) {

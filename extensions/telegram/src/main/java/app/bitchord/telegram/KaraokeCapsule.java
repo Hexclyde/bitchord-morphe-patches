@@ -27,11 +27,12 @@ import java.lang.ref.WeakReference;
 
 /**
  * The Karaoke control on BitChord's lyrics: a frosted capsule holding a microphone, which opens
- * into a vertical slider for how much of the lead vocal is removed. Closing it fades the microphone
- * out; the microphone's place keeps its touch target and its description.
+ * into a vertical slider for how much of the lead vocal is removed. Closing it dims the microphone;
+ * the control keeps its touch target and description.
  */
 final class KaraokeCapsule extends FrameLayout {
-    static final int BASE_DP = 76, TRACK_DP = 44, ICON_DP = 34, EXPANDED_DP = 320;
+    static final int BASE_DP = 48, DISC_DP = 34, TRACK_DP = 32, ICON_DP = 19, EXPANDED_DP = 320;
+    static final float RESTING_ALPHA = 0.3f;
     static final long AUTO_CLOSE_MS = 3_000, OPEN_MS = 400, FADE_MS = 280, GLITTER_MS = 600;
     private static final int ACTION_RESET = 0x4B000001,
             ACTION_FINER = 0x4B000002,
@@ -39,10 +40,10 @@ final class KaraokeCapsule extends FrameLayout {
     private final float dp, sp;
     private final Mic mic;
     private final Track track;
-    private final Off off;
     private final Paint glass = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint text = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final RectF box = new RectF();
+    private final Path visualClip = new Path();
     private final Runnable closeLater = () -> close(true);
     private final Runnable status = this::statusChanged;
     private final AccessibilityManager accessibility;
@@ -74,12 +75,9 @@ final class KaraokeCapsule extends FrameLayout {
         setWillNotDraw(false);
         mic = new Mic(context);
         track = new Track(context);
-        off = new Off(context);
         addView(track);
-        addView(off);
         addView(mic);
         track.setVisibility(INVISIBLE);
-        off.setVisibility(INVISIBLE);
         text.setTextAlign(Paint.Align.CENTER);
         text.setFakeBoldText(true);
         refreshDescriptions();
@@ -134,10 +132,6 @@ final class KaraokeCapsule extends FrameLayout {
         return track;
     }
 
-    View offButton() {
-        return off;
-    }
-
     // ── Opening, closing and fading ──────────────────────────────────────────
 
     /** The microphone was pressed: switch the separation model on if it is off, then toggle. */
@@ -156,16 +150,16 @@ final class KaraokeCapsule extends FrameLayout {
         refreshDescriptions();
     }
 
-    /** Hides the slider and then the microphone. Karaoke itself stays as it was. */
+    /** Closes the slider and dims the microphone without changing Karaoke. */
     void close(boolean fade) {
         cancelCloseLater();
         if (!fade && open <= 0.01f) return;
         pendingFade = fade;
-        go(0, fade ? 0 : 1, fade);
+        go(0, fade ? RESTING_ALPHA : 1, fade);
         refreshDescriptions();
     }
 
-    /** Brings the microphone back without opening the slider, for focus. */
+    /** Brightens the microphone without opening the slider, for focus. */
     void reveal() {
         if (shown >= 1 || pendingFade && open > 0.01f) return;
         focusRevealed = true;
@@ -177,7 +171,7 @@ final class KaraokeCapsule extends FrameLayout {
         if (focusRevealed && open <= 0.01f) {
             focusRevealed = false;
             pendingFade = true;
-            go(0, 0, true);
+            go(0, RESTING_ALPHA, true);
         }
     }
 
@@ -233,7 +227,7 @@ final class KaraokeCapsule extends FrameLayout {
     }
 
     private void apply(float openNow, float shownNow) {
-        boolean wasShown = shown > 0.01f;
+        boolean wasShown = shown > RESTING_ALPHA + 0.01f;
         boolean sized = openNow != open;
         open = openNow;
         shown = shownNow;
@@ -241,21 +235,19 @@ final class KaraokeCapsule extends FrameLayout {
         int visibility = sliderVisible ? VISIBLE : INVISIBLE;
         if (track.getVisibility() != visibility) {
             track.setVisibility(visibility);
-            off.setVisibility(visibility);
         }
         float sections = clamp((open - 0.35f) / 0.65f, 0, 1);
         track.setAlpha(sections);
-        off.setAlpha(sections);
         if (sized) requestLayout();
         invalidateAll();
-        boolean nowShown = shown > 0.01f;
+        boolean nowShown = shown > RESTING_ALPHA + 0.01f;
         if (wasShown != nowShown) announceVisible(nowShown);
         if (open >= 0.999f) {
             pendingFade = false;
             startGlitter();
             scheduleClose();
         } else stopGlitter();
-        if (open <= 0.001f && shown <= 0.001f) pendingFade = false;
+        if (open <= 0.001f && shown <= RESTING_ALPHA + 0.001f) pendingFade = false;
     }
 
     private void announceVisible(boolean visible) {
@@ -279,11 +271,9 @@ final class KaraokeCapsule extends FrameLayout {
                 && accessibility.isEnabled()
                 && accessibility.isTouchExplorationEnabled()) return true;
         return track.hasFocus()
-                || off.hasFocus()
                 || mic.hasFocus()
                 || mic.isAccessibilityFocused()
-                || track.isAccessibilityFocused()
-                || off.isAccessibilityFocused();
+                || track.isAccessibilityFocused();
     }
 
     void touched() {
@@ -336,19 +326,40 @@ final class KaraokeCapsule extends FrameLayout {
                 MeasureSpec.getMode(heightSpec) == MeasureSpec.UNSPECIFIED
                         ? Integer.MAX_VALUE
                         : MeasureSpec.getSize(heightSpec);
-        available = Math.min(limit, windowRoom());
+        available = Math.min(Math.min(limit, windowRoom()), roomAbove());
         int width = base();
         int collapsed = base();
         int height = Math.round(collapsed + (expandedHeight() - collapsed) * open);
         setMeasuredDimension(width, height);
         Geometry g = geometry(height);
         mic.measure(exactly(width), exactly(base()));
-        off.measure(exactly(g.offWidth), exactly(g.offHeight));
         track.measure(exactly(width), exactly(Math.max(0, g.trackBottom - g.trackTop)));
     }
 
     private static int exactly(int size) {
         return MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY);
+    }
+
+    /**
+     * Room between the bars and the bottom edge it was last laid out at. That edge does not move
+     * while the slider opens, so the cap holds still instead of growing with the capsule.
+     */
+    private int roomAbove() {
+        if (!isAttachedToWindow() || getHeight() == 0) return Integer.MAX_VALUE;
+        int[] at = new int[2];
+        getLocationInWindow(at);
+        WindowInsets insets = getRootWindowInsets();
+        int bar = 0;
+        if (insets != null) {
+            if (Build.VERSION.SDK_INT >= 30)
+                bar =
+                        insets.getInsets(
+                                        WindowInsets.Type.systemBars()
+                                                | WindowInsets.Type.displayCutout())
+                                .top;
+            else bar = insets.getSystemWindowInsetTop();
+        }
+        return Math.max(base(), at[1] + getHeight() - bar - Math.round(8 * dp));
     }
 
     /** Room left on screen for the capsule once the bars and cutouts are out. */
@@ -375,11 +386,6 @@ final class KaraokeCapsule extends FrameLayout {
         int width = right - left, height = bottom - top;
         mic.layout(0, height - base(), width, height);
         Geometry g = geometry(height);
-        off.layout(
-                (width - g.offWidth) / 2,
-                g.offTop,
-                (width + g.offWidth) / 2,
-                g.offTop + g.offHeight);
         track.layout(0, g.trackTop, width, g.trackBottom);
     }
 
@@ -387,27 +393,22 @@ final class KaraokeCapsule extends FrameLayout {
     private Geometry geometry(int height) {
         Geometry g = new Geometry();
         int room = height - base();
-        g.offHeight = Math.round(48 * dp);
-        g.offWidth = Math.round(64 * dp);
-        g.offTop = Math.round(6 * dp);
+        g.readoutTop = Math.round(6 * dp);
         g.readoutHeight = Math.round(26 * dp * fontScale());
-        int stacked = g.offTop + g.offHeight + g.readoutHeight;
         int gap = Math.round(12 * dp);
         int minTrack = Math.round(48 * dp);
-        if (room - stacked - gap < minTrack) {
-            // Short screens give up the Off row's margin first, then the status line.
-            g.offTop = 0;
+        if (room - g.readoutTop - g.readoutHeight - gap < minTrack) {
+            // Short screens give up the margin first, then part of the status line.
+            g.readoutTop = 0;
             g.readoutHeight = Math.round(20 * dp * fontScale());
-            stacked = g.offHeight + g.readoutHeight;
         }
-        g.readoutTop = g.offTop + g.offHeight;
         g.trackTop = g.readoutTop + g.readoutHeight;
         g.trackBottom = Math.max(g.trackTop, height - base() - gap);
         return g;
     }
 
     private static final class Geometry {
-        int offTop, offWidth, offHeight, readoutTop, readoutHeight, trackTop, trackBottom;
+        int readoutTop, readoutHeight, trackTop, trackBottom;
     }
 
     // ── Drawing ──────────────────────────────────────────────────────────────
@@ -419,10 +420,29 @@ final class KaraokeCapsule extends FrameLayout {
         super.dispatchDraw(canvas);
     }
 
+    /**
+     * What is painted, in this view's coordinates: the 34 dp disc standing on the bottom of the 48
+     * dp target, widening to the whole view as the slider opens.
+     */
+    void visualBounds(RectF out) {
+        float closed = 1 - open;
+        float side = (BASE_DP - DISC_DP) * 0.5f * closed * dp;
+        out.set(side, 2 * side, getWidth() - side, getHeight());
+    }
+
+    void clipVisual(Canvas canvas) {
+        visualBounds(box);
+        visualClip.reset();
+        float radius = box.width() / 2f;
+        visualClip.addRoundRect(box, radius, radius, Path.Direction.CW);
+        canvas.clipPath(visualClip);
+    }
+
     private void drawGlass(Canvas canvas) {
         if (shown <= 0.001f) return;
-        float inset = 0.5f * dp, radius = getWidth() / 2f;
-        box.set(inset, inset, getWidth() - inset, getHeight() - inset);
+        visualBounds(box);
+        box.inset(0.5f * dp, 0.5f * dp);
+        float radius = box.width() / 2f;
         glass.setStyle(Paint.Style.FILL);
         glass.setShader(null);
         // The host blur supplies the frost; without it the capsule is a little denser.
@@ -478,7 +498,6 @@ final class KaraokeCapsule extends FrameLayout {
         invalidate();
         mic.invalidate();
         track.invalidate();
-        off.invalidate();
     }
 
     // ── Model and level changes ──────────────────────────────────────────────
@@ -497,7 +516,6 @@ final class KaraokeCapsule extends FrameLayout {
     private void refreshDescriptions() {
         mic.refresh();
         track.refresh();
-        off.refresh();
     }
 
     @Override
@@ -678,12 +696,14 @@ final class KaraokeCapsule extends FrameLayout {
         @Override
         protected void onDraw(Canvas canvas) {
             if (shown <= 0.001f) return;
-            float cx = getWidth() / 2f, cy = getHeight() / 2f;
-            float size = ICON_DP * dp * (1f + 0.1f * open);
+            float cx = getWidth() / 2f, middle = getHeight() / 2f;
+            // The glyph stays on the disc's centre, 17 dp above the bottom, however far it is open.
+            float cy = middle + (BASE_DP - DISC_DP) * 0.5f * dp;
+            float size = ICON_DP * dp;
             if (open > 0.01f) {
                 ink.setStyle(Paint.Style.FILL);
                 ink.setColor(withAlpha(tint, 0.05f * open * shown));
-                canvas.drawCircle(cx, cy, getWidth() / 2f - dp, ink);
+                canvas.drawCircle(cx, middle, getWidth() / 2f - dp, ink);
                 ink.setStyle(Paint.Style.STROKE);
             }
             ink.setColor(withAlpha(tint, 0.9f * shown));
@@ -725,80 +745,6 @@ final class KaraokeCapsule extends FrameLayout {
             ink.setColor(withAlpha(tint, 0.9f * shown));
             canvas.drawCircle(x, y, radius, ink);
             ink.setStyle(Paint.Style.STROKE);
-        }
-    }
-
-    // ── The Off button ───────────────────────────────────────────────────────
-
-    private final class Off extends View {
-        private final Paint pill = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private final RectF bounds = new RectF();
-
-        Off(Context context) {
-            super(context);
-            setTag("karaoke-off");
-            setClickable(true);
-            setFocusable(true);
-            pill.setTextAlign(Paint.Align.CENTER);
-            pill.setFakeBoldText(true);
-            setOnClickListener(
-                    v -> {
-                        KaraokeLyrics.deactivate();
-                        close(true);
-                    });
-            setOnFocusChangeListener((v, focused) -> touched());
-            TypedValue ripple = new TypedValue();
-            if (context.getTheme()
-                    .resolveAttribute(
-                            android.R.attr.selectableItemBackgroundBorderless, ripple, true))
-                setBackgroundResource(ripple.resourceId);
-        }
-
-        void refresh() {
-            setContentDescription(Strings.t("Turn Karaoke off"));
-            setEnabled(true);
-            invalidate();
-        }
-
-        @Override
-        protected void onMeasure(int widthSpec, int heightSpec) {
-            setMeasuredDimension(Math.round(64 * dp), Math.round(48 * dp));
-        }
-
-        @Override
-        public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
-            super.onInitializeAccessibilityNodeInfo(info);
-            info.setClassName("android.widget.Button");
-        }
-
-        @Override
-        protected void onDraw(Canvas canvas) {
-            if (shown <= 0.001f) return;
-            float w = getWidth(), h = getHeight();
-            float ph = Math.min(h, 30 * dp), pw = Math.min(w, 52 * dp);
-            bounds.set((w - pw) / 2, (h - ph) / 2, (w + pw) / 2, (h + ph) / 2);
-            boolean on = KaraokeLyrics.modelOn();
-            pill.setStyle(Paint.Style.FILL);
-            pill.setColor(withAlpha(tint, (on ? 0.14f : 0.05f) * shown));
-            canvas.drawRoundRect(bounds, ph / 2, ph / 2, pill);
-            pill.setStyle(Paint.Style.STROKE);
-            pill.setStrokeWidth(dp);
-            pill.setColor(withAlpha(tint, 0.25f * shown));
-            canvas.drawRoundRect(bounds, ph / 2, ph / 2, pill);
-            pill.setStyle(Paint.Style.FILL);
-            pill.setColor(withAlpha(tint, (on ? 0.95f : 0.6f) * shown));
-            String label = Strings.t("Off");
-            float size = 13 * sp;
-            pill.setTextSize(size);
-            float width = pill.measureText(label);
-            if (width > pw - 8 * dp)
-                pill.setTextSize(Math.max(8 * sp, size * (pw - 8 * dp) / width));
-            Paint.FontMetrics metrics = pill.getFontMetrics();
-            canvas.drawText(
-                    label,
-                    bounds.centerX(),
-                    bounds.centerY() - (metrics.ascent + metrics.descent) / 2,
-                    pill);
         }
     }
 

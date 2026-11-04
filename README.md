@@ -17,7 +17,7 @@
 
 I add a Download control beside the player's favourite and menu actions. It uses the current downloadable non-YouTube stream first, then checks enabled sources for a matching recording and duration, preferring higher reported quality. YouTube is the last fallback when enabled. Progress comes from BitChord's download queue; a missing total stays indeterminate.
 
-[Source-independent AutoMix](docs/AUTOMIX.md) measures the selected recording for BitChord’s transition planner. Its [transition editor](docs/TRANSITION-EDITOR.md) saves timing, volume, EQ and filter edits for each track pair. [Playlist tools](docs/PLAYLIST-TOOLS.md) support signed-out links, device copies, queue saving, metadata-file import and manual Spotify/YouTube Music membership sync.
+[Automix Editor](docs/AUTOMIX.md) measures the selected recording for BitChord’s transition planner. Its [transition editor](docs/TRANSITION-EDITOR.md) saves timing, volume, EQ and filter edits for each track pair. [Playlist tools](docs/PLAYLIST-TOOLS.md) support signed-out links, device copies, queue saving, metadata-file import and manual Spotify/YouTube Music membership sync.
 
 [Playback, storage and playlist settings](docs/BETA18-FEATURES.md) include Play alongside other apps, Steady playback, Smart downloads, Karaoke, cache management and local Smart playlists. Patch download controls also appear in BitChord’s Downloads settings. Cleanup rules and external playlist suggestions require explicit activation.
 
@@ -27,7 +27,7 @@ In **Sources → YouTube Music**, turn the switch off and choose **Playback only
 
 | Patch | What it does |
 | --- | --- |
-| **Source-independent AutoMix** | Analyse the selected playable source, verify automatic replacements and preserve chosen speed through transitions. Selected by default. |
+| **Automix Editor** | Analyse the selected playable source, verify automatic replacements and preserve chosen speed through transitions. Selected by default. |
 | **Unofficial Telegram music** | Search and play audio from your own Telegram channels and chats through TDLib, using your own account. Android 8 or newer. |
 | **Unofficial Soulseek audio** | Guided Soulseek search and exact-file downloads, an explicit source choice for eligible single-song Download actions, paired-phone originals and optional debrid links. Saved destination/format choices; download-only. Android 8 or newer. |
 | **Streamseek previews** | Inline 30-second Soulseek lossless/MP3 previews with an on-device decoder, transfer reuse and optional local-reference/evidence tools. Depends on the Soulseek patch; off by default. |
@@ -99,7 +99,7 @@ controls. Their styling follows BitChord's theme, fonts, switches and rounded ca
 
 Each feature has an enable switch. A settings gear appears only when the feature is enabled and has configurable controls. Settings open explicitly through the gear and close with Done. Toggle-only features, including Battery saver, Per-download quality and Audio and video switch, do not show a gear. Disabling a feature leaves its configured choices unchanged. Reversible toggle changes offer Undo; sliders support live values, fine adjustment and native-default Reset. Telegram keeps its existing source toggle and account settings page. See [Patches & tweaks](docs/PATCHES-AND-TWEAKS.md) for dependency and Undo behavior. The optional playback patches include:
 
-- **Karaoke:** turns the lead vocal down so you can sing over the song, from a little to all of it. On the lyrics screen, tap the microphone at the bottom right to switch the separation model on and drag the slider from original vocals (0%) to the most removal (100%); the slider closes by itself and the microphone fades out until you tap its place again. The slider and the one on the Karaoke settings page change the same value. By default only the voice range is cut, only while someone is singing, and drum hits are left alone; **Whole centre** removes everything in the middle instead, which suits older recordings. Ported from [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45.
+- **Karaoke:** turns the lead vocal down so you can sing over the song, from a little to all of it. On the lyrics screen, tap the microphone at the bottom right to switch the separation model on and drag the slider from original vocals (0%) to the most removal (100%); the slider closes by itself and the microphone dims but stays visible; tap it to reopen the slider. The slider and the one on the Karaoke settings page change the same value. By default only the voice range is cut, only while someone is singing, and drum hits are left alone; **Whole centre** removes everything in the middle instead, which suits older recordings. Ported from [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45.
 - **Pitch control:** up or down by up to 12 semitones without changing the speed. BitChord's speed setting keeps the pitch you set.
 - **Loudness level:** how loud songs play with BitChord's loudness normalisation on, from -23 to -8 LUFS. BitChord's own level is -14 LUFS. It applies to the songs BitChord normalises, the ones YouTube gives a loudness for.
 - **Sleep timer fade-out:** when the timer's time is up, the song fades out over a length you choose (3 to 60 seconds) before it pauses. With the timer's **After this song** option, the last seconds of that song fade instead of it stopping at full volume. A fade stands down the moment you play, pause, seek or set the timer again, and the volume comes back up for the next time you play.
@@ -186,6 +186,7 @@ Bug reports and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.m
 - [PixelMusic](https://github.com/ianshulyadav/PixelMusic) by ianshulyadav, for the Storage Sense, duplicate review and description-to-playlist ideas. I wrote native implementations for BitChord; I port its GPL-3.0 local playlist language processing and ranking with attribution; my storage adapters are independent implementations.
 
 - [BitChord](https://github.com/kushagrasinghx/BitChord) by kushagra (kushagrasinghx) and its contributors, the app these patches are for.
+- [InnerTubeX](https://github.com/MetrolistGroup/innertubex) by MetrolistGroup and its contributors, for the cipher wrapper templates used in `tests/cipher-memory`.
 - [Auris](https://github.com/OreoMuncher45/Auris) by OreoMuncher45, a fork of BitChord. Karaoke is ported from its vocal remover.
 - [Prism](https://github.com/Yigder/Prism) by Yigder and [Stash](https://github.com/rawnaldclark/Stash) by Rawnald Clark, with Evo (ParaliyzedEvo). Their pitch, loudness, sleep fade, headphone correction, per-output equaliser, DJ mode and per-download quality features shaped the playback patches.
 - [AutoEq](https://github.com/jaakkopasanen/AutoEq) by Jaakko Pasanen, whose headphone measurements Headphone correction fetches.

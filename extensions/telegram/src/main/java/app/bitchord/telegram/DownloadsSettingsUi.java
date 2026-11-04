@@ -22,10 +22,29 @@ public final class DownloadsSettingsUi {
                 return Unit.INSTANCE;
             };
 
+    private static final Function0<Unit> FOLDER =
+            () -> {
+                Context app = ExtrasUi.context;
+                if (app != null)
+                    app.startActivity(
+                            new Intent(app, DownloadsSettingsActivity.class)
+                                    .putExtra(DownloadsSettingsActivity.PICK_DIRECTORY, true)
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                return Unit.INSTANCE;
+            };
+
     private DownloadsSettingsUi() {}
 
     /** Called by Morphe from the composable that draws BitChord's sync-playlists control. */
     public static void row(ComposerImpl composer) {
+        Context app = ExtrasUi.context;
+        HostSettingsRow.call(
+                Strings.t("Default download folder"),
+                app == null ? Strings.t("BitChord default") : DownloadFolder.label(app),
+                true,
+                null,
+                FOLDER,
+                composer);
         HostSettingsRow.call(
                 Strings.t("Patch downloads"),
                 Strings.t("Smart downloads, sources and Storage Sense"),

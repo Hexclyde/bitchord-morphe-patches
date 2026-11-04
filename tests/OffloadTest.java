@@ -12,7 +12,7 @@ public final class OffloadTest {
     }
 
     public static void main(String[] args) {
-        check(!SourceAutomix.applied(), "the Source-independent AutoMix marker is off");
+        check(!SourceAutomix.applied(), "the Automix Editor marker is off");
         check(!SourceAutomix.activeMix(), "no patch means no patched mix");
         SoundExtras.batterySaver = true;
 

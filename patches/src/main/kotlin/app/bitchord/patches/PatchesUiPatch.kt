@@ -83,9 +83,11 @@ internal fun BytecodePatchContext.qualitySourceShape(): Boolean {
     return qualityConfig == 1
 }
 
+internal val cipherMemoryRuntime = bytecodePatch { execute { addCipherMemoryHooks() } }
+
 /** Shared settings and sound controls contain no Telegram account or TDLib implementation. */
 internal val patchesUiRuntime = bytecodePatch {
-    dependsOn(audioOriginPatch, selectedDownloadsPatch)
+    dependsOn(cipherMemoryRuntime, audioOriginPatch, selectedDownloadsPatch)
     extendWith("extensions/patches-ui.mpe")
     execute {
         addYouTubeControls()

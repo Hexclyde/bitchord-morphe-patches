@@ -89,7 +89,7 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "4276bcc217712a4364d4f85f875ea807b8678d4cf26888e9027b79a1e6d04358",
+  "patch_bundle_sha256": "a91aea9105437dbc88b18022a7759f46cea6fad871fcde7c86e434324c927f33",
   "soulseek_development": {
     "status": "experimental-local-build",
     "baseline_commit": "3de260f7f1d7967c5a97ce924085d7d42bec18af",
@@ -238,7 +238,7 @@
     "zh",
     "zh-TW"
   ],
-  "ui_translation_phrases": 2041,
+  "ui_translation_phrases": 2048,
   "flac_audio_protocol_reference": {
     "repository": "https://github.com/aztecempire/spotube-plugin-flac-audio",
     "commit": "4ecc535d57c32fe347a301e8fc54ce9be0430158",

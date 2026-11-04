@@ -1,6 +1,6 @@
 {
   "repository": "Hexclyde/bitchord-morphe-patches",
   "name": "BitChord Morphe Patches",
-  "description": "Morphe patches for BitChord 1.9: Telegram music, a Downloads explorer, Soulseek sharing, Telegram archives, mixed-source playlists, source-independent AutoMix and playback tools.",
+  "description": "Morphe patches for BitChord 1.9: Telegram music, a Downloads explorer, Soulseek sharing, Telegram archives, mixed-source playlists, Automix Editor and playback tools.",
   "license": "GPL-3.0-or-later"
 }

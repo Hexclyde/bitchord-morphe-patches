@@ -202,6 +202,7 @@ remove-beta18-branch.ps1
 /ui-tests/src/test/java/app/bitchord/telegram/KaraokeCapsule.java
 
 /ui-tests/src/test/java/app/bitchord/telegram/DownloadSelection.java
+/ui-tests/src/test/java/app/bitchord/telegram/DownloadFolder.java
 /ui-tests/src/test/java/app/bitchord/telegram/SmartPlaylistActivity.java
 /ui-tests/src/test/java/app/bitchord/telegram/SmartPlaylistService.java
 /ui-tests/src/test/java/app/bitchord/telegram/SmartPlaylistStore.java

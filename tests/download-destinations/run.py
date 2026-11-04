@@ -13,6 +13,11 @@ from buildenv import TOOLS, jdk
 
 with tempfile.TemporaryDirectory(prefix="bitchord-destination-tests-") as temporary:
     extension = ROOT / "extensions/soulseek/src/main/java/app/bitchord/soulseek"
+    folder_stub = Path(temporary) / "app/bitchord/telegram/DownloadFolder.java"
+    folder_stub.parent.mkdir(parents=True)
+    folder_stub.write_text(
+        'package app.bitchord.telegram;public class DownloadFolder{public static int prepared;public static String selected(android.content.Context c){return "";}public static String prepare(android.content.Context c,String s)throws java.io.IOException{prepared++;return "folder";}}'
+    )
     classpath = os.pathsep.join(map(str, [TOOLS / "json.jar", TOOLS / "android.jar"]))
     subprocess.run(
         [
@@ -26,6 +31,7 @@ with tempfile.TemporaryDirectory(prefix="bitchord-destination-tests-") as tempor
             temporary,
             str(ROOT / "compile-only/app/bitchord/telegram/PatchStrings.java"),
             str(ROOT / "compile-only/app/bitchord/telegram/CapturePolicy.java"),
+            str(folder_stub),
             str(extension / "DownloadDestinations.java"),
             str(extension / "DownloadStyle.java"),
             str(extension / "DownloadActivity.java"),
@@ -45,6 +51,7 @@ with tempfile.TemporaryDirectory(prefix="bitchord-destination-tests-") as tempor
     )
 
     fixtures = {
+        "app/bitchord/telegram/DownloadFolder.java": folder_stub.read_text(),
         "android/content/SharedPreferences.java": """package android.content;import java.util.*;public final class SharedPreferences {
 final Map<String,Object> data=new HashMap<>();public boolean getBoolean(String k,boolean f){Object v=data.get(k);return v==null?f:(Boolean)v;}
 public String getString(String k,String f){Object v=data.get(k);return v==null?f:(String)v;}public long getLong(String k,long f){Object v=data.get(k);return v==null?f:(Long)v;}

@@ -21,9 +21,11 @@ private const val HAZE_STATE = "Ldev/chrisbanes/haze/HazeState;"
 private const val HAZE_STYLE = "Ldev/chrisbanes/haze/HazeStyle;"
 private const val MODIFIER = "Landroidx/compose/ui/Modifier;"
 private const val MODIFIER_COMPANION = "Landroidx/compose/ui/Modifier\$Companion;"
-private const val SHAPE = "Landroidx/compose/ui/graphics/Shape;"
 private const val COLOR = "Landroidx/compose/ui/graphics/Color;"
 private const val FUNCTION1 = "Lkotlin/jvm/functions/Function1;"
+private const val SIZE_KT = "Landroidx/compose/foundation/layout/SizeKt;"
+private const val OFFSET_KT = "Landroidx/compose/foundation/layout/OffsetKt;"
+private const val INT_OFFSET = "Landroidx/compose/ui/unit/IntOffset;"
 private const val STATIC = 8
 
 private fun Instruction.call() = (this as? ReferenceInstruction)?.reference as? MethodReference
@@ -51,10 +53,11 @@ private fun Method.shape(vararg parameters: String, returns: String) =
         parameterTypes.map { it.toString() } == parameters.toList()
 
 /**
- * The Karaoke capsule is the last child of the box that holds the lyrics: in the portrait layout
- * after the translation button, and in the landscape pane after the lyrics. Both places, and every
- * Compose and BitChord helper the capsule calls, are found from what the host does there, not from
- * the names R8 gave its lambdas or merged file classes; the extension is handed what was found.
+ * The Karaoke capsule is the last child of the box that holds the lyrics in the portrait layout,
+ * and a child of the translation slot in the landscape pane's bottom row, where it is moved beside
+ * the translate button and the status line leaves room for it. Both places, and every Compose and
+ * BitChord helper the capsule calls, are found from what the host does there, not from the names R8
+ * gave its lambdas or merged file classes; the extension is handed what was found.
  */
 internal fun BytecodePatchContext.addKaraokeLyrics() {
     val all = mutableListOf<ClassDef>()
@@ -137,6 +140,40 @@ private fun resolveKaraokeSymbols(
             .filter { it.shape(FUNCTION1, MODIFIER, FUNCTION1, COMPOSER, "I", "I", returns = "V") }
             .map { "${it.definingClass}->${it.name}(${it.parameterTypes.joinToString("")})V" }
             .exactly("The Compose view-interop entry")
+
+    // The landscape slot is sized and moved with Compose's own layout modifiers, found by shape.
+    symbols["requiredSize"] =
+        statics
+            .filter {
+                it.definingClass == SIZE_KT &&
+                    it.name.startsWith("requiredSizeIn-") &&
+                    it.name.endsWith("\$default") &&
+                    it.shape(MODIFIER, "F", "F", "F", "F", "I", returns = MODIFIER)
+            }
+            .map {
+                "${it.definingClass}->${it.name}(${it.parameterTypes.joinToString("")})$MODIFIER"
+            }
+            .exactly("The required-size modifier")
+    symbols["offsetBy"] =
+        statics
+            .filter {
+                it.definingClass == OFFSET_KT &&
+                    it.name == "offset" &&
+                    it.shape(MODIFIER, FUNCTION1, returns = MODIFIER)
+            }
+            .map {
+                "${it.definingClass}->${it.name}(${it.parameterTypes.joinToString("")})$MODIFIER"
+            }
+            .exactly("The lambda offset modifier")
+    symbols["intOffset"] =
+        all.filter { it.type == INT_OFFSET }
+            .exactly("The packed offset class")
+            .methods
+            .filter {
+                it.name == "<init>" && it.parameterTypes.map { p -> p.toString() } == listOf("J")
+            }
+            .map { "$INT_OFFSET-><init>(J)V" }
+            .exactly("The packed offset constructor")
 
     symbols["padding"] =
         code
@@ -221,6 +258,21 @@ private fun resolveKaraokeSymbols(
             .filter { it.name == "TranslationToggleButton" }
             .exactly("The translation button")
     val buttonCode = button.code()
+    // The offsets are measured from a translate button that is a 34 dp disc.
+    check(
+        buttonCode.indices.count { i ->
+            buttonCode[i].call()?.let { c ->
+                c.definingClass == SIZE_KT &&
+                    c.name.startsWith("size-") &&
+                    c.parameterTypes.map { p -> p.toString() } == listOf(MODIFIER, "F")
+            } == true &&
+                (buttonCode[i] as? FiveRegisterInstruction)?.let {
+                    buttonCode.floatBefore(i, it.registerD) == 34f
+                } == true
+        } == 1
+    ) {
+        "The translate button is no longer a 34 dp disc"
+    }
     val tints =
         buttonCode.indices
             .filter { i ->
@@ -251,13 +303,6 @@ private fun resolveKaraokeSymbols(
     } else println("Karaoke: this BitChord has no player tint local; the capsule uses white")
 
     // The host's own circle button shows the clip helper and its shape.
-    val clips =
-        buttonCode.indices.filter { i ->
-            buttonCode[i].call()?.let {
-                it.parameterTypes.map { p -> p.toString() } == listOf(MODIFIER, SHAPE) &&
-                    it.returnType == MODIFIER
-            } == true
-        }
     val hazeCandidates =
         statics.filter { it.shape(MODIFIER, HAZE_STATE, HAZE_STYLE, FUNCTION1, returns = MODIFIER) }
     // BitChord wraps the library's effect; the wrapper is the one that calls the other.
@@ -282,8 +327,7 @@ private fun resolveKaraokeSymbols(
         statics
             .filter { it.shape("F", "J", returns = HAZE_STYLE) }
             .map { "${it.definingClass}->${it.name}(FJ)$HAZE_STYLE" }
-    val clipRefs = clips.map { buttonCode[it].call()!!.text() }.toSet()
-    val group = listOf(clipRefs.size, hazeEffect.size, frost.size)
+    val group = listOf(hazeEffect.size, frost.size)
     if (group.all { it == 0 }) {
         println(
             "Karaoke: no frosted-glass helpers in this BitChord; the capsule is translucent only"
@@ -291,38 +335,113 @@ private fun resolveKaraokeSymbols(
         return symbols
     }
     check(group.all { it == 1 }) {
-        "The frosted-glass helpers are partly missing or ambiguous (clip, haze, style: $group)"
+        "The frosted-glass helpers are partly missing or ambiguous (haze, style: $group)"
     }
-    val clipAt = clips.single()
-    val shapeRegister = (buttonCode[clipAt] as FiveRegisterInstruction).registerD
-    val shapeType =
-        (clipAt - 1 downTo 0)
-            .mapNotNull { i ->
-                val step = buttonCode[i]
-                if (
-                    step.opcode == Opcode.SGET_OBJECT &&
-                        (step as OneRegisterInstruction).registerA == shapeRegister
-                )
-                    step.field()
-                else null
-            }
-            .firstOrNull()
-            ?.type ?: error("The clip shape in the lyrics button is not a static shape")
-    symbols["shape"] =
-        statics
-            .filter { m ->
-                m.shape("F", returns = shapeType) &&
-                    m.code().any {
-                        it.opcode == Opcode.NEW_INSTANCE &&
-                            ((it as ReferenceInstruction).reference as? TypeReference)?.type ==
-                                shapeType
-                    }
-            }
-            .map { "${it.definingClass}->${it.name}(F)$shapeType" }
-            .exactly("The rounded-corner shape helper")
-    symbols["clip"] = clipRefs.single()
     symbols["hazeEffect"] = hazeEffect.single()
     symbols["frost"] = frost.single()
+    val classes = all.associateBy { it.type }
+    val drawings =
+        all.mapNotNull { element ->
+                val constructor =
+                    element.methods.singleOrNull {
+                        it.parameterTypes.map { p -> p.toString() } == listOf(FUNCTION1) &&
+                            it.returnType == "V" &&
+                            it.name == "<init>"
+                    } ?: return@mapNotNull null
+                val create =
+                    element.methods.singleOrNull {
+                        it.parameterTypes.isEmpty() &&
+                            it.returnType == "Landroidx/compose/ui/Modifier\$Node;" &&
+                            it.accessFlags and STATIC == 0
+                    } ?: return@mapNotNull null
+                val child =
+                    create
+                        .code()
+                        .mapNotNull {
+                            if (it.opcode == Opcode.NEW_INSTANCE)
+                                ((it as ReferenceInstruction).reference as? TypeReference)?.type
+                            else null
+                        }
+                        .singleOrNull()
+                        ?.let { classes[it] } ?: return@mapNotNull null
+                val fields = child.fields.filter { it.accessFlags and STATIC == 0 }
+                if (fields.size != 1 || fields.single().type != FUNCTION1) return@mapNotNull null
+                val draw =
+                    child.methods.singleOrNull { method ->
+                        method.parameterTypes.size == 1 &&
+                            method.returnType == "V" &&
+                            method.accessFlags and STATIC == 0 &&
+                            method.code().map { it.opcode } ==
+                                listOf(
+                                    Opcode.IGET_OBJECT,
+                                    Opcode.INVOKE_INTERFACE,
+                                    Opcode.RETURN_VOID,
+                                ) &&
+                            method.code().count {
+                                it.call()?.let { c ->
+                                    c.definingClass == FUNCTION1 && c.name == "invoke"
+                                } == true
+                            } == 1 &&
+                            method.code().none { it.call()?.name == "drawContent" }
+                    } ?: return@mapNotNull null
+                val callbackScope =
+                    classes[draw.parameterTypes.single().toString()] ?: return@mapNotNull null
+                if (
+                    callbackScope.methods.none {
+                        it.name == "drawContent" &&
+                            it.parameterTypes.isEmpty() &&
+                            it.returnType == "V"
+                    } ||
+                        callbackScope.methods.none {
+                            it.name == "getDrawContext" &&
+                                it.parameterTypes.isEmpty() &&
+                                it.accessFlags and STATIC == 0
+                        }
+                )
+                    return@mapNotNull null
+                constructor to draw
+            }
+            .exactly("The content-only drawing modifier")
+    val drawingScope =
+        classes[drawings.second.parameterTypes.single().toString()]
+            ?: error("The content drawing scope is missing")
+    val drawContent =
+        drawingScope.methods
+            .filter {
+                it.name == "drawContent" &&
+                    it.parameterTypes.isEmpty() &&
+                    it.returnType == "V" &&
+                    it.accessFlags and STATIC == 0
+            }
+            .exactly("The native draw-content operation")
+    val context =
+        drawingScope.methods
+            .filter {
+                it.name == "getDrawContext" &&
+                    it.parameterTypes.isEmpty() &&
+                    it.accessFlags and STATIC == 0
+            }
+            .exactly("The native drawing context")
+    val canvas =
+        classes[context.returnType]
+            ?.methods
+            ?.toList()
+            .orEmpty()
+            .filter {
+                it.parameterTypes.isEmpty() &&
+                    it.accessFlags and STATIC == 0 &&
+                    it.returnType == "Landroidx/compose/ui/graphics/Canvas;"
+            }
+            .exactly("The drawing context's canvas")
+    val nativeCanvas =
+        statics
+            .filter { it.shape(canvas.returnType, returns = "Landroid/graphics/Canvas;") }
+            .exactly("The native drawing canvas adapter")
+    symbols["drawElement"] = drawings.first.text()
+    symbols["drawContent"] = drawContent.text()
+    symbols["drawContext"] = context.text()
+    symbols["contextCanvas"] = canvas.text()
+    symbols["nativeCanvas"] = nativeCanvas.text()
     return symbols
 }
 
@@ -421,32 +540,101 @@ private fun hookPortrait(method: MutableMethod, symbols: MutableMap<String, Stri
     return true
 }
 
-/** Returns false when this method already carries the hook. */
+/**
+ * The whole-number float in [register] just before [at]: a small constant run through int-to-float.
+ */
+private fun List<Instruction>.floatBefore(at: Int, register: Int): Float? {
+    val convert = (at - 1 downTo 0).firstOrNull { this[it].writes(register) } ?: return null
+    if (this[convert].opcode != Opcode.INT_TO_FLOAT) return null
+    val source = (this[convert] as TwoRegisterInstruction).registerB
+    val load = (convert - 1 downTo 0).firstOrNull { this[it].writes(source) } ?: return null
+    if (this[load].opcode != Opcode.CONST_4 && this[load].opcode != Opcode.CONST_16) return null
+    return (this[load] as NarrowLiteralInstruction).narrowLiteral.toFloat()
+}
+
+/**
+ * The bottom row of the landscape pane holds a 34 dp slot at each end of a status line padded 12 dp
+ * a side, centred vertically. The capsule goes in the translation slot, which the row centres on
+ * the translate button's own line whatever height the status line gives the row, and the status
+ * line's padding grows by the room the capsule's target takes. The translate button is itself 34
+ * dp, which the offsets rely on. Returns false when this method already carries the hook.
+ */
 private fun hookLandscape(method: MutableMethod): Boolean {
     val code = method.code()
-    if (code.any { it.callsKaraoke() }) return false
-    val topStart =
-        code.indexOfFirst {
-            it.field()?.let { f -> f.definingClass == ALIGNMENT && f.name == "TopStart" } == true
+    if (code.any { it.callsKaraoke() }) {
+        check(
+            code.count {
+                it.call()?.let { c ->
+                    c.definingClass == KARAOKE && c.name == "landscapeReserve"
+                } == true
+            } == 1
+        ) {
+            "An older Karaoke layout is already patched; start from a clean BitChord APK"
         }
-    check(topStart >= 0) { "The landscape lyrics box changed" }
-    // The lyrics themselves are the composable slot invoked with a modifier and a composer.
+        return false
+    }
+    val statuses =
+        code.indices.filter {
+            code[it].call()?.let { c ->
+                c.definingClass == LYRICS_UI && c.name == "LyricsStatusWithChange"
+            } == true
+        }
+    check(statuses.size == 1) { "The landscape status line changed (${statuses.size})" }
+    val status = statuses.single()
+    val slots =
+        code.indices.filter {
+            code[it].call()?.let { c ->
+                c.definingClass == SIZE_KT &&
+                    c.name.startsWith("size-") &&
+                    c.parameterTypes.map { p -> p.toString() } == listOf(MODIFIER, "F")
+            } == true
+        }
+    check(slots.size == 2 && slots[0] < status && slots[1] > status) {
+        "The landscape row no longer has one slot either side of the status line (${slots.size})"
+    }
+    for (slot in slots) check(
+        (code[slot] as? FiveRegisterInstruction)?.let {
+            code.floatBefore(slot, it.registerD) == 34f
+        } == true
+    ) {
+        "A landscape row slot is no longer a 34 dp call with short argument registers"
+    }
+    val paddings =
+        code.indices.filter {
+            it in slots[0] until status &&
+                code[it].call()?.let { c ->
+                    c.definingClass == OFFSET_KT &&
+                        c.name.startsWith("padding-") &&
+                        c.parameterTypes.map { p -> p.toString() } ==
+                            listOf("F", "F", "I", MODIFIER)
+                } == true
+        }
+    check(paddings.size == 1) { "The status line's side padding changed (${paddings.size})" }
+    val padding = paddings.single()
+    check(code[padding] is FiveRegisterInstruction) {
+        "The landscape padding argument layout changed"
+    }
+    val side = (code[padding] as FiveRegisterInstruction).registerC
+    check(code.floatBefore(padding, side) == 12f && side < 16) {
+        "The status line is no longer padded 12 dp a side"
+    }
+    val convert = (padding - 1 downTo 0).first { code[it].writes(side) }
+    // The translation slot's content is the next composable slot invoked after the status line.
     val content =
-        (topStart until code.size).firstOrNull { i ->
+        (status until code.size).firstOrNull { i ->
             code[i].call()?.let {
                 it.definingClass == LAMBDA &&
                     it.name == "invoke" &&
-                    it.parameterTypes ==
-                        listOf("Ljava/lang/Object;", "Ljava/lang/Object;", "Ljava/lang/Object;")
+                    it.parameterTypes == listOf("Ljava/lang/Object;", "Ljava/lang/Object;")
             } == true
-        } ?: error("The landscape lyrics slot is missing")
+        } ?: error("The landscape translation slot is missing")
     val gotos = setOf(Opcode.GOTO, Opcode.GOTO_16, Opcode.GOTO_32)
     val first =
         (content until code.size).firstOrNull { code[it].opcode in gotos }
-            ?: error("The landscape lyrics branch no longer jumps to the box's end")
+            ?: error("The landscape translation slot no longer jumps to the slot's end")
     val close = (code[first] as BuilderOffsetInstruction).target.location.index
     check(code[close].isEnd()) {
-        "The landscape lyrics box no longer closes where the branches meet"
+        "The landscape translation slot no longer closes where the branches meet"
     }
     // Branches keep their label on the closing call, so the hook goes before the jump into it.
     val jumps =
@@ -454,14 +642,23 @@ private fun hookLandscape(method: MutableMethod): Boolean {
             code[it].opcode in gotos &&
                 (code[it] as BuilderOffsetInstruction).target.location.index == close
         }
-    check(jumps.size == 1 && code[close - 1].opcode in gotos) {
-        "The landscape lyrics box is reached another way (${jumps.size})"
+    val entries =
+        code.indices.filter {
+            (code[it] as? BuilderOffsetInstruction)?.target?.location?.index == close
+        }
+    check(jumps.size == 1 && entries == jumps && code[close - 1].opcode in gotos) {
+        "The landscape translation slot has a branch that could bypass Karaoke"
     }
     val composer = (code[close] as FiveRegisterInstruction).registerC
     check(composer < 16) { "Lyrics composer register out of range" }
+    // The later place first, so the earlier index still holds.
     method.addInstruction(
         jumps.single(),
         "invoke-static {v$composer}, $KARAOKE->landscape(Ljava/lang/Object;)V",
+    )
+    method.addInstructions(
+        convert + 1,
+        "invoke-static {v$side}, $KARAOKE->landscapeReserve(F)F\nmove-result v$side",
     )
     return true
 }

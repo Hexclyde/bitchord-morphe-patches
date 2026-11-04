@@ -4,11 +4,14 @@ Requires JDK 21, Maven 3.9+, network access, and about 2 GB for framework jars.
 """
 
 from pathlib import Path
-import os, shutil, subprocess, urllib.request, zipfile, io, hashlib, sys
+import os, shutil, subprocess, urllib.request, zipfile, io, hashlib, sys, fcntl
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 SOURCES = HERE / "src/test/java"
+(ROOT / ".deps").mkdir(exist_ok=True)
+stage_lock = (ROOT / ".deps" / "ui-tests.lock").open("a")
+fcntl.flock(stage_lock, fcntl.LOCK_EX)
 sys.path.insert(0, str(ROOT))
 from buildenv import patch_version_source
 
@@ -156,6 +159,7 @@ for name in (
     "RecordingIdentity.java",
     "DownloadControls.java",
     "DownloadSelection.java",
+    "DownloadFolder.java",
     "StorageSense.java",
     "StorageSenseActive.java",
     "StorageSenseActivity.java",

@@ -54,7 +54,14 @@ final class TransitionWaveCache {
     private static final ExecutorService preloads =
             Executors.newSingleThreadExecutor(
                     task -> {
-                        Thread t = new Thread(task, "automix-peak-prefetch");
+                        Thread t =
+                                new Thread(
+                                        () -> {
+                                            android.os.Process.setThreadPriority(
+                                                    android.os.Process.THREAD_PRIORITY_BACKGROUND);
+                                            task.run();
+                                        },
+                                        "automix-peak-prefetch");
                         t.setDaemon(true);
                         return t;
                     });

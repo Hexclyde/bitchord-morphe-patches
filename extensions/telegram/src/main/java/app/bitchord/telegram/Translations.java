@@ -851,6 +851,9 @@ final class Translations {
             "BitChord decodes every song",
             "\u064a\u0641\u0643 BitChord \u062a\u0631\u0645\u064a\u0632 \u0643\u0644"
                     + " \u0623\u063a\u0646\u064a\u0629",
+            "BitChord default",
+            "\u0627\u0644\u0625\u0639\u062f\u0627\u062f"
+                + " \u0627\u0644\u0627\u0641\u062a\u0631\u0627\u0636\u064a \u0644\u0640 BitChord",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -1152,6 +1155,12 @@ final class Translations {
             "Check saved copies",
             "\u0641\u062d\u0635 \u0627\u0644\u0646\u0633\u062e"
                     + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638\u0629",
+            "Check the download folder before retrying this file",
+            "\u062a\u062d\u0642\u0642 \u0645\u0646 \u0645\u062c\u0644\u062f"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644 \u0642\u0628\u0644"
+                    + " \u0625\u0639\u0627\u062f\u0629 \u0645\u062d\u0627\u0648\u0644\u0629"
+                    + " \u062a\u0646\u0632\u064a\u0644 \u0647\u0630\u0627"
+                    + " \u0627\u0644\u0645\u0644\u0641",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -1819,6 +1828,9 @@ final class Translations {
             "\u062e\u0641\u0636 \u0628\u0646\u0633\u0628\u0629 1%",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "\u0645\u062c\u0644\u062f \u0627\u0644\u062a\u0646\u0632\u064a\u0644"
+                    + " \u0627\u0644\u0627\u0641\u062a\u0631\u0627\u0636\u064a",
             "Default order",
             "Default order",
             "Delete",
@@ -2021,6 +2033,18 @@ final class Translations {
             "Download Explorer",
             "Download FLAC or MP3 from flacdownloader.com",
             "\u0646\u0632\u0651\u0644 FLAC \u0623\u0648 MP3 \u0645\u0646 flacdownloader.com",
+            "Download folder unavailable",
+            "\u0645\u062c\u0644\u062f \u0627\u0644\u062a\u0646\u0632\u064a\u0644 \u063a\u064a\u0631"
+                    + " \u0645\u062a\u0627\u062d",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "\u0645\u062c\u0644\u062f \u0627\u0644\u062a\u0646\u0632\u064a\u0644 \u063a\u064a\u0631"
+                    + " \u0645\u062a\u0627\u062d. \u0623\u0639\u062f \u062a\u0648\u0635\u064a\u0644"
+                    + " \u0648\u062d\u062f\u0629 \u0627\u0644\u062a\u062e\u0632\u064a\u0646"
+                    + " \u0623\u0648 \u0627\u062e\u062a\u0631 \u0627\u0644\u0645\u062c\u0644\u062f"
+                    + " \u0645\u062c\u062f\u062f\u064b\u0627 \u0641\u064a"
+                    + " \u0625\u0639\u062f\u0627\u062f\u0627\u062a"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644\u0627\u062a.",
             "Download formats",
             "\u0635\u064a\u063a \u0627\u0644\u062a\u0646\u0632\u064a\u0644",
             "Download from {0}",
@@ -3326,6 +3350,17 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "\u062a\u064f\u062d\u0641\u0638 \u0627\u0644\u0645\u0644\u0641\u0627\u062a"
+                    + " \u0627\u0644\u0635\u0648\u062a\u064a\u0629"
+                    + " \u0627\u0644\u062c\u062f\u064a\u062f\u0629 \u0641\u064a \u0647\u0630\u0627"
+                    + " \u0627\u0644\u0645\u062c\u0644\u062f. \u062a\u0628\u0642\u0649"
+                    + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644\u0627\u062a"
+                    + " \u0627\u0644\u0645\u0646\u062a\u0638\u0631\u0629"
+                    + " \u0648\u0627\u0644\u0645\u0644\u0641\u0627\u062a"
+                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638\u0629 \u0641\u064a"
+                    + " \u0645\u0648\u0627\u0642\u0639\u0647\u0627.",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -4915,6 +4950,14 @@ final class Translations {
                     + " \u0627\u0644\u0645\u062d\u062f\u062f\u0629",
             "Saving\u2026",
             "\u062c\u0627\u0631\u064d \u0627\u0644\u062d\u0641\u0638\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "\u062a\u0638\u0647\u0631 \u0628\u0637\u0627\u0642\u0627\u062a SD"
+                + " \u0648\u0648\u062d\u062f\u0627\u062a USB \u0641\u064a"
+                + " \u0645\u0646\u062a\u0642\u064a \u0627\u0644\u0645\u062c\u0644\u062f\u0627\u062a"
+                + " \u0641\u064a Android. \u062a\u0628\u0642\u0649 \u062d\u0632\u0645 HLS/DASH"
+                + " \u063a\u064a\u0631 \u0627\u0644\u0645\u062a\u0635\u0644\u0629 \u0641\u064a"
+                + " \u0645\u0633\u0627\u062d\u0629 \u062a\u062e\u0632\u064a\u0646 BitChord.",
             "Search",
             "\u0628\u062d\u062b",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -5550,8 +5593,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "\u0627\u0644\u0645\u0635\u062f\u0631: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -6578,8 +6619,6 @@ final class Translations {
                     + " \u0633\u0637\u0631\u060c \u0628\u062d\u062f \u0623\u0642\u0635\u0649 16",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "\u0625\u064a\u0642\u0627\u0641 \u0627\u0644\u0643\u0627\u0631\u064a\u0648\u0643\u064a",
             "Turn off",
             "\u0625\u064a\u0642\u0627\u0641",
             "Turn off YouTube Music?",
@@ -6712,6 +6751,14 @@ final class Translations {
                 + " \u0644\u0647\u0630\u0627 \u0627\u0644\u063a\u0631\u0636.",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0625\u0639\u062f\u0627\u062f BitChord"
+                    + " \u0627\u0644\u0627\u0641\u062a\u0631\u0627\u0636\u064a",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0625\u0639\u062f\u0627\u062f"
+                + " \u0627\u0644\u062a\u062e\u0632\u064a\u0646 \u0627\u0644\u062e\u0627\u0635"
+                + " \u0628\u0640 BitChord \u0644\u0644\u062a\u0646\u0632\u064a\u0644\u0627\u062a"
+                + " \u0627\u0644\u062c\u062f\u064a\u062f\u0629",
             "Use compatible relay selection",
             "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0627\u062e\u062a\u064a\u0627\u0631"
                     + " \u062e\u0648\u0627\u062f\u0645 \u062a\u0631\u062d\u064a\u0644"
@@ -8377,6 +8424,8 @@ final class Translations {
             "BitChord decodes every song",
             "BitChord \u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u0997\u09be\u09a8"
                     + " \u09a8\u09bf\u099c\u09c7 \u09a1\u09bf\u0995\u09cb\u09a1 \u0995\u09b0\u09c7",
+            "BitChord default",
+            "BitChord-\u098f\u09b0 \u09a1\u09bf\u09ab\u09b2\u09cd\u099f",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -8692,6 +8741,12 @@ final class Translations {
             "Check saved copies",
             "\u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09bf\u09a4 \u0995\u09aa\u09bf"
                     + " \u09af\u09be\u099a\u09be\u0987 \u0995\u09b0\u09c1\u09a8",
+            "Check the download folder before retrying this file",
+            "\u098f\u0987 \u09ab\u09be\u0987\u09b2\u099f\u09bf \u0986\u09ac\u09be\u09b0"
+                    + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09be\u09b0"
+                    + " \u0986\u0997\u09c7 \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                    + " \u09ab\u09cb\u09b2\u09cd\u09a1\u09be\u09b0\u099f\u09bf"
+                    + " \u09a6\u09c7\u0996\u09c1\u09a8",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -9416,6 +9471,9 @@ final class Translations {
             "1% \u0995\u09ae\u09be\u09a8",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "\u09a1\u09bf\u09ab\u09b2\u09cd\u099f \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                    + " \u09ab\u09cb\u09b2\u09cd\u09a1\u09be\u09b0",
             "Default order",
             "Default order",
             "Delete",
@@ -9636,6 +9694,23 @@ final class Translations {
             "Download FLAC or MP3 from flacdownloader.com",
             "flacdownloader.com \u09a5\u09c7\u0995\u09c7 FLAC \u09ac\u09be MP3"
                     + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u0995\u09b0\u09c1\u09a8",
+            "Download folder unavailable",
+            "\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                    + " \u09ab\u09cb\u09b2\u09cd\u09a1\u09be\u09b0\u099f\u09bf"
+                    + " \u09aa\u09be\u0993\u09af\u09bc\u09be \u09af\u09be\u099a\u09cd\u099b\u09c7"
+                    + " \u09a8\u09be",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                + " \u09ab\u09cb\u09b2\u09cd\u09a1\u09be\u09b0\u099f\u09bf"
+                + " \u09aa\u09be\u0993\u09af\u09bc\u09be \u09af\u09be\u099a\u09cd\u099b\u09c7"
+                + " \u09a8\u09be\u0964 \u09a1\u09cd\u09b0\u09be\u0987\u09ad\u099f\u09bf"
+                + " \u0986\u09ac\u09be\u09b0 \u09b8\u0982\u09af\u09c1\u0995\u09cd\u09a4"
+                + " \u0995\u09b0\u09c1\u09a8 \u0985\u09a5\u09ac\u09be"
+                + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1"
+                + " \u09b8\u09c7\u099f\u09bf\u0982\u09b8\u09c7"
+                + " \u09ab\u09cb\u09b2\u09cd\u09a1\u09be\u09b0\u099f\u09bf \u0986\u09ac\u09be\u09b0"
+                + " \u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a8\u0964",
             "Download formats",
             "\u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u09ab\u09b0\u09ae\u09cd\u09af\u09be\u099f",
             "Download from {0}",
@@ -11044,6 +11119,17 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "\u09a8\u09a4\u09c1\u09a8 \u0985\u09a1\u09bf\u0993 \u09ab\u09be\u0987\u09b2"
+                + " \u098f\u0987 \u09ab\u09cb\u09b2\u09cd\u09a1\u09be\u09b0\u09c7"
+                + " \u09b0\u09be\u0996\u09be \u09b9\u09ac\u09c7\u0964"
+                + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09ae\u09be\u09a3"
+                + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u0993"
+                + " \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09bf\u09a4"
+                + " \u09ab\u09be\u0987\u09b2\u09c7\u09b0 \u0985\u09ac\u09b8\u09cd\u09a5\u09be\u09a8"
+                + " \u0985\u09aa\u09b0\u09bf\u09ac\u09b0\u09cd\u09a4\u09bf\u09a4"
+                + " \u09a5\u09be\u0995\u09ac\u09c7\u0964",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -12766,6 +12852,17 @@ final class Translations {
                     + " \u09b9\u099a\u09cd\u099b\u09c7",
             "Saving\u2026",
             "\u09b8\u09c7\u09ad \u09b9\u099a\u09cd\u099b\u09c7\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "Android-\u098f\u09b0 \u09ab\u09cb\u09b2\u09cd\u09a1\u09be\u09b0"
+                + " \u09ac\u09be\u099b\u09be\u0987 \u09aa\u09b0\u09cd\u09a6\u09be\u09af\u09bc SD"
+                + " \u0995\u09be\u09b0\u09cd\u09a1 \u0993 USB \u09a1\u09cd\u09b0\u09be\u0987\u09ad"
+                + " \u09a6\u09c7\u0996\u09be \u09af\u09be\u09af\u09bc\u0964"
+                + " \u0985\u09ab\u09b2\u09be\u0987\u09a8 HLS/DASH"
+                + " \u09aa\u09cd\u09af\u09be\u0995\u09c7\u099c BitChord-\u098f\u09b0"
+                + " \u09a8\u09bf\u099c\u09b8\u09cd\u09ac"
+                + " \u09b8\u09cd\u099f\u09cb\u09b0\u09c7\u099c\u09c7\u0987"
+                + " \u09a5\u09be\u0995\u09ac\u09c7\u0964",
             "Search",
             "\u09b8\u09be\u09b0\u09cd\u099a \u0995\u09b0\u09c1\u09a8",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -13423,8 +13520,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "\u0989\u09ce\u09b8: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -14518,9 +14613,6 @@ final class Translations {
                 + " \u0995\u09c0, \u09b8\u09b0\u09cd\u09ac\u09cb\u099a\u09cd\u099a 16\u099f\u09bf",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "\u0995\u09be\u09b0\u09be\u0993\u0995\u09c7 \u09ac\u09a8\u09cd\u09a7"
-                    + " \u0995\u09b0\u09c1\u09a8",
             "Turn off",
             "\u09ac\u09a8\u09cd\u09a7 \u0995\u09b0\u09c1\u09a8",
             "Turn off YouTube Music?",
@@ -14661,6 +14753,15 @@ final class Translations {
                 + " \u09a8\u09be\u0964",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "BitChord-\u098f\u09b0 \u09a1\u09bf\u09ab\u09b2\u09cd\u099f"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09c1\u09a8",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "\u09a8\u09a4\u09c1\u09a8 \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0"
+                + " \u099c\u09a8\u09cd\u09af BitChord-\u098f\u09b0"
+                + " \u09a8\u09bf\u099c\u09b8\u09cd\u09ac \u09b8\u09cd\u099f\u09cb\u09b0\u09c7\u099c"
+                + " \u09b8\u09c7\u099f\u09bf\u0982 \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0"
+                + " \u0995\u09b0\u09c1\u09a8",
             "Use compatible relay selection",
             "\u09b8\u09be\u09ae\u099e\u09cd\u099c\u09b8\u09cd\u09af\u09aa\u09c2\u09b0\u09cd\u09a3"
                     + " \u09b0\u09bf\u09b2\u09c7 \u09a8\u09bf\u09b0\u09cd\u09ac\u09be\u099a\u09a8"
@@ -16010,6 +16111,8 @@ final class Translations {
             "BitChord konnte diesen Download nicht starten. Versuche es erneut.",
             "BitChord decodes every song",
             "BitChord dekodiert jeden Song",
+            "BitChord default",
+            "BitChord-Standard",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -16182,6 +16285,8 @@ final class Translations {
             "Treffer am Klang pr\u00fcfen",
             "Check saved copies",
             "Gespeicherte Kopien pr\u00fcfen",
+            "Check the download folder before retrying this file",
+            "Pr\u00fcfe vor dem erneuten Herunterladen dieser Datei den Downloadordner",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -16619,6 +16724,8 @@ final class Translations {
             "Um 1 % verringern",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "Standard-Downloadordner",
             "Default order",
             "Default order",
             "Delete",
@@ -16759,6 +16866,12 @@ final class Translations {
             "Download Explorer",
             "Download FLAC or MP3 from flacdownloader.com",
             "FLAC oder MP3 von flacdownloader.com herunterladen",
+            "Download folder unavailable",
+            "Downloadordner nicht verf\u00fcgbar",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "Downloadordner nicht verf\u00fcgbar. Verbinde das Laufwerk erneut oder w\u00e4hle den"
+                    + " Ordner in den Download-Einstellungen erneut aus.",
             "Download formats",
             "Download-Formate",
             "Download from {0}",
@@ -17597,6 +17710,10 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "Neue Audiodateien werden in diesem Ordner gespeichert. Bereits eingereihte Downloads"
+                    + " und gespeicherte Dateien behalten ihren Speicherort.",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -18672,6 +18789,10 @@ final class Translations {
             "Ausgew\u00e4hlte Kopien werden gespeichert",
             "Saving\u2026",
             "Wird gespeichert\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "SD-Karten und USB-Laufwerke erscheinen in der Android-Ordnerauswahl."
+                    + " Offline-HLS/DASH-Pakete bleiben im eigenen Speicher von BitChord.",
             "Search",
             "Suchen",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -19066,8 +19187,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "Quelle: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -19666,8 +19785,6 @@ final class Translations {
                     + " 64 Zeichen pro Zeile, h\u00f6chstens 16",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "Karaoke ausschalten",
             "Turn off",
             "Ausschalten",
             "Turn off YouTube Music?",
@@ -19753,6 +19870,10 @@ final class Translations {
                     + " kein Dienst integriert, und BitChord betreibt daf\u00fcr keinen Server.",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "BitChord-Standard verwenden",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "F\u00fcr neue Downloads die Speichereinstellung von BitChord verwenden",
             "Use compatible relay selection",
             "Kompatible Relay-Auswahl verwenden",
             "Use configured main channel",
@@ -20741,6 +20862,8 @@ final class Translations {
             "BitChord no pudo iniciar esta descarga. Int\u00e9ntalo de nuevo.",
             "BitChord decodes every song",
             "BitChord decodifica todas las canciones",
+            "BitChord default",
+            "Predeterminado de BitChord",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -20913,6 +21036,8 @@ final class Translations {
             "Comprobar coincidencias por sonido",
             "Check saved copies",
             "Comprobar copias guardadas",
+            "Check the download folder before retrying this file",
+            "Comprueba la carpeta de descarga antes de volver a intentar descargar este archivo",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -21351,6 +21476,8 @@ final class Translations {
             "Reducir un 1%",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "Carpeta de descarga predeterminada",
             "Default order",
             "Default order",
             "Delete",
@@ -21491,6 +21618,12 @@ final class Translations {
             "Download Explorer",
             "Download FLAC or MP3 from flacdownloader.com",
             "Descarga FLAC o MP3 desde flacdownloader.com",
+            "Download folder unavailable",
+            "Carpeta de descarga no disponible",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "La carpeta de descarga no est\u00e1 disponible. Vuelve a conectar la unidad o"
+                    + " selecciona otra vez la carpeta en los ajustes de Descargas.",
             "Download formats",
             "Formatos de descarga",
             "Download from {0}",
@@ -22334,6 +22467,10 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "Los archivos de audio nuevos usan esta carpeta. Las descargas en cola y los archivos"
+                    + " guardados conservan su ubicaci\u00f3n.",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -23413,6 +23550,10 @@ final class Translations {
             "Guardando las copias elegidas",
             "Saving\u2026",
             "Guardando\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "Las tarjetas SD y las unidades USB aparecen en el selector de carpetas de Android. Los"
+                + " paquetes HLS/DASH sin conexi\u00f3n siguen en el almacenamiento de BitChord.",
             "Search",
             "Buscar",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -23806,8 +23947,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "Fuente: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -24403,8 +24542,6 @@ final class Translations {
                     + " hasta 16",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "Desactivar Karaoke",
             "Turn off",
             "Desactivar",
             "Turn off YouTube Music?",
@@ -24491,6 +24628,10 @@ final class Translations {
                 + " esto.",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "Usar el valor predeterminado de BitChord",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "Usar el ajuste de almacenamiento de BitChord para las descargas nuevas",
             "Use compatible relay selection",
             "Usar selecci\u00f3n de rel\u00e9s compatibles",
             "Use configured main channel",
@@ -25491,6 +25632,8 @@ final class Translations {
             "BitChord n'a pas pu d\u00e9marrer ce t\u00e9l\u00e9chargement. R\u00e9essayez.",
             "BitChord decodes every song",
             "BitChord d\u00e9code chaque morceau",
+            "BitChord default",
+            "Valeur par d\u00e9faut de BitChord",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -25669,6 +25812,9 @@ final class Translations {
             "V\u00e9rifier les correspondances au son",
             "Check saved copies",
             "V\u00e9rifier les copies enregistr\u00e9es",
+            "Check the download folder before retrying this file",
+            "V\u00e9rifiez le dossier de t\u00e9l\u00e9chargement avant de r\u00e9essayer de"
+                    + " t\u00e9l\u00e9charger ce fichier",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -26112,6 +26258,8 @@ final class Translations {
             "Diminuer de 1 %",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "Dossier de t\u00e9l\u00e9chargement par d\u00e9faut",
             "Default order",
             "Default order",
             "Delete",
@@ -26255,6 +26403,13 @@ final class Translations {
             "Download Explorer",
             "Download FLAC or MP3 from flacdownloader.com",
             "T\u00e9l\u00e9chargez du FLAC ou du MP3 depuis flacdownloader.com",
+            "Download folder unavailable",
+            "Dossier de t\u00e9l\u00e9chargement indisponible",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "Le dossier de t\u00e9l\u00e9chargement est indisponible. Rebranchez le support ou"
+                    + " s\u00e9lectionnez \u00e0 nouveau le dossier dans les param\u00e8tres de"
+                    + " T\u00e9l\u00e9chargements.",
             "Download formats",
             "Formats de t\u00e9l\u00e9chargement",
             "Download from {0}",
@@ -27109,6 +27264,10 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "Les nouveaux fichiers audio utilisent ce dossier. Les t\u00e9l\u00e9chargements en"
+                    + " attente et les fichiers enregistr\u00e9s conservent leur emplacement.",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -28211,6 +28370,11 @@ final class Translations {
             "Enregistrement des copies choisies",
             "Saving\u2026",
             "Enregistrement\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "Les cartes SD et les supports USB apparaissent dans le s\u00e9lecteur de dossiers"
+                    + " Android. Les paquets HLS/DASH hors connexion restent dans le stockage de"
+                    + " BitChord.",
             "Search",
             "Rechercher",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -28614,8 +28778,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "Source : Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -29221,8 +29383,6 @@ final class Translations {
                     + " ligne, jusqu\u2019\u00e0 16",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "D\u00e9sactiver Karaok\u00e9",
             "Turn off",
             "D\u00e9sactiver",
             "Turn off YouTube Music?",
@@ -29311,6 +29471,11 @@ final class Translations {
                 + " aucun serveur pour cela.",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "Utiliser la valeur par d\u00e9faut de BitChord",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "Utiliser le r\u00e9glage de stockage de BitChord pour les nouveaux"
+                    + " t\u00e9l\u00e9chargements",
             "Use compatible relay selection",
             "Utiliser la s\u00e9lection de relais compatibles",
             "Use configured main channel",
@@ -30564,6 +30729,8 @@ final class Translations {
                     + " \u05dc\u05e0\u05e1\u05d5\u05ea \u05e9\u05d5\u05d1.",
             "BitChord decodes every song",
             "BitChord \u05de\u05e4\u05e2\u05e0\u05d7 \u05db\u05dc \u05e9\u05d9\u05e8",
+            "BitChord default",
+            "\u05d1\u05e8\u05d9\u05e8\u05ea \u05d4\u05de\u05d7\u05d3\u05dc \u05e9\u05dc BitChord",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -30849,6 +31016,12 @@ final class Translations {
             "Check saved copies",
             "\u05d1\u05d3\u05d9\u05e7\u05ea \u05e2\u05d5\u05ea\u05e7\u05d9\u05dd"
                     + " \u05e9\u05de\u05d5\u05e8\u05d9\u05dd",
+            "Check the download folder before retrying this file",
+            "\u05d9\u05e9 \u05dc\u05d1\u05d3\u05d5\u05e7 \u05d0\u05ea"
+                    + " \u05ea\u05d9\u05e7\u05d9\u05d9\u05ea \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4"
+                    + " \u05dc\u05e4\u05e0\u05d9 \u05e0\u05d9\u05e1\u05d9\u05d5\u05df"
+                    + " \u05e0\u05d5\u05e1\u05e3 \u05dc\u05d4\u05d5\u05e8\u05d9\u05d3 \u05d0\u05ea"
+                    + " \u05d4\u05e7\u05d5\u05d1\u05e5",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -31483,6 +31656,9 @@ final class Translations {
             "\u05d4\u05e7\u05d8\u05e0\u05d4 \u05d1-1%",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "\u05ea\u05d9\u05e7\u05d9\u05d9\u05ea \u05d4\u05d5\u05e8\u05d3\u05d4"
+                    + " \u05db\u05d1\u05e8\u05d9\u05e8\u05ea \u05de\u05d7\u05d3\u05dc",
             "Default order",
             "Default order",
             "Delete",
@@ -31673,6 +31849,18 @@ final class Translations {
             "Download Explorer",
             "Download FLAC or MP3 from flacdownloader.com",
             "\u05d4\u05d5\u05e8\u05d3\u05ea FLAC \u05d0\u05d5 MP3 \u05de-flacdownloader.com",
+            "Download folder unavailable",
+            "\u05ea\u05d9\u05e7\u05d9\u05d9\u05ea \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4"
+                    + " \u05d0\u05d9\u05e0\u05d4 \u05d6\u05de\u05d9\u05e0\u05d4",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "\u05ea\u05d9\u05e7\u05d9\u05d9\u05ea \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4"
+                    + " \u05d0\u05d9\u05e0\u05d4 \u05d6\u05de\u05d9\u05e0\u05d4. \u05d9\u05e9"
+                    + " \u05dc\u05d7\u05d1\u05e8 \u05de\u05d7\u05d3\u05e9 \u05d0\u05ea"
+                    + " \u05d4\u05db\u05d5\u05e0\u05df \u05d0\u05d5 \u05dc\u05d1\u05d7\u05d5\u05e8"
+                    + " \u05e9\u05d5\u05d1 \u05d0\u05ea \u05d4\u05ea\u05d9\u05e7\u05d9\u05d9\u05d4"
+                    + " \u05d1\u05d4\u05d2\u05d3\u05e8\u05d5\u05ea"
+                    + " \u05d4\u05d4\u05d5\u05e8\u05d3\u05d5\u05ea.",
             "Download formats",
             "\u05e4\u05d5\u05e8\u05de\u05d8\u05d9\u05dd \u05dc\u05d4\u05d5\u05e8\u05d3\u05d4",
             "Download from {0}",
@@ -32928,6 +33116,14 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "\u05e7\u05d5\u05d1\u05e6\u05d9 \u05e9\u05de\u05e2 \u05d7\u05d3\u05e9\u05d9\u05dd"
+                + " \u05d9\u05d9\u05e9\u05de\u05e8\u05d5 \u05d1\u05ea\u05d9\u05e7\u05d9\u05d9\u05d4"
+                + " \u05d6\u05d5. \u05d4\u05d5\u05e8\u05d3\u05d5\u05ea \u05e9\u05db\u05d1\u05e8"
+                + " \u05d1\u05ea\u05d5\u05e8 \u05d5\u05e7\u05d1\u05e6\u05d9\u05dd"
+                + " \u05e9\u05de\u05d5\u05e8\u05d9\u05dd \u05d9\u05d9\u05e9\u05d0\u05e8\u05d5"
+                + " \u05d1\u05de\u05d9\u05e7\u05d5\u05de\u05dd.",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -34424,6 +34620,15 @@ final class Translations {
                     + " \u05e9\u05e0\u05d1\u05d7\u05e8\u05d5",
             "Saving\u2026",
             "\u05e9\u05d5\u05de\u05e8\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "\u05db\u05e8\u05d8\u05d9\u05e1\u05d9 SD \u05d5\u05db\u05d5\u05e0\u05e0\u05d9 USB"
+                    + " \u05de\u05d5\u05e4\u05d9\u05e2\u05d9\u05dd \u05d1\u05d1\u05d5\u05e8\u05e8"
+                    + " \u05d4\u05ea\u05d9\u05e7\u05d9\u05d5\u05ea \u05e9\u05dc Android."
+                    + " \u05d7\u05d1\u05d9\u05dc\u05d5\u05ea HLS/DASH"
+                    + " \u05dc\u05e9\u05d9\u05de\u05d5\u05e9 \u05dc\u05dc\u05d0"
+                    + " \u05d7\u05d9\u05d1\u05d5\u05e8 \u05d9\u05d9\u05e9\u05d0\u05e8\u05d5"
+                    + " \u05d1\u05d0\u05d7\u05e1\u05d5\u05df \u05e9\u05dc BitChord.",
             "Search",
             "\u05d7\u05d9\u05e4\u05d5\u05e9",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -35011,8 +35216,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "\u05de\u05e7\u05d5\u05e8: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -35981,8 +36184,6 @@ final class Translations {
                     + " \u05d1\u05db\u05dc \u05e9\u05d5\u05e8\u05d4, \u05e2\u05d3 16",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "\u05db\u05d9\u05d1\u05d5\u05d9 \u05d4\u05e7\u05e8\u05d9\u05d5\u05e7\u05d9",
             "Turn off",
             "\u05db\u05d1\u05d4",
             "Turn off YouTube Music?",
@@ -36105,6 +36306,13 @@ final class Translations {
                     + " \u05db\u05da.",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "\u05e9\u05d9\u05de\u05d5\u05e9 \u05d1\u05d1\u05e8\u05d9\u05e8\u05ea"
+                    + " \u05d4\u05de\u05d7\u05d3\u05dc \u05e9\u05dc BitChord",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "\u05e9\u05d9\u05de\u05d5\u05e9 \u05d1\u05d4\u05d2\u05d3\u05e8\u05ea"
+                    + " \u05d4\u05d0\u05d7\u05e1\u05d5\u05df \u05e9\u05dc BitChord"
+                    + " \u05dc\u05d4\u05d5\u05e8\u05d3\u05d5\u05ea \u05d7\u05d3\u05e9\u05d5\u05ea",
             "Use compatible relay selection",
             "\u05e9\u05d9\u05de\u05d5\u05e9 \u05d1\u05d1\u05d7\u05d9\u05e8\u05ea"
                     + " \u05de\u05de\u05e1\u05e8\u05d9\u05dd \u05ea\u05d5\u05d0\u05de\u05ea",
@@ -37715,6 +37923,8 @@ final class Translations {
             "BitChord decodes every song",
             "BitChord \u0939\u0930 \u0917\u093e\u0928\u093e \u0916\u0941\u0926"
                     + " \u0921\u093f\u0915\u094b\u0921 \u0915\u0930\u0924\u093e \u0939\u0948",
+            "BitChord default",
+            "BitChord \u0915\u093e \u0921\u093f\u092b\u093c\u0949\u0932\u094d\u091f",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -38027,6 +38237,13 @@ final class Translations {
             "Check saved copies",
             "\u0938\u0939\u0947\u091c\u0940 \u0917\u0908 \u0915\u0949\u092a\u093f\u092f\u093e\u0901"
                     + " \u091c\u093e\u0901\u091a\u0947\u0902",
+            "Check the download folder before retrying this file",
+            "\u0907\u0938 \u092b\u093c\u093e\u0907\u0932 \u0915\u094b"
+                + " \u0926\u094b\u092c\u093e\u0930\u093e \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                + " \u0915\u0930\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947"
+                + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                + " \u092b\u093c\u094b\u0932\u094d\u0921\u0930"
+                + " \u091c\u093e\u0901\u091a\u0947\u0902",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -38725,6 +38942,10 @@ final class Translations {
             "1% \u0918\u091f\u093e\u090f\u0901",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "\u0921\u093f\u092b\u093c\u0949\u0932\u094d\u091f"
+                    + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u092b\u093c\u094b\u0932\u094d\u0921\u0930",
             "Default order",
             "Default order",
             "Delete",
@@ -38941,6 +39162,19 @@ final class Translations {
             "Download FLAC or MP3 from flacdownloader.com",
             "flacdownloader.com \u0938\u0947 FLAC \u092f\u093e MP3"
                     + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0930\u0947\u0902",
+            "Download folder unavailable",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u092b\u093c\u094b\u0932\u094d\u0921\u0930"
+                    + " \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902 \u0939\u0948",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "\u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u092b\u093c\u094b\u0932\u094d\u0921\u0930"
+                    + " \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902"
+                    + " \u0939\u0948\u0964 \u0921\u094d\u0930\u093e\u0907\u0935"
+                    + " \u0926\u094b\u092c\u093e\u0930\u093e \u091c\u094b\u0921\u093c\u0947\u0902"
+                    + " \u092f\u093e \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u0938\u0947\u091f\u093f\u0902\u0917 \u092e\u0947\u0902"
+                    + " \u092b\u093c\u094b\u0932\u094d\u0921\u0930 \u092b\u093f\u0930 \u0938\u0947"
+                    + " \u091a\u0941\u0928\u0947\u0902\u0964",
             "Download formats",
             "\u0921\u093e\u0909\u0928\u0932\u094b\u0921"
                     + " \u092b\u093c\u0949\u0930\u094d\u092e\u0948\u091f",
@@ -40346,6 +40580,16 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "\u0928\u0908 \u0911\u0921\u093f\u092f\u094b \u092b\u093c\u093e\u0907\u0932\u0947\u0902"
+                    + " \u0907\u0938 \u092b\u093c\u094b\u0932\u094d\u0921\u0930 \u092e\u0947\u0902"
+                    + " \u0930\u0916\u0940 \u091c\u093e\u090f\u0901\u0917\u0940\u0964"
+                    + " \u0915\u0924\u093e\u0930 \u092e\u0947\u0902 \u092e\u094c\u091c\u0942\u0926"
+                    + " \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0914\u0930 \u0938\u0947\u0935"
+                    + " \u0915\u0940 \u0917\u0908 \u092b\u093c\u093e\u0907\u0932\u094b\u0902"
+                    + " \u0915\u0940 \u091c\u0917\u0939 \u0928\u0939\u0940\u0902"
+                    + " \u092c\u0926\u0932\u0947\u0917\u0940\u0964",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -42032,6 +42276,17 @@ final class Translations {
                     + " \u0939\u0948\u0902",
             "Saving\u2026",
             "\u0938\u0947\u0935 \u0939\u094b \u0930\u0939\u093e \u0939\u0948\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "SD \u0915\u093e\u0930\u094d\u0921 \u0914\u0930 USB"
+                + " \u0921\u094d\u0930\u093e\u0907\u0935 Android \u0915\u0947"
+                + " \u092b\u093c\u094b\u0932\u094d\u0921\u0930"
+                + " \u091a\u092f\u0928\u0915\u0930\u094d\u0924\u093e \u092e\u0947\u0902"
+                + " \u0926\u093f\u0916\u0924\u0947 \u0939\u0948\u0902\u0964"
+                + " \u0911\u092b\u093c\u0932\u093e\u0907\u0928 HLS/DASH"
+                + " \u092a\u0948\u0915\u0947\u091c BitChord \u0915\u0947 \u0905\u092a\u0928\u0947"
+                + " \u0938\u094d\u091f\u094b\u0930\u0947\u091c \u092e\u0947\u0902 \u0939\u0940"
+                + " \u0930\u0939\u0947\u0902\u0917\u0947\u0964",
             "Search",
             "\u0916\u094b\u091c\u0947\u0902",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -42692,8 +42947,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "\u0938\u094d\u0930\u094b\u0924: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -43775,8 +44028,6 @@ final class Translations {
                     + " \u0915\u0941\u0902\u091c\u0940, \u0905\u0927\u093f\u0915\u0924\u092e 16",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "\u0915\u0930\u093e\u0913\u0915\u0947 \u092c\u0902\u0926 \u0915\u0930\u0947\u0902",
             "Turn off",
             "\u092c\u0902\u0926 \u0915\u0930\u0947\u0902",
             "Turn off YouTube Music?",
@@ -43919,6 +44170,14 @@ final class Translations {
                 + " \u091a\u0932\u093e\u0924\u093e\u0964",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "BitChord \u0915\u093e \u0921\u093f\u092b\u093c\u0949\u0932\u094d\u091f"
+                    + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0947\u0902",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "\u0928\u090f \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0947"
+                + " \u0932\u093f\u090f BitChord \u0915\u0940 \u0905\u092a\u0928\u0940"
+                + " \u0938\u094d\u091f\u094b\u0930\u0947\u091c \u0938\u0947\u091f\u093f\u0902\u0917"
+                + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0947\u0902",
             "Use compatible relay selection",
             "\u0938\u0902\u0917\u0924 \u0930\u093f\u0932\u0947 \u0915\u093e \u091a\u092f\u0928"
                     + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0947\u0902",
@@ -45247,6 +45506,8 @@ final class Translations {
             "BitChord tidak dapat memulai unduhan ini. Coba lagi.",
             "BitChord decodes every song",
             "BitChord mendekode setiap lagu",
+            "BitChord default",
+            "Bawaan BitChord",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -45414,6 +45675,8 @@ final class Translations {
             "Cocokkan lewat suara",
             "Check saved copies",
             "Periksa salinan tersimpan",
+            "Check the download folder before retrying this file",
+            "Periksa folder unduhan sebelum mencoba mengunduh file ini lagi",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -45841,6 +46104,8 @@ final class Translations {
             "Kurangi 1%",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "Folder unduhan default",
             "Default order",
             "Default order",
             "Delete",
@@ -45978,6 +46243,12 @@ final class Translations {
             "Download Explorer",
             "Download FLAC or MP3 from flacdownloader.com",
             "Unduh FLAC atau MP3 dari flacdownloader.com",
+            "Download folder unavailable",
+            "Folder unduhan tidak tersedia",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "Folder unduhan tidak tersedia. Sambungkan kembali drive atau pilih ulang folder di"
+                    + " pengaturan Unduhan.",
             "Download formats",
             "Format unduhan",
             "Download from {0}",
@@ -46795,6 +47066,10 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "File audio baru menggunakan folder ini. Unduhan yang sudah mengantre dan file"
+                    + " tersimpan tetap di lokasinya.",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -47860,6 +48135,10 @@ final class Translations {
             "Menyimpan salinan pilihan",
             "Saving\u2026",
             "Menyimpan\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "Kartu SD dan drive USB muncul di pemilih folder Android. Paket HLS/DASH offline tetap"
+                    + " menggunakan penyimpanan BitChord sendiri.",
             "Search",
             "Cari",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -48241,8 +48520,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "Sumber: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -48820,8 +49097,6 @@ final class Translations {
             "Kunci publik perangkat mitra tepercaya: satu kunci 64 karakter per baris, maksimal 16",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "Matikan Karaoke",
             "Turn off",
             "Matikan",
             "Turn off YouTube Music?",
@@ -48904,6 +49179,10 @@ final class Translations {
                     + " layanan bawaan, dan BitChord tidak menjalankan server untuk ini.",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "Gunakan bawaan BitChord",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "Gunakan pengaturan penyimpanan BitChord untuk unduhan baru",
             "Use compatible relay selection",
             "Gunakan pilihan relai yang kompatibel",
             "Use configured main channel",
@@ -49876,6 +50155,8 @@ final class Translations {
             "BitChord non ha potuto avviare questo download. Riprova.",
             "BitChord decodes every song",
             "BitChord decodifica ogni brano",
+            "BitChord default",
+            "Predefinito di BitChord",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -50044,6 +50325,8 @@ final class Translations {
             "Verifica le corrispondenze dal suono",
             "Check saved copies",
             "Verifica copie salvate",
+            "Check the download folder before retrying this file",
+            "Controlla la cartella di download prima di riprovare a scaricare questo file",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -50478,6 +50761,8 @@ final class Translations {
             "Diminuisci dell\u20191%",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "Cartella di download predefinita",
             "Default order",
             "Default order",
             "Delete",
@@ -50616,6 +50901,12 @@ final class Translations {
             "Download Explorer",
             "Download FLAC or MP3 from flacdownloader.com",
             "Scarica FLAC o MP3 da flacdownloader.com",
+            "Download folder unavailable",
+            "Cartella di download non disponibile",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "La cartella di download non \u00e8 disponibile. Ricollega l'unit\u00e0 o seleziona di"
+                    + " nuovo la cartella nelle impostazioni dei download.",
             "Download formats",
             "Formati di download",
             "Download from {0}",
@@ -51445,6 +51736,10 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "I nuovi file audio usano questa cartella. I download gi\u00e0 in coda e i file salvati"
+                    + " mantengono la loro posizione.",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -52516,6 +52811,10 @@ final class Translations {
             "Salvataggio delle copie scelte",
             "Saving\u2026",
             "Salvataggio\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "Le schede SD e le unit\u00e0 USB compaiono nel selettore cartelle di Android. I"
+                    + " pacchetti HLS/DASH offline restano nella memoria di BitChord.",
             "Search",
             "Cerca",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -52904,8 +53203,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "Sorgente: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -53490,8 +53787,6 @@ final class Translations {
             "Chiavi pubbliche dei peer fidati: una chiave di 64 caratteri per riga, fino a 16",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "Disattiva Karaoke",
             "Turn off",
             "Disattiva",
             "Turn off YouTube Music?",
@@ -53577,6 +53872,10 @@ final class Translations {
                     + " \u00e8 integrato e BitChord non gestisce alcun server per questo.",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "Usa il valore predefinito di BitChord",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "Usa l'impostazione di archiviazione di BitChord per i nuovi download",
             "Use compatible relay selection",
             "Usa selezione di relay compatibili",
             "Use configured main channel",
@@ -54581,6 +54880,8 @@ final class Translations {
             "BitChord decodes every song",
             "BitChord"
                 + " \u304c\u3059\u3079\u3066\u306e\u66f2\u3092\u30c7\u30b3\u30fc\u30c9\u3057\u307e\u3059",
+            "BitChord default",
+            "BitChord\u306e\u65e2\u5b9a",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -54767,6 +55068,8 @@ final class Translations {
             "\u97f3\u3067\u4e00\u81f4\u3092\u78ba\u8a8d",
             "Check saved copies",
             "\u4fdd\u5b58\u6e08\u307f\u30b3\u30d4\u30fc\u3092\u78ba\u8a8d",
+            "Check the download folder before retrying this file",
+            "\u3053\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u518d\u8a66\u884c\u3059\u308b\u524d\u306b\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u30d5\u30a9\u30eb\u30c0\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -55193,6 +55496,8 @@ final class Translations {
             "1% \u4e0b\u3052\u308b",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "\u65e2\u5b9a\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u30d5\u30a9\u30eb\u30c0",
             "Default order",
             "Default order",
             "Delete",
@@ -55333,6 +55638,11 @@ final class Translations {
             "Download FLAC or MP3 from flacdownloader.com",
             "flacdownloader.com \u304b\u3089 FLAC \u307e\u305f\u306f MP3"
                     + " \u3092\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9",
+            "Download folder unavailable",
+            "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u30d5\u30a9\u30eb\u30c0\u3092\u5229\u7528\u3067\u304d\u307e\u305b\u3093",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u30d5\u30a9\u30eb\u30c0\u3092\u5229\u7528\u3067\u304d\u307e\u305b\u3093\u3002\u30c9\u30e9\u30a4\u30d6\u3092\u518d\u63a5\u7d9a\u3059\u308b\u304b\u3001\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u8a2d\u5b9a\u3067\u30d5\u30a9\u30eb\u30c0\u3092\u9078\u3073\u76f4\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "Download formats",
             "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u5f62\u5f0f",
             "Download from {0}",
@@ -56182,6 +56492,9 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "\u65b0\u3057\u3044\u97f3\u58f0\u30d5\u30a1\u30a4\u30eb\u306f\u3053\u306e\u30d5\u30a9\u30eb\u30c0\u306b\u4fdd\u5b58\u3055\u308c\u307e\u3059\u3002\u5f85\u6a5f\u4e2d\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3068\u4fdd\u5b58\u6e08\u307f\u30d5\u30a1\u30a4\u30eb\u306e\u5834\u6240\u306f\u5909\u308f\u308a\u307e\u305b\u3093\u3002",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -57246,6 +57559,9 @@ final class Translations {
             "\u9078\u629e\u3057\u305f\u30b3\u30d4\u30fc\u3092\u4fdd\u5b58\u4e2d",
             "Saving\u2026",
             "\u4fdd\u5b58\u4e2d\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "SD\u30ab\u30fc\u30c9\u3084USB\u30c9\u30e9\u30a4\u30d6\u306fAndroid\u306e\u30d5\u30a9\u30eb\u30c0\u9078\u629e\u753b\u9762\u306b\u8868\u793a\u3055\u308c\u307e\u3059\u3002\u30aa\u30d5\u30e9\u30a4\u30f3HLS/DASH\u30d1\u30c3\u30b1\u30fc\u30b8\u306f\u5f15\u304d\u7d9a\u304dBitChord\u72ec\u81ea\u306e\u4fdd\u5b58\u5148\u3092\u4f7f\u3044\u307e\u3059\u3002",
             "Search",
             "\u691c\u7d22",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -57632,8 +57948,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "\u30bd\u30fc\u30b9\uff1aSoulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -58267,8 +58581,6 @@ final class Translations {
             "\u4fe1\u983c\u3059\u308b\u30d4\u30a2\u306e\u516c\u958b\u30ad\u30fc\uff1a1\u884c\u306b64\u6587\u5b57\u306e\u30ad\u30fc1\u4ef6\u3001\u6700\u592716\u4ef6",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "\u30ab\u30e9\u30aa\u30b1\u3092\u30aa\u30d5\u306b\u3059\u308b",
             "Turn off",
             "\u30aa\u30d5\u306b\u3059\u308b",
             "Turn off YouTube Music?",
@@ -58354,6 +58666,10 @@ final class Translations {
                 + " \u306f\u3053\u306e\u305f\u3081\u306e\u30b5\u30fc\u30d0\u30fc\u3092\u904b\u55b6\u3057\u3066\u3044\u307e\u305b\u3093\u3002",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "BitChord\u306e\u65e2\u5b9a\u3092\u4f7f\u3046",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "\u65b0\u3057\u3044\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u306bBitChord\u72ec\u81ea\u306e\u4fdd\u5b58\u5148\u8a2d\u5b9a\u3092\u4f7f\u3046",
             "Use compatible relay selection",
             "\u4e92\u63db\u6027\u306e\u3042\u308b\u30ea\u30ec\u30fc\u306e\u9078\u629e\u3092\u4f7f\u7528",
             "Use configured main channel",
@@ -59443,6 +59759,8 @@ final class Translations {
             "BitChord decodes every song",
             "BitChord\uac00 \ubaa8\ub4e0 \uace1\uc744 \uc9c1\uc811"
                     + " \ub514\ucf54\ub529\ud569\ub2c8\ub2e4",
+            "BitChord default",
+            "BitChord \uae30\ubcf8\uac12",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -59654,6 +59972,10 @@ final class Translations {
             "\uc18c\ub9ac\ub85c \uc77c\uce58 \ud655\uc778",
             "Check saved copies",
             "\uc800\uc7a5\ub41c \uc0ac\ubcf8 \ud655\uc778",
+            "Check the download folder before retrying this file",
+            "\uc774 \ud30c\uc77c\uc744 \ub2e4\uc2dc \ub2e4\uc6b4\ub85c\ub4dc\ud558\uae30"
+                    + " \uc804\uc5d0 \ub2e4\uc6b4\ub85c\ub4dc \ud3f4\ub354\ub97c"
+                    + " \ud655\uc778\ud558\uc138\uc694",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -60158,6 +60480,8 @@ final class Translations {
             "1% \ub0ae\ucd94\uae30",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "\uae30\ubcf8 \ub2e4\uc6b4\ub85c\ub4dc \ud3f4\ub354",
             "Default order",
             "Default order",
             "Delete",
@@ -60319,6 +60643,15 @@ final class Translations {
             "Download Explorer",
             "Download FLAC or MP3 from flacdownloader.com",
             "flacdownloader.com\uc5d0\uc11c FLAC \ub610\ub294 MP3 \ub2e4\uc6b4\ub85c\ub4dc",
+            "Download folder unavailable",
+            "\ub2e4\uc6b4\ub85c\ub4dc \ud3f4\ub354\ub97c \uc0ac\uc6a9\ud560 \uc218 \uc5c6\uc74c",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "\ub2e4\uc6b4\ub85c\ub4dc \ud3f4\ub354\ub97c \uc0ac\uc6a9\ud560 \uc218"
+                    + " \uc5c6\uc2b5\ub2c8\ub2e4. \ub4dc\ub77c\uc774\ube0c\ub97c \ub2e4\uc2dc"
+                    + " \uc5f0\uacb0\ud558\uac70\ub098 \ub2e4\uc6b4\ub85c\ub4dc"
+                    + " \uc124\uc815\uc5d0\uc11c \ud3f4\ub354\ub97c \ub2e4\uc2dc"
+                    + " \uc120\ud0dd\ud558\uc138\uc694.",
             "Download formats",
             "\ub2e4\uc6b4\ub85c\ub4dc \ud615\uc2dd",
             "Download from {0}",
@@ -61298,6 +61631,12 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "\uc0c8 \uc624\ub514\uc624 \ud30c\uc77c\uc740 \uc774 \ud3f4\ub354\uc5d0"
+                    + " \uc800\uc7a5\ub429\ub2c8\ub2e4. \uc774\ubbf8 \ub300\uae30 \uc911\uc778"
+                    + " \ub2e4\uc6b4\ub85c\ub4dc\uc640 \uc800\uc7a5\ub41c \ud30c\uc77c\uc758"
+                    + " \uc704\uce58\ub294 \ubc14\ub00c\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -62508,6 +62847,13 @@ final class Translations {
             "\uc120\ud0dd\ud55c \uc0ac\ubcf8 \uc800\uc7a5 \uc911",
             "Saving\u2026",
             "\uc800\uc7a5 \uc911\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "SD \uce74\ub4dc\uc640 USB \ub4dc\ub77c\uc774\ube0c\ub294 Android \ud3f4\ub354"
+                    + " \uc120\ud0dd\uae30\uc5d0 \ud45c\uc2dc\ub429\ub2c8\ub2e4."
+                    + " \uc624\ud504\ub77c\uc778 HLS/DASH \ud328\ud0a4\uc9c0\ub294 \uacc4\uc18d"
+                    + " BitChord\uc758 \uc790\uccb4 \uc800\uc7a5\uc18c\ub97c"
+                    + " \uc0ac\uc6a9\ud569\ub2c8\ub2e4.",
             "Search",
             "\uac80\uc0c9",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -62967,8 +63313,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "\uc18c\uc2a4: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -63706,8 +64050,6 @@ final class Translations {
                     + " 64\uc790 \ud0a4 \ud558\ub098, \ucd5c\ub300 16\uac1c",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "\ub178\ub798\ubc29 \ub044\uae30",
             "Turn off",
             "\ub044\uae30",
             "Turn off YouTube Music?",
@@ -63805,6 +64147,11 @@ final class Translations {
                 + " \uc704\ud55c \uc11c\ubc84\ub97c \uc6b4\uc601\ud558\uc9c0 \uc54a\uc544\uc694.",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "BitChord \uae30\ubcf8\uac12 \uc0ac\uc6a9",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "\uc0c8 \ub2e4\uc6b4\ub85c\ub4dc\uc5d0 BitChord\uc758 \uc790\uccb4 \uc800\uc7a5\uc18c"
+                    + " \uc124\uc815 \uc0ac\uc6a9",
             "Use compatible relay selection",
             "\ud638\ud658\ub418\ub294 \ub9b4\ub808\uc774 \uc120\ud0dd \uc0ac\uc6a9",
             "Use configured main channel",
@@ -64887,6 +65234,8 @@ final class Translations {
                     + " ponownie.",
             "BitChord decodes every song",
             "BitChord dekoduje ka\u017cdy utw\u00f3r",
+            "BitChord default",
+            "Domy\u015blne ustawienie BitChord",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -65063,6 +65412,8 @@ final class Translations {
             "Sprawdzaj dopasowania po d\u017awi\u0119ku",
             "Check saved copies",
             "Sprawd\u017a zapisane kopie",
+            "Check the download folder before retrying this file",
+            "Sprawd\u017a folder pobierania przed ponown\u0105 pr\u00f3b\u0105 pobrania tego pliku",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -65513,6 +65864,8 @@ final class Translations {
             "Zmniejsz o 1%",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "Domy\u015blny folder pobierania",
             "Default order",
             "Default order",
             "Delete",
@@ -65654,6 +66007,12 @@ final class Translations {
             "Download Explorer",
             "Download FLAC or MP3 from flacdownloader.com",
             "Pobieraj FLAC lub MP3 z flacdownloader.com",
+            "Download folder unavailable",
+            "Folder pobierania jest niedost\u0119pny",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "Folder pobierania jest niedost\u0119pny. Pod\u0142\u0105cz ponownie dysk lub wybierz"
+                    + " folder jeszcze raz w ustawieniach pobierania.",
             "Download formats",
             "Formaty pobierania",
             "Download from {0}",
@@ -66506,6 +66865,10 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "Nowe pliki audio b\u0119d\u0105 zapisywane w tym folderze. Pliki ju\u017c zapisane i"
+                    + " pobrania w kolejce zachowaj\u0105 swoje lokalizacje.",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -67597,6 +67960,11 @@ final class Translations {
             "Zapisywanie wybranych kopii",
             "Saving\u2026",
             "Zapisywanie\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "Karty SD i dyski USB s\u0105 widoczne w systemowym wyborze folder\u00f3w Androida."
+                    + " Pakiety HLS/DASH offline pozostaj\u0105 w pami\u0119ci u\u017cywanej przez"
+                    + " BitChord.",
             "Search",
             "Szukaj",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -67999,8 +68367,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "\u0179r\u00f3d\u0142o: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -68604,8 +68970,6 @@ final class Translations {
                     + " maksymalnie 16",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "Wy\u0142\u0105cz Karaoke",
             "Turn off",
             "Wy\u0142\u0105cz",
             "Turn off YouTube Music?",
@@ -68693,6 +69057,10 @@ final class Translations {
                     + " serwera.",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "U\u017cyj domy\u015blnego ustawienia BitChord",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "U\u017cyj ustawienia pami\u0119ci BitChord dla nowych pobra\u0144",
             "Use compatible relay selection",
             "U\u017cyj zgodnego wyboru przeka\u017anik\u00f3w",
             "Use configured main channel",
@@ -69694,6 +70062,8 @@ final class Translations {
             "O BitChord n\u00e3o conseguiu iniciar este download. Tente novamente.",
             "BitChord decodes every song",
             "O BitChord decodifica todas as m\u00fasicas",
+            "BitChord default",
+            "Padr\u00e3o do BitChord",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -69868,6 +70238,8 @@ final class Translations {
             "Verificar correspond\u00eancias pelo som",
             "Check saved copies",
             "Verificar c\u00f3pias salvas",
+            "Check the download folder before retrying this file",
+            "Verifique a pasta de download antes de tentar baixar este arquivo novamente",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -70307,6 +70679,8 @@ final class Translations {
             "Diminuir 1%",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "Pasta de download padr\u00e3o",
             "Default order",
             "Default order",
             "Delete",
@@ -70448,6 +70822,12 @@ final class Translations {
             "Download Explorer",
             "Download FLAC or MP3 from flacdownloader.com",
             "Baixe FLAC ou MP3 de flacdownloader.com",
+            "Download folder unavailable",
+            "Pasta de download indispon\u00edvel",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "A pasta de download est\u00e1 indispon\u00edvel. Reconecte a unidade ou selecione a"
+                    + " pasta novamente nas configura\u00e7\u00f5es de Downloads.",
             "Download formats",
             "Formatos de download",
             "Download from {0}",
@@ -71287,6 +71667,10 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "Novos arquivos de \u00e1udio usam esta pasta. Downloads j\u00e1 na fila e arquivos"
+                    + " salvos mant\u00eam suas localiza\u00e7\u00f5es.",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -72365,6 +72749,10 @@ final class Translations {
             "Salvando as c\u00f3pias escolhidas",
             "Saving\u2026",
             "Salvando\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "Cart\u00f5es SD e unidades USB aparecem no seletor de pastas do Android. Pacotes"
+                    + " HLS/DASH offline continuam no armazenamento do BitChord.",
             "Search",
             "Buscar",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -72756,8 +73144,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "Fonte: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -73355,8 +73741,6 @@ final class Translations {
                     + " at\u00e9 16",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "Desativar Karaok\u00ea",
             "Turn off",
             "Desativar",
             "Turn off YouTube Music?",
@@ -73443,6 +73827,10 @@ final class Translations {
                     + " servidor para isso.",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "Usar o padr\u00e3o do BitChord",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "Usar a configura\u00e7\u00e3o de armazenamento do BitChord para novos downloads",
             "Use compatible relay selection",
             "Usar sele\u00e7\u00e3o de retransmissores compat\u00edveis",
             "Use configured main channel",
@@ -74886,6 +75274,8 @@ final class Translations {
             "BitChord decodes every song",
             "BitChord \u0434\u0435\u043a\u043e\u0434\u0438\u0440\u0443\u0435\u0442"
                     + " \u043a\u0430\u0436\u0434\u0443\u044e \u043f\u0435\u0441\u043d\u044e",
+            "BitChord default",
+            "\u041f\u043e \u0443\u043c\u043e\u043b\u0447\u0430\u043d\u0438\u044e \u0432 BitChord",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -75234,6 +75624,13 @@ final class Translations {
             "\u041f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c"
                     + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0435"
                     + " \u043a\u043e\u043f\u0438\u0438",
+            "Check the download folder before retrying this file",
+            "\u041f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u043f\u0430\u043f\u043a\u0443"
+                + " \u0437\u0430\u0433\u0440\u0443\u0437\u043e\u043a \u043f\u0435\u0440\u0435\u0434"
+                + " \u043f\u043e\u0432\u0442\u043e\u0440\u043d\u043e\u0439"
+                + " \u043f\u043e\u043f\u044b\u0442\u043a\u043e\u0439"
+                + " \u0441\u043a\u0430\u0447\u0430\u0442\u044c \u044d\u0442\u043e\u0442"
+                + " \u0444\u0430\u0439\u043b",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -76016,6 +76413,9 @@ final class Translations {
             "\u0423\u043c\u0435\u043d\u044c\u0448\u0438\u0442\u044c \u043d\u0430 1%",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "\u041f\u0430\u043f\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043e\u043a"
+                    + " \u043f\u043e \u0443\u043c\u043e\u043b\u0447\u0430\u043d\u0438\u044e",
             "Default order",
             "Default order",
             "Delete",
@@ -76256,6 +76656,20 @@ final class Translations {
             "Download FLAC or MP3 from flacdownloader.com",
             "\u0421\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435 FLAC \u0438\u043b\u0438"
                     + " MP3 \u0441 flacdownloader.com",
+            "Download folder unavailable",
+            "\u041f\u0430\u043f\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043e\u043a"
+                    + " \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u0430",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "\u041f\u0430\u043f\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043e\u043a"
+                + " \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u0430."
+                + " \u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0438\u0442\u0435"
+                + " \u043d\u0430\u043a\u043e\u043f\u0438\u0442\u0435\u043b\u044c"
+                + " \u0437\u0430\u043d\u043e\u0432\u043e \u0438\u043b\u0438"
+                + " \u043f\u043e\u0432\u0442\u043e\u0440\u043d\u043e"
+                + " \u0432\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043f\u0430\u043f\u043a\u0443"
+                + " \u0432 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430\u0445"
+                + " \u0437\u0430\u0433\u0440\u0443\u0437\u043e\u043a.",
             "Download formats",
             "\u0424\u043e\u0440\u043c\u0430\u0442\u044b"
                     + " \u0441\u043a\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u044f",
@@ -77782,6 +78196,19 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "\u041d\u043e\u0432\u044b\u0435"
+                + " \u0430\u0443\u0434\u0438\u043e\u0444\u0430\u0439\u043b\u044b"
+                + " \u0441\u043e\u0445\u0440\u0430\u043d\u044f\u044e\u0442\u0441\u044f \u0432"
+                + " \u044d\u0442\u0443 \u043f\u0430\u043f\u043a\u0443. \u0423\u0436\u0435"
+                + " \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0435 \u0432"
+                + " \u043e\u0447\u0435\u0440\u0435\u0434\u044c"
+                + " \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438 \u0438"
+                + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0435"
+                + " \u0444\u0430\u0439\u043b\u044b \u043e\u0441\u0442\u0430\u044e\u0442\u0441\u044f"
+                + " \u043d\u0430 \u0441\u0432\u043e\u0438\u0445"
+                + " \u043c\u0435\u0441\u0442\u0430\u0445.",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -79611,6 +80038,17 @@ final class Translations {
                     + " \u043a\u043e\u043f\u0438\u0439",
             "Saving\u2026",
             "\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "SD-\u043a\u0430\u0440\u0442\u044b \u0438"
+                + " USB-\u043d\u0430\u043a\u043e\u043f\u0438\u0442\u0435\u043b\u0438"
+                + " \u043e\u0442\u043e\u0431\u0440\u0430\u0436\u0430\u044e\u0442\u0441\u044f \u0432"
+                + " \u0441\u0438\u0441\u0442\u0435\u043c\u043d\u043e\u043c"
+                + " \u0432\u044b\u0431\u043e\u0440\u0435 \u043f\u0430\u043f\u043e\u043a Android."
+                + " \u041f\u0430\u043a\u0435\u0442\u044b HLS/DASH \u0434\u043b\u044f"
+                + " \u0440\u0430\u0431\u043e\u0442\u044b \u0431\u0435\u0437"
+                + " \u0441\u0435\u0442\u0438 \u043e\u0441\u0442\u0430\u044e\u0442\u0441\u044f"
+                + " \u0432 \u0445\u0440\u0430\u043d\u0438\u043b\u0438\u0449\u0435 BitChord.",
             "Search",
             "\u041d\u0430\u0439\u0442\u0438",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -80341,8 +80779,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "\u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -81535,9 +81971,6 @@ final class Translations {
                     + " \u0431\u043e\u043b\u0435\u0435 16",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "\u0412\u044b\u043a\u043b\u044e\u0447\u0438\u0442\u044c"
-                    + " \u043a\u0430\u0440\u0430\u043e\u043a\u0435",
             "Turn off",
             "\u0412\u044b\u043a\u043b\u044e\u0447\u0438\u0442\u044c",
             "Turn off YouTube Music?",
@@ -81687,6 +82120,16 @@ final class Translations {
                 + " \u0441\u0435\u0440\u0432\u0435\u0440.",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"
+                    + " \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435 BitChord \u043f\u043e"
+                    + " \u0443\u043c\u043e\u043b\u0447\u0430\u043d\u0438\u044e",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"
+                    + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0443"
+                    + " \u0445\u0440\u0430\u043d\u0438\u043b\u0438\u0449\u0430 BitChord"
+                    + " \u0434\u043b\u044f \u043d\u043e\u0432\u044b\u0445"
+                    + " \u0437\u0430\u0433\u0440\u0443\u0437\u043e\u043a",
             "Use compatible relay selection",
             "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"
                 + " \u0441\u043e\u0432\u043c\u0435\u0441\u0442\u0438\u043c\u044b\u0439"
@@ -83223,6 +83666,9 @@ final class Translations {
             "BitChord decodes every song",
             "BitChord"
                 + " \u0e16\u0e2d\u0e14\u0e23\u0e2b\u0e31\u0e2a\u0e17\u0e38\u0e01\u0e40\u0e1e\u0e25\u0e07\u0e40\u0e2d\u0e07",
+            "BitChord default",
+            "\u0e04\u0e48\u0e32\u0e40\u0e23\u0e34\u0e48\u0e21\u0e15\u0e49\u0e19\u0e02\u0e2d\u0e07"
+                    + " BitChord",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -83447,6 +83893,8 @@ final class Translations {
             "\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e04\u0e27\u0e32\u0e21\u0e15\u0e23\u0e07\u0e01\u0e31\u0e19\u0e14\u0e49\u0e27\u0e22\u0e40\u0e2a\u0e35\u0e22\u0e07",
             "Check saved copies",
             "\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e2a\u0e33\u0e40\u0e19\u0e32\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49",
+            "Check the download folder before retrying this file",
+            "\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e42\u0e1f\u0e25\u0e40\u0e14\u0e2d\u0e23\u0e4c\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e01\u0e48\u0e2d\u0e19\u0e25\u0e2d\u0e07\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e44\u0e1f\u0e25\u0e4c\u0e19\u0e35\u0e49\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -83952,6 +84400,8 @@ final class Translations {
             "\u0e25\u0e14 1%",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "\u0e42\u0e1f\u0e25\u0e40\u0e14\u0e2d\u0e23\u0e4c\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e40\u0e23\u0e34\u0e48\u0e21\u0e15\u0e49\u0e19",
             "Default order",
             "Default order",
             "Delete",
@@ -84114,6 +84564,12 @@ final class Translations {
             "Download FLAC or MP3 from flacdownloader.com",
             "\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14 FLAC \u0e2b\u0e23\u0e37\u0e2d"
                     + " MP3 \u0e08\u0e32\u0e01 flacdownloader.com",
+            "Download folder unavailable",
+            "\u0e42\u0e1f\u0e25\u0e40\u0e14\u0e2d\u0e23\u0e4c\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e44\u0e21\u0e48\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e43\u0e0a\u0e49\u0e07\u0e32\u0e19",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "\u0e42\u0e1f\u0e25\u0e40\u0e14\u0e2d\u0e23\u0e4c\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e44\u0e21\u0e48\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e43\u0e0a\u0e49\u0e07\u0e32\u0e19"
+                + " \u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d\u0e44\u0e14\u0e23\u0e1f\u0e4c\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07\u0e2b\u0e23\u0e37\u0e2d\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e42\u0e1f\u0e25\u0e40\u0e14\u0e2d\u0e23\u0e4c\u0e43\u0e2b\u0e21\u0e48\u0e43\u0e19\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14",
             "Download formats",
             "\u0e23\u0e39\u0e1b\u0e41\u0e1a\u0e1a\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14",
             "Download from {0}",
@@ -85097,6 +85553,10 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "\u0e44\u0e1f\u0e25\u0e4c\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e43\u0e2b\u0e21\u0e48\u0e08\u0e30\u0e43\u0e0a\u0e49\u0e42\u0e1f\u0e25\u0e40\u0e14\u0e2d\u0e23\u0e4c\u0e19\u0e35\u0e49"
+                + " \u0e2a\u0e48\u0e27\u0e19\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e17\u0e35\u0e48\u0e2d\u0e22\u0e39\u0e48\u0e43\u0e19\u0e04\u0e34\u0e27\u0e41\u0e25\u0e30\u0e44\u0e1f\u0e25\u0e4c\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e41\u0e25\u0e49\u0e27\u0e08\u0e30\u0e22\u0e31\u0e07\u0e2d\u0e22\u0e39\u0e48\u0e17\u0e35\u0e48\u0e40\u0e14\u0e34\u0e21",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -86309,6 +86769,14 @@ final class Translations {
             "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e2a\u0e33\u0e40\u0e19\u0e32\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01",
             "Saving\u2026",
             "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "\u0e01\u0e32\u0e23\u0e4c\u0e14 SD \u0e41\u0e25\u0e30\u0e44\u0e14\u0e23\u0e1f\u0e4c USB"
+                + " \u0e08\u0e30\u0e41\u0e2a\u0e14\u0e07\u0e43\u0e19\u0e15\u0e31\u0e27\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e42\u0e1f\u0e25\u0e40\u0e14\u0e2d\u0e23\u0e4c\u0e02\u0e2d\u0e07"
+                + " Android \u0e2a\u0e48\u0e27\u0e19\u0e41\u0e1e\u0e47\u0e01\u0e40\u0e01\u0e08"
+                + " HLS/DASH"
+                + " \u0e2d\u0e2d\u0e1f\u0e44\u0e25\u0e19\u0e4c\u0e08\u0e30\u0e22\u0e31\u0e07\u0e43\u0e0a\u0e49\u0e1e\u0e37\u0e49\u0e19\u0e17\u0e35\u0e48\u0e08\u0e31\u0e14\u0e40\u0e01\u0e47\u0e1a\u0e02\u0e2d\u0e07"
+                + " BitChord",
             "Search",
             "\u0e04\u0e49\u0e19\u0e2b\u0e32",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -86786,8 +87254,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -87535,8 +88001,6 @@ final class Translations {
                 + " \u0e2a\u0e39\u0e07\u0e2a\u0e38\u0e14 16 \u0e23\u0e32\u0e22\u0e01\u0e32\u0e23",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "\u0e1b\u0e34\u0e14\u0e04\u0e32\u0e23\u0e32\u0e42\u0e2d\u0e40\u0e01\u0e30",
             "Turn off",
             "\u0e1b\u0e34\u0e14",
             "Turn off YouTube Music?",
@@ -87634,6 +88098,13 @@ final class Translations {
                 + " \u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e40\u0e1b\u0e34\u0e14\u0e40\u0e0b\u0e34\u0e23\u0e4c\u0e1f\u0e40\u0e27\u0e2d\u0e23\u0e4c\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e2a\u0e48\u0e27\u0e19\u0e19\u0e35\u0e49",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "\u0e43\u0e0a\u0e49\u0e04\u0e48\u0e32\u0e40\u0e23\u0e34\u0e48\u0e21\u0e15\u0e49\u0e19\u0e02\u0e2d\u0e07"
+                + " BitChord",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "\u0e43\u0e0a\u0e49\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e1e\u0e37\u0e49\u0e19\u0e17\u0e35\u0e48\u0e08\u0e31\u0e14\u0e40\u0e01\u0e47\u0e1a\u0e02\u0e2d\u0e07"
+                + " BitChord"
+                + " \u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e43\u0e2b\u0e21\u0e48",
             "Use compatible relay selection",
             "\u0e43\u0e0a\u0e49\u0e15\u0e31\u0e27\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e23\u0e35\u0e40\u0e25\u0e22\u0e4c\u0e17\u0e35\u0e48\u0e40\u0e02\u0e49\u0e32\u0e01\u0e31\u0e19\u0e44\u0e14\u0e49",
             "Use configured main channel",
@@ -88762,6 +89233,8 @@ final class Translations {
             "BitChord bu indirmeyi ba\u015flatamad\u0131. Tekrar deneyin.",
             "BitChord decodes every song",
             "BitChord her \u015fark\u0131y\u0131 kendisi \u00e7\u00f6zer",
+            "BitChord default",
+            "BitChord varsay\u0131lan\u0131",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -88943,6 +89416,9 @@ final class Translations {
             "E\u015fle\u015fmeleri sesle kontrol et",
             "Check saved copies",
             "Kay\u0131tl\u0131 kopyalar\u0131 denetle",
+            "Check the download folder before retrying this file",
+            "Bu dosyay\u0131 yeniden indirmeyi denemeden \u00f6nce indirme klas\u00f6r\u00fcn\u00fc"
+                    + " kontrol edin",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -89390,6 +89866,8 @@ final class Translations {
             "%1 azalt",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "Varsay\u0131lan indirme klas\u00f6r\u00fc",
             "Default order",
             "Default order",
             "Delete",
@@ -89534,6 +90012,13 @@ final class Translations {
             "Download Explorer",
             "Download FLAC or MP3 from flacdownloader.com",
             "flacdownloader.com \u00fczerinden FLAC veya MP3 indirin",
+            "Download folder unavailable",
+            "\u0130ndirme klas\u00f6r\u00fc kullan\u0131lam\u0131yor",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "\u0130ndirme klas\u00f6r\u00fc kullan\u0131lam\u0131yor. S\u00fcr\u00fcc\u00fcy\u00fc"
+                    + " yeniden ba\u011flay\u0131n veya \u0130ndirilenler ayarlar\u0131ndan"
+                    + " klas\u00f6r\u00fc tekrar se\u00e7in.",
             "Download formats",
             "\u0130ndirme bi\u00e7imleri",
             "Download from {0}",
@@ -90410,6 +90895,10 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "Yeni ses dosyalar\u0131 bu klas\u00f6re kaydedilir. Kuyruktaki indirmelerin ve"
+                    + " kaydedilmi\u015f dosyalar\u0131n konumlar\u0131 de\u011fi\u015fmez.",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -91521,6 +92010,11 @@ final class Translations {
             "Se\u00e7ilen kopyalar kaydediliyor",
             "Saving\u2026",
             "Kaydediliyor\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "SD kartlar ve USB s\u00fcr\u00fcc\u00fcler Android'in klas\u00f6r se\u00e7icisinde"
+                    + " g\u00f6r\u00fcn\u00fcr. \u00c7evrimd\u0131\u015f\u0131 HLS/DASH paketleri"
+                    + " BitChord'un kendi depolama alan\u0131n\u0131 kullanmaya devam eder.",
             "Search",
             "Ara",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -91931,8 +92425,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "Kaynak: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -92555,8 +93047,6 @@ final class Translations {
                     + " sat\u0131ra 64 karakterli bir anahtar, en fazla 16",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "Karaoke\u2019yi kapat",
             "Turn off",
             "Kapat",
             "Turn off YouTube Music?",
@@ -92645,6 +93135,10 @@ final class Translations {
                     + " sunucu \u00e7al\u0131\u015ft\u0131rmaz.",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "BitChord varsay\u0131lan\u0131n\u0131 kullan",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "Yeni indirmeler i\u00e7in BitChord'un kendi depolama ayar\u0131n\u0131 kullan",
             "Use compatible relay selection",
             "Uyumlu aktar\u0131c\u0131 se\u00e7imini kullan",
             "Use configured main channel",
@@ -94024,6 +94518,8 @@ final class Translations {
             "BitChord decodes every song",
             "BitChord \u06c1\u0631 \u06af\u0627\u0646\u0627 \u062e\u0648\u062f \u0688\u06cc"
                     + " \u06a9\u0648\u0688 \u06a9\u0631\u062a\u0627 \u06c1\u06d2",
+            "BitChord default",
+            "BitChord \u06a9\u06cc \u0637\u06d2 \u0634\u062f\u06c1 \u062a\u0631\u062a\u06cc\u0628",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -94335,6 +94831,12 @@ final class Translations {
             "Check saved copies",
             "\u0645\u062d\u0641\u0648\u0638 \u0634\u062f\u06c1 \u0646\u0642\u0648\u0644"
                     + " \u062c\u0627\u0646\u0686\u06cc\u06ba",
+            "Check the download folder before retrying this file",
+            "\u0627\u0633 \u0641\u0627\u0626\u0644 \u06a9\u0648"
+                    + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u0688\u0627\u0624\u0646"
+                    + " \u0644\u0648\u0688 \u06a9\u0631\u0646\u06d2 \u0633\u06d2"
+                    + " \u067e\u06c1\u0644\u06d2 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
+                    + " \u0641\u0648\u0644\u0688\u0631 \u0686\u06cc\u06a9 \u06a9\u0631\u06cc\u06ba",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -95034,6 +95536,9 @@ final class Translations {
             "1% \u06a9\u0645 \u06a9\u0631\u06cc\u06ba",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "\u0637\u06d2 \u0634\u062f\u06c1 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
+                    + " \u0641\u0648\u0644\u0688\u0631",
             "Default order",
             "Default order",
             "Delete",
@@ -95243,6 +95748,20 @@ final class Translations {
             "Download FLAC or MP3 from flacdownloader.com",
             "flacdownloader.com \u0633\u06d2 FLAC \u06cc\u0627 MP3 \u0688\u0627\u0624\u0646"
                     + " \u0644\u0648\u0688 \u06a9\u0631\u06cc\u06ba",
+            "Download folder unavailable",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u0641\u0648\u0644\u0688\u0631"
+                    + " \u062f\u0633\u062a\u06cc\u0627\u0628 \u0646\u06c1\u06cc\u06ba \u06c1\u06d2",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u0641\u0648\u0644\u0688\u0631"
+                    + " \u062f\u0633\u062a\u06cc\u0627\u0628 \u0646\u06c1\u06cc\u06ba"
+                    + " \u06c1\u06d2\u06d4 \u0688\u0631\u0627\u0626\u06cc\u0648"
+                    + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u0645\u0646\u0633\u0644\u06a9"
+                    + " \u06a9\u0631\u06cc\u06ba \u06cc\u0627 \u0688\u0627\u0624\u0646"
+                    + " \u0644\u0648\u0688 \u06a9\u06cc \u062a\u0631\u062a\u06cc\u0628\u0627\u062a"
+                    + " \u0645\u06cc\u06ba \u0641\u0648\u0644\u0688\u0631"
+                    + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u0645\u0646\u062a\u062e\u0628"
+                    + " \u06a9\u0631\u06cc\u06ba\u06d4",
             "Download formats",
             "\u0688\u0627\u0624\u0646 \u0644\u0648\u0688"
                     + " \u0641\u0627\u0631\u0645\u06cc\u0679\u0633",
@@ -96621,6 +97140,16 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "\u0646\u0626\u06cc \u0622\u0688\u06cc\u0648 \u0641\u0627\u0626\u0644\u06cc\u06ba"
+                + " \u0627\u0633 \u0641\u0648\u0644\u0688\u0631 \u0645\u06cc\u06ba"
+                + " \u0645\u062d\u0641\u0648\u0638 \u06c1\u0648\u06ba \u06af\u06cc\u06d4"
+                + " \u0642\u0637\u0627\u0631 \u0645\u06cc\u06ba \u0645\u0648\u062c\u0648\u062f"
+                + " \u0688\u0627\u0624\u0646 \u0644\u0648\u0688\u0632 \u0627\u0648\u0631"
+                + " \u0645\u062d\u0641\u0648\u0638 \u0634\u062f\u06c1"
+                + " \u0641\u0627\u0626\u0644\u06cc\u06ba \u0627\u067e\u0646\u06cc"
+                + " \u062c\u06af\u06c1 \u067e\u0631 \u0631\u06c1\u06cc\u06ba \u06af\u06cc\u06d4",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -98292,6 +98821,17 @@ final class Translations {
                     + " \u06a9\u06cc \u062c\u0627 \u0631\u06c1\u06cc \u06c1\u06cc\u06ba",
             "Saving\u2026",
             "\u0645\u062d\u0641\u0648\u0638 \u06c1\u0648 \u0631\u06c1\u0627 \u06c1\u06d2\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "SD \u06a9\u0627\u0631\u0688 \u0627\u0648\u0631 USB"
+                    + " \u0688\u0631\u0627\u0626\u06cc\u0648\u0632 Android \u06a9\u06d2"
+                    + " \u0641\u0648\u0644\u0688\u0631 \u0645\u0646\u062a\u062e\u0628"
+                    + " \u06a9\u0631\u0646\u06d2 \u0648\u0627\u0644\u06d2 \u062d\u0635\u06d2"
+                    + " \u0645\u06cc\u06ba \u0646\u0638\u0631 \u0622\u062a\u06cc"
+                    + " \u06c1\u06cc\u06ba\u06d4 \u0622\u0641 \u0644\u0627\u0626\u0646 HLS/DASH"
+                    + " \u067e\u06cc\u06a9\u062c BitChord \u06a9\u06cc \u0627\u067e\u0646\u06cc"
+                    + " \u0627\u0633\u0679\u0648\u0631\u06cc\u062c \u0645\u06cc\u06ba \u06c1\u06cc"
+                    + " \u0631\u06c1\u06cc\u06ba \u06af\u06d2\u06d4",
             "Search",
             "\u062a\u0644\u0627\u0634 \u06a9\u0631\u06cc\u06ba",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -98944,8 +99484,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "\u0645\u0627\u062e\u0630: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -100020,8 +100558,6 @@ final class Translations {
                 + " \u0632\u06cc\u0627\u062f\u06c1 \u0633\u06d2 \u0632\u06cc\u0627\u062f\u06c1 16",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "\u06a9\u0631\u0627\u0624\u06a9\u06d2 \u0628\u0646\u062f \u06a9\u0631\u06cc\u06ba",
             "Turn off",
             "\u0628\u0646\u062f \u06a9\u0631\u06cc\u06ba",
             "Turn off YouTube Music?",
@@ -100156,6 +100692,14 @@ final class Translations {
                 + " \u0686\u0644\u0627\u062a\u0627\u06d4",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "BitChord \u06a9\u06cc \u0637\u06d2 \u0634\u062f\u06c1 \u062a\u0631\u062a\u06cc\u0628"
+                    + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0631\u06cc\u06ba",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "\u0646\u0626\u06d2 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688\u0632 \u06a9\u06d2"
+                    + " \u0644\u06cc\u06d2 BitChord \u06a9\u06cc \u0627\u067e\u0646\u06cc"
+                    + " \u0627\u0633\u0679\u0648\u0631\u06cc\u062c \u062a\u0631\u062a\u06cc\u0628"
+                    + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0631\u06cc\u06ba",
             "Use compatible relay selection",
             "\u0645\u0637\u0627\u0628\u0642\u062a \u0631\u06a9\u06be\u0646\u06d2"
                 + " \u0648\u0627\u0644\u06d2 \u0631\u06cc\u0644\u06d2 \u06a9\u0627"
@@ -101551,6 +102095,8 @@ final class Translations {
                     + " H\u00e3y th\u1eed l\u1ea1i.",
             "BitChord decodes every song",
             "BitChord t\u1ef1 gi\u1ea3i m\u00e3 m\u1ecdi b\u00e0i h\u00e1t",
+            "BitChord default",
+            "M\u1eb7c \u0111\u1ecbnh c\u1ee7a BitChord",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -101750,6 +102296,9 @@ final class Translations {
             "Ki\u1ec3m tra kh\u1edbp b\u1eb1ng \u00e2m thanh",
             "Check saved copies",
             "Ki\u1ec3m tra b\u1ea3n sao \u0111\u00e3 l\u01b0u",
+            "Check the download folder before retrying this file",
+            "Ki\u1ec3m tra th\u01b0 m\u1ee5c t\u1ea3i xu\u1ed1ng tr\u01b0\u1edbc khi th\u1eed"
+                    + " t\u1ea3i l\u1ea1i t\u1ec7p n\u00e0y",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -102237,6 +102786,8 @@ final class Translations {
             "Gi\u1ea3m 1%",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "Th\u01b0 m\u1ee5c t\u1ea3i xu\u1ed1ng m\u1eb7c \u0111\u1ecbnh",
             "Default order",
             "Default order",
             "Delete",
@@ -102391,6 +102942,13 @@ final class Translations {
             "Download Explorer",
             "Download FLAC or MP3 from flacdownloader.com",
             "T\u1ea3i FLAC ho\u1eb7c MP3 t\u1eeb flacdownloader.com",
+            "Download folder unavailable",
+            "Kh\u00f4ng th\u1ec3 truy c\u1eadp th\u01b0 m\u1ee5c t\u1ea3i xu\u1ed1ng",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "Kh\u00f4ng th\u1ec3 truy c\u1eadp th\u01b0 m\u1ee5c t\u1ea3i xu\u1ed1ng. H\u00e3y"
+                + " k\u1ebft n\u1ed1i l\u1ea1i \u1ed5 \u0111\u0129a ho\u1eb7c ch\u1ecdn l\u1ea1i"
+                + " th\u01b0 m\u1ee5c trong c\u00e0i \u0111\u1eb7t T\u1ea3i xu\u1ed1ng.",
             "Download formats",
             "\u0110\u1ecbnh d\u1ea1ng t\u1ea3i xu\u1ed1ng",
             "Download from {0}",
@@ -103337,6 +103895,11 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "C\u00e1c t\u1ec7p \u00e2m thanh m\u1edbi d\u00f9ng th\u01b0 m\u1ee5c n\u00e0y."
+                    + " N\u1ed9i dung \u0111ang ch\u1edd t\u1ea3i v\u00e0 c\u00e1c t\u1ec7p"
+                    + " \u0111\u00e3 l\u01b0u v\u1eabn gi\u1eef nguy\u00ean v\u1ecb tr\u00ed.",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -104523,6 +105086,11 @@ final class Translations {
             "\u0110ang l\u01b0u c\u00e1c b\u1ea3n sao \u0111\u00e3 ch\u1ecdn",
             "Saving\u2026",
             "\u0110ang l\u01b0u\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "Th\u1ebb SD v\u00e0 \u1ed5 USB xu\u1ea5t hi\u1ec7n trong tr\u00ecnh ch\u1ecdn th\u01b0"
+                    + " m\u1ee5c c\u1ee7a Android. C\u00e1c g\u00f3i HLS/DASH ngo\u1ea1i tuy\u1ebfn"
+                    + " v\u1eabn d\u00f9ng b\u1ed9 nh\u1edb ri\u00eang c\u1ee7a BitChord.",
             "Search",
             "T\u00ecm ki\u1ebfm",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -104963,8 +105531,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "Ngu\u1ed3n: Soulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -105668,8 +106234,6 @@ final class Translations {
                     + " t\u1ef1, t\u1ed1i \u0111a 16",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "T\u1eaft Karaoke",
             "Turn off",
             "T\u1eaft",
             "Turn off YouTube Music?",
@@ -105765,6 +106329,11 @@ final class Translations {
                     + " v\u1eadn h\u00e0nh m\u00e1y ch\u1ee7 cho vi\u1ec7c n\u00e0y.",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "D\u00f9ng m\u1eb7c \u0111\u1ecbnh c\u1ee7a BitChord",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "D\u00f9ng c\u00e0i \u0111\u1eb7t l\u01b0u tr\u1eef c\u1ee7a BitChord cho c\u00e1c"
+                    + " l\u01b0\u1ee3t t\u1ea3i m\u1edbi",
             "Use compatible relay selection",
             "D\u00f9ng l\u1ef1a ch\u1ecdn m\u00e1y chuy\u1ec3n ti\u1ebfp t\u01b0\u01a1ng"
                     + " th\u00edch",
@@ -106807,6 +107376,8 @@ final class Translations {
                 + " \u7121\u6cd5\u958b\u59cb\u6b64\u4e0b\u8f09\u3002\u8acb\u518d\u8a66\u4e00\u6b21\u3002",
             "BitChord decodes every song",
             "\u7531 BitChord \u89e3\u78bc\u6bcf\u9996\u6b4c",
+            "BitChord default",
+            "BitChord \u9810\u8a2d\u4f4d\u7f6e",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -106980,6 +107551,8 @@ final class Translations {
             "\u4f9d\u8072\u97f3\u6aa2\u67e5\u6bd4\u5c0d\u7d50\u679c",
             "Check saved copies",
             "\u6aa2\u67e5\u5df2\u5132\u5b58\u7684\u526f\u672c",
+            "Check the download folder before retrying this file",
+            "\u91cd\u8a66\u6b64\u6a94\u6848\u524d\uff0c\u8acb\u6aa2\u67e5\u4e0b\u8f09\u8cc7\u6599\u593e",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -107406,6 +107979,8 @@ final class Translations {
             "\u6e1b\u5c11 1%",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "\u9810\u8a2d\u4e0b\u8f09\u8cc7\u6599\u593e",
             "Default order",
             "Default order",
             "Delete",
@@ -107549,6 +108124,11 @@ final class Translations {
             "Download Explorer",
             "Download FLAC or MP3 from flacdownloader.com",
             "\u5f9e flacdownloader.com \u4e0b\u8f09 FLAC \u6216 MP3",
+            "Download folder unavailable",
+            "\u4e0b\u8f09\u8cc7\u6599\u593e\u7121\u6cd5\u4f7f\u7528",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "\u4e0b\u8f09\u8cc7\u6599\u593e\u7121\u6cd5\u4f7f\u7528\u3002\u8acb\u91cd\u65b0\u9023\u63a5\u5132\u5b58\u88dd\u7f6e\uff0c\u6216\u5728\u4e0b\u8f09\u8a2d\u5b9a\u4e2d\u91cd\u65b0\u9078\u53d6\u8a72\u8cc7\u6599\u593e\u3002",
             "Download formats",
             "\u4e0b\u8f09\u683c\u5f0f",
             "Download from {0}",
@@ -108387,6 +108967,9 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "\u65b0\u7684\u97f3\u8a0a\u6a94\u6848\u6703\u5132\u5b58\u5230\u6b64\u8cc7\u6599\u593e\u3002\u5df2\u6392\u5165\u4f47\u5217\u7684\u4e0b\u8f09\u8207\u5df2\u5132\u5b58\u6a94\u6848\u7684\u4f4d\u7f6e\u4e0d\u6703\u8b8a\u66f4\u3002",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -109448,6 +110031,12 @@ final class Translations {
             "\u6b63\u5728\u5132\u5b58\u6240\u9078\u526f\u672c",
             "Saving\u2026",
             "\u6b63\u5728\u5132\u5b58\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "SD \u5361\u8207 USB \u5132\u5b58\u88dd\u7f6e\u6703\u986f\u793a\u5728 Android"
+                    + " \u8cc7\u6599\u593e\u9078\u64c7\u5668\u4e2d\u3002\u96e2\u7dda HLS/DASH"
+                    + " \u5957\u4ef6\u4ecd\u4f7f\u7528 BitChord"
+                    + " \u81ea\u8eab\u7684\u5132\u5b58\u4f4d\u7f6e\u3002",
             "Search",
             "\u641c\u5c0b",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -109838,8 +110427,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "\u4f86\u6e90\uff1aSoulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -110448,8 +111035,6 @@ final class Translations {
                     + " \u5b57\u5143\u91d1\u9470\uff0c\u6700\u591a 16 \u500b",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "\u95dc\u9589\u5361\u62c9OK",
             "Turn off",
             "\u95dc\u9589",
             "Turn off YouTube Music?",
@@ -110535,6 +111120,10 @@ final class Translations {
                     + " \u4e5f\u4e0d\u70ba\u6b64\u57f7\u884c\u4f3a\u670d\u5668\u3002",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "\u4f7f\u7528 BitChord \u9810\u8a2d\u4f4d\u7f6e",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "\u65b0\u4e0b\u8f09\u4f7f\u7528 BitChord \u81ea\u8eab\u7684\u5132\u5b58\u8a2d\u5b9a",
             "Use compatible relay selection",
             "\u4f7f\u7528\u76f8\u5bb9\u7684\u4e2d\u7e7c\u9078\u64c7",
             "Use configured main channel",
@@ -111508,6 +112097,8 @@ final class Translations {
             "BitChord \u65e0\u6cd5\u542f\u52a8\u6b64\u4e0b\u8f7d\u3002\u8bf7\u91cd\u8bd5\u3002",
             "BitChord decodes every song",
             "BitChord \u81ea\u5df1\u89e3\u7801\u6bcf\u9996\u6b4c",
+            "BitChord default",
+            "BitChord \u9ed8\u8ba4\u4f4d\u7f6e",
             "BitChord download state is unavailable.",
             "BitChord download state is unavailable.",
             "BitChord guesses from the file type",
@@ -111681,6 +112272,8 @@ final class Translations {
             "\u6309\u58f0\u97f3\u68c0\u67e5\u5339\u914d",
             "Check saved copies",
             "\u68c0\u67e5\u5df2\u4fdd\u5b58\u7684\u526f\u672c",
+            "Check the download folder before retrying this file",
+            "\u91cd\u8bd5\u6b64\u6587\u4ef6\u524d\uff0c\u8bf7\u68c0\u67e5\u4e0b\u8f7d\u6587\u4ef6\u5939",
             "Check the name and playlist links, then try again.",
             "Check the name and playlist links, then try again.",
             "Check the recording",
@@ -112107,6 +112700,8 @@ final class Translations {
             "\u51cf\u5c11 1%",
             "Decrease {0}",
             "Decrease {0}",
+            "Default download folder",
+            "\u9ed8\u8ba4\u4e0b\u8f7d\u6587\u4ef6\u5939",
             "Default order",
             "Default order",
             "Delete",
@@ -112249,6 +112844,11 @@ final class Translations {
             "Download Explorer",
             "Download FLAC or MP3 from flacdownloader.com",
             "\u4ece flacdownloader.com \u4e0b\u8f7d FLAC \u6216 MP3",
+            "Download folder unavailable",
+            "\u4e0b\u8f7d\u6587\u4ef6\u5939\u4e0d\u53ef\u7528",
+            "Download folder unavailable. Reconnect the drive or choose the folder again in"
+                    + " Downloads settings.",
+            "\u4e0b\u8f7d\u6587\u4ef6\u5939\u4e0d\u53ef\u7528\u3002\u8bf7\u91cd\u65b0\u8fde\u63a5\u5b58\u50a8\u8bbe\u5907\uff0c\u6216\u5728\u4e0b\u8f7d\u8bbe\u7f6e\u4e2d\u91cd\u65b0\u9009\u62e9\u8be5\u6587\u4ef6\u5939\u3002",
             "Download formats",
             "\u4e0b\u8f7d\u683c\u5f0f",
             "Download from {0}",
@@ -113085,6 +113685,9 @@ final class Translations {
             "Needs attention",
             "Needs verification",
             "Needs verification",
+            "New audio files use this folder. Queued downloads and saved files keep their"
+                    + " locations.",
+            "\u65b0\u97f3\u9891\u6587\u4ef6\u5c06\u4fdd\u5b58\u5230\u6b64\u6587\u4ef6\u5939\u3002\u5df2\u6392\u961f\u7684\u4e0b\u8f7d\u548c\u5df2\u4fdd\u5b58\u6587\u4ef6\u7684\u4f4d\u7f6e\u4fdd\u6301\u4e0d\u53d8\u3002",
             "New device playlist",
             "New device playlist",
             "New playlist",
@@ -114143,6 +114746,12 @@ final class Translations {
             "\u6b63\u5728\u4fdd\u5b58\u6240\u9009\u526f\u672c",
             "Saving\u2026",
             "\u6b63\u5728\u4fdd\u5b58\u2026",
+            "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
+                    + " packages keep BitChord\u2019s own storage.",
+            "SD \u5361\u548c USB \u5b58\u50a8\u8bbe\u5907\u4f1a\u663e\u793a\u5728 Android"
+                    + " \u6587\u4ef6\u5939\u9009\u62e9\u5668\u4e2d\u3002\u79bb\u7ebf HLS/DASH"
+                    + " \u5305\u4ecd\u4f7f\u7528 BitChord"
+                    + " \u81ea\u8eab\u7684\u5b58\u50a8\u4f4d\u7f6e\u3002",
             "Search",
             "\u641c\u7d22",
             "Search and playback still use mobile data; only the background indexing waits.",
@@ -114531,8 +115140,6 @@ final class Translations {
             "Source not selected",
             "Source \u00b7 {0}",
             "Source \u00b7 {0}",
-            "Source-independent AutoMix",
-            "Source-independent AutoMix",
             "Source: Soulseek",
             "\u6765\u6e90\uff1aSoulseek",
             "Source: Soulseek. Selected file queued. Open View",
@@ -115134,8 +115741,6 @@ final class Translations {
                     + " \u5b57\u7b26\u5bc6\u94a5\uff0c\u6700\u591a 16 \u4e2a",
             "Try a title, artist, source or format.",
             "Try a title, artist, source or format.",
-            "Turn Karaoke off",
-            "\u5173\u95ed\u5361\u62c9OK",
             "Turn off",
             "\u5173\u95ed",
             "Turn off YouTube Music?",
@@ -115221,6 +115826,10 @@ final class Translations {
                     + " \u4e5f\u4e0d\u4e3a\u6b64\u8fd0\u884c\u670d\u52a1\u5668\u3002",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
+            "Use BitChord default",
+            "\u4f7f\u7528 BitChord \u9ed8\u8ba4\u4f4d\u7f6e",
+            "Use BitChord\u2019s own storage setting for new downloads",
+            "\u65b0\u4e0b\u8f7d\u4f7f\u7528 BitChord \u81ea\u8eab\u7684\u5b58\u50a8\u8bbe\u7f6e",
             "Use compatible relay selection",
             "\u4f7f\u7528\u517c\u5bb9\u7684\u4e2d\u7ee7\u9009\u62e9",
             "Use configured main channel",

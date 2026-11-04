@@ -1,6 +1,6 @@
 ## 1.1.0-beta.19
 
-- **Karaoke** (formerly Sing) adds a microphone control at the bottom right of the lyrics. Tapping it switches on separation-model vocal removal and opens a vertical slider linked to the settings slider; after it closes, the microphone fades until its place is tapped again.
+- **Karaoke** (formerly Sing) adds a microphone control beside Translate in the lyrics. Tapping it switches on separation-model vocal removal and opens a vertical slider linked to the settings slider; after it closes, the microphone stays faintly visible and can be tapped to reopen the slider.
 - **Diagnostics** records app and patch events for startup and sign-in troubleshooting. Start and stop capture explicitly, then share a compressed report through Android’s share menu.
 - **Audio and video switch** carries a manual lyrics-provider choice between versions of the same queued song and reloads lyrics for the active version.
 - Returning to audio clears the video-origin flag so native AutoMix can analyse and blend the song again. Fullscreen can follow the player's request when the window ignores rotation, with Back handled in the player's scope.
@@ -12,9 +12,13 @@
 - **DJ mode** orders upcoming tracks by key and tempo with Steady, Build up and Wind down choices. Compatible keys receive longer blends; Save DJ order updates a local playlist after confirmation.
 - **Unofficial Telegram music** updates the saved index when audio and ZIP posts arrive, change or disappear while connected.
 - **DJ mode** leaves queue order to native shuffle while shuffle is on. **Audio and video switch** respects music-only playback and manual version changes.
-- **Battery saver** stands down for native AutoMix even without Source-independent AutoMix installed. **Equaliser per output** leaves the native equaliser off while JamesDSP controls effects.
+- **Battery saver** stands down for native AutoMix even without **Automix Editor** installed. **Equaliser per output** leaves the native equaliser off while JamesDSP controls effects.
 - Supports the experimental BitChord **1.9.1-beta1** build alongside 1.9.
 - The player's **Audio/Video** pair is centred above the playback-origin caption. **Automix Editor** opens from a separate waveform icon below the stats; the icons follow BitChord's player colours and blending.
+- **Automix Editor** is the patch name for source-aware transition analysis and pair editing. Its preset options remain scrollable, with compact Save draft and Apply controls.
+- **Downloads** offers a default audio folder through Android’s picker, including writable folders on SD cards and USB drives. New transfers keep their selected destination through pause and retry.
+- Completed files in selected folders use Android’s document-provider delete operation. A failed deletion keeps the saved entry.
+- YouTube video preparation uses less memory when handling cipher scripts.
 
 ## 1.1.0-beta.18
 

@@ -200,7 +200,7 @@
   },
   {
     "id": "sourceAutomix",
-    "name": "Source-independent AutoMix",
+    "name": "Automix Editor",
     "desc": "Measures the selected playable source, verifies automatic replacements, preserves playback speed and adds a native, pair-specific transition timeline with volume, EQ, filter controls and preview.",
     "def": true
   },

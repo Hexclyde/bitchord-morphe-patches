@@ -34,9 +34,8 @@ private fun MutableMethod.wrapObjectReturn(index: Int, invocation: String, regis
 
 /**
  * What checking a copy of a song against the song needs: BitChord's own decoder and source router
- * for the extension, and the check at the player's resolver. Shared, and done once: both
- * source-independent AutoMix and playing the best source first depend on it, and neither on the
- * other.
+ * for the extension, and the check at the player's resolver. Shared, and done once: both Automix
+ * Editor and playing the best source first depend on it, and neither on the other.
  */
 internal fun BytecodePatchContext.addSourceVerification() {
     if (mutableClassDefBy(HOST).methods.any { it.name == "bitchordAutomixResolveWith" }) return

@@ -1,6 +1,6 @@
 # Automix Editor
 
-Select **Source-independent AutoMix**, enable Automix in BitChord's Playback settings, and queue two tracks with known durations. Tap the waveform icon below the stats at the foot of the artwork to open **Automix Editor** for the playing track and the next queued track. The icon stays available when stats are hidden and works independently of the Audio and video switch patch. The editor is also available in Patches & tweaks.
+Select **Automix Editor**, enable Automix in BitChord's Playback settings, and queue two tracks with known durations. Tap the waveform icon below the stats at the foot of the artwork to open **Automix Editor** for the playing track and the next queued track. The icon stays available when stats are hidden and works independently of the Audio and video switch patch. The editor is also available in Patches & tweaks.
 
 The native screen shows outgoing track, stacked waveforms and volume curves, an independent Preview button, overlap selector, incoming track, Auto-apply/Auto-save, thinner presets, and Volume / EQ / Effects / Tools. The first four presets are Custom, Auto, Fade and Rise; scroll horizontally for Blend, Wave, Melt and Slam. Apply and the current listening track remain visible at the bottom. Opening a control tab or scrolling down compacts the waveforms and track names into a pinned header. Scrolling back to the top or using its expand control restores the full timeline. Landscape uses side-by-side deck and control panes. Light/dark themes, larger text, system bars and cutouts are supported.
 

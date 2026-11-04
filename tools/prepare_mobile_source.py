@@ -13,15 +13,18 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import zipfile
 from bootstrap_from_release import download, verify_bundle
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from buildenv import jdk
 
 # The public patches. The playback patches are off until chosen in Morphe.
 ON_BY_DEFAULT = {
-    "Source-independent AutoMix",
+    "Automix Editor",
     "Unofficial Telegram music",
     "Install as Bitchord+",
     "Sign in with MicroG",
@@ -203,11 +206,9 @@ def export_patches(bundle, provenance, download_patcher):
         raise ValueError(
             "Missing/mismatched pinned Morphe JAR. Supply MORPHE_TOOLS or --download-patcher."
         )
-    java_home = os.environ.get("JAVA_HOME")
-    if not java_home:
-        java_home = next(iter(sorted(tools.glob("jdk-21*"))), None)
-    java = str(Path(java_home) / "bin/java") if java_home else "java"
-    javac = str(Path(java_home) / "bin/javac") if java_home else "javac"
+    java_home = jdk(tools)
+    java = str(java_home / "bin/java")
+    javac = str(java_home / "bin/javac")
     with tempfile.TemporaryDirectory(prefix="bitchord-mobile-metadata-") as temporary:
         output = Path(temporary) / "patches-list.json"
         subprocess.run(

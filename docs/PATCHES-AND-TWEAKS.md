@@ -28,7 +28,7 @@ supported unit at a time; **Reset** is an explicit action using the native defau
 | Headphone correction strength | 0–100% | 100% |
 
 Opening the page or a configuration does not apply a slider value. Enabling
-Source-independent AutoMix uses BitChord's existing Automix setting; it does not
+Automix Editor uses BitChord's existing Automix setting; it does not
 change playback speed or the saved pitch.
 
 ## Controls that work together
@@ -44,7 +44,7 @@ updates the same enabled state and account configuration.
 
 | Controls | Playback behavior |
 | --- | --- |
-| Native AutoMix and Source-independent AutoMix | Share one native AutoMix switch and transition engine. The patch analyses the selected recording for that engine. |
+| Native AutoMix and Automix Editor | Share one native AutoMix switch and transition engine. The patch analyses the selected recording for that engine. |
 | DJ mode and queue shuffle | Shuffle controls queue order while enabled; DJ does not reorder the shuffled queue. |
 | Battery saver and AutoMix | Audio offload stands down while AutoMix needs decoded audio, including without the source-analysis patch. |
 | Equaliser per output and JamesDSP | Per-output settings stay saved while JamesDSP holds the native equaliser off. Turning JamesDSP off restores the saved output configuration. |

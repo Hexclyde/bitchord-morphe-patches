@@ -37,4 +37,18 @@ public final class OffsetKt {
             Modifier base, float start, float top, float end, float bottom, int defaults) {
         return base.then(new Padding(start, top, end, bottom));
     }
+
+    /** What offset(Function1) records: the lambda is read in the placement phase. */
+    public static final class OffsetBy implements Modifier {
+        public final kotlin.jvm.functions.Function1<Object, Object> offset;
+
+        OffsetBy(kotlin.jvm.functions.Function1<Object, Object> offset) {
+            this.offset = offset;
+        }
+    }
+
+    public static Modifier offset(
+            Modifier base, kotlin.jvm.functions.Function1<Object, Object> offset) {
+        return base.then(new OffsetBy(offset));
+    }
 }

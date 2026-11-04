@@ -291,6 +291,42 @@ final class DownloadsSettings {
                             }
                         });
         }
+        heading(parent, style, Strings.t("Default download folder"));
+        LinearLayout folder = PlaylistRows.group(parent, style);
+        PlaylistRows.add(
+                folder,
+                style,
+                DownloadFolder.label(activity),
+                Strings.t("Choose folder"),
+                () ->
+                        activity.startActivity(
+                                new Intent(activity, DownloadsSettingsActivity.class)
+                                        .putExtra(DownloadsSettingsActivity.PICK_DIRECTORY, true)));
+        if (!DownloadFolder.selected(activity).isEmpty())
+            PlaylistRows.add(
+                    folder,
+                    style,
+                    Strings.t("Use BitChord default"),
+                    Strings.t("Use BitChord’s own storage setting for new downloads"),
+                    () -> {
+                        if (activity instanceof DownloadsSettingsActivity)
+                            ((DownloadsSettingsActivity) activity).saveFolder("");
+                    });
+        TextView folderNote =
+                style.text(
+                        Strings.t(
+                                        "New audio files use this folder. Queued downloads and"
+                                                + " saved files keep their locations.")
+                                + "\n"
+                                + Strings.t(
+                                        "SD cards and USB drives appear in Android’s folder picker."
+                                                + " Offline HLS/DASH packages keep BitChord’s own"
+                                                + " storage."),
+                        13,
+                        style.secondary,
+                        style.regular);
+        folderNote.setPadding(style.dp(4), style.dp(8), style.dp(4), style.dp(16));
+        parent.addView(folderNote);
         heading(parent, style, Strings.t("Storage"));
         LinearLayout storage = PlaylistRows.group(parent, style);
         PlaylistRows.add(

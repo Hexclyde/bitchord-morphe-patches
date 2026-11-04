@@ -18,6 +18,14 @@ previous player tab. The Compose back handler allows the expanded player and dia
 to preserve their normal precedence. Existing setup/advanced transfer screens remain
 available as separate settings activities.
 
+## Default audio folder
+
+Open **Downloads settings → Default download folder** and choose a writable folder with Android’s folder picker. Mounted SD cards and USB drives appear when their document provider exposes them. BitChord saves new progressive audio transfers directly in the selected folder; saved files and requests already queued keep their locations. **Use BitChord default** delegates new native downloads to BitChord’s storage setting.
+
+Folder access persists across restarts. An unavailable drive or revoked grant leaves the request failed so its destination can be reconnected or granted again. A transfer does not silently move to another folder. Android’s system and app-private folder restrictions still apply. Segmented offline HLS/DASH packages use BitChord’s managed storage.
+
+A new file can appear in an external file manager while it is downloading. BitChord lists it as saved only after the transfer and metadata writing finish. Interrupted files are not accepted as completed downloads.
+
 ## Views and controls
 
 Tap the view icon to cycle Grid, List, Compact, Comfy and Detailed; hold it to select

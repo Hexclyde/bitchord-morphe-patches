@@ -1,6 +1,6 @@
 # Playback, downloads and storage
 
-Play alongside other apps, Steady playback, Smart downloads and Karaoke start disabled. Source-independent AutoMix is selected by default in Morphe and uses BitChord’s AutoMix setting. Open **Settings → Patches & tweaks** to enable a feature and its gear to change its settings. Controls follow BitChord’s theme, text size and green capsule switches.
+Play alongside other apps, Steady playback, Smart downloads and Karaoke start disabled. Automix Editor is selected by default in Morphe and uses BitChord’s AutoMix setting. Open **Settings → Patches & tweaks** to enable a feature and its gear to change its settings. Controls follow BitChord’s theme, text size and green capsule switches.
 
 ## Playback
 
@@ -34,7 +34,7 @@ Insufficient evidence or memory uses a basic **Crossfade**; **Mixing** identifie
 
 Enable **Karaoke** and open its gear to choose **Filter** or **Separation model** and adjust the removal level. Separation uses BitChord’s bundled Open-Unmix export. A zero level passes the original audio unchanged. Missing, late or unsupported inference uses the filter.
 
-On the lyrics screen, Karaoke adds a microphone capsule at the bottom right, above the translation button. Tapping the microphone chooses the separation model, turns Karaoke on and opens a vertical slider: the bottom is 0%, the original vocals, and the top is 100%, the most removal. The slider and the Voice slider on the settings page are the same value. The capsule shows the model's status while it loads and when it falls back to the filter, and **Off** turns Karaoke off. The slider closes by itself after three seconds without a touch, or when the microphone is tapped again, and the microphone then fades out; tapping its place brings it back. Closing it never turns Karaoke off. Screen readers get a slider with fine steps and a reset to 50%, and the slider stays open while a screen reader or keyboard is on it.
+On the lyrics screen, Karaoke adds a microphone capsule beside the translation button. Tapping the microphone chooses the separation model, turns Karaoke on and opens a vertical slider: the bottom is 0%, the original vocals, and the top is 100%, the most removal. The slider and the Voice slider on the settings page are the same value. The capsule shows the model's status while it loads and when it falls back to the filter. Turn Karaoke off from its settings page. The slider closes by itself after three seconds without a touch, or when the microphone is tapped again, and the microphone then dims while staying visible; tapping it brings it back. Closing it never turns Karaoke off. Screen readers get a slider with fine steps and a reset to 50%, and the slider stays open while a screen reader or keyboard is on it.
 
 Separation applies a soft vocal mask with 4096-sample Hann windows, a 1024-sample hop and weighted overlap-add mapped to the model’s 44.1 kHz frequency grid. Lookahead and processing add about 1.60 seconds at 44.1/48 kHz. Seeks reset its history; ordinary track boundaries preserve delayed audio. Nonstandard speed or pitch bypasses separation, and bit-perfect output bypasses the effects path.
 

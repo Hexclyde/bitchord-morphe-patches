@@ -10,6 +10,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.*
 /** Exact source and filename identity, independent of any optional transfer runtime. */
 internal val selectedDownloadsPatch = bytecodePatch {
     execute {
+        addDownloadFolder()
         val songType = "Lcom/music/bitchord/data/model/Song;"
         val selection = "Lapp/bitchord/telegram/DownloadSelection;"
         val fileName =

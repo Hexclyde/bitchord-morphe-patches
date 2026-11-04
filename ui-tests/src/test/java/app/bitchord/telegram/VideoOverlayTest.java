@@ -113,8 +113,8 @@ public class VideoOverlayTest {
         measure();
         assertSame(column, row.getParent());
         assertEquals(32, row.getTop());
-        assertEquals("the pair row plus the caption's target gap", 48 + 14, row.getHeight());
-        assertEquals(32 + 62, artwork.getTop());
+        assertEquals("The caption owns its minimum height below the pair", 48, row.getHeight());
+        assertEquals(32 + 48, artwork.getTop());
         FrameLayout window = owner.get().findViewById(android.R.id.content);
         assertEquals("No floating sibling is added to the window", 1, window.getChildCount());
         assertEquals("The normal layout has no status-bar offset", 0, row.getTranslationY(), 0.01);
@@ -168,7 +168,7 @@ public class VideoOverlayTest {
     public void hidingThePatchOrPlayingExternalAudioReleasesItsLayoutSpace() {
         VideoSwitch.Header row = header();
         measure();
-        assertEquals(48 + 14, row.getHeight());
+        assertEquals(48, row.getHeight());
         VideoSwitch.setEnabled(false);
         measure();
         assertEquals(0, row.getHeight());
@@ -201,10 +201,12 @@ public class VideoOverlayTest {
         org.robolectric.RuntimeEnvironment.setFontScale(2f);
         VideoSwitch.Header row = header();
         measure();
-        assertEquals(48 + 6, row.getHeight());
+        assertEquals(48, row.getHeight());
         assertEquals(104, row.control.getWidth());
         assertTrue(row.control.audio.getWidth() >= 48);
         assertTrue(row.control.video.getWidth() >= 48);
+        assertTrue(row.control.audio.getHeight() >= 48);
+        assertTrue(row.control.video.getHeight() >= 48);
     }
 
     @Test

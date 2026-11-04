@@ -211,6 +211,7 @@ public final class VerifyTravelFeaturesApk {
                         "SmartDownloadsJob",
                         "SmartDownloadSources",
                         "DownloadSelection",
+                        "DownloadFolder",
                         "SeparatedSing",
                         "SeparationModel"))
             check(classes.containsKey(BASE + helper + ";"), "Shared helper present: " + helper);

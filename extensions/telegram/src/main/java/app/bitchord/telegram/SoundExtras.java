@@ -779,7 +779,7 @@ public final class SoundExtras {
 
     /**
      * BitChord's own Automix switch. It is read from the setting, so it holds whether or not the
-     * Source-independent AutoMix patch is added.
+     * Automix Editor patch is added.
      */
     static boolean nativeSmartFade() {
         try {

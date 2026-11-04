@@ -20,6 +20,7 @@ public Set<String> getStringSet(String n,Set<String>d){return new HashSet<>(save
 public Prefs putStringSet(String k,Set<String> s){if(success)saved=new HashSet<>(s);return this;}public boolean commit(){return success;}}}""",
     "android/content/Intent.java": """package android.content;public class Intent{public static final int FLAG_ACTIVITY_NEW_TASK=1;
 public Intent(Context c,Class<?> t){}public Intent addFlags(int f){return this;}}""",
+    "app/bitchord/telegram/DownloadFolder.java": "package app.bitchord.telegram;public class DownloadFolder{static void naming(Object s){} static void named(String n){}}",
     "app/bitchord/telegram/DownloadControls.java": "package app.bitchord.telegram;public class DownloadControls{public static void remember(android.content.Context c,Object s,String f){}}",
     "app/bitchord/telegram/PatchStrings.java": """package app.bitchord.telegram;public class PatchStrings{public static String t(String s){return s;}}""",
     "app/bitchord/soulseek/Fixtures.java": """package app.bitchord.soulseek;

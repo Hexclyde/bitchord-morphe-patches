@@ -66,6 +66,7 @@ public final class DownloadSelection {
     }
 
     public static void fileNameStart(Object song) {
+        DownloadFolder.naming(song);
         String reference = text(song, "videoId");
         if (pinned.contains(reference)) filenameSelection.set(reference);
         else filenameSelection.remove();
@@ -74,7 +75,9 @@ public final class DownloadSelection {
     public static String fileNameFinish(String name) {
         String reference = filenameSelection.get();
         filenameSelection.remove();
-        return reference == null ? name : selectedName(reference, name);
+        String result = reference == null ? name : selectedName(reference, name);
+        DownloadFolder.named(result);
+        return result;
     }
 
     public static String selectedFileName(Object song, String name) {

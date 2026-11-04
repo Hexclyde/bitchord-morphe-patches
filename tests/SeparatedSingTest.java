@@ -2,6 +2,11 @@ package app.bitchord.telegram;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /** Transform, timing and lifecycle checks without a runtime or model dependency. */
 public final class SeparatedSingTest {
@@ -288,6 +293,130 @@ public final class SeparatedSingTest {
         check(out.frames == 88200, "and the delay carries on, losing nothing: " + out.frames);
     }
 
+    private interface Step {
+        void run() throws Exception;
+    }
+
+    /** Runs the step on its own thread; false if it is still going when the time is up. */
+    private static boolean finishes(Step step, long ms) throws Exception {
+        Throwable[] failure = {null};
+        Thread thread =
+                new Thread(
+                        () -> {
+                            try {
+                                step.run();
+                            } catch (Throwable thrown) {
+                                failure[0] = thrown;
+                            }
+                        });
+        thread.setDaemon(true);
+        thread.start();
+        thread.join(ms);
+        if (thread.isAlive()) return false;
+        if (failure[0] != null) throw new AssertionError(failure[0]);
+        return true;
+    }
+
+    private static void blockedEstimateDoesNotHoldTheAudio() throws Exception {
+        int rate = 44100;
+        CountDownLatch entered = new CountDownLatch(1), release = new CountDownLatch(1);
+        AtomicInteger asked = new AtomicInteger(), filtered = new AtomicInteger();
+        ExecutorService worker =
+                Executors.newSingleThreadExecutor(
+                        r -> {
+                            Thread thread = new Thread(r);
+                            thread.setDaemon(true);
+                            return thread;
+                        });
+        try {
+            SeparatedSing engine =
+                    new SeparatedSing(
+                            rate,
+                            input -> {
+                                asked.incrementAndGet();
+                                entered.countDown();
+                                if (!release.await(30, TimeUnit.SECONDS))
+                                    throw new IllegalStateException("never released");
+                                return new float[input.length];
+                            },
+                            worker,
+                            (pcm, n, level) -> filtered.incrementAndGet());
+            Output out = new Output();
+            out.feed(engine, signal(rate), 4096, 1);
+            check(entered.await(5, TimeUnit.SECONDS), "the first estimate has begun");
+            // The estimate is held from here on: everything below happens while it is.
+            boolean done =
+                    finishes(
+                            () -> {
+                                out.feed(engine, signal(rate * 4), 4096, 1);
+                                out.finish(engine, 1024, 1);
+                            },
+                            10_000);
+            check(done, "input and the end of the stream don't wait for the estimate");
+            check(release.getCount() == 1, "and it was still held when they were done");
+            check(asked.get() == 1, "no second request queues behind it: " + asked.get());
+            check(!engine.ready(), "no estimate has arrived");
+            check(filtered.get() > 0, "the filter covered the audio meanwhile");
+            check(out.frames == rate * 5, "every frame came out: " + out.frames);
+        } finally {
+            release.countDown();
+            worker.shutdownNow();
+        }
+    }
+
+    private static void modelArrivesAfterSeveralSeconds() throws Exception {
+        int rate = 44100;
+        AtomicInteger asked = new AtomicInteger();
+        SeparationModel.forTest(null, true);
+        try {
+            Object key = new Object();
+            VocalCut filter = new VocalCut(rate);
+            Output out = new Output();
+            long fed = 0;
+            float[] block = new float[4096 * 2];
+            for (int i = 0; i < 33; i++, fed += 4096) {
+                System.arraycopy(signal(4096), 0, block, 0, block.length);
+                int skipped =
+                        SeparationModel.process(key, block, block.length, rate, 1, filter, true);
+                check(skipped == 0, "no delay without a model");
+                out.add(block, 0, 4096);
+            }
+            check(SeparationModel.engine(key) == null, "filter only, for three seconds");
+            // The session shows up now, as a load that finishes late would leave it.
+            SeparationModel.Inference model =
+                    input -> {
+                        asked.incrementAndGet();
+                        return new float[input.length];
+                    };
+            Field inference = SeparationModel.class.getDeclaredField("inference");
+            Field session = SeparationModel.class.getDeclaredField("session");
+            inference.setAccessible(true);
+            session.setAccessible(true);
+            inference.set(null, model);
+            session.set(null, model);
+            System.arraycopy(signal(4096), 0, block, 0, block.length);
+            SeparationModel.process(key, block, block.length, rate, 1, filter, true);
+            out.add(block, 0, 4096);
+            fed += 4096;
+            waitFor(() -> SeparationModel.engine(key) != null, "the engine to arrive");
+            SeparatedSing engine = SeparationModel.engine(key);
+            long engineStart = fed;
+            for (int i = 0; i < 43; i++, fed += 4096) {
+                System.arraycopy(signal(4096), 0, block, 0, block.length);
+                int skipped =
+                        SeparationModel.process(key, block, block.length, rate, 1, filter, true);
+                out.add(block, skipped, 4096 - skipped);
+            }
+            check(SeparationModel.engine(key) == engine, "the same engine carried on");
+            check(engine.inputFrames() == fed - engineStart, "it has all it was given since");
+            waitFor(() -> asked.get() > 0, "an estimate to be asked for");
+            out.finish(engine, 1024, 1);
+            check(out.frames == fed, "frames in " + fed + ", out " + out.frames);
+        } finally {
+            SeparationModel.forTest(null, false);
+        }
+    }
+
     // ── The model's own rules, with a stand-in for the runtime ──────────────
 
     private static void waitFor(java.util.function.BooleanSupplier done, String what)
@@ -454,6 +583,7 @@ public final class SeparatedSingTest {
         seekClearsEverything();
         endThenMoreInput();
         slowEstimatesDoNotQueue();
+        blockedEstimateDoesNotHoldTheAudio();
         outOfMemory();
         unavailableStopsAsking();
         flushIsolation();
@@ -461,6 +591,7 @@ public final class SeparatedSingTest {
         missingModelUsesTheFilter();
         tooSlowBacksOff();
         memoryFailureReleasesTheSession();
+        modelArrivesAfterSeveralSeconds();
         System.out.println(
                 "PASS: " + checks + " separation transform, timing and fallback checks.");
     }

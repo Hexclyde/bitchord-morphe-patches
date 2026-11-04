@@ -36,6 +36,40 @@
       "options": []
     },
     {
+      "name": "Automix Editor",
+      "description": "Measures the selected playable source, verifies automatic replacements, preserves playback speed and adds a native, pair-specific transition timeline with volume, EQ, filter controls and preview.",
+      "default": true,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.music.bitchord",
+          "name": "BitChord",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF8944",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.9",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            },
+            {
+              "version": "1.9.1-beta1",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Battery saver",
       "description": "Lets the phone's audio chip decode songs, so long listens use less battery. BitChord's effects don't run on songs played this way. Settings are in Settings, Patches & tweaks.",
       "default": false,
@@ -593,40 +627,6 @@
       "name": "Smart downloads",
       "description": "Downloads the songs you play most, on Wi-Fi, so they're there without a signal. Uses BitChord's listening statistics and its Download quality; songs you delete aren't downloaded again. Settings are in Settings, Patches & tweaks.",
       "default": false,
-      "category": null,
-      "compatiblePackages": [
-        {
-          "packageName": "com.music.bitchord",
-          "name": "BitChord",
-          "description": null,
-          "apkFileType": "APK",
-          "appIconColor": "#FF8944",
-          "signatures": null,
-          "formFactor": "MOBILE",
-          "targets": [
-            {
-              "version": "1.9",
-              "versionCodes": null,
-              "isExperimental": true,
-              "minSdk": 26,
-              "description": null
-            },
-            {
-              "version": "1.9.1-beta1",
-              "versionCodes": null,
-              "isExperimental": true,
-              "minSdk": 26,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
-      "name": "Source-independent AutoMix",
-      "description": "Measures the selected playable source, verifies automatic replacements, preserves playback speed and adds a native, pair-specific transition timeline with volume, EQ, filter controls and preview.",
-      "default": true,
       "category": null,
       "compatiblePackages": [
         {

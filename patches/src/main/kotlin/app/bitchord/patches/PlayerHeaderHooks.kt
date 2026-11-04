@@ -145,6 +145,110 @@ private fun List<Instruction>.overwrittenBeforeRead(from: Int, register: Int): B
     return false
 }
 
+internal class OriginCaptionSite(val at: Int, val modifier: Int)
+
+internal fun originCaptionSite(code: List<Instruction>, registers: Int): OriginCaptionSite {
+    val changed = "Native playback caption changed"
+    check(
+        code.any { it.stringOrNull() == "text" } &&
+            code.any { it.stringOrNull() == "onClick" } &&
+            code.any {
+                it.fieldRefOrNull()?.let { f ->
+                    f.name == "labelSmall" && f.type == "Landroidx/compose/ui/text/TextStyle;"
+                } == true
+            }
+    ) {
+        "$changed: text style or inputs"
+    }
+    val clickable =
+        code.indices
+            .filter { i ->
+                code[i].methodRef()?.let { m ->
+                    m.name.startsWith("clickable-") &&
+                        m.returnType == MODIFIER &&
+                        m.takes(
+                            MODIFIER,
+                            "Z",
+                            "Ljava/lang/String;",
+                            "Landroidx/compose/ui/semantics/Role;",
+                            "Lkotlin/jvm/functions/Function0;",
+                            "I",
+                        )
+                } == true
+            }
+            .singleOrNull()
+    check(clickable != null && code.getOrNull(clickable + 1)?.opcode == Opcode.MOVE_RESULT_OBJECT) {
+        "$changed: native click target"
+    }
+    val padding =
+        (clickable + 2 until code.size)
+            .filter { i ->
+                code[i].methodRef()?.let { m ->
+                    m.name == "padding" &&
+                        m.returnType == MODIFIER &&
+                        m.takes(MODIFIER, "Landroidx/compose/foundation/layout/PaddingValues;")
+                } == true
+            }
+            .singleOrNull()
+    check(padding != null) { "$changed: native content padding" }
+    val modifier = code[padding].argument(0)
+    val result = (code[clickable + 1] as OneRegisterInstruction).registerA
+    val base = registers - 8
+    check(
+        modifier in 0..255 &&
+            modifier == result &&
+            modifier != base + 4 &&
+            (clickable + 2 until padding).none { code[it].writes(modifier) } &&
+            padding !in branchTargets(code).first
+    ) {
+        "$changed: click result ownership"
+    }
+    check(
+        code.frameInput(code[clickable].argument(4), clickable, base + 1) &&
+            code.frameInput(code[padding].argument(1), padding, base + 3)
+    ) {
+        "$changed: callback or padding ownership"
+    }
+    check(
+        (padding + 1 until code.size).any { i ->
+            code[i].methodRef()?.let { m ->
+                m.definingClass == "Landroidx/compose/material3/TextKt;" &&
+                    m.name.startsWith("Text-") &&
+                    m.parameterTypes.take(2).map(Any::toString) ==
+                        listOf("Ljava/lang/String;", MODIFIER)
+            } == true
+        }
+    ) {
+        "$changed: native text rendering"
+    }
+    return OriginCaptionSite(padding, modifier)
+}
+
+internal fun locateOriginCaption(all: List<ClassDef>): Method {
+    val methods =
+        all.filter { it.type.startsWith(PLAYER_UI) }
+            .flatMap { c ->
+                c.methods.filter { m ->
+                    m.accessFlags and STATIC != 0 &&
+                        m.accessFlags and 1 != 0 &&
+                        m.shaped(
+                            "Ljava/lang/String;",
+                            "Lkotlin/jvm/functions/Function0;",
+                            "I",
+                            "Landroidx/compose/foundation/layout/PaddingValuesImpl;",
+                            MODIFIER,
+                            COMPOSER,
+                            "I",
+                            "I",
+                            returns = "V",
+                        )
+                }
+            }
+    check(methods.size == 1) { "Native playback caption changed: unique caption renderer" }
+    val method = methods.single()
+    return method
+}
+
 /** What the portrait player's drag strip is hooked at; found from how the strip is built. */
 internal class PortraitAnchors(
     val height: Int,
@@ -661,13 +765,14 @@ internal data class IconCounts(
     val editor: Int = 0,
     val portraitHeader: Int = 0,
     val landscapeHeader: Int = 0,
+    val caption: Int = 0,
 )
 
 /** True when nothing is installed yet; false when all of it is; anything else is refused. */
 internal fun IconCounts.needsInstall(): Boolean {
     if (this == IconCounts()) return true
     check(editor == 0) { "Shared player icons still place the editor inside the sleeve" }
-    check(this == IconCounts(1, 1, 1, 1, 1, 1, 0, 0, 1)) {
+    check(this == IconCounts(1, 1, 1, 1, 1, 1, 0, 0, 1, 1)) {
         "Shared player icons are only partly installed"
     }
     return false
@@ -700,6 +805,9 @@ internal fun BytecodePatchContext.installPlayerHeader(hook: String) {
             mutableClassDefBy(type).methods.single { it.sameAs(found) }
         }
 
+    val caption = locateOriginCaption(all)
+    val captionMethod =
+        mutableClassDefBy(caption.definingClass).methods.single { it.sameAs(caption) }
     val portraitCode = portraitMethod.instructionList()
     val landscapeCode = landscapeMethod.instructionList()
     // What an earlier install left in the code, counted from the code as it is now.
@@ -721,6 +829,7 @@ internal fun BytecodePatchContext.installPlayerHeader(hook: String) {
                     .sumOf { it.icons("editor") },
             portraitHeader = portraitCode.headerCalls(hook),
             landscapeHeader = landscapeCode.headerCalls(hook),
+            caption = captionMethod.instructionList().icons("caption"),
         )
     if (!counts.needsInstall()) {
         val table =
@@ -735,6 +844,11 @@ internal fun BytecodePatchContext.installPlayerHeader(hook: String) {
         return
     }
 
+    val captionSite =
+        originCaptionSite(
+            captionMethod.instructionList(),
+            captionMethod.implementation!!.registerCount,
+        )
     val plan = planPlayerIcons(all, located)
     val anchors = plan.anchors
 
@@ -772,6 +886,13 @@ internal fun BytecodePatchContext.installPlayerHeader(hook: String) {
     }
     val landscapeComposer = (landscapeCode[install] as FiveRegisterInstruction).registerC
 
+    captionMethod.addInstructions(
+        captionSite.at,
+        "invoke-static/range {v${captionSite.modifier} .. v${captionSite.modifier}}, " +
+            "$PLAYER_ICONS->caption(Ljava/lang/Object;)Ljava/lang/Object;\n" +
+            "move-result-object v${captionSite.modifier}\n" +
+            "check-cast v${captionSite.modifier}, $MODIFIER",
+    )
     // Later indices first, so the earlier ones stay where they were found.
     portraitMethod.addInstruction(
         anchors.gate,
@@ -925,6 +1046,24 @@ internal fun resolvePlayerIconSymbols(
                 "${it.definingClass}->${it.name}(${it.parameterTypes.joinToString("")})$MODIFIER"
             }
             .exactly("The square size helper")
+    symbols["captionHeight"] =
+        statics
+            .filter {
+                it.definingClass == sizes.definingClass &&
+                    it.name.startsWith("heightIn-") &&
+                    it.shaped(MODIFIER, "F", "F", returns = MODIFIER) &&
+                    it.code().any { i ->
+                        i.methodRef()?.let { call ->
+                            call.definingClass == SIZE_ELEMENT &&
+                                call.name == "<init>" &&
+                                call.takes("F", "F", "F", "F", "I")
+                        } == true
+                    }
+            }
+            .map {
+                "${it.definingClass}->${it.name}(${it.parameterTypes.joinToString("")})$MODIFIER"
+            }
+            .exactly("The native minimum caption height helper")
     symbols["offset"] =
         statics
             .filter {

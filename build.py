@@ -196,6 +196,7 @@ shared_ui = {
     "MixedSongCodec",
     "DownloadControls",
     "DownloadSelection",
+    "DownloadFolder",
     "StorageSense",
     "StorageSenseActive",
     "StorageSenseActivity",

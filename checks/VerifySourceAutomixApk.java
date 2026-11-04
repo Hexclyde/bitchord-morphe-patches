@@ -1171,7 +1171,7 @@ public final class VerifySourceAutomixApk {
         System.out.println(
                 "PASS: "
                         + checks
-                        + " source-independent AutoMix APK checks; "
+                        + " Automix Editor APK checks; "
                         + speeds
                         + " speed paths protected");
     }

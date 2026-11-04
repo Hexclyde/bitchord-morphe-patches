@@ -32,6 +32,20 @@ public final class Downloads {
         return (java.io.Serializable) result;
     }
 
+    public static final List<String> cancelled = new ArrayList<>();
+    public static final List<String> forgotten = new ArrayList<>();
+
+    public static void cancel(String id) {
+        cancelled.add(id);
+    }
+
+    public static void forget(String id) {
+        java.util.Map<String, String> next = new java.util.HashMap<>(_saved.getValue());
+        next.remove(id);
+        _saved.setValue(next);
+        forgotten.add(id);
+    }
+
     private Downloads() {}
 
     public static void enqueue(Context context, Song song, String from) {

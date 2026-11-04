@@ -682,7 +682,7 @@ public final class ExtrasActivity extends Activity {
         if (SourceAutomix.applied()) {
             feature(
                     "source-automix",
-                    Strings.t("Source-independent AutoMix"),
+                    Strings.t("Automix Editor"),
                     Strings.t("Extend BitChord’s AutoMix to the audio from supported sources"),
                     () -> hostBoolean("getSmartFadeEnabled"),
                     on -> setHostBoolean("setSmartFadeEnabled", on),

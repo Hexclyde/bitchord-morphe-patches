@@ -35,6 +35,14 @@ public final class PhoneFolderFailureTest {
                                 new DownloadDestinations.Snapshot("both", TREE, -1001, 12, "Main")),
                 "Both cannot complete when optional Telegram integration is absent");
         check(
+                app.bitchord.telegram.DownloadFolder.prepared == 1,
+                "failed Telegram validation does not prepare or change the default folder");
+        check(
+                activity.getSharedPreferences("bitchord-download-destinations", 0)
+                        .getString("defaultFolderTree", "")
+                        .equals(TREE),
+                "native default folder is committed with the successful destination choice");
+        check(
                 DownloadDestinations.snapshot(activity).mode.equals("phone"),
                 "failed edit preserves prior valid choice atomically");
         Activity telegramOnly = new Activity();

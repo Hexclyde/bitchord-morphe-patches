@@ -90,6 +90,7 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
     print(abi, flow.stdout, flow.stderr, flush=True)
     flow.check_returncode()
     for checker, arguments in [
+        ("VerifyCipherMemoryApk", [str(output)]),
         ("VerifyHostContractsApk", [str(output), str(original)]),
         ("VerifyCaptureApk", [str(output)]),
         ("VerifyAudioOriginApk", [str(output)]),

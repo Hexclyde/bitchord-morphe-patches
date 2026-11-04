@@ -17,6 +17,8 @@ public class VerifyKaraokeLyricsApk {
     static final String LYRICS = "Lcom/music/bitchord/ui/player/PlayerLyricsKt;";
     static final String COMPOSER = "Landroidx/compose/runtime/ComposerImpl;";
     static final String ALIGNMENT = "Landroidx/compose/ui/Alignment$Companion;";
+    static final String SIZE_KT = "Landroidx/compose/foundation/layout/SizeKt;";
+    static final String OFFSET_KT = "Landroidx/compose/foundation/layout/OffsetKt;";
     static int fails;
 
     static void check(boolean ok, String what) {
@@ -30,6 +32,24 @@ public class VerifyKaraokeLyricsApk {
         for (String e : box.getDexEntryNames())
             for (ClassDef c : box.getEntry(e).getDexFile().getClasses()) out.put(c.getType(), c);
         return out;
+    }
+
+    static Method resolved(Map<String, ClassDef> dex, String reference) {
+        if (reference == null || !reference.contains("->")) return null;
+        ClassDef owner = dex.get(reference.substring(0, reference.indexOf("->")));
+        if (owner == null) return null;
+        for (Method method : owner.getMethods()) {
+            String actual =
+                    method.getDefiningClass()
+                            + "->"
+                            + method.getName()
+                            + "("
+                            + String.join("", method.getParameterTypes())
+                            + ")"
+                            + method.getReturnType();
+            if (reference.equals(actual)) return method;
+        }
+        return null;
     }
 
     /** A method's instructions with the instruction index every branch lands on. */
@@ -117,6 +137,48 @@ public class VerifyKaraokeLyricsApk {
 
     static boolean hasHaze;
 
+    /** True when the instruction writes the register (not a store, branch, return or call). */
+    static boolean writes(Instruction i, int register) {
+        String n = i.getOpcode().name().toLowerCase().replace('_', '-');
+        for (String p :
+                new String[] {
+                    "if-", "iput", "sput", "aput", "return", "monitor", "throw", "invoke"
+                }) if (n.startsWith(p)) return false;
+        return i instanceof OneRegisterInstruction o && o.getRegisterA() == register;
+    }
+
+    /** The whole-number float in the register just before index {@code at}, or null. */
+    static Float floatBefore(Code code, int at, int register) {
+        int convert = -1;
+        for (int k = at - 1; k >= 0 && convert < 0; k--)
+            if (writes(code.ins.get(k), register)) convert = k;
+        if (convert < 0 || code.ins.get(convert).getOpcode() != Opcode.INT_TO_FLOAT) return null;
+        int source = ((TwoRegisterInstruction) code.ins.get(convert)).getRegisterB();
+        int load = -1;
+        for (int k = convert - 1; k >= 0 && load < 0; k--)
+            if (writes(code.ins.get(k), source)) load = k;
+        if (load < 0) return null;
+        Opcode op = code.ins.get(load).getOpcode();
+        if (op != Opcode.CONST_4 && op != Opcode.CONST_16) return null;
+        return (float) ((NarrowLiteralInstruction) code.ins.get(load)).getNarrowLiteral();
+    }
+
+    /** Calls to Compose's size modifier in this code: the instruction indices. */
+    static List<Integer> sizeCalls(Code code) {
+        List<Integer> found = new ArrayList<>();
+        for (int k = 0; k < code.ins.size(); k++) {
+            MethodReference m = code.call(k);
+            if (m != null
+                    && code.ins.get(k) instanceof FiveRegisterInstruction
+                    && m.getDefiningClass().equals(SIZE_KT)
+                    && m.getName().startsWith("size-")
+                    && m.getParameterTypes()
+                            .toString()
+                            .equals("[Landroidx/compose/ui/Modifier;, F]")) found.add(k);
+        }
+        return found;
+    }
+
     static boolean refers(Method m, String prefix) {
         if (m.getImplementation() == null) return false;
         for (Instruction i : m.getImplementation().getInstructions())
@@ -183,7 +245,10 @@ public class VerifyKaraokeLyricsApk {
                     "alignment",
                     "childData",
                     "startGroup",
-                    "endGroup"
+                    "endGroup",
+                    "requiredSize",
+                    "offsetBy",
+                    "intOffset"
                 })
             check(
                     table.contains("\n" + key + "=") || table.startsWith(key + "="),
@@ -192,21 +257,101 @@ public class VerifyKaraokeLyricsApk {
                 !table.contains("\ntint=") || table.contains("\nconsume="),
                 "A player tint comes with the consume that reads it");
 
+        Map<String, String> symbols = new HashMap<>();
+        for (String line : table.split("\n")) {
+            int separator = line.indexOf('=');
+            if (separator > 0)
+                symbols.put(line.substring(0, separator), line.substring(separator + 1));
+        }
+        // The landscape slot is sized and moved with layout modifiers that exist in this build.
+        Method required = resolved(dex, symbols.get("requiredSize"));
+        check(
+                required != null
+                        && required.getDefiningClass().equals(SIZE_KT)
+                        && required.getName().endsWith("$default")
+                        && required.getParameterTypes()
+                                .equals(
+                                        List.of(
+                                                "Landroidx/compose/ui/Modifier;",
+                                                "F",
+                                                "F",
+                                                "F",
+                                                "F",
+                                                "I")),
+                "The required-size modifier resolves with its default mask");
+        Method offsetBy = resolved(dex, symbols.get("offsetBy"));
+        check(
+                offsetBy != null
+                        && offsetBy.getDefiningClass().equals(OFFSET_KT)
+                        && offsetBy.getParameterTypes()
+                                .equals(
+                                        List.of(
+                                                "Landroidx/compose/ui/Modifier;",
+                                                "Lkotlin/jvm/functions/Function1;")),
+                "The lambda offset modifier resolves");
+        Method packed = resolved(dex, symbols.get("intOffset"));
+        check(
+                packed != null && packed.getParameterTypes().equals(List.of("J")),
+                "The packed offset class resolves its long constructor");
+
         hasHaze = table.contains("\nhazeEffect=");
-        // Exactly three places: the portrait lyrics, the landscape lyrics and the frosted-glass
-        // state.
-        int portrait = 0, landscape = 0, haze = 0;
+        if (hasHaze) {
+            for (String key :
+                    List.of(
+                            "drawElement",
+                            "drawContent",
+                            "drawContext",
+                            "contextCanvas",
+                            "nativeCanvas"))
+                check(
+                        resolved(dex, symbols.get(key)) != null,
+                        "The drawing boundary resolves " + key);
+            Method element = resolved(dex, symbols.get("drawElement"));
+            Method content = resolved(dex, symbols.get("drawContent"));
+            Method context = resolved(dex, symbols.get("drawContext"));
+            Method canvas = resolved(dex, symbols.get("contextCanvas"));
+            Method nativeCanvas = resolved(dex, symbols.get("nativeCanvas"));
+            if (element != null
+                    && content != null
+                    && context != null
+                    && canvas != null
+                    && nativeCanvas != null) {
+                check(
+                        element.getName().equals("<init>")
+                                && element.getParameterTypes()
+                                        .equals(List.of("Lkotlin/jvm/functions/Function1;")),
+                        "The visual clip is a drawing modifier callback");
+                check(
+                        content.getParameterTypes().isEmpty()
+                                && content.getReturnType().equals("V")
+                                && content.getDefiningClass().equals(context.getDefiningClass()),
+                        "The native drawing callback owns its context");
+                check(
+                        context.getReturnType().equals(canvas.getDefiningClass())
+                                && canvas.getParameterTypes().isEmpty(),
+                        "The canvas follows the actual native context type");
+                check(
+                        nativeCanvas.getParameterTypes().equals(List.of(canvas.getReturnType()))
+                                && nativeCanvas.getReturnType().equals("Landroid/graphics/Canvas;"),
+                        "The drawing boundary reaches the platform canvas");
+            }
+        }
+        // Exactly four calls: the portrait lyrics, the landscape slot and its status margin, and
+        // the frosted-glass state.
+        int portrait = 0, landscape = 0, reserve = 0, haze = 0;
         for (String caller : callers) {
             String type = caller.substring(0, caller.indexOf("->"));
             String call = caller.substring(caller.lastIndexOf(':') + 1);
             if (call.equals("portrait")) portrait++;
             else if (call.equals("landscape")) landscape++;
+            else if (call.equals("landscapeReserve")) reserve++;
             else if (call.equals("haze")
                     && type.startsWith("Lcom/music/bitchord/ui/player/NowPlayingScreenKt")) haze++;
         }
         check(
-                callers.size() == 3 && portrait == 1 && landscape == 1 && haze == 1,
-                "Only the portrait lyrics, the landscape lyrics and the glass state call it: "
+                callers.size() == 4 && portrait == 1 && landscape == 1 && reserve == 1 && haze == 1,
+                "Only the portrait lyrics, the landscape slot, its margin and the glass state call"
+                        + " it: "
                         + callers);
 
         for (ClassDef c : dex.values()) {
@@ -311,11 +456,13 @@ public class VerifyKaraokeLyricsApk {
                     check(
                             c.getType().equals("Lcom/music/bitchord/ui/player/LandscapePlayerKt;"),
                             "The landscape hook is in the landscape player: " + c.getType());
+                    List<Integer> statuses = code.callsTo(LYRICS, "LyricsStatusWithChange");
                     check(
-                            code.calls(LYRICS, "LyricsStatusWithChange"),
-                            "It is in the pane that holds the lyrics and their status");
+                            statuses.size() == 1 && statuses.get(0) < hook,
+                            "It is in the pane that holds the status line, after it");
+                    int status = statuses.isEmpty() ? hook : statuses.get(0);
                     boolean beforeJump = code.isGoto(hook + 1) && code.target.containsKey(hook + 1);
-                    check(beforeJump, "It sits right before the jump into the box's end");
+                    check(beforeJump, "It sits right before the jump into the slot's end");
                     if (!beforeJump) continue;
                     int close = code.target.get(hook + 1);
                     MethodReference end = code.call(close);
@@ -324,23 +471,25 @@ public class VerifyKaraokeLyricsApk {
                                     && end.getDefiningClass().equals(COMPOSER)
                                     && end.getName().equals("end")
                                     && end.getParameterTypes().toString().equals("[Z]"),
-                            "That jump lands on the call that closes the lyrics box");
-                    int jumps = 0;
-                    for (Map.Entry<Integer, Integer> e : code.target.entrySet())
-                        if (e.getValue() == close && code.isGoto(e.getKey())) jumps++;
+                            "That jump lands on the call that closes the translation slot");
+                    int entries = 0, jumps = 0;
+                    for (Map.Entry<Integer, Integer> e : code.target.entrySet()) {
+                        if (e.getValue() != close) continue;
+                        entries++;
+                        if (code.isGoto(e.getKey())) jumps++;
+                    }
                     check(
-                            jumps == 1,
-                            "It is the only jump into the box's end, so no path skips it");
+                            jumps == 1 && entries == 1,
+                            "The slot has one common jump and no branch bypasses Karaoke");
                     int content = -1;
-                    for (int k = 0; k < hook; k++)
+                    for (int k = status; k < hook; k++)
                         if (code.call(k) != null
                                 && code.call(k).getName().equals("invoke")
                                 && code.call(k).getDefiningClass().contains("ComposableLambdaImpl")
-                                && code.call(k).getParameterTypes().size() == 3) content = k;
+                                && code.call(k).getParameterTypes().size() == 2) content = k;
                     check(
-                            content > 0 && content < hook,
-                            "The lyrics slot runs before it, and the no-lyrics branch rejoins"
-                                    + " through it");
+                            content > status && content < hook,
+                            "The translation toggle slot runs before it, after the status line");
                     boolean elseJoins = false;
                     for (Map.Entry<Integer, Integer> e : code.target.entrySet())
                         if (code.isGoto(e.getKey())
@@ -354,7 +503,77 @@ public class VerifyKaraokeLyricsApk {
                                     && f.getRegisterC()
                                             == ((FiveRegisterInstruction) code.ins.get(close))
                                                     .getRegisterC(),
-                            "It passes the composer that closes the box");
+                            "It passes the composer that closes the slot");
+
+                    // One 34 dp slot each side of the status line, as the offsets assume.
+                    List<Integer> slots = sizeCalls(code);
+                    check(
+                            slots.size() == 2 && slots.get(0) < status && slots.get(1) > status,
+                            "The row has one size-modified slot either side of the status line");
+                    for (int slot : slots)
+                        check(
+                                Float.valueOf(34f)
+                                        .equals(
+                                                floatBefore(
+                                                        code,
+                                                        slot,
+                                                        ((FiveRegisterInstruction)
+                                                                        code.ins.get(slot))
+                                                                .getRegisterD())),
+                                "A row slot is 34 dp");
+
+                    // The status line's side margin goes through the extension, once.
+                    List<Integer> margins = code.callsTo(KARAOKE, "landscapeReserve");
+                    check(
+                            margins.size() == 1 && margins.get(0) < status,
+                            "The margin hook is once");
+                    if (margins.size() == 1) {
+                        int at = margins.get(0);
+                        MethodReference mr = code.call(at);
+                        check(
+                                mr.getParameterTypes().toString().equals("[F]")
+                                        && mr.getReturnType().equals("F"),
+                                "It takes and gives the margin as a float");
+                        int register = ((FiveRegisterInstruction) code.ins.get(at)).getRegisterC();
+                        check(
+                                code.ins.get(at - 1).getOpcode() == Opcode.INT_TO_FLOAT
+                                        && ((OneRegisterInstruction) code.ins.get(at - 1))
+                                                        .getRegisterA()
+                                                == register
+                                        && code.ins.get(at + 1).getOpcode() == Opcode.MOVE_RESULT
+                                        && ((OneRegisterInstruction) code.ins.get(at + 1))
+                                                        .getRegisterA()
+                                                == register,
+                                "It replaces the converted 12 dp margin in place");
+                        boolean horizontal = false;
+                        for (int k = at + 2; k < Math.min(code.ins.size(), at + 8); k++)
+                            if (code.call(k) != null
+                                    && code.call(k).getDefiningClass().equals(OFFSET_KT)
+                                    && code.call(k).getName().startsWith("padding-")
+                                    && code.call(k)
+                                            .getParameterTypes()
+                                            .toString()
+                                            .equals("[F, F, I, Landroidx/compose/ui/Modifier;]")
+                                    && ((FiveRegisterInstruction) code.ins.get(k)).getRegisterC()
+                                            == register) horizontal = true;
+                        check(horizontal, "That value is the horizontal padding of the status box");
+                    }
+                }
+                if (c.getType().equals(LYRICS)) {
+                    for (Method t : c.getMethods()) {
+                        if (!t.getName().equals("TranslationToggleButton")) continue;
+                        Code body = new Code(t);
+                        int discs = 0;
+                        for (int slot : sizeCalls(body))
+                            if (Float.valueOf(34f)
+                                    .equals(
+                                            floatBefore(
+                                                    body,
+                                                    slot,
+                                                    ((FiveRegisterInstruction) body.ins.get(slot))
+                                                            .getRegisterD()))) discs++;
+                        check(discs == 1, "The translate button is one 34 dp disc");
+                    }
                 }
             }
         }

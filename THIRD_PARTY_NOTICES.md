@@ -55,6 +55,7 @@ The existing Rust standard-library notices apply to all embedded Rust outputs.
 
 | Project | What | License |
 | --- | --- | --- |
+| [InnerTubeX](https://github.com/MetrolistGroup/innertubex) by MetrolistGroup and its contributors | Cipher wrapper templates from [`EjsChallengeSolver.kt` and `QuickJsEngine.kt` at v0.7.0](https://github.com/MetrolistGroup/innertubex/tree/v0.7.0/src/commonMain/kotlin/com/metrolist/innertubex/cipher), used in `tests/cipher-memory/js_equivalence.py` | [GPL-3.0](licenses/GPL-3.0.txt); [upstream licence](https://github.com/MetrolistGroup/innertubex/blob/v0.7.0/LICENSE) |
 | [DJ Sugar](https://github.com/winnerspiros/djsugar) / [Mixxx](https://github.com/mixxxdj/mixxx) | Phrase/grid maths and the calibrated constant-power crossfader, translated to Java in `MixTools.java` | GPL-2.0-or-later, used under GPL-3.0-or-later; [pinned attribution](licenses/AUTOMIX-COMPONENTS.txt) |
 | [SideDeck](https://github.com/manueljpy/SideDeck) | Grid-nudge and beat-jump control adaptations in the native transition editor | GPL-3.0-or-later; [pinned attribution](licenses/AUTOMIX-COMPONENTS.txt) |
 | [DJM-Rec for Android](https://github.com/P2GR/DJM-Rec-for-Android) by P2GR | Stereo peak/RMS metering, translated to Java in `DeckMeter.java` | MIT; [full notice](licenses/AUTOMIX-COMPONENTS.txt) |

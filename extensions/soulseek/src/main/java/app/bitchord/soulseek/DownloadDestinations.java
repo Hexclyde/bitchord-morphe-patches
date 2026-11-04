@@ -72,10 +72,17 @@ public final class DownloadDestinations {
         if (snapshot.needsPhone()) verifyPhoneFolder(context, snapshot.phoneTreeUri);
         if (snapshot.needsTelegram())
             validateTelegram(context, snapshot.telegramUserId, snapshot.telegramChatId);
+        String folderLabel =
+                snapshot.needsPhone()
+                        ? app.bitchord.telegram.DownloadFolder.prepare(
+                                context, snapshot.phoneTreeUri)
+                        : null;
         synchronized (PREFERENCE_LOCK) {
-            if (!preferences(context)
-                    .edit()
-                    .putString("mode", snapshot.mode)
+            SharedPreferences.Editor write = preferences(context).edit();
+            if (folderLabel != null)
+                write.putString("defaultFolderTree", snapshot.phoneTreeUri)
+                        .putString("defaultFolderLabel", folderLabel);
+            if (!write.putString("mode", snapshot.mode)
                     .putString("phoneTreeUri", snapshot.phoneTreeUri)
                     .putLong("telegramChatId", snapshot.telegramChatId)
                     .putLong("telegramUserId", snapshot.telegramUserId)

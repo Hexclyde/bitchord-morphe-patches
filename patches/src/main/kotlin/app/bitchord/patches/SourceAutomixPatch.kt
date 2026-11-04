@@ -46,7 +46,7 @@ private val automixResources = resourcePatch {
 @Suppress("unused")
 val sourceAutomixPatch =
     bytecodePatch(
-        name = "Source-independent AutoMix",
+        name = "Automix Editor",
         description =
             "Measures the selected playable source, verifies automatic replacements, preserves playback speed and adds a native, pair-specific transition timeline with volume, EQ, filter controls and preview.",
         default = true,

@@ -158,11 +158,11 @@ public class KaraokeSettingsTest {
     }
 
     @Test
-    public void offFromTheCapsuleIsTheSwitchOnThePage() {
+    public void theSettingsSwitchIsTheOnlyWayToTurnKaraokeOff() {
         voice();
         KaraokeLyrics.activate();
         assertTrue(SoundExtras.singEnabled);
-        KaraokeLyrics.deactivate();
+        SoundExtras.setSingEnabled(false);
         controller.recreate();
         TelegramSwitch toggle = content().findViewWithTag("enable:sing");
         assertFalse(toggle.isChecked());

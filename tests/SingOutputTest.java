@@ -5,6 +5,9 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Sing through a stand-in for BitChord's sink, which goes through the same steps as the real one's
@@ -340,6 +343,132 @@ public final class SingOutputTest {
                 "the one jump is the bypass, announced: " + sink.delegate.jumps);
     }
 
+    static float[] ramp(int frames) {
+        float[] out = new float[frames * 2];
+        for (int i = 0; i < frames; i++) out[2 * i] = out[2 * i + 1] = .8f * i / frames;
+        return out;
+    }
+
+    /** The track has no room for 20 tries, then a little for 5, over and over. */
+    static int roomAt(int tries) {
+        return tries % 25 < 20 ? 0 : 700;
+    }
+
+    static void fullTrackLetsGo() {
+        on();
+        Sink sink = new Sink();
+        int frames = RATE * 3, block = 8192;
+        float[] pcm = ramp(frames);
+        long startUs = 5_000_000;
+        int tries = 0, stalls = 0;
+        for (int at = 0; at < frames; at += block) {
+            int n = Math.min(block, frames - at);
+            ByteBuffer input = ByteBuffer.allocate(n * 8).order(ByteOrder.nativeOrder());
+            for (int i = 0; i < n * 2; i++) input.putFloat(pcm[at * 2 + i]);
+            input.flip();
+            while (true) {
+                sink.delegate.room = roomAt(tries);
+                int before = sink.delegate.frames;
+                boolean took = sink.handleBuffer(startUs + Sink.dur(at), input);
+                if (sink.delegate.room == 0) {
+                    check(sink.delegate.frames == before, "a full track takes nothing");
+                    if (!took) stalls++;
+                }
+                if (took) break;
+                if (++tries > 100_000) throw new AssertionError("The sink never took a buffer");
+            }
+        }
+        check(stalls > 0, "the track was full at some point");
+        sink.totalIn = frames;
+        while (!sink.isEnded()) {
+            sink.delegate.room = roomAt(tries);
+            int before = sink.delegate.frames;
+            sink.playToEnd();
+            if (sink.delegate.room == 0) check(sink.delegate.frames == before, "full at the end");
+            if (sink.delegate.frames < frames) {
+                check(!sink.isEnded(), "not ended while audio is owed");
+                check(sink.hasPendingData(), "and it counts as pending");
+            }
+            if (++tries > 100_000) throw new AssertionError("The stream never ended");
+        }
+        Delegate delegate = sink.delegate;
+        check(delegate.frames == frames, "no frame lost or repeated: " + delegate.frames);
+        check(delegate.emptyWrites == 0, "no empty write");
+        check(delegate.jumps == 0 && delegate.discontinuities == 0, "no jump");
+        long last = -1;
+        for (long[] write : delegate.writes) {
+            check(write[0] > last, "times only go forward");
+            last = write[0];
+        }
+        checkTimes(delegate, startUs, "full track");
+        for (int i = 4096; i < frames - 4096; i++)
+            check(
+                    Math.abs(delegate.played[2 * i] - .8f * i / frames) < .01,
+                    "frame " + i + " is the one that went in");
+    }
+
+    static void waitForEstimate(AtomicInteger count, int least) throws Exception {
+        long until = System.currentTimeMillis() + 5000;
+        while (count.get() < least) {
+            if (System.currentTimeMillis() > until) throw new AssertionError("Timed out");
+            Thread.sleep(5);
+        }
+    }
+
+    static void blockedEstimateNeverStopsTheSink() throws Exception {
+        CountDownLatch entered = new CountDownLatch(1), release = new CountDownLatch(1);
+        AtomicInteger asked = new AtomicInteger(), finished = new AtomicInteger();
+        SoundExtras.singEnabled = true;
+        SoundExtras.singLevel = 100;
+        SoundExtras.singMethod = SeparationModel.METHOD;
+        SeparationModel.forTest(
+                input -> {
+                    asked.incrementAndGet();
+                    entered.countDown();
+                    try {
+                        if (!release.await(30, TimeUnit.SECONDS))
+                            throw new IllegalStateException("never released");
+                        return new float[input.length];
+                    } finally {
+                        finished.incrementAndGet();
+                    }
+                },
+                true);
+        try {
+            Sink sink = new Sink();
+            sink.delegate.room = 700;
+            sink.play(tone(RATE * 2, 440), 0);
+            check(entered.await(5, TimeUnit.SECONDS), "the first estimate has begun");
+            Throwable[] failure = {null};
+            Thread thread =
+                    new Thread(
+                            () -> {
+                                try {
+                                    sink.play(tone(RATE * 4, 440), 2_000_000);
+                                    sink.totalIn = RATE * 6;
+                                    sink.finish();
+                                } catch (Throwable thrown) {
+                                    failure[0] = thrown;
+                                }
+                            });
+            thread.setDaemon(true);
+            thread.start();
+            thread.join(20_000);
+            check(!thread.isAlive(), "the sink goes on and ends while the estimate is held");
+            if (failure[0] != null) throw new AssertionError(failure[0]);
+            check(release.getCount() == 1, "the estimate was still held at the end");
+            check(asked.get() == 1, "no second request queues behind it: " + asked.get());
+            check(sink.delegate.frames == RATE * 6, "every frame played: " + sink.delegate.frames);
+            check(sink.delegate.jumps == 0, "without a jump");
+            checkTimes(sink.delegate, 0, "held estimate");
+            check(sink.isEnded(), "ended");
+        } finally {
+            release.countDown();
+            waitForEstimate(finished, asked.get());
+            SeparationModel.forTest(null, false);
+        }
+    }
+
     static void twoSinks() {
         on();
         Sink first = new Sink(), second = new Sink();
@@ -593,6 +722,8 @@ public final class SingOutputTest {
         gapless();
         levelZeroThenBack();
         twoSinks();
+        fullTrackLetsGo();
+        blockedEstimateNeverStopsTheSink();
         streamsDecideForThemselves();
         startsAtAnotherSpeed();
         unknownMeansTheFilter();

@@ -3,6 +3,7 @@
 import json
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -54,7 +55,7 @@ PATCHES = [
     "Smart downloads",
     "Mixed-source playlists",
     "Streamseek previews",
-    "Source-independent AutoMix",
+    "Automix Editor",
 ]
 
 TOOLS = Path(os.environ.get("MORPHE_TOOLS", ROOT / ".deps/tools"))
@@ -67,11 +68,38 @@ MORPHE_JAR = TOOLS / next(
 )
 
 
-def jdk():
-    try:
-        return next(TOOLS.glob("jdk-21*"))
-    except StopIteration:
-        sys.exit(
-            f"No JDK 21 found in {TOOLS}. Run tools/bootstrap_from_release.py "
-            "or bootstrap.py first, or set MORPHE_TOOLS."
-        )
+def jdk(tools=None):
+    tools = TOOLS if tools is None else Path(tools)
+    candidates = sorted(tools.glob("jdk-21*"))
+    if os.environ.get("JAVA_HOME"):
+        candidates.append(Path(os.environ["JAVA_HOME"]))
+    for home in dict.fromkeys(candidates):
+        binaries = [home / "bin" / name for name in ("java", "javac")]
+        if not all(path.is_file() and os.access(path, os.X_OK) for path in binaries):
+            continue
+        try:
+            versions = [
+                subprocess.run(
+                    [str(path), "-version"],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    timeout=10,
+                    check=True,
+                ).stdout
+                for path in binaries
+            ]
+        except (OSError, subprocess.SubprocessError):
+            continue
+        if all(
+            re.search(
+                r'(?m)^(?:openjdk|java|javac)(?: version)?\s+"?21(?:[.\s"+_-]|$)', value
+            )
+            for value in versions
+        ):
+            return home
+    sys.exit(
+        f"No usable JDK 21 found in {tools} or JAVA_HOME. Run "
+        "tools/bootstrap_from_release.py or bootstrap.py first, set MORPHE_TOOLS, "
+        "or set JAVA_HOME to a JDK 21 installation."
+    )

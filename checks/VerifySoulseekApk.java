@@ -270,6 +270,7 @@ public final class VerifySoulseekApk {
                                         "Lapp/bitchord/telegram/NativeSourceConfig;",
                                         "Lapp/bitchord/telegram/DownloadControls;",
                                         "Lapp/bitchord/telegram/DownloadSelection;",
+                                        "Lapp/bitchord/telegram/DownloadFolder;",
                                         "Lapp/bitchord/telegram/FlacAddon;",
                                         "Lapp/bitchord/telegram/AudioOrigin;",
                                         "Lapp/bitchord/telegram/NativeSourceConfig;",
@@ -287,6 +288,8 @@ public final class VerifySoulseekApk {
                                                 "Lapp/bitchord/telegram/DownloadControls;")
                                         || reference.startsWith(
                                                 "Lapp/bitchord/telegram/DownloadSelection;")
+                                        || reference.startsWith(
+                                                "Lapp/bitchord/telegram/DownloadFolder;")
                                         || reference.startsWith("Lapp/bitchord/telegram/FlacAddon;")
                                         || reference.startsWith(
                                                 "Lapp/bitchord/telegram/AudioOrigin;")

@@ -3,6 +3,7 @@
 You only need this to work on the patch. To use it, install the released `.mpp` with Morphe instead.
 
 The instructions assume Linux x86-64 with Python 3.12+.
+The cipher-script host checks also require Node.js.
 
 ## Layout
 

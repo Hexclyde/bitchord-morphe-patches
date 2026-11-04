@@ -119,6 +119,7 @@ public final class VerifyPatchUiApk {
                         "VideoSwitch",
                         "PlayerIcons",
                         "DownloadSelection",
+                        "DownloadFolder",
                         "StorageSense",
                         "StorageSenseActive",
                         "StorageSenseActivity",
@@ -293,6 +294,13 @@ public final class VerifyPatchUiApk {
             if (Arrays.asList(args).contains("--regressions")) iconRegressions(apk, classes);
         }
 
+        check(
+                classes.containsKey(base + "DownloadFolder;") == runtime,
+                "Folder runtime follows shared settings selection");
+        if (runtime) {
+            verifyDownloadFolder(classes);
+            if (Arrays.asList(args).contains("--regressions")) folderRegressions(classes);
+        }
         check(title == runtime, "Shared page uses renamed title");
         Document manifest = VerifyApk.manifest(apk);
         var activities = manifest.getElementsByTagName("activity");
@@ -491,6 +499,293 @@ public final class VerifyPatchUiApk {
         check(
                 stroke.equalsIgnoreCase("#ffffffff") || stroke.equalsIgnoreCase("#ffffff"),
                 "Tweaks icon has an opaque tintable stroke");
+    }
+
+    static void verifyDownloadFolder(Map<String, ClassDef> classes) {
+        String helper = "Lapp/bitchord/telegram/DownloadFolder;";
+        Map<String, Integer> counts = new HashMap<>();
+        Method transfer = null;
+        int commit = -1;
+        for (ClassDef owner : classes.values()) {
+            if (!owner.getType().startsWith("Lcom/music/bitchord/")) continue;
+            for (Method method : owner.getMethods()) {
+                if (method.getImplementation() == null) continue;
+                List<Instruction> code = new ArrayList<>();
+                method.getImplementation().getInstructions().forEach(code::add);
+                for (int i = 0; i < code.size(); i++) {
+                    MethodReference call = VerifyApk.call(code.get(i));
+                    if (call == null || !call.getDefiningClass().equals(helper)) continue;
+                    counts.merge(call.getName(), 1, Integer::sum);
+                    check(
+                            (code.get(i).getOpcode() == Opcode.INVOKE_STATIC
+                                    || code.get(i).getOpcode() == Opcode.INVOKE_STATIC_RANGE),
+                            "Folder bridge is a static invocation");
+                    if (call.getName().equals("commit")) {
+                        transfer = method;
+                        commit = i;
+                    }
+                }
+            }
+        }
+        for (String name : List.of("custom", "existing", "insert", "open", "commit"))
+            check(counts.getOrDefault(name, 0) == 1, "Exactly one native folder bridge: " + name);
+        check(
+                counts.getOrDefault("delete", 0) == 2,
+                "Native interrupted and completed files use document-aware deletion");
+        int savedDeletes = 0;
+        for (ClassDef owner : classes.values()) {
+            if (!owner.getType().startsWith("Lcom/music/bitchord/")) continue;
+            for (Method method : owner.getMethods()) {
+                if (method.getImplementation() == null) continue;
+                List<Instruction> body = new ArrayList<>();
+                method.getImplementation().getInstructions().forEach(body::add);
+                if (body.stream()
+                        .noneMatch(
+                                i ->
+                                        i instanceof ReferenceInstruction
+                                                && ((ReferenceInstruction) i).getReference()
+                                                        instanceof StringReference
+                                                && ((StringReference)
+                                                                ((ReferenceInstruction) i)
+                                                                        .getReference())
+                                                        .getString()
+                                                        .equals("could not delete "))) continue;
+                verifySavedDeletion(body);
+                savedDeletes++;
+            }
+        }
+        check(savedDeletes == 1, "Unique behavior-qualified saved-file deletion guard");
+        check(
+                counts.getOrDefault("export", 0) == 2,
+                "Lookup and transfer use captured storage policy");
+        List<Instruction> code = new ArrayList<>();
+        transfer.getImplementation().getInstructions().forEach(code::add);
+        MethodReference call = VerifyApk.call(code.get(commit));
+        check(
+                call.getReturnType().equals("Landroid/net/Uri;"),
+                "Folder commit returns the actual provider URI");
+        check(
+                code.get(commit + 1).getOpcode() == Opcode.MOVE_RESULT_OBJECT,
+                "Folder completion captures an object URI");
+        List<Integer> destination = registers(code.get(commit));
+        int nil = destination.get(3);
+        check(
+                nil == destination.get(4) && nil != destination.get(1),
+                "Folder completion has separate URI and null registers");
+        Instruction zero = code.get(commit - 1), clear = code.get(commit + 2);
+        check(
+                zero.getOpcode() == Opcode.CONST_4
+                        && ((OneRegisterInstruction) zero).getRegisterA() == nil
+                        && ((NarrowLiteralInstruction) zero).getNarrowLiteral() == 0,
+                "Native pending destination clear receives null");
+        FieldReference cleared =
+                clear instanceof ReferenceInstruction
+                                && ((ReferenceInstruction) clear).getReference()
+                                        instanceof FieldReference
+                        ? (FieldReference) ((ReferenceInstruction) clear).getReference()
+                        : null;
+        check(
+                clear.getOpcode() == Opcode.IPUT_OBJECT
+                        && ((TwoRegisterInstruction) clear).getRegisterA() == nil
+                        && cleared != null
+                        && cleared.getDefiningClass().equals("Lkotlin/jvm/internal/Ref$ObjectRef;")
+                        && cleared.getName().equals("element"),
+                "Native pending destination is cleared immediately after successful commit");
+        int uri = registers(code.get(commit)).get(1);
+        check(
+                ((OneRegisterInstruction) code.get(commit + 1)).getRegisterA() == uri,
+                "Folder commit replaces the native completed URI register");
+        int remember = -1;
+        for (int i = commit + 2; i < Math.min(code.size(), commit + 10); i++) {
+            MethodReference next = VerifyApk.call(code.get(i));
+            if (next != null
+                    && next.getDefiningClass().equals("Lcom/music/bitchord/download/Downloads;")
+                    && next.getName().equals("remember")) {
+                remember = i;
+                break;
+            }
+            Instruction instruction = code.get(i);
+            check(
+                    !(instruction instanceof OneRegisterInstruction)
+                            || ((OneRegisterInstruction) instruction).getRegisterA() != uri,
+                    "Completed folder URI remains live until native publication");
+        }
+        check(
+                remember >= 0 && registers(code.get(remember)).get(2) == uri,
+                "Native saved-file publication receives the completed document URI");
+        for (Instruction instruction : code) {
+            MethodReference nativeCall = VerifyApk.call(instruction);
+            check(
+                    nativeCall == null
+                            || !nativeCall
+                                    .getDefiningClass()
+                                    .equals("Landroid/content/ContentResolver;")
+                            || !List.of("insert", "openOutputStream", "update")
+                                    .contains(nativeCall.getName()),
+                    "Progressive destination IO uses the qualified folder adapters");
+        }
+    }
+
+    static void verifySavedDeletion(List<Instruction> body) {
+        int remove = -1;
+        List<Integer> forgets = new ArrayList<>();
+        for (int i = 0; i < body.size(); i++) {
+            MethodReference call = VerifyApk.call(body.get(i));
+            if (call == null) continue;
+            if (call.getName().equals("delete")
+                    && call.getDefiningClass().equals("Lapp/bitchord/telegram/DownloadFolder;")) {
+                check(remove < 0, "Saved deletion has one adapter call");
+                remove = i;
+            }
+            check(
+                    !(call.getDefiningClass().equals("Landroid/content/ContentResolver;")
+                            && call.getName().equals("delete")),
+                    "Saved document deletion uses the document adapter");
+            if (call.getDefiningClass().equals("Lcom/music/bitchord/download/Downloads;")
+                    && call.getName().equals("forget")) forgets.add(i);
+        }
+        check(
+                remove >= 0
+                        && forgets.size() == 2
+                        && forgets.get(0) < remove
+                        && forgets.get(1) > remove,
+                "Earlier missing-file cleanup stays separate from explicit deletion");
+        int forget = forgets.get(1);
+        check(forget >= 5 && forget + 1 < body.size(), "Saved deletion guard sites exist");
+        MethodReference unbox = VerifyApk.call(body.get(forget - 3));
+        check(
+                unbox != null
+                        && unbox.getDefiningClass().equals("Ljava/lang/Boolean;")
+                        && unbox.getName().equals("booleanValue")
+                        && unbox.getParameterTypes().isEmpty()
+                        && unbox.getReturnType().equals("Z"),
+                "Saved deletion tests its actual Boolean result");
+        int result = registers(body.get(forget - 3)).get(0);
+        Instruction cast = body.get(forget - 5),
+                singleton = body.get(forget - 4),
+                move = body.get(forget - 2),
+                branch = body.get(forget - 1);
+        check(
+                cast.getOpcode() == Opcode.CHECK_CAST
+                        && ((OneRegisterInstruction) cast).getRegisterA() == result
+                        && ((TypeReference) ((ReferenceInstruction) cast).getReference())
+                                .getType()
+                                .equals("Ljava/lang/Boolean;"),
+                "Saved deletion unboxes the native completion value");
+        check(
+                singleton.getOpcode() == Opcode.SGET_OBJECT
+                        && move.getOpcode() == Opcode.MOVE_RESULT
+                        && branch.getOpcode() == Opcode.IF_EQZ,
+                "Only successful saved deletion can forget the row");
+        int scratch = ((OneRegisterInstruction) move).getRegisterA();
+        check(
+                scratch != result
+                        && ((OneRegisterInstruction) singleton).getRegisterA() == scratch
+                        && ((OneRegisterInstruction) branch).getRegisterA() == scratch
+                        && !registers(body.get(forget)).contains(scratch),
+                "Saved deletion guard uses the qualified dead scratch register");
+        check(
+                List.of(Opcode.GOTO, Opcode.GOTO_16, Opcode.GOTO_32)
+                        .contains(body.get(forget + 1).getOpcode()),
+                "Saved deletion has a native return branch");
+        Instruction destination = VerifyApk.branchTarget(body, forget - 1);
+        check(
+                destination == VerifyApk.branchTarget(body, forget + 1)
+                        && destination.getOpcode() == Opcode.RETURN_OBJECT
+                        && ((OneRegisterInstruction) destination).getRegisterA() == result,
+                "Failed deletion returns without forgetting its saved row");
+    }
+
+    static void folderRegressions(Map<String, ClassDef> classes) {
+        String helper = "Lapp/bitchord/telegram/DownloadFolder;";
+        int rejected = 0;
+        for (ClassDef owner : classes.values()) {
+            if (!owner.getType().startsWith("Lcom/music/bitchord/")) continue;
+            for (Method method : owner.getMethods()) {
+                if (method.getImplementation() == null) continue;
+                List<Instruction> original = new ArrayList<>();
+                method.getImplementation().getInstructions().forEach(original::add);
+                for (int i = 0; i < original.size(); i++) {
+                    MethodReference call = VerifyApk.call(original.get(i));
+                    if (call == null || !call.getDefiningClass().equals(helper)) continue;
+                    if (call.getName().equals("delete")
+                            && original.stream()
+                                    .anyMatch(
+                                            x ->
+                                                    x instanceof ReferenceInstruction
+                                                            && ((ReferenceInstruction) x)
+                                                                            .getReference()
+                                                                    instanceof StringReference
+                                                            && ((StringReference)
+                                                                            ((ReferenceInstruction)
+                                                                                            x)
+                                                                                    .getReference())
+                                                                    .getString()
+                                                                    .equals("could not delete "))) {
+                        int forget = -1;
+                        for (int j = i + 1; j < original.size(); j++) {
+                            MethodReference next = VerifyApk.call(original.get(j));
+                            if (next != null
+                                    && next.getDefiningClass()
+                                            .equals("Lcom/music/bitchord/download/Downloads;")
+                                    && next.getName().equals("forget")) forget = j;
+                        }
+                        check(forget > 0, "Saved deletion negative variant has a final forget");
+                        OneRegisterInstruction branch =
+                                (OneRegisterInstruction) original.get(forget - 1);
+                        List<Instruction> wrong = new ArrayList<>(original);
+                        wrong.set(
+                                forget - 1,
+                                new ImmutableInstruction21t(
+                                        Opcode.IF_NEZ,
+                                        branch.getRegisterA(),
+                                        ((OffsetInstruction) branch).getCodeOffset()));
+                        rejectFolder(
+                                withCode(classes, method, wrong),
+                                "failed deletion forgets saved row");
+                        rejected++;
+                    }
+                    if (List.of("existing", "insert", "open", "delete").contains(call.getName())) {
+                        List<Instruction> broken = new ArrayList<>(original);
+                        broken.set(i, new ImmutableInstruction10x(Opcode.NOP));
+                        rejectFolder(
+                                withCode(classes, method, broken), "missing " + call.getName());
+                        rejected++;
+                    } else if (call.getName().equals("commit")) {
+                        List<Instruction> uncleared = new ArrayList<>(original);
+                        uncleared.set(i + 2, new ImmutableInstruction10x(Opcode.NOP));
+                        rejectFolder(
+                                withCode(classes, method, uncleared),
+                                "completed pending destination remains live");
+                        rejected++;
+                        int uri = registers(original.get(i)).get(1);
+                        for (Instruction wrong :
+                                List.of(
+                                        new ImmutableInstruction11x(Opcode.MOVE_RESULT, uri),
+                                        new ImmutableInstruction11x(
+                                                Opcode.MOVE_RESULT_OBJECT, uri == 0 ? 1 : 0))) {
+                            List<Instruction> broken = new ArrayList<>(original);
+                            broken.set(i + 1, wrong);
+                            rejectFolder(
+                                    withCode(classes, method, broken),
+                                    "completion URI type or register");
+                            rejected++;
+                        }
+                    }
+                }
+            }
+        }
+        check(rejected == 9, "Nine folder bridge negative variants exercised");
+    }
+
+    static void rejectFolder(Map<String, ClassDef> classes, String name) {
+        boolean rejected = false;
+        try {
+            verifyDownloadFolder(classes);
+        } catch (AssertionError expected) {
+            rejected = true;
+        }
+        check(rejected, "Folder negative variant rejected: " + name);
     }
 
     static Map<String, ClassDef> withCode(

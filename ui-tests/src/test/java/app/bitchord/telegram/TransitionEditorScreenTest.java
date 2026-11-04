@@ -100,6 +100,7 @@ public class TransitionEditorScreenTest {
     private boolean playing;
     private PlaybackParameters speed = new PlaybackParameters(1.25f, .95f);
     private final List<String> calls = new ArrayList<>();
+    private final List<String> mutations = new ArrayList<>();
     private MediaItem[] items;
     private final List<AutoMixTestDeck> previewDecks = new ArrayList<>();
     private TransitionPreview.Factory previousFactory;
@@ -148,7 +149,14 @@ public class TransitionEditorScreenTest {
                         Player.class.getClassLoader(),
                         new Class<?>[] {Player.class},
                         (proxy, method, args) -> {
-                            switch (method.getName()) {
+                            String name = method.getName();
+                            if (name.startsWith("set")
+                                    || name.startsWith("seek")
+                                    || name.equals("play")
+                                    || name.equals("pause")
+                                    || name.equals("prepare")
+                                    || name.equals("stop")) mutations.add(name);
+                            switch (name) {
                                 case "getCurrentMediaItemIndex":
                                     return index;
                                 case "getNextMediaItemIndex":
@@ -1235,7 +1243,7 @@ public class TransitionEditorScreenTest {
         assertSame(draft.getParent(), apply.getParent());
         assertNotSame(draft.getParent(), tag("transition-status").getParent());
         assertTrue(draft.getHeight() >= 48 && apply.getHeight() >= 48);
-        assertEquals(draft.getWidth(), apply.getWidth());
+        assertTrue(draft.getWidth() <= 160 && apply.getWidth() <= 160);
     }
 
     @Test
@@ -1332,5 +1340,126 @@ public class TransitionEditorScreenTest {
         }
         assertTrue(tag("transition-preview").getHeight() >= 44);
         assertTrue(tag("transition-save").getHeight() >= 44);
+    }
+
+    @Test
+    public void selectingPresetsKeepsOptionsScrollableInAShortWindow() throws Exception {
+        open();
+        for (int preset : new int[] {0, 2, 3, 1}) {
+            layout(393, 852);
+            if (tag("automix-compact").getVisibility() == View.VISIBLE)
+                tag("automix-expand").performClick();
+            layout(393, 852);
+            assertTrue(
+                    "The preset is reachable before choosing it",
+                    tag("transition-preset:" + preset).isShown());
+            tag("transition-preset:" + preset).performClick();
+            layout(393, 680);
+            ScrollView scroll = (ScrollView) tag("automix-controls-scroll");
+            assertTrue("Preset selection must leave an options viewport", scroll.getHeight() >= 96);
+            int range = scroll.getChildAt(0).getHeight() - scroll.getHeight();
+            assertTrue("Preset options remain scrollable", range > 0);
+            scroll.scrollTo(0, range);
+            layout(393, 680);
+            assertTrue("Options can scroll after changing the preset", scroll.getScrollY() > 0);
+            scroll.scrollTo(0, 0);
+            float y = scroll.getHeight() * .75f;
+            gesture(scroll, 4, y, 4, Math.max(4, y - 80));
+            layout(393, 680);
+            assertTrue(
+                    "A vertical touch gesture still scrolls preset options",
+                    scroll.getScrollY() > 0);
+        }
+    }
+
+    @Test
+    public void footerActionsHaveCompactWidthsWithAndWithoutTheDraftAction() throws Exception {
+        open();
+        layout(393, 852);
+        View apply = tag("transition-save");
+        assertTrue("Apply must not stretch across the editor", apply.getWidth() <= 160);
+        assertTrue(apply.getHeight() >= 48);
+        tag("automix-auto-save").performClick();
+        layout(393, 852);
+        View draft = tag("automix-save-draft");
+        assertEquals(View.VISIBLE, draft.getVisibility());
+        assertTrue(draft.getWidth() <= 160 && apply.getWidth() <= 160);
+        assertTrue(draft.getHeight() >= 48 && apply.getHeight() >= 48);
+    }
+
+    @Test
+    public void openingEditorKeepsWaveformWorkBelowPlaybackPriorityWithoutStartingAudio()
+            throws Exception {
+        TransitionWaveCache.clearMemory();
+        com.music.bitchord.playback.PlaybackService.WaveDecoder decoder =
+                com.music.bitchord.playback.PlaybackService.waveDecoder;
+        List<Integer> priorities = new java.util.concurrent.CopyOnWriteArrayList<>();
+        com.music.bitchord.playback.PlaybackService.waveDecoder =
+                (source, from, to, abort, chunks) -> {
+                    priorities.add(
+                            android.os.Process.getThreadPriority(android.os.Process.myTid()));
+                    return decoder.decode(source, from, to, abort, chunks);
+                };
+        playing = true;
+        mutations.clear();
+        android.media.AudioManager audio =
+                RuntimeEnvironment.getApplication()
+                        .getSystemService(android.media.AudioManager.class);
+        Object focus = Shadows.shadowOf(audio).getLastAudioFocusRequest();
+        open();
+        assertEquals(
+                "Opening the editor cannot mutate listening playback",
+                Collections.emptyList(),
+                mutations);
+        assertSame(
+                "Opening the editor cannot request audio focus",
+                focus,
+                Shadows.shadowOf(audio).getLastAudioFocusRequest());
+        assertFalse("The real waveform decoder must run", priorities.isEmpty());
+        for (int priority : priorities)
+            assertTrue(
+                    "Waveform decoding must yield to playback",
+                    priority >= android.os.Process.THREAD_PRIORITY_BACKGROUND);
+        assertTrue("Opening the editor keeps the listening player playing", playing);
+        assertEquals(12000, position);
+        assertEquals(1.25f, speed.speed, 0);
+        assertEquals(.95f, speed.pitch, 0);
+        assertTrue(previewDecks.isEmpty());
+        assertFalse(calls.contains("seek"));
+    }
+
+    @Test
+    @Config(qualifiers = "w320dp-h640dp-notnight-mdpi")
+    public void compactFooterActionsFitAtDoubleFontScale() throws Exception {
+        RuntimeEnvironment.setFontScale(2f);
+        RuntimeEnvironment.getApplication()
+                .getSharedPreferences("bitchord_automix_editor", 0)
+                .edit()
+                .putBoolean("auto_save", false)
+                .commit();
+        open();
+        layout(320, 640);
+        View draft = tag("automix-save-draft"), apply = tag("transition-save");
+        View row = (View) draft.getParent();
+        assertTrue(draft.getHeight() >= 48 && apply.getHeight() >= 48);
+        assertTrue(draft.getRight() <= apply.getLeft());
+        assertTrue(apply.getRight() <= row.getWidth());
+        for (View child : new View[] {draft, apply}) {
+            TextView text = (TextView) child;
+            assertNotNull(text.getLayout());
+            assertTrue(
+                    text.getLayout().getHeight()
+                            <= text.getHeight()
+                                    - text.getCompoundPaddingTop()
+                                    - text.getCompoundPaddingBottom());
+        }
+        assertTrue(tag("automix-controls-scroll").getHeight() >= 96);
+        for (int i = 0; i < 4; i++) {
+            TextView label = (TextView) tag("transition-tab:" + i);
+            assertEquals(1, label.getLineCount());
+            assertEquals(label.getText().toString(), label.getContentDescription().toString());
+            assertTrue(label.getLayout().getHeight() <= label.getHeight());
+        }
+        render("automix-editor-actions-font2.png", 320, 640);
     }
 }

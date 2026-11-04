@@ -340,7 +340,13 @@ public final class VerifyVideoSwitchApk {
      * stats line, then adds the editor icon after it. Nothing here names a minified lambda.
      */
     static void verifyPlayerIcons(Map<String, ClassDef> types) {
-        int strips = 0, modes = 0, lifts = 0, landscapeLifts = 0, above = 0, square = 0;
+        int strips = 0,
+                modes = 0,
+                lifts = 0,
+                landscapeLifts = 0,
+                above = 0,
+                square = 0,
+                captions = 0;
         for (ClassDef owner : types.values())
             for (Method method : owner.getMethods()) {
                 if (method.getImplementation() == null) continue;
@@ -371,6 +377,69 @@ public final class VerifyVideoSwitchApk {
                             !hasStats || ref.getName().startsWith("lift"),
                             "Only the stats lift is placed inside the stats lambdas");
                     switch (ref.getName()) {
+                        case "caption" -> {
+                            captions++;
+                            check(
+                                    method.getParameterTypes()
+                                            .equals(
+                                                    List.of(
+                                                            "Ljava/lang/String;",
+                                                            "Lkotlin/jvm/functions/Function0;",
+                                                            "I",
+                                                            "Landroidx/compose/foundation/layout/PaddingValuesImpl;",
+                                                            "Landroidx/compose/ui/Modifier;",
+                                                            "Landroidx/compose/runtime/ComposerImpl;",
+                                                            "I",
+                                                            "I")),
+                                    "Caption sizing belongs to the native playback-origin"
+                                            + " renderer");
+                            int input = argument(code.get(i), 0);
+                            MethodReference padding = call(code.get(i + 3));
+                            check(
+                                    code.get(i + 1).getOpcode() == Opcode.MOVE_RESULT_OBJECT
+                                            && register(code.get(i + 1)) == input
+                                            && code.get(i + 2).getOpcode() == Opcode.CHECK_CAST
+                                            && register(code.get(i + 2)) == input
+                                            && padding != null
+                                            && padding.getName().equals("padding")
+                                            && padding.getParameterTypes()
+                                                    .equals(
+                                                            List.of(
+                                                                    "Landroidx/compose/ui/Modifier;",
+                                                                    "Landroidx/compose/foundation/layout/PaddingValues;"))
+                                            && argument(code.get(i + 3), 0) == input,
+                                    "The real caption target is sized inside its click target"
+                                            + " before content padding");
+                            int clickable = -1;
+                            for (int j = Math.max(0, i - 5); j < i; j++) {
+                                MethodReference target = call(code.get(j));
+                                if (target != null && target.getName().startsWith("clickable-"))
+                                    clickable = j;
+                            }
+                            check(
+                                    clickable >= 0
+                                            && code.get(clickable + 1).getOpcode()
+                                                    == Opcode.MOVE_RESULT_OBJECT
+                                            && register(code.get(clickable + 1)) == input
+                                            && input
+                                                    != method.getImplementation().getRegisterCount()
+                                                            - 4,
+                                    "The caption wraps the click result without changing its"
+                                            + " restart modifier");
+                            int base = method.getImplementation().getRegisterCount() - 8;
+                            check(
+                                    frameInput(
+                                                    code,
+                                                    argument(code.get(clickable), 4),
+                                                    clickable,
+                                                    base + 1)
+                                            && frameInput(
+                                                    code,
+                                                    argument(code.get(i + 3), 1),
+                                                    i + 3,
+                                                    base + 3),
+                                    "The caption keeps its native callback and content padding");
+                        }
                         case "strip" -> {
                             strips++;
                             check(portrait, "The strip height is read in the portrait player");
@@ -532,6 +601,7 @@ public final class VerifyVideoSwitchApk {
                     }
                 }
             }
+        check(captions == 1, "One minimum-height native playback caption");
         check(strips == 1 && modes == 1, "One strip height and one pair in the portrait player");
         check(lifts == 2 && landscapeLifts == 1, "One lifted stats line per artwork layout");
         check(
@@ -566,6 +636,7 @@ public final class VerifyVideoSwitchApk {
                 List.of(
                         "androidView",
                         "padding",
+                        "captionHeight",
                         "companion",
                         "topCenter",
                         "bottomCenter",

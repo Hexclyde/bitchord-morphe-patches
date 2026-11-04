@@ -140,6 +140,7 @@ SOURCES = [
     "SmartDownloadSources",
     "SmartDownloadTransfer",
     "DownloadSelection",
+    "DownloadFolder",
     "StorageSense",
     "StorageSenseEngine",
     "StorageSenseScanner",
@@ -306,5 +307,6 @@ for suite in (
     "player-icon-anchors",
     "video-rendition",
     "player-download-hooks",
+    "cipher-memory",
 ):
     subprocess.run([sys.executable, str(ROOT / "tests" / suite / "run.py")], check=True)

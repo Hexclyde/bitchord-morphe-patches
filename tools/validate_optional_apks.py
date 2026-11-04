@@ -5,6 +5,7 @@ from pathlib import Path
 import os
 import subprocess
 import sys
+import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -21,6 +22,7 @@ def main():
     outputs = ROOT / "build/validation-apks"
     cp = str(checks) + os.pathsep + str(MORPHE_JAR)
     cases = [
+        ("InstallPlus", ["Install as Bitchord+"], []),
         (
             "DjOnly",
             ["DJ mode"],
@@ -31,7 +33,7 @@ def main():
         ),
         (
             "DjAutoMix",
-            ["Source-independent AutoMix", "DJ mode"],
+            ["Automix Editor", "DJ mode"],
             [
                 ("VerifyDjJourneyApk", [str(original)]),
                 ("VerifySourceAutomixApk", []),
@@ -48,7 +50,7 @@ def main():
         ),
         (
             "AutoMix",
-            ["Source-independent AutoMix"],
+            ["Automix Editor"],
             [
                 ("VerifySourceAutomixApk", []),
                 ("VerifyTravelFeaturesApk", [""]),
@@ -128,23 +130,25 @@ def main():
         )
     )
     for label, selections, inspectors in cases:
-        inspectors.append(("VerifyPlayerDownloadApk", []))
-        inspectors.append(
-            (
-                "VerifyKaraokeLyricsApk",
-                ["present" if "Karaoke" in selections else "absent"],
+        inspectors.append(("VerifyCipherMemoryApk", []))
+        if label != "InstallPlus":
+            inspectors.append(("VerifyPlayerDownloadApk", []))
+            inspectors.append(
+                (
+                    "VerifyKaraokeLyricsApk",
+                    ["present" if "Karaoke" in selections else "absent"],
+                )
             )
-        )
-        inspectors.append(
-            ("VerifyFlacAddonApk", ["disabled", str(ROOT / "build" / BUNDLE_NAME)])
-        )
-        inspectors.append(("VerifyAudioOriginApk", []))
-        inspectors.append(
-            (
-                "VerifySourcePreparationApk",
-                ["enabled" if label == "TelegramOnly" else "disabled"],
+            inspectors.append(
+                ("VerifyFlacAddonApk", ["disabled", str(ROOT / "build" / BUNDLE_NAME)])
             )
-        )
+            inspectors.append(("VerifyAudioOriginApk", []))
+            inspectors.append(
+                (
+                    "VerifySourcePreparationApk",
+                    ["enabled" if label == "TelegramOnly" else "disabled"],
+                )
+            )
         output = outputs / f"BitChord-{label}-{VERSION}-arm64-v8a-test.apk"
         with (ROOT / "build" / f"optional-{VERSION}-{label}.log").open("w") as log:
             subprocess.run(
@@ -184,6 +188,15 @@ def main():
                     stderr=subprocess.STDOUT,
                     check=True,
                 )
+            if label == "InstallPlus":
+                with zipfile.ZipFile(output) as archive:
+                    for name in archive.namelist():
+                        if name.endswith(".dex") and b"Lapp/bitchord/" in archive.read(
+                            name
+                        ):
+                            raise AssertionError(
+                                "Installation-only selection includes a runtime"
+                            )
         print("PASS optional:", label, flush=True)
 
 

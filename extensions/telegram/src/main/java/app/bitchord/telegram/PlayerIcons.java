@@ -115,17 +115,28 @@ public final class PlayerIcons {
 
     static float strip(float nativeDp, float fontScale) {
         if (!pair.get()) return nativeDp;
-        // The caption's touch target is at least 48 dp, centred on its line; the pair ends above
-        // it.
+        // The caption owns its minimum-height target below the pair; its text starts at the top.
         float line = CAPTION_LINE_SP * fontScale + CAPTION_PAD_DP;
         float target = Math.max(MIN_TARGET_DP, line);
-        return Math.max(nativeDp, (float) Math.ceil(HANDLE_DP + PAIR_DP + (target + line) / 2));
+        return Math.max(nativeDp, (float) Math.ceil(HANDLE_DP + PAIR_DP + target));
     }
 
-    // The caption's target is at least 48 dp, centred on its 16 sp line and 2 dp padding.
     static float captionGap(float fontScale) {
-        float line = CAPTION_LINE_SP * fontScale + 4;
-        return (float) Math.ceil((Math.max(MIN_TARGET_DP, line) - line) / 2);
+        return 0;
+    }
+
+    public static Object caption(Object modifier) {
+        if (!pair.get()) return modifier;
+        try {
+            Compose c = compose();
+            return c == null
+                    ? modifier
+                    : c.captionHeight.invoke(
+                            null, modifier, MIN_TARGET_DP, Float.POSITIVE_INFINITY);
+        } catch (ReflectiveOperationException | LinkageError unavailable) {
+            failed(unavailable);
+            return modifier;
+        }
     }
 
     public static void modes(Object composer) {
@@ -391,7 +402,7 @@ public final class PlayerIcons {
 
     static final class Compose {
         final Method androidView, padding, then, startGroup, endGroup, consume, blend;
-        final Method offset, wrapWidth, size;
+        final Method offset, wrapWidth, size, captionHeight;
         final Object companion, topCenter, bottomCenter, centerH;
         final Constructor<?> childData, zIndex;
         final Field tintField, chromeField;
@@ -418,6 +429,7 @@ public final class PlayerIcons {
             offset = method(need(refs, "offset"));
             wrapWidth = method(need(refs, "wrapWidth"));
             size = method(need(refs, "size"));
+            captionHeight = method(need(refs, "captionHeight"));
             centerH = field(need(refs, "centerH")).get(null);
             String[] sides = {"minWidth", "minHeight", "maxWidth", "maxHeight"};
             for (int i = 0; i < 4; i++) square[i] = field(need(refs, sides[i]));

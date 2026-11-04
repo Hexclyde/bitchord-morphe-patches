@@ -9,7 +9,7 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-from buildenv import MORPHE_JAR, TOOLS, jdk
+from buildenv import MORPHE_JAR, TOOLS, jdk, patch_version_source
 
 HERE = Path(__file__).resolve().parent
 CP = os.pathsep.join(
@@ -22,6 +22,9 @@ CP = os.pathsep.join(
     )
 )
 with tempfile.TemporaryDirectory() as out:
+    version = Path(out) / "app/bitchord/telegram/PatchVersion.java"
+    version.parent.mkdir(parents=True, exist_ok=True)
+    version.write_text(patch_version_source())
     subprocess.run(
         [
             str(jdk() / "bin/javac"),
@@ -41,6 +44,7 @@ with tempfile.TemporaryDirectory() as out:
             ),
             "-d",
             out,
+            str(version),
             str(HERE / "VideoRenditionTest.java"),
             str(HERE / "stubs/com/music/bitchord/playback/PlayerConnectionKt.java"),
         ],

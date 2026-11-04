@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.res.ColorStateList;
 import android.graphics.*;
+import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,7 +56,14 @@ public final class TransitionEditorActivity extends Activity {
             Executors.newFixedThreadPool(
                     2,
                     task -> {
-                        Thread t = new Thread(task, "automix-artwork");
+                        Thread t =
+                                new Thread(
+                                        () -> {
+                                            android.os.Process.setThreadPriority(
+                                                    android.os.Process.THREAD_PRIORITY_BACKGROUND);
+                                            task.run();
+                                        },
+                                        "automix-artwork");
                         t.setDaemon(true);
                         return t;
                     });
@@ -143,7 +151,44 @@ public final class TransitionEditorActivity extends Activity {
                         == android.content.res.Configuration.ORIENTATION_LANDSCAPE;
         getWindow().setStatusBarColor(background());
         getWindow().setNavigationBarColor(background());
-        LinearLayout root = column();
+        LinearLayout root =
+                new LinearLayout(this) {
+                    @Override
+                    protected void onMeasure(int width, int height) {
+                        super.onMeasure(width, height);
+                        if (wide
+                                || compact
+                                || workspace == null
+                                || controlScroll == null
+                                || workspace.getParent() != this) return;
+                        LinearLayout settings = (LinearLayout) controlScroll.getParent();
+                        // The waveform gives space to the controls in shorter windows.
+                        int reserved = getPaddingTop() + getPaddingBottom() + style.dp(96);
+                        for (int i = 0; i < getChildCount(); i++) {
+                            View child = getChildAt(i);
+                            if (child != workspace
+                                    && child != settings
+                                    && child.getVisibility() != View.GONE)
+                                reserved += child.getMeasuredHeight();
+                        }
+                        for (int i = 0; i < settings.getChildCount(); i++) {
+                            View child = settings.getChildAt(i);
+                            if (child != controlScroll && child.getVisibility() != View.GONE)
+                                reserved += child.getMeasuredHeight();
+                        }
+                        int available = getMeasuredHeight() - reserved;
+                        if (available < style.dp(260)) setCompact(true);
+                        else {
+                            ViewGroup.LayoutParams space = workspace.getLayoutParams();
+                            int desired = Math.min(style.dp(expandedHeight()), available);
+                            if (space.height == desired) return;
+                            space.height = desired;
+                            workspace.setLayoutParams(space);
+                        }
+                        super.onMeasure(width, height);
+                    }
+                };
+        root.setOrientation(LinearLayout.VERTICAL);
         root.setTag("transition-editor-root");
         root.setPadding(style.dp(16), style.dp(8), style.dp(16), style.dp(8));
         root.setBackgroundColor(background());
@@ -542,59 +587,36 @@ public final class TransitionEditorActivity extends Activity {
         status.setTextSize(11);
         status.setPadding(style.dp(4), 0, style.dp(4), style.dp(6));
         footer.addView(status, new LinearLayout.LayoutParams(-1, -2));
-        // Equal button widths: weighted splits hand the odd pixel to one side.
-        LinearLayout actions =
-                new LinearLayout(this) {
-                    @Override
-                    protected void onMeasure(int widthSpec, int heightSpec) {
-                        int both = 0;
-                        for (int i = 0; i < getChildCount(); i++)
-                            if (getChildAt(i).getVisibility() != View.GONE) both++;
-                        if (both == 2 && MeasureSpec.getMode(widthSpec) == MeasureSpec.EXACTLY) {
-                            int gap = style.dp(10),
-                                    each = (MeasureSpec.getSize(widthSpec) - gap) / 2,
-                                    fixed = MeasureSpec.makeMeasureSpec(each, MeasureSpec.EXACTLY);
-                            for (int i = 0; i < getChildCount(); i++)
-                                getChildAt(i).measure(fixed, heightSpec);
-                            setMeasuredDimension(
-                                    MeasureSpec.getSize(widthSpec),
-                                    getChildAt(0).getMeasuredHeight());
-                            return;
-                        }
-                        super.onMeasure(widthSpec, heightSpec);
-                    }
-
-                    @Override
-                    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-                        if (getChildCount() == 2
-                                && getChildAt(0).getVisibility() != View.GONE
-                                && getChildAt(1).getVisibility() != View.GONE) {
-                            View draft = getChildAt(0), apply = getChildAt(1);
-                            draft.layout(0, 0, draft.getMeasuredWidth(), b - t);
-                            apply.layout(r - l - apply.getMeasuredWidth(), 0, r - l, b - t);
-                            return;
-                        }
-                        super.onLayout(changed, l, t, r, b);
-                    }
-                };
-        actions.setGravity(Gravity.CENTER_VERTICAL);
+        LinearLayout actions = row();
+        actions.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
         draftSave = chip(Strings.t("Save draft"), false, () -> persistDraft(true));
         draftSave.setTag("automix-save-draft");
         draftSave.setTextSize(13);
         draftSave.setMinHeight(style.dp(48));
+        draftSave.setMinWidth(style.dp(88));
+        draftSave.setMaxWidth(style.dp(160));
         draftSave.setPadding(style.dp(12), 0, style.dp(12), 0);
         draftSave.setBackground(
                 new RippleDrawable(
                         ColorStateList.valueOf(0x228e8e93),
-                        style.shape(background(), 24, true),
+                        new InsetDrawable(
+                                style.shape(background(), 20, true),
+                                0,
+                                style.dp(4),
+                                0,
+                                style.dp(4)),
                         null));
-        LinearLayout.LayoutParams draftSpace = new LinearLayout.LayoutParams(0, style.dp(48), 1);
+        LinearLayout.LayoutParams draftSpace = new LinearLayout.LayoutParams(-2, -2);
         draftSpace.rightMargin = style.dp(10);
         actions.addView(draftSave, draftSpace);
         save.setMinHeight(style.dp(48));
+        save.setMinWidth(style.dp(88));
+        save.setMaxWidth(style.dp(160));
+        save.setBackground(
+                new InsetDrawable(style.shape(GREEN, 20, false), 0, style.dp(4), 0, style.dp(4)));
         save.setTextSize(13);
         save.setPadding(style.dp(12), 0, style.dp(12), 0);
-        actions.addView(save, new LinearLayout.LayoutParams(0, style.dp(48), 1));
+        actions.addView(save, new LinearLayout.LayoutParams(-2, -2));
         footer.addView(actions);
         LinearLayout player = row();
         player.setPadding(0, style.dp(5), 0, 0);
@@ -960,7 +982,15 @@ public final class TransitionEditorActivity extends Activity {
                     Executors.newFixedThreadPool(
                             2,
                             task -> {
-                                Thread thread = new Thread(task, "transition-waveform");
+                                Thread thread =
+                                        new Thread(
+                                                () -> {
+                                                    android.os.Process.setThreadPriority(
+                                                            android.os.Process
+                                                                    .THREAD_PRIORITY_BACKGROUND);
+                                                    task.run();
+                                                },
+                                                "transition-waveform");
                                 thread.setDaemon(true);
                                 return thread;
                             });
@@ -1607,6 +1637,9 @@ public final class TransitionEditorActivity extends Activity {
                                 setCompact(true);
                             });
             button.setTag("transition-tab:" + i);
+            button.setSingleLine(true);
+            button.setEllipsize(TextUtils.TruncateAt.END);
+            button.setContentDescription(titles[i]);
             button.setTextSize(12);
             button.setMinHeight(0);
             button.setPadding(style.dp(5), 0, style.dp(5), 0);
