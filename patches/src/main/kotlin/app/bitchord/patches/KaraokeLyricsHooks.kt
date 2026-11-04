@@ -54,10 +54,10 @@ private fun Method.shape(vararg parameters: String, returns: String) =
 
 /**
  * The Karaoke capsule is the last child of the box that holds the lyrics in the portrait layout,
- * and a child of the translation slot in the landscape pane's bottom row, where it is moved beside
- * the translate button and the status line leaves room for it. Both places, and every Compose and
- * BitChord helper the capsule calls, are found from what the host does there, not from the names R8
- * gave its lambdas or merged file classes; the extension is handed what was found.
+ * and a child of the translation slot in the landscape pane's bottom row, where it is raised above
+ * the translate button. Both places, and every Compose and BitChord helper the capsule calls, are
+ * found from what the host does there, not from the names R8 gave its lambdas or merged file
+ * classes; the extension is handed what was found.
  */
 internal fun BytecodePatchContext.addKaraokeLyrics() {
     val all = mutableListOf<ClassDef>()
@@ -555,23 +555,24 @@ private fun List<Instruction>.floatBefore(at: Int, register: Int): Float? {
 /**
  * The bottom row of the landscape pane holds a 34 dp slot at each end of a status line padded 12 dp
  * a side, centred vertically. The capsule goes in the translation slot, which the row centres on
- * the translate button's own line whatever height the status line gives the row, and the status
- * line's padding grows by the room the capsule's target takes. The translate button is itself 34
- * dp, which the offsets rely on. Returns false when this method already carries the hook.
+ * the translate button's own line whatever height the status line gives the row. The target
+ * overhangs the button by 7 dp, inside the status line's own 12 dp padding, which is checked here
+ * along with the translate button being 34 dp, which the offsets rely on. Returns false when this
+ * method already carries the hook.
  */
 private fun hookLandscape(method: MutableMethod): Boolean {
     val code = method.code()
-    if (code.any { it.callsKaraoke() }) {
+    val existing = code.indices.filter { code[it].callsKaraoke() }
+    if (existing.isNotEmpty()) {
         check(
-            code.count {
+            code.none {
                 it.call()?.let { c ->
                     c.definingClass == KARAOKE && c.name == "landscapeReserve"
                 } == true
-            } == 1
+            }
         ) {
             "An older Karaoke layout is already patched; start from a clean BitChord APK"
         }
-        return false
     }
     val statuses =
         code.indices.filter {
@@ -618,7 +619,6 @@ private fun hookLandscape(method: MutableMethod): Boolean {
     check(code.floatBefore(padding, side) == 12f && side < 16) {
         "The status line is no longer padded 12 dp a side"
     }
-    val convert = (padding - 1 downTo 0).first { code[it].writes(side) }
     // The translation slot's content is the next composable slot invoked after the status line.
     val content =
         (status until code.size).firstOrNull { i ->
@@ -651,14 +651,30 @@ private fun hookLandscape(method: MutableMethod): Boolean {
     }
     val composer = (code[close] as FiveRegisterInstruction).registerC
     check(composer < 16) { "Lyrics composer register out of range" }
-    // The later place first, so the earlier index still holds.
+    if (existing.isNotEmpty()) {
+        check(
+            existing.size == 1 &&
+                existing.single() == jumps.single() - 1 &&
+                code[existing.single()].let { step ->
+                    step.opcode == Opcode.INVOKE_STATIC &&
+                        (step as? FiveRegisterInstruction)?.let {
+                            it.registerCount == 1 && it.registerC == composer
+                        } == true &&
+                        step.call()?.let {
+                            it.definingClass == KARAOKE &&
+                                it.name == "landscape" &&
+                                it.parameterTypes == listOf("Ljava/lang/Object;") &&
+                                it.returnType == "V"
+                        } == true
+                }
+        ) {
+            "An older Karaoke layout is already patched; start from a clean BitChord APK"
+        }
+        return false
+    }
     method.addInstruction(
         jumps.single(),
         "invoke-static {v$composer}, $KARAOKE->landscape(Ljava/lang/Object;)V",
-    )
-    method.addInstructions(
-        convert + 1,
-        "invoke-static {v$side}, $KARAOKE->landscapeReserve(F)F\nmove-result v$side",
     )
     return true
 }

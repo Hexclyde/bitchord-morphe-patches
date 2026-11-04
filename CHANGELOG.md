@@ -1,6 +1,6 @@
 ## 1.1.0-beta.19
 
-- **Karaoke** (formerly Sing) adds a microphone control beside Translate in the lyrics. Tapping it switches on separation-model vocal removal and opens a vertical slider linked to the settings slider; after it closes, the microphone stays faintly visible and can be tapped to reopen the slider.
+- **Karaoke** (formerly Sing) adds a microphone control directly above Translate in the lyrics. Tapping it switches on separation-model vocal removal and opens a vertical slider linked to the settings slider; after it closes, the microphone stays faintly visible and can be tapped to reopen the slider.
 - **Diagnostics** records app and patch events for startup and sign-in troubleshooting. Start and stop capture explicitly, then share a compressed report through Android’s share menu.
 - **Audio and video switch** carries a manual lyrics-provider choice between versions of the same queued song and reloads lyrics for the active version.
 - Returning to audio clears the video-origin flag so native AutoMix can analyse and blend the song again. Fullscreen can follow the player's request when the window ignores rotation, with Back handled in the player's scope.

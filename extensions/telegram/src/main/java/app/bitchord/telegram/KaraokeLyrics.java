@@ -30,16 +30,15 @@ public final class KaraokeLyrics {
 
     /**
      * The host's translate button is a bare 34 dp disc. The capsule paints a 34 dp disc standing on
-     * the bottom of its 48 dp target, 48 dp from the button's centre, so both discs share one
-     * baseline with a 14 dp gap. Portrait puts the target 41 dp from the box's end (34 + 14 - 7).
+     * the bottom of its 48 dp target, directly above the button and 48 dp from its centre, leaving
+     * a 14 dp gap. The 48 dp target is 7 dp wider than the button each side, so portrait shifts it
+     * 7 dp toward the end to share the button's axis.
      */
-    static final int PORTRAIT_END_DP = 41, PORTRAIT_BOTTOM_DP = 0;
-
     static final int CENTRE_SEPARATION_DP = 48, TRANSLATE_DP = 34;
 
-    /** The status line gives up this much each side: the target's far edge from its slot. */
-    static final int LANDSCAPE_RESERVE_DP =
-            CENTRE_SEPARATION_DP + KaraokeCapsule.BASE_DP / 2 - TRANSLATE_DP / 2;
+    static final int PORTRAIT_END_DP = 0, PORTRAIT_BOTTOM_DP = CENTRE_SEPARATION_DP;
+
+    static final int PORTRAIT_SHIFT_DP = (KaraokeCapsule.BASE_DP - TRANSLATE_DP) / 2;
 
     private static final int GROUP_KEY = 0x4B415241;
 
@@ -114,7 +113,7 @@ public final class KaraokeLyrics {
     }
 
     /**
-     * Portrait lyrics: a child of the box holding the lyrics, beside the translation button, while
+     * Portrait lyrics: a child of the box holding the lyrics, above the translation button, while
      * the lyrics are on screen. It stays whether or not the host's own lyric controls are shown.
      */
     public static void portrait(Object composer, boolean lyricsVisible) {
@@ -144,16 +143,21 @@ public final class KaraokeLyrics {
         embed(composer, true, true);
     }
 
-    /** The translation slot's offset for a capsule this tall, packed as the host's IntOffset. */
+    /**
+     * The translation slot's offset for a capsule this tall, packed as the host's IntOffset. The
+     * slot centres the capsule on the button, so only the rise is left: the target's bottom ends 48
+     * - 17 dp above the slot's centre.
+     */
     static long landscapeOffset(float density, int measuredHeightPx) {
-        int x = -Math.round(CENTRE_SEPARATION_DP * density);
-        int y = Math.round((KaraokeCapsule.DISC_DP / 2f) * density) - measuredHeightPx / 2;
-        return ((long) x << 32) | (y & 0xffffffffL);
+        int y =
+                -Math.round((CENTRE_SEPARATION_DP - TRANSLATE_DP / 2f) * density)
+                        - measuredHeightPx / 2;
+        return y & 0xffffffffL;
     }
 
-    /** The status line's side margin in dp: wide enough to leave the capsule's target alone. */
-    public static float landscapeReserve(float marginDp) {
-        return applied() ? Math.max(marginDp, LANDSCAPE_RESERVE_DP) : marginDp;
+    /** The portrait target's shift toward the end, packed as the host's IntOffset. */
+    static long portraitOffset(float density) {
+        return (long) Math.round(PORTRAIT_SHIFT_DP * density) << 32;
     }
 
     private static void embed(Object composer, boolean landscape, boolean show) {
@@ -415,7 +419,7 @@ public final class KaraokeLyrics {
         /**
          * Inside the 34 dp translation slot: the target is 48 dp wide and as tall as the capsule
          * wants (an unspecified maximum would inherit the slot's 34 dp), centred in the slot, then
-         * moved beside the button. The offset reads the height measured for this frame.
+         * raised above the button. The offset reads the height measured for this frame.
          */
         Object slotModifier(Object frost, KaraokeCapsule[] control)
                 throws ReflectiveOperationException {
@@ -424,21 +428,32 @@ public final class KaraokeLyrics {
             Object sized =
                     requiredSize.invoke(
                             null, companion, base, base, base, Float.POSITIVE_INFINITY, 0);
+            Object placed =
+                    shifted(
+                            sized,
+                            capsule ->
+                                    landscapeOffset(
+                                            capsule.getResources().getDisplayMetrics().density,
+                                            capsule.getMeasuredHeight()),
+                            control);
+            return withFrost(placed, frost, control);
+        }
+
+        /** The host's end-relative offset, read in the placement phase from the live capsule. */
+        private Object shifted(
+                Object base, Function1<KaraokeCapsule, Long> offset, KaraokeCapsule[] control)
+                throws ReflectiveOperationException {
             Function1<Object, Object> moved =
                     density -> {
                         KaraokeCapsule capsule = control[0];
                         if (capsule == null) return zero();
                         try {
-                            return intOffset.newInstance(
-                                    landscapeOffset(
-                                            capsule.getResources().getDisplayMetrics().density,
-                                            capsule.getMeasuredHeight()));
+                            return intOffset.newInstance(offset.invoke(capsule));
                         } catch (ReflectiveOperationException failed) {
                             throw new IllegalStateException(failed);
                         }
                     };
-            Object placed = offsetBy.invoke(null, sized, moved);
-            return withFrost(placed, frost, control);
+            return offsetBy.invoke(null, base, moved);
         }
 
         private Object zero() {
@@ -460,7 +475,19 @@ public final class KaraokeLyrics {
                             padding.getParameterCount() == 6
                                     ? values
                                     : java.util.Arrays.copyOf(values, 5));
-            return withFrost(spaced, frost, control);
+            // Without the offset symbols the target stays 7 dp short of the button's axis.
+            Object placed =
+                    offsetBy == null
+                            ? spaced
+                            : shifted(
+                                    spaced,
+                                    capsule ->
+                                            portraitOffset(
+                                                    capsule.getResources()
+                                                            .getDisplayMetrics()
+                                                            .density),
+                                    control);
+            return withFrost(placed, frost, control);
         }
 
         private Object withFrost(Object spaced, Object frost, KaraokeCapsule[] control)

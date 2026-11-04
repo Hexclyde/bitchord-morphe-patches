@@ -241,8 +241,13 @@ public class KaraokeLyricsTest {
                 left + visual.left, top + visual.top, left + visual.right, top + visual.bottom);
     }
 
+    /** The native offset's x as it grows toward the end edge; none recorded means no shift. */
+    private static int portraitShift(OffsetKt.OffsetBy shift) {
+        return shift == null ? 0 : offsetOf(shift, true);
+    }
+
     @Test
-    public void withTheMarkerOneCapsuleSitsAtTheBottomEndBesideTheTranslationButton() {
+    public void withTheMarkerOneCapsuleSitsAtTheBottomEndAboveTheTranslationButton() {
         KaraokeCapsule capsule = embed();
         assertNotNull(capsule);
         assertEquals(1, content.getChildCount());
@@ -250,43 +255,117 @@ public class KaraokeLyricsTest {
         assertSame(Alignment.Companion.BottomEnd, place.alignment);
         assertFalse(place.matchParentSize);
         OffsetKt.Padding spacing = find(composer.modifier, OffsetKt.Padding.class);
-        // The 34 dp translate button, a 14 dp gap and the 7 dp the 48 dp target keeps round the
-        // disc.
-        assertEquals(41f, spacing.end, 0f);
-        assertEquals(0f, spacing.bottom, 0f);
+        // The disc stands on its target, so the target's bottom is 34 dp + 14 dp above the box.
+        assertEquals(0f, spacing.end, 0f);
+        assertEquals(48f, spacing.bottom, 0f);
         // A size modifier here would make the capsule a cover over the lyrics.
         assertNull(find(composer.modifier, androidx.compose.foundation.layout.SizeKt.Fill.class));
     }
 
-    /** The native lyrics box: translate is a bare 34 dp disc in its bottom-end corner. */
-    private void assertPortraitBesideTranslate(float fontScale) {
+    /**
+     * The native lyrics box: translate is a bare 34 dp disc in its bottom-end corner, and the box
+     * ends 30 dp inside the window (the native 61 px end margin plus the 7 dp overhang). The
+     * capsule is placed by the BottomEnd alignment, the padding and the end-relative offset, which
+     * flips in right-to-left.
+     */
+    private void assertPortraitAboveTranslate(float fontScale, boolean rtl, boolean open) {
         org.robolectric.RuntimeEnvironment.setFontScale(fontScale);
         KaraokeCapsule capsule = embed();
-        lay(capsule, 700);
         OffsetKt.Padding spacing = find(composer.modifier, OffsetKt.Padding.class);
-        float boxWidth = px(393), boxHeight = px(500);
-        Box translate = new Box(boxWidth - px(34), boxHeight - px(34), boxWidth, boxHeight);
-        float left = boxWidth - px(spacing.end) - capsule.getWidth();
+        OffsetKt.OffsetBy shift = find(composer.modifier, OffsetKt.OffsetBy.class);
+        if (shift != null)
+            assertTrue("the host's offset follows the layout direction", shift.rtlAware);
+        lay(capsule, 700);
+        if (open) {
+            capsule.microphone().performClick();
+            lay(capsule, 700);
+        }
+        float window = px(393), inset = px(30), boxHeight = px(500);
+        float boxLeft = inset, boxRight = window - inset;
+        Box translate =
+                rtl
+                        ? new Box(boxLeft, boxHeight - px(34), boxLeft + px(34), boxHeight)
+                        : new Box(boxRight - px(34), boxHeight - px(34), boxRight, boxHeight);
+        float dx = portraitShift(shift) * (rtl ? -1 : 1);
+        float left =
+                (rtl ? boxLeft + px(spacing.end) : boxRight - px(spacing.end) - capsule.getWidth())
+                        + dx;
         float top = boxHeight - px(spacing.bottom) - capsule.getHeight();
         Box target = new Box(left, top, left + capsule.getWidth(), top + capsule.getHeight());
-        Box disc = disc(capsule, left, top);
-        assertEquals("the native 48 dp target", px(48), capsule.getWidth());
-        assertEquals("the native 48 dp target", px(48), capsule.getHeight());
-        assertEquals("a 34 dp painted disc", px(34), disc.right - disc.left, 1f);
-        assertEquals("one baseline", translate.centreY(), disc.centreY(), 1f);
-        assertEquals("48 dp between centres", px(48), translate.centreX() - disc.centreX(), 1f);
-        assertEquals("a 14 dp painted gap", px(14), translate.left - disc.right, 1f);
-        assertFalse("the target stays clear of translate", target.overlaps(translate));
+        String where = "font " + fontScale + (rtl ? " rtl" : " ltr") + (open ? " open" : " closed");
+        assertEquals(where + ": the native 48 dp target", px(48), capsule.getWidth());
+        assertEquals(where + ": same vertical axis", translate.centreX(), target.centreX(), 1f);
+        assertTrue(
+                where + ": the target stays in the window",
+                target.left >= 0 && target.right <= window);
+        assertEquals(
+                where + ": the target stands 14 dp above translate",
+                px(14),
+                translate.top - target.bottom,
+                1f);
+        float glyphY = target.bottom - px(17);
+        assertEquals(where + ": 48 dp between centres", px(48), translate.centreY() - glyphY, 1f);
+        if (!open) {
+            assertEquals(where + ": the native 48 dp target", px(48), capsule.getHeight());
+            Box disc = disc(capsule, left, top);
+            assertEquals(where + ": a 34 dp painted disc", px(34), disc.right - disc.left, 1f);
+            assertEquals(where + ": disc on the axis", translate.centreX(), disc.centreX(), 1f);
+            assertEquals(
+                    where + ": 48 dp between centres",
+                    px(48),
+                    translate.centreY() - disc.centreY(),
+                    1f);
+            assertEquals(where + ": a 14 dp painted gap", px(14), translate.top - disc.bottom, 1f);
+            assertFalse(
+                    where + ": the target stays clear of translate", target.overlaps(translate));
+        }
     }
 
     @Test
-    public void portraitDiscSharesTranslatesBaselineAtNormalText() {
-        assertPortraitBesideTranslate(1f);
+    public void portraitDiscSitsAboveTranslateAtNormalText() {
+        assertPortraitAboveTranslate(1f, false, false);
+        assertPortraitAboveTranslate(1f, false, true);
     }
 
     @Test
-    public void portraitDiscSharesTranslatesBaselineAtDoubleText() {
-        assertPortraitBesideTranslate(2f);
+    public void portraitDiscSitsAboveTranslateAtDoubleText() {
+        assertPortraitAboveTranslate(2f, false, false);
+        assertPortraitAboveTranslate(2f, false, true);
+    }
+
+    @Test
+    public void portraitDiscSitsAboveTranslateInRightToLeft() {
+        assertPortraitAboveTranslate(1f, true, false);
+        assertPortraitAboveTranslate(2f, true, true);
+    }
+
+    @Test
+    public void portraitOpenSliderStaysInTheWindowAtTheSmallestHeight() {
+        KaraokeCapsule capsule = embed();
+        OffsetKt.Padding spacing = find(composer.modifier, OffsetKt.Padding.class);
+        // A lyrics box only 200 dp tall: the capsule's bottom is 48 dp above it.
+        int bottom = px(200) - px(spacing.bottom);
+        FrameLayout.LayoutParams place =
+                new FrameLayout.LayoutParams(
+                        px(48), px(48), android.view.Gravity.TOP | android.view.Gravity.START);
+        place.topMargin = bottom - px(48);
+        ((ViewGroup) capsule.getParent()).removeView(capsule);
+        content.addView(capsule, place);
+        content.measure(
+                View.MeasureSpec.makeMeasureSpec(px(393), View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(px(200), View.MeasureSpec.EXACTLY));
+        content.layout(0, 0, px(393), px(200));
+        capsule.microphone().performClick();
+        capsule.measure(
+                View.MeasureSpec.makeMeasureSpec(px(48), View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        capsule.layout(0, bottom - capsule.getMeasuredHeight(), px(48), bottom);
+        int[] at = new int[2];
+        capsule.getLocationInWindow(at);
+        assertTrue("inside the window", at[1] >= 0);
+        assertEquals("the full 48 dp wide pointer region", px(48), capsule.getWidth());
+        assertTrue(capsule.getHeight() >= px(48));
+        assertTrue(capsule.getHeight() < px(320));
     }
 
     // ── Landscape: the native row below the lyrics ───────────────────────────
@@ -329,7 +408,7 @@ public class KaraokeLyricsTest {
      * the limits the real size node gives it, centred in the slot and then moved by the extension's
      * offset, which reads the height measured for this frame.
      */
-    private void assertLandscapeBesideTranslate(float rowDp, boolean open) {
+    private void assertLandscapeAboveTranslate(float rowDp, boolean open) {
         KaraokeCapsule capsule = embedLandscape();
         SizeKt.RequiredSizeIn required = find(composer.modifier, SizeKt.RequiredSizeIn.class);
         OffsetKt.OffsetBy shift = find(composer.modifier, OffsetKt.OffsetBy.class);
@@ -339,7 +418,8 @@ public class KaraokeLyricsTest {
         capsule.layout(0, px(852) - px(48), px(48), px(852));
         if (open != capsule.expanded()) capsule.microphone().performClick();
         measureInSlot(capsule, required);
-        float row = px(rowDp), slot = px(34), paneWidth = px(852);
+        // The native row keeps at least 12 dp between its slot and the window's end.
+        float row = px(rowDp), slot = px(34), paneWidth = px(852) - px(12);
         float slotTop = (row - slot) / 2f, slotLeft = paneWidth - slot;
         Box translate = new Box(slotLeft, slotTop, paneWidth, slotTop + slot);
         int width = capsule.getMeasuredWidth(), height = capsule.getMeasuredHeight();
@@ -348,33 +428,30 @@ public class KaraokeLyricsTest {
         float left = slotLeft + (slot - width) / 2f + offsetOf(shift, true);
         float top = slotTop + (slot - height) / 2f + offsetOf(shift, false);
         Box target = new Box(left, top, left + width, top + height);
-        Box statusText =
-                new Box(
-                        slot + px(KaraokeLyrics.landscapeReserve(12f)),
-                        0,
-                        slotLeft - px(KaraokeLyrics.landscapeReserve(12f)),
-                        row);
+        // The native status text keeps its own 12 dp margin from the slots.
+        Box statusText = new Box(slot + px(12), 0, slotLeft - px(12), row);
         String where = "row " + rowDp + "dp, " + (open ? "open" : "closed");
+        assertEquals(where + ": same vertical axis", translate.centreX(), target.centreX(), 1f);
         assertEquals(
-                where + ": bottom stays on the disc line",
-                translate.centreY() + px(17),
-                target.bottom,
+                where + ": bottom stands 14 dp above translate",
+                translate.top,
+                target.bottom + px(14),
                 1f);
         assertEquals(where + ": 48 dp target", px(48), width);
         assertEquals(where + ": open height", open ? px(320) : px(48), height);
+        assertTrue(where + ": inside the window", target.right <= px(852));
         assertFalse(where + ": clear of translate", target.overlaps(translate));
         assertFalse(where + ": clear of the status line", target.overlaps(statusText));
-        assertEquals(
-                where + ": the reserve is the same on both sides",
-                statusText.left - slot,
-                slotLeft - statusText.right,
-                0.5f);
         Box disc = disc(capsule, left, top);
         float glyphY = top + height - px(17);
-        assertEquals(where + ": the glyph stays on one baseline", translate.centreY(), glyphY, 1f);
+        assertEquals(
+                where + ": the glyph stays 48 dp above translate",
+                px(48),
+                translate.centreY() - glyphY,
+                1f);
         if (!open) {
-            assertEquals(where + ": one baseline", translate.centreY(), disc.centreY(), 1f);
-            assertEquals(where + ": 14 dp gap", px(14), translate.left - disc.right, 1f);
+            assertEquals(where + ": on the axis", translate.centreX(), disc.centreX(), 1f);
+            assertEquals(where + ": 14 dp gap", px(14), translate.top - disc.bottom, 1f);
             assertEquals(where + ": 34 dp disc", px(34), disc.right - disc.left, 1f);
         }
     }
@@ -411,24 +488,15 @@ public class KaraokeLyricsTest {
     }
 
     @Test
-    public void landscapeDiscSharesTranslatesBaselineWhateverTheRowHeight() {
+    public void landscapeDiscSitsAboveTranslateWhateverTheRowHeight() {
         // 34 dp slots alone, a one-line status at 1.3x and 2x text, and a wrapped large-text row.
         for (float row : new float[] {34f, 40f, 58f, 96f})
-            assertLandscapeBesideTranslate(row, false);
+            assertLandscapeAboveTranslate(row, false);
     }
 
     @Test
     public void landscapeOpenSliderKeepsItsBottomOnTheDiscLine() {
-        for (float row : new float[] {34f, 58f, 96f}) assertLandscapeBesideTranslate(row, true);
-    }
-
-    @Test
-    public void landscapeReserveOnlyGrowsTheStatusMargin() {
-        assertTrue(KaraokeLyrics.landscapeReserve(12f) > 12f);
-        assertEquals(80f, KaraokeLyrics.landscapeReserve(80f), 0f);
-        Marker.installed = false;
-        assertEquals(
-                "nothing changes without the patch", 12f, KaraokeLyrics.landscapeReserve(12f), 0f);
+        for (float row : new float[] {34f, 58f, 96f}) assertLandscapeAboveTranslate(row, true);
     }
 
     @Test

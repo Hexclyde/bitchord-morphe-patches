@@ -38,8 +38,12 @@ public final class OffsetKt {
         return base.then(new Padding(start, top, end, bottom));
     }
 
-    /** What offset(Function1) records: the lambda is read in the placement phase. */
+    /**
+     * What offset(Function1) records: the lambda is read in the placement phase. Like the host's
+     * OffsetPxElement (its toString prints rtlAware=true), x grows toward the end edge.
+     */
     public static final class OffsetBy implements Modifier {
+        public final boolean rtlAware = true;
         public final kotlin.jvm.functions.Function1<Object, Object> offset;
 
         OffsetBy(kotlin.jvm.functions.Function1<Object, Object> offset) {

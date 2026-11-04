@@ -336,22 +336,19 @@ public class VerifyKaraokeLyricsApk {
                         "The drawing boundary reaches the platform canvas");
             }
         }
-        // Exactly four calls: the portrait lyrics, the landscape slot and its status margin, and
-        // the frosted-glass state.
-        int portrait = 0, landscape = 0, reserve = 0, haze = 0;
+        // Exactly three calls: the portrait lyrics, the landscape slot and the frosted-glass state.
+        int portrait = 0, landscape = 0, haze = 0;
         for (String caller : callers) {
             String type = caller.substring(0, caller.indexOf("->"));
             String call = caller.substring(caller.lastIndexOf(':') + 1);
             if (call.equals("portrait")) portrait++;
             else if (call.equals("landscape")) landscape++;
-            else if (call.equals("landscapeReserve")) reserve++;
             else if (call.equals("haze")
                     && type.startsWith("Lcom/music/bitchord/ui/player/NowPlayingScreenKt")) haze++;
         }
         check(
-                callers.size() == 4 && portrait == 1 && landscape == 1 && reserve == 1 && haze == 1,
-                "Only the portrait lyrics, the landscape slot, its margin and the glass state call"
-                        + " it: "
+                callers.size() == 3 && portrait == 1 && landscape == 1 && haze == 1,
+                "Only the portrait lyrics, the landscape slot and the glass state call it: "
                         + callers);
 
         for (ClassDef c : dex.values()) {
@@ -522,41 +519,33 @@ public class VerifyKaraokeLyricsApk {
                                                                 .getRegisterD())),
                                 "A row slot is 34 dp");
 
-                    // The status line's side margin goes through the extension, once.
-                    List<Integer> margins = code.callsTo(KARAOKE, "landscapeReserve");
+                    // The status line keeps its own 12 dp side margin, and nothing widens it.
                     check(
-                            margins.size() == 1 && margins.get(0) < status,
-                            "The margin hook is once");
+                            code.callsTo(KARAOKE, "landscapeReserve").isEmpty(),
+                            "No margin hook is left");
+                    List<Integer> margins = new ArrayList<>();
+                    for (int k = 0; k < code.ins.size(); k++)
+                        if (code.call(k) != null
+                                && code.call(k).getDefiningClass().equals(OFFSET_KT)
+                                && code.call(k).getName().startsWith("padding-")
+                                && code.call(k)
+                                        .getParameterTypes()
+                                        .toString()
+                                        .equals("[F, F, I, Landroidx/compose/ui/Modifier;]")
+                                && k > slots.get(0)
+                                && k < status) margins.add(k);
+                    check(margins.size() == 1, "The status box has one horizontal padding");
                     if (margins.size() == 1) {
                         int at = margins.get(0);
-                        MethodReference mr = code.call(at);
                         check(
-                                mr.getParameterTypes().toString().equals("[F]")
-                                        && mr.getReturnType().equals("F"),
-                                "It takes and gives the margin as a float");
-                        int register = ((FiveRegisterInstruction) code.ins.get(at)).getRegisterC();
-                        check(
-                                code.ins.get(at - 1).getOpcode() == Opcode.INT_TO_FLOAT
-                                        && ((OneRegisterInstruction) code.ins.get(at - 1))
-                                                        .getRegisterA()
-                                                == register
-                                        && code.ins.get(at + 1).getOpcode() == Opcode.MOVE_RESULT
-                                        && ((OneRegisterInstruction) code.ins.get(at + 1))
-                                                        .getRegisterA()
-                                                == register,
-                                "It replaces the converted 12 dp margin in place");
-                        boolean horizontal = false;
-                        for (int k = at + 2; k < Math.min(code.ins.size(), at + 8); k++)
-                            if (code.call(k) != null
-                                    && code.call(k).getDefiningClass().equals(OFFSET_KT)
-                                    && code.call(k).getName().startsWith("padding-")
-                                    && code.call(k)
-                                            .getParameterTypes()
-                                            .toString()
-                                            .equals("[F, F, I, Landroidx/compose/ui/Modifier;]")
-                                    && ((FiveRegisterInstruction) code.ins.get(k)).getRegisterC()
-                                            == register) horizontal = true;
-                        check(horizontal, "That value is the horizontal padding of the status box");
+                                Float.valueOf(12f)
+                                        .equals(
+                                                floatBefore(
+                                                        code,
+                                                        at,
+                                                        ((FiveRegisterInstruction) code.ins.get(at))
+                                                                .getRegisterC())),
+                                "The status line is padded 12 dp a side");
                     }
                 }
                 if (c.getType().equals(LYRICS)) {
