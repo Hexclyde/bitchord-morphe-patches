@@ -19,6 +19,7 @@ public final class VideoSwitchLyricsTest {
 
     public static final class Request {
         public final String videoId;
+        public long durationMs = 215_000;
 
         Request(String id) {
             videoId = id;
@@ -51,6 +52,19 @@ public final class VideoSwitchLyricsTest {
             lyricsFor = next;
             lyricsGeneration++;
             currentLyricsRequest = new Request((String) next.get(0));
+        }
+
+        int loads;
+
+        /** BitChord's loadLyrics: the same key returns before the length is looked at again. */
+        void load(List<Object> next, long ms, Song playing, long now, boolean hooked) {
+            if (hooked) VideoSwitch.reloadLyrics(this, ms, playing, now, true);
+            if (next.equals(lyricsFor) || ms <= 0) return;
+            VideoSwitch.beforeLyrics(this, next, playing, now, true);
+            reset(next);
+            currentLyricsRequest.durationMs = ms;
+            loads++;
+            VideoSwitch.afterLyrics(this, playing, now, true);
         }
     }
 
@@ -248,6 +262,86 @@ public final class VideoSwitchLyricsTest {
         VideoSwitch.afterLyrics(off, VIDEO, 630, true);
         check(off.choices == 0, "no host swap pins a provider while the switch is off");
         VideoSwitch.setEnabled(true);
+
+        // A provider with nothing for the video is still the listener's choice for the song.
+        VideoSwitch.preferredVideo = true;
+        Model gone = run("NOT_FOUND", "Manual", VIDEO, 120, true);
+        check(
+                gone.choices == 1 && gone.selectedLyricsSource == null,
+                "a missing provider leaves the video on the honest fallback");
+        gone.state = "NOT_FETCHED";
+        VideoSwitch.preferredVideo = false;
+        VideoSwitch.pendingLyricsSwitch(VIDEO, AUDIO, 130);
+        List<Object> back = key(AUDIO.videoId);
+        VideoSwitch.beforeLyrics(gone, back, AUDIO, 140, true);
+        gone.reset(back);
+        VideoSwitch.afterLyrics(gone, AUDIO, 150, true);
+        check(
+                gone.requests == 1
+                        && AUDIO.videoId.equals(gone.requestedId)
+                        && "Manual".equals(gone.selectedLyricsSource),
+                "the provider returns with the song after a version that lacked it");
+        Song audioTwo = new Song(AUDIO.videoId, "entry-2", false);
+        Song videoTwo = new Song(VIDEO.videoId, "entry-2", true);
+        Model nextEntry = new Model();
+        nextEntry.selectedLyricsSource = null;
+        VideoSwitch.preferredVideo = true;
+        VideoSwitch.pendingLyricsSwitch(audioTwo, videoTwo, 200);
+        VideoSwitch.beforeLyrics(nextEntry, key(VIDEO.videoId), videoTwo, 210, true);
+        nextEntry.reset(key(VIDEO.videoId));
+        VideoSwitch.afterLyrics(nextEntry, videoTwo, 220, true);
+        check(nextEntry.choices == 0, "a kept provider never moves to another queue entry");
+        // The length lands after the track: a lookup made with the catalogue length goes stale.
+        for (boolean hooked : new boolean[] {false, true}) {
+            VideoSwitch.setEnabled(false);
+            VideoSwitch.setEnabled(true);
+            VideoSwitch.preferredVideo = true;
+            VideoSwitch.noteCurrent(AUDIO, 700);
+            Model late = new Model();
+            VideoSwitch.pendingLyricsSwitch(AUDIO, VIDEO, 710);
+            VideoSwitch.noteCurrent(VIDEO, 715);
+            late.load(key(VIDEO.videoId), 215_000, VIDEO, 720, hooked);
+            late.load(key(VIDEO.videoId), 231_000, VIDEO, 800, hooked);
+            check(
+                    hooked ? late.loads == 2 : late.loads == 1,
+                    "the host never looks the video up again at its real length (" + hooked + ")");
+            if (!hooked) continue;
+            check(
+                    late.currentLyricsRequest.durationMs == 231_000,
+                    "the reload uses the length the video really has");
+            check(
+                    "Manual".equals(late.selectedLyricsSource) && late.requests == 2,
+                    "the reload keeps the chosen provider");
+            late.load(key(VIDEO.videoId), 231_000, VIDEO, 900, hooked);
+            late.load(key(VIDEO.videoId), 232_500, VIDEO, 950, hooked);
+            check(late.loads == 2, "the same or a close length is not looked up again");
+            late.load(key(VIDEO.videoId), 215_000, VIDEO, 1000, hooked);
+            late.load(key(VIDEO.videoId), 231_000, VIDEO, 1100, hooked);
+            late.load(key(VIDEO.videoId), 215_000, VIDEO, 1200, hooked);
+            check(late.loads <= 4, "a length that keeps flipping stops reloading");
+        }
+        VideoSwitch.setEnabled(false);
+        VideoSwitch.setEnabled(true);
+        VideoSwitch.noteCurrent(VIDEO, 2000);
+        Model intro = new Model();
+        intro.load(key(VIDEO.videoId), 231_000, VIDEO, 2010, true);
+        intro.load(key(VIDEO.videoId), 231_000, VIDEO, 2100, true);
+        check(intro.loads == 1, "a video intro the first lookup already used is not reloaded");
+        Model auto = new Model();
+        auto.selectedLyricsSource = null;
+        auto.load(key(VIDEO.videoId), 215_000, VIDEO, 2200, true);
+        auto.load(key(VIDEO.videoId), 231_000, VIDEO, 2300, true);
+        check(auto.loads == 2 && auto.choices == 0, "Automatic reloads without a manual choice");
+        Model wrong = new Model();
+        wrong.load(key(VIDEO.videoId), 215_000, VIDEO, 2400, true);
+        wrong.load(key(VIDEO.videoId), 231_000, AUDIO, 2500, true);
+        check(wrong.loads == 1, "another playing version is never reloaded");
+        wrong.load(key(VIDEO.videoId), 0, VIDEO, 2700, true);
+        check(wrong.loads == 1, "an unknown length is never reloaded");
+        VideoSwitch.enabled = false;
+        wrong.load(key(VIDEO.videoId), 231_000, VIDEO, 2800, true);
+        check(wrong.loads == 1, "a disabled switch never reloads");
+        VideoSwitch.enabled = true;
         System.out.println("PASS: " + checks + " native lyrics-choice switch checks.");
     }
 }

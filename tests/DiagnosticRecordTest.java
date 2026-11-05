@@ -57,6 +57,69 @@ public final class DiagnosticRecordTest {
                                     + secret);
             check(!output.contains(secret), "AutoMix field exported private text");
         }
+        String previewLine =
+                "AutoMix preview timing: ctorMs=23 outReadyMs=4010 inReadyMs=-1 outPlayMs=4010"
+                        + " inPlayMs=-1 stalls=2 stallMs=800 end=stopped";
+        JSONObject preview = new JSONObject(DiagnosticRecord.safeLine('D', previewLine));
+        check("AUTOMIX_PREVIEW_TIMING".equals(preview.optString("reason")), "Preview timing lost");
+        check(
+                preview.optInt("outPlayMs") == 4010 && preview.optInt("inPlayMs") == -1,
+                "Preview readiness lost");
+        check(
+                preview.optInt("stalls") == 2 && preview.optInt("stallMs") == 800,
+                "Preview buffering lost");
+        check("stopped".equals(preview.optString("end")), "Preview outcome lost");
+        check(
+                DiagnosticRecord.sanitize(preview.toString()).equals(preview.toString()),
+                "Export lost preview timing");
+        JSONObject previewFailure =
+                new JSONObject(
+                        DiagnosticRecord.safeLine(
+                                'D',
+                                "AutoMix preview failed: IOException@private.example:32"
+                                        + " token=secret"));
+        check(
+                "AUTOMIX_PREVIEW_FAILED".equals(previewFailure.optString("reason"))
+                        && "IO".equals(previewFailure.optString("error")),
+                "Preview failure kind lost");
+        check(
+                !previewFailure.toString().contains("private.example")
+                        && !previewFailure.toString().contains("secret"),
+                "Preview failure leaked details");
+        JSONObject overflow =
+                new JSONObject(
+                        DiagnosticRecord.safeLine(
+                                'D',
+                                "AutoMix preview timing: ctorMs=9999999999 outReadyMs=-2"
+                                        + " stalls=9999999999 end=private"));
+        check(
+                !overflow.has("ctorMs")
+                        && !overflow.has("outReadyMs")
+                        && !overflow.has("stalls")
+                        && !overflow.has("end"),
+                "Unbounded preview values exported");
+        for (String secret : secrets) {
+            String output =
+                    DiagnosticRecord.safeLine(
+                            'D', "AutoMix preview timing: ctorMs=" + secret + " end=" + secret);
+            check(!output.contains(secret), "Preview timing exported private text");
+        }
+        JSONObject stopped =
+                new JSONObject(
+                        DiagnosticRecord.safeLine(
+                                'D',
+                                "AutoMix preview timing: ctorMs=32 source=incoming code=2001"
+                                        + " cause=IOException end=queue-changed"));
+        check(
+                "queue-changed".equals(stopped.optString("end"))
+                        && "incoming".equals(stopped.optString("preview_source")),
+                "Preview stop and deck details lost");
+        check(
+                stopped.optInt("preview_code") == 2001 && "IO".equals(stopped.optString("error")),
+                "Preview decoder failure lost");
+        check(
+                DiagnosticRecord.sanitize(stopped.toString()).equals(stopped.toString()),
+                "Preview failure export changed");
         Map<String, Object> fields = new LinkedHashMap<>();
         fields.put("sdk", 37);
         fields.put("patch", "1.1.0-beta.19");

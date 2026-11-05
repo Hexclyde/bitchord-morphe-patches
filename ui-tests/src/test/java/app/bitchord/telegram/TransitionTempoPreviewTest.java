@@ -11,22 +11,57 @@ import org.robolectric.annotation.*;
 
 import java.lang.reflect.Field;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, sdk = 35, shadows = TransitionEditorScreenTest.Installed.class)
 @LooperMode(LooperMode.Mode.PAUSED)
 public class TransitionTempoPreviewTest {
     private final TransitionEditorScreenTest listening = new TransitionEditorScreenTest();
+    private final List<String> logged = new ArrayList<>();
 
     @Before
     public void setup() throws Exception {
         listening.setup();
+        HostLog.observer = logged::add;
     }
 
     @After
     public void close() throws Exception {
+        HostLog.observer = null;
         listening.close();
+    }
+
+    private long timing(String field) {
+        String line = null;
+        for (String entry : logged)
+            if (entry.startsWith("AutoMix preview timing: ")) {
+                assertNull("one timing line per audition", line);
+                line = entry;
+            }
+        assertNotNull(line);
+        Matcher match = Pattern.compile(" " + field + "=(-?\\d+)").matcher(line);
+        assertTrue(line, match.find());
+        return Long.parseLong(match.group(1));
+    }
+
+    private String ending() {
+        for (String entry : logged)
+            if (entry.startsWith("AutoMix preview timing: "))
+                return entry.substring(entry.indexOf("end=") + 4);
+        return null;
+    }
+
+    /** Moves the virtual clock, running the preview's own polling as it goes. */
+    private void idle(long millis) {
+        Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(millis));
+    }
+
+    private TransitionPreview.Audition begin(TransitionEdit edit) throws Exception {
+        return TransitionPreview.acquire(TransitionRuntime.pair()).start(edit, () -> {});
     }
 
     @SuppressWarnings("unchecked")
@@ -92,5 +127,148 @@ public class TransitionTempoPreviewTest {
         assertEquals(.95f, b.parameters.pitch, 0);
         assertTrue(held.unchanged());
         preview.stop();
+    }
+
+    @Test
+    public void slowOutgoingDeckDelaysFirstReadyAndPlayWithoutCountingAStall() throws Exception {
+        TransitionEdit edit = new TransitionEdit();
+        TransitionPreview.Audition preview = begin(edit);
+        AutoMixTestDeck a = decks().get(0);
+        a.state = androidx.media3.common.Player.STATE_BUFFERING;
+        idle(1000);
+        assertFalse(a.playing);
+        a.state = androidx.media3.common.Player.STATE_READY;
+        idle(100);
+        assertTrue(a.playing);
+        preview.stop();
+        assertTrue(timing("ctorMs") >= 0);
+        assertTrue(timing("outReadyMs") >= 1000 && timing("outReadyMs") < 1100);
+        assertTrue(timing("outPlayMs") >= timing("outReadyMs"));
+        assertEquals(-1, timing("inPlayMs"));
+        assertEquals(0, timing("stalls"));
+        assertEquals(0, timing("stallMs"));
+        assertEquals("stopped", ending());
+    }
+
+    @Test
+    public void slowIncomingDeckThatIsReadyBeforeTheCueNeverStalls() throws Exception {
+        TransitionRuntime.Pair pair = TransitionRuntime.pair();
+        TransitionEdit edit = new TransitionEdit();
+        TransitionPreview.Audition preview = begin(edit);
+        AutoMixTestDeck a = decks().get(0), b = decks().get(1);
+        b.state = androidx.media3.common.Player.STATE_BUFFERING;
+        idle(800);
+        assertTrue(a.playing);
+        b.state = androidx.media3.common.Player.STATE_READY;
+        idle(100);
+        a.position = Math.round(edit.start(pair.outgoingDuration) * 1000);
+        idle(100);
+        assertTrue(b.playing);
+        preview.stop();
+        assertTrue(timing("inReadyMs") >= 800 && timing("inReadyMs") < 1000);
+        assertTrue(timing("inPlayMs") >= timing("inReadyMs"));
+        assertTrue(timing("outReadyMs") < timing("inReadyMs"));
+        assertEquals(0, timing("stalls"));
+    }
+
+    @Test
+    public void incomingDeckBufferingAtTheCuePausesBothAndResumes() throws Exception {
+        TransitionRuntime.Pair pair = TransitionRuntime.pair();
+        TransitionEdit edit = new TransitionEdit();
+        TransitionPreview.Audition preview = begin(edit);
+        AutoMixTestDeck a = decks().get(0), b = decks().get(1);
+        b.state = androidx.media3.common.Player.STATE_BUFFERING;
+        idle(100);
+        assertTrue(a.playing);
+        a.position = Math.round(edit.start(pair.outgoingDuration) * 1000);
+        idle(500);
+        assertFalse(a.playing);
+        assertFalse(preview.playing());
+        b.state = androidx.media3.common.Player.STATE_READY;
+        idle(100);
+        assertTrue(a.playing);
+        assertTrue(b.playing);
+        preview.stop();
+        assertEquals(1, timing("stalls"));
+        assertTrue(timing("stallMs") >= 500 && timing("stallMs") < 700);
+        assertTrue(timing("inPlayMs") >= 0);
+        assertEquals("stopped", ending());
+    }
+
+    @Test
+    public void stoppingWhileBufferingCountsTheOpenStall() throws Exception {
+        TransitionRuntime.Pair pair = TransitionRuntime.pair();
+        TransitionEdit edit = new TransitionEdit();
+        TransitionPreview.Audition preview = begin(edit);
+        AutoMixTestDeck a = decks().get(0), b = decks().get(1);
+        b.state = androidx.media3.common.Player.STATE_BUFFERING;
+        idle(100);
+        a.position = Math.round(edit.start(pair.outgoingDuration) * 1000);
+        idle(300);
+        preview.stop();
+        preview.stop();
+        assertEquals(1, timing("stalls"));
+        assertTrue(timing("stallMs") >= 250);
+    }
+
+    @Test
+    public void failedDeckSetupReportsOnceWithoutTimings() throws Exception {
+        TransitionPreview.Factory working = TransitionPreview.factory;
+        TransitionPreview.factory =
+                (owner, side) -> {
+                    if (side == 1) throw new IllegalStateException("content://audio/secret");
+                    return working.create(owner, side);
+                };
+        try {
+            begin(new TransitionEdit());
+            fail();
+        } catch (IllegalStateException expected) {
+            assertEquals("setup-failed", ending());
+            assertEquals(-1, timing("ctorMs"));
+            assertEquals(-1, timing("outPlayMs"));
+            for (String entry : logged) assertFalse(entry, entry.contains("secret"));
+        } finally {
+            TransitionPreview.factory = working;
+        }
+    }
+
+    private String line() {
+        for (String entry : logged) if (entry.startsWith("AutoMix preview timing: ")) return entry;
+        return null;
+    }
+
+    @Test
+    public void aFailedDeckReportsItsSideCodeAndCauseClassOnly() throws Exception {
+        TransitionPreview.Audition preview = begin(new TransitionEdit());
+        decks().get(1).error =
+                new androidx.media3.common.PlaybackException(
+                        "https://host/audio?token=secret",
+                        new java.io.IOException("hidden"),
+                        androidx.media3.common.PlaybackException
+                                .ERROR_CODE_IO_NETWORK_CONNECTION_FAILED);
+        idle(100);
+        assertTrue(preview.closed);
+        String line = line();
+        assertNotNull(line);
+        assertTrue(line, line.contains(" source=incoming "));
+        assertTrue(line, line.contains(" code=2001 "));
+        assertTrue(line, line.contains(" cause=IOException "));
+        assertEquals("error", ending());
+        for (String entry : logged) {
+            assertFalse(entry, entry.contains("secret"));
+            assertFalse(entry, entry.contains("hidden"));
+        }
+    }
+
+    @Test
+    public void aDeckPausedFromOutsideEndsWithThatReason() throws Exception {
+        TransitionPreview.Audition preview = begin(new TransitionEdit());
+        idle(100);
+        assertTrue(decks().get(0).playing);
+        decks().get(0).playing = false;
+        idle(100);
+        assertTrue(preview.closed);
+        assertEquals("outgoing-paused", ending());
+        assertTrue(line(), line().contains(" source=none code=-1 cause=none "));
     }
 }

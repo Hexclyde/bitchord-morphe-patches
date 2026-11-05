@@ -20,6 +20,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.SwitchPayload
+import com.android.tools.smali.dexlib2.iface.instruction.ThreeRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.WideLiteralInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
@@ -3663,6 +3664,9 @@ private fun BytecodePatchContext.addVersionLyricsSelection() {
             classDefBy(request).fields.any {
                 it.name == "videoId" && it.type == "Ljava/lang/String;" && it.accessFlags and 1 != 0
             } &&
+            classDefBy(request).fields.any {
+                it.name == "durationMs" && it.type == "J" && it.accessFlags and 1 != 0
+            } &&
             listOf("Ljava/util/LinkedHashMap;", "Ljava/util/concurrent/ConcurrentHashMap;").all {
                 type ->
                 resetCode.any {
@@ -3680,6 +3684,81 @@ private fun BytecodePatchContext.addVersionLyricsSelection() {
             }
     ) {
         "The native lyrics lookup startup or bridge access changed"
+    }
+    // The native key ignores the length, so a same-key call never sees a length that landed late.
+    val compare =
+        (0 until lookup.index)
+            .filter {
+                code[it].opcode == Opcode.IGET_OBJECT &&
+                    code[it].fieldRef()?.let { field ->
+                        field.definingClass == model && field.name == "lyricsFor"
+                    } == true
+            }
+            .singleOrNull()
+    check(compare != null) { "The native lyrics lookup key read changed" }
+    val shown = code[compare] as TwoRegisterInstruction
+    val length =
+        (compare + 2 until minOf(lookup.index, compare + 10))
+            .map { code[it] }
+            .single { it.opcode == Opcode.CMP_LONG } as ThreeRegisterInstruction
+    // A zero long is written only by const-wide: narrow consts also report a wide literal.
+    val zero = { register: Int ->
+        val writes =
+            code.take(compare).filter {
+                it.opcode.setsRegister() && (it as? OneRegisterInstruction)?.registerA == register
+            }
+        writes.isNotEmpty() &&
+            writes.all {
+                it.opcode in
+                    setOf(
+                        Opcode.CONST_WIDE_16,
+                        Opcode.CONST_WIDE_32,
+                        Opcode.CONST_WIDE,
+                        Opcode.CONST_WIDE_HIGH16,
+                    ) && (it as WideLiteralInstruction).wideLiteral == 0L
+            }
+    }
+    check(shown.registerB == key.registerB) {
+        "The native lyrics key read is not on the model that stores the key"
+    }
+    check(
+        code[compare + 1].methodRef()?.let {
+            it.definingClass == "Lkotlin/jvm/internal/Intrinsics;" && it.name == "areEqual"
+        } == true
+    ) {
+        "The native lyrics key read is no longer compared with Intrinsics.areEqual"
+    }
+    check(zero(length.registerC) && !zero(length.registerB)) {
+        "The native lyrics length test no longer compares a length with a zero constant"
+    }
+    check(
+        code.subList(compare, lookup.index).none {
+            it.opcode.setsRegister() &&
+                (it as? OneRegisterInstruction)?.registerA in length.registerB..length.registerB + 1
+        }
+    ) {
+        "The native lyrics length is rewritten between its test and the lookup"
+    }
+    // The request constructor's long parameter must be the very register pair that was tested.
+    val build =
+        code.subList(lookup.index, ready).singleOrNull {
+            it.methodRef()?.let { call ->
+                call.definingClass == request && call.name == "<init>"
+            } == true
+        }
+    check(build is RegisterRangeInstruction) {
+        "The native lyrics request is no longer built with a register range"
+    }
+    val types = build.methodRef()!!.parameterTypes
+    val wide = types.indexOfFirst { it == "J" }
+    check(wide >= 0 && types.count { it == "J" } == 1) {
+        "The native lyrics request no longer takes exactly one length"
+    }
+    // The first range register is the request; each earlier parameter takes one slot.
+    check(
+        build.startRegister + 1 + wide == length.registerB && build.registerCount == types.size + 2
+    ) {
+        "The native lyrics length is not the request's length parameter"
     }
     val mutable =
         mutableClassDefBy(lookup.method.definingClass).methods.single {
@@ -3699,6 +3778,19 @@ private fun BytecodePatchContext.addVersionLyricsSelection() {
     mutable.addInstruction(
         lookup.index + 1,
         "iput-object v${key.registerA}, v${key.registerB}, $model->lyricsFor:Ljava/util/List;",
+    )
+    // Incoming branches enter at the first hook; the original read follows it.
+    mutable.replaceInstruction(
+        compare,
+        "invoke-static/range {v${shown.registerB} .. v${shown.registerB}}, $VIDEO_SWITCH->lyricsModel(Ljava/lang/Object;)V",
+    )
+    mutable.addInstruction(
+        compare + 1,
+        "invoke-static/range {v${length.registerB} .. v${length.registerB + 1}}, $VIDEO_SWITCH->lyricsLength(J)V",
+    )
+    mutable.addInstruction(
+        compare + 2,
+        "iget-object v${shown.registerA}, v${shown.registerB}, $model->lyricsFor:Ljava/util/List;",
     )
 }
 

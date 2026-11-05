@@ -39,7 +39,8 @@ public final class DiagnosticRecord {
                         + " ERR_CONNECTION_RESET ERR_INTERNET_DISCONNECTED"
                         + " ERR_CERT_AUTHORITY_INVALID ERR_CERT_DATE_INVALID ERR_SSL_PROTOCOL_ERROR"
                         + " ERR_TOO_MANY_REDIRECTS ERR_ABORTED AUTOMIX_FAILED AUTOMIX_MEMORY"
-                        + " AUTOMIX_READY AUTOMIX_DEFERRED");
+                        + " AUTOMIX_READY AUTOMIX_DEFERRED AUTOMIX_PREVIEW_TIMING"
+                        + " AUTOMIX_PREVIEW_FAILED");
     private static final Set<String> ANALYSIS_STAGES =
             set(
                     "starting restore native-restore memory-preview source-resolution"
@@ -50,6 +51,24 @@ public final class DiagnosticRecord {
                     "(?:^|[:,]"
                         + " )(?:(stage|error)=([A-Za-z_-]{1,48})|(neededKiB|availableKiB)=([0-9]{1,10}))(?=$|[,;"
                         + " ])");
+    private static final Pattern PREVIEW_FIELD =
+            Pattern.compile(
+                    "(?:^|"
+                        + " )(ctorMs|outReadyMs|inReadyMs|outPlayMs|inPlayMs|stalls|stallMs)=(-?[0-9]{1,10})(?=$|"
+                        + " )");
+    private static final Pattern PREVIEW_END =
+            Pattern.compile(
+                    "(?:^|"
+                        + " )end=(completed|stopped|error|setup-failed|queue-changed|main-playing|focus-lost|outgoing-paused|incoming-paused)(?=$|"
+                        + " )");
+    private static final Pattern PREVIEW_SOURCE =
+            Pattern.compile("(?:^| )source=(none|outgoing|incoming)(?=$| )");
+    private static final Pattern PREVIEW_CODE =
+            Pattern.compile("(?:^| )code=(-?[0-9]{1,6})(?=$| )");
+    private static final Pattern PREVIEW_CAUSE =
+            Pattern.compile("(?:^| )cause=([A-Za-z-]{1,48})(?=$| )");
+    private static final Pattern PREVIEW_ERROR =
+            Pattern.compile("^AutoMix preview (?:setup )?failed: ([A-Za-z]+)(?=$|[@: ])");
     private static final Set<String> SOURCE_REASONS =
             set(
                     "PASSED DURATION_INSUFFICIENT DURATION_MISMATCH IDENTITY_MISMATCH"
@@ -166,6 +185,34 @@ public final class DiagnosticRecord {
                         break;
                     case "stage":
                         out.put(key, enumValue(value, ANALYSIS_STAGES, "unknown"));
+                        break;
+                    case "preview_source":
+                        out.put(key, enumValue(value, set("none outgoing incoming"), "none"));
+                        break;
+                    case "preview_code":
+                        integer(out, key, value, -1, 100000);
+                        break;
+                    case "ctorMs":
+                    case "outReadyMs":
+                    case "inReadyMs":
+                    case "outPlayMs":
+                    case "inPlayMs":
+                    case "stallMs":
+                        integer(out, key, value, -1, 3600000);
+                        break;
+                    case "stalls":
+                        integer(out, key, value, 0, 100000);
+                        break;
+                    case "end":
+                        out.put(
+                                key,
+                                enumValue(
+                                        value,
+                                        set(
+                                                "completed stopped error setup-failed queue-changed"
+                                                        + " main-playing focus-lost outgoing-paused"
+                                                        + " incoming-paused"),
+                                        "error"));
                         break;
                     case "needed_kib":
                     case "available_kib":
@@ -399,6 +446,35 @@ public final class DiagnosticRecord {
                             "neededKiB".equals(field.group(3)) ? "needed_kib" : "available_kib",
                             Long.parseLong(field.group(4)));
             }
+        }
+        if (text.startsWith("AutoMix preview timing: ")) {
+            values.put("reason", "AUTOMIX_PREVIEW_TIMING");
+            Matcher timing = PREVIEW_FIELD.matcher(text);
+            while (timing.find()) values.put(timing.group(1), Long.parseLong(timing.group(2)));
+            Matcher end = PREVIEW_END.matcher(text);
+            if (end.find()) values.put("end", end.group(1));
+            Matcher source = PREVIEW_SOURCE.matcher(text);
+            if (source.find()) values.put("preview_source", source.group(1));
+            Matcher code = PREVIEW_CODE.matcher(text);
+            if (code.find()) values.put("preview_code", Long.parseLong(code.group(1)));
+            Matcher cause = PREVIEW_CAUSE.matcher(text);
+            if (cause.find()) {
+                String kind = cause.group(1);
+                values.put(
+                        "error",
+                        "none".equals(kind)
+                                ? "NONE"
+                                : "timeout".equals(kind)
+                                        ? "TIMEOUT"
+                                        : "deck-ended".equals(kind)
+                                                ? "STATE"
+                                                : analysisError(kind));
+            }
+        }
+        Matcher previewError = PREVIEW_ERROR.matcher(text);
+        if (previewError.find()) {
+            values.put("reason", "AUTOMIX_PREVIEW_FAILED");
+            values.put("error", analysisError(previewError.group(1)));
         }
         if (text.startsWith("Recording check ")) {
             values.put("category", "SOURCE");

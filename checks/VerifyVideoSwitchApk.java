@@ -211,6 +211,44 @@ public final class VerifyVideoSwitchApk {
                         && call(code.get(jobAt - 2)) != null
                         && call(code.get(jobAt - 2)).getName().equals("launch$default"),
                 "New lyrics job is the native coroutine launch result");
+        // The late length reaches the lookup before the native same-key return.
+        int modelAt = -1;
+        for (int i = 0; i < keyAt; i++)
+            if (call(code.get(i)) != null
+                    && call(code.get(i)).getName().equals("lyricsModel")
+                    && call(code.get(i))
+                            .getDefiningClass()
+                            .equals("Lapp/bitchord/telegram/VideoSwitch;")) {
+                check(modelAt < 0, "Only one lyrics model capture before the native key compare");
+                modelAt = i;
+            }
+        check(
+                modelAt >= 0
+                        && code.get(modelAt) instanceof RegisterRangeInstruction modelCall
+                        && modelCall.getRegisterCount() == 1
+                        && modelCall.getStartRegister() == owner
+                        && call(code.get(modelAt))
+                                .getParameterTypes()
+                                .equals(List.of("Ljava/lang/Object;"))
+                        && call(code.get(modelAt + 1)) != null
+                        && call(code.get(modelAt + 1)).getName().equals("lyricsLength")
+                        && call(code.get(modelAt + 1)).getParameterTypes().equals(List.of("J"))
+                        && code.get(modelAt + 1) instanceof RegisterRangeInstruction lengthCall
+                        && lengthCall.getRegisterCount() == 2
+                        && field(code.get(modelAt + 2)) != null
+                        && field(code.get(modelAt + 2)).getName().equals("lyricsFor")
+                        && code.get(modelAt + 2).getOpcode() == Opcode.IGET_OBJECT
+                        && ((TwoRegisterInstruction) code.get(modelAt + 2)).getRegisterB() == owner
+                        && call(code.get(modelAt + 3)) != null
+                        && call(code.get(modelAt + 3)).getName().equals("areEqual"),
+                "Native key compare is preceded by the model and length hooks");
+        RegisterRangeInstruction lengthCall = (RegisterRangeInstruction) code.get(modelAt + 1);
+        boolean compared = false;
+        for (Instruction i : code.subList(modelAt + 4, modelAt + 12))
+            if (i.getOpcode() == Opcode.CMP_LONG
+                    && ((ThreeRegisterInstruction) i).getRegisterB()
+                            == lengthCall.getStartRegister()) compared = true;
+        check(compared, "The hooked length is the one the native lookup tests and requests");
         Method bridge = null;
         for (Method m : types.get(model).getMethods())
             if (m.getName().equals("bitchordSelectLyricsProvider")) {

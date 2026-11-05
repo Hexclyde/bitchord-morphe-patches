@@ -1046,14 +1046,12 @@ public final class SourceAutomix {
                     job.cachedOnly = cached != null;
                 }
                 if (!job.cachedOnly) {
-                    if (job.speculative) {
-                        // Only a local file or a complete cached rendition; nothing is resolved.
-                        checkLookahead(job, current);
-                        if (!localReadable(job)) throw new Skipped();
-                        job.spec = new DataSpec(job.uri);
-                    } else {
-                        job.spec = resolve(job.uri);
-                    }
+                    // A local file is read in place, as the host's own analysis does; only a
+                    // stream goes through the resolver. Ahead of time, nothing else is opened.
+                    if (job.speculative) checkLookahead(job, current);
+                    if (localReadable(job.uri, job.service)) job.spec = new DataSpec(job.uri);
+                    else if (job.speculative) throw new Skipped();
+                    else job.spec = resolve(job.uri);
                 }
                 checkLookahead(job, current);
                 stage = "decode-admission";
@@ -1269,12 +1267,13 @@ public final class SourceAutomix {
     }
 
     /** On the worker: a local file or a trusted, openable content item; nothing is resolved. */
-    private static boolean localReadable(Job job) {
-        Uri uri = job.uri;
+    private static boolean localReadable(Uri uri, Object owner) {
         if (isFile(uri)) return new File(uri.getPath()).canRead();
-        if (!"content".equals(uri.getScheme()) || !trustedContent(uri)) return false;
+        if (!"content".equals(uri.getScheme())
+                || !trustedContent(uri)
+                || !(owner instanceof Context)) return false;
         try (android.content.res.AssetFileDescriptor opened =
-                ((Context) job.service).getContentResolver().openAssetFileDescriptor(uri, "r")) {
+                ((Context) owner).getContentResolver().openAssetFileDescriptor(uri, "r")) {
             if (opened == null) return false;
             // A regular local file reports its size; pipes and virtual files report -1.
             long size = opened.getParcelFileDescriptor().getStatSize();
@@ -1395,7 +1394,7 @@ public final class SourceAutomix {
                     String key = identity(uri);
                     spec = pinned.get(key);
                     if (spec == null) {
-                        spec = resolve(uri);
+                        spec = localReadable(uri, service.get()) ? new DataSpec(uri) : resolve(uri);
                         if (pinned.size() > 128) pinned.clear();
                         pinned.put(key, spec);
                     }

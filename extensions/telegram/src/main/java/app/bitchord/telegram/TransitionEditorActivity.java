@@ -1436,6 +1436,14 @@ public final class TransitionEditorActivity extends Activity {
         }
 
         @Override
+        protected void onScrollChanged(int left, int top, int oldLeft, int oldTop) {
+            super.onScrollChanged(left, top, oldLeft, oldTop);
+            // A drag that has moved the options is not a pull to expand, even when it returns to
+            // the start.
+            if (controlTouching && !inLayout && top > 0) childOwnsTouch = true;
+        }
+
+        @Override
         public void requestDisallowInterceptTouchEvent(boolean disallow) {
             childOwnsTouch |= disallow;
             super.requestDisallowInterceptTouchEvent(disallow);
@@ -1448,7 +1456,8 @@ public final class TransitionEditorActivity extends Activity {
             if (action == MotionEvent.ACTION_DOWN) {
                 controlTouching = true;
                 expandingGesture = false;
-                childOwnsTouch = false;
+                // A touch that starts inside the options only scrolls them.
+                childOwnsTouch = getScrollY() > 0;
                 compactWanted = false;
                 controlTouchY = event.getRawY();
             } else if (expandingGesture) {

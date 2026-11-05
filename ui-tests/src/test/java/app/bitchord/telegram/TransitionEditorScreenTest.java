@@ -1970,6 +1970,15 @@ public class TransitionEditorScreenTest {
         frame();
         assertTrue(compactShown());
         at = inWindow(scroll);
+        from = at[1] + scroll.getHeight() * .1f;
+        finger = new Finger(x, from);
+        finger.down();
+        for (int i = 1; i <= 12; i++) finger.moveTo(from + 20 * i);
+        finger.up();
+        frame();
+        assertEquals("A drag back to the start only scrolls", 0, scroll.getScrollY());
+        assertTrue("Reaching the start by dragging does not expand", compactShown());
+        at = inWindow(scroll);
         from = at[1] + scroll.getHeight() * .3f;
         List<Boolean> states = new ArrayList<>(List.of(compactShown()));
         finger = new Finger(x, from);
@@ -2006,6 +2015,176 @@ public class TransitionEditorScreenTest {
         scroll.scrollTo(0, 0);
         frame();
         assertFalse("Reaching the start without a finger expands", compactShown());
+    }
+
+    /** Condenses the waveforms and scrolls the options a known distance with a real drag. */
+    private int scrollDeep(ScrollView scroll, int steps) {
+        int[] at = inWindow(scroll);
+        float x = at[0] + 4, from = at[1] + scroll.getHeight() * .9f;
+        Finger finger = new Finger(x, from);
+        finger.down();
+        for (int i = 1; i <= steps; i++) finger.moveTo(from - 10 * i);
+        finger.up();
+        frame();
+        return scroll.getScrollY();
+    }
+
+    private void pump(int frames, List<Integer> offsets, List<Boolean> states) {
+        for (int i = 0; i < frames; i++) {
+            org.robolectric.shadows.ShadowSystemClock.advanceBy(java.time.Duration.ofMillis(16));
+            activity.get()
+                    .getWindow()
+                    .getDecorView()
+                    .draw(new Canvas(Bitmap.createBitmap(393, 852, Bitmap.Config.ARGB_8888)));
+            frame();
+            offsets.add(((ScrollView) tag("automix-controls-scroll")).getScrollY());
+            states.add(compactShown());
+        }
+    }
+
+    @Test
+    public void oneDragDownFromDeepInTheOptionsReachesTheStartWithoutRelayoutMidGesture()
+            throws Exception {
+        open();
+        showExpandedOptions();
+        ScrollView scroll = plainOptions(900);
+        scrollDeep(scroll, 12);
+        assertTrue(compactShown());
+        int deep = scrollDeep(scroll, 20);
+        assertTrue("The options are scrolled well down: " + deep, deep > 150);
+        int[] at = inWindow(scroll);
+        float x = at[0] + 4, from = at[1] + scroll.getHeight() * .2f;
+        List<Boolean> states = new ArrayList<>(List.of(compactShown()));
+        Finger finger = new Finger(x, from);
+        finger.down();
+        for (int i = 1; i <= 45; i++) {
+            finger.moveTo(from + 10 * i);
+            states.add(compactShown());
+        }
+        finger.up();
+        assertEquals(
+                "The layout stays put while the finger is down: " + states, 0, changes(states));
+        for (int i = 1; i < finger.scrolls.size(); i++)
+            assertTrue(
+                    "The content follows the finger up to the start: " + finger.scrolls,
+                    finger.scrolls.get(i) <= finger.scrolls.get(i - 1));
+        assertEquals("The drag reaches the start: " + finger.scrolls, 0, scroll.getScrollY());
+    }
+
+    @Test
+    public void aCoarseMoveThatReachesTheStartInOneStepDoesNotExpandOnTheNext() throws Exception {
+        open();
+        showExpandedOptions();
+        ScrollView scroll = plainOptions(900);
+        scrollDeep(scroll, 12);
+        int deep = scrollDeep(scroll, 12);
+        assertTrue("The options are scrolled down: " + deep, deep > 100 && deep < 400);
+        assertTrue(compactShown());
+        int[] at = inWindow(scroll);
+        float x = at[0] + 4, from = at[1] + scroll.getHeight() * .1f;
+        List<Boolean> states = new ArrayList<>(List.of(compactShown()));
+        Finger finger = new Finger(x, from);
+        finger.down();
+        // One batched move is larger than the whole offset; the next ones start at the top.
+        for (float step : new float[] {deep + 120, deep + 160, deep + 200}) {
+            finger.moveTo(from + step);
+            states.add(compactShown());
+        }
+        finger.up();
+        assertEquals("The drag only scrolls: " + states, 0, changes(states));
+        assertEquals(0, scroll.getScrollY());
+    }
+
+    @Test
+    public void rebuildingTheOptionsKeepsTheScrollPositionAndTheCondensedWaveforms()
+            throws Exception {
+        open();
+        showExpandedOptions();
+        ScrollView scroll = (ScrollView) tag("automix-controls-scroll");
+        int deep = scrollDeep(scroll, 30);
+        assertTrue("The real options scroll: " + deep, deep > 20);
+        assertTrue(compactShown());
+        Method rebuild = TransitionEditorActivity.class.getDeclaredMethod("buildControls");
+        rebuild.setAccessible(true);
+        List<Boolean> states = new ArrayList<>(List.of(compactShown()));
+        for (int i = 0; i < 4; i++) {
+            rebuild.invoke(activity.get());
+            frame();
+            states.add(compactShown());
+        }
+        assertEquals("The position survives a rebuild", deep, scroll.getScrollY());
+        assertEquals("The waveforms stay condensed: " + states, 0, changes(states));
+    }
+
+    @Test
+    public void repeatedFlingsToTheBottomAndTopSettleWithoutFlipping() throws Exception {
+        open();
+        showExpandedOptions();
+        ScrollView scroll = plainOptions(900);
+        scrollDeep(scroll, 8);
+        assertTrue(compactShown());
+        for (int round = 0; round < 3; round++) {
+            List<Integer> offsets = new ArrayList<>();
+            List<Boolean> states = new ArrayList<>();
+            int[] at = inWindow(scroll);
+            float x = at[0] + 4, from = at[1] + scroll.getHeight() * .9f;
+            Finger up = new Finger(x, from);
+            up.down();
+            for (int i = 1; i <= 6; i++) up.moveTo(from - 60 * i);
+            up.up();
+            pump(60, offsets, states);
+            assertEquals("Flings down do not flip the layout: " + states, 0, changes(states));
+            assertTrue("The fling moved the options: " + offsets, scroll.getScrollY() > 200);
+            offsets.clear();
+            states.clear();
+            at = inWindow(scroll);
+            from = at[1] + scroll.getHeight() * .1f;
+            Finger down = new Finger(x, from);
+            down.down();
+            for (int i = 1; i <= 6; i++) down.moveTo(from + 40 * i);
+            down.up();
+            pump(60, offsets, states);
+            String trace =
+                    "round "
+                            + round
+                            + " viewport "
+                            + scroll.getHeight()
+                            + " content "
+                            + scroll.getChildAt(0).getHeight()
+                            + " drag "
+                            + down.scrolls
+                            + " then "
+                            + offsets;
+            assertTrue("Changes at most once: " + trace, changes(states) <= 1);
+            scrollDeep(scroll, 8);
+            assertTrue("Scrolling down again condenses: " + trace, compactShown());
+        }
+    }
+
+    @Test
+    public void changingTabsOrPresetsNeverFlipsTheLayoutBackAndForth() throws Exception {
+        open();
+        showExpandedOptions();
+        ScrollView scroll = (ScrollView) tag("automix-controls-scroll");
+        List<Boolean> states = new ArrayList<>(List.of(compactShown()));
+        tag("transition-preset:2").performClick();
+        for (int i = 0; i < 4; i++) {
+            frame();
+            states.add(compactShown());
+        }
+        assertEquals("A preset does not move the layout: " + states, 0, changes(states));
+        scrollDeep(scroll, 4);
+        assertTrue(compactShown());
+        states.clear();
+        for (int tab = 0; tab < 4; tab++) {
+            tag("transition-tab:" + tab).performClick();
+            for (int i = 0; i < 3; i++) {
+                frame();
+                states.add(compactShown());
+            }
+        }
+        assertTrue("A tab keeps the waveforms condensed: " + states, compactShown());
+        assertEquals("Tabs do not flip the layout: " + states, 0, changes(states));
     }
 
     @Test

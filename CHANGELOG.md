@@ -1,7 +1,10 @@
 ## 1.1.0-beta.19
 
-- **Automix Editor** keeps scrolling stable when the waveform condenses and restores the full view when there is room.
-- **Diagnostics** includes bounded AutoMix failure stages, error types and memory-wait values.
+- **Automix Editor** keeps the waveform layout steady through a continuous swipe, including swipes that reach the start of the settings. A fresh pull at the start expands the waveform.
+- **Diagnostics** records AutoMix failure stages, memory waits, preview loading times, buffering, source errors and why a preview stopped.
+
+- **Automix Editor** reads downloaded files directly for track analysis and waveform loading.
+- **Audio and video switch** refreshes lyrics when the active recording’s length arrives late and preserves a chosen provider across a version with no result.
 
 - **Automix Editor** analyzes queued tracks with missing durations and uses the selected file’s duration when its queue label is rounded.
 

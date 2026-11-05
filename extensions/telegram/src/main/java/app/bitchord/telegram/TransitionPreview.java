@@ -79,6 +79,14 @@ final class TransitionPreview {
         return failure.getClass().getSimpleName() + site;
     }
 
+    /** Class name only, safe to log. */
+    static String failureClass(Throwable failure) {
+        while (failure instanceof InvocationTargetException && failure.getCause() != null)
+            failure = failure.getCause();
+        String name = failure.getClass().getSimpleName();
+        return name.isEmpty() ? "unknown" : name;
+    }
+
     static boolean holding(Object controller) {
         Session session = held;
         return session != null && !session.closed && session.controller == controller;
@@ -652,6 +660,14 @@ final class TransitionPreview {
         private AudioManager focusManager;
         private AudioFocusRequest focus;
         private boolean started, incomingStarted, buffering;
+        // Milliseconds since construction began; -1 until observed.
+        private final long created = SystemClock.elapsedRealtime();
+        private long constructed = -1, outReady = -1, inReady = -1, outPlay = -1, inPlay = -1;
+        private long stallStart, stallMs;
+        private int stalls;
+        // Why it ended and, for a failed deck, which side and the player's numeric error code.
+        private String reason = "stopped", failedSide = "none", cause = "none";
+        private int failedCode = -1;
         boolean closed, completed;
         String error;
         double progress = Double.NaN;
@@ -687,7 +703,10 @@ final class TransitionPreview {
                                                 .build())
                                 .setOnAudioFocusChangeListener(
                                         change -> {
-                                            if (change != AudioManager.AUDIOFOCUS_GAIN) stop();
+                                            if (change != AudioManager.AUDIOFOCUS_GAIN) {
+                                                reason = "focus-lost";
+                                                stop();
+                                            }
                                         },
                                         handler)
                                 .build();
@@ -726,13 +745,60 @@ final class TransitionPreview {
                     deck.effects(draft, side, 0);
                     player.prepare();
                 }
+                constructed = since();
                 handler.post(tick);
             } catch (Exception | LinkageError failure) {
                 releaseDecks();
                 this.done = null;
                 closed = true;
+                cause = failureClass(failure);
+                report("setup-failed");
                 throw failure;
             }
+        }
+
+        private long since() {
+            return SystemClock.elapsedRealtime() - created;
+        }
+
+        /** One line of counts and milliseconds, with no track, source or account details. */
+        private void report(String end) {
+            HostLog.d(
+                    "AutoMix preview timing: ctorMs="
+                            + constructed
+                            + " outReadyMs="
+                            + outReady
+                            + " inReadyMs="
+                            + inReady
+                            + " outPlayMs="
+                            + outPlay
+                            + " inPlayMs="
+                            + inPlay
+                            + " stalls="
+                            + stalls
+                            + " stallMs="
+                            + stallMs
+                            + " source="
+                            + failedSide
+                            + " code="
+                            + failedCode
+                            + " cause="
+                            + cause
+                            + " end="
+                            + end);
+        }
+
+        /** Side, numeric error code and cause class of a deck's player error; no source details. */
+        private void sourceFailed(int side, Object failure) {
+            failedSide = side == 0 ? "outgoing" : "incoming";
+            try {
+                failedCode = failure.getClass().getField("errorCode").getInt(failure);
+            } catch (ReflectiveOperationException | RuntimeException unavailable) {
+                failedCode = -1;
+            }
+            Throwable inner =
+                    failure instanceof Throwable ? ((Throwable) failure).getCause() : null;
+            cause = inner == null ? "none" : failureClass(inner);
         }
 
         /** Outgoing position, in seconds, where the heard part of the blend begins. */
@@ -743,19 +809,29 @@ final class TransitionPreview {
         private void step() {
             if (closed) return;
             try {
-                if (!session.unchangedQuick() || session.main.getPlayWhenReady()) {
+                if (!session.unchangedQuick()) {
+                    reason = "queue-changed";
                     session.close(false);
                     return;
                 }
-                if (SystemClock.elapsedRealtime() > deadline)
+                if (session.main.getPlayWhenReady()) {
+                    reason = "main-playing";
+                    session.close(false);
+                    return;
+                }
+                if (SystemClock.elapsedRealtime() > deadline) {
+                    cause = "timeout";
                     throw new IllegalStateException("Preview timed out");
+                }
                 Player a = decks[0].player(), b = decks[1].player();
-                for (Deck deck : decks) {
+                for (int side = 0; side < 2; side++) {
                     Object failure =
                             TransitionRuntime.pcall(
-                                    deck.player(), "getPlayerError", new Class<?>[0]);
-                    if (failure != null)
+                                    decks[side].player(), "getPlayerError", new Class<?>[0]);
+                    if (failure != null) {
+                        sourceFailed(side, failure);
                         throw new IllegalStateException("Preview source is unavailable");
+                    }
                 }
                 double position = a.getCurrentPosition() / 1000d;
                 double start = draft.start(pair.outgoingDuration);
@@ -766,8 +842,12 @@ final class TransitionPreview {
                     return;
                 }
                 if (a.getPlaybackState() == Player.STATE_ENDED
-                        || b.getPlaybackState() == Player.STATE_ENDED)
+                        || b.getPlaybackState() == Player.STATE_ENDED) {
+                    cause = "deck-ended";
                     throw new IllegalStateException("Not enough preview audio");
+                }
+                if (outReady < 0 && a.getPlaybackState() == Player.STATE_READY) outReady = since();
+                if (inReady < 0 && b.getPlaybackState() == Player.STATE_READY) inReady = since();
                 // The outgoing lead-in plays while the incoming deck is still loading; both
                 // wait together only if the incoming deck is not ready when it is needed.
                 double heard = entry();
@@ -780,6 +860,8 @@ final class TransitionPreview {
                         a.pause();
                         b.pause();
                         buffering = true;
+                        stalls++;
+                        stallStart = since();
                     }
                     handler.postDelayed(tick, 30);
                     return;
@@ -787,11 +869,14 @@ final class TransitionPreview {
                 if (!started) {
                     a.play();
                     started = true;
+                    outPlay = since();
                 } else if (buffering) {
                     a.play();
                     if (incomingStarted) b.play();
                     buffering = false;
+                    stallMs += since() - stallStart;
                 } else if (!a.getPlayWhenReady() || (incomingStarted && !b.getPlayWhenReady())) {
+                    reason = a.getPlayWhenReady() ? "incoming-paused" : "outgoing-paused";
                     stop();
                     return;
                 }
@@ -810,6 +895,7 @@ final class TransitionPreview {
                                     rate * (float) draft.overlapRate[0], session.parameters.pitch));
                     incomingStarted = true;
                     b.play();
+                    inPlay = since();
                 }
                 double p = Math.max(0, Math.min(1, progress));
                 double outgoingGain = draft.gain(0, p),
@@ -824,6 +910,7 @@ final class TransitionPreview {
                 handler.postDelayed(tick, 16);
             } catch (Exception | LinkageError failure) {
                 error = failureDetail(failure);
+                if ("none".equals(cause)) cause = failureClass(failure);
                 HostLog.d("AutoMix preview failed: " + error);
                 stop();
             }
@@ -841,6 +928,8 @@ final class TransitionPreview {
             if (closed) return;
             closed = true;
             handler.removeCallbacks(tick);
+            if (buffering) stallMs += since() - stallStart;
+            report(error != null ? "error" : completed ? "completed" : reason);
             releaseDecks();
             if (session.audition == this) session.audition = null;
             Runnable notify = done;

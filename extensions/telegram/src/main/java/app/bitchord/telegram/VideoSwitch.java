@@ -88,13 +88,26 @@ public final class VideoSwitch {
     private static final long VERSION_WAIT_MS = 30_000;
     private static LyricsSwitch lyricsSwitch;
 
+    /** The chosen provider stays the song's while a version has no result from it. */
+    private static String keptEntry;
+
+    private static Object keptProvider;
+
+    /** A lookup made with a length that is off by more than the providers' own tolerance. */
+    private static final long LENGTH_RELOAD_MS = 2_000;
+
+    private static final int LENGTH_RELOADS = 2;
+    private static WeakReference<Object> lookupModel = new WeakReference<>(null);
+    private static String reloadId;
+    private static int reloads;
+
     private static final class LyricsSwitch {
         final String from, target, entry;
         final boolean video, host;
         final long deadline;
         WeakReference<Object> model = new WeakReference<>(null);
         Object provider;
-        List<?> key;
+        List<?> key, oldKey;
         long generation;
         boolean retryScheduled;
 
@@ -167,6 +180,10 @@ public final class VideoSwitch {
         String beforeEntry = seenEntry, beforeId = seenId;
         seenEntry = entry;
         seenId = id;
+        if (entry == null || !entry.equals(beforeEntry)) {
+            keptProvider = null;
+            reloadId = null;
+        }
         if (entry == null
                 || !entry.equals(beforeEntry)
                 || !youTubeId(beforeId)
@@ -212,6 +229,69 @@ public final class VideoSwitch {
         }
     }
 
+    public static void lyricsModel(Object model) {
+        if (Looper.getMainLooper() != null && Looper.myLooper() == Looper.getMainLooper())
+            lookupModel = new WeakReference<>(model);
+    }
+
+    /** The length BitChord is about to look lyrics up with, before it compares the lookup key. */
+    public static void lyricsLength(long durationMs) {
+        boolean onMain =
+                Looper.getMainLooper() != null && Looper.myLooper() == Looper.getMainLooper();
+        reloadLyrics(
+                lookupModel.get(),
+                durationMs,
+                onMain ? current() : null,
+                SystemClock.elapsedRealtime(),
+                onMain && !inParty());
+    }
+
+    /**
+     * The native lookup key ignores the length, so a lookup made before the version's length landed
+     * is never repeated. A real change gets one fresh native lookup, with the provider kept.
+     */
+    static boolean reloadLyrics(
+            Object model, long durationMs, Object playing, long now, boolean onMain) {
+        if (!enabled || !onMain || model == null || playing == null || durationMs <= 0)
+            return false;
+        try {
+            Object request = read(model, "currentLyricsRequest");
+            String id = string(playing, "videoId");
+            String entry = string(playing, "queueEntryId");
+            Object shown = read(model, "lyricsFor");
+            if (request == null
+                    || shown == null
+                    || entry == null
+                    || id == null
+                    || lyricsSwitch != null
+                    || !id.equals(string(request, "videoId"))
+                    || Math.abs(
+                                    durationMs
+                                            - request.getClass()
+                                                    .getField("durationMs")
+                                                    .getLong(request))
+                            <= LENGTH_RELOAD_MS) return false;
+            String again = entry + "|" + id;
+            if (!again.equals(reloadId)) {
+                reloadId = again;
+                reloads = 0;
+            }
+            if (reloads >= LENGTH_RELOADS) return false;
+            reloads++;
+            if (read(model, "selectedLyricsSource") != null) {
+                LyricsSwitch reload = new LyricsSwitch(id, id, entry, isVideo(playing), true, now);
+                reload.oldKey = (List<?>) shown;
+                lyricsSwitch = reload;
+            }
+            // The native lookup sees a new key and runs its usual reset.
+            model.getClass().getField("lyricsFor").set(model, null);
+            return true;
+        } catch (Exception | LinkageError unavailable) {
+            HostLog.d("Lyrics length reload unavailable: " + unavailable);
+            return false;
+        }
+    }
+
     static void beforeLyrics(
             Object model, Object nextKey, Object playing, long now, boolean onMain) {
         if (onMain) noteCurrent(playing, now);
@@ -220,9 +300,11 @@ public final class VideoSwitch {
         try {
             if (!onMain || !pending.belongs(playing, now) || !(nextKey instanceof List))
                 throw new IllegalStateException();
-            List<?> old = (List<?>) read(model, "lyricsFor");
+            List<?> old =
+                    pending.oldKey != null ? pending.oldKey : (List<?>) read(model, "lyricsFor");
             List<?> next = (List<?>) nextKey;
             Object provider = read(model, "selectedLyricsSource");
+            if (provider == null && pending.entry.equals(keptEntry)) provider = keptProvider;
             if (old == null
                     || old.size() != 4
                     || next.size() != 4
@@ -269,6 +351,9 @@ public final class VideoSwitch {
             model.getClass()
                     .getMethod("bitchordSelectLyricsProvider", Object.class)
                     .invoke(model, pending.provider);
+            // The chooser ignores a provider with no result for this version; keep it for the next.
+            keptEntry = pending.entry;
+            keptProvider = read(model, "selectedLyricsSource") == null ? pending.provider : null;
         } catch (Exception | LinkageError unavailable) {
             if (lyricsSwitch == pending) lyricsSwitch = null;
             HostLog.d("Version lyrics selection unavailable: " + unavailable);
@@ -293,7 +378,11 @@ public final class VideoSwitch {
 
     static void setEnabled(boolean on) {
         enabled = on;
-        if (!on) lyricsSwitch = null;
+        if (!on) {
+            lyricsSwitch = null;
+            keptProvider = null;
+            reloadId = null;
+        }
         SharedPreferences saved = preferences;
         if (saved != null) saved.edit().putBoolean("enabled", on).apply();
         attempted = null;
