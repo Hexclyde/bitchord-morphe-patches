@@ -1,12 +1,24 @@
 ## 1.1.0-beta.19
 
+- **Karaoke** uses smaller model working buffers. Read-ahead stays bounded while the model is loaded, and background decoding waits when heap headroom is low.
+
+- **Automix Editor** reuses native analysis, timing and beat matching unless an explicit tempo override is saved. Deck headers show measured keys and tempo with low-confidence indicators, and Preview waits for an actual automatic plan.
+
+- **Automix Editor** follows the playing pair without discarding drafts, prioritises the outgoing waveform and retries failed waveform requests. Queue analysis prepares one additional readable local or fully cached track when current and next analysis have settled.
+
+- Playlist and album downloads expand source results inside each track card, with reported format filters, duration, size and selected-source details. Each original duration stays visible beside the selected copy’s reported duration.
+- Tapping a completed download opens BitChord’s local player. Its recorded source stays available for local playback, and FLAC tag updates preserve existing metadata when no replacement is supplied.
+
 - **Karaoke** (formerly Sing) adds a microphone control directly above Translate in the lyrics. Tapping it switches on separation-model vocal removal and opens a vertical slider linked to the settings slider; after it closes, the microphone stays faintly visible and can be tapped to reopen the slider.
 - **Diagnostics** records app and patch events for startup and sign-in troubleshooting. Start and stop capture explicitly, then share a compressed report through Android’s share menu.
 - **Audio and video switch** carries a manual lyrics-provider choice between versions of the same queued song and reloads lyrics for the active version.
 - Returning to audio clears the video-origin flag so native AutoMix can analyse and blend the song again. Fullscreen can follow the player's request when the window ignores rotation, with Back handled in the player's scope.
 - The player's **Download** control uses the current downloadable non-YouTube stream first, then matching alternatives ranked by quality. YouTube is the last fallback when enabled; the control shows the download queue's reported percentage.
-- Playlist source selection carries each song's original duration into its picker and keeps the selected quality and reported duration visible afterward. Soulseek candidates show their reported duration when available.
 - **Transition editor** restores the full waveform when scrolling back to the top, offers an overlap slider and separates draft saving from applying a transition.
+- **Automix Editor** has uniform controls, separate track-tempo and matching controls, and adjustable filter depth. Explicit overlap rates keep pitch and return to the listener’s speed after the blend.
+- Track analysis accounts separately for decoding and measurement memory, and offers Retry when repeated memory rejections prevent analysis.
+- **Automix Editor** loads device audio and reverses preview order without changing listening. **Use this pair** explicitly changes the current and next queue entries; opening a draft does not apply it.
+- Draft changes in **Automix Editor** survive rotation without an older delayed save overwriting them.
 - Fixed: Google sign-in handles links to other apps without opening an unknown-scheme error page.
 - **YouTube Music** can be turned off from Sources. Playback only stops YouTube audio and Full disable also stops its search and browsing; songs use saved files, matching local music or another enabled source, with **No audio track found** shown when none has playable audio.
 - **DJ mode** orders upcoming tracks by key and tempo with Steady, Build up and Wind down choices. Compatible keys receive longer blends; Save DJ order updates a local playlist after confirmation.

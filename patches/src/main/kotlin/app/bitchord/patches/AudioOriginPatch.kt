@@ -38,6 +38,7 @@ internal val audioOriginPatch = bytecodePatch {
         hookServedRequests()
         hookActiveRendition()
         hookSavedFiles()
+        addFlacMetadata()
     }
 }
 

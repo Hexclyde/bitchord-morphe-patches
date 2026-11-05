@@ -37,6 +37,10 @@ public interface Player {
 
     boolean getShuffleModeEnabled();
 
+    int getRepeatMode();
+
+    int getNextMediaItemIndex();
+
     long getDuration();
 
     long getCurrentPosition();

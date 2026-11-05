@@ -1,0 +1,51 @@
+package app.bitchord.telegram;
+
+/** Only the shared Java memory reserve, copied so the model tests build on their own. */
+final class SourceAudio {
+    static AutoCloseable holdJavaResident() {
+        return () -> {};
+    }
+
+    static final class JavaMemory implements AutoCloseable {
+        private static long pending;
+        final long bytes;
+        private boolean closed;
+
+        private JavaMemory(long bytes) {
+            this.bytes = bytes;
+            pending += bytes;
+        }
+
+        @Override
+        public void close() {
+            synchronized (JavaMemory.class) {
+                if (closed) return;
+                closed = true;
+                pending -= bytes;
+            }
+        }
+    }
+
+    private static long pendingJava(JavaMemory own) {
+        synchronized (JavaMemory.class) {
+            return JavaMemory.pending - (own == null || own.closed ? 0 : own.bytes);
+        }
+    }
+
+    static JavaMemory reserveJava(long bytes) {
+        Runtime runtime = Runtime.getRuntime();
+        return reserveJava(
+                runtime.maxMemory(), runtime.totalMemory() - runtime.freeMemory(), bytes);
+    }
+
+    static JavaMemory reserveJava(long maximum, long used, long bytes) {
+        synchronized (JavaMemory.class) {
+            if (maximum <= 0 || used < 0 || used >= maximum || bytes <= 0) return null;
+            // Playback loading and the visible screen can still grow during an allocation.
+            long margin = Math.max(8L << 20, Math.min(24L << 20, maximum / 8));
+            long free = maximum - used - margin;
+            if (bytes > free || JavaMemory.pending > free - bytes) return null;
+            return new JavaMemory(bytes);
+        }
+    }
+}

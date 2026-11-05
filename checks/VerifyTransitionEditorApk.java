@@ -28,6 +28,11 @@ public final class VerifyTransitionEditorApk {
                 : null;
     }
 
+    /** The listening snapshot's one explicit queue change and the rollback it alone calls. */
+    static boolean allowsQueueWrite(String method) {
+        return method.equals("usePair") || method.equals("restore");
+    }
+
     static void first(ClassDef owner, String method, String bridge, String result) {
         Method target = method(owner, method);
         Instruction entry = target.getImplementation().getInstructions().iterator().next();
@@ -64,17 +69,51 @@ public final class VerifyTransitionEditorApk {
                     types.containsKey("Lapp/bitchord/telegram/" + name + ";"),
                     "Standalone helper available: " + name);
         ClassDef editor = types.get("Lapp/bitchord/telegram/TransitionEditorActivity;");
-        int optionRows = 0;
+        int docks = 0, handles = 0, columns = 0;
         for (Instruction step :
                 method(editor, "buildLayout").getImplementation().getInstructions()) {
             MethodReference ref = call(step);
             if (ref != null
                     && ref.getDefiningClass().equals(editor.getType())
-                    && ref.getName().equals("optionRow")) optionRows++;
+                    && ref.getName().equals("buildDock")) docks++;
+        }
+        for (Instruction step : method(editor, "buildDock").getImplementation().getInstructions()) {
+            MethodReference ref = call(step);
+            if (ref == null || !ref.getDefiningClass().equals(editor.getType())) continue;
+            if (ref.getName().equals("modeHandle")) handles++;
+            if (ref.getName().equals("dockColumn")) columns++;
+            require(
+                    !ref.getName().equals("setMode"),
+                    "Rendering mode controls does not change modes");
         }
         require(
-                optionRows == 2,
-                "Auto-save and Auto-apply show visible labels beside their switches");
+                docks == 1 && handles == 2 && columns == 2,
+                "Pinned draft and apply controls each have an independent native mode handle");
+        Set<String> modeLabels = new HashSet<>(),
+                preferences = new HashSet<>(),
+                tags = new HashSet<>();
+        for (Instruction step : method(editor, "modeDialog").getImplementation().getInstructions())
+            if (step instanceof ReferenceInstruction ref
+                    && ref.getReference() instanceof StringReference text)
+                modeLabels.add(text.getString());
+        for (Instruction step : method(editor, "modeHandle").getImplementation().getInstructions())
+            if (step instanceof ReferenceInstruction ref
+                    && ref.getReference() instanceof StringReference text)
+                tags.add(text.getString());
+        for (Instruction step : method(editor, "setMode").getImplementation().getInstructions())
+            if (step instanceof ReferenceInstruction ref
+                    && ref.getReference() instanceof StringReference text)
+                preferences.add(text.getString());
+        require(
+                modeLabels.containsAll(
+                        Set.of("Manual", "Automatic", "Draft saving", "Apply settings")),
+                "Both mode dialogs expose manual and automatic choices");
+        require(
+                tags.containsAll(Set.of("automix-auto-save", "automix-auto-apply")),
+                "Draft and apply mode handles remain separately accessible");
+        require(
+                preferences.containsAll(Set.of("auto_save", "auto_apply")),
+                "Mode actions persist their distinct editor preferences");
         ClassDef host = types.get("Lcom/music/bitchord/playback/PlaybackService;");
         Method wave = method(host, "bitchordWaveDecode");
         require(
@@ -129,6 +168,18 @@ public final class VerifyTransitionEditorApk {
         require(
                 types.containsKey("Lapp/bitchord/telegram/PlayerIcons$EditorEntry;"),
                 "Editor icon available independently of mode-switch selection");
+        for (String name : List.of("outgoing", "incoming", "easing")) {
+            int matching = 0;
+            for (Field field : controller.getFields())
+                if (field.getName().equals(name)) {
+                    matching++;
+                    require(
+                            field.getType().equals("Landroidx/media3/exoplayer/ExoPlayer;")
+                                    && (field.getAccessFlags() & 0x8) == 0,
+                            "Native deck ownership field is an instance player: " + name);
+                }
+            require(matching == 1, "One native deck ownership field: " + name);
+        }
         ClassDef bands = types.get("Lcom/music/bitchord/playback/smart/MixWaveform$Bands;");
         for (String name : List.of("low", "mid", "high")) {
             boolean available = false;
@@ -178,26 +229,99 @@ public final class VerifyTransitionEditorApk {
                         && planning.get(4).getOpcode() == Opcode.RETURN_VOID,
                 "Live planning waits for the pair database and stays paused throughout editing");
         ClassDef session = types.get("Lapp/bitchord/telegram/TransitionPreview$Session;");
-        boolean mutatesQueue = false;
+        require(
+                allowsQueueWrite("usePair")
+                        && allowsQueueWrite("restore")
+                        && !allowsQueueWrite("selectPair")
+                        && !allowsQueueWrite("settle")
+                        && !allowsQueueWrite("<init>")
+                        && !allowsQueueWrite("close")
+                        && !allowsQueueWrite("start"),
+                "Only the explicit pair change and its rollback may write the real queue");
+        Set<String> queueWrites =
+                Set.of(
+                        "seekTo",
+                        "setMediaItem",
+                        "setMediaItems",
+                        "replaceMediaItem",
+                        "replaceMediaItems",
+                        "moveMediaItem",
+                        "moveMediaItems",
+                        "addMediaItem",
+                        "addMediaItems",
+                        "removeMediaItem",
+                        "removeMediaItems",
+                        "clearMediaItems");
+        Set<String> queueWriters = new TreeSet<>(), restoreCallers = new TreeSet<>();
         for (Method method : session.getMethods())
             if (method.getImplementation() != null)
                 for (Instruction step : method.getImplementation().getInstructions()) {
                     MethodReference ref = call(step);
+                    // Direct Player calls and reflective calls by method name both count.
+                    if (ref != null && queueWrites.contains(ref.getName()))
+                        queueWriters.add(method.getName());
                     if (ref != null
-                            && Set.of(
-                                            "seekTo",
-                                            "setMediaItem",
-                                            "setMediaItems",
-                                            "replaceMediaItem",
-                                            "moveMediaItems")
-                                    .contains(ref.getName())) mutatesQueue = true;
+                            && ref.getDefiningClass().equals(session.getType())
+                            && ref.getName().equals("restore"))
+                        restoreCallers.add(method.getName());
+                    if (step instanceof ReferenceInstruction r
+                            && r.getReference() instanceof StringReference text
+                            && queueWrites.contains(text.getString()))
+                        queueWriters.add(method.getName());
                 }
-        require(!mutatesQueue, "The listening snapshot never seeks or mutates the real queue");
+        for (String writer : queueWriters)
+            require(
+                    allowsQueueWrite(writer),
+                    "The listening snapshot writes the real queue only in usePair: " + writer);
+        require(
+                restoreCallers.isEmpty() || restoreCallers.equals(Set.of("usePair")),
+                "Queue rollback is reachable only from the explicit pair change");
         require(
                 types.get("Lapp/bitchord/telegram/TransitionStore$Helper;")
                         .getSuperclass()
                         .equals("Landroid/database/sqlite/SQLiteOpenHelper;"),
                 "Applied transitions use the persistent app database");
+        int tempoStarts = 0;
+        for (Method method : controller.getMethods()) {
+            if (method.getImplementation() == null) continue;
+            List<Instruction> body = new ArrayList<>();
+            method.getImplementation().getInstructions().forEach(body::add);
+            for (int i = 0; i < body.size(); i++) {
+                MethodReference ref = call(body.get(i));
+                if (ref == null
+                        || !ref.getDefiningClass().equals(RUNTIME)
+                        || !ref.getName().equals("beginTempo")) continue;
+                tempoStarts++;
+                int receiver = method.getImplementation().getRegisterCount() - 1;
+                for (CharSequence parameter : method.getParameterTypes())
+                    receiver -=
+                            parameter.toString().equals("J") || parameter.toString().equals("D")
+                                    ? 2
+                                    : 1;
+                require(
+                        body.get(i) instanceof RegisterRangeInstruction range
+                                && range.getRegisterCount() == 1
+                                && range.getStartRegister() == receiver,
+                        "Overlap tempo uses this controller's unchanged receiver register");
+                require(i + 1 < body.size(), "Tempo starts before an executable playback call");
+                MethodReference audible = call(body.get(i + 1));
+                require(
+                        audible != null
+                                && audible.getName().equals("setPlayWhenReady")
+                                && audible.getParameterTypes().equals(List.of("Z")),
+                        "Explicit overlap tempo is applied before the incoming deck starts");
+                MethodReference silent = i > 0 ? call(body.get(i - 1)) : null;
+                MethodReference clock = i + 2 < body.size() ? call(body.get(i + 2)) : null;
+                require(
+                        silent != null
+                                && silent.getName().equals("setVolume")
+                                && clock != null
+                                && clock.getDefiningClass().equals("Landroid/os/SystemClock;")
+                                && clock.getName().equals("elapsedRealtime"),
+                        "The tempo hook belongs to the silent-deck blend-start path");
+            }
+        }
+        require(tempoStarts == 1, "Exactly one guarded overlap-tempo start");
         first(controller, "finish", "finish", "V");
         first(controller, "release", "release", "V");
         Method pcm =

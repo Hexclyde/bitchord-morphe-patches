@@ -8,6 +8,7 @@ import app.morphe.patcher.patch.*
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.ClassDef
 import com.android.tools.smali.dexlib2.iface.instruction.*
 import com.android.tools.smali.dexlib2.iface.reference.*
 import com.android.tools.smali.dexlib2.immutable.*
@@ -67,6 +68,7 @@ val sourceAutomixPatch =
         dependsOn(extrasSettingsPatch, playbackBufferGatePatch, automixResources)
         execute {
             addSourceVerification()
+            addAnalysisLookaheadHooks()
             val timingPair = classDefBy("Lkotlin/Pair;")
             check(
                 setOf("first", "second").all { name ->
@@ -153,29 +155,13 @@ val sourceAutomixPatch =
                 """
                     .trimIndent(),
             )
-            val decodeCode =
-                classDefBy(decoder)
-                    .methods
-                    .single { it == decoded }
-                    .implementation!!
-                    .instructions
-                    .toList()
             check(
-                listOf(
-                        "Landroid/media/MediaExtractor;" to "setDataSource",
-                        "Landroid/media/MediaCodec;" to "getOutputBuffer",
-                        function0 to "invoke",
-                        function4 to "invoke",
-                    )
-                    .all { (owner, name) ->
-                        decodeCode.any {
-                            it.mixCall()?.let { call ->
-                                call.definingClass == owner && call.name == name
-                            } == true
-                        }
-                    }
+                sourceAudioRedirect(
+                    classDefBy(decoder).methods.single { it == decoded },
+                    raw = true,
+                )
             ) {
-                "Bounded AutoMix decoder no longer streams cancellable codec buffers"
+                "Bounded AutoMix decoder is not the qualified SourceAudio redirect"
             }
             val mono = staticMethod(decoder, listOf(byteBuffer, info, "I"), "[F")
             check(
@@ -498,14 +484,14 @@ val sourceAutomixPatch =
             return v0
         """,
             )
-            val restore =
-                "Lcom/music/bitchord/playback/smart/TrackAnalyzer${'$'}${'$'}ExternalSyntheticLambda18;"
-            check(
-                mutableClassDefBy(restore).methods.any {
-                    it.name == "<init>" &&
-                        it.parameterTypes == listOf(ANALYZER, "Ljava/lang/String;")
-                }
-            )
+            val classes = mutableListOf<ClassDef>()
+            classDefForEach { classes += it }
+            val site = locateAnalysisRestore(classes)
+            val restore = site.type.type
+            mutableClassDefBy(restore)
+                .methods
+                .single { it.name == "run" && it.parameterTypes.isEmpty() }
+                .replaceInstruction(site.instruction, restoredSmali(site, MIX))
             add(
                 HOST,
                 "bitchordAutomixRestore",
@@ -824,6 +810,15 @@ val sourceAutomixPatch =
                 invoke-static {v0, v1}, $edit->arm(Ljava/lang/Object;Ljava/lang/Object;)V
             """,
             )
+            verifyTransitionTempoDeckApi(controller)
+            verifyTransitionPairApi { classDefBy(it) }
+            val tempoStart = locateTransitionTempoStart(controller)
+            controller.methods
+                .single { it == tempoStart.method }
+                .addInstruction(
+                    tempoStart.instruction,
+                    "invoke-static/range {p0 .. p0}, $edit->beginTempo(Ljava/lang/Object;)V",
+                )
             for (name in listOf("finish", "release")) {
                 controller.methods
                     .single { it.name == name }

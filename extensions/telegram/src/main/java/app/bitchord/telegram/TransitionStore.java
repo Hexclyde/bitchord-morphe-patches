@@ -170,7 +170,10 @@ final class TransitionStore {
             TransitionEdit draft,
             boolean automatic,
             Consumer<Exception> done) {
-        persist(pair, automatic ? null : draft, draft, automatic, true, done);
+        // Automatic timing stores an override only when the listener chose the tempo.
+        TransitionEdit active = automatic && !draft.tempoExplicit ? null : draft.copy();
+        if (active != null) active.automaticTiming = automatic;
+        persist(pair, active, draft, automatic, true, done);
     }
 
     void write(TransitionRuntime.Pair pair, TransitionEdit draft, Consumer<Exception> done) {

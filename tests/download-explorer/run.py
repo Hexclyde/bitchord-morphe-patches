@@ -15,11 +15,29 @@ STUBS = {
     "android/content/Context.java": """package android.content;
 import java.util.*;public class Context{public int launches;public final Prefs prefs=new Prefs();
 public void startActivity(Intent i){launches++;}public Prefs getSharedPreferences(String n,int m){return prefs;}
+public android.content.pm.PackageManager getPackageManager(){return new android.content.pm.PackageManager();}
+public String getPackageName(){return "com.music.bitchord";}public ContentResolver getContentResolver(){return new ContentResolver();}
 public static class Prefs{public Set<String> saved=new HashSet<>();public boolean success=true;public String getString(String k,String d){return d;}public Prefs putString(String k,String v){return this;}
 public Set<String> getStringSet(String n,Set<String>d){return new HashSet<>(saved);}public Prefs edit(){return this;}
 public Prefs putStringSet(String k,Set<String> s){if(success)saved=new HashSet<>(s);return this;}public boolean commit(){return success;}}}""",
-    "android/content/Intent.java": """package android.content;public class Intent{public static final int FLAG_ACTIVITY_NEW_TASK=1;
-public Intent(Context c,Class<?> t){}public Intent addFlags(int f){return this;}}""",
+    "android/content/Intent.java": """package android.content;public class Intent{public static final int FLAG_ACTIVITY_NEW_TASK=1,FLAG_GRANT_READ_URI_PERMISSION=2,FLAG_ACTIVITY_SINGLE_TOP=4;
+public static final String ACTION_VIEW="android.intent.action.VIEW";private ComponentName component;
+public Intent(Context c,Class<?> t){component=new ComponentName(c.getPackageName(),t.getName());}public Intent(String action){}
+public ComponentName getComponent(){return component;}public Intent setComponent(ComponentName c){component=c;return this;}
+public Intent setPackage(String p){return this;}public Intent setDataAndType(android.net.Uri uri,String type){return this;}public Intent addFlags(int f){return this;}}""",
+    "android/content/ComponentName.java": """package android.content;public class ComponentName{private final String name;
+public ComponentName(String p,String c){name=p;}public String getPackageName(){return name;}}""",
+    "android/content/pm/PackageManager.java": """package android.content.pm;public class PackageManager{
+public android.content.Intent getLaunchIntentForPackage(String p){return null;}}""",
+    "android/content/ContentResolver.java": """package android.content;public class ContentResolver{
+public android.content.res.AssetFileDescriptor openAssetFileDescriptor(android.net.Uri uri,String mode)throws java.io.IOException{return null;}}""",
+    "android/content/res/AssetFileDescriptor.java": """package android.content.res;public class AssetFileDescriptor implements java.io.Closeable{
+public void close()throws java.io.IOException{}}""",
+    "android/net/Uri.java": """package android.net;public class Uri{private final java.net.URI uri;
+private Uri(String s){uri=java.net.URI.create(s);}public static Uri parse(String s){return new Uri(s);}
+public String getScheme(){return uri.getScheme();}public String getPath(){return uri.getPath();}}""",
+    "app/bitchord/telegram/AudioOrigin.java": """package app.bitchord.telegram;public class AudioOrigin{
+public static void prepareSavedFile(String id,String location){}}""",
     "app/bitchord/telegram/DownloadFolder.java": "package app.bitchord.telegram;public class DownloadFolder{static void naming(Object s){} static void named(String n){}}",
     "app/bitchord/telegram/DownloadControls.java": "package app.bitchord.telegram;public class DownloadControls{public static void remember(android.content.Context c,Object s,String f){}}",
     "app/bitchord/telegram/PatchStrings.java": """package app.bitchord.telegram;public class PatchStrings{public static String t(String s){return s;}}""",

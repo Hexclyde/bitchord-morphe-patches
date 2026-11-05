@@ -292,4 +292,163 @@ public class DspAnalysisTest {
         assertEquals(2, availableCalls.get());
         assertArrayEquals(new String[0], directory.list());
     }
+
+    @Test
+    public void admissionIsTheLargerOfTheDecodeAndMeasurementPeaks() {
+        // 48 kHz: 147 phases of 283 taps is a 166,404 byte filter table.
+        long decode = (24L << 20) + 166_404;
+        assertEquals(
+                "A short track is bound by the decode workspace",
+                decode,
+                DspAnalysis.bytes(48000, 2));
+        assertEquals(
+                "A long track is bound by Java mono plus the native input copy",
+                2_654_269L * 8 + (16L << 20),
+                DspAnalysis.bytes(48000, 240));
+        assertEquals(9_930_769L * 8 + (16L << 20), DspAnalysis.bytes(48000, 900));
+        for (double seconds : new double[] {2, 30, 240, 900}) {
+            long frames = (long) Math.ceil((seconds + .75) * DspAnalysis.RATE);
+            assertEquals(
+                    Math.max(decode, DspAnalysis.measurement(frames)),
+                    DspAnalysis.bytes(48000, seconds));
+        }
+        assertEquals(176_400L + (16L << 20), DspAnalysis.measurement(22_050));
+    }
+
+    @Test
+    public void thePhaseSplitKeepsTheSameFormatAndDurationRefusals() {
+        for (int rate : new int[] {-1, 0, 7999, 44101, 384001})
+            assertEquals(rate + " Hz", -1, DspAnalysis.bytes(rate, 10));
+        for (double seconds : new double[] {0, -1, Double.NaN, Double.POSITIVE_INFINITY, 900.5})
+            assertEquals(seconds + " s", -1, DspAnalysis.bytes(48000, seconds));
+        assertTrue(DspAnalysis.bytes(48000, 900) > 0);
+        assertTrue(DspAnalysis.bytes(11025, 900) > 0);
+        assertTrue(DspAnalysis.bytes(384000, 900) > 0);
+    }
+
+    @Test
+    public void theSourceIsClosedBeforeMeasuredFeaturesAndOnlyTheMeasuredPcmIsCharged()
+            throws Exception {
+        AtomicInteger closed = new AtomicInteger(), features = new AtomicInteger();
+        AtomicInteger calls = new AtomicInteger();
+        decoder(200, 0);
+        PlaybackService.dspFeatures =
+                (samples, seconds) -> {
+                    assertEquals("The source is closed before measurement", 1, closed.get());
+                    assertEquals(22050, samples.length);
+                    features.incrementAndGet();
+                    return new Object();
+                };
+        // The source's 8 MiB cache needs no second allowance after close.
+        long oldRequired = 30_319L * 8 + (24L << 20) + 166_404;
+        File directory = files.newFolder();
+        assertNotNull(
+                DspAnalysis.analyze(
+                        "id",
+                        directory,
+                        () -> source(closed),
+                        48000,
+                        2,
+                        () -> false,
+                        () -> calls.incrementAndGet() == 1 ? 64L << 20 : oldRequired - (8L << 20)));
+        assertEquals(2, calls.get());
+        assertEquals(1, features.get());
+        assertArrayEquals(new String[0], directory.list());
+    }
+
+    @Test
+    public void oneByteBelowTheMeasurementPeakIsWaitingForMemoryAfterDecoding() throws Exception {
+        AtomicInteger closed = new AtomicInteger(), features = new AtomicInteger();
+        AtomicInteger calls = new AtomicInteger();
+        decoder(200, 0);
+        PlaybackService.dspFeatures =
+                (samples, seconds) -> {
+                    features.incrementAndGet();
+                    return new Object();
+                };
+        long measurement = DspAnalysis.measurement(22_050);
+        File directory = files.newFolder();
+        DspAnalysis.Deferred deferred =
+                assertThrows(
+                        DspAnalysis.Deferred.class,
+                        () ->
+                                DspAnalysis.analyze(
+                                        "id",
+                                        directory,
+                                        () -> source(closed),
+                                        48000,
+                                        2,
+                                        () -> false,
+                                        () ->
+                                                calls.incrementAndGet() == 1
+                                                        ? 64L << 20
+                                                        : measurement - 1));
+        assertTrue(deferred.decoded);
+        assertEquals(measurement, deferred.required);
+        assertEquals(measurement - 1, deferred.available);
+        assertEquals(1, closed.get());
+        assertEquals(0, features.get());
+        assertArrayEquals(new String[0], directory.list());
+    }
+
+    @Test
+    public void stopRequestedWhileTheHeadroomIsRecheckedCannotMeasureOrPublish() throws Exception {
+        AtomicInteger closed = new AtomicInteger(), features = new AtomicInteger();
+        AtomicInteger calls = new AtomicInteger();
+        AtomicBoolean stopped = new AtomicBoolean();
+        decoder(200, 0);
+        PlaybackService.dspFeatures =
+                (samples, seconds) -> {
+                    features.incrementAndGet();
+                    return new Object();
+                };
+        File directory = files.newFolder();
+        IOException failure =
+                assertThrows(
+                        IOException.class,
+                        () ->
+                                DspAnalysis.analyze(
+                                        "id",
+                                        directory,
+                                        () -> source(closed),
+                                        48000,
+                                        2,
+                                        stopped::get,
+                                        () -> {
+                                            if (calls.incrementAndGet() == 2) stopped.set(true);
+                                            return 64L << 20;
+                                        }));
+        assertFalse(failure instanceof DspAnalysis.Deferred);
+        assertEquals(2, calls.get());
+        assertEquals(1, closed.get());
+        assertEquals(0, features.get());
+        assertArrayEquals(new String[0], directory.list());
+    }
+
+    @Test
+    public void aFailedMeasurementClosesTheSourceAndDeletesItsScratch() throws Exception {
+        AtomicInteger closed = new AtomicInteger();
+        decoder(200, 0);
+        OutOfMemoryError failure = new OutOfMemoryError("Measurement allocation failed");
+        PlaybackService.dspFeatures =
+                (samples, seconds) -> {
+                    throw failure;
+                };
+        File directory = files.newFolder();
+        assertSame(
+                failure,
+                assertThrows(
+                        OutOfMemoryError.class,
+                        () ->
+                                DspAnalysis.analyze(
+                                        "id",
+                                        directory,
+                                        () -> source(closed),
+                                        48000,
+                                        2,
+                                        () -> false,
+                                        () -> 64L << 20)));
+        assertEquals(1, closed.get());
+        assertArrayEquals(new String[0], directory.list());
+    }
 }

@@ -8,4 +8,6 @@ public final class AudioOrigin {
     public static Source savedSource(String id, String uri) {
         return null;
     }
+
+    public static void prepareSavedFile(String id, String uri) {}
 }

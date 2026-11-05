@@ -1,5 +1,6 @@
 package app.bitchord.telegram;
 
+import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,10 +29,75 @@ final class SeparatedSing {
             return true;
         }
 
-        /** The worker's copy of the history. One worker can share one between engines. */
+        /**
+         * The worker's copy of the history. One worker can share one between engines. Null means
+         * there is no memory for it now; the estimate is skipped and asked for again later.
+         */
         default float[] scratch(int length) {
             return new float[length];
         }
+
+        /**
+         * Fills {@code into} with the masks for the newest {@link #MASK_FRAMES} columns. False when
+         * the model gave no usable estimate.
+         */
+        default boolean masks(float[] magnitude, float[] into) throws Exception {
+            float[] vocals = infer(magnitude);
+            if (vocals == null || vocals.length != magnitude.length) return false;
+            fillMasks(magnitude, FloatBuffer.wrap(vocals), into);
+            return true;
+        }
+
+        /** Held across an allocation of this many bytes. Null refuses it. */
+        default Ticket reserve(long bytes) {
+            return Ticket.NONE;
+        }
+    }
+
+    interface Ticket extends AutoCloseable {
+        Ticket NONE = () -> {};
+
+        @Override
+        void close();
+    }
+
+    static final long MASK_BYTES = 16 + 4L * 2 * BINS * MASK_FRAMES;
+
+    /**
+     * Reads only the last {@link #MASK_FRAMES} of each row of the model's output, from the buffer's
+     * current position and without moving it.
+     */
+    static void fillMasks(float[] mixture, FloatBuffer vocals, float[] into) {
+        int base = vocals.position();
+        for (int c = 0; c < 2; c++)
+            for (int bin = 0; bin < BINS; bin++)
+                for (int frame = 0; frame < MASK_FRAMES; frame++) {
+                    int index = (c * BINS + bin) * FRAMES + FRAMES - MASK_FRAMES + frame;
+                    into[(c * BINS + bin) * MASK_FRAMES + frame] =
+                            mask(mixture[index], vocals.get(base + index));
+                }
+    }
+
+    /** Upper bound of the Java heap one engine takes at this rate, array headers included. */
+    static long heapBytes(int rate) {
+        if (rate < 8000 || rate > MAX_RATE) return Long.MAX_VALUE;
+        long hops = (long) Math.ceil(LOOKAHEAD_SECONDS * rate / HOP);
+        long delay = hops * HOP + FFT, pending = hops + 2, size = delay + FFT * 2L;
+        long header = 16, reference = 8;
+        long total = 512;
+        total += header + reference * 2 + 2 * (header + 4L * FFT);
+        total += 3 * (header + 8L * FFT);
+        total += header + reference * pending + pending * (header + 16L * FFT);
+        total += header + 8 * pending;
+        total += 3 * (header + 4 * size) + header + 4 * size;
+        total += header + 4L * 2 * BINS * FRAMES;
+        total += 2 * (header + reference * 2 + 2 * (header + 4L * BINS));
+        return total;
+    }
+
+    /** True when nothing has gone through since the last reset, so there is nothing to lose. */
+    boolean idle() {
+        return resetRequested;
     }
 
     interface Fallback {
@@ -63,7 +129,6 @@ final class SeparatedSing {
     private boolean usingMask, ended, ranLastBlock, historyStale;
     private volatile boolean closed, resetRequested;
     private int tail, lastDrainInput;
-    private float[] snapshotBuffer;
 
     private static final class Mask {
         final float[] values;
@@ -351,9 +416,8 @@ final class SeparatedSing {
             executor.execute(
                     () -> {
                         try {
-                            if (snapshotBuffer == null)
-                                snapshotBuffer = model.scratch(history.length);
-                            float[] snapshot = snapshotBuffer;
+                            float[] snapshot = model.scratch(history.length);
+                            if (snapshot == null || snapshot.length != history.length) return;
                             Arrays.fill(snapshot, 0);
                             double end;
                             historyLock.lock();
@@ -376,26 +440,17 @@ final class SeparatedSing {
                             } finally {
                                 historyLock.unlock();
                             }
-                            float[] vocals = model.infer(snapshot);
-                            if (vocals == null || vocals.length != snapshot.length) return;
-                            float[] masks = new float[2 * BINS * MASK_FRAMES];
-                            for (int c = 0; c < 2; c++)
-                                for (int bin = 0; bin < BINS; bin++)
-                                    for (int frame = 0; frame < MASK_FRAMES; frame++) {
-                                        int index =
-                                                (c * BINS + bin) * FRAMES
-                                                        + FRAMES
-                                                        - MASK_FRAMES
-                                                        + frame;
-                                        masks[(c * BINS + bin) * MASK_FRAMES + frame] =
-                                                mask(snapshot[index], vocals[index]);
-                                    }
+                            float[] masks;
+                            try (Ticket ticket = model.reserve(MASK_BYTES)) {
+                                if (ticket == null) return;
+                                masks = new float[2 * BINS * MASK_FRAMES];
+                            }
+                            if (!model.masks(snapshot, masks)) return;
                             if (closed || generation != epoch) return;
                             Mask made = new Mask(masks, end, generation, trackAsked);
                             if (trackAsked == track) latest = made;
                             else if (trackAsked == track - 1) outgoing = made;
                         } catch (OutOfMemoryError pressure) {
-                            snapshotBuffer = null;
                             close();
                             model.failed();
                         } catch (Exception failure) {

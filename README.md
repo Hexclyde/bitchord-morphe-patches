@@ -17,7 +17,7 @@
 
 I add a Download control beside the player's favourite and menu actions. It uses the current downloadable non-YouTube stream first, then checks enabled sources for a matching recording and duration, preferring higher reported quality. YouTube is the last fallback when enabled. Progress comes from BitChord's download queue; a missing total stays indeterminate.
 
-[Automix Editor](docs/AUTOMIX.md) measures the selected recording for BitChord’s transition planner. Its [transition editor](docs/TRANSITION-EDITOR.md) saves timing, volume, EQ and filter edits for each track pair. [Playlist tools](docs/PLAYLIST-TOOLS.md) support signed-out links, device copies, queue saving, metadata-file import and manual Spotify/YouTube Music membership sync.
+[Automix Editor](docs/AUTOMIX.md) measures the selected recording for BitChord’s transition planner. Its [transition editor](docs/TRANSITION-EDITOR.md) saves timing, volume, EQ, filter and explicit overlap-tempo edits for each track pair. [Playlist tools](docs/PLAYLIST-TOOLS.md) support signed-out links, device copies, queue saving, metadata-file import and manual Spotify/YouTube Music membership sync.
 
 [Playback, storage and playlist settings](docs/BETA18-FEATURES.md) include Play alongside other apps, Steady playback, Smart downloads, Karaoke, cache management and local Smart playlists. Patch download controls also appear in BitChord’s Downloads settings. Cleanup rules and external playlist suggestions require explicit activation.
 
@@ -27,7 +27,7 @@ In **Sources → YouTube Music**, turn the switch off and choose **Playback only
 
 | Patch | What it does |
 | --- | --- |
-| **Automix Editor** | Analyse the selected playable source, verify automatic replacements and preserve chosen speed through transitions. Selected by default. |
+| **Automix Editor** | Edit BitChord’s native next-track blend with real analysis, waveforms and per-track tempo controls. Analyse selected sources and preserve the listener’s speed after transitions. Selected by default. |
 | **Unofficial Telegram music** | Search and play audio from your own Telegram channels and chats through TDLib, using your own account. Android 8 or newer. |
 | **Unofficial Soulseek audio** | Guided Soulseek search and exact-file downloads, an explicit source choice for eligible single-song Download actions, paired-phone originals and optional debrid links. Saved destination/format choices; download-only. Android 8 or newer. |
 | **Streamseek previews** | Inline 30-second Soulseek lossless/MP3 previews with an on-device decoder, transfer reuse and optional local-reference/evidence tools. Depends on the Soulseek patch; off by default. |

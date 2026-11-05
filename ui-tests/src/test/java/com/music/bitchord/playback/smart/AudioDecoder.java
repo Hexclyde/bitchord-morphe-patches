@@ -26,6 +26,21 @@ public final class AudioDecoder {
     public static volatile boolean corrupt;
     public static volatile IntConsumer afterWindow;
 
+    /**
+     * While held, a seek past the start waits without reading or looking at abort or interrupts.
+     */
+    public static volatile java.util.concurrent.CountDownLatch seekStall;
+
+    /**
+     * Whether decoding goes through the platform extractor the old way, where a seek cannot be
+     * stopped. By default it goes through the shared decoder bridge, as the host's does.
+     */
+    public static volatile boolean platform;
+
+    public static final java.util.concurrent.atomic.AtomicInteger
+            seeksEntered = new java.util.concurrent.atomic.AtomicInteger(),
+            buffersDelivered = new java.util.concurrent.atomic.AtomicInteger();
+
     private AudioDecoder() {}
 
     /** Builds the synthetic PCM before a worker's measured behavior starts. */
@@ -43,7 +58,7 @@ public final class AudioDecoder {
         return out;
     }
 
-    private static byte pattern(long position) {
+    public static byte pattern(long position) {
         return (byte) (position * 31 ^ position >>> 8);
     }
 
@@ -79,6 +94,10 @@ public final class AudioDecoder {
     }
 
     public static Double containerDurationSeconds(MediaDataSource source) {
+        if (!platform) {
+            app.bitchord.telegram.SyntheticDecoder.install();
+            return app.bitchord.telegram.SourceAudio.containerDurationSeconds(source);
+        }
         try (Native extractor = new Native(source)) {
             ByteBuffer header = extractor.header();
             if (header == null) return null;
@@ -97,7 +116,41 @@ public final class AudioDecoder {
         return mono;
     }
 
+    @SuppressWarnings("unchecked")
     public static Pair<Double, Double> decodeRaw(
+            MediaDataSource source,
+            double start,
+            double end,
+            Function0<Boolean> abort,
+            Function4<ByteBuffer, MediaCodec.BufferInfo, Integer, Integer, ?> onBuffer)
+            throws IOException {
+        if (platform) return platformDecodeRaw(source, start, end, abort, onBuffer);
+        app.bitchord.telegram.SyntheticDecoder.install();
+        Function4<ByteBuffer, MediaCodec.BufferInfo, Integer, Integer, kotlin.Unit> counted =
+                (bytes, info, channels, rate) -> {
+                    buffersDelivered.incrementAndGet();
+                    return ((Function4<
+                                            ByteBuffer,
+                                            MediaCodec.BufferInfo,
+                                            Integer,
+                                            Integer,
+                                            kotlin.Unit>)
+                                    onBuffer)
+                            .invoke(bytes, info, channels, rate);
+                };
+        Pair<Double, Double> timing =
+                app.bitchord.telegram.SourceAudio.decodeRaw(source, start, end, abort, counted);
+        if (timing != null) {
+            synchronized (windows) {
+                windows.add(app.bitchord.telegram.SyntheticDecoder.seed() + "@" + (int) start);
+            }
+            IntConsumer hook = afterWindow;
+            if (hook != null) hook.accept(windows.size());
+        }
+        return timing;
+    }
+
+    private static Pair<Double, Double> platformDecodeRaw(
             MediaDataSource source,
             double start,
             double end,
@@ -115,6 +168,18 @@ public final class AudioDecoder {
             if (walks && start > 0)
                 for (long at = HEADER; at < target; at += 2100)
                     if (extractor.read(at, bytes, 2048) <= 0) return null;
+            java.util.concurrent.CountDownLatch stall = seekStall;
+            if (stall != null && start > 0) {
+                seeksEntered.incrementAndGet();
+                boolean held = true;
+                while (held) {
+                    try {
+                        held = !stall.await(50, java.util.concurrent.TimeUnit.MILLISECONDS);
+                    } catch (InterruptedException ignored) {
+                        // The platform call does not return early for an interrupt.
+                    }
+                }
+            }
             float[] whole = tune(seed, seconds), other = middle == 0 ? null : tune(middle, seconds);
             int done = 0;
             for (double t = start; t < end; t += 1) {
@@ -139,6 +204,7 @@ public final class AudioDecoder {
                 pcm.flip();
                 MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
                 info.set(0, RATE * 2, (long) (t * 1e6), 0);
+                buffersDelivered.incrementAndGet();
                 onBuffer.invoke(pcm, info, 1, RATE);
                 done++;
             }
@@ -159,7 +225,7 @@ public final class AudioDecoder {
             new java.util.concurrent.ConcurrentHashMap<>();
 
     /** Separate notes on a beat, so its loudness and pitch move the way music's do. */
-    static float[] tune(long seed, int seconds) {
+    public static float[] tune(long seed, int seconds) {
         return tunes.computeIfAbsent(
                 seed * 1000 + seconds,
                 k -> {

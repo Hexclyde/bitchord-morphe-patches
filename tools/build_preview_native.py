@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the pinned, offline Streamseek audio decoder for Android API 26+."""
+"""Build the pinned, offline audio decoder for Android API 26+."""
 
 import hashlib
 import json
@@ -43,7 +43,7 @@ DECODERS = (
         ]
     )
 )
-DEMUXERS = "flac,aiff,wav,w64,mov,caf,ape,wv,tta,tak,shorten,asf,dsf,iff,matroska,ogg,mp3,dts,truehd,mlp"
+DEMUXERS = "flac,aiff,wav,w64,mov,caf,ape,wv,tta,tak,shorten,asf,dsf,iff,matroska,ogg,mp3,aac,mpegts,dts,truehd,mlp"
 
 
 def run(args, cwd):

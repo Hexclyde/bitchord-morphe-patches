@@ -57,6 +57,7 @@ public final class SteadyPlayback {
 
     private static final Map<Object, Boolean> observedControls = new java.util.WeakHashMap<>();
     private static final List<AnalysisLease> analysisLeases = new ArrayList<>();
+    private static int residentHolds;
     private static boolean gateObserved;
     private static long configurationEpoch;
     static LongSupplier heapBytes = () -> Runtime.getRuntime().maxMemory();
@@ -297,7 +298,7 @@ public final class SteadyPlayback {
         }
         try {
             int bytes = targetBytes(enabled, currentLink, wifiMb, mobileMb);
-            if (enabled) {
+            if (enabled || residentActive()) {
                 bytes = Math.min(bytes, allowance(control));
                 Object states = read(control, "loadingStates");
                 int players = states instanceof Map ? Math.max(1, ((Map<?, ?>) states).size()) : 1;
@@ -382,7 +383,7 @@ public final class SteadyPlayback {
             synchronized (controls) {
                 if (configurationEpoch != epoch) return -1;
             }
-            return Math.max(0, maximum / 4 - bytes);
+            return Math.max(0, Math.min(maximum / 4, loadingBudget()) - bytes);
         } catch (Exception | LinkageError unavailable) {
             return -1;
         }
@@ -401,7 +402,7 @@ public final class SteadyPlayback {
         public long getAsLong() {
             if (closed || cancelled) return -1;
             try {
-                return Math.max(0, budget - retained(observed()));
+                return Math.max(0, Math.min(budget, loadingBudget()) - retained(observed()));
             } catch (Exception | LinkageError unavailable) {
                 cancelled = true;
                 return -1;
@@ -445,6 +446,65 @@ public final class SteadyPlayback {
         }
     }
 
+    static boolean residentActive() {
+        synchronized (controls) {
+            return residentHolds > 0;
+        }
+    }
+
+    static AutoCloseable holdResident() {
+        synchronized (controls) {
+            residentHolds++;
+            configurationEpoch++;
+            controls.replaceAll((owner, previous) -> -1);
+        }
+        return new AutoCloseable() {
+            private boolean closed;
+
+            public void close() {
+                synchronized (controls) {
+                    if (closed) return;
+                    closed = true;
+                    residentHolds--;
+                    configurationEpoch++;
+                    controls.replaceAll((owner, previous) -> -1);
+                }
+            }
+        };
+    }
+
+    private static boolean loadingHeadroom() {
+        Runtime runtime = Runtime.getRuntime();
+        return runtime.maxMemory() - (runtime.totalMemory() - runtime.freeMemory()) >= (24L << 20);
+    }
+
+    /** Only unused native allocations are discarded; queued audio remains owned by its player. */
+    private static void reclaimFreePools() {
+        Map<Object, Boolean> seen = new IdentityHashMap<>();
+        for (Object control : observed()) {
+            try {
+                Object allocator = read(control, "allocator");
+                if (seen.put(allocator, true) != null) continue;
+                synchronized (allocator) {
+                    if (((Number) read(allocator, "availableCount")).intValue() == 0) continue;
+                    int target = ((Number) read(allocator, "targetBufferSize")).intValue();
+                    Method resize =
+                            allocator
+                                    .getClass()
+                                    .getDeclaredMethod("setTargetBufferSize", int.class);
+                    resize.setAccessible(true);
+                    try {
+                        resize.invoke(allocator, 0);
+                    } finally {
+                        resize.invoke(allocator, target);
+                    }
+                }
+            } catch (Exception | LinkageError unavailable) {
+                // A loading decision can still refuse growth without changing an unknown pool.
+            }
+        }
+    }
+
     private static void cancelAnalysis() {
         synchronized (controls) {
             for (AnalysisLease lease : analysisLeases) lease.cancelled = true;
@@ -454,6 +514,8 @@ public final class SteadyPlayback {
     private static long loadingBudget() {
         synchronized (controls) {
             long budget = Math.max(0, heapBytes.getAsLong() / 2);
+            if (residentHolds > 0)
+                budget = Math.min(budget, Math.max(16L << 20, heapBytes.getAsLong() / 8));
             for (AnalysisLease lease : analysisLeases) budget = Math.min(budget, lease.budget);
             return budget;
         }
@@ -462,7 +524,7 @@ public final class SteadyPlayback {
     /** The native loading decision keeps its time policy after a bounded startup allowance. */
     public static boolean allowLoading(Object control, Object parameters) {
         if (control == null) {
-            if (!analysisActive()) return true;
+            if (!analysisActive() && !residentActive()) return true;
             cancelAnalysis();
             return false;
         }
@@ -477,12 +539,17 @@ public final class SteadyPlayback {
         }
         tick(control);
         boolean leased = analysisActive();
-        if (!enabled && !leased) return true;
+        boolean resident = residentActive();
+        if (!enabled && !leased && !resident) return true;
         try {
             boolean starting =
                     ((Number) read(parameters, "bufferedDurationUs")).longValue() < READY_US;
-            if (starting && !leased) return true;
+            if (starting && !leased && !resident) return true;
             Object own = read(control, "allocator");
+            if (resident && !loadingHeadroom()) {
+                reclaimFreePools();
+                if (!loadingHeadroom()) return false;
+            }
             long[] ownUsage = allocation(own);
             if (leased && ownUsage[1] > 0) return true;
             if (ownUsage[0] >= allowance(control)) {
@@ -492,11 +559,15 @@ public final class SteadyPlayback {
             // Reusing an owned block sustains read-ahead without increasing the live heap.
             if (ownUsage[1] > 0) return true;
             boolean allowed = retained(observed()) < loadingBudget();
+            if (!allowed && resident) {
+                reclaimFreePools();
+                allowed = loadingHeadroom() && retained(observed()) < loadingBudget();
+            }
             if (!allowed && starting && leased) cancelAnalysis();
             return allowed;
         } catch (Exception | LinkageError unavailable) {
             HostLog.d("Steady playback couldn't inspect the loading allowance");
-            if (analysisActive()) {
+            if (analysisActive() || residentActive()) {
                 cancelAnalysis();
                 return false;
             }

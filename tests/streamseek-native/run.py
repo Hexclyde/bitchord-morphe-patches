@@ -40,6 +40,8 @@ def fixtures(root, samples=None):
     for name, codec, extra in [
         ("flac.flac", "flac", []),
         ("alac.m4a", "alac", ["-movflags", "+faststart"]),
+        ("aac.aac", "aac", ["-f", "adts"]),
+        ("aac.ts", "aac", ["-f", "mpegts"]),
         ("aiff.aiff", "pcm_s24be", []),
         ("caf.caf", "pcm_s24be", []),
         ("wave64.w64", "pcm_s24le", []),

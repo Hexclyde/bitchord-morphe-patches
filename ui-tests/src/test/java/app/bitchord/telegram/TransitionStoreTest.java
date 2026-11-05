@@ -200,4 +200,98 @@ public class TransitionStoreTest {
         assertNotNull(entry.error);
         assertNull(entry.json);
     }
+
+    @Test
+    public void automaticTimingRetainsOnlyExplicitPairTempoAcrossReopen() throws Exception {
+        var pair = pair("automatic-a", "automatic-b");
+        TransitionEdit draft = new TransitionEdit();
+        draft.tempoExplicit = true;
+        draft.manualBpm[0] = 120;
+        draft.manualBpm[1] = 150;
+        draft.overlapRate[1] = .8;
+        TransitionStore.get().commit(pair, draft, true, error -> assertNull(error));
+        idle();
+        TransitionStore.closeForTest();
+        TransitionEdit stored = read(pair);
+        assertNotNull(stored);
+        assertTrue(stored.automaticTiming);
+        assertEquals(120, stored.manualBpm[0], 0);
+        assertEquals(.8, stored.overlapRate[1], 0);
+        TransitionStore.get().commit(pair, new TransitionEdit(), true, error -> assertNull(error));
+        idle();
+        assertNull(read(pair));
+    }
+
+    @Test
+    public void nativeDerivedRatesOnAutomaticTimingStoreNoOverride() throws Exception {
+        var pair = pair("native-a", "native-b");
+        TransitionEdit draft = new TransitionEdit();
+        draft.overlapRate[0] = 1.1;
+        draft.overlapRate[1] = .9;
+        TransitionStore.get().commit(pair, draft, true, error -> assertNull(error));
+        idle();
+        assertNull(read(pair));
+    }
+
+    private static TransitionEdit withoutIntent(TransitionEdit edit) throws Exception {
+        org.json.JSONObject value = new org.json.JSONObject(edit.encode());
+        value.remove("tempoExplicit");
+        return TransitionEdit.decode(value.toString());
+    }
+
+    @Test
+    public void recordsWithoutIntentMigrateConservatively() throws Exception {
+        TransitionEdit rated = new TransitionEdit();
+        rated.overlapRate[0] = 1.2;
+        assertTrue(withoutIntent(rated).tempoExplicit);
+        TransitionEdit manual = new TransitionEdit();
+        manual.manualBpm[1] = 120;
+        assertTrue(withoutIntent(manual).tempoExplicit);
+        TransitionEdit flagged = new TransitionEdit();
+        flagged.automaticTiming = true;
+        assertTrue(withoutIntent(flagged).tempoExplicit);
+        assertFalse(withoutIntent(new TransitionEdit()).tempoExplicit);
+    }
+
+    @Test
+    public void newRecordsKeepNativeRatesImplicitAndExplicitIntentThroughACopy() throws Exception {
+        TransitionEdit native_ = new TransitionEdit();
+        native_.overlapRate[0] = 1.2;
+        assertFalse(native_.copy().tempoExplicit);
+        assertFalse(TransitionEdit.decode(native_.encode()).tempoExplicit);
+        native_.tempoExplicit = true;
+        assertTrue(native_.copy().tempoExplicit);
+        TransitionEdit target = new TransitionEdit();
+        target.copyTempoFrom(native_);
+        assertTrue(target.tempoExplicit);
+        target.copyTempoFrom(new TransitionEdit());
+        assertFalse(target.tempoExplicit);
+    }
+
+    @Test
+    public void aFlaggedUnityResetIsStoredSoNativeTempoStaysOff() throws Exception {
+        var pair = pair("reset-a", "reset-b");
+        TransitionEdit draft = new TransitionEdit();
+        draft.tempoExplicit = true;
+        TransitionStore.get().commit(pair, draft, true, error -> assertNull(error));
+        idle();
+        TransitionEdit stored = read(pair);
+        assertNotNull(stored);
+        assertTrue(stored.automaticTiming);
+    }
+
+    @Test
+    public void applyingCustomTimingClearsAnOldAutomaticOverlay() throws Exception {
+        var pair = pair("custom-a", "custom-b");
+        TransitionEdit draft = new TransitionEdit();
+        draft.automaticTiming = true;
+        draft.overlap = 12;
+        draft.overlapRate[0] = 1.25;
+        TransitionStore.get().commit(pair, draft, false, error -> assertNull(error));
+        idle();
+        TransitionEdit stored = read(pair);
+        assertFalse(stored.automaticTiming);
+        assertEquals(12, stored.overlap, 0);
+        assertEquals(1.25, stored.overlapRate[0], 0);
+    }
 }

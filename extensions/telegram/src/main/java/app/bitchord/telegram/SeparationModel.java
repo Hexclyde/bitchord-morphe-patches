@@ -39,7 +39,7 @@ final class SeparationModel {
     private static final java.util.List<Runnable> watchers =
             new java.util.concurrent.CopyOnWriteArrayList<>();
     private static volatile long lastInferenceMs;
-    private static Method tensorFactory, run, floatBuffer;
+    private static Method tensorFactory, run, borrow;
 
     static final String UNAVAILABLE = "Model unavailable · using filter";
     static final String TOO_SLOW = "Too slow on this device · using filter";
@@ -55,9 +55,18 @@ final class SeparationModel {
     private static volatile long retryAtMs;
 
     /** Reused by every inference, and only ever touched on the worker. */
-    private static float[] snapshot, output;
+    private static float[] snapshot;
+
+    /** A refused engine is not asked for again straight away. */
+    static final long DENIED_PAUSE_MS = 2000;
+
+    private static volatile long admitAfterMs;
+
+    /** Stands in for the shared Java memory reserve in tests. */
+    static volatile java.util.function.LongFunction<SourceAudio.JavaMemory> admission;
 
     private static ByteBuffer inputBytes;
+    private static AutoCloseable resident;
 
     /** Streams that have had audio since they started, so anything else is at a stream's start. */
     private static final Map<Object, Boolean> started = new WeakHashMap<>();
@@ -77,6 +86,8 @@ final class SeparationModel {
         tooSlow = false;
         slowRuns = 0;
         backoffMs = FIRST_BACKOFF_MS;
+        admitAfterMs = 0;
+        admission = null;
         setState(fake == null ? "Filter" : "Model ready");
         reset(true);
     }
@@ -138,10 +149,62 @@ final class SeparationModel {
 
                 @Override
                 public float[] scratch(int length) {
-                    if (snapshot == null || snapshot.length != length) snapshot = new float[length];
+                    if (snapshot != null && snapshot.length == length) return snapshot;
+                    snapshot = null;
+                    try (SeparatedSing.Ticket ticket = reserve(16 + 4L * length)) {
+                        if (ticket == null) return null;
+                        snapshot = new float[length];
+                    }
                     return snapshot;
                 }
+
+                @Override
+                public boolean masks(float[] magnitude, float[] into) throws Exception {
+                    return SeparationModel.masks(magnitude, into);
+                }
+
+                @Override
+                public SeparatedSing.Ticket reserve(long bytes) {
+                    java.util.function.LongFunction<SourceAudio.JavaMemory> test = admission;
+                    if (test == null && inference == null && !holdResident()) return null;
+                    SourceAudio.JavaMemory memory =
+                            test != null ? test.apply(bytes) : SourceAudio.reserveJava(bytes);
+                    return memory == null ? null : memory::close;
+                }
             };
+
+    private static boolean holdResident() {
+        synchronized (engines) {
+            if (resident != null) return true;
+            try {
+                resident = SourceAudio.holdJavaResident();
+            } catch (RuntimeException | LinkageError unavailable) {
+                return false;
+            }
+            return resident != null;
+        }
+    }
+
+    /** Queued estimates finish before their resident loading ceiling is released. */
+    private static void releaseResidentLater() {
+        worker.execute(SeparationModel::releaseResident);
+    }
+
+    private static void releaseResident() {
+        AutoCloseable previous;
+        synchronized (engines) {
+            if (session != null || !engines.isEmpty() || snapshot != null || inputBytes != null)
+                return;
+            previous = resident;
+            resident = null;
+        }
+        if (previous != null)
+            try {
+                previous.close();
+            } catch (Exception | LinkageError unavailable) {
+                HostLog.d("Karaoke could not release its loading allowance");
+            }
+    }
 
     static void configure() {
         wanted = SoundExtras.singEnabled && SoundExtras.singMethod == METHOD;
@@ -195,6 +258,7 @@ final class SeparationModel {
                 started.clear();
             }
         }
+        if (close) releaseResidentLater();
     }
 
     /** One stream was flushed. Any other stream carries on as it was. */
@@ -213,12 +277,13 @@ final class SeparationModel {
             SeparatedSing engine = engines.get(key);
             if (engine == null) return;
             // A seek is the one time the delay can go without anyone hearing a jump.
-            if (keep) engine.reset();
+            if (keep && !engine.idle()) engine.reset();
             else {
                 engine.close();
                 engines.remove(key);
             }
         }
+        releaseResidentLater();
     }
 
     /** Audio went past without passing through, so what the delay holds is out of date. */
@@ -273,7 +338,7 @@ final class SeparationModel {
         synchronized (engines) {
             boolean fresh = !started.containsKey(key);
             if (fresh) started.put(key, true);
-            if (session != null && !tooSlow) {
+            if (session != null && !tooSlow && System.currentTimeMillis() >= admitAfterMs) {
                 if (fresh) {
                     // Nothing has been heard of this stream yet, so it can start in the delay now,
                     // rather than start under the filter and fall silent when the engine arrives.
@@ -301,20 +366,27 @@ final class SeparationModel {
     private static SeparatedSing install(Object key, int rate, VocalCut filter) {
         SeparatedSing created = null;
         try {
-            created = new SeparatedSing(rate, MODEL, worker, filter::process);
-            created.fallback(filter, filter::process);
+            // Held while the arrays are built, so two installs never have three engines live.
             synchronized (engines) {
-                if (!wanted) {
-                    created.close();
+                if (!wanted) return null;
+                SeparatedSing current = engines.get(key);
+                if (current != null && current.sampleRate() == rate) return current;
+                // The stream's format changed, so this one stands for audio that is gone.
+                if (current != null) engines.remove(key).close();
+                current = null;
+                if (engines.size() >= 2 && !retireIdle()) {
+                    admitAfterMs = System.currentTimeMillis() + DENIED_PAUSE_MS;
                     return null;
                 }
-                if (engines.size() >= 2 && !engines.containsKey(key)) {
-                    Iterator<SeparatedSing> old = engines.values().iterator();
-                    old.next().close();
-                    old.remove();
+                try (SeparatedSing.Ticket ticket = MODEL.reserve(SeparatedSing.heapBytes(rate))) {
+                    if (ticket == null) {
+                        admitAfterMs = System.currentTimeMillis() + DENIED_PAUSE_MS;
+                        return null;
+                    }
+                    created = new SeparatedSing(rate, MODEL, worker, filter::process);
                 }
-                SeparatedSing previous = engines.put(key, created);
-                if (previous != null) previous.close();
+                created.fallback(filter, filter::process);
+                engines.put(key, created);
             }
             return created;
         } catch (OutOfMemoryError pressure) {
@@ -324,6 +396,19 @@ final class SeparationModel {
             worker.execute(SeparationModel::closeSession);
             return null;
         }
+    }
+
+    /** Closes an engine that holds nothing. A playing one is never closed. Lock held. */
+    private static boolean retireIdle() {
+        Iterator<SeparatedSing> all = engines.values().iterator();
+        while (all.hasNext()) {
+            SeparatedSing engine = all.next();
+            if (!engine.idle()) continue;
+            engine.close();
+            all.remove();
+            return true;
+        }
+        return false;
     }
 
     private static void load() throws Exception {
@@ -379,8 +464,7 @@ final class SeparationModel {
                                 .getMethod(
                                         "createTensor", envType, FloatBuffer.class, long[].class);
                 run = created.getClass().getMethod("run", Map.class);
-                floatBuffer =
-                        Class.forName("ai.onnxruntime.OnnxTensor").getMethod("getFloatBuffer");
+                borrow = borrower(Class.forName("ai.onnxruntime.OnnxTensor"));
                 session = created;
                 setState("Model ready");
             } catch (Exception | LinkageError failure) {
@@ -437,9 +521,38 @@ final class SeparationModel {
         float[] result;
         Inference fake = inference;
         if (fake != null) result = fake.run(magnitude);
-        else result = runSession(magnitude);
+        else {
+            float[][] whole = new float[1][];
+            Denied.check(
+                    runSession(
+                            magnitude,
+                            values -> {
+                                try (SeparatedSing.Ticket ticket =
+                                        MODEL.reserve(16 + 4L * magnitude.length)) {
+                                    if (ticket == null) throw new Denied();
+                                    whole[0] = new float[magnitude.length];
+                                }
+                                values.get(whole[0]);
+                            }));
+            result = whole[0];
+        }
         noteInference((System.nanoTime() - started) / 1000000);
         return result;
+    }
+
+    /** The newest columns only, read straight from the session's output. */
+    private static boolean masks(float[] magnitude, float[] into) throws Exception {
+        long started = System.nanoTime();
+        Inference fake = inference;
+        if (fake != null) {
+            float[] vocals = fake.run(magnitude);
+            if (vocals == null || vocals.length != magnitude.length) return false;
+            SeparatedSing.fillMasks(magnitude, FloatBuffer.wrap(vocals), into);
+        } else if (!runSession(
+                magnitude, values -> SeparatedSing.fillMasks(magnitude, values, into)))
+            return false;
+        noteInference((System.nanoTime() - started) / 1000000);
+        return true;
     }
 
     /** Estimates that keep arriving too late are no use, and cost the phone two busy threads. */
@@ -458,14 +571,63 @@ final class SeparationModel {
         }
     }
 
-    private static float[] runSession(float[] magnitude) throws Exception {
+    /** No memory for this now: nothing is wrong with the session. */
+    private static final class Denied extends IOException {
+        static void check(boolean ran) throws Denied {
+            if (!ran) throw new Denied();
+        }
+    }
+
+    interface Reader {
+        void read(FloatBuffer values) throws Exception;
+    }
+
+    /** The tensor's own native view; the public accessor copies all of it into a new array. */
+    static Method borrower(Class<?> tensor) throws Exception {
+        Method method = tensor.getDeclaredMethod("getBuffer");
+        method.setAccessible(true);
+        return method;
+    }
+
+    /**
+     * A float view over the tensor's native memory. It is only good until the result is closed, so
+     * it is read in place and never kept.
+     */
+    static FloatBuffer borrowed(Object target, Method borrower, int length) throws Exception {
+        if (target == null || !borrower.getDeclaringClass().isInstance(target))
+            throw new IOException("Unexpected separation output");
+        Object info = target.getClass().getMethod("getInfo").invoke(target);
+        Object type = info.getClass().getField("type").get(info);
+        long[] shape = (long[]) info.getClass().getMethod("getShape").invoke(info);
+        if (!(type instanceof Enum) || !"FLOAT".equals(((Enum<?>) type).name()))
+            throw new IOException("Unexpected separation type");
+        if (!Arrays.equals(shape, new long[] {1, 2, SeparatedSing.BINS, SeparatedSing.FRAMES}))
+            throw new IOException("Unexpected separation shape");
+        ByteBuffer bytes = (ByteBuffer) borrower.invoke(target);
+        long size = 4L * length;
+        if (bytes == null
+                || !bytes.isDirect()
+                || bytes.order() != ByteOrder.nativeOrder()
+                || bytes.position() != 0
+                || bytes.capacity() != size
+                || bytes.remaining() != size) throw new IOException("Unexpected separation shape");
+        return bytes.asFloatBuffer();
+    }
+
+    /** False when the memory for the input was refused; the session is left as it was. */
+    private static boolean runSession(float[] magnitude, Reader reader) throws Exception {
         Object current = session;
         if (!wanted || current == null) throw new IOException("Separation inactive");
-        if (inputBytes == null || inputBytes.capacity() != magnitude.length * 4)
-            inputBytes =
-                    ByteBuffer.allocateDirect(magnitude.length * 4).order(ByteOrder.nativeOrder());
-        if (output == null || output.length != magnitude.length)
-            output = new float[magnitude.length];
+        if (inputBytes == null || inputBytes.capacity() != magnitude.length * 4) {
+            inputBytes = null;
+            // A direct buffer is backed by the Java heap here, so it is counted like an array.
+            try (SeparatedSing.Ticket ticket = MODEL.reserve(64 + 4L * magnitude.length)) {
+                if (ticket == null) return false;
+                inputBytes =
+                        ByteBuffer.allocateDirect(magnitude.length * 4)
+                                .order(ByteOrder.nativeOrder());
+            }
+        }
         FloatBuffer floats = inputBytes.asFloatBuffer();
         floats.put(magnitude);
         floats.rewind();
@@ -480,12 +642,12 @@ final class SeparationModel {
                             new long[] {1, 2, SeparatedSing.BINS, SeparatedSing.FRAMES});
             result = run.invoke(current, Collections.singletonMap("mix_magnitude", tensor));
             Object target = result.getClass().getMethod("get", int.class).invoke(result, 0);
-            FloatBuffer values = (FloatBuffer) floatBuffer.invoke(target);
-            if (values.remaining() != magnitude.length)
-                throw new IOException("Unexpected separation shape");
-            values.get(output);
+            reader.read(borrowed(target, borrow, magnitude.length));
             failed = false;
-            return output;
+            return true;
+        } catch (Denied refused) {
+            failed = false;
+            throw refused;
         } catch (InvocationTargetException wrapped) {
             if (wrapped.getCause() instanceof OutOfMemoryError)
                 throw (OutOfMemoryError) wrapped.getCause();
@@ -520,8 +682,8 @@ final class SeparationModel {
         session = null;
         close(current);
         snapshot = null;
-        output = null;
         inputBytes = null;
+        releaseResident();
     }
 
     private static void close(Object value) {

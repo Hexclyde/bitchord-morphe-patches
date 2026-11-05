@@ -634,6 +634,36 @@ public class AudioOriginTest {
     }
 
     @Test
+    public void openingASavedFileKeepsItsDownloadSourceWhenThePlayerUsesTheUriAsId() {
+        start("saved-download", sourceRoute("qobuz-uuid"));
+        finish("saved-download", "saved-download", FILE);
+        assertNull(AudioOrigin.savedSource(FILE, FILE));
+        AudioOrigin.prepareSavedFile("saved-download", FILE);
+        assertEquals("Qobuz", stats(item(FILE, FILE), "This device"));
+        start("other-download", sourceRoute("telegram-native"));
+        finish("other-download", "other-download", "file:///other.flac");
+        assertEquals("Qobuz", stats(item(FILE, FILE), "This device"));
+        AudioOrigin.forgetSaved("saved-download");
+        assertNull(AudioOrigin.savedSource(FILE, FILE));
+    }
+
+    @Test
+    public void preparingAnUnknownFileDoesNotGuessItsSourceFromTheRequestedId() {
+        start("saved-download", sourceRoute("qobuz-uuid"));
+        finish("saved-download", "saved-download", FILE);
+        String other = "content://media/external/audio/media/2";
+        AudioOrigin.prepareSavedFile("saved-download", other);
+        assertNull(AudioOrigin.savedSource(other, other));
+        AudioOrigin.prepareSavedFile("removed-alias", FILE);
+        assertEquals("qobuz-uuid", AudioOrigin.savedSource(FILE, FILE).id);
+        start("saved-download", sourceRoute("telegram-native"));
+        finish("saved-download", "saved-download", FILE);
+        assertNull(AudioOrigin.savedSource(FILE, FILE));
+        AudioOrigin.prepareSavedFile("saved-download", FILE);
+        assertEquals("telegram-native", AudioOrigin.savedSource(FILE, FILE).id);
+    }
+
+    @Test
     public void forgettingADownloadForgetsItsSource() {
         start("song", sourceRoute("qobuz-uuid"));
         finish("song", "song", FILE);

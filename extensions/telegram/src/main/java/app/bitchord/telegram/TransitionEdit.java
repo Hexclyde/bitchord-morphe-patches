@@ -3,6 +3,8 @@ package app.bitchord.telegram;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+
 /** One directed track pair; timeline values are seconds and EQ values are dB. */
 final class TransitionEdit {
     static final int LINEAR = 0, POWER = 1, SMOOTH = 2, CUSTOM = 3, DJ = 4;
@@ -14,10 +16,16 @@ final class TransitionEdit {
     int preset = FADE;
     int bars;
     String recording;
-    double faderSharpness = 1;
+    double faderSharpness = 1, filterDepth = 1;
+    boolean automaticTiming;
+
+    /** The listener chose the tempo; rates native AutoMix derived stay implicit. */
+    boolean tempoExplicit;
+
     final double[] volume = {1, 1};
     final int[] deckCurve = {-1, -1};
     final double[] gridOffset = {0, 0}, tempoScale = {1, 1};
+    final double[] manualBpm = {0, 0}, overlapRate = {1, 1};
     final double[][] cues = {{-1, -1, -1, -1}, {-1, -1, -1, -1}};
     final double[][] levels = {{1, .75, .35, 0}, {0, .35, .75, 1}};
     final double[][] times = {{0, 1d / 3, 2d / 3, 1}, {0, 1d / 3, 2d / 3, 1}};
@@ -35,6 +43,7 @@ final class TransitionEdit {
         require(incomingCue, 0, 3600);
         if (curve < LINEAR || curve > DJ) throw new IllegalArgumentException("Invalid fade curve");
         require(faderSharpness, 1, 10);
+        require(filterDepth, 0, 1);
         if (recording != null && !recording.matches("[0-9a-f]{64}"))
             throw new IllegalArgumentException("Invalid recording identity");
         if (preset < -1
@@ -46,6 +55,8 @@ final class TransitionEdit {
             if (deckCurve[side] < -1 || deckCurve[side] > DJ)
                 throw new IllegalArgumentException("Invalid deck curve");
             require(gridOffset[side], -8, 8);
+            if (manualBpm[side] != 0) require(manualBpm[side], 30, 300);
+            require(overlapRate[side], .5, 2);
             if (tempoScale[side] != .5 && tempoScale[side] != 1 && tempoScale[side] != 2)
                 throw new IllegalArgumentException("Invalid beat grid scale");
             for (double cue : cues[side]) require(cue, -1, 86400);
@@ -65,7 +76,57 @@ final class TransitionEdit {
     }
 
     double start(double duration) {
-        return Math.max(0, duration - outgoingTrim - overlap);
+        return Math.max(0, duration - outgoingTrim - sourceSpan(0));
+    }
+
+    double sourceSpan(int side) {
+        return overlap * overlapRate[side];
+    }
+
+    double incomingAt(double progress) {
+        return incomingCue + sourceSpan(1) * Math.max(0, Math.min(1, progress));
+    }
+
+    double baseBpm(int side, double measured) {
+        double value = manualBpm[side] == 0 ? measured : manualBpm[side];
+        return Double.isFinite(value) && value >= 30 && value <= 300 ? value : Double.NaN;
+    }
+
+    double overlapBpm(int side, double measured) {
+        return baseBpm(side, measured) * overlapRate[side];
+    }
+
+    void setOverlapBpm(int side, double target, double measured) {
+        double rate = target / baseBpm(side, measured);
+        require(rate, .5, 2);
+        overlapRate[side] = rate;
+        tempoExplicit = true;
+    }
+
+    boolean canMatchTempo(int side, double outgoing, double incoming) {
+        double[] measured = {outgoing, incoming};
+        double rate = overlapBpm(1 - side, measured[1 - side]) / baseBpm(side, measured[side]);
+        return Double.isFinite(rate) && rate >= .5 && rate <= 2;
+    }
+
+    void matchTempo(int side, double outgoing, double incoming) {
+        double[] measured = {outgoing, incoming};
+        setOverlapBpm(side, overlapBpm(1 - side, measured[1 - side]), measured[side]);
+    }
+
+    void resetOverlapRates() {
+        Arrays.fill(overlapRate, 1);
+        tempoExplicit = true;
+    }
+
+    boolean hasTempoOverrides() {
+        return manualBpm[0] != 0 || manualBpm[1] != 0 || overlapRate[0] != 1 || overlapRate[1] != 1;
+    }
+
+    void copyTempoFrom(TransitionEdit other) {
+        System.arraycopy(other.manualBpm, 0, manualBpm, 0, 2);
+        System.arraycopy(other.overlapRate, 0, overlapRate, 0, 2);
+        tempoExplicit = other.tempoExplicit;
     }
 
     /** Our presets describe real fader/filter moves; none changes either deck's tempo. */
@@ -189,7 +250,7 @@ final class TransitionEdit {
 
     float[] cutoffs(int side, double progress) {
         double p = Math.max(0, Math.min(1, progress));
-        double amount = side == 0 ? p : 1 - p;
+        double amount = (side == 0 ? p : 1 - p) * filterDepth;
         float lp = 20000, hp = 0;
         if (filter[side] == 1)
             lp = (float) Math.exp(Math.log(20000) + amount * Math.log(cutoff[side] / 20000));
@@ -217,8 +278,13 @@ final class TransitionEdit {
                     .put("deckCurve", new JSONArray(deckCurve));
             value.put("recording", recording)
                     .put("sharpness", faderSharpness)
+                    .put("filterDepth", filterDepth)
+                    .put("automaticTiming", automaticTiming)
+                    .put("tempoExplicit", tempoExplicit)
                     .put("gridOffset", new JSONArray(gridOffset))
                     .put("tempoScale", new JSONArray(tempoScale))
+                    .put("manualBpm", new JSONArray(manualBpm))
+                    .put("overlapRate", new JSONArray(overlapRate))
                     .put("cues", new JSONArray(cues));
             value.put("levels", new JSONArray(levels))
                     .put("times", new JSONArray(times))
@@ -244,6 +310,8 @@ final class TransitionEdit {
             edit.bars = value.optInt("bars", 0);
             edit.recording = value.isNull("recording") ? null : value.optString("recording", null);
             edit.faderSharpness = value.optDouble("sharpness", 1);
+            edit.filterDepth = value.has("filterDepth") ? value.getDouble("filterDepth") : 1;
+            edit.automaticTiming = value.optBoolean("automaticTiming", false);
             for (int side = 0; side < 2; side++) {
                 if (value.has("volume"))
                     edit.volume[side] = value.getJSONArray("volume").getDouble(side);
@@ -253,6 +321,10 @@ final class TransitionEdit {
                     edit.gridOffset[side] = value.getJSONArray("gridOffset").getDouble(side);
                 if (value.has("tempoScale"))
                     edit.tempoScale[side] = value.getJSONArray("tempoScale").getDouble(side);
+                if (value.has("manualBpm"))
+                    edit.manualBpm[side] = value.getJSONArray("manualBpm").getDouble(side);
+                if (value.has("overlapRate"))
+                    edit.overlapRate[side] = value.getJSONArray("overlapRate").getDouble(side);
                 if (value.has("cues"))
                     for (int i = 0; i < 4; i++)
                         edit.cues[side][i] =
@@ -268,6 +340,11 @@ final class TransitionEdit {
                 edit.filter[side] = value.getJSONArray("filter").getInt(side);
                 edit.cutoff[side] = value.getJSONArray("cutoff").getDouble(side);
             }
+            // Records written before native rates were captured: any tempo value was chosen.
+            edit.tempoExplicit =
+                    value.has("tempoExplicit")
+                            ? value.getBoolean("tempoExplicit")
+                            : edit.automaticTiming || edit.hasTempoOverrides();
             edit.validate();
             return edit;
         } catch (Exception invalid) {

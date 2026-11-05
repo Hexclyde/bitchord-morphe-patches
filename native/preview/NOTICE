@@ -1,4 +1,4 @@
-Streamseek preview decoder uses FFmpeg 7.1.5 (libavformat, libavcodec,
+The shared audio decoder uses FFmpeg 7.1.5 (libavformat, libavcodec,
 libswresample and libavutil) under the GNU Lesser General Public License,
 version 2.1 or later. FFmpeg copyright belongs to its respective authors.
 

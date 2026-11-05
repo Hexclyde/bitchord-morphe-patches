@@ -97,6 +97,72 @@ public class TransitionAnalysisTest {
     }
 
     @Test
+    public void memoryPhasesSayWhetherAnotherAttemptIsComing() {
+        TransitionAnalysis.Snapshot snapshot = new TransitionAnalysis.Snapshot();
+        snapshot.phase = "memory";
+        assertEquals("Waiting for memory", snapshot.state());
+        snapshot.phase = "memory_limit";
+        assertEquals("Not enough memory to analyze this track. Tap Retry.", snapshot.state());
+        assertEquals(snapshot.state(), snapshot.tempo());
+        assertFalse(snapshot.ready);
+        assertFalse(snapshot.beatGrid());
+        assertFalse(snapshot.reliableKey());
+        assertTrue(Double.isNaN(snapshot.bpm));
+        assertNull(snapshot.key);
+    }
+
+    @Test
+    public void everyNotReadyPhaseNamesItsOwnReason() {
+        String[][] expected = {
+            {"waiting", "Waiting to analyze"},
+            {"queued", "Analyzing selected audio…"},
+            {"analyzing", "Analyzing selected audio…"},
+            {"failed", "Could not read this track's audio."},
+            {"ready", "Analysis result could not be read"},
+            {"unavailable", "Not available"},
+            {"thermal", "Waiting for device to cool down"}
+        };
+        for (String[] row : expected) {
+            TransitionAnalysis.Snapshot snapshot = new TransitionAnalysis.Snapshot();
+            snapshot.phase = row[0];
+            assertEquals(row[0], Strings.t(row[1]), snapshot.state());
+            assertEquals(row[0], snapshot.state(), snapshot.tempo());
+        }
+    }
+
+    @Test
+    public void aNativeResultWithoutAnExtensionJobIsReadFromTheAnalyzer() {
+        assertEquals("waiting", SourceAutomix.analysisPhase("a"));
+        var result = TransitionAnalysis.read(pair, 0);
+        assertTrue(result.ready);
+        assertEquals(130, result.bpm, 0);
+        assertEquals("F minor", result.key);
+    }
+
+    @Test
+    public void aReadyJobWhoseResultIsUnreadableIsNotReportedAsMissing() throws Exception {
+        measured.status = "waiting";
+        java.lang.reflect.Field jobs = SourceAutomix.class.getDeclaredField("jobs");
+        jobs.setAccessible(true);
+        Map<String, SourceAutomix.Job> state = new java.util.concurrent.ConcurrentHashMap<>();
+        SourceAutomix.Job job =
+                new SourceAutomix.Job(
+                        service,
+                        service.trackAnalyzer,
+                        "a",
+                        android.net.Uri.parse("content://music/1"),
+                        180,
+                        "key");
+        job.phase = "ready";
+        state.put("a", job);
+        ((Map<Object, Map<String, SourceAutomix.Job>>) jobs.get(null))
+                .put(service.trackAnalyzer, state);
+        var result = TransitionAnalysis.read(pair, 0);
+        assertFalse(result.ready);
+        assertEquals(Strings.t("Analysis result could not be read"), result.state());
+    }
+
+    @Test
     public void energyUsesTimestampedMeasurementsWithinTheSelectedRecording() {
         measured.energyCurve =
                 Arrays.asList(

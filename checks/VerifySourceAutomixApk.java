@@ -964,6 +964,133 @@ public final class VerifySourceAutomixApk {
         throw new AssertionError("Native DSP regression accepted: " + name);
     }
 
+    static void lookaheadContracts(Map<String, ClassDef> types) {
+        String player = "Landroidx/media3/common/Player;";
+        String timeline = "Landroidx/media3/common/Timeline;";
+        for (String[] contract :
+                new String[][] {
+                    {player, "getCurrentTimeline", timeline},
+                    {player, "getRepeatMode", "I"},
+                    {player, "getShuffleModeEnabled", "Z"},
+                    {player, "getNextMediaItemIndex", "I"},
+                    {timeline, "getWindowCount", "I"},
+                    {timeline, "getNextWindowIndex", "I", "I", "I", "Z"}
+                }) {
+            Method api = named(types.get(contract[0]), contract[1]);
+            check(
+                    api.getReturnType().equals(contract[2])
+                            && api.getParameterTypes()
+                                    .equals(
+                                            List.of(
+                                                    Arrays.copyOfRange(
+                                                            contract, 3, contract.length)))
+                            && (api.getAccessFlags() & 9) == 1,
+                    "Lookahead uses the native timeline ABI: " + contract[1]);
+        }
+        String runtime = "Lapp/bitchord/telegram/SourceAutomix;";
+        for (String name : List.of("queueChanged", "cancelLookahead")) {
+            Method method = named(types.get(runtime), name);
+            check(
+                    (method.getAccessFlags() & 9) == 9
+                            && method.getReturnType().equals("V")
+                            && method.getParameterTypes()
+                                    .equals(
+                                            Collections.nCopies(
+                                                    name.equals("queueChanged") ? 2 : 1,
+                                                    "Ljava/lang/Object;")),
+                    "Lookahead bridge ABI: " + name);
+        }
+        Method editor = named(types.get(runtime), "editor");
+        check(
+                (editor.getAccessFlags() & 9) == 9
+                        && editor.getReturnType().equals("V")
+                        && editor.getParameterTypes().equals(List.of("Ljava/lang/Object;", "Z")),
+                "Visible editor has an identity-scoped static priority lease");
+        List<Method> warm = new ArrayList<>();
+        for (Method method : types.get(HOST).getMethods()) {
+            List<Instruction> body = code(method);
+            if (method.getParameterTypes().equals(List.of("Landroidx/media3/exoplayer/ExoPlayer;"))
+                    && method.getReturnType().equals("V")
+                    && body.stream().anyMatch(i -> calls(i, player, "getNextMediaItemIndex", "I"))
+                    && body.stream()
+                            .anyMatch(
+                                    i ->
+                                            calls(
+                                                    i,
+                                                    "Lcom/music/bitchord/playback/AudioCache;",
+                                                    "noteSongs",
+                                                    "V",
+                                                    "Ljava/util/List;"))) warm.add(method);
+        }
+        check(warm.size() == 1, "One native queue read-ahead method drives lookahead");
+        Method around = warm.getFirst();
+        Set<String> reads = new HashSet<>();
+        List<FieldReference> fields = new ArrayList<>();
+        for (Instruction instruction : code(around)) {
+            if (!(instruction instanceof ReferenceInstruction reference)
+                    || !(reference.getReference() instanceof FieldReference field)) continue;
+            if (instruction.getOpcode() == Opcode.IGET_OBJECT
+                    && field.getDefiningClass().equals(HOST)
+                    && field.getType().equals("Ljava/util/ArrayList;")) reads.add(field.toString());
+        }
+        for (Instruction instruction : code(around))
+            if (instruction.getOpcode() == Opcode.IPUT_OBJECT
+                    && instruction instanceof ReferenceInstruction reference
+                    && reference.getReference() instanceof FieldReference field
+                    && reads.contains(field.toString())
+                    && fields.stream().noneMatch(f -> f.toString().equals(field.toString())))
+                fields.add(field);
+        check(fields.size() == 1, "One semantic prefetch state field");
+        String state = fields.getFirst().toString();
+        int stores = 0;
+        for (ClassDef type : types.values())
+            for (Method method : type.getMethods()) {
+                List<Instruction> body = code(method);
+                for (int i = 0; i < body.size(); i++) {
+                    Instruction instruction = body.get(i);
+                    if (instruction instanceof ReferenceInstruction reference
+                            && reference.getReference() instanceof FieldReference field
+                            && field.toString().equals(state)
+                            && instruction.getOpcode().name().startsWith("IPUT")) {
+                        check(
+                                instruction.getOpcode() == Opcode.IPUT_OBJECT
+                                        && i + 1 < body.size(),
+                                "Prefetch state is an instance object store");
+                        Instruction cancel = body.get(i + 1);
+                        check(
+                                calls(cancel, runtime, "cancelLookahead", "V", "Ljava/lang/Object;")
+                                        && cancel instanceof RegisterRangeInstruction range
+                                        && range.getRegisterCount() == 1
+                                        && range.getStartRegister()
+                                                == ((TwoRegisterInstruction) instruction)
+                                                        .getRegisterB(),
+                                "Every native prefetch write cancels only the same owner's"
+                                        + " speculation");
+                        stores++;
+                    }
+                }
+            }
+        check(stores > 0, "Native pause/stop/queue prefetch state is observed");
+        List<Instruction> body = code(around);
+        for (int i = 0; i < body.size(); i++)
+            if (body.get(i).getOpcode() == Opcode.RETURN_VOID) {
+                check(
+                        i > 0
+                                && calls(
+                                        body.get(i - 1),
+                                        runtime,
+                                        "queueChanged",
+                                        "V",
+                                        "Ljava/lang/Object;",
+                                        "Ljava/lang/Object;")
+                                && body.get(i - 1) instanceof RegisterRangeInstruction range
+                                && range.getRegisterCount() == 2
+                                && range.getStartRegister()
+                                        == around.getImplementation().getRegisterCount() - 2,
+                        "Every native read-ahead return observes the exact service/player pair");
+            }
+    }
+
     public static void main(String[] args) throws Exception {
         Map<String, ClassDef> types = new HashMap<>();
         var dex = DexFileFactory.loadDexContainer(new File(args[0]), Opcodes.getDefault());
@@ -971,6 +1098,7 @@ public final class VerifySourceAutomixApk {
             for (ClassDef type : dex.getEntry(name).getDexFile().getClasses())
                 types.put(type.getType(), type);
         dspContracts(types, args.length > 1 && args[1].equals("--regressions"));
+        lookaheadContracts(types);
         String runtime = "Lapp/bitchord/telegram/SourceAutomix;",
                 pref = "Lapp/bitchord/telegram/SourcePreference;";
         check(types.containsKey(runtime), "Source-independent runtime is installed");
@@ -1089,7 +1217,7 @@ public final class VerifySourceAutomixApk {
                         && editorReaders == 1
                         && preflights == 1
                         && plans == 1,
-                "Request, selected-source readers and tempo-neutral plan are reachable exactly"
+                "Request, selected-source readers and native plan bridge are reachable exactly"
                         + " once");
         check(
                 speeds >= 8 && unprotectedSpeeds == 0,
@@ -1114,10 +1242,150 @@ public final class VerifySourceAutomixApk {
                                 "bitchordAutomixStopped",
                                 "bitchordAutomixRestore")),
                 "All host bridges exist");
-        ClassDef restore =
-                types.get(
-                        "Lcom/music/bitchord/playback/smart/TrackAnalyzer$$ExternalSyntheticLambda18;");
-        check(restore != null, "Exact-rendition stored-analysis restore implementation retained");
+        String analyzerType = "Lcom/music/bitchord/playback/smart/TrackAnalyzer;";
+        String hostType = "Lcom/music/bitchord/playback/PlaybackService;";
+        String objectType = "Ljava/lang/Object;";
+        Method restoreBridge = null;
+        for (Method method : types.get(hostType).getMethods())
+            if (method.getName().equals("bitchordAutomixRestore")) {
+                check(restoreBridge == null, "One stored-analysis restore bridge");
+                restoreBridge = method;
+            }
+        check(
+                restoreBridge != null
+                        && (restoreBridge.getAccessFlags() & 0x9) == 0x9
+                        && restoreBridge.getReturnType().equals("V")
+                        && restoreBridge
+                                .getParameterTypes()
+                                .equals(List.of(objectType, "Ljava/lang/String;")),
+                "Stored-analysis restore bridge ABI");
+        String restoreName = null;
+        int constructions = 0, constructorCalls = 0, runCalls = 0;
+        for (Instruction instruction : code(restoreBridge))
+            if (instruction.getOpcode() == Opcode.NEW_INSTANCE) {
+                constructions++;
+                restoreName =
+                        ((TypeReference) ((ReferenceInstruction) instruction).getReference())
+                                .getType();
+            }
+        check(constructions == 1 && restoreName != null, "Restore bridge creates one runnable");
+        for (Instruction instruction : code(restoreBridge)) {
+            if (instruction.getOpcode() == Opcode.INVOKE_DIRECT
+                    && calls(
+                            instruction,
+                            restoreName,
+                            "<init>",
+                            "V",
+                            analyzerType,
+                            "Ljava/lang/String;")) constructorCalls++;
+            if (instruction.getOpcode() == Opcode.INVOKE_VIRTUAL
+                    && calls(instruction, restoreName, "run", "V")) runCalls++;
+        }
+        check(
+                constructorCalls == 1 && runCalls == 1,
+                "Restore bridge constructs and runs the native runnable once");
+        ClassDef restore = types.get(restoreName);
+        check(
+                restore != null
+                        && (restore.getAccessFlags() & 0x1) != 0
+                        && (restore.getAccessFlags() & 0x400) == 0
+                        && restore.getInterfaces().contains("Ljava/lang/Runnable;"),
+                "Restore bridge target is a native runnable");
+        int publicConstructors = 0;
+        for (Method method : restore.getMethods())
+            if (method.getName().equals("<init>")
+                    && method.getReturnType().equals("V")
+                    && method.getParameterTypes()
+                            .equals(List.of(analyzerType, "Ljava/lang/String;"))
+                    && (method.getAccessFlags() & 0x1) != 0
+                    && (method.getAccessFlags() & 0x8) == 0) publicConstructors++;
+        check(publicConstructors == 1, "Native restore constructor is publicly callable");
+        Method restoredApi = null;
+        for (Method method : types.get(runtime).getMethods())
+            if (method.getName().equals("restored")) {
+                check(restoredApi == null, "One restored publication hook");
+                restoredApi = method;
+            }
+        check(
+                restoredApi != null
+                        && (restoredApi.getAccessFlags() & 0x9) == 0x9
+                        && restoredApi.getReturnType().equals(objectType)
+                        && restoredApi
+                                .getParameterTypes()
+                                .equals(List.of("Ljava/util/Map;", objectType, objectType)),
+                "Restored publication hook ABI");
+        int restoredHooks = 0;
+        for (ClassDef type : types.values())
+            for (Method method : type.getMethods())
+                for (Instruction instruction : code(method))
+                    if (calls(
+                            instruction,
+                            runtime,
+                            "restored",
+                            objectType,
+                            "Ljava/util/Map;",
+                            objectType,
+                            objectType)) {
+                        restoredHooks++;
+                        check(
+                                type == restore,
+                                "Restored hook is only reached by the native runnable");
+                    }
+        check(restoredHooks == 1, "Restored publication hook is reached exactly once");
+        Method restoreRun = null;
+        for (Method method : restore.getMethods())
+            if (method.getName().equals("run") && method.getParameterTypes().isEmpty())
+                restoreRun = method;
+        check(
+                restoreRun != null
+                        && restoreRun.getReturnType().equals("V")
+                        && (restoreRun.getAccessFlags() & 0x1) != 0
+                        && (restoreRun.getAccessFlags() & 0x8) == 0,
+                "Native runnable has public run()");
+        List<Instruction> restoreCode = code(restoreRun);
+        int restoredAt =
+                unique(
+                        restoreCode,
+                        runtime,
+                        "restored",
+                        objectType,
+                        "Ljava/util/Map;",
+                        objectType,
+                        objectType);
+        check(
+                restoredAt > 0
+                        && restoredAt + 1 < restoreCode.size()
+                        && restoreCode.get(restoredAt - 1).getOpcode() == Opcode.IGET_OBJECT
+                        && restoreCode.get(restoredAt - 1)
+                                instanceof TwoRegisterInstruction published
+                        && ((ReferenceInstruction) published).getReference()
+                                instanceof FieldReference results
+                        && results.getDefiningClass().equals(analyzerType)
+                        && results.getName().equals("results")
+                        && results.getType().equals("Ljava/util/concurrent/ConcurrentHashMap;")
+                        && restoreCode.get(restoredAt) instanceof FiveRegisterInstruction hook
+                        && hook.getOpcode() == Opcode.INVOKE_STATIC
+                        && hook.getRegisterCount() == 3
+                        && hook.getRegisterC() == published.getRegisterA()
+                        && restoreCode.get(restoredAt + 1).getOpcode() == Opcode.RETURN_VOID,
+                "Restored hook directly publishes the analyzer results map");
+        int resultAccesses = 0;
+        for (Instruction instruction : restoreCode) {
+            if (instruction instanceof ReferenceInstruction r
+                    && r.getReference() instanceof FieldReference field
+                    && field.getDefiningClass().equals(analyzerType)
+                    && field.getName().equals("results")) resultAccesses++;
+            check(
+                    !calls(
+                            instruction,
+                            "Ljava/util/concurrent/ConcurrentHashMap;",
+                            "putIfAbsent",
+                            objectType,
+                            objectType,
+                            objectType),
+                    "Native runnable no longer publishes through the original map call");
+        }
+        check(resultAccesses == 1, "Native runnable has one analysis result access");
         ClassDef analyzer = types.get("Lcom/music/bitchord/playback/smart/TrackAnalyzer;");
         Set<String> fields = new HashSet<>();
         for (Field field : analyzer.getFields()) fields.add(field.getName());

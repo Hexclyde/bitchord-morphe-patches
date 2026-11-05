@@ -62,7 +62,7 @@ final class DspAnalysis {
         }
     }
 
-    /** Includes the native analyzer's input copy, source cache and bounded codec/DSP workspace. */
+    /** The larger of the separate decode and measurement working sets. */
     static long bytes(int rate, double seconds) {
         if (rate < 8_000
                 || rate > 384_000
@@ -74,7 +74,13 @@ final class DspAnalysis {
         long taps = 2L * ((long) Math.ceil(32d * Math.max(1d, rate / (double) RATE)) + 1) + 1;
         long filters = phases * taps * 4;
         if (filters > (2L << 20)) return -1;
-        return (long) Math.ceil((seconds + .75) * RATE) * 8 + (24L << 20) + filters;
+        long decode = (24L << 20) + filters;
+        return Math.max(decode, measurement((long) Math.ceil((seconds + .75) * RATE)));
+    }
+
+    /** The Java mono array and the native analyzer's input copy, with its working remainder. */
+    static long measurement(long frames) {
+        return frames * 8 + (16L << 20);
     }
 
     static Object analyze(
@@ -97,8 +103,11 @@ final class DspAnalysis {
             check(stopped);
             if (frames <= 0 || Math.abs(frames / (double) RATE - seconds) > .75)
                 throw new IOException("The whole selected audio was not decoded");
+            // The source is closed and the resampler dropped: only the measured PCM remains.
+            long measured = measurement(frames);
             availableBytes = available.getAsLong();
-            if (required > availableBytes) throw new Deferred(required, availableBytes, true);
+            if (measured > availableBytes) throw new Deferred(measured, availableBytes, true);
+            check(stopped);
             float[] mono = read(scratch, (int) frames, stopped);
             check(stopped);
             double measuredSeconds = frames / (double) RATE;

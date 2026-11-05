@@ -27,11 +27,11 @@ public class TransitionEditorInsetsTest {
                             .setInsets(WindowInsets.Type.displayCutout(), Insets.of(18, 0, 0, 0))
                             .build();
             root.dispatchApplyWindowInsets(bars);
-            assertEquals(38, root.getPaddingTop());
+            assertEquals(30, root.getPaddingTop());
             assertEquals(34, root.getPaddingLeft());
             assertEquals(32, root.getPaddingBottom());
             root.dispatchApplyWindowInsets(bars);
-            assertEquals(38, root.getPaddingTop());
+            assertEquals(30, root.getPaddingTop());
             root.dispatchApplyWindowInsets(
                     new WindowInsets.Builder(bars)
                             .setInsets(WindowInsets.Type.ime(), Insets.of(0, 0, 0, 260))

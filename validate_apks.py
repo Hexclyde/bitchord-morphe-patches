@@ -91,9 +91,14 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
     flow.check_returncode()
     for checker, arguments in [
         ("VerifyCipherMemoryApk", [str(output)]),
+        ("VerifySharedAudioApk", [str(output)]),
         ("VerifyHostContractsApk", [str(output), str(original)]),
         ("VerifyCaptureApk", [str(output)]),
         ("VerifyAudioOriginApk", [str(output)]),
+        (
+            "VerifyFlacMetadataApk",
+            [str(output), "present", str(original), "--regressions"],
+        ),
         ("VerifySourcePreparationApk", [str(output)]),
         ("VerifyDownloadIntegrationApk", [str(output)]),
         ("VerifyPlayerDownloadApk", [str(output)]),
@@ -194,6 +199,19 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
                 ],
                 check=True,
             )
+        subprocess.run(
+            [
+                str(java),
+                "-Xshare:off",
+                "-cp",
+                str(checks) + ":" + str(jar),
+                "VerifyFlacMetadataApk",
+                str(playback),
+                "present",
+                str(original),
+            ],
+            check=True,
+        )
         for checker in ("VerifyVideoSwitchApk", "VerifyPlayerDownloadApk"):
             subprocess.run(
                 [
@@ -207,6 +225,17 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
                 check=True,
             )
     for apk, telegram in shared:
+        subprocess.run(
+            [
+                str(java),
+                "-Xshare:off",
+                "-cp",
+                str(checks) + ":" + str(jar),
+                "VerifySharedAudioApk",
+                str(apk),
+            ],
+            check=True,
+        )
         page = subprocess.run(
             [
                 str(java),

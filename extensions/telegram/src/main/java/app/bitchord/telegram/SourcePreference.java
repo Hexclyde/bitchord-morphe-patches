@@ -370,6 +370,8 @@ public final class SourcePreference {
             }
             // What did arrive is kept, however late: the next attempt needn't read it again.
             if (gotNothing) {
+                // A decode stopped by the job, the player or an interrupt returns no audio.
+                SourceAudio.checkLeased();
                 if (System.nanoTime() > deadline)
                     throw new SourceAudio.Stopped(SourceAudio.StopReason.DEADLINE);
                 if (stale.getAsBoolean())
@@ -890,11 +892,24 @@ public final class SourcePreference {
                         "toMono", ByteBuffer.class, MediaCodec.BufferInfo.class, int.class);
         mono.setAccessible(true);
         ArrayList<float[]> chunks = new ArrayList<>();
+        SourceAudio.JavaMemory[] allocation = {null};
+        int[] sampleRate = {0};
         int[] count = {0};
         Function4<ByteBuffer, MediaCodec.BufferInfo, Integer, Integer, Unit> tap =
                 (bytes, info, channels, rate) -> {
                     if (first[0] == 0) first[0] = System.nanoTime();
                     try {
+                        if (allocation[0] == null) {
+                            allocation[0] =
+                                    SourceAudio.reserveJava(verificationBytes(rate, until - from));
+                            if (allocation[0] == null)
+                                throw new IllegalStateException(
+                                        "Audio verification is waiting for memory");
+                            sampleRate[0] = rate;
+                        }
+                        if (rate != sampleRate[0])
+                            throw new IllegalStateException(
+                                    "Audio verification sample rate changed");
                         float[] chunk = (float[]) mono.invoke(null, bytes, info, channels);
                         count[0] += chunk.length;
                         if (count[0] > 192000 * 24)
@@ -914,38 +929,51 @@ public final class SourcePreference {
                         Function0.class,
                         Function4.class);
         raw.setAccessible(true);
-        Object timing;
-        try (MediaDataSource source = copy.open()) {
-            timing = raw.invoke(null, source, from, until, (Function0<Boolean>) copy::expired, tap);
+        try {
+            Object timing;
+            try (MediaDataSource source = copy.open()) {
+                timing =
+                        raw.invoke(
+                                null, source, from, until, (Function0<Boolean>) copy::expired, tap);
+            }
+            long decoded = System.nanoTime();
+            copy.finished(timing == null || count[0] == 0);
+            if (timing == null || count[0] == 0) return null;
+            float[] pcm = new float[count[0]];
+            int at = 0;
+            for (float[] chunk : chunks) {
+                System.arraycopy(chunk, 0, pcm, at, chunk.length);
+                at += chunk.length;
+            }
+            RecordingIdentity.Window window =
+                    new RecordingIdentity.Window(
+                            pcm,
+                            ((Number) pairValue(timing, "first")).intValue(),
+                            ((Number) pairValue(timing, "second")).doubleValue());
+            long done = System.nanoTime();
+            HostLog.d(
+                    String.format(
+                            Locale.US,
+                            "Recording %s: to first audio %d ms, decode %d ms, source reads %d ms,"
+                                    + " fingerprint %d ms, %.1f s of audio",
+                            name,
+                            (first[0] - begun) / 1_000_000,
+                            (decoded - first[0]) / 1_000_000,
+                            ((copy.audio == null ? 0 : copy.audio.sourceNanos()) - sourceBefore)
+                                    / 1_000_000,
+                            (done - decoded) / 1_000_000,
+                            window.seconds));
+            return window;
+        } finally {
+            if (allocation[0] != null) allocation[0].close();
         }
-        long decoded = System.nanoTime();
-        copy.finished(timing == null || count[0] == 0);
-        if (timing == null || count[0] == 0) return null;
-        float[] pcm = new float[count[0]];
-        int at = 0;
-        for (float[] chunk : chunks) {
-            System.arraycopy(chunk, 0, pcm, at, chunk.length);
-            at += chunk.length;
-        }
-        RecordingIdentity.Window window =
-                new RecordingIdentity.Window(
-                        pcm,
-                        ((Number) pairValue(timing, "first")).intValue(),
-                        ((Number) pairValue(timing, "second")).doubleValue());
-        long done = System.nanoTime();
-        HostLog.d(
-                String.format(
-                        Locale.US,
-                        "Recording %s: to first audio %d ms, decode %d ms, source reads %d ms,"
-                                + " fingerprint %d ms, %.1f s of audio",
-                        name,
-                        (first[0] - begun) / 1_000_000,
-                        (decoded - first[0]) / 1_000_000,
-                        ((copy.audio == null ? 0 : copy.audio.sourceNanos()) - sourceBefore)
-                                / 1_000_000,
-                        (done - decoded) / 1_000_000,
-                        window.seconds));
-        return window;
+    }
+
+    static long verificationBytes(int rate, double seconds) {
+        if (rate <= 0 || !Double.isFinite(seconds) || seconds <= 0 || seconds > 24) return -1;
+        // Mono chunks and their flat copy, one decoder frame, source blocks and fingerprint work.
+        double bytes = (Math.ceil(rate * seconds) + 65536) * 8 + (12L << 20);
+        return bytes >= Long.MAX_VALUE ? -1 : (long) bytes;
     }
 
     static Object pairValue(Object pair, String name) throws ReflectiveOperationException {

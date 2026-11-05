@@ -7,6 +7,7 @@ The patch code is licensed under GPL-3.0-or-later. Third-party components keep t
 | Component | Used for | License |
 | --- | --- | --- |
 | [Google Material Design Icons](https://github.com/google/material-design-icons) | Rounded Settings icon matching BitChord's `Icons.Rounded.Settings`, rendered from the same 24px path | [Apache License 2.0](licenses/APACHE-2.0.txt) |
+| [BitChord](https://github.com/kushagrasinghx/BitChord) by kushagra and its contributors | I reuse native local-file playback and download tagging. `FlacMetadata.java` merges existing tags with the native FLAC tagger's replacements, following [RFC 9639](https://www.rfc-editor.org/rfc/rfc9639.html). | [GPL-3.0](licenses/GPL-3.0.txt); the metadata merger is independently written |
 | [TDLib](https://github.com/tdlib/td) and its Java bindings | Telegram login, search and downloads | [Boost Software License 1.0](licenses/TDLIB-BOOST.txt) |
 | [TGX-Android/tdlib](https://github.com/TGX-Android/tdlib) | Prebuilt native TDLib libraries | See TDLib, OpenSSL and libc++ |
 | [OpenSSL](https://github.com/openssl/openssl) | TLS for TDLib | [Apache License 2.0](licenses/OPENSSL-APACHE.txt) |
@@ -108,9 +109,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-# Streamseek audio decoder
+# Shared audio decoder
 
-The optional Streamseek decoder uses FFmpeg 7.1.5 (libavformat, libavcodec,
+Recording checks, track analysis, waveforms and Streamseek previews use FFmpeg 7.1.5 (libavformat, libavcodec,
 libswresample and libavutil), licensed under LGPL-2.1-or-later. No GPL-only,
 nonfree or network components are enabled. The exact unmodified upstream source
 archive is included in `native/preview/vendor/ffmpeg-7.1.5.tar.xz`, with the

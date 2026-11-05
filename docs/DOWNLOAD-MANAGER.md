@@ -6,7 +6,13 @@ Select **Unofficial Soulseek audio** in Morphe for BitChord 1.9, then open Downl
 
 I place a Download control beside the player's favourite/menu actions. It first uses the current non-YouTube stream when downloadable, then checks other enabled sources and readable local music for a matching recording and duration. Alternatives are ranked by reported audio quality; YouTube is the last fallback and remains unavailable when disabled under Sources. A known transfer percentage appears inside the control. Source lookup and missing transfer totals do not produce estimated percentages.
 
-Playlist source selection shows each original song's duration and carries that song's title, artist, artwork and duration into the picker. I keep the chosen candidate's quality and reported duration in the batch review. A source that supplies no duration is labelled **Not reported**; file size and bitrate are not used to invent one.
+I keep playlist and album source selection inside each track's card. **Choose source and quality** expands its results, search and format filters without leaving the batch review. Each result shows the provider and its reported format, duration and size; reported quality stays visible, with further peer metadata in the spoken result description and preview details. Filters group explicit audio specifications without treating an unspecified lossless file as FLAC. I preserve the original song's duration beside the selected copy so I can compare recordings. Missing values say **Not reported**; I do not infer duration from size or bitrate. With **Streamseek previews** installed and enabled, a supported Soulseek result in its current session can be previewed without opening another page.
+
+I can tap a completed file in Downloads to play it through BitChord's local player, including when network music sources are disabled. The saved file's recorded source remains available to Stats when playback uses its local URI. I also use the completed copy when replaying its original song or an existing queue entry. A missing file or revoked folder permission still requires restoring access to that file.
+
+I preserve existing FLAC metadata when BitChord writes download tags, including release dates, album fields, lyrics, artwork and other supported metadata blocks. New non-empty values replace their corresponding tags; existing values remain when replacements are absent. This does not fetch missing release dates or restore metadata already removed from older files.
+
+Local playback uses BitChord's existing Last.fm and ListenBrainz connections and scrobbling settings. Track title, artist, album and duration follow the local song through the normal player. Disabling music sources does not disable scrobbling; sending a scrobble still needs a connected account and network access.
 
 Downloads is the fifth tab, between Explore and Library, in both native navigation
 styles. It uses BitChord's original Downloads glyph. The hub, Explorer and batch
@@ -38,7 +44,7 @@ Unknown rates, formats and progress are not fabricated. Saved aliases for the sa
 host URI appear once.
 
 Downloads has a persistent search field for saved files and transfers, with one
-clear control. Search in the bottom navigation finds music; a track's Download
+clear control. Search in the bottom navigation finds music; the track menu's manual Download
 action opens source selection. There is no duplicate Find sources button.
 Filters show actual counts. Issues appears when attention is needed. A result
 count, display-sort control and view switch sit above the cards. Sorting only

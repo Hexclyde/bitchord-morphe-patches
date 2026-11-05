@@ -146,5 +146,9 @@ public final class PlaybackService {
         return true;
     }
 
-    public static void bitchordAutomixRestore(Object analyzer, String key) {}
+    public static java.util.function.BiConsumer<Object, String> restorer;
+
+    public static void bitchordAutomixRestore(Object analyzer, String key) {
+        if (restorer != null) restorer.accept(analyzer, key);
+    }
 }

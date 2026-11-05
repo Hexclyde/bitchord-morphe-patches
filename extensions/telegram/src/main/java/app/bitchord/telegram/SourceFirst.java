@@ -220,6 +220,16 @@ public final class SourceFirst {
         return running == null ? computed : running.cacheKey(original, computed);
     }
 
+    /**
+     * Whether analysing this entry's source now cannot read a copy about to be replaced. Pure
+     * snapshot: nothing is bound, removed or held. True when the engine is absent or off. The
+     * verified form asks the host whether a prepared copy still stands, so only a worker uses it.
+     */
+    public static boolean lookaheadReady(Uri uri, boolean verified) {
+        SourcePreparation running = active;
+        return running == null || running.lookaheadReady(uri, verified);
+    }
+
     /** Read-only guard at both checks of the host's automatic upgrade swap. */
     public static boolean preparedEntry(MediaItem item) {
         SourcePreparation running = active;

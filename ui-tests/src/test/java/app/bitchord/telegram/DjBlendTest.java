@@ -38,12 +38,14 @@ public class DjBlendTest {
 
     /** The native plan's field names, which the runtime reads and writes by reflection. */
     public static final class Plan {
-        public boolean blocked, shouldStart, markerVisible, bassSwap;
+        public boolean blocked, shouldStart, markerVisible, bassSwap, phaseLock;
         public double fadeSeconds = 8,
                 transitionEnd = 180,
                 transitionStart = 172,
                 incomingCueTime = 4,
                 incomingHandoffTime = 8,
+                incomingPlaybackRate = 1,
+                outgoingPlaybackRate = 1,
                 filterSweep,
                 vocalOverlap,
                 echoSeconds;
@@ -166,6 +168,40 @@ public class DjBlendTest {
     }
 
     @Test
+    public void anOutgoingNativeRateKeepsTheCompatiblePhraseWithinIncomingBounds()
+            throws Exception {
+        Plan plan = new Plan();
+        plan.outgoingPlaybackRate = 1.04;
+        plan.incomingHandoffTime = 4 + 8 / 1.04 * .5;
+        TransitionRuntime.Pair shortIncoming =
+                new TransitionRuntime.Pair("dj:out", "dj:in", "", "", 180, 50.2, 0);
+        assertEquals(16, TransitionRuntime.djBlend(plan, shortIncoming, service.player, 8), 1e-9);
+        assertEquals(4 + 16 / 1.04 * .5, plan.incomingHandoffTime, 1e-9);
+        assertEquals(164, plan.transitionStart, 1e-9);
+    }
+
+    @Test
+    public void anIncomingNativeRatePreservesALateHandoffOnItsOwnClock() throws Exception {
+        Plan plan = new Plan();
+        plan.incomingPlaybackRate = 1.04;
+        plan.incomingHandoffTime = 4 + 8 * 1.04 * .99;
+        assertEquals(16, TransitionRuntime.djBlend(plan, pair(), service.player, 8), 1e-9);
+        assertEquals(4 + 16 * 1.04 * .99, plan.incomingHandoffTime, 1e-9);
+    }
+
+    @Test
+    public void anIncomingNativeRateCapsThePhraseBeforeTheAvailableAudioRunsOut() throws Exception {
+        Plan plan = new Plan();
+        plan.incomingPlaybackRate = 1.04;
+        plan.incomingHandoffTime = 4 + 8 * 1.04 * .5;
+        TransitionRuntime.Pair shortIncoming =
+                new TransitionRuntime.Pair("dj:out", "dj:in", "", "", 180, 52, 0);
+        assertEquals(
+                16 / 1.04, TransitionRuntime.djBlend(plan, shortIncoming, service.player, 8), 1e-9);
+        assertEquals(12, plan.incomingHandoffTime, 1e-9);
+    }
+
+    @Test
     public void anUnusableHandoffLeavesTheNativePlanUnchanged() throws Exception {
         Plan plan = new Plan();
         plan.incomingHandoffTime = Double.NaN;
@@ -228,6 +264,152 @@ public class DjBlendTest {
         DjMode.plan(off);
         assertEquals(8, off.fadeSeconds, 0);
         DjMode.service(null);
+    }
+
+    /** A native plan that also carries a render stage the editor's audition cannot reproduce. */
+    public static final class RenderedPlan {
+        public static final class Render {
+            public boolean advanced = true;
+        }
+
+        public boolean blocked, shouldStart, markerVisible, bassSwap, phaseLock;
+        public double fadeSeconds = 8,
+                transitionEnd = 180,
+                transitionStart = 172,
+                incomingCueTime = 4,
+                incomingHandoffTime = 8,
+                incomingPlaybackRate = 1,
+                outgoingPlaybackRate = 1,
+                filterSweep,
+                vocalOverlap,
+                echoSeconds;
+        public String reason = "Smart";
+        public Style transitionStyle = Style.EQUAL_POWER;
+        public Render render = new Render();
+    }
+
+    private static final class BeforeSnapshot {
+        final TransitionEdit edit;
+        final String reason;
+
+        BeforeSnapshot(Object value) throws Exception {
+            Field editField = value.getClass().getDeclaredField("edit");
+            Field reasonField = value.getClass().getDeclaredField("reason");
+            editField.setAccessible(true);
+            reasonField.setAccessible(true);
+            edit = (TransitionEdit) editField.get(value);
+            reason = (String) reasonField.get(value);
+        }
+    }
+
+    private static BeforeSnapshot before(TransitionRuntime.Pair pair) throws Exception {
+        try {
+            java.lang.reflect.Method method =
+                    TransitionRuntime.class.getDeclaredMethod(
+                            "before", TransitionRuntime.Pair.class);
+            method.setAccessible(true);
+            return new BeforeSnapshot(method.invoke(null, pair));
+        } catch (NoSuchMethodException missing) {
+            throw new AssertionError("Automatic Before preview is unavailable", missing);
+        }
+    }
+
+    @Test
+    public void beforeIsTheActualNativePlanIncludingTheDjSpan() throws Exception {
+        TransitionRuntime.bind(service);
+        TransitionRuntime.Pair live = TransitionRuntime.pair();
+        assertEquals(Strings.t("Automatic mix is not ready yet."), before(live).reason);
+        assertNull(before(live).edit);
+
+        Plan plan = new Plan();
+        TransitionRuntime.apply(plan);
+        BeforeSnapshot before = before(live);
+        assertNull(before.reason);
+        assertEquals(16, before.edit.overlap, 1e-9);
+        assertEquals(164, before.edit.start(180), 1e-9);
+        assertEquals(4, before.edit.incomingCue, 1e-9);
+        assertEquals(1, before.edit.overlapRate[0], 0);
+        assertEquals(1, before.edit.overlapRate[1], 0);
+        assertNotSame(before.edit, before(live).edit);
+    }
+
+    @Test
+    public void automaticPlanIsOnlyTheCapturedNativeTimingAndDraftsNeverCrash() throws Exception {
+        TransitionRuntime.bind(service);
+        TransitionRuntime.Pair live = TransitionRuntime.pair();
+        assertNull(TransitionRuntime.automaticPlan(live));
+        assertNull(TransitionRuntime.automaticPlan(null));
+        assertNotNull(TransitionRuntime.automaticDraft(live));
+        TransitionRuntime.apply(new Plan());
+        TransitionEdit plan = TransitionRuntime.automaticPlan(live);
+        assertEquals(16, plan.overlap, 1e-9);
+        assertEquals(16, TransitionRuntime.automaticDraft(live).overlap, 1e-9);
+        TransitionRuntime.Pair other =
+                new TransitionRuntime.Pair("dj:out", "dj:other", "", "", 180, 180, 0);
+        assertNull(TransitionRuntime.automaticPlan(other));
+    }
+
+    @Test
+    public void nativeTimingKeepsBothDeckRatesAndTheOutgoingSourceClock() throws Exception {
+        DjMode.enabled = false;
+        TransitionRuntime.bind(service);
+        TransitionRuntime.Pair live = TransitionRuntime.pair();
+        Plan plan = new Plan();
+        plan.fadeSeconds = 12;
+        plan.transitionStart = 168;
+        plan.outgoingPlaybackRate = 1.2;
+        plan.incomingPlaybackRate = .96;
+        TransitionRuntime.apply(plan);
+        BeforeSnapshot before = before(live);
+        assertNull(before.reason);
+        assertEquals(10, before.edit.overlap, 1e-9);
+        assertEquals(168, before.edit.start(180), 1e-9);
+        assertEquals(1.2, before.edit.overlapRate[0], 1e-9);
+        assertEquals(.96, before.edit.overlapRate[1], 1e-9);
+        assertEquals(12, plan.fadeSeconds, 0);
+        assertEquals(1.2, plan.outgoingPlaybackRate, 0);
+        assertEquals(.96, plan.incomingPlaybackRate, 0);
+        assertNull(TransitionRuntime.load(live));
+        plan.incomingPlaybackRate = Double.NaN;
+        TransitionRuntime.apply(plan);
+        assertNull(before(live).edit);
+    }
+
+    @Test
+    public void beforeIsNotOfferedForAPlanThatDoesNotSurviveTheNextApply() throws Exception {
+        TransitionRuntime.bind(service);
+        TransitionRuntime.Pair live = TransitionRuntime.pair();
+        TransitionRuntime.apply(new Plan());
+        assertNotNull(before(live).edit);
+        Plan blocked = new Plan();
+        blocked.blocked = true;
+        TransitionRuntime.apply(blocked);
+        assertNull(before(live).edit);
+        assertEquals(Strings.t("Automatic mix is not ready yet."), before(live).reason);
+        assertNull(TransitionRuntime.load(live));
+    }
+
+    @Test
+    public void beforeRefusesAnyNativeEffectItCannotRenderFaithfully() throws Exception {
+        TransitionRuntime.bind(service);
+        TransitionRuntime.Pair live = TransitionRuntime.pair();
+        String reason = Strings.t("Before isn't available: Automix adds effects to this blend.");
+        for (String effect :
+                new String[] {
+                    "filterSweep", "vocalOverlap", "echoSeconds", "bassSwap", "phaseLock", "render"
+                }) {
+            Object plan = effect.equals("render") ? new RenderedPlan() : new Plan();
+            if (effect.equals("bassSwap")) ((Plan) plan).bassSwap = true;
+            else if (effect.equals("phaseLock")) ((Plan) plan).phaseLock = true;
+            else if (!effect.equals("render")) plan.getClass().getField(effect).setDouble(plan, 2);
+            TransitionRuntime.apply(plan);
+            assertNull(effect, before(live).edit);
+            assertEquals(effect, reason, before(live).reason);
+        }
+        RenderedPlan quiet = new RenderedPlan();
+        quiet.render.advanced = false;
+        TransitionRuntime.apply(quiet);
+        assertNotNull(before(live).edit);
     }
 
     @Test

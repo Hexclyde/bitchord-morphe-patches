@@ -1395,6 +1395,75 @@ public class SourcePreparationTest {
     }
 
     @Test
+    public void lookaheadReadinessAcceptsOtherSourcesAndRefusesAnUnsettledWatchEntry()
+            throws Exception {
+        assertFalse(preparation.lookaheadReady(null, false));
+        assertTrue(preparation.lookaheadReady(Uri.parse("file:///music/a.flac"), false));
+        assertTrue(preparation.lookaheadReady(Uri.parse("https://example.test/a"), true));
+        assertFalse(preparation.lookaheadReady(entry("a", "future"), false));
+        assertFalse(preparation.lookaheadReady(entry("a", "future"), true));
+    }
+
+    @Test
+    public void aPreparedFutureCopyIsReadyBeforeItsEntryBindsAndBindsNothing() throws Exception {
+        Uri current = entry("a", "playing"), next = entry("b", "future");
+        preparation.retainCurrentEntries(Collections.singletonList(current));
+        preparation.upcoming(Collections.singletonList(next));
+        idle();
+        assertTrue(preparation.lookaheadReady(next, false));
+        assertTrue(preparation.lookaheadReady(next, true));
+        assertTrue("Asking again changes nothing", preparation.lookaheadReady(next, true));
+        Uri chosen = preparation.renditionUri(next);
+        assertNotEquals("The prepared copy was still unbound until the open", next, chosen);
+        assertTrue(preparation.lookaheadReady(next, false));
+        assertEquals(chosen, preparation.renditionUri(next));
+    }
+
+    @Test
+    public void aPreparedCopyThatNoLongerStandsIsNotReadyWhenVerified() throws Exception {
+        Uri current = entry("a", "playing"), next = entry("b", "future");
+        preparation.retainCurrentEntries(Collections.singletonList(current));
+        preparation.upcoming(Collections.singletonList(next));
+        idle();
+        host.sourceOn = false;
+        assertTrue("The snapshot alone cannot know", preparation.lookaheadReady(next, false));
+        assertFalse(preparation.lookaheadReady(next, true));
+        host.sourceOn = true;
+        assertTrue(preparation.lookaheadReady(next, true));
+        host.terms = "changed";
+        assertFalse(preparation.lookaheadReady(next, true));
+        host.terms = "session";
+        assertNotEquals("Checking removed nothing", next, preparation.renditionUri(next));
+    }
+
+    @Test
+    public void lookaheadReadinessAcceptsASettledPlainEntry() throws Exception {
+        Uri current = entry("a", "first");
+        assertFalse(preparation.lookaheadReady(current, false));
+        host.foreground = false;
+        assertEquals(current, preparation.route(new Object(), new DataSpec(current)).uri);
+        assertEquals(current, preparation.renditionUri(current));
+        assertTrue(preparation.lookaheadReady(current, false));
+    }
+
+    @Test
+    public void lookaheadReadinessPassesWhenTheEngineIsOffOrClosed() throws Exception {
+        Uri next = entry("b", "future");
+        assertFalse(preparation.lookaheadReady(next, false));
+        preparation.switched(false);
+        assertTrue(preparation.lookaheadReady(next, false));
+        preparation.switched(true);
+        assertFalse(preparation.lookaheadReady(next, false));
+        preparation.close();
+        assertTrue(preparation.lookaheadReady(next, false));
+    }
+
+    @Test
+    public void lookaheadReadinessIsOpenWhileNoEngineExists() {
+        assertTrue(SourceFirst.lookaheadReady(entry("b", "future"), true));
+    }
+
+    @Test
     public void aTimedOutEntryCannotFlipWhenItsCheckFinishes() throws Exception {
         Uri current = entry("a", "first"), next = entry("a", "second");
         host.gates.put("a", new CountDownLatch(1));

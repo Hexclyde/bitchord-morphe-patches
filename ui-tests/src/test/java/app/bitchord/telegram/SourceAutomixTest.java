@@ -191,15 +191,23 @@ public class SourceAutomixTest {
         PlaybackService.dspDecoder = null;
         PlaybackService.dspFeatures = null;
         HostLog.observer = null;
-        for (String name : new String[] {"jobs", "observed", "pinned"}) {
+        originalStat = SourceAutomix.statReader;
+        originalClock = SourceAutomix.identityClock;
+        for (String name : new String[] {"jobs", "observed", "pinned", "facts", "replays"}) {
             java.lang.reflect.Field field = SourceAutomix.class.getDeclaredField(name);
             field.setAccessible(true);
             ((Map<?, ?>) field.get(null)).clear();
         }
     }
 
+    java.util.function.Function<java.io.File, String> originalStat;
+    java.util.function.LongSupplier originalClock;
+
     @After
     public void restoreFormats() throws Exception {
+        SourceAutomix.statReader = originalStat;
+        SourceAutomix.identityClock = originalClock;
+        PlaybackService.restorer = null;
         SourceAudio.analysisFormats = originalFormats;
         SourceAutomix.heapMaximum = originalMaximum;
         SourceAutomix.heapUsed = originalUsed;
@@ -416,6 +424,156 @@ public class SourceAutomixTest {
         assertTrue(callback.f$0.trackAnalyzer.store.keys.isEmpty());
     }
 
+    SourceAutomix.Job job(String id) throws Exception {
+        java.lang.reflect.Field jobs = SourceAutomix.class.getDeclaredField("jobs");
+        jobs.setAccessible(true);
+        Map<Object, Map<String, SourceAutomix.Job>> all =
+                (Map<Object, Map<String, SourceAutomix.Job>>) jobs.get(null);
+        return all.get(callback.f$0.trackAnalyzer).get(id);
+    }
+
+    @Test
+    public void spentFullReadsShowTheLimitUntilARealRetryFindsHeadroom() throws Exception {
+        guardedLowMemory();
+        SourceAudio.analysisFormats = () -> format(48000, 2_000_000);
+        DspAnalysisTest.decoder(200, 0);
+        PlaybackService.DspDecoder decoder = PlaybackService.dspDecoder;
+        java.util.concurrent.atomic.AtomicInteger decoded =
+                new java.util.concurrent.atomic.AtomicInteger();
+        java.util.concurrent.atomic.AtomicInteger opened =
+                new java.util.concurrent.atomic.AtomicInteger();
+        java.util.concurrent.atomic.AtomicInteger measured =
+                new java.util.concurrent.atomic.AtomicInteger();
+        java.util.concurrent.atomic.AtomicBoolean pressure =
+                new java.util.concurrent.atomic.AtomicBoolean(true);
+        PlaybackService.dspDecoder =
+                (source, end, abort, chunks) -> {
+                    decoded.incrementAndGet();
+                    Object result = decoder.decode(source, end, abort, chunks);
+                    if (pressure.get()) SourceAutomix.heapUsed = () -> 170L << 20;
+                    return result;
+                };
+        PlaybackService.cached =
+                uri -> {
+                    opened.incrementAndGet();
+                    return cachedAudio();
+                };
+        PlaybackService.dspFeatures =
+                (samples, seconds) -> {
+                    measured.incrementAndGet();
+                    return new Object();
+                };
+        MediaItem selected = item("content://music/low-memory");
+        TransitionRuntime.Pair pair =
+                new TransitionRuntime.Pair("recording-1", "recording-2", "A", "B", 2, 2, 0);
+        pair.outgoing = selected;
+        String waiting = Strings.t("Waiting for memory");
+        String limit = Strings.t("Not enough memory to analyze this track. Tap Retry.");
+        for (int i = 0; i < 3; i++) {
+            SourceAutomix.heapUsed = () -> 38L << 20;
+            SourceAutomix.request(callback, selected, 2000L);
+            assertEquals(i < 2 ? "memory" : "memory_limit", job("recording-1").phase);
+            assertEquals(i < 2 ? waiting : limit, TransitionAnalysis.read(pair, 0).state());
+            job("recording-1").retryAfter = 0;
+        }
+        assertEquals(3, decoded.get());
+        int reads = opened.get();
+
+        pressure.set(false);
+        SourceAutomix.heapUsed = () -> 38L << 20;
+        assertTrue(SourceAutomix.request(callback, selected, 2000L));
+        assertEquals("An ordinary request starts no fourth read", 3, decoded.get());
+        assertEquals("An ordinary request reopens nothing", reads, opened.get());
+        assertEquals(0, measured.get());
+        assertEquals("memory_limit", job("recording-1").phase);
+        assertEquals(limit, TransitionAnalysis.read(pair, 0).state());
+        assertTrue(callback.f$0.trackAnalyzer.results.isEmpty());
+
+        SourceAutomix.requestEditor(pair, true);
+        assertEquals(4, decoded.get());
+        assertEquals("The editor's Retry measures the recovered heap", 1, measured.get());
+        assertEquals("ready", job("recording-1").phase);
+        assertEquals(1, job("recording-1").attempts);
+        assertNotNull(callback.f$0.trackAnalyzer.results.get("recording-1"));
+        assertEquals(1, callback.f$0.trackAnalyzer.store.keys.size());
+    }
+
+    @Test
+    public void pressureBeforeAnyReadKeepsWaitingAndSpendsNoAttempt() throws Exception {
+        guardedLowMemory();
+        SourceAudio.analysisFormats = () -> format(48000, 2_000_000);
+        SourceAutomix.heapUsed = () -> 170L << 20;
+        DspAnalysisTest.decoder(200, 0);
+        java.util.concurrent.atomic.AtomicInteger decoded =
+                new java.util.concurrent.atomic.AtomicInteger();
+        PlaybackService.DspDecoder decoder = PlaybackService.dspDecoder;
+        PlaybackService.dspDecoder =
+                (source, end, abort, chunks) -> {
+                    decoded.incrementAndGet();
+                    return decoder.decode(source, end, abort, chunks);
+                };
+        MediaItem selected = item("content://music/low-memory");
+        TransitionRuntime.Pair pair =
+                new TransitionRuntime.Pair("recording-1", "recording-2", "A", "B", 2, 2, 0);
+        for (int i = 0; i < 6; i++) {
+            SourceAutomix.request(callback, selected, 2000L);
+            SourceAutomix.Job job = job("recording-1");
+            assertEquals("memory", job.phase);
+            assertEquals(0, job.attempts);
+            assertEquals(Strings.t("Waiting for memory"), TransitionAnalysis.read(pair, 0).state());
+            job.retryAfter = 0;
+        }
+        assertEquals(0, decoded.get());
+    }
+
+    @Test
+    public void headroomBetweenTheMeasurementAndTheWholeDecodePeakStillPublishes()
+            throws Exception {
+        guardedLowMemory();
+        SourceAudio.analysisFormats = () -> format(48000, 2_000_000);
+        DspAnalysisTest.decoder(200, 0);
+        PlaybackService.DspDecoder decoder = PlaybackService.dspDecoder;
+        PlaybackService.dspDecoder =
+                (source, end, abort, chunks) -> {
+                    Object result = decoder.decode(source, end, abort, chunks);
+                    // 17 MiB remain: above the 22,050 measured frames, below the decode peak.
+                    SourceAutomix.heapUsed = () -> 119L << 20;
+                    return result;
+                };
+        java.util.concurrent.atomic.AtomicInteger measured =
+                new java.util.concurrent.atomic.AtomicInteger();
+        PlaybackService.dspFeatures =
+                (samples, seconds) -> {
+                    measured.incrementAndGet();
+                    return new Object();
+                };
+        SourceAutomix.request(callback, item("content://music/low-memory"), 2000L);
+        assertEquals(1, measured.get());
+        assertEquals("ready", job("recording-1").phase);
+        assertEquals(1, job("recording-1").attempts);
+        assertNotNull(callback.f$0.trackAnalyzer.results.get("recording-1"));
+    }
+
+    @Test
+    public void failedMeasurementCannotPublishAndReleasesTheTemporaryMemoryLease()
+            throws Exception {
+        guardedLowMemory();
+        SourceAudio.analysisFormats = () -> format(48000, 2_000_000);
+        DspAnalysisTest.decoder(200, 0);
+        PlaybackService.dspFeatures =
+                (samples, seconds) -> {
+                    throw new OutOfMemoryError("Measurement failed");
+                };
+        SourceAutomix.request(callback, item("content://music/low-memory"), 2000L);
+        assertEquals("failed", job("recording-1").phase);
+        assertTrue(callback.f$0.trackAnalyzer.results.isEmpty());
+        assertTrue(callback.f$0.trackAnalyzer.store.keys.isEmpty());
+        assertTrue(callback.f$0.trackAnalyzer.running.isEmpty());
+        java.lang.reflect.Field leases = SteadyPlayback.class.getDeclaredField("analysisLeases");
+        leases.setAccessible(true);
+        assertTrue(((java.util.List<?>) leases.get(null)).isEmpty());
+    }
+
     @Test
     public void diagnosticsDescribeTheBudgetAndOwnFailureSiteWithoutSourceSecrets() {
         guardedLowMemory();
@@ -560,6 +718,12 @@ public class SourceAutomixTest {
                     "bitchord://watch?v=abc"
                 }) {
             Callback next = new Callback();
+            if (uri.startsWith("file:"))
+                try {
+                    SourceAutomix.prepareIdentity(Uri.parse(uri)).get(5, TimeUnit.SECONDS);
+                } catch (Exception failure) {
+                    throw new AssertionError(failure);
+                }
             assertTrue(SourceAutomix.request(next, item(uri), 120000L));
             Analyzer analyzer = next.f$0.trackAnalyzer;
             assertEquals(Collections.singletonList(Uri.parse(uri)), analyzer.analyzed);
@@ -582,6 +746,776 @@ public class SourceAutomixTest {
         assertEquals(2, analyzer.analyzed.size());
         assertEquals(2, analyzer.store.keys.size());
         assertNotEquals(analyzer.store.keys.get(0), analyzer.store.keys.get(1));
+    }
+
+    private static TrackAnalysis cached(String id, double seconds) {
+        TrackAnalysis result = new TrackAnalysis(id);
+        result.duration = seconds;
+        return result;
+    }
+
+    @Test
+    public void readyNativeResultForTheSameUriAndDurationIsKeptWithoutADecode() throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        TrackAnalysis cachedResult = cached("recording-1", 120);
+        analyzer.results.put("recording-1", cachedResult);
+        analyzer.sourceAnalysisUris.put("recording-1", Uri.parse("content://music/42"));
+        assertTrue(SourceAutomix.request(callback, item("content://music/42"), 120000L));
+        assertSame(cachedResult, analyzer.results.get("recording-1"));
+        assertTrue(analyzer.analyzed.isEmpty());
+        assertEquals(0, analyzer.executor.tasks);
+        assertTrue(analyzer.store.keys.isEmpty());
+        assertEquals("ready", job("recording-1").phase);
+        assertTrue(job("recording-1").done);
+        assertEquals("ready", SourceAutomix.analysisPhase("recording-1"));
+    }
+
+    @Test
+    public void readyNativeResultWithoutAnAnalysisUriEntryIsKeptForWatchAndLocalRows()
+            throws Exception {
+        for (String uri :
+                new String[] {"bitchord://watch?v=abc", "file:///music/a.flac", "content://m/1"}) {
+            Callback next = new Callback();
+            Analyzer analyzer = next.f$0.trackAnalyzer;
+            TrackAnalysis native_ = cached("recording-1", 120);
+            analyzer.results.put("recording-1", native_);
+            assertTrue(SourceAutomix.request(next, item(uri), 120000L));
+            assertSame(uri, native_, analyzer.results.get("recording-1"));
+            assertTrue(uri, analyzer.analyzed.isEmpty());
+            assertEquals(uri, 0, analyzer.executor.tasks);
+            assertTrue(uri, analyzer.store.keys.isEmpty());
+            assertNull(
+                    "Unverified data is not relabelled",
+                    analyzer.sourceAnalysisUris.get("recording-1"));
+        }
+    }
+
+    @Test
+    public void plainIdNativeCacheRestoresOnTheWorkerWithoutADecode() throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        TrackAnalysis stored = cached("recording-1", 120);
+        java.util.List<String> keys = new ArrayList<>();
+        PlaybackService.restorer =
+                (target, key) -> {
+                    keys.add(key);
+                    if (key.equals("recording-1"))
+                        nativePublish(((Analyzer) target).results, "recording-1", stored);
+                };
+        try {
+            SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        } finally {
+            PlaybackService.restorer = null;
+        }
+        assertTrue(keys.contains("recording-1"));
+        assertSame(stored, analyzer.results.get("recording-1"));
+        assertTrue(analyzer.analyzed.isEmpty());
+        assertTrue(analyzer.store.keys.isEmpty());
+        assertEquals("ready", job("recording-1").phase);
+    }
+
+    @Test
+    public void aConflictingPlainIdCacheIsRemovedOnlyWhileItIsTheSameObject() throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        TrackAnalysis stale = cached("recording-1", 400);
+        PlaybackService.restorer =
+                (target, key) -> {
+                    if (key.equals("recording-1"))
+                        nativePublish(((Analyzer) target).results, "recording-1", stale);
+                };
+        try {
+            SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        } finally {
+            PlaybackService.restorer = null;
+        }
+        assertEquals(1, analyzer.analyzed.size());
+        assertNotSame(stale, analyzer.results.get("recording-1"));
+    }
+
+    @Test
+    public void aResultOwnedByAnotherTrackIdIsNotReused() throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        TrackAnalysis foreign = cached("another-track", 120);
+        analyzer.results.put("recording-1", foreign);
+        SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        assertEquals(1, analyzer.analyzed.size());
+        assertNotSame(foreign, analyzer.results.get("recording-1"));
+    }
+
+    @Test
+    public void readyNativeResultWithAnotherDurationIsReplacedNotTrusted() throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        TrackAnalysis stale = cached("recording-1", 300);
+        analyzer.results.put("recording-1", stale);
+        analyzer.sourceAnalysisUris.put("recording-1", Uri.parse("content://music/42"));
+        assertTrue(SourceAutomix.request(callback, item("content://music/42"), 120000L));
+        assertEquals(1, analyzer.analyzed.size());
+        assertNotSame(stale, analyzer.results.get("recording-1"));
+        assertEquals(
+                Uri.parse("content://music/42"), analyzer.sourceAnalysisUris.get("recording-1"));
+    }
+
+    @Test
+    public void coldNativeRestoreIsAdoptedWithoutBindingTheSourceUri() throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        TrackAnalysis stored = cached("recording-1", 120);
+        PlaybackService.restorer =
+                (target, key) -> {
+                    if (key.equals("recording-1"))
+                        nativePublish(((Analyzer) target).results, "recording-1", stored);
+                };
+        SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        assertSame(stored, analyzer.results.get("recording-1"));
+        assertNull(analyzer.sourceAnalysisUris.get("recording-1"));
+        assertTrue(analyzer.store.keys.isEmpty());
+        assertTrue(job("recording-1").adopted);
+    }
+
+    @Test
+    public void nativePublicationDelegatesUnlessTheWorkerCapturesThatMapAndId() throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        Map<Object, Object> plain = new ConcurrentHashMap<>();
+        TrackAnalysis first = cached("x", 120), second = cached("x", 120);
+        assertNull(SourceAutomix.restored(plain, "x", first));
+        assertSame(first, SourceAutomix.restored(plain, "x", second));
+        assertSame(first, plain.get("x"));
+        Map<Object, Object> other = new ConcurrentHashMap<>();
+        TrackAnalysis stored = cached("recording-1", 120), sibling = cached("sibling", 120);
+        PlaybackService.restorer =
+                (target, key) -> {
+                    if (!key.equals("recording-1")) return;
+                    nativePublish(other, "recording-1", stored);
+                    nativePublish(((Analyzer) target).results, "sibling", sibling);
+                    assertNull(
+                            "The captured entry stays private",
+                            ((Analyzer) target).results.get("recording-1"));
+                };
+        SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        assertSame("Another map is untouched by the capture", stored, other.get("recording-1"));
+        assertSame("Another id is published at once", sibling, analyzer.results.get("sibling"));
+    }
+
+    private static void waitFor(CountDownLatch latch) throws Exception {
+        assertTrue(latch.await(5, TimeUnit.SECONDS));
+    }
+
+    private static java.io.File tiny(String text) throws Exception {
+        java.io.File file = java.io.File.createTempFile("identity", ".flac");
+        file.deleteOnExit();
+        java.nio.file.Files.write(file.toPath(), text.getBytes());
+        return file;
+    }
+
+    @Test
+    public void localFileIdentityIsUnavailableBeforeTheWorkerAndFullAndStableAfter()
+            throws Exception {
+        java.io.File file = tiny("abc");
+        Uri uri = Uri.fromFile(file);
+        Thread test = Thread.currentThread();
+        List<Thread> readers = Collections.synchronizedList(new ArrayList<>());
+        SourceAutomix.statReader =
+                f -> {
+                    readers.add(Thread.currentThread());
+                    return f.length() + "|" + f.lastModified();
+                };
+        // Asking starts a read on the worker; hold the worker so the unseen state is observable.
+        CountDownLatch held = new CountDownLatch(1), gate = new CountDownLatch(1);
+        identityWorker()
+                .execute(
+                        () -> {
+                            held.countDown();
+                            try {
+                                gate.await(5, TimeUnit.SECONDS);
+                            } catch (InterruptedException interrupted) {
+                                throw new AssertionError(interrupted);
+                            }
+                        });
+        try {
+            waitFor(held);
+            assertNull(SourceAutomix.cachedIdentity(uri));
+            try {
+                SourceAutomix.identity(uri);
+                fail("A file that was never read has no identity on the main thread");
+            } catch (SourceAutomix.IdentityPending pending) {
+                assertEquals(uri, pending.uri);
+            }
+            assertTrue("Nothing was read while the worker was held", readers.isEmpty());
+        } finally {
+            gate.countDown();
+        }
+        String full = SourceAutomix.prepareIdentity(uri).get(5, TimeUnit.SECONDS);
+        assertEquals(PlaybackService.bitchordAutomixKey(uri) + "|3|" + file.lastModified(), full);
+        assertEquals(full, SourceAutomix.cachedIdentity(uri));
+        assertEquals(full, SourceAutomix.identity(uri));
+        assertFalse(readers.contains(test));
+        assertEquals(
+                "content://music/42",
+                SourceAutomix.cachedIdentity(Uri.parse("content://music/42")));
+    }
+
+    @Test
+    public void editorAndRequestNeverReadTheFileOnTheMainThread() throws Exception {
+        java.io.File file = tiny("abc");
+        Uri uri = Uri.fromFile(file);
+        Thread test = Thread.currentThread();
+        List<Thread> readers = Collections.synchronizedList(new ArrayList<>());
+        CountDownLatch read = new CountDownLatch(1);
+        SourceAutomix.statReader =
+                f -> {
+                    readers.add(Thread.currentThread());
+                    read.countDown();
+                    return f.length() + "|" + f.lastModified();
+                };
+        TransitionRuntime.Pair pair =
+                new TransitionRuntime.Pair("recording-1", "recording-2", "A", "B", 120, 120, 0);
+        pair.outgoing = item(uri.toString());
+        SourceAutomix.service(callback.f$0);
+        SourceAutomix.requestEditor(pair, true);
+        SourceAutomix.request(callback, item(uri.toString()), 120000L);
+        waitFor(read);
+        drainIdentityWorker();
+        assertFalse(readers.contains(test));
+        assertEquals(1, callback.f$0.trackAnalyzer.analyzed.size());
+    }
+
+    @Test
+    public void aChangedLocalFileInvalidatesTheAnalysisItOwned() throws Exception {
+        java.io.File file = tiny("abc");
+        Uri uri = Uri.fromFile(file);
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        SourceAutomix.prepareIdentity(uri).get(5, TimeUnit.SECONDS);
+        SourceAutomix.request(callback, item(uri.toString()), 120000L);
+        SourceAutomix.prepareIdentity(uri).get(5, TimeUnit.SECONDS);
+        assertEquals(1, analyzer.analyzed.size());
+        Object first = analyzer.results.get("recording-1");
+        java.nio.file.Files.write(file.toPath(), "abcdef".getBytes());
+        file.setLastModified(file.lastModified() + 5000);
+        SourceAutomix.prepareIdentity(uri).get(5, TimeUnit.SECONDS);
+        SourceAutomix.request(callback, item(uri.toString()), 120000L);
+        assertEquals("The changed file is measured again", 2, analyzer.analyzed.size());
+        assertNotSame(first, analyzer.results.get("recording-1"));
+    }
+
+    @Test
+    public void aFileChangeSeenByTheWorkerReplaysTheWaitingRequest() throws Exception {
+        java.io.File file = tiny("abc");
+        Uri uri = Uri.fromFile(file);
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        java.util.concurrent.atomic.AtomicLong now = new java.util.concurrent.atomic.AtomicLong();
+        SourceAutomix.identityClock = now::get;
+        SourceAutomix.prepareIdentity(uri).get(5, TimeUnit.SECONDS);
+        SourceAutomix.request(callback, item(uri.toString()), 120000L);
+        assertEquals(1, analyzer.analyzed.size());
+        java.nio.file.Files.write(file.toPath(), "abcdef".getBytes());
+        file.setLastModified(file.lastModified() + 5000);
+        now.set(600);
+        SourceAutomix.request(callback, item(uri.toString()), 120000L);
+        drainIdentityWorker();
+        assertEquals(
+                "The snapshot was refreshed and the request replayed", 2, analyzer.analyzed.size());
+    }
+
+    @Test
+    public void aRequestHoldingTheOldFactCannotReplaceTheFreshJob() throws Exception {
+        java.io.File file = tiny("abc");
+        Uri uri = Uri.fromFile(file);
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        java.util.concurrent.atomic.AtomicLong now = new java.util.concurrent.atomic.AtomicLong();
+        CountDownLatch statEntered = new CountDownLatch(1), statGate = new CountDownLatch(1);
+        CountDownLatch clockEntered = new CountDownLatch(1), clockGate = new CountDownLatch(1);
+        SourceAutomix.identityClock = now::get;
+        SourceAutomix.prepareIdentity(uri).get(5, TimeUnit.SECONDS);
+        SourceAutomix.request(callback, item(uri.toString()), 120000L);
+        assertEquals(1, analyzer.analyzed.size());
+        java.nio.file.Files.write(file.toPath(), "abcdef".getBytes());
+        file.setLastModified(file.lastModified() + 5000);
+        now.set(600);
+        SourceAutomix.statReader =
+                f -> {
+                    statEntered.countDown();
+                    try {
+                        assertTrue(statGate.await(5, TimeUnit.SECONDS));
+                    } catch (InterruptedException interrupted) {
+                        throw new AssertionError(interrupted);
+                    }
+                    return f.length() + "|" + f.lastModified();
+                };
+        // The first request leaves a replay waiting on a read that has not finished.
+        SourceAutomix.request(callback, item(uri.toString()), 120000L);
+        waitFor(statEntered);
+        SourceAutomix.identityClock =
+                () -> {
+                    if (Thread.currentThread().getName().equals("late-request")) {
+                        clockEntered.countDown();
+                        try {
+                            assertTrue(clockGate.await(5, TimeUnit.SECONDS));
+                        } catch (InterruptedException interrupted) {
+                            throw new AssertionError(interrupted);
+                        }
+                    }
+                    return now.get();
+                };
+        // This request has read the old fact when the read below publishes the new one.
+        Thread second =
+                new Thread(
+                        () -> SourceAutomix.request(callback, item(uri.toString()), 120000L),
+                        "late-request");
+        second.start();
+        waitFor(clockEntered);
+        statGate.countDown();
+        drainIdentityWorker();
+        assertEquals("The replay measured the changed file", 2, analyzer.analyzed.size());
+        clockGate.countDown();
+        second.join(5000);
+        drainIdentityWorker();
+        assertEquals("The old fact did not start another job", 2, analyzer.analyzed.size());
+    }
+
+    @Test
+    public void pendingFileFactsAreSharedAndAReleasedOwnerLosesItsReplay() throws Exception {
+        java.io.File file = tiny("abc");
+        Uri uri = Uri.fromFile(file);
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        CountDownLatch entered = new CountDownLatch(1), gate = new CountDownLatch(1);
+        java.util.concurrent.atomic.AtomicInteger reads =
+                new java.util.concurrent.atomic.AtomicInteger();
+        SourceAutomix.statReader =
+                f -> {
+                    reads.incrementAndGet();
+                    entered.countDown();
+                    try {
+                        assertTrue(gate.await(5, TimeUnit.SECONDS));
+                    } catch (InterruptedException interrupted) {
+                        throw new AssertionError(interrupted);
+                    }
+                    return f.length() + "|" + f.lastModified();
+                };
+        try {
+            CompletableFuture<String> first = SourceAutomix.prepareIdentity(uri);
+            waitFor(entered);
+            assertSame("Callers share one pending read", first, SourceAutomix.prepareIdentity(uri));
+            for (int n = 0; n < 20; n++)
+                SourceAutomix.request(callback, item(uri.toString()), 120000L);
+            SourceAutomix.release(callback.f$0);
+            gate.countDown();
+            first.get(5, TimeUnit.SECONDS);
+            assertEquals(1, reads.get());
+            assertTrue("A released owner is not asked again", analyzer.analyzed.isEmpty());
+            assertEquals(0, analyzer.executor.tasks);
+        } finally {
+            gate.countDown();
+        }
+    }
+
+    @Test
+    public void snapshotsAndPendingFilesStayBounded() throws Exception {
+        List<CompletableFuture<String>> futures = new ArrayList<>();
+        for (int n = 0; n < 300; n++)
+            futures.add(SourceAutomix.prepareIdentity(Uri.parse("file:///bounded/" + n + ".flac")));
+        for (CompletableFuture<String> future : futures)
+            try {
+                future.get(5, TimeUnit.SECONDS);
+            } catch (ExecutionException refused) {
+            }
+        java.lang.reflect.Field field = SourceAutomix.class.getDeclaredField("facts");
+        field.setAccessible(true);
+        assertTrue(((Map<?, ?>) field.get(null)).size() <= 128);
+        assertTrue(identityWorker().getQueue().size() <= 128);
+    }
+
+    private static ThreadPoolExecutor identityWorker() throws Exception {
+        java.lang.reflect.Field field = SourceAutomix.class.getDeclaredField("identityWorker");
+        field.setAccessible(true);
+        return (ThreadPoolExecutor) field.get(null);
+    }
+
+    /**
+     * The worker is one thread, so a task queued now runs after every read and replay before it.
+     */
+    private static void drainIdentityWorker() throws Exception {
+        identityWorker().submit(() -> {}).get(5, TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void aSnapshotIsServedWhileItRefreshesFromHalfASecondAndExpiresAtOneSecond()
+            throws Exception {
+        java.io.File file = tiny("abc");
+        Uri uri = Uri.fromFile(file);
+        java.util.concurrent.atomic.AtomicLong now = new java.util.concurrent.atomic.AtomicLong();
+        java.util.concurrent.atomic.AtomicInteger reads =
+                new java.util.concurrent.atomic.AtomicInteger();
+        java.util.concurrent.atomic.AtomicBoolean block =
+                new java.util.concurrent.atomic.AtomicBoolean();
+        CountDownLatch entered = new CountDownLatch(1), gate = new CountDownLatch(1);
+        SourceAutomix.identityClock = now::get;
+        SourceAutomix.statReader =
+                f -> {
+                    reads.incrementAndGet();
+                    if (block.get()) {
+                        entered.countDown();
+                        try {
+                            assertTrue(gate.await(5, TimeUnit.SECONDS));
+                        } catch (InterruptedException interrupted) {
+                            throw new AssertionError(interrupted);
+                        }
+                    }
+                    return f.length() + "|" + f.lastModified();
+                };
+        try {
+            String full = SourceAutomix.prepareIdentity(uri).get(5, TimeUnit.SECONDS);
+            assertEquals(
+                    PlaybackService.bitchordAutomixKey(uri) + "|3|" + file.lastModified(), full);
+            now.set(499);
+            assertEquals(full, SourceAutomix.cachedIdentity(uri));
+            drainIdentityWorker();
+            assertEquals("No refresh before half a second", 1, reads.get());
+            block.set(true);
+            now.set(500);
+            assertEquals(
+                    "The valid snapshot is still served", full, SourceAutomix.cachedIdentity(uri));
+            waitFor(entered);
+            assertEquals(full, SourceAutomix.cachedIdentity(uri));
+            now.set(1000);
+            assertNull("A snapshot a second old is not served", SourceAutomix.cachedIdentity(uri));
+            assertEquals("Callers join the pending read", 2, reads.get());
+            gate.countDown();
+            drainIdentityWorker();
+            assertEquals(full, SourceAutomix.cachedIdentity(uri));
+        } finally {
+            gate.countDown();
+        }
+    }
+
+    @Test
+    public void theMainThreadNeverReadsAFileEvenInsideAnActiveAnalysis() throws Exception {
+        java.io.File file = tiny("abc");
+        Uri unseen = Uri.fromFile(file);
+        Thread test = Thread.currentThread();
+        List<Thread> readers = Collections.synchronizedList(new ArrayList<>());
+        SourceAutomix.statReader =
+                f -> {
+                    readers.add(Thread.currentThread());
+                    return f.length() + "|" + f.lastModified();
+                };
+        java.util.concurrent.atomic.AtomicInteger pending =
+                new java.util.concurrent.atomic.AtomicInteger();
+        callback.f$0.trackAnalyzer.probe =
+                id -> {
+                    try {
+                        SourceAutomix.identity(unseen);
+                    } catch (SourceAutomix.IdentityPending expected) {
+                        pending.incrementAndGet();
+                    }
+                };
+        SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        drainIdentityWorker();
+        assertEquals("The analysis job does not allow a read on the main thread", 1, pending.get());
+        assertFalse(readers.contains(test));
+    }
+
+    @Test
+    public void aWorkerReadsTheFileBeforeItsIdentityIsUsed() throws Exception {
+        java.io.File file = tiny("abc");
+        Uri uri = Uri.fromFile(file);
+        java.util.concurrent.atomic.AtomicReference<String> seen =
+                new java.util.concurrent.atomic.AtomicReference<>();
+        Thread worker = new Thread(() -> seen.set(SourceAutomix.identity(uri)));
+        worker.start();
+        worker.join(5000);
+        assertEquals(
+                PlaybackService.bitchordAutomixKey(uri) + "|3|" + file.lastModified(), seen.get());
+    }
+
+    @Test
+    public void aReleasedOwnersReplayNeverRunsOrTakesTheServiceBack() throws Exception {
+        java.io.File file = tiny("abc");
+        Uri uri = Uri.fromFile(file);
+        Callback older = new Callback(), newer = new Callback();
+        CountDownLatch entered = new CountDownLatch(1), gate = new CountDownLatch(1);
+        SourceAutomix.statReader =
+                f -> {
+                    entered.countDown();
+                    try {
+                        assertTrue(gate.await(5, TimeUnit.SECONDS));
+                    } catch (InterruptedException interrupted) {
+                        throw new AssertionError(interrupted);
+                    }
+                    return f.length() + "|" + f.lastModified();
+                };
+        try {
+            SourceAutomix.request(older, item(uri.toString()), 120000L);
+            waitFor(entered);
+            SourceAutomix.service(newer.f$0);
+            gate.countDown();
+            drainIdentityWorker();
+            assertSame(newer.f$0, SourceAutomix.owner());
+            assertTrue(older.f$0.trackAnalyzer.analyzed.isEmpty());
+            assertEquals(0, older.f$0.trackAnalyzer.executor.tasks);
+        } finally {
+            gate.countDown();
+        }
+    }
+
+    @Test
+    public void adoptedNativeResultIsStillInvalidatedWhenTheRenditionChanges() throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        TrackAnalysis cachedResult = cached("recording-1", 120);
+        analyzer.results.put("recording-1", cachedResult);
+        analyzer.sourceAnalysisUris.put("recording-1", Uri.parse("content://music/42"));
+        SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        assertTrue(analyzer.analyzed.isEmpty());
+        PlaybackService.keySuffix = "#hifi-new";
+        SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        assertEquals(1, analyzer.analyzed.size());
+        assertNotSame(cachedResult, analyzer.results.get("recording-1"));
+    }
+
+    @Test
+    public void editorRequestDoesNotDiscardAReadyNativeResultItCanProve() throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        TrackAnalysis cachedResult = cached("recording-1", 120);
+        analyzer.results.put("recording-1", cachedResult);
+        analyzer.sourceAnalysisUris.put("recording-1", Uri.parse("content://music/42"));
+        TransitionRuntime.Pair pair =
+                new TransitionRuntime.Pair("recording-1", "recording-2", "A", "B", 120, 120, 0);
+        pair.outgoing = item("content://music/42");
+        SourceAutomix.service(callback.f$0);
+        SourceAutomix.requestEditor(pair, true);
+        assertSame(cachedResult, analyzer.results.get("recording-1"));
+        assertTrue(analyzer.analyzed.isEmpty());
+    }
+
+    /** Native plain-id restore publishes through SourceAutomix.restored when it exists. */
+    private static Object nativePublish(Map<?, ?> results, String id, Object value) {
+        try {
+            java.lang.reflect.Method hook =
+                    SourceAutomix.class.getDeclaredMethod(
+                            "restored", Map.class, Object.class, Object.class);
+            hook.setAccessible(true);
+            return hook.invoke(null, results, id, value);
+        } catch (NoSuchMethodException absent) {
+            return ((Map<Object, Object>) results).putIfAbsent(id, value);
+        } catch (ReflectiveOperationException failure) {
+            throw new AssertionError(failure);
+        }
+    }
+
+    @Test
+    public void nativeCanonicalMappedSourceResultStaysTheSameObjectWithoutADecodeOrRelabel()
+            throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        TrackAnalysis mapped = cached("recording-1", 120);
+        Uri canonical = Uri.parse("bitchord://watch?v=canonical");
+        analyzer.results.put("recording-1", mapped);
+        analyzer.sourceAnalysisUris.put("recording-1", canonical);
+        String audible = "bitchord://source?s=telegram-native&t=12_34&mix=stereo";
+        for (int n = 0; n < 2; n++)
+            assertTrue(SourceAutomix.request(callback, item(audible), 120000L));
+        assertSame(mapped, analyzer.results.get("recording-1"));
+        assertTrue(analyzer.analyzed.isEmpty());
+        assertEquals(0, analyzer.executor.tasks);
+        assertTrue(analyzer.store.keys.isEmpty());
+        assertEquals(canonical, analyzer.sourceAnalysisUris.get("recording-1"));
+        assertEquals("ready", SourceAutomix.analysisPhase("recording-1"));
+    }
+
+    @Test
+    public void changedAdoptedRenditionDoesNotResurrectTheSamePlainIdCache() throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        TrackAnalysis old = cached("recording-1", 120);
+        analyzer.results.put("recording-1", old);
+        SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        assertTrue(job("recording-1").done);
+        assertTrue(analyzer.analyzed.isEmpty());
+        PlaybackService.restorer =
+                (target, key) -> {
+                    if (key.equals("recording-1"))
+                        nativePublish(((Analyzer) target).results, "recording-1", old);
+                };
+        try {
+            PlaybackService.keySuffix = "#hifi-new";
+            SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        } finally {
+            PlaybackService.restorer = null;
+        }
+        assertEquals("The changed rendition is measured again", 1, analyzer.analyzed.size());
+        assertNotSame(old, analyzer.results.get("recording-1"));
+    }
+
+    @Test
+    public void gatedNativeRestoreAfterReleaseCannotPublish() throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        ExecutorService background = Executors.newSingleThreadExecutor();
+        analyzer.executor.background = background;
+        CountDownLatch entered = new CountDownLatch(1), gate = new CountDownLatch(1);
+        TrackAnalysis stale = cached("recording-1", 120);
+        PlaybackService.restorer =
+                (target, key) -> {
+                    if (!key.equals("recording-1")) return;
+                    entered.countDown();
+                    try {
+                        assertTrue(gate.await(5, TimeUnit.SECONDS));
+                    } catch (InterruptedException interrupted) {
+                        throw new AssertionError(interrupted);
+                    }
+                    nativePublish(((Analyzer) target).results, "recording-1", stale);
+                };
+        try {
+            SourceAutomix.request(callback, item("content://music/42"), 120000L);
+            assertTrue(entered.await(5, TimeUnit.SECONDS));
+            SourceAutomix.release(callback.f$0);
+            gate.countDown();
+            background.shutdown();
+            assertTrue(background.awaitTermination(5, TimeUnit.SECONDS));
+            assertNull(
+                    "A released service never receives a late restore",
+                    analyzer.results.get("recording-1"));
+            assertTrue(analyzer.analyzed.isEmpty());
+            assertTrue(analyzer.running.isEmpty());
+        } finally {
+            gate.countDown();
+            PlaybackService.restorer = null;
+            background.shutdownNow();
+            assertTrue(background.awaitTermination(5, TimeUnit.SECONDS));
+        }
+    }
+
+    @Test
+    public void newerNativeResultDuringAGatedRestoreWins() throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        ExecutorService background = Executors.newSingleThreadExecutor();
+        analyzer.executor.background = background;
+        CountDownLatch entered = new CountDownLatch(1), gate = new CountDownLatch(1);
+        TrackAnalysis stale = cached("recording-1", 120), newer = cached("recording-1", 120);
+        PlaybackService.restorer =
+                (target, key) -> {
+                    if (!key.equals("recording-1")) return;
+                    entered.countDown();
+                    try {
+                        assertTrue(gate.await(5, TimeUnit.SECONDS));
+                    } catch (InterruptedException interrupted) {
+                        throw new AssertionError(interrupted);
+                    }
+                    nativePublish(((Analyzer) target).results, "recording-1", stale);
+                };
+        try {
+            SourceAutomix.request(callback, item("content://music/42"), 120000L);
+            assertTrue(entered.await(5, TimeUnit.SECONDS));
+            analyzer.results.put("recording-1", newer);
+            gate.countDown();
+            background.shutdown();
+            assertTrue(background.awaitTermination(5, TimeUnit.SECONDS));
+            assertSame(newer, analyzer.results.get("recording-1"));
+            assertTrue(analyzer.analyzed.isEmpty());
+            assertTrue(analyzer.store.keys.isEmpty());
+        } finally {
+            gate.countDown();
+            PlaybackService.restorer = null;
+            background.shutdownNow();
+            assertTrue(background.awaitTermination(5, TimeUnit.SECONDS));
+        }
+    }
+
+    @Test
+    public void aNativeResultPutBetweenTheJobChangeAndTheWorkerIsNotAdoptedForAChangedRendition()
+            throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        analyzer.results.put("recording-1", cached("recording-1", 120));
+        SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        assertTrue(job("recording-1").done);
+        ExecutorService background = Executors.newSingleThreadExecutor();
+        analyzer.executor.background = background;
+        CountDownLatch held = new CountDownLatch(1), gate = new CountDownLatch(1);
+        background.execute(
+                () -> {
+                    held.countDown();
+                    try {
+                        gate.await(5, TimeUnit.SECONDS);
+                    } catch (InterruptedException interrupted) {
+                        throw new AssertionError(interrupted);
+                    }
+                });
+        try {
+            waitFor(held);
+            PlaybackService.keySuffix = "#hifi-new";
+            SourceAutomix.request(callback, item("content://music/42"), 120000L);
+            TrackAnalysis stale = cached("recording-1", 120);
+            analyzer.results.put("recording-1", stale);
+            gate.countDown();
+            background.shutdown();
+            assertTrue(background.awaitTermination(5, TimeUnit.SECONDS));
+            assertEquals("The changed rendition is measured", 1, analyzer.analyzed.size());
+            assertNotSame(stale, analyzer.results.get("recording-1"));
+            assertEquals(
+                    Uri.parse("content://music/42"),
+                    analyzer.sourceAnalysisUris.get("recording-1"));
+        } finally {
+            gate.countDown();
+            background.shutdownNow();
+            assertTrue(background.awaitTermination(5, TimeUnit.SECONDS));
+        }
+    }
+
+    @Test
+    public void theSameUriWithAnotherRuntimeIsMeasuredAgainNotServedFromTheOldNativeResult()
+            throws Exception {
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        TrackAnalysis native120 = cached("recording-1", 120);
+        analyzer.results.put("recording-1", native120);
+        SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        assertTrue(job("recording-1").done);
+        assertTrue(analyzer.analyzed.isEmpty());
+        SourceAutomix.request(callback, item("content://music/42"), 300000L);
+        assertEquals("The longer recording is decoded", 1, analyzer.analyzed.size());
+        assertEquals(300, job("recording-1").duration, .001);
+        assertNotSame(native120, analyzer.results.get("recording-1"));
+    }
+
+    @Test
+    public void anOldOwnerPublishesNothingAfterTheServiceSwitchesDuringAnalysis() throws Exception {
+        Analyzer older = callback.f$0.trackAnalyzer;
+        Callback newer = new Callback();
+        older.probe = id -> SourceAutomix.service(newer.f$0);
+        SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        assertEquals(1, older.analyzed.size());
+        assertTrue(older.results.isEmpty());
+        assertTrue(older.sourceAnalysisUris.isEmpty());
+        assertTrue(older.store.keys.isEmpty());
+        assertSame(newer.f$0, SourceAutomix.owner());
+    }
+
+    @Test
+    public void aFileSnapshotIsStampedWhenTheReadFinishesNotWhenItStarts() throws Exception {
+        java.io.File file = tiny("abc");
+        Uri uri = Uri.fromFile(file);
+        java.util.concurrent.atomic.AtomicLong now = new java.util.concurrent.atomic.AtomicLong();
+        CountDownLatch entered = new CountDownLatch(1), gate = new CountDownLatch(1);
+        SourceAutomix.identityClock = now::get;
+        SourceAutomix.statReader =
+                f -> {
+                    entered.countDown();
+                    try {
+                        assertTrue(gate.await(5, TimeUnit.SECONDS));
+                    } catch (InterruptedException interrupted) {
+                        throw new AssertionError(interrupted);
+                    }
+                    return f.length() + "|" + f.lastModified();
+                };
+        try {
+            CompletableFuture<String> read = SourceAutomix.prepareIdentity(uri);
+            waitFor(entered);
+            now.set(2000);
+            gate.countDown();
+            String full = read.get(5, TimeUnit.SECONDS);
+            assertEquals(
+                    PlaybackService.bitchordAutomixKey(uri) + "|3|" + file.lastModified(), full);
+            assertEquals(
+                    "The snapshot is fresh when the read arrives",
+                    full,
+                    SourceAutomix.cachedIdentity(uri));
+            drainIdentityWorker();
+        } finally {
+            gate.countDown();
+        }
     }
 
     @Test

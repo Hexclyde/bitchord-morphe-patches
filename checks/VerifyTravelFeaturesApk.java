@@ -11,6 +11,100 @@ public final class VerifyTravelFeaturesApk {
     private static int checks;
     private static final String BASE = "Lapp/bitchord/telegram/";
 
+    private static void karaokeMemory(Map<String, ClassDef> classes) {
+        String tensorName = "Lai/onnxruntime/OnnxTensor;";
+        ClassDef tensor = classes.get(tensorName);
+        check(tensor != null, "Karaoke has the native tensor implementation");
+        Method view = null;
+        int nativeViews = 0;
+        for (Method method : tensor.getMethods()) {
+            if (!method.getName().equals("getBuffer")) continue;
+            if (method.getParameterTypes().isEmpty()
+                    && method.getReturnType().equals("Ljava/nio/ByteBuffer;")) {
+                check(view == null, "One borrowed tensor view exists");
+                view = method;
+            }
+            if (method.getParameterTypes().equals(List.of("J", "J"))
+                    && method.getReturnType().equals("Ljava/nio/ByteBuffer;")
+                    && method.getAccessFlags() == 258
+                    && method.getImplementation() == null) nativeViews++;
+        }
+        check(view != null && view.getAccessFlags() == 2, "Borrowed tensor view remains private");
+        check(nativeViews == 1, "One instance native tensor view exists");
+        List<Instruction> code = new ArrayList<>();
+        view.getImplementation().getInstructions().forEach(code::add);
+        check(
+                code.stream()
+                        .map(Instruction::getOpcode)
+                        .toList()
+                        .equals(
+                                List.of(
+                                        Opcode.SGET_WIDE,
+                                        Opcode.IGET_WIDE,
+                                        Opcode.INVOKE_DIRECT,
+                                        Opcode.MOVE_RESULT_OBJECT,
+                                        Opcode.INVOKE_STATIC,
+                                        Opcode.MOVE_RESULT_OBJECT,
+                                        Opcode.INVOKE_VIRTUAL,
+                                        Opcode.MOVE_RESULT_OBJECT,
+                                        Opcode.RETURN_OBJECT)),
+                "Borrowed tensor view has no copying allocation");
+        MethodReference nativeCall =
+                (MethodReference) ((ReferenceInstruction) code.get(2)).getReference();
+        MethodReference order =
+                (MethodReference) ((ReferenceInstruction) code.get(4)).getReference();
+        MethodReference setOrder =
+                (MethodReference) ((ReferenceInstruction) code.get(6)).getReference();
+        check(
+                nativeCall.getDefiningClass().equals(tensorName)
+                        && nativeCall.getName().equals("getBuffer")
+                        && nativeCall.getParameterTypes().equals(List.of("J", "J"))
+                        && nativeCall.getReturnType().equals("Ljava/nio/ByteBuffer;"),
+                "Borrowed view calls the native tensor buffer");
+        check(
+                order.toString().equals("Ljava/nio/ByteOrder;->nativeOrder()Ljava/nio/ByteOrder;")
+                        && setOrder.toString()
+                                .equals(
+                                        "Ljava/nio/ByteBuffer;->order(Ljava/nio/ByteOrder;)Ljava/nio/ByteBuffer;"),
+                "Borrowed view keeps native byte order");
+        int receiver = view.getImplementation().getRegisterCount() - 1;
+        int api = ((OneRegisterInstruction) code.get(0)).getRegisterA();
+        TwoRegisterInstruction handle = (TwoRegisterInstruction) code.get(1);
+        FiveRegisterInstruction call = (FiveRegisterInstruction) code.get(2);
+        check(
+                handle.getRegisterB() == receiver
+                        && call.getRegisterCount() == 5
+                        && call.getRegisterC() == receiver
+                        && call.getRegisterD() == api
+                        && call.getRegisterE() == api + 1
+                        && call.getRegisterF() == handle.getRegisterA()
+                        && call.getRegisterG() == handle.getRegisterA() + 1,
+                "Borrowed view uses the owning tensor and runtime handles");
+        ClassDef model = classes.get(BASE + "SeparationModel;");
+        check(model != null, "Karaoke model controller exists");
+        Set<String> strings = new HashSet<>();
+        boolean direct = false, capacity = false;
+        for (Method method : model.getMethods()) {
+            if (method.getImplementation() == null) continue;
+            for (Instruction instruction : method.getImplementation().getInstructions()) {
+                if (!(instruction instanceof ReferenceInstruction reference)) continue;
+                if (reference.getReference() instanceof StringReference text)
+                    strings.add(text.getString());
+                if (reference.getReference() instanceof MethodReference target
+                        && target.getDefiningClass().equals("Ljava/nio/ByteBuffer;")) {
+                    direct |= target.getName().equals("isDirect");
+                    capacity |= target.getName().equals("capacity");
+                }
+            }
+        }
+        check(
+                strings.containsAll(Set.of("getBuffer", "getInfo", "getShape", "type", "FLOAT"))
+                        && !strings.contains("getFloatBuffer")
+                        && direct
+                        && capacity,
+                "Karaoke borrows only a qualified FLOAT tensor view without a copying fallback");
+    }
+
     private static void check(boolean value, String message) {
         checks++;
         if (!value) throw new AssertionError(message);
@@ -114,6 +208,7 @@ public final class VerifyTravelFeaturesApk {
         boolean bufferGate = steady || applied(classes, BASE + "SourceAutomix;", "applied");
         boolean smart = applied(classes, "smartDownloadsApplied");
         boolean sing = applied(classes, "singApplied");
+        if (sing) karaokeMemory(classes);
         int built = 0,
                 moved = 0,
                 control = 0,

@@ -1,6 +1,8 @@
 package app.bitchord.soulseek;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
@@ -21,6 +23,31 @@ public final class HostDownloadAccess {
 
     public static void init(Context context) {
         app.bitchord.telegram.DownloadSelection.init(context);
+    }
+
+    static Intent playFileIntent(Context context, String savedId, String location)
+            throws Exception {
+        Uri uri = Uri.parse(location);
+        if ((!"file".equals(uri.getScheme()) && !"content".equals(uri.getScheme()))
+                || uri.getPath() == null
+                || uri.getPath().isEmpty())
+            throw new IOException("Saved audio has no local file location");
+        Intent launch =
+                context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+        if (launch == null
+                || launch.getComponent() == null
+                || !context.getPackageName().equals(launch.getComponent().getPackageName()))
+            throw new IOException("Native file playback is unavailable");
+        try (android.content.res.AssetFileDescriptor file =
+                context.getContentResolver().openAssetFileDescriptor(uri, "r")) {
+            if (file == null) throw new IOException("Saved audio is unavailable");
+        }
+        app.bitchord.telegram.AudioOrigin.prepareSavedFile(savedId, location);
+        return new Intent(Intent.ACTION_VIEW)
+                .setComponent(launch.getComponent())
+                .setPackage(context.getPackageName())
+                .setDataAndType(uri, "audio/*")
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_SINGLE_TOP);
     }
 
     static Object propertyObject(Object object, String name) throws Exception {

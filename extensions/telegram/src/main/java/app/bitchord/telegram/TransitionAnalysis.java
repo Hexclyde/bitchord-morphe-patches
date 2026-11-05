@@ -44,12 +44,35 @@ final class TransitionAnalysis {
                 case "analyzing":
                 case "queued":
                     return Strings.t("Analyzing selected audio…");
+                case "waiting":
+                    return Strings.t("Waiting to analyze");
+                case "failed":
+                    return Strings.t("Could not read this track's audio.");
+                case "ready":
+                    return Strings.t("Analysis result could not be read");
                 case "memory":
                     return Strings.t("Waiting for memory");
+                case "memory_limit":
+                    return Strings.t("Not enough memory to analyze this track. Tap Retry.");
                 case "thermal":
                     return Strings.t("Waiting for device to cool down");
                 default:
                     return Strings.t("Not available");
+            }
+        }
+
+        /** One short word for the track header; the full reason comes from state(). */
+        String badge() {
+            if (ready) return Strings.t("Ready");
+            switch (phase) {
+                case "analyzing":
+                case "queued":
+                case "waiting":
+                case "memory":
+                case "thermal":
+                    return Strings.t("Analyzing…");
+                default:
+                    return Strings.t("Unavailable");
             }
         }
 

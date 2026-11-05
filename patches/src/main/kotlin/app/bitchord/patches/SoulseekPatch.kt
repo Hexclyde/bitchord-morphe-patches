@@ -44,17 +44,8 @@ private object SoulseekApplicationCreate :
 private class SoulseekPatchMarker
 
 private val streamseekPreviewResources = resourcePatch {
+    dependsOn(sharedAudioResources)
     execute {
-        for (abi in listOf("arm64-v8a", "armeabi-v7a", "x86_64")) {
-            if (listApkEntries("lib/$abi/").isEmpty()) continue
-            val path = "lib/$abi/libbitchord_preview.so"
-            val output = get(path, false)
-            output.parentFile.mkdirs()
-            val input =
-                SoulseekPatchMarker::class.java.classLoader.getResourceAsStream(path)
-                    ?: error("Streamseek decoder missing from bundle: $abi")
-            input.use { source -> output.outputStream().use { source.copyTo(it) } }
-        }
         document("AndroidManifest.xml").use { doc ->
             val app = doc.getElementsByTagName("application").item(0) as org.w3c.dom.Element
             val activity = doc.createElement("activity")

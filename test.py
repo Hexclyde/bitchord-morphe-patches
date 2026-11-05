@@ -114,6 +114,7 @@ SOURCES = [
     "VocalCut",
     "SeparatedSing",
     "SeparationModel",
+    "SourceAudio",
     "SingOutput",
     "Outputs",
     "SleepFade",
@@ -235,6 +236,7 @@ subprocess.run(
             for path in (ROOT / "tests").rglob("*.java")
             if path.relative_to(ROOT / "tests").parts[0]
             not in {
+                "karaoke-memory",
                 "source-config",
                 "video-rendition",
                 "soulseek",
@@ -308,5 +310,14 @@ for suite in (
     "video-rendition",
     "player-download-hooks",
     "cipher-memory",
+    "transition-tempo",
+    "flac-metadata",
+    "flac-metadata-hooks",
+    "analysis-restore",
+    "source-audio-hooks",
+    "analysis-lookahead",
+    "karaoke-memory-abi",
 ):
     subprocess.run([sys.executable, str(ROOT / "tests" / suite / "run.py")], check=True)
+
+subprocess.run(["bash", str(ROOT / "tests/karaoke-memory/run.sh")], check=True)

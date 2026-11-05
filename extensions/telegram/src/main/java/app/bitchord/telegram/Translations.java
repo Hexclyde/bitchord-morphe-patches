@@ -441,6 +441,8 @@ final class Translations {
             "Adjust the normalised playback level",
             "Advanced",
             "\u0645\u062a\u0642\u062f\u0645",
+            "Advanced curve",
+            "\u0645\u0646\u062d\u0646\u0649 \u0645\u062a\u0642\u062f\u0645",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -517,9 +519,16 @@ final class Translations {
                     + " \u062d\u0633\u0627\u0628\u0643\u060c \u062f\u0627\u062e\u0644 BitChord.",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "\u062a\u062d\u0644\u064a\u0644",
+            "Analysis result could not be read",
+            "\u062a\u0639\u0630\u0651\u0631\u062a \u0642\u0631\u0627\u0621\u0629"
+                    + " \u0646\u062a\u064a\u062c\u0629 \u0627\u0644\u062a\u062d\u0644\u064a\u0644",
             "Analyzing selected audio\u2026",
             "\u062c\u0627\u0631\u064d \u062a\u062d\u0644\u064a\u0644 \u0627\u0644\u0635\u0648\u062a"
                     + " \u0627\u0644\u0645\u062d\u062f\u062f\u2026",
+            "Analyzing\u2026",
+            "\u062c\u0627\u0631\u064d \u0627\u0644\u062a\u062d\u0644\u064a\u0644\u2026",
             "Android didn't allow this file to be deleted.",
             "\u0644\u0645 \u064a\u0633\u0645\u062d Android \u0628\u062d\u0630\u0641"
                     + " \u0647\u0630\u0627 \u0627\u0644\u0645\u0644\u0641.",
@@ -597,6 +606,8 @@ final class Translations {
             "\u062a\u0637\u0628\u064a\u0642 \u062d\u062c\u0645"
                     + " \u0627\u0644\u0630\u0627\u0643\u0631\u0629"
                     + " \u0627\u0644\u0645\u0624\u0642\u062a\u0629",
+            "Apply mode",
+            "\u0648\u0636\u0639 \u0627\u0644\u062a\u0637\u0628\u064a\u0642",
             "Apply now",
             "\u062a\u0637\u0628\u064a\u0642 \u0627\u0644\u0622\u0646",
             "Apply or close to resume playback.",
@@ -605,6 +616,8 @@ final class Translations {
                     + " \u0627\u0644\u062a\u0634\u063a\u064a\u0644.",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "\u062a\u0637\u0628\u064a\u0642 \u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -701,6 +714,9 @@ final class Translations {
             "\u062d\u0641\u0638 \u062a\u0644\u0642\u0627\u0626\u064a",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "\u0627\u0644\u0645\u0632\u062c \u0627\u0644\u062a\u0644\u0642\u0627\u0626\u064a"
+                + " \u0644\u064a\u0633 \u062c\u0627\u0647\u0632\u064b\u0627 \u0628\u0639\u062f.",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -789,6 +805,9 @@ final class Translations {
             "Beat grid offset",
             "\u0625\u0632\u0627\u062d\u0629 \u0634\u0628\u0643\u0629"
                     + " \u0627\u0644\u0625\u064a\u0642\u0627\u0639",
+            "Beat grid scale",
+            "\u0645\u0642\u064a\u0627\u0633 \u0634\u0628\u0643\u0629"
+                    + " \u0627\u0644\u0646\u0628\u0636\u0627\u062a",
             "Beat grid tempo",
             "\u0633\u0631\u0639\u0629 \u0634\u0628\u0643\u0629"
                     + " \u0627\u0644\u0625\u064a\u0642\u0627\u0639",
@@ -796,6 +815,13 @@ final class Translations {
             "\u0642\u0641\u0632\u0629 \u0625\u064a\u0642\u0627\u0639\u064a\u0629",
             "Beats",
             "\u0627\u0644\u0646\u0628\u0636\u0627\u062a",
+            "Before",
+            "\u0642\u0628\u0644",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u0627\u0644\u0645\u0639\u0627\u064a\u0646\u0629 \u00ab\u0642\u0628\u0644\u00bb"
+                    + " \u063a\u064a\u0631 \u0645\u062a\u0627\u062d\u0629: \u064a\u0636\u064a\u0641"
+                    + " Automix \u0645\u0624\u062b\u0631\u0627\u062a \u0625\u0644\u0649"
+                    + " \u0647\u0630\u0627 \u0627\u0644\u0645\u0632\u062c.",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -1114,6 +1140,12 @@ final class Translations {
                 + " \u0627\u0644\u0642\u0633\u0645 \u0645\u0628\u0627\u0634\u0631\u0629\u064b.",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "\u064a\u063a\u064a\u0651\u0631 \u0633\u0631\u0639\u0629 \u0643\u0644"
+                    + " \u0645\u0642\u0637\u0639 \u0623\u062b\u0646\u0627\u0621"
+                    + " \u0627\u0644\u062a\u062f\u0627\u062e\u0644 \u0641\u0642\u0637\u060c"
+                    + " \u0645\u0639 \u0627\u0644\u062d\u0641\u0627\u0638 \u0639\u0644\u0649"
+                    + " \u062d\u062f\u0629 \u0627\u0644\u0635\u0648\u062a.",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -1199,6 +1231,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "\u0627\u062e\u062a\u064a\u0627\u0631",
+            "Choose a different file",
+            "\u0627\u062e\u062a\u064a\u0627\u0631 \u0645\u0644\u0641 \u0622\u062e\u0631",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -1624,6 +1658,9 @@ final class Translations {
             "Corrected names",
             "\u0627\u0644\u0623\u0633\u0645\u0627\u0621"
                     + " \u0627\u0644\u0645\u0635\u062d\u0651\u062d\u0629",
+            "Could not change the queue",
+            "\u062a\u0639\u0630\u0631 \u062a\u063a\u064a\u064a\u0631 \u0642\u0627\u0626\u0645\u0629"
+                    + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631",
             "Could not complete peer discovery. Check relays and try again.",
             "\u062a\u0639\u0630\u0651\u0631 \u0625\u0643\u0645\u0627\u0644"
                     + " \u0627\u0643\u062a\u0634\u0627\u0641"
@@ -1684,8 +1721,14 @@ final class Translations {
                     + " \u0627\u062a\u0635\u0627\u0644\u0643.",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "\u062a\u0639\u0630\u0631\u062a \u0642\u0631\u0627\u0621\u0629 \u0647\u0630\u0627"
+                    + " \u0627\u0644\u0645\u0644\u0641",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "\u062a\u0639\u0630\u0651\u0631\u062a \u0642\u0631\u0627\u0621\u0629 \u0635\u0648\u062a"
+                    + " \u0647\u0630\u0627 \u0627\u0644\u0645\u0642\u0637\u0639.",
             "Could not read your library. Try again.",
             "\u062a\u0639\u0630\u0631\u062a \u0642\u0631\u0627\u0621\u0629"
                     + " \u0645\u0643\u062a\u0628\u062a\u0643. \u062d\u0627\u0648\u0644"
@@ -1729,6 +1772,9 @@ final class Translations {
                     + " \u0645\u062c\u062f\u062f\u064b\u0627.",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "\u062a\u0639\u0630\u0631 \u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0647\u0630\u0627"
+                    + " \u0627\u0644\u0632\u0648\u062c.",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "\u062a\u0639\u0630\u0651\u0631 \u0627\u0644\u0646\u0633\u062e: {0}."
                 + " \u0625\u0639\u0627\u062f\u0629 \u0627\u0644\u0645\u062d\u0627\u0648\u0644\u0629"
@@ -2135,6 +2181,8 @@ final class Translations {
                     + " \u0639\u0646 \u0627\u0644\u062a\u0634\u063a\u064a\u0644",
             "Draft saved",
             "\u062a\u0645 \u062d\u0641\u0638 \u0627\u0644\u0645\u0633\u0648\u062f\u0629",
+            "Draft saving",
+            "\u062d\u0641\u0638 \u0627\u0644\u0645\u0633\u0648\u062f\u0629",
             "Drag a curve point or fine-tune each track below.",
             "\u0627\u0633\u062d\u0628 \u0646\u0642\u0637\u0629"
                     + " \u0627\u0644\u0645\u0646\u062d\u0646\u0649 \u0623\u0648"
@@ -2404,6 +2452,8 @@ final class Translations {
                     + " \u0627\u0644\u0623\u062e\u064a\u0631\u0629",
             "Failed",
             "\u0641\u0634\u0644",
+            "Faster by 1%",
+            "\u0623\u0633\u0631\u0639 \u0628\u0646\u0633\u0628\u0629 1\u066a",
             "Favor songs you play often",
             "\u062a\u0641\u0636\u064a\u0644 \u0627\u0644\u0623\u063a\u0627\u0646\u064a"
                     + " \u0627\u0644\u062a\u064a \u062a\u0634\u063a\u0651\u0644\u0647\u0627"
@@ -2452,6 +2502,8 @@ final class Translations {
                     + " \u0641\u064a AcoustID",
             "Filter",
             "\u0627\u0644\u0645\u0631\u0634\u0651\u062d",
+            "Filter depth",
+            "\u0639\u0645\u0642 \u0627\u0644\u0645\u0631\u0634\u062d",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -2598,6 +2650,9 @@ final class Translations {
             "Folder selected.",
             "\u062a\u0645 \u0627\u062e\u062a\u064a\u0627\u0631"
                     + " \u0627\u0644\u0645\u062c\u0644\u062f.",
+            "Follow current pair",
+            "\u0627\u062a\u0628\u0627\u0639 \u0627\u0644\u0632\u0648\u062c"
+                    + " \u0627\u0644\u062d\u0627\u0644\u064a",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -2722,6 +2777,8 @@ final class Translations {
                     + " \u0627\u0644\u0645\u0643\u0631\u0631\u0629",
             "Hide hash",
             "\u0625\u062e\u0641\u0627\u0621 \u0627\u0644\u0640 hash",
+            "Hide sources",
+            "\u0625\u062e\u0641\u0627\u0621 \u0627\u0644\u0645\u0635\u0627\u062f\u0631",
             "High",
             "High",
             "High-pass",
@@ -2733,6 +2790,10 @@ final class Translations {
                     + " \u062d\u0630\u0641\u0647\u0627. \u062a\u0639\u062f\u064a\u0644"
                     + " \u0627\u0644\u0634\u0628\u0643\u0629 \u0644\u0627 \u064a\u063a\u064a\u0631"
                     + " \u0633\u0631\u0639\u0629 \u0627\u0644\u062a\u0634\u063a\u064a\u0644.",
+            "How far the selected filters sweep.",
+            "\u0645\u062f\u0649 \u0627\u0644\u0645\u0633\u062d"
+                    + " \u0644\u0644\u0645\u0631\u0634\u062d\u0627\u062a"
+                    + " \u0627\u0644\u0645\u062d\u062f\u062f\u0629.",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -2778,6 +2839,9 @@ final class Translations {
                     + " \u0623\u0643\u0628\u0631)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "\u062a\u0623\u062b\u064a\u0631 \u0627\u0644\u0645\u0642\u0637\u0639"
+                    + " \u0627\u0644\u062f\u0627\u062e\u0644",
             "Incoming offers",
             "\u0627\u0644\u0639\u0631\u0648\u0636 \u0627\u0644\u0648\u0627\u0631\u062f\u0629",
             "Incomplete sponsored-message response",
@@ -3007,6 +3071,10 @@ final class Translations {
             "\u0622\u062e\u0631 \u0627\u0633\u062a\u062e\u062f\u0627\u0645: {0}",
             "Later",
             "\u0644\u0627\u062d\u0642\u064b\u0627",
+            "Leave Listen Together to change the queue",
+            "\u063a\u0627\u062f\u0631 \u00abListen together\u00bb"
+                    + " \u0644\u062a\u063a\u064a\u064a\u0631 \u0642\u0627\u0626\u0645\u0629"
+                    + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631",
             "Left to BitChord",
             "\u0627\u0644\u0642\u0631\u0627\u0631 \u0644\u0640 BitChord",
             "Let JamesDSP do the effects",
@@ -3047,9 +3115,15 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "\u062a\u062d\u0645\u064a\u0644 \u0627\u0644\u0645\u0642\u0637\u0639"
+                    + " \u0627\u0644\u062f\u0627\u062e\u0644",
             "Load older posts",
             "\u062a\u062d\u0645\u064a\u0644 \u0627\u0644\u0645\u0646\u0634\u0648\u0631\u0627\u062a"
                     + " \u0627\u0644\u0623\u0642\u062f\u0645",
+            "Load outgoing",
+            "\u062a\u062d\u0645\u064a\u0644 \u0627\u0644\u0645\u0642\u0637\u0639"
+                    + " \u0627\u0644\u062e\u0627\u0631\u062c",
             "Loading",
             "\u062c\u0627\u0631\u064d \u0627\u0644\u062a\u062d\u0645\u064a\u0644",
             "Loading channel\u2026",
@@ -3166,6 +3240,23 @@ final class Translations {
                     + " \u0648\u0639\u0645\u0644\u064a\u0627\u062a \u0627\u0644\u0646\u0642\u0644"
                     + " \u0648\u0627\u0644\u0645\u0634\u0627\u0631\u0643\u0629"
                     + " \u0627\u0644\u0639\u0627\u0645\u0629.",
+            "Manual",
+            "\u064a\u062f\u0648\u064a",
+            "Manual applies when you tap Apply.",
+            "\u0641\u064a \u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u064a\u062f\u0648\u064a\u060c"
+                    + " \u062a\u064f\u0637\u0628\u0651\u064e\u0642"
+                    + " \u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0639\u0646\u062f"
+                    + " \u0627\u0644\u0646\u0642\u0631 \u0639\u0644\u0649"
+                    + " \u00ab\u062a\u0637\u0628\u064a\u0642\u00bb.",
+            "Manual saves when you tap Save draft.",
+            "\u0641\u064a \u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u064a\u062f\u0648\u064a\u060c"
+                + " \u062a\u064f\u062d\u0641\u064e\u0638 \u0627\u0644\u0645\u0633\u0648\u062f\u0629"
+                + " \u0639\u0646\u062f \u0627\u0644\u0646\u0642\u0631 \u0639\u0644\u0649"
+                + " \u00ab\u062d\u0641\u0638 \u0627\u0644\u0645\u0633\u0648\u062f\u0629\u00bb.",
+            "Match A to B",
+            "\u0645\u0637\u0627\u0628\u0642\u0629 A \u0645\u0639 B",
+            "Match B to A",
+            "\u0645\u0637\u0627\u0628\u0642\u0629 B \u0645\u0639 A",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -3274,6 +3365,8 @@ final class Translations {
                     + " \u062d\u0633\u0628 \u0635\u064a\u063a\u062a\u0647\u060c \u0623\u0648"
                     + " \u062d\u0633\u0628 \u0645\u0639\u062f\u0644 \u0627\u0644\u0628\u062a"
                     + " \u0644\u0645\u0644\u0641\u0627\u062a M4A.",
+            "Multiplier",
+            "\u0627\u0644\u0645\u064f\u0636\u0627\u0639\u0650\u0641",
             "Music chats",
             "\u0645\u062d\u0627\u062f\u062b\u0627\u062a"
                     + " \u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649",
@@ -3348,6 +3441,10 @@ final class Translations {
                     + " \u0623\u062d\u062f\u062b.",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "\u064a\u062a\u0637\u0644\u0628 \u0625\u064a\u0642\u0627\u0639\u064e\u064a"
+                + " \u0627\u0644\u0645\u0642\u0637\u0639\u064a\u0646 \u0648\u0646\u0633\u0628\u0629"
+                + " \u0628\u064a\u0646 0.5\u00d7 \u06482\u00d7",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -3433,6 +3530,9 @@ final class Translations {
                 + " \u0627\u0644\u0645\u0642\u062a\u0631\u0646 \u0627\u062e\u062a\u064a\u0627\u0631"
                 + " \u0645\u0644\u0641\u0627\u062a \u0635\u0648\u062a"
                 + " \u0644\u0645\u0634\u0627\u0631\u0643\u062a\u0647\u0627.",
+            "No file picker is available",
+            "\u0644\u0627 \u064a\u062a\u0648\u0641\u0631 \u0645\u0646\u062a\u0642\u064a"
+                    + " \u0645\u0644\u0641\u0627\u062a",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -3527,6 +3627,9 @@ final class Translations {
                 + " \u0645\u062d\u0641\u0648\u0638. \u0623\u062f\u062e\u0644 \u0627\u0633\u0645"
                 + " \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645 \u0648\u0643\u0644\u0645\u0629"
                 + " \u0627\u0644\u0645\u0631\u0648\u0631.",
+            "No saved draft",
+            "\u0644\u0627 \u062a\u0648\u062c\u062f \u0645\u0633\u0648\u062f\u0629"
+                    + " \u0645\u062d\u0641\u0648\u0638\u0629",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -3592,6 +3695,12 @@ final class Translations {
             "Not enough audio",
             "\u0644\u0627 \u064a\u062a\u0648\u0641\u0631 \u0635\u0648\u062a"
                     + " \u0643\u0627\u0641\u064d",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "\u0627\u0644\u0630\u0627\u0643\u0631\u0629 \u063a\u064a\u0631"
+                    + " \u0643\u0627\u0641\u064a\u0629 \u0644\u062a\u062d\u0644\u064a\u0644"
+                    + " \u0647\u0630\u0627 \u0627\u0644\u0645\u0642\u0637\u0639."
+                    + " \u0627\u0636\u063a\u0637 \u0639\u0644\u0649 \u0625\u0639\u0627\u062f\u0629"
+                    + " \u0627\u0644\u0645\u062d\u0627\u0648\u0644\u0629.",
             "Not managed here",
             "\u0644\u0627 \u064a\u064f\u062f\u0627\u0631 \u0645\u0646 \u0647\u0646\u0627",
             "Not played yet",
@@ -3834,6 +3943,8 @@ final class Translations {
                     + " \u0627\u0644\u0623\u062e\u0631\u0649.",
             "Original key",
             "\u0627\u0644\u0637\u0628\u0642\u0629 \u0627\u0644\u0623\u0635\u0644\u064a\u0629",
+            "Original tempo",
+            "\u0627\u0644\u0625\u064a\u0642\u0627\u0639 \u0627\u0644\u0623\u0635\u0644\u064a",
             "Original vocals",
             "\u0627\u0644\u0623\u0635\u0648\u0627\u062a \u0627\u0644\u0623\u0635\u0644\u064a\u0629",
             "Other",
@@ -3851,10 +3962,21 @@ final class Translations {
             "\u0645\u0644\u0641\u0627\u062a Telegram \u0627\u0644\u0623\u062e\u0631\u0649",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "\u062a\u0623\u062b\u064a\u0631 \u0627\u0644\u0645\u0642\u0637\u0639"
+                    + " \u0627\u0644\u062e\u0627\u0631\u062c",
             "Outro",
             "\u0627\u0644\u062e\u0627\u062a\u0645\u0629",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "\u0646\u0628\u0636\u0627\u062a \u0627\u0644\u062f\u0642\u064a\u0642\u0629"
+                    + " \u0623\u062b\u0646\u0627\u0621 \u0627\u0644\u062a\u062f\u0627\u062e\u0644",
+            "overlap only",
+            "\u0623\u062b\u0646\u0627\u0621 \u0627\u0644\u062a\u062f\u0627\u062e\u0644"
+                    + " \u0641\u0642\u0637",
+            "Overlap tempo",
+            "\u0625\u064a\u0642\u0627\u0639 \u0627\u0644\u062a\u062f\u0627\u062e\u0644",
             "Pair a peer",
             "\u0625\u0642\u0631\u0627\u0646 \u0646\u0638\u064a\u0631",
             "Pair a peer before sharing files.",
@@ -4080,6 +4202,8 @@ final class Translations {
                     + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644.",
             "Pitch",
             "\u0637\u0628\u0642\u0629 \u0627\u0644\u0635\u0648\u062a",
+            "Play",
+            "\u062a\u0634\u063a\u064a\u0644",
             "Play a song first.",
             "\u0634\u063a\u0651\u0644 \u0623\u063a\u0646\u064a\u0629"
                     + " \u0623\u0648\u0644\u064b\u0627.",
@@ -4205,6 +4329,8 @@ final class Translations {
             "\u0639\u0627\u064a\u0646 \u0645\u062c\u062f\u062f\u064b\u0627 \u0623\u0648"
                     + " \u0637\u0628\u0651\u0642 \u0644\u0627\u0633\u062a\u0626\u0646\u0627\u0641"
                     + " \u0627\u0644\u062a\u0634\u063a\u064a\u0644.",
+            "Preview Before",
+            "\u0645\u0639\u0627\u064a\u0646\u0629 \u00ab\u0642\u0628\u0644\u00bb",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -4444,6 +4570,8 @@ final class Translations {
                     + " \u0645\u0644\u0641\u064b\u0627.",
             "Ready.",
             "\u062c\u0627\u0647\u0632.",
+            "Recall draft",
+            "\u062a\u062d\u0645\u064a\u0644 \u0627\u0644\u0645\u0633\u0648\u062f\u0629",
             "Receive",
             "\u0627\u0633\u062a\u0644\u0627\u0645",
             "Receive audio from another BitChord phone, or share your files.",
@@ -4612,6 +4740,14 @@ final class Translations {
             "\u0625\u0635\u0644\u0627\u062d",
             "Repeat preview",
             "\u062a\u0643\u0631\u0627\u0631 \u0627\u0644\u0645\u0639\u0627\u064a\u0646\u0629",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "\u064a\u0633\u062a\u0628\u062f\u0644 \u0627\u0644\u0623\u063a\u0646\u064a\u0629"
+                    + " \u0627\u0644\u062d\u0627\u0644\u064a\u0629"
+                    + " \u0648\u0627\u0644\u062a\u0627\u0644\u064a\u0629 \u0641\u064a"
+                    + " \u0642\u0627\u0626\u0645\u0629"
+                    + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631\u060c"
+                    + " \u0648\u064a\u062a\u0631\u0643 \u0627\u0644\u0628\u0627\u0642\u064a"
+                    + " \u0643\u0645\u0627 \u0647\u0648.",
             "Report audio quality",
             "\u0627\u0644\u0625\u0628\u0644\u0627\u063a \u0639\u0646 \u062c\u0648\u062f\u0629"
                     + " \u0627\u0644\u0635\u0648\u062a",
@@ -4649,6 +4785,9 @@ final class Translations {
             "Reset connection identity?",
             "\u0625\u0639\u0627\u062f\u0629 \u062a\u0639\u064a\u064a\u0646 \u0647\u0648\u064a\u0629"
                     + " \u0627\u0644\u0627\u062a\u0635\u0627\u0644\u061f",
+            "Reset EQ",
+            "\u0625\u0639\u0627\u062f\u0629 \u0636\u0628\u0637 \u0645\u0639\u0627\u062f\u0644"
+                    + " \u0627\u0644\u0635\u0648\u062a",
             "Reset to {0}%",
             "\u0625\u0639\u0627\u062f\u0629 \u0627\u0644\u062a\u0639\u064a\u064a\u0646"
                     + " \u0625\u0644\u0649 {0}%",
@@ -4720,6 +4859,8 @@ final class Translations {
             "\u0625\u0639\u0627\u062f\u0629 \u0645\u062d\u0627\u0648\u0644\u0629"
                     + " \u0627\u0644\u0631\u0633\u0627\u0626\u0644"
                     + " \u0627\u0644\u0645\u0645\u0648\u0651\u0644\u0629",
+            "Reverse",
+            "\u0639\u0643\u0633 \u0627\u0644\u062a\u0631\u062a\u064a\u0628",
             "Review",
             "\u0645\u0631\u0627\u062c\u0639\u0629",
             "Review 1 song without tags",
@@ -4805,6 +4946,8 @@ final class Translations {
                     + " \u0645\u0646 \u0645\u0635\u0627\u062f\u0631"
                     + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644"
                     + " \u0627\u0644\u0645\u062a\u0627\u062d\u0629 \u0639\u0628\u0631 Wi-Fi",
+            "Save mode",
+            "\u0648\u0636\u0639 \u0627\u0644\u062d\u0641\u0638",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -5417,6 +5560,8 @@ final class Translations {
             "\u0645\u0624\u0642\u062a \u0627\u0644\u0646\u0648\u0645",
             "Sliders {0}",
             "\u0627\u0644\u0645\u0646\u0632\u0644\u0642\u0627\u062a {0}",
+            "Slower by 1%",
+            "\u0623\u0628\u0637\u0623 \u0628\u0646\u0633\u0628\u0629 1\u066a",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -6236,6 +6381,14 @@ final class Translations {
                     + " \u062d\u062f\u0651\u062b \u0639\u0645\u0644\u064a\u0629"
                     + " \u0627\u0644\u0646\u0642\u0644 \u0647\u0630\u0647"
                     + " \u0644\u0627\u062d\u0642\u064b\u0627.",
+            "The queue changed; reopen this transition",
+            "\u062a\u063a\u064a\u0651\u0631\u062a \u0642\u0627\u0626\u0645\u0629"
+                    + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631\u061b \u0623\u0639\u062f"
+                    + " \u0641\u062a\u062d \u0647\u0630\u0627"
+                    + " \u0627\u0644\u0627\u0646\u062a\u0642\u0627\u0644",
+            "The queue is being changed",
+            "\u062c\u0627\u0631\u064d \u062a\u063a\u064a\u064a\u0631 \u0642\u0627\u0626\u0645\u0629"
+                    + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631",
             "The queue plays in its own order",
             "\u062a\u064f\u0634\u063a\u064e\u0651\u0644 \u0642\u0627\u0626\u0645\u0629"
                     + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631"
@@ -6347,6 +6500,9 @@ final class Translations {
             "The song pauses straight away",
             "\u062a\u062a\u0648\u0642\u0641 \u0627\u0644\u0623\u063a\u0646\u064a\u0629"
                     + " \u0645\u0624\u0642\u062a\u064b\u0627 \u0641\u0648\u0631\u064b\u0627",
+            "The track length is not available",
+            "\u0645\u062f\u0629 \u0627\u0644\u0645\u0642\u0637\u0639 \u063a\u064a\u0631"
+                    + " \u0645\u062a\u0627\u062d\u0629",
             "The whole song is cached.",
             "\u0627\u0644\u0623\u063a\u0646\u064a\u0629 \u0643\u0627\u0645\u0644\u0629"
                     + " \u0645\u062e\u0632\u064e\u0651\u0646\u0629"
@@ -6427,6 +6583,11 @@ final class Translations {
                 + " \u0647\u0630\u0627. \u0627\u0631\u062c\u0639 \u0625\u0644\u0649"
                 + " \u0627\u0644\u0623\u063a\u0646\u064a\u0629 \u0648\u062d\u0627\u0648\u0644"
                 + " \u0645\u062c\u062f\u062f\u064b\u0627.",
+            "This file can\u2019t stay available",
+            "\u0644\u0627 \u064a\u0645\u0643\u0646 \u0627\u0644\u0627\u062d\u062a\u0641\u0627\u0638"
+                    + " \u0628\u0625\u0645\u0643\u0627\u0646\u064a\u0629"
+                    + " \u0627\u0644\u0648\u0635\u0648\u0644 \u0625\u0644\u0649 \u0647\u0630\u0627"
+                    + " \u0627\u0644\u0645\u0644\u0641",
             "This file couldn't be deleted.",
             "\u062a\u0639\u0630\u0651\u0631 \u062d\u0630\u0641 \u0647\u0630\u0627"
                     + " \u0627\u0644\u0645\u0644\u0641.",
@@ -6467,6 +6628,9 @@ final class Translations {
                     + " \u0627\u0644\u0645\u0645\u0648\u0651\u0644\u0629"
                     + " \u0627\u0644\u0631\u0633\u0645\u064a\u0629"
                     + " \u0628\u0627\u0644\u0643\u0627\u0645\u0644.",
+            "This pair cannot be previewed",
+            "\u0644\u0627 \u064a\u0645\u0643\u0646 \u0645\u0639\u0627\u064a\u0646\u0629"
+                    + " \u0647\u0630\u0627 \u0627\u0644\u0632\u0648\u062c",
             "This phone\u2019s audio chip can play: {0}.",
             "\u062a\u0633\u062a\u0637\u064a\u0639 \u0634\u0631\u064a\u062d\u0629"
                     + " \u0627\u0644\u0635\u0648\u062a \u0641\u064a \u0647\u0630\u0627"
@@ -6537,6 +6701,8 @@ final class Translations {
                     + " \u0627\u0644\u0645\u0624\u0642\u062a\u0629.",
             "Time",
             "Time",
+            "times",
+            "\u0645\u0631\u0629",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -6579,6 +6745,9 @@ final class Translations {
             "\u0627\u0644\u0623\u062f\u0648\u0627\u062a",
             "Track analysis",
             "\u062a\u062d\u0644\u064a\u0644 \u0627\u0644\u0645\u0642\u0627\u0637\u0639",
+            "Track BPM",
+            "\u0646\u0628\u0636\u0627\u062a \u0627\u0644\u0645\u0642\u0637\u0639 \u0641\u064a"
+                    + " \u0627\u0644\u062f\u0642\u064a\u0642\u0629",
             "Track details",
             "\u062a\u0641\u0627\u0635\u064a\u0644 \u0627\u0644\u0645\u0642\u0637\u0639",
             "Track durations are not available yet. Start playback or",
@@ -6636,6 +6805,11 @@ final class Translations {
                     + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638\u00bb"
                     + " \u0623\u0648\u0644\u064b\u0627. \u0627\u0644\u0623\u063a\u0627\u0646\u064a"
                     + " \u062a\u0623\u062a\u064a \u0645\u0646\u0647.",
+            "Turn shuffle off to change the queue",
+            "\u0623\u0648\u0642\u0641 \u0627\u0644\u062a\u0634\u063a\u064a\u0644"
+                    + " \u0627\u0644\u0639\u0634\u0648\u0627\u0626\u064a"
+                    + " \u0644\u062a\u063a\u064a\u064a\u0631 \u0642\u0627\u0626\u0645\u0629"
+                    + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631",
             "Turn the singer down",
             "Turn the singer down",
             "Turns the singer down so you can sing over the song. Works",
@@ -6657,6 +6831,8 @@ final class Translations {
             "Type part of the model name.",
             "\u0627\u0643\u062a\u0628 \u062c\u0632\u0621\u064b\u0627 \u0645\u0646"
                     + " \u0627\u0633\u0645 \u0627\u0644\u0637\u0631\u0627\u0632.",
+            "Unavailable",
+            "\u063a\u064a\u0631 \u0645\u062a\u0627\u062d",
             "Under {0}, oldest first",
             "\u0623\u0642\u0644 \u0645\u0646 {0}\u060c \u0627\u0644\u0623\u0642\u062f\u0645"
                     + " \u0623\u0648\u0644\u064b\u0627",
@@ -6732,6 +6908,10 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "\u0627\u0633\u062a\u062e\u062f\u0645"
+                    + " \u0645\u064f\u0636\u0627\u0639\u0650\u0641\u064b\u0627 \u0628\u064a\u0646"
+                    + " 0.5\u00d7 \u06482\u00d7",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -6749,6 +6929,9 @@ final class Translations {
                 + " \u0645\u062f\u0645\u062c\u0629\u060c \u0648\u0644\u0627"
                 + " \u064a\u0634\u063a\u0651\u0644 BitChord \u0623\u064a \u062e\u0627\u062f\u0645"
                 + " \u0644\u0647\u0630\u0627 \u0627\u0644\u063a\u0631\u0636.",
+            "Use automatic mode",
+            "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0627\u0644\u0648\u0636\u0639"
+                    + " \u0627\u0644\u062a\u0644\u0642\u0627\u0626\u064a",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -6784,6 +6967,12 @@ final class Translations {
                     + " \u0645\u0624\u0642\u062a\u064b\u0627",
             "Use it",
             "\u0627\u0633\u062a\u062e\u062f\u0627\u0645",
+            "Use manual mode",
+            "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0627\u0644\u0648\u0636\u0639"
+                    + " \u0627\u0644\u064a\u062f\u0648\u064a",
+            "Use measured tempo",
+            "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0627\u0644\u0625\u064a\u0642\u0627\u0639"
+                    + " \u0627\u0644\u0645\u0642\u0627\u0633",
             "Use MicroG",
             "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 MicroG",
             "Use name",
@@ -6812,6 +7001,13 @@ final class Translations {
             "Use this name?",
             "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0647\u0630\u0627"
                     + " \u0627\u0644\u0627\u0633\u0645\u061f",
+            "Use this pair",
+            "\u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0647\u0630\u0627"
+                    + " \u0627\u0644\u0632\u0648\u062c",
+            "Use this pair to apply it",
+            "\u0627\u0633\u062a\u062e\u062f\u0645 \u0647\u0630\u0627 \u0627\u0644\u0632\u0648\u062c"
+                    + " \u0644\u062a\u0637\u0628\u064a\u0642"
+                    + " \u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "\u0627\u0633\u062a\u062e\u062f\u0645 \u062d\u0633\u0627\u0628\u0643"
                 + " \u0627\u0644\u062e\u0627\u0635 \u0641\u064a Real-Debrid \u0623\u0648 AllDebrid"
@@ -6847,6 +7043,9 @@ final class Translations {
                 + " \u0643\u0645\u0644\u0641\u0627\u062a \u0628\u0628\u0627\u064a\u062a\u0627\u062a"
                 + " \u0627\u0644\u0635\u0648\u062a \u0627\u0644\u0623\u0635\u0644\u064a\u0629"
                 + " \u062f\u0648\u0646 \u062a\u063a\u064a\u064a\u0631.",
+            "Using this pair\u2026",
+            "\u062c\u0627\u0631\u064d \u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0647\u0630\u0627"
+                    + " \u0627\u0644\u0632\u0648\u062c\u2026",
             "Using {0}",
             "\u064a\u064f\u0633\u062a\u062e\u062f\u0645 {0}",
             "Variable",
@@ -6901,6 +7100,10 @@ final class Translations {
             "\u0627\u0646\u062a\u0638\u0631 \u062d\u062a\u0649 \u064a\u0646\u062a\u0647\u064a"
                     + " \u0627\u0644\u0625\u062c\u0631\u0627\u0621"
                     + " \u0627\u0644\u062d\u0627\u0644\u064a.",
+            "Wait for the pair to finish loading",
+            "\u0627\u0646\u062a\u0638\u0631 \u062d\u062a\u0649 \u064a\u0646\u062a\u0647\u064a"
+                    + " \u062a\u062d\u0645\u064a\u0644"
+                    + " \u0627\u0644\u0645\u0642\u0637\u0639\u064a\u0646",
             "Waiting for a community channel to be indexed",
             "\u0628\u0627\u0646\u062a\u0638\u0627\u0631 \u0641\u0647\u0631\u0633\u0629"
                     + " \u0625\u062d\u062f\u0649 \u0642\u0646\u0648\u0627\u062a"
@@ -6952,6 +7155,8 @@ final class Translations {
             "Waiting for {0} community channels to be indexed",
             "\u0628\u0627\u0646\u062a\u0638\u0627\u0631 \u0641\u0647\u0631\u0633\u0629 {0}"
                     + " \u0642\u0646\u0648\u0627\u062a \u0645\u062c\u062a\u0645\u0639",
+            "Waiting to analyze",
+            "\u0628\u0627\u0646\u062a\u0638\u0627\u0631 \u0627\u0644\u062a\u062d\u0644\u064a\u0644",
             "Waiting to save",
             "\u0628\u0627\u0646\u062a\u0638\u0627\u0631 \u0627\u0644\u062d\u0641\u0638",
             "Waiting to save selected copies",
@@ -7967,6 +8172,8 @@ final class Translations {
             "Adjust the normalised playback level",
             "Advanced",
             "\u0985\u09cd\u09af\u09be\u09a1\u09ad\u09be\u09a8\u09cd\u09b8\u09a1",
+            "Advanced curve",
+            "\u0989\u09a8\u09cd\u09a8\u09a4 \u09ac\u0995\u09cd\u09b0\u09b0\u09c7\u0996\u09be",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -8059,10 +8266,18 @@ final class Translations {
                     + " BitChord-\u098f\u09b0 \u09ad\u09c7\u09a4\u09b0\u09c7\u0964",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "\u09ac\u09bf\u09b6\u09cd\u09b2\u09c7\u09b7\u09a3",
+            "Analysis result could not be read",
+            "\u09ac\u09bf\u09b6\u09cd\u09b2\u09c7\u09b7\u09a3\u09c7\u09b0"
+                    + " \u09ab\u09b2\u09be\u09ab\u09b2 \u09aa\u09a1\u09bc\u09be"
+                    + " \u09af\u09be\u09af\u09bc\u09a8\u09bf",
             "Analyzing selected audio\u2026",
             "\u09a8\u09bf\u09b0\u09cd\u09ac\u09be\u099a\u09bf\u09a4 \u0985\u09a1\u09bf\u0993"
                     + " \u09ac\u09bf\u09b6\u09cd\u09b2\u09c7\u09b7\u09a3 \u0995\u09b0\u09be"
                     + " \u09b9\u099a\u09cd\u099b\u09c7\u2026",
+            "Analyzing\u2026",
+            "\u09ac\u09bf\u09b6\u09cd\u09b2\u09c7\u09b7\u09a3 \u099a\u09b2\u099b\u09c7\u2026",
             "Android didn't allow this file to be deleted.",
             "Android \u098f\u0987 \u09ab\u09be\u0987\u09b2\u099f\u09bf"
                     + " \u09ae\u09c1\u099b\u09a4\u09c7 \u09a6\u09c7\u09af\u09bc\u09a8\u09bf\u0964",
@@ -8139,6 +8354,8 @@ final class Translations {
             "Apply cache size",
             "\u0995\u09cd\u09af\u09be\u09b6 \u09b8\u09be\u0987\u099c"
                     + " \u09aa\u09cd\u09b0\u09af\u09bc\u09cb\u0997 \u0995\u09b0\u09c1\u09a8",
+            "Apply mode",
+            "\u09aa\u09cd\u09b0\u09af\u09bc\u09cb\u0997\u09c7\u09b0 \u09ae\u09cb\u09a1",
             "Apply now",
             "\u098f\u0996\u09a8 \u09aa\u09cd\u09b0\u09af\u09bc\u09cb\u0997"
                     + " \u0995\u09b0\u09c1\u09a8",
@@ -8149,6 +8366,9 @@ final class Translations {
                     + " \u0995\u09b0\u09c1\u09a8\u0964",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "\u09b8\u09c7\u099f\u09bf\u0982\u09b8 \u09aa\u09cd\u09b0\u09af\u09bc\u09cb\u0997"
+                    + " \u0995\u09b0\u09c1\u09a8",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -8259,6 +8479,10 @@ final class Translations {
                     + " \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "\u09b8\u09cd\u09ac\u09af\u09bc\u0982\u0995\u09cd\u09b0\u09bf\u09af\u09bc"
+                    + " \u09ae\u09bf\u09b6\u09cd\u09b0\u09a3 \u098f\u0996\u09a8\u0993"
+                    + " \u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09c1\u09a4 \u09a8\u09af\u09bc\u0964",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -8352,6 +8576,9 @@ final class Translations {
             "Beat grid offset",
             "\u09ac\u09bf\u099f \u0997\u09cd\u09b0\u09bf\u09a1\u09c7\u09b0"
                     + " \u0985\u09ab\u09b8\u09c7\u099f",
+            "Beat grid scale",
+            "\u09ac\u09bf\u099f \u0997\u09cd\u09b0\u09bf\u09a1\u09c7\u09b0"
+                    + " \u09b8\u09cd\u0995\u09c7\u09b2",
             "Beat grid tempo",
             "\u09ac\u09bf\u099f \u0997\u09cd\u09b0\u09bf\u09a1\u09c7\u09b0"
                     + " \u099f\u09c7\u09ae\u09cd\u09aa\u09cb",
@@ -8359,6 +8586,13 @@ final class Translations {
             "\u09ac\u09bf\u099f \u099c\u09be\u09ae\u09cd\u09aa",
             "Beats",
             "\u09ac\u09bf\u099f",
+            "Before",
+            "\u0986\u0997\u09c7",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u201c\u0986\u0997\u09c7\u201d \u0989\u09aa\u09b2\u09ac\u09cd\u09a7"
+                + " \u09a8\u09af\u09bc: Automix \u098f\u0987"
+                + " \u09ae\u09bf\u09b6\u09cd\u09b0\u09a3\u09c7 \u0987\u09ab\u09c7\u0995\u09cd\u099f"
+                + " \u09af\u09cb\u0997 \u0995\u09b0\u09c7\u0964",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -8697,6 +8931,15 @@ final class Translations {
                     + " \u0986\u099b\u09c7\u0964",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "\u09b6\u09c1\u09a7\u09c1"
+                    + " \u0993\u09ad\u09be\u09b0\u09b2\u09cd\u09af\u09be\u09aa\u09c7\u09b0"
+                    + " \u09b8\u09ae\u09af\u09bc \u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf"
+                    + " \u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995\u09c7\u09b0 \u0997\u09a4\u09bf"
+                    + " \u09ac\u09a6\u09b2\u09be\u09af\u09bc\u0964 \u09b8\u09c1\u09b0\u09c7\u09b0"
+                    + " \u0989\u099a\u09cd\u099a\u09a4\u09be"
+                    + " \u0985\u09aa\u09b0\u09bf\u09ac\u09b0\u09cd\u09a4\u09bf\u09a4"
+                    + " \u09a5\u09be\u0995\u09c7\u0964",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -8789,6 +9032,9 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "\u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a8",
+            "Choose a different file",
+            "\u0985\u09a8\u09cd\u09af \u09ab\u09be\u0987\u09b2 \u09ac\u09c7\u099b\u09c7"
+                    + " \u09a8\u09bf\u09a8",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -9251,6 +9497,9 @@ final class Translations {
                 + " \u09aa\u09cb\u09b8\u09cd\u099f \u0986\u0997\u09c7\u0964",
             "Corrected names",
             "\u09b8\u0982\u09b6\u09cb\u09a7\u09bf\u09a4 \u09a8\u09be\u09ae",
+            "Could not change the queue",
+            "\u09b8\u09be\u09b0\u09bf \u09ac\u09a6\u09b2\u09be\u09a8\u09cb"
+                    + " \u09af\u09be\u09af\u09bc\u09a8\u09bf",
             "Could not complete peer discovery. Check relays and try again.",
             "\u09aa\u09bf\u09af\u09bc\u09be\u09b0"
                     + " \u0985\u09a8\u09c1\u09b8\u09a8\u09cd\u09a7\u09be\u09a8"
@@ -9312,8 +9561,15 @@ final class Translations {
                     + " \u0995\u09b0\u09c1\u09a8\u0964",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "\u098f\u0987 \u09ab\u09be\u0987\u09b2\u099f\u09bf \u09aa\u09a1\u09bc\u09be"
+                    + " \u09af\u09be\u09af\u09bc\u09a8\u09bf",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "\u098f\u0987 \u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995\u09c7\u09b0"
+                    + " \u0985\u09a1\u09bf\u0993 \u09aa\u09a1\u09bc\u09be"
+                    + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964",
             "Could not read your library. Try again.",
             "\u0986\u09aa\u09a8\u09be\u09b0 \u09b2\u09be\u0987\u09ac\u09cd\u09b0\u09c7\u09b0\u09bf"
                     + " \u09aa\u09a1\u09bc\u09be \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964"
@@ -9365,6 +9621,10 @@ final class Translations {
                 + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8\u0964",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "\u098f\u0987 \u099c\u09cb\u09a1\u09bc\u09be\u099f\u09bf"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09be"
+                    + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "\u0995\u09aa\u09bf \u0995\u09b0\u09be \u09af\u09be\u09af\u09bc\u09a8\u09bf: {0}\u0964"
                     + " {1} \u09ae\u09bf. \u09aa\u09b0\u09c7 \u0986\u09ac\u09be\u09b0"
@@ -9804,6 +10064,8 @@ final class Translations {
                     + " \u09a5\u09c7\u0995\u09c7 \u0986\u09b2\u09be\u09a6\u09be",
             "Draft saved",
             "\u0996\u09b8\u09a1\u09bc\u09be \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09bf\u09a4",
+            "Draft saving",
+            "\u0996\u09b8\u09a1\u09bc\u09be \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3",
             "Drag a curve point or fine-tune each track below.",
             "\u0995\u09be\u09b0\u09cd\u09ad\u09c7\u09b0 \u098f\u0995\u099f\u09bf"
                     + " \u09ac\u09bf\u09a8\u09cd\u09a6\u09c1 \u099f\u09be\u09a8\u09c1\u09a8"
@@ -10104,6 +10366,8 @@ final class Translations {
                     + " \u0995\u09ae\u09be\u09a8",
             "Failed",
             "\u09ac\u09cd\u09af\u09b0\u09cd\u09a5",
+            "Faster by 1%",
+            "\u09e7% \u09a6\u09cd\u09b0\u09c1\u09a4",
             "Favor songs you play often",
             "\u09af\u09c7 \u0997\u09be\u09a8 \u09aa\u09cd\u09b0\u09be\u09af\u09bc\u0987"
                 + " \u09b6\u09cb\u09a8\u09c7\u09a8 \u09b8\u09c7\u0997\u09c1\u09b2\u09cb\u0995\u09c7"
@@ -10150,6 +10414,9 @@ final class Translations {
                     + " AcoustID-\u098f \u0996\u09cb\u0981\u099c\u09be \u09b9\u09af\u09bc",
             "Filter",
             "\u09ab\u09bf\u09b2\u09cd\u099f\u09be\u09b0",
+            "Filter depth",
+            "\u09ab\u09bf\u09b2\u09cd\u099f\u09be\u09b0\u09c7\u09b0"
+                    + " \u0997\u09ad\u09c0\u09b0\u09a4\u09be",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -10308,6 +10575,9 @@ final class Translations {
             "\u09ab\u09cb\u09b2\u09cd\u09a1\u09be\u09b0 \u09ac\u09c7\u099b\u09c7"
                     + " \u09a8\u09c7\u0993\u09af\u09bc\u09be"
                     + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964",
+            "Follow current pair",
+            "\u09ac\u09b0\u09cd\u09a4\u09ae\u09be\u09a8 \u099c\u09cb\u09a1\u09bc\u09be"
+                    + " \u0985\u09a8\u09c1\u09b8\u09b0\u09a3 \u0995\u09b0\u09c1\u09a8",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -10445,6 +10715,8 @@ final class Translations {
                     + " \u09b2\u09c1\u0995\u09be\u09a8",
             "Hide hash",
             "hash \u09b2\u09c1\u0995\u09be\u09a8",
+            "Hide sources",
+            "\u0989\u09ce\u09b8 \u09b2\u09c1\u0995\u09be\u09a8",
             "High",
             "High",
             "High-pass",
@@ -10456,6 +10728,10 @@ final class Translations {
                     + " \u09b8\u09ae\u09cd\u09aa\u09be\u09a6\u09a8\u09be\u09af\u09bc"
                     + " \u09aa\u09cd\u09b2\u09c7\u09ac\u09cd\u09af\u09be\u0995\u09c7\u09b0"
                     + " \u0997\u09a4\u09bf \u09ac\u09a6\u09b2\u09be\u09af\u09bc \u09a8\u09be\u0964",
+            "How far the selected filters sweep.",
+            "\u09a8\u09bf\u09b0\u09cd\u09ac\u09be\u099a\u09bf\u09a4"
+                    + " \u09ab\u09bf\u09b2\u09cd\u099f\u09be\u09b0\u09c7\u09b0"
+                    + " \u09b8\u09c1\u0987\u09aa\u09c7\u09b0 \u09aa\u09b0\u09bf\u09b8\u09b0\u0964",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -10501,6 +10777,9 @@ final class Translations {
                 + " \u09b0\u09be\u0996\u09c1\u09a8 (\u09ac\u09a1\u09bc \u09ab\u09be\u0987\u09b2)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "\u0986\u09b8\u09a8\u09cd\u09a8 \u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995\u09c7\u09b0"
+                    + " \u0987\u09ab\u09c7\u0995\u09cd\u099f",
             "Incoming offers",
             "\u0986\u09b8\u09be \u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09be\u09ac",
             "Incomplete sponsored-message response",
@@ -10749,6 +11028,10 @@ final class Translations {
             "\u09b6\u09c7\u09b7 \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0: {0}",
             "Later",
             "\u09aa\u09b0\u09c7",
+            "Leave Listen Together to change the queue",
+            "\u09b8\u09be\u09b0\u09bf \u09ac\u09a6\u09b2\u09be\u09a4\u09c7 \u201cListen"
+                    + " together\u201d \u099b\u09c7\u09a1\u09bc\u09c7"
+                    + " \u09ac\u09c7\u09b0\u09bf\u09af\u09bc\u09c7 \u0986\u09b8\u09c1\u09a8",
             "Left to BitChord",
             "BitChord-\u098f\u09b0 \u09b9\u09be\u09a4\u09c7",
             "Let JamesDSP do the effects",
@@ -10794,9 +11077,15 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "\u0986\u09b8\u09a8\u09cd\u09a8 \u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995"
+                    + " \u09b2\u09cb\u09a1 \u0995\u09b0\u09c1\u09a8",
             "Load older posts",
             "\u09aa\u09c1\u09b0\u09cb\u09a8\u09cb \u09aa\u09cb\u09b8\u09cd\u099f \u09b2\u09cb\u09a1"
                     + " \u0995\u09b0\u09c1\u09a8",
+            "Load outgoing",
+            "\u09ac\u09bf\u09a6\u09be\u09af\u09bc\u09c0 \u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995"
+                    + " \u09b2\u09cb\u09a1 \u0995\u09b0\u09c1\u09a8",
             "Loading",
             "\u09b2\u09cb\u09a1 \u09b9\u099a\u09cd\u099b\u09c7",
             "Loading channel\u2026",
@@ -10920,6 +11209,25 @@ final class Translations {
                     + " \u09b6\u09c7\u09af\u09bc\u09be\u09b0\u09bf\u0982"
                     + " \u09aa\u09b0\u09bf\u099a\u09be\u09b2\u09a8\u09be"
                     + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "Manual",
+            "\u09ae\u09cd\u09af\u09be\u09a8\u09c1\u09af\u09bc\u09be\u09b2",
+            "Manual applies when you tap Apply.",
+            "\u09ae\u09cd\u09af\u09be\u09a8\u09c1\u09af\u09bc\u09be\u09b2 \u09ae\u09cb\u09a1\u09c7"
+                    + " \u09aa\u09cd\u09b0\u09af\u09bc\u09cb\u0997 \u0995\u09b0\u09c1\u09a8"
+                    + " \u099a\u09be\u09aa\u09b2\u09c7 \u09b8\u09c7\u099f\u09bf\u0982\u09b8"
+                    + " \u09aa\u09cd\u09b0\u09af\u09bc\u09cb\u0997 \u09b9\u09af\u09bc\u0964",
+            "Manual saves when you tap Save draft.",
+            "\u09ae\u09cd\u09af\u09be\u09a8\u09c1\u09af\u09bc\u09be\u09b2 \u09ae\u09cb\u09a1\u09c7"
+                + " \u0996\u09b8\u09a1\u09bc\u09be \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3"
+                + " \u0995\u09b0\u09c1\u09a8 \u099a\u09be\u09aa\u09b2\u09c7"
+                + " \u0996\u09b8\u09a1\u09bc\u09be \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09bf\u09a4"
+                + " \u09b9\u09af\u09bc\u0964",
+            "Match A to B",
+            "A-\u0995\u09c7 B-\u098f\u09b0 \u09b8\u0999\u09cd\u0997\u09c7"
+                    + " \u09ae\u09c7\u09b2\u09be\u09a8",
+            "Match B to A",
+            "B-\u0995\u09c7 A-\u098f\u09b0 \u09b8\u0999\u09cd\u0997\u09c7"
+                    + " \u09ae\u09c7\u09b2\u09be\u09a8",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -11034,6 +11342,8 @@ final class Translations {
                 + " \u0995\u09cd\u09b7\u09c7\u09a4\u09cd\u09b0\u09c7"
                 + " \u09ac\u09bf\u099f\u09b0\u09c7\u099f \u09a6\u09c7\u0996\u09c7"
                 + " \u09a0\u09bf\u0995 \u09b9\u09af\u09bc\u0964",
+            "Multiplier",
+            "\u0997\u09c1\u09a3\u0995",
             "Music chats",
             "\u09ae\u09bf\u0989\u099c\u09bf\u0995 \u099a\u09cd\u09af\u09be\u099f",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -11117,6 +11427,11 @@ final class Translations {
                     + " \u09ad\u09be\u09b0\u09cd\u09b8\u09a8 \u09b2\u09be\u0997\u09ac\u09c7\u0964",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "\u09a6\u09c1\u0987 \u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995\u09c7\u09b0"
+                    + " \u099f\u09c7\u09ae\u09cd\u09aa\u09cb \u098f\u09ac\u0982 0.5\u00d7"
+                    + " \u09a5\u09c7\u0995\u09c7 2\u00d7 \u0985\u09a8\u09c1\u09aa\u09be\u09a4"
+                    + " \u09aa\u09cd\u09b0\u09af\u09bc\u09cb\u099c\u09a8",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -11212,6 +11527,9 @@ final class Translations {
                     + " \u0995\u09b0\u09be\u09b0 \u0985\u09a1\u09bf\u0993 \u09ab\u09be\u0987\u09b2"
                     + " \u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a4\u09c7"
                     + " \u09ac\u09b2\u09c1\u09a8\u0964",
+            "No file picker is available",
+            "\u09ab\u09be\u0987\u09b2 \u09ac\u09be\u099b\u09be\u0987\u09af\u09bc\u09c7\u09b0"
+                    + " \u0995\u09cb\u09a8\u09cb \u0985\u09cd\u09af\u09be\u09aa \u09a8\u09c7\u0987",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -11315,6 +11633,9 @@ final class Translations {
                     + " \u09a8\u09be\u09ae \u0993"
                     + " \u09aa\u09be\u09b8\u0993\u09af\u09bc\u09be\u09b0\u09cd\u09a1"
                     + " \u09b2\u09bf\u0996\u09c1\u09a8\u0964",
+            "No saved draft",
+            "\u0995\u09cb\u09a8\u09cb \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09bf\u09a4"
+                    + " \u0996\u09b8\u09a1\u09bc\u09be \u09a8\u09c7\u0987",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -11382,6 +11703,12 @@ final class Translations {
             "Not enough audio",
             "\u09aa\u09b0\u09cd\u09af\u09be\u09aa\u09cd\u09a4 \u0985\u09a1\u09bf\u0993"
                     + " \u09a8\u09c7\u0987",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "\u098f\u0987 \u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995\u099f\u09bf"
+                    + " \u09ac\u09bf\u09b6\u09cd\u09b2\u09c7\u09b7\u09a3 \u0995\u09b0\u09be\u09b0"
+                    + " \u09ae\u09a4\u09cb \u09ae\u09c7\u09ae\u09b0\u09bf \u09a8\u09c7\u0987\u0964"
+                    + " \u0986\u09ac\u09be\u09b0 \u099a\u09c7\u09b7\u09cd\u099f\u09be"
+                    + " \u0995\u09b0\u09c1\u09a8 \u099a\u09be\u09aa\u09c1\u09a8\u0964",
             "Not managed here",
             "\u098f\u0996\u09be\u09a8\u09c7 \u09aa\u09b0\u09bf\u099a\u09be\u09b2\u09bf\u09a4"
                     + " \u09b9\u09af\u09bc \u09a8\u09be",
@@ -11652,6 +11979,8 @@ final class Translations {
                 + " \u09a8\u09c7\u0987\u0964",
             "Original key",
             "\u09ae\u09c2\u09b2 \u09b8\u09c1\u09b0",
+            "Original tempo",
+            "\u09ae\u09c2\u09b2 \u099f\u09c7\u09ae\u09cd\u09aa\u09cb",
             "Original vocals",
             "\u09ae\u09c2\u09b2 \u09ad\u09cb\u0995\u09be\u09b2",
             "Other",
@@ -11670,10 +11999,21 @@ final class Translations {
             "Telegram-\u098f\u09b0 \u0985\u09a8\u09cd\u09af \u09ab\u09be\u0987\u09b2",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "\u09ac\u09bf\u09a6\u09be\u09af\u09bc\u09c0"
+                    + " \u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995\u09c7\u09b0"
+                    + " \u0987\u09ab\u09c7\u0995\u09cd\u099f",
             "Outro",
             "\u09b8\u09ae\u09be\u09aa\u09cd\u09a4\u09bf",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "\u0993\u09ad\u09be\u09b0\u09b2\u09cd\u09af\u09be\u09aa\u09c7\u09b0 BPM",
+            "overlap only",
+            "\u09b6\u09c1\u09a7\u09c1 \u0993\u09ad\u09be\u09b0\u09b2\u09cd\u09af\u09be\u09aa\u09c7",
+            "Overlap tempo",
+            "\u0993\u09ad\u09be\u09b0\u09b2\u09cd\u09af\u09be\u09aa\u09c7\u09b0"
+                    + " \u099f\u09c7\u09ae\u09cd\u09aa\u09cb",
             "Pair a peer",
             "\u098f\u0995\u099f\u09bf \u09aa\u09bf\u09af\u09bc\u09be\u09b0"
                     + " \u09aa\u09c7\u09af\u09bc\u09be\u09b0 \u0995\u09b0\u09c1\u09a8",
@@ -11914,6 +12254,8 @@ final class Translations {
                 + " \u09a8\u09bf\u09a8\u0964",
             "Pitch",
             "\u09b8\u09c1\u09b0",
+            "Play",
+            "\u099a\u09be\u09b2\u09be\u09a8",
             "Play a song first.",
             "\u0986\u0997\u09c7 \u098f\u0995\u099f\u09bf \u0997\u09be\u09a8"
                     + " \u099a\u09be\u09b2\u09be\u09a8\u0964",
@@ -12049,6 +12391,8 @@ final class Translations {
                     + " \u0995\u09b0\u09c1\u09a8 \u09ac\u09be \u099a\u09be\u09b2\u09c1"
                     + " \u0995\u09b0\u09a4\u09c7 \u09aa\u09cd\u09b0\u09af\u09bc\u09cb\u0997"
                     + " \u0995\u09b0\u09c1\u09a8\u0964",
+            "Preview Before",
+            "\u201c\u0986\u0997\u09c7\u201d \u09aa\u09cd\u09b0\u09bf\u09ad\u09bf\u0989",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -12304,6 +12648,8 @@ final class Translations {
                 + " \u09b9\u09ac\u09c7 \u09a8\u09be\u0964",
             "Ready.",
             "\u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09c1\u09a4\u0964",
+            "Recall draft",
+            "\u0996\u09b8\u09a1\u09bc\u09be \u09b2\u09cb\u09a1 \u0995\u09b0\u09c1\u09a8",
             "Receive",
             "\u0997\u09cd\u09b0\u09b9\u09a3",
             "Receive audio from another BitChord phone, or share your files.",
@@ -12483,6 +12829,13 @@ final class Translations {
             "Repeat preview",
             "\u09aa\u09cd\u09b0\u09bf\u09ad\u09bf\u0989"
                     + " \u09aa\u09c1\u09a8\u09b0\u09be\u09ac\u09c3\u09a4\u09cd\u09a4\u09bf",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "\u09b8\u09be\u09b0\u09bf\u09b0 \u09ac\u09b0\u09cd\u09a4\u09ae\u09be\u09a8 \u0993"
+                    + " \u09aa\u09b0\u09ac\u09b0\u09cd\u09a4\u09c0 \u0997\u09be\u09a8"
+                    + " \u09ac\u09a6\u09b2\u09c7 \u09a6\u09c7\u09af\u09bc\u0964"
+                    + " \u09ac\u09be\u0995\u09bf\u0997\u09c1\u09b2\u09cb"
+                    + " \u0985\u09aa\u09b0\u09bf\u09ac\u09b0\u09cd\u09a4\u09bf\u09a4"
+                    + " \u09a5\u09be\u0995\u09c7\u0964",
             "Report audio quality",
             "\u0985\u09a1\u09bf\u0993 \u0995\u09cb\u09af\u09bc\u09be\u09b2\u09bf\u099f\u09bf"
                     + " \u099c\u09be\u09a8\u09be\u09a8",
@@ -12522,6 +12875,8 @@ final class Translations {
             "Reset connection identity?",
             "\u09b8\u0982\u09af\u09cb\u0997\u09c7\u09b0 \u09aa\u09b0\u09bf\u099a\u09af\u09bc"
                     + " \u09b0\u09bf\u09b8\u09c7\u099f \u0995\u09b0\u09ac\u09c7\u09a8?",
+            "Reset EQ",
+            "EQ \u09b0\u09bf\u09b8\u09c7\u099f \u0995\u09b0\u09c1\u09a8",
             "Reset to {0}%",
             "{0}%-\u098f \u09b0\u09bf\u09b8\u09c7\u099f \u0995\u09b0\u09c1\u09a8",
             "Reset {0}",
@@ -12603,6 +12958,8 @@ final class Translations {
             "\u09b8\u09cd\u09aa\u09a8\u09b8\u09b0\u09cd\u09a1 \u09ae\u09c7\u09b8\u09c7\u099c"
                     + " \u0986\u09ac\u09be\u09b0 \u099a\u09c7\u09b7\u09cd\u099f\u09be"
                     + " \u0995\u09b0\u09c1\u09a8",
+            "Reverse",
+            "\u0995\u09cd\u09b0\u09ae \u0989\u09b2\u09cd\u099f\u09be\u09a8",
             "Review",
             "\u09a6\u09c7\u0996\u09c1\u09a8",
             "Review 1 song without tags",
@@ -12698,6 +13055,8 @@ final class Translations {
                     + " \u09a5\u09c7\u0995\u09c7 \u09ac\u09c7\u09b6\u09bf"
                     + " \u09ac\u09be\u099c\u09be\u09a8\u09cb \u0997\u09be\u09a8"
                     + " \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3 \u0995\u09b0\u09c1\u09a8",
+            "Save mode",
+            "\u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3\u09c7\u09b0 \u09ae\u09cb\u09a1",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -13342,6 +13701,8 @@ final class Translations {
             "\u09b8\u09cd\u09b2\u09bf\u09aa \u099f\u09be\u0987\u09ae\u09be\u09b0",
             "Sliders {0}",
             "\u09b8\u09cd\u09b2\u09be\u0987\u09a1\u09be\u09b0 {0}",
+            "Slower by 1%",
+            "\u09e7% \u09a7\u09c0\u09b0",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -14215,6 +14576,13 @@ final class Translations {
                     + " \u0995\u09b0\u099b\u09c7\u0964 \u09aa\u09b0\u09c7 \u098f\u0987"
                     + " \u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09ab\u09be\u09b0"
                     + " \u09b0\u09bf\u09ab\u09cd\u09b0\u09c7\u09b6 \u0995\u09b0\u09c1\u09a8\u0964",
+            "The queue changed; reopen this transition",
+            "\u09b8\u09be\u09b0\u09bf \u09ac\u09a6\u09b2\u09c7 \u0997\u09c7\u099b\u09c7;"
+                + " \u098f\u0987 \u099f\u09cd\u09b0\u09be\u09a8\u099c\u09bf\u09b6\u09a8\u099f\u09bf"
+                + " \u0986\u09ac\u09be\u09b0 \u0996\u09c1\u09b2\u09c1\u09a8",
+            "The queue is being changed",
+            "\u09b8\u09be\u09b0\u09bf \u09ac\u09a6\u09b2\u09be\u09a8\u09cb"
+                    + " \u09b9\u099a\u09cd\u099b\u09c7",
             "The queue plays in its own order",
             "\u09b8\u09be\u09b0\u09bf \u09a8\u09bf\u099c\u09c7\u09b0 \u0995\u09cd\u09b0\u09ae\u09c7"
                     + " \u09ac\u09be\u099c\u09c7",
@@ -14338,6 +14706,10 @@ final class Translations {
             "The song pauses straight away",
             "\u0997\u09be\u09a8 \u09b8\u0999\u09cd\u0997\u09c7 \u09b8\u0999\u09cd\u0997\u09c7"
                     + " \u09a5\u09be\u09ae\u09c7",
+            "The track length is not available",
+            "\u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995\u09c7\u09b0"
+                + " \u09a6\u09c8\u09b0\u09cd\u0998\u09cd\u09af \u09aa\u09be\u0993\u09af\u09bc\u09be"
+                + " \u09af\u09be\u09af\u09bc\u09a8\u09bf",
             "The whole song is cached.",
             "\u09aa\u09c1\u09b0\u09cb \u0997\u09be\u09a8\u099f\u09bf"
                     + " \u0995\u09cd\u09af\u09be\u09b6\u09c7 \u0986\u099b\u09c7\u0964",
@@ -14411,6 +14783,10 @@ final class Translations {
                     + " \u09ae\u09c7\u09af\u09bc\u09be\u09a6 \u09b6\u09c7\u09b7\u0964"
                     + " \u0997\u09be\u09a8\u09c7 \u09ab\u09bf\u09b0\u09c7 \u0986\u09ac\u09be\u09b0"
                     + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8\u0964",
+            "This file can\u2019t stay available",
+            "\u098f\u0987 \u09ab\u09be\u0987\u09b2\u09c7\u09b0"
+                    + " \u0985\u09cd\u09af\u09be\u0995\u09cd\u09b8\u09c7\u09b8 \u09a7\u09b0\u09c7"
+                    + " \u09b0\u09be\u0996\u09be \u09af\u09be\u09ac\u09c7 \u09a8\u09be",
             "This file couldn't be deleted.",
             "\u098f\u0987 \u09ab\u09be\u0987\u09b2\u099f\u09bf \u09ae\u09cb\u099b\u09be"
                     + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964",
@@ -14458,6 +14834,10 @@ final class Translations {
                     + " \u09aa\u09c1\u09b0\u09cb\u09aa\u09c1\u09b0\u09bf"
                     + " \u09a6\u09c7\u0996\u09be\u09a8\u09cb"
                     + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964",
+            "This pair cannot be previewed",
+            "\u098f\u0987 \u099c\u09cb\u09a1\u09bc\u09be\u099f\u09bf\u09b0"
+                    + " \u09aa\u09cd\u09b0\u09bf\u09ad\u09bf\u0989 \u09b6\u09cb\u09a8\u09be"
+                    + " \u09af\u09be\u09ac\u09c7 \u09a8\u09be",
             "This phone\u2019s audio chip can play: {0}.",
             "\u098f\u0987 \u09ab\u09cb\u09a8\u09c7\u09b0 \u0985\u09a1\u09bf\u0993"
                     + " \u099a\u09bf\u09aa \u09ac\u09be\u099c\u09be\u09a4\u09c7"
@@ -14526,6 +14906,8 @@ final class Translations {
                     + " \u09a6\u09c7\u09af\u09bc \u09a8\u09be\u0964",
             "Time",
             "Time",
+            "times",
+            "\u0997\u09c1\u09a3",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -14573,6 +14955,8 @@ final class Translations {
             "Track analysis",
             "\u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995"
                     + " \u09ac\u09bf\u09b6\u09cd\u09b2\u09c7\u09b7\u09a3",
+            "Track BPM",
+            "\u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995\u09c7\u09b0 BPM",
             "Track details",
             "\u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995\u09c7\u09b0 \u09ac\u09bf\u09ac\u09b0\u09a3",
             "Track durations are not available yet. Start playback or",
@@ -14631,6 +15015,10 @@ final class Translations {
                     + " \u0995\u09b0\u09c1\u09a8\u0964 \u0997\u09be\u09a8\u0997\u09c1\u09b2\u09cb"
                     + " \u09b8\u09c7\u0996\u09be\u09a8 \u09a5\u09c7\u0995\u09c7\u0987"
                     + " \u0986\u09b8\u09c7\u0964",
+            "Turn shuffle off to change the queue",
+            "\u09b8\u09be\u09b0\u09bf \u09ac\u09a6\u09b2\u09be\u09a4\u09c7"
+                + " \u098f\u09b2\u09cb\u09ae\u09c7\u09b2\u09cb \u099a\u09be\u09b2\u09be\u09a8\u09cb"
+                + " \u09ac\u09a8\u09cd\u09a7 \u0995\u09b0\u09c1\u09a8",
             "Turn the singer down",
             "Turn the singer down",
             "Turns the singer down so you can sing over the song. Works",
@@ -14653,6 +15041,8 @@ final class Translations {
             "\u09ae\u09a1\u09c7\u09b2\u09c7\u09b0 \u09a8\u09be\u09ae\u09c7\u09b0"
                     + " \u0995\u09bf\u099b\u09c1 \u0985\u0982\u09b6"
                     + " \u09b2\u09bf\u0996\u09c1\u09a8\u0964",
+            "Unavailable",
+            "\u0985\u09a8\u09c1\u09aa\u09b2\u09ac\u09cd\u09a7",
             "Under {0}, oldest first",
             "{0}-\u098f\u09b0 \u09a8\u09bf\u099a\u09c7, \u09b8\u09ac\u099a\u09c7\u09af\u09bc\u09c7"
                     + " \u09aa\u09c1\u09b0\u09a8\u09cb\u0997\u09c1\u09b2\u09cb \u0986\u0997\u09c7"
@@ -14730,6 +15120,9 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "0.5\u00d7 \u09a5\u09c7\u0995\u09c7 2\u00d7 \u0997\u09c1\u09a3\u0995"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09c1\u09a8",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -14751,6 +15144,10 @@ final class Translations {
                 + " \u099c\u09a8\u09cd\u09af \u0995\u09cb\u09a8\u09cb"
                 + " \u09b8\u09be\u09b0\u09cd\u09ad\u09be\u09b0 \u099a\u09be\u09b2\u09be\u09af\u09bc"
                 + " \u09a8\u09be\u0964",
+            "Use automatic mode",
+            "\u09b8\u09cd\u09ac\u09af\u09bc\u0982\u0995\u09cd\u09b0\u09bf\u09af\u09bc"
+                    + " \u09ae\u09cb\u09a1 \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0"
+                    + " \u0995\u09b0\u09c1\u09a8",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -14788,6 +15185,12 @@ final class Translations {
                     + " \u09a5\u09be\u0995\u09c7",
             "Use it",
             "\u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09c1\u09a8",
+            "Use manual mode",
+            "\u09ae\u09cd\u09af\u09be\u09a8\u09c1\u09af\u09bc\u09be\u09b2 \u09ae\u09cb\u09a1"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09c1\u09a8",
+            "Use measured tempo",
+            "\u09ae\u09be\u09aa\u09be \u099f\u09c7\u09ae\u09cd\u09aa\u09cb"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09c1\u09a8",
             "Use MicroG",
             "MicroG \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09c1\u09a8",
             "Use name",
@@ -14819,6 +15222,13 @@ final class Translations {
             "Use this name?",
             "\u098f\u0987 \u09a8\u09be\u09ae \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0"
                     + " \u0995\u09b0\u09ac\u09c7\u09a8?",
+            "Use this pair",
+            "\u098f\u0987 \u099c\u09cb\u09a1\u09bc\u09be\u099f\u09bf"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09c1\u09a8",
+            "Use this pair to apply it",
+            "\u09aa\u09cd\u09b0\u09af\u09bc\u09cb\u0997 \u0995\u09b0\u09a4\u09c7 \u098f\u0987"
+                    + " \u099c\u09cb\u09a1\u09bc\u09be\u099f\u09bf"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09c1\u09a8",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "\u09a8\u09bf\u099c\u09c7\u09b0 Real-Debrid, AllDebrid, Premiumize \u09ac\u09be TorBox"
                     + " \u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f"
@@ -14856,6 +15266,10 @@ final class Translations {
                 + " \u0985\u0995\u09cd\u09b7\u09c1\u09a3\u09cd\u09a3 \u09b0\u09c7\u0996\u09c7"
                 + " \u09ab\u09be\u0987\u09b2 \u09b9\u09bf\u09b8\u09c7\u09ac\u09c7"
                 + " \u0986\u09aa\u09b2\u09cb\u09a1 \u09b9\u09af\u09bc\u0964",
+            "Using this pair\u2026",
+            "\u098f\u0987 \u099c\u09cb\u09a1\u09bc\u09be\u099f\u09bf"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09be"
+                    + " \u09b9\u099a\u09cd\u099b\u09c7\u2026",
             "Using {0}",
             "{0} \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u09b9\u099a\u09cd\u099b\u09c7",
             "Variable",
@@ -14912,6 +15326,11 @@ final class Translations {
             "\u09ac\u09b0\u09cd\u09a4\u09ae\u09be\u09a8 \u0995\u09be\u099c \u09b6\u09c7\u09b7"
                     + " \u09b9\u0993\u09af\u09bc\u09be \u09aa\u09b0\u09cd\u09af\u09a8\u09cd\u09a4"
                     + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be \u0995\u09b0\u09c1\u09a8\u0964",
+            "Wait for the pair to finish loading",
+            "\u09a6\u09c1\u0987 \u099f\u09cd\u09b0\u09cd\u09af\u09be\u0995 \u09b2\u09cb\u09a1"
+                    + " \u09b9\u0993\u09af\u09bc\u09be \u09b6\u09c7\u09b7"
+                    + " \u09b9\u0993\u09af\u09bc\u09be \u09aa\u09b0\u09cd\u09af\u09a8\u09cd\u09a4"
+                    + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be \u0995\u09b0\u09c1\u09a8",
             "Waiting for a community channel to be indexed",
             "\u0995\u09cb\u09a8\u09cb \u0995\u09ae\u09bf\u0989\u09a8\u09bf\u099f\u09bf"
                 + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2"
@@ -14977,6 +15396,9 @@ final class Translations {
                 + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2"
                 + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09b9\u0993\u09af\u09bc\u09be\u09b0"
                 + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be",
+            "Waiting to analyze",
+            "\u09ac\u09bf\u09b6\u09cd\u09b2\u09c7\u09b7\u09a3\u09c7\u09b0"
+                    + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be\u09af\u09bc",
             "Waiting to save",
             "\u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3\u09c7\u09b0"
                     + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be\u09af\u09bc",
@@ -15840,6 +16262,8 @@ final class Translations {
             "Adjust the normalised playback level",
             "Advanced",
             "Erweitert",
+            "Advanced curve",
+            "Erweiterte Kurve",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -15890,8 +16314,14 @@ final class Translations {
             "Ein inoffizieller Client, der die Telegram API nutzt. Dein Konto, in BitChord.",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "Analyse",
+            "Analysis result could not be read",
+            "Das Analyseergebnis konnte nicht gelesen werden",
             "Analyzing selected audio\u2026",
             "Ausgew\u00e4hltes Audio wird analysiert\u2026",
+            "Analyzing\u2026",
+            "Wird analysiert \u2026",
             "Android didn't allow this file to be deleted.",
             "Android hat das L\u00f6schen dieser Datei nicht zugelassen.",
             "Android mixes surround files itself",
@@ -15940,12 +16370,16 @@ final class Translations {
             "Ein AutoEq-Profil f\u00fcr dein Kopfh\u00f6rermodell anwenden",
             "Apply cache size",
             "Cache-Gr\u00f6\u00dfe \u00fcbernehmen",
+            "Apply mode",
+            "Anwendungsmodus",
             "Apply now",
             "Jetzt anwenden",
             "Apply or close to resume playback.",
             "Zum Fortsetzen anwenden oder schlie\u00dfen.",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "Einstellungen anwenden",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -16017,6 +16451,8 @@ final class Translations {
             "Automatisch speichern",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "Der automatische \u00dcbergang ist noch nicht bereit.",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -16075,12 +16511,19 @@ final class Translations {
             "Taktsicherheit",
             "Beat grid offset",
             "Beatgrid-Versatz",
+            "Beat grid scale",
+            "Taktraster-Skalierung",
             "Beat grid tempo",
             "Beatgrid-Tempo",
             "Beat jump",
             "Beat-Sprung",
             "Beats",
             "Beats",
+            "Before",
+            "Vorher",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u201eVorher\u201c ist nicht verf\u00fcgbar: Automix f\u00fcgt diesem \u00dcbergang"
+                    + " Effekte hinzu.",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -16259,6 +16702,9 @@ final class Translations {
             "\u00c4ndere das in BitChords Download-Einstellungen, direkt dar\u00fcber.",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "\u00c4ndert die Geschwindigkeit beider Titel nur w\u00e4hrend der \u00dcberlappung."
+                    + " Die Tonh\u00f6he bleibt erhalten.",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -16315,6 +16761,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "Ausw\u00e4hlen",
+            "Choose a different file",
+            "Andere Datei ausw\u00e4hlen",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -16587,6 +17035,8 @@ final class Translations {
             "Das Kopieren daraus beginnt, sobald er fertig ist, \u00e4ltester Beitrag zuerst.",
             "Corrected names",
             "Korrigierte Namen",
+            "Could not change the queue",
+            "Die Warteschlange konnte nicht ge\u00e4ndert werden",
             "Could not complete peer discovery. Check relays and try again.",
             "Die Teilnehmersuche konnte nicht abgeschlossen werden. Pr\u00fcfe die"
                     + " Vermittlungsserver und versuche es erneut.",
@@ -16623,8 +17073,12 @@ final class Translations {
             "Der Dienst ist nicht erreichbar. Pr\u00fcfe deine Verbindung.",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "Diese Datei konnte nicht gelesen werden",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "Das Audio dieses Titels konnte nicht gelesen werden.",
             "Could not read your library. Try again.",
             "Deine Mediathek konnte nicht gelesen werden. Versuche es noch einmal.",
             "Could not remove the saved service. Try again.",
@@ -16649,6 +17103,8 @@ final class Translations {
                     + " Verbindungseinstellungen und versuche es erneut.",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "Dieses Titelpaar konnte nicht verwendet werden.",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "Kopieren fehlgeschlagen: {0}. Neuer Versuch in {1} Min.",
             "Couldn\u2019t load AutoEq\u2019s list: {0}",
@@ -16940,6 +17396,8 @@ final class Translations {
             "Der Entwurf ist von der Wiedergabe getrennt",
             "Draft saved",
             "Entwurf gespeichert",
+            "Draft saving",
+            "Entwurfsspeicherung",
             "Drag a curve point or fine-tune each track below.",
             "Ziehe einen Kurvenpunkt oder passe unten jeden Titel an.",
             "Drag to reorder, or use Move up and Move down.",
@@ -17105,6 +17563,8 @@ final class Translations {
             "Ende des letzten Songs ausblenden",
             "Failed",
             "Fehlgeschlagen",
+            "Faster by 1%",
+            "1 % schneller",
             "Favor songs you play often",
             "Oft geh\u00f6rte Songs bevorzugen",
             "Favor well-known songs",
@@ -17137,6 +17597,8 @@ final class Translations {
             "Dateien ohne Tags werden in AcoustID nachgeschlagen",
             "Filter",
             "Filter",
+            "Filter depth",
+            "Filtertiefe",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -17217,6 +17679,8 @@ final class Translations {
             "Ordner",
             "Folder selected.",
             "Ordner ausgew\u00e4hlt.",
+            "Follow current pair",
+            "Aktuellem Paar folgen",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -17304,6 +17768,8 @@ final class Translations {
             "Doppelte Songs ausblenden",
             "Hide hash",
             "Hash ausblenden",
+            "Hide sources",
+            "Quellen ausblenden",
             "High",
             "Hoch",
             "High-pass",
@@ -17311,6 +17777,8 @@ final class Translations {
             "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
             "Cue gedr\u00fcckt halten, um ihn zu ersetzen oder zu entfernen. Grid-\u00c4nderungen"
                     + " \u00e4ndern das Wiedergabetempo nicht.",
+            "How far the selected filters sweep.",
+            "Wie weit die ausgew\u00e4hlten Filter durchlaufen werden.",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -17343,6 +17811,8 @@ final class Translations {
             "Gespeicherten Index einschlie\u00dfen (gr\u00f6\u00dfere Datei)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "Effekt f\u00fcr eingehenden Titel",
             "Incoming offers",
             "Eingehende Angebote",
             "Incomplete sponsored-message response",
@@ -17481,6 +17951,8 @@ final class Translations {
             "Zuletzt verwendet: {0}",
             "Later",
             "Sp\u00e4ter",
+            "Leave Listen Together to change the queue",
+            "Verlasse \u201eGemeinsam h\u00f6ren\u201c, um die Warteschlange zu \u00e4ndern",
             "Left to BitChord",
             "BitChord \u00fcberlassen",
             "Let JamesDSP do the effects",
@@ -17512,8 +17984,12 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "Eingehenden Titel laden",
             "Load older posts",
             "\u00c4ltere Beitr\u00e4ge laden",
+            "Load outgoing",
+            "Ausgehenden Titel laden",
             "Loading",
             "L\u00e4dt",
             "Loading channel\u2026",
@@ -17590,6 +18066,17 @@ final class Translations {
             "Platz im Mix schaffen",
             "Manage download destinations, transfers and public sharing.",
             "Downloadziele, \u00dcbertragungen und \u00f6ffentliche Freigaben verwalten.",
+            "Manual",
+            "Manuell",
+            "Manual applies when you tap Apply.",
+            "Im manuellen Modus wird erst beim Tippen auf \u201eAnwenden\u201c angewendet.",
+            "Manual saves when you tap Save draft.",
+            "Im manuellen Modus wird erst beim Tippen auf \u201eEntwurf speichern\u201c"
+                    + " gespeichert.",
+            "Match A to B",
+            "A an B anpassen",
+            "Match B to A",
+            "B an A anpassen",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -17668,6 +18155,8 @@ final class Translations {
             "MP3, AAC, Opus und andere verlustbehaftete Dateien in den Community-Kan\u00e4len"
                 + " werden \u00fcbersprungen. Ob eine Datei verlustfrei ist, ergibt sich aus ihrem"
                 + " Format, bei M4A-Dateien aus ihrer Bitrate.",
+            "Multiplier",
+            "Multiplikator",
             "Music chats",
             "Musik-Chats",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -17708,6 +18197,8 @@ final class Translations {
             "Braucht Android 10 oder neuer.",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "Ben\u00f6tigt beide Tempi und ein Verh\u00e4ltnis zwischen 0,5\u00d7 und 2\u00d7",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -17767,6 +18258,8 @@ final class Translations {
             "No file offers yet. Ask the paired phone to choose audio files to share.",
             "Noch keine Dateiangebote. Bitte die andere Person, auf dem gekoppelten Telefon"
                     + " Audiodateien zum Teilen auszuw\u00e4hlen.",
+            "No file picker is available",
+            "Keine Dateiauswahl verf\u00fcgbar",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -17825,6 +18318,8 @@ final class Translations {
                     + " oder kopple direkt mit dem App-Schl\u00fcssel des anderen Telefons.",
             "No saved account. Enter your username and password.",
             "Kein Konto gespeichert. Gib deinen Benutzernamen und dein Passwort ein.",
+            "No saved draft",
+            "Kein gespeicherter Entwurf",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -17862,6 +18357,9 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "Nicht gen\u00fcgend Audio",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "Nicht gen\u00fcgend Arbeitsspeicher, um diesen Titel zu analysieren. Tippe auf"
+                    + " \u201eErneut versuchen\u201c.",
             "Not managed here",
             "Hier nicht verwaltet",
             "Not played yet",
@@ -18016,6 +18514,8 @@ final class Translations {
                 + " ihn nicht.",
             "Original key",
             "Originaltonart",
+            "Original tempo",
+            "Urspr\u00fcngliches Tempo",
             "Original vocals",
             "Originalgesang",
             "Other",
@@ -18028,10 +18528,18 @@ final class Translations {
             "Andere Telegram-Dateien",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "Effekt f\u00fcr ausgehenden Titel",
             "Outro",
             "Outro",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "BPM w\u00e4hrend der \u00dcberlappung",
+            "overlap only",
+            "nur w\u00e4hrend der \u00dcberlappung",
+            "Overlap tempo",
+            "Tempo w\u00e4hrend der \u00dcberlappung",
             "Pair a peer",
             "Peer koppeln",
             "Pair a peer before sharing files.",
@@ -18178,6 +18686,8 @@ final class Translations {
             "W\u00e4hle die Qualit\u00e4t f\u00fcr diesen Download.",
             "Pitch",
             "Tonh\u00f6he",
+            "Play",
+            "Wiedergeben",
             "Play a song first.",
             "Spiel zuerst einen Song ab.",
             "Play alongside other apps",
@@ -18266,6 +18776,8 @@ final class Translations {
             "Preview",
             "Preview again, or Apply to resume.",
             "Erneut vorh\u00f6ren oder zum Fortsetzen anwenden.",
+            "Preview Before",
+            "\u201eVorher\u201c anh\u00f6ren",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -18436,6 +18948,8 @@ final class Translations {
             "Bereit zur Suche. Erst nach der Dateiauswahl wird etwas heruntergeladen.",
             "Ready.",
             "Bereit.",
+            "Recall draft",
+            "Entwurf laden",
             "Receive",
             "Empfangen",
             "Receive audio from another BitChord phone, or share your files.",
@@ -18551,6 +19065,9 @@ final class Translations {
             "Reparieren",
             "Repeat preview",
             "Vorschau wiederholen",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "Ersetzt den aktuellen und den n\u00e4chsten Titel in der Warteschlange. Der Rest"
+                    + " bleibt unver\u00e4ndert.",
             "Report audio quality",
             "Audioqualit\u00e4t angeben",
             "Report sponsored message",
@@ -18583,6 +19100,8 @@ final class Translations {
             "Verbindungsidentit\u00e4t zur\u00fccksetzen",
             "Reset connection identity?",
             "Verbindungsidentit\u00e4t zur\u00fccksetzen?",
+            "Reset EQ",
+            "EQ zur\u00fccksetzen",
             "Reset to {0}%",
             "Auf {0} % zur\u00fccksetzen",
             "Reset {0}",
@@ -18632,6 +19151,8 @@ final class Translations {
             "Verbindung erneut versuchen",
             "Retry sponsored messages",
             "Gesponserte Nachrichten erneut laden",
+            "Reverse",
+            "Umkehren",
             "Review",
             "Pr\u00fcfen",
             "Review 1 song without tags",
@@ -18693,6 +19214,8 @@ final class Translations {
             "Save frequently played songs from available download sources on Wi-Fi",
             "H\u00e4ufig gespielte Songs \u00fcber Wi-Fi aus verf\u00fcgbaren Downloadquellen"
                     + " speichern",
+            "Save mode",
+            "Speichermodus",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -19073,6 +19596,8 @@ final class Translations {
             "Sleep-Timer",
             "Sliders {0}",
             "Regler {0}",
+            "Slower by 1%",
+            "1 % langsamer",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -19566,6 +20091,10 @@ final class Translations {
             "The provider is still preparing files. Refresh this transfer later.",
             "Der Anbieter bereitet die Dateien noch vor. Aktualisiere diese \u00dcbertragung"
                     + " sp\u00e4ter.",
+            "The queue changed; reopen this transition",
+            "Die Warteschlange hat sich ge\u00e4ndert. \u00d6ffne diesen \u00dcbergang erneut.",
+            "The queue is being changed",
+            "Die Warteschlange wird ge\u00e4ndert",
             "The queue plays in its own order",
             "Die Warteschlange spielt in ihrer eigenen Reihenfolge",
             "The rootless JamesDSP needs two permissions that only Shizuku or a",
@@ -19623,6 +20152,8 @@ final class Translations {
             "Der Song wird ausgeblendet und pausiert dann",
             "The song pauses straight away",
             "Der Song pausiert sofort",
+            "The track length is not available",
+            "Die Titell\u00e4nge ist nicht verf\u00fcgbar",
             "The whole song is cached.",
             "Der ganze Song ist zwischengespeichert.",
             "There's no music in this chat yet.",
@@ -19664,6 +20195,8 @@ final class Translations {
             "This download choice expired. Return to the song and try again.",
             "Diese Download-Auswahl ist abgelaufen. Kehre zum Titel zur\u00fcck und versuche es"
                     + " erneut.",
+            "This file can\u2019t stay available",
+            "Diese Datei kann nicht dauerhaft verf\u00fcgbar bleiben",
             "This file couldn't be deleted.",
             "Diese Datei konnte nicht gel\u00f6scht werden.",
             "This file did not pass the audio format check. Choose another result.",
@@ -19685,6 +20218,8 @@ final class Translations {
             "This official sponsored message could not be displayed completely.",
             "Diese offizielle gesponserte Nachricht konnte nicht vollst\u00e4ndig angezeigt"
                     + " werden.",
+            "This pair cannot be previewed",
+            "Dieses Titelpaar kann nicht vorgeh\u00f6rt werden",
             "This phone\u2019s audio chip can play: {0}.",
             "Der Audiochip dieses Handys kann abspielen: {0}.",
             "This playlist has no available tracks.",
@@ -19725,6 +20260,8 @@ final class Translations {
             "Diese BitChord-Version gibt ihren Song-Cache nicht frei.",
             "Time",
             "Time",
+            "times",
+            "-fach",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -19753,6 +20290,8 @@ final class Translations {
             "Werkzeuge",
             "Track analysis",
             "Titelanalyse",
+            "Track BPM",
+            "Titel-BPM",
             "Track details",
             "Titeldetails",
             "Track durations are not available yet. Start playback or",
@@ -19796,6 +20335,8 @@ final class Translations {
                     + " daraus.",
             "Turn on Saved index first. The songs come from it.",
             "Aktiviere zuerst \u201eGespeicherter Index\u201c. Die Songs stammen daraus.",
+            "Turn shuffle off to change the queue",
+            "Schalte die Zufallswiedergabe aus, um die Warteschlange zu \u00e4ndern",
             "Turn the singer down",
             "Turn the singer down",
             "Turns the singer down so you can sing over the song. Works",
@@ -19808,6 +20349,8 @@ final class Translations {
             "Zweistufige Best\u00e4tigung",
             "Type part of the model name.",
             "Gib einen Teil des Modellnamens ein.",
+            "Unavailable",
+            "Nicht verf\u00fcgbar",
             "Under {0}, oldest first",
             "Unter {0}, \u00e4lteste zuerst",
             "Undo",
@@ -19856,6 +20399,8 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "Verwende einen Multiplikator zwischen 0,5\u00d7 und 2\u00d7",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -19868,6 +20413,8 @@ final class Translations {
                     + " and BitChord runs no server for this.",
             "Nutze einen beliebigen HTTPS-Dienst, der JSON-Anfragen im Chat-Format annimmt. Es ist"
                     + " kein Dienst integriert, und BitChord betreibt daf\u00fcr keinen Server.",
+            "Use automatic mode",
+            "Automatischen Modus verwenden",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -19887,6 +20434,10 @@ final class Translations {
                     + " pausieren",
             "Use it",
             "Verwenden",
+            "Use manual mode",
+            "Manuellen Modus verwenden",
+            "Use measured tempo",
+            "Gemessenes Tempo verwenden",
             "Use MicroG",
             "MicroG verwenden",
             "Use name",
@@ -19909,6 +20460,10 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "Diesen Namen verwenden?",
+            "Use this pair",
+            "Dieses Titelpaar verwenden",
+            "Use this pair to apply it",
+            "Dieses Titelpaar zuerst \u00fcbernehmen",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Verwende dein eigenes Konto bei Real-Debrid, AllDebrid, Premiumize oder TorBox",
             "Use your Spotify developer client ID and register this redirect URI:",
@@ -19926,6 +20481,8 @@ final class Translations {
                     + " original audio bytes.",
             "Verwendet deinen konfigurierten privaten Hauptkanal. Downloads werden als Dateien mit"
                     + " unver\u00e4nderten urspr\u00fcnglichen Audiodaten hochgeladen.",
+            "Using this pair\u2026",
+            "Dieses Titelpaar wird \u00fcbernommen\u2026",
             "Using {0}",
             "{0} wird verwendet",
             "Variable",
@@ -19970,6 +20527,8 @@ final class Translations {
             "Volume",
             "Wait for the current action to finish.",
             "Warte, bis die aktuelle Aktion abgeschlossen ist.",
+            "Wait for the pair to finish loading",
+            "Warte, bis beide Titel fertig geladen sind",
             "Waiting for a community channel to be indexed",
             "Warte darauf, dass ein Community-Kanal indexiert wird",
             "Waiting for device to cool down",
@@ -20002,6 +20561,8 @@ final class Translations {
             "Warten auf deine Zustimmung",
             "Waiting for {0} community channels to be indexed",
             "Warte darauf, dass {0} Community-Kan\u00e4le indexiert werden",
+            "Waiting to analyze",
+            "Wartet auf Analyse",
             "Waiting to save",
             "Warten auf Speichern",
             "Waiting to save selected copies",
@@ -20589,6 +21150,8 @@ final class Translations {
             "Adjust the normalised playback level",
             "Advanced",
             "Avanzado",
+            "Advanced curve",
+            "Curva avanzada",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -20640,8 +21203,14 @@ final class Translations {
             "Un cliente no oficial que usa la API de Telegram. Tu cuenta, dentro de BitChord.",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "An\u00e1lisis",
+            "Analysis result could not be read",
+            "No se pudo leer el resultado del an\u00e1lisis",
             "Analyzing selected audio\u2026",
             "Analizando el audio seleccionado\u2026",
+            "Analyzing\u2026",
+            "Analizando\u2026",
             "Android didn't allow this file to be deleted.",
             "Android no permiti\u00f3 eliminar este archivo.",
             "Android mixes surround files itself",
@@ -20691,12 +21260,16 @@ final class Translations {
             "Aplicar un perfil de AutoEq para tu modelo de auriculares",
             "Apply cache size",
             "Aplicar tama\u00f1o de cach\u00e9",
+            "Apply mode",
+            "Modo de aplicaci\u00f3n",
             "Apply now",
             "Aplicar ahora",
             "Apply or close to resume playback.",
             "Aplica o cierra para reanudar la reproducci\u00f3n.",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "Aplicar ajustes",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -20767,6 +21340,8 @@ final class Translations {
             "Guardar autom\u00e1ticamente",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "La mezcla autom\u00e1tica a\u00fan no est\u00e1 lista.",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -20826,12 +21401,18 @@ final class Translations {
             "Confianza del pulso",
             "Beat grid offset",
             "Desfase de la cuadr\u00edcula",
+            "Beat grid scale",
+            "Escala de la cuadr\u00edcula de pulsos",
             "Beat grid tempo",
             "Tempo de la cuadr\u00edcula",
             "Beat jump",
             "Salto de pulsos",
             "Beats",
             "Pulsos",
+            "Before",
+            "Antes",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u00abAntes\u00bb no est\u00e1 disponible: Automix a\u00f1ade efectos a esta mezcla.",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -21011,6 +21592,9 @@ final class Translations {
             "C\u00e1mbialos en los ajustes de Descargas de BitChord, justo encima.",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "Cambia la velocidad de cada pista solo durante la superposici\u00f3n. Se mantiene el"
+                    + " tono.",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -21066,6 +21650,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "Elegir",
+            "Choose a different file",
+            "Elegir otro archivo",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -21342,6 +21928,8 @@ final class Translations {
                     + " antigua.",
             "Corrected names",
             "Nombres corregidos",
+            "Could not change the queue",
+            "No se pudo cambiar la cola",
             "Could not complete peer discovery. Check relays and try again.",
             "No se pudo completar la detecci\u00f3n de pares. Revisa los rel\u00e9s e"
                     + " int\u00e9ntalo de nuevo.",
@@ -21375,8 +21963,12 @@ final class Translations {
             "No se pudo contactar con el servicio. Comprueba tu conexi\u00f3n.",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "No se pudo leer este archivo",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "No se pudo leer el audio de esta pista.",
             "Could not read your library. Try again.",
             "No se pudo leer tu biblioteca. Int\u00e9ntalo de nuevo.",
             "Could not remove the saved service. Try again.",
@@ -21401,6 +21993,8 @@ final class Translations {
                     + " e int\u00e9ntalo de nuevo.",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "No se pudo usar esta pareja.",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "No se pudo copiar: {0}. Se reintentar\u00e1 en {1} min.",
             "Couldn\u2019t load AutoEq\u2019s list: {0}",
@@ -21692,6 +22286,8 @@ final class Translations {
             "El borrador es independiente de la reproducci\u00f3n",
             "Draft saved",
             "Borrador guardado",
+            "Draft saving",
+            "Guardado del borrador",
             "Drag a curve point or fine-tune each track below.",
             "Arrastra un punto de la curva o ajusta cada pista abajo.",
             "Drag to reorder, or use Move up and Move down.",
@@ -21856,6 +22452,8 @@ final class Translations {
             "Desvanecer el final de la \u00faltima canci\u00f3n",
             "Failed",
             "Fallido",
+            "Faster by 1%",
+            "Un 1 % m\u00e1s r\u00e1pido",
             "Favor songs you play often",
             "Dar preferencia a las canciones que escuchas a menudo",
             "Favor well-known songs",
@@ -21888,6 +22486,8 @@ final class Translations {
             "Los archivos sin etiquetas se buscan en AcoustID",
             "Filter",
             "Filtro",
+            "Filter depth",
+            "Profundidad del filtro",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -21968,6 +22568,8 @@ final class Translations {
             "Carpeta",
             "Folder selected.",
             "Carpeta seleccionada.",
+            "Follow current pair",
+            "Seguir el par actual",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -22056,6 +22658,8 @@ final class Translations {
             "Ocultar canciones duplicadas",
             "Hide hash",
             "Ocultar hash",
+            "Hide sources",
+            "Ocultar fuentes",
             "High",
             "Alta",
             "High-pass",
@@ -22063,6 +22667,8 @@ final class Translations {
             "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
             "Mant\u00e9n pulsado un cue para reemplazarlo o eliminarlo. Editar la cuadr\u00edcula"
                     + " no cambia la velocidad.",
+            "How far the selected filters sweep.",
+            "Amplitud del barrido de los filtros seleccionados.",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -22096,6 +22702,8 @@ final class Translations {
             "Incluir el \u00cdndice guardado (archivo m\u00e1s grande)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "Efecto de entrada",
             "Incoming offers",
             "Ofertas entrantes",
             "Incomplete sponsored-message response",
@@ -22235,6 +22843,8 @@ final class Translations {
             "\u00daltimo uso: {0}",
             "Later",
             "M\u00e1s tarde",
+            "Leave Listen Together to change the queue",
+            "Sal de Escuchar juntos para cambiar la cola",
             "Left to BitChord",
             "Lo decide BitChord",
             "Let JamesDSP do the effects",
@@ -22266,8 +22876,12 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "Cargar pista entrante",
             "Load older posts",
             "Cargar publicaciones anteriores",
+            "Load outgoing",
+            "Cargar pista saliente",
             "Loading",
             "Cargando",
             "Loading channel\u2026",
@@ -22345,6 +22959,16 @@ final class Translations {
             "Manage download destinations, transfers and public sharing.",
             "Gestiona destinos de descarga, transferencias y archivos compartidos"
                     + " p\u00fablicamente.",
+            "Manual",
+            "Manual",
+            "Manual applies when you tap Apply.",
+            "En modo manual, toca Aplicar para aplicar los ajustes.",
+            "Manual saves when you tap Save draft.",
+            "En modo manual, toca Guardar borrador para guardar.",
+            "Match A to B",
+            "Ajustar A a B",
+            "Match B to A",
+            "Ajustar B a A",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -22425,6 +23049,8 @@ final class Translations {
             "Se omiten los MP3, AAC, Opus y otros archivos con p\u00e9rdida de los canales de la"
                     + " comunidad. Un archivo cuenta como sin p\u00e9rdida por su formato o, en los"
                     + " archivos M4A, por su tasa de bits.",
+            "Multiplier",
+            "Multiplicador",
             "Music chats",
             "Chats de m\u00fasica",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -22465,6 +23091,8 @@ final class Translations {
             "Necesita Android 10 o posterior.",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "Requiere ambos tempos y una relaci\u00f3n entre 0,5\u00d7 y 2\u00d7",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -22524,6 +23152,8 @@ final class Translations {
             "No file offers yet. Ask the paired phone to choose audio files to share.",
             "A\u00fan no hay ofertas de archivos. Pide que elijan archivos de audio para compartir"
                     + " en el tel\u00e9fono vinculado.",
+            "No file picker is available",
+            "No hay un selector de archivos disponible",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -22581,6 +23211,8 @@ final class Translations {
                     + " app del otro tel\u00e9fono.",
             "No saved account. Enter your username and password.",
             "No hay ninguna cuenta guardada. Ingresa tu nombre de usuario y contrase\u00f1a.",
+            "No saved draft",
+            "No hay ning\u00fan borrador guardado",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -22618,6 +23250,8 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "No hay suficiente audio",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "No hay memoria suficiente para analizar esta pista. Toca Reintentar.",
             "Not managed here",
             "No se gestiona aqu\u00ed",
             "Not played yet",
@@ -22772,6 +23406,8 @@ final class Translations {
                     + " necesitan.",
             "Original key",
             "Tono original",
+            "Original tempo",
+            "Tempo original",
             "Original vocals",
             "Voces originales",
             "Other",
@@ -22784,10 +23420,18 @@ final class Translations {
             "Otros archivos de Telegram",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "Efecto de salida",
             "Outro",
             "Final",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "BPM de la superposici\u00f3n",
+            "overlap only",
+            "solo durante la superposici\u00f3n",
+            "Overlap tempo",
+            "Tempo de la superposici\u00f3n",
             "Pair a peer",
             "Vincular un par",
             "Pair a peer before sharing files.",
@@ -22936,6 +23580,8 @@ final class Translations {
             "Elige la calidad de esta descarga.",
             "Pitch",
             "Tono",
+            "Play",
+            "Reproducir",
             "Play a song first.",
             "Primero reproduce una canci\u00f3n.",
             "Play alongside other apps",
@@ -23024,6 +23670,8 @@ final class Translations {
             "Preview",
             "Preview again, or Apply to resume.",
             "Preescucha de nuevo o aplica para continuar.",
+            "Preview Before",
+            "Escuchar \u00abAntes\u00bb",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -23194,6 +23842,8 @@ final class Translations {
             "Listo para buscar. No se descarga nada hasta que elijas un archivo.",
             "Ready.",
             "Listo.",
+            "Recall draft",
+            "Recuperar borrador",
             "Receive",
             "Recibir",
             "Receive audio from another BitChord phone, or share your files.",
@@ -23309,6 +23959,8 @@ final class Translations {
             "Reparar",
             "Repeat preview",
             "Repetir vista previa",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "Sustituye la canci\u00f3n actual y la siguiente en la cola. El resto no cambia.",
             "Report audio quality",
             "Informar calidad de audio",
             "Report sponsored message",
@@ -23341,6 +23993,8 @@ final class Translations {
             "Restablecer identidad de conexi\u00f3n",
             "Reset connection identity?",
             "\u00bfRestablecer la identidad de conexi\u00f3n?",
+            "Reset EQ",
+            "Restablecer ecualizador",
             "Reset to {0}%",
             "Restablecer al {0}%",
             "Reset {0}",
@@ -23390,6 +24044,8 @@ final class Translations {
             "Reintentar conexi\u00f3n",
             "Retry sponsored messages",
             "Reintentar mensajes patrocinados",
+            "Reverse",
+            "Invertir",
             "Review",
             "Revisar",
             "Review 1 song without tags",
@@ -23452,6 +24108,8 @@ final class Translations {
             "Save frequently played songs from available download sources on Wi-Fi",
             "Guardar por Wi-Fi las canciones m\u00e1s escuchadas desde las fuentes de descarga"
                     + " disponibles",
+            "Save mode",
+            "Modo de guardado",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -23835,6 +24493,8 @@ final class Translations {
             "Temporizador",
             "Sliders {0}",
             "Deslizadores {0}",
+            "Slower by 1%",
+            "Un 1 % m\u00e1s lento",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -24330,6 +24990,10 @@ final class Translations {
             "The provider is still preparing files. Refresh this transfer later.",
             "El proveedor todav\u00eda est\u00e1 preparando los archivos. Actualiza esta"
                     + " transferencia m\u00e1s tarde.",
+            "The queue changed; reopen this transition",
+            "La cola cambi\u00f3; vuelve a abrir esta transici\u00f3n",
+            "The queue is being changed",
+            "Se est\u00e1 cambiando la cola",
             "The queue plays in its own order",
             "La cola se reproduce en su propio orden",
             "The rootless JamesDSP needs two permissions that only Shizuku or a",
@@ -24382,6 +25046,8 @@ final class Translations {
             "La canci\u00f3n se desvanece y luego se pausa",
             "The song pauses straight away",
             "La canci\u00f3n se pausa al instante",
+            "The track length is not available",
+            "La duraci\u00f3n de la pista no est\u00e1 disponible",
             "The whole song is cached.",
             "La canci\u00f3n entera est\u00e1 en cach\u00e9.",
             "There's no music in this chat yet.",
@@ -24423,6 +25089,8 @@ final class Translations {
             "This download choice expired. Return to the song and try again.",
             "Esta selecci\u00f3n de descarga ha caducado. Vuelve a la canci\u00f3n e int\u00e9ntalo"
                     + " de nuevo.",
+            "This file can\u2019t stay available",
+            "Este archivo no puede permanecer disponible",
             "This file couldn't be deleted.",
             "No se pudo eliminar este archivo.",
             "This file did not pass the audio format check. Choose another result.",
@@ -24443,6 +25111,8 @@ final class Translations {
                     + " cuenta de Telegram existente.",
             "This official sponsored message could not be displayed completely.",
             "No se pudo mostrar completo este mensaje patrocinado oficial.",
+            "This pair cannot be previewed",
+            "No se puede preescuchar esta pareja",
             "This phone\u2019s audio chip can play: {0}.",
             "El chip de audio de este tel\u00e9fono puede reproducir: {0}.",
             "This playlist has no available tracks.",
@@ -24483,6 +25153,8 @@ final class Translations {
             "Esta versi\u00f3n de BitChord no da acceso a su cach\u00e9 de canciones.",
             "Time",
             "Time",
+            "times",
+            "veces",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -24511,6 +25183,8 @@ final class Translations {
             "Herramientas",
             "Track analysis",
             "An\u00e1lisis de pistas",
+            "Track BPM",
+            "BPM de la pista",
             "Track details",
             "Detalles de la pista",
             "Track durations are not available yet. Start playback or",
@@ -24552,6 +25226,8 @@ final class Translations {
             "Primero activa \u00cdndice guardado. De ah\u00ed salen los archivos para copiar.",
             "Turn on Saved index first. The songs come from it.",
             "Primero activa \u00cdndice guardado. De ah\u00ed salen las canciones.",
+            "Turn shuffle off to change the queue",
+            "Desactiva el modo aleatorio para cambiar la cola",
             "Turn the singer down",
             "Turn the singer down",
             "Turns the singer down so you can sing over the song. Works",
@@ -24564,6 +25240,8 @@ final class Translations {
             "Verificaci\u00f3n en dos pasos",
             "Type part of the model name.",
             "Escribe parte del nombre del modelo.",
+            "Unavailable",
+            "No disponible",
             "Under {0}, oldest first",
             "Menos de {0}, primero lo m\u00e1s antiguo",
             "Undo",
@@ -24613,6 +25291,8 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "Usa un multiplicador entre 0,5\u00d7 y 2\u00d7",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -24626,6 +25306,8 @@ final class Translations {
             "Usa cualquier servicio HTTPS que acepte solicitudes JSON de tipo chat. No hay"
                 + " ning\u00fan servicio integrado y BitChord no tiene ning\u00fan servidor para"
                 + " esto.",
+            "Use automatic mode",
+            "Usar modo autom\u00e1tico",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -24645,6 +25327,10 @@ final class Translations {
                     + " efectos y el fundido cruzado",
             "Use it",
             "Usar",
+            "Use manual mode",
+            "Usar modo manual",
+            "Use measured tempo",
+            "Usar tempo medido",
             "Use MicroG",
             "Usar MicroG",
             "Use name",
@@ -24667,6 +25353,10 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "\u00bfUsar este nombre?",
+            "Use this pair",
+            "Usar esta pareja",
+            "Use this pair to apply it",
+            "Usa esta pareja para aplicar los ajustes",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Usa tu propia cuenta de Real-Debrid, AllDebrid, Premiumize o TorBox",
             "Use your Spotify developer client ID and register this redirect URI:",
@@ -24684,6 +25374,8 @@ final class Translations {
                     + " original audio bytes.",
             "Utiliza tu canal principal privado configurado. Las descargas se suben como archivos"
                     + " conservando sus bytes de audio originales.",
+            "Using this pair\u2026",
+            "Usando esta pareja\u2026",
             "Using {0}",
             "Usando {0}",
             "Variable",
@@ -24728,6 +25420,8 @@ final class Translations {
             "Volume",
             "Wait for the current action to finish.",
             "Espera a que termine la acci\u00f3n actual.",
+            "Wait for the pair to finish loading",
+            "Espera a que termine de cargar la pareja",
             "Waiting for a community channel to be indexed",
             "Esperando a que se indexe un canal de la comunidad",
             "Waiting for device to cool down",
@@ -24758,6 +25452,8 @@ final class Translations {
             "Esperando tu aprobaci\u00f3n",
             "Waiting for {0} community channels to be indexed",
             "Esperando a que se indexen {0} canales de la comunidad",
+            "Waiting to analyze",
+            "Esperando el an\u00e1lisis",
             "Waiting to save",
             "Esperando para guardar",
             "Waiting to save selected copies",
@@ -25356,6 +26052,8 @@ final class Translations {
             "Adjust the normalised playback level",
             "Advanced",
             "Avanc\u00e9",
+            "Advanced curve",
+            "Courbe avanc\u00e9e",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -25408,8 +26106,14 @@ final class Translations {
             "Un client non officiel utilisant l\u2019API Telegram. Votre compte, dans BitChord.",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "Analyse",
+            "Analysis result could not be read",
+            "Impossible de lire le r\u00e9sultat de l'analyse",
             "Analyzing selected audio\u2026",
             "Analyse de l\u2019audio s\u00e9lectionn\u00e9\u2026",
+            "Analyzing\u2026",
+            "Analyse en cours\u2026",
             "Android didn't allow this file to be deleted.",
             "Android n\u2019a pas autoris\u00e9 la suppression de ce fichier.",
             "Android mixes surround files itself",
@@ -25459,12 +26163,16 @@ final class Translations {
             "Appliquer un profil AutoEq adapt\u00e9 au mod\u00e8le de votre casque",
             "Apply cache size",
             "Appliquer la taille du cache",
+            "Apply mode",
+            "Mode d\u2019application",
             "Apply now",
             "Appliquer maintenant",
             "Apply or close to resume playback.",
             "Appliquez ou fermez pour reprendre la lecture.",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "Appliquer les r\u00e9glages",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -25537,6 +26245,8 @@ final class Translations {
             "Enregistrer automatiquement",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "Le fondu automatique n'est pas encore pr\u00eat.",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -25595,12 +26305,18 @@ final class Translations {
             "Fiabilit\u00e9 du rythme",
             "Beat grid offset",
             "D\u00e9calage de la grille",
+            "Beat grid scale",
+            "\u00c9chelle de la grille rythmique",
             "Beat grid tempo",
             "Tempo de la grille",
             "Beat jump",
             "Saut de temps",
             "Beats",
             "Temps",
+            "Before",
+            "Avant",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u00ab Avant \u00bb est indisponible : Automix ajoute des effets \u00e0 ce fondu.",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -25786,6 +26502,9 @@ final class Translations {
                     + " au-dessus.",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "Modifie la vitesse de chaque morceau uniquement pendant le chevauchement. La hauteur"
+                    + " est conserv\u00e9e.",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -25843,6 +26562,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "Choisir",
+            "Choose a different file",
+            "Choisir un autre fichier",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -26121,6 +26842,8 @@ final class Translations {
                     + " commen\u00e7ant par la publication la plus ancienne.",
             "Corrected names",
             "Noms corrig\u00e9s",
+            "Could not change the queue",
+            "Impossible de modifier la file",
             "Could not complete peer discovery. Check relays and try again.",
             "Impossible de terminer la d\u00e9couverte de pairs. V\u00e9rifiez les relais et"
                     + " r\u00e9essayez.",
@@ -26156,8 +26879,12 @@ final class Translations {
             "Impossible de joindre le service. V\u00e9rifiez votre connexion.",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "Impossible de lire ce fichier",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "Impossible de lire l'audio de ce titre.",
             "Could not read your library. Try again.",
             "Impossible de lire votre biblioth\u00e8que. R\u00e9essayez.",
             "Could not remove the saved service. Try again.",
@@ -26183,6 +26910,8 @@ final class Translations {
                     + " param\u00e8tres de connexion et r\u00e9essayez.",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "Impossible d\u2019utiliser cette paire.",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "Copie impossible : {0}. Nouvel essai dans {1} min.",
             "Couldn\u2019t load AutoEq\u2019s list: {0}",
@@ -26478,6 +27207,8 @@ final class Translations {
             "Le brouillon est ind\u00e9pendant de la lecture",
             "Draft saved",
             "Brouillon enregistr\u00e9",
+            "Draft saving",
+            "Enregistrement du brouillon",
             "Drag a curve point or fine-tune each track below.",
             "D\u00e9placez un point de la courbe ou ajustez chaque piste ci-dessous.",
             "Drag to reorder, or use Move up and Move down.",
@@ -26646,6 +27377,8 @@ final class Translations {
             "Fondu \u00e0 la fin du dernier morceau",
             "Failed",
             "\u00c9chec",
+            "Faster by 1%",
+            "1 % plus rapide",
             "Favor songs you play often",
             "Privil\u00e9gier les morceaux que vous \u00e9coutez souvent",
             "Favor well-known songs",
@@ -26678,6 +27411,8 @@ final class Translations {
             "Les fichiers sans tags sont recherch\u00e9s dans AcoustID",
             "Filter",
             "Filtre",
+            "Filter depth",
+            "Amplitude du filtre",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -26758,6 +27493,8 @@ final class Translations {
             "Dossier",
             "Folder selected.",
             "Dossier s\u00e9lectionn\u00e9.",
+            "Follow current pair",
+            "Suivre la paire actuelle",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -26850,6 +27587,8 @@ final class Translations {
             "Masquer les doublons",
             "Hide hash",
             "Masquer le hash",
+            "Hide sources",
+            "Masquer les sources",
             "High",
             "\u00c9lev\u00e9e",
             "High-pass",
@@ -26857,6 +27596,8 @@ final class Translations {
             "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
             "Maintenez un cue pour le remplacer ou le supprimer. Modifier la grille ne change pas"
                     + " la vitesse.",
+            "How far the selected filters sweep.",
+            "\u00c9tendue du balayage des filtres s\u00e9lectionn\u00e9s.",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -26889,6 +27630,8 @@ final class Translations {
             "Inclure l\u2019index enregistr\u00e9 (fichier plus lourd)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "Effet entrant",
             "Incoming offers",
             "Offres re\u00e7ues",
             "Incomplete sponsored-message response",
@@ -27032,6 +27775,8 @@ final class Translations {
             "Derni\u00e8re utilisation : {0}",
             "Later",
             "Plus tard",
+            "Leave Listen Together to change the queue",
+            "Quittez \u00ab \u00c9couter ensemble \u00bb pour modifier la file",
             "Left to BitChord",
             "Au choix de BitChord",
             "Let JamesDSP do the effects",
@@ -27064,8 +27809,12 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "Charger le morceau entrant",
             "Load older posts",
             "Charger les publications plus anciennes",
+            "Load outgoing",
+            "Charger le morceau sortant",
             "Loading",
             "Chargement",
             "Loading channel\u2026",
@@ -27143,6 +27892,16 @@ final class Translations {
             "Manage download destinations, transfers and public sharing.",
             "G\u00e9rez les destinations de t\u00e9l\u00e9chargement, les transferts et le partage"
                     + " public.",
+            "Manual",
+            "Manuel",
+            "Manual applies when you tap Apply.",
+            "En mode manuel, touchez Appliquer pour appliquer les r\u00e9glages.",
+            "Manual saves when you tap Save draft.",
+            "En mode manuel, touchez Enregistrer le brouillon pour enregistrer.",
+            "Match A to B",
+            "Ajuster A sur B",
+            "Match B to A",
+            "Ajuster B sur A",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -27222,6 +27981,8 @@ final class Translations {
                 + " sont ignor\u00e9s. Un fichier est consid\u00e9r\u00e9 comme sans perte"
                 + " d\u2019apr\u00e8s son format ou, pour les fichiers M4A, d\u2019apr\u00e8s son"
                 + " d\u00e9bit.",
+            "Multiplier",
+            "Multiplicateur",
             "Music chats",
             "Discussions musicales",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -27262,6 +28023,8 @@ final class Translations {
             "N\u00e9cessite Android 10 ou plus r\u00e9cent.",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "N\u00e9cessite les deux tempos et un rapport entre 0,5\u00d7 et 2\u00d7",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -27322,6 +28085,8 @@ final class Translations {
             "No file offers yet. Ask the paired phone to choose audio files to share.",
             "Aucune offre de fichiers pour le moment. Demandez de choisir des fichiers audio \u00e0"
                     + " partager sur le t\u00e9l\u00e9phone associ\u00e9.",
+            "No file picker is available",
+            "Aucun s\u00e9lecteur de fichiers disponible",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -27381,6 +28146,8 @@ final class Translations {
             "No saved account. Enter your username and password.",
             "Aucun compte enregistr\u00e9. Saisissez votre nom d\u2019utilisateur et votre mot de"
                     + " passe.",
+            "No saved draft",
+            "Aucun brouillon enregistr\u00e9",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -27418,6 +28185,8 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "Audio insuffisant",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "M\u00e9moire insuffisante pour analyser ce titre. Appuyez sur R\u00e9essayer.",
             "Not managed here",
             "Non g\u00e9r\u00e9 ici",
             "Not played yet",
@@ -27578,6 +28347,8 @@ final class Translations {
                     + " G\u00e9n\u00e9rer, et vos autres playlists n\u2019en ont pas besoin.",
             "Original key",
             "Tonalit\u00e9 d\u2019origine",
+            "Original tempo",
+            "Tempo d\u2019origine",
             "Original vocals",
             "Voix d\u2019origine",
             "Other",
@@ -27591,10 +28362,18 @@ final class Translations {
             "Autres fichiers Telegram",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "Effet sortant",
             "Outro",
             "Fin",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "BPM du chevauchement",
+            "overlap only",
+            "chevauchement uniquement",
+            "Overlap tempo",
+            "Tempo du chevauchement",
             "Pair a peer",
             "Associer un pair",
             "Pair a peer before sharing files.",
@@ -27746,6 +28525,8 @@ final class Translations {
             "Choisissez la qualit\u00e9 de ce t\u00e9l\u00e9chargement.",
             "Pitch",
             "Tonalit\u00e9",
+            "Play",
+            "Lire",
             "Play a song first.",
             "Lancez d\u2019abord un morceau.",
             "Play alongside other apps",
@@ -27835,6 +28616,8 @@ final class Translations {
             "Preview",
             "Preview again, or Apply to resume.",
             "Pr\u00e9\u00e9coutez \u00e0 nouveau ou appliquez pour reprendre.",
+            "Preview Before",
+            "\u00c9couter \u00ab Avant \u00bb",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -28009,6 +28792,8 @@ final class Translations {
                     + " fichier.",
             "Ready.",
             "Pr\u00eat.",
+            "Recall draft",
+            "Charger le brouillon",
             "Receive",
             "Recevoir",
             "Receive audio from another BitChord phone, or share your files.",
@@ -28125,6 +28910,8 @@ final class Translations {
             "R\u00e9parer",
             "Repeat preview",
             "R\u00e9p\u00e9ter l\u2019aper\u00e7u",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "Remplace le morceau actuel et le suivant dans la file. Le reste ne change pas.",
             "Report audio quality",
             "Indiquer la qualit\u00e9 audio",
             "Report sponsored message",
@@ -28157,6 +28944,8 @@ final class Translations {
             "R\u00e9initialiser l\u2019identit\u00e9 de connexion",
             "Reset connection identity?",
             "R\u00e9initialiser l\u2019identit\u00e9 de connexion ?",
+            "Reset EQ",
+            "R\u00e9initialiser l\u2019\u00e9galiseur",
             "Reset to {0}%",
             "R\u00e9initialiser \u00e0 {0} %",
             "Reset {0}",
@@ -28207,6 +28996,8 @@ final class Translations {
             "R\u00e9essayer la connexion",
             "Retry sponsored messages",
             "R\u00e9essayer les messages sponsoris\u00e9s",
+            "Reverse",
+            "Inverser",
             "Review",
             "V\u00e9rifier",
             "Review 1 song without tags",
@@ -28270,6 +29061,8 @@ final class Translations {
             "Save frequently played songs from available download sources on Wi-Fi",
             "Enregistrer en Wi-Fi les morceaux souvent \u00e9cout\u00e9s depuis les sources de"
                     + " t\u00e9l\u00e9chargement disponibles",
+            "Save mode",
+            "Mode d\u2019enregistrement",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -28664,6 +29457,8 @@ final class Translations {
             "Minuteur de veille",
             "Sliders {0}",
             "Curseurs {0}",
+            "Slower by 1%",
+            "1 % plus lent",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -29161,6 +29956,10 @@ final class Translations {
             "The playlists in your music services will be kept.",
             "The provider is still preparing files. Refresh this transfer later.",
             "Le fournisseur pr\u00e9pare encore les fichiers. Actualisez ce transfert plus tard.",
+            "The queue changed; reopen this transition",
+            "La file a chang\u00e9 ; rouvrez cette transition",
+            "The queue is being changed",
+            "Modification de la file en cours",
             "The queue plays in its own order",
             "La file est lue dans son propre ordre",
             "The rootless JamesDSP needs two permissions that only Shizuku or a",
@@ -29220,6 +30019,8 @@ final class Translations {
             "Le morceau s\u2019estompe, puis se met en pause",
             "The song pauses straight away",
             "Le morceau se met en pause aussit\u00f4t",
+            "The track length is not available",
+            "La dur\u00e9e du morceau n\u2019est pas disponible",
             "The whole song is cached.",
             "Le morceau entier est en cache.",
             "There's no music in this chat yet.",
@@ -29261,6 +30062,8 @@ final class Translations {
             "This download choice expired. Return to the song and try again.",
             "Ce choix de t\u00e9l\u00e9chargement a expir\u00e9. Revenez au morceau et"
                     + " r\u00e9essayez.",
+            "This file can\u2019t stay available",
+            "Ce fichier ne peut pas rester accessible",
             "This file couldn't be deleted.",
             "Impossible de supprimer ce fichier.",
             "This file did not pass the audio format check. Choose another result.",
@@ -29283,6 +30086,8 @@ final class Translations {
             "This official sponsored message could not be displayed completely.",
             "Ce message sponsoris\u00e9 officiel n\u2019a pas pu \u00eatre affich\u00e9"
                     + " enti\u00e8rement.",
+            "This pair cannot be previewed",
+            "Impossible de pr\u00e9\u00e9couter cette paire",
             "This phone\u2019s audio chip can play: {0}.",
             "La puce audio de ce t\u00e9l\u00e9phone peut lire : {0}.",
             "This playlist has no available tracks.",
@@ -29324,6 +30129,8 @@ final class Translations {
             "Cette version de BitChord ne donne pas acc\u00e8s \u00e0 son cache de morceaux.",
             "Time",
             "Time",
+            "times",
+            "fois",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -29352,6 +30159,8 @@ final class Translations {
             "Outils",
             "Track analysis",
             "Analyse des pistes",
+            "Track BPM",
+            "BPM du morceau",
             "Track details",
             "D\u00e9tails du titre",
             "Track durations are not available yet. Start playback or",
@@ -29395,6 +30204,8 @@ final class Translations {
             "Turn on Saved index first. The songs come from it.",
             "Activez d\u2019abord \u00ab Index enregistr\u00e9 \u00bb. Les morceaux en"
                     + " proviennent.",
+            "Turn shuffle off to change the queue",
+            "D\u00e9sactivez la lecture al\u00e9atoire pour modifier la file",
             "Turn the singer down",
             "Turn the singer down",
             "Turns the singer down so you can sing over the song. Works",
@@ -29407,6 +30218,8 @@ final class Translations {
             "Validation en deux \u00e9tapes",
             "Type part of the model name.",
             "Saisissez une partie du nom du mod\u00e8le.",
+            "Unavailable",
+            "Indisponible",
             "Under {0}, oldest first",
             "Moins de {0}, les plus anciens d\u2019abord",
             "Undo",
@@ -29456,6 +30269,8 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "Utilisez un multiplicateur entre 0,5\u00d7 et 2\u00d7",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -29469,6 +30284,8 @@ final class Translations {
             "Utilisez n\u2019importe quel service HTTPS qui accepte des requ\u00eates JSON de type"
                 + " chat. Aucun service n\u2019est int\u00e9gr\u00e9, et BitChord n\u2019exploite"
                 + " aucun serveur pour cela.",
+            "Use automatic mode",
+            "Utiliser le mode automatique",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -29489,6 +30306,10 @@ final class Translations {
                     + " encha\u00een\u00e9 sont suspendus",
             "Use it",
             "Utiliser",
+            "Use manual mode",
+            "Utiliser le mode manuel",
+            "Use measured tempo",
+            "Utiliser le tempo mesur\u00e9",
             "Use MicroG",
             "Utiliser MicroG",
             "Use name",
@@ -29511,6 +30332,10 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "Utiliser ce nom ?",
+            "Use this pair",
+            "Utiliser cette paire",
+            "Use this pair to apply it",
+            "Utilisez cette paire pour appliquer les r\u00e9glages",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Utilisez votre propre compte Real-Debrid, AllDebrid, Premiumize ou TorBox",
             "Use your Spotify developer client ID and register this redirect URI:",
@@ -29530,6 +30355,8 @@ final class Translations {
             "Utilise votre canal principal priv\u00e9 configur\u00e9. Les t\u00e9l\u00e9chargements"
                     + " sont envoy\u00e9s sous forme de fichiers avec leurs octets audio"
                     + " d\u2019origine.",
+            "Using this pair\u2026",
+            "Utilisation de cette paire\u2026",
             "Using {0}",
             "Utilisation de {0}",
             "Variable",
@@ -29575,6 +30402,8 @@ final class Translations {
             "Volume",
             "Wait for the current action to finish.",
             "Attendez la fin de l\u2019action en cours.",
+            "Wait for the pair to finish loading",
+            "Attendez la fin du chargement des deux morceaux",
             "Waiting for a community channel to be indexed",
             "En attente de l\u2019indexation d\u2019un canal communautaire",
             "Waiting for device to cool down",
@@ -29606,6 +30435,8 @@ final class Translations {
             "En attente de votre accord",
             "Waiting for {0} community channels to be indexed",
             "En attente de l\u2019indexation de {0} canaux communautaires",
+            "Waiting to analyze",
+            "En attente d'analyse",
             "Waiting to save",
             "En attente d'enregistrement",
             "Waiting to save selected copies",
@@ -30346,6 +31177,8 @@ final class Translations {
                     + " \u05d4\u05de\u05e0\u05d5\u05e8\u05de\u05dc\u05ea",
             "Advanced",
             "\u05de\u05ea\u05e7\u05d3\u05dd",
+            "Advanced curve",
+            "\u05e2\u05e7\u05d5\u05de\u05d4 \u05de\u05ea\u05e7\u05d3\u05de\u05ea",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -30418,9 +31251,16 @@ final class Translations {
                     + " \u05d1\u05ea\u05d5\u05da BitChord.",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "\u05e0\u05d9\u05ea\u05d5\u05d7",
+            "Analysis result could not be read",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05e7\u05e8\u05d5\u05d0 \u05d0\u05ea"
+                    + " \u05ea\u05d5\u05e6\u05d0\u05ea \u05d4\u05e0\u05d9\u05ea\u05d5\u05d7",
             "Analyzing selected audio\u2026",
             "\u05de\u05e0\u05ea\u05d7 \u05d0\u05ea \u05d4\u05d0\u05d5\u05d3\u05d9\u05d5"
                     + " \u05e9\u05e0\u05d1\u05d7\u05e8\u2026",
+            "Analyzing\u2026",
+            "\u05de\u05e0\u05ea\u05d7\u2026",
             "Android didn't allow this file to be deleted.",
             "Android \u05dc\u05d0 \u05d0\u05e4\u05e9\u05e8 \u05dc\u05de\u05d7\u05d5\u05e7"
                     + " \u05d0\u05ea \u05d4\u05e7\u05d5\u05d1\u05e5 \u05d4\u05d6\u05d4.",
@@ -30490,6 +31330,8 @@ final class Translations {
             "Apply cache size",
             "\u05d4\u05d7\u05dc\u05ea \u05d2\u05d5\u05d3\u05dc"
                     + " \u05d4\u05de\u05d8\u05de\u05d5\u05df",
+            "Apply mode",
+            "\u05de\u05e6\u05d1 \u05d4\u05d7\u05dc\u05d4",
             "Apply now",
             "\u05d4\u05d7\u05dc \u05db\u05e2\u05ea",
             "Apply or close to resume playback.",
@@ -30498,6 +31340,8 @@ final class Translations {
                     + " \u05d1\u05e0\u05d9\u05d2\u05d5\u05df.",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "\u05d4\u05d7\u05dc\u05ea \u05d4\u05d4\u05d2\u05d3\u05e8\u05d5\u05ea",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -30591,6 +31435,9 @@ final class Translations {
             "\u05e9\u05de\u05d9\u05e8\u05d4 \u05d0\u05d5\u05d8\u05d5\u05de\u05d8\u05d9\u05ea",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "\u05d4\u05de\u05e2\u05d1\u05e8 \u05d4\u05d0\u05d5\u05d8\u05d5\u05de\u05d8\u05d9"
+                    + " \u05e2\u05d3\u05d9\u05d9\u05df \u05dc\u05d0 \u05de\u05d5\u05db\u05df.",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -30672,12 +31519,22 @@ final class Translations {
             "Beat grid offset",
             "\u05d4\u05d9\u05e1\u05d8 \u05e8\u05e9\u05ea"
                     + " \u05d4\u05e4\u05e2\u05d9\u05de\u05d5\u05ea",
+            "Beat grid scale",
+            "\u05e7\u05e0\u05d4 \u05de\u05d9\u05d3\u05d4 \u05e9\u05dc \u05e8\u05e9\u05ea"
+                    + " \u05d4\u05e4\u05e2\u05d9\u05de\u05d5\u05ea",
             "Beat grid tempo",
             "\u05e7\u05e6\u05d1 \u05e8\u05e9\u05ea \u05d4\u05e4\u05e2\u05d9\u05de\u05d5\u05ea",
             "Beat jump",
             "\u05e7\u05e4\u05d9\u05e6\u05ea \u05e4\u05e2\u05d9\u05de\u05d5\u05ea",
             "Beats",
             "\u05e4\u05e2\u05d9\u05de\u05d5\u05ea",
+            "Before",
+            "\u05dc\u05e4\u05e0\u05d9",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u05d4\u05d0\u05e4\u05e9\u05e8\u05d5\u05ea \u05f4\u05dc\u05e4\u05e0\u05d9\u05f4"
+                    + " \u05d0\u05d9\u05e0\u05d4 \u05d6\u05de\u05d9\u05e0\u05d4: Automix"
+                    + " \u05de\u05d5\u05e1\u05d9\u05e3 \u05d0\u05e4\u05e7\u05d8\u05d9\u05dd"
+                    + " \u05dc\u05de\u05e2\u05d1\u05e8 \u05d4\u05d6\u05d4.",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -30976,6 +31833,12 @@ final class Translations {
                     + " \u05de\u05de\u05e9 \u05de\u05e2\u05dc.",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "\u05de\u05e9\u05e0\u05d4 \u05d0\u05ea \u05de\u05d4\u05d9\u05e8\u05d5\u05ea"
+                    + " \u05db\u05dc \u05e8\u05e6\u05d5\u05e2\u05d4 \u05e8\u05e7"
+                    + " \u05d1\u05d6\u05de\u05df \u05d4\u05d7\u05e4\u05d9\u05e4\u05d4."
+                    + " \u05d2\u05d5\u05d1\u05d4 \u05d4\u05e6\u05dc\u05d9\u05dc"
+                    + " \u05e0\u05e9\u05de\u05e8.",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -31058,6 +31921,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "\u05d1\u05d7\u05d9\u05e8\u05d4",
+            "Choose a different file",
+            "\u05d1\u05d7\u05d9\u05e8\u05ea \u05e7\u05d5\u05d1\u05e5 \u05d0\u05d7\u05e8",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -31456,6 +32321,9 @@ final class Translations {
                 + " \u05d4\u05d9\u05e9\u05df \u05d1\u05d9\u05d5\u05ea\u05e8.",
             "Corrected names",
             "\u05e9\u05de\u05d5\u05ea \u05de\u05ea\u05d5\u05e7\u05e0\u05d9\u05dd",
+            "Could not change the queue",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05e9\u05e0\u05d5\u05ea \u05d0\u05ea"
+                    + " \u05d4\u05ea\u05d5\u05e8",
             "Could not complete peer discovery. Check relays and try again.",
             "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05d4\u05e9\u05dc\u05d9\u05dd"
                 + " \u05d0\u05ea \u05d2\u05d9\u05dc\u05d5\u05d9"
@@ -31515,8 +32383,15 @@ final class Translations {
                     + " \u05d4\u05d7\u05d9\u05d1\u05d5\u05e8.",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05e7\u05e8\u05d5\u05d0 \u05d0\u05ea"
+                    + " \u05d4\u05e7\u05d5\u05d1\u05e5 \u05d4\u05d6\u05d4",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05e7\u05e8\u05d5\u05d0 \u05d0\u05ea"
+                    + " \u05d4\u05d0\u05d5\u05d3\u05d9\u05d5 \u05e9\u05dc"
+                    + " \u05d4\u05e8\u05e6\u05d5\u05e2\u05d4 \u05d4\u05d6\u05d5.",
             "Could not read your library. Try again.",
             "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05e7\u05e8\u05d5\u05d0 \u05d0\u05ea"
                 + " \u05d4\u05e1\u05e4\u05e8\u05d9\u05d9\u05d4 \u05e9\u05dc\u05da."
@@ -31559,6 +32434,9 @@ final class Translations {
                     + " \u05d5\u05dc\u05e0\u05e1\u05d5\u05ea \u05e9\u05d5\u05d1.",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05d4\u05e9\u05ea\u05de\u05e9"
+                    + " \u05d1\u05d6\u05d5\u05d2 \u05d4\u05d6\u05d4.",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "\u05d4\u05d4\u05e2\u05ea\u05e7\u05d4 \u05e0\u05db\u05e9\u05dc\u05d4: {0}."
                     + " \u05e0\u05d9\u05e1\u05d9\u05d5\u05df \u05d7\u05d5\u05d6\u05e8"
@@ -31943,6 +32821,8 @@ final class Translations {
                     + " \u05de\u05d4\u05e0\u05d9\u05d2\u05d5\u05df",
             "Draft saved",
             "\u05d4\u05d8\u05d9\u05d5\u05d8\u05d4 \u05e0\u05e9\u05de\u05e8\u05d4",
+            "Draft saving",
+            "\u05e9\u05de\u05d9\u05e8\u05ea \u05d8\u05d9\u05d5\u05d8\u05d4",
             "Drag a curve point or fine-tune each track below.",
             "\u05d2\u05e8\u05e8\u05d5 \u05e0\u05e7\u05d5\u05d3\u05d4"
                     + " \u05d1\u05e2\u05e7\u05d5\u05de\u05d4 \u05d0\u05d5"
@@ -32207,6 +33087,8 @@ final class Translations {
                     + " \u05d4\u05d0\u05d7\u05e8\u05d5\u05df",
             "Failed",
             "\u05e0\u05db\u05e9\u05dc",
+            "Faster by 1%",
+            "\u05de\u05d4\u05e8 \u05d9\u05d5\u05ea\u05e8 \u05d1\u05be1%",
             "Favor songs you play often",
             "\u05d4\u05e2\u05d3\u05e4\u05ea \u05e9\u05d9\u05e8\u05d9\u05dd"
                     + " \u05e9\u05de\u05d5\u05e9\u05de\u05e2\u05d9\u05dd"
@@ -32252,6 +33134,8 @@ final class Translations {
                     + " \u05e0\u05d1\u05d3\u05e7\u05d9\u05dd \u05d1-AcoustID",
             "Filter",
             "\u05de\u05e1\u05e0\u05df",
+            "Filter depth",
+            "\u05e2\u05d5\u05de\u05e7 \u05d4\u05de\u05e1\u05e0\u05df",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -32393,6 +33277,9 @@ final class Translations {
             "\u05ea\u05d9\u05e7\u05d9\u05d9\u05d4",
             "Folder selected.",
             "\u05d4\u05ea\u05d9\u05e7\u05d9\u05d9\u05d4 \u05e0\u05d1\u05d7\u05e8\u05d4.",
+            "Follow current pair",
+            "\u05de\u05e2\u05e7\u05d1 \u05d0\u05d7\u05e8 \u05d4\u05d6\u05d5\u05d2"
+                    + " \u05d4\u05e0\u05d5\u05db\u05d7\u05d9",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -32514,6 +33401,8 @@ final class Translations {
                     + " \u05db\u05e4\u05d5\u05dc\u05d9\u05dd",
             "Hide hash",
             "\u05d4\u05e1\u05ea\u05e8\u05ea \u05d4-hash",
+            "Hide sources",
+            "\u05d4\u05e1\u05ea\u05e8\u05ea \u05d4\u05de\u05e7\u05d5\u05e8\u05d5\u05ea",
             "High",
             "\u05d2\u05d1\u05d5\u05d4",
             "High-pass",
@@ -32526,6 +33415,10 @@ final class Translations {
                     + " \u05d4\u05e8\u05e9\u05ea \u05d0\u05d9\u05e0\u05d4 \u05de\u05e9\u05e0\u05d4"
                     + " \u05d0\u05ea \u05de\u05d4\u05d9\u05e8\u05d5\u05ea"
                     + " \u05d4\u05e0\u05d2\u05d9\u05e0\u05d4.",
+            "How far the selected filters sweep.",
+            "\u05d8\u05d5\u05d5\u05d7 \u05d4\u05e1\u05e8\u05d9\u05e7\u05d4 \u05e9\u05dc"
+                    + " \u05d4\u05de\u05e1\u05e0\u05e0\u05d9\u05dd"
+                    + " \u05e9\u05e0\u05d1\u05d7\u05e8\u05d5.",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -32571,6 +33464,9 @@ final class Translations {
                     + " \u05d2\u05d3\u05d5\u05dc \u05d9\u05d5\u05ea\u05e8)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "\u05d0\u05e4\u05e7\u05d8 \u05dc\u05e8\u05e6\u05d5\u05e2\u05d4"
+                    + " \u05d4\u05e0\u05db\u05e0\u05e1\u05ea",
             "Incoming offers",
             "\u05d4\u05e6\u05e2\u05d5\u05ea \u05e0\u05db\u05e0\u05e1\u05d5\u05ea",
             "Incomplete sponsored-message response",
@@ -32792,6 +33688,10 @@ final class Translations {
             "\u05e9\u05d9\u05de\u05d5\u05e9 \u05d0\u05d7\u05e8\u05d5\u05df: {0}",
             "Later",
             "\u05de\u05d0\u05d5\u05d7\u05e8 \u05d9\u05d5\u05ea\u05e8",
+            "Leave Listen Together to change the queue",
+            "\u05d9\u05e9 \u05dc\u05e6\u05d0\u05ea \u05de\u05f4\u05dc\u05d4\u05d0\u05d6\u05d9\u05df"
+                    + " \u05d1\u05d9\u05d7\u05d3\u05f4 \u05db\u05d3\u05d9"
+                    + " \u05dc\u05e9\u05e0\u05d5\u05ea \u05d0\u05ea \u05d4\u05ea\u05d5\u05e8",
             "Left to BitChord",
             "\u05d4\u05d4\u05d7\u05dc\u05d8\u05d4 \u05d1\u05d9\u05d3\u05d9 BitChord",
             "Let JamesDSP do the effects",
@@ -32833,9 +33733,15 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "\u05d8\u05e2\u05d9\u05e0\u05ea \u05d4\u05e8\u05e6\u05d5\u05e2\u05d4"
+                    + " \u05d4\u05e0\u05db\u05e0\u05e1\u05ea",
             "Load older posts",
             "\u05d8\u05e2\u05d9\u05e0\u05ea \u05e4\u05d5\u05e1\u05d8\u05d9\u05dd"
                     + " \u05d9\u05e9\u05e0\u05d9\u05dd \u05d9\u05d5\u05ea\u05e8",
+            "Load outgoing",
+            "\u05d8\u05e2\u05d9\u05e0\u05ea \u05d4\u05e8\u05e6\u05d5\u05e2\u05d4"
+                    + " \u05d4\u05d9\u05d5\u05e6\u05d0\u05ea",
             "Loading",
             "\u05e0\u05d8\u05e2\u05df",
             "Loading channel\u2026",
@@ -32940,6 +33846,21 @@ final class Translations {
             "\u05e0\u05d9\u05d4\u05d5\u05dc \u05d9\u05e2\u05d3\u05d9"
                     + " \u05d4\u05d5\u05e8\u05d3\u05d4, \u05d4\u05e2\u05d1\u05e8\u05d5\u05ea"
                     + " \u05d5\u05e9\u05d9\u05ea\u05d5\u05e3 \u05e6\u05d9\u05d1\u05d5\u05e8\u05d9.",
+            "Manual",
+            "\u05d9\u05d3\u05e0\u05d9",
+            "Manual applies when you tap Apply.",
+            "\u05d1\u05de\u05e6\u05d1 \u05d9\u05d3\u05e0\u05d9,"
+                + " \u05d4\u05d4\u05d2\u05d3\u05e8\u05d5\u05ea \u05de\u05d5\u05d7\u05dc\u05d5\u05ea"
+                + " \u05d1\u05dc\u05d7\u05d9\u05e6\u05d4 \u05e2\u05dc \u05d4\u05d7\u05dc\u05d4.",
+            "Manual saves when you tap Save draft.",
+            "\u05d1\u05de\u05e6\u05d1 \u05d9\u05d3\u05e0\u05d9,"
+                    + " \u05d4\u05d8\u05d9\u05d5\u05d8\u05d4 \u05e0\u05e9\u05de\u05e8\u05ea"
+                    + " \u05d1\u05dc\u05d7\u05d9\u05e6\u05d4 \u05e2\u05dc"
+                    + " \u05e9\u05de\u05d9\u05e8\u05ea \u05d8\u05d9\u05d5\u05d8\u05d4.",
+            "Match A to B",
+            "\u05d4\u05ea\u05d0\u05de\u05ea A \u05dc\u05beB",
+            "Match B to A",
+            "\u05d4\u05ea\u05d0\u05de\u05ea B \u05dc\u05beA",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -33042,6 +33963,8 @@ final class Translations {
                     + " \u05d4\u05e4\u05d5\u05e8\u05de\u05d8 \u05e9\u05dc\u05d5,"
                     + " \u05d5\u05d1\u05e7\u05d5\u05d1\u05e6\u05d9 M4A \u05dc\u05e4\u05d9"
                     + " \u05e7\u05e6\u05d1 \u05d4\u05e1\u05d9\u05d1\u05d9\u05d5\u05ea.",
+            "Multiplier",
+            "\u05de\u05db\u05e4\u05d9\u05dc",
             "Music chats",
             "\u05e6'\u05d0\u05d8\u05d9 \u05de\u05d5\u05d6\u05d9\u05e7\u05d4",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -33114,6 +34037,10 @@ final class Translations {
             "\u05e0\u05d3\u05e8\u05e9 Android 10 \u05d5\u05de\u05e2\u05dc\u05d4.",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "\u05e0\u05d3\u05e8\u05e9\u05d9\u05dd \u05d4\u05e7\u05e6\u05d1 \u05e9\u05dc"
+                    + " \u05e9\u05ea\u05d9 \u05d4\u05e8\u05e6\u05d5\u05e2\u05d5\u05ea"
+                    + " \u05d5\u05d9\u05d7\u05e1 \u05d1\u05d9\u05df 0.5\u00d7 \u05dc\u05be2\u00d7",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -33194,6 +34121,9 @@ final class Translations {
                     + " \u05dc\u05d1\u05d7\u05d5\u05e8 \u05e7\u05d5\u05d1\u05e6\u05d9"
                     + " \u05e9\u05de\u05e2 \u05dc\u05e9\u05d9\u05ea\u05d5\u05e3"
                     + " \u05d1\u05d8\u05dc\u05e4\u05d5\u05df \u05d4\u05de\u05e6\u05d5\u05de\u05d3.",
+            "No file picker is available",
+            "\u05d0\u05d9\u05df \u05d1\u05d5\u05e8\u05e8 \u05e7\u05d1\u05e6\u05d9\u05dd"
+                    + " \u05d6\u05de\u05d9\u05df",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -33281,6 +34211,8 @@ final class Translations {
             "\u05d0\u05d9\u05df \u05d7\u05e9\u05d1\u05d5\u05df \u05e9\u05de\u05d5\u05e8."
                     + " \u05d9\u05e9 \u05dc\u05d4\u05d6\u05d9\u05df \u05e9\u05dd"
                     + " \u05de\u05e9\u05ea\u05de\u05e9 \u05d5\u05e1\u05d9\u05e1\u05de\u05d4.",
+            "No saved draft",
+            "\u05d0\u05d9\u05df \u05d8\u05d9\u05d5\u05d8\u05d4 \u05e9\u05de\u05d5\u05e8\u05d4",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -33345,6 +34277,11 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "\u05d0\u05d9\u05df \u05de\u05e1\u05e4\u05d9\u05e7 \u05d0\u05d5\u05d3\u05d9\u05d5",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "\u05d0\u05d9\u05df \u05de\u05e1\u05e4\u05d9\u05e7 \u05d6\u05d9\u05db\u05e8\u05d5\u05df"
+                + " \u05dc\u05e0\u05d9\u05ea\u05d5\u05d7 \u05d4\u05e8\u05e6\u05d5\u05e2\u05d4"
+                + " \u05d4\u05d6\u05d5. \u05d9\u05e9 \u05dc\u05d4\u05e7\u05d9\u05e9 \u05e2\u05dc"
+                + " \u05e0\u05d9\u05e1\u05d9\u05d5\u05df \u05d7\u05d5\u05d6\u05e8.",
             "Not managed here",
             "\u05dc\u05d0 \u05de\u05e0\u05d5\u05d4\u05dc \u05db\u05d0\u05df",
             "Not played yet",
@@ -33577,6 +34514,8 @@ final class Translations {
                     + " \u05e6\u05e8\u05d9\u05db\u05d9\u05dd \u05d0\u05d5\u05ea\u05d5.",
             "Original key",
             "\u05e1\u05d5\u05dc\u05dd \u05de\u05e7\u05d5\u05e8\u05d9",
+            "Original tempo",
+            "\u05d4\u05e7\u05e6\u05d1 \u05d4\u05de\u05e7\u05d5\u05e8\u05d9",
             "Original vocals",
             "\u05e9\u05d9\u05e8\u05d4 \u05de\u05e7\u05d5\u05e8\u05d9\u05ea",
             "Other",
@@ -33593,10 +34532,20 @@ final class Translations {
             "\u05e7\u05d5\u05d1\u05e6\u05d9 Telegram \u05d0\u05d7\u05e8\u05d9\u05dd",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "\u05d0\u05e4\u05e7\u05d8 \u05dc\u05e8\u05e6\u05d5\u05e2\u05d4"
+                    + " \u05d4\u05d9\u05d5\u05e6\u05d0\u05ea",
             "Outro",
             "\u05e1\u05d9\u05d5\u05dd",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "BPM \u05d1\u05d6\u05de\u05df \u05d4\u05d7\u05e4\u05d9\u05e4\u05d4",
+            "overlap only",
+            "\u05d1\u05d6\u05de\u05df \u05d4\u05d7\u05e4\u05d9\u05e4\u05d4"
+                    + " \u05d1\u05dc\u05d1\u05d3",
+            "Overlap tempo",
+            "\u05e7\u05e6\u05d1 \u05d4\u05d7\u05e4\u05d9\u05e4\u05d4",
             "Pair a peer",
             "\u05e6\u05d9\u05de\u05d5\u05d3 \u05e2\u05de\u05d9\u05ea",
             "Pair a peer before sharing files.",
@@ -33806,6 +34755,8 @@ final class Translations {
                     + " \u05d4\u05d6\u05d5.",
             "Pitch",
             "\u05d2\u05d5\u05d1\u05d4 \u05e6\u05dc\u05d9\u05dc",
+            "Play",
+            "\u05e0\u05d9\u05d2\u05d5\u05df",
             "Play a song first.",
             "\u05d9\u05e9 \u05dc\u05e0\u05d2\u05df \u05e9\u05d9\u05e8 \u05e7\u05d5\u05d3\u05dd.",
             "Play alongside other apps",
@@ -33924,6 +34875,9 @@ final class Translations {
             "\u05d4\u05d0\u05d6\u05d9\u05e0\u05d5 \u05e9\u05d5\u05d1 \u05d0\u05d5"
                     + " \u05d4\u05d7\u05d9\u05dc\u05d5 \u05db\u05d3\u05d9"
                     + " \u05dc\u05d4\u05de\u05e9\u05d9\u05da.",
+            "Preview Before",
+            "\u05ea\u05e6\u05d5\u05d2\u05d4 \u05de\u05e7\u05d3\u05d9\u05de\u05d4 \u05e9\u05dc"
+                    + " \u05f4\u05dc\u05e4\u05e0\u05d9\u05f4",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -34152,6 +35106,8 @@ final class Translations {
                     + " \u05dc\u05d1\u05d7\u05d9\u05e8\u05ea \u05e7\u05d5\u05d1\u05e5.",
             "Ready.",
             "\u05de\u05d5\u05db\u05df.",
+            "Recall draft",
+            "\u05d8\u05e2\u05d9\u05e0\u05ea \u05d8\u05d9\u05d5\u05d8\u05d4",
             "Receive",
             "\u05e7\u05d1\u05dc\u05d4",
             "Receive audio from another BitChord phone, or share your files.",
@@ -34307,6 +35263,12 @@ final class Translations {
             "Repeat preview",
             "\u05d7\u05d6\u05e8\u05d4 \u05e2\u05dc \u05ea\u05e6\u05d5\u05d2\u05d4"
                     + " \u05de\u05e7\u05d3\u05d9\u05de\u05d4",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "\u05de\u05d7\u05dc\u05d9\u05e3 \u05d0\u05ea \u05d4\u05e9\u05d9\u05e8"
+                    + " \u05d4\u05e0\u05d5\u05db\u05d7\u05d9 \u05d5\u05d0\u05ea"
+                    + " \u05d4\u05e9\u05d9\u05e8 \u05d4\u05d1\u05d0 \u05d1\u05ea\u05d5\u05e8."
+                    + " \u05d4\u05e9\u05d0\u05e8 \u05e0\u05e9\u05d0\u05e8 \u05dc\u05dc\u05d0"
+                    + " \u05e9\u05d9\u05e0\u05d5\u05d9.",
             "Report audio quality",
             "\u05d3\u05d9\u05d5\u05d5\u05d7 \u05e2\u05dc \u05d0\u05d9\u05db\u05d5\u05ea"
                     + " \u05d4\u05e9\u05de\u05e2",
@@ -34344,6 +35306,8 @@ final class Translations {
             "Reset connection identity?",
             "\u05dc\u05d0\u05e4\u05e1 \u05d0\u05ea \u05d6\u05d4\u05d5\u05ea"
                     + " \u05d4\u05d7\u05d9\u05d1\u05d5\u05e8?",
+            "Reset EQ",
+            "\u05d0\u05d9\u05e4\u05d5\u05e1 \u05d4\u05d0\u05e7\u05d5\u05dc\u05d9\u05d9\u05d6\u05e8",
             "Reset to {0}%",
             "\u05d0\u05d9\u05e4\u05d5\u05e1 \u05dc-{0}%",
             "Reset {0}",
@@ -34412,6 +35376,8 @@ final class Translations {
             "\u05d8\u05e2\u05d9\u05e0\u05d4 \u05d7\u05d5\u05d6\u05e8\u05ea \u05e9\u05dc"
                     + " \u05d4\u05d4\u05d5\u05d3\u05e2\u05d5\u05ea"
                     + " \u05d4\u05de\u05de\u05d5\u05de\u05e0\u05d5\u05ea",
+            "Reverse",
+            "\u05d4\u05d7\u05dc\u05e4\u05ea \u05d4\u05e1\u05d3\u05e8",
             "Review",
             "\u05d1\u05d3\u05d9\u05e7\u05d4",
             "Review 1 song without tags",
@@ -34491,6 +35457,8 @@ final class Translations {
                 + " \u05dc\u05e2\u05d9\u05ea\u05d9\u05dd \u05e7\u05e8\u05d5\u05d1\u05d5\u05ea"
                 + " \u05de\u05de\u05e7\u05d5\u05e8\u05d5\u05ea \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4"
                 + " \u05d4\u05d6\u05de\u05d9\u05e0\u05d9\u05dd \u05d1-Wi-Fi",
+            "Save mode",
+            "\u05de\u05e6\u05d1 \u05e9\u05de\u05d9\u05e8\u05d4",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -35052,6 +36020,8 @@ final class Translations {
             "\u05d8\u05d9\u05d9\u05de\u05e8 \u05e9\u05d9\u05e0\u05d4",
             "Sliders {0}",
             "\u05de\u05d7\u05d5\u05d5\u05e0\u05d9\u05dd \u200e{0}",
+            "Slower by 1%",
+            "\u05dc\u05d0\u05d8 \u05d9\u05d5\u05ea\u05e8 \u05d1\u05be1%",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -35828,6 +36798,12 @@ final class Translations {
                     + " \u05e7\u05d1\u05e6\u05d9\u05dd. \u05d9\u05e9 \u05dc\u05e8\u05e2\u05e0\u05df"
                     + " \u05d0\u05ea \u05d4\u05d4\u05e2\u05d1\u05e8\u05d4"
                     + " \u05d1\u05d4\u05de\u05e9\u05da.",
+            "The queue changed; reopen this transition",
+            "\u05d4\u05ea\u05d5\u05e8 \u05d4\u05e9\u05ea\u05e0\u05d4; \u05d9\u05e9"
+                    + " \u05dc\u05e4\u05ea\u05d5\u05d7 \u05d0\u05ea \u05d4\u05de\u05e2\u05d1\u05e8"
+                    + " \u05de\u05d7\u05d3\u05e9",
+            "The queue is being changed",
+            "\u05d4\u05ea\u05d5\u05e8 \u05de\u05e9\u05ea\u05e0\u05d4 \u05db\u05e2\u05ea",
             "The queue plays in its own order",
             "\u05d4\u05ea\u05d5\u05e8 \u05de\u05ea\u05e0\u05d2\u05df \u05d1\u05e1\u05d3\u05e8"
                     + " \u05e9\u05dc\u05d5",
@@ -35934,6 +36910,9 @@ final class Translations {
                     + " \u05de\u05d5\u05e9\u05d4\u05d4",
             "The song pauses straight away",
             "\u05d4\u05e9\u05d9\u05e8 \u05de\u05d5\u05e9\u05d4\u05d4 \u05de\u05d9\u05d3",
+            "The track length is not available",
+            "\u05de\u05e9\u05da \u05d4\u05e8\u05e6\u05d5\u05e2\u05d4 \u05d0\u05d9\u05e0\u05d5"
+                    + " \u05d6\u05de\u05d9\u05df",
             "The whole song is cached.",
             "\u05d4\u05e9\u05d9\u05e8 \u05db\u05d5\u05dc\u05d5 \u05e0\u05de\u05e6\u05d0"
                     + " \u05d1\u05de\u05d8\u05de\u05d5\u05df.",
@@ -36003,6 +36982,10 @@ final class Translations {
                     + " \u05d4\u05d4\u05d5\u05e8\u05d3\u05d4 \u05e4\u05d2. \u05d9\u05e9"
                     + " \u05dc\u05d7\u05d6\u05d5\u05e8 \u05dc\u05e9\u05d9\u05e8"
                     + " \u05d5\u05dc\u05e0\u05e1\u05d5\u05ea \u05e9\u05d5\u05d1.",
+            "This file can\u2019t stay available",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05e9\u05de\u05d5\u05e8 \u05e2\u05dc"
+                    + " \u05d4\u05d2\u05d9\u05e9\u05d4 \u05dc\u05e7\u05d5\u05d1\u05e5"
+                    + " \u05d4\u05d6\u05d4",
             "This file couldn't be deleted.",
             "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05d4\u05d9\u05d4"
                     + " \u05dc\u05de\u05d7\u05d5\u05e7 \u05d0\u05ea \u05d4\u05e7\u05d5\u05d1\u05e5"
@@ -36042,6 +37025,10 @@ final class Translations {
                 + " \u05d4\u05d4\u05d5\u05d3\u05e2\u05d4 \u05d4\u05de\u05de\u05d5\u05de\u05e0\u05ea"
                 + " \u05d4\u05e8\u05e9\u05de\u05d9\u05ea \u05d4\u05d6\u05d5"
                 + " \u05d1\u05de\u05dc\u05d5\u05d0\u05d4.",
+            "This pair cannot be previewed",
+            "\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05d4\u05e9\u05de\u05d9\u05e2"
+                    + " \u05ea\u05e6\u05d5\u05d2\u05d4 \u05de\u05e7\u05d3\u05d9\u05de\u05d4"
+                    + " \u05e9\u05dc \u05d4\u05d6\u05d5\u05d2 \u05d4\u05d6\u05d4",
             "This phone\u2019s audio chip can play: {0}.",
             "\u05e9\u05d1\u05d1 \u05d4\u05e9\u05de\u05e2 \u05e9\u05dc"
                     + " \u05d4\u05d8\u05dc\u05e4\u05d5\u05df \u05d4\u05d6\u05d4"
@@ -36104,6 +37091,8 @@ final class Translations {
                     + " \u05d4\u05e9\u05d9\u05e8\u05d9\u05dd \u05e9\u05dc\u05d4.",
             "Time",
             "Time",
+            "times",
+            "\u05e4\u05e2\u05de\u05d9\u05dd",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -36147,6 +37136,8 @@ final class Translations {
             "\u05db\u05dc\u05d9\u05dd",
             "Track analysis",
             "\u05e0\u05d9\u05ea\u05d5\u05d7 \u05e8\u05e6\u05d5\u05e2\u05d5\u05ea",
+            "Track BPM",
+            "BPM \u05e9\u05dc \u05d4\u05e8\u05e6\u05d5\u05e2\u05d4",
             "Track details",
             "\u05e4\u05e8\u05d8\u05d9 \u05e8\u05e6\u05d5\u05e2\u05d4",
             "Track durations are not available yet. Start playback or",
@@ -36200,6 +37191,11 @@ final class Translations {
                 + " \u05d0\u05ea \"\u05d0\u05d9\u05e0\u05d3\u05e7\u05e1 \u05e9\u05de\u05d5\u05e8\"."
                 + " \u05d4\u05e9\u05d9\u05e8\u05d9\u05dd \u05e0\u05dc\u05e7\u05d7\u05d9\u05dd"
                 + " \u05de\u05de\u05e0\u05d5.",
+            "Turn shuffle off to change the queue",
+            "\u05d9\u05e9 \u05dc\u05db\u05d1\u05d5\u05ea \u05d0\u05ea"
+                    + " \u05d4\u05e0\u05d9\u05d2\u05d5\u05df \u05d4\u05d0\u05e7\u05e8\u05d0\u05d9"
+                    + " \u05db\u05d3\u05d9 \u05dc\u05e9\u05e0\u05d5\u05ea \u05d0\u05ea"
+                    + " \u05d4\u05ea\u05d5\u05e8",
             "Turn the singer down",
             "\u05d4\u05e0\u05de\u05db\u05ea \u05d4\u05e9\u05d9\u05e8\u05d4"
                     + " \u05d4\u05de\u05e7\u05d5\u05e8\u05d9\u05ea",
@@ -36220,6 +37216,8 @@ final class Translations {
             "Type part of the model name.",
             "\u05d9\u05e9 \u05dc\u05d4\u05e7\u05dc\u05d9\u05d3 \u05d7\u05dc\u05e7"
                     + " \u05de\u05e9\u05dd \u05d4\u05d3\u05d2\u05dd.",
+            "Unavailable",
+            "\u05dc\u05d0 \u05d6\u05de\u05d9\u05df",
             "Under {0}, oldest first",
             "\u05de\u05ea\u05d7\u05ea \u05dc-{0}, \u05d4\u05d9\u05e9\u05e0\u05d9\u05dd"
                     + " \u05d1\u05d9\u05d5\u05ea\u05e8 \u05e7\u05d5\u05d3\u05dd",
@@ -36287,6 +37285,9 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "\u05d9\u05e9 \u05dc\u05d4\u05e9\u05ea\u05de\u05e9 \u05d1\u05de\u05db\u05e4\u05d9\u05dc"
+                    + " \u05d1\u05d9\u05df 0.5\u00d7 \u05dc\u05be2\u00d7",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -36304,6 +37305,9 @@ final class Translations {
                     + " \u05de\u05d5\u05d1\u05e0\u05d4, \u05d5-BitChord \u05dc\u05d0"
                     + " \u05de\u05e4\u05e2\u05d9\u05dc \u05e9\u05e8\u05ea \u05dc\u05e9\u05dd"
                     + " \u05db\u05da.",
+            "Use automatic mode",
+            "\u05e9\u05d9\u05de\u05d5\u05e9 \u05d1\u05de\u05e6\u05d1"
+                    + " \u05d0\u05d5\u05d8\u05d5\u05de\u05d8\u05d9",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -36333,6 +37337,11 @@ final class Translations {
                     + " \u05de\u05d5\u05e9\u05d1\u05ea\u05d9\u05dd \u05d6\u05de\u05e0\u05d9\u05ea",
             "Use it",
             "\u05e9\u05d9\u05de\u05d5\u05e9",
+            "Use manual mode",
+            "\u05e9\u05d9\u05de\u05d5\u05e9 \u05d1\u05de\u05e6\u05d1 \u05d9\u05d3\u05e0\u05d9",
+            "Use measured tempo",
+            "\u05e9\u05d9\u05de\u05d5\u05e9 \u05d1\u05e7\u05e6\u05d1"
+                    + " \u05e9\u05e0\u05de\u05d3\u05d3",
             "Use MicroG",
             "\u05e9\u05d9\u05de\u05d5\u05e9 \u05d1-MicroG",
             "Use name",
@@ -36361,6 +37370,12 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "\u05dc\u05d4\u05e9\u05ea\u05de\u05e9 \u05d1\u05e9\u05dd \u05d4\u05d6\u05d4?",
+            "Use this pair",
+            "\u05e9\u05d9\u05de\u05d5\u05e9 \u05d1\u05d6\u05d5\u05d2 \u05d4\u05d6\u05d4",
+            "Use this pair to apply it",
+            "\u05d9\u05e9 \u05dc\u05d4\u05e9\u05ea\u05de\u05e9 \u05d1\u05d6\u05d5\u05d2"
+                    + " \u05d4\u05d6\u05d4 \u05db\u05d3\u05d9 \u05dc\u05d4\u05d7\u05d9\u05dc"
+                    + " \u05d0\u05ea \u05d4\u05d4\u05d2\u05d3\u05e8\u05d5\u05ea",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "\u05d0\u05e4\u05e9\u05e8 \u05dc\u05d4\u05e9\u05ea\u05de\u05e9"
                     + " \u05d1\u05d7\u05e9\u05d1\u05d5\u05df Real-Debrid, AllDebrid, Premiumize"
@@ -36394,6 +37409,8 @@ final class Translations {
                 + " \u05e0\u05ea\u05d5\u05e0\u05d9 \u05d4\u05d0\u05d5\u05d3\u05d9\u05d5"
                 + " \u05d4\u05de\u05e7\u05d5\u05e8\u05d9\u05d9\u05dd, \u05dc\u05dc\u05d0"
                 + " \u05e9\u05d9\u05e0\u05d5\u05d9.",
+            "Using this pair\u2026",
+            "\u05de\u05e9\u05ea\u05de\u05e9 \u05d1\u05d6\u05d5\u05d2 \u05d4\u05d6\u05d4\u2026",
             "Using {0}",
             "\u05d1\u05e9\u05d9\u05de\u05d5\u05e9: {0}",
             "Variable",
@@ -36447,6 +37464,10 @@ final class Translations {
             "\u05d9\u05e9 \u05dc\u05d4\u05de\u05ea\u05d9\u05df \u05dc\u05e1\u05d9\u05d5\u05dd"
                     + " \u05d4\u05e4\u05e2\u05d5\u05dc\u05d4"
                     + " \u05d4\u05e0\u05d5\u05db\u05d7\u05d9\u05ea.",
+            "Wait for the pair to finish loading",
+            "\u05d9\u05e9 \u05dc\u05d4\u05de\u05ea\u05d9\u05df \u05dc\u05e1\u05d9\u05d5\u05dd"
+                    + " \u05d8\u05e2\u05d9\u05e0\u05ea \u05e9\u05e0\u05d9"
+                    + " \u05d4\u05e7\u05d8\u05e2\u05d9\u05dd",
             "Waiting for a community channel to be indexed",
             "\u05de\u05de\u05ea\u05d9\u05df \u05dc\u05d0\u05d9\u05e0\u05d3\u05d5\u05e7\u05e1"
                     + " \u05e9\u05dc \u05e2\u05e8\u05d5\u05e5 \u05e7\u05d4\u05d9\u05dc\u05d4",
@@ -36495,6 +37516,8 @@ final class Translations {
             "Waiting for {0} community channels to be indexed",
             "\u05de\u05de\u05ea\u05d9\u05df \u05dc\u05d0\u05d9\u05e0\u05d3\u05d5\u05e7\u05e1"
                 + " \u05e9\u05dc {0} \u05e2\u05e8\u05d5\u05e6\u05d9 \u05e7\u05d4\u05d9\u05dc\u05d4",
+            "Waiting to analyze",
+            "\u05de\u05de\u05ea\u05d9\u05df \u05dc\u05e0\u05d9\u05ea\u05d5\u05d7",
             "Waiting to save",
             "\u05de\u05de\u05ea\u05d9\u05df \u05dc\u05e9\u05de\u05d9\u05e8\u05d4",
             "Waiting to save selected copies",
@@ -37481,6 +38504,8 @@ final class Translations {
             "Adjust the normalised playback level",
             "Advanced",
             "\u090f\u0921\u0935\u093e\u0902\u0938\u094d\u0921",
+            "Advanced curve",
+            "\u0909\u0928\u094d\u0928\u0924 \u0935\u0915\u094d\u0930",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -37569,10 +38594,19 @@ final class Translations {
                     + " \u0905\u0902\u0926\u0930\u0964",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923",
+            "Analysis result could not be read",
+            "\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093e"
+                    + " \u092a\u0930\u093f\u0923\u093e\u092e \u092a\u0922\u093c\u093e"
+                    + " \u0928\u0939\u0940\u0902 \u091c\u093e \u0938\u0915\u093e",
             "Analyzing selected audio\u2026",
             "\u091a\u0941\u0928\u0947 \u0939\u0941\u090f \u0911\u0921\u093f\u092f\u094b"
                     + " \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0939\u094b"
                     + " \u0930\u0939\u093e \u0939\u0948\u2026",
+            "Analyzing\u2026",
+            "\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0939\u094b \u0930\u0939\u093e"
+                    + " \u0939\u0948\u2026",
             "Android didn't allow this file to be deleted.",
             "Android \u0928\u0947 \u0907\u0938 \u092b\u093c\u093e\u0907\u0932 \u0915\u094b"
                     + " \u0921\u093f\u0932\u0940\u091f \u0915\u0930\u0928\u0947 \u0915\u0940"
@@ -37651,6 +38685,8 @@ final class Translations {
             "Apply cache size",
             "\u0915\u0948\u0936 \u0938\u093e\u0907\u091c\u093c \u0932\u093e\u0917\u0942"
                     + " \u0915\u0930\u0947\u0902",
+            "Apply mode",
+            "\u0932\u093e\u0917\u0942 \u0915\u0930\u0928\u0947 \u0915\u093e \u092e\u094b\u0921",
             "Apply now",
             "\u0905\u092d\u0940 \u0932\u093e\u0917\u0942 \u0915\u0930\u0947\u0902",
             "Apply or close to resume playback.",
@@ -37660,6 +38696,9 @@ final class Translations {
                     + " \u092c\u0902\u0926 \u0915\u0930\u0947\u0902\u0964",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "\u0938\u0947\u091f\u093f\u0902\u0917 \u0932\u093e\u0917\u0942"
+                    + " \u0915\u0930\u0947\u0902",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -37762,6 +38801,10 @@ final class Translations {
             "\u0905\u092a\u0928\u0947 \u0906\u092a \u0938\u0939\u0947\u091c\u0947\u0902",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "\u0938\u094d\u0935\u091a\u093e\u0932\u093f\u0924 \u092e\u093f\u0936\u094d\u0930\u0923"
+                    + " \u0905\u092d\u0940 \u0924\u0948\u092f\u093e\u0930 \u0928\u0939\u0940\u0902"
+                    + " \u0939\u0948\u0964",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -37853,6 +38896,9 @@ final class Translations {
             "Beat grid offset",
             "\u092c\u0940\u091f \u0917\u094d\u0930\u093f\u0921"
                     + " \u0911\u092b\u093c\u0938\u0947\u091f",
+            "Beat grid scale",
+            "\u092c\u0940\u091f \u0917\u094d\u0930\u093f\u0921 \u0915\u093e"
+                    + " \u092a\u0948\u092e\u093e\u0928\u093e",
             "Beat grid tempo",
             "\u092c\u0940\u091f \u0917\u094d\u0930\u093f\u0921"
                     + " \u091f\u0947\u092e\u094d\u092a\u094b",
@@ -37860,6 +38906,14 @@ final class Translations {
             "\u092c\u0940\u091f \u091c\u0902\u092a",
             "Beats",
             "\u092c\u0940\u091f",
+            "Before",
+            "\u092a\u0939\u0932\u0947",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u201c\u092a\u0939\u0932\u0947\u201d \u0909\u092a\u0932\u092c\u094d\u0927"
+                + " \u0928\u0939\u0940\u0902 \u0939\u0948: Automix \u0907\u0938"
+                + " \u092e\u093f\u0936\u094d\u0930\u0923 \u092e\u0947\u0902"
+                + " \u0907\u092b\u093c\u0947\u0915\u094d\u091f \u091c\u094b\u0921\u093c\u0924\u093e"
+                + " \u0939\u0948\u0964",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -38195,6 +39249,13 @@ final class Translations {
                 + " \u0939\u0948\u0964",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "\u0939\u0930 \u091f\u094d\u0930\u0948\u0915 \u0915\u0940 \u0917\u0924\u093f"
+                    + " \u0915\u0947\u0935\u0932 \u0913\u0935\u0930\u0932\u0948\u092a \u0915\u0947"
+                    + " \u0926\u094c\u0930\u093e\u0928 \u092c\u0926\u0932\u0924\u093e"
+                    + " \u0939\u0948\u0964 \u0938\u0941\u0930 \u0915\u0940"
+                    + " \u090a\u0901\u091a\u093e\u0908 \u092c\u0928\u0940 \u0930\u0939\u0924\u0940"
+                    + " \u0939\u0948\u0964",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -38284,6 +39345,9 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "\u091a\u0941\u0928\u0947\u0902",
+            "Choose a different file",
+            "\u0926\u0942\u0938\u0930\u0940 \u092b\u093c\u093e\u0907\u0932"
+                    + " \u091a\u0941\u0928\u0947\u0902",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -38735,6 +39799,9 @@ final class Translations {
                     + " \u092a\u094b\u0938\u094d\u091f \u092a\u0939\u0932\u0947\u0964",
             "Corrected names",
             "\u0938\u0941\u0927\u0930\u0947 \u0939\u0941\u090f \u0928\u093e\u092e",
+            "Could not change the queue",
+            "\u0915\u0924\u093e\u0930 \u092c\u0926\u0932\u0940 \u0928\u0939\u0940\u0902"
+                    + " \u091c\u093e \u0938\u0915\u0940",
             "Could not complete peer discovery. Check relays and try again.",
             "\u092a\u0940\u092f\u0930 \u0916\u094b\u091c \u092a\u0942\u0930\u0940"
                     + " \u0928\u0939\u0940\u0902 \u0939\u094b \u0938\u0915\u0940\u0964"
@@ -38794,8 +39861,15 @@ final class Translations {
                     + " \u091c\u093e\u0901\u091a\u0947\u0902\u0964",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "\u0907\u0938 \u092b\u093c\u093e\u0907\u0932 \u0915\u094b \u092a\u0922\u093c\u093e"
+                    + " \u0928\u0939\u0940\u0902 \u091c\u093e \u0938\u0915\u093e",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "\u0907\u0938 \u091f\u094d\u0930\u0948\u0915 \u0915\u093e"
+                    + " \u0911\u0921\u093f\u092f\u094b \u092a\u0922\u093c\u093e"
+                    + " \u0928\u0939\u0940\u0902 \u091c\u093e \u0938\u0915\u093e\u0964",
             "Could not read your library. Try again.",
             "\u0906\u092a\u0915\u0940 \u0932\u093e\u0907\u092c\u094d\u0930\u0947\u0930\u0940"
                     + " \u092a\u0922\u093c\u0940 \u0928\u0939\u0940\u0902 \u091c\u093e"
@@ -38843,6 +39917,10 @@ final class Translations {
                     + " \u0938\u0947 \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0902\u0964",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "\u0907\u0938 \u091c\u094b\u0921\u093c\u0940 \u0915\u093e"
+                    + " \u0909\u092a\u092f\u094b\u0917 \u0928\u0939\u0940\u0902 \u0939\u094b"
+                    + " \u0938\u0915\u093e\u0964",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "\u0915\u0949\u092a\u0940 \u0928\u0939\u0940\u0902 \u0939\u094b \u0938\u0915\u093e:"
                     + " {0}\u0964 {1} \u092e\u093f. \u092e\u0947\u0902 \u092b\u093f\u0930"
@@ -39272,6 +40350,8 @@ final class Translations {
             "Draft saved",
             "\u0921\u094d\u0930\u093e\u092b\u093c\u094d\u091f \u0938\u0939\u0947\u091c\u093e"
                     + " \u0917\u092f\u093e",
+            "Draft saving",
+            "\u0921\u094d\u0930\u093e\u092b\u093c\u094d\u091f \u0938\u0939\u0947\u091c\u0928\u093e",
             "Drag a curve point or fine-tune each track below.",
             "\u0915\u0930\u094d\u0935 \u0915\u093e \u092c\u093f\u0902\u0926\u0941"
                 + " \u0916\u0940\u0902\u091a\u0947\u0902 \u092f\u093e \u0928\u0940\u091a\u0947"
@@ -39564,6 +40644,8 @@ final class Translations {
                     + " \u0915\u0930\u0947\u0902",
             "Failed",
             "\u0935\u093f\u092b\u0932",
+            "Faster by 1%",
+            "1% \u0924\u0947\u091c\u093c",
             "Favor songs you play often",
             "\u0905\u0915\u094d\u0938\u0930 \u0938\u0941\u0928\u0947 \u091c\u093e\u0928\u0947"
                     + " \u0935\u093e\u0932\u0947 \u0917\u093e\u0928\u094b\u0902 \u0915\u094b"
@@ -39618,6 +40700,9 @@ final class Translations {
                     + " \u0916\u094b\u091c\u0940 \u091c\u093e\u0924\u0940 \u0939\u0948\u0902",
             "Filter",
             "\u092b\u093c\u093f\u0932\u094d\u091f\u0930",
+            "Filter depth",
+            "\u092b\u093c\u093f\u0932\u094d\u091f\u0930 \u0915\u0940"
+                    + " \u0917\u0939\u0930\u093e\u0908",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -39775,6 +40860,9 @@ final class Translations {
             "Folder selected.",
             "\u092b\u093c\u094b\u0932\u094d\u0921\u0930 \u091a\u0941\u0928 \u0932\u093f\u092f\u093e"
                     + " \u0917\u092f\u093e\u0964",
+            "Follow current pair",
+            "\u092e\u094c\u091c\u0942\u0926\u093e \u091c\u094b\u0921\u093c\u0940 \u0915\u093e"
+                    + " \u0905\u0928\u0941\u0938\u0930\u0923 \u0915\u0930\u0947\u0902",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -39909,6 +40997,8 @@ final class Translations {
                     + " \u091b\u093f\u092a\u093e\u090f\u0901",
             "Hide hash",
             "hash \u091b\u093f\u092a\u093e\u090f\u0901",
+            "Hide sources",
+            "\u0938\u094d\u0930\u094b\u0924 \u091b\u093f\u092a\u093e\u090f\u0901",
             "High",
             "\u091c\u093c\u094d\u092f\u093e\u0926\u093e",
             "High-pass",
@@ -39920,6 +41010,10 @@ final class Translations {
                     + " \u0917\u094d\u0930\u093f\u0921 \u0938\u0902\u092a\u093e\u0926\u0928"
                     + " \u0938\u0947 \u092a\u094d\u0932\u0947\u092c\u0948\u0915 \u0917\u0924\u093f"
                     + " \u0928\u0939\u0940\u0902 \u092c\u0926\u0932\u0924\u0940\u0964",
+            "How far the selected filters sweep.",
+            "\u091a\u0941\u0928\u0947 \u0917\u090f \u092b\u093c\u093f\u0932\u094d\u091f\u0930"
+                    + " \u0915\u0947 \u0938\u094d\u0935\u0940\u092a \u0915\u0940"
+                    + " \u0938\u0940\u092e\u093e\u0964",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -39967,6 +41061,9 @@ final class Translations {
                     + " (\u092c\u0921\u093c\u0940 \u092b\u093c\u093e\u0907\u0932)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "\u0906\u0928\u0947 \u0935\u093e\u0932\u0947 \u091f\u094d\u0930\u0948\u0915"
+                    + " \u0915\u093e \u092a\u094d\u0930\u092d\u093e\u0935",
             "Incoming offers",
             "\u0906\u0928\u0947 \u0935\u093e\u0932\u0947"
                     + " \u092a\u094d\u0930\u0938\u094d\u0924\u093e\u0935",
@@ -40210,6 +41307,11 @@ final class Translations {
                     + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932: {0}",
             "Later",
             "\u092c\u093e\u0926 \u092e\u0947\u0902",
+            "Leave Listen Together to change the queue",
+            "\u0915\u0924\u093e\u0930 \u092c\u0926\u0932\u0928\u0947 \u0915\u0947"
+                    + " \u0932\u093f\u090f \u201c\u0938\u093e\u0925 \u092e\u0947\u0902"
+                    + " \u0938\u0941\u0928\u0947\u0902\u201d \u0938\u0947 \u092c\u093e\u0939\u0930"
+                    + " \u0928\u093f\u0915\u0932\u0947\u0902",
             "Left to BitChord",
             "BitChord \u092a\u0930 \u091b\u094b\u0921\u093c\u093e \u0917\u092f\u093e",
             "Let JamesDSP do the effects",
@@ -40256,9 +41358,15 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "\u0906\u0928\u0947 \u0935\u093e\u0932\u093e \u091f\u094d\u0930\u0948\u0915"
+                    + " \u0932\u094b\u0921 \u0915\u0930\u0947\u0902",
             "Load older posts",
             "\u092a\u0941\u0930\u093e\u0928\u0940 \u092a\u094b\u0938\u094d\u091f \u0932\u094b\u0921"
                     + " \u0915\u0930\u0947\u0902",
+            "Load outgoing",
+            "\u091c\u093e\u0928\u0947 \u0935\u093e\u0932\u093e \u091f\u094d\u0930\u0948\u0915"
+                    + " \u0932\u094b\u0921 \u0915\u0930\u0947\u0902",
             "Loading",
             "\u0932\u094b\u0921 \u0939\u094b \u0930\u0939\u093e \u0939\u0948",
             "Loading channel\u2026",
@@ -40376,6 +41484,25 @@ final class Translations {
                     + " \u0938\u093e\u091d\u093e\u0915\u0930\u0923"
                     + " \u092a\u094d\u0930\u092c\u0902\u0927\u093f\u0924"
                     + " \u0915\u0930\u0947\u0902\u0964",
+            "Manual",
+            "\u092e\u0948\u0928\u094d\u092f\u0941\u0905\u0932",
+            "Manual applies when you tap Apply.",
+            "\u092e\u0948\u0928\u094d\u092f\u0941\u0905\u0932 \u092e\u094b\u0921 \u092e\u0947\u0902"
+                    + " \u0932\u093e\u0917\u0942 \u0915\u0930\u0947\u0902 \u092a\u0930"
+                    + " \u091f\u0948\u092a \u0915\u0930\u0928\u0947 \u0938\u0947"
+                    + " \u0938\u0947\u091f\u093f\u0902\u0917 \u0932\u093e\u0917\u0942"
+                    + " \u0939\u094b\u0924\u0940 \u0939\u0948\u0902\u0964",
+            "Manual saves when you tap Save draft.",
+            "\u092e\u0948\u0928\u094d\u092f\u0941\u0905\u0932 \u092e\u094b\u0921 \u092e\u0947\u0902"
+                + " \u0921\u094d\u0930\u093e\u092b\u093c\u094d\u091f"
+                + " \u0938\u0939\u0947\u091c\u0947\u0902 \u092a\u0930 \u091f\u0948\u092a"
+                + " \u0915\u0930\u0928\u0947 \u0938\u0947"
+                + " \u0921\u094d\u0930\u093e\u092b\u093c\u094d\u091f \u0938\u0939\u0947\u091c\u093e"
+                + " \u091c\u093e\u0924\u093e \u0939\u0948\u0964",
+            "Match A to B",
+            "A \u0915\u094b B \u0938\u0947 \u092e\u093f\u0932\u093e\u090f\u0901",
+            "Match B to A",
+            "B \u0915\u094b A \u0938\u0947 \u092e\u093f\u0932\u093e\u090f\u0901",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -40491,6 +41618,8 @@ final class Translations {
                     + " \u092b\u093c\u093e\u0907\u0932\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f"
                     + " \u0909\u0938\u0915\u0947 \u092c\u093f\u091f\u0930\u0947\u091f"
                     + " \u0938\u0947\u0964",
+            "Multiplier",
+            "\u0917\u0941\u0923\u0915",
             "Music chats",
             "\u092e\u094d\u092f\u0942\u091c\u093c\u093f\u0915 \u091a\u0948\u091f",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -40578,6 +41707,11 @@ final class Translations {
             "Android 10 \u092f\u093e \u0928\u092f\u093e \u091a\u093e\u0939\u093f\u090f\u0964",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "\u0926\u094b\u0928\u094b\u0902 \u0915\u0940 \u0932\u092f-\u0917\u0924\u093f"
+                    + " \u0914\u0930 0.5\u00d7 \u0938\u0947 2\u00d7 \u0915\u0947 \u092c\u0940\u091a"
+                    + " \u0915\u093e \u0905\u0928\u0941\u092a\u093e\u0924"
+                    + " \u091a\u093e\u0939\u093f\u090f",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -40667,6 +41801,10 @@ final class Translations {
                     + " \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f"
                     + " \u0911\u0921\u093f\u092f\u094b \u092b\u093c\u093e\u0907\u0932\u0947\u0902"
                     + " \u091a\u0941\u0928\u0928\u0947 \u0915\u094b \u0915\u0939\u0947\u0902\u0964",
+            "No file picker is available",
+            "\u0915\u094b\u0908 \u092b\u093c\u093e\u0907\u0932 \u091a\u0941\u0928\u0928\u0947"
+                    + " \u0935\u093e\u0932\u093e \u0910\u092a \u0909\u092a\u0932\u092c\u094d\u0927"
+                    + " \u0928\u0939\u0940\u0902 \u0939\u0948",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -40767,6 +41905,10 @@ final class Translations {
                 + " \u0909\u092a\u092f\u094b\u0917\u0915\u0930\u094d\u0924\u093e \u0928\u093e\u092e"
                 + " \u0914\u0930 \u092a\u093e\u0938\u0935\u0930\u094d\u0921"
                 + " \u0921\u093e\u0932\u0947\u0902\u0964",
+            "No saved draft",
+            "\u0915\u094b\u0908 \u0938\u0939\u0947\u091c\u093e \u0917\u092f\u093e"
+                    + " \u0921\u094d\u0930\u093e\u092b\u093c\u094d\u091f \u0928\u0939\u0940\u0902"
+                    + " \u0939\u0948",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -40837,6 +41979,15 @@ final class Translations {
             "Not enough audio",
             "\u092a\u0930\u094d\u092f\u093e\u092a\u094d\u0924 \u0911\u0921\u093f\u092f\u094b"
                     + " \u0928\u0939\u0940\u0902 \u0939\u0948",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "\u0907\u0938 \u091f\u094d\u0930\u0948\u0915 \u0915\u093e"
+                    + " \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0928\u0947"
+                    + " \u0915\u0947 \u0932\u093f\u090f"
+                    + " \u092a\u0930\u094d\u092f\u093e\u092a\u094d\u0924"
+                    + " \u092e\u0947\u092e\u094b\u0930\u0940 \u0928\u0939\u0940\u0902"
+                    + " \u0939\u0948\u0964 \u092b\u093f\u0930 \u0938\u0947"
+                    + " \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0902 \u092a\u0930"
+                    + " \u091f\u0948\u092a \u0915\u0930\u0947\u0902\u0964",
             "Not managed here",
             "\u092f\u0939\u093e\u0901 \u092e\u0948\u0928\u0947\u091c \u0928\u0939\u0940\u0902"
                     + " \u0939\u094b\u0924\u093e",
@@ -41106,6 +42257,8 @@ final class Translations {
                     + " \u0928\u0939\u0940\u0902 \u0939\u0948\u0964",
             "Original key",
             "\u092e\u0942\u0932 \u0938\u094d\u0935\u0930",
+            "Original tempo",
+            "\u092e\u0942\u0932 \u0932\u092f-\u0917\u0924\u093f",
             "Original vocals",
             "\u092e\u0942\u0932 \u0935\u094b\u0915\u0932",
             "Other",
@@ -41124,10 +42277,19 @@ final class Translations {
                     + " \u092b\u093c\u093e\u0907\u0932\u0947\u0902",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "\u091c\u093e\u0928\u0947 \u0935\u093e\u0932\u0947 \u091f\u094d\u0930\u0948\u0915"
+                    + " \u0915\u093e \u092a\u094d\u0930\u092d\u093e\u0935",
             "Outro",
             "\u0905\u0902\u0924\u093f\u092e \u092d\u093e\u0917",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "\u0913\u0935\u0930\u0932\u0948\u092a BPM",
+            "overlap only",
+            "\u0915\u0947\u0935\u0932 \u0913\u0935\u0930\u0932\u0948\u092a \u092e\u0947\u0902",
+            "Overlap tempo",
+            "\u0913\u0935\u0930\u0932\u0948\u092a \u0915\u0940 \u0932\u092f-\u0917\u0924\u093f",
             "Pair a peer",
             "\u092a\u0940\u092f\u0930 \u092a\u0947\u092f\u0930 \u0915\u0930\u0947\u0902",
             "Pair a peer before sharing files.",
@@ -41362,6 +42524,8 @@ final class Translations {
                     + " \u091a\u0941\u0928\u0947\u0902\u0964",
             "Pitch",
             "\u0938\u094d\u0935\u0930",
+            "Play",
+            "\u091a\u0932\u093e\u090f\u0901",
             "Play a song first.",
             "\u092a\u0939\u0932\u0947 \u0915\u094b\u0908 \u0917\u093e\u0928\u093e"
                     + " \u091a\u0932\u093e\u090f\u0901\u0964",
@@ -41495,6 +42659,9 @@ final class Translations {
                     + " \u0915\u0930\u0947\u0902 \u092f\u093e \u091c\u093e\u0930\u0940"
                     + " \u0930\u0916\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f"
                     + " \u0932\u093e\u0917\u0942 \u0915\u0930\u0947\u0902\u0964",
+            "Preview Before",
+            "\u201c\u092a\u0939\u0932\u0947\u201d \u0915\u093e"
+                    + " \u092a\u0942\u0930\u094d\u0935\u093e\u0935\u0932\u094b\u0915\u0928",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -41742,6 +42909,9 @@ final class Translations {
                     + " \u0939\u094b\u0917\u093e\u0964",
             "Ready.",
             "\u0924\u0948\u092f\u093e\u0930 \u0939\u0948\u0964",
+            "Recall draft",
+            "\u0921\u094d\u0930\u093e\u092b\u093c\u094d\u091f \u0932\u094b\u0921"
+                    + " \u0915\u0930\u0947\u0902",
             "Receive",
             "\u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0947\u0902",
             "Receive audio from another BitChord phone, or share your files.",
@@ -41917,6 +43087,12 @@ final class Translations {
             "Repeat preview",
             "\u092a\u094d\u0930\u0940\u0935\u094d\u092f\u0942"
                     + " \u0926\u094b\u0939\u0930\u093e\u090f\u0901",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "\u0915\u0924\u093e\u0930 \u092e\u0947\u0902 \u092e\u094c\u091c\u0942\u0926\u093e"
+                    + " \u0914\u0930 \u0905\u0917\u0932\u0947 \u0917\u093e\u0928\u0947 \u0915\u094b"
+                    + " \u092c\u0926\u0932\u0924\u093e \u0939\u0948\u0964 \u092c\u093e\u0915\u0940"
+                    + " \u0935\u0948\u0938\u0947 \u0939\u0940 \u0930\u0939\u0924\u0947"
+                    + " \u0939\u0948\u0902\u0964",
             "Report audio quality",
             "\u0911\u0921\u093f\u092f\u094b \u0915\u094d\u0935\u093e\u0932\u093f\u091f\u0940"
                     + " \u092c\u0924\u093e\u090f\u0901",
@@ -41956,6 +43132,8 @@ final class Translations {
             "Reset connection identity?",
             "\u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u0915\u0940 \u092a\u0939\u091a\u093e\u0928"
                     + " \u0930\u0940\u0938\u0947\u091f \u0915\u0930\u0947\u0902?",
+            "Reset EQ",
+            "EQ \u0930\u0940\u0938\u0947\u091f \u0915\u0930\u0947\u0902",
             "Reset to {0}%",
             "{0}% \u092a\u0930 \u0930\u0940\u0938\u0947\u091f \u0915\u0930\u0947\u0902",
             "Reset {0}",
@@ -42033,6 +43211,8 @@ final class Translations {
             "\u0938\u094d\u092a\u0949\u0928\u094d\u0938\u0930\u094d\u0921"
                     + " \u092e\u0948\u0938\u0947\u091c \u092b\u093f\u0930 \u0938\u0947"
                     + " \u0906\u091c\u093c\u092e\u093e\u090f\u0901",
+            "Reverse",
+            "\u0915\u094d\u0930\u092e \u0909\u0932\u091f\u0947\u0902",
             "Review",
             "\u0926\u0947\u0916\u0947\u0902",
             "Review 1 song without tags",
@@ -42122,6 +43302,8 @@ final class Translations {
                     + " \u0905\u0915\u094d\u0938\u0930 \u092c\u091c\u093e\u090f"
                     + " \u091c\u093e\u0928\u0947 \u0935\u093e\u0932\u0947 \u0917\u093e\u0928\u0947"
                     + " \u0938\u0939\u0947\u091c\u0947\u0902",
+            "Save mode",
+            "\u0938\u0939\u0947\u091c\u0928\u0947 \u0915\u093e \u092e\u094b\u0921",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -42762,6 +43944,8 @@ final class Translations {
             "\u0938\u094d\u0932\u0940\u092a \u091f\u093e\u0907\u092e\u0930",
             "Sliders {0}",
             "\u0938\u094d\u0932\u093e\u0907\u0921\u0930 {0}",
+            "Slower by 1%",
+            "1% \u0927\u0940\u092e\u093e",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -43630,6 +44814,13 @@ final class Translations {
                     + " \u091f\u094d\u0930\u093e\u0902\u0938\u092b\u093c\u0930 \u092c\u093e\u0926"
                     + " \u092e\u0947\u0902 \u0930\u0940\u092b\u093c\u094d\u0930\u0947\u0936"
                     + " \u0915\u0930\u0947\u0902\u0964",
+            "The queue changed; reopen this transition",
+            "\u0915\u0924\u093e\u0930 \u092c\u0926\u0932 \u0917\u0908 \u0939\u0948; \u0907\u0938"
+                    + " \u091f\u094d\u0930\u093e\u0902\u091c\u093c\u093f\u0936\u0928 \u0915\u094b"
+                    + " \u092b\u093f\u0930 \u0938\u0947 \u0916\u094b\u0932\u0947\u0902",
+            "The queue is being changed",
+            "\u0915\u0924\u093e\u0930 \u092c\u0926\u0932\u0940 \u091c\u093e \u0930\u0939\u0940"
+                    + " \u0939\u0948",
             "The queue plays in its own order",
             "\u0915\u0924\u093e\u0930 \u0905\u092a\u0928\u0947 \u0915\u094d\u0930\u092e"
                     + " \u092e\u0947\u0902 \u092c\u091c\u0924\u0940 \u0939\u0948",
@@ -43753,6 +44944,9 @@ final class Translations {
             "The song pauses straight away",
             "\u0917\u093e\u0928\u093e \u0924\u0941\u0930\u0902\u0924 \u0930\u0941\u0915"
                     + " \u091c\u093e\u0924\u093e \u0939\u0948",
+            "The track length is not available",
+            "\u091f\u094d\u0930\u0948\u0915 \u0915\u0940 \u0905\u0935\u0927\u093f"
+                    + " \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902 \u0939\u0948",
             "The whole song is cached.",
             "\u092a\u0942\u0930\u093e \u0917\u093e\u0928\u093e \u0915\u0948\u0936"
                     + " \u0939\u0948\u0964",
@@ -43830,6 +45024,10 @@ final class Translations {
                     + " \u0917\u0908\u0964 \u0917\u093e\u0928\u0947 \u092a\u0930"
                     + " \u0932\u094c\u091f\u0915\u0930 \u092b\u093f\u0930 \u0938\u0947"
                     + " \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0902\u0964",
+            "This file can\u2019t stay available",
+            "\u0907\u0938 \u092b\u093c\u093e\u0907\u0932 \u0924\u0915"
+                    + " \u092a\u0939\u0941\u0901\u091a \u092c\u0928\u093e\u090f"
+                    + " \u0928\u0939\u0940\u0902 \u0930\u0916 \u0938\u0915\u0924\u0947",
             "This file couldn't be deleted.",
             "\u092f\u0939 \u092b\u093c\u093e\u0907\u0932 \u0921\u093f\u0932\u0940\u091f"
                 + " \u0928\u0939\u0940\u0902 \u0915\u0940 \u091c\u093e \u0938\u0915\u0940\u0964",
@@ -43874,6 +45072,10 @@ final class Translations {
                     + " \u092e\u0948\u0938\u0947\u091c \u092a\u0942\u0930\u093e"
                     + " \u0928\u0939\u0940\u0902 \u0926\u093f\u0916\u093e\u092f\u093e \u091c\u093e"
                     + " \u0938\u0915\u093e\u0964",
+            "This pair cannot be previewed",
+            "\u0907\u0938 \u091c\u094b\u0921\u093c\u0940 \u0915\u093e"
+                    + " \u092a\u094d\u0930\u0940\u0935\u094d\u092f\u0942 \u0928\u0939\u0940\u0902"
+                    + " \u0938\u0941\u0928\u093e \u091c\u093e \u0938\u0915\u0924\u093e",
             "This phone\u2019s audio chip can play: {0}.",
             "\u0907\u0938 \u092b\u093c\u094b\u0928 \u0915\u0940 \u0911\u0921\u093f\u092f\u094b"
                 + " \u091a\u093f\u092a \u092c\u091c\u093e \u0938\u0915\u0924\u0940 \u0939\u0948:"
@@ -43942,6 +45144,8 @@ final class Translations {
                     + " \u0928\u0939\u0940\u0902 \u0926\u0947\u0924\u093e\u0964",
             "Time",
             "Time",
+            "times",
+            "\u0917\u0941\u0928\u093e",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -43987,6 +45191,8 @@ final class Translations {
             "\u0909\u092a\u0915\u0930\u0923",
             "Track analysis",
             "\u091f\u094d\u0930\u0948\u0915 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923",
+            "Track BPM",
+            "\u091f\u094d\u0930\u0948\u0915 BPM",
             "Track details",
             "\u091f\u094d\u0930\u0948\u0915 \u0915\u0940"
                     + " \u091c\u093e\u0928\u0915\u093e\u0930\u0940",
@@ -44047,6 +45253,10 @@ final class Translations {
                     + " \u091a\u093e\u0932\u0942 \u0915\u0930\u0947\u0902\u0964"
                     + " \u0917\u093e\u0928\u0947 \u0909\u0938\u0940 \u0938\u0947 \u0906\u0924\u0947"
                     + " \u0939\u0948\u0902\u0964",
+            "Turn shuffle off to change the queue",
+            "\u0915\u0924\u093e\u0930 \u092c\u0926\u0932\u0928\u0947 \u0915\u0947"
+                    + " \u0932\u093f\u090f \u0936\u092b\u093c\u0932 \u092c\u0902\u0926"
+                    + " \u0915\u0930\u0947\u0902",
             "Turn the singer down",
             "Turn the singer down",
             "Turns the singer down so you can sing over the song. Works",
@@ -44069,6 +45279,8 @@ final class Translations {
             "\u092e\u0949\u0921\u0932 \u0915\u0947 \u0928\u093e\u092e \u0915\u093e"
                     + " \u0915\u0941\u091b \u0939\u093f\u0938\u094d\u0938\u093e"
                     + " \u0932\u093f\u0916\u0947\u0902\u0964",
+            "Unavailable",
+            "\u0905\u0928\u0941\u092a\u0932\u092c\u094d\u0927",
             "Under {0}, oldest first",
             "{0} \u0938\u0947 \u0915\u092e, \u0938\u092c\u0938\u0947"
                     + " \u092a\u0941\u0930\u093e\u0928\u0947 \u092a\u0939\u0932\u0947"
@@ -44148,6 +45360,10 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "0.5\u00d7 \u0938\u0947 2\u00d7 \u0915\u0947 \u092c\u0940\u091a \u0915\u093e"
+                    + " \u0917\u0941\u0923\u0915 \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932"
+                    + " \u0915\u0930\u0947\u0902",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -44168,6 +45384,9 @@ final class Translations {
                 + " \u0939\u0948, \u0914\u0930 BitChord \u0907\u0938\u0915\u0947 \u0932\u093f\u090f"
                 + " \u0915\u094b\u0908 \u0938\u0930\u094d\u0935\u0930 \u0928\u0939\u0940\u0902"
                 + " \u091a\u0932\u093e\u0924\u093e\u0964",
+            "Use automatic mode",
+            "\u0905\u092a\u0928\u0947-\u0906\u092a \u0935\u093e\u0932\u093e \u092e\u094b\u0921"
+                    + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0947\u0902",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -44202,6 +45421,12 @@ final class Translations {
                     + " \u092c\u0902\u0926 \u0930\u0939\u0924\u0947 \u0939\u0948\u0902",
             "Use it",
             "\u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0947\u0902",
+            "Use manual mode",
+            "\u092e\u0948\u0928\u094d\u092f\u0941\u0905\u0932 \u092e\u094b\u0921"
+                    + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0947\u0902",
+            "Use measured tempo",
+            "\u092e\u093e\u092a\u0940 \u0917\u0908 \u0932\u092f-\u0917\u0924\u093f"
+                    + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0947\u0902",
             "Use MicroG",
             "MicroG \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0915\u0930\u0947\u0902",
             "Use name",
@@ -44234,6 +45459,13 @@ final class Translations {
             "Use this name?",
             "\u092f\u0939 \u0928\u093e\u092e \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932"
                     + " \u0915\u0930\u0947\u0902?",
+            "Use this pair",
+            "\u0907\u0938 \u091c\u094b\u0921\u093c\u0940 \u0915\u093e"
+                    + " \u0909\u092a\u092f\u094b\u0917 \u0915\u0930\u0947\u0902",
+            "Use this pair to apply it",
+            "\u0932\u093e\u0917\u0942 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f"
+                    + " \u0907\u0938 \u091c\u094b\u0921\u093c\u0940 \u0915\u093e"
+                    + " \u0909\u092a\u092f\u094b\u0917 \u0915\u0930\u0947\u0902",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "\u0905\u092a\u0928\u093e Real-Debrid, AllDebrid, Premiumize \u092f\u093e TorBox"
                     + " \u0916\u093e\u0924\u093e \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932"
@@ -44274,6 +45506,10 @@ final class Translations {
                     + " \u092b\u093c\u093e\u0907\u0932\u094b\u0902 \u0915\u0947 \u0930\u0942\u092a"
                     + " \u092e\u0947\u0902 \u0905\u092a\u0932\u094b\u0921 \u0915\u093f\u090f"
                     + " \u091c\u093e\u0924\u0947 \u0939\u0948\u0902\u0964",
+            "Using this pair\u2026",
+            "\u0907\u0938 \u091c\u094b\u0921\u093c\u0940 \u0915\u093e"
+                    + " \u0909\u092a\u092f\u094b\u0917 \u0939\u094b \u0930\u0939\u093e"
+                    + " \u0939\u0948\u2026",
             "Using {0}",
             "{0} \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932 \u0939\u094b \u0930\u0939\u093e"
                     + " \u0939\u0948",
@@ -44332,6 +45568,10 @@ final class Translations {
             "\u092e\u094c\u091c\u0942\u0926\u093e \u0915\u093e\u092e \u092a\u0942\u0930\u093e"
                     + " \u0939\u094b\u0928\u0947 \u0915\u093e"
                     + " \u0907\u0902\u0924\u091c\u093c\u093e\u0930 \u0915\u0930\u0947\u0902\u0964",
+            "Wait for the pair to finish loading",
+            "\u0926\u094b\u0928\u094b\u0902 \u091f\u094d\u0930\u0948\u0915 \u0932\u094b\u0921"
+                    + " \u0939\u094b\u0928\u0947 \u0924\u0915"
+                    + " \u0907\u0902\u0924\u091c\u093c\u093e\u0930 \u0915\u0930\u0947\u0902",
             "Waiting for a community channel to be indexed",
             "\u0915\u093f\u0938\u0940 \u0915\u092e\u094d\u092f\u0941\u0928\u093f\u091f\u0940"
                     + " \u091a\u0948\u0928\u0932 \u0915\u0947"
@@ -44394,6 +45634,9 @@ final class Translations {
                     + " \u091a\u0948\u0928\u0932\u094b\u0902 \u0915\u0947"
                     + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0939\u094b\u0928\u0947"
                     + " \u0915\u093e \u0907\u0902\u0924\u091c\u093c\u093e\u0930",
+            "Waiting to analyze",
+            "\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0940"
+                    + " \u092a\u094d\u0930\u0924\u0940\u0915\u094d\u0937\u093e \u092e\u0947\u0902",
             "Waiting to save",
             "\u0938\u0939\u0947\u091c\u0928\u0947 \u0915\u093e"
                     + " \u0907\u0902\u0924\u091c\u093c\u093e\u0930 \u0939\u0948",
@@ -45239,6 +46482,8 @@ final class Translations {
             "Adjust the normalised playback level",
             "Advanced",
             "Lanjutan",
+            "Advanced curve",
+            "Kurva lanjutan",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -45289,8 +46534,14 @@ final class Translations {
             "Klien tidak resmi yang memakai Telegram API. Akun Anda, di dalam BitChord.",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "Analisis",
+            "Analysis result could not be read",
+            "Hasil analisis tidak dapat dibaca",
             "Analyzing selected audio\u2026",
             "Menganalisis audio terpilih\u2026",
+            "Analyzing\u2026",
+            "Menganalisis\u2026",
             "Android didn't allow this file to be deleted.",
             "Android tidak mengizinkan file ini dihapus.",
             "Android mixes surround files itself",
@@ -45338,12 +46589,16 @@ final class Translations {
             "Terapkan profil AutoEq untuk model headphone Anda",
             "Apply cache size",
             "Terapkan ukuran cache",
+            "Apply mode",
+            "Mode penerapan",
             "Apply now",
             "Terapkan sekarang",
             "Apply or close to resume playback.",
             "Terapkan atau tutup untuk melanjutkan pemutaran.",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "Terapkan pengaturan",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -45414,6 +46669,8 @@ final class Translations {
             "Simpan otomatis",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "Transisi otomatis belum siap.",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -45471,12 +46728,18 @@ final class Translations {
             "Keyakinan ketukan",
             "Beat grid offset",
             "Offset kisi ketukan",
+            "Beat grid scale",
+            "Skala kisi ketukan",
             "Beat grid tempo",
             "Tempo kisi ketukan",
             "Beat jump",
             "Lompatan ketukan",
             "Beats",
             "Ketukan",
+            "Before",
+            "Sebelum",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u201cSebelum\u201d tidak tersedia: Automix menambahkan efek pada transisi ini.",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -45651,6 +46914,8 @@ final class Translations {
             "Ubah opsi ini di pengaturan Unduhan BitChord, tepat di atas bagian ini.",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "Mengubah kecepatan setiap lagu hanya selama tumpang tindih. Nada tetap dipertahankan.",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -45705,6 +46970,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "Pilih",
+            "Choose a different file",
+            "Pilih berkas lain",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -45974,6 +47241,8 @@ final class Translations {
             "Penyalinan dari kanal ini dimulai setelah selesai, dari postingan terlama.",
             "Corrected names",
             "Nama yang diperbaiki",
+            "Could not change the queue",
+            "Antrean tidak dapat diubah",
             "Could not complete peer discovery. Check relays and try again.",
             "Tidak dapat menyelesaikan pencarian rekan. Periksa relai dan coba lagi.",
             "Could not complete this action. Check the API key, account access and connection, then"
@@ -46006,8 +47275,12 @@ final class Translations {
             "Tidak bisa menghubungi layanan. Periksa koneksi Anda.",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "Berkas ini tidak dapat dibaca",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "Audio lagu ini tidak dapat dibaca.",
             "Could not read your library. Try again.",
             "Tidak dapat membaca koleksi Anda. Coba lagi.",
             "Could not remove the saved service. Try again.",
@@ -46030,6 +47303,8 @@ final class Translations {
             "Tidak dapat memperbarui pencarian rekan. Periksa pengaturan koneksi dan coba lagi.",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "Pasangan ini tidak dapat digunakan.",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "Tidak dapat menyalin: {0}. Mencoba lagi dalam {1} mnt.",
             "Couldn\u2019t load AutoEq\u2019s list: {0}",
@@ -46314,6 +47589,8 @@ final class Translations {
             "Draf terpisah dari pemutaran",
             "Draft saved",
             "Draf tersimpan",
+            "Draft saving",
+            "Penyimpanan draf",
             "Drag a curve point or fine-tune each track below.",
             "Seret titik kurva atau sesuaikan tiap trek di bawah.",
             "Drag to reorder, or use Move up and Move down.",
@@ -46475,6 +47752,8 @@ final class Translations {
             "Pelankan akhir lagu terakhir",
             "Failed",
             "Gagal",
+            "Faster by 1%",
+            "1% lebih cepat",
             "Favor songs you play often",
             "Utamakan lagu yang sering Anda putar",
             "Favor well-known songs",
@@ -46507,6 +47786,8 @@ final class Translations {
             "File tanpa tag dicari di AcoustID",
             "Filter",
             "Filter",
+            "Filter depth",
+            "Kedalaman filter",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -46581,6 +47862,8 @@ final class Translations {
             "Folder",
             "Folder selected.",
             "Folder dipilih.",
+            "Follow current pair",
+            "Ikuti pasangan saat ini",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -46667,6 +47950,8 @@ final class Translations {
             "Sembunyikan lagu duplikat",
             "Hide hash",
             "Sembunyikan hash",
+            "Hide sources",
+            "Sembunyikan sumber",
             "High",
             "Tinggi",
             "High-pass",
@@ -46674,6 +47959,8 @@ final class Translations {
             "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
             "Tahan cue untuk mengganti atau menghapusnya. Pengeditan kisi tidak mengubah kecepatan"
                     + " pemutaran.",
+            "How far the selected filters sweep.",
+            "Rentang sapuan filter yang dipilih.",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -46706,6 +47993,8 @@ final class Translations {
             "Sertakan Indeks tersimpan (file lebih besar)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "Efek lagu masuk",
             "Incoming offers",
             "Tawaran masuk",
             "Incomplete sponsored-message response",
@@ -46841,6 +48130,8 @@ final class Translations {
             "Terakhir dipakai: {0}",
             "Later",
             "Nanti",
+            "Leave Listen Together to change the queue",
+            "Keluar dari Dengar bersama untuk mengubah antrean",
             "Left to BitChord",
             "Diserahkan ke BitChord",
             "Let JamesDSP do the effects",
@@ -46872,8 +48163,12 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "Muat lagu masuk",
             "Load older posts",
             "Muat postingan lama",
+            "Load outgoing",
+            "Muat lagu keluar",
             "Loading",
             "Memuat",
             "Loading channel\u2026",
@@ -46949,6 +48244,16 @@ final class Translations {
             "Beri ruang dalam campuran",
             "Manage download destinations, transfers and public sharing.",
             "Kelola tujuan unduhan, transfer, dan berbagi publik.",
+            "Manual",
+            "Manual",
+            "Manual applies when you tap Apply.",
+            "Dalam mode manual, ketuk Terapkan untuk menerapkan pengaturan.",
+            "Manual saves when you tap Save draft.",
+            "Dalam mode manual, ketuk Simpan draf untuk menyimpan.",
+            "Match A to B",
+            "Sesuaikan A dengan B",
+            "Match B to A",
+            "Sesuaikan B dengan A",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -47025,6 +48330,8 @@ final class Translations {
                     + " counts as lossless from its format, or for M4A files, from its bitrate.",
             "MP3, AAC, Opus, dan file lossy lainnya di kanal komunitas dilewati. File dianggap"
                 + " lossless berdasarkan formatnya, atau untuk file M4A, berdasarkan bitrate-nya.",
+            "Multiplier",
+            "Pengali",
             "Music chats",
             "Chat musik",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -47064,6 +48371,8 @@ final class Translations {
             "Memerlukan Android 10 atau yang lebih baru.",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "Memerlukan kedua tempo dan rasio antara 0,5\u00d7 hingga 2\u00d7",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -47123,6 +48432,8 @@ final class Translations {
             "No file offers yet. Ask the paired phone to choose audio files to share.",
             "Belum ada tawaran berkas. Minta ponsel yang dipasangkan memilih berkas audio untuk"
                     + " dibagikan.",
+            "No file picker is available",
+            "Pemilih berkas tidak tersedia",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -47179,6 +48490,8 @@ final class Translations {
                     + " aplikasi ponsel lain.",
             "No saved account. Enter your username and password.",
             "Tidak ada akun tersimpan. Masukkan nama pengguna dan kata sandi Anda.",
+            "No saved draft",
+            "Tidak ada draf tersimpan",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -47216,6 +48529,8 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "Durasi audio tidak cukup",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "Memori tidak cukup untuk menganalisis lagu ini. Ketuk Coba lagi.",
             "Not managed here",
             "Tidak dikelola di sini",
             "Not played yet",
@@ -47368,6 +48683,8 @@ final class Translations {
                     + " memerlukannya.",
             "Original key",
             "Nada asli",
+            "Original tempo",
+            "Tempo asli",
             "Original vocals",
             "Vokal asli",
             "Other",
@@ -47380,10 +48697,18 @@ final class Translations {
             "File Telegram lainnya",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "Efek lagu keluar",
             "Outro",
             "Outro",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "BPM tumpang tindih",
+            "overlap only",
+            "hanya saat tumpang tindih",
+            "Overlap tempo",
+            "Tempo tumpang tindih",
             "Pair a peer",
             "Sandingkan perangkat lain",
             "Pair a peer before sharing files.",
@@ -47529,6 +48854,8 @@ final class Translations {
             "Pilih kualitas untuk unduhan ini.",
             "Pitch",
             "Nada",
+            "Play",
+            "Putar",
             "Play a song first.",
             "Putar lagu terlebih dahulu.",
             "Play alongside other apps",
@@ -47617,6 +48944,8 @@ final class Translations {
             "Preview",
             "Preview again, or Apply to resume.",
             "Pratinjau lagi atau terapkan untuk melanjutkan.",
+            "Preview Before",
+            "Pratinjau \u201cSebelum\u201d",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -47785,6 +49114,8 @@ final class Translations {
             "Siap mencari. Tidak ada yang diunduh sampai Anda memilih berkas.",
             "Ready.",
             "Siap.",
+            "Recall draft",
+            "Muat draf",
             "Receive",
             "Terima",
             "Receive audio from another BitChord phone, or share your files.",
@@ -47900,6 +49231,8 @@ final class Translations {
             "Perbaiki",
             "Repeat preview",
             "Ulangi pratinjau",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "Mengganti lagu saat ini dan berikutnya dalam antrean. Sisanya tidak berubah.",
             "Report audio quality",
             "Laporkan kualitas audio",
             "Report sponsored message",
@@ -47932,6 +49265,8 @@ final class Translations {
             "Reset identitas koneksi",
             "Reset connection identity?",
             "Reset identitas koneksi?",
+            "Reset EQ",
+            "Atur ulang EQ",
             "Reset to {0}%",
             "Atur ulang ke {0}%",
             "Reset {0}",
@@ -47980,6 +49315,8 @@ final class Translations {
             "Coba sambungkan lagi",
             "Retry sponsored messages",
             "Coba lagi pesan bersponsor",
+            "Reverse",
+            "Balik",
             "Review",
             "Tinjau",
             "Review 1 song without tags",
@@ -48040,6 +49377,8 @@ final class Translations {
             "Simpan pilihan format",
             "Save frequently played songs from available download sources on Wi-Fi",
             "Simpan lagu yang sering diputar dari sumber unduhan yang tersedia melalui Wi-Fi",
+            "Save mode",
+            "Mode penyimpanan",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -48410,6 +49749,8 @@ final class Translations {
             "Timer tidur",
             "Sliders {0}",
             "Slider {0}",
+            "Slower by 1%",
+            "1% lebih lambat",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -48893,6 +50234,10 @@ final class Translations {
             "The playlists in your music services will be kept.",
             "The provider is still preparing files. Refresh this transfer later.",
             "Penyedia masih menyiapkan berkas. Perbarui transfer ini nanti.",
+            "The queue changed; reopen this transition",
+            "Antrean berubah; buka kembali transisi ini",
+            "The queue is being changed",
+            "Antrean sedang diubah",
             "The queue plays in its own order",
             "Antrean diputar sesuai urutannya sendiri",
             "The rootless JamesDSP needs two permissions that only Shizuku or a",
@@ -48943,6 +50288,8 @@ final class Translations {
             "Lagu memudar perlahan, lalu dijeda",
             "The song pauses straight away",
             "Lagu langsung dijeda",
+            "The track length is not available",
+            "Durasi lagu tidak tersedia",
             "The whole song is cached.",
             "Seluruh lagu ada di cache.",
             "There's no music in this chat yet.",
@@ -48981,6 +50328,8 @@ final class Translations {
             "This download choice expired. Return to the song and",
             "This download choice expired. Return to the song and try again.",
             "Pilihan unduhan ini kedaluwarsa. Kembali ke lagu dan coba lagi.",
+            "This file can\u2019t stay available",
+            "Akses berkas ini tidak dapat dipertahankan",
             "This file couldn't be deleted.",
             "File ini tidak bisa dihapus.",
             "This file did not pass the audio format check. Choose another result.",
@@ -48999,6 +50348,8 @@ final class Translations {
             "Langkah masuk ini tidak didukung di sini. Masuk dengan akun Telegram yang sudah ada.",
             "This official sponsored message could not be displayed completely.",
             "Pesan bersponsor resmi ini tidak dapat ditampilkan sepenuhnya.",
+            "This pair cannot be previewed",
+            "Pasangan ini tidak dapat dipratinjau",
             "This phone\u2019s audio chip can play: {0}.",
             "Chip audio ponsel ini bisa memutar: {0}.",
             "This playlist has no available tracks.",
@@ -49039,6 +50390,8 @@ final class Translations {
             "Versi BitChord ini tidak membuka akses ke cache lagunya.",
             "Time",
             "Time",
+            "times",
+            "kali",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -49067,6 +50420,8 @@ final class Translations {
             "Alat",
             "Track analysis",
             "Analisis trek",
+            "Track BPM",
+            "BPM lagu",
             "Track details",
             "Detail trek",
             "Track durations are not available yet. Start playback or",
@@ -49107,6 +50462,8 @@ final class Translations {
             "Aktifkan Indeks tersimpan terlebih dahulu. File yang akan disalin diambil dari sana.",
             "Turn on Saved index first. The songs come from it.",
             "Aktifkan Indeks tersimpan terlebih dahulu. Lagunya diambil dari sana.",
+            "Turn shuffle off to change the queue",
+            "Matikan acak untuk mengubah antrean",
             "Turn the singer down",
             "Turn the singer down",
             "Turns the singer down so you can sing over the song. Works",
@@ -49119,6 +50476,8 @@ final class Translations {
             "Verifikasi dua langkah",
             "Type part of the model name.",
             "Ketik sebagian nama model.",
+            "Unavailable",
+            "Tidak tersedia",
             "Under {0}, oldest first",
             "Di bawah {0}, yang terlama dihapus dulu",
             "Undo",
@@ -49165,6 +50524,8 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "Gunakan pengali antara 0,5\u00d7 hingga 2\u00d7",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -49177,6 +50538,8 @@ final class Translations {
                     + " and BitChord runs no server for this.",
             "Gunakan layanan HTTPS apa pun yang menerima permintaan JSON bergaya obrolan. Tidak ada"
                     + " layanan bawaan, dan BitChord tidak menjalankan server untuk ini.",
+            "Use automatic mode",
+            "Gunakan mode otomatis",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -49195,6 +50558,10 @@ final class Translations {
             "Gunakan dekode perangkat keras jika tersedia; efek dan crossfade dihentikan sementara",
             "Use it",
             "Gunakan",
+            "Use manual mode",
+            "Gunakan mode manual",
+            "Use measured tempo",
+            "Gunakan tempo terukur",
             "Use MicroG",
             "Gunakan MicroG",
             "Use name",
@@ -49217,6 +50584,10 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "Gunakan nama ini?",
+            "Use this pair",
+            "Gunakan pasangan ini",
+            "Use this pair to apply it",
+            "Gunakan pasangan ini untuk menerapkan pengaturan",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Gunakan akun Real-Debrid, AllDebrid, Premiumize, atau TorBox Anda sendiri",
             "Use your Spotify developer client ID and register this redirect URI:",
@@ -49234,6 +50605,8 @@ final class Translations {
                     + " original audio bytes.",
             "Menggunakan kanal utama pribadi yang Anda konfigurasikan. Unduhan diunggah sebagai"
                     + " berkas dengan data audio aslinya.",
+            "Using this pair\u2026",
+            "Menggunakan pasangan ini\u2026",
             "Using {0}",
             "Memakai {0}",
             "Variable",
@@ -49278,6 +50651,8 @@ final class Translations {
             "Volume",
             "Wait for the current action to finish.",
             "Tunggu hingga tindakan saat ini selesai.",
+            "Wait for the pair to finish loading",
+            "Tunggu hingga kedua lagu selesai dimuat",
             "Waiting for a community channel to be indexed",
             "Menunggu kanal komunitas diindeks",
             "Waiting for device to cool down",
@@ -49308,6 +50683,8 @@ final class Translations {
             "Menunggu persetujuan Anda",
             "Waiting for {0} community channels to be indexed",
             "Menunggu {0} kanal komunitas diindeks",
+            "Waiting to analyze",
+            "Menunggu analisis",
             "Waiting to save",
             "Menunggu untuk menyimpan",
             "Waiting to save selected copies",
@@ -49884,6 +51261,8 @@ final class Translations {
             "Regola il livello di riproduzione normalizzato",
             "Advanced",
             "Avanzate",
+            "Advanced curve",
+            "Curva avanzata",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -49935,8 +51314,14 @@ final class Translations {
                     + " BitChord.",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "Analisi",
+            "Analysis result could not be read",
+            "Impossibile leggere il risultato dell'analisi",
             "Analyzing selected audio\u2026",
             "Analisi dell\u2019audio selezionato\u2026",
+            "Analyzing\u2026",
+            "Analisi in corso\u2026",
             "Android didn't allow this file to be deleted.",
             "Android non ha consentito di eliminare questo file.",
             "Android mixes surround files itself",
@@ -49986,12 +51371,16 @@ final class Translations {
             "Applica un profilo AutoEq per il modello delle tue cuffie",
             "Apply cache size",
             "Applica dimensione cache",
+            "Apply mode",
+            "Modalit\u00e0 di applicazione",
             "Apply now",
             "Applica ora",
             "Apply or close to resume playback.",
             "Applica o chiudi per riprendere la riproduzione.",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "Applica impostazioni",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -50062,6 +51451,8 @@ final class Translations {
             "Salva automaticamente",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "La transizione automatica non \u00e8 ancora pronta.",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -50119,12 +51510,19 @@ final class Translations {
             "Affidabilit\u00e0 del ritmo",
             "Beat grid offset",
             "Offset della griglia",
+            "Beat grid scale",
+            "Scala della griglia ritmica",
             "Beat grid tempo",
             "Tempo della griglia",
             "Beat jump",
             "Salto di battiti",
             "Beats",
             "Battiti",
+            "Before",
+            "Prima",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u00abPrima\u00bb non \u00e8 disponibile: Automix aggiunge effetti a questa"
+                    + " transizione.",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -50300,6 +51698,9 @@ final class Translations {
             "Modificali nelle impostazioni Download di BitChord, proprio qui sopra.",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "Cambia la velocit\u00e0 di ogni brano solo durante la sovrapposizione."
+                    + " L\u2019intonazione resta invariata.",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -50355,6 +51756,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "Scegli",
+            "Choose a different file",
+            "Scegli un altro file",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -50627,6 +52030,8 @@ final class Translations {
                     + " pi\u00f9 vecchio.",
             "Corrected names",
             "Nomi corretti",
+            "Could not change the queue",
+            "Impossibile modificare la coda",
             "Could not complete peer discovery. Check relays and try again.",
             "Impossibile completare la ricerca di nodi. Controlla i ripetitori e riprova.",
             "Could not complete this action. Check the API key, account access and connection, then"
@@ -50660,8 +52065,12 @@ final class Translations {
             "Impossibile raggiungere il servizio. Controlla la connessione.",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "Impossibile leggere questo file",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "Impossibile leggere l'audio di questo brano.",
             "Could not read your library. Try again.",
             "Impossibile leggere la tua libreria. Riprova.",
             "Could not remove the saved service. Try again.",
@@ -50686,6 +52095,8 @@ final class Translations {
                     + " riprova.",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "Impossibile usare questa coppia.",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "Copia non riuscita: {0}. Nuovo tentativo tra {1} min.",
             "Couldn\u2019t load AutoEq\u2019s list: {0}",
@@ -50973,6 +52384,8 @@ final class Translations {
             "La bozza \u00e8 separata dalla riproduzione",
             "Draft saved",
             "Bozza salvata",
+            "Draft saving",
+            "Salvataggio della bozza",
             "Drag a curve point or fine-tune each track below.",
             "Trascina un punto della curva o regola ogni brano qui sotto.",
             "Drag to reorder, or use Move up and Move down.",
@@ -51135,6 +52548,8 @@ final class Translations {
             "Dissolvenza alla fine dell\u2019ultimo brano",
             "Failed",
             "Non riuscito",
+            "Faster by 1%",
+            "1% pi\u00f9 veloce",
             "Favor songs you play often",
             "Preferisci i brani che ascolti spesso",
             "Favor well-known songs",
@@ -51167,6 +52582,8 @@ final class Translations {
             "I file senza tag vengono cercati su AcoustID",
             "Filter",
             "Filtro",
+            "Filter depth",
+            "Profondit\u00e0 del filtro",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -51242,6 +52659,8 @@ final class Translations {
             "Cartella",
             "Folder selected.",
             "Cartella selezionata.",
+            "Follow current pair",
+            "Segui la coppia attuale",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -51328,6 +52747,8 @@ final class Translations {
             "Nascondi i brani duplicati",
             "Hide hash",
             "Nascondi hash",
+            "Hide sources",
+            "Nascondi le sorgenti",
             "High",
             "Alta",
             "High-pass",
@@ -51335,6 +52756,8 @@ final class Translations {
             "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
             "Tieni premuto un cue per sostituirlo o rimuoverlo. Modificare la griglia non cambia la"
                     + " velocit\u00e0.",
+            "How far the selected filters sweep.",
+            "Ampiezza della scansione dei filtri selezionati.",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -51368,6 +52791,8 @@ final class Translations {
             "Includi l\u2019indice salvato (file pi\u00f9 grande)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "Effetto in entrata",
             "Incoming offers",
             "Offerte in arrivo",
             "Incomplete sponsored-message response",
@@ -51507,6 +52932,8 @@ final class Translations {
             "Ultimo utilizzo: {0}",
             "Later",
             "Pi\u00f9 tardi",
+            "Leave Listen Together to change the queue",
+            "Esci da \u201cAscoltare insieme\u201d per modificare la coda",
             "Left to BitChord",
             "Decide BitChord",
             "Let JamesDSP do the effects",
@@ -51538,8 +52965,12 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "Carica brano in entrata",
             "Load older posts",
             "Carica post meno recenti",
+            "Load outgoing",
+            "Carica brano in uscita",
             "Loading",
             "Caricamento",
             "Loading channel\u2026",
@@ -51615,6 +53046,16 @@ final class Translations {
             "Fai spazio nel mix",
             "Manage download destinations, transfers and public sharing.",
             "Gestisci destinazioni dei download, trasferimenti e condivisione pubblica.",
+            "Manual",
+            "Manuale",
+            "Manual applies when you tap Apply.",
+            "In modalit\u00e0 manuale, tocca Applica per applicare le impostazioni.",
+            "Manual saves when you tap Save draft.",
+            "In modalit\u00e0 manuale, tocca Salva bozza per salvare.",
+            "Match A to B",
+            "Adatta A a B",
+            "Match B to A",
+            "Adatta B ad A",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -51694,6 +53135,8 @@ final class Translations {
             "MP3, AAC, Opus e gli altri file lossy dei canali della community vengono saltati. Un"
                     + " file conta come lossless in base al formato o, per i file M4A, in base al"
                     + " bitrate.",
+            "Multiplier",
+            "Moltiplicatore",
             "Music chats",
             "Chat musicali",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -51734,6 +53177,8 @@ final class Translations {
             "Richiede Android 10 o versioni successive.",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "Richiede entrambi i tempi e un rapporto tra 0,5\u00d7 e 2\u00d7",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -51793,6 +53238,8 @@ final class Translations {
             "No file offers yet. Ask the paired phone to choose audio files to share.",
             "Ancora nessuna offerta di file. Chiedi di scegliere i file audio da condividere sul"
                     + " telefono abbinato.",
+            "No file picker is available",
+            "Nessun selettore di file disponibile",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -51849,6 +53296,8 @@ final class Translations {
                     + " dell\u2019app dell\u2019altro telefono.",
             "No saved account. Enter your username and password.",
             "Nessun account salvato. Inserisci nome utente e password.",
+            "No saved draft",
+            "Nessuna bozza salvata",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -51886,6 +53335,8 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "Audio insufficiente",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "Memoria insufficiente per analizzare questo brano. Tocca Riprova.",
             "Not managed here",
             "Non gestito qui",
             "Not played yet",
@@ -52040,6 +53491,8 @@ final class Translations {
                 + " bisogno.",
             "Original key",
             "Tonalit\u00e0 originale",
+            "Original tempo",
+            "Tempo originale",
             "Original vocals",
             "Voce originale",
             "Other",
@@ -52052,10 +53505,18 @@ final class Translations {
             "Altri file di Telegram",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "Effetto in uscita",
             "Outro",
             "Finale",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "BPM della sovrapposizione",
+            "overlap only",
+            "solo nella sovrapposizione",
+            "Overlap tempo",
+            "Tempo della sovrapposizione",
             "Pair a peer",
             "Associa un peer",
             "Pair a peer before sharing files.",
@@ -52201,6 +53662,8 @@ final class Translations {
             "Scegli la qualit\u00e0 per questo download.",
             "Pitch",
             "Tonalit\u00e0",
+            "Play",
+            "Riproduci",
             "Play a song first.",
             "Riproduci prima un brano.",
             "Play alongside other apps",
@@ -52289,6 +53752,8 @@ final class Translations {
             "Preview",
             "Preview again, or Apply to resume.",
             "Ascolta di nuovo o applica per riprendere.",
+            "Preview Before",
+            "Ascolta \u00abPrima\u00bb",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -52458,6 +53923,8 @@ final class Translations {
             "Pronto per la ricerca. Non viene scaricato nulla finch\u00e9 non scegli un file.",
             "Ready.",
             "Pronto.",
+            "Recall draft",
+            "Carica bozza",
             "Receive",
             "Ricevi",
             "Receive audio from another BitChord phone, or share your files.",
@@ -52573,6 +54040,8 @@ final class Translations {
             "Ripara",
             "Repeat preview",
             "Ripeti anteprima",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "Sostituisce il brano attuale e il successivo in coda. Il resto non cambia.",
             "Report audio quality",
             "Indica la qualit\u00e0 audio",
             "Report sponsored message",
@@ -52605,6 +54074,8 @@ final class Translations {
             "Reimposta identit\u00e0 di connessione",
             "Reset connection identity?",
             "Reimpostare l\u2019identit\u00e0 di connessione?",
+            "Reset EQ",
+            "Reimposta equalizzatore",
             "Reset to {0}%",
             "Reimposta a {0}%",
             "Reset {0}",
@@ -52654,6 +54125,8 @@ final class Translations {
             "Riprova la connessione",
             "Retry sponsored messages",
             "Riprova i messaggi sponsorizzati",
+            "Reverse",
+            "Inverti",
             "Review",
             "Controlla",
             "Review 1 song without tags",
@@ -52714,6 +54187,8 @@ final class Translations {
             "Salva scelta dei formati",
             "Save frequently played songs from available download sources on Wi-Fi",
             "Salva su Wi-Fi i brani ascoltati spesso dalle fonti di download disponibili",
+            "Save mode",
+            "Modalit\u00e0 di salvataggio",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -53091,6 +54566,8 @@ final class Translations {
             "Timer di spegnimento",
             "Sliders {0}",
             "Cursori {0}",
+            "Slower by 1%",
+            "1% pi\u00f9 lento",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -53578,6 +55055,10 @@ final class Translations {
             "The provider is still preparing files. Refresh this transfer later.",
             "Il fornitore sta ancora preparando i file. Aggiorna questo trasferimento pi\u00f9"
                     + " tardi.",
+            "The queue changed; reopen this transition",
+            "La coda \u00e8 cambiata; riapri questa transizione",
+            "The queue is being changed",
+            "Modifica della coda in corso",
             "The queue plays in its own order",
             "La coda segue il suo ordine",
             "The rootless JamesDSP needs two permissions that only Shizuku or a",
@@ -53630,6 +55111,8 @@ final class Translations {
             "Il brano sfuma, poi si mette in pausa",
             "The song pauses straight away",
             "Il brano si mette subito in pausa",
+            "The track length is not available",
+            "La durata del brano non \u00e8 disponibile",
             "The whole song is cached.",
             "L\u2019intero brano \u00e8 in cache.",
             "There's no music in this chat yet.",
@@ -53669,6 +55152,8 @@ final class Translations {
             "This download choice expired. Return to the song and",
             "This download choice expired. Return to the song and try again.",
             "Questa scelta di download \u00e8 scaduta. Torna al brano e riprova.",
+            "This file can\u2019t stay available",
+            "Questo file non pu\u00f2 restare accessibile",
             "This file couldn't be deleted.",
             "Impossibile eliminare questo file.",
             "This file did not pass the audio format check. Choose another result.",
@@ -53689,6 +55174,8 @@ final class Translations {
                     + " esistente.",
             "This official sponsored message could not be displayed completely.",
             "Impossibile mostrare completamente questo messaggio sponsorizzato ufficiale.",
+            "This pair cannot be previewed",
+            "Impossibile ascoltare l\u2019anteprima di questa coppia",
             "This phone\u2019s audio chip can play: {0}.",
             "Il chip audio di questo telefono pu\u00f2 riprodurre: {0}.",
             "This playlist has no available tracks.",
@@ -53729,6 +55216,8 @@ final class Translations {
             "Questa versione di BitChord non espone la sua cache dei brani.",
             "Time",
             "Time",
+            "times",
+            "volte",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -53757,6 +55246,8 @@ final class Translations {
             "Strumenti",
             "Track analysis",
             "Analisi dei brani",
+            "Track BPM",
+            "BPM del brano",
             "Track details",
             "Dettagli della traccia",
             "Track durations are not available yet. Start playback or",
@@ -53797,6 +55288,8 @@ final class Translations {
             "Attiva prima Indice salvato. I file da copiare vengono da l\u00ec.",
             "Turn on Saved index first. The songs come from it.",
             "Attiva prima Indice salvato. I brani vengono da l\u00ec.",
+            "Turn shuffle off to change the queue",
+            "Disattiva la riproduzione casuale per modificare la coda",
             "Turn the singer down",
             "Abbassa la voce del cantante",
             "Turns the singer down so you can sing over the song. Works",
@@ -53809,6 +55302,8 @@ final class Translations {
             "Verifica in due passaggi",
             "Type part of the model name.",
             "Digita parte del nome del modello.",
+            "Unavailable",
+            "Non disponibile",
             "Under {0}, oldest first",
             "Sotto {0}, prima i pi\u00f9 vecchi",
             "Undo",
@@ -53858,6 +55353,8 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "Usa un moltiplicatore tra 0,5\u00d7 e 2\u00d7",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -53870,6 +55367,8 @@ final class Translations {
                     + " and BitChord runs no server for this.",
             "Usa qualsiasi servizio HTTPS che accetti richieste JSON in stile chat. Nessun servizio"
                     + " \u00e8 integrato e BitChord non gestisce alcun server per questo.",
+            "Use automatic mode",
+            "Usa modalit\u00e0 automatica",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -53889,6 +55388,10 @@ final class Translations {
                     + " vengono sospesi",
             "Use it",
             "Usa",
+            "Use manual mode",
+            "Usa modalit\u00e0 manuale",
+            "Use measured tempo",
+            "Usa tempo misurato",
             "Use MicroG",
             "Usa MicroG",
             "Use name",
@@ -53911,6 +55414,10 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "Usare questo nome?",
+            "Use this pair",
+            "Usa questa coppia",
+            "Use this pair to apply it",
+            "Usa questa coppia per applicare le impostazioni",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Usa il tuo account Real-Debrid, AllDebrid, Premiumize o TorBox",
             "Use your Spotify developer client ID and register this redirect URI:",
@@ -53928,6 +55435,8 @@ final class Translations {
                     + " original audio bytes.",
             "Usa il canale principale privato configurato. I download vengono caricati come file"
                     + " mantenendo i byte audio originali.",
+            "Using this pair\u2026",
+            "Utilizzo della coppia\u2026",
             "Using {0}",
             "In uso: {0}",
             "Variable",
@@ -53972,6 +55481,8 @@ final class Translations {
             "Volume",
             "Wait for the current action to finish.",
             "Attendi il completamento dell\u2019azione corrente.",
+            "Wait for the pair to finish loading",
+            "Attendi il completamento del caricamento dei due brani",
             "Waiting for a community channel to be indexed",
             "In attesa dell\u2019indicizzazione di un canale della community",
             "Waiting for device to cool down",
@@ -54004,6 +55515,8 @@ final class Translations {
             "In attesa della tua approvazione",
             "Waiting for {0} community channels to be indexed",
             "In attesa dell\u2019indicizzazione di {0} canali della community",
+            "Waiting to analyze",
+            "In attesa dell'analisi",
             "Waiting to save",
             "In attesa di salvataggio",
             "Waiting to save selected copies",
@@ -54593,6 +56106,8 @@ final class Translations {
             "Adjust the normalised playback level",
             "Advanced",
             "\u8a73\u7d30",
+            "Advanced curve",
+            "\u8a73\u7d30\u306a\u30ab\u30fc\u30d6",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -54651,8 +56166,14 @@ final class Translations {
                 + " BitChord \u306e\u4e2d\u3067\u3002",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "\u89e3\u6790",
+            "Analysis result could not be read",
+            "\u89e3\u6790\u7d50\u679c\u3092\u8aad\u307f\u53d6\u308c\u307e\u305b\u3093\u3067\u3057\u305f",
             "Analyzing selected audio\u2026",
             "\u9078\u629e\u3057\u305f\u97f3\u58f0\u3092\u89e3\u6790\u4e2d\u2026",
+            "Analyzing\u2026",
+            "\u89e3\u6790\u4e2d\u2026",
             "Android didn't allow this file to be deleted.",
             "Android"
                 + " \u304c\u3053\u306e\u30d5\u30a1\u30a4\u30eb\u306e\u524a\u9664\u3092\u8a31\u53ef\u3057\u307e\u305b\u3093\u3067\u3057\u305f\u3002",
@@ -54706,12 +56227,16 @@ final class Translations {
                     + " \u30d7\u30ed\u30d5\u30a1\u30a4\u30eb\u3092\u9069\u7528\u3057\u307e\u3059",
             "Apply cache size",
             "\u30ad\u30e3\u30c3\u30b7\u30e5\u30b5\u30a4\u30ba\u3092\u9069\u7528",
+            "Apply mode",
+            "\u9069\u7528\u30e2\u30fc\u30c9",
             "Apply now",
             "\u4eca\u3059\u3050\u9069\u7528",
             "Apply or close to resume playback.",
             "\u9069\u7528\u3059\u308b\u304b\u9589\u3058\u308b\u3068\u518d\u751f\u3092\u518d\u958b\u3057\u307e\u3059\u3002",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "\u8a2d\u5b9a\u3092\u9069\u7528",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -54782,6 +56307,8 @@ final class Translations {
             "\u81ea\u52d5\u4fdd\u5b58",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "\u81ea\u52d5\u30df\u30c3\u30af\u30b9\u306f\u307e\u3060\u6e96\u5099\u3067\u304d\u3066\u3044\u307e\u305b\u3093\u3002",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -54844,12 +56371,19 @@ final class Translations {
             "\u30d3\u30fc\u30c8\u306e\u4fe1\u983c\u5ea6",
             "Beat grid offset",
             "\u30d3\u30fc\u30c8\u30b0\u30ea\u30c3\u30c9\u306e\u30aa\u30d5\u30bb\u30c3\u30c8",
+            "Beat grid scale",
+            "\u30d3\u30fc\u30c8\u30b0\u30ea\u30c3\u30c9\u306e\u500d\u7387",
             "Beat grid tempo",
             "\u30d3\u30fc\u30c8\u30b0\u30ea\u30c3\u30c9\u306e\u30c6\u30f3\u30dd",
             "Beat jump",
             "\u30d3\u30fc\u30c8\u30b8\u30e3\u30f3\u30d7",
             "Beats",
             "\u30d3\u30fc\u30c8",
+            "Before",
+            "\u5909\u66f4\u524d",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u300c\u5909\u66f4\u524d\u300d\u306f\u5229\u7528\u3067\u304d\u307e\u305b\u3093\u3002Automix"
+                + " \u304c\u3053\u306e\u30d6\u30ec\u30f3\u30c9\u306b\u30a8\u30d5\u30a7\u30af\u30c8\u3092\u52a0\u3048\u3066\u3044\u307e\u3059\u3002",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -55042,6 +56576,8 @@ final class Translations {
                 + " \u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u8a2d\u5b9a\u3067\u5909\u66f4\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "\u91cd\u306a\u308a\u533a\u9593\u3060\u3051\u5404\u66f2\u306e\u901f\u5ea6\u3092\u5909\u66f4\u3057\u307e\u3059\u3002\u97f3\u7a0b\u306f\u7dad\u6301\u3055\u308c\u307e\u3059\u3002",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -55098,6 +56634,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "\u9078\u629e",
+            "Choose a different file",
+            "\u5225\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u9078\u629e",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -55367,6 +56905,8 @@ final class Translations {
             "\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u304c\u7d42\u308f\u308b\u3068\u30b3\u30d4\u30fc\u304c\u59cb\u307e\u308a\u307e\u3059\u3002\u53e4\u3044\u6295\u7a3f\u304b\u3089\u9806\u306b\u30b3\u30d4\u30fc\u3057\u307e\u3059\u3002",
             "Corrected names",
             "\u4fee\u6b63\u5f8c\u306e\u540d\u524d",
+            "Could not change the queue",
+            "\u30ad\u30e5\u30fc\u3092\u5909\u66f4\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f",
             "Could not complete peer discovery. Check relays and try again.",
             "\u30d4\u30a2\u306e\u691c\u51fa\u3092\u5b8c\u4e86\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u30ea\u30ec\u30fc\u3092\u78ba\u8a8d\u3057\u3066\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
             "Could not complete this action. Check the API key, account access and connection, then"
@@ -55397,8 +56937,12 @@ final class Translations {
             "\u30b5\u30fc\u30d3\u30b9\u306b\u63a5\u7d9a\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u63a5\u7d9a\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "\u3053\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u8aad\u307f\u53d6\u308c\u307e\u305b\u3093\u3067\u3057\u305f",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "\u3053\u306e\u30c8\u30e9\u30c3\u30af\u306e\u97f3\u58f0\u3092\u8aad\u307f\u53d6\u308c\u307e\u305b\u3093\u3067\u3057\u305f\u3002",
             "Could not read your library. Try again.",
             "\u30e9\u30a4\u30d6\u30e9\u30ea\u3092\u8aad\u307f\u53d6\u308c\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
             "Could not remove the saved service. Try again.",
@@ -55421,6 +56965,8 @@ final class Translations {
             "\u30d4\u30a2\u306e\u691c\u51fa\u3092\u66f4\u65b0\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u63a5\u7d9a\u8a2d\u5b9a\u3092\u78ba\u8a8d\u3057\u3066\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "\u3053\u306e\u66f2\u306e\u7d44\u307f\u5408\u308f\u305b\u3092\u4f7f\u7528\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "\u30b3\u30d4\u30fc\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\uff1a{0}\u3002{1}"
                     + " \u5206\u5f8c\u306b\u518d\u8a66\u884c\u3057\u307e\u3059\u3002",
@@ -55708,6 +57254,8 @@ final class Translations {
             "\u4e0b\u66f8\u304d\u306f\u518d\u751f\u8a2d\u5b9a\u304b\u3089\u72ec\u7acb\u3057\u3066\u3044\u307e\u3059",
             "Draft saved",
             "\u4e0b\u66f8\u304d\u3092\u4fdd\u5b58\u3057\u307e\u3057\u305f",
+            "Draft saving",
+            "\u4e0b\u66f8\u304d\u306e\u4fdd\u5b58",
             "Drag a curve point or fine-tune each track below.",
             "\u30ab\u30fc\u30d6\u306e\u70b9\u3092\u30c9\u30e9\u30c3\u30b0\u3059\u308b\u304b\u3001\u4e0b\u3067\u5404\u66f2\u3092\u8abf\u6574\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "Drag to reorder, or use Move up and Move down.",
@@ -55876,6 +57424,8 @@ final class Translations {
             "\u6700\u5f8c\u306e\u66f2\u306e\u7d42\u308f\u308a\u3092\u30d5\u30a7\u30fc\u30c9\u30a2\u30a6\u30c8",
             "Failed",
             "\u5931\u6557",
+            "Faster by 1%",
+            "1%\u901f\u304f",
             "Favor songs you play often",
             "\u3088\u304f\u8074\u304f\u66f2\u3092\u512a\u5148",
             "Favor well-known songs",
@@ -55910,6 +57460,8 @@ final class Translations {
                     + " \u3067\u691c\u7d22\u3057\u307e\u3059",
             "Filter",
             "\u30d5\u30a3\u30eb\u30bf\u30fc",
+            "Filter depth",
+            "\u30d5\u30a3\u30eb\u30bf\u30fc\u306e\u6df1\u3055",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -55981,6 +57533,8 @@ final class Translations {
             "\u30d5\u30a9\u30eb\u30c0",
             "Folder selected.",
             "\u30d5\u30a9\u30eb\u30c0\u30fc\u3092\u9078\u629e\u3057\u307e\u3057\u305f\u3002",
+            "Follow current pair",
+            "\u73fe\u5728\u306e\u30da\u30a2\u306b\u5408\u308f\u305b\u308b",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -56070,12 +57624,16 @@ final class Translations {
             "\u91cd\u8907\u3057\u305f\u66f2\u3092\u96a0\u3059",
             "Hide hash",
             "hash \u3092\u96a0\u3059",
+            "Hide sources",
+            "\u30bd\u30fc\u30b9\u3092\u96a0\u3059",
             "High",
             "\u9ad8",
             "High-pass",
             "High-pass",
             "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
             "\u30ad\u30e5\u30fc\u3092\u9577\u62bc\u3057\u3059\u308b\u3068\u7f6e\u63db\u3084\u524a\u9664\u304c\u3067\u304d\u307e\u3059\u3002\u30b0\u30ea\u30c3\u30c9\u306e\u7de8\u96c6\u3067\u518d\u751f\u901f\u5ea6\u306f\u5909\u308f\u308a\u307e\u305b\u3093\u3002",
+            "How far the selected filters sweep.",
+            "\u9078\u629e\u3057\u305f\u30d5\u30a3\u30eb\u30bf\u30fc\u306e\u30b9\u30a4\u30fc\u30d7\u7bc4\u56f2\u3002",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -56110,6 +57668,8 @@ final class Translations {
             "\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u3092\u542b\u3081\u308b\uff08\u30d5\u30a1\u30a4\u30eb\u304c\u5927\u304d\u304f\u306a\u308a\u307e\u3059\uff09",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "\u6b21\u306e\u66f2\u306e\u30a8\u30d5\u30a7\u30af\u30c8",
             "Incoming offers",
             "\u53d7\u4fe1\u3057\u305f\u5171\u6709\u30ea\u30af\u30a8\u30b9\u30c8",
             "Incomplete sponsored-message response",
@@ -56259,6 +57819,8 @@ final class Translations {
             "\u6700\u7d42\u4f7f\u7528: {0}",
             "Later",
             "\u5f8c\u3067",
+            "Leave Listen Together to change the queue",
+            "\u30ad\u30e5\u30fc\u3092\u5909\u66f4\u3059\u308b\u306b\u306f\u300c\u4e00\u7dd2\u306b\u8074\u304f\u300d\u3092\u7d42\u4e86\u3057\u3066\u304f\u3060\u3055\u3044",
             "Left to BitChord",
             "BitChord \u306b\u4efb\u305b\u308b",
             "Let JamesDSP do the effects",
@@ -56290,8 +57852,12 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "\u6b21\u306e\u66f2\u3092\u8aad\u307f\u8fbc\u3080",
             "Load older posts",
             "\u4ee5\u524d\u306e\u6295\u7a3f\u3092\u8aad\u307f\u8fbc\u3080",
+            "Load outgoing",
+            "\u524d\u306e\u66f2\u3092\u8aad\u307f\u8fbc\u3080",
             "Loading",
             "\u8aad\u307f\u8fbc\u307f\u4e2d",
             "Loading channel\u2026",
@@ -56367,6 +57933,16 @@ final class Translations {
             "\u30df\u30c3\u30af\u30b9\u306b\u4f59\u88d5\u3092\u4f5c\u308b",
             "Manage download destinations, transfers and public sharing.",
             "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u5148\u3001\u8ee2\u9001\u3001\u516c\u958b\u5171\u6709\u3092\u7ba1\u7406\u3057\u307e\u3059\u3002",
+            "Manual",
+            "\u624b\u52d5",
+            "Manual applies when you tap Apply.",
+            "\u624b\u52d5\u30e2\u30fc\u30c9\u3067\u306f\u300c\u9069\u7528\u300d\u3092\u30bf\u30c3\u30d7\u3059\u308b\u3068\u8a2d\u5b9a\u304c\u9069\u7528\u3055\u308c\u307e\u3059\u3002",
+            "Manual saves when you tap Save draft.",
+            "\u624b\u52d5\u30e2\u30fc\u30c9\u3067\u306f\u300c\u4e0b\u66f8\u304d\u3092\u4fdd\u5b58\u300d\u3092\u30bf\u30c3\u30d7\u3059\u308b\u3068\u4fdd\u5b58\u3055\u308c\u307e\u3059\u3002",
+            "Match A to B",
+            "A\u3092B\u306b\u5408\u308f\u305b\u308b",
+            "Match B to A",
+            "B\u3092A\u306b\u5408\u308f\u305b\u308b",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -56453,6 +58029,8 @@ final class Translations {
                 + " MP3\u3001AAC\u3001Opus"
                 + " \u306a\u3069\u306e\u30ed\u30c3\u30b7\u30fc\u30d5\u30a1\u30a4\u30eb\u306f\u30b9\u30ad\u30c3\u30d7\u3055\u308c\u307e\u3059\u3002\u30d5\u30a1\u30a4\u30eb\u304c\u30ed\u30b9\u30ec\u30b9\u304b\u3069\u3046\u304b\u306f\u30d5\u30a9\u30fc\u30de\u30c3\u30c8\u3067\u3001M4A"
                 + " \u30d5\u30a1\u30a4\u30eb\u306e\u5834\u5408\u306f\u30d3\u30c3\u30c8\u30ec\u30fc\u30c8\u3067\u5224\u65ad\u3055\u308c\u307e\u3059\u3002",
+            "Multiplier",
+            "\u500d\u7387",
             "Music chats",
             "\u97f3\u697d\u30c1\u30e3\u30c3\u30c8",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -56490,6 +58068,8 @@ final class Translations {
             "Android 10 \u4ee5\u964d\u304c\u5fc5\u8981\u3067\u3059\u3002",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "\u4e21\u65b9\u306e\u30c6\u30f3\u30dd\u3068\u30010.5\u500d\u304b\u30892\u500d\u306e\u7bc4\u56f2\u306e\u6bd4\u7387\u304c\u5fc5\u8981\u3067\u3059",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -56547,6 +58127,8 @@ final class Translations {
             "\u5b8c\u5168\u306a\u91cd\u8907\u306f\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f",
             "No file offers yet. Ask the paired phone to choose audio files to share.",
             "\u5171\u6709\u30ea\u30af\u30a8\u30b9\u30c8\u306f\u307e\u3060\u3042\u308a\u307e\u305b\u3093\u3002\u30da\u30a2\u8a2d\u5b9a\u3057\u305f\u76f8\u624b\u306b\u3001\u5171\u6709\u3059\u308b\u97f3\u58f0\u30d5\u30a1\u30a4\u30eb\u3092\u9078\u3093\u3067\u3082\u3089\u3063\u3066\u304f\u3060\u3055\u3044\u3002",
+            "No file picker is available",
+            "\u30d5\u30a1\u30a4\u30eb\u9078\u629e\u30a2\u30d7\u30ea\u304c\u3042\u308a\u307e\u305b\u3093",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -56602,6 +58184,8 @@ final class Translations {
             "\u6700\u8fd1\u306e\u30d4\u30a2\u306f\u3042\u308a\u307e\u305b\u3093\u3002\u300c\u30d4\u30a2\u3092\u63a2\u3059\u300d\u3092\u9078\u3076\u304b\u3001\u76f8\u624b\u306e\u30a2\u30d7\u30ea\u306e\u9375\u3067\u76f4\u63a5\u30da\u30a2\u8a2d\u5b9a\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "No saved account. Enter your username and password.",
             "\u4fdd\u5b58\u6e08\u307f\u30a2\u30ab\u30a6\u30f3\u30c8\u304c\u3042\u308a\u307e\u305b\u3093\u3002\u30e6\u30fc\u30b6\u30fc\u540d\u3068\u30d1\u30b9\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "No saved draft",
+            "\u4fdd\u5b58\u6e08\u307f\u306e\u4e0b\u66f8\u304d\u306f\u3042\u308a\u307e\u305b\u3093",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -56636,6 +58220,8 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "\u97f3\u58f0\u306e\u9577\u3055\u304c\u8db3\u308a\u307e\u305b\u3093",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "\u3053\u306e\u66f2\u3092\u89e3\u6790\u3059\u308b\u305f\u3081\u306e\u30e1\u30e2\u30ea\u304c\u4e0d\u8db3\u3057\u3066\u3044\u307e\u3059\u3002\u300c\u518d\u8a66\u884c\u300d\u3092\u30bf\u30c3\u30d7\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "Not managed here",
             "\u3053\u3053\u3067\u306f\u7ba1\u7406\u3055\u308c\u307e\u305b\u3093",
             "Not played yet",
@@ -56786,6 +58372,8 @@ final class Translations {
             "\u4efb\u610f\u3067\u3059\u3002\u4f7f\u7528\u3059\u308b\u306b\u306f\u5916\u90e8\u30c6\u30ad\u30b9\u30c8\u30b5\u30fc\u30d3\u30b9\u3092\u8a2d\u5b9a\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u300c\u751f\u6210\u300d\u3092\u30bf\u30c3\u30d7\u3059\u308b\u307e\u3067\u4f55\u3082\u9001\u4fe1\u3055\u308c\u307e\u305b\u3093\u3002\u4ed6\u306e\u30d7\u30ec\u30a4\u30ea\u30b9\u30c8\u306b\u306f\u4e0d\u8981\u3067\u3059\u3002",
             "Original key",
             "\u539f\u66f2\u306e\u30ad\u30fc",
+            "Original tempo",
+            "\u5143\u306e\u30c6\u30f3\u30dd",
             "Original vocals",
             "\u5143\u306e\u30dc\u30fc\u30ab\u30eb",
             "Other",
@@ -56798,10 +58386,18 @@ final class Translations {
             "Telegram \u306e\u305d\u306e\u4ed6\u306e\u30d5\u30a1\u30a4\u30eb",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "\u524d\u306e\u66f2\u306e\u30a8\u30d5\u30a7\u30af\u30c8",
             "Outro",
             "\u30a2\u30a6\u30c8\u30ed",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "\u91cd\u306a\u308a\u533a\u9593\u306eBPM",
+            "overlap only",
+            "\u91cd\u306a\u308a\u533a\u9593\u306e\u307f",
+            "Overlap tempo",
+            "\u91cd\u306a\u308a\u533a\u9593\u306e\u30c6\u30f3\u30dd",
             "Pair a peer",
             "\u30d4\u30a2\u3092\u30da\u30a2\u30ea\u30f3\u30b0",
             "Pair a peer before sharing files.",
@@ -56942,6 +58538,8 @@ final class Translations {
             "\u3053\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u306e\u97f3\u8cea\u3092\u9078\u3093\u3067\u304f\u3060\u3055\u3044\u3002",
             "Pitch",
             "\u30d4\u30c3\u30c1",
+            "Play",
+            "\u518d\u751f",
             "Play a song first.",
             "\u5148\u306b\u66f2\u3092\u518d\u751f\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "Play alongside other apps",
@@ -57028,6 +58626,8 @@ final class Translations {
             "Preview",
             "Preview again, or Apply to resume.",
             "\u518d\u5ea6\u30d7\u30ec\u30d3\u30e5\u30fc\u3059\u308b\u304b\u3001\u9069\u7528\u3057\u3066\u518d\u751f\u3092\u518d\u958b\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Preview Before",
+            "\u300c\u5909\u66f4\u524d\u300d\u3092\u30d7\u30ec\u30d3\u30e5\u30fc",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -57202,6 +58802,8 @@ final class Translations {
             "\u691c\u7d22\u3067\u304d\u307e\u3059\u3002\u30d5\u30a1\u30a4\u30eb\u3092\u9078\u3076\u307e\u3067\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u306f\u59cb\u307e\u308a\u307e\u305b\u3093\u3002",
             "Ready.",
             "\u6e96\u5099\u5b8c\u4e86\u3002",
+            "Recall draft",
+            "\u4e0b\u66f8\u304d\u3092\u8aad\u307f\u8fbc\u3080",
             "Receive",
             "\u53d7\u4fe1",
             "Receive audio from another BitChord phone, or share your files.",
@@ -57319,6 +58921,8 @@ final class Translations {
             "\u4fee\u5fa9",
             "Repeat preview",
             "\u30d7\u30ec\u30d3\u30e5\u30fc\u3092\u7e70\u308a\u8fd4\u3059",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "\u30ad\u30e5\u30fc\u306e\u73fe\u5728\u306e\u66f2\u3068\u6b21\u306e\u66f2\u3092\u7f6e\u304d\u63db\u3048\u307e\u3059\u3002\u305d\u308c\u4ee5\u5916\u306f\u5909\u308f\u308a\u307e\u305b\u3093\u3002",
             "Report audio quality",
             "\u97f3\u8cea\u3092\u5831\u544a",
             "Report sponsored message",
@@ -57351,6 +58955,8 @@ final class Translations {
             "\u63a5\u7d9aID\u3092\u30ea\u30bb\u30c3\u30c8",
             "Reset connection identity?",
             "\u63a5\u7d9aID\u3092\u30ea\u30bb\u30c3\u30c8\u3057\u307e\u3059\u304b\uff1f",
+            "Reset EQ",
+            "EQ\u3092\u30ea\u30bb\u30c3\u30c8",
             "Reset to {0}%",
             "{0}% \u306b\u30ea\u30bb\u30c3\u30c8",
             "Reset {0}",
@@ -57398,6 +59004,8 @@ final class Translations {
             "\u63a5\u7d9a\u3092\u518d\u8a66\u884c",
             "Retry sponsored messages",
             "\u30b9\u30dd\u30f3\u30b5\u30fc\u30e1\u30c3\u30bb\u30fc\u30b8\u3092\u518d\u8a66\u884c",
+            "Reverse",
+            "\u5165\u308c\u66ff\u3048",
             "Review",
             "\u78ba\u8a8d",
             "Review 1 song without tags",
@@ -57460,6 +59068,8 @@ final class Translations {
             "Save frequently played songs from available download sources on Wi-Fi",
             "Wi-Fi"
                 + " \u3067\u5229\u7528\u53ef\u80fd\u306a\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u5143\u304b\u3089\u3088\u304f\u8074\u304f\u66f2\u3092\u4fdd\u5b58\u3057\u307e\u3059",
+            "Save mode",
+            "\u4fdd\u5b58\u30e2\u30fc\u30c9",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -57837,6 +59447,8 @@ final class Translations {
             "\u30b9\u30ea\u30fc\u30d7\u30bf\u30a4\u30de\u30fc",
             "Sliders {0}",
             "\u30b9\u30e9\u30a4\u30c0\u30fc {0}",
+            "Slower by 1%",
+            "1%\u9045\u304f",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -58361,6 +59973,10 @@ final class Translations {
             "The playlists in your music services will be kept.",
             "The provider is still preparing files. Refresh this transfer later.",
             "\u30b5\u30fc\u30d3\u30b9\u5074\u3067\u30d5\u30a1\u30a4\u30eb\u3092\u6e96\u5099\u4e2d\u3067\u3059\u3002\u5f8c\u3067\u3053\u306e\u8ee2\u9001\u3092\u66f4\u65b0\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "The queue changed; reopen this transition",
+            "\u30ad\u30e5\u30fc\u304c\u5909\u66f4\u3055\u308c\u307e\u3057\u305f\u3002\u3053\u306e\u30c8\u30e9\u30f3\u30b8\u30b7\u30e7\u30f3\u3092\u958b\u304d\u76f4\u3057\u3066\u304f\u3060\u3055\u3044",
+            "The queue is being changed",
+            "\u30ad\u30e5\u30fc\u3092\u5909\u66f4\u4e2d\u3067\u3059",
             "The queue plays in its own order",
             "\u30ad\u30e5\u30fc\u306f\u305d\u306e\u307e\u307e\u306e\u9806\u3067\u518d\u751f\u3055\u308c\u307e\u3059",
             "The rootless JamesDSP needs two permissions that only Shizuku or a",
@@ -58417,6 +60033,8 @@ final class Translations {
             "\u66f2\u304c\u30d5\u30a7\u30fc\u30c9\u30a2\u30a6\u30c8\u3057\u3066\u304b\u3089\u4e00\u6642\u505c\u6b62\u3057\u307e\u3059",
             "The song pauses straight away",
             "\u66f2\u304c\u3059\u3050\u306b\u4e00\u6642\u505c\u6b62\u3057\u307e\u3059",
+            "The track length is not available",
+            "\u66f2\u306e\u9577\u3055\u3092\u53d6\u5f97\u3067\u304d\u307e\u305b\u3093",
             "The whole song is cached.",
             "\u66f2\u5168\u4f53\u304c\u30ad\u30e3\u30c3\u30b7\u30e5\u3055\u308c\u3066\u3044\u307e\u3059\u3002",
             "There's no music in this chat yet.",
@@ -58455,6 +60073,8 @@ final class Translations {
             "This download choice expired. Return to the song and",
             "This download choice expired. Return to the song and try again.",
             "\u3053\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u9078\u629e\u306e\u6709\u52b9\u671f\u9650\u304c\u5207\u308c\u307e\u3057\u305f\u3002\u66f2\u306b\u623b\u3063\u3066\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
+            "This file can\u2019t stay available",
+            "\u3053\u306e\u30d5\u30a1\u30a4\u30eb\u3078\u306e\u30a2\u30af\u30bb\u30b9\u3092\u7dad\u6301\u3067\u304d\u307e\u305b\u3093",
             "This file couldn't be deleted.",
             "\u3053\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u524a\u9664\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002",
             "This file did not pass the audio format check. Choose another result.",
@@ -58476,6 +60096,8 @@ final class Translations {
                 + " \u30a2\u30ab\u30a6\u30f3\u30c8\u3067\u30ed\u30b0\u30a4\u30f3\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
             "This official sponsored message could not be displayed completely.",
             "\u3053\u306e\u516c\u5f0f\u30b9\u30dd\u30f3\u30b5\u30fc\u30e1\u30c3\u30bb\u30fc\u30b8\u3092\u5b8c\u5168\u306b\u8868\u793a\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002",
+            "This pair cannot be previewed",
+            "\u3053\u306e\u7d44\u307f\u5408\u308f\u305b\u306f\u30d7\u30ec\u30d3\u30e5\u30fc\u3067\u304d\u307e\u305b\u3093",
             "This phone\u2019s audio chip can play: {0}.",
             "\u3053\u306e\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u306e\u30aa\u30fc\u30c7\u30a3\u30aa\u30c1\u30c3\u30d7\u3067\u518d\u751f\u3067\u304d\u308b\u5f62\u5f0f\uff1a{0}\u3002",
             "This playlist has no available tracks.",
@@ -58521,6 +60143,8 @@ final class Translations {
                 + " \u306f\u66f2\u30ad\u30e3\u30c3\u30b7\u30e5\u306b\u30a2\u30af\u30bb\u30b9\u3067\u304d\u307e\u305b\u3093\u3002",
             "Time",
             "Time",
+            "times",
+            "\u500d",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -58551,6 +60175,8 @@ final class Translations {
             "\u30c4\u30fc\u30eb",
             "Track analysis",
             "\u697d\u66f2\u306e\u89e3\u6790",
+            "Track BPM",
+            "\u66f2\u306eBPM",
             "Track details",
             "\u30c8\u30e9\u30c3\u30af\u306e\u8a73\u7d30",
             "Track durations are not available yet. Start playback or",
@@ -58591,6 +60217,8 @@ final class Translations {
             "\u5148\u306b\u300c\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u300d\u3092\u30aa\u30f3\u306b\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u30b3\u30d4\u30fc\u3059\u308b\u30d5\u30a1\u30a4\u30eb\u306f\u305d\u3053\u304b\u3089\u53d6\u5f97\u3055\u308c\u307e\u3059\u3002",
             "Turn on Saved index first. The songs come from it.",
             "\u5148\u306b\u300c\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u300d\u3092\u30aa\u30f3\u306b\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u66f2\u306f\u305d\u3053\u304b\u3089\u53d6\u5f97\u3055\u308c\u307e\u3059\u3002",
+            "Turn shuffle off to change the queue",
+            "\u30ad\u30e5\u30fc\u3092\u5909\u66f4\u3059\u308b\u306b\u306f\u30b7\u30e3\u30c3\u30d5\u30eb\u3092\u30aa\u30d5\u306b\u3057\u3066\u304f\u3060\u3055\u3044",
             "Turn the singer down",
             "Turn the singer down",
             "Turns the singer down so you can sing over the song. Works",
@@ -58602,6 +60230,8 @@ final class Translations {
             "2 \u6bb5\u968e\u8a8d\u8a3c",
             "Type part of the model name.",
             "\u6a5f\u7a2e\u540d\u306e\u4e00\u90e8\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "Unavailable",
+            "\u5229\u7528\u4e0d\u53ef",
             "Under {0}, oldest first",
             "{0} \u672a\u6e80\u306b\u4fdd\u3061\u3001\u53e4\u3044\u3082\u306e\u304b\u3089\u6d88\u53bb",
             "Undo",
@@ -58649,6 +60279,8 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "0.5\u500d\u304b\u30892\u500d\u306e\u7bc4\u56f2\u306e\u500d\u7387\u3092\u6307\u5b9a\u3057\u3066\u304f\u3060\u3055\u3044",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -58664,6 +60296,8 @@ final class Translations {
                 + " HTTPS"
                 + " \u30b5\u30fc\u30d3\u30b9\u3092\u4f7f\u7528\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u30b5\u30fc\u30d3\u30b9\u306f\u5185\u8535\u3055\u308c\u3066\u304a\u3089\u305a\u3001BitChord"
                 + " \u306f\u3053\u306e\u305f\u3081\u306e\u30b5\u30fc\u30d0\u30fc\u3092\u904b\u55b6\u3057\u3066\u3044\u307e\u305b\u3093\u3002",
+            "Use automatic mode",
+            "\u81ea\u52d5\u30e2\u30fc\u30c9\u3092\u4f7f\u7528",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -58682,6 +60316,10 @@ final class Translations {
             "\u5229\u7528\u53ef\u80fd\u306a\u5834\u5408\u306f\u30cf\u30fc\u30c9\u30a6\u30a7\u30a2\u30c7\u30b3\u30fc\u30c9\u3092\u4f7f\u3044\u307e\u3059\u3002\u30a8\u30d5\u30a7\u30af\u30c8\u3068\u30af\u30ed\u30b9\u30d5\u30a7\u30fc\u30c9\u306f\u4e00\u6642\u7684\u306b\u7121\u52b9\u306b\u306a\u308a\u307e\u3059",
             "Use it",
             "\u4f7f\u7528",
+            "Use manual mode",
+            "\u624b\u52d5\u30e2\u30fc\u30c9\u3092\u4f7f\u7528",
+            "Use measured tempo",
+            "\u6e2c\u5b9a\u3057\u305f\u30c6\u30f3\u30dd\u3092\u4f7f\u7528",
             "Use MicroG",
             "MicroG \u3092\u4f7f\u3046",
             "Use name",
@@ -58705,6 +60343,10 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "\u3053\u306e\u540d\u524d\u3092\u4f7f\u7528\u3057\u307e\u3059\u304b\uff1f",
+            "Use this pair",
+            "\u3053\u306e\u7d44\u307f\u5408\u308f\u305b\u3092\u4f7f\u7528",
+            "Use this pair to apply it",
+            "\u9069\u7528\u3059\u308b\u306b\u306f\u3053\u306e\u7d44\u307f\u5408\u308f\u305b\u3092\u4f7f\u7528\u3057\u3066\u304f\u3060\u3055\u3044",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "\u81ea\u5206\u306eReal-Debrid\u3001AllDebrid\u3001Premiumize\u3001TorBox\u30a2\u30ab\u30a6\u30f3\u30c8\u3092\u4f7f\u7528",
             "Use your Spotify developer client ID and register this redirect URI:",
@@ -58722,6 +60364,8 @@ final class Translations {
             "Uses your configured private main channel. Downloads are uploaded as files with their"
                     + " original audio bytes.",
             "\u8a2d\u5b9a\u6e08\u307f\u306e\u975e\u516c\u958b\u30e1\u30a4\u30f3\u30c1\u30e3\u30f3\u30cd\u30eb\u3092\u4f7f\u3044\u307e\u3059\u3002\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3057\u305f\u30d5\u30a1\u30a4\u30eb\u3092\u3001\u5143\u306e\u97f3\u58f0\u30d0\u30a4\u30c8\u3092\u4fdd\u6301\u3057\u305f\u307e\u307e\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u3057\u307e\u3059\u3002",
+            "Using this pair\u2026",
+            "\u3053\u306e\u7d44\u307f\u5408\u308f\u305b\u3092\u4f7f\u7528\u4e2d\u2026",
             "Using {0}",
             "{0} \u3092\u4f7f\u7528\u3057\u307e\u3059",
             "Variable",
@@ -58766,6 +60410,8 @@ final class Translations {
             "Volume",
             "Wait for the current action to finish.",
             "\u73fe\u5728\u306e\u64cd\u4f5c\u304c\u5b8c\u4e86\u3059\u308b\u307e\u3067\u304a\u5f85\u3061\u304f\u3060\u3055\u3044\u3002",
+            "Wait for the pair to finish loading",
+            "\u4e21\u65b9\u306e\u66f2\u306e\u8aad\u307f\u8fbc\u307f\u304c\u5b8c\u4e86\u3059\u308b\u307e\u3067\u304a\u5f85\u3061\u304f\u3060\u3055\u3044",
             "Waiting for a community channel to be indexed",
             "\u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30c1\u30e3\u30f3\u30cd\u30eb\u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u3092\u5f85\u3063\u3066\u3044\u307e\u3059",
             "Waiting for device to cool down",
@@ -58797,6 +60443,8 @@ final class Translations {
             "\u627f\u8a8d\u3092\u5f85\u3063\u3066\u3044\u307e\u3059",
             "Waiting for {0} community channels to be indexed",
             "{0} \u4ef6\u306e\u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30c1\u30e3\u30f3\u30cd\u30eb\u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u3092\u5f85\u3063\u3066\u3044\u307e\u3059",
+            "Waiting to analyze",
+            "\u89e3\u6790\u3092\u5f85\u6a5f\u4e2d",
             "Waiting to save",
             "\u4fdd\u5b58\u3092\u5f85\u6a5f\u4e2d",
             "Waiting to save selected copies",
@@ -59442,6 +61090,8 @@ final class Translations {
             "Adjust the normalised playback level",
             "Advanced",
             "\uace0\uae09",
+            "Advanced curve",
+            "\uace0\uae09 \uace1\uc120",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -59503,8 +61153,14 @@ final class Translations {
                     + " \ud074\ub77c\uc774\uc5b8\ud2b8. BitChord \uc548\uc758 \ub0b4 \uacc4\uc815.",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "\ubd84\uc11d",
+            "Analysis result could not be read",
+            "\ubd84\uc11d \uacb0\uacfc\ub97c \uc77d\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4",
             "Analyzing selected audio\u2026",
             "\uc120\ud0dd\ud55c \uc624\ub514\uc624 \ubd84\uc11d \uc911\u2026",
+            "Analyzing\u2026",
+            "\ubd84\uc11d \uc911\u2026",
             "Android didn't allow this file to be deleted.",
             "Android\uc5d0\uc11c \uc774 \ud30c\uc77c \uc0ad\uc81c\ub97c \ud5c8\uc6a9\ud558\uc9c0"
                     + " \uc54a\uc558\uc5b4\uc694.",
@@ -59562,6 +61218,8 @@ final class Translations {
                     + " \uc801\uc6a9\ud574\uc694",
             "Apply cache size",
             "\uce90\uc2dc \ud06c\uae30 \uc801\uc6a9",
+            "Apply mode",
+            "\uc801\uc6a9 \ubaa8\ub4dc",
             "Apply now",
             "\uc9c0\uae08 \uc801\uc6a9",
             "Apply or close to resume playback.",
@@ -59569,6 +61227,8 @@ final class Translations {
                     + " \uc7ac\uac1c\ub429\ub2c8\ub2e4.",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "\uc124\uc815 \uc801\uc6a9",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -59648,6 +61308,9 @@ final class Translations {
             "\uc790\ub3d9 \uc800\uc7a5",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "\uc790\ub3d9 \ubbf9\uc2a4\uac00 \uc544\uc9c1 \uc900\ube44\ub418\uc9c0"
+                    + " \uc54a\uc558\uc2b5\ub2c8\ub2e4.",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -59714,12 +61377,19 @@ final class Translations {
             "\ube44\ud2b8 \uc2e0\ub8b0\ub3c4",
             "Beat grid offset",
             "\ube44\ud2b8 \uadf8\ub9ac\ub4dc \uc624\ud504\uc14b",
+            "Beat grid scale",
+            "\ube44\ud2b8 \uadf8\ub9ac\ub4dc \ubc30\uc728",
             "Beat grid tempo",
             "\ube44\ud2b8 \uadf8\ub9ac\ub4dc \ud15c\ud3ec",
             "Beat jump",
             "\ube44\ud2b8 \uc810\ud504",
             "Beats",
             "\ube44\ud2b8",
+            "Before",
+            "\uc774\uc804",
+            "Before isn't available: Automix adds effects to this blend.",
+            "'\uc774\uc804'\uc744 \uc0ac\uc6a9\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4. Automix\uac00"
+                + " \uc774 \uc804\ud658\uc5d0 \ud6a8\uacfc\ub97c \ucd94\uac00\ud569\ub2c8\ub2e4.",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -59943,6 +61613,10 @@ final class Translations {
                     + " \ubcc0\uacbd\ud558\uc138\uc694.",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "\uacb9\uce58\ub294 \uad6c\uac04\uc5d0\uc11c\ub9cc \uac01 \uace1\uc758"
+                    + " \uc18d\ub3c4\ub97c \ubc14\uafc9\ub2c8\ub2e4. \uc74c\uc815\uc740"
+                    + " \uc720\uc9c0\ub429\ub2c8\ub2e4.",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -60006,6 +61680,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "\uc120\ud0dd",
+            "Choose a different file",
+            "\ub2e4\ub978 \ud30c\uc77c \uc120\ud0dd",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -60325,6 +62001,8 @@ final class Translations {
                 + " \uac8c\uc2dc\ubb3c\ubd80\ud130 \ubcf5\uc0ac\ub97c \uc2dc\uc791\ud574\uc694.",
             "Corrected names",
             "\uc218\uc815\ub41c \uc774\ub984",
+            "Could not change the queue",
+            "\ub300\uae30\uc5f4\uc744 \ubc14\uafc0 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4",
             "Could not complete peer discovery. Check relays and try again.",
             "\ud53c\uc5b4 \uac80\uc0c9\uc744 \uc644\ub8cc\ud558\uc9c0"
                     + " \ubabb\ud588\uc2b5\ub2c8\ub2e4. \ub9b4\ub808\uc774\ub97c"
@@ -60367,8 +62045,13 @@ final class Translations {
                     + " \uc0c1\ud0dc\ub97c \ud655\uc778\ud558\uc138\uc694.",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "\uc774 \ud30c\uc77c\uc744 \uc77d\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "\uc774 \ud2b8\ub799\uc758 \uc624\ub514\uc624\ub97c \uc77d\uc744 \uc218"
+                    + " \uc5c6\uc2b5\ub2c8\ub2e4.",
             "Could not read your library. Try again.",
             "\ub77c\uc774\ube0c\ub7ec\ub9ac\ub97c \uc77d\uc744 \uc218 \uc5c6\uc5b4\uc694."
                     + " \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uc138\uc694.",
@@ -60401,6 +62084,8 @@ final class Translations {
                     + " \ud655\uc778\ud558\uace0 \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uc138\uc694.",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "\uc774 \uace1 \uc870\ud569\uc744 \uc0ac\uc6a9\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "\ubcf5\uc0ac\ud560 \uc218 \uc5c6\uc74c: {0}. {1}\ubd84 \ud6c4 \ub2e4\uc2dc"
                     + " \uc2dc\ub3c4\ud574\uc694.",
@@ -60726,6 +62411,8 @@ final class Translations {
             "\ucd08\uc548\uc740 \uc7ac\uc0dd \uc124\uc815\uacfc \ubcc4\uac1c\uc785\ub2c8\ub2e4",
             "Draft saved",
             "\ucd08\uc548 \uc800\uc7a5\ub428",
+            "Draft saving",
+            "\ucd08\uc548 \uc800\uc7a5",
             "Drag a curve point or fine-tune each track below.",
             "\uace1\uc120\uc758 \uc810\uc744 \ub04c\uac70\ub098 \uc544\ub798\uc5d0\uc11c \uac01"
                     + " \ud2b8\ub799\uc744 \uc870\uc815\ud558\uc138\uc694.",
@@ -60928,6 +62615,8 @@ final class Translations {
                     + " \uc544\uc6c3",
             "Failed",
             "\uc2e4\ud328",
+            "Faster by 1%",
+            "1% \ube60\ub974\uac8c",
             "Favor songs you play often",
             "\uc790\uc8fc \ub4e3\ub294 \uace1 \uc6b0\uc120",
             "Favor well-known songs",
@@ -60963,6 +62652,8 @@ final class Translations {
             "\ud0dc\uadf8 \uc5c6\ub294 \ud30c\uc77c\uc744 AcoustID\uc5d0\uc11c \ucc3e\uc544\uc694",
             "Filter",
             "\ud544\ud130",
+            "Filter depth",
+            "\ud544\ud130 \uae4a\uc774",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -61064,6 +62755,8 @@ final class Translations {
             "\ud3f4\ub354",
             "Folder selected.",
             "\ud3f4\ub354\ub97c \uc120\ud0dd\ud588\uc2b5\ub2c8\ub2e4.",
+            "Follow current pair",
+            "\ud604\uc7ac \uc30d \ub530\ub77c\uac00\uae30",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -61162,6 +62855,8 @@ final class Translations {
             "\uc911\ubcf5 \ub178\ub798 \uc228\uae30\uae30",
             "Hide hash",
             "\ud574\uc2dc \uc228\uae30\uae30",
+            "Hide sources",
+            "\uc18c\uc2a4 \uc228\uae30\uae30",
             "High",
             "High",
             "High-pass",
@@ -61170,6 +62865,8 @@ final class Translations {
             "\ud050\ub97c \uae38\uac8c \ub20c\ub7ec \uad50\uccb4\ud558\uac70\ub098"
                 + " \uc0ad\uc81c\ud558\uc138\uc694. \uadf8\ub9ac\ub4dc \ud3b8\uc9d1\uc740"
                 + " \uc7ac\uc0dd \uc18d\ub3c4\ub97c \ubc14\uafb8\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
+            "How far the selected filters sweep.",
+            "\uc120\ud0dd\ud55c \ud544\ud130\uc758 \uc2a4\uc715 \ubc94\uc704\uc785\ub2c8\ub2e4.",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -61206,6 +62903,8 @@ final class Translations {
                     + " \ucee4\uc838\uc694)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "\ub4e4\uc5b4\uc624\ub294 \uace1 \ud6a8\uacfc",
             "Incoming offers",
             "\ubc1b\uc740 \uacf5\uc720 \uc81c\uc548",
             "Incomplete sponsored-message response",
@@ -61371,6 +63070,9 @@ final class Translations {
             "\ub9c8\uc9c0\ub9c9 \uc0ac\uc6a9: {0}",
             "Later",
             "\ub098\uc911\uc5d0",
+            "Leave Listen Together to change the queue",
+            "\ub300\uae30\uc5f4\uc744 \ubc14\uafb8\ub824\uba74 \u201cListen"
+                    + " together\u201d\uc5d0\uc11c \ub098\uac00\uc138\uc694",
             "Left to BitChord",
             "BitChord\uc5d0 \ub9e1\uae40",
             "Let JamesDSP do the effects",
@@ -61407,8 +63109,12 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "\ub4e4\uc5b4\uc624\ub294 \uace1 \ubd88\ub7ec\uc624\uae30",
             "Load older posts",
             "\uc774\uc804 \uac8c\uc2dc\ubb3c \ubd88\ub7ec\uc624\uae30",
+            "Load outgoing",
+            "\ub098\uac00\ub294 \uace1 \ubd88\ub7ec\uc624\uae30",
             "Loading",
             "\ubd88\ub7ec\uc624\ub294 \uc911",
             "Loading channel\u2026",
@@ -61492,6 +63198,18 @@ final class Translations {
             "Manage download destinations, transfers and public sharing.",
             "\ub2e4\uc6b4\ub85c\ub4dc \uc704\uce58, \uc804\uc1a1 \ubc0f \uacf5\uac1c"
                     + " \uacf5\uc720\ub97c \uad00\ub9ac\ud558\uc138\uc694.",
+            "Manual",
+            "\uc218\ub3d9",
+            "Manual applies when you tap Apply.",
+            "\uc218\ub3d9 \ubaa8\ub4dc\uc5d0\uc11c\ub294 \uc801\uc6a9\uc744 \ub20c\ub7ec\uc57c"
+                    + " \uc124\uc815\uc774 \uc801\uc6a9\ub429\ub2c8\ub2e4.",
+            "Manual saves when you tap Save draft.",
+            "\uc218\ub3d9 \ubaa8\ub4dc\uc5d0\uc11c\ub294 \ucd08\uc548 \uc800\uc7a5\uc744"
+                    + " \ub20c\ub7ec\uc57c \uc800\uc7a5\ub429\ub2c8\ub2e4.",
+            "Match A to B",
+            "A\ub97c B\uc5d0 \ub9de\ucd94\uae30",
+            "Match B to A",
+            "B\ub97c A\uc5d0 \ub9de\ucd94\uae30",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -61577,6 +63295,8 @@ final class Translations {
                 + " \ubb34\uc190\uc2e4 \uc5ec\ubd80\ub294 \ud30c\uc77c \ud3ec\ub9f7\uc73c\ub85c"
                 + " \ud310\ub2e8\ud558\uace0, M4A \ud30c\uc77c\uc740"
                 + " \ube44\ud2b8\ub808\uc774\ud2b8\ub85c \ud310\ub2e8\ud574\uc694.",
+            "Multiplier",
+            "\ubc30\uc728",
             "Music chats",
             "\uc74c\uc545 \ucc44\ud305",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -61629,6 +63349,9 @@ final class Translations {
             "Android 10 \uc774\uc0c1\uc774 \ud544\uc694\ud574\uc694.",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "\ub450 \uace1\uc758 \ud15c\ud3ec\uc640 0.5\ubc30\uc5d0\uc11c 2\ubc30"
+                    + " \uc0ac\uc774\uc758 \ube44\uc728\uc774 \ud544\uc694\ud569\ub2c8\ub2e4",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -61696,6 +63419,9 @@ final class Translations {
                     + " \ud398\uc5b4\ub9c1\ud55c \ud734\ub300\ud3f0\uc5d0\uc11c \uacf5\uc720\ud560"
                     + " \uc624\ub514\uc624 \ud30c\uc77c\uc744 \uc120\ud0dd\ud574 \ub2ec\ub77c\uace0"
                     + " \uc694\uccad\ud558\uc138\uc694.",
+            "No file picker is available",
+            "\uc0ac\uc6a9 \uac00\ub2a5\ud55c \ud30c\uc77c \uc120\ud0dd\uae30\uac00"
+                    + " \uc5c6\uc2b5\ub2c8\ub2e4",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -61766,6 +63492,8 @@ final class Translations {
             "\uc800\uc7a5\ub41c \uacc4\uc815\uc774 \uc5c6\uc2b5\ub2c8\ub2e4. \uc0ac\uc6a9\uc790"
                     + " \uc774\ub984\uacfc \ube44\ubc00\ubc88\ud638\ub97c"
                     + " \uc785\ub825\ud558\uc138\uc694.",
+            "No saved draft",
+            "\uc800\uc7a5\ub41c \ucd08\uc548 \uc5c6\uc74c",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -61811,6 +63539,10 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "\uc624\ub514\uc624 \uae38\uc774\uac00 \ubd80\uc871\ud569\ub2c8\ub2e4",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "\uc774 \uace1\uc744 \ubd84\uc11d\ud560 \uba54\ubaa8\ub9ac\uac00"
+                    + " \ubd80\uc871\ud569\ub2c8\ub2e4. \ub2e4\uc2dc \uc2dc\ub3c4\ub97c"
+                    + " \ub204\ub974\uc138\uc694.",
             "Not managed here",
             "\uc5ec\uae30\uc11c \uad00\ub9ac\ud558\uc9c0 \uc54a\uc74c",
             "Not played yet",
@@ -61989,6 +63721,8 @@ final class Translations {
                     + " \uc54a\uc544\uc694.",
             "Original key",
             "\uc6d0\ub798 \ud0a4",
+            "Original tempo",
+            "\uc6d0\ub798 \ud15c\ud3ec",
             "Original vocals",
             "\uc6d0\ub798 \ubcf4\uceec",
             "Other",
@@ -62002,10 +63736,18 @@ final class Translations {
             "\ub2e4\ub978 Telegram \ud30c\uc77c",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "\ub098\uac00\ub294 \uace1 \ud6a8\uacfc",
             "Outro",
             "\uc544\uc6c3\ud2b8\ub85c",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "\uacb9\uce58\ub294 \uad6c\uac04 BPM",
+            "overlap only",
+            "\uacb9\uce58\ub294 \uad6c\uac04\ub9cc",
+            "Overlap tempo",
+            "\uacb9\uce58\ub294 \uad6c\uac04 \ud15c\ud3ec",
             "Pair a peer",
             "\ud53c\uc5b4 \ud398\uc5b4\ub9c1",
             "Pair a peer before sharing files.",
@@ -62176,6 +63918,8 @@ final class Translations {
                     + " \uc120\ud0dd\ud558\uc138\uc694.",
             "Pitch",
             "\uc74c\ub192\uc774",
+            "Play",
+            "\uc7ac\uc0dd",
             "Play a song first.",
             "\uba3c\uc800 \ub178\ub798\ub97c \uc7ac\uc0dd\ud558\uc138\uc694.",
             "Play alongside other apps",
@@ -62272,6 +64016,8 @@ final class Translations {
             "Preview again, or Apply to resume.",
             "\ub2e4\uc2dc \ubbf8\ub9ac \ub4e3\uac70\ub098 \uc801\uc6a9\ud558\uc5ec"
                     + " \uc7ac\uc0dd\uc744 \uc7ac\uac1c\ud558\uc138\uc694.",
+            "Preview Before",
+            "'\uc774\uc804' \ubbf8\ub9ac \ub4e3\uae30",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -62464,6 +64210,8 @@ final class Translations {
                     + " \uc2dc\uc791\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
             "Ready.",
             "\uc900\ube44\ub418\uc5c8\uc2b5\ub2c8\ub2e4.",
+            "Recall draft",
+            "\ucd08\uc548 \ubd88\ub7ec\uc624\uae30",
             "Receive",
             "\ubc1b\uae30",
             "Receive audio from another BitChord phone, or share your files.",
@@ -62588,6 +64336,10 @@ final class Translations {
             "\ubcf5\uad6c",
             "Repeat preview",
             "\ubbf8\ub9ac \ub4e3\uae30 \ubc18\ubcf5",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "\ub300\uae30\uc5f4\uc758 \ud604\uc7ac \uace1\uacfc \ub2e4\uc74c \uace1\uc744"
+                    + " \ubc14\uafc9\ub2c8\ub2e4. \ub098\uba38\uc9c0\ub294 \uadf8\ub300\ub85c"
+                    + " \uc720\uc9c0\ub429\ub2c8\ub2e4.",
             "Report audio quality",
             "\uc624\ub514\uc624 \ud488\uc9c8 \uc54c\ub9ac\uae30",
             "Report sponsored message",
@@ -62620,6 +64372,8 @@ final class Translations {
             "\uc5f0\uacb0 \uc2dd\ubcc4\uc790 \ucd08\uae30\ud654",
             "Reset connection identity?",
             "\uc5f0\uacb0 \uc2dd\ubcc4\uc790\ub97c \ucd08\uae30\ud654\ud560\uae4c\uc694?",
+            "Reset EQ",
+            "EQ \ucd08\uae30\ud654",
             "Reset to {0}%",
             "{0}%\ub85c \ucd08\uae30\ud654",
             "Reset {0}",
@@ -62675,6 +64429,8 @@ final class Translations {
             "\uc5f0\uacb0 \ub2e4\uc2dc \uc2dc\ub3c4",
             "Retry sponsored messages",
             "\uc2a4\ud3f0\uc11c \uba54\uc2dc\uc9c0 \ub2e4\uc2dc \uc2dc\ub3c4",
+            "Reverse",
+            "\uc21c\uc11c \ubc14\uafb8\uae30",
             "Review",
             "\uac80\ud1a0",
             "Review 1 song without tags",
@@ -62741,6 +64497,8 @@ final class Translations {
             "Wi-Fi\uc5d0\uc11c \uc774\uc6a9 \uac00\ub2a5\ud55c \ub2e4\uc6b4\ub85c\ub4dc"
                     + " \uc18c\uc2a4\ub85c \uc790\uc8fc \ub4e3\ub294 \uace1\uc744"
                     + " \uc800\uc7a5\ud574\uc694",
+            "Save mode",
+            "\uc800\uc7a5 \ubaa8\ub4dc",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -63183,6 +64941,8 @@ final class Translations {
             "\uc218\uba74 \ud0c0\uc774\uba38",
             "Sliders {0}",
             "\uc2ac\ub77c\uc774\ub354 {0}",
+            "Slower by 1%",
+            "1% \ub290\ub9ac\uac8c",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -63776,6 +65536,11 @@ final class Translations {
             "\uc11c\ube44\uc2a4\uc5d0\uc11c \uc544\uc9c1 \ud30c\uc77c\uc744 \uc900\ube44"
                     + " \uc911\uc785\ub2c8\ub2e4. \ub098\uc911\uc5d0 \uc774 \uc804\uc1a1\uc744"
                     + " \uc0c8\ub85c\uace0\uce68\ud558\uc138\uc694.",
+            "The queue changed; reopen this transition",
+            "\ub300\uae30\uc5f4\uc774 \ubc14\ub00c\uc5c8\uc2b5\ub2c8\ub2e4. \uc774"
+                    + " \uc804\ud658\uc744 \ub2e4\uc2dc \uc5ec\uc138\uc694",
+            "The queue is being changed",
+            "\ub300\uae30\uc5f4\uc744 \ubcc0\uacbd\ud558\ub294 \uc911\uc785\ub2c8\ub2e4",
             "The queue plays in its own order",
             "\ub300\uae30\uc5f4\uc774 \uc6d0\ub798 \uc21c\uc11c\ub300\ub85c"
                     + " \uc7ac\uc0dd\ub3fc\uc694",
@@ -63856,6 +65621,8 @@ final class Translations {
                     + " \uc77c\uc2dc\uc815\uc9c0\ub3fc\uc694",
             "The song pauses straight away",
             "\uace1\uc774 \ubc14\ub85c \uc77c\uc2dc\uc815\uc9c0\ub429\ub2c8\ub2e4",
+            "The track length is not available",
+            "\uace1 \uae38\uc774\ub97c \ud655\uc778\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4",
             "The whole song is cached.",
             "\uace1 \uc804\uccb4\uac00 \uce90\uc2dc\ub418\uc5b4 \uc788\uc5b4\uc694.",
             "There's no music in this chat yet.",
@@ -63907,6 +65674,9 @@ final class Translations {
             "\uc774 \ub2e4\uc6b4\ub85c\ub4dc \uc120\ud0dd\uc774"
                     + " \ub9cc\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \uace1\uc73c\ub85c"
                     + " \ub3cc\uc544\uac00 \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uc138\uc694.",
+            "This file can\u2019t stay available",
+            "\uc774 \ud30c\uc77c\uc5d0 \ub300\ud55c \uc811\uadfc \uad8c\ud55c\uc744"
+                    + " \uc720\uc9c0\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4",
             "This file couldn't be deleted.",
             "\uc774 \ud30c\uc77c\uc744 \uc0ad\uc81c\ud560 \uc218 \uc5c6\uc5b4\uc694.",
             "This file did not pass the audio format check. Choose another result.",
@@ -63934,6 +65704,8 @@ final class Translations {
             "This official sponsored message could not be displayed completely.",
             "\uc774 \uacf5\uc2dd \uc2a4\ud3f0\uc11c \uba54\uc2dc\uc9c0\ub97c \uc644\uc804\ud788"
                     + " \ud45c\uc2dc\ud560 \uc218 \uc5c6\uc5b4\uc694.",
+            "This pair cannot be previewed",
+            "\uc774 \uc870\ud569\uc740 \ubbf8\ub9ac \ub4e4\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4",
             "This phone\u2019s audio chip can play: {0}.",
             "\uc774 \ud734\ub300\uc804\ud654\uc758 \uc624\ub514\uc624 \uce69\uc774"
                     + " \uc7ac\uc0dd\ud560 \uc218 \uc788\ub294 \ud3ec\ub9f7: {0}.",
@@ -63984,6 +65756,8 @@ final class Translations {
                     + " \uc5c6\uc5b4\uc694.",
             "Time",
             "Time",
+            "times",
+            "\ubc30",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -64018,6 +65792,8 @@ final class Translations {
             "\ub3c4\uad6c",
             "Track analysis",
             "\ud2b8\ub799 \ubd84\uc11d",
+            "Track BPM",
+            "\uace1 BPM",
             "Track details",
             "\ud2b8\ub799 \uc138\ubd80\uc815\ubcf4",
             "Track durations are not available yet. Start playback or",
@@ -64063,6 +65839,9 @@ final class Translations {
             "Turn on Saved index first. The songs come from it.",
             "\uba3c\uc800 \uc800\uc7a5\ub41c \uc0c9\uc778\uc744 \ucf1c\uc138\uc694."
                     + " \ub178\ub798\ub97c \uc5ec\uae30\uc11c \uac00\uc838\uc640\uc694.",
+            "Turn shuffle off to change the queue",
+            "\ub300\uae30\uc5f4\uc744 \ubc14\uafb8\ub824\uba74 \uc154\ud50c\uc744"
+                    + " \ub044\uc138\uc694",
             "Turn the singer down",
             "Turn the singer down",
             "Turns the singer down so you can sing over the song. Works",
@@ -64077,6 +65856,8 @@ final class Translations {
             "2\ub2e8\uacc4 \uc778\uc99d",
             "Type part of the model name.",
             "\ubaa8\ub378\uba85\uc758 \uc77c\ubd80\ub97c \uc785\ub825\ud558\uc138\uc694.",
+            "Unavailable",
+            "\uc0ac\uc6a9\ud560 \uc218 \uc5c6\uc74c",
             "Under {0}, oldest first",
             "{0} \ubbf8\ub9cc, \uc624\ub798\ub41c \ud56d\ubaa9\ubd80\ud130",
             "Undo",
@@ -64131,6 +65912,9 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "0.5\ubc30\uc5d0\uc11c 2\ubc30 \uc0ac\uc774\uc758 \ubc30\uc728\uc744"
+                    + " \uc0ac\uc6a9\ud558\uc138\uc694",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -64145,6 +65929,8 @@ final class Translations {
                 + " \uc11c\ube44\uc2a4\ub97c \uc0ac\uc6a9\ud558\uc138\uc694. \ub0b4\uc7a5\ub41c"
                 + " \uc11c\ube44\uc2a4\ub294 \uc5c6\uc73c\uba70 BitChord\ub294 \uc774\ub97c"
                 + " \uc704\ud55c \uc11c\ubc84\ub97c \uc6b4\uc601\ud558\uc9c0 \uc54a\uc544\uc694.",
+            "Use automatic mode",
+            "\uc790\ub3d9 \ubaa8\ub4dc \uc0ac\uc6a9",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -64167,6 +65953,10 @@ final class Translations {
                     + " \uc911\ub2e8\ub3fc\uc694",
             "Use it",
             "\uc0ac\uc6a9",
+            "Use manual mode",
+            "\uc218\ub3d9 \ubaa8\ub4dc \uc0ac\uc6a9",
+            "Use measured tempo",
+            "\uce21\uc815\ub41c \ud15c\ud3ec \uc0ac\uc6a9",
             "Use MicroG",
             "MicroG \uc0ac\uc6a9",
             "Use name",
@@ -64191,6 +65981,11 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "\uc774 \uc774\ub984\uc744 \uc0ac\uc6a9\ud560\uae4c\uc694?",
+            "Use this pair",
+            "\uc774 \uc870\ud569 \uc0ac\uc6a9",
+            "Use this pair to apply it",
+            "\uc801\uc6a9\ud558\ub824\uba74 \uc774 \uc870\ud569\uc744"
+                    + " \uc0ac\uc6a9\ud558\uc138\uc694",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "\ubcf8\uc778\uc758 Real-Debrid, AllDebrid, Premiumize \ub610\ub294 TorBox \uacc4\uc815"
                     + " \uc0ac\uc6a9",
@@ -64214,6 +66009,8 @@ final class Translations {
                     + " \ud30c\uc77c\uc740 \uc6d0\ub798 \uc624\ub514\uc624 \ubc14\uc774\ud2b8\ub97c"
                     + " \uadf8\ub300\ub85c \uc720\uc9c0\ud558\uc5ec"
                     + " \uc5c5\ub85c\ub4dc\ub429\ub2c8\ub2e4.",
+            "Using this pair\u2026",
+            "\uc774 \uc870\ud569 \uc0ac\uc6a9 \uc911\u2026",
             "Using {0}",
             "{0} \uc0ac\uc6a9 \uc911",
             "Variable",
@@ -64261,6 +66058,9 @@ final class Translations {
             "Wait for the current action to finish.",
             "\ud604\uc7ac \uc791\uc5c5\uc774 \ub05d\ub0a0 \ub54c\uae4c\uc9c0"
                     + " \uae30\ub2e4\ub9ac\uc138\uc694.",
+            "Wait for the pair to finish loading",
+            "\ub450 \uace1\uc744 \ubaa8\ub450 \ubd88\ub7ec\uc62c \ub54c\uae4c\uc9c0"
+                    + " \uae30\ub2e4\ub9ac\uc138\uc694",
             "Waiting for a community channel to be indexed",
             "\ucee4\ubba4\ub2c8\ud2f0 \ucc44\ub110 \uc0c9\uc778\uc744 \uae30\ub2e4\ub9ac\ub294"
                     + " \uc911",
@@ -64297,6 +66097,8 @@ final class Translations {
             "Waiting for {0} community channels to be indexed",
             "\ucee4\ubba4\ub2c8\ud2f0 \ucc44\ub110 {0}\uac1c\uc758 \uc0c9\uc778\uc744"
                     + " \uae30\ub2e4\ub9ac\ub294 \uc911",
+            "Waiting to analyze",
+            "\ubd84\uc11d \ub300\uae30 \uc911",
             "Waiting to save",
             "\uc800\uc7a5 \ub300\uae30 \uc911",
             "Waiting to save selected copies",
@@ -64958,6 +66760,8 @@ final class Translations {
             "Dostosuj znormalizowany poziom odtwarzania",
             "Advanced",
             "Zaawansowane",
+            "Advanced curve",
+            "Krzywa zaawansowana",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -65012,8 +66816,14 @@ final class Translations {
                     + " BitChord.",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "Analiza",
+            "Analysis result could not be read",
+            "Nie mo\u017cna odczyta\u0107 wyniku analizy",
             "Analyzing selected audio\u2026",
             "Analizowanie wybranego d\u017awi\u0119ku\u2026",
+            "Analyzing\u2026",
+            "Analizowanie\u2026",
             "Android didn't allow this file to be deleted.",
             "Android nie pozwoli\u0142 usun\u0105\u0107 tego pliku.",
             "Android mixes surround files itself",
@@ -65063,12 +66873,16 @@ final class Translations {
             "Zastosuj profil AutoEq dla swojego modelu s\u0142uchawek",
             "Apply cache size",
             "Zastosuj rozmiar pami\u0119ci podr\u0119cznej",
+            "Apply mode",
+            "Tryb stosowania",
             "Apply now",
             "Zastosuj teraz",
             "Apply or close to resume playback.",
             "Zastosuj lub zamknij, aby wznowi\u0107 odtwarzanie.",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "Zastosuj ustawienia",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -65139,6 +66953,8 @@ final class Translations {
             "Zapisuj automatycznie",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "Automatyczne przej\u015bcie nie jest jeszcze gotowe.",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -65197,12 +67013,19 @@ final class Translations {
             "Pewno\u015b\u0107 rytmu",
             "Beat grid offset",
             "Przesuni\u0119cie siatki",
+            "Beat grid scale",
+            "Skala siatki rytmicznej",
             "Beat grid tempo",
             "Tempo siatki",
             "Beat jump",
             "Skok o uderzenia",
             "Beats",
             "Uderzenia",
+            "Before",
+            "Przed",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u201ePrzed\u201d jest niedost\u0119pne: Automix dodaje efekty do tego"
+                    + " przej\u015bcia.",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -65386,6 +67209,9 @@ final class Translations {
             "Zmie\u0144 to w ustawieniach sekcji Pobrane w BitChord, tu\u017c powy\u017cej.",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "Zmienia pr\u0119dko\u015b\u0107 obu utwor\u00f3w tylko podczas nak\u0142adania."
+                    + " Wysoko\u015b\u0107 d\u017awi\u0119ku pozostaje bez zmian.",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -65442,6 +67268,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "Wybierz",
+            "Choose a different file",
+            "Wybierz inny plik",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -65723,6 +67551,8 @@ final class Translations {
                     + " posta.",
             "Corrected names",
             "Poprawione nazwy",
+            "Could not change the queue",
+            "Nie uda\u0142o si\u0119 zmieni\u0107 kolejki",
             "Could not complete peer discovery. Check relays and try again.",
             "Nie uda\u0142o si\u0119 uko\u0144czy\u0107 wykrywania w\u0119z\u0142\u00f3w."
                     + " Sprawd\u017a przeka\u017aniki i spr\u00f3buj ponownie.",
@@ -65760,8 +67590,12 @@ final class Translations {
                     + " po\u0142\u0105czenie.",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "Nie uda\u0142o si\u0119 odczyta\u0107 tego pliku",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "Nie mo\u017cna odczyta\u0107 d\u017awi\u0119ku tego utworu.",
             "Could not read your library. Try again.",
             "Nie uda\u0142o si\u0119 odczyta\u0107 Twojej biblioteki. Spr\u00f3buj ponownie.",
             "Could not remove the saved service. Try again.",
@@ -65789,6 +67623,8 @@ final class Translations {
                     + " Sprawd\u017a ustawienia po\u0142\u0105czenia i spr\u00f3buj ponownie.",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "Nie uda\u0142o si\u0119 u\u017cy\u0107 tej pary.",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "Nie uda\u0142o si\u0119 skopiowa\u0107: {0}. Kolejna pr\u00f3ba za {1} min.",
             "Couldn\u2019t load AutoEq\u2019s list: {0}",
@@ -66081,6 +67917,8 @@ final class Translations {
             "Szkic jest niezale\u017cny od odtwarzania",
             "Draft saved",
             "Szkic zapisany",
+            "Draft saving",
+            "Zapisywanie szkicu",
             "Drag a curve point or fine-tune each track below.",
             "Przeci\u0105gnij punkt krzywej lub dostosuj utwory poni\u017cej.",
             "Drag to reorder, or use Move up and Move down.",
@@ -66250,6 +68088,8 @@ final class Translations {
             "Wyciszaj koniec ostatniego utworu",
             "Failed",
             "Niepowodzenie",
+            "Faster by 1%",
+            "O 1% szybciej",
             "Favor songs you play often",
             "Preferuj utwory, kt\u00f3rych cz\u0119sto s\u0142uchasz",
             "Favor well-known songs",
@@ -66282,6 +68122,8 @@ final class Translations {
             "Pliki bez tag\u00f3w s\u0105 wyszukiwane w AcoustID",
             "Filter",
             "Filtr",
+            "Filter depth",
+            "G\u0142\u0119boko\u015b\u0107 filtra",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -66361,6 +68203,8 @@ final class Translations {
             "Folder",
             "Folder selected.",
             "Wybrano folder.",
+            "Follow current pair",
+            "Pod\u0105\u017caj za bie\u017c\u0105c\u0105 par\u0105",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -66450,6 +68294,8 @@ final class Translations {
             "Ukryj zduplikowane utwory",
             "Hide hash",
             "Ukryj hash",
+            "Hide sources",
+            "Ukryj \u017ar\u00f3d\u0142a",
             "High",
             "Wysokie",
             "High-pass",
@@ -66457,6 +68303,8 @@ final class Translations {
             "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
             "Przytrzymaj cue, aby go zast\u0105pi\u0107 lub usun\u0105\u0107. Edycja siatki nie"
                     + " zmienia pr\u0119dko\u015bci odtwarzania.",
+            "How far the selected filters sweep.",
+            "Zakres przemiatania wybranych filtr\u00f3w.",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -66490,6 +68338,8 @@ final class Translations {
             "Do\u0142\u0105cz zapisany indeks (wi\u0119kszy plik)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "Efekt utworu wchodz\u0105cego",
             "Incoming offers",
             "Przychodz\u0105ce oferty",
             "Incomplete sponsored-message response",
@@ -66631,6 +68481,8 @@ final class Translations {
             "Ostatnie u\u017cycie: {0}",
             "Later",
             "P\u00f3\u017aniej",
+            "Leave Listen Together to change the queue",
+            "Opu\u015b\u0107 \u201eS\u0142uchajcie razem\u201d, aby zmieni\u0107 kolejk\u0119",
             "Left to BitChord",
             "Decyduje BitChord",
             "Let JamesDSP do the effects",
@@ -66663,8 +68515,12 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "Wczytaj utw\u00f3r wchodz\u0105cy",
             "Load older posts",
             "Wczytaj starsze posty",
+            "Load outgoing",
+            "Wczytaj utw\u00f3r wychodz\u0105cy",
             "Loading",
             "Wczytywanie",
             "Loading channel\u2026",
@@ -66741,6 +68597,16 @@ final class Translations {
             "Zr\u00f3b miejsce w miksie",
             "Manage download destinations, transfers and public sharing.",
             "Zarz\u0105dzaj miejscami pobierania, transferami i udost\u0119pnianiem publicznym.",
+            "Manual",
+            "R\u0119cznie",
+            "Manual applies when you tap Apply.",
+            "W trybie r\u0119cznym ustawienia s\u0105 stosowane po dotkni\u0119ciu Zastosuj.",
+            "Manual saves when you tap Save draft.",
+            "W trybie r\u0119cznym szkic jest zapisywany po dotkni\u0119ciu Zapisz szkic.",
+            "Match A to B",
+            "Dopasuj A do B",
+            "Match B to A",
+            "Dopasuj B do A",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -66821,6 +68687,8 @@ final class Translations {
             "Pliki MP3, AAC, Opus i inne stratne z kana\u0142\u00f3w spo\u0142eczno\u015bci s\u0105"
                 + " pomijane. O tym, czy plik jest bezstratny, decyduje jego format, a w przypadku"
                 + " plik\u00f3w M4A \u2013 bitrate.",
+            "Multiplier",
+            "Mno\u017cnik",
             "Music chats",
             "Czaty muzyczne",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -66863,6 +68731,8 @@ final class Translations {
             "Wymaga Androida 10 lub nowszego.",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "Wymaga obu temp i proporcji od 0,5\u00d7 do 2\u00d7",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -66922,6 +68792,8 @@ final class Translations {
             "No file offers yet. Ask the paired phone to choose audio files to share.",
             "Nie ma jeszcze ofert plik\u00f3w. Popro\u015b o wybranie plik\u00f3w audio do"
                     + " udost\u0119pnienia na sparowanym telefonie.",
+            "No file picker is available",
+            "Brak aplikacji do wyboru plik\u00f3w",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -66979,6 +68851,8 @@ final class Translations {
                     + " bezpo\u015brednio za pomoc\u0105 klucza aplikacji drugiego telefonu.",
             "No saved account. Enter your username and password.",
             "Brak zapisanego konta. Wpisz nazw\u0119 u\u017cytkownika i has\u0142o.",
+            "No saved draft",
+            "Brak zapisanego szkicu",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -67017,6 +68891,9 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "Za ma\u0142o materia\u0142u audio",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "Za ma\u0142o pami\u0119ci, aby przeanalizowa\u0107 ten utw\u00f3r. Stuknij"
+                    + " Spr\u00f3buj ponownie.",
             "Not managed here",
             "Niezarz\u0105dzane tutaj",
             "Not played yet",
@@ -67176,6 +69053,8 @@ final class Translations {
                     + " potrzebuj\u0105.",
             "Original key",
             "Oryginalna tonacja",
+            "Original tempo",
+            "Oryginalne tempo",
             "Original vocals",
             "Oryginalny wokal",
             "Other",
@@ -67188,10 +69067,18 @@ final class Translations {
             "Inne pliki Telegrama",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "Efekt utworu wychodz\u0105cego",
             "Outro",
             "Zako\u0144czenie",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "BPM podczas nak\u0142adania",
+            "overlap only",
+            "tylko podczas nak\u0142adania",
+            "Overlap tempo",
+            "Tempo podczas nak\u0142adania",
             "Pair a peer",
             "Sparuj urz\u0105dzenie",
             "Pair a peer before sharing files.",
@@ -67343,6 +69230,8 @@ final class Translations {
             "Wybierz jako\u015b\u0107 tego pobierania.",
             "Pitch",
             "Wysoko\u015b\u0107 tonu",
+            "Play",
+            "Odtw\u00f3rz",
             "Play a song first.",
             "Najpierw odtw\u00f3rz utw\u00f3r.",
             "Play alongside other apps",
@@ -67431,6 +69320,8 @@ final class Translations {
             "Preview",
             "Preview again, or Apply to resume.",
             "Ods\u0142uchaj ponownie lub zastosuj, aby wznowi\u0107.",
+            "Preview Before",
+            "Ods\u0142uchaj \u201ePrzed\u201d",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -67603,6 +69494,8 @@ final class Translations {
             "Gotowe do wyszukiwania. Nic nie zostanie pobrane, dop\u00f3ki nie wybierzesz pliku.",
             "Ready.",
             "Gotowe.",
+            "Recall draft",
+            "Wczytaj szkic",
             "Receive",
             "Odbierz",
             "Receive audio from another BitChord phone, or share your files.",
@@ -67719,6 +69612,9 @@ final class Translations {
             "Napraw",
             "Repeat preview",
             "Powtarzaj podgl\u0105d",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "Zast\u0119puje bie\u017c\u0105cy i nast\u0119pny utw\u00f3r w kolejce. Reszta"
+                    + " pozostaje bez zmian.",
             "Report audio quality",
             "Przekazuj jako\u015b\u0107 d\u017awi\u0119ku",
             "Report sponsored message",
@@ -67751,6 +69647,8 @@ final class Translations {
             "Zresetuj to\u017csamo\u015b\u0107 po\u0142\u0105czenia",
             "Reset connection identity?",
             "Zresetowa\u0107 to\u017csamo\u015b\u0107 po\u0142\u0105czenia?",
+            "Reset EQ",
+            "Resetuj korektor",
             "Reset to {0}%",
             "Przywr\u00f3\u0107 {0}%",
             "Reset {0}",
@@ -67800,6 +69698,8 @@ final class Translations {
             "Pon\u00f3w po\u0142\u0105czenie",
             "Retry sponsored messages",
             "Wczytaj ponownie wiadomo\u015bci sponsorowane",
+            "Reverse",
+            "Odwr\u00f3\u0107",
             "Review",
             "Sprawd\u017a",
             "Review 1 song without tags",
@@ -67863,6 +69763,8 @@ final class Translations {
             "Save frequently played songs from available download sources on Wi-Fi",
             "Zapisuj cz\u0119sto odtwarzane utwory z dost\u0119pnych \u017ar\u00f3de\u0142"
                     + " pobierania przez Wi-Fi",
+            "Save mode",
+            "Tryb zapisywania",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -68250,6 +70152,8 @@ final class Translations {
             "Wy\u0142\u0105cznik czasowy",
             "Sliders {0}",
             "Suwaki {0}",
+            "Slower by 1%",
+            "O 1% wolniej",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -68750,6 +70654,10 @@ final class Translations {
             "The playlists in your music services will be kept.",
             "The provider is still preparing files. Refresh this transfer later.",
             "Dostawca nadal przygotowuje pliki. Od\u015bwie\u017c ten transfer p\u00f3\u017aniej.",
+            "The queue changed; reopen this transition",
+            "Kolejka si\u0119 zmieni\u0142a; otw\u00f3rz to przej\u015bcie ponownie",
+            "The queue is being changed",
+            "Trwa zmienianie kolejki",
             "The queue plays in its own order",
             "Kolejka gra we w\u0142asnej kolejno\u015bci",
             "The rootless JamesDSP needs two permissions that only Shizuku or a",
@@ -68806,6 +70714,8 @@ final class Translations {
             "Utw\u00f3r cichnie, a potem si\u0119 zatrzymuje",
             "The song pauses straight away",
             "Utw\u00f3r zatrzymuje si\u0119 od razu",
+            "The track length is not available",
+            "D\u0142ugo\u015b\u0107 utworu jest niedost\u0119pna",
             "The whole song is cached.",
             "Ca\u0142y utw\u00f3r jest w pami\u0119ci podr\u0119cznej.",
             "There's no music in this chat yet.",
@@ -68849,6 +70759,8 @@ final class Translations {
             "This download choice expired. Return to the song and try again.",
             "Ten wyb\u00f3r pobierania wygas\u0142. Wr\u00f3\u0107 do utworu i spr\u00f3buj"
                     + " ponownie.",
+            "This file can\u2019t stay available",
+            "Ten plik nie mo\u017ce pozosta\u0107 dost\u0119pny",
             "This file couldn't be deleted.",
             "Nie uda\u0142o si\u0119 usun\u0105\u0107 tego pliku.",
             "This file did not pass the audio format check. Choose another result.",
@@ -68869,6 +70781,8 @@ final class Translations {
             "This official sponsored message could not be displayed completely.",
             "Nie uda\u0142o si\u0119 w ca\u0142o\u015bci wy\u015bwietli\u0107 tej oficjalnej"
                     + " wiadomo\u015bci sponsorowanej.",
+            "This pair cannot be previewed",
+            "Nie mo\u017cna ods\u0142ucha\u0107 podgl\u0105du tej pary",
             "This phone\u2019s audio chip can play: {0}.",
             "Uk\u0142ad audio tego telefonu potrafi odtwarza\u0107: {0}.",
             "This playlist has no available tracks.",
@@ -68910,6 +70824,8 @@ final class Translations {
                     + " utwor\u00f3w.",
             "Time",
             "Time",
+            "times",
+            "razy",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -68939,6 +70855,8 @@ final class Translations {
             "Narz\u0119dzia",
             "Track analysis",
             "Analiza utwor\u00f3w",
+            "Track BPM",
+            "BPM utworu",
             "Track details",
             "Szczeg\u00f3\u0142y utworu",
             "Track durations are not available yet. Start playback or",
@@ -68981,6 +70899,8 @@ final class Translations {
                     + " skopiowania.",
             "Turn on Saved index first. The songs come from it.",
             "Najpierw w\u0142\u0105cz Zapisany indeks. To z niego pochodz\u0105 utwory.",
+            "Turn shuffle off to change the queue",
+            "Wy\u0142\u0105cz odtwarzanie losowe, aby zmieni\u0107 kolejk\u0119",
             "Turn the singer down",
             "\u015acisz wokal",
             "Turns the singer down so you can sing over the song. Works",
@@ -68993,6 +70913,8 @@ final class Translations {
             "Weryfikacja dwuetapowa",
             "Type part of the model name.",
             "Wpisz fragment nazwy modelu.",
+            "Unavailable",
+            "Niedost\u0119pne",
             "Under {0}, oldest first",
             "Poni\u017cej {0}, najpierw najstarsze",
             "Undo",
@@ -69042,6 +70964,8 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "U\u017cyj mno\u017cnika od 0,5\u00d7 do 2\u00d7",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -69055,6 +70979,8 @@ final class Translations {
             "U\u017cyj dowolnej us\u0142ugi HTTPS, kt\u00f3ra przyjmuje \u017c\u0105dania JSON w"
                     + " stylu czatu. Nie ma wbudowanej us\u0142ugi, a BitChord nie prowadzi do tego"
                     + " serwera.",
+            "Use automatic mode",
+            "U\u017cyj trybu automatycznego",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -69074,6 +71000,10 @@ final class Translations {
                     + " zostaj\u0105 wstrzymane",
             "Use it",
             "U\u017cyj",
+            "Use manual mode",
+            "U\u017cyj trybu r\u0119cznego",
+            "Use measured tempo",
+            "U\u017cyj zmierzonego tempa",
             "Use MicroG",
             "U\u017cyj MicroG",
             "Use name",
@@ -69096,6 +71026,10 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "U\u017cy\u0107 tej nazwy?",
+            "Use this pair",
+            "U\u017cyj tej pary",
+            "Use this pair to apply it",
+            "U\u017cyj tej pary, aby zastosowa\u0107 ustawienia",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "U\u017cyj w\u0142asnego konta Real-Debrid, AllDebrid, Premiumize lub TorBox",
             "Use your Spotify developer client ID and register this redirect URI:",
@@ -69113,6 +71047,8 @@ final class Translations {
                     + " original audio bytes.",
             "Korzysta ze skonfigurowanego prywatnego kana\u0142u g\u0142\u00f3wnego. Pobrane pliki"
                     + " s\u0105 wysy\u0142ane z oryginalnymi danymi audio.",
+            "Using this pair\u2026",
+            "U\u017cywanie tej pary\u2026",
             "Using {0}",
             "U\u017cywany: {0}",
             "Variable",
@@ -69159,6 +71095,8 @@ final class Translations {
             "Volume",
             "Wait for the current action to finish.",
             "Poczekaj na zako\u0144czenie bie\u017c\u0105cej czynno\u015bci.",
+            "Wait for the pair to finish loading",
+            "Poczekaj, a\u017c oba utwory zostan\u0105 wczytane",
             "Waiting for a community channel to be indexed",
             "Oczekiwanie na zindeksowanie kana\u0142u spo\u0142eczno\u015bci",
             "Waiting for device to cool down",
@@ -69191,6 +71129,8 @@ final class Translations {
             "Oczekiwanie na twoj\u0105 zgod\u0119",
             "Waiting for {0} community channels to be indexed",
             "Oczekiwanie na zindeksowanie kana\u0142\u00f3w spo\u0142eczno\u015bci: {0}",
+            "Waiting to analyze",
+            "Czeka na analiz\u0119",
             "Waiting to save",
             "Oczekiwanie na zapis",
             "Waiting to save selected copies",
@@ -69788,6 +71728,8 @@ final class Translations {
             "Adjust the normalised playback level",
             "Advanced",
             "Avan\u00e7ado",
+            "Advanced curve",
+            "Curva avan\u00e7ada",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -69841,8 +71783,14 @@ final class Translations {
             "Um cliente n\u00e3o oficial que usa a API do Telegram. Sua conta, dentro do BitChord.",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "An\u00e1lise",
+            "Analysis result could not be read",
+            "N\u00e3o foi poss\u00edvel ler o resultado da an\u00e1lise",
             "Analyzing selected audio\u2026",
             "Analisando o \u00e1udio selecionado\u2026",
+            "Analyzing\u2026",
+            "Analisando\u2026",
             "Android didn't allow this file to be deleted.",
             "O Android n\u00e3o permitiu excluir este arquivo.",
             "Android mixes surround files itself",
@@ -69892,12 +71840,16 @@ final class Translations {
             "Aplicar um perfil do AutoEq para o modelo dos seus fones",
             "Apply cache size",
             "Aplicar tamanho do cache",
+            "Apply mode",
+            "Modo de aplica\u00e7\u00e3o",
             "Apply now",
             "Aplicar agora",
             "Apply or close to resume playback.",
             "Aplique ou feche para retomar a reprodu\u00e7\u00e3o.",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "Aplicar ajustes",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -69969,6 +71921,8 @@ final class Translations {
             "Salvar automaticamente",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "A mistura autom\u00e1tica ainda n\u00e3o est\u00e1 pronta.",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -70026,12 +71980,19 @@ final class Translations {
             "Confian\u00e7a das batidas",
             "Beat grid offset",
             "Deslocamento da grelha",
+            "Beat grid scale",
+            "Escala da grade de batidas",
             "Beat grid tempo",
             "Tempo da grelha",
             "Beat jump",
             "Salto de batidas",
             "Beats",
             "Batidas",
+            "Before",
+            "Antes",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u201cAntes\u201d n\u00e3o est\u00e1 dispon\u00edvel: o Automix adiciona efeitos a"
+                    + " esta mistura.",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -70212,6 +72173,9 @@ final class Translations {
             "Altere isso nas configura\u00e7\u00f5es de Downloads do BitChord, logo acima.",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "Altera a velocidade de cada faixa apenas durante a sobreposi\u00e7\u00e3o. O tom"
+                    + " \u00e9 mantido.",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -70268,6 +72232,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "Escolher",
+            "Choose a different file",
+            "Escolher outro arquivo",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -70541,6 +72507,8 @@ final class Translations {
             "Quando terminar, a c\u00f3pia dele come\u00e7a, a partir da postagem mais antiga.",
             "Corrected names",
             "Nomes corrigidos",
+            "Could not change the queue",
+            "N\u00e3o foi poss\u00edvel alterar a fila",
             "Could not complete peer discovery. Check relays and try again.",
             "N\u00e3o foi poss\u00edvel concluir a descoberta de pares. Verifique os rel\u00e9s e"
                     + " tente novamente.",
@@ -70576,8 +72544,12 @@ final class Translations {
             "N\u00e3o foi poss\u00edvel acessar o servi\u00e7o. Verifique sua conex\u00e3o.",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "N\u00e3o foi poss\u00edvel ler este arquivo",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "N\u00e3o foi poss\u00edvel ler o \u00e1udio desta faixa.",
             "Could not read your library. Try again.",
             "N\u00e3o foi poss\u00edvel ler sua biblioteca. Tente de novo.",
             "Could not remove the saved service. Try again.",
@@ -70604,6 +72576,8 @@ final class Translations {
                     + " configura\u00e7\u00f5es de conex\u00e3o e tente novamente.",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "N\u00e3o foi poss\u00edvel usar este par.",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "N\u00e3o foi poss\u00edvel copiar: {0}. Tentando de novo em {1} min.",
             "Couldn\u2019t load AutoEq\u2019s list: {0}",
@@ -70896,6 +72870,8 @@ final class Translations {
             "O rascunho \u00e9 separado da reprodu\u00e7\u00e3o",
             "Draft saved",
             "Rascunho salvo",
+            "Draft saving",
+            "Salvamento do rascunho",
             "Drag a curve point or fine-tune each track below.",
             "Arraste um ponto da curva ou ajuste cada faixa abaixo.",
             "Drag to reorder, or use Move up and Move down.",
@@ -71059,6 +73035,8 @@ final class Translations {
             "Fazer fade no fim da \u00faltima m\u00fasica",
             "Failed",
             "Falhou",
+            "Faster by 1%",
+            "1% mais r\u00e1pido",
             "Favor songs you play often",
             "Priorizar m\u00fasicas que voc\u00ea ouve com frequ\u00eancia",
             "Favor well-known songs",
@@ -71092,6 +73070,8 @@ final class Translations {
             "Arquivos sem tags s\u00e3o procurados no AcoustID",
             "Filter",
             "Filtro",
+            "Filter depth",
+            "Profundidade do filtro",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -71170,6 +73150,8 @@ final class Translations {
             "Pasta",
             "Folder selected.",
             "Pasta selecionada.",
+            "Follow current pair",
+            "Seguir o par atual",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -71258,6 +73240,8 @@ final class Translations {
             "Ocultar m\u00fasicas duplicadas",
             "Hide hash",
             "Ocultar hash",
+            "Hide sources",
+            "Ocultar fontes",
             "High",
             "Alta",
             "High-pass",
@@ -71265,6 +73249,8 @@ final class Translations {
             "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
             "Mantenha um cue premido para o substituir ou remover. Editar a grelha n\u00e3o altera"
                     + " a velocidade.",
+            "How far the selected filters sweep.",
+            "Amplitude da varredura dos filtros selecionados.",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -71298,6 +73284,8 @@ final class Translations {
             "Incluir o \u00cdndice salvo (arquivo maior)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "Efeito de entrada",
             "Incoming offers",
             "Ofertas recebidas",
             "Incomplete sponsored-message response",
@@ -71438,6 +73426,8 @@ final class Translations {
             "\u00daltimo uso: {0}",
             "Later",
             "Mais tarde",
+            "Leave Listen Together to change the queue",
+            "Saia do Ouvir junto para alterar a fila",
             "Left to BitChord",
             "A crit\u00e9rio do BitChord",
             "Let JamesDSP do the effects",
@@ -71469,8 +73459,12 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "Carregar faixa de entrada",
             "Load older posts",
             "Carregar postagens anteriores",
+            "Load outgoing",
+            "Carregar faixa de sa\u00edda",
             "Loading",
             "Carregando",
             "Loading channel\u2026",
@@ -71547,6 +73541,16 @@ final class Translations {
             "Abra espa\u00e7o na mixagem",
             "Manage download destinations, transfers and public sharing.",
             "Gerencie destinos de download, transfer\u00eancias e compartilhamento p\u00fablico.",
+            "Manual",
+            "Manual",
+            "Manual applies when you tap Apply.",
+            "No modo manual, toque em Aplicar para aplicar os ajustes.",
+            "Manual saves when you tap Save draft.",
+            "No modo manual, toque em Salvar rascunho para salvar.",
+            "Match A to B",
+            "Ajustar A a B",
+            "Match B to A",
+            "Ajustar B a A",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -71625,6 +73629,8 @@ final class Translations {
             "MP3, AAC, Opus e outros arquivos com perdas dos canais da comunidade s\u00e3o"
                     + " ignorados. Um arquivo conta como sem perdas pelo formato ou, no caso de"
                     + " arquivos M4A, pela taxa de bits.",
+            "Multiplier",
+            "Multiplicador",
             "Music chats",
             "Chats de m\u00fasica",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -71665,6 +73671,8 @@ final class Translations {
             "Precisa do Android 10 ou mais recente.",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "Requer os dois tempos e uma propor\u00e7\u00e3o entre 0,5\u00d7 e 2\u00d7",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -71724,6 +73732,8 @@ final class Translations {
             "No file offers yet. Ask the paired phone to choose audio files to share.",
             "Ainda n\u00e3o h\u00e1 ofertas de arquivos. Pe\u00e7a para escolherem arquivos de"
                     + " \u00e1udio para compartilhar no telefone pareado.",
+            "No file picker is available",
+            "Nenhum seletor de arquivos dispon\u00edvel",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -71781,6 +73791,8 @@ final class Translations {
                     + " do app do outro telefone.",
             "No saved account. Enter your username and password.",
             "Nenhuma conta salva. Insira seu nome de usu\u00e1rio e senha.",
+            "No saved draft",
+            "Nenhum rascunho salvo",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -71818,6 +73830,8 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "\u00c1udio insuficiente",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "Mem\u00f3ria insuficiente para analisar esta faixa. Toque em Tentar novamente.",
             "Not managed here",
             "N\u00e3o gerenciado aqui",
             "Not played yet",
@@ -71973,6 +73987,8 @@ final class Translations {
                     + " precisam dele.",
             "Original key",
             "Tom original",
+            "Original tempo",
+            "Tempo original",
             "Original vocals",
             "Vocais originais",
             "Other",
@@ -71985,10 +74001,18 @@ final class Translations {
             "Outros arquivos do Telegram",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "Efeito de sa\u00edda",
             "Outro",
             "Final",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "BPM da sobreposi\u00e7\u00e3o",
+            "overlap only",
+            "apenas na sobreposi\u00e7\u00e3o",
+            "Overlap tempo",
+            "Tempo da sobreposi\u00e7\u00e3o",
             "Pair a peer",
             "Parear um par",
             "Pair a peer before sharing files.",
@@ -72136,6 +74160,8 @@ final class Translations {
             "Escolha a qualidade deste download.",
             "Pitch",
             "Tom",
+            "Play",
+            "Reproduzir",
             "Play a song first.",
             "Toque uma m\u00fasica primeiro.",
             "Play alongside other apps",
@@ -72225,6 +74251,8 @@ final class Translations {
             "Preview",
             "Preview again, or Apply to resume.",
             "Ou\u00e7a novamente ou aplique para continuar.",
+            "Preview Before",
+            "Ouvir \u201cAntes\u201d",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -72395,6 +74423,8 @@ final class Translations {
             "Pronto para pesquisar. Nada ser\u00e1 baixado at\u00e9 voc\u00ea escolher um arquivo.",
             "Ready.",
             "Pronto.",
+            "Recall draft",
+            "Carregar rascunho",
             "Receive",
             "Receber",
             "Receive audio from another BitChord phone, or share your files.",
@@ -72510,6 +74540,8 @@ final class Translations {
             "Reparar",
             "Repeat preview",
             "Repetir pr\u00e9via",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "Substitui a m\u00fasica atual e a pr\u00f3xima na fila. O restante n\u00e3o muda.",
             "Report audio quality",
             "Informar qualidade do \u00e1udio",
             "Report sponsored message",
@@ -72542,6 +74574,8 @@ final class Translations {
             "Redefinir identidade de conex\u00e3o",
             "Reset connection identity?",
             "Redefinir a identidade de conex\u00e3o?",
+            "Reset EQ",
+            "Redefinir equalizador",
             "Reset to {0}%",
             "Redefinir para {0}%",
             "Reset {0}",
@@ -72592,6 +74626,8 @@ final class Translations {
             "Tentar conex\u00e3o de novo",
             "Retry sponsored messages",
             "Tentar mensagens patrocinadas de novo",
+            "Reverse",
+            "Inverter",
             "Review",
             "Revisar",
             "Review 1 song without tags",
@@ -72652,6 +74688,8 @@ final class Translations {
             "Salvar sele\u00e7\u00e3o de formatos",
             "Save frequently played songs from available download sources on Wi-Fi",
             "Salvar no Wi-Fi as m\u00fasicas mais ouvidas das fontes de download dispon\u00edveis",
+            "Save mode",
+            "Modo de salvamento",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -73031,6 +75069,8 @@ final class Translations {
             "Temporizador de sono",
             "Sliders {0}",
             "Controles {0}",
+            "Slower by 1%",
+            "1% mais lento",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -73524,6 +75564,10 @@ final class Translations {
             "The provider is still preparing files. Refresh this transfer later.",
             "O provedor ainda est\u00e1 preparando os arquivos. Atualize esta transfer\u00eancia"
                     + " mais tarde.",
+            "The queue changed; reopen this transition",
+            "A fila mudou; abra esta transi\u00e7\u00e3o novamente",
+            "The queue is being changed",
+            "Alterando a fila",
             "The queue plays in its own order",
             "A fila toca na pr\u00f3pria ordem",
             "The rootless JamesDSP needs two permissions that only Shizuku or a",
@@ -73582,6 +75626,8 @@ final class Translations {
             "A m\u00fasica diminui aos poucos e depois pausa",
             "The song pauses straight away",
             "A m\u00fasica pausa na hora",
+            "The track length is not available",
+            "A dura\u00e7\u00e3o da faixa n\u00e3o est\u00e1 dispon\u00edvel",
             "The whole song is cached.",
             "A m\u00fasica inteira est\u00e1 em cache.",
             "There's no music in this chat yet.",
@@ -73622,6 +75668,8 @@ final class Translations {
             "This download choice expired. Return to the song and",
             "This download choice expired. Return to the song and try again.",
             "Esta escolha de download expirou. Volte \u00e0 m\u00fasica e tente novamente.",
+            "This file can\u2019t stay available",
+            "Este arquivo n\u00e3o pode continuar acess\u00edvel",
             "This file couldn't be deleted.",
             "N\u00e3o foi poss\u00edvel excluir este arquivo.",
             "This file did not pass the audio format check. Choose another result.",
@@ -73642,6 +75690,8 @@ final class Translations {
                     + " Telegram existente.",
             "This official sponsored message could not be displayed completely.",
             "N\u00e3o foi poss\u00edvel exibir esta mensagem patrocinada oficial por completo.",
+            "This pair cannot be previewed",
+            "N\u00e3o \u00e9 poss\u00edvel ouvir a pr\u00e9via deste par",
             "This phone\u2019s audio chip can play: {0}.",
             "O chip de \u00e1udio deste celular consegue tocar: {0}.",
             "This playlist has no available tracks.",
@@ -73682,6 +75732,8 @@ final class Translations {
             "Esta vers\u00e3o do BitChord n\u00e3o d\u00e1 acesso ao cache de m\u00fasicas.",
             "Time",
             "Time",
+            "times",
+            "vezes",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -73710,6 +75762,8 @@ final class Translations {
             "Ferramentas",
             "Track analysis",
             "An\u00e1lise das faixas",
+            "Track BPM",
+            "BPM da faixa",
             "Track details",
             "Detalhes da faixa",
             "Track durations are not available yet. Start playback or",
@@ -73751,6 +75805,8 @@ final class Translations {
             "Ative o \u00cdndice salvo primeiro. Os arquivos a copiar v\u00eam dele.",
             "Turn on Saved index first. The songs come from it.",
             "Ative o \u00cdndice salvo primeiro. As m\u00fasicas v\u00eam dele.",
+            "Turn shuffle off to change the queue",
+            "Desative a reprodu\u00e7\u00e3o aleat\u00f3ria para alterar a fila",
             "Turn the singer down",
             "Turn the singer down",
             "Turns the singer down so you can sing over the song. Works",
@@ -73763,6 +75819,8 @@ final class Translations {
             "Verifica\u00e7\u00e3o em duas etapas",
             "Type part of the model name.",
             "Digite parte do nome do modelo.",
+            "Unavailable",
+            "Indispon\u00edvel",
             "Under {0}, oldest first",
             "Abaixo de {0}, mais antigos primeiro",
             "Undo",
@@ -73812,6 +75870,8 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "Use um multiplicador entre 0,5\u00d7 e 2\u00d7",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -73825,6 +75885,8 @@ final class Translations {
             "Use qualquer servi\u00e7o HTTPS que aceite solicita\u00e7\u00f5es JSON no estilo chat."
                     + " Nenhum servi\u00e7o vem inclu\u00eddo e o BitChord n\u00e3o mant\u00e9m"
                     + " servidor para isso.",
+            "Use automatic mode",
+            "Usar modo autom\u00e1tico",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -73844,6 +75906,10 @@ final class Translations {
                     + " ficam suspensos",
             "Use it",
             "Usar",
+            "Use manual mode",
+            "Usar modo manual",
+            "Use measured tempo",
+            "Usar tempo medido",
             "Use MicroG",
             "Usar o MicroG",
             "Use name",
@@ -73866,6 +75932,10 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "Usar este nome?",
+            "Use this pair",
+            "Usar este par",
+            "Use this pair to apply it",
+            "Use este par para aplicar os ajustes",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Use sua pr\u00f3pria conta Real-Debrid, AllDebrid, Premiumize ou TorBox",
             "Use your Spotify developer client ID and register this redirect URI:",
@@ -73883,6 +75953,8 @@ final class Translations {
                     + " original audio bytes.",
             "Usa seu canal principal privado configurado. Os downloads s\u00e3o enviados como"
                     + " arquivos com os bytes de \u00e1udio originais.",
+            "Using this pair\u2026",
+            "Usando este par\u2026",
             "Using {0}",
             "Usando {0}",
             "Variable",
@@ -73927,6 +75999,8 @@ final class Translations {
             "Volume",
             "Wait for the current action to finish.",
             "Aguarde a conclus\u00e3o da a\u00e7\u00e3o atual.",
+            "Wait for the pair to finish loading",
+            "Aguarde o t\u00e9rmino do carregamento das duas faixas",
             "Waiting for a community channel to be indexed",
             "Aguardando a indexa\u00e7\u00e3o de um canal da comunidade",
             "Waiting for device to cool down",
@@ -73959,6 +76033,8 @@ final class Translations {
             "Aguardando sua aprova\u00e7\u00e3o",
             "Waiting for {0} community channels to be indexed",
             "Aguardando a indexa\u00e7\u00e3o de {0} canais da comunidade",
+            "Waiting to analyze",
+            "Aguardando a an\u00e1lise",
             "Waiting to save",
             "Aguardando para salvar",
             "Waiting to save selected copies",
@@ -74797,6 +76873,9 @@ final class Translations {
             "Adjust the normalised playback level",
             "Advanced",
             "\u0414\u043e\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0435",
+            "Advanced curve",
+            "\u0420\u0430\u0441\u0448\u0438\u0440\u0435\u043d\u043d\u0430\u044f"
+                    + " \u043a\u0440\u0438\u0432\u0430\u044f",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -74888,10 +76967,19 @@ final class Translations {
                 + " BitChord.",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "\u0410\u043d\u0430\u043b\u0438\u0437",
+            "Analysis result could not be read",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u043f\u0440\u043e\u0447\u0438\u0442\u0430\u0442\u044c"
+                    + " \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442"
+                    + " \u0430\u043d\u0430\u043b\u0438\u0437\u0430",
             "Analyzing selected audio\u2026",
             "\u0410\u043d\u0430\u043b\u0438\u0437"
                     + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u043e\u0433\u043e"
                     + " \u0430\u0443\u0434\u0438\u043e\u2026",
+            "Analyzing\u2026",
+            "\u0410\u043d\u0430\u043b\u0438\u0437\u2026",
             "Android didn't allow this file to be deleted.",
             "Android \u043d\u0435 \u0440\u0430\u0437\u0440\u0435\u0448\u0438\u043b"
                     + " \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u044d\u0442\u043e\u0442"
@@ -74978,6 +77066,9 @@ final class Translations {
             "Apply cache size",
             "\u041f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u044c"
                     + " \u0440\u0430\u0437\u043c\u0435\u0440 \u043a\u0435\u0448\u0430",
+            "Apply mode",
+            "\u0420\u0435\u0436\u0438\u043c"
+                    + " \u043f\u0440\u0438\u043c\u0435\u043d\u0435\u043d\u0438\u044f",
             "Apply now",
             "\u041f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u044c"
                     + " \u0441\u0435\u0439\u0447\u0430\u0441",
@@ -74988,6 +77079,9 @@ final class Translations {
                 + " \u0432\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u0435\u0434\u0435\u043d\u0438\u044f.",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "\u041f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u044c"
+                    + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -75102,6 +77196,10 @@ final class Translations {
                 + " \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438\u0439"
+                    + " \u043f\u0435\u0440\u0435\u0445\u043e\u0434 \u0435\u0449\u0451 \u043d\u0435"
+                    + " \u0433\u043e\u0442\u043e\u0432.",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -75200,6 +77298,9 @@ final class Translations {
                     + " \u0440\u0438\u0442\u043c\u0430",
             "Beat grid offset",
             "\u0421\u043c\u0435\u0449\u0435\u043d\u0438\u0435 \u0441\u0435\u0442\u043a\u0438",
+            "Beat grid scale",
+            "\u041c\u0430\u0441\u0448\u0442\u0430\u0431 \u0441\u0435\u0442\u043a\u0438"
+                    + " \u0434\u043e\u043b\u0435\u0439",
             "Beat grid tempo",
             "\u0422\u0435\u043c\u043f \u0441\u0435\u0442\u043a\u0438",
             "Beat jump",
@@ -75207,6 +77308,14 @@ final class Translations {
                     + " \u0434\u043e\u043b\u044f\u043c",
             "Beats",
             "\u0414\u043e\u043b\u0438",
+            "Before",
+            "\u0414\u043e",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u00ab\u0414\u043e\u00bb \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u043e:"
+                    + " Automix \u0434\u043e\u0431\u0430\u0432\u043b\u044f\u0435\u0442"
+                    + " \u044d\u0444\u0444\u0435\u043a\u0442\u044b \u043a"
+                    + " \u044d\u0442\u043e\u043c\u0443"
+                    + " \u043f\u0435\u0440\u0435\u0445\u043e\u0434\u0443.",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -75576,6 +77685,14 @@ final class Translations {
                     + " \u0440\u0430\u0437\u0434\u0435\u043b\u043e\u043c.",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "\u041c\u0435\u043d\u044f\u0435\u0442 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u044c"
+                    + " \u043a\u0430\u0436\u0434\u043e\u0433\u043e \u0442\u0440\u0435\u043a\u0430"
+                    + " \u0442\u043e\u043b\u044c\u043a\u043e \u0432\u043e"
+                    + " \u0432\u0440\u0435\u043c\u044f"
+                    + " \u043d\u0430\u043b\u043e\u0436\u0435\u043d\u0438\u044f."
+                    + " \u0412\u044b\u0441\u043e\u0442\u0430 \u0442\u043e\u043d\u0430"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u044f\u0435\u0442\u0441\u044f.",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -75673,6 +77790,9 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "\u0412\u044b\u0431\u0440\u0430\u0442\u044c",
+            "Choose a different file",
+            "\u0412\u044b\u0431\u0440\u0430\u0442\u044c \u0434\u0440\u0443\u0433\u043e\u0439"
+                    + " \u0444\u0430\u0439\u043b",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -76169,6 +78289,10 @@ final class Translations {
             "Corrected names",
             "\u0418\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0435"
                     + " \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044f",
+            "Could not change the queue",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u044c"
+                    + " \u043e\u0447\u0435\u0440\u0435\u0434\u044c",
             "Could not complete peer discovery. Check relays and try again.",
             "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
                 + " \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u044c"
@@ -76243,8 +78367,17 @@ final class Translations {
                     + " \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435.",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                + " \u043f\u0440\u043e\u0447\u0438\u0442\u0430\u0442\u044c \u044d\u0442\u043e\u0442"
+                + " \u0444\u0430\u0439\u043b",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u043f\u0440\u043e\u0447\u0438\u0442\u0430\u0442\u044c"
+                    + " \u0430\u0443\u0434\u0438\u043e \u044d\u0442\u043e\u0433\u043e"
+                    + " \u0442\u0440\u0435\u043a\u0430.",
             "Could not read your library. Try again.",
             "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
                 + " \u043f\u0440\u043e\u0447\u0438\u0442\u0430\u0442\u044c \u0432\u0430\u0448\u0443"
@@ -76301,6 +78434,10 @@ final class Translations {
                 + " \u043f\u043e\u043f\u044b\u0442\u043a\u0443.",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
+                    + " \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"
+                    + " \u044d\u0442\u0443 \u043f\u0430\u0440\u0443.",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
                     + " \u0441\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c: {0}."
@@ -76775,6 +78912,9 @@ final class Translations {
             "Draft saved",
             "\u0427\u0435\u0440\u043d\u043e\u0432\u0438\u043a"
                     + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d",
+            "Draft saving",
+            "\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435"
+                    + " \u0447\u0435\u0440\u043d\u043e\u0432\u0438\u043a\u0430",
             "Drag a curve point or fine-tune each track below.",
             "\u041f\u0435\u0440\u0435\u0442\u0430\u0449\u0438\u0442\u0435"
                     + " \u0442\u043e\u0447\u043a\u0443 \u043a\u0440\u0438\u0432\u043e\u0439"
@@ -77104,6 +79244,8 @@ final class Translations {
                     + " \u043f\u0435\u0441\u043d\u0438",
             "Failed",
             "\u041e\u0448\u0438\u0431\u043a\u0430",
+            "Faster by 1%",
+            "\u041d\u0430 1% \u0431\u044b\u0441\u0442\u0440\u0435\u0435",
             "Favor songs you play often",
             "\u041f\u0440\u0435\u0434\u043f\u043e\u0447\u0438\u0442\u0430\u0442\u044c"
                     + " \u043f\u0435\u0441\u043d\u0438, \u043a\u043e\u0442\u043e\u0440\u044b\u0435"
@@ -77153,6 +79295,8 @@ final class Translations {
                     + " \u0438\u0449\u0443\u0442\u0441\u044f \u0432 AcoustID",
             "Filter",
             "\u0424\u0438\u043b\u044c\u0442\u0440",
+            "Filter depth",
+            "\u0413\u043b\u0443\u0431\u0438\u043d\u0430 \u0444\u0438\u043b\u044c\u0442\u0440\u0430",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -77327,6 +79471,9 @@ final class Translations {
             "\u041f\u0430\u043f\u043a\u0430",
             "Folder selected.",
             "\u041f\u0430\u043f\u043a\u0430 \u0432\u044b\u0431\u0440\u0430\u043d\u0430.",
+            "Follow current pair",
+            "\u0421\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u044c \u0437\u0430"
+                    + " \u0442\u0435\u043a\u0443\u0449\u0435\u0439 \u043f\u0430\u0440\u043e\u0439",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -77471,6 +79618,9 @@ final class Translations {
                     + " \u043f\u0435\u0441\u0435\u043d",
             "Hide hash",
             "\u0421\u043a\u0440\u044b\u0442\u044c hash",
+            "Hide sources",
+            "\u0421\u043a\u0440\u044b\u0442\u044c"
+                    + " \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u0438",
             "High",
             "\u0412\u044b\u0441\u043e\u043a\u043e\u0435",
             "High-pass",
@@ -77483,6 +79633,11 @@ final class Translations {
                 + " \u043d\u0435 \u043c\u0435\u043d\u044f\u0435\u0442"
                 + " \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u044c"
                 + " \u0432\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u0435\u0434\u0435\u043d\u0438\u044f.",
+            "How far the selected filters sweep.",
+            "\u0414\u0438\u0430\u043f\u0430\u0437\u043e\u043d"
+                    + " \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f"
+                    + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0445"
+                    + " \u0444\u0438\u043b\u044c\u0442\u0440\u043e\u0432.",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -77530,6 +79685,10 @@ final class Translations {
                     + " \u0431\u043e\u043b\u044c\u0448\u0435)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "\u042d\u0444\u0444\u0435\u043a\u0442"
+                    + " \u0432\u0445\u043e\u0434\u044f\u0449\u0435\u0433\u043e"
+                    + " \u0442\u0440\u0435\u043a\u0430",
             "Incoming offers",
             "\u0412\u0445\u043e\u0434\u044f\u0449\u0438\u0435"
                     + " \u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u044f",
@@ -77798,6 +79957,12 @@ final class Translations {
                 + " {0}",
             "Later",
             "\u041f\u043e\u0437\u0436\u0435",
+            "Leave Listen Together to change the queue",
+            "\u0412\u044b\u0439\u0434\u0438\u0442\u0435 \u0438\u0437"
+                    + " \u00ab\u0421\u043b\u0443\u0448\u0430\u0442\u044c"
+                    + " \u0432\u043c\u0435\u0441\u0442\u0435\u00bb, \u0447\u0442\u043e\u0431\u044b"
+                    + " \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u044c"
+                    + " \u043e\u0447\u0435\u0440\u0435\u0434\u044c",
             "Left to BitChord",
             "\u041d\u0430 \u0443\u0441\u043c\u043e\u0442\u0440\u0435\u043d\u0438\u0435 BitChord",
             "Let JamesDSP do the effects",
@@ -77845,9 +80010,16 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c"
+                    + " \u0432\u0445\u043e\u0434\u044f\u0449\u0438\u0439 \u0442\u0440\u0435\u043a",
             "Load older posts",
             "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0431\u043e\u043b\u0435\u0435"
                     + " \u0441\u0442\u0430\u0440\u044b\u0435 \u043f\u043e\u0441\u0442\u044b",
+            "Load outgoing",
+            "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c"
+                    + " \u0438\u0441\u0445\u043e\u0434\u044f\u0449\u0438\u0439"
+                    + " \u0442\u0440\u0435\u043a",
             "Loading",
             "\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430",
             "Loading channel\u2026",
@@ -77977,6 +80149,25 @@ final class Translations {
                     + " \u043f\u0435\u0440\u0435\u0434\u0430\u0447\u0430\u043c\u0438 \u0438"
                     + " \u043e\u0431\u0449\u0438\u043c"
                     + " \u0434\u043e\u0441\u0442\u0443\u043f\u043e\u043c.",
+            "Manual",
+            "\u0412\u0440\u0443\u0447\u043d\u0443\u044e",
+            "Manual applies when you tap Apply.",
+            "\u0412 \u0440\u0443\u0447\u043d\u043e\u043c \u0440\u0435\u0436\u0438\u043c\u0435"
+                + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438"
+                + " \u043f\u0440\u0438\u043c\u0435\u043d\u044f\u044e\u0442\u0441\u044f \u043f\u043e"
+                + " \u043d\u0430\u0436\u0430\u0442\u0438\u044e"
+                + " \u00ab\u041f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u044c\u00bb.",
+            "Manual saves when you tap Save draft.",
+            "\u0412 \u0440\u0443\u0447\u043d\u043e\u043c \u0440\u0435\u0436\u0438\u043c\u0435"
+                + " \u0447\u0435\u0440\u043d\u043e\u0432\u0438\u043a"
+                + " \u0441\u043e\u0445\u0440\u0430\u043d\u044f\u0435\u0442\u0441\u044f \u043f\u043e"
+                + " \u043d\u0430\u0436\u0430\u0442\u0438\u044e"
+                + " \u00ab\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c"
+                + " \u0447\u0435\u0440\u043d\u043e\u0432\u0438\u043a\u00bb.",
+            "Match A to B",
+            "\u041f\u043e\u0434\u0441\u0442\u0440\u043e\u0438\u0442\u044c A \u043f\u043e\u0434 B",
+            "Match B to A",
+            "\u041f\u043e\u0434\u0441\u0442\u0440\u043e\u0438\u0442\u044c B \u043f\u043e\u0434 A",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -78100,6 +80291,8 @@ final class Translations {
                 + " \u043f\u043e\u0442\u0435\u0440\u044c \u043f\u043e"
                 + " \u0444\u043e\u0440\u043c\u0430\u0442\u0443, \u0430 \u0434\u043b\u044f M4A"
                 + " \u2014 \u043f\u043e \u0431\u0438\u0442\u0440\u0435\u0439\u0442\u0443.",
+            "Multiplier",
+            "\u041c\u043d\u043e\u0436\u0438\u0442\u0435\u043b\u044c",
             "Music chats",
             "\u041c\u0443\u0437\u044b\u043a\u0430\u043b\u044c\u043d\u044b\u0435"
                     + " \u0447\u0430\u0442\u044b",
@@ -78194,6 +80387,10 @@ final class Translations {
                     + " \u043d\u043e\u0432\u0435\u0435.",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "\u041d\u0443\u0436\u043d\u044b \u043e\u0431\u0430 \u0442\u0435\u043c\u043f\u0430"
+                    + " \u0438 \u0441\u043e\u043e\u0442\u043d\u043e\u0448\u0435\u043d\u0438\u0435"
+                    + " \u043e\u0442 0,5\u00d7 \u0434\u043e 2\u00d7",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -78287,6 +80484,10 @@ final class Translations {
                 + " \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0438 \u043d\u0430"
                 + " \u0441\u043e\u043f\u0440\u044f\u0436\u0451\u043d\u043d\u043e\u043c"
                 + " \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0435.",
+            "No file picker is available",
+            "\u041d\u0435\u0442 \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u043e\u0433\u043e"
+                + " \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f \u0434\u043b\u044f"
+                + " \u0432\u044b\u0431\u043e\u0440\u0430 \u0444\u0430\u0439\u043b\u043e\u0432",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -78392,6 +80593,10 @@ final class Translations {
                 + " \u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0438\u043c\u044f"
                 + " \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f \u0438"
                 + " \u043f\u0430\u0440\u043e\u043b\u044c.",
+            "No saved draft",
+            "\u041d\u0435\u0442"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u043e\u0433\u043e"
+                    + " \u0447\u0435\u0440\u043d\u043e\u0432\u0438\u043a\u0430",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -78469,6 +80674,12 @@ final class Translations {
             "Not enough audio",
             "\u041d\u0435\u0434\u043e\u0441\u0442\u0430\u0442\u043e\u0447\u043d\u043e"
                     + " \u0430\u0443\u0434\u0438\u043e",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "\u041d\u0435\u0434\u043e\u0441\u0442\u0430\u0442\u043e\u0447\u043d\u043e"
+                    + " \u043f\u0430\u043c\u044f\u0442\u0438 \u0434\u043b\u044f"
+                    + " \u0430\u043d\u0430\u043b\u0438\u0437\u0430 \u044d\u0442\u043e\u0433\u043e"
+                    + " \u0442\u0440\u0435\u043a\u0430. \u041d\u0430\u0436\u043c\u0438\u0442\u0435"
+                    + " \u00ab\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c\u00bb.",
             "Not managed here",
             "\u0417\u0434\u0435\u0441\u044c \u043d\u0435"
                     + " \u0443\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u0442\u0441\u044f",
@@ -78765,6 +80976,8 @@ final class Translations {
             "Original key",
             "\u0418\u0441\u0445\u043e\u0434\u043d\u0430\u044f"
                     + " \u0442\u043e\u043d\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c",
+            "Original tempo",
+            "\u0418\u0441\u0445\u043e\u0434\u043d\u044b\u0439 \u0442\u0435\u043c\u043f",
             "Original vocals",
             "\u0418\u0441\u0445\u043e\u0434\u043d\u044b\u0439 \u0432\u043e\u043a\u0430\u043b",
             "Other",
@@ -78784,10 +80997,22 @@ final class Translations {
             "\u0414\u0440\u0443\u0433\u0438\u0435 \u0444\u0430\u0439\u043b\u044b Telegram",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "\u042d\u0444\u0444\u0435\u043a\u0442"
+                    + " \u0438\u0441\u0445\u043e\u0434\u044f\u0449\u0435\u0433\u043e"
+                    + " \u0442\u0440\u0435\u043a\u0430",
             "Outro",
             "\u041e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u0435",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "BPM \u043f\u0440\u0438 \u043d\u0430\u043b\u043e\u0436\u0435\u043d\u0438\u0438",
+            "overlap only",
+            "\u0442\u043e\u043b\u044c\u043a\u043e \u043f\u0440\u0438"
+                    + " \u043d\u0430\u043b\u043e\u0436\u0435\u043d\u0438\u0438",
+            "Overlap tempo",
+            "\u0422\u0435\u043c\u043f \u043f\u0440\u0438"
+                    + " \u043d\u0430\u043b\u043e\u0436\u0435\u043d\u0438\u0438",
             "Pair a peer",
             "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0438\u0442\u044c"
                     + " \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u043e",
@@ -79049,6 +81274,8 @@ final class Translations {
                     + " \u044d\u0442\u043e\u0439 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438.",
             "Pitch",
             "\u0412\u044b\u0441\u043e\u0442\u0430 \u0442\u043e\u043d\u0430",
+            "Play",
+            "\u0412\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u0435\u0441\u0442\u0438",
             "Play a song first.",
             "\u0421\u043d\u0430\u0447\u0430\u043b\u0430"
                     + " \u0432\u043a\u043b\u044e\u0447\u0438\u0442\u0435"
@@ -79195,6 +81422,8 @@ final class Translations {
                     + " \u0440\u0430\u0437 \u0438\u043b\u0438"
                     + " \u043f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u0435 \u0434\u043b\u044f"
                     + " \u043f\u0440\u043e\u0434\u043e\u043b\u0436\u0435\u043d\u0438\u044f.",
+            "Preview Before",
+            "\u041f\u0440\u043e\u0441\u043b\u0443\u0448\u0430\u0442\u044c \u00ab\u0414\u043e\u00bb",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -79453,6 +81682,9 @@ final class Translations {
                     + " \u0432\u044b\u0431\u043e\u0440\u0430 \u0444\u0430\u0439\u043b\u0430.",
             "Ready.",
             "\u0413\u043e\u0442\u043e\u0432\u043e.",
+            "Recall draft",
+            "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c"
+                    + " \u0447\u0435\u0440\u043d\u043e\u0432\u0438\u043a",
             "Receive",
             "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c",
             "Receive audio from another BitChord phone, or share your files.",
@@ -79648,6 +81880,14 @@ final class Translations {
             "Repeat preview",
             "\u041f\u043e\u0432\u0442\u043e\u0440"
                 + " \u043f\u0440\u0435\u0434\u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0430",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "\u0417\u0430\u043c\u0435\u043d\u044f\u0435\u0442"
+                    + " \u0442\u0435\u043a\u0443\u0449\u0443\u044e \u0438"
+                    + " \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0443\u044e"
+                    + " \u043f\u0435\u0441\u043d\u044e \u0432"
+                    + " \u043e\u0447\u0435\u0440\u0435\u0434\u0438."
+                    + " \u041e\u0441\u0442\u0430\u043b\u044c\u043d\u044b\u0435 \u043d\u0435"
+                    + " \u043c\u0435\u043d\u044f\u044e\u0442\u0441\u044f.",
             "Report audio quality",
             "\u0421\u043e\u043e\u0431\u0449\u0430\u0442\u044c"
                     + " \u043a\u0430\u0447\u0435\u0441\u0442\u0432\u043e"
@@ -79690,6 +81930,9 @@ final class Translations {
             "\u0421\u0431\u0440\u043e\u0441\u0438\u0442\u044c"
                     + " \u0438\u0434\u0435\u043d\u0442\u0438\u0447\u043d\u043e\u0441\u0442\u044c"
                     + " \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f?",
+            "Reset EQ",
+            "\u0421\u0431\u0440\u043e\u0441\u0438\u0442\u044c"
+                    + " \u044d\u043a\u0432\u0430\u043b\u0430\u0439\u0437\u0435\u0440",
             "Reset to {0}%",
             "\u0421\u0431\u0440\u043e\u0441\u0438\u0442\u044c \u0434\u043e {0}%",
             "Reset {0}",
@@ -79774,6 +82017,9 @@ final class Translations {
                     + " \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0443"
                     + " \u0441\u043f\u043e\u043d\u0441\u043e\u0440\u0441\u043a\u0438\u0445"
                     + " \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0439",
+            "Reverse",
+            "\u041f\u043e\u043c\u0435\u043d\u044f\u0442\u044c"
+                    + " \u043c\u0435\u0441\u0442\u0430\u043c\u0438",
             "Review",
             "\u041f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c",
             "Review 1 song without tags",
@@ -79871,6 +82117,9 @@ final class Translations {
                 + " \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u0445"
                 + " \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u043e\u0432"
                 + " \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438 \u043f\u043e Wi-Fi",
+            "Save mode",
+            "\u0420\u0435\u0436\u0438\u043c"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u044f",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -80573,6 +82822,8 @@ final class Translations {
             "\u0422\u0430\u0439\u043c\u0435\u0440 \u0441\u043d\u0430",
             "Sliders {0}",
             "\u041f\u043e\u043b\u0437\u0443\u043d\u043a\u0438 {0}",
+            "Slower by 1%",
+            "\u041d\u0430 1% \u043c\u0435\u0434\u043b\u0435\u043d\u043d\u0435\u0435",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -81535,6 +83786,15 @@ final class Translations {
                     + " \u041e\u0431\u043d\u043e\u0432\u0438\u0442\u0435 \u044d\u0442\u0443"
                     + " \u043f\u0435\u0440\u0435\u0434\u0430\u0447\u0443"
                     + " \u043f\u043e\u0437\u0436\u0435.",
+            "The queue changed; reopen this transition",
+            "\u041e\u0447\u0435\u0440\u0435\u0434\u044c"
+                    + " \u0438\u0437\u043c\u0435\u043d\u0438\u043b\u0430\u0441\u044c;"
+                    + " \u043e\u0442\u043a\u0440\u043e\u0439\u0442\u0435 \u044d\u0442\u043e\u0442"
+                    + " \u043f\u0435\u0440\u0435\u0445\u043e\u0434"
+                    + " \u0437\u0430\u043d\u043e\u0432\u043e",
+            "The queue is being changed",
+            "\u041e\u0447\u0435\u0440\u0435\u0434\u044c"
+                    + " \u0438\u0437\u043c\u0435\u043d\u044f\u0435\u0442\u0441\u044f",
             "The queue plays in its own order",
             "\u041e\u0447\u0435\u0440\u0435\u0434\u044c \u0438\u0433\u0440\u0430\u0435\u0442 \u0432"
                     + " \u0441\u0432\u043e\u0451\u043c \u043f\u043e\u0440\u044f\u0434\u043a\u0435",
@@ -81669,6 +83929,10 @@ final class Translations {
             "\u041f\u0435\u0441\u043d\u044f \u0441\u0440\u0430\u0437\u0443"
                     + " \u0441\u0442\u0430\u0432\u0438\u0442\u0441\u044f \u043d\u0430"
                     + " \u043f\u0430\u0443\u0437\u0443",
+            "The track length is not available",
+            "\u0414\u043b\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c"
+                    + " \u0442\u0440\u0435\u043a\u0430"
+                    + " \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u0430",
             "The whole song is cached.",
             "\u0412\u0441\u044f \u043f\u0435\u0441\u043d\u044f \u0432 \u043a\u0435\u0448\u0435.",
             "There's no music in this chat yet.",
@@ -81753,6 +84017,11 @@ final class Translations {
                     + " \u0442\u0440\u0435\u043a\u0443 \u0438"
                     + " \u043f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435"
                     + " \u043f\u043e\u043f\u044b\u0442\u043a\u0443.",
+            "This file can\u2019t stay available",
+            "\u042d\u0442\u043e\u0442 \u0444\u0430\u0439\u043b \u043d\u0435"
+                    + " \u043c\u043e\u0436\u0435\u0442"
+                    + " \u043e\u0441\u0442\u0430\u0432\u0430\u0442\u044c\u0441\u044f"
+                    + " \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u043c",
             "This file couldn't be deleted.",
             "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c"
                     + " \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u044d\u0442\u043e\u0442"
@@ -81806,6 +84075,10 @@ final class Translations {
                     + " \u043e\u0444\u0438\u0446\u0438\u0430\u043b\u044c\u043d\u043e\u0435"
                     + " \u0441\u043f\u043e\u043d\u0441\u043e\u0440\u0441\u043a\u043e\u0435"
                     + " \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435.",
+            "This pair cannot be previewed",
+            "\u041f\u0440\u0435\u0434\u043f\u0440\u043e\u0441\u043b\u0443\u0448\u0438\u0432\u0430\u043d\u0438\u0435"
+                + " \u044d\u0442\u043e\u0439 \u043f\u0430\u0440\u044b"
+                + " \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u043e",
             "This phone\u2019s audio chip can play: {0}.",
             "\u0410\u0443\u0434\u0438\u043e\u0447\u0438\u043f \u044d\u0442\u043e\u0433\u043e"
                 + " \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430 \u043c\u043e\u0436\u0435\u0442"
@@ -81877,6 +84150,8 @@ final class Translations {
                 + " \u043f\u0435\u0441\u0435\u043d.",
             "Time",
             "Time",
+            "times",
+            "\u0440\u0430\u0437",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -81929,6 +84204,8 @@ final class Translations {
             "\u0418\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442\u044b",
             "Track analysis",
             "\u0410\u043d\u0430\u043b\u0438\u0437 \u0442\u0440\u0435\u043a\u043e\u0432",
+            "Track BPM",
+            "BPM \u0442\u0440\u0435\u043a\u0430",
             "Track details",
             "\u0421\u0432\u0435\u0434\u0435\u043d\u0438\u044f \u043e"
                     + " \u0442\u0440\u0435\u043a\u0435",
@@ -81993,6 +84270,11 @@ final class Translations {
                     + " \u0438\u043d\u0434\u0435\u043a\u0441\u00bb. \u041f\u0435\u0441\u043d\u0438"
                     + " \u0431\u0435\u0440\u0443\u0442\u0441\u044f \u0438\u0437"
                     + " \u043d\u0435\u0433\u043e.",
+            "Turn shuffle off to change the queue",
+            "\u041e\u0442\u043a\u043b\u044e\u0447\u0438\u0442\u0435"
+                + " \u043f\u0435\u0440\u0435\u043c\u0435\u0448\u0438\u0432\u0430\u043d\u0438\u0435,"
+                + " \u0447\u0442\u043e\u0431\u044b \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u044c"
+                + " \u043e\u0447\u0435\u0440\u0435\u0434\u044c",
             "Turn the singer down",
             "Turn the singer down",
             "Turns the singer down so you can sing over the song. Works",
@@ -82017,6 +84299,8 @@ final class Translations {
             "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0447\u0430\u0441\u0442\u044c"
                     + " \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044f"
                     + " \u043c\u043e\u0434\u0435\u043b\u0438.",
+            "Unavailable",
+            "\u041d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u043e",
             "Under {0}, oldest first",
             "\u041c\u0435\u043d\u044c\u0448\u0435 {0}, \u0441\u043d\u0430\u0447\u0430\u043b\u0430"
                     + " \u0441\u0430\u043c\u043e\u0435 \u0441\u0442\u0430\u0440\u043e\u0435",
@@ -82098,6 +84382,10 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0439\u0442\u0435"
+                + " \u043c\u043d\u043e\u0436\u0438\u0442\u0435\u043b\u044c \u043e\u0442 0,5\u00d7"
+                + " \u0434\u043e 2\u00d7",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -82118,6 +84406,10 @@ final class Translations {
                 + " \u043d\u0435 \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442"
                 + " \u0434\u043b\u044f \u044d\u0442\u043e\u0433\u043e"
                 + " \u0441\u0435\u0440\u0432\u0435\u0440.",
+            "Use automatic mode",
+            "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"
+                + " \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438\u0439"
+                + " \u0440\u0435\u0436\u0438\u043c",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -82159,6 +84451,13 @@ final class Translations {
                 + " \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u0430\u0432\u043b\u0438\u0432\u0430\u044e\u0442\u0441\u044f",
             "Use it",
             "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c",
+            "Use manual mode",
+            "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"
+                    + " \u0440\u0443\u0447\u043d\u043e\u0439 \u0440\u0435\u0436\u0438\u043c",
+            "Use measured tempo",
+            "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"
+                    + " \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u043d\u044b\u0439"
+                    + " \u0442\u0435\u043c\u043f",
             "Use MicroG",
             "\u0427\u0435\u0440\u0435\u0437 MicroG",
             "Use name",
@@ -82191,6 +84490,14 @@ final class Translations {
             "Use this name?",
             "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"
                     + " \u044d\u0442\u043e \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435?",
+            "Use this pair",
+            "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c"
+                    + " \u044d\u0442\u0443 \u043f\u0430\u0440\u0443",
+            "Use this pair to apply it",
+            "\u0421\u043d\u0430\u0447\u0430\u043b\u0430"
+                    + " \u0432\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u044d\u0442\u0443"
+                    + " \u043f\u0430\u0440\u0443 \u0434\u043b\u044f"
+                    + " \u043f\u0440\u0438\u043c\u0435\u043d\u0435\u043d\u0438\u044f",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0439\u0442\u0435"
                 + " \u0441\u043e\u0431\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439"
@@ -82235,6 +84542,9 @@ final class Translations {
                 + " \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u044e\u0442\u0441\u044f \u0441"
                 + " \u0438\u0441\u0445\u043e\u0434\u043d\u044b\u043c\u0438"
                 + " \u0430\u0443\u0434\u0438\u043e\u0434\u0430\u043d\u043d\u044b\u043c\u0438.",
+            "Using this pair\u2026",
+            "\u0412\u044b\u0431\u043e\u0440 \u044d\u0442\u043e\u0439"
+                    + " \u043f\u0430\u0440\u044b\u2026",
             "Using {0}",
             "\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442\u0441\u044f {0}",
             "Variable",
@@ -82296,6 +84606,11 @@ final class Translations {
                     + " \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0438\u044f"
                     + " \u0442\u0435\u043a\u0443\u0449\u0435\u0433\u043e"
                     + " \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f.",
+            "Wait for the pair to finish loading",
+            "\u0414\u043e\u0436\u0434\u0438\u0442\u0435\u0441\u044c"
+                + " \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0438\u044f"
+                + " \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438 \u043e\u0431\u043e\u0438\u0445"
+                + " \u0442\u0440\u0435\u043a\u043e\u0432",
             "Waiting for a community channel to be indexed",
             "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435"
                     + " \u0438\u043d\u0434\u0435\u043a\u0441\u0430\u0446\u0438\u0438"
@@ -82361,6 +84676,8 @@ final class Translations {
                     + " \u0438\u043d\u0434\u0435\u043a\u0441\u0430\u0446\u0438\u0438"
                     + " \u043a\u0430\u043d\u0430\u043b\u043e\u0432"
                     + " \u0441\u043e\u043e\u0431\u0449\u0435\u0441\u0442\u0432\u0430: {0}",
+            "Waiting to analyze",
+            "\u041e\u0436\u0438\u0434\u0430\u0435\u0442 \u0430\u043d\u0430\u043b\u0438\u0437\u0430",
             "Waiting to save",
             "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435"
                     + " \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u044f",
@@ -83342,6 +85659,8 @@ final class Translations {
             "\u0e1b\u0e23\u0e31\u0e1a\u0e23\u0e30\u0e14\u0e31\u0e1a\u0e04\u0e27\u0e32\u0e21\u0e14\u0e31\u0e07\u0e17\u0e35\u0e48\u0e43\u0e0a\u0e49\u0e1b\u0e23\u0e31\u0e1a\u0e43\u0e2b\u0e49\u0e40\u0e17\u0e48\u0e32\u0e01\u0e31\u0e19",
             "Advanced",
             "\u0e02\u0e31\u0e49\u0e19\u0e2a\u0e39\u0e07",
+            "Advanced curve",
+            "\u0e40\u0e2a\u0e49\u0e19\u0e42\u0e04\u0e49\u0e07\u0e02\u0e31\u0e49\u0e19\u0e2a\u0e39\u0e07",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -83408,8 +85727,14 @@ final class Translations {
                 + " \u0e20\u0e32\u0e22\u0e43\u0e19 BitChord",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "\u0e01\u0e32\u0e23\u0e27\u0e34\u0e40\u0e04\u0e23\u0e32\u0e30\u0e2b\u0e4c",
+            "Analysis result could not be read",
+            "\u0e2d\u0e48\u0e32\u0e19\u0e1c\u0e25\u0e01\u0e32\u0e23\u0e27\u0e34\u0e40\u0e04\u0e23\u0e32\u0e30\u0e2b\u0e4c\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49",
             "Analyzing selected audio\u2026",
             "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e27\u0e34\u0e40\u0e04\u0e23\u0e32\u0e30\u0e2b\u0e4c\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01\u2026",
+            "Analyzing\u2026",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e27\u0e34\u0e40\u0e04\u0e23\u0e32\u0e30\u0e2b\u0e4c\u2026",
             "Android didn't allow this file to be deleted.",
             "Android"
                 + " \u0e44\u0e21\u0e48\u0e2d\u0e19\u0e38\u0e0d\u0e32\u0e15\u0e43\u0e2b\u0e49\u0e25\u0e1a\u0e44\u0e1f\u0e25\u0e4c\u0e19\u0e35\u0e49",
@@ -83467,12 +85792,16 @@ final class Translations {
                 + " \u0e17\u0e35\u0e48\u0e15\u0e23\u0e07\u0e01\u0e31\u0e1a\u0e23\u0e38\u0e48\u0e19\u0e2b\u0e39\u0e1f\u0e31\u0e07",
             "Apply cache size",
             "\u0e43\u0e0a\u0e49\u0e02\u0e19\u0e32\u0e14\u0e41\u0e04\u0e0a\u0e19\u0e35\u0e49",
+            "Apply mode",
+            "\u0e42\u0e2b\u0e21\u0e14\u0e01\u0e32\u0e23\u0e19\u0e33\u0e44\u0e1b\u0e43\u0e0a\u0e49",
             "Apply now",
             "\u0e43\u0e0a\u0e49\u0e15\u0e2d\u0e19\u0e19\u0e35\u0e49",
             "Apply or close to resume playback.",
             "\u0e43\u0e0a\u0e49\u0e2b\u0e23\u0e37\u0e2d\u0e1b\u0e34\u0e14\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e40\u0e25\u0e48\u0e19\u0e15\u0e48\u0e2d",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "\u0e43\u0e0a\u0e49\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -83550,6 +85879,8 @@ final class Translations {
             "\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e2d\u0e31\u0e15\u0e42\u0e19\u0e21\u0e31\u0e15\u0e34",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "\u0e01\u0e32\u0e23\u0e1c\u0e2a\u0e21\u0e2d\u0e31\u0e15\u0e42\u0e19\u0e21\u0e31\u0e15\u0e34\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e1e\u0e23\u0e49\u0e2d\u0e21",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -83616,12 +85947,20 @@ final class Translations {
             "\u0e04\u0e27\u0e32\u0e21\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e31\u0e48\u0e19\u0e02\u0e2d\u0e07\u0e1a\u0e35\u0e15",
             "Beat grid offset",
             "\u0e2d\u0e2d\u0e1f\u0e40\u0e0b\u0e47\u0e15\u0e01\u0e23\u0e34\u0e14\u0e08\u0e31\u0e07\u0e2b\u0e27\u0e30",
+            "Beat grid scale",
+            "\u0e2a\u0e40\u0e01\u0e25\u0e01\u0e23\u0e34\u0e14\u0e08\u0e31\u0e07\u0e2b\u0e27\u0e30",
             "Beat grid tempo",
             "\u0e40\u0e17\u0e21\u0e42\u0e1b\u0e02\u0e2d\u0e07\u0e01\u0e23\u0e34\u0e14\u0e08\u0e31\u0e07\u0e2b\u0e27\u0e30",
             "Beat jump",
             "\u0e02\u0e49\u0e32\u0e21\u0e08\u0e31\u0e07\u0e2b\u0e27\u0e30",
             "Beats",
             "\u0e08\u0e31\u0e07\u0e2b\u0e27\u0e30",
+            "Before",
+            "\u0e01\u0e48\u0e2d\u0e19",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u0e43\u0e0a\u0e49 \u201c\u0e01\u0e48\u0e2d\u0e19\u201d"
+                + " \u0e44\u0e21\u0e48\u0e44\u0e14\u0e49: Automix"
+                + " \u0e40\u0e1e\u0e34\u0e48\u0e21\u0e40\u0e2d\u0e1f\u0e40\u0e1f\u0e01\u0e15\u0e4c\u0e43\u0e2b\u0e49\u0e01\u0e32\u0e23\u0e1c\u0e2a\u0e21\u0e19\u0e35\u0e49",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -83863,6 +86202,9 @@ final class Translations {
                 + " \u0e0b\u0e36\u0e48\u0e07\u0e2d\u0e22\u0e39\u0e48\u0e40\u0e2b\u0e19\u0e37\u0e2d\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e19\u0e35\u0e49",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e04\u0e27\u0e32\u0e21\u0e40\u0e23\u0e47\u0e27\u0e02\u0e2d\u0e07\u0e41\u0e15\u0e48\u0e25\u0e30\u0e40\u0e1e\u0e25\u0e07\u0e40\u0e09\u0e1e\u0e32\u0e30\u0e0a\u0e48\u0e27\u0e07\u0e17\u0e35\u0e48\u0e0b\u0e49\u0e2d\u0e19\u0e01\u0e31\u0e19"
+                + " \u0e42\u0e14\u0e22\u0e04\u0e07\u0e23\u0e30\u0e14\u0e31\u0e1a\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e2a\u0e39\u0e07\u0e15\u0e48\u0e33\u0e40\u0e14\u0e34\u0e21",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -83925,6 +86267,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "\u0e40\u0e25\u0e37\u0e2d\u0e01",
+            "Choose a different file",
+            "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e44\u0e1f\u0e25\u0e4c\u0e2d\u0e37\u0e48\u0e19",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -84241,6 +86585,8 @@ final class Translations {
                 + " \u0e42\u0e14\u0e22\u0e40\u0e23\u0e34\u0e48\u0e21\u0e08\u0e32\u0e01\u0e42\u0e1e\u0e2a\u0e15\u0e4c\u0e40\u0e01\u0e48\u0e32\u0e2a\u0e38\u0e14\u0e01\u0e48\u0e2d\u0e19",
             "Corrected names",
             "\u0e0a\u0e37\u0e48\u0e2d\u0e17\u0e35\u0e48\u0e41\u0e01\u0e49\u0e44\u0e02\u0e41\u0e25\u0e49\u0e27",
+            "Could not change the queue",
+            "\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e04\u0e34\u0e27\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49",
             "Could not complete peer discovery. Check relays and try again.",
             "\u0e04\u0e49\u0e19\u0e1e\u0e1a\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c\u0e44\u0e21\u0e48\u0e2a\u0e33\u0e40\u0e23\u0e47\u0e08"
                 + " \u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e23\u0e35\u0e40\u0e25\u0e22\u0e4c\u0e41\u0e25\u0e49\u0e27\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
@@ -84284,8 +86630,12 @@ final class Translations {
                 + " \u0e42\u0e1b\u0e23\u0e14\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e01\u0e32\u0e23\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "\u0e2d\u0e48\u0e32\u0e19\u0e44\u0e1f\u0e25\u0e4c\u0e19\u0e35\u0e49\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "\u0e2d\u0e48\u0e32\u0e19\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e02\u0e2d\u0e07\u0e41\u0e17\u0e23\u0e47\u0e01\u0e19\u0e35\u0e49\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49",
             "Could not read your library. Try again.",
             "\u0e2d\u0e48\u0e32\u0e19\u0e04\u0e25\u0e31\u0e07\u0e40\u0e1e\u0e25\u0e07\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49"
                 + " \u0e42\u0e1b\u0e23\u0e14\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
@@ -84314,6 +86664,8 @@ final class Translations {
                 + " \u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e01\u0e32\u0e23\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d\u0e41\u0e25\u0e49\u0e27\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "\u0e43\u0e0a\u0e49\u0e40\u0e1e\u0e25\u0e07\u0e04\u0e39\u0e48\u0e19\u0e35\u0e49\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "\u0e04\u0e31\u0e14\u0e25\u0e2d\u0e01\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49: {0}"
                 + " \u0e08\u0e30\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07\u0e43\u0e19\u0e2d\u0e35\u0e01"
@@ -84642,6 +86994,8 @@ final class Translations {
             "\u0e09\u0e1a\u0e31\u0e1a\u0e23\u0e48\u0e32\u0e07\u0e41\u0e22\u0e01\u0e08\u0e32\u0e01\u0e01\u0e32\u0e23\u0e40\u0e25\u0e48\u0e19",
             "Draft saved",
             "\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e09\u0e1a\u0e31\u0e1a\u0e23\u0e48\u0e32\u0e07\u0e41\u0e25\u0e49\u0e27",
+            "Draft saving",
+            "\u0e01\u0e32\u0e23\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e41\u0e1a\u0e1a\u0e23\u0e48\u0e32\u0e07",
             "Drag a curve point or fine-tune each track below.",
             "\u0e25\u0e32\u0e01\u0e08\u0e38\u0e14\u0e1a\u0e19\u0e40\u0e2a\u0e49\u0e19\u0e42\u0e04\u0e49\u0e07\u0e2b\u0e23\u0e37\u0e2d\u0e1b\u0e23\u0e31\u0e1a\u0e41\u0e15\u0e48\u0e25\u0e30\u0e41\u0e17\u0e23\u0e47\u0e01\u0e14\u0e49\u0e32\u0e19\u0e25\u0e48\u0e32\u0e07",
             "Drag to reorder, or use Move up and Move down.",
@@ -84840,6 +87194,8 @@ final class Translations {
             "\u0e40\u0e1f\u0e14\u0e0a\u0e48\u0e27\u0e07\u0e17\u0e49\u0e32\u0e22\u0e02\u0e2d\u0e07\u0e40\u0e1e\u0e25\u0e07\u0e2a\u0e38\u0e14\u0e17\u0e49\u0e32\u0e22",
             "Failed",
             "\u0e25\u0e49\u0e21\u0e40\u0e2b\u0e25\u0e27",
+            "Faster by 1%",
+            "\u0e40\u0e23\u0e47\u0e27\u0e02\u0e36\u0e49\u0e19 1%",
             "Favor songs you play often",
             "\u0e40\u0e19\u0e49\u0e19\u0e40\u0e1e\u0e25\u0e07\u0e17\u0e35\u0e48\u0e04\u0e38\u0e13\u0e1f\u0e31\u0e07\u0e1a\u0e48\u0e2d\u0e22",
             "Favor well-known songs",
@@ -84876,6 +87232,8 @@ final class Translations {
                 + " AcoustID",
             "Filter",
             "\u0e1f\u0e34\u0e25\u0e40\u0e15\u0e2d\u0e23\u0e4c",
+            "Filter depth",
+            "\u0e04\u0e27\u0e32\u0e21\u0e25\u0e36\u0e01\u0e02\u0e2d\u0e07\u0e15\u0e31\u0e27\u0e01\u0e23\u0e2d\u0e07",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -84964,6 +87322,8 @@ final class Translations {
             "\u0e42\u0e1f\u0e25\u0e40\u0e14\u0e2d\u0e23\u0e4c",
             "Folder selected.",
             "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e42\u0e1f\u0e25\u0e40\u0e14\u0e2d\u0e23\u0e4c\u0e41\u0e25\u0e49\u0e27",
+            "Follow current pair",
+            "\u0e15\u0e32\u0e21\u0e04\u0e39\u0e48\u0e1b\u0e31\u0e08\u0e08\u0e38\u0e1a\u0e31\u0e19",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -85066,6 +87426,8 @@ final class Translations {
             "\u0e0b\u0e48\u0e2d\u0e19\u0e40\u0e1e\u0e25\u0e07\u0e17\u0e35\u0e48\u0e0b\u0e49\u0e33\u0e01\u0e31\u0e19",
             "Hide hash",
             "\u0e0b\u0e48\u0e2d\u0e19 hash",
+            "Hide sources",
+            "\u0e0b\u0e48\u0e2d\u0e19\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e17\u0e35\u0e48\u0e21\u0e32",
             "High",
             "\u0e2a\u0e39\u0e07",
             "High-pass",
@@ -85073,6 +87435,8 @@ final class Translations {
             "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
             "\u0e01\u0e14\u0e04\u0e34\u0e27\u0e04\u0e49\u0e32\u0e07\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e41\u0e17\u0e19\u0e17\u0e35\u0e48\u0e2b\u0e23\u0e37\u0e2d\u0e25\u0e1a"
                 + " \u0e01\u0e32\u0e23\u0e41\u0e01\u0e49\u0e44\u0e02\u0e01\u0e23\u0e34\u0e14\u0e44\u0e21\u0e48\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e04\u0e27\u0e32\u0e21\u0e40\u0e23\u0e47\u0e27\u0e43\u0e19\u0e01\u0e32\u0e23\u0e40\u0e25\u0e48\u0e19",
+            "How far the selected filters sweep.",
+            "\u0e0a\u0e48\u0e27\u0e07\u0e01\u0e32\u0e23\u0e01\u0e27\u0e32\u0e14\u0e04\u0e27\u0e32\u0e21\u0e16\u0e35\u0e48\u0e02\u0e2d\u0e07\u0e15\u0e31\u0e27\u0e01\u0e23\u0e2d\u0e07\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -85112,6 +87476,8 @@ final class Translations {
                 + " (\u0e44\u0e1f\u0e25\u0e4c\u0e43\u0e2b\u0e0d\u0e48\u0e02\u0e36\u0e49\u0e19)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "\u0e40\u0e2d\u0e1f\u0e40\u0e1f\u0e01\u0e15\u0e4c\u0e40\u0e1e\u0e25\u0e07\u0e02\u0e32\u0e40\u0e02\u0e49\u0e32",
             "Incoming offers",
             "\u0e04\u0e33\u0e02\u0e2d\u0e41\u0e0a\u0e23\u0e4c\u0e17\u0e35\u0e48\u0e44\u0e14\u0e49\u0e23\u0e31\u0e1a",
             "Incomplete sponsored-message response",
@@ -85282,6 +87648,10 @@ final class Translations {
             "\u0e43\u0e0a\u0e49\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14: {0}",
             "Later",
             "\u0e20\u0e32\u0e22\u0e2b\u0e25\u0e31\u0e07",
+            "Leave Listen Together to change the queue",
+            "\u0e2d\u0e2d\u0e01\u0e08\u0e32\u0e01"
+                + " \u201c\u0e1f\u0e31\u0e07\u0e14\u0e49\u0e27\u0e22\u0e01\u0e31\u0e19\u201d"
+                + " \u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e04\u0e34\u0e27",
             "Left to BitChord",
             "\u0e1b\u0e25\u0e48\u0e2d\u0e22\u0e43\u0e2b\u0e49 BitChord"
                     + " \u0e08\u0e31\u0e14\u0e01\u0e32\u0e23",
@@ -85318,8 +87688,12 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "\u0e42\u0e2b\u0e25\u0e14\u0e40\u0e1e\u0e25\u0e07\u0e02\u0e32\u0e40\u0e02\u0e49\u0e32",
             "Load older posts",
             "\u0e42\u0e2b\u0e25\u0e14\u0e42\u0e1e\u0e2a\u0e15\u0e4c\u0e40\u0e01\u0e48\u0e32\u0e01\u0e27\u0e48\u0e32",
+            "Load outgoing",
+            "\u0e42\u0e2b\u0e25\u0e14\u0e40\u0e1e\u0e25\u0e07\u0e02\u0e32\u0e2d\u0e2d\u0e01",
             "Loading",
             "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e42\u0e2b\u0e25\u0e14",
             "Loading channel\u2026",
@@ -85406,6 +87780,21 @@ final class Translations {
             "\u0e08\u0e31\u0e14\u0e01\u0e32\u0e23\u0e1b\u0e25\u0e32\u0e22\u0e17\u0e32\u0e07\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14"
                 + " \u0e01\u0e32\u0e23\u0e16\u0e48\u0e32\u0e22\u0e42\u0e2d\u0e19"
                 + " \u0e41\u0e25\u0e30\u0e01\u0e32\u0e23\u0e41\u0e0a\u0e23\u0e4c\u0e2a\u0e32\u0e18\u0e32\u0e23\u0e13\u0e30",
+            "Manual",
+            "\u0e01\u0e33\u0e2b\u0e19\u0e14\u0e40\u0e2d\u0e07",
+            "Manual applies when you tap Apply.",
+            "\u0e43\u0e19\u0e42\u0e2b\u0e21\u0e14\u0e01\u0e33\u0e2b\u0e19\u0e14\u0e40\u0e2d\u0e07"
+                + " \u0e43\u0e2b\u0e49\u0e41\u0e15\u0e30 \u0e43\u0e0a\u0e49"
+                + " \u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e19\u0e33\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e44\u0e1b\u0e43\u0e0a\u0e49",
+            "Manual saves when you tap Save draft.",
+            "\u0e43\u0e19\u0e42\u0e2b\u0e21\u0e14\u0e01\u0e33\u0e2b\u0e19\u0e14\u0e40\u0e2d\u0e07"
+                + " \u0e43\u0e2b\u0e49\u0e41\u0e15\u0e30"
+                + " \u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e41\u0e1a\u0e1a\u0e23\u0e48\u0e32\u0e07"
+                + " \u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01",
+            "Match A to B",
+            "\u0e1b\u0e23\u0e31\u0e1a A \u0e43\u0e2b\u0e49\u0e15\u0e23\u0e07\u0e01\u0e31\u0e1a B",
+            "Match B to A",
+            "\u0e1b\u0e23\u0e31\u0e1a B \u0e43\u0e2b\u0e49\u0e15\u0e23\u0e07\u0e01\u0e31\u0e1a A",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -85502,6 +87891,8 @@ final class Translations {
                 + " \u0e08\u0e32\u0e01\u0e1f\u0e2d\u0e23\u0e4c\u0e41\u0e21\u0e15"
                 + " \u0e2b\u0e23\u0e37\u0e2d\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e44\u0e1f\u0e25\u0e4c"
                 + " M4A \u0e14\u0e39\u0e08\u0e32\u0e01\u0e1a\u0e34\u0e15\u0e40\u0e23\u0e15",
+            "Multiplier",
+            "\u0e15\u0e31\u0e27\u0e04\u0e39\u0e13",
             "Music chats",
             "\u0e41\u0e0a\u0e17\u0e40\u0e1e\u0e25\u0e07",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -85551,6 +87942,9 @@ final class Translations {
                     + " \u0e02\u0e36\u0e49\u0e19\u0e44\u0e1b",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "\u0e15\u0e49\u0e2d\u0e07\u0e21\u0e35\u0e40\u0e17\u0e21\u0e42\u0e1b\u0e02\u0e2d\u0e07\u0e17\u0e31\u0e49\u0e07\u0e2a\u0e2d\u0e07\u0e40\u0e1e\u0e25\u0e07\u0e41\u0e25\u0e30\u0e2d\u0e31\u0e15\u0e23\u0e32\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e49\u0e07\u0e41\u0e15\u0e48"
+                + " 0.5\u00d7 \u0e16\u0e36\u0e07 2\u00d7",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -85613,6 +88007,8 @@ final class Translations {
             "No file offers yet. Ask the paired phone to choose audio files to share.",
             "\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e04\u0e33\u0e02\u0e2d\u0e41\u0e0a\u0e23\u0e4c\u0e44\u0e1f\u0e25\u0e4c"
                 + " \u0e02\u0e2d\u0e43\u0e2b\u0e49\u0e42\u0e17\u0e23\u0e28\u0e31\u0e1e\u0e17\u0e4c\u0e17\u0e35\u0e48\u0e08\u0e31\u0e1a\u0e04\u0e39\u0e48\u0e44\u0e27\u0e49\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e44\u0e1f\u0e25\u0e4c\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e17\u0e35\u0e48\u0e15\u0e49\u0e2d\u0e07\u0e01\u0e32\u0e23\u0e41\u0e0a\u0e23\u0e4c",
+            "No file picker is available",
+            "\u0e44\u0e21\u0e48\u0e21\u0e35\u0e15\u0e31\u0e27\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e44\u0e1f\u0e25\u0e4c\u0e17\u0e35\u0e48\u0e43\u0e0a\u0e49\u0e44\u0e14\u0e49",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -85679,6 +88075,8 @@ final class Translations {
             "No saved account. Enter your username and password.",
             "\u0e44\u0e21\u0e48\u0e21\u0e35\u0e1a\u0e31\u0e0d\u0e0a\u0e35\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49"
                 + " \u0e1b\u0e49\u0e2d\u0e19\u0e0a\u0e37\u0e48\u0e2d\u0e1c\u0e39\u0e49\u0e43\u0e0a\u0e49\u0e41\u0e25\u0e30\u0e23\u0e2b\u0e31\u0e2a\u0e1c\u0e48\u0e32\u0e19",
+            "No saved draft",
+            "\u0e44\u0e21\u0e48\u0e21\u0e35\u0e41\u0e1a\u0e1a\u0e23\u0e48\u0e32\u0e07\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -85724,6 +88122,9 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e22\u0e32\u0e27\u0e44\u0e21\u0e48\u0e1e\u0e2d",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "\u0e2b\u0e19\u0e48\u0e27\u0e22\u0e04\u0e27\u0e32\u0e21\u0e08\u0e33\u0e44\u0e21\u0e48\u0e40\u0e1e\u0e35\u0e22\u0e07\u0e1e\u0e2d\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e27\u0e34\u0e40\u0e04\u0e23\u0e32\u0e30\u0e2b\u0e4c\u0e40\u0e1e\u0e25\u0e07\u0e19\u0e35\u0e49"
+                + " \u0e41\u0e15\u0e30\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
             "Not managed here",
             "\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e08\u0e31\u0e14\u0e01\u0e32\u0e23\u0e17\u0e35\u0e48\u0e19\u0e35\u0e48",
             "Not played yet",
@@ -85903,6 +88304,8 @@ final class Translations {
                 + " \u0e41\u0e25\u0e30\u0e40\u0e1e\u0e25\u0e22\u0e4c\u0e25\u0e34\u0e2a\u0e15\u0e4c\u0e2d\u0e37\u0e48\u0e19\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13\u0e44\u0e21\u0e48\u0e08\u0e33\u0e40\u0e1b\u0e47\u0e19\u0e15\u0e49\u0e2d\u0e07\u0e43\u0e0a\u0e49\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23\u0e19\u0e35\u0e49",
             "Original key",
             "\u0e04\u0e35\u0e22\u0e4c\u0e15\u0e49\u0e19\u0e09\u0e1a\u0e31\u0e1a",
+            "Original tempo",
+            "\u0e40\u0e17\u0e21\u0e42\u0e1b\u0e40\u0e14\u0e34\u0e21",
             "Original vocals",
             "\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e23\u0e49\u0e2d\u0e07\u0e15\u0e49\u0e19\u0e09\u0e1a\u0e31\u0e1a",
             "Other",
@@ -85915,10 +88318,18 @@ final class Translations {
             "\u0e44\u0e1f\u0e25\u0e4c Telegram \u0e2d\u0e37\u0e48\u0e19\u0e46",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "\u0e40\u0e2d\u0e1f\u0e40\u0e1f\u0e01\u0e15\u0e4c\u0e40\u0e1e\u0e25\u0e07\u0e02\u0e32\u0e2d\u0e2d\u0e01",
             "Outro",
             "\u0e0a\u0e48\u0e27\u0e07\u0e17\u0e49\u0e32\u0e22",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "BPM \u0e0a\u0e48\u0e27\u0e07\u0e0b\u0e49\u0e2d\u0e19",
+            "overlap only",
+            "\u0e40\u0e09\u0e1e\u0e32\u0e30\u0e0a\u0e48\u0e27\u0e07\u0e0b\u0e49\u0e2d\u0e19",
+            "Overlap tempo",
+            "\u0e40\u0e17\u0e21\u0e42\u0e1b\u0e0a\u0e48\u0e27\u0e07\u0e0b\u0e49\u0e2d\u0e19",
             "Pair a peer",
             "\u0e08\u0e31\u0e1a\u0e04\u0e39\u0e48\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c",
             "Pair a peer before sharing files.",
@@ -86077,6 +88488,8 @@ final class Translations {
             "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e04\u0e38\u0e13\u0e20\u0e32\u0e1e\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e19\u0e35\u0e49",
             "Pitch",
             "\u0e23\u0e30\u0e14\u0e31\u0e1a\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e2a\u0e39\u0e07\u0e15\u0e48\u0e33",
+            "Play",
+            "\u0e40\u0e25\u0e48\u0e19",
             "Play a song first.",
             "\u0e40\u0e25\u0e48\u0e19\u0e40\u0e1e\u0e25\u0e07\u0e01\u0e48\u0e2d\u0e19",
             "Play alongside other apps",
@@ -86174,6 +88587,8 @@ final class Translations {
             "Preview",
             "Preview again, or Apply to resume.",
             "\u0e1f\u0e31\u0e07\u0e15\u0e31\u0e27\u0e2d\u0e22\u0e48\u0e32\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07\u0e2b\u0e23\u0e37\u0e2d\u0e43\u0e0a\u0e49\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e40\u0e25\u0e48\u0e19\u0e15\u0e48\u0e2d",
+            "Preview Before",
+            "\u0e1f\u0e31\u0e07 \u201c\u0e01\u0e48\u0e2d\u0e19\u201d",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -86361,6 +88776,8 @@ final class Translations {
                 + " \u0e08\u0e30\u0e44\u0e21\u0e48\u0e21\u0e35\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e08\u0e19\u0e01\u0e27\u0e48\u0e32\u0e04\u0e38\u0e13\u0e08\u0e30\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e44\u0e1f\u0e25\u0e4c",
             "Ready.",
             "\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e41\u0e25\u0e49\u0e27",
+            "Recall draft",
+            "\u0e42\u0e2b\u0e25\u0e14\u0e41\u0e1a\u0e1a\u0e23\u0e48\u0e32\u0e07",
             "Receive",
             "\u0e23\u0e31\u0e1a",
             "Receive audio from another BitChord phone, or share your files.",
@@ -86495,6 +88912,9 @@ final class Translations {
             "\u0e0b\u0e48\u0e2d\u0e21\u0e41\u0e0b\u0e21",
             "Repeat preview",
             "\u0e40\u0e25\u0e48\u0e19\u0e15\u0e31\u0e27\u0e2d\u0e22\u0e48\u0e32\u0e07\u0e0b\u0e49\u0e33",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "\u0e41\u0e17\u0e19\u0e17\u0e35\u0e48\u0e40\u0e1e\u0e25\u0e07\u0e1b\u0e31\u0e08\u0e08\u0e38\u0e1a\u0e31\u0e19\u0e41\u0e25\u0e30\u0e40\u0e1e\u0e25\u0e07\u0e16\u0e31\u0e14\u0e44\u0e1b\u0e43\u0e19\u0e04\u0e34\u0e27"
+                + " \u0e2a\u0e48\u0e27\u0e19\u0e40\u0e1e\u0e25\u0e07\u0e2d\u0e37\u0e48\u0e19\u0e22\u0e31\u0e07\u0e04\u0e07\u0e40\u0e14\u0e34\u0e21",
             "Report audio quality",
             "\u0e23\u0e32\u0e22\u0e07\u0e32\u0e19\u0e04\u0e38\u0e13\u0e20\u0e32\u0e1e\u0e40\u0e2a\u0e35\u0e22\u0e07",
             "Report sponsored message",
@@ -86527,6 +88947,8 @@ final class Translations {
             "\u0e23\u0e35\u0e40\u0e0b\u0e47\u0e15\u0e15\u0e31\u0e27\u0e15\u0e19\u0e01\u0e32\u0e23\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d",
             "Reset connection identity?",
             "\u0e23\u0e35\u0e40\u0e0b\u0e47\u0e15\u0e15\u0e31\u0e27\u0e15\u0e19\u0e01\u0e32\u0e23\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d\u0e2b\u0e23\u0e37\u0e2d\u0e44\u0e21\u0e48",
+            "Reset EQ",
+            "\u0e23\u0e35\u0e40\u0e0b\u0e47\u0e15 EQ",
             "Reset to {0}%",
             "\u0e23\u0e35\u0e40\u0e0b\u0e47\u0e15\u0e40\u0e1b\u0e47\u0e19 {0}%",
             "Reset {0}",
@@ -86579,6 +89001,8 @@ final class Translations {
             "\u0e25\u0e2d\u0e07\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
             "Retry sponsored messages",
             "\u0e25\u0e2d\u0e07\u0e42\u0e2b\u0e25\u0e14\u0e02\u0e49\u0e2d\u0e04\u0e27\u0e32\u0e21\u0e2a\u0e1b\u0e2d\u0e19\u0e40\u0e0b\u0e2d\u0e23\u0e4c\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "Reverse",
+            "\u0e2a\u0e25\u0e31\u0e1a\u0e25\u0e33\u0e14\u0e31\u0e1a",
             "Review",
             "\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a",
             "Review 1 song without tags",
@@ -86648,6 +89072,8 @@ final class Translations {
             "Save frequently played songs from available download sources on Wi-Fi",
             "\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e40\u0e1e\u0e25\u0e07\u0e17\u0e35\u0e48\u0e40\u0e25\u0e48\u0e19\u0e1a\u0e48\u0e2d\u0e22\u0e08\u0e32\u0e01\u0e41\u0e2b\u0e25\u0e48\u0e07\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e17\u0e35\u0e48\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e43\u0e0a\u0e49\u0e1c\u0e48\u0e32\u0e19"
                 + " Wi-Fi",
+            "Save mode",
+            "\u0e42\u0e2b\u0e21\u0e14\u0e01\u0e32\u0e23\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -87114,6 +89540,8 @@ final class Translations {
             "\u0e15\u0e31\u0e27\u0e08\u0e31\u0e1a\u0e40\u0e27\u0e25\u0e32\u0e1b\u0e34\u0e14\u0e40\u0e1e\u0e25\u0e07",
             "Sliders {0}",
             "\u0e2a\u0e44\u0e25\u0e40\u0e14\u0e2d\u0e23\u0e4c {0}",
+            "Slower by 1%",
+            "\u0e0a\u0e49\u0e32\u0e25\u0e07 1%",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -87734,6 +90162,11 @@ final class Translations {
             "The provider is still preparing files. Refresh this transfer later.",
             "\u0e1c\u0e39\u0e49\u0e43\u0e2b\u0e49\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23\u0e22\u0e31\u0e07\u0e40\u0e15\u0e23\u0e35\u0e22\u0e21\u0e44\u0e1f\u0e25\u0e4c\u0e2d\u0e22\u0e39\u0e48"
                 + " \u0e43\u0e2b\u0e49\u0e23\u0e35\u0e40\u0e1f\u0e23\u0e0a\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e42\u0e2d\u0e19\u0e19\u0e35\u0e49\u0e20\u0e32\u0e22\u0e2b\u0e25\u0e31\u0e07",
+            "The queue changed; reopen this transition",
+            "\u0e04\u0e34\u0e27\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e41\u0e25\u0e49\u0e27"
+                + " \u0e42\u0e1b\u0e23\u0e14\u0e40\u0e1b\u0e34\u0e14\u0e0a\u0e48\u0e27\u0e07\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e40\u0e1e\u0e25\u0e07\u0e19\u0e35\u0e49\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "The queue is being changed",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e04\u0e34\u0e27",
             "The queue plays in its own order",
             "\u0e04\u0e34\u0e27\u0e40\u0e25\u0e48\u0e19\u0e15\u0e32\u0e21\u0e25\u0e33\u0e14\u0e31\u0e1a\u0e40\u0e14\u0e34\u0e21",
             "The rootless JamesDSP needs two permissions that only Shizuku or a",
@@ -87809,6 +90242,8 @@ final class Translations {
                 + " \u0e41\u0e25\u0e49\u0e27\u0e2b\u0e22\u0e38\u0e14\u0e0a\u0e31\u0e48\u0e27\u0e04\u0e23\u0e32\u0e27",
             "The song pauses straight away",
             "\u0e40\u0e1e\u0e25\u0e07\u0e2b\u0e22\u0e38\u0e14\u0e0a\u0e31\u0e48\u0e27\u0e04\u0e23\u0e32\u0e27\u0e17\u0e31\u0e19\u0e17\u0e35",
+            "The track length is not available",
+            "\u0e44\u0e21\u0e48\u0e21\u0e35\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e04\u0e27\u0e32\u0e21\u0e22\u0e32\u0e27\u0e40\u0e1e\u0e25\u0e07",
             "The whole song is cached.",
             "\u0e41\u0e04\u0e0a\u0e40\u0e1e\u0e25\u0e07\u0e19\u0e35\u0e49\u0e44\u0e27\u0e49\u0e17\u0e31\u0e49\u0e07\u0e40\u0e1e\u0e25\u0e07\u0e41\u0e25\u0e49\u0e27",
             "There's no music in this chat yet.",
@@ -87857,6 +90292,8 @@ final class Translations {
             "This download choice expired. Return to the song and try again.",
             "\u0e15\u0e31\u0e27\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e19\u0e35\u0e49\u0e2b\u0e21\u0e14\u0e2d\u0e32\u0e22\u0e38\u0e41\u0e25\u0e49\u0e27"
                 + " \u0e01\u0e25\u0e31\u0e1a\u0e44\u0e1b\u0e17\u0e35\u0e48\u0e40\u0e1e\u0e25\u0e07\u0e41\u0e25\u0e49\u0e27\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+            "This file can\u2019t stay available",
+            "\u0e44\u0e21\u0e48\u0e2a\u0e32\u0e21\u0e32\u0e23\u0e16\u0e04\u0e07\u0e2a\u0e34\u0e17\u0e18\u0e34\u0e4c\u0e40\u0e02\u0e49\u0e32\u0e16\u0e36\u0e07\u0e44\u0e1f\u0e25\u0e4c\u0e19\u0e35\u0e49\u0e44\u0e14\u0e49",
             "This file couldn't be deleted.",
             "\u0e25\u0e1a\u0e44\u0e1f\u0e25\u0e4c\u0e19\u0e35\u0e49\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49",
             "This file did not pass the audio format check. Choose another result.",
@@ -87881,6 +90318,8 @@ final class Translations {
                 + " \u0e17\u0e35\u0e48\u0e21\u0e35\u0e2d\u0e22\u0e39\u0e48\u0e41\u0e25\u0e49\u0e27",
             "This official sponsored message could not be displayed completely.",
             "\u0e02\u0e49\u0e2d\u0e04\u0e27\u0e32\u0e21\u0e2a\u0e1b\u0e2d\u0e19\u0e40\u0e0b\u0e2d\u0e23\u0e4c\u0e2d\u0e22\u0e48\u0e32\u0e07\u0e40\u0e1b\u0e47\u0e19\u0e17\u0e32\u0e07\u0e01\u0e32\u0e23\u0e19\u0e35\u0e49\u0e41\u0e2a\u0e14\u0e07\u0e44\u0e14\u0e49\u0e44\u0e21\u0e48\u0e2a\u0e21\u0e1a\u0e39\u0e23\u0e13\u0e4c",
+            "This pair cannot be previewed",
+            "\u0e1f\u0e31\u0e07\u0e15\u0e31\u0e27\u0e2d\u0e22\u0e48\u0e32\u0e07\u0e40\u0e1e\u0e25\u0e07\u0e04\u0e39\u0e48\u0e19\u0e35\u0e49\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49",
             "This phone\u2019s audio chip can play: {0}.",
             "\u0e0a\u0e34\u0e1b\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e02\u0e2d\u0e07\u0e42\u0e17\u0e23\u0e28\u0e31\u0e1e\u0e17\u0e4c\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e19\u0e35\u0e49\u0e40\u0e25\u0e48\u0e19\u0e44\u0e14\u0e49:"
                 + " {0}",
@@ -87933,6 +90372,8 @@ final class Translations {
                 + " \u0e40\u0e27\u0e2d\u0e23\u0e4c\u0e0a\u0e31\u0e19\u0e19\u0e35\u0e49\u0e44\u0e21\u0e48\u0e40\u0e1b\u0e34\u0e14\u0e43\u0e2b\u0e49\u0e40\u0e02\u0e49\u0e32\u0e16\u0e36\u0e07\u0e41\u0e04\u0e0a\u0e40\u0e1e\u0e25\u0e07",
             "Time",
             "Time",
+            "times",
+            "\u0e40\u0e17\u0e48\u0e32",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -87968,6 +90409,8 @@ final class Translations {
             "\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e21\u0e37\u0e2d",
             "Track analysis",
             "\u0e01\u0e32\u0e23\u0e27\u0e34\u0e40\u0e04\u0e23\u0e32\u0e30\u0e2b\u0e4c\u0e41\u0e17\u0e23\u0e47\u0e01",
+            "Track BPM",
+            "BPM \u0e02\u0e2d\u0e07\u0e40\u0e1e\u0e25\u0e07",
             "Track details",
             "\u0e23\u0e32\u0e22\u0e25\u0e30\u0e40\u0e2d\u0e35\u0e22\u0e14\u0e41\u0e17\u0e23\u0e47\u0e01",
             "Track durations are not available yet. Start playback or",
@@ -88013,6 +90456,8 @@ final class Translations {
             "Turn on Saved index first. The songs come from it.",
             "\u0e40\u0e1b\u0e34\u0e14\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49\u0e01\u0e48\u0e2d\u0e19"
                 + " \u0e40\u0e1e\u0e25\u0e07\u0e21\u0e32\u0e08\u0e32\u0e01\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e19\u0e35\u0e49",
+            "Turn shuffle off to change the queue",
+            "\u0e1b\u0e34\u0e14\u0e01\u0e32\u0e23\u0e40\u0e25\u0e48\u0e19\u0e41\u0e1a\u0e1a\u0e2a\u0e38\u0e48\u0e21\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e04\u0e34\u0e27",
             "Turn the singer down",
             "\u0e25\u0e14\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e19\u0e31\u0e01\u0e23\u0e49\u0e2d\u0e07\u0e25\u0e07",
             "Turns the singer down so you can sing over the song. Works",
@@ -88025,6 +90470,8 @@ final class Translations {
             "\u0e01\u0e32\u0e23\u0e22\u0e37\u0e19\u0e22\u0e31\u0e19\u0e2a\u0e2d\u0e07\u0e02\u0e31\u0e49\u0e19\u0e15\u0e2d\u0e19",
             "Type part of the model name.",
             "\u0e1e\u0e34\u0e21\u0e1e\u0e4c\u0e1a\u0e32\u0e07\u0e2a\u0e48\u0e27\u0e19\u0e02\u0e2d\u0e07\u0e0a\u0e37\u0e48\u0e2d\u0e23\u0e38\u0e48\u0e19",
+            "Unavailable",
+            "\u0e44\u0e21\u0e48\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e43\u0e0a\u0e49\u0e07\u0e32\u0e19",
             "Under {0}, oldest first",
             "\u0e44\u0e21\u0e48\u0e40\u0e01\u0e34\u0e19 {0}"
                 + " \u0e42\u0e14\u0e22\u0e25\u0e49\u0e32\u0e07\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e40\u0e01\u0e48\u0e32\u0e2a\u0e38\u0e14\u0e01\u0e48\u0e2d\u0e19",
@@ -88080,6 +90527,9 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "\u0e43\u0e0a\u0e49\u0e15\u0e31\u0e27\u0e04\u0e39\u0e13\u0e15\u0e31\u0e49\u0e07\u0e41\u0e15\u0e48"
+                + " 0.5\u00d7 \u0e16\u0e36\u0e07 2\u00d7",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -88096,6 +90546,8 @@ final class Translations {
                 + " \u0e44\u0e21\u0e48\u0e21\u0e35\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23\u0e43\u0e19\u0e15\u0e31\u0e27"
                 + " \u0e41\u0e25\u0e30 BitChord"
                 + " \u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e40\u0e1b\u0e34\u0e14\u0e40\u0e0b\u0e34\u0e23\u0e4c\u0e1f\u0e40\u0e27\u0e2d\u0e23\u0e4c\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e2a\u0e48\u0e27\u0e19\u0e19\u0e35\u0e49",
+            "Use automatic mode",
+            "\u0e43\u0e0a\u0e49\u0e42\u0e2b\u0e21\u0e14\u0e2d\u0e31\u0e15\u0e42\u0e19\u0e21\u0e31\u0e15\u0e34",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -88118,6 +90570,10 @@ final class Translations {
                 + " \u0e42\u0e14\u0e22\u0e40\u0e2d\u0e1f\u0e40\u0e1f\u0e01\u0e15\u0e4c\u0e41\u0e25\u0e30\u0e04\u0e23\u0e2d\u0e2a\u0e40\u0e1f\u0e14\u0e08\u0e30\u0e2b\u0e22\u0e38\u0e14\u0e0a\u0e31\u0e48\u0e27\u0e04\u0e23\u0e32\u0e27",
             "Use it",
             "\u0e43\u0e0a\u0e49\u0e2d\u0e31\u0e19\u0e19\u0e35\u0e49",
+            "Use manual mode",
+            "\u0e43\u0e0a\u0e49\u0e42\u0e2b\u0e21\u0e14\u0e01\u0e33\u0e2b\u0e19\u0e14\u0e40\u0e2d\u0e07",
+            "Use measured tempo",
+            "\u0e43\u0e0a\u0e49\u0e40\u0e17\u0e21\u0e42\u0e1b\u0e17\u0e35\u0e48\u0e27\u0e31\u0e14\u0e44\u0e14\u0e49",
             "Use MicroG",
             "\u0e43\u0e0a\u0e49 MicroG",
             "Use name",
@@ -88142,6 +90598,10 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "\u0e43\u0e0a\u0e49\u0e0a\u0e37\u0e48\u0e2d\u0e19\u0e35\u0e49\u0e2b\u0e23\u0e37\u0e2d\u0e44\u0e21\u0e48",
+            "Use this pair",
+            "\u0e43\u0e0a\u0e49\u0e40\u0e1e\u0e25\u0e07\u0e04\u0e39\u0e48\u0e19\u0e35\u0e49",
+            "Use this pair to apply it",
+            "\u0e43\u0e0a\u0e49\u0e40\u0e1e\u0e25\u0e07\u0e04\u0e39\u0e48\u0e19\u0e35\u0e49\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e19\u0e33\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e44\u0e1b\u0e43\u0e0a\u0e49",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "\u0e43\u0e0a\u0e49\u0e1a\u0e31\u0e0d\u0e0a\u0e35 Real-Debrid, AllDebrid, Premiumize"
                     + " \u0e2b\u0e23\u0e37\u0e2d TorBox"
@@ -88166,6 +90626,8 @@ final class Translations {
                     + " original audio bytes.",
             "\u0e43\u0e0a\u0e49\u0e0a\u0e48\u0e2d\u0e07\u0e2b\u0e25\u0e31\u0e01\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27\u0e17\u0e35\u0e48\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e44\u0e27\u0e49"
                 + " \u0e44\u0e1f\u0e25\u0e4c\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e08\u0e30\u0e16\u0e39\u0e01\u0e2d\u0e31\u0e1b\u0e42\u0e2b\u0e25\u0e14\u0e42\u0e14\u0e22\u0e04\u0e07\u0e44\u0e1a\u0e15\u0e4c\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e15\u0e49\u0e19\u0e09\u0e1a\u0e31\u0e1a\u0e44\u0e27\u0e49",
+            "Using this pair\u2026",
+            "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e43\u0e0a\u0e49\u0e40\u0e1e\u0e25\u0e07\u0e04\u0e39\u0e48\u0e19\u0e35\u0e49\u2026",
             "Using {0}",
             "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e43\u0e0a\u0e49 {0}",
             "Variable",
@@ -88212,6 +90674,8 @@ final class Translations {
             "Volume",
             "Wait for the current action to finish.",
             "\u0e23\u0e2d\u0e43\u0e2b\u0e49\u0e01\u0e32\u0e23\u0e14\u0e33\u0e40\u0e19\u0e34\u0e19\u0e01\u0e32\u0e23\u0e1b\u0e31\u0e08\u0e08\u0e38\u0e1a\u0e31\u0e19\u0e40\u0e2a\u0e23\u0e47\u0e08\u0e01\u0e48\u0e2d\u0e19",
+            "Wait for the pair to finish loading",
+            "\u0e23\u0e2d\u0e08\u0e19\u0e01\u0e27\u0e48\u0e32\u0e40\u0e1e\u0e25\u0e07\u0e17\u0e31\u0e49\u0e07\u0e04\u0e39\u0e48\u0e08\u0e30\u0e42\u0e2b\u0e25\u0e14\u0e40\u0e2a\u0e23\u0e47\u0e08",
             "Waiting for a community channel to be indexed",
             "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d\u0e43\u0e2b\u0e49\u0e0a\u0e48\u0e2d\u0e07\u0e0a\u0e38\u0e21\u0e0a\u0e19\u0e17\u0e33\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e40\u0e2a\u0e23\u0e47\u0e08",
             "Waiting for device to cool down",
@@ -88247,6 +90711,8 @@ final class Translations {
             "Waiting for {0} community channels to be indexed",
             "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d\u0e43\u0e2b\u0e49\u0e0a\u0e48\u0e2d\u0e07\u0e0a\u0e38\u0e21\u0e0a\u0e19"
                 + " {0} \u0e0a\u0e48\u0e2d\u0e07\u0e17\u0e33\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e40\u0e2a\u0e23\u0e47\u0e08",
+            "Waiting to analyze",
+            "\u0e23\u0e2d\u0e01\u0e32\u0e23\u0e27\u0e34\u0e40\u0e04\u0e23\u0e32\u0e30\u0e2b\u0e4c",
             "Waiting to save",
             "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01",
             "Waiting to save selected copies",
@@ -88950,6 +91416,8 @@ final class Translations {
             "Adjust the normalised playback level",
             "Advanced",
             "Geli\u015fmi\u015f",
+            "Advanced curve",
+            "Geli\u015fmi\u015f e\u011fri",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -89004,8 +91472,14 @@ final class Translations {
                     + " BitChord\u2019un i\u00e7inde.",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "Analiz",
+            "Analysis result could not be read",
+            "Analiz sonucu okunamad\u0131",
             "Analyzing selected audio\u2026",
             "Se\u00e7ilen ses analiz ediliyor\u2026",
+            "Analyzing\u2026",
+            "Analiz ediliyor\u2026",
             "Android didn't allow this file to be deleted.",
             "Android bu dosyan\u0131n silinmesine izin vermedi.",
             "Android mixes surround files itself",
@@ -89055,12 +91529,16 @@ final class Translations {
             "Kulakl\u0131k modeliniz i\u00e7in bir AutoEq profili uygulay\u0131n",
             "Apply cache size",
             "\u00d6nbellek boyutunu uygula",
+            "Apply mode",
+            "Uygulama modu",
             "Apply now",
             "\u015eimdi uygula",
             "Apply or close to resume playback.",
             "Oynatmay\u0131 s\u00fcrd\u00fcrmek i\u00e7in uygulay\u0131n veya kapat\u0131n.",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "Ayarlar\u0131 uygula",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -89133,6 +91611,8 @@ final class Translations {
             "Otomatik kaydet",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "Otomatik ge\u00e7i\u015f hen\u00fcz haz\u0131r de\u011fil.",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -89193,12 +91673,19 @@ final class Translations {
             "Vuru\u015f g\u00fcveni",
             "Beat grid offset",
             "Vuru\u015f \u0131zgaras\u0131 kaymas\u0131",
+            "Beat grid scale",
+            "Vuru\u015f \u0131zgaras\u0131 \u00f6l\u00e7e\u011fi",
             "Beat grid tempo",
             "Vuru\u015f \u0131zgaras\u0131 temposu",
             "Beat jump",
             "Vuru\u015f atlama",
             "Beats",
             "Vuru\u015flar",
+            "Before",
+            "\u00d6nce",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u201c\u00d6nce\u201d kullan\u0131lam\u0131yor: Automix bu ge\u00e7i\u015fe efekt"
+                    + " ekliyor.",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -89390,6 +91877,9 @@ final class Translations {
                     + " de\u011fi\u015ftirin.",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "Her par\u00e7an\u0131n h\u0131z\u0131n\u0131 yaln\u0131zca \u00f6rt\u00fc\u015fme"
+                    + " s\u0131ras\u0131nda de\u011fi\u015ftirir. Ses perdesi korunur.",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -89447,6 +91937,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "Se\u00e7",
+            "Choose a different file",
+            "Ba\u015fka bir dosya se\u00e7",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -89729,6 +92221,8 @@ final class Translations {
             "Ondan kopyalama, bu bitti\u011finde en eski g\u00f6nderiden ba\u015flar.",
             "Corrected names",
             "D\u00fczeltilmi\u015f adlar",
+            "Could not change the queue",
+            "Kuyruk de\u011fi\u015ftirilemedi",
             "Could not complete peer discovery. Check relays and try again.",
             "E\u015f ke\u015ffi tamamlanamad\u0131. Aktar\u0131c\u0131lar\u0131 kontrol edip tekrar"
                     + " deneyin.",
@@ -89764,8 +92258,12 @@ final class Translations {
             "Hizmete ula\u015f\u0131lamad\u0131. Ba\u011flant\u0131n\u0131z\u0131 kontrol edin.",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "Bu dosya okunamad\u0131",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "Bu par\u00e7an\u0131n sesi okunamad\u0131.",
             "Could not read your library. Try again.",
             "Kitapl\u0131\u011f\u0131n\u0131z okunamad\u0131. Yeniden deneyin.",
             "Could not remove the saved service. Try again.",
@@ -89790,6 +92288,8 @@ final class Translations {
                     + " kontrol edip tekrar deneyin.",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "Bu par\u00e7a \u00e7ifti kullan\u0131lamad\u0131.",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "Kopyalanamad\u0131: {0}. {1} dk sonra yeniden denenecek.",
             "Couldn\u2019t load AutoEq\u2019s list: {0}",
@@ -90088,6 +92588,8 @@ final class Translations {
             "Taslak oynatmadan ba\u011f\u0131ms\u0131zd\u0131r",
             "Draft saved",
             "Taslak kaydedildi",
+            "Draft saving",
+            "Taslak kayd\u0131",
             "Drag a curve point or fine-tune each track below.",
             "Bir e\u011fri noktas\u0131n\u0131 s\u00fcr\u00fckleyin veya a\u015fa\u011f\u0131da"
                     + " par\u00e7alar\u0131 ayarlay\u0131n.",
@@ -90263,6 +92765,8 @@ final class Translations {
             "Son \u015fark\u0131n\u0131n sonunda sesi k\u0131s",
             "Failed",
             "Ba\u015far\u0131s\u0131z",
+            "Faster by 1%",
+            "%1 daha h\u0131zl\u0131",
             "Favor songs you play often",
             "S\u0131k dinledi\u011finiz \u015fark\u0131lara \u00f6ncelik ver",
             "Favor well-known songs",
@@ -90295,6 +92799,8 @@ final class Translations {
             "Etiketsiz dosyalar AcoustID\u2019de aran\u0131r",
             "Filter",
             "Filtre",
+            "Filter depth",
+            "Filtre derinli\u011fi",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -90379,6 +92885,8 @@ final class Translations {
             "Klas\u00f6r",
             "Folder selected.",
             "Klas\u00f6r se\u00e7ildi.",
+            "Follow current pair",
+            "Ge\u00e7erli \u00e7ifti izle",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -90470,6 +92978,8 @@ final class Translations {
             "Yinelenen \u015fark\u0131lar\u0131 gizle",
             "Hide hash",
             "Hash\u2019i gizle",
+            "Hide sources",
+            "Kaynaklar\u0131 gizle",
             "High",
             "Y\u00fcksek",
             "High-pass",
@@ -90477,6 +92987,8 @@ final class Translations {
             "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
             "De\u011fi\u015ftirmek veya silmek i\u00e7in cue i\u015faretini bas\u0131l\u0131 tutun."
                 + " Izgara d\u00fczenlemeleri oynatma h\u0131z\u0131n\u0131 de\u011fi\u015ftirmez.",
+            "How far the selected filters sweep.",
+            "Se\u00e7ili filtrelerin tarama aral\u0131\u011f\u0131.",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -90511,6 +93023,8 @@ final class Translations {
             "Kay\u0131tl\u0131 dizini dahil et (daha b\u00fcy\u00fck dosya)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "Gelen par\u00e7a efekti",
             "Incoming offers",
             "Gelen teklifler",
             "Incomplete sponsored-message response",
@@ -90657,6 +93171,9 @@ final class Translations {
             "Son kullan\u0131m: {0}",
             "Later",
             "Daha sonra",
+            "Leave Listen Together to change the queue",
+            "Kuyru\u011fu de\u011fi\u015ftirmek i\u00e7in \u201cBirlikte dinle\u201dden"
+                    + " ayr\u0131l\u0131n",
             "Left to BitChord",
             "BitChord\u2019a b\u0131rak\u0131ld\u0131",
             "Let JamesDSP do the effects",
@@ -90689,8 +93206,12 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "Gelen par\u00e7ay\u0131 y\u00fckle",
             "Load older posts",
             "Daha eski g\u00f6nderileri y\u00fckle",
+            "Load outgoing",
+            "Giden par\u00e7ay\u0131 y\u00fckle",
             "Loading",
             "Y\u00fckleniyor",
             "Loading channel\u2026",
@@ -90769,6 +93290,17 @@ final class Translations {
             "Manage download destinations, transfers and public sharing.",
             "\u0130ndirme konumlar\u0131n\u0131, aktar\u0131mlar\u0131 ve herkese a\u00e7\u0131k"
                     + " payla\u015f\u0131m\u0131 y\u00f6netin.",
+            "Manual",
+            "Manuel",
+            "Manual applies when you tap Apply.",
+            "Manuel modda, Uygula d\u00fc\u011fmesine dokundu\u011funuzda uygulan\u0131r.",
+            "Manual saves when you tap Save draft.",
+            "Manuel modda, Tasla\u011f\u0131 kaydet d\u00fc\u011fmesine dokundu\u011funuzda"
+                    + " kaydedilir.",
+            "Match A to B",
+            "A\u2019y\u0131 B\u2019ye e\u015fle\u015ftir",
+            "Match B to A",
+            "B\u2019yi A\u2019ya e\u015fle\u015ftir",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -90850,6 +93382,8 @@ final class Translations {
                 + " atlan\u0131r. Bir dosyan\u0131n kay\u0131ps\u0131z olup olmad\u0131\u011f\u0131"
                 + " format\u0131na, M4A dosyalar\u0131nda ise bit h\u0131z\u0131na g\u00f6re"
                 + " belirlenir.",
+            "Multiplier",
+            "\u00c7arpan",
             "Music chats",
             "M\u00fczik sohbetleri",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -90893,6 +93427,8 @@ final class Translations {
             "Android 10 veya daha yenisini gerektirir.",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "Her iki tempo ve 0,5\u00d7 ile 2\u00d7 aras\u0131nda bir oran gerekir",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -90952,6 +93488,8 @@ final class Translations {
             "No file offers yet. Ask the paired phone to choose audio files to share.",
             "Hen\u00fcz dosya teklifi yok. E\u015fle\u015ftirilmi\u015f telefondan"
                     + " payla\u015f\u0131lacak ses dosyalar\u0131n\u0131 se\u00e7mesini isteyin.",
+            "No file picker is available",
+            "Dosya se\u00e7ici bulunamad\u0131",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -91012,6 +93550,8 @@ final class Translations {
             "No saved account. Enter your username and password.",
             "Kay\u0131tl\u0131 hesap yok. Kullan\u0131c\u0131 ad\u0131n\u0131z\u0131 ve"
                     + " parolan\u0131z\u0131 girin.",
+            "No saved draft",
+            "Kay\u0131tl\u0131 taslak yok",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -91050,6 +93590,9 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "Yeterli ses yok",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "Bu par\u00e7ay\u0131 analiz etmek i\u00e7in yeterli bellek yok. Yeniden dene"
+                    + " se\u00e7ene\u011fine dokunun.",
             "Not managed here",
             "Burada y\u00f6netilmeyenler",
             "Not played yet",
@@ -91211,6 +93754,8 @@ final class Translations {
                 + " gerek yoktur.",
             "Original key",
             "Orijinal ton",
+            "Original tempo",
+            "\u00d6zg\u00fcn tempo",
             "Original vocals",
             "Orijinal vokal",
             "Other",
@@ -91224,10 +93769,18 @@ final class Translations {
             "Di\u011fer Telegram dosyalar\u0131",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "Giden par\u00e7a efekti",
             "Outro",
             "\u00c7\u0131k\u0131\u015f",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "\u00d6rt\u00fc\u015fme BPM\u2019i",
+            "overlap only",
+            "yaln\u0131zca \u00f6rt\u00fc\u015fmede",
+            "Overlap tempo",
+            "\u00d6rt\u00fc\u015fme temposu",
             "Pair a peer",
             "Bir e\u015fle e\u015fle\u015ftir",
             "Pair a peer before sharing files.",
@@ -91380,6 +93933,8 @@ final class Translations {
             "Bu indirme i\u00e7in kaliteyi se\u00e7in.",
             "Pitch",
             "Ton",
+            "Play",
+            "Oynat",
             "Play a song first.",
             "\u00d6nce bir \u015fark\u0131 \u00e7al\u0131n.",
             "Play alongside other apps",
@@ -91471,6 +94026,8 @@ final class Translations {
             "Preview",
             "Preview again, or Apply to resume.",
             "Tekrar dinleyin veya s\u00fcrd\u00fcrmek i\u00e7in uygulay\u0131n.",
+            "Preview Before",
+            "\u201c\u00d6nce\u201dyi dinle",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -91645,6 +94202,8 @@ final class Translations {
             "Aramaya haz\u0131r. Bir dosya se\u00e7ene kadar hi\u00e7bir \u015fey indirilmez.",
             "Ready.",
             "Haz\u0131r.",
+            "Recall draft",
+            "Tasla\u011f\u0131 y\u00fckle",
             "Receive",
             "Al",
             "Receive audio from another BitChord phone, or share your files.",
@@ -91763,6 +94322,9 @@ final class Translations {
             "Onar",
             "Repeat preview",
             "\u00d6nizlemeyi tekrarla",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "Kuyruktaki ge\u00e7erli ve sonraki \u015fark\u0131y\u0131 de\u011fi\u015ftirir."
+                    + " Di\u011ferleri ayn\u0131 kal\u0131r.",
             "Report audio quality",
             "Ses kalitesini bildir",
             "Report sponsored message",
@@ -91795,6 +94357,8 @@ final class Translations {
             "Ba\u011flant\u0131 kimli\u011fini s\u0131f\u0131rla",
             "Reset connection identity?",
             "Ba\u011flant\u0131 kimli\u011fi s\u0131f\u0131rlans\u0131n m\u0131?",
+            "Reset EQ",
+            "Ekolayz\u0131r\u0131 s\u0131f\u0131rla",
             "Reset to {0}%",
             "%{0} de\u011ferine s\u0131f\u0131rla",
             "Reset {0}",
@@ -91845,6 +94409,8 @@ final class Translations {
             "Ba\u011flant\u0131y\u0131 yeniden dene",
             "Retry sponsored messages",
             "Sponsorlu mesajlar\u0131 yeniden dene",
+            "Reverse",
+            "Ters \u00e7evir",
             "Review",
             "\u0130ncele",
             "Review 1 song without tags",
@@ -91909,6 +94475,8 @@ final class Translations {
             "Save frequently played songs from available download sources on Wi-Fi",
             "S\u0131k \u00e7al\u0131nan \u015fark\u0131lar\u0131 Wi-Fi \u00fczerinden"
                     + " kullan\u0131labilir indirme kaynaklar\u0131ndan kaydedin",
+            "Save mode",
+            "Kay\u0131t modu",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -92310,6 +94878,8 @@ final class Translations {
             "Uyku zamanlay\u0131c\u0131s\u0131",
             "Sliders {0}",
             "Kayd\u0131r\u0131c\u0131lar {0}",
+            "Slower by 1%",
+            "%1 daha yava\u015f",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -92824,6 +95394,10 @@ final class Translations {
             "The provider is still preparing files. Refresh this transfer later.",
             "Hizmet sa\u011flay\u0131c\u0131 dosyalar\u0131 h\u00e2l\u00e2 haz\u0131rl\u0131yor. Bu"
                     + " aktar\u0131m\u0131 daha sonra yenileyin.",
+            "The queue changed; reopen this transition",
+            "Kuyruk de\u011fi\u015fti; bu ge\u00e7i\u015fi yeniden a\u00e7\u0131n",
+            "The queue is being changed",
+            "Kuyruk de\u011fi\u015ftiriliyor",
             "The queue plays in its own order",
             "S\u0131ra kendi d\u00fczeninde \u00e7alar",
             "The rootless JamesDSP needs two permissions that only Shizuku or a",
@@ -92881,6 +95455,8 @@ final class Translations {
             "\u015eark\u0131n\u0131n sesi k\u0131s\u0131l\u0131r, sonra duraklar",
             "The song pauses straight away",
             "\u015eark\u0131 hemen durur",
+            "The track length is not available",
+            "Par\u00e7a s\u00fcresi mevcut de\u011fil",
             "The whole song is cached.",
             "\u015eark\u0131n\u0131n tamam\u0131 \u00f6nbellekte.",
             "There's no music in this chat yet.",
@@ -92923,6 +95499,8 @@ final class Translations {
             "This download choice expired. Return to the song and try again.",
             "Bu indirme se\u00e7iminin s\u00fcresi doldu. \u015eark\u0131ya d\u00f6n\u00fcp tekrar"
                     + " deneyin.",
+            "This file can\u2019t stay available",
+            "Bu dosyaya kal\u0131c\u0131 eri\u015fim sa\u011flanam\u0131yor",
             "This file couldn't be deleted.",
             "Bu dosya silinemedi.",
             "This file did not pass the audio format check. Choose another result.",
@@ -92944,6 +95522,8 @@ final class Translations {
                     + " hesab\u0131yla giri\u015f yap\u0131n.",
             "This official sponsored message could not be displayed completely.",
             "Bu resmi sponsorlu mesaj tam olarak g\u00f6sterilemedi.",
+            "This pair cannot be previewed",
+            "Bu \u00e7iftin \u00f6nizlemesi dinlenemiyor",
             "This phone\u2019s audio chip can play: {0}.",
             "Bu telefonun ses \u00e7ipi \u015funlar\u0131 \u00e7alabilir: {0}.",
             "This playlist has no available tracks.",
@@ -92986,6 +95566,8 @@ final class Translations {
                     + " eri\u015fim sunmuyor.",
             "Time",
             "Time",
+            "times",
+            "kat",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -93016,6 +95598,8 @@ final class Translations {
             "Ara\u00e7lar",
             "Track analysis",
             "Par\u00e7a analizi",
+            "Track BPM",
+            "Par\u00e7a BPM\u2019i",
             "Track details",
             "Par\u00e7a ayr\u0131nt\u0131lar\u0131",
             "Track durations are not available yet. Start playback or",
@@ -93058,6 +95642,9 @@ final class Translations {
                     + " gelir.",
             "Turn on Saved index first. The songs come from it.",
             "\u00d6nce Kay\u0131tl\u0131 dizini a\u00e7\u0131n. \u015eark\u0131lar oradan gelir.",
+            "Turn shuffle off to change the queue",
+            "Kuyru\u011fu de\u011fi\u015ftirmek i\u00e7in kar\u0131\u015f\u0131k \u00e7almay\u0131"
+                    + " kapat\u0131n",
             "Turn the singer down",
             "Turn the singer down",
             "Turns the singer down so you can sing over the song. Works",
@@ -93071,6 +95658,8 @@ final class Translations {
             "\u0130ki ad\u0131ml\u0131 do\u011frulama",
             "Type part of the model name.",
             "Model ad\u0131n\u0131n bir k\u0131sm\u0131n\u0131 yaz\u0131n.",
+            "Unavailable",
+            "Kullan\u0131lam\u0131yor",
             "Under {0}, oldest first",
             "{0} alt\u0131nda, \u00f6nce en eskiler",
             "Undo",
@@ -93120,6 +95709,8 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "0,5\u00d7 ile 2\u00d7 aras\u0131nda bir \u00e7arpan kullan\u0131n",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -93133,6 +95724,8 @@ final class Translations {
             "Sohbet tarz\u0131 JSON isteklerini kabul eden herhangi bir HTTPS hizmetini"
                     + " kullan\u0131n. Yerle\u015fik bir hizmet yoktur ve BitChord bunun i\u00e7in"
                     + " sunucu \u00e7al\u0131\u015ft\u0131rmaz.",
+            "Use automatic mode",
+            "Otomatik modu kullan",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -93152,6 +95745,10 @@ final class Translations {
                     + " \u00e7apraz ge\u00e7i\u015f duraklar",
             "Use it",
             "Kullan",
+            "Use manual mode",
+            "Manuel modu kullan",
+            "Use measured tempo",
+            "\u00d6l\u00e7\u00fclen tempoyu kullan",
             "Use MicroG",
             "MicroG kullan",
             "Use name",
@@ -93175,6 +95772,10 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "Bu ad kullan\u0131ls\u0131n m\u0131?",
+            "Use this pair",
+            "Bu \u00e7ifti kullan",
+            "Use this pair to apply it",
+            "Uygulamak i\u00e7in bu \u00e7ifti kullan\u0131n",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "Kendi Real-Debrid, AllDebrid, Premiumize veya TorBox hesab\u0131n\u0131z\u0131"
                     + " kullan\u0131n",
@@ -93196,6 +95797,8 @@ final class Translations {
             "Yap\u0131land\u0131r\u0131lm\u0131\u015f \u00f6zel ana kanal\u0131n\u0131z\u0131"
                 + " kullan\u0131r. \u0130ndirmeler, \u00f6zg\u00fcn ses verileri korunarak dosya"
                 + " olarak y\u00fcklenir.",
+            "Using this pair\u2026",
+            "Bu \u00e7ift kullan\u0131l\u0131yor\u2026",
             "Using {0}",
             "{0} kullan\u0131l\u0131yor",
             "Variable",
@@ -93241,6 +95844,8 @@ final class Translations {
             "Volume",
             "Wait for the current action to finish.",
             "Ge\u00e7erli i\u015flemin tamamlanmas\u0131n\u0131 bekleyin.",
+            "Wait for the pair to finish loading",
+            "Her iki par\u00e7an\u0131n y\u00fcklenmesini bekleyin",
             "Waiting for a community channel to be indexed",
             "Bir topluluk kanal\u0131n\u0131n dizine eklenmesi bekleniyor",
             "Waiting for device to cool down",
@@ -93273,6 +95878,8 @@ final class Translations {
             "Waiting for {0} community channels to be indexed",
             "Topluluk kanallar\u0131n\u0131n dizine eklenmesi bekleniyor (kanal say\u0131s\u0131:"
                     + " {0})",
+            "Waiting to analyze",
+            "Analiz bekleniyor",
             "Waiting to save",
             "Kaydetmek i\u00e7in bekleniyor",
             "Waiting to save selected copies",
@@ -94080,6 +96687,8 @@ final class Translations {
             "Adjust the normalised playback level",
             "Advanced",
             "\u0627\u06cc\u0688\u0648\u0627\u0646\u0633\u0688",
+            "Advanced curve",
+            "\u062a\u0641\u0635\u06cc\u0644\u06cc \u0645\u0646\u062d\u0646\u06cc",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -94169,10 +96778,18 @@ final class Translations {
                 + " \u06a9\u06d2 \u0627\u0646\u062f\u0631\u06d4",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "\u062a\u062c\u0632\u06cc\u06c1",
+            "Analysis result could not be read",
+            "\u062a\u062c\u0632\u06cc\u06d2 \u06a9\u0627 \u0646\u062a\u06cc\u062c\u06c1"
+                    + " \u067e\u0691\u06be\u0627 \u0646\u06c1\u06cc\u06ba \u062c\u0627"
+                    + " \u0633\u06a9\u0627",
             "Analyzing selected audio\u2026",
             "\u0645\u0646\u062a\u062e\u0628 \u0622\u0688\u06cc\u0648 \u06a9\u0627"
                     + " \u062a\u062c\u0632\u06cc\u06c1 \u06c1\u0648 \u0631\u06c1\u0627"
                     + " \u06c1\u06d2\u2026",
+            "Analyzing\u2026",
+            "\u062a\u062c\u0632\u06cc\u06c1 \u062c\u0627\u0631\u06cc \u06c1\u06d2\u2026",
             "Android didn't allow this file to be deleted.",
             "Android \u0646\u06d2 \u0627\u0633 \u0641\u0627\u0626\u0644 \u06a9\u0648"
                     + " \u062d\u0630\u0641 \u06a9\u0631\u0646\u06d2 \u06a9\u06cc"
@@ -94249,6 +96866,9 @@ final class Translations {
             "Apply cache size",
             "\u06a9\u06cc\u0634 \u06a9\u0627 \u0633\u0627\u0626\u0632 \u0644\u0627\u06af\u0648"
                     + " \u06a9\u0631\u06cc\u06ba",
+            "Apply mode",
+            "\u0644\u0627\u06af\u0648 \u06a9\u0631\u0646\u06d2 \u06a9\u0627"
+                    + " \u0637\u0631\u06cc\u0642\u06c1",
             "Apply now",
             "\u0627\u0628\u06be\u06cc \u0644\u0627\u06af\u0648 \u06a9\u0631\u06cc\u06ba",
             "Apply or close to resume playback.",
@@ -94258,6 +96878,9 @@ final class Translations {
                     + " \u0628\u0646\u062f \u06a9\u0631\u06cc\u06ba\u06d4",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "\u062a\u0631\u062a\u06cc\u0628\u0627\u062a \u0644\u0627\u06af\u0648"
+                    + " \u06a9\u0631\u06cc\u06ba",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -94360,6 +96983,10 @@ final class Translations {
                     + " \u06a9\u0631\u06cc\u06ba",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "\u062e\u0648\u062f\u06a9\u0627\u0631 \u0627\u0645\u062a\u0632\u0627\u062c"
+                    + " \u0627\u0628\u06be\u06cc \u062a\u06cc\u0627\u0631 \u0646\u06c1\u06cc\u06ba"
+                    + " \u06c1\u06d2\u06d4",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -94452,12 +97079,23 @@ final class Translations {
             "\u0628\u06cc\u0679 \u06a9\u0627 \u0627\u0639\u062a\u0645\u0627\u062f",
             "Beat grid offset",
             "\u0628\u06cc\u0679 \u06af\u0631\u0688 \u06a9\u0627 \u0641\u0631\u0642",
+            "Beat grid scale",
+            "\u0628\u06cc\u0679 \u06af\u0631\u0688 \u06a9\u0627"
+                    + " \u067e\u06cc\u0645\u0627\u0646\u06c1",
             "Beat grid tempo",
             "\u0628\u06cc\u0679 \u06af\u0631\u0688 \u06a9\u06cc \u0631\u0641\u062a\u0627\u0631",
             "Beat jump",
             "\u0628\u06cc\u0679 \u06a9\u06cc \u0686\u06be\u0644\u0627\u0646\u06af",
             "Beats",
             "\u062a\u0627\u0644",
+            "Before",
+            "\u067e\u06c1\u0644\u06d2",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u201c\u067e\u06c1\u0644\u06d2\u201d \u062f\u0633\u062a\u06cc\u0627\u0628"
+                    + " \u0646\u06c1\u06cc\u06ba: Automix \u0627\u0633"
+                    + " \u0627\u0645\u062a\u0632\u0627\u062c \u0645\u06cc\u06ba"
+                    + " \u0627\u062b\u0631\u0627\u062a \u0634\u0627\u0645\u0644"
+                    + " \u06a9\u0631\u062a\u0627 \u06c1\u06d2\u06d4",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -94788,6 +97426,13 @@ final class Translations {
                     + " \u06c1\u06cc\u06ba\u06d4",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "\u06c1\u0631 \u0679\u0631\u06cc\u06a9 \u06a9\u06cc \u0631\u0641\u062a\u0627\u0631"
+                + " \u0635\u0631\u0641 \u0627\u0648\u0648\u0631\u0644\u06cc\u067e \u06a9\u06d2"
+                + " \u062f\u0648\u0631\u0627\u0646 \u0628\u062f\u0644\u062a\u0627"
+                + " \u06c1\u06d2\u06d4 \u0633\u064f\u0631 \u06a9\u06cc"
+                + " \u0627\u0648\u0646\u0686\u0627\u0626\u06cc \u0628\u0631\u0642\u0631\u0627\u0631"
+                + " \u0631\u06c1\u062a\u06cc \u06c1\u06d2\u06d4",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -94876,6 +97521,9 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "\u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba",
+            "Choose a different file",
+            "\u062f\u0648\u0633\u0631\u06cc \u0641\u0627\u0626\u0644 \u0645\u0646\u062a\u062e\u0628"
+                    + " \u06a9\u0631\u06cc\u06ba",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -95324,6 +97972,9 @@ final class Translations {
                     + " \u067e\u0648\u0633\u0679 \u067e\u06c1\u0644\u06d2\u06d4",
             "Corrected names",
             "\u062f\u0631\u0633\u062a \u06a9\u06cc\u06d2 \u06af\u0626\u06d2 \u0646\u0627\u0645",
+            "Could not change the queue",
+            "\u0642\u0637\u0627\u0631 \u0628\u062f\u0644\u06cc \u0646\u06c1\u06cc\u06ba"
+                    + " \u062c\u0627 \u0633\u06a9\u06cc",
             "Could not complete peer discovery. Check relays and try again.",
             "\u0633\u0627\u062a\u06be\u06cc\u0648\u06ba \u06a9\u06cc \u062a\u0644\u0627\u0634"
                     + " \u0645\u06a9\u0645\u0644 \u0646\u06c1\u06cc\u06ba \u06c1\u0648"
@@ -95387,8 +98038,15 @@ final class Translations {
                     + " \u06a9\u0631\u06cc\u06ba\u06d4",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "\u06cc\u06c1 \u0641\u0627\u0626\u0644 \u067e\u0691\u06be\u06cc"
+                    + " \u0646\u06c1\u06cc\u06ba \u062c\u0627 \u0633\u06a9\u06cc",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "\u0627\u0633 \u0679\u0631\u06cc\u06a9 \u06a9\u06cc \u0622\u0688\u06cc\u0648"
+                    + " \u067e\u0691\u06be\u06cc \u0646\u06c1\u06cc\u06ba \u062c\u0627"
+                    + " \u0633\u06a9\u06cc\u06d4",
             "Could not read your library. Try again.",
             "\u0622\u067e \u06a9\u06cc \u0644\u0627\u0626\u0628\u0631\u06cc\u0631\u06cc"
                     + " \u067e\u0691\u06be\u06cc \u0646\u06c1\u06cc\u06ba \u062c\u0627"
@@ -95437,6 +98095,9 @@ final class Translations {
                 + " \u06a9\u0648\u0634\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "\u06cc\u06c1 \u062c\u0648\u0691\u0627 \u0627\u0633\u062a\u0639\u0645\u0627\u0644"
+                    + " \u0646\u06c1\u06cc\u06ba \u06c1\u0648 \u0633\u06a9\u0627\u06d4",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "\u06a9\u0627\u067e\u06cc \u0646\u06c1\u06cc\u06ba \u06c1\u0648 \u0633\u06a9\u0627:"
                     + " {0}\u06d4 {1} \u0645\u0646\u0679 \u0645\u06cc\u06ba"
@@ -95858,6 +98519,9 @@ final class Translations {
             "Draft saved",
             "\u0645\u0633\u0648\u062f\u06c1 \u0645\u062d\u0641\u0648\u0638 \u06c1\u0648"
                     + " \u06af\u06cc\u0627",
+            "Draft saving",
+            "\u0645\u0633\u0648\u062f\u06c1 \u0645\u062d\u0641\u0648\u0638"
+                    + " \u06a9\u0631\u0646\u0627",
             "Drag a curve point or fine-tune each track below.",
             "\u0645\u0646\u062d\u0646\u06cc \u06a9\u0627 \u0646\u0642\u0637\u06c1"
                     + " \u06a9\u06be\u06cc\u0646\u0686\u06cc\u06ba \u06cc\u0627"
@@ -96148,6 +98812,8 @@ final class Translations {
                     + " \u06a9\u0645 \u06a9\u0631\u06cc\u06ba",
             "Failed",
             "\u0646\u0627\u06a9\u0627\u0645",
+            "Faster by 1%",
+            "1\u066a \u062a\u06cc\u0632",
             "Favor songs you play often",
             "\u0627\u06a9\u062b\u0631 \u0633\u0646\u06d2 \u062c\u0627\u0646\u06d2"
                     + " \u0648\u0627\u0644\u06d2 \u06af\u0627\u0646\u0648\u06ba \u06a9\u0648"
@@ -96200,6 +98866,8 @@ final class Translations {
                     + " \u06c1\u06cc\u06ba",
             "Filter",
             "\u0641\u0644\u0679\u0631",
+            "Filter depth",
+            "\u0641\u0644\u0679\u0631 \u06a9\u06cc \u06af\u06c1\u0631\u0627\u0626\u06cc",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -96354,6 +99022,9 @@ final class Translations {
             "Folder selected.",
             "\u0641\u0648\u0644\u0688\u0631 \u0645\u0646\u062a\u062e\u0628 \u06c1\u0648"
                     + " \u06af\u06cc\u0627\u06d4",
+            "Follow current pair",
+            "\u0645\u0648\u062c\u0648\u062f\u06c1 \u062c\u0648\u0691\u06cc \u06a9\u06cc"
+                    + " \u067e\u06cc\u0631\u0648\u06cc \u06a9\u0631\u06cc\u06ba",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -96488,6 +99159,8 @@ final class Translations {
                     + " \u0686\u06be\u067e\u0627\u0626\u06cc\u06ba",
             "Hide hash",
             "hash \u0686\u06be\u067e\u0627\u0626\u06cc\u06ba",
+            "Hide sources",
+            "\u0630\u0631\u0627\u0626\u0639 \u0686\u06be\u067e\u0627\u0626\u06cc\u06ba",
             "High",
             "High",
             "High-pass",
@@ -96500,6 +99173,9 @@ final class Translations {
                     + " \u067e\u0644\u06d2 \u0628\u06cc\u06a9 \u06a9\u06cc"
                     + " \u0631\u0641\u062a\u0627\u0631 \u0646\u06c1\u06cc\u06ba"
                     + " \u0628\u062f\u0644\u062a\u06cc\u06d4",
+            "How far the selected filters sweep.",
+            "\u0645\u0646\u062a\u062e\u0628 \u0641\u0644\u0679\u0631\u0632 \u06a9\u06d2"
+                    + " \u0633\u0648\u06cc\u067e \u06a9\u06cc \u062d\u062f\u06d4",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -96546,6 +99222,9 @@ final class Translations {
                     + " \u0641\u0627\u0626\u0644)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "\u0622\u0646\u06d2 \u0648\u0627\u0644\u06d2 \u0679\u0631\u06cc\u06a9 \u06a9\u0627"
+                    + " \u0627\u062b\u0631",
             "Incoming offers",
             "\u0645\u0648\u0635\u0648\u0644 \u06c1\u0648\u0646\u06d2 \u0648\u0627\u0644\u06cc"
                     + " \u067e\u06cc\u0634\u06a9\u0634\u06cc\u06ba",
@@ -96783,6 +99462,10 @@ final class Translations {
             "\u0622\u062e\u0631\u06cc \u0627\u0633\u062a\u0639\u0645\u0627\u0644: {0}",
             "Later",
             "\u0628\u0639\u062f \u0645\u06cc\u06ba",
+            "Leave Listen Together to change the queue",
+            "\u0642\u0637\u0627\u0631 \u0628\u062f\u0644\u0646\u06d2 \u06a9\u06d2"
+                    + " \u0644\u06cc\u06d2 \u201cListen together\u201d \u0633\u06d2"
+                    + " \u0646\u06a9\u0644\u06cc\u06ba",
             "Left to BitChord",
             "BitChord \u067e\u0631 \u0686\u06be\u0648\u0691\u0627 \u06af\u06cc\u0627",
             "Let JamesDSP do the effects",
@@ -96828,9 +99511,15 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "\u0622\u0646\u06d2 \u0648\u0627\u0644\u0627 \u0679\u0631\u06cc\u06a9"
+                    + " \u0644\u0648\u0688 \u06a9\u0631\u06cc\u06ba",
             "Load older posts",
             "\u067e\u0631\u0627\u0646\u06cc \u067e\u0648\u0633\u0679\u0633 \u0644\u0648\u0688"
                     + " \u06a9\u0631\u06cc\u06ba",
+            "Load outgoing",
+            "\u062c\u0627\u0646\u06d2 \u0648\u0627\u0644\u0627 \u0679\u0631\u06cc\u06a9"
+                    + " \u0644\u0648\u0688 \u06a9\u0631\u06cc\u06ba",
             "Loading",
             "\u0644\u0648\u0688 \u06c1\u0648 \u0631\u06c1\u0627 \u06c1\u06d2",
             "Loading channel\u2026",
@@ -96948,6 +99637,24 @@ final class Translations {
                 + " \u0627\u0648\u0631 \u0639\u0648\u0627\u0645\u06cc"
                 + " \u0627\u0634\u062a\u0631\u0627\u06a9 \u06a9\u0627 \u0646\u0638\u0645"
                 + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Manual",
+            "\u062f\u0633\u062a\u06cc",
+            "Manual applies when you tap Apply.",
+            "\u062f\u0633\u062a\u06cc \u0637\u0631\u06cc\u0642\u06d2 \u0645\u06cc\u06ba"
+                    + " \u0644\u0627\u06af\u0648 \u06a9\u0631\u06cc\u06ba \u067e\u0631"
+                    + " \u0679\u06cc\u067e \u06a9\u0631\u0646\u06d2 \u0633\u06d2"
+                    + " \u062a\u0631\u062a\u06cc\u0628\u0627\u062a \u0644\u0627\u06af\u0648"
+                    + " \u06c1\u0648\u062a\u06cc \u06c1\u06cc\u06ba\u06d4",
+            "Manual saves when you tap Save draft.",
+            "\u062f\u0633\u062a\u06cc \u0637\u0631\u06cc\u0642\u06d2 \u0645\u06cc\u06ba"
+                    + " \u0645\u0633\u0648\u062f\u06c1 \u0645\u062d\u0641\u0648\u0638"
+                    + " \u06a9\u0631\u06cc\u06ba \u067e\u0631 \u0679\u06cc\u067e"
+                    + " \u06a9\u0631\u0646\u06d2 \u0633\u06d2 \u0645\u0633\u0648\u062f\u06c1"
+                    + " \u0645\u062d\u0641\u0648\u0638 \u06c1\u0648\u062a\u0627 \u06c1\u06d2\u06d4",
+            "Match A to B",
+            "A \u06a9\u0648 B \u0633\u06d2 \u0645\u0644\u0627\u0626\u06cc\u06ba",
+            "Match B to A",
+            "B \u06a9\u0648 A \u0633\u06d2 \u0645\u0644\u0627\u0626\u06cc\u06ba",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -97056,6 +99763,8 @@ final class Translations {
                     + " \u06a9\u06d2 \u0644\u06cc\u06d2 \u0627\u067e\u0646\u06d2 \u0628\u0679"
                     + " \u0631\u06cc\u0679 \u0633\u06d2\u060c \u0644\u0627\u0633 \u0644\u06cc\u0633"
                     + " \u0645\u0627\u0646\u06cc \u062c\u0627\u062a\u06cc \u06c1\u06d2\u06d4",
+            "Multiplier",
+            "\u0636\u0631\u0628 \u06a9\u0627 \u0639\u0627\u0645\u0644",
             "Music chats",
             "\u0645\u06cc\u0648\u0632\u06a9 \u0686\u06cc\u0679\u0633",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -97138,6 +99847,11 @@ final class Translations {
                     + " \u062f\u0631\u06a9\u0627\u0631 \u06c1\u06d2\u06d4",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "\u062f\u0648\u0646\u0648\u06ba \u06a9\u06cc \u0631\u0641\u062a\u0627\u0631"
+                    + " \u0627\u0648\u0631 0.5\u00d7 \u0633\u06d2 2\u00d7 \u06a9\u06d2"
+                    + " \u062f\u0631\u0645\u06cc\u0627\u0646 \u062a\u0646\u0627\u0633\u0628"
+                    + " \u062f\u0631\u06a9\u0627\u0631 \u06c1\u06d2",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -97224,6 +99938,10 @@ final class Translations {
                     + " \u06a9\u0631\u0646\u06d2 \u06a9\u06d2 \u0644\u06cc\u06d2"
                     + " \u0622\u0688\u06cc\u0648 \u0641\u0627\u0626\u0644\u06cc\u06ba"
                     + " \u0686\u0646\u0646\u06d2 \u06a9\u0648 \u06a9\u06c1\u06cc\u06ba\u06d4",
+            "No file picker is available",
+            "\u0641\u0627\u0626\u0644 \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u0646\u06d2"
+                    + " \u06a9\u06cc \u06a9\u0648\u0626\u06cc \u0627\u06cc\u067e"
+                    + " \u062f\u0633\u062a\u06cc\u0627\u0628 \u0646\u06c1\u06cc\u06ba",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -97320,6 +100038,9 @@ final class Translations {
                     + " \u0627\u067e\u0646\u0627 \u0635\u0627\u0631\u0641 \u0646\u0627\u0645"
                     + " \u0627\u0648\u0631 \u067e\u0627\u0633 \u0648\u0631\u0688 \u062f\u0631\u062c"
                     + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "No saved draft",
+            "\u06a9\u0648\u0626\u06cc \u0645\u062d\u0641\u0648\u0638 \u0645\u0633\u0648\u062f\u06c1"
+                    + " \u0646\u06c1\u06cc\u06ba",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -97391,6 +100112,13 @@ final class Translations {
             "Not enough audio",
             "\u06a9\u0627\u0641\u06cc \u0622\u0688\u06cc\u0648 \u062f\u0633\u062a\u06cc\u0627\u0628"
                     + " \u0646\u06c1\u06cc\u06ba",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "\u0627\u0633 \u0679\u0631\u06cc\u06a9 \u06a9\u0627 \u062a\u062c\u0632\u06cc\u06c1"
+                    + " \u06a9\u0631\u0646\u06d2 \u06a9\u06d2 \u0644\u06cc\u06d2"
+                    + " \u0645\u06cc\u0645\u0648\u0631\u06cc \u0646\u0627\u06a9\u0627\u0641\u06cc"
+                    + " \u06c1\u06d2\u06d4 \u062f\u0648\u0628\u0627\u0631\u06c1"
+                    + " \u06a9\u0648\u0634\u0634 \u06a9\u0631\u06cc\u06ba \u067e\u0631"
+                    + " \u0679\u06cc\u067e \u06a9\u0631\u06cc\u06ba\u06d4",
             "Not managed here",
             "\u06cc\u06c1\u0627\u06ba \u0633\u0646\u0628\u06be\u0627\u0644\u0627"
                     + " \u0646\u06c1\u06cc\u06ba \u062c\u0627\u062a\u0627",
@@ -97653,6 +100381,8 @@ final class Translations {
                     + " \u0646\u06c1\u06cc\u06ba\u06d4",
             "Original key",
             "\u0627\u0635\u0644 \u0633\u064f\u0631",
+            "Original tempo",
+            "\u0627\u0635\u0644 \u0631\u0641\u062a\u0627\u0631",
             "Original vocals",
             "\u0627\u0635\u0644 \u0622\u0648\u0627\u0632",
             "Other",
@@ -97671,10 +100401,20 @@ final class Translations {
             "Telegram \u06a9\u06cc \u062f\u06cc\u06af\u0631 \u0641\u0627\u0626\u0644\u06cc\u06ba",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "\u062c\u0627\u0646\u06d2 \u0648\u0627\u0644\u06d2 \u0679\u0631\u06cc\u06a9"
+                    + " \u06a9\u0627 \u0627\u062b\u0631",
             "Outro",
             "\u0622\u062e\u0631\u06cc \u062d\u0635\u06c1",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "\u0627\u0648\u0648\u0631\u0644\u06cc\u067e \u06a9\u0627 BPM",
+            "overlap only",
+            "\u0635\u0631\u0641 \u0627\u0648\u0648\u0631\u0644\u06cc\u067e \u0645\u06cc\u06ba",
+            "Overlap tempo",
+            "\u0627\u0648\u0648\u0631\u0644\u06cc\u067e \u06a9\u06cc"
+                    + " \u0631\u0641\u062a\u0627\u0631",
             "Pair a peer",
             "\u0633\u0627\u062a\u06be\u06cc \u06a9\u06d2 \u0633\u0627\u062a\u06be"
                     + " \u062c\u0648\u0691\u0627 \u0628\u0646\u0627\u0626\u06cc\u06ba",
@@ -97912,6 +100652,8 @@ final class Translations {
                     + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba\u06d4",
             "Pitch",
             "\u0633\u064f\u0631",
+            "Play",
+            "\u0686\u0644\u0627\u0626\u06cc\u06ba",
             "Play a song first.",
             "\u067e\u06c1\u0644\u06d2 \u06a9\u0648\u0626\u06cc \u06af\u0627\u0646\u0627"
                     + " \u0686\u0644\u0627\u0626\u06cc\u06ba\u06d4",
@@ -98040,6 +100782,9 @@ final class Translations {
             "\u062f\u0648\u0628\u0627\u0631\u06c1 \u0633\u0646\u06cc\u06ba \u06cc\u0627"
                     + " \u062c\u0627\u0631\u06cc \u0631\u06a9\u06be\u0646\u06d2 \u06a9\u06d2"
                     + " \u0644\u06cc\u06d2 \u0644\u0627\u06af\u0648 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Preview Before",
+            "\u201c\u067e\u06c1\u0644\u06d2\u201d \u06a9\u0627 \u067e\u06cc\u0634"
+                    + " \u0645\u0646\u0638\u0631",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -98283,6 +101028,8 @@ final class Translations {
                     + " \u0646\u06c1\u06cc\u06ba \u06c1\u0648\u06af\u0627\u06d4",
             "Ready.",
             "\u062a\u06cc\u0627\u0631 \u06c1\u06d2\u06d4",
+            "Recall draft",
+            "\u0645\u0633\u0648\u062f\u06c1 \u0644\u0648\u0688 \u06a9\u0631\u06cc\u06ba",
             "Receive",
             "\u0648\u0635\u0648\u0644 \u06a9\u0631\u06cc\u06ba",
             "Receive audio from another BitChord phone, or share your files.",
@@ -98457,6 +101204,12 @@ final class Translations {
             "Repeat preview",
             "\u067e\u06cc\u0634 \u0645\u0646\u0638\u0631"
                     + " \u062f\u06c1\u0631\u0627\u0626\u06cc\u06ba",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "\u0642\u0637\u0627\u0631 \u0645\u06cc\u06ba \u0645\u0648\u062c\u0648\u062f\u06c1"
+                    + " \u0627\u0648\u0631 \u0627\u06af\u0644\u0627 \u06af\u0627\u0646\u0627"
+                    + " \u0628\u062f\u0644 \u062f\u06cc\u062a\u0627 \u06c1\u06d2\u06d4"
+                    + " \u0628\u0627\u0642\u06cc \u0648\u06cc\u0633\u06d2 \u06c1\u06cc"
+                    + " \u0631\u06c1\u062a\u06d2 \u06c1\u06cc\u06ba\u06d4",
             "Report audio quality",
             "\u0622\u0688\u06cc\u0648 \u06a9\u0648\u0627\u0644\u0679\u06cc"
                     + " \u0628\u062a\u0627\u0626\u06cc\u06ba",
@@ -98498,6 +101251,8 @@ final class Translations {
             "\u0631\u0627\u0628\u0637\u06d2 \u06a9\u06cc \u0634\u0646\u0627\u062e\u062a"
                     + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u0645\u0642\u0631\u0631"
                     + " \u06a9\u0631\u06cc\u06ba\u061f",
+            "Reset EQ",
+            "EQ \u0631\u06cc \u0633\u06cc\u0679 \u06a9\u0631\u06cc\u06ba",
             "Reset to {0}%",
             "{0}% \u067e\u0631 \u062f\u0648\u0628\u0627\u0631\u06c1 \u0645\u0642\u0631\u0631"
                     + " \u06a9\u0631\u06cc\u06ba",
@@ -98575,6 +101330,8 @@ final class Translations {
             "\u0627\u0633\u067e\u0627\u0646\u0633\u0631\u0688"
                 + " \u067e\u06cc\u063a\u0627\u0645\u0627\u062a \u062f\u0648\u0628\u0627\u0631\u06c1"
                 + " \u0622\u0632\u0645\u0627\u0626\u06cc\u06ba",
+            "Reverse",
+            "\u062a\u0631\u062a\u06cc\u0628 \u0627\u0644\u0679\u06cc\u06ba",
             "Review",
             "\u062c\u0627\u0626\u0632\u06c1 \u0644\u06cc\u06ba",
             "Review 1 song without tags",
@@ -98669,6 +101426,9 @@ final class Translations {
                     + " \u0627\u06a9\u062b\u0631 \u0686\u0644\u0627\u0626\u06d2"
                     + " \u062c\u0627\u0646\u06d2 \u0648\u0627\u0644\u06d2 \u06af\u0627\u0646\u06d2"
                     + " \u0645\u062d\u0641\u0648\u0638 \u06a9\u0631\u06cc\u06ba",
+            "Save mode",
+            "\u0645\u062d\u0641\u0648\u0638 \u06a9\u0631\u0646\u06d2 \u06a9\u0627"
+                    + " \u0637\u0631\u06cc\u0642\u06c1",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -99306,6 +102066,8 @@ final class Translations {
             "\u0633\u0644\u06cc\u067e \u0679\u0627\u0626\u0645\u0631",
             "Sliders {0}",
             "\u0633\u0644\u0627\u0626\u06cc\u0688\u0631\u0632 {0}",
+            "Slower by 1%",
+            "1\u066a \u0622\u06c1\u0633\u062a\u06c1",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -100166,6 +102928,13 @@ final class Translations {
                     + " \u0631\u06c1\u0627 \u06c1\u06d2\u06d4 \u0627\u0633"
                     + " \u0645\u0646\u062a\u0642\u0644\u06cc \u06a9\u0648 \u0628\u0639\u062f"
                     + " \u0645\u06cc\u06ba \u062a\u0627\u0632\u06c1 \u06a9\u0631\u06cc\u06ba\u06d4",
+            "The queue changed; reopen this transition",
+            "\u0642\u0637\u0627\u0631 \u0628\u062f\u0644 \u06af\u0626\u06cc \u06c1\u06d2\u061b"
+                    + " \u06cc\u06c1 \u0679\u0631\u0627\u0646\u0632\u06cc\u0634\u0646"
+                    + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u06a9\u06be\u0648\u0644\u06cc\u06ba",
+            "The queue is being changed",
+            "\u0642\u0637\u0627\u0631 \u0628\u062f\u0644\u06cc \u062c\u0627 \u0631\u06c1\u06cc"
+                    + " \u06c1\u06d2",
             "The queue plays in its own order",
             "\u0642\u0637\u0627\u0631 \u0627\u067e\u0646\u06cc \u062a\u0631\u062a\u06cc\u0628"
                     + " \u0633\u06d2 \u0686\u0644\u062a\u06cc \u06c1\u06d2",
@@ -100289,6 +103058,9 @@ final class Translations {
             "The song pauses straight away",
             "\u06af\u0627\u0646\u0627 \u0641\u0648\u0631\u0627\u064b \u0631\u06a9"
                     + " \u062c\u0627\u062a\u0627 \u06c1\u06d2",
+            "The track length is not available",
+            "\u0679\u0631\u06cc\u06a9 \u06a9\u0627 \u062f\u0648\u0631\u0627\u0646\u06cc\u06c1"
+                    + " \u062f\u0633\u062a\u06cc\u0627\u0628 \u0646\u06c1\u06cc\u06ba",
             "The whole song is cached.",
             "\u067e\u0648\u0631\u0627 \u06af\u0627\u0646\u0627 \u06a9\u06cc\u0634"
                     + " \u06c1\u06d2\u06d4",
@@ -100364,6 +103136,10 @@ final class Translations {
                     + " \u0648\u0627\u067e\u0633 \u062c\u0627 \u06a9\u0631"
                     + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u06a9\u0648\u0634\u0634"
                     + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "This file can\u2019t stay available",
+            "\u0627\u0633 \u0641\u0627\u0626\u0644 \u062a\u06a9 \u0631\u0633\u0627\u0626\u06cc"
+                    + " \u0628\u0631\u0642\u0631\u0627\u0631 \u0646\u06c1\u06cc\u06ba"
+                    + " \u0631\u06a9\u06be\u06cc \u062c\u0627 \u0633\u06a9\u062a\u06cc",
             "This file couldn't be deleted.",
             "\u06cc\u06c1 \u0641\u0627\u0626\u0644 \u062d\u0630\u0641 \u0646\u06c1\u06cc\u06ba"
                     + " \u06a9\u06cc \u062c\u0627 \u0633\u06a9\u06cc\u06d4",
@@ -100407,6 +103183,10 @@ final class Translations {
                 + " \u067e\u0648\u0631\u06cc \u0637\u0631\u062d"
                 + " \u062f\u06a9\u06be\u0627\u06cc\u0627 \u0646\u06c1\u06cc\u06ba \u062c\u0627"
                 + " \u0633\u06a9\u0627\u06d4",
+            "This pair cannot be previewed",
+            "\u0627\u0633 \u062c\u0648\u0691\u06d2 \u06a9\u0627 \u067e\u06cc\u0634"
+                    + " \u0645\u0646\u0638\u0631 \u0646\u06c1\u06cc\u06ba \u0633\u0646\u0627"
+                    + " \u062c\u0627 \u0633\u06a9\u062a\u0627",
             "This phone\u2019s audio chip can play: {0}.",
             "\u0627\u0633 \u0641\u0648\u0646 \u06a9\u06cc \u0622\u0688\u06cc\u0648"
                 + " \u0686\u0650\u067e \u0686\u0644\u0627 \u0633\u06a9\u062a\u06cc \u06c1\u06d2:"
@@ -100475,6 +103255,8 @@ final class Translations {
                     + " \u062f\u06cc\u062a\u0627\u06d4",
             "Time",
             "Time",
+            "times",
+            "\u06af\u0646\u0627",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -100518,6 +103300,8 @@ final class Translations {
             "\u0627\u0648\u0632\u0627\u0631",
             "Track analysis",
             "\u0679\u0631\u06cc\u06a9 \u06a9\u0627 \u062a\u062c\u0632\u06cc\u06c1",
+            "Track BPM",
+            "\u0679\u0631\u06cc\u06a9 \u06a9\u0627 BPM",
             "Track details",
             "\u0679\u0631\u06cc\u06a9 \u06a9\u06cc \u062a\u0641\u0635\u06cc\u0644\u0627\u062a",
             "Track durations are not available yet. Start playback or",
@@ -100576,6 +103360,10 @@ final class Translations {
                     + " \u0627\u0646\u0688\u06cc\u06a9\u0633 \u0622\u0646"
                     + " \u06a9\u0631\u06cc\u06ba\u06d4 \u06af\u0627\u0646\u06d2 \u0627\u0633\u06cc"
                     + " \u0633\u06d2 \u0622\u062a\u06d2 \u06c1\u06cc\u06ba\u06d4",
+            "Turn shuffle off to change the queue",
+            "\u0642\u0637\u0627\u0631 \u0628\u062f\u0644\u0646\u06d2 \u06a9\u06d2"
+                    + " \u0644\u06cc\u06d2 \u0634\u0641\u0644 \u0628\u0646\u062f"
+                    + " \u06a9\u0631\u06cc\u06ba",
             "Turn the singer down",
             "Turn the singer down",
             "Turns the singer down so you can sing over the song. Works",
@@ -100596,6 +103384,8 @@ final class Translations {
             "Type part of the model name.",
             "\u0645\u0627\u0688\u0644 \u06a9\u06d2 \u0646\u0627\u0645 \u06a9\u0627"
                     + " \u06a9\u0686\u06be \u062d\u0635\u06c1 \u0644\u06a9\u06be\u06cc\u06ba\u06d4",
+            "Unavailable",
+            "\u062f\u0633\u062a\u06cc\u0627\u0628 \u0646\u06c1\u06cc\u06ba",
             "Under {0}, oldest first",
             "{0} \u0633\u06d2 \u06a9\u0645\u060c \u0633\u0628 \u0633\u06d2"
                     + " \u067e\u0631\u0627\u0646\u06d2 \u067e\u06c1\u0644\u06d2 \u0635\u0627\u0641",
@@ -100669,6 +103459,10 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "0.5\u00d7 \u0633\u06d2 2\u00d7 \u06a9\u06d2 \u062f\u0631\u0645\u06cc\u0627\u0646"
+                    + " \u0636\u0631\u0628 \u06a9\u0627 \u0639\u0627\u0645\u0644"
+                    + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0631\u06cc\u06ba",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -100690,6 +103484,9 @@ final class Translations {
                 + " BitChord \u0627\u0633 \u06a9\u06d2 \u0644\u06cc\u06d2 \u06a9\u0648\u0626\u06cc"
                 + " \u0633\u0631\u0648\u0631 \u0646\u06c1\u06cc\u06ba"
                 + " \u0686\u0644\u0627\u062a\u0627\u06d4",
+            "Use automatic mode",
+            "\u062e\u0648\u062f\u06a9\u0627\u0631 \u0637\u0631\u06cc\u0642\u06c1"
+                    + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0631\u06cc\u06ba",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -100726,6 +103523,12 @@ final class Translations {
                     + " \u06c1\u06cc\u06ba",
             "Use it",
             "\u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0631\u06cc\u06ba",
+            "Use manual mode",
+            "\u062f\u0633\u062a\u06cc \u0637\u0631\u06cc\u0642\u06c1"
+                    + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0631\u06cc\u06ba",
+            "Use measured tempo",
+            "\u0646\u0627\u067e\u06cc \u06af\u0626\u06cc \u0631\u0641\u062a\u0627\u0631"
+                    + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0631\u06cc\u06ba",
             "Use MicroG",
             "MicroG \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0631\u06cc\u06ba",
             "Use name",
@@ -100758,6 +103561,13 @@ final class Translations {
             "Use this name?",
             "\u06cc\u06c1 \u0646\u0627\u0645 \u0627\u0633\u062a\u0639\u0645\u0627\u0644"
                     + " \u06a9\u0631\u06cc\u06ba\u061f",
+            "Use this pair",
+            "\u06cc\u06c1 \u062c\u0648\u0691\u0627 \u0627\u0633\u062a\u0639\u0645\u0627\u0644"
+                    + " \u06a9\u0631\u06cc\u06ba",
+            "Use this pair to apply it",
+            "\u0644\u0627\u06af\u0648 \u06a9\u0631\u0646\u06d2 \u06a9\u06d2 \u0644\u06cc\u06d2"
+                    + " \u06cc\u06c1 \u062c\u0648\u0691\u0627"
+                    + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0631\u06cc\u06ba",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "\u0627\u067e\u0646\u0627 Real-Debrid\u060c AllDebrid\u060c Premiumize \u06cc\u0627"
                     + " TorBox \u0627\u06a9\u0627\u0624\u0646\u0679"
@@ -100796,6 +103606,9 @@ final class Translations {
                     + " \u0633\u0627\u062a\u06be \u0641\u0627\u0626\u0644\u0648\u06ba \u06a9\u06cc"
                     + " \u0635\u0648\u0631\u062a \u0645\u06cc\u06ba \u0627\u067e \u0644\u0648\u0688"
                     + " \u06c1\u0648\u062a\u06d2 \u06c1\u06cc\u06ba\u06d4",
+            "Using this pair\u2026",
+            "\u06cc\u06c1 \u062c\u0648\u0691\u0627 \u0627\u0633\u062a\u0639\u0645\u0627\u0644"
+                    + " \u06c1\u0648 \u0631\u06c1\u0627 \u06c1\u06d2\u2026",
             "Using {0}",
             "{0} \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06c1\u0648 \u0631\u06c1\u0627"
                     + " \u06c1\u06d2",
@@ -100853,6 +103666,10 @@ final class Translations {
             "\u0645\u0648\u062c\u0648\u062f\u06c1 \u0639\u0645\u0644 \u0645\u06a9\u0645\u0644"
                     + " \u06c1\u0648\u0646\u06d2 \u06a9\u0627 \u0627\u0646\u062a\u0638\u0627\u0631"
                     + " \u06a9\u0631\u06cc\u06ba\u06d4",
+            "Wait for the pair to finish loading",
+            "\u062f\u0648\u0646\u0648\u06ba \u0679\u0631\u06cc\u06a9 \u0644\u0648\u0688"
+                    + " \u06c1\u0648\u0646\u06d2 \u062a\u06a9 \u0627\u0646\u062a\u0638\u0627\u0631"
+                    + " \u06a9\u0631\u06cc\u06ba",
             "Waiting for a community channel to be indexed",
             "\u06a9\u0633\u06cc \u06a9\u0645\u06cc\u0648\u0646\u0679\u06cc \u0686\u06cc\u0646\u0644"
                     + " \u06a9\u06d2 \u0627\u0646\u0688\u06cc\u06a9\u0633 \u06c1\u0648\u0646\u06d2"
@@ -100910,6 +103727,9 @@ final class Translations {
             "{0} \u06a9\u0645\u06cc\u0648\u0646\u0679\u06cc \u0686\u06cc\u0646\u0644\u0632"
                     + " \u06a9\u06d2 \u0627\u0646\u0688\u06cc\u06a9\u0633 \u06c1\u0648\u0646\u06d2"
                     + " \u06a9\u0627 \u0627\u0646\u062a\u0638\u0627\u0631",
+            "Waiting to analyze",
+            "\u062a\u062c\u0632\u06cc\u06d2 \u06a9\u0627 \u0627\u0646\u062a\u0638\u0627\u0631"
+                    + " \u06c1\u06d2",
             "Waiting to save",
             "\u0645\u062d\u0641\u0648\u0638 \u06a9\u0631\u0646\u06d2 \u06a9\u0627"
                     + " \u0627\u0646\u062a\u0638\u0627\u0631 \u06c1\u06d2",
@@ -101796,6 +104616,8 @@ final class Translations {
             "\u0110i\u1ec1u ch\u1ec9nh m\u1ee9c ph\u00e1t \u0111\u00e3 chu\u1ea9n h\u00f3a",
             "Advanced",
             "N\u00e2ng cao",
+            "Advanced curve",
+            "\u0110\u01b0\u1eddng cong n\u00e2ng cao",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -101854,8 +104676,14 @@ final class Translations {
                     + " T\u00e0i kho\u1ea3n c\u1ee7a b\u1ea1n, ngay trong BitChord.",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "Ph\u00e2n t\u00edch",
+            "Analysis result could not be read",
+            "Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c k\u1ebft qu\u1ea3 ph\u00e2n t\u00edch",
             "Analyzing selected audio\u2026",
             "\u0110ang ph\u00e2n t\u00edch \u00e2m thanh \u0111\u00e3 ch\u1ecdn\u2026",
+            "Analyzing\u2026",
+            "\u0110ang ph\u00e2n t\u00edch\u2026",
             "Android didn't allow this file to be deleted.",
             "Android kh\u00f4ng cho ph\u00e9p x\u00f3a t\u1ec7p n\u00e0y.",
             "Android mixes surround files itself",
@@ -101907,12 +104735,16 @@ final class Translations {
             "\u00c1p d\u1ee5ng c\u1ea5u h\u00ecnh AutoEq cho m\u1eabu tai nghe c\u1ee7a b\u1ea1n",
             "Apply cache size",
             "\u00c1p d\u1ee5ng dung l\u01b0\u1ee3ng b\u1ed9 nh\u1edb \u0111\u1ec7m",
+            "Apply mode",
+            "Ch\u1ebf \u0111\u1ed9 \u00e1p d\u1ee5ng",
             "Apply now",
             "\u00c1p d\u1ee5ng ngay",
             "Apply or close to resume playback.",
             "\u00c1p d\u1ee5ng ho\u1eb7c \u0111\u00f3ng \u0111\u1ec3 ti\u1ebfp t\u1ee5c ph\u00e1t.",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "\u00c1p d\u1ee5ng c\u00e0i \u0111\u1eb7t",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -101989,6 +104821,8 @@ final class Translations {
             "T\u1ef1 \u0111\u1ed9ng l\u01b0u",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "Chuy\u1ec3n b\u00e0i t\u1ef1 \u0111\u1ed9ng ch\u01b0a s\u1eb5n s\u00e0ng.",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -102052,12 +104886,19 @@ final class Translations {
             "\u0110\u1ed9 tin c\u1eady nh\u1ecbp",
             "Beat grid offset",
             "\u0110\u1ed9 l\u1ec7ch l\u01b0\u1edbi nh\u1ecbp",
+            "Beat grid scale",
+            "T\u1ef7 l\u1ec7 l\u01b0\u1edbi nh\u1ecbp",
             "Beat grid tempo",
             "Nh\u1ecbp \u0111\u1ed9 l\u01b0\u1edbi nh\u1ecbp",
             "Beat jump",
             "Nh\u1ea3y nh\u1ecbp",
             "Beats",
             "Nh\u1ecbp",
+            "Before",
+            "Tr\u01b0\u1edbc",
+            "Before isn't available: Automix adds effects to this blend.",
+            "Kh\u00f4ng d\u00f9ng \u0111\u01b0\u1ee3c \u201cTr\u01b0\u1edbc\u201d: Automix"
+                    + " th\u00eam hi\u1ec7u \u1ee9ng v\u00e0o \u0111o\u1ea1n chuy\u1ec3n n\u00e0y.",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -102268,6 +105109,9 @@ final class Translations {
                     + " xu\u1ed1ng c\u1ee7a BitChord, ngay ph\u00eda tr\u00ean.",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "Ch\u1ec9 \u0111\u1ed5i t\u1ed1c \u0111\u1ed9 c\u1ee7a m\u1ed7i b\u00e0i trong"
+                    + " \u0111o\u1ea1n ch\u1ed3ng l\u1ea5n. Gi\u1eef nguy\u00ean cao \u0111\u1ed9.",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -102328,6 +105172,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "Ch\u1ecdn",
+            "Choose a different file",
+            "Ch\u1ecdn t\u1ec7p kh\u00e1c",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -102636,6 +105482,8 @@ final class Translations {
                 + " c\u0169 nh\u1ea5t.",
             "Corrected names",
             "T\u00ean \u0111\u00e3 s\u1eeda",
+            "Could not change the queue",
+            "Kh\u00f4ng th\u1ec3 thay \u0111\u1ed5i h\u00e0ng \u0111\u1ee3i",
             "Could not complete peer discovery. Check relays and try again.",
             "Kh\u00f4ng th\u1ec3 ho\u00e0n t\u1ea5t vi\u1ec7c t\u00ecm thi\u1ebft b\u1ecb ngang"
                     + " h\u00e0ng. Ki\u1ec3m tra m\u00e1y chuy\u1ec3n ti\u1ebfp r\u1ed3i th\u1eed"
@@ -102676,8 +105524,13 @@ final class Translations {
                     + " tra k\u1ebft n\u1ed1i c\u1ee7a b\u1ea1n.",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "Kh\u00f4ng th\u1ec3 \u0111\u1ecdc t\u1ec7p n\u00e0y",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c \u00e2m thanh c\u1ee7a b\u00e0i"
+                    + " n\u00e0y.",
             "Could not read your library. Try again.",
             "Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c th\u01b0 vi\u1ec7n c\u1ee7a b\u1ea1n."
                     + " H\u00e3y th\u1eed l\u1ea1i.",
@@ -102707,6 +105560,8 @@ final class Translations {
                     + " th\u1eed l\u1ea1i.",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "Kh\u00f4ng th\u1ec3 d\u00f9ng c\u1eb7p b\u00e0i n\u00e0y.",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "Kh\u00f4ng sao ch\u00e9p \u0111\u01b0\u1ee3c: {0}. Th\u1eed l\u1ea1i sau {1}"
                     + " ph\u00fat.",
@@ -103019,6 +105874,8 @@ final class Translations {
             "B\u1ea3n nh\u00e1p t\u00e1ch bi\u1ec7t v\u1edbi ph\u00e1t nh\u1ea1c",
             "Draft saved",
             "\u0110\u00e3 l\u01b0u b\u1ea3n nh\u00e1p",
+            "Draft saving",
+            "L\u01b0u b\u1ea3n nh\u00e1p",
             "Drag a curve point or fine-tune each track below.",
             "K\u00e9o m\u1ed9t \u0111i\u1ec3m tr\u00ean \u0111\u01b0\u1eddng cong ho\u1eb7c"
                     + " ch\u1ec9nh t\u1eebng b\u00e0i b\u00ean d\u01b0\u1edbi.",
@@ -103208,6 +106065,8 @@ final class Translations {
             "Nh\u1ecf d\u1ea7n \u1edf cu\u1ed1i b\u00e0i cu\u1ed1i c\u00f9ng",
             "Failed",
             "Th\u1ea5t b\u1ea1i",
+            "Faster by 1%",
+            "Nhanh h\u01a1n 1%",
             "Favor songs you play often",
             "\u01afu ti\u00ean b\u00e0i h\u00e1t b\u1ea1n th\u01b0\u1eddng nghe",
             "Favor well-known songs",
@@ -103243,6 +106102,8 @@ final class Translations {
                     + " AcoustID",
             "Filter",
             "B\u1ed9 l\u1ecdc",
+            "Filter depth",
+            "\u0110\u1ed9 s\u00e2u b\u1ed9 l\u1ecdc",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -103338,6 +106199,8 @@ final class Translations {
             "Th\u01b0 m\u1ee5c",
             "Folder selected.",
             "\u0110\u00e3 ch\u1ecdn th\u01b0 m\u1ee5c.",
+            "Follow current pair",
+            "Theo c\u1eb7p hi\u1ec7n t\u1ea1i",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -103435,6 +106298,8 @@ final class Translations {
             "\u1ea8n b\u00e0i h\u00e1t tr\u00f9ng l\u1eb7p",
             "Hide hash",
             "\u1ea8n hash",
+            "Hide sources",
+            "\u1ea8n ngu\u1ed3n",
             "High",
             "Cao",
             "High-pass",
@@ -103442,6 +106307,8 @@ final class Translations {
             "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
             "Nh\u1ea5n gi\u1eef cue \u0111\u1ec3 thay th\u1ebf ho\u1eb7c x\u00f3a. S\u1eeda"
                 + " l\u01b0\u1edbi kh\u00f4ng thay \u0111\u1ed5i t\u1ed1c \u0111\u1ed9 ph\u00e1t.",
+            "How far the selected filters sweep.",
+            "Ph\u1ea1m vi qu\u00e9t c\u1ee7a c\u00e1c b\u1ed9 l\u1ecdc \u0111\u00e3 ch\u1ecdn.",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -103477,6 +106344,8 @@ final class Translations {
             "K\u00e8m ch\u1ec9 m\u1ee5c \u0111\u00e3 l\u01b0u (t\u1ec7p l\u1edbn h\u01a1n)",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "Hi\u1ec7u \u1ee9ng b\u00e0i v\u00e0o",
             "Incoming offers",
             "\u0110\u1ec1 ngh\u1ecb nh\u1eadn \u0111\u01b0\u1ee3c",
             "Incomplete sponsored-message response",
@@ -103642,6 +106511,8 @@ final class Translations {
             "S\u1eed d\u1ee5ng l\u1ea7n cu\u1ed1i: {0}",
             "Later",
             "\u0110\u1ec3 sau",
+            "Leave Listen Together to change the queue",
+            "R\u1eddi Listen together \u0111\u1ec3 thay \u0111\u1ed5i h\u00e0ng \u0111\u1ee3i",
             "Left to BitChord",
             "\u0110\u1ec3 BitChord x\u1eed l\u00fd",
             "Let JamesDSP do the effects",
@@ -103677,8 +106548,12 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "T\u1ea3i b\u00e0i v\u00e0o",
             "Load older posts",
             "T\u1ea3i b\u00e0i \u0111\u0103ng c\u0169 h\u01a1n",
+            "Load outgoing",
+            "T\u1ea3i b\u00e0i ra",
             "Loading",
             "\u0110ang t\u1ea3i",
             "Loading channel\u2026",
@@ -103761,6 +106636,18 @@ final class Translations {
             "Manage download destinations, transfers and public sharing.",
             "Qu\u1ea3n l\u00fd n\u01a1i t\u1ea3i xu\u1ed1ng, l\u01b0\u1ee3t truy\u1ec1n v\u00e0"
                     + " chia s\u1ebb c\u00f4ng khai.",
+            "Manual",
+            "Th\u1ee7 c\u00f4ng",
+            "Manual applies when you tap Apply.",
+            "\u1ede ch\u1ebf \u0111\u1ed9 th\u1ee7 c\u00f4ng, nh\u1ea5n \u00c1p d\u1ee5ng"
+                    + " \u0111\u1ec3 \u00e1p d\u1ee5ng c\u00e0i \u0111\u1eb7t.",
+            "Manual saves when you tap Save draft.",
+            "\u1ede ch\u1ebf \u0111\u1ed9 th\u1ee7 c\u00f4ng, nh\u1ea5n L\u01b0u b\u1ea3n nh\u00e1p"
+                    + " \u0111\u1ec3 l\u01b0u.",
+            "Match A to B",
+            "Kh\u1edbp A theo B",
+            "Match B to A",
+            "Kh\u1edbp B theo A",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -103845,6 +106732,8 @@ final class Translations {
                     + " \u0111\u01b0\u1ee3c t\u00ednh l\u00e0 lossless d\u1ef1a tr\u00ean"
                     + " \u0111\u1ecbnh d\u1ea1ng, ho\u1eb7c v\u1edbi t\u1ec7p M4A th\u00ec d\u1ef1a"
                     + " tr\u00ean bitrate.",
+            "Multiplier",
+            "H\u1ec7 s\u1ed1",
             "Music chats",
             "Chat nh\u1ea1c",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -103893,6 +106782,9 @@ final class Translations {
             "C\u1ea7n Android 10 tr\u1edf l\u00ean.",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "C\u1ea7n nh\u1ecbp \u0111\u1ed9 c\u1ee7a c\u1ea3 hai b\u00e0i v\u00e0 t\u1ef7 l\u1ec7"
+                    + " t\u1eeb 0,5\u00d7 \u0111\u1ebfn 2\u00d7",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -103957,6 +106849,8 @@ final class Translations {
             "Ch\u01b0a c\u00f3 \u0111\u1ec1 ngh\u1ecb chia s\u1ebb t\u1ec7p. H\u00e3y y\u00eau"
                     + " c\u1ea7u \u0111i\u1ec7n tho\u1ea1i \u0111\u00e3 gh\u00e9p \u0111\u00f4i"
                     + " ch\u1ecdn t\u1ec7p \u00e2m thanh \u0111\u1ec3 chia s\u1ebb.",
+            "No file picker is available",
+            "Kh\u00f4ng c\u00f3 tr\u00ecnh ch\u1ecdn t\u1ec7p",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -104021,6 +106915,8 @@ final class Translations {
             "No saved account. Enter your username and password.",
             "Ch\u01b0a l\u01b0u t\u00e0i kho\u1ea3n. Nh\u1eadp t\u00ean ng\u01b0\u1eddi d\u00f9ng"
                     + " v\u00e0 m\u1eadt kh\u1ea9u.",
+            "No saved draft",
+            "Ch\u01b0a c\u00f3 b\u1ea3n nh\u00e1p \u0111\u00e3 l\u01b0u",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -104065,6 +106961,9 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "Kh\u00f4ng \u0111\u1ee7 \u0111\u1ed9 d\u00e0i \u00e2m thanh",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "Kh\u00f4ng \u0111\u1ee7 b\u1ed9 nh\u1edb \u0111\u1ec3 ph\u00e2n t\u00edch b\u00e0i"
+                    + " n\u00e0y. Nh\u1ea5n Th\u1eed l\u1ea1i.",
             "Not managed here",
             "Kh\u00f4ng qu\u1ea3n l\u00fd t\u1ea1i \u0111\u00e2y",
             "Not played yet",
@@ -104239,6 +107138,8 @@ final class Translations {
                 + " d\u1ecbch v\u1ee5 n\u00e0y.",
             "Original key",
             "T\u00f4ng g\u1ed1c",
+            "Original tempo",
+            "Nh\u1ecbp \u0111\u1ed9 g\u1ed1c",
             "Original vocals",
             "Gi\u1ecdng h\u00e1t g\u1ed1c",
             "Other",
@@ -104252,10 +107153,18 @@ final class Translations {
             "C\u00e1c t\u1ec7p Telegram kh\u00e1c",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "Hi\u1ec7u \u1ee9ng b\u00e0i ra",
             "Outro",
             "K\u1ebft th\u00fac",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "BPM \u0111o\u1ea1n ch\u1ed3ng l\u1ea5n",
+            "overlap only",
+            "ch\u1ec9 trong \u0111o\u1ea1n ch\u1ed3ng l\u1ea5n",
+            "Overlap tempo",
+            "Nh\u1ecbp \u0111\u1ed9 \u0111o\u1ea1n ch\u1ed3ng l\u1ea5n",
             "Pair a peer",
             "Gh\u00e9p n\u1ed1i thi\u1ebft b\u1ecb kh\u00e1c",
             "Pair a peer before sharing files.",
@@ -104424,6 +107333,8 @@ final class Translations {
             "Ch\u1ecdn ch\u1ea5t l\u01b0\u1ee3ng cho l\u1ea7n t\u1ea3i n\u00e0y.",
             "Pitch",
             "Cao \u0111\u1ed9",
+            "Play",
+            "Ph\u00e1t",
             "Play a song first.",
             "H\u00e3y ph\u00e1t m\u1ed9t b\u00e0i h\u00e1t tr\u01b0\u1edbc.",
             "Play alongside other apps",
@@ -104517,6 +107428,8 @@ final class Translations {
             "Preview",
             "Preview again, or Apply to resume.",
             "Nghe th\u1eed l\u1ea1i ho\u1eb7c \u00e1p d\u1ee5ng \u0111\u1ec3 ph\u00e1t ti\u1ebfp.",
+            "Preview Before",
+            "Nghe th\u1eed \u201cTr\u01b0\u1edbc\u201d",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -104703,6 +107616,8 @@ final class Translations {
                     + " \u0111\u01b0\u1ee3c t\u1ea3i cho \u0111\u1ebfn khi b\u1ea1n ch\u1ecdn.",
             "Ready.",
             "S\u1eb5n s\u00e0ng.",
+            "Recall draft",
+            "T\u1ea3i b\u1ea3n nh\u00e1p",
             "Receive",
             "Nh\u1eadn",
             "Receive audio from another BitChord phone, or share your files.",
@@ -104829,6 +107744,9 @@ final class Translations {
             "S\u1eeda ch\u1eefa",
             "Repeat preview",
             "L\u1eb7p l\u1ea1i b\u1ea3n nghe th\u1eed",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "Thay b\u00e0i hi\u1ec7n t\u1ea1i v\u00e0 b\u00e0i ti\u1ebfp theo trong h\u00e0ng"
+                + " \u0111\u1ee3i. C\u00e1c b\u00e0i c\u00f2n l\u1ea1i kh\u00f4ng \u0111\u1ed5i.",
             "Report audio quality",
             "B\u00e1o c\u00e1o ch\u1ea5t l\u01b0\u1ee3ng \u00e2m thanh",
             "Report sponsored message",
@@ -104861,6 +107779,8 @@ final class Translations {
             "\u0110\u1eb7t l\u1ea1i danh t\u00ednh k\u1ebft n\u1ed1i",
             "Reset connection identity?",
             "\u0110\u1eb7t l\u1ea1i danh t\u00ednh k\u1ebft n\u1ed1i?",
+            "Reset EQ",
+            "\u0110\u1eb7t l\u1ea1i EQ",
             "Reset to {0}%",
             "\u0110\u1eb7t l\u1ea1i v\u1ec1 {0}%",
             "Reset {0}",
@@ -104916,6 +107836,8 @@ final class Translations {
             "Th\u1eed k\u1ebft n\u1ed1i l\u1ea1i",
             "Retry sponsored messages",
             "Th\u1eed t\u1ea3i l\u1ea1i tin nh\u1eafn \u0111\u01b0\u1ee3c t\u00e0i tr\u1ee3",
+            "Reverse",
+            "\u0110\u1ea3o ng\u01b0\u1ee3c",
             "Review",
             "Xem l\u1ea1i",
             "Review 1 song without tags",
@@ -104980,6 +107902,8 @@ final class Translations {
             "Save frequently played songs from available download sources on Wi-Fi",
             "L\u01b0u b\u00e0i th\u01b0\u1eddng nghe t\u1eeb c\u00e1c ngu\u1ed3n t\u1ea3i"
                     + " xu\u1ed1ng kh\u1ea3 d\u1ee5ng qua Wi-Fi",
+            "Save mode",
+            "Ch\u1ebf \u0111\u1ed9 l\u01b0u",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -105405,6 +108329,8 @@ final class Translations {
             "H\u1eb9n gi\u1edd t\u1eaft",
             "Sliders {0}",
             "Thanh tr\u01b0\u1ee3t {0}",
+            "Slower by 1%",
+            "Ch\u1eadm h\u01a1n 1%",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -105976,6 +108902,11 @@ final class Translations {
             "The provider is still preparing files. Refresh this transfer later.",
             "Nh\u00e0 cung c\u1ea5p v\u1eabn \u0111ang chu\u1ea9n b\u1ecb t\u1ec7p. L\u00e0m"
                     + " m\u1edbi t\u00e1c v\u1ee5 truy\u1ec1n n\u00e0y sau.",
+            "The queue changed; reopen this transition",
+            "H\u00e0ng \u0111\u1ee3i \u0111\u00e3 \u0111\u1ed5i; h\u00e3y m\u1edf l\u1ea1i"
+                    + " chuy\u1ec3n ti\u1ebfp n\u00e0y",
+            "The queue is being changed",
+            "\u0110ang thay \u0111\u1ed5i h\u00e0ng \u0111\u1ee3i",
             "The queue plays in its own order",
             "H\u00e0ng \u0111\u1ee3i ph\u00e1t theo th\u1ee9 t\u1ef1 v\u1ed1n c\u00f3",
             "The rootless JamesDSP needs two permissions that only Shizuku or a",
@@ -106047,6 +108978,8 @@ final class Translations {
             "B\u00e0i h\u00e1t nh\u1ecf d\u1ea7n r\u1ed3i t\u1ea1m d\u1eebng",
             "The song pauses straight away",
             "B\u00e0i h\u00e1t t\u1ea1m d\u1eebng ngay l\u1eadp t\u1ee9c",
+            "The track length is not available",
+            "Kh\u00f4ng c\u00f3 th\u00f4ng tin th\u1eddi l\u01b0\u1ee3ng b\u00e0i",
             "The whole song is cached.",
             "To\u00e0n b\u1ed9 b\u00e0i h\u00e1t \u0111\u00e3 \u0111\u01b0\u1ee3c l\u01b0u trong"
                     + " b\u1ed9 nh\u1edb \u0111\u1ec7m.",
@@ -106095,6 +109028,8 @@ final class Translations {
             "This download choice expired. Return to the song and try again.",
             "L\u1ef1a ch\u1ecdn t\u1ea3i xu\u1ed1ng n\u00e0y \u0111\u00e3 h\u1ebft h\u1ea1n. Quay"
                     + " l\u1ea1i b\u00e0i h\u00e1t r\u1ed3i th\u1eed l\u1ea1i.",
+            "This file can\u2019t stay available",
+            "Kh\u00f4ng th\u1ec3 gi\u1eef quy\u1ec1n truy c\u1eadp t\u1ec7p n\u00e0y",
             "This file couldn't be deleted.",
             "Kh\u00f4ng th\u1ec3 x\u00f3a t\u1ec7p n\u00e0y.",
             "This file did not pass the audio format check. Choose another result.",
@@ -106120,6 +109055,8 @@ final class Translations {
             "This official sponsored message could not be displayed completely.",
             "Kh\u00f4ng hi\u1ec3n th\u1ecb \u0111\u01b0\u1ee3c \u0111\u1ea7y \u0111\u1ee7 tin"
                 + " nh\u1eafn \u0111\u01b0\u1ee3c t\u00e0i tr\u1ee3 ch\u00ednh th\u1ee9c n\u00e0y.",
+            "This pair cannot be previewed",
+            "Kh\u00f4ng th\u1ec3 nghe th\u1eed c\u1eb7p b\u00e0i n\u00e0y",
             "This phone\u2019s audio chip can play: {0}.",
             "Chip \u00e2m thanh c\u1ee7a \u0111i\u1ec7n tho\u1ea1i n\u00e0y c\u00f3 th\u1ec3"
                     + " ph\u00e1t: {0}.",
@@ -106168,6 +109105,8 @@ final class Translations {
                     + " c\u1eadp v\u00e0o b\u1ed9 nh\u1edb \u0111\u1ec7m b\u00e0i h\u00e1t.",
             "Time",
             "Time",
+            "times",
+            "l\u1ea7n",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -106201,6 +109140,8 @@ final class Translations {
             "C\u00f4ng c\u1ee5",
             "Track analysis",
             "Ph\u00e2n t\u00edch b\u00e0i h\u00e1t",
+            "Track BPM",
+            "BPM c\u1ee7a b\u00e0i",
             "Track details",
             "Chi ti\u1ebft b\u1ea3n nh\u1ea1c",
             "Track durations are not available yet. Start playback or",
@@ -106247,6 +109188,9 @@ final class Translations {
             "Turn on Saved index first. The songs come from it.",
             "H\u00e3y b\u1eadt Ch\u1ec9 m\u1ee5c \u0111\u00e3 l\u01b0u tr\u01b0\u1edbc. C\u00e1c"
                     + " b\u00e0i h\u00e1t \u0111\u01b0\u1ee3c l\u1ea5y t\u1eeb \u0111\u00f3.",
+            "Turn shuffle off to change the queue",
+            "T\u1eaft ph\u00e1t ng\u1eabu nhi\u00ean \u0111\u1ec3 thay \u0111\u1ed5i h\u00e0ng"
+                    + " \u0111\u1ee3i",
             "Turn the singer down",
             "Gi\u1ea3m gi\u1ecdng ca s\u0129",
             "Turns the singer down so you can sing over the song. Works",
@@ -106260,6 +109204,8 @@ final class Translations {
             "X\u00e1c minh hai b\u01b0\u1edbc",
             "Type part of the model name.",
             "Nh\u1eadp m\u1ed9t ph\u1ea7n t\u00ean m\u1eabu.",
+            "Unavailable",
+            "Kh\u00f4ng kh\u1ea3 d\u1ee5ng",
             "Under {0}, oldest first",
             "D\u01b0\u1edbi {0}, x\u00f3a m\u1ee5c c\u0169 nh\u1ea5t tr\u01b0\u1edbc",
             "Undo",
@@ -106313,6 +109259,8 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "D\u00f9ng h\u1ec7 s\u1ed1 t\u1eeb 0,5\u00d7 \u0111\u1ebfn 2\u00d7",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -106327,6 +109275,8 @@ final class Translations {
                     + " y\u00eau c\u1ea7u JSON ki\u1ec3u tr\u00f2 chuy\u1ec7n. Kh\u00f4ng c\u00f3"
                     + " d\u1ecbch v\u1ee5 t\u00edch h\u1ee3p s\u1eb5n v\u00e0 BitChord kh\u00f4ng"
                     + " v\u1eadn h\u00e0nh m\u00e1y ch\u1ee7 cho vi\u1ec7c n\u00e0y.",
+            "Use automatic mode",
+            "D\u00f9ng ch\u1ebf \u0111\u1ed9 t\u1ef1 \u0111\u1ed9ng",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -106348,6 +109298,10 @@ final class Translations {
                     + " \u1ee9ng v\u00e0 chuy\u1ec3n \u00e2m ch\u00e9o t\u1ea1m ng\u1eebng",
             "Use it",
             "D\u00f9ng",
+            "Use manual mode",
+            "D\u00f9ng ch\u1ebf \u0111\u1ed9 th\u1ee7 c\u00f4ng",
+            "Use measured tempo",
+            "D\u00f9ng nh\u1ecbp \u0111\u1ed9 \u0111\u00e3 \u0111o",
             "Use MicroG",
             "D\u00f9ng MicroG",
             "Use name",
@@ -106371,6 +109325,10 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "D\u00f9ng t\u00ean n\u00e0y?",
+            "Use this pair",
+            "D\u00f9ng c\u1eb7p b\u00e0i n\u00e0y",
+            "Use this pair to apply it",
+            "D\u00f9ng c\u1eb7p b\u00e0i n\u00e0y \u0111\u1ec3 \u00e1p d\u1ee5ng",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "D\u00f9ng t\u00e0i kho\u1ea3n Real-Debrid, AllDebrid, Premiumize ho\u1eb7c TorBox"
                     + " c\u1ee7a ri\u00eang b\u1ea1n",
@@ -106393,6 +109351,8 @@ final class Translations {
                     + " c\u1ee7a b\u1ea1n. C\u00e1c l\u01b0\u1ee3t t\u1ea3i \u0111\u01b0\u1ee3c"
                     + " t\u1ea3i l\u00ean d\u01b0\u1edbi d\u1ea1ng t\u1ec7p gi\u1eef nguy\u00ean"
                     + " d\u1eef li\u1ec7u \u00e2m thanh g\u1ed1c.",
+            "Using this pair\u2026",
+            "\u0110ang d\u00f9ng c\u1eb7p b\u00e0i n\u00e0y\u2026",
             "Using {0}",
             "\u0110ang d\u00f9ng {0}",
             "Variable",
@@ -106438,6 +109398,8 @@ final class Translations {
             "Volume",
             "Wait for the current action to finish.",
             "\u0110\u1ee3i thao t\u00e1c hi\u1ec7n t\u1ea1i ho\u00e0n t\u1ea5t.",
+            "Wait for the pair to finish loading",
+            "Ch\u1edd t\u1ea3i xong c\u1ea3 hai b\u00e0i",
             "Waiting for a community channel to be indexed",
             "\u0110ang ch\u1edd m\u1ed9t k\u00eanh c\u1ed9ng \u0111\u1ed3ng \u0111\u01b0\u1ee3c"
                     + " l\u1eadp ch\u1ec9 m\u1ee5c",
@@ -106474,6 +109436,8 @@ final class Translations {
             "Waiting for {0} community channels to be indexed",
             "\u0110ang ch\u1edd {0} k\u00eanh c\u1ed9ng \u0111\u1ed3ng \u0111\u01b0\u1ee3c l\u1eadp"
                     + " ch\u1ec9 m\u1ee5c",
+            "Waiting to analyze",
+            "\u0110ang ch\u1edd ph\u00e2n t\u00edch",
             "Waiting to save",
             "\u0110ang ch\u1edd l\u01b0u",
             "Waiting to save selected copies",
@@ -107103,6 +110067,8 @@ final class Translations {
             "\u8abf\u6574\u6a19\u6e96\u5316\u5f8c\u7684\u64ad\u653e\u97ff\u5ea6",
             "Advanced",
             "\u9032\u968e",
+            "Advanced curve",
+            "\u9032\u968e\u66f2\u7dda",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -107157,8 +110123,14 @@ final class Translations {
                 + " BitChord \u4e2d\u3002",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "\u5206\u6790",
+            "Analysis result could not be read",
+            "\u7121\u6cd5\u8b80\u53d6\u5206\u6790\u7d50\u679c",
             "Analyzing selected audio\u2026",
             "\u6b63\u5728\u5206\u6790\u6240\u9078\u97f3\u8a0a\u2026",
+            "Analyzing\u2026",
+            "\u6b63\u5728\u5206\u6790\u2026",
             "Android didn't allow this file to be deleted.",
             "Android \u4e0d\u5141\u8a31\u522a\u9664\u6b64\u6a94\u6848\u3002",
             "Android mixes surround files itself",
@@ -107209,12 +110181,16 @@ final class Translations {
                     + " \u8a2d\u5b9a\u6a94",
             "Apply cache size",
             "\u5957\u7528\u5feb\u53d6\u5927\u5c0f",
+            "Apply mode",
+            "\u5957\u7528\u6a21\u5f0f",
             "Apply now",
             "\u7acb\u5373\u5957\u7528",
             "Apply or close to resume playback.",
             "\u5957\u7528\u6216\u95dc\u9589\u4ee5\u6062\u5fa9\u64ad\u653e\u3002",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "\u5957\u7528\u8a2d\u5b9a",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -107283,6 +110259,8 @@ final class Translations {
             "\u81ea\u52d5\u5132\u5b58",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "\u81ea\u52d5\u6df7\u97f3\u5c1a\u672a\u5c31\u7dd2\u3002",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -107341,12 +110319,19 @@ final class Translations {
             "\u7bc0\u62cd\u53ef\u4fe1\u5ea6",
             "Beat grid offset",
             "\u7bc0\u62cd\u7db2\u683c\u504f\u79fb",
+            "Beat grid scale",
+            "\u7bc0\u62cd\u7db2\u683c\u6bd4\u4f8b",
             "Beat grid tempo",
             "\u7bc0\u62cd\u7db2\u683c\u901f\u5ea6",
             "Beat jump",
             "\u7bc0\u62cd\u8df3\u8f49",
             "Beats",
             "\u7bc0\u62cd",
+            "Before",
+            "\u4e4b\u524d",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u7121\u6cd5\u4f7f\u7528\u300c\u4e4b\u524d\u300d\uff1aAutomix"
+                    + " \u6703\u70ba\u6b64\u8f49\u5834\u52a0\u5165\u6548\u679c\u3002",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -107525,6 +110510,8 @@ final class Translations {
                     + " \u7684\u4e0b\u8f09\u8a2d\u5b9a\u4e2d\u8b8a\u66f4\u3002",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "\u50c5\u5728\u91cd\u758a\u5340\u6bb5\u66f4\u6539\u5404\u66f2\u76ee\u7684\u64ad\u653e\u901f\u5ea6\uff0c\u97f3\u9ad8\u4fdd\u6301\u4e0d\u8b8a\u3002",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -107581,6 +110568,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "\u9078\u64c7",
+            "Choose a different file",
+            "\u9078\u64c7\u5176\u4ed6\u6a94\u6848",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -107848,6 +110837,8 @@ final class Translations {
             "\u7d22\u5f15\u5b8c\u6210\u5f8c\u958b\u59cb\u8907\u88fd\uff0c\u5f9e\u6700\u65e9\u7684\u8cbc\u6587\u958b\u59cb\u3002",
             "Corrected names",
             "\u66f4\u6b63\u5f8c\u7684\u540d\u7a31",
+            "Could not change the queue",
+            "\u7121\u6cd5\u8b8a\u66f4\u4f47\u5217",
             "Could not complete peer discovery. Check relays and try again.",
             "\u7121\u6cd5\u5b8c\u6210\u7bc0\u9ede\u63a2\u7d22\u3002\u8acb\u6aa2\u67e5\u4e2d\u7e7c\u5f8c\u91cd\u8a66\u3002",
             "Could not complete this action. Check the API key, account access and connection, then"
@@ -107880,8 +110871,12 @@ final class Translations {
             "\u7121\u6cd5\u9023\u7dda\u5230\u670d\u52d9\u3002\u8acb\u6aa2\u67e5\u7db2\u8def\u9023\u7dda\u3002",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "\u7121\u6cd5\u8b80\u53d6\u6b64\u6a94\u6848",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "\u7121\u6cd5\u8b80\u53d6\u9019\u9996\u66f2\u76ee\u7684\u97f3\u8a0a\u3002",
             "Could not read your library. Try again.",
             "\u7121\u6cd5\u8b80\u53d6\u4f60\u7684\u97f3\u6a02\u5eab\u3002\u8acb\u518d\u8a66\u4e00\u6b21\u3002",
             "Could not remove the saved service. Try again.",
@@ -107904,6 +110899,8 @@ final class Translations {
             "\u7121\u6cd5\u66f4\u65b0\u7bc0\u9ede\u63a2\u7d22\u3002\u8acb\u6aa2\u67e5\u9023\u7dda\u8a2d\u5b9a\u5f8c\u91cd\u8a66\u3002",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "\u7121\u6cd5\u4f7f\u7528\u9019\u7d44\u66f2\u76ee\u3002",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "\u7121\u6cd5\u8907\u88fd\uff1a{0}\u3002{1} \u5206\u9418\u5f8c\u91cd\u8a66\u3002",
             "Couldn\u2019t load AutoEq\u2019s list: {0}",
@@ -108196,6 +111193,8 @@ final class Translations {
             "\u8349\u7a3f\u8207\u64ad\u653e\u8a2d\u5b9a\u5206\u958b",
             "Draft saved",
             "\u8349\u7a3f\u5df2\u5132\u5b58",
+            "Draft saving",
+            "\u8349\u7a3f\u5132\u5b58",
             "Drag a curve point or fine-tune each track below.",
             "\u62d6\u66f3\u66f2\u7dda\u9ede\uff0c\u6216\u5728\u4e0b\u65b9\u5fae\u8abf\u6bcf\u9996\u66f2\u76ee\u3002",
             "Drag to reorder, or use Move up and Move down.",
@@ -108364,6 +111363,8 @@ final class Translations {
             "\u6700\u5f8c\u4e00\u9996\u6b4c\u7d50\u5c3e\u6de1\u51fa",
             "Failed",
             "\u5931\u6557",
+            "Faster by 1%",
+            "\u52a0\u5feb 1%",
             "Favor songs you play often",
             "\u512a\u5148\u9078\u64c7\u4f60\u5e38\u807d\u7684\u6b4c\u66f2",
             "Favor well-known songs",
@@ -108397,6 +111398,8 @@ final class Translations {
             "\u5728 AcoustID \u4e2d\u67e5\u8a62\u6c92\u6709\u6a19\u7c64\u7684\u6a94\u6848",
             "Filter",
             "\u6ffe\u6ce2\u5668",
+            "Filter depth",
+            "\u6ffe\u6ce2\u6df1\u5ea6",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -108471,6 +111474,8 @@ final class Translations {
             "\u8cc7\u6599\u593e",
             "Folder selected.",
             "\u5df2\u9078\u64c7\u8cc7\u6599\u593e\u3002",
+            "Follow current pair",
+            "\u8ddf\u96a8\u76ee\u524d\u66f2\u76ee\u7d44",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -108560,12 +111565,16 @@ final class Translations {
             "\u96b1\u85cf\u91cd\u8907\u6b4c\u66f2",
             "Hide hash",
             "\u96b1\u85cf hash",
+            "Hide sources",
+            "\u96b1\u85cf\u4f86\u6e90",
             "High",
             "\u9ad8",
             "High-pass",
             "High-pass",
             "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
             "\u9577\u6309\u63d0\u793a\u9ede\u53ef\u53d6\u4ee3\u6216\u522a\u9664\u3002\u7de8\u8f2f\u7db2\u683c\u4e0d\u6703\u6539\u8b8a\u64ad\u653e\u901f\u5ea6\u3002",
+            "How far the selected filters sweep.",
+            "\u6240\u9078\u6ffe\u6ce2\u5668\u7684\u6383\u983b\u7bc4\u570d\u3002",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -108600,6 +111609,8 @@ final class Translations {
             "\u5305\u542b\u5df2\u5132\u5b58\u7d22\u5f15\uff08\u6a94\u6848\u8f03\u5927\uff09",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "\u6de1\u5165\u66f2\u76ee\u6548\u679c",
             "Incoming offers",
             "\u6536\u5230\u7684\u5206\u4eab\u8acb\u6c42",
             "Incomplete sponsored-message response",
@@ -108741,6 +111752,8 @@ final class Translations {
             "\u4e0a\u6b21\u4f7f\u7528\uff1a{0}",
             "Later",
             "\u7a0d\u5f8c",
+            "Leave Listen Together to change the queue",
+            "\u8acb\u5148\u9000\u51fa\u300c\u4e00\u8d77\u807d\u300d\u518d\u8b8a\u66f4\u4f47\u5217",
             "Left to BitChord",
             "\u4ea4\u7531 BitChord \u6c7a\u5b9a",
             "Let JamesDSP do the effects",
@@ -108771,8 +111784,12 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "\u8f09\u5165\u6de1\u5165\u66f2\u76ee",
             "Load older posts",
             "\u8f09\u5165\u66f4\u65e9\u7684\u8cbc\u6587",
+            "Load outgoing",
+            "\u8f09\u5165\u6de1\u51fa\u66f2\u76ee",
             "Loading",
             "\u8f09\u5165\u4e2d",
             "Loading channel\u2026",
@@ -108847,6 +111864,16 @@ final class Translations {
             "\u70ba\u6df7\u97f3\u7559\u51fa\u7a7a\u9593",
             "Manage download destinations, transfers and public sharing.",
             "\u7ba1\u7406\u4e0b\u8f09\u4f4d\u7f6e\u3001\u50b3\u8f38\u53ca\u516c\u958b\u5206\u4eab\u3002",
+            "Manual",
+            "\u624b\u52d5",
+            "Manual applies when you tap Apply.",
+            "\u624b\u52d5\u6a21\u5f0f\u4e0b\uff0c\u9ede\u9078\u300c\u5957\u7528\u300d\u5f8c\u624d\u6703\u5957\u7528\u8a2d\u5b9a\u3002",
+            "Manual saves when you tap Save draft.",
+            "\u624b\u52d5\u6a21\u5f0f\u4e0b\uff0c\u9ede\u9078\u300c\u5132\u5b58\u8349\u7a3f\u300d\u5f8c\u624d\u6703\u5132\u5b58\u3002",
+            "Match A to B",
+            "\u5c07 A \u914d\u5408 B",
+            "Match B to A",
+            "\u5c07 B \u914d\u5408 A",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -108929,6 +111956,8 @@ final class Translations {
             "\u793e\u7fa4\u983b\u9053\u4e2d\u7684 MP3\u3001AAC\u3001Opus"
                 + " \u7b49\u6709\u640d\u6a94\u6848\u6703\u88ab\u7565\u904e\u3002\u6a94\u6848\u662f\u5426\u7121\u640d\u4f9d\u5176\u683c\u5f0f\u5224\u65b7\uff0cM4A"
                 + " \u6a94\u6848\u5247\u4f9d\u4f4d\u5143\u7387\u5224\u65b7\u3002",
+            "Multiplier",
+            "\u500d\u7387",
             "Music chats",
             "\u97f3\u6a02\u804a\u5929\u5ba4",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -108965,6 +111994,9 @@ final class Translations {
             "\u9700\u8981 Android 10 \u6216\u66f4\u65b0\u7248\u672c\u3002",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "\u9700\u8981\u5169\u9996\u66f2\u76ee\u7684\u901f\u5ea6\uff0c\u4e14\u6bd4\u4f8b\u9808\u5728"
+                + " 0.5\u00d7 \u81f3 2\u00d7 \u4e4b\u9593",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -109022,6 +112054,8 @@ final class Translations {
             "\u672a\u627e\u5230\u5b8c\u5168\u91cd\u8907\u9805\u76ee",
             "No file offers yet. Ask the paired phone to choose audio files to share.",
             "\u9084\u6c92\u6709\u6a94\u6848\u5206\u4eab\u8acb\u6c42\u3002\u8acb\u8b93\u5df2\u914d\u5c0d\u7684\u624b\u6a5f\u9078\u53d6\u8981\u5206\u4eab\u7684\u97f3\u8a0a\u6a94\u6848\u3002",
+            "No file picker is available",
+            "\u6c92\u6709\u53ef\u7528\u7684\u6a94\u6848\u9078\u64c7\u5668",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -109078,6 +112112,8 @@ final class Translations {
             "\u6c92\u6709\u6700\u8fd1\u7684\u7bc0\u9ede\u3002\u9078\u64c7\u300c\u5c0b\u627e\u7bc0\u9ede\u300d\uff0c\u6216\u4f7f\u7528\u53e6\u4e00\u652f\u624b\u6a5f\u7684\u61c9\u7528\u7a0b\u5f0f\u91d1\u9470\u76f4\u63a5\u914d\u5c0d\u3002",
             "No saved account. Enter your username and password.",
             "\u6c92\u6709\u5df2\u5132\u5b58\u7684\u5e33\u6236\u3002\u8acb\u8f38\u5165\u4f7f\u7528\u8005\u540d\u7a31\u53ca\u5bc6\u78bc\u3002",
+            "No saved draft",
+            "\u6c92\u6709\u5df2\u5132\u5b58\u7684\u8349\u7a3f",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -109113,6 +112149,8 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "\u97f3\u8a0a\u9577\u5ea6\u4e0d\u8db3",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "\u8a18\u61b6\u9ad4\u4e0d\u8db3\uff0c\u7121\u6cd5\u5206\u6790\u6b64\u66f2\u76ee\u3002\u8acb\u9ede\u9078\u300c\u91cd\u8a66\u300d\u3002",
             "Not managed here",
             "\u4e0d\u5728\u6b64\u8655\u7ba1\u7406",
             "Not played yet",
@@ -109261,6 +112299,8 @@ final class Translations {
             "\u9078\u7528\u3002\u8981\u4f7f\u7528\u6b64\u529f\u80fd\uff0c\u8acb\u8a2d\u5b9a\u5916\u90e8\u6587\u5b57\u670d\u52d9\u3002\u9ede\u9078\u300c\u7522\u751f\u300d\u524d\u4e0d\u6703\u50b3\u9001\u4efb\u4f55\u5167\u5bb9\uff0c\u5176\u4ed6\u64ad\u653e\u6e05\u55ae\u4e5f\u4e0d\u9700\u8981\u5b83\u3002",
             "Original key",
             "\u539f\u8abf",
+            "Original tempo",
+            "\u539f\u59cb\u901f\u5ea6",
             "Original vocals",
             "\u539f\u59cb\u4eba\u8072",
             "Other",
@@ -109273,10 +112313,18 @@ final class Translations {
             "\u5176\u4ed6 Telegram \u6a94\u6848",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "\u6de1\u51fa\u66f2\u76ee\u6548\u679c",
             "Outro",
             "\u5c3e\u594f",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "\u91cd\u758a\u5340\u6bb5 BPM",
+            "overlap only",
+            "\u50c5\u91cd\u758a\u5340\u6bb5",
+            "Overlap tempo",
+            "\u91cd\u758a\u5340\u6bb5\u901f\u5ea6",
             "Pair a peer",
             "\u914d\u5c0d\u7bc0\u9ede",
             "Pair a peer before sharing files.",
@@ -109418,6 +112466,8 @@ final class Translations {
             "\u9078\u64c7\u9019\u6b21\u4e0b\u8f09\u7684\u97f3\u8cea\u3002",
             "Pitch",
             "\u97f3\u9ad8",
+            "Play",
+            "\u64ad\u653e",
             "Play a song first.",
             "\u8acb\u5148\u64ad\u653e\u4e00\u9996\u6b4c\u3002",
             "Play alongside other apps",
@@ -109502,6 +112552,8 @@ final class Translations {
             "Preview",
             "Preview again, or Apply to resume.",
             "\u518d\u6b21\u9810\u89bd\uff0c\u6216\u5957\u7528\u4ee5\u6062\u5fa9\u64ad\u653e\u3002",
+            "Preview Before",
+            "\u8a66\u807d\u300c\u4e4b\u524d\u300d",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -109675,6 +112727,8 @@ final class Translations {
             "\u53ef\u4ee5\u958b\u59cb\u641c\u5c0b\u3002\u9078\u64c7\u6a94\u6848\u5f8c\u624d\u6703\u958b\u59cb\u4e0b\u8f09\u3002",
             "Ready.",
             "\u6e96\u5099\u5c31\u7dd2\u3002",
+            "Recall draft",
+            "\u8f09\u5165\u8349\u7a3f",
             "Receive",
             "\u63a5\u6536",
             "Receive audio from another BitChord phone, or share your files.",
@@ -109792,6 +112846,8 @@ final class Translations {
             "\u4fee\u5fa9",
             "Repeat preview",
             "\u91cd\u8907\u9810\u89bd",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "\u53d6\u4ee3\u4f47\u5217\u4e2d\u7684\u76ee\u524d\u66f2\u76ee\u548c\u4e0b\u4e00\u9996\u66f2\u76ee\uff0c\u5176\u9918\u66f2\u76ee\u4fdd\u6301\u4e0d\u8b8a\u3002",
             "Report audio quality",
             "\u56de\u5831\u97f3\u8cea",
             "Report sponsored message",
@@ -109824,6 +112880,8 @@ final class Translations {
             "\u91cd\u8a2d\u9023\u7dda\u8eab\u5206",
             "Reset connection identity?",
             "\u91cd\u8a2d\u9023\u7dda\u8eab\u5206\uff1f",
+            "Reset EQ",
+            "\u91cd\u8a2d\u7b49\u5316\u5668",
             "Reset to {0}%",
             "\u91cd\u8a2d\u70ba {0}%",
             "Reset {0}",
@@ -109871,6 +112929,8 @@ final class Translations {
             "\u91cd\u8a66\u9023\u7dda",
             "Retry sponsored messages",
             "\u91cd\u8a66\u8d0a\u52a9\u8a0a\u606f",
+            "Reverse",
+            "\u4ea4\u63db",
             "Review",
             "\u6aa2\u8996",
             "Review 1 song without tags",
@@ -109933,6 +112993,8 @@ final class Translations {
             "Save frequently played songs from available download sources on Wi-Fi",
             "\u900f\u904e Wi-Fi"
                 + " \u5f9e\u53ef\u7528\u7684\u4e0b\u8f09\u4f86\u6e90\u5132\u5b58\u7d93\u5e38\u64ad\u653e\u7684\u6b4c\u66f2",
+            "Save mode",
+            "\u5132\u5b58\u6a21\u5f0f",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -110315,6 +113377,8 @@ final class Translations {
             "\u7761\u7720\u5b9a\u6642\u5668",
             "Sliders {0}",
             "\u6ed1\u687f {0}",
+            "Slower by 1%",
+            "\u6e1b\u6162 1%",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -110821,6 +113885,10 @@ final class Translations {
             "The playlists in your music services will be kept.",
             "The provider is still preparing files. Refresh this transfer later.",
             "\u670d\u52d9\u5546\u4ecd\u5728\u6e96\u5099\u6a94\u6848\uff0c\u8acb\u7a0d\u5f8c\u91cd\u65b0\u6574\u7406\u6b64\u50b3\u8f38\u3002",
+            "The queue changed; reopen this transition",
+            "\u4f47\u5217\u5df2\u8b8a\u66f4\uff0c\u8acb\u91cd\u65b0\u958b\u555f\u6b64\u8f49\u5834",
+            "The queue is being changed",
+            "\u6b63\u5728\u8b8a\u66f4\u4f47\u5217",
             "The queue plays in its own order",
             "\u64ad\u653e\u4f47\u5217\u4f9d\u539f\u672c\u9806\u5e8f\u64ad\u653e",
             "The rootless JamesDSP needs two permissions that only Shizuku or a",
@@ -110874,6 +113942,8 @@ final class Translations {
             "\u6b4c\u66f2\u5148\u6de1\u51fa\uff0c\u518d\u66ab\u505c",
             "The song pauses straight away",
             "\u6b4c\u66f2\u7acb\u5373\u66ab\u505c",
+            "The track length is not available",
+            "\u7121\u6cd5\u53d6\u5f97\u66f2\u76ee\u9577\u5ea6",
             "The whole song is cached.",
             "\u6574\u9996\u6b4c\u66f2\u5df2\u5feb\u53d6\u3002",
             "There's no music in this chat yet.",
@@ -110913,6 +113983,8 @@ final class Translations {
             "This download choice expired. Return to the song and",
             "This download choice expired. Return to the song and try again.",
             "\u9019\u6b21\u4e0b\u8f09\u9078\u64c7\u5df2\u904e\u671f\u3002\u8acb\u8fd4\u56de\u6b4c\u66f2\u5f8c\u518d\u8a66\u3002",
+            "This file can\u2019t stay available",
+            "\u7121\u6cd5\u4fdd\u7559\u6b64\u6a94\u6848\u7684\u5b58\u53d6\u6b0a",
             "This file couldn't be deleted.",
             "\u7121\u6cd5\u522a\u9664\u6b64\u6a94\u6848\u3002",
             "This file did not pass the audio format check. Choose another result.",
@@ -110932,6 +114004,8 @@ final class Translations {
                 + " Telegram \u5e33\u865f\u767b\u5165\u3002",
             "This official sponsored message could not be displayed completely.",
             "\u7121\u6cd5\u5b8c\u6574\u986f\u793a\u9019\u5247\u5b98\u65b9\u8d0a\u52a9\u8a0a\u606f\u3002",
+            "This pair cannot be previewed",
+            "\u7121\u6cd5\u8a66\u807d\u9019\u7d44\u66f2\u76ee",
             "This phone\u2019s audio chip can play: {0}.",
             "\u9019\u90e8\u624b\u6a5f\u7684\u97f3\u8a0a\u6676\u7247\u53ef\u4ee5\u64ad\u653e\uff1a{0}\u3002",
             "This playlist has no available tracks.",
@@ -110974,6 +114048,8 @@ final class Translations {
                     + " \u672a\u958b\u653e\u5176\u6b4c\u66f2\u5feb\u53d6\u3002",
             "Time",
             "Time",
+            "times",
+            "\u500d",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -111004,6 +114080,8 @@ final class Translations {
             "\u5de5\u5177",
             "Track analysis",
             "\u66f2\u76ee\u5206\u6790",
+            "Track BPM",
+            "\u66f2\u76ee BPM",
             "Track details",
             "\u66f2\u76ee\u8a73\u7d30\u8cc7\u8a0a",
             "Track durations are not available yet. Start playback or",
@@ -111045,6 +114123,8 @@ final class Translations {
             "\u8acb\u5148\u958b\u555f\u300c\u5df2\u5132\u5b58\u7d22\u5f15\u300d\u3002\u8981\u8907\u88fd\u7684\u6a94\u6848\u4f86\u81ea\u5b83\u3002",
             "Turn on Saved index first. The songs come from it.",
             "\u8acb\u5148\u958b\u555f\u300c\u5df2\u5132\u5b58\u7d22\u5f15\u300d\u3002\u6b4c\u66f2\u4f86\u81ea\u5b83\u3002",
+            "Turn shuffle off to change the queue",
+            "\u8acb\u5148\u95dc\u9589\u96a8\u6a5f\u64ad\u653e\u518d\u8b8a\u66f4\u4f47\u5217",
             "Turn the singer down",
             "\u964d\u4f4e\u4e3b\u5531\u4eba\u8072",
             "Turns the singer down so you can sing over the song. Works",
@@ -111056,6 +114136,8 @@ final class Translations {
             "\u5169\u6b65\u9a5f\u9a57\u8b49",
             "Type part of the model name.",
             "\u8f38\u5165\u578b\u865f\u540d\u7a31\u7684\u4e00\u90e8\u5206\u3002",
+            "Unavailable",
+            "\u7121\u6cd5\u4f7f\u7528",
             "Under {0}, oldest first",
             "\u4f4e\u65bc {0}\uff0c\u512a\u5148\u6e05\u9664\u6700\u820a\u5167\u5bb9",
             "Undo",
@@ -111104,6 +114186,8 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "\u8acb\u4f7f\u7528 0.5\u00d7 \u81f3 2\u00d7 \u4e4b\u9593\u7684\u500d\u7387",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -111118,6 +114202,8 @@ final class Translations {
                     + " HTTPS"
                     + " \u670d\u52d9\u3002\u672a\u5167\u5efa\u4efb\u4f55\u670d\u52d9\uff0cBitChord"
                     + " \u4e5f\u4e0d\u70ba\u6b64\u57f7\u884c\u4f3a\u670d\u5668\u3002",
+            "Use automatic mode",
+            "\u4f7f\u7528\u81ea\u52d5\u6a21\u5f0f",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -111136,6 +114222,10 @@ final class Translations {
             "\u53ef\u7528\u6642\u4f7f\u7528\u786c\u9ad4\u89e3\u78bc\uff1b\u97f3\u6548\u548c\u4ea4\u53c9\u6de1\u5316\u6703\u66ab\u6642\u505c\u7528",
             "Use it",
             "\u4f7f\u7528",
+            "Use manual mode",
+            "\u4f7f\u7528\u624b\u52d5\u6a21\u5f0f",
+            "Use measured tempo",
+            "\u4f7f\u7528\u6e2c\u5f97\u7684\u901f\u5ea6",
             "Use MicroG",
             "\u4f7f\u7528 MicroG",
             "Use name",
@@ -111159,6 +114249,10 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "\u8981\u4f7f\u7528\u9019\u500b\u540d\u7a31\u55ce\uff1f",
+            "Use this pair",
+            "\u4f7f\u7528\u9019\u7d44\u66f2\u76ee",
+            "Use this pair to apply it",
+            "\u5148\u4f7f\u7528\u9019\u7d44\u66f2\u76ee\u518d\u5957\u7528\u8a2d\u5b9a",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "\u4f7f\u7528\u60a8\u81ea\u5df1\u7684 Real-Debrid\u3001AllDebrid\u3001Premiumize \u6216"
                     + " TorBox \u5e33\u6236",
@@ -111176,6 +114270,8 @@ final class Translations {
             "Uses your configured private main channel. Downloads are uploaded as files with their"
                     + " original audio bytes.",
             "\u4f7f\u7528\u5df2\u8a2d\u5b9a\u7684\u79c1\u4eba\u4e3b\u983b\u9053\u3002\u4e0b\u8f09\u7684\u6a94\u6848\u5c07\u4fdd\u7559\u539f\u59cb\u97f3\u8a0a\u4f4d\u5143\u7d44\u4e0a\u50b3\u3002",
+            "Using this pair\u2026",
+            "\u6b63\u5728\u4f7f\u7528\u9019\u7d44\u66f2\u76ee\u2026",
             "Using {0}",
             "\u6b63\u5728\u4f7f\u7528 {0}",
             "Variable",
@@ -111220,6 +114316,8 @@ final class Translations {
             "Volume",
             "Wait for the current action to finish.",
             "\u8acb\u7b49\u5f85\u76ee\u524d\u64cd\u4f5c\u5b8c\u6210\u3002",
+            "Wait for the pair to finish loading",
+            "\u8acb\u7b49\u5f85\u5169\u9996\u66f2\u76ee\u8f09\u5165\u5b8c\u6210",
             "Waiting for a community channel to be indexed",
             "\u7b49\u5f85\u793e\u7fa4\u983b\u9053\u5b8c\u6210\u7d22\u5f15",
             "Waiting for device to cool down",
@@ -111250,6 +114348,8 @@ final class Translations {
             "\u7b49\u5f85\u60a8\u7684\u6838\u51c6",
             "Waiting for {0} community channels to be indexed",
             "\u7b49\u5f85 {0} \u500b\u793e\u7fa4\u983b\u9053\u5b8c\u6210\u7d22\u5f15",
+            "Waiting to analyze",
+            "\u7b49\u5f85\u5206\u6790",
             "Waiting to save",
             "\u6b63\u5728\u7b49\u5f85\u5132\u5b58",
             "Waiting to save selected copies",
@@ -111826,6 +114926,8 @@ final class Translations {
             "Adjust the normalised playback level",
             "Advanced",
             "\u9ad8\u7ea7",
+            "Advanced curve",
+            "\u9ad8\u7ea7\u66f2\u7ebf",
             "Advertised format: ",
             "Advertised format: ",
             "Advertised format: {0} \u00b7 {1} bytes",
@@ -111880,8 +114982,14 @@ final class Translations {
                 + " BitChord \u4e2d\u3002",
             "Analyse and blend tracks from supported sources",
             "Analyse and blend tracks from supported sources",
+            "Analysis",
+            "\u5206\u6790",
+            "Analysis result could not be read",
+            "\u65e0\u6cd5\u8bfb\u53d6\u5206\u6790\u7ed3\u679c",
             "Analyzing selected audio\u2026",
             "\u6b63\u5728\u5206\u6790\u6240\u9009\u97f3\u9891\u2026",
+            "Analyzing\u2026",
+            "\u6b63\u5728\u5206\u6790\u2026",
             "Android didn't allow this file to be deleted.",
             "Android \u4e0d\u5141\u8bb8\u5220\u9664\u6b64\u6587\u4ef6\u3002",
             "Android mixes surround files itself",
@@ -111931,12 +115039,16 @@ final class Translations {
             "\u5e94\u7528\u9002\u5408\u4f60\u8033\u673a\u578b\u53f7\u7684 AutoEq \u914d\u7f6e",
             "Apply cache size",
             "\u5e94\u7528\u7f13\u5b58\u5927\u5c0f",
+            "Apply mode",
+            "\u5e94\u7528\u6a21\u5f0f",
             "Apply now",
             "\u7acb\u5373\u5e94\u7528",
             "Apply or close to resume playback.",
             "\u5e94\u7528\u6216\u5173\u95ed\u4ee5\u6062\u590d\u64ad\u653e\u3002",
             "Apply playlist changes?",
             "Apply playlist changes?",
+            "Apply settings",
+            "\u5e94\u7528\u8bbe\u7f6e",
             "Apply sync",
             "Apply sync",
             "Applying a selection preserves working configured relays. To replace those with faster"
@@ -112005,6 +115117,8 @@ final class Translations {
             "\u81ea\u52a8\u4fdd\u5b58",
             "Automatic",
             "Automatic",
+            "Automatic mix is not ready yet.",
+            "\u81ea\u52a8\u6df7\u97f3\u5c1a\u672a\u5c31\u7eea\u3002",
             "Automix",
             "Automix",
             "Automix Editor",
@@ -112063,12 +115177,19 @@ final class Translations {
             "\u8282\u62cd\u7f6e\u4fe1\u5ea6",
             "Beat grid offset",
             "\u8282\u62cd\u7f51\u683c\u504f\u79fb",
+            "Beat grid scale",
+            "\u8282\u62cd\u7f51\u683c\u6bd4\u4f8b",
             "Beat grid tempo",
             "\u8282\u62cd\u7f51\u683c\u901f\u5ea6",
             "Beat jump",
             "\u8282\u62cd\u8df3\u8f6c",
             "Beats",
             "\u8282\u62cd",
+            "Before",
+            "\u4e4b\u524d",
+            "Before isn't available: Automix adds effects to this blend.",
+            "\u65e0\u6cd5\u4f7f\u7528\u201c\u4e4b\u524d\u201d\uff1aAutomix"
+                    + " \u4f1a\u4e3a\u6b64\u8fc7\u6e21\u6dfb\u52a0\u6548\u679c\u3002",
             "Before reading a chat from Telegram, the patch looks for an index file of it posted in"
                 + " the chat itself (in a channel, only its admins can post), in your Saved"
                 + " Messages or in your main channel, and then only reads what\u2019s been posted"
@@ -112246,6 +115367,8 @@ final class Translations {
                     + " \u7684\u4e0b\u8f7d\u8bbe\u7f6e\u4e2d\u66f4\u6539\u3002",
             "Change undone",
             "Change undone",
+            "Changes each track's speed during the overlap only. Pitch is kept.",
+            "\u4ec5\u5728\u91cd\u53e0\u6bb5\u66f4\u6539\u6bcf\u9996\u66f2\u76ee\u7684\u64ad\u653e\u901f\u5ea6\uff0c\u97f3\u9ad8\u4fdd\u6301\u4e0d\u53d8\u3002",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s",
             "Changes the key without changing the speed. BitChord\u2019s speed setting keeps the"
@@ -112302,6 +115425,8 @@ final class Translations {
             "Checksum identifies this file; no trusted reference checksum was compared.",
             "Choose",
             "\u9009\u62e9",
+            "Choose a different file",
+            "\u9009\u62e9\u5176\u4ed6\u6587\u4ef6",
             "Choose a different recording or keep this track in its original service.",
             "Choose a different recording or keep this track in its original service.",
             "Choose a document file.",
@@ -112569,6 +115694,8 @@ final class Translations {
             "\u7d22\u5f15\u5b8c\u6210\u540e\u5f00\u59cb\u590d\u5236\uff0c\u4ece\u6700\u65e9\u7684\u5e16\u5b50\u5f00\u59cb\u3002",
             "Corrected names",
             "\u66f4\u6b63\u540e\u7684\u540d\u79f0",
+            "Could not change the queue",
+            "\u65e0\u6cd5\u66f4\u6539\u961f\u5217",
             "Could not complete peer discovery. Check relays and try again.",
             "\u65e0\u6cd5\u5b8c\u6210\u8282\u70b9\u53d1\u73b0\u3002\u8bf7\u68c0\u67e5\u4e2d\u7ee7\u540e\u91cd\u8bd5\u3002",
             "Could not complete this action. Check the API key, account access and connection, then"
@@ -112601,8 +115728,12 @@ final class Translations {
             "\u65e0\u6cd5\u8fde\u63a5\u5230\u670d\u52a1\u3002\u8bf7\u68c0\u67e5\u7f51\u7edc\u8fde\u63a5\u3002",
             "Could not read the complete playlist. No copy was saved.",
             "Could not read the complete playlist. No copy was saved.",
+            "Could not read this file",
+            "\u65e0\u6cd5\u8bfb\u53d6\u6b64\u6587\u4ef6",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
             "Could not read this file. Choose JSON, CSV, TSV, TXT or M3U playlist metadata.",
+            "Could not read this track's audio.",
+            "\u65e0\u6cd5\u8bfb\u53d6\u8fd9\u9996\u66f2\u76ee\u7684\u97f3\u9891\u3002",
             "Could not read your library. Try again.",
             "\u65e0\u6cd5\u8bfb\u53d6\u4f60\u7684\u97f3\u4e50\u5e93\u3002\u8bf7\u91cd\u8bd5\u3002",
             "Could not remove the saved service. Try again.",
@@ -112625,6 +115756,8 @@ final class Translations {
             "\u65e0\u6cd5\u66f4\u65b0\u8282\u70b9\u53d1\u73b0\u3002\u8bf7\u68c0\u67e5\u8fde\u63a5\u8bbe\u7f6e\u540e\u91cd\u8bd5\u3002",
             "Could not update this device playlist.",
             "Could not update this device playlist.",
+            "Could not use this pair.",
+            "\u65e0\u6cd5\u4f7f\u7528\u8fd9\u7ec4\u66f2\u76ee\u3002",
             "Couldn't copy: {0}. Trying again in {1} min.",
             "\u65e0\u6cd5\u590d\u5236\uff1a{0}\u3002{1} \u5206\u949f\u540e\u91cd\u8bd5\u3002",
             "Couldn\u2019t load AutoEq\u2019s list: {0}",
@@ -112916,6 +116049,8 @@ final class Translations {
             "\u8349\u7a3f\u4e0e\u64ad\u653e\u8bbe\u7f6e\u5206\u5f00",
             "Draft saved",
             "\u8349\u7a3f\u5df2\u4fdd\u5b58",
+            "Draft saving",
+            "\u8349\u7a3f\u4fdd\u5b58",
             "Drag a curve point or fine-tune each track below.",
             "\u62d6\u52a8\u66f2\u7ebf\u70b9\uff0c\u6216\u5728\u4e0b\u65b9\u5fae\u8c03\u6bcf\u9996\u66f2\u76ee\u3002",
             "Drag to reorder, or use Move up and Move down.",
@@ -113083,6 +116218,8 @@ final class Translations {
             "\u6de1\u51fa\u6700\u540e\u4e00\u9996\u6b4c\u7684\u7ed3\u5c3e",
             "Failed",
             "\u5931\u8d25",
+            "Faster by 1%",
+            "\u52a0\u5feb 1%",
             "Favor songs you play often",
             "\u4f18\u5148\u9009\u62e9\u4f60\u5e38\u542c\u7684\u6b4c\u66f2",
             "Favor well-known songs",
@@ -113116,6 +116253,8 @@ final class Translations {
             "\u5728 AcoustID \u4e2d\u67e5\u627e\u6ca1\u6709\u6807\u7b7e\u7684\u6587\u4ef6",
             "Filter",
             "\u6ee4\u6ce2\u5668",
+            "Filter depth",
+            "\u6ee4\u6ce2\u6df1\u5ea6",
             "Filter download sources",
             "Filter download sources",
             "Filter fallback at current speed or pitch",
@@ -113190,6 +116329,8 @@ final class Translations {
             "\u6587\u4ef6\u5939",
             "Folder selected.",
             "\u5df2\u9009\u62e9\u6587\u4ef6\u5939\u3002",
+            "Follow current pair",
+            "\u8ddf\u968f\u5f53\u524d\u66f2\u76ee\u5bf9",
             "Follow downloads, saved files and confirmed destination copies.",
             "Follow downloads, saved files and confirmed destination copies.",
             "Forget",
@@ -113279,12 +116420,16 @@ final class Translations {
             "\u9690\u85cf\u91cd\u590d\u6b4c\u66f2",
             "Hide hash",
             "\u9690\u85cf hash",
+            "Hide sources",
+            "\u9690\u85cf\u6765\u6e90",
             "High",
             "\u9ad8",
             "High-pass",
             "High-pass",
             "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
             "\u957f\u6309\u63d0\u793a\u70b9\u53ef\u66ff\u6362\u6216\u5220\u9664\u3002\u7f16\u8f91\u7f51\u683c\u4e0d\u4f1a\u6539\u53d8\u64ad\u653e\u901f\u5ea6\u3002",
+            "How far the selected filters sweep.",
+            "\u6240\u9009\u6ee4\u6ce2\u5668\u7684\u626b\u9891\u8303\u56f4\u3002",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation",
             "How loud songs play when BitChord\u2019s loudness normalisation is on. BitChord\u2019s"
@@ -113319,6 +116464,8 @@ final class Translations {
             "\u5305\u542b\u5df2\u4fdd\u5b58\u7d22\u5f15\uff08\u6587\u4ef6\u66f4\u5927\uff09",
             "Incoming",
             "Incoming",
+            "Incoming effect",
+            "\u6de1\u5165\u66f2\u76ee\u6548\u679c",
             "Incoming offers",
             "\u6536\u5230\u7684\u5206\u4eab\u8bf7\u6c42",
             "Incomplete sponsored-message response",
@@ -113460,6 +116607,8 @@ final class Translations {
             "\u4e0a\u6b21\u4f7f\u7528\uff1a{0}",
             "Later",
             "\u7a0d\u540e",
+            "Leave Listen Together to change the queue",
+            "\u8bf7\u5148\u9000\u51fa\u201c\u4e00\u8d77\u542c\u201d\u518d\u66f4\u6539\u961f\u5217",
             "Left to BitChord",
             "\u7531 BitChord \u51b3\u5b9a",
             "Let JamesDSP do the effects",
@@ -113490,8 +116639,12 @@ final class Translations {
             "Listen to selected Soulseek lossless audio and MP3 files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
             "Listen to selected Soulseek MP3 and FLAC files before saving",
+            "Load incoming",
+            "\u8f7d\u5165\u6de1\u5165\u66f2\u76ee",
             "Load older posts",
             "\u52a0\u8f7d\u66f4\u65e9\u7684\u5e16\u5b50",
+            "Load outgoing",
+            "\u8f7d\u5165\u6de1\u51fa\u66f2\u76ee",
             "Loading",
             "\u52a0\u8f7d\u4e2d",
             "Loading channel\u2026",
@@ -113566,6 +116719,16 @@ final class Translations {
             "\u4e3a\u6df7\u97f3\u7559\u51fa\u7a7a\u95f4",
             "Manage download destinations, transfers and public sharing.",
             "\u7ba1\u7406\u4e0b\u8f7d\u4f4d\u7f6e\u3001\u4f20\u8f93\u548c\u516c\u5f00\u5206\u4eab\u3002",
+            "Manual",
+            "\u624b\u52a8",
+            "Manual applies when you tap Apply.",
+            "\u624b\u52a8\u6a21\u5f0f\u4e0b\uff0c\u70b9\u6309\u201c\u5e94\u7528\u201d\u540e\u624d\u4f1a\u5e94\u7528\u8bbe\u7f6e\u3002",
+            "Manual saves when you tap Save draft.",
+            "\u624b\u52a8\u6a21\u5f0f\u4e0b\uff0c\u70b9\u6309\u201c\u4fdd\u5b58\u8349\u7a3f\u201d\u540e\u624d\u4f1a\u4fdd\u5b58\u3002",
+            "Match A to B",
+            "\u5c06 A \u5339\u914d\u5230 B",
+            "Match B to A",
+            "\u5c06 B \u5339\u914d\u5230 A",
             "Match report could not be exported",
             "Match report could not be exported",
             "Match report exported",
@@ -113647,6 +116810,8 @@ final class Translations {
             "\u793e\u533a\u9891\u9053\u4e2d\u7684 MP3\u3001AAC\u3001Opus"
                 + " \u7b49\u6709\u635f\u6587\u4ef6\u4f1a\u88ab\u8df3\u8fc7\u3002\u6587\u4ef6\u662f\u5426\u65e0\u635f\u6839\u636e\u5176\u683c\u5f0f\u5224\u65ad\uff0cM4A"
                 + " \u6587\u4ef6\u5219\u6839\u636e\u7801\u7387\u5224\u65ad\u3002",
+            "Multiplier",
+            "\u500d\u7387",
             "Music chats",
             "\u97f3\u4e50\u804a\u5929",
             "Music from your community channels is copied into your main channel, a few files at a"
@@ -113683,6 +116848,9 @@ final class Translations {
             "\u9700\u8981 Android 10 \u6216\u66f4\u9ad8\u7248\u672c\u3002",
             "Needs attention",
             "Needs attention",
+            "Needs both tempos and a ratio from 0.5\u00d7 to 2\u00d7",
+            "\u9700\u8981\u4e24\u4e2a\u66f2\u76ee\u7684\u901f\u5ea6\uff0c\u4e14\u6bd4\u4f8b\u987b\u5728"
+                + " 0.5\u00d7 \u81f3 2\u00d7 \u4e4b\u95f4",
             "Needs verification",
             "Needs verification",
             "New audio files use this folder. Queued downloads and saved files keep their"
@@ -113740,6 +116908,8 @@ final class Translations {
             "\u672a\u627e\u5230\u5b8c\u5168\u91cd\u590d\u9879",
             "No file offers yet. Ask the paired phone to choose audio files to share.",
             "\u8fd8\u6ca1\u6709\u6587\u4ef6\u5206\u4eab\u8bf7\u6c42\u3002\u8bf7\u8ba9\u5df2\u914d\u5bf9\u7684\u624b\u673a\u9009\u62e9\u8981\u5171\u4eab\u7684\u97f3\u9891\u6587\u4ef6\u3002",
+            "No file picker is available",
+            "\u6ca1\u6709\u53ef\u7528\u7684\u6587\u4ef6\u9009\u62e9\u5668",
             "No file picker is available.",
             "No file picker is available.",
             "No files are shared.",
@@ -113796,6 +116966,8 @@ final class Translations {
             "\u6ca1\u6709\u6700\u8fd1\u7684\u8282\u70b9\u3002\u9009\u62e9\u300c\u67e5\u627e\u8282\u70b9\u300d\uff0c\u6216\u4f7f\u7528\u53e6\u4e00\u90e8\u624b\u673a\u7684\u5e94\u7528\u5bc6\u94a5\u76f4\u63a5\u914d\u5bf9\u3002",
             "No saved account. Enter your username and password.",
             "\u6ca1\u6709\u5df2\u4fdd\u5b58\u7684\u8d26\u6237\u3002\u8bf7\u8f93\u5165\u7528\u6237\u540d\u548c\u5bc6\u7801\u3002",
+            "No saved draft",
+            "\u6ca1\u6709\u5df2\u4fdd\u5b58\u7684\u8349\u7a3f",
             "No saved playlist links yet.",
             "No saved playlist links yet.",
             "No saved songs match that. Try an artist, genre or mood from your library.",
@@ -113830,6 +117002,8 @@ final class Translations {
             "Not connected",
             "Not enough audio",
             "\u97f3\u9891\u957f\u5ea6\u4e0d\u8db3",
+            "Not enough memory to analyze this track. Tap Retry.",
+            "\u5185\u5b58\u4e0d\u8db3\uff0c\u65e0\u6cd5\u5206\u6790\u6b64\u66f2\u76ee\u3002\u8bf7\u70b9\u6309\u201c\u91cd\u8bd5\u201d\u3002",
             "Not managed here",
             "\u4e0d\u5728\u6b64\u5904\u7ba1\u7406",
             "Not played yet",
@@ -113978,6 +117152,8 @@ final class Translations {
             "\u53ef\u9009\u3002\u8981\u4f7f\u7528\u6b64\u529f\u80fd\uff0c\u8bf7\u8bbe\u7f6e\u5916\u90e8\u6587\u672c\u670d\u52a1\u3002\u70b9\u6309\u300c\u751f\u6210\u300d\u524d\u4e0d\u4f1a\u53d1\u9001\u4efb\u4f55\u5185\u5bb9\uff0c\u5176\u4ed6\u6b4c\u5355\u4e5f\u4e0d\u9700\u8981\u5b83\u3002",
             "Original key",
             "\u539f\u8c03",
+            "Original tempo",
+            "\u539f\u59cb\u901f\u5ea6",
             "Original vocals",
             "\u539f\u59cb\u4eba\u58f0",
             "Other",
@@ -113990,10 +117166,18 @@ final class Translations {
             "\u5176\u4ed6 Telegram \u6587\u4ef6",
             "Outgoing",
             "Outgoing",
+            "Outgoing effect",
+            "\u6de1\u51fa\u66f2\u76ee\u6548\u679c",
             "Outro",
             "\u5c3e\u594f",
             "Overlap",
             "Overlap",
+            "Overlap BPM",
+            "\u91cd\u53e0\u6bb5 BPM",
+            "overlap only",
+            "\u4ec5\u91cd\u53e0\u6bb5",
+            "Overlap tempo",
+            "\u91cd\u53e0\u6bb5\u901f\u5ea6",
             "Pair a peer",
             "\u914d\u5bf9\u8282\u70b9",
             "Pair a peer before sharing files.",
@@ -114135,6 +117319,8 @@ final class Translations {
             "\u9009\u62e9\u6b64\u6b21\u4e0b\u8f7d\u7684\u97f3\u8d28\u3002",
             "Pitch",
             "\u97f3\u8c03",
+            "Play",
+            "\u64ad\u653e",
             "Play a song first.",
             "\u8bf7\u5148\u64ad\u653e\u4e00\u9996\u6b4c\u3002",
             "Play alongside other apps",
@@ -114219,6 +117405,8 @@ final class Translations {
             "Preview",
             "Preview again, or Apply to resume.",
             "\u518d\u6b21\u9884\u89c8\uff0c\u6216\u5e94\u7528\u4ee5\u6062\u590d\u64ad\u653e\u3002",
+            "Preview Before",
+            "\u8bd5\u542c\u201c\u4e4b\u524d\u201d",
             "Preview closed",
             "Preview closed",
             "Preview complete",
@@ -114392,6 +117580,8 @@ final class Translations {
             "\u53ef\u4ee5\u5f00\u59cb\u641c\u7d22\u3002\u9009\u62e9\u6587\u4ef6\u540e\u624d\u4f1a\u5f00\u59cb\u4e0b\u8f7d\u3002",
             "Ready.",
             "\u51c6\u5907\u5c31\u7eea\u3002",
+            "Recall draft",
+            "\u8f7d\u5165\u8349\u7a3f",
             "Receive",
             "\u63a5\u6536",
             "Receive audio from another BitChord phone, or share your files.",
@@ -114508,6 +117698,8 @@ final class Translations {
             "\u4fee\u590d",
             "Repeat preview",
             "\u91cd\u590d\u9884\u89c8",
+            "Replaces the current and next song in the queue. The rest stays as it is.",
+            "\u66ff\u6362\u961f\u5217\u4e2d\u7684\u5f53\u524d\u66f2\u76ee\u548c\u4e0b\u4e00\u9996\u66f2\u76ee\uff0c\u5176\u4f59\u66f2\u76ee\u4fdd\u6301\u4e0d\u53d8\u3002",
             "Report audio quality",
             "\u62a5\u544a\u97f3\u8d28",
             "Report sponsored message",
@@ -114540,6 +117732,8 @@ final class Translations {
             "\u91cd\u7f6e\u8fde\u63a5\u8eab\u4efd",
             "Reset connection identity?",
             "\u91cd\u7f6e\u8fde\u63a5\u8eab\u4efd\uff1f",
+            "Reset EQ",
+            "\u91cd\u7f6e\u5747\u8861\u5668",
             "Reset to {0}%",
             "\u91cd\u7f6e\u4e3a {0}%",
             "Reset {0}",
@@ -114587,6 +117781,8 @@ final class Translations {
             "\u91cd\u8bd5\u8fde\u63a5",
             "Retry sponsored messages",
             "\u91cd\u8bd5\u8d5e\u52a9\u6d88\u606f",
+            "Reverse",
+            "\u4ea4\u6362",
             "Review",
             "\u67e5\u770b",
             "Review 1 song without tags",
@@ -114649,6 +117845,8 @@ final class Translations {
             "Save frequently played songs from available download sources on Wi-Fi",
             "\u901a\u8fc7 Wi-Fi"
                 + " \u4ece\u53ef\u7528\u4e0b\u8f7d\u6e90\u4fdd\u5b58\u7ecf\u5e38\u64ad\u653e\u7684\u6b4c\u66f2",
+            "Save mode",
+            "\u4fdd\u5b58\u6a21\u5f0f",
             "Save pair and preview",
             "Save pair and preview",
             "Save playlist",
@@ -115029,6 +118227,8 @@ final class Translations {
             "\u7761\u7720\u5b9a\u65f6\u5668",
             "Sliders {0}",
             "\u6ed1\u5757 {0}",
+            "Slower by 1%",
+            "\u51cf\u6162 1%",
             "Smallest reported file",
             "Smallest reported file",
             "Smart downloads",
@@ -115526,6 +118726,10 @@ final class Translations {
             "The playlists in your music services will be kept.",
             "The provider is still preparing files. Refresh this transfer later.",
             "\u670d\u52a1\u5546\u4ecd\u5728\u51c6\u5907\u6587\u4ef6\uff0c\u8bf7\u7a0d\u540e\u5237\u65b0\u6b64\u4f20\u8f93\u3002",
+            "The queue changed; reopen this transition",
+            "\u961f\u5217\u5df2\u66f4\u6539\uff0c\u8bf7\u91cd\u65b0\u6253\u5f00\u6b64\u8fc7\u6e21",
+            "The queue is being changed",
+            "\u6b63\u5728\u66f4\u6539\u961f\u5217",
             "The queue plays in its own order",
             "\u961f\u5217\u6309\u539f\u6709\u987a\u5e8f\u64ad\u653e",
             "The rootless JamesDSP needs two permissions that only Shizuku or a",
@@ -115579,6 +118783,8 @@ final class Translations {
             "\u6b4c\u66f2\u6de1\u51fa\u540e\u6682\u505c",
             "The song pauses straight away",
             "\u6b4c\u66f2\u7acb\u5373\u6682\u505c",
+            "The track length is not available",
+            "\u65e0\u6cd5\u83b7\u53d6\u66f2\u76ee\u65f6\u957f",
             "The whole song is cached.",
             "\u6574\u9996\u6b4c\u66f2\u5df2\u7f13\u5b58\u3002",
             "There's no music in this chat yet.",
@@ -115618,6 +118824,8 @@ final class Translations {
             "This download choice expired. Return to the song and",
             "This download choice expired. Return to the song and try again.",
             "\u6b64\u6b21\u4e0b\u8f7d\u9009\u62e9\u5df2\u8fc7\u671f\u3002\u8bf7\u8fd4\u56de\u6b4c\u66f2\u540e\u91cd\u8bd5\u3002",
+            "This file can\u2019t stay available",
+            "\u65e0\u6cd5\u4fdd\u7559\u5bf9\u6b64\u6587\u4ef6\u7684\u8bbf\u95ee\u6743\u9650",
             "This file couldn't be deleted.",
             "\u65e0\u6cd5\u5220\u9664\u6b64\u6587\u4ef6\u3002",
             "This file did not pass the audio format check. Choose another result.",
@@ -115637,6 +118845,8 @@ final class Translations {
                 + " Telegram \u8d26\u53f7\u767b\u5f55\u3002",
             "This official sponsored message could not be displayed completely.",
             "\u65e0\u6cd5\u5b8c\u6574\u663e\u793a\u8fd9\u6761\u5b98\u65b9\u8d5e\u52a9\u6d88\u606f\u3002",
+            "This pair cannot be previewed",
+            "\u65e0\u6cd5\u8bd5\u542c\u8fd9\u7ec4\u66f2\u76ee",
             "This phone\u2019s audio chip can play: {0}.",
             "\u8fd9\u90e8\u624b\u673a\u7684\u97f3\u9891\u82af\u7247\u53ef\u4ee5\u64ad\u653e\uff1a{0}\u3002",
             "This playlist has no available tracks.",
@@ -115680,6 +118890,8 @@ final class Translations {
                     + " \u672a\u5f00\u653e\u5176\u6b4c\u66f2\u7f13\u5b58\u3002",
             "Time",
             "Time",
+            "times",
+            "\u500d",
             "Timing, volume curves and effects for the next transition",
             "Timing, volume curves and effects for the next transition",
             "Title",
@@ -115710,6 +118922,8 @@ final class Translations {
             "\u5de5\u5177",
             "Track analysis",
             "\u66f2\u76ee\u5206\u6790",
+            "Track BPM",
+            "\u66f2\u76ee BPM",
             "Track details",
             "\u66f2\u76ee\u8be6\u60c5",
             "Track durations are not available yet. Start playback or",
@@ -115751,6 +118965,8 @@ final class Translations {
             "\u8bf7\u5148\u5f00\u542f\u300c\u5df2\u4fdd\u5b58\u7d22\u5f15\u300d\u3002\u8981\u590d\u5236\u7684\u6587\u4ef6\u6765\u81ea\u5b83\u3002",
             "Turn on Saved index first. The songs come from it.",
             "\u8bf7\u5148\u5f00\u542f\u300c\u5df2\u4fdd\u5b58\u7d22\u5f15\u300d\u3002\u6b4c\u66f2\u6765\u81ea\u5b83\u3002",
+            "Turn shuffle off to change the queue",
+            "\u8bf7\u5148\u5173\u95ed\u968f\u673a\u64ad\u653e\u518d\u66f4\u6539\u961f\u5217",
             "Turn the singer down",
             "Turn the singer down",
             "Turns the singer down so you can sing over the song. Works",
@@ -115762,6 +118978,8 @@ final class Translations {
             "\u4e24\u6b65\u9a8c\u8bc1",
             "Type part of the model name.",
             "\u8bf7\u8f93\u5165\u578b\u53f7\u540d\u79f0\u7684\u4e00\u90e8\u5206\u3002",
+            "Unavailable",
+            "\u4e0d\u53ef\u7528",
             "Under {0}, oldest first",
             "\u4f4e\u4e8e {0}\uff0c\u4f18\u5148\u6e05\u9664\u6700\u65e7\u5185\u5bb9",
             "Undo",
@@ -115810,6 +119028,8 @@ final class Translations {
             "Uploading original file",
             "USB",
             "USB",
+            "Use a multiplier from 0.5\u00d7 to 2\u00d7",
+            "\u8bf7\u4f7f\u7528 0.5\u00d7 \u81f3 2\u00d7 \u4e4b\u95f4\u7684\u500d\u7387",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in",
             "Use Add to playlist for a track, or New playlist in Library. Device playlists keep"
@@ -115824,6 +119044,8 @@ final class Translations {
                     + " HTTPS"
                     + " \u670d\u52a1\u3002\u672a\u5185\u7f6e\u4efb\u4f55\u670d\u52a1\uff0cBitChord"
                     + " \u4e5f\u4e0d\u4e3a\u6b64\u8fd0\u884c\u670d\u52a1\u5668\u3002",
+            "Use automatic mode",
+            "\u4f7f\u7528\u81ea\u52a8\u6a21\u5f0f",
             "Use BitChord automatic source selection",
             "Use BitChord automatic source selection",
             "Use BitChord default",
@@ -115842,6 +119064,10 @@ final class Translations {
             "\u53ef\u7528\u65f6\u4f7f\u7528\u786c\u4ef6\u89e3\u7801\uff1b\u97f3\u6548\u548c\u4ea4\u53c9\u6de1\u5316\u4f1a\u6682\u65f6\u505c\u7528",
             "Use it",
             "\u4f7f\u7528",
+            "Use manual mode",
+            "\u4f7f\u7528\u624b\u52a8\u6a21\u5f0f",
+            "Use measured tempo",
+            "\u4f7f\u7528\u6d4b\u5f97\u7684\u901f\u5ea6",
             "Use MicroG",
             "\u4f7f\u7528 MicroG",
             "Use name",
@@ -115865,6 +119091,10 @@ final class Translations {
                     + " Explorer.",
             "Use this name?",
             "\u4f7f\u7528\u8fd9\u4e2a\u540d\u79f0\u5417\uff1f",
+            "Use this pair",
+            "\u4f7f\u7528\u8fd9\u7ec4\u66f2\u76ee",
+            "Use this pair to apply it",
+            "\u5148\u4f7f\u7528\u8fd9\u7ec4\u66f2\u76ee\u518d\u5e94\u7528\u8bbe\u7f6e",
             "Use your own Real-Debrid, AllDebrid, Premiumize or TorBox account",
             "\u4f7f\u7528\u60a8\u81ea\u5df1\u7684 Real-Debrid\u3001AllDebrid\u3001Premiumize \u6216"
                     + " TorBox \u8d26\u6237",
@@ -115882,6 +119112,8 @@ final class Translations {
             "Uses your configured private main channel. Downloads are uploaded as files with their"
                     + " original audio bytes.",
             "\u4f7f\u7528\u5df2\u914d\u7f6e\u7684\u79c1\u5bc6\u4e3b\u9891\u9053\u3002\u4e0b\u8f7d\u7684\u6587\u4ef6\u5c06\u4fdd\u7559\u539f\u59cb\u97f3\u9891\u5b57\u8282\u4e0a\u4f20\u3002",
+            "Using this pair\u2026",
+            "\u6b63\u5728\u4f7f\u7528\u8fd9\u7ec4\u66f2\u76ee\u2026",
             "Using {0}",
             "\u6b63\u5728\u4f7f\u7528 {0}",
             "Variable",
@@ -115926,6 +119158,8 @@ final class Translations {
             "Volume",
             "Wait for the current action to finish.",
             "\u8bf7\u7b49\u5f85\u5f53\u524d\u64cd\u4f5c\u5b8c\u6210\u3002",
+            "Wait for the pair to finish loading",
+            "\u8bf7\u7b49\u5f85\u4e24\u9996\u66f2\u76ee\u8f7d\u5165\u5b8c\u6210",
             "Waiting for a community channel to be indexed",
             "\u7b49\u5f85\u793e\u533a\u9891\u9053\u5b8c\u6210\u7d22\u5f15",
             "Waiting for device to cool down",
@@ -115956,6 +119190,8 @@ final class Translations {
             "\u7b49\u5f85\u60a8\u7684\u6279\u51c6",
             "Waiting for {0} community channels to be indexed",
             "\u7b49\u5f85 {0} \u4e2a\u793e\u533a\u9891\u9053\u5b8c\u6210\u7d22\u5f15",
+            "Waiting to analyze",
+            "\u7b49\u5f85\u5206\u6790",
             "Waiting to save",
             "\u6b63\u5728\u7b49\u5f85\u4fdd\u5b58",
             "Waiting to save selected copies",

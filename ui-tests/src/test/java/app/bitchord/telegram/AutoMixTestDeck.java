@@ -5,7 +5,7 @@ import androidx.media3.common.*;
 import java.lang.reflect.Proxy;
 
 /** Controllable private-deck clock; the listening player remains a different object. */
-final class AutoMixTestDeck implements TransitionPreview.Deck {
+class AutoMixTestDeck implements TransitionPreview.Deck {
     long position;
     boolean playing, closed, prepared, shuffled;
     int state = Player.STATE_READY, repeats, plays, releases;
@@ -102,6 +102,14 @@ final class AutoMixTestDeck implements TransitionPreview.Deck {
         effects = edit.copy();
         this.side = side;
         this.progress = progress;
+    }
+
+    float trim = 1f;
+    final java.util.List<Float> trims = new java.util.ArrayList<>();
+
+    public void trim(float gain) {
+        trim = gain;
+        trims.add(gain);
     }
 
     public void close() {

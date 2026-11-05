@@ -9,6 +9,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <pthread.h>
 
 /* Each extractor owns one context, used and released on its Media3 loading
  * thread. */
@@ -24,14 +26,39 @@ typedef struct {
   AVFrame *frame;
   AVPacket *packet;
   int stream, draining, rate, channels;
-  enum AVSampleFormat sample_format;
+  enum AVSampleFormat sample_format, out_format;
   int64_t time_us, samples;
+  /* Analysis handles: the input's stopped() method, the thread that opened the
+   * handle, and the last real frame timestamp. */
+  jmethodID stopped;
+  int analysis, aborted, read_any, have_pts;
+  pthread_t owner;
 } Preview;
+
+/* Cooperative stop: a pending Java exception or a true stopped() ends every
+ * later read, seek, packet and frame. It cannot interrupt a call that makes no
+ * reads and checks nothing. */
+static int stop_requested(Preview *p) {
+  JNIEnv *e = p->env;
+  if (p->aborted)
+    return 1;
+  if ((*e)->ExceptionCheck(e)) {
+    p->aborted = 1;
+    return 1;
+  }
+  if (!p->stopped)
+    return 0;
+  jboolean stop = (*e)->CallBooleanMethod(e, p->input, p->stopped);
+  if ((*e)->ExceptionCheck(e) || stop)
+    p->aborted = 1;
+  return p->aborted;
+}
+static int interrupted(void *opaque) { return stop_requested(opaque); }
 
 static int read_input(void *opaque, uint8_t *buf, int size) {
   Preview *p = opaque;
   JNIEnv *e = p->env;
-  if ((*e)->ExceptionCheck(e))
+  if ((*e)->ExceptionCheck(e) || (p->analysis && stop_requested(p)))
     return AVERROR_EXIT;
   if (size > 32768)
     size = 32768;
@@ -42,12 +69,14 @@ static int read_input(void *opaque, uint8_t *buf, int size) {
     return AVERROR_EOF;
   if (n == 0)
     return AVERROR(EIO);
+  if (n > size)
+    return AVERROR_INVALIDDATA;
   (*e)->GetByteArrayRegion(e, p->buffer, 0, n, (jbyte *)buf);
   return n;
 }
 static int64_t seek_input(void *opaque, int64_t offset, int whence) {
   Preview *p = opaque;
-  if ((*p->env)->ExceptionCheck(p->env))
+  if ((*p->env)->ExceptionCheck(p->env) || (p->analysis && stop_requested(p)))
     return AVERROR_EXIT;
   int64_t at = (*p->env)->CallLongMethod(p->env, p->input, p->seek,
                                          (jlong)offset, (jint)whence);
@@ -78,9 +107,7 @@ static void destroy(JNIEnv *e, Preview *p) {
     (*e)->DeleteGlobalRef(e, p->buffer);
   av_free(p);
 }
-JNIEXPORT jlong JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_open(
-    JNIEnv *e, jclass cls, jobject input) {
-  (void)cls;
+static jlong open_core(JNIEnv *e, jobject input, int analysis) {
   Preview *p = av_mallocz(sizeof(*p));
   if (!p) {
     failure(e, "Preview allocation", AVERROR(ENOMEM));
@@ -88,6 +115,9 @@ JNIEXPORT jlong JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_open(
   }
   av_max_alloc(64 * 1024 * 1024);
   p->env = e;
+  p->analysis = analysis;
+  p->owner = pthread_self();
+  p->out_format = analysis ? AV_SAMPLE_FMT_S16 : AV_SAMPLE_FMT_S32;
   p->input = (*e)->NewGlobalRef(e, input);
   jbyteArray bytes = (*e)->NewByteArray(e, 32768);
   p->buffer = bytes ? (*e)->NewGlobalRef(e, bytes) : NULL;
@@ -96,6 +126,8 @@ JNIEXPORT jlong JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_open(
   jclass type = (*e)->GetObjectClass(e, input);
   p->read = (*e)->GetMethodID(e, type, "read", "([BII)I");
   p->seek = (*e)->GetMethodID(e, type, "seek", "(JI)J");
+  if (analysis)
+    p->stopped = (*e)->GetMethodID(e, type, "stopped", "()Z");
   (*e)->DeleteLocalRef(e, type);
   if ((*e)->ExceptionCheck(e) || !p->input || !p->buffer) {
     destroy(e, p);
@@ -114,6 +146,10 @@ JNIEXPORT jlong JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_open(
   }
   p->format->pb = p->io;
   p->format->flags |= AVFMT_FLAG_CUSTOM_IO;
+  if (analysis) {
+    p->format->interrupt_callback.callback = interrupted;
+    p->format->interrupt_callback.opaque = p;
+  }
   p->format->max_streams = 8;
   p->format->max_index_size = 1024 * 1024;
   p->format->probesize = 1024 * 1024;
@@ -143,6 +179,8 @@ JNIEXPORT jlong JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_open(
   if (result < 0)
     goto failed;
   p->codec->thread_count = 1;
+  if (analysis)
+    p->codec->pkt_timebase = p->format->streams[p->stream]->time_base;
   result = avcodec_open2(p->codec, decoder, NULL);
   if (result < 0)
     goto failed;
@@ -156,7 +194,7 @@ JNIEXPORT jlong JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_open(
   p->channels = p->codec->ch_layout.nb_channels;
   p->sample_format = p->codec->sample_fmt;
   result =
-      swr_alloc_set_opts2(&p->swr, &p->codec->ch_layout, AV_SAMPLE_FMT_S32,
+      swr_alloc_set_opts2(&p->swr, &p->codec->ch_layout, p->out_format,
                           p->codec->sample_rate, &p->codec->ch_layout,
                           p->codec->sample_fmt, p->codec->sample_rate, 0, NULL);
   if (result < 0 || (result = swr_init(p->swr)) < 0)
@@ -169,9 +207,15 @@ JNIEXPORT jlong JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_open(
   }
   return (jlong)(intptr_t)p;
 failed:
-  failure(e, "Cannot decode this preview", result);
+  failure(e, analysis ? "Cannot decode this audio" : "Cannot decode this preview",
+          result);
   destroy(e, p);
   return 0;
+}
+JNIEXPORT jlong JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_open(
+    JNIEnv *e, jclass cls, jobject input) {
+  (void)cls;
+  return open_core(e, input, 0);
 }
 JNIEXPORT jlongArray JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_info(
     JNIEnv *e, jclass cls, jlong handle) {
@@ -193,13 +237,14 @@ JNIEXPORT jstring JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_codec(
   Preview *p = (Preview *)(intptr_t)handle;
   return (*e)->NewStringUTF(e, avcodec_get_name(p->codec->codec_id));
 }
-JNIEXPORT jbyteArray JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_next(
-    JNIEnv *e, jclass cls, jlong handle) {
-  (void)cls;
-  Preview *p = (Preview *)(intptr_t)handle;
+static jbyteArray next_core(JNIEnv *e, Preview *p) {
   p->env = e;
   int result;
   for (;;) {
+    if (p->analysis && stop_requested(p)) {
+      failure(e, "Audio analysis stopped", AVERROR_EXIT);
+      return NULL;
+    }
     result = avcodec_receive_frame(p->codec, p->frame);
     if (result == 0)
       break;
@@ -212,7 +257,12 @@ JNIEXPORT jbyteArray JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_next(
     if (p->draining)
       return NULL;
     do {
+      if (p->analysis && stop_requested(p)) {
+        failure(e, "Audio analysis stopped", AVERROR_EXIT);
+        return NULL;
+      }
       result = av_read_frame(p->format, p->packet);
+      p->read_any = 1;
       if ((*e)->ExceptionCheck(e))
         return NULL;
       if (result < 0) {
@@ -247,8 +297,23 @@ JNIEXPORT jbyteArray JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_next(
     failure(e, "Audio frame", AVERROR_INVALIDDATA);
     return NULL;
   }
-  int size =
-      av_samples_get_buffer_size(NULL, channels, frames, AV_SAMPLE_FMT_S32, 1);
+  int64_t pts_us = 0;
+  if (p->analysis) {
+    /* A real timestamp or nothing: a missing or backward one is not measured. */
+    int64_t pts = p->frame->best_effort_timestamp;
+    if (pts == AV_NOPTS_VALUE) {
+      failure(e, "Audio frame timestamp", AVERROR_INVALIDDATA);
+      return NULL;
+    }
+    pts_us = av_rescale_q(pts, p->format->streams[p->stream]->time_base,
+                          AV_TIME_BASE_Q);
+    if (p->have_pts && pts_us <= p->time_us) {
+      failure(e, "Audio frame order", AVERROR_INVALIDDATA);
+      return NULL;
+    }
+  }
+  int bytes = av_get_bytes_per_sample(p->out_format);
+  int size = av_samples_get_buffer_size(NULL, channels, frames, p->out_format, 1);
   if (size < 0) {
     failure(e, "Audio size", size);
     return NULL;
@@ -264,19 +329,29 @@ JNIEXPORT jbyteArray JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_next(
   if (count < 0)
     failure(e, "Audio conversion", count);
   else {
-    /* A sample clock avoids coarse or absent container timestamps drifting
-     * backward. */
-    p->time_us =
-        av_rescale_q(p->samples, (AVRational){1, p->rate}, AV_TIME_BASE_Q);
-    p->samples += count;
-    output = (*e)->NewByteArray(e, count * channels * 4);
+    if (p->analysis) {
+      p->time_us = pts_us;
+      p->have_pts = 1;
+    } else {
+      /* A sample clock avoids coarse or absent container timestamps drifting
+       * backward. */
+      p->time_us =
+          av_rescale_q(p->samples, (AVRational){1, p->rate}, AV_TIME_BASE_Q);
+      p->samples += count;
+    }
+    output = (*e)->NewByteArray(e, count * channels * bytes);
     if (output)
-      (*e)->SetByteArrayRegion(e, output, 0, count * channels * 4,
+      (*e)->SetByteArrayRegion(e, output, 0, count * channels * bytes,
                                (jbyte *)pcm);
   }
   av_free(pcm);
   av_frame_unref(p->frame);
   return output;
+}
+JNIEXPORT jbyteArray JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_next(
+    JNIEnv *e, jclass cls, jlong handle) {
+  (void)cls;
+  return next_core(e, (Preview *)(intptr_t)handle);
 }
 JNIEXPORT jlong JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_time(
     JNIEnv *e, jclass cls, jlong handle) {
@@ -288,4 +363,123 @@ JNIEXPORT void JNICALL Java_app_bitchord_soulseek_NativePreviewAudio_close(
     JNIEnv *e, jclass cls, jlong handle) {
   (void)cls;
   destroy(e, (Preview *)(intptr_t)handle);
+}
+
+/* Analysis entry points: PCM16 with the stream's own channels, real frame
+ * timestamps and a stop check on every read, seek, packet and frame. */
+static Preview *owned(JNIEnv *e, jlong handle) {
+  Preview *p = (Preview *)(intptr_t)handle;
+  if (!p || !p->analysis || !pthread_equal(p->owner, pthread_self())) {
+    (*e)->ThrowNew(e, (*e)->FindClass(e, "java/lang/IllegalStateException"),
+                   "Audio handle used from another thread");
+    return NULL;
+  }
+  p->env = e;
+  return p;
+}
+JNIEXPORT jlong JNICALL Java_app_bitchord_telegram_SourceAudio_nativeOpen(
+    JNIEnv *e, jclass cls, jobject input) {
+  (void)cls;
+  return open_core(e, input, 1);
+}
+JNIEXPORT jlongArray JNICALL Java_app_bitchord_telegram_SourceAudio_nativeInfo(
+    JNIEnv *e, jclass cls, jlong handle) {
+  (void)cls;
+  Preview *p = owned(e, handle);
+  if (!p)
+    return NULL;
+  /* The selected audio stream's own length. The container's is the longest of
+   * all its streams, so it stands in only when nothing else could extend it. */
+  AVStream *selected = p->format->streams[p->stream];
+  int64_t duration = -1;
+  if (selected->duration != AV_NOPTS_VALUE && selected->duration > 0) {
+    duration = av_rescale_q(selected->duration, selected->time_base, AV_TIME_BASE_Q);
+  } else if (p->format->duration != AV_NOPTS_VALUE && p->format->duration > 0) {
+    int others = 0;
+    for (unsigned i = 0; i < p->format->nb_streams; i++)
+      if ((int)i != p->stream &&
+          !(p->format->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC))
+        others++;
+    if (!others)
+      duration = p->format->duration;
+  }
+  /* Whether frame times map onto the playback clock. Transport streams start at
+   * a nonzero time that this does not translate. */
+  const char *container = p->format->iformat ? p->format->iformat->name : "";
+  jlong values[6] = {p->codec->sample_rate,
+                     p->codec->ch_layout.nb_channels,
+                     p->codec->bits_per_raw_sample
+                         ? p->codec->bits_per_raw_sample
+                         : av_get_bits_per_sample(p->codec->codec_id),
+                     duration,
+                     av_fmt_ctx_get_duration_estimation_method(p->format),
+                     strstr(container, "mpegts") ? 0 : 1};
+  jlongArray array = (*e)->NewLongArray(e, 6);
+  if (array)
+    (*e)->SetLongArrayRegion(e, array, 0, 6, values);
+  return array;
+}
+JNIEXPORT jstring JNICALL Java_app_bitchord_telegram_SourceAudio_nativeCodec(
+    JNIEnv *e, jclass cls, jlong handle) {
+  (void)cls;
+  Preview *p = owned(e, handle);
+  return p ? (*e)->NewStringUTF(e, avcodec_get_name(p->codec->codec_id)) : NULL;
+}
+JNIEXPORT void JNICALL Java_app_bitchord_telegram_SourceAudio_nativeSeek(
+    JNIEnv *e, jclass cls, jlong handle, jlong time_us) {
+  (void)cls;
+  Preview *p = owned(e, handle);
+  if (!p)
+    return;
+  if (stop_requested(p)) {
+    failure(e, "Audio analysis stopped", AVERROR_EXIT);
+    return;
+  }
+  /* Nothing has been read yet, so the start of the file is already current. */
+  if (time_us <= 0 && !p->read_any)
+    return;
+  AVStream *stream = p->format->streams[p->stream];
+  int64_t target = av_rescale_q(time_us, AV_TIME_BASE_Q, stream->time_base);
+  int result = avformat_seek_file(p->format, p->stream, INT64_MIN, target,
+                                  target, 0);
+  if (result < 0 && !p->aborted && !(*e)->ExceptionCheck(e))
+    result = av_seek_frame(p->format, p->stream, target, AVSEEK_FLAG_BACKWARD);
+  if (result < 0) {
+    failure(e, "Audio seek", result);
+    return;
+  }
+  avcodec_flush_buffers(p->codec);
+  swr_close(p->swr);
+  result = swr_init(p->swr);
+  if (result < 0) {
+    failure(e, "Audio seek", result);
+    return;
+  }
+  av_packet_unref(p->packet);
+  av_frame_unref(p->frame);
+  p->draining = 0;
+  p->have_pts = 0;
+  p->read_any = 1;
+}
+JNIEXPORT jbyteArray JNICALL Java_app_bitchord_telegram_SourceAudio_nativeNext(
+    JNIEnv *e, jclass cls, jlong handle) {
+  (void)cls;
+  Preview *p = owned(e, handle);
+  return p ? next_core(e, p) : NULL;
+}
+JNIEXPORT jlong JNICALL Java_app_bitchord_telegram_SourceAudio_nativeTime(
+    JNIEnv *e, jclass cls, jlong handle) {
+  (void)cls;
+  Preview *p = owned(e, handle);
+  return p ? p->time_us : 0;
+}
+JNIEXPORT void JNICALL Java_app_bitchord_telegram_SourceAudio_nativeClose(
+    JNIEnv *e, jclass cls, jlong handle) {
+  (void)cls;
+  if (!handle)
+    return;
+  /* A foreign thread gets the exception and leaves the handle open for its owner. */
+  Preview *p = owned(e, handle);
+  if (p)
+    destroy(e, p);
 }

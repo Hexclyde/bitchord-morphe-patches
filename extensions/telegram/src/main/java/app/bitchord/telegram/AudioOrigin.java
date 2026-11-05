@@ -225,6 +225,15 @@ public final class AudioOrigin {
     private static final Map<Object, Source> routes =
             Collections.synchronizedMap(new WeakHashMap<Object, Source>());
     private static final Map<String, Source> pending = new ConcurrentHashMap<>();
+    private static final Map<String, Source> preparedFiles =
+            new LinkedHashMap<String, Source>(16, .75f, true) {
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<String, Source> entry) {
+                    return size() > 64;
+                }
+            };
+    private static Host preparedHost;
+    private static int savedEpoch;
     private static volatile Context context;
 
     // Which source served a request.
@@ -619,7 +628,10 @@ public final class AudioOrigin {
         if (id == null || uri == null || source == null) return;
         try {
             SharedPreferences prefs = prefs();
-            if (prefs != null) AudioOriginSaved.put(prefs, id, uri, source);
+            if (prefs != null) {
+                AudioOriginSaved.put(prefs, id, uri, source);
+                invalidatePreparedFiles(uri);
+            }
         } catch (Throwable failed) {
             report(failed);
         }
@@ -631,6 +643,11 @@ public final class AudioOrigin {
         try {
             SharedPreferences prefs = prefs();
             Source saved = prefs == null ? null : AudioOriginSaved.get(prefs, id, uri);
+            if (saved == null) {
+                synchronized (lock) {
+                    if (preparedHost == host) saved = preparedFiles.get(uri);
+                }
+            }
             return saved == null ? null : current(host, saved);
         } catch (Throwable failed) {
             report(failed);
@@ -638,11 +655,49 @@ public final class AudioOrigin {
         }
     }
 
+    /** Prepare exact-file provenance before native local playback. Call off the main thread. */
+    public static void prepareSavedFile(String id, String uri) {
+        if (id == null || uri == null) return;
+        String scheme = Uri.parse(uri).getScheme();
+        if (!"file".equals(scheme) && !"content".equals(scheme)) return;
+        try {
+            Host owner = host;
+            int epoch;
+            synchronized (lock) {
+                epoch = savedEpoch;
+            }
+            SharedPreferences prefs = prefs();
+            if (prefs == null) return;
+            Source source = AudioOriginSaved.get(prefs, id, uri);
+            if (source == null) source = AudioOriginSaved.ofFile(prefs, uri);
+            synchronized (lock) {
+                if (epoch != savedEpoch || owner != host) return;
+                if (preparedHost != owner) preparedFiles.clear();
+                preparedHost = owner;
+                if (source == null) preparedFiles.remove(uri);
+                else preparedFiles.put(uri, source);
+            }
+        } catch (Throwable failed) {
+            report(failed);
+        }
+    }
+
+    private static void invalidatePreparedFiles(String uri) {
+        synchronized (lock) {
+            savedEpoch++;
+            if (uri == null) preparedFiles.clear();
+            else preparedFiles.remove(uri);
+        }
+    }
+
     public static void forgetSaved(String id) {
         if (id == null) return;
         try {
             SharedPreferences prefs = prefs();
-            if (prefs != null) AudioOriginSaved.remove(prefs, id);
+            if (prefs != null) {
+                AudioOriginSaved.remove(prefs, id);
+                invalidatePreparedFiles(null);
+            }
         } catch (Throwable failed) {
             report(failed);
         }

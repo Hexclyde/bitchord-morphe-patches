@@ -49,9 +49,69 @@ public final class PreviewNativeCases {
             return target;
         }
 
+        public boolean stopped() {
+            return cancelled;
+        }
+
         public void close() throws IOException {
             file.close();
         }
+    }
+
+    static Class<?> analysis;
+
+    static Object analyze(String name, Class<?>[] types, Object... args) throws Exception {
+        Method method = analysis.getDeclaredMethod(name, types);
+        method.setAccessible(true);
+        try {
+            return method.invoke(null, args);
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof Exception) throw (Exception) cause;
+            throw new AssertionError(cause);
+        }
+    }
+
+    static Object analyze(String name, long handle) throws Exception {
+        return analyze(name, new Class<?>[] {long.class}, handle);
+    }
+
+    /** Opens, seeks, reads and stops one file through the analysis entry points. */
+    static void analysis(File audio) throws Exception {
+        for (int round = 0; round < 25; round++) {
+            try (Input input = new Input(audio)) {
+                long handle = (Long) analyze("nativeOpen", new Class<?>[] {Object.class}, input);
+                try {
+                    long[] info = (long[]) analyze("nativeInfo", handle);
+                    check(info.length == 6 && info[0] > 0 && info[1] > 0, "Analysis format");
+                    long target = info[3] > 0 ? Math.min(1_000_000L, info[3] / 2) : 0;
+                    analyze("nativeSeek", new Class<?>[] {long.class, long.class}, handle, target);
+                    long previous = Long.MIN_VALUE;
+                    int frames = 0;
+                    for (byte[] pcm;
+                            frames < 64 && (pcm = (byte[]) analyze("nativeNext", handle)) != null;
+                            frames++) {
+                        check(pcm.length > 0 && pcm.length % (2 * info[1]) == 0, "PCM16 frames");
+                        long time = (Long) analyze("nativeTime", handle);
+                        check(time > previous, "Frame times increase");
+                        if (frames == 0)
+                            check(time <= target + 100_000, "Seek lands at or before the target");
+                        previous = time;
+                    }
+                    check(frames > 0, "Analysis decoded audio");
+                    input.cancelled = true;
+                    try {
+                        analyze("nativeNext", handle);
+                        throw new AssertionError("Stopped input kept decoding");
+                    } catch (IOException expected) {
+                    }
+                } finally {
+                    analyze("nativeClose", handle);
+                }
+            }
+        }
+        System.out.println(
+                "PASS " + audio.getName() + " analysis seek/read/stop, repeated open/close");
     }
 
     static byte[] decode(long handle) throws Exception {
@@ -97,6 +157,11 @@ public final class PreviewNativeCases {
         System.out.println(
                 "PASS actual Media3 SeekMap callbacks, including isEstimated default method");
         decoder = Class.forName("app.bitchord.soulseek.NativePreviewAudio");
+        try {
+            analysis = Class.forName("app.bitchord.telegram.SourceAudio");
+        } catch (ClassNotFoundException absent) {
+            System.out.println("SKIP analysis entry points: shared runtime not installed");
+        }
         File root = new File(directory);
         File[] files = root.listFiles((dir, name) -> name.endsWith(".expect"));
         check(files != null && files.length > 0, "No fixtures");
@@ -142,6 +207,7 @@ public final class PreviewNativeCases {
                                 + " bytes="
                                 + actual.length
                                 + " reopen/rewind");
+                if (analysis != null) analysis(audio);
             } finally {
                 if (handle != 0) call("close", handle);
             }

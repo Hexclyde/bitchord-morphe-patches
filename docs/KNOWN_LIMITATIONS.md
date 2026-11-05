@@ -10,7 +10,10 @@ The patches target original BitChord 1.9 APKs and the 1.9.1-beta1 source build f
 - DJ mode orders the upcoming queue while shuffle is off. With shuffle on, BitChord controls playback order.
 - Play alongside other apps prevents other audio from ducking music. Android communication mode cannot identify every third-party call; phone, VoIP, headset and Bluetooth behavior needs physical-device checking.
 - Steady playback uses Java memory for read-ahead. Larger settings consume more memory, including spare and artwork players. Extended offline retries apply to progressive loading; HLS and DASH errors can still stop playback.
-- BitChord already provides add-on crossfading. Automix Editor measures the selected rendition for its planner. Unsupported, incomplete or unavailable analysis uses a basic crossfade. Provider availability and evidence determine which transitions are possible.
+- Read-ahead and background analysis wait when the separation model leaves too little free heap.
+- MPEG-TS files can be previewed with Streamseek. Track analysis and automatic recording replacement are unavailable for MPEG-TS.
+- BitChord already provides add-on crossfading. Automix Editor supplies selected-recording analysis to BitChord’s native planner. Unsupported, incomplete or unavailable analysis uses a basic crossfade. Provider availability and evidence determine which transitions are possible.
+- Automix Editor’s **Before** preview requires captured native timing for the current recording pair. Native filtering, phase locking and other effects that its private audition cannot reproduce make Before unavailable.
 - With YouTube Music enabled, automatic source replacement checks opening, middle and ending audio windows, duration and timing. This adds traffic and can delay an upgrade while the existing copy plays. It cannot certify an identical master or lossless origin. A failed check or insufficient buffering leaves the current source playing. With YouTube Music disabled, initial playback uses the other source’s metadata match without fetching a YouTube audio reference.
 - With **Play the best source first** on, an unprepared song can spend up to 20 seconds checking sources before falling back. A prepared queue entry skips that wait; subsequent network resolution can add time.
 - Karaoke separation adds about 1.60 seconds of latency. Enabling it or returning from a different speed or pitch needs fresh audio history and can cause a discontinuity. The filter handles unavailable or late inference. Physical-phone listening and thermal behavior remain unchecked. See [Karaoke settings](BETA18-FEATURES.md#karaoke-separation-model).
@@ -35,6 +38,8 @@ The patches target original BitChord 1.9 APKs and the 1.9.1-beta1 source build f
 - Telegram links and channel videos open in Telegram. Some sponsored-message formats, custom emoji and link previews cannot render; Telegram errors can appear in English.
 
 ## Downloads and storage
+
+- FLAC metadata preservation keeps existing embedded tags when no non-empty replacement is supplied. It does not fetch missing release dates, restore tags already removed from older files, or add every embedded field to Downloads cards.
 
 - BitChord’s native saved-file lookup can discard an index entry when an unavailable drive is treated as a missing file.
 - FLAC Downloader is unavailable in the patch catalogue. Existing saved files remain accessible from Downloads.

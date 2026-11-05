@@ -448,6 +448,31 @@ final class SourcePreparation {
         }
     }
 
+    /**
+     * True for a source other than a YouTube watch entry, a closed or switched-off engine, an entry
+     * already bound, or an unbound one whose prepared copy is recent enough that the open will take
+     * it. The verified form also asks the host about the copy's terms and source. Binds, removes
+     * and holds nothing.
+     */
+    boolean lookaheadReady(Uri item, boolean verified) {
+        if (item == null) return false;
+        if (!eligible(item)) return true;
+        String id = item.getQueryParameter("v");
+        Prepared copy = null;
+        synchronized (lock) {
+            if (closed || !on || entries.containsKey(entryKey(item))) return true;
+            // Iterated, not read by key: reading would reorder the recency list.
+            for (Map.Entry<String, Prepared> candidate : prepared.entrySet())
+                if (candidate.getKey().equals(id)) copy = candidate.getValue();
+        }
+        if (copy == null || System.nanoTime() - copy.at >= TimeUnit.MILLISECONDS.toNanos(KEPT_MS))
+            return false;
+        return !verified
+                || (copy.terms.equals(host.terms(copy.stream))
+                        && host.sourceActive(copy.source)
+                        && copy.url.equals(host.parked(id)));
+    }
+
     boolean isPreparedUri(Uri item) {
         if (item == null) return false;
         synchronized (lock) {

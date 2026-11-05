@@ -200,8 +200,8 @@ public final class VerifyStreamseekApk {
                 if (hasAbi)
                     check(
                             (archive.getEntry("lib/" + abi + "/libbitchord_preview.so") != null)
-                                    == selected,
-                            "Decoder belongs only to the selected preview patch: " + abi);
+                                    == types.containsKey("Lapp/bitchord/telegram/SourceAudio;"),
+                            "Decoder belongs to the shared audio runtime: " + abi);
             }
         }
         method("Landroidx/media3/extractor/SeekMap;", "isEstimated", "Z");

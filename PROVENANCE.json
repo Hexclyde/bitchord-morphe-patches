@@ -89,7 +89,7 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "4b9db317d888ac62e63aa4af5cddecbdf05a78d842550c504046dcf4c271cbbf",
+  "patch_bundle_sha256": "87d6fc481b6d6e98e08c49c7a84bce97f94b2ae1ba592411ac7b71e40c2f3db6",
   "soulseek_development": {
     "status": "experimental-local-build",
     "baseline_commit": "3de260f7f1d7967c5a97ce924085d7d42bec18af",
@@ -162,9 +162,9 @@
     "lib/arm64-v8a/libtor.so": "67ce86a6664c330f49037487f0931498e2a0f82099fbfaf3de7a62c32cf5e996",
     "lib/armeabi-v7a/libtor.so": "a27f80fc60f96d953c8251e9a3ba007a7da0ba941c51968962b525141d416f7c",
     "lib/x86_64/libtor.so": "dc7f0fecc47ed73397b2f7928ddf2b87d18fac7c6ba1d00d72e3d7772e5eb480",
-    "lib/arm64-v8a/libbitchord_preview.so": "9a50b38c5e6b3a91e91c86e081bd29371effdac07f2b11b486d95846223e6aa7",
-    "lib/armeabi-v7a/libbitchord_preview.so": "4da2f0b98d3002cc034003d7417e592c4a0e4b81c84d6cbed40fe33af3ecc384",
-    "lib/x86_64/libbitchord_preview.so": "9b8dce3b5a016d78df410bd45ec67ff75894a55f32aae0dc112658f1aa63c7f9"
+    "lib/arm64-v8a/libbitchord_preview.so": "82c086359a4ffeda9baf962988f926c59e2b2c86b6a3823ce46ab555e2908aba",
+    "lib/armeabi-v7a/libbitchord_preview.so": "9057e3fa248d4deff3651dd3e903b5441c5bcab0b479edefd8412511f1e0c8a1",
+    "lib/x86_64/libbitchord_preview.so": "be7cf225a030c49415c0a84b3c911579fe9e4c1f76808ab459ee0fcbe1db13d0"
   },
   "soulseek_compatibility": {
     "versions": [
@@ -238,7 +238,7 @@
     "zh",
     "zh-TW"
   ],
-  "ui_translation_phrases": 2048,
+  "ui_translation_phrases": 2114,
   "flac_audio_protocol_reference": {
     "repository": "https://github.com/aztecempire/spotube-plugin-flac-audio",
     "commit": "4ecc535d57c32fe347a301e8fc54ce9be0430158",
@@ -312,6 +312,8 @@
       "matroska",
       "ogg",
       "mp3",
+      "aac",
+      "mpegts",
       "dts",
       "truehd",
       "mlp"

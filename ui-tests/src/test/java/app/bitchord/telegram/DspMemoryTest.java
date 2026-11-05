@@ -145,6 +145,35 @@ public class DspMemoryTest {
     }
 
     @Test
+    public void claimedDspExcludesItsOwnLoanButAccountsForModelGrowth() {
+        register(new Allocator());
+        SourceAudio.DspMemory memory = memory(38 * MB);
+        assertTrue(memory.claim(32 * MB, MAXIMUM, 38 * MB));
+        assertEquals(98 * MB, memory.available(MAXIMUM, 38 * MB));
+        try (SourceAudio.JavaMemory model = SourceAudio.reserveJava(MAXIMUM, 38 * MB, 16 * MB)) {
+            assertNotNull(model);
+            assertEquals(82 * MB, memory.available(MAXIMUM, 38 * MB));
+            assertEquals(10 * MB, SourceAudio.analysisAvailable(MAXIMUM, 38 * MB));
+        }
+        assertEquals(98 * MB, memory.available(MAXIMUM, 38 * MB));
+        memory.close();
+        assertEquals(58 * MB, SourceAudio.analysisAvailable(MAXIMUM, 38 * MB));
+    }
+
+    @Test
+    public void dspClaimCannotGrowOrSurviveItsOwner() {
+        register(new Allocator());
+        SourceAudio.DspMemory memory = memory(38 * MB);
+        assertFalse(memory.claim(99 * MB, MAXIMUM, 38 * MB));
+        assertTrue(memory.claim(32 * MB, MAXIMUM, 38 * MB));
+        assertTrue(memory.claim(32 * MB, MAXIMUM, 38 * MB));
+        assertFalse(memory.claim(33 * MB, MAXIMUM, 38 * MB));
+        memory.close();
+        assertFalse(memory.claim(1, MAXIMUM, 38 * MB));
+        assertEquals(58 * MB, SourceAudio.analysisAvailable(MAXIMUM, 38 * MB));
+    }
+
+    @Test
     public void actualFormatUsesLongerDurationAndClosesOnlyItsProbe() throws Exception {
         SourceAudio.AnalysisInfo info = SourceAudio.analysisInfo(source(), 120);
         assertEquals(48000, info.sampleRate);
@@ -442,7 +471,8 @@ public class DspMemoryTest {
         register(allocator);
         SourceAudio.DspMemory memory = memory(152 * MB);
         assertEquals(32 * MB, memory.available());
-        for (double seconds : new double[] {187, 214, 302})
+        assertTrue(DspAnalysis.bytes(48000, 187) <= memory.available());
+        for (double seconds : new double[] {214, 302})
             assertTrue(DspAnalysis.bytes(48000, seconds) > memory.available());
         assertEquals(96, allocator.allocatedCount + allocator.availableCount);
     }

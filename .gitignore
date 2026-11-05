@@ -234,12 +234,14 @@ remove-beta18-branch.ps1
 /ui-tests/src/test/java/app/bitchord/telegram/AudioOrigin.java
 /ui-tests/src/test/java/app/bitchord/telegram/AudioOriginHost.java
 /ui-tests/src/test/java/app/bitchord/telegram/AudioOriginSaved.java
+/ui-tests/src/test/java/app/bitchord/telegram/FlacMetadata.java
 /ui-tests/src/test/java/app/bitchord/telegram/SourceFirst.java
 /ui-tests/src/test/java/app/bitchord/telegram/SourcePreparation.java
 /ui-tests/src/test/java/app/bitchord/telegram/TelegramMediaChanges.java
 /ui-tests/src/test/java/app/bitchord/telegram/DspAnalysis.java
 
 /ui-tests/src/test/java/app/bitchord/telegram/TransitionPreview.java
+/ui-tests/src/test/java/app/bitchord/telegram/TransitionPairSelection.java
 /ui-tests/src/test/java/app/bitchord/telegram/TransitionStore.java
 
 /ui-tests/src/test/java/app/bitchord/telegram/TransitionWaveCache.java

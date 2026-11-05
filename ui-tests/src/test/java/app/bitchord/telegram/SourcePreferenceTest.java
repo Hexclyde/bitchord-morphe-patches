@@ -148,6 +148,7 @@ public class SourcePreferenceTest {
     final AtomicInteger resolves = new AtomicInteger();
     java.util.function.Supplier<SourceAudio.AnalysisFormat> originalAnalysisFormats;
     java.util.function.LongSupplier originalHeapMaximum, originalHeapUsed;
+    SourceAudio.Backend originalDecoder;
 
     class Remote implements DataSource {
         byte[] file;
@@ -197,6 +198,9 @@ public class SourcePreferenceTest {
     @Before
     public void network() throws Exception {
         originalAnalysisFormats = SourceAudio.analysisFormats;
+        originalDecoder = SourceAudio.decoder;
+        SyntheticDecoder.reset();
+        AudioDecoder.platform = false;
         originalHeapMaximum = SourceAutomix.heapMaximum;
         originalHeapUsed = SourceAutomix.heapUsed;
         // Concurrency checks need enough headroom to enter the mocked analyzer.
@@ -216,6 +220,9 @@ public class SourcePreferenceTest {
         AudioDecoder.windows.clear();
         AudioDecoder.corrupt = false;
         AudioDecoder.afterWindow = null;
+        AudioDecoder.seekStall = null;
+        AudioDecoder.seeksEntered.set(0);
+        AudioDecoder.buffersDelivered.set(0);
         QualityUpgrade.parked = true;
         PlaybackService.stopped = false;
         PlaybackService.cached = null;
@@ -235,7 +242,13 @@ public class SourcePreferenceTest {
 
     @After
     public void restoreAnalysisFormats() {
+        java.util.concurrent.CountDownLatch stall = AudioDecoder.seekStall;
+        AudioDecoder.seekStall = null;
+        if (stall != null) stall.countDown();
         SourceAudio.analysisFormats = originalAnalysisFormats;
+        SourceAudio.decoder = originalDecoder;
+        AudioDecoder.platform = false;
+        SyntheticDecoder.reset();
         SourceAutomix.heapMaximum = originalHeapMaximum;
         SourceAutomix.heapUsed = originalHeapUsed;
     }
@@ -396,6 +409,197 @@ public class SourcePreferenceTest {
             executor.shutdownNow();
             assertTrue(executor.awaitTermination(5, TimeUnit.SECONDS));
         }
+    }
+
+    @Test
+    public void aStalledPlatformSeekEndsOnCancellationAndFreesTheDecoderPermit() throws Exception {
+        java.util.concurrent.atomic.AtomicBoolean cancelled =
+                new java.util.concurrent.atomic.AtomicBoolean();
+        CountDownLatch stall = new CountDownLatch(1);
+        AudioDecoder.seekStall = stall;
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        try {
+            Future<?> checked =
+                    executor.submit(
+                            () -> {
+                                SourcePreference.verifyPrepared(
+                                        plain(),
+                                        new DataSpec(Uri.parse(CANDIDATE)),
+                                        cancelled::get,
+                                        true);
+                                return null;
+                            });
+            long limit = System.nanoTime() + TimeUnit.SECONDS.toNanos(10);
+            while (AudioDecoder.seeksEntered.get() == 0 && System.nanoTime() < limit)
+                Thread.sleep(10);
+            assertEquals("The seek was entered", 1, AudioDecoder.seeksEntered.get());
+            int before = AudioDecoder.buffersDelivered.get();
+            cancelled.set(true);
+            try {
+                checked.get(3, TimeUnit.SECONDS);
+                fail("Cancelled verification must not succeed");
+            } catch (ExecutionException stopped) {
+                assertTrue(
+                        String.valueOf(stopped.getCause()),
+                        stopped.getCause() instanceof SourceAudio.Stopped);
+            } catch (TimeoutException stuck) {
+                fail("Cancellation did not end verification inside the stalled seek");
+            }
+            Future<Boolean> admitted =
+                    executor.submit(
+                            () -> {
+                                try (SourceAudio.Decoding permit =
+                                        SourceAudio.decode(
+                                                System.nanoTime() + TimeUnit.SECONDS.toNanos(3),
+                                                () -> false)) {
+                                    return true;
+                                }
+                            });
+            assertTrue("Another decoder gets the permit", admitted.get(4, TimeUnit.SECONDS));
+            stall.countDown();
+            Thread.sleep(200);
+            assertEquals(
+                    "No audio is delivered after cancellation",
+                    before,
+                    AudioDecoder.buffersDelivered.get());
+            assertEquals(
+                    "Every opened file is closed once",
+                    SyntheticDecoder.opened.get(),
+                    SyntheticDecoder.closed.get());
+            assertEquals(0, SyntheticDecoder.misuse.get());
+            assertFalse(
+                    SourcePreference.rejectedPrepared(plain(), new DataSpec(Uri.parse(CANDIDATE))));
+            try {
+                SourcePreference.preparedRead(plain(), new DataSpec(Uri.parse(CANDIDATE))).close();
+                fail("A stopped verification must not be trusted");
+            } catch (IOException untrusted) {
+            }
+        } finally {
+            stall.countDown();
+            AudioDecoder.seekStall = null;
+            executor.shutdownNow();
+            assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS));
+        }
+    }
+
+    @Test
+    public void aPlatformExtractorSeekCannotBeStoppedWhichIsWhyItIsNotUsed() throws Exception {
+        AudioDecoder.platform = true;
+        java.util.concurrent.atomic.AtomicBoolean cancelled =
+                new java.util.concurrent.atomic.AtomicBoolean();
+        CountDownLatch stall = new CountDownLatch(1);
+        AudioDecoder.seekStall = stall;
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        try {
+            Future<?> checked =
+                    executor.submit(
+                            () -> {
+                                SourcePreference.verifyPrepared(
+                                        plain(),
+                                        new DataSpec(Uri.parse(CANDIDATE)),
+                                        cancelled::get,
+                                        true);
+                                return null;
+                            });
+            long limit = System.nanoTime() + TimeUnit.SECONDS.toNanos(10);
+            while (AudioDecoder.seeksEntered.get() == 0 && System.nanoTime() < limit)
+                Thread.sleep(10);
+            cancelled.set(true);
+            try {
+                checked.get(500, TimeUnit.MILLISECONDS);
+                fail("The platform call does not look at cancellation");
+            } catch (TimeoutException expected) {
+            }
+            stall.countDown();
+            try {
+                checked.get(5, TimeUnit.SECONDS);
+                fail("Cancelled verification must not succeed");
+            } catch (ExecutionException stopped) {
+                assertTrue(stopped.getCause() instanceof SourceAudio.Stopped);
+            }
+        } finally {
+            stall.countDown();
+            AudioDecoder.seekStall = null;
+            executor.shutdownNow();
+            assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS));
+        }
+    }
+
+    @Test
+    public void aLengthGuessedFromTheBitrateNeverRefusesACopy() throws Exception {
+        SyntheticDecoder.durationMethod = 2;
+        files.put(CANDIDATE, AudioDecoder.file(91, 0, 183, 0, false));
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        try {
+            SourcePreference.guard(plain(), resolved);
+            fail("A guessed length cannot confirm a copy");
+        } catch (IOException inconclusive) {
+            assertFalse(
+                    inconclusive.getMessage(),
+                    inconclusive.getMessage().contains("different duration"));
+        }
+        assertFalse(SourcePreference.rejected(plain(), resolved));
+        assertTrue(AudioDecoder.windows.isEmpty());
+        SyntheticDecoder.durationMethod = 0;
+        files.put(CANDIDATE, AudioDecoder.file(91, 0, 180, 250, false));
+        assertSame(resolved, SourcePreference.guard(plain(), resolved));
+        assertEquals(6, AudioDecoder.windows.size());
+        assertEquals(SyntheticDecoder.opened.get(), SyntheticDecoder.closed.get());
+        assertEquals(0, SyntheticDecoder.misuse.get());
+    }
+
+    @Test
+    public void framesOffThePlaybackClockLeaveNeitherProofNorRefusal() throws Exception {
+        SyntheticDecoder.unqualified = true;
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        try {
+            SourcePreference.guard(plain(), resolved);
+            fail("Nothing can be compared off the playback clock");
+        } catch (IOException inconclusive) {
+            assertFalse(
+                    inconclusive.getMessage(),
+                    inconclusive.getMessage().contains("different duration"));
+            assertFalse(
+                    inconclusive.getMessage(), inconclusive.getMessage().contains("fingerprint"));
+        }
+        try {
+            SourcePreference.verifyPrepared(plain(), resolved, () -> false, true);
+            fail();
+        } catch (IOException inconclusive) {
+        }
+        assertFalse(SourcePreference.rejected(plain(), resolved));
+        assertFalse(SourcePreference.rejectedPrepared(plain(), resolved));
+        try {
+            SourcePreference.preparedRead(plain(), resolved).close();
+            fail("There is no preparation proof");
+        } catch (IOException untrusted) {
+        }
+        assertTrue(AudioDecoder.windows.isEmpty());
+        assertEquals(SyntheticDecoder.opened.get(), SyntheticDecoder.closed.get());
+        SyntheticDecoder.unqualified = false;
+        files.put(CANDIDATE, AudioDecoder.file(91, 0, 180, 250, false));
+        assertSame(resolved, SourcePreference.guard(plain(), resolved));
+        assertEquals(6, AudioDecoder.windows.size());
+    }
+
+    @Test
+    public void aMissingLibraryEndsVerificationWithoutAnAnswer() throws Exception {
+        SourceAudio.decoder =
+                new SyntheticDecoder() {
+                    @Override
+                    public long open(Object input) throws IOException {
+                        throw new IOException("The audio decoder is not available");
+                    }
+                };
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        try {
+            SourcePreference.guard(plain(), resolved);
+            fail("Nothing can be measured without the decoder");
+        } catch (IOException unavailable) {
+            assertFalse(unavailable.getMessage(), unavailable.getMessage().contains("fingerprint"));
+        }
+        assertFalse(SourcePreference.rejected(plain(), resolved));
+        assertTrue(AudioDecoder.windows.isEmpty());
     }
 
     @Test

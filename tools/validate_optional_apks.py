@@ -131,6 +131,13 @@ def main():
     )
     for label, selections, inspectors in cases:
         inspectors.append(("VerifyCipherMemoryApk", []))
+        inspectors.append(("VerifySharedAudioApk", []))
+        inspectors.append(
+            (
+                "VerifyFlacMetadataApk",
+                ["absent" if label == "InstallPlus" else "present", str(original)],
+            )
+        )
         if label != "InstallPlus":
             inspectors.append(("VerifyPlayerDownloadApk", []))
             inspectors.append(

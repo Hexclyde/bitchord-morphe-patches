@@ -22,8 +22,20 @@ final class TransitionPreview {
 
         void effects(TransitionEdit edit, int side, double progress) throws Exception;
 
+        /** The native blend headroom for this private deck; 1 leaves the level untouched. */
+        default void trim(float gain) throws Exception {}
+
         void close();
     }
+
+    /** BitChord's blend headroom: the summed faders are scaled back once they exceed unity. */
+    static float headroom(double outgoing, double incoming) {
+        double sum = outgoing + incoming;
+        return sum > 1 ? (float) (1 / Math.sqrt(sum)) : 1f;
+    }
+
+    /** Longer blends are heard around their middle instead of from end to end. */
+    private static final double HEARD_SECONDS = 12;
 
     interface Factory {
         Deck create(Object service, int side) throws Exception;
@@ -92,38 +104,66 @@ final class TransitionPreview {
     }
 
     static final class Session {
+        private static final String CHANGED = "The queue changed; reopen this transition";
+        private static final String ENTRY_KEY = "bitchord.queueEntryId",
+                TIER_KEY = "bitchord.queueTier",
+                AUTOPLAY_KEY = "bitchord.fromAutoplay",
+                CYCLE_KEY = "bitchord.contextCycleId",
+                CANONICAL_KEY = "bitchord.canonicalIndex";
+
+        /** The pair the queue held when this session started; the selection never replaces it. */
         final TransitionRuntime.Pair pair;
+
         final Object service, controller;
         final Player main;
-        final List<String> queue;
-        final int index;
+        final List<String> queue, entries;
+        final int index, nextIndex, repeat;
         final long position;
-        final boolean playing;
+        final boolean playing, exoShuffle, queueShuffle;
         final PlaybackParameters parameters;
         final float volume;
+        private final List<MediaItem> items;
+        private final MediaItem outgoingWritten, incomingWritten;
+        private final boolean provisional;
+        private final long settleBy;
+        private TransitionRuntime.Pair selected;
         private WeakReference<Object> editor = new WeakReference<>(null);
         Audition audition;
         boolean closed, applied;
+        private boolean writing, closeLater, resumeLater;
         private long checkedAt;
 
         Session(TransitionRuntime.Pair pair) throws Exception {
             TransitionRuntime.Pair current = TransitionRuntime.pair();
             if (current == null
                     || current.index != pair.index
+                    || current.nextIndex != pair.nextIndex
                     || !current.recording().equals(pair.recording()))
-                throw new IllegalStateException("The queue changed; reopen this transition");
+                throw new IllegalStateException(CHANGED);
             this.pair = pair;
+            selected = pair;
             service = SourceAutomix.owner();
             controller = TransitionRuntime.field(service, "crossfade");
             if (Boolean.TRUE.equals(
                     TransitionRuntime.call(controller, "isTransitioning", new Class<?>[0])))
                 throw new IllegalStateException("Wait for the current transition to finish");
             main = (Player) TransitionRuntime.player();
-            queue = TransitionRuntime.queue(main);
+            items = snapshot(main);
+            queue = keys(items);
+            entries = entryIds(items);
             index = main.getCurrentMediaItemIndex();
+            nextIndex = pair.nextIndex;
+            if (nextIndex < 0 || nextIndex >= items.size() || nextIndex == index)
+                throw new IllegalStateException(CHANGED);
             playing = main.getPlayWhenReady();
             parameters = main.getPlaybackParameters();
             volume = Math.max(0, Math.min(1, main.getVolume()));
+            repeat = main.getRepeatMode();
+            exoShuffle = main.getShuffleModeEnabled();
+            queueShuffle = DjMode.queueShuffleOn();
+            outgoingWritten = incomingWritten = null;
+            provisional = false;
+            settleBy = 0;
             held = this;
             try {
                 main.pause();
@@ -134,12 +174,399 @@ final class TransitionPreview {
             }
         }
 
+        /** The same paused listening state after the pair's queue slots were written. */
+        private Session(
+                Session from,
+                TransitionRuntime.Pair pair,
+                MediaItem outgoingWritten,
+                MediaItem incomingWritten,
+                long position,
+                boolean provisional) {
+            this.pair = pair;
+            selected = pair;
+            service = from.service;
+            controller = from.controller;
+            main = from.main;
+            items = snapshot(main);
+            queue = keys(items);
+            entries = entryIds(items);
+            index = from.index;
+            nextIndex = from.nextIndex;
+            repeat = from.repeat;
+            exoShuffle = from.exoShuffle;
+            queueShuffle = from.queueShuffle;
+            playing = from.playing;
+            parameters = from.parameters;
+            volume = from.volume;
+            this.position = position;
+            this.outgoingWritten = outgoingWritten;
+            this.incomingWritten = incomingWritten;
+            this.provisional = provisional;
+            settleBy = SystemClock.elapsedRealtime() + 30000;
+            editor = from.editor;
+        }
+
         void attach(Object owner) {
             editor = new WeakReference<>(owner);
         }
 
         boolean ownedBy(Object owner) {
             return editor.get() == owner;
+        }
+
+        TransitionRuntime.Pair selectedPair() {
+            return selected;
+        }
+
+        /** Preview ownership only: a pair this session was given, never permission to apply it. */
+        boolean ownsSelection(TransitionRuntime.Pair candidate) {
+            return isHeld() && candidate != null && candidate == selected;
+        }
+
+        boolean isHeld() {
+            return !closed && held == this;
+        }
+
+        /** Chooses the directed pair to audition; the real queue is not touched. */
+        void selectPair(TransitionRuntime.Pair candidate) {
+            if (!isHeld() || writing) throw new IllegalStateException(CHANGED);
+            // A different pair waits until settle has rebased, so it is never discarded by it.
+            if (provisional && candidate != selected)
+                throw new IllegalStateException(Strings.t("Wait for the pair to finish loading"));
+            if (candidate == null
+                    || candidate.outgoing == null
+                    || candidate.incoming == null
+                    || candidate.index != index
+                    || candidate.nextIndex != nextIndex
+                    || !candidate.outgoingId.equals(candidate.outgoing.mediaId)
+                    || !candidate.incomingId.equals(candidate.incoming.mediaId)
+                    || candidate.outgoingId.equals(candidate.incomingId)
+                    || !usable(candidate.outgoingDuration)
+                    || !usable(candidate.incomingDuration))
+                throw new IllegalArgumentException(Strings.t("This pair cannot be previewed"));
+            cancelAudition();
+            selected = candidate;
+        }
+
+        private static boolean usable(double duration) {
+            return duration > 0 && !Double.isInfinite(duration);
+        }
+
+        /** Stops the audition without telling the editor, which is the one that asked. */
+        private void cancelAudition() {
+            Audition running = audition;
+            if (running == null) return;
+            running.done = null;
+            running.stop();
+        }
+
+        /**
+         * Replaces the current and actual next queue slots with the selected pair. Every other
+         * slot, the shuffle order, repeat mode and listening settings stay exactly as they were.
+         */
+        Session usePair(TransitionRuntime.Pair candidate) throws Exception {
+            if (writing) throw new IllegalStateException(Strings.t("The queue is being changed"));
+            if (!ownsSelection(candidate)) throw new IllegalStateException(CHANGED);
+            if (DjMode.inParty())
+                throw new IllegalStateException(
+                        Strings.t("Leave Listen Together to change the queue"));
+            if (main.getShuffleModeEnabled())
+                throw new IllegalStateException(Strings.t("Turn shuffle off to change the queue"));
+            cancelAudition();
+            if (!baselineHolds()) throw new IllegalStateException(CHANGED);
+            boolean changeOutgoing = !queue.get(index).equals(key(candidate.outgoing)),
+                    changeIncoming = !queue.get(nextIndex).equals(key(candidate.incoming));
+            if (!changeOutgoing && !changeIncoming) {
+                if (candidate == pair || candidate.recording().equals(pair.recording()))
+                    return this;
+                // Same songs with fuller metadata: no queue write, only a canonical rebase.
+                TransitionRuntime.Pair same = rebound(candidate);
+                same.outgoing = items.get(index);
+                same.incoming = items.get(nextIndex);
+                return rebase(same, null, null, position, true);
+            }
+            MediaItem outgoingItem =
+                    changeOutgoing ? occurrence(candidate.outgoing, items.get(index)) : null;
+            MediaItem incomingItem =
+                    changeIncoming ? occurrence(candidate.incoming, items.get(nextIndex)) : null;
+            boolean wroteOutgoing = false, wroteIncoming = false;
+            writing = true;
+            try {
+                // Each step is checked before the next one, so a listener that reacted to the
+                // previous write is never written over.
+                if (changeIncoming) {
+                    wroteIncoming = true;
+                    main.replaceMediaItem(nextIndex, incomingItem);
+                    if (!landed(null, incomingItem, true)) throw new IllegalStateException(CHANGED);
+                }
+                if (changeOutgoing) {
+                    wroteOutgoing = true;
+                    main.replaceMediaItem(index, outgoingItem);
+                    if (!landed(outgoingItem, incomingItem, false)
+                            || main.getCurrentPosition() != 0)
+                        throw new IllegalStateException(CHANGED);
+                }
+                main.prepare();
+                if (!landed(outgoingItem, incomingItem, !changeOutgoing)
+                        || (changeOutgoing && main.getCurrentPosition() != 0))
+                    throw new IllegalStateException(CHANGED);
+                TransitionRuntime.Pair rebound = rebound(candidate);
+                rebound.outgoing = changeOutgoing ? outgoingItem : items.get(index);
+                rebound.incoming = changeIncoming ? incomingItem : items.get(nextIndex);
+                Session next =
+                        rebase(
+                                rebound,
+                                outgoingItem,
+                                incomingItem,
+                                changeOutgoing ? 0 : position,
+                                true);
+                writing = false;
+                if (closeLater) next.close(resumeLater);
+                return next;
+            } catch (RuntimeException | Error failure) {
+                // Newest write first; a slot is only restored while it still holds what was
+                // written.
+                if (wroteOutgoing) restore(index, outgoingItem);
+                if (wroteIncoming) restore(nextIndex, incomingItem);
+                if (!baselineHolds()) {
+                    closeLater = true;
+                    resumeLater = false;
+                }
+                throw failure;
+            } finally {
+                boolean pendingClose = writing && closeLater && !closed;
+                writing = false;
+                if (pendingClose) close(resumeLater);
+            }
+        }
+
+        /**
+         * Rebases onto the native pair once the played song's duration is known. Returns this
+         * session while that is still pending; callers poll without waiting.
+         */
+        Session settle() throws Exception {
+            if (!provisional) return this;
+            if (!isHeld() || writing || !baselineHolds()) throw new IllegalStateException(CHANGED);
+            if (main.getDuration() <= 0) {
+                if (SystemClock.elapsedRealtime() > settleBy)
+                    throw new IllegalStateException(Strings.t("The track length is not available"));
+                return this;
+            }
+            TransitionRuntime.Pair live = TransitionRuntime.pair();
+            if (live == null
+                    || live.index != index
+                    || live.nextIndex != nextIndex
+                    || !live.outgoingId.equals(pair.outgoingId)
+                    || !live.incomingId.equals(pair.incomingId))
+                throw new IllegalStateException(CHANGED);
+            if (!usable(live.outgoingDuration) || !usable(live.incomingDuration))
+                throw new IllegalStateException(Strings.t("The track length is not available"));
+            return rebase(live, null, null, position, false);
+        }
+
+        private TransitionRuntime.Pair rebound(TransitionRuntime.Pair candidate) {
+            return new TransitionRuntime.Pair(
+                    candidate.outgoingId,
+                    candidate.incomingId,
+                    candidate.outgoingTitle,
+                    candidate.incomingTitle,
+                    candidate.outgoingDuration,
+                    candidate.incomingDuration,
+                    index,
+                    nextIndex);
+        }
+
+        private Session rebase(
+                TransitionRuntime.Pair onto,
+                MediaItem outgoingItem,
+                MediaItem incomingItem,
+                long at,
+                boolean pending) {
+            Session next = new Session(this, onto, outgoingItem, incomingItem, at, pending);
+            held = next;
+            closed = true;
+            editor = new WeakReference<>(null);
+            return next;
+        }
+
+        private static List<MediaItem> snapshot(Player player) {
+            int count = player.getMediaItemCount();
+            List<MediaItem> out = new ArrayList<>(count);
+            for (int at = 0; at < count; at++) out.add(player.getMediaItemAt(at));
+            return Collections.unmodifiableList(out);
+        }
+
+        private static List<String> keys(List<MediaItem> items) {
+            List<String> out = new ArrayList<>(items.size());
+            for (MediaItem item : items) out.add(key(item));
+            return Collections.unmodifiableList(out);
+        }
+
+        private static List<String> entryIds(List<MediaItem> items) {
+            List<String> out = new ArrayList<>(items.size());
+            for (MediaItem item : items) out.add(entry(item));
+            return Collections.unmodifiableList(out);
+        }
+
+        private static String key(MediaItem item) {
+            return item.mediaId + "|" + SourceFirst.renditionUri(item);
+        }
+
+        private static String entry(MediaItem item) {
+            String value =
+                    item.mediaMetadata.extras == null
+                            ? null
+                            : item.mediaMetadata.extras.getString(ENTRY_KEY);
+            return value == null ? "" : value;
+        }
+
+        private static android.net.Uri rawUri(MediaItem item) {
+            return item.localConfiguration == null ? null : item.localConfiguration.uri;
+        }
+
+        /** BitChord's own watch address with its queue-entry tag; providers' queries are theirs. */
+        private static boolean tagged(android.net.Uri uri) {
+            return uri != null
+                    && "bitchord".equals(uri.getScheme())
+                    && "watch".equals(uri.getAuthority())
+                    && uri.isHierarchical()
+                    && uri.getQueryParameter(SourcePreparation.ENTRY) != null;
+        }
+
+        private static android.net.Uri plain(android.net.Uri uri) {
+            return tagged(uri) ? SourcePreparation.withoutEntry(uri) : uri;
+        }
+
+        /**
+         * Whether a live slot is the occurrence written there. A reused entry id alone is not
+         * enough: the song and its source, apart from the host's entry tag, must also match.
+         */
+        private static boolean sameWritten(MediaItem live, MediaItem written) {
+            if (live == written) return true;
+            if (live == null || written == null) return false;
+            String id = entry(written);
+            if (id.isEmpty() || !id.equals(entry(live)) || !written.mediaId.equals(live.mediaId))
+                return false;
+            return Objects.equals(plain(rawUri(live)), plain(rawUri(written)))
+                    || Objects.equals(
+                            SourceFirst.renditionUri(live), SourceFirst.renditionUri(written));
+        }
+
+        /** The queue entry for a song: a fresh occurrence in the slot it takes over. */
+        private static MediaItem occurrence(MediaItem source, MediaItem slot) {
+            try {
+                android.os.Bundle extras =
+                        source.mediaMetadata.extras == null
+                                ? new android.os.Bundle()
+                                : new android.os.Bundle(source.mediaMetadata.extras);
+                android.os.Bundle target = slot.mediaMetadata.extras;
+                extras.putString(ENTRY_KEY, UUID.randomUUID().toString());
+                extras.remove(CANONICAL_KEY);
+                extras.remove(CYCLE_KEY);
+                extras.remove(TIER_KEY);
+                extras.remove(AUTOPLAY_KEY);
+                if (target != null) {
+                    if (target.containsKey(TIER_KEY))
+                        extras.putString(TIER_KEY, target.getString(TIER_KEY));
+                    if (target.containsKey(AUTOPLAY_KEY))
+                        extras.putBoolean(AUTOPLAY_KEY, target.getBoolean(AUTOPLAY_KEY));
+                    if (target.containsKey(CYCLE_KEY))
+                        extras.putLong(CYCLE_KEY, target.getLong(CYCLE_KEY));
+                }
+                Object builder = MediaItem.class.getMethod("buildUpon").invoke(source);
+                android.net.Uri raw = rawUri(source);
+                if (tagged(raw))
+                    // The release host's setter returns void. Never chain its reflection result.
+                    builder.getClass()
+                            .getMethod("setUri", String.class)
+                            .invoke(builder, SourcePreparation.withoutEntry(raw).toString());
+                Object metadata = source.mediaMetadata;
+                Object values = metadata.getClass().getMethod("buildUpon").invoke(metadata);
+                Field field = values.getClass().getDeclaredField("extras");
+                field.setAccessible(true);
+                field.set(values, extras);
+                Constructor<?> make = metadata.getClass().getDeclaredConstructor(values.getClass());
+                make.setAccessible(true);
+                Field slotField = builder.getClass().getDeclaredField("mediaMetadata");
+                slotField.setAccessible(true);
+                slotField.set(builder, make.newInstance(values));
+                return SourceFirst.tag(
+                        (MediaItem) builder.getClass().getMethod("build").invoke(builder));
+            } catch (ReflectiveOperationException | RuntimeException unavailable) {
+                throw new IllegalStateException(
+                        Strings.t("Could not change the queue"), unavailable);
+            }
+        }
+
+        private boolean slotHolds(int at, MediaItem outgoingItem, MediaItem incomingItem) {
+            if (at < 0 || at >= items.size()) return true;
+            MediaItem live = main.getMediaItemAt(at);
+            MediaItem written = at == index ? outgoingItem : at == nextIndex ? incomingItem : null;
+            if (written != null) return sameWritten(live, written);
+            return queue.get(at).equals(key(live)) && entries.get(at).equals(entry(live));
+        }
+
+        private boolean slotsHold(MediaItem outgoingItem, MediaItem incomingItem) {
+            if (main.getMediaItemCount() != items.size()) return false;
+            for (int at = 0; at < items.size(); at++)
+                if (!slotHolds(at, outgoingItem, incomingItem)) return false;
+            return true;
+        }
+
+        /** Listening settings the pair change must leave alone. */
+        private boolean settingsHold(boolean positionToo) {
+            return main.getNextMediaItemIndex() == nextIndex
+                    && main.getRepeatMode() == repeat
+                    && main.getShuffleModeEnabled() == exoShuffle
+                    && DjMode.queueShuffleOn() == queueShuffle
+                    && !main.getPlayWhenReady()
+                    && parameters.equals(main.getPlaybackParameters())
+                    && volume == Math.max(0, Math.min(1, main.getVolume()))
+                    && (!positionToo || Math.abs(main.getCurrentPosition() - position) <= 250);
+        }
+
+        private boolean baselineHolds() {
+            try {
+                return unchanged()
+                        && !Boolean.TRUE.equals(
+                                TransitionRuntime.call(
+                                        controller, "isTransitioning", new Class<?>[0]))
+                        && settingsHold(true);
+            } catch (Exception unavailable) {
+                return false;
+            }
+        }
+
+        private boolean landed(
+                MediaItem outgoingItem, MediaItem incomingItem, boolean positionToo) {
+            try {
+                return !closed
+                        && SourceAutomix.owner() == service
+                        && TransitionRuntime.player() == main
+                        && main.getCurrentMediaItemIndex() == index
+                        && slotsHold(outgoingItem, incomingItem)
+                        && settingsHold(positionToo)
+                        && !DjMode.inParty();
+            } catch (Exception unavailable) {
+                return false;
+            }
+        }
+
+        private void restore(int at, MediaItem written) {
+            try {
+                if (SourceAutomix.owner() != service
+                        || TransitionRuntime.player() != main
+                        || DjMode.inParty()
+                        || main.getMediaItemCount() != items.size()
+                        || main.getCurrentMediaItemIndex() != index
+                        || !sameWritten(main.getMediaItemAt(at), written)) return;
+                // The current slot is only put back while nobody has acted on playback since.
+                if (at == index && (!settingsHold(false) || main.getCurrentPosition() != 0)) return;
+                main.replaceMediaItem(at, items.get(at));
+                if (at == index) main.seekTo(index, position);
+            } catch (Exception unavailable) {
+                HostLog.d("AutoMix could not restore a queue entry");
+            }
         }
 
         /** Per-tick check: the full queue walk is O(queue), so it runs once a second. */
@@ -155,17 +582,11 @@ final class TransitionPreview {
                         && TransitionRuntime.player() == main
                         && main.getCurrentMediaItemIndex() == index
                         && main.getMediaItemCount() == queue.size()
-                        && sameAt(index)
-                        && sameAt(index + 1);
+                        && slotHolds(index, outgoingWritten, incomingWritten)
+                        && slotHolds(nextIndex, outgoingWritten, incomingWritten);
             } catch (Exception unavailable) {
                 return false;
             }
-        }
-
-        private boolean sameAt(int at) {
-            if (at < 0 || at >= queue.size()) return true;
-            MediaItem item = main.getMediaItemAt(at);
-            return queue.get(at).equals(item.mediaId + "|" + SourceFirst.renditionUri(item));
         }
 
         boolean unchanged() {
@@ -174,7 +595,7 @@ final class TransitionPreview {
                         && SourceAutomix.owner() == service
                         && TransitionRuntime.player() == main
                         && main.getCurrentMediaItemIndex() == index
-                        && queue.equals(TransitionRuntime.queue(main));
+                        && slotsHold(outgoingWritten, incomingWritten);
             } catch (Exception unavailable) {
                 return false;
             }
@@ -190,6 +611,12 @@ final class TransitionPreview {
 
         void close(boolean resume) {
             if (closed) return;
+            if (writing) {
+                // The queue write finishes first; its caller closes the session that results.
+                resumeLater = closeLater ? resumeLater && resume : resume;
+                closeLater = true;
+                return;
+            }
             if (audition != null) audition.stop();
             boolean restore =
                     resume
@@ -214,11 +641,14 @@ final class TransitionPreview {
     static final class Audition {
         final Session session;
         final TransitionEdit draft;
+        final TransitionRuntime.Pair pair;
+        final float rate;
         final Deck[] decks = new Deck[2];
         final Handler handler = new Handler(Looper.getMainLooper());
         private final Runnable tick = this::step;
         private Runnable done;
         private final long deadline;
+        private final double begin, end;
         private AudioManager focusManager;
         private AudioFocusRequest focus;
         private boolean started, incomingStarted, buffering;
@@ -230,9 +660,16 @@ final class TransitionPreview {
             edit.validate();
             this.session = session;
             draft = edit.copy();
+            pair = session.selectedPair();
             this.done = done;
-            float rate = AutomixAccess.speed();
-            if (!Float.isFinite(rate) || rate <= 0) rate = session.parameters.speed;
+            double length = draft.sourceSpan(0);
+            begin = length > HEARD_SECONDS ? .5 - HEARD_SECONDS / 2 / length : 0;
+            end = length > HEARD_SECONDS ? .5 + HEARD_SECONDS / 2 / length : 1;
+            float requested = AutomixAccess.speed();
+            rate =
+                    Float.isFinite(requested) && requested > 0
+                            ? requested
+                            : session.parameters.speed;
             deadline =
                     SystemClock.elapsedRealtime()
                             + 30000
@@ -269,21 +706,22 @@ final class TransitionPreview {
                             player,
                             "setMediaItem",
                             new Class<?>[] {MediaItem.class},
-                            side == 0 ? session.pair.outgoing : session.pair.incoming);
+                            side == 0 ? pair.outgoing : pair.incoming);
                     player.setPlaybackParameters(
-                            new PlaybackParameters(rate, session.parameters.pitch));
+                            new PlaybackParameters(
+                                    rate * (side == 0 ? 1f : (float) draft.overlapRate[1]),
+                                    session.parameters.pitch));
                     player.setVolume(side == 0 ? session.volume : 0);
                     player.seekTo(
                             0,
                             Math.round(
                                     (side == 0
-                                                    ? Math.max(
-                                                            0,
-                                                            draft.start(
-                                                                            session.pair
-                                                                                    .outgoingDuration)
-                                                                    - 2)
-                                                    : draft.incomingCue)
+                                                    ? Math.max(0, entry() - 2)
+                                                    : draft.incomingCue
+                                                            + begin
+                                                                    * draft.sourceSpan(0)
+                                                                    * draft.overlapRate[1]
+                                                                    / draft.overlapRate[0])
                                             * 1000));
                     deck.effects(draft, side, 0);
                     player.prepare();
@@ -295,6 +733,11 @@ final class TransitionPreview {
                 closed = true;
                 throw failure;
             }
+        }
+
+        /** Outgoing position, in seconds, where the heard part of the blend begins. */
+        private double entry() {
+            return draft.start(pair.outgoingDuration) + begin * draft.sourceSpan(0);
         }
 
         private void step() {
@@ -315,9 +758,9 @@ final class TransitionPreview {
                         throw new IllegalStateException("Preview source is unavailable");
                 }
                 double position = a.getCurrentPosition() / 1000d;
-                double start = draft.start(session.pair.outgoingDuration);
-                progress = (position - start) / draft.overlap;
-                if (started && incomingStarted && progress >= 1) {
+                double start = draft.start(pair.outgoingDuration);
+                progress = (position - start) / draft.sourceSpan(0);
+                if (started && incomingStarted && progress >= end) {
                     completed = true;
                     stop();
                     return;
@@ -327,7 +770,8 @@ final class TransitionPreview {
                     throw new IllegalStateException("Not enough preview audio");
                 // The outgoing lead-in plays while the incoming deck is still loading; both
                 // wait together only if the incoming deck is not ready when it is needed.
-                boolean needB = incomingStarted || position >= start - .05;
+                double heard = entry();
+                boolean needB = incomingStarted || position >= heard - .05;
                 boolean ready =
                         a.getPlaybackState() == Player.STATE_READY
                                 && (!needB || b.getPlaybackState() == Player.STATE_READY);
@@ -351,18 +795,32 @@ final class TransitionPreview {
                     stop();
                     return;
                 }
-                if (!incomingStarted && position >= start) {
+                if (!incomingStarted && position >= heard) {
                     long target =
-                            Math.round((draft.incomingCue + Math.max(0, position - start)) * 1000);
+                            Math.round(
+                                    (draft.incomingCue
+                                                    + Math.max(0, position - start)
+                                                            * draft.overlapRate[1]
+                                                            / draft.overlapRate[0])
+                                            * 1000);
                     // The prepared deck already sits at the cue; seeking again restarts its load.
                     if (Math.abs(b.getCurrentPosition() - target) > 150) b.seekTo(0, target);
+                    a.setPlaybackParameters(
+                            new PlaybackParameters(
+                                    rate * (float) draft.overlapRate[0], session.parameters.pitch));
                     incomingStarted = true;
                     b.play();
                 }
                 double p = Math.max(0, Math.min(1, progress));
-                a.setVolume(session.volume * (float) draft.gain(0, p));
-                b.setVolume(incomingStarted ? session.volume * (float) draft.gain(1, p) : 0);
-                for (int side = 0; side < 2; side++) decks[side].effects(draft, side, p);
+                double outgoingGain = draft.gain(0, p),
+                        incomingGain = incomingStarted ? draft.gain(1, p) : 0;
+                a.setVolume(session.volume * (float) outgoingGain);
+                b.setVolume(session.volume * (float) incomingGain);
+                float trim = headroom(outgoingGain, incomingGain);
+                for (int side = 0; side < 2; side++) {
+                    decks[side].effects(draft, side, p);
+                    decks[side].trim(trim);
+                }
                 handler.postDelayed(tick, 16);
             } catch (Exception | LinkageError failure) {
                 error = failureDetail(failure);
@@ -391,7 +849,15 @@ final class TransitionPreview {
         }
 
         private void releaseDecks() {
-            for (Deck deck : decks) if (deck != null) deck.close();
+            for (Deck deck : decks)
+                if (deck != null) {
+                    try {
+                        deck.trim(1f);
+                    } catch (Exception | LinkageError unavailable) {
+                        /* The private deck is released next. */
+                    }
+                    deck.close();
+                }
             if (focusManager != null && focus != null) {
                 focusManager.abandonAudioFocusRequest(focus);
                 focus = null;
@@ -405,6 +871,8 @@ final class TransitionPreview {
     private static final class HostDeck implements Deck {
         final Player player;
         final Object processor;
+        private final Object loudness;
+        private final Method trimmer;
         private boolean closed;
 
         HostDeck(Object service, int side) throws Exception {
@@ -428,6 +896,14 @@ final class TransitionPreview {
                     "target",
                     TransitionRuntime.field(
                             TransitionRuntime.field(service, "equalizerProcessorA"), "target"));
+            this.loudness = previewLoudness;
+            Method trimmer = null;
+            try {
+                trimmer = previewLoudness.getClass().getMethod("setBlendTrim", float.class);
+            } catch (NoSuchMethodException older) {
+                /* Previews then refuse any level change they cannot apply. */
+            }
+            this.trimmer = trimmer;
             SourceAutomix.set(
                     previewLoudness,
                     "gainFor",
@@ -506,6 +982,11 @@ final class TransitionPreview {
             SourceAutomix.set(processor, "targetLowPassHz", hz[0]);
             SourceAutomix.set(processor, "targetHighPassHz", Math.min(2000, hz[1]));
             TransitionRuntime.previewProcessor(processor, edit, side);
+        }
+
+        public void trim(float gain) throws Exception {
+            if (trimmer != null) trimmer.invoke(loudness, gain);
+            else if (gain != 1f) throw new IllegalStateException("Preview headroom is unavailable");
         }
 
         public void close() {

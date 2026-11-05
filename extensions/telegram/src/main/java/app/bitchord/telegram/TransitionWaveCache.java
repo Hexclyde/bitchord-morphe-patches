@@ -36,6 +36,9 @@ final class TransitionWaveCache {
         final String identity;
         final double from, to;
 
+        /** Speculative preload work; a visible editor may cancel it. */
+        volatile boolean background;
+
         Work(String identity, double from, double to, Callable<Window> task) {
             super(task);
             this.identity = identity;
@@ -99,6 +102,12 @@ final class TransitionWaveCache {
     }
 
     static Window load(String identity, double from, double to, Reader reader) throws Exception {
+        return load(identity, from, to, reader, false);
+    }
+
+    private static Window load(
+            String identity, double from, double to, Reader reader, boolean background)
+            throws Exception {
         Window hit = peek(identity, from, to);
         if (hit != null) return hit;
         // A wider decode already in flight for the same rendition is shared, not repeated.
@@ -133,14 +142,37 @@ final class TransitionWaveCache {
                             write(key, result);
                             return result;
                         });
+        work.background = background;
         Work other = running.putIfAbsent(key, work);
-        if (other != null) return other.get();
+        if (other != null) {
+            Window shared = shared(other);
+            if (shared != null && shared.covers(from, to)) return shared;
+            if (Thread.currentThread().isInterrupted()) return null;
+            // The other decode ended without peaks; this caller makes one attempt of its own.
+            running.remove(key, other);
+            Window late = peek(identity, from, to);
+            if (late != null) return late;
+            Work again = running.putIfAbsent(key, work);
+            if (again != null) return shared(again);
+        }
         try {
             work.run();
             return work.get();
         } finally {
             running.remove(key, work);
         }
+    }
+
+    /**
+     * A visible window takes priority: queued preloads are dropped and running speculative decodes
+     * that would not serve it are cancelled. A decode that covers it stays shared.
+     */
+    static void yieldTo(String identity, double from, double to) {
+        synchronized (pending) {
+            requested = null;
+        }
+        for (Work work : running.values())
+            if (work.background && !work.covers(identity, from, to)) work.cancel(true);
     }
 
     /** Another caller's cancelled or failed decode leaves this caller free to decode itself. */
@@ -306,7 +338,7 @@ final class TransitionWaveCache {
                         try {
                             // A newer selection supersedes queued work before it decodes.
                             if (!stamp.equals(requested)) return;
-                            if (load(id, from, to, request::read) == null) retry(stamp);
+                            if (load(id, from, to, request::read, true) == null) retry(stamp);
                         } catch (Exception unavailable) {
                             retry(stamp);
                         } finally {

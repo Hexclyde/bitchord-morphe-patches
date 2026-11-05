@@ -46,6 +46,7 @@ final class DownloadsHubPage extends DownloadPage {
     private final List<TextView> filterViews = new ArrayList<>();
     private final Map<String, Long> fileSizes = new HashMap<>();
     private volatile boolean foreground;
+    private boolean openingFile;
     private final Runnable refresh = () -> snapshot();
 
     DownloadsHubPage(android.app.Activity activity, Intent intent) {
@@ -1051,6 +1052,21 @@ final class DownloadsHubPage extends DownloadPage {
         placement.setMargins(0, 0, 0, downloadStyle.dp(compact ? 2 : 11));
         card.setLayoutParams(placement);
         downloadStyle.markCustom(card);
+        if (!row.savedUri.isEmpty() && !row.transfer && row.action != null) {
+            card.setMinimumHeight(downloadStyle.dp(48));
+            card.setFocusable(true);
+            card.setContentDescription(PatchStrings.t("Play") + ": " + row.name);
+            card.setOnClickListener(view -> row.action.run());
+            card.setAccessibilityDelegate(
+                    new View.AccessibilityDelegate() {
+                        @Override
+                        public void onInitializeAccessibilityNodeInfo(
+                                View host, android.view.accessibility.AccessibilityNodeInfo info) {
+                            super.onInitializeAccessibilityNodeInfo(host, info);
+                            info.setClassName(Button.class.getName());
+                        }
+                    });
+        }
         if (grid)
             card.addView(cover(row, 124), new LinearLayout.LayoutParams(-1, downloadStyle.dp(124)));
         LinearLayout header = new LinearLayout(this);
@@ -1390,6 +1406,7 @@ final class DownloadsHubPage extends DownloadPage {
 
     private String actionIcon(String label) {
         if (label.equals(PatchStrings.t("Details"))) return "info";
+        if (label.equals(PatchStrings.t("Play"))) return "preview";
         if (label.equals(PatchStrings.t("Pause"))) return "pause";
         if (label.equals(PatchStrings.t("Resume"))) return "preview";
         if (label.equals(PatchStrings.t("Retry"))) return "refresh";
@@ -1436,26 +1453,44 @@ final class DownloadsHubPage extends DownloadPage {
         }
     }
 
+    private void playSavedFile(String id, String uri) {
+        if (isFinishing() || openingFile) return;
+        openingFile = true;
+        Runnable failed =
+                () -> {
+                    openingFile = false;
+                    if (!isFinishing())
+                        status.setText(
+                                PatchStrings.t(
+                                        "Saved file could not be opened. Check its storage"
+                                                + " location."));
+                };
+        try {
+            worker.execute(
+                    () -> {
+                        try {
+                            Intent target = HostDownloadAccess.playFileIntent(activity, id, uri);
+                            ui.post(
+                                    () -> {
+                                        openingFile = false;
+                                        if (isFinishing()) return;
+                                        try {
+                                            startActivity(target);
+                                        } catch (RuntimeException unavailable) {
+                                            failed.run();
+                                        }
+                                    });
+                        } catch (Exception | LinkageError unavailable) {
+                            ui.post(failed);
+                        }
+                    });
+        } catch (RejectedExecutionException closed) {
+            failed.run();
+        }
+    }
+
     private Row fileRow(String title, String detail, String id, String uri) {
-        Row row =
-                new Row(
-                        title,
-                        detail,
-                        "On device",
-                        "Open file",
-                        () -> {
-                            try {
-                                startActivity(
-                                        new Intent(Intent.ACTION_VIEW)
-                                                .setDataAndType(Uri.parse(uri), "audio/*")
-                                                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION));
-                            } catch (Exception unavailable) {
-                                status.setText(
-                                        PatchStrings.t(
-                                                "Saved file could not be opened. Check its storage"
-                                                        + " location."));
-                            }
-                        });
+        Row row = new Row(title, detail, "On device", "Play", () -> playSavedFile(id, uri));
         row.savedUri = uri;
         row.hostId = id;
         Long known = fileSizes.get(uri);

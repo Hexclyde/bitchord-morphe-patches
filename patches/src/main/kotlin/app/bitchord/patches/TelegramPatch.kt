@@ -2469,6 +2469,11 @@ private val extrasAudioPatch = bytecodePatch {
     execute { addAudioTap() }
 }
 
+internal val playbackBufferGatePatch = bytecodePatch {
+    dependsOn(extrasSettingsPatch)
+    execute { addPlaybackBufferGate() }
+}
+
 /** The playback service, for DJ mode. */
 private val extrasServicePatch = bytecodePatch {
     dependsOn(extrasSettingsPatch)
@@ -2550,7 +2555,9 @@ val singPatch =
             WHERE,
         extrasAudioPatch,
         extrasPlayersPatch,
+        playbackBufferGatePatch,
     ) {
+        verifyKaraokeMemoryAbi()
         addSingDrain()
         addKaraokeLyrics()
         markApplied("singApplied")
@@ -3119,11 +3126,6 @@ private fun BytecodePatchContext.addAudioFocus() {
     )
 }
 
-internal val playbackBufferGatePatch = bytecodePatch {
-    dependsOn(extrasSettingsPatch)
-    execute { addPlaybackBufferGate() }
-}
-
 @Suppress("unused")
 val steadyPlaybackPatch =
     extrasPatch(
@@ -3190,6 +3192,33 @@ private fun BytecodePatchContext.addPlaybackBufferGate() {
             }
     ) {
         "Playback allocator or buffered-duration fields changed"
+    }
+    val resize =
+        classDefBy(allocator).methods.filter {
+            it.name == "setTargetBufferSize" &&
+                it.parameterTypes == listOf("I") &&
+                it.returnType == "V"
+        }
+    check(
+        classDefBy(allocator).fields.any { it.name == "targetBufferSize" && it.type == "I" } &&
+            resize.size == 1 &&
+            resize.single().implementation?.instructions?.any {
+                it.fieldRef()?.let { field ->
+                    field.definingClass == allocator &&
+                        field.name == "targetBufferSize" &&
+                        field.type == "I"
+                } == true
+            } == true &&
+            resize.single().implementation?.instructions?.any {
+                it.methodRef()?.let { call ->
+                    call.definingClass == allocator &&
+                        call.name == "trim" &&
+                        call.parameterTypes.isEmpty() &&
+                        call.returnType == "V"
+                } == true
+            } == true
+    ) {
+        "Playback allocator no longer exposes its free-pool resize and trim policy"
     }
     val loadingCode = load.implementation!!.instructions.toList()
     val firstLoading = loadingCode.firstOrNull() as? TwoRegisterInstruction
