@@ -99,7 +99,7 @@ public final class TransitionEditorActivity extends Activity {
     private TransitionEdit edit;
     private Timeline timeline, miniTimeline;
     private LinearLayout workspace, expanded, compactRow, preferenceHeader;
-    private ScrollView controlScroll;
+    private ControlScroll controlScroll;
     private TextView miniPreview,
             miniLength,
             draftSave,
@@ -116,8 +116,12 @@ public final class TransitionEditorActivity extends Activity {
     private final Set<View> adjustments = new HashSet<>();
     private boolean compact, autoSave, autoApply, dirtyDraft, applyPending;
     private boolean advancedCurve;
-    private boolean compactLayoutPending, controlTouching, expandingGesture;
+    // Condensing waits for the finger to lift, so the list under it does not move mid-drag.
+    private boolean compactWanted, controlTouching, expandingGesture, childOwnsTouch;
+    // The window is too short for the full waveforms, so expanding them cannot hold.
+    private boolean shortWindow;
     private float controlTouchY;
+    private int presetsHeight, expandNeed;
     private String appliedState, observedState;
     private final Runnable saveDraftLater = () -> persistDraft(false);
     private final Runnable applyLater =
@@ -253,7 +257,6 @@ public final class TransitionEditorActivity extends Activity {
                     protected void onMeasure(int width, int height) {
                         super.onMeasure(width, height);
                         if (wide
-                                || compact
                                 || workspace == null
                                 || controlScroll == null
                                 || workspace.getParent() != this) return;
@@ -272,23 +275,52 @@ public final class TransitionEditorActivity extends Activity {
                             if (child != controlScroll && child.getVisibility() != View.GONE)
                                 reserved += child.getMeasuredHeight();
                         }
+                        // Condensed, the presets are hidden; the room is judged as if they were
+                        // back.
+                        if (preferenceHeader.getVisibility() == View.GONE) {
+                            if (presetsHeight == 0) {
+                                preferenceHeader.measure(
+                                        View.MeasureSpec.makeMeasureSpec(
+                                                settings.getMeasuredWidth(),
+                                                View.MeasureSpec.EXACTLY),
+                                        View.MeasureSpec.makeMeasureSpec(
+                                                0, View.MeasureSpec.UNSPECIFIED));
+                                presetsHeight = preferenceHeader.getMeasuredHeight();
+                            }
+                            reserved += presetsHeight;
+                        } else presetsHeight = preferenceHeader.getMeasuredHeight();
                         int available = getMeasuredHeight() - reserved;
                         // Larger text wraps the track facts; the graph still needs a full target.
-                        int need = 0;
-                        if (getResources().getConfiguration().fontScale > 1f
-                                && expanded != null
-                                && overlapRow != null
-                                && expanded.getChildCount() >= 4)
-                            need =
-                                    expanded.getChildAt(0).getMeasuredHeight()
-                                            + overlapRow.getMeasuredHeight()
-                                            + expanded.getChildAt(3).getMeasuredHeight()
-                                            + style.dp(48);
-                        if (available < style.dp(260) || need > available) setCompact(true);
+                        if (!compact) {
+                            expandNeed = 0;
+                            if (getResources().getConfiguration().fontScale > 1f
+                                    && expanded != null
+                                    && overlapRow != null
+                                    && expanded.getChildCount() >= 4)
+                                expandNeed =
+                                        expanded.getChildAt(0).getMeasuredHeight()
+                                                + overlapRow.getMeasuredHeight()
+                                                + expanded.getChildAt(3).getMeasuredHeight()
+                                                + style.dp(48);
+                        }
+                        boolean tooShort = available < style.dp(260) || expandNeed > available;
+                        boolean flipped = tooShort != shortWindow;
+                        if (flipped) {
+                            shortWindow = tooShort;
+                            // A button that cannot restore the full view would only mislead.
+                            expandButton.setVisibility(tooShort ? View.GONE : View.VISIBLE);
+                        }
+                        if (compact) {
+                            if (flipped) super.onMeasure(width, height);
+                            return;
+                        }
+                        if (tooShort) setCompact(true);
                         else {
                             ViewGroup.LayoutParams space = workspace.getLayoutParams();
                             int desired =
-                                    Math.max(need, Math.min(style.dp(expandedHeight()), available));
+                                    Math.max(
+                                            expandNeed,
+                                            Math.min(style.dp(expandedHeight()), available));
                             if (space.height == desired) return;
                             space.height = desired;
                             workspace.setLayoutParams(space);
@@ -666,7 +698,7 @@ public final class TransitionEditorActivity extends Activity {
         preferenceHeader.addView(presetScroll, new LinearLayout.LayoutParams(-1, -2));
         tabs = row();
         right.addView(tabs, new LinearLayout.LayoutParams(-1, -2));
-        controlScroll = new ScrollView(this);
+        controlScroll = new ControlScroll();
         controlScroll.setTag("automix-controls-scroll");
         controlScroll.setFillViewport(true);
         controls = column();
@@ -674,44 +706,13 @@ public final class TransitionEditorActivity extends Activity {
         controlScroll.addView(controls);
         controlScroll.setOnScrollChangeListener(
                 (v, x, y, oldX, oldY) -> {
-                    if (wide || compactLayoutPending || expandingGesture) return;
-                    if (y > style.dp(12)) setCompact(true);
-                    else if (compact && y == 0 && !controlTouching) setCompact(false);
-                });
-        controlScroll.addOnLayoutChangeListener(
-                (v, left, top, rightEdge, bottom, oldLeft, oldTop, oldRight, oldBottom) ->
-                        compactLayoutPending = false);
-        controlScroll.setOnTouchListener(
-                (v, event) -> {
-                    switch (event.getActionMasked()) {
-                        case MotionEvent.ACTION_DOWN:
-                            controlTouching = true;
-                            expandingGesture = false;
-                            controlTouchY = event.getY();
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            float down = event.getY() - controlTouchY;
-                            if (compact
-                                    && down > style.dp(8)
-                                    && controlScroll.getScrollY() <= down) {
-                                expandingGesture = true;
-                                MotionEvent cancel = MotionEvent.obtain(event);
-                                cancel.setAction(MotionEvent.ACTION_CANCEL);
-                                controlScroll.onTouchEvent(cancel);
-                                cancel.recycle();
-                                expandWaveforms();
-                            }
-                            break;
-                        case MotionEvent.ACTION_UP:
-                        case MotionEvent.ACTION_CANCEL:
-                            controlTouching = false;
-                            boolean consumed = expandingGesture;
-                            expandingGesture = false;
-                            return consumed;
-                        default:
-                            break;
-                    }
-                    return expandingGesture;
+                    // A viewport that grows or shrinks clamps the offset; that is not a scroll.
+                    if (wide || expandingGesture || controlScroll.inLayout) return;
+                    if (y > style.dp(12)) {
+                        if (controlTouching) compactWanted = true;
+                        else setCompact(true);
+                    } else if (compact && y == 0 && !controlTouching && !shortWindow)
+                        setCompact(false);
                 });
         right.addView(controlScroll, new LinearLayout.LayoutParams(-1, 0, 1));
         View dockView = buildDock();
@@ -1371,7 +1372,6 @@ public final class TransitionEditorActivity extends Activity {
     private void setCompact(boolean value) {
         if (workspace == null || compact == value) return;
         compact = value;
-        compactLayoutPending = true;
         expanded.setVisibility(value ? View.GONE : View.VISIBLE);
         compactRow.setVisibility(value ? View.VISIBLE : View.GONE);
         // Presets stay in the side pane while the waveforms are condensed.
@@ -1412,8 +1412,74 @@ public final class TransitionEditorActivity extends Activity {
     }
 
     private void expandWaveforms() {
+        if (shortWindow) return;
         setCompact(false);
         controlScroll.scrollTo(0, 0);
+    }
+
+    /** Sees every touch, including those a control inside the list handles. */
+    private final class ControlScroll extends ScrollView {
+        boolean inLayout;
+
+        ControlScroll() {
+            super(TransitionEditorActivity.this);
+        }
+
+        @Override
+        protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+            inLayout = true;
+            try {
+                super.onLayout(changed, left, top, right, bottom);
+            } finally {
+                inLayout = false;
+            }
+        }
+
+        @Override
+        public void requestDisallowInterceptTouchEvent(boolean disallow) {
+            childOwnsTouch |= disallow;
+            super.requestDisallowInterceptTouchEvent(disallow);
+        }
+
+        @Override
+        public boolean dispatchTouchEvent(MotionEvent event) {
+            int action = event.getActionMasked();
+            boolean end = action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL;
+            if (action == MotionEvent.ACTION_DOWN) {
+                controlTouching = true;
+                expandingGesture = false;
+                childOwnsTouch = false;
+                compactWanted = false;
+                controlTouchY = event.getRawY();
+            } else if (expandingGesture) {
+                if (end) {
+                    controlTouching = false;
+                    expandingGesture = false;
+                }
+                return true;
+            } else if (action == MotionEvent.ACTION_MOVE
+                    && compact
+                    && !shortWindow
+                    && !childOwnsTouch
+                    && getScrollY() == 0
+                    && event.getRawY() - controlTouchY > style.dp(8)) {
+                expandingGesture = true;
+                MotionEvent cancel = MotionEvent.obtain(event);
+                cancel.setAction(MotionEvent.ACTION_CANCEL);
+                super.dispatchTouchEvent(cancel);
+                cancel.recycle();
+                expandWaveforms();
+                return true;
+            }
+            boolean handled = super.dispatchTouchEvent(event);
+            if (end) {
+                controlTouching = false;
+                boolean wanted = compactWanted;
+                compactWanted = false;
+                if (wanted && getScrollY() > style.dp(12)) setCompact(true);
+            }
+            return handled;
+        }
     }
 
     private TelegramSwitch optionSwitch(

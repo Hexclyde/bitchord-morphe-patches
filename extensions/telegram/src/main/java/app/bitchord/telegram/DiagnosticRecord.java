@@ -38,7 +38,18 @@ public final class DiagnosticRecord {
                         + " ERR_NAME_NOT_RESOLVED ERR_CONNECTION_TIMED_OUT ERR_CONNECTION_REFUSED"
                         + " ERR_CONNECTION_RESET ERR_INTERNET_DISCONNECTED"
                         + " ERR_CERT_AUTHORITY_INVALID ERR_CERT_DATE_INVALID ERR_SSL_PROTOCOL_ERROR"
-                        + " ERR_TOO_MANY_REDIRECTS ERR_ABORTED");
+                        + " ERR_TOO_MANY_REDIRECTS ERR_ABORTED AUTOMIX_FAILED AUTOMIX_MEMORY"
+                        + " AUTOMIX_READY AUTOMIX_DEFERRED");
+    private static final Set<String> ANALYSIS_STAGES =
+            set(
+                    "starting restore native-restore memory-preview source-resolution"
+                            + " decode-admission model-preflight format-probe bounded-DSP"
+                            + " model-analysis result save before-decode after-decode unknown");
+    private static final Pattern ANALYSIS_FIELD =
+            Pattern.compile(
+                    "(?:^|[:,]"
+                        + " )(?:(stage|error)=([A-Za-z_-]{1,48})|(neededKiB|availableKiB)=([0-9]{1,10}))(?=$|[,;"
+                        + " ])");
     private static final Set<String> SOURCE_REASONS =
             set(
                     "PASSED DURATION_INSUFFICIENT DURATION_MISMATCH IDENTITY_MISMATCH"
@@ -152,6 +163,13 @@ public final class DiagnosticRecord {
                         break;
                     case "reason":
                         out.put(key, enumValue(value, reasons(), "OTHER"));
+                        break;
+                    case "stage":
+                        out.put(key, enumValue(value, ANALYSIS_STAGES, "unknown"));
+                        break;
+                    case "needed_kib":
+                    case "available_kib":
+                        integer(out, key, value, 0, 1 << 30);
                         break;
                     case "error":
                         out.put(key, enumValue(value, ERRORS, "OTHER"));
@@ -361,6 +379,27 @@ public final class DiagnosticRecord {
                                 : severity == 'I' ? "INFO" : severity == 'F' ? "FATAL" : "DEBUG");
         values.put("category", category);
         values.put("reason", reason);
+        if (text.startsWith("AutoMix ")) {
+            if (text.startsWith("AutoMix will use a basic fade"))
+                values.put("reason", "AUTOMIX_FAILED");
+            else if (text.startsWith("AutoMix analysis is waiting for"))
+                values.put("reason", "AUTOMIX_MEMORY");
+            else if (text.startsWith("AutoMix measured")
+                    || text.startsWith("AutoMix restored")
+                    || text.startsWith("AutoMix reused")) values.put("reason", "AUTOMIX_READY");
+            else if (text.startsWith("AutoMix analysis deferred"))
+                values.put("reason", "AUTOMIX_DEFERRED");
+            Matcher field = ANALYSIS_FIELD.matcher(text);
+            while (field.find()) {
+                if ("stage".equals(field.group(1))) values.put("stage", field.group(2));
+                else if ("error".equals(field.group(1)))
+                    values.put("error", analysisError(field.group(2)));
+                else if (field.group(3) != null)
+                    values.put(
+                            "neededKiB".equals(field.group(3)) ? "needed_kib" : "available_kib",
+                            Long.parseLong(field.group(4)));
+            }
+        }
         if (text.startsWith("Recording check ")) {
             values.put("category", "SOURCE");
             Matcher result = SOURCE_REASON.matcher(text);
@@ -375,6 +414,32 @@ public final class DiagnosticRecord {
         Matcher status = HTTP.matcher(text);
         if (status.find()) values.put("http_status", Integer.parseInt(status.group(1)));
         return structured("host.line", values);
+    }
+
+    private static String analysisError(String value) {
+        switch (value) {
+            case "IOException":
+            case "EOFException":
+            case "FileNotFoundException":
+                return "IO";
+            case "SocketTimeoutException":
+            case "TimeoutException":
+                return "TIMEOUT";
+            case "OutOfMemoryError":
+                return "OUT_OF_MEMORY";
+            case "IllegalStateException":
+                return "STATE";
+            case "IllegalArgumentException":
+                return "ARGUMENT";
+            case "SecurityException":
+                return "SECURITY";
+            case "UnsatisfiedLinkError":
+            case "NoSuchMethodError":
+            case "NoClassDefFoundError":
+                return "LINKAGE";
+            default:
+                return "OTHER";
+        }
     }
 
     public static String failure(Throwable error) {

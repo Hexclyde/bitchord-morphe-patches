@@ -152,8 +152,11 @@ public final class SourceAudio extends MediaDataSource {
                 throw new IOException("Selected audio format is unknown");
             int rate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE);
             double seconds = Math.max(0, requestedSeconds);
-            if (format.containsKey(MediaFormat.KEY_DURATION))
-                seconds = Math.max(seconds, format.getLong(MediaFormat.KEY_DURATION) / 1_000_000d);
+            if (format.containsKey(MediaFormat.KEY_DURATION)) {
+                double measured = format.getLong(MediaFormat.KEY_DURATION) / 1_000_000d;
+                // Queue labels may describe another rendition or round up to a whole second.
+                if (measured > 0) seconds = measured;
+            }
             if (rate <= 0 || !Double.isFinite(seconds) || seconds <= 0)
                 throw new IOException("Selected audio duration or sample rate is unusable");
             return new AnalysisInfo(rate, seconds);

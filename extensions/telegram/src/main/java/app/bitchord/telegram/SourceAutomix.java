@@ -738,12 +738,12 @@ public final class SourceAutomix {
         cancelSpeculation();
         for (int side = 0; side < 2; side++) {
             double seconds = side == 0 ? pair.outgoingDuration : pair.incomingDuration;
-            if (Double.isFinite(seconds) && seconds > 0)
-                enqueue(
-                        owner,
-                        side == 0 ? pair.outgoing : pair.incoming,
-                        Math.round(seconds * 1000),
-                        retry);
+            // A queued item can lack a duration; the worker reads its audio header.
+            enqueue(
+                    owner,
+                    side == 0 ? pair.outgoing : pair.incoming,
+                    Double.isFinite(seconds) && seconds > 0 ? Math.round(seconds * 1000) : 0,
+                    retry);
         }
     }
 
@@ -1136,7 +1136,7 @@ public final class SourceAutomix {
                                         new Class<?>[] {String.class, Uri.class, double.class},
                                         job.id,
                                         job.uri,
-                                        job.duration);
+                                        job.format.seconds);
                         result = outcome == null ? null : field(outcome, "flags");
                     }
                 }

@@ -1,5 +1,10 @@
 ## 1.1.0-beta.19
 
+- **Automix Editor** keeps scrolling stable when the waveform condenses and restores the full view when there is room.
+- **Diagnostics** includes bounded AutoMix failure stages, error types and memory-wait values.
+
+- **Automix Editor** analyzes queued tracks with missing durations and uses the selected file’s duration when its queue label is rounded.
+
 - **Karaoke** uses smaller model working buffers. Read-ahead stays bounded while the model is loaded, and background decoding waits when heap headroom is low.
 
 - **Automix Editor** reuses native analysis, timing and beat matching unless an explicit tempo override is saved. Deck headers show measured keys and tempo with low-confidence indicators, and Preview waits for an actual automatic plan.

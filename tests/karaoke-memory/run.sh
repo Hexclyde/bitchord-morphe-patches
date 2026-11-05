@@ -1,15 +1,16 @@
 #!/bin/sh
 # Builds and runs the model memory checks on their own, under the device's 192 MiB heap.
-# Usage: tests/karaoke-memory/run.sh <scratch directory on disk>
+# Usage: tests/karaoke-memory/run.sh [scratch directory on disk]
 set -e
 here=$(cd "$(dirname "$0")" && pwd)
 root=$(cd "$here/../.." && pwd)
-base=${1:?scratch directory on disk}
+base=${1:-$root/build}
 mkdir -p "$base"
 out=$(mktemp -d "$base/karaoke-memory.XXXXXX")
+trap 'rm -rf "$out"' EXIT HUP INT TERM
 ext=$root/extensions/telegram/src/main/java/app/bitchord/telegram
 tools=${MORPHE_TOOLS:-$root/.deps/tools}
-jdk=$(ls -d "$tools"/jdk-21*)
+jdk=$(PYTHONPATH="$root${PYTHONPATH:+:$PYTHONPATH}" python3 -c 'from buildenv import jdk; print(jdk())')
 mkdir -p "$out/stub/app/bitchord/telegram" "$out/classes"
 cp "$here/stub/SourceAudio.java.txt" "$out/stub/app/bitchord/telegram/SourceAudio.java"
 "$jdk/bin/javac" -J-Xshare:off --release 11 -proc:none \

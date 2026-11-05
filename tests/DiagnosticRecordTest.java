@@ -21,6 +21,42 @@ public final class DiagnosticRecordTest {
             "cookie=PRIVATECOOKIE",
             "/home/private/account"
         };
+        JSONObject analysis =
+                new JSONObject(
+                        DiagnosticRecord.safeLine(
+                                'D',
+                                "AutoMix will use a basic fade until audio can be measured:"
+                                        + " stage=bounded-DSP, error=IOException, site=analyze:73"
+                                        + " private@example.invalid"));
+        check("AUTOMIX_FAILED".equals(analysis.optString("reason")), "AutoMix failure lost");
+        check("bounded-DSP".equals(analysis.optString("stage")), "AutoMix stage lost");
+        check("IO".equals(analysis.optString("error")), "AutoMix error kind lost");
+        check(!analysis.toString().contains("private@example.invalid"), "Analysis leaked content");
+        JSONObject memory =
+                new JSONObject(
+                        DiagnosticRecord.safeLine(
+                                'D',
+                                "AutoMix analysis is waiting for memory: stage=before-decode,"
+                                        + " neededKiB=38767, availableKiB=0, decoded=false"));
+        check("AUTOMIX_MEMORY".equals(memory.optString("reason")), "Memory wait lost");
+        check(
+                memory.optInt("needed_kib", -1) == 38767 && memory.optInt("available_kib", -1) == 0,
+                "Bounded memory facts lost");
+        check(
+                DiagnosticRecord.sanitize(analysis.toString()).equals(analysis.toString()),
+                "Export lost safe analysis details");
+        for (String secret : secrets) {
+            String output =
+                    DiagnosticRecord.safeLine(
+                            'D',
+                            "AutoMix will use a basic fade until audio can be measured: stage="
+                                    + secret
+                                    + ", error="
+                                    + secret
+                                    + ", neededKiB="
+                                    + secret);
+            check(!output.contains(secret), "AutoMix field exported private text");
+        }
         Map<String, Object> fields = new LinkedHashMap<>();
         fields.put("sdk", 37);
         fields.put("patch", "1.1.0-beta.19");

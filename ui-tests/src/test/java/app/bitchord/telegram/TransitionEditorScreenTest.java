@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
@@ -1762,6 +1763,278 @@ public class TransitionEditorScreenTest {
         layout(393, 852);
         assertEquals(View.VISIBLE, tag("automix-compact").getVisibility());
         assertEquals(View.GONE, tag("automix-expanded").getVisibility());
+    }
+
+    /** One finger sent through the window, so the real parent chain routes every event. */
+    private final class Finger {
+        private final float x;
+        private float y;
+        private long time;
+        final List<Integer> scrolls = new ArrayList<>();
+
+        Finger(float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        void down() {
+            send(MotionEvent.ACTION_DOWN);
+        }
+
+        void moveTo(float to) {
+            y = to;
+            time += 16;
+            send(MotionEvent.ACTION_MOVE);
+            scrolls.add(((ScrollView) tag("automix-controls-scroll")).getScrollY());
+        }
+
+        void up() {
+            send(MotionEvent.ACTION_UP);
+        }
+
+        void cancel() {
+            send(MotionEvent.ACTION_CANCEL);
+        }
+
+        private void send(int action) {
+            MotionEvent event = MotionEvent.obtain(0, time, action, x, y, 0);
+            try {
+                activity.get().getWindow().getDecorView().dispatchTouchEvent(event);
+            } finally {
+                event.recycle();
+            }
+            frame();
+        }
+    }
+
+    /** Runs what the platform runs between frames. */
+    private void frame() {
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        layout(393, 852);
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        layout(393, 852);
+    }
+
+    private boolean compactShown() {
+        return tag("automix-compact").getVisibility() == View.VISIBLE;
+    }
+
+    private int[] inWindow(View view) {
+        int[] at = new int[2];
+        view.getLocationInWindow(at);
+        return at;
+    }
+
+    /** The first control that is fully inside the visible part of the options. */
+    private View visibleControl(ViewGroup parent, Rect window) {
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            View child = parent.getChildAt(i);
+            if (child.getVisibility() != View.VISIBLE) continue;
+            int[] at = inWindow(child);
+            Rect box = new Rect(at[0], at[1], at[0] + child.getWidth(), at[1] + child.getHeight());
+            if (child.isClickable() && window.contains(box)) return child;
+            if (child instanceof ViewGroup) {
+                View inside = visibleControl((ViewGroup) child, window);
+                if (inside != null) return inside;
+            }
+        }
+        return null;
+    }
+
+    private void showExpandedOptions() {
+        tag("transition-tab:3").performClick();
+        layout(393, 852);
+        if (compactShown()) tag("automix-expand").performClick();
+        layout(393, 852);
+        assertFalse(compactShown());
+    }
+
+    /** Replaces the options with plain content of a known height. */
+    private ScrollView plainOptions(int overflow) {
+        ScrollView scroll = (ScrollView) tag("automix-controls-scroll");
+        ViewGroup controls = (ViewGroup) scroll.getChildAt(0);
+        controls.removeAllViews();
+        controls.addView(new View(activity.get()), new LinearLayout.LayoutParams(-1, 1));
+        layout(393, 852);
+        int viewport = scroll.getHeight() - controls.getPaddingTop() - controls.getPaddingBottom();
+        controls.getChildAt(0)
+                .setLayoutParams(new LinearLayout.LayoutParams(-1, viewport + overflow));
+        layout(393, 852);
+        return scroll;
+    }
+
+    private int changes(List<Boolean> states) {
+        int changes = 0;
+        for (int i = 1; i < states.size(); i++)
+            if (!states.get(i).equals(states.get(i - 1))) changes++;
+        return changes;
+    }
+
+    @Test
+    public void draggingUpFromAControlScrollsSteadilyAndCompactsOnce() throws Exception {
+        open();
+        showExpandedOptions();
+        ScrollView scroll = (ScrollView) tag("automix-controls-scroll");
+        int[] at = inWindow(scroll);
+        Rect window = new Rect(at[0], at[1], at[0] + scroll.getWidth(), at[1] + scroll.getHeight());
+        View control = visibleControl(scroll, window);
+        assertNotNull("A control is visible in the options", control);
+        int[] spot = inWindow(control);
+        float x = spot[0] + control.getWidth() / 2f, from = spot[1] + control.getHeight() / 2f;
+        List<Boolean> states = new ArrayList<>(List.of(compactShown()));
+        Finger finger = new Finger(x, from);
+        finger.down();
+        for (int i = 1; i <= 12; i++) {
+            finger.moveTo(from - 10 * i);
+            states.add(compactShown());
+        }
+        finger.up();
+        for (int i = 0; i < 4; i++) {
+            frame();
+            states.add(compactShown());
+        }
+        for (int i = 1; i < finger.scrolls.size(); i++)
+            assertTrue(
+                    "The content follows the finger: " + finger.scrolls,
+                    finger.scrolls.get(i) >= finger.scrolls.get(i - 1));
+        assertTrue("The options scrolled: " + finger.scrolls, scroll.getScrollY() > 0);
+        assertTrue("The waveforms condense", compactShown());
+        assertEquals("The layout changes once: " + states, 1, changes(states));
+    }
+
+    @Test
+    public void draggingUpFromEmptySpaceScrollsSteadilyAndCompactsOnce() throws Exception {
+        open();
+        showExpandedOptions();
+        ScrollView scroll = plainOptions(60);
+        int[] at = inWindow(scroll);
+        float x = at[0] + 4, from = at[1] + scroll.getHeight() * .8f;
+        List<Boolean> states = new ArrayList<>(List.of(compactShown()));
+        Finger finger = new Finger(x, from);
+        finger.down();
+        for (int i = 1; i <= 8; i++) {
+            finger.moveTo(from - 10 * i);
+            states.add(compactShown());
+        }
+        finger.up();
+        for (int i = 0; i < 4; i++) {
+            frame();
+            states.add(compactShown());
+        }
+        for (int i = 1; i < finger.scrolls.size(); i++)
+            assertTrue(
+                    "The content follows the finger: " + finger.scrolls,
+                    finger.scrolls.get(i) >= finger.scrolls.get(i - 1));
+        assertTrue("The waveforms condense", compactShown());
+        assertEquals("The layout changes once: " + states, 1, changes(states));
+    }
+
+    @Test
+    public void condensingThatRemovesTheScrollRangeDoesNotExpandAgain() throws Exception {
+        open();
+        showExpandedOptions();
+        ScrollView scroll = plainOptions(40);
+        int[] at = inWindow(scroll);
+        float x = at[0] + 4, from = at[1] + scroll.getHeight() * .8f;
+        Finger finger = new Finger(x, from);
+        finger.down();
+        for (int i = 1; i <= 6; i++) finger.moveTo(from - 10 * i);
+        finger.up();
+        List<Boolean> states = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            frame();
+            states.add(compactShown());
+        }
+        assertTrue("The viewport clamp is not a request to expand: " + states, compactShown());
+        assertEquals(0, changes(states));
+    }
+
+    @Test
+    public void pullingDownAtTheStartExpandsOnceAndEndsTheGesture() throws Exception {
+        open();
+        showExpandedOptions();
+        ScrollView scroll = plainOptions(400);
+        scroll.scrollTo(0, 60);
+        frame();
+        assertTrue(compactShown());
+        scroll.scrollTo(0, 0);
+        frame();
+        // The scroll back to the start is a request to expand.
+        assertFalse(compactShown());
+        int[] at = inWindow(scroll);
+        float x = at[0] + 4, from = at[1] + scroll.getHeight() * .8f;
+        Finger finger = new Finger(x, from);
+        finger.down();
+        for (int i = 1; i <= 6; i++) finger.moveTo(from - 10 * i);
+        finger.up();
+        frame();
+        assertTrue(compactShown());
+        at = inWindow(scroll);
+        from = at[1] + scroll.getHeight() * .3f;
+        List<Boolean> states = new ArrayList<>(List.of(compactShown()));
+        finger = new Finger(x, from);
+        finger.down();
+        for (int i = 1; i <= 8; i++) {
+            finger.moveTo(from + 10 * i);
+            states.add(compactShown());
+        }
+        finger.up();
+        for (int i = 0; i < 4; i++) {
+            frame();
+            states.add(compactShown());
+        }
+        assertFalse("Pulling down at the start expands: " + states, compactShown());
+        assertEquals(0, scroll.getScrollY());
+        assertEquals("The layout changes once: " + states, 1, changes(states));
+    }
+
+    @Test
+    public void aCancelledDragStillEndsTheTouchSoScrollingToTheStartExpands() throws Exception {
+        open();
+        showExpandedOptions();
+        ScrollView scroll = plainOptions(400);
+        int[] at = inWindow(scroll);
+        float x = at[0] + 4, from = at[1] + scroll.getHeight() * .8f;
+        Finger finger = new Finger(x, from);
+        finger.down();
+        for (int i = 1; i <= 6; i++) finger.moveTo(from - 10 * i);
+        finger.cancel();
+        frame();
+        assertTrue(compactShown());
+        scroll.scrollTo(0, 20);
+        frame();
+        scroll.scrollTo(0, 0);
+        frame();
+        assertFalse("Reaching the start without a finger expands", compactShown());
+    }
+
+    @Test
+    public void aShortWindowKeepsTheWaveformsCondensedWithoutOfferingAnEmptyExpand()
+            throws Exception {
+        open();
+        layout(393, 520);
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        layout(393, 520);
+        assertTrue("A short window condenses the waveforms", compactShown());
+        assertNotEquals(
+                "Expanding cannot work here, so it is not offered",
+                View.VISIBLE,
+                tag("automix-expand").getVisibility());
+        for (int i = 0; i < 4; i++) {
+            tag("automix-mini-timeline").performClick();
+            Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+            layout(393, 520);
+            assertTrue(compactShown());
+        }
+        layout(393, 852);
+        assertEquals(
+                "A taller window offers it again",
+                View.VISIBLE,
+                tag("automix-expand").getVisibility());
+        tag("automix-expand").performClick();
+        layout(393, 852);
+        layout(393, 852);
+        assertFalse("Expanding works once there is room", compactShown());
     }
 
     @Test

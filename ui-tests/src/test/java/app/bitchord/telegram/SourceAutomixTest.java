@@ -101,6 +101,7 @@ public class SourceAutomixTest {
         public Thermal thermalWatch$delegate = new Thermal();
         public int thermalStatus;
         List<Uri> analyzed = new ArrayList<>();
+        Map<String, Double> measuredDurations = new HashMap<>();
         boolean fail;
         java.util.function.Consumer<String> probe;
 
@@ -108,6 +109,7 @@ public class SourceAutomixTest {
             if (probe != null) probe.accept(id);
             synchronized (analyzed) {
                 analyzed.add(uri);
+                measuredDurations.put(id, duration);
             }
             return new Outcome(fail ? null : new TrackAnalysis(id));
         }
@@ -254,6 +256,57 @@ public class SourceAutomixTest {
         dspControl = new DspControl();
         SteadyPlayback.loadControl(dspControl);
         assertTrue(SteadyPlayback.allowLoading(dspControl, new DspParameters()));
+    }
+
+    @Test
+    public void editorRequestsAnIncomingTrackWithoutDurationMetadata() throws Exception {
+        SourceAutomix.heapMaximum = () -> 512L << 20;
+        SourceAutomix.heapUsed = () -> 32L << 20;
+        SourceAudio.analysisFormats = () -> format(48000, 2_000_000);
+        TransitionRuntime.Pair pair =
+                new TransitionRuntime.Pair("recording-1", "next", "A", "B", 2, 0, 0);
+        pair.outgoing = item("content://music/current");
+        pair.incoming =
+                new MediaItem.Builder().setMediaId("next").setUri("content://music/next").build();
+        SourceAutomix.service(callback.f$0);
+        SourceAutomix.requestEditor(pair, false);
+        assertEquals(
+                "The source header can supply the missing next-track duration",
+                "ready",
+                SourceAutomix.analysisPhase("next"));
+        assertTrue(callback.f$0.trackAnalyzer.results.containsKey("next"));
+        assertEquals(2, callback.f$0.trackAnalyzer.measuredDurations.get("next"), .001);
+    }
+
+    @Test
+    public void boundedAnalysisUsesTheSelectedFilesLengthNotARoundedQueueLabel() {
+        guardedLowMemory();
+        SourceAudio.analysisFormats = () -> format(48000, 2_000_000);
+        PlaybackService.dspDecoder =
+                (source, end, abort, chunks) -> {
+                    java.nio.ByteBuffer pcm =
+                            java.nio.ByteBuffer.allocate(1920)
+                                    .order(java.nio.ByteOrder.LITTLE_ENDIAN);
+                    for (int i = 0; i < 960; i++) pcm.putShort((short) 4000);
+                    for (int i = 0; i < 200; i++) {
+                        android.media.MediaCodec.BufferInfo info =
+                                new android.media.MediaCodec.BufferInfo();
+                        info.set(0, 1920, i * 10_000L, 0);
+                        chunks.invoke(pcm, info, 2, 48000);
+                    }
+                    return new Object();
+                };
+        PlaybackService.dspFeatures =
+                (samples, seconds) -> {
+                    assertEquals(2d, seconds, .0001);
+                    return new Object();
+                };
+        SourceAutomix.request(callback, item("content://music/rounded-length"), 3000L);
+        assertEquals(
+                "A complete two-second file is not a truncated three-second recording",
+                "ready",
+                SourceAutomix.analysisPhase("recording-1"));
+        assertTrue(callback.f$0.trackAnalyzer.results.containsKey("recording-1"));
     }
 
     @Test
