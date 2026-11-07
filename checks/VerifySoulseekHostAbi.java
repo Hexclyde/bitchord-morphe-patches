@@ -76,17 +76,17 @@ public final class VerifySoulseekHostAbi {
             output.stream()
                     .filter(e -> e.getName().startsWith("lib/") && e.getName().endsWith(".so"))
                     .forEach(e -> outputAbis.add(e.getName().split("/")[1]));
-            boolean universal19 =
-                    before.getAttributeNS(ns, "versionName").equals("1.9")
+            boolean supportedUniversal =
+                    Set.of("1.9", "1.9.1").contains(before.getAttributeNS(ns, "versionName"))
                             && inputAbis.equals(
                                     Set.of("arm64-v8a", "armeabi-v7a", "x86", "x86_64"));
             Set<String> expectedAbis = new HashSet<>(inputAbis);
-            if (universal19) expectedAbis.remove("x86");
+            if (supportedUniversal) expectedAbis.remove("x86");
             check(outputAbis.equals(expectedAbis), "Only fully supported native ABIs remain");
-            if (universal19)
+            if (supportedUniversal)
                 check(
                         output.stream().noneMatch(e -> e.getName().startsWith("lib/x86/")),
-                        "Universal1.9 removes the entire unsupported32-bit x86 native directory");
+                        "Universal APK removes the entire unsupported 32-bit x86 native directory");
             for (var entry :
                     input.stream()
                             .filter(
@@ -94,7 +94,7 @@ public final class VerifySoulseekHostAbi {
                                             e.getName().startsWith("lib/")
                                                     && e.getName().endsWith(".so"))
                             .toList()) {
-                if (universal19 && entry.getName().startsWith("lib/x86/")) continue;
+                if (supportedUniversal && entry.getName().startsWith("lib/x86/")) continue;
                 var retained = output.getEntry(entry.getName());
                 check(
                         retained != null

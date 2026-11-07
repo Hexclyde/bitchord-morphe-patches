@@ -72,17 +72,19 @@ private val soulseekResources = resourcePatch {
         val supportedAbis = setOf("arm64-v8a", "armeabi-v7a", "x86_64")
         val originalAbis =
             listApkEntries("lib/").filter { it.endsWith(".so") }.map { it.split('/')[1] }.toSet()
-        // The official 1.9 universal APK includes a partial x86 library set. There is no
+        // The official 1.9 and 1.9.1 universal APK includes a partial x86 library set. There is no
         // 32-bit x86 Soulseek/transfer runtime, so remove that ABI in full: retaining even
         // the host's partial set could make Android select an ABI without our runtimes.
-        val universal19 =
-            packageMetadata.versionName == "1.9" && originalAbis == supportedAbis + "x86"
+        val supportedUniversal =
+            packageMetadata.versionName in setOf("1.9", "1.9.1") &&
+                originalAbis == supportedAbis + "x86"
         check(
-            originalAbis.isNotEmpty() && (originalAbis.all { it in supportedAbis } || universal19)
+            originalAbis.isNotEmpty() &&
+                (originalAbis.all { it in supportedAbis } || supportedUniversal)
         ) {
             "Unsupported Soulseek APK architecture: $originalAbis"
         }
-        if (universal19) {
+        if (supportedUniversal) {
             val unsupportedEntries = listApkEntries("lib/x86/")
             check(unsupportedEntries.isNotEmpty()) { "Universal APK x86 entries are missing" }
             for (path in unsupportedEntries) delete(path)

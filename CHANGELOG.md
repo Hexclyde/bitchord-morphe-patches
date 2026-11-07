@@ -1,5 +1,7 @@
 ## 1.1.0-beta.19
 
+- Support the BitChord 1.9.1 universal APK for shared audio, Telegram and Soulseek. Unsupported 32-bit x86 libraries are removed; ARM64, ARMv7 and x86-64 remain available.
+
 - **Unofficial Telegram** catches up a delayed quality upgrade before fading it in. If the copies cannot be aligned, the current audio keeps playing.
 
 - Fix a startup crash on BitChord 1.9.1 with **Unofficial Telegram** or **Soulseek** installed.

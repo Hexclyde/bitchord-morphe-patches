@@ -11,15 +11,20 @@ private class SharedAudioMarker
 
 internal class SharedAudioAbiPlan(val abis: Set<String>, val removeX86: Boolean)
 
-/** Supported libraries are copied; the official 1.9 universal APK's partial x86 set is removed. */
+/**
+ * Supported libraries are copied; the official 1.9 and 1.9.1 universal APK's partial x86 set is
+ * removed.
+ */
 internal fun sharedAudioAbiPlan(version: String?, original: Set<String>): SharedAudioAbiPlan {
-    val universal19 = version == "1.9" && original == sharedAudioSupportedAbis + "x86"
+    val supportedUniversal =
+        version in setOf("1.9", "1.9.1") && original == sharedAudioSupportedAbis + "x86"
     check(
-        original.isNotEmpty() && (original.all { it in sharedAudioSupportedAbis } || universal19)
+        original.isNotEmpty() &&
+            (original.all { it in sharedAudioSupportedAbis } || supportedUniversal)
     ) {
         "Unsupported audio decoder APK architecture: $original"
     }
-    return SharedAudioAbiPlan(original.intersect(sharedAudioSupportedAbis), universal19)
+    return SharedAudioAbiPlan(original.intersect(sharedAudioSupportedAbis), supportedUniversal)
 }
 
 /** Preview-only notice and inventory paths from the bundled runtime asset list. */

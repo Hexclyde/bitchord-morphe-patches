@@ -419,6 +419,10 @@ private fun synthetic() {
     val three = setOf("arm64-v8a", "armeabi-v7a", "x86_64")
     var plan = sharedAudioAbiPlan("1.9", three + "x86")
     ensure(plan.abis == three && plan.removeX86, "universal 1.9 drops x86")
+    plan = sharedAudioAbiPlan("1.9.1", three + "x86")
+    ensure(plan.abis == three && plan.removeX86, "universal 1.9.1 drops x86")
+    plan = sharedAudioAbiPlan("1.9.1", three)
+    ensure(plan.abis == three && !plan.removeX86, "1.9.1 already removed x86 is accepted")
     plan = sharedAudioAbiPlan("1.9", three)
     ensure(plan.abis == three && !plan.removeX86, "already removed x86 is accepted")
     plan = sharedAudioAbiPlan("1.9.1-beta1", setOf("arm64-v8a"))
@@ -426,6 +430,9 @@ private fun synthetic() {
     for ((version, set) in
         listOf(
             "1.9.1-beta1" to three + "x86",
+            "1.9.1" to setOf("x86"),
+            "1.9.1" to setOf("arm64-v8a", "x86"),
+            "1.9.2" to three + "x86",
             "1.9" to setOf("x86"),
             "1.9" to setOf("arm64-v8a", "x86"),
             null to three + "x86",

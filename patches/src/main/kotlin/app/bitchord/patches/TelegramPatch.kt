@@ -130,18 +130,20 @@ private val telegramResources = resourcePatch {
             writeText("""{"apiId":$applicationId,"apiHash":"$applicationHash"}""")
         }
         // Every installable ABI must have the complete native runtime. The official
-        // 1.9 universal APK also includes x86, for which these runtimes are unavailable.
+        // 1.9 and 1.9.1 universal APK also includes x86, for which these runtimes are unavailable.
         val supportedAbis = setOf("arm64-v8a", "armeabi-v7a", "x86_64")
         val originalAbis =
             listApkEntries("lib/").filter { it.endsWith(".so") }.map { it.split('/')[1] }.toSet()
-        val universal19 =
-            packageMetadata.versionName == "1.9" && originalAbis == supportedAbis + "x86"
+        val supportedUniversal =
+            packageMetadata.versionName in setOf("1.9", "1.9.1") &&
+                originalAbis == supportedAbis + "x86"
         check(
-            originalAbis.isNotEmpty() && (originalAbis.all { it in supportedAbis } || universal19)
+            originalAbis.isNotEmpty() &&
+                (originalAbis.all { it in supportedAbis } || supportedUniversal)
         ) {
             "Unsupported APK native architecture: $originalAbis"
         }
-        if (universal19) for (path in listApkEntries("lib/x86/")) delete(path)
+        if (supportedUniversal) for (path in listApkEntries("lib/x86/")) delete(path)
         val inputAbis = originalAbis.intersect(supportedAbis)
         for (abi in inputAbis) for (name in
             listOf("libtdjni.so", "libsslx.so", "libcryptox.so", "libc++_shared.so")) {
