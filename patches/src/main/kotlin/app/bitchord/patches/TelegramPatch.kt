@@ -1125,6 +1125,38 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
         state,
         "invoke-static/range {v$player .. v$player}, $SMOOTH->settled($PLAYER)I",
     )
+    val sine =
+        body.indices.singleOrNull {
+            body[it].methodRef()?.let { call ->
+                call.definingClass == "Ljava/lang/Math;" &&
+                    call.name == "sin" &&
+                    call.parameterTypes.map(CharSequence::toString) == listOf("D")
+            } == true
+        } ?: throw PatchException("Version swap incoming fade gain changed")
+    val gain = body.getOrNull(sine + 2) as? OneRegisterInstruction
+    val fade =
+        (sine + 3 until minOf(sine + 12, body.size)).firstOrNull {
+            body[it].methodRef()?.let { call ->
+                call.definingClass == PLAYER &&
+                    call.name == "setVolume" &&
+                    call.parameterTypes.map(CharSequence::toString) == listOf("F")
+            } == true
+        } ?: throw PatchException("Version swap incoming volume call changed")
+    val volume = body[fade] as? FiveRegisterInstruction
+    check(
+        body[sine + 1].opcode == Opcode.MOVE_RESULT_WIDE &&
+            body[sine + 2].opcode == Opcode.DOUBLE_TO_FLOAT &&
+            gain != null &&
+            volume != null &&
+            volume.registerCount == 2 &&
+            volume.registerD == gain.registerA
+    ) {
+        "Version swap incoming volume no longer uses its sine gain"
+    }
+    run.replaceInstruction(
+        fade,
+        "invoke-static {v${volume.registerC}, v${volume.registerD}}, $SMOOTH->fadeVolume(${PLAYER}F)V",
+    )
     val waitRegister = (body[wait] as OneRegisterInstruction).registerA
     run.replaceInstruction(wait, "const-wide/16 v$waitRegister, 0xa28")
     println("Held the upgrade's crossfade until the new copy plays in step")

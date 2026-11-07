@@ -22,6 +22,47 @@ public final class SmoothUpgradeTest {
         return item;
     }
 
+    static Player clockPlayer(androidx.media3.common.MediaItem song, long[] position, int state) {
+        return clockPlayer(song, position, state, new ArrayList<>());
+    }
+
+    static Player clockPlayer(
+            androidx.media3.common.MediaItem song, long[] position, int state, List<String> calls) {
+        return (Player)
+                Proxy.newProxyInstance(
+                        Player.class.getClassLoader(),
+                        new Class<?>[] {Player.class},
+                        (proxy, method, arguments) ->
+                                switch (method.getName()) {
+                                    case "getCurrentMediaItem" -> song;
+                                    case "getCurrentMediaItemIndex" -> 0;
+                                    case "getCurrentPosition" -> position[0];
+                                    case "getPlaybackState" -> state;
+                                    case "getPlaybackParameters" ->
+                                            new androidx.media3.common.PlaybackParameters(1f, 1f);
+                                    case "hashCode" -> System.identityHashCode(proxy);
+                                    case "equals" -> proxy == arguments[0];
+                                    case "seekTo" -> {
+                                        position[0] = (long) arguments[1];
+                                        calls.add("seek:" + position[0]);
+                                        yield null;
+                                    }
+                                    case "stop" -> {
+                                        calls.add("stop");
+                                        yield null;
+                                    }
+                                    case "setVolume" -> {
+                                        calls.add("volume:" + arguments[0]);
+                                        yield null;
+                                    }
+                                    default -> {
+                                        if (!method.getName().startsWith("get"))
+                                            calls.add(method.getName());
+                                        yield null;
+                                    }
+                                });
+    }
+
     public static void main(String[] args) throws Exception {
         Object service = new Object();
         SmoothUpgrade.captureOwner(service);
@@ -108,6 +149,14 @@ public final class SmoothUpgradeTest {
         check(offset != null && offset == 250, "And starts from the verified offset: " + offset);
         check(SmoothUpgrade.alignedOffset() == null, "Once");
         check(!SmoothUpgrade.measureOffset(), "And the next swap isn't asked");
+        SmoothUpgrade.verified = id -> "first".equals(id) ? 250L : 90L;
+        SmoothUpgrade.offerVerified("first");
+        check(SmoothUpgrade.measureOffset(), "The first upgrade arms its offset");
+        SmoothUpgrade.offerVerified("second");
+        check(SmoothUpgrade.measureOffset(), "The second upgrade arms its own offset");
+        check(
+                SmoothUpgrade.alignedOffset() == 90L,
+                "An abandoned upgrade cannot lend another song its offset");
         SmoothUpgrade.verified = id -> null;
         SmoothUpgrade.offerVerified("song");
         check(!SmoothUpgrade.measureOffset(), "No verified offset: as before, none is applied");
@@ -157,6 +206,101 @@ public final class SmoothUpgradeTest {
                     throw new IllegalStateException("Wrong thread");
                 };
         check(SmoothUpgrade.auditionPosition(song, 40_000) == 40_000, "A failure changes nothing");
+        long[] oldPosition = {72_000}, newPosition = {70_000};
+        Player outgoing = clockPlayer(song, oldPosition, Player.STATE_READY);
+        Player incoming = clockPlayer(song, newPosition, Player.STATE_READY);
+        SmoothUpgrade.Settling late = new SmoothUpgrade.Settling(null, outgoing, 0, song, 0.0);
+        late.began = System.nanoTime() / 1_000_000 - SmoothUpgrade.SETTLE_MS - 1;
+        java.lang.reflect.Field pending = SmoothUpgrade.class.getDeclaredField("settling");
+        pending.setAccessible(true);
+        pending.set(null, late);
+        boolean cancelled = false;
+        try {
+            SmoothUpgrade.settled(incoming);
+        } catch (java.util.concurrent.CancellationException expected) {
+            cancelled = true;
+        }
+        check(cancelled, "An unaligned copy must not become audible when settling times out");
+        check(pending.get(null) == null, "A refused swap releases its settling state");
+        List<String> outgoingCalls = new ArrayList<>(), incomingCalls = new ArrayList<>();
+        outgoing = clockPlayer(song, oldPosition, Player.STATE_READY, outgoingCalls);
+        incoming = clockPlayer(song, newPosition, Player.STATE_BUFFERING, incomingCalls);
+        late = new SmoothUpgrade.Settling(null, outgoing, 0, song, 0.0);
+        late.began = System.nanoTime() / 1_000_000 - SmoothUpgrade.SETTLE_MS - 1;
+        java.util.concurrent.CompletableFuture<double[]> work =
+                new java.util.concurrent.CompletableFuture<>();
+        late.measuring = work;
+        pending.set(null, late);
+        cancelled = false;
+        try {
+            SmoothUpgrade.settled(incoming);
+        } catch (java.util.concurrent.CancellationException expected) {
+            cancelled = true;
+        }
+        check(cancelled, "A buffering copy also observes the alignment deadline");
+        check(work.isCancelled(), "Refusing a swap cancels its measurement");
+        check(
+                incomingCalls.equals(List.of("stop", "volume:1.0")),
+                "The unused incoming player is stopped");
+        check(
+                outgoingCalls.isEmpty() && oldPosition[0] == 72_000,
+                "The heard audio is not sought or stopped");
+
+        incomingCalls.clear();
+        incoming = clockPlayer(song, newPosition, Player.STATE_READY, incomingCalls);
+        late = new SmoothUpgrade.Settling(null, outgoing, 0, song, 250.0);
+        pending.set(null, late);
+        check(
+                SmoothUpgrade.settled(incoming) == Player.STATE_BUFFERING,
+                "A copy outside the search window is held silent");
+        check(
+                newPosition[0] == 72_250 && incomingCalls.equals(List.of("seek:72250")),
+                "Resync uses the live position plus the verified recording offset");
+        late.began = System.nanoTime() / 1_000_000 - SmoothUpgrade.SETTLE_MS - 1;
+        check(
+                SmoothUpgrade.settled(incoming) == Player.STATE_READY,
+                "Verified clocks can agree when PCM comparison is unavailable");
+        check(pending.get(null) == null, "A confirmed clock match completes settling");
+        SmoothUpgrade.fadeVolume(incoming, .5f);
+        check(incomingCalls.contains("volume:0.5"), "A confirmed copy may fade in");
+
+        incomingCalls.clear();
+        late = new SmoothUpgrade.Settling(null, outgoing, 0, song, null);
+        pending.set(null, late);
+        cancelled = false;
+        try {
+            SmoothUpgrade.fadeVolume(incoming, .5f);
+        } catch (java.util.concurrent.CancellationException expected) {
+            cancelled = true;
+        }
+        check(
+                cancelled && !incomingCalls.contains("volume:0.5"),
+                "Skipping the host ready wait cannot expose an unverified copy");
+
+        incomingCalls.clear();
+        late = new SmoothUpgrade.Settling(null, outgoing, 0, song, null);
+        late.began = System.nanoTime() / 1_000_000;
+        late.measuring =
+                java.util.concurrent.CompletableFuture.completedFuture(new double[] {0, 1, 1});
+        pending.set(null, late);
+        check(
+                SmoothUpgrade.settled(incoming) == Player.STATE_READY,
+                "A matching waveform completes settling without a stored offset");
+        SmoothUpgrade.fadeVolume(incoming, .5f);
+        check(
+                incomingCalls.equals(List.of("volume:0.5")),
+                "Waveform alignment does not seek or alter speed and pitch");
+
+        late = new SmoothUpgrade.Settling(null, outgoing, 0, other, null);
+        pending.set(null, late);
+        incomingCalls.clear();
+        SmoothUpgrade.fadeVolume(incoming, .25f);
+        check(
+                incomingCalls.equals(List.of("volume:0.25")),
+                "An unrelated version swap is not intercepted");
+        check(
+                SmoothUpgrade.settled(incoming) == Player.STATE_READY && pending.get(null) == null,
+                "An unrelated pair clears the old alignment state");
         System.out.println("PASS: " + checks + " smooth-upgrade fallback checks.");
     }
 }

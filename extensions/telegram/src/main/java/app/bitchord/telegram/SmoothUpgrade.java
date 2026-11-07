@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.CancellationException;
 
 /**
  * BitChord switches to a better copy of the playing song (say, your Telegram FLAC replacing the
@@ -37,6 +38,7 @@ public final class SmoothUpgrade {
 
     // The offset measured for the swap about to start, and when: {offsetMs, millis}.
     private static volatile double[] aligned;
+    private static volatile String alignedFor;
 
     // Whether BitChord's swap asked for that offset: only then is it this swap's to take.
     private static volatile boolean armed;
@@ -222,6 +224,7 @@ public final class SmoothUpgrade {
     private static void go(
             Object service, Player player, int index, MediaItem item, Double offset) {
         aligned = offset == null ? null : new double[] {offset, System.currentTimeMillis()};
+        alignedFor = mediaId(item);
         if (swap(service, player, index, item)) return;
         aligned = null;
         long at = player.getCurrentPosition() + (offset == null ? 0 : Math.round(offset));
@@ -233,20 +236,37 @@ public final class SmoothUpgrade {
     private static boolean swap(Object service, Player player, int index, MediaItem item) {
         try {
             offerVerified(mediaId(item));
-            if (PlaybackService.bitchordSmoothSwap(service, player, index, item)) {
-                settling = new Settling(player);
-                return true;
-            }
+            double[] offset = aligned;
+            settling =
+                    new Settling(
+                            service,
+                            player,
+                            index,
+                            item,
+                            offset == null || System.currentTimeMillis() - offset[1] >= 10_000
+                                    ? null
+                                    : offset[0]);
+            if (PlaybackService.bitchordSmoothSwap(service, player, index, item)) return true;
+        } catch (CancellationException cancelled) {
+            return true;
         } catch (Throwable ignored) {
             // Falls back to the original swap, which keeps the old copy's position.
         }
+        clearSettling(settling);
         aligned = null;
+        alignedFor = null;
         armed = false;
         return false;
     }
 
     /** Unless this upgrade was measured here, starts from the recording check's offset. */
     static void offerVerified(String mediaId) {
+        if (!Objects.equals(alignedFor, mediaId)
+                || (aligned != null && System.currentTimeMillis() - aligned[1] >= 10_000)) {
+            aligned = null;
+            armed = false;
+        }
+        alignedFor = mediaId;
         Long offset = aligned == null ? verified.apply(mediaId) : null;
         if (offset != null) aligned = new double[] {offset, System.currentTimeMillis()};
     }
@@ -274,6 +294,7 @@ public final class SmoothUpgrade {
         double[] found = aligned;
         boolean asked = armed;
         aligned = null;
+        alignedFor = null;
         armed = false;
         return asked && found != null && System.currentTimeMillis() - found[1] < 10_000
                 ? Math.round(found[0])
@@ -282,16 +303,37 @@ public final class SmoothUpgrade {
 
     /** One upgrade's swap, from launch until the new copy plays in step. */
     static final class Settling {
+        final Object service;
         final Player main;
-        final long created = now();
+        final int index;
+        final String mainId;
+        final MediaItem target;
+        final Double offset;
         long began, looked;
         int seeks;
         double first = Double.NaN, cut;
         VersionAlign.Heard catching;
         java.util.concurrent.Future<double[]> measuring;
 
-        Settling(Player main) {
+        Settling(Object service, Player main, int index, MediaItem target, Double offset) {
+            this.service = service;
             this.main = main;
+            this.index = index;
+            this.mainId = mediaId(main.getCurrentMediaItem());
+            this.target = target;
+            this.offset = offset;
+        }
+
+        boolean owns(Player spare) {
+            MediaItem item = spare.getCurrentMediaItem();
+            return target != null
+                    && item != null
+                    && Objects.equals(target.mediaId, item.mediaId)
+                    && Objects.equals(
+                            target.localConfiguration == null
+                                    ? null
+                                    : target.localConfiguration.uri,
+                            item.localConfiguration == null ? null : item.localConfiguration.uri);
         }
     }
 
@@ -309,22 +351,89 @@ public final class SmoothUpgrade {
     public static int settled(Player spare) {
         int state = spare.getPlaybackState();
         Settling s = settling;
-        if (s == null || state != Player.STATE_READY || spare == s.main) return state;
-        try {
-            return step(s, spare) ? state : Player.STATE_BUFFERING;
-        } catch (Throwable e) {
-            settling = null;
+        if (s == null || spare == s.main) return state;
+        if (!s.owns(spare)) {
+            clearSettling(s);
             return state;
         }
+        try {
+            if (!still(s.main, s.index, s.mainId))
+                throw abort(s, spare, "the playing track changed");
+            long now = now();
+            if (s.began == 0) s.began = now;
+            if (now - s.began > SETTLE_MS) {
+                if (state == Player.STATE_READY && clocksAgree(s, spare)) {
+                    done(s, "verified playback positions agree", spare);
+                    return state;
+                }
+                throw abort(s, spare, "alignment timed out");
+            }
+            if (state != Player.STATE_READY) return state;
+            return step(s, spare) ? state : Player.STATE_BUFFERING;
+        } catch (CancellationException cancelled) {
+            throw cancelled;
+        } catch (Throwable failure) {
+            throw abort(s, spare, "alignment failed");
+        }
+    }
+
+    /** The host can skip its ready wait; never fade in a copy that was not aligned. */
+    public static void fadeVolume(Player spare, float volume) {
+        Settling s = settling;
+        if (s != null && s.owns(spare) && volume > 0) {
+            settled(spare);
+            if (settling == s) throw abort(s, spare, "the incoming copy is not aligned");
+        }
+        spare.setVolume(volume);
+    }
+
+    private static boolean clocksAgree(Settling s, Player spare) {
+        return s.offset != null
+                && Math.abs(s.main.getCurrentPosition() + s.offset - spare.getCurrentPosition())
+                        <= 25;
+    }
+
+    private static void clearSettling(Settling s) {
+        if (s == null) return;
+        if (s.measuring != null) s.measuring.cancel(true);
+        if (settling == s) settling = null;
+    }
+
+    private static CancellationException abort(Settling s, Player spare, String reason) {
+        clearSettling(s);
+        try {
+            spare.stop();
+            spare.setVolume(1f);
+        } catch (Throwable ignored) {
+            // The outgoing player remains untouched.
+        }
+        try {
+            java.lang.reflect.Field field =
+                    s.service.getClass().getDeclaredField("swappingMediaId");
+            field.setAccessible(true);
+            if (Objects.equals(field.get(s.service), mediaId(s.target))) field.set(s.service, null);
+        } catch (Throwable ignored) {
+            // The service may already have finished the swap.
+        }
+        HostLog.d("Unofficial Telegram kept the current audio: " + reason);
+        return new CancellationException("Quality upgrade was not aligned");
     }
 
     private static boolean step(Settling s, Player spare) throws Exception {
         long now = now();
-        if (s.began == 0) {
-            if (now - s.created > 15_000) return done(s, "", spare); // not this swap's
-            s.began = now;
+        // A slow seek can leave the new copy beyond the waveform search window.
+        if (s.offset != null
+                && Math.abs(s.main.getCurrentPosition() + s.offset - spare.getCurrentPosition())
+                        > 300
+                && s.seeks < 2) {
+            s.seeks++;
+            if (s.measuring != null) s.measuring.cancel(true);
+            s.measuring = null;
+            spare.seekTo(
+                    spare.getCurrentMediaItemIndex(),
+                    Math.max(0, s.main.getCurrentPosition() + Math.round(s.offset)));
+            return false;
         }
-        if (now - s.began > SETTLE_MS) return done(s, "ran out of time", spare);
         if (s.catching != null) return s.catching.caughtUp() ? done(s, null, spare) : false;
         float speed = s.main.getPlaybackParameters().speed;
         if (s.measuring == null) {
@@ -340,8 +449,11 @@ public final class SmoothUpgrade {
         } finally {
             s.measuring = null;
         }
-        if (found == null)
-            return now - s.began > LISTEN_MS ? done(s, "couldn't hear both copies", spare) : false;
+        if (found == null) {
+            if (now - s.began <= LISTEN_MS) return false;
+            if (clocksAgree(s, spare)) return done(s, "verified playback positions agree", spare);
+            throw abort(s, spare, "couldn't align both copies");
+        }
         double lag = found[0];
         if (Double.isNaN(s.first)) s.first = lag;
         if (Math.abs(lag) <= CLOSE_MS) return done(s, null, spare);
@@ -352,7 +464,7 @@ public final class SmoothUpgrade {
             s.catching = fresh;
             return false;
         }
-        if (s.seeks >= 2) return done(s, "too far apart", spare);
+        if (s.seeks >= 2) throw abort(s, spare, "the copies are still too far apart");
         // Sought a little short, so it's behind and the rest is cut.
         s.seeks++;
         spare.seekTo(
@@ -362,8 +474,7 @@ public final class SmoothUpgrade {
     }
 
     private static boolean done(Settling s, String trouble, Player spare) {
-        settling = null;
-        if ("".equals(trouble)) return true;
+        clearSettling(s);
         HostLog.d(
                 String.format(
                         java.util.Locale.US,

@@ -1176,6 +1176,7 @@ public class VerifyApk {
                                                     "Lcom/music/bitchord/playback/PlaybackService$swapIn$6;>prepare",
                                                     "Lcom/music/bitchord/playback/PlaybackService$swapIn$6;>replace",
                                                     "Lcom/music/bitchord/playback/PlaybackService$smoothSwapCurrentTrackVersion$1;>settled",
+                                                    "Lcom/music/bitchord/playback/PlaybackService$smoothSwapCurrentTrackVersion$1;>fadeVolume",
                                                     "Lcom/music/bitchord/playback/PlaybackService$swapIn$6;>seekTo"))),
                     "Quality upgrades go through the two-player swap: " + smoothHooks);
             check(

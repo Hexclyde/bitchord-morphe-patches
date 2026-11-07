@@ -1,5 +1,7 @@
 ## 1.1.0-beta.19
 
+- **Unofficial Telegram** catches up a delayed quality upgrade before fading it in. If the copies cannot be aligned, the current audio keeps playing.
+
 - Fix a startup crash on BitChord 1.9.1 with **Unofficial Telegram** or **Soulseek** installed.
 
 - **Automix Editor** keeps the waveform layout steady through a continuous swipe, including swipes that reach the start of the settings. A fresh pull at the start expands the waveform.

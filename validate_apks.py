@@ -108,6 +108,7 @@ for abi, machine in [("arm64-v8a", 183), ("armeabi-v7a", 40), ("x86_64", 62)]:
         ("VerifyYouTubeControlsApk", [str(original), str(output), "--combined"]),
         ("VerifyTelegramPageApk", [str(output)]),
         ("VerifyNativeDispatchApk", [str(output)]),
+        ("VerifyUpgradeSafetyApk", [str(output)]),
         ("VerifyBeta7Apk", [str(output)]),
         ("VerifyPatchUiApk", [str(output), "true", "true", "true"]),
         ("VerifySoulseekApk", [str(output), "enabled", str(mpp)]),

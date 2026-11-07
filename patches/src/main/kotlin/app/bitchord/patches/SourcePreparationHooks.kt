@@ -266,8 +266,28 @@ internal fun BytecodePatchContext.addSourceVerification() {
                 "Lcom/music/bitchord/data/model/Song;",
             )
     )
+    val alignmentCode = alignment.implementation!!.instructions.toList()
+    val measured =
+        alignmentCode.indexOfFirst {
+            it.mixCall()?.let { call ->
+                call.definingClass == "Lapp/bitchord/telegram/SmoothUpgrade;" &&
+                    call.name == "alignedOffset"
+            } == true
+        }
+    val verifiedAt =
+        if (measured < 0) 0
+        else {
+            check(
+                measured == 0 &&
+                    alignmentCode[3].opcode == Opcode.RETURN_OBJECT &&
+                    alignmentCode[4].opcode == Opcode.NOP
+            ) {
+                "Measured upgrade offset guard changed"
+            }
+            5
+        }
     alignment.addInstructionsWithLabels(
-        0,
+        verifiedAt,
         """
     invoke-static/range {p0 .. p2}, $PREF->alignedOffset(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Long;
     move-result-object v0

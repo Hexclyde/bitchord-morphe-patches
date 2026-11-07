@@ -61,7 +61,7 @@ public final class VersionAlign {
     /** The least loudness change ({@link #shape}, log10 squared) that counts as music moving. */
     static final double MOVING = 2e-3;
 
-    /** Measuring gives up after this long, and the swap goes ahead unaligned. */
+    /** Measurement budget; a timeout leaves the recording offset unconfirmed. */
     static final long BUDGET_MS = 8000;
 
     // ── Listening ───────────────────────────────────────────────────────────
