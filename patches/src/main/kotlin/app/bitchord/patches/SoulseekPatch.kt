@@ -929,22 +929,11 @@ val nativeSoulseekPatch =
 
             // Each native source returns null for identifiers it does not own. Keeping the
             // original entry as an external label makes this chain with Telegram in either order.
-            val bodyHost = addonBodyHost()
-            val body = bodyHost.method
-            val externalBody = body.implementation!!.instructions.first()
-            body.addInstructionsWithLabels(
-                0,
-                """
-                move-object/from16 v0, p0
-                iget-object v0, v0, ${bodyHost.url.definingClass}->${bodyHost.url.name}:${bodyHost.url.type}
-                check-cast v0, Ljava/lang/String;
-                invoke-static {v0}, ${SOULSEEK}SoulseekAddon;->bodyOrNull(Ljava/lang/String;)Ljava/lang/String;
-                move-result-object v0
-                if-eqz v0, :external_soulseek_metadata
-                return-object v0
-                """,
-                ExternalLabel("external_soulseek_metadata", externalBody),
-            )
+            addonBodyHost()
+                .install(
+                    "${SOULSEEK}SoulseekAddon;->bodyOrNull(Ljava/lang/String;)Ljava/lang/String;",
+                    "external_soulseek_metadata",
+                )
 
             val constructor =
                 mutableClassDefBy("Landroidx/media3/datasource/ResolvingDataSource;")

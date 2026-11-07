@@ -317,6 +317,7 @@ for suite in (
     "flac-metadata-hooks",
     "analysis-restore",
     "source-audio-hooks",
+    "native-addon-hooks",
     "analysis-lookahead",
     "karaoke-memory-abi",
 ):

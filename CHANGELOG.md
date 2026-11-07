@@ -1,5 +1,7 @@
 ## 1.1.0-beta.19
 
+- Fix a startup crash on BitChord 1.9.1 with **Unofficial Telegram** or **Soulseek** installed.
+
 - **Automix Editor** keeps the waveform layout steady through a continuous swipe, including swipes that reach the start of the settings. A fresh pull at the start expands the waveform.
 - **Diagnostics** records AutoMix failure stages, memory waits, preview loading times, buffering, source errors and why a preview stopped.
 

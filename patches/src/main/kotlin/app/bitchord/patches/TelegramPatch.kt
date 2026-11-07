@@ -1535,25 +1535,11 @@ val nativeTelegramPatch =
             // AddonClient's original coroutine still supplies Dispatchers.IO. Only
             // the reserved native identifier is answered directly; external addons
             // retain their original HTTP implementation.
-            val addonBodyHost = addonBodyHost()
-            val addonBody = addonBodyHost.method
-            // Continuations are existing host instructions, not labels at the end
-            // of a separately assembled snippet. The latter have snippet-relative
-            // locations and corrupt branches inserted at nonzero code addresses.
-            val externalAddon = addonBody.implementation!!.instructions.first()
-            addonBody.addInstructionsWithLabels(
-                0,
-                """
-            move-object/from16 v0, p0
-                iget-object v0, v0, ${addonBodyHost.url.definingClass}->${addonBodyHost.url.name}:${addonBodyHost.url.type}
-            check-cast v0, Ljava/lang/String;
-            invoke-static {v0}, Lapp/bitchord/telegram/InternalAddon;->bodyOrNull(Ljava/lang/String;)Ljava/lang/String;
-            move-result-object v0
-            if-eqz v0, :external_addon
-            return-object v0
-        """,
-                ExternalLabel("external_addon", externalAddon),
-            )
+            addonBodyHost()
+                .install(
+                    "Lapp/bitchord/telegram/InternalAddon;->bodyOrNull(Ljava/lang/String;)Ljava/lang/String;",
+                    "external_addon",
+                )
             addTelegramCatalogueCalls()
             // Wrap the downstream after resolution. Placing a router above the
             // resolver would miss Telegram substitutes for ordinary YouTube items.
