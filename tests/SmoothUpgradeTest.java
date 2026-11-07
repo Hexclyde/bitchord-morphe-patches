@@ -32,35 +32,38 @@ public final class SmoothUpgradeTest {
                 Proxy.newProxyInstance(
                         Player.class.getClassLoader(),
                         new Class<?>[] {Player.class},
-                        (proxy, method, arguments) ->
-                                switch (method.getName()) {
-                                    case "getCurrentMediaItem" -> song;
-                                    case "getCurrentMediaItemIndex" -> 0;
-                                    case "getCurrentPosition" -> position[0];
-                                    case "getPlaybackState" -> state;
-                                    case "getPlaybackParameters" ->
-                                            new androidx.media3.common.PlaybackParameters(1f, 1f);
-                                    case "hashCode" -> System.identityHashCode(proxy);
-                                    case "equals" -> proxy == arguments[0];
-                                    case "seekTo" -> {
-                                        position[0] = (long) arguments[1];
-                                        calls.add("seek:" + position[0]);
-                                        yield null;
-                                    }
-                                    case "stop" -> {
-                                        calls.add("stop");
-                                        yield null;
-                                    }
-                                    case "setVolume" -> {
-                                        calls.add("volume:" + arguments[0]);
-                                        yield null;
-                                    }
-                                    default -> {
-                                        if (!method.getName().startsWith("get"))
-                                            calls.add(method.getName());
-                                        yield null;
-                                    }
-                                });
+                        (proxy, method, arguments) -> {
+                            switch (method.getName()) {
+                                case "getCurrentMediaItem":
+                                    return song;
+                                case "getCurrentMediaItemIndex":
+                                    return 0;
+                                case "getCurrentPosition":
+                                    return position[0];
+                                case "getPlaybackState":
+                                    return state;
+                                case "getPlaybackParameters":
+                                    return new androidx.media3.common.PlaybackParameters(1f, 1f);
+                                case "hashCode":
+                                    return System.identityHashCode(proxy);
+                                case "equals":
+                                    return proxy == arguments[0];
+                                case "seekTo":
+                                    position[0] = (long) arguments[1];
+                                    calls.add("seek:" + position[0]);
+                                    return null;
+                                case "stop":
+                                    calls.add("stop");
+                                    return null;
+                                case "setVolume":
+                                    calls.add("volume:" + arguments[0]);
+                                    return null;
+                                default:
+                                    if (!method.getName().startsWith("get"))
+                                        calls.add(method.getName());
+                                    return null;
+                            }
+                        });
     }
 
     public static void main(String[] args) throws Exception {
