@@ -748,6 +748,33 @@ public final class SourceFallback {
     // ── BitChord ────────────────────────────────────────────────────────────
 
     /** BitChord's own classes, reached by name so nothing links against them. */
+    static Object invokeBest(
+            Method call, Object resolver, List<?> sources, Object target, Object best, Object step)
+            throws ReflectiveOperationException {
+        int count = call.getParameterTypes().length;
+        if (count == 11) {
+            return call.invoke(
+                    null,
+                    resolver,
+                    sources,
+                    target,
+                    best,
+                    false,
+                    0,
+                    null,
+                    null,
+                    null,
+                    step,
+                    BEST_DEFAULTS);
+        }
+        if (count == 13) {
+            return call.invoke(
+                    null, resolver, sources, target, best, false, false, 0, null, null, null, null,
+                    step, 4088);
+        }
+        throw new NoSuchMethodException("Source lookup defaults changed");
+    }
+
     private static final class Reflected implements Host {
         private Method ranked, active, lookup;
         private Field instances;
@@ -832,26 +859,12 @@ public final class SourceFallback {
             Method across = null;
             for (Method method : type.getMethods())
                 if (method.getName().equals("bestAcross$app_prodRelease$default")
-                        && method.getParameterTypes().length == 11) across = method;
+                        && (method.getParameterTypes().length == 11
+                                || method.getParameterTypes().length == 13)) across = method;
             if (across == null) throw new NoSuchMethodException("bestAcross");
             Method call = across;
             return VideoSwitch.await(
-                    step ->
-                            call.invoke(
-                                    null,
-                                    resolver,
-                                    sources,
-                                    target,
-                                    best,
-                                    false,
-                                    0,
-                                    null,
-                                    null,
-                                    null,
-                                    step,
-                                    BEST_DEFAULTS),
-                    left,
-                    stale);
+                    step -> invokeBest(call, resolver, sources, target, best, step), left, stale);
         }
 
         @Override

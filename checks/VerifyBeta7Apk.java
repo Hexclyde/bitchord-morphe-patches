@@ -67,11 +67,12 @@ public final class VerifyBeta7Apk {
         for (String entry : dex.getDexEntryNames())
             for (ClassDef cls : dex.getEntry(entry).getDexFile().getClasses())
                 check(classes.put(cls.getType(), cls) == null, "Unique class " + cls.getType());
-        boolean host19 =
+        // BitChord 1.9 and its 1.9.x releases have the two-path precision sink.
+        String hostVersion =
                 VerifyApk.manifest(new File(args[0]))
                         .getDocumentElement()
-                        .getAttributeNS(VerifyApk.NS, "versionName")
-                        .equals("1.9");
+                        .getAttributeNS(VerifyApk.NS, "versionName");
+        boolean host19 = hostVersion.equals("1.9") || hostVersion.startsWith("1.9.");
 
         boolean jamesDsp = applied(classes, "jamesDspApplied");
         var queriedPackages = VerifyApk.manifest(new File(args[0])).getElementsByTagName("package");

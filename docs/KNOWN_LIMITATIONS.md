@@ -1,10 +1,12 @@
 # Known limitations
 
-The patches target original BitChord 1.9 APKs and the 1.9.1-beta1 source build for arm64-v8a, armeabi-v7a and x86_64. Physical ARM phones, TV, Wear OS, split APKs and already patched inputs have not been qualified.
+The patches target original BitChord 1.9 and 1.9.1 APKs and the 1.9.1-beta1 source build for arm64-v8a, armeabi-v7a and x86_64. Physical ARM phones, TV, Wear OS, split APKs and already patched inputs have not been qualified.
+
+BitChord 1.9.1 add-ons declaring `bitchordAuth` require the upstream service to accept the app’s hardware attestation, package name and signing certificate. Those add-ons may reject patched APKs or devices without supported hardware attestation.
 
 ## Playback and effects
 
-- BitChord 1.9.1-beta1 compatibility is tied to source revision `ee9129d`. Other 1.9.1 versions are outside the supported version list.
+- BitChord 1.9.1-beta1 compatibility is tied to source revision `ee9129d`.
 
 - Optional playback features start disabled. Bit-perfect output bypasses Karaoke, Pitch control, Loudness level, Headphone correction, sleep fades and JamesDSP. Battery saver yields to bit-perfect output and AutoMix.
 - DJ mode orders the upcoming queue while shuffle is off. With shuffle on, BitChord controls playback order.

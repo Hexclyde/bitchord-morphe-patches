@@ -11,7 +11,7 @@
 
 **[Add this source to Morphe](https://morphe.software/add-source?github=Hexclyde/bitchord-morphe-patches&name=BitChord%20Morphe%20Patches&app=com.music.bitchord)** · [Releases](https://github.com/Hexclyde/bitchord-morphe-patches/releases) · [Interactive install guide](https://hexclyde.github.io/bitchord-morphe-patches/) · [Setup guide](docs/MOBILE.md)
 
-**Status:** experimental 1.1.0-beta.19 for BitChord **1.9** and **1.9.1-beta1**. See [known limitations](docs/KNOWN_LIMITATIONS.md).
+**Status:** experimental 1.1.0-beta.19 for BitChord **1.9**, **1.9.1-beta1** and **1.9.1**. See [known limitations](docs/KNOWN_LIMITATIONS.md).
 
 [Downloads](docs/DOWNLOAD-MANAGER.md) offers Grid, List, Compact, Comfy and Detailed layouts, local search, exact-source Pause/Resume/Retry, list removal and confirmed file deletion. Library’s Downloads shortcut opens this page when its patch is installed. The player’s Audio/Video switch saves the YouTube mode preference and appears outside Lyrics and Queue.
 

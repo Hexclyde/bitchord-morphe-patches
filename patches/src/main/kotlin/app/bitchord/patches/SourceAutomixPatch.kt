@@ -62,6 +62,7 @@ val sourceAutomixPatch =
                     listOf(
                         AppTarget(version = "1.9", isExperimental = true, minSdk = 26),
                         AppTarget(version = "1.9.1-beta1", isExperimental = true, minSdk = 26),
+                        AppTarget(version = "1.9.1", isExperimental = true, minSdk = 26),
                     ),
             )
         )
@@ -411,21 +412,7 @@ val sourceAutomixPatch =
             check(labels.size == 1) { "AutoMix's native blend label changed" }
             val label = labels.single()
             val labelCode = label.implementation!!.instructions.toList()
-            val textCalls =
-                labelCode.indices.filter { index ->
-                    labelCode[index].mixCall()?.let {
-                        it.definingClass == "Lcom/music/bitchord/ui/AppUi;" &&
-                            it.name == "stringResource" &&
-                            it.returnType == string
-                    } == true
-                }
-            check(
-                textCalls.size == 1 &&
-                    labelCode[textCalls.single() + 1].opcode == Opcode.MOVE_RESULT_OBJECT
-            ) {
-                "AutoMix's localized blend label no longer has one native string result"
-            }
-            val textAt = textCalls.single() + 1
+            val textAt = automixLabelTextAt(labelCode)
             val textRegister = (labelCode[textAt] as OneRegisterInstruction).registerA
             label.addInstructions(
                 textAt + 1,

@@ -586,6 +586,36 @@ private fun BytecodePatchContext.addPlayerDownloadLifecycle() {
     }
 }
 
+// 1.9 ends at the drift bar; 1.9.1 adds lengthLater and checkFileLength before the continuation.
+internal fun playerDownloadMatchSignature(resolver: ClassDef): List<String> {
+    val source = "Lcom/music/bitchord/data/sources/"
+    val head =
+        listOf(
+            source + "MusicSource;",
+            source + "TrackMatcher\$Target;",
+            source + "StreamRequest;",
+            "Z",
+            "Z",
+            "Z",
+            "I",
+        )
+    val continuation = "Lkotlin/coroutines/jvm/internal/ContinuationImpl;"
+    val known =
+        listOf(head + continuation, head + "Lkotlin/jvm/functions/Function1;" + "Z" + continuation)
+            .filter { signature ->
+                resolver.methods.any {
+                    it.name == "matchAndStream" &&
+                        it.returnType == "Ljava/lang/Object;" &&
+                        it.downloadTakes(*signature.toTypedArray())
+                }
+            }
+    check(known.size == 1) {
+        "$DOWNLOAD_LAYOUT_CHANGED: reflected ${resolver.type}->matchAndStream " +
+            "(${known.size} known signatures)"
+    }
+    return known.single()
+}
+
 internal fun validatePlayerDownloadReflectedHost(all: List<ClassDef>) {
     val string = "Ljava/lang/String;"
     val context = "Landroid/content/Context;"
@@ -630,19 +660,13 @@ internal fun validatePlayerDownloadReflectedHost(all: List<ClassDef>) {
         source + "StreamRequest;",
         continuation,
     )
+    val matchSignature = playerDownloadMatchSignature(type(source + "SourceResolver;"))
     method(
         source + "SourceResolver;",
         "matchAndStream",
         "Ljava/lang/Object;",
         false,
-        source + "MusicSource;",
-        source + "TrackMatcher\$Target;",
-        source + "StreamRequest;",
-        "Z",
-        "Z",
-        "Z",
-        "I",
-        continuation,
+        *matchSignature.toTypedArray(),
     )
     method(
         source + "TrackMatcher\$Target;",

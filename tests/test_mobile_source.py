@@ -105,10 +105,12 @@ class MobileSourceTest(unittest.TestCase):
             if p["name"] == "Unofficial Soulseek audio"
         )
         targets = soulseek["compatiblePackages"][0]["targets"]
-        self.assertEqual(["1.9", "1.9.1-beta1"], [t["version"] for t in targets])
+        self.assertEqual(
+            ["1.9", "1.9.1-beta1", "1.9.1"], [t["version"] for t in targets]
+        )
         other = next(p for p in self.patches["patches"] if p is not soulseek)
         self.assertEqual(
-            ["1.9", "1.9.1-beta1"],
+            ["1.9", "1.9.1-beta1", "1.9.1"],
             [t["version"] for t in other["compatiblePackages"][0]["targets"]],
         )
         unsupported = copy.deepcopy(targets[0])

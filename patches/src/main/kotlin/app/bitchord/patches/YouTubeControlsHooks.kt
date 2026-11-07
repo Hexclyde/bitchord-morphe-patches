@@ -427,6 +427,48 @@ internal fun BytecodePatchContext.addYouTubeControls() {
         "YouTube visitor request",
         "catalogueGate",
     )
+    val sourceResolver = "Lcom/music/bitchord/data/sources/SourceResolver;"
+    val bestMethods =
+        mutableClassDefBy(sourceResolver).methods.filter {
+            it.name == "bestAcross\$app_prodRelease\$default"
+        }
+    check(bestMethods.size == 1) { "Source fallback best lookup changed" }
+    val bestMethod = bestMethods.single()
+    val bestTypes = bestMethod.parameterTypes.names()
+    val extendedBest = bestTypes.size == 13
+    check(
+        (bestTypes.size == 11 || extendedBest) &&
+            bestMethod.accessFlags and 8 != 0 &&
+            bestMethod.returnType == "Ljava/lang/Object;" &&
+            bestTypes.take(4) ==
+                listOf(
+                    sourceResolver,
+                    "Ljava/util/List;",
+                    YT_TARGET,
+                    "Lcom/music/bitchord/data/sources/StreamRequest;",
+                ) &&
+            bestTypes[4] == "Z" &&
+            (if (extendedBest) bestTypes[5] == "Z" && bestTypes[6] == "I"
+            else bestTypes[5] == "I") &&
+            bestTypes.takeLast(2) == listOf(YT_CONTINUATION, "I")
+    ) {
+        "Source fallback best lookup signature changed"
+    }
+    val substitute =
+        methodOf(
+            sourceResolver,
+            "substituteForYouTube",
+            listOf(YT_TARGET, YT_CONTINUATION),
+            "Source fallback defaults",
+        )
+    check(
+        substitute.code().any {
+            it is NarrowLiteralInstruction && it.narrowLiteral == (if (extendedBest) 4088 else 1016)
+        }
+    ) {
+        "Source fallback best lookup defaults changed"
+    }
+
     // 7. Ranking: the five checks that ask where YouTube stands among the enabled sources.
     fun ranking(method: MutableMethod, what: String, marker: (Instruction) -> Boolean) {
         val body = method.code()
@@ -437,6 +479,32 @@ internal fun BytecodePatchContext.addYouTubeControls() {
                     it.definingClass == YT_REGISTRY && it.name == "activeForPlayback"
                 } == true
             }
+        if (asks.isEmpty()) {
+            val helpers =
+                body.filter {
+                    it.call()?.let { call ->
+                        call.definingClass == "Lcom/music/bitchord/data/sources/SourceResolver;" &&
+                            call.name == "canSubstituteForYouTube" &&
+                            call.parameterTypes.isEmpty() &&
+                            call.returnType == "Z"
+                    } == true && it.opcode == Opcode.INVOKE_STATIC
+                }
+            check(helpers.size == 1 && body.any(marker)) {
+                "$what YouTube ranking helper changed (${helpers.size})"
+            }
+            val helper = helpers.single().call()!!
+            val methods =
+                mutableClassDefBy(helper.definingClass).methods.filter {
+                    it.name == helper.name && it.parameterTypes.isEmpty() && it.returnType == "Z"
+                }
+            check(methods.size == 1) { "$what YouTube ranking helper is ambiguous" }
+            val target = methods.single()
+            check(target.code().none { it.call()?.name == helper.name }) {
+                "$what YouTube ranking helper is recursive"
+            }
+            ranking(target, "$what helper") { instruction -> youtubeKind(instruction) }
+            return
+        }
         check(asks.size == 1) { "$what YouTube ranking check changed (${asks.size})" }
         val at = asks.single()
         check(
@@ -514,6 +582,44 @@ internal fun BytecodePatchContext.addYouTubeControls() {
         "Queue read-ahead",
         calls("getNextMediaItemIndex"),
     )
+
+    val revertMethods = service.methods.filter { it.name == "replaceWithYouTube" }
+    if (revertMethods.isNotEmpty()) {
+        check(revertMethods.size == 1) { "YouTube source reversion entry changed" }
+        val revert = revertMethods.single()
+        check(
+            revert.parameterTypes.names() ==
+                listOf(
+                    "Landroidx/media3/common/MediaItem;",
+                    "Landroid/net/Uri;",
+                    "J",
+                    "Z",
+                    YT_TEXT,
+                ) &&
+                revert.returnType == "Z" &&
+                revert.accessFlags and 8 == 0 &&
+                revert.implementation!!.registerCount > 7 &&
+                revert.code().any { instruction ->
+                    ((instruction as? ReferenceInstruction)?.reference as? StringReference)
+                        ?.string
+                        ?.contains("falling back to YouTube audio") == true
+                }
+        ) {
+            "YouTube source reversion behavior changed"
+        }
+        val first = revert.implementation!!.instructions.first()
+        revert.addInstructionsWithLabels(
+            0,
+            """
+            invoke-static {}, $YT_POLICY->playbackBlocked()Z
+            move-result v0
+            if-eqz v0, :youtube_reversion_allowed
+            const/4 v0, 0x0
+            return v0
+        """,
+            ExternalLabel("youtube_reversion_allowed", first),
+        )
+    }
 
     // 8. Resolution: other sources are asked before BitChord races them against YouTube.
     val entry =

@@ -31,7 +31,16 @@ internal fun BytecodePatchContext.addTelegramCatalogueCalls() {
             owner.methods.filter {
                 it.parameterTypes == parameters &&
                     it.returnType == result &&
-                    it.implementation != null
+                    it.implementation?.instructions?.any { instruction ->
+                        instruction.method()?.let { call ->
+                            call.parameterTypes ==
+                                listOf(
+                                    "Ljava/lang/String;",
+                                    *functions.toTypedArray(),
+                                    continuation,
+                                ) && call.returnType == result
+                        } == true
+                    } == true
             }
         check(matches.size == 1) { "The addon catalogue suspend entry is not unique" }
         val method = matches.single()

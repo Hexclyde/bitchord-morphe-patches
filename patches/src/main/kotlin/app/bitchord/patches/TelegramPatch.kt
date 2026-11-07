@@ -84,6 +84,7 @@ private val target =
             listOf(
                 AppTarget(version = "1.9", isExperimental = true, minSdk = 26),
                 AppTarget(version = "1.9.1-beta1", isExperimental = true, minSdk = 26),
+                AppTarget(version = "1.9.1", isExperimental = true, minSdk = 26),
             ),
     )
 
@@ -1543,7 +1544,8 @@ val nativeTelegramPatch =
             addonBody.addInstructionsWithLabels(
                 0,
                 """
-            iget-object v0, p0, ${addonBodyHost.url.definingClass}->${addonBodyHost.url.name}:${addonBodyHost.url.type}
+            move-object/from16 v0, p0
+                iget-object v0, v0, ${addonBodyHost.url.definingClass}->${addonBodyHost.url.name}:${addonBodyHost.url.type}
             check-cast v0, Ljava/lang/String;
             invoke-static {v0}, Lapp/bitchord/telegram/InternalAddon;->bodyOrNull(Ljava/lang/String;)Ljava/lang/String;
             move-result-object v0

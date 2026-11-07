@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build internal addon rows against the 1.9 seven-value config, the nine-value one and an unknown one."""
+"""Build internal addon rows against the 1.9 seven-value config, the nine-value one, the ten-value one and an unknown one."""
 
 from pathlib import Path
 import subprocess
@@ -34,9 +34,15 @@ VARIANTS = {
     + "public SourceConfig(String id,SourceKind kind,String label,String url,boolean enabled,boolean downloads,boolean lossless,List<String> options,String picked){this.id=id;this.kind=kind;this.label=label;this.url=url;this.enabled=enabled;this.downloads=downloads;this.lossless=lossless;this.qualityOptions=options;this.pickedQuality=picked;}"
     + GETTERS
     + "}",
+    "auth": HEAD
+    + FIELDS
+    + "public final List<String> qualityOptions;public final String pickedQuality;public final Boolean bitchordAuth;"
+    + "public SourceConfig(String id,SourceKind kind,String label,String url,boolean enabled,boolean downloads,boolean lossless,List<String> options,String picked,Boolean auth){this.id=id;this.kind=kind;this.label=label;this.url=url;this.enabled=enabled;this.downloads=downloads;this.lossless=lossless;this.qualityOptions=options;this.pickedQuality=picked;this.bitchordAuth=auth;}"
+    + GETTERS
+    + "}",
     "future": HEAD
     + FIELDS
-    + "public SourceConfig(String id,SourceKind kind,String label,String url,boolean enabled,boolean downloads,boolean lossless,List<String> options,String picked,String added){this.id=id;this.kind=kind;this.label=label;this.url=url;this.enabled=enabled;this.downloads=downloads;this.lossless=lossless;}"
+    + "public SourceConfig(String id,SourceKind kind,String label,String url,boolean enabled,boolean downloads,boolean lossless,List<String> options,String picked,String added,int more){this.id=id;this.kind=kind;this.label=label;this.url=url;this.enabled=enabled;this.downloads=downloads;this.lossless=lossless;}"
     + GETTERS
     + "}",
 }

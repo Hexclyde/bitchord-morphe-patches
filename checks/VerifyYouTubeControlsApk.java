@@ -311,6 +311,20 @@ public class VerifyYouTubeControlsApk {
         return out;
     }
 
+    static Method rankingSite(Map<String, ClassDef> dex, Method site) {
+        List<String> body = text(site);
+        if (count(body, RANKED) + count(body, SWAPPED) > 0) return site;
+        String owner = "Lcom/music/bitchord/data/sources/SourceResolver;";
+        check(
+                count(body, owner + "->canSubstituteForYouTube()Z") == 1,
+                "delegated ranking uses one checked source helper");
+        Method helper = named(dex, owner, "canSubstituteForYouTube");
+        check(
+                helper != null && helper.getReturnType().equals("Z"),
+                "ranking helper returns boolean");
+        return helper;
+    }
+
     public static void main(String[] a) throws Exception {
         Map<String, ClassDef> base = load(new File(a[0])), now = load(new File(a[1]));
         String reg = "Lcom/music/bitchord/data/sources/SourceRegistry;";
@@ -688,14 +702,18 @@ public class VerifyYouTubeControlsApk {
         check(
                 across != null
                         && (across.getAccessFlags() & 8) != 0
-                        && across.getParameterTypes().size() == 11
+                        && (across.getParameterTypes().size() == 11
+                                || across.getParameterTypes().size() == 13)
                         && across.getParameterTypes().get(0).toString().equals(resolverType)
                         && across.getParameterTypes().get(1).toString().equals("Ljava/util/List;")
                         && across.getParameterTypes()
                                 .get(3)
                                 .toString()
                                 .equals("Lcom/music/bitchord/data/sources/StreamRequest;")
-                        && across.getParameterTypes().get(10).toString().equals("I"),
+                        && across.getParameterTypes()
+                                .get(across.getParameterTypes().size() - 1)
+                                .toString()
+                                .equals("I"),
                 "SourceResolver.bestAcross$app_prodRelease$default(resolver, List, Target, request,"
                         + " ...mask)");
         List<String> substitute =
@@ -707,12 +725,12 @@ public class VerifyYouTubeControlsApk {
                                 "Lcom/music/bitchord/data/sources/TrackMatcher$Target;",
                                 "Lkotlin/coroutines/jvm/internal/ContinuationImpl;"));
         check(
-                has(substitute, "#1016")
+                has(substitute, across.getParameterTypes().size() == 13 ? "#4088" : "#1016")
                         && has(substitute, "SourceResolver;->requestForNow()")
                         && has(substitute, "SourceResolver;->bestAcross$app_prodRelease$default(")
                         && !has(substitute, "StreamRequest$Best;->INSTANCE"),
-                "native substitute asks once with the current request and mask 1016, never with"
-                        + " Best");
+                "native substitute asks once with the current request and verified defaults, never"
+                        + " with Best");
         int bestUsers = 0;
         for (ClassDef c : base.values())
             if (c.getType().startsWith("Lcom/music/bitchord/data/sources/SourceResolver$bestAcross")
@@ -741,15 +759,20 @@ public class VerifyYouTubeControlsApk {
             "getNextMediaItemIndex"
         };
         int natives = 0, swapped = 0;
+        Set<String> rankingMethods = new HashSet<>();
         for (int k = 0; k < names.size(); k++) {
             check(
                     sitesBase.get(k) != null && sitesNow.get(k) != null,
                     names.get(k) + " check exists");
-            List<String> older = text(sitesBase.get(k)), is = text(sitesNow.get(k));
             check(
-                    count(older, RANKED) == 1
-                            && ranksYouTube(older, RANKED)
-                            && has(older, marks[k]),
+                    has(text(sitesBase.get(k)), marks[k]),
+                    names.get(k) + " retains its identifying behavior");
+            Method originalRanking = rankingSite(base, sitesBase.get(k));
+            Method patchedRanking = rankingSite(now, sitesNow.get(k));
+            rankingMethods.add(originalRanking.toString());
+            List<String> older = text(originalRanking), is = text(patchedRanking);
+            check(
+                    count(older, RANKED) == 1 && ranksYouTube(older, RANKED),
                     "base: "
                             + names.get(k)
                             + " asks the native list once, then compares to YouTube");
@@ -775,8 +798,27 @@ public class VerifyYouTubeControlsApk {
                 swapped += count(t, SWAPPED);
             }
         check(
-                natives == 5 && swapped == 5,
-                "only the five ranking checks changed (" + natives + ", " + swapped + ")");
+                natives == rankingMethods.size() && swapped == rankingMethods.size(),
+                "only the identified ranking checks changed (" + natives + ", " + swapped + ")");
+        Method revert =
+                named(
+                        now,
+                        service,
+                        "replaceWithYouTube",
+                        "Landroidx/media3/common/MediaItem;",
+                        "Landroid/net/Uri;",
+                        "J",
+                        "Z",
+                        "Ljava/lang/String;");
+        if (revert != null) {
+            List<String> guarded = text(revert);
+            check(
+                    guarded.get(0).contains(POLICY + "->playbackBlocked()Z")
+                            && guarded.get(1).startsWith("MOVE_RESULT")
+                            && guarded.get(2).startsWith("IF_EQZ")
+                            && guarded.get(4).startsWith("RETURN"),
+                    "native source reversion respects disabled YouTube playback before mutation");
+        }
         Method entry =
                 named(
                         now,

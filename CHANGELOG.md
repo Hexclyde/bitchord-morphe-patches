@@ -33,7 +33,7 @@
 - **Unofficial Telegram music** updates the saved index when audio and ZIP posts arrive, change or disappear while connected.
 - **DJ mode** leaves queue order to native shuffle while shuffle is on. **Audio and video switch** respects music-only playback and manual version changes.
 - **Battery saver** stands down for native AutoMix even without **Automix Editor** installed. **Equaliser per output** leaves the native equaliser off while JamesDSP controls effects.
-- Supports the experimental BitChord **1.9.1-beta1** build alongside 1.9.
+- Supports BitChord **1.9.1** and its experimental **1.9.1-beta1** build alongside 1.9.
 - The player's **Audio/Video** pair is centred above the playback-origin caption. **Automix Editor** opens from a separate waveform icon below the stats; the icons follow BitChord's player colours and blending.
 - **Automix Editor** is the patch name for source-aware transition analysis and pair editing. Its preset options remain scrollable, with compact Save draft and Apply controls.
 - **Downloads** offers a default audio folder through Android’s picker, including writable folders on SD cards and USB drives. New transfers keep their selected destination through pause and retry.

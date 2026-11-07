@@ -5,6 +5,7 @@ import com.android.tools.smali.dexlib2.iface.reference.*;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Stream;
 
 /** Checks the native player download action. Args: patched.apkOrDexDirectory [present|absent]. */
 public final class VerifyPlayerDownloadApk {
@@ -419,19 +420,45 @@ public final class VerifyPlayerDownloadApk {
                 string,
                 source + "StreamRequest;",
                 continuation);
+        // 1.9 ends at the drift bar; 1.9.1 adds lengthLater and checkFileLength before it.
+        String[] matching = {
+            source + "MusicSource;",
+            source + "TrackMatcher$Target;",
+            source + "StreamRequest;",
+            "Z",
+            "Z",
+            "Z",
+            "I"
+        };
+        List<String[]> signatures = new ArrayList<>();
+        signatures.add(
+                Stream.concat(Arrays.stream(matching), Stream.of(continuation))
+                        .toArray(String[]::new));
+        signatures.add(
+                Stream.concat(
+                                Arrays.stream(matching),
+                                Stream.of("Lkotlin/jvm/functions/Function1;", "Z", continuation))
+                        .toArray(String[]::new));
+        ClassDef resolver = classes.get(source + "SourceResolver;");
+        check(resolver != null, "Download reflected host class " + source + "SourceResolver;");
+        List<String[]> known = new ArrayList<>();
+        for (String[] signature : signatures)
+            for (Method method : resolver.getMethods())
+                if (method.getName().equals("matchAndStream")
+                        && method.getReturnType().equals("Ljava/lang/Object;")
+                        && args(method).equals(Arrays.asList(signature))) {
+                    known.add(signature);
+                    break;
+                }
+        check(
+                known.size() == 1,
+                "Download reflected matchAndStream has " + known.size() + " known signatures");
         hostMethod(
                 source + "SourceResolver;",
                 "matchAndStream",
                 "Ljava/lang/Object;",
                 false,
-                source + "MusicSource;",
-                source + "TrackMatcher$Target;",
-                source + "StreamRequest;",
-                "Z",
-                "Z",
-                "Z",
-                "I",
-                continuation);
+                known.get(0));
         hostMethod(
                 source + "TrackMatcher$Target;",
                 "<init>",

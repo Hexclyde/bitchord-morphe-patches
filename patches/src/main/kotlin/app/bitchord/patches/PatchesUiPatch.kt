@@ -3,9 +3,11 @@ package app.bitchord.patches
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.*
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
+import app.morphe.patcher.util.smali.ExternalLabel
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.*
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
@@ -30,6 +32,10 @@ private val SOURCE_CONFIG_LEGACY_CONSTRUCTOR =
 private val SOURCE_CONFIG_QUALITY_CONSTRUCTOR =
     SOURCE_CONFIG_LEGACY_CONSTRUCTOR + listOf("Ljava/util/List;", STRING)
 
+// Addons that declare BitChord verification add the declared flag.
+private val SOURCE_CONFIG_AUTH_CONSTRUCTOR =
+    SOURCE_CONFIG_QUALITY_CONSTRUCTOR + listOf("Ljava/lang/Boolean;")
+
 private val SOURCES_SCREEN_PREFIX = listOf("Landroidx/compose/foundation/layout/PaddingValuesImpl;")
 private val SOURCES_SCREEN_SUFFIX =
     listOf("Landroidx/compose/ui/Modifier;", "Landroidx/compose/runtime/ComposerImpl;", "I")
@@ -46,6 +52,12 @@ private val SOURCES_SCREEN_QUALITY =
         listOf(FUNCTION1, FUNCTION1, FUNCTION0, FUNCTION0, FUNCTION0) +
         SOURCES_SCREEN_SUFFIX
 
+// The outdated-addon explanation callback follows the quality chooser callback.
+private val SOURCES_SCREEN_AUTH =
+    SOURCES_SCREEN_PREFIX +
+        listOf(FUNCTION1, FUNCTION1, FUNCTION1, FUNCTION0, FUNCTION0, FUNCTION0) +
+        SOURCES_SCREEN_SUFFIX
+
 private object PatchesApplicationCreate :
     Fingerprint(
         definingClass = "Lcom/music/bitchord/BitChordApplication;",
@@ -54,33 +66,95 @@ private object PatchesApplicationCreate :
         returnType = "V",
     )
 
-/** Whether SourceConfig carries the quality options, from its constructor and fields. */
-internal fun BytecodePatchContext.qualitySourceShape(): Boolean {
+/**
+ * The SourceConfig and Sources screen layouts BitChord has shipped, each with its own constructor.
+ */
+internal enum class SourceShape(val constructor: List<String>, val screen: List<String>) {
+    LEGACY(SOURCE_CONFIG_LEGACY_CONSTRUCTOR, SOURCES_SCREEN_LEGACY),
+    QUALITY(SOURCE_CONFIG_QUALITY_CONSTRUCTOR, SOURCES_SCREEN_QUALITY),
+    AUTH(SOURCE_CONFIG_AUTH_CONSTRUCTOR, SOURCES_SCREEN_AUTH),
+}
+
+/**
+ * Which layout SourceConfig has, from its public constructors and fields; exactly one must match.
+ */
+internal fun BytecodePatchContext.sourceConfigShape(): SourceShape {
     val config = classDefBy(SOURCE_CONFIG)
-    val legacyConfig =
-        config.methods.count {
-            it.name == "<init>" &&
-                it.accessFlags and 1 != 0 &&
-                it.parameterTypes == SOURCE_CONFIG_LEGACY_CONSTRUCTOR
+    val fields =
+        config.fields
+            .filter {
+                (it.name == "qualityOptions" && it.type == "Ljava/util/List;") ||
+                    (it.name == "pickedQuality" && it.type == STRING) ||
+                    (it.name == "bitchordAuth" && it.type == "Ljava/lang/Boolean;")
+            }
+            .map { it.name }
+            .toSet()
+    val expected =
+        mapOf(
+            SourceShape.LEGACY to emptySet(),
+            SourceShape.QUALITY to setOf("qualityOptions", "pickedQuality"),
+            SourceShape.AUTH to setOf("qualityOptions", "pickedQuality", "bitchordAuth"),
+        )
+    val shapes =
+        SourceShape.entries.filter { shape ->
+            fields == expected.getValue(shape) &&
+                SourceShape.entries.all { other ->
+                    config.methods.count {
+                        it.name == "<init>" &&
+                            it.accessFlags and 1 != 0 &&
+                            it.parameterTypes == other.constructor
+                    } == if (other == shape) 1 else 0
+                }
         }
-    val qualityConfig =
-        config.methods.count {
-            it.name == "<init>" &&
+    check(shapes.size == 1) { "Source configuration constructor is not a known BitChord shape" }
+    return shapes.single()
+}
+
+/**
+ * Internal addons are built into the app and answer from the phone, so the host's "Outdated addon"
+ * line, which asks an addon's developer to publish `bitchordAuth`, does not apply to them. The
+ * getter only feeds that line; verification of external addons never reads it.
+ */
+internal fun BytecodePatchContext.hideNativeOutdatedMarker() {
+    val getter =
+        mutableClassDefBy(SOURCE_CONFIG).methods.filter {
+            it.name == "getNeedsAddonUpdate" &&
+                it.parameterTypes.isEmpty() &&
+                it.returnType == "Z" &&
                 it.accessFlags and 1 != 0 &&
-                it.parameterTypes == SOURCE_CONFIG_QUALITY_CONSTRUCTOR
+                it.accessFlags and 8 == 0 &&
+                it.implementation != null
         }
-    val qualityFields =
-        config.fields.count {
-            (it.name == "qualityOptions" && it.type == "Ljava/util/List;") ||
-                (it.name == "pickedQuality" && it.type == STRING)
+    check(getter.size == 1) { "Outdated addon marker getter changed (${getter.size})" }
+    val method = getter.single()
+    val code = method.implementation!!.instructions.toList()
+    fun reads(owner: String, name: String) =
+        code.count {
+            val field = (it as? ReferenceInstruction)?.reference as? FieldReference
+            field?.definingClass == owner && field.name == name
         }
     check(
-        (legacyConfig == 1 && qualityConfig == 0 && qualityFields == 0) ||
-            (legacyConfig == 0 && qualityConfig == 1 && qualityFields == 2)
+        reads(SOURCE_CONFIG, "kind") == 1 &&
+            reads("Lcom/music/bitchord/data/sources/SourceKind;", "ADDON") == 1 &&
+            reads(SOURCE_CONFIG, "bitchordAuth") == 1 &&
+            reads("Ljava/lang/Boolean;", "FALSE") == 1 &&
+            method.implementation!!.registerCount - method.parameterTypes.size - 1 >= 1
     ) {
-        "Source configuration constructor is not a known BitChord shape"
+        "Outdated addon marker no longer tests an addon whose bitchordAuth is false"
     }
-    return qualityConfig == 1
+    method.addInstructionsWithLabels(
+        0,
+        """
+        invoke-virtual {p0}, $SOURCE_CONFIG->getId()Ljava/lang/String;
+        move-result-object v0
+        invoke-static {v0}, Lapp/bitchord/telegram/NativeSourceConfig;->isNative(Ljava/lang/String;)Z
+        move-result v0
+        if-eqz v0, :host_outdated_marker
+        const/4 v0, 0x0
+        return v0
+        """,
+        ExternalLabel("host_outdated_marker", method.implementation!!.instructions.first()),
+    )
 }
 
 internal val cipherMemoryRuntime = bytecodePatch { execute { addCipherMemoryHooks() } }
@@ -109,7 +183,8 @@ internal val patchesUiRuntime = bytecodePatch {
                 "Source configuration $getter identity getter changed"
             }
         }
-        qualitySourceShape()
+        val shape = sourceConfigShape()
+        if (shape == SourceShape.AUTH) hideNativeOutdatedMarker()
         val registry = mutableClassDefBy("Lcom/music/bitchord/data/sources/SourceRegistry;")
         val publication =
             registry.methods.singleOrNull {
@@ -515,6 +590,7 @@ internal val extrasSettingsPatch = bytecodePatch {
         // R8 merges SourcesScreen into different ScreenKt classes in 1.9/1.9.1.
         // Wrap only its collected UI state. The registry, playback resolver and search
         // retain their original source configurations and enabled state.
+        val shape = sourceConfigShape()
         val sourceOwners = mutableListOf<String>()
         classDefForEach { candidate ->
             if (
@@ -522,9 +598,7 @@ internal val extrasSettingsPatch = bytecodePatch {
                     candidate.methods.any {
                         it.name == "SourcesScreen" &&
                             it.returnType == "V" &&
-                            it.parameterTypes ==
-                                (if (qualitySourceShape()) SOURCES_SCREEN_QUALITY
-                                else SOURCES_SCREEN_LEGACY)
+                            it.parameterTypes == shape.screen
                     }
             )
                 sourceOwners.add(candidate.type)

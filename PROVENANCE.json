@@ -89,7 +89,7 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "28b4e75f2d7f3dee28404f85fdb5681655a2869259903d9ac8bc32298a19b1aa",
+  "patch_bundle_sha256": "d75032badc45002b3196fb386d2c25e4c8dee4b923b52a78df656ce88837c626",
   "soulseek_development": {
     "status": "experimental-local-build",
     "baseline_commit": "3de260f7f1d7967c5a97ce924085d7d42bec18af",
@@ -169,7 +169,8 @@
   "soulseek_compatibility": {
     "versions": [
       "1.9",
-      "1.9.1-beta1"
+      "1.9.1-beta1",
+      "1.9.1"
     ],
     "scope": "Unofficial Soulseek audio and its shared settings dependency only",
     "upstream_source_commit": "04f64c9f11bd2714d01bbc6da401f146f3d9399f",
@@ -350,5 +351,27 @@
     "source_commit": "ee9129d43d7edccef28c53ba54fe091db14489f1",
     "source_url": "https://github.com/kushagrasinghx/BitChord/tree/v1.9.1",
     "apk_origin": "source build"
+  },
+  "stable_app_build": {
+    "version": "1.9.1",
+    "source_commit": "7f45c768a461fd7e68bf4613f71e8a767e643d4c",
+    "release_url": "https://github.com/kushagrasinghx/BitChord/releases/tag/v1.9.1",
+    "original_apks": [
+      {
+        "file": "BitChord-v1.9.1_armeabi-v7a.apk",
+        "sha256": "38f6c165a378b445e11c78fd47455b3a0aeb0055dd5d9f4fda06ee2eb30fcef3",
+        "url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.9.1/BitChord-v1.9.1_armeabi-v7a.apk"
+      },
+      {
+        "file": "BitChord-v1.9.1_x86_64.apk",
+        "sha256": "8cae031ebf690703a149c1bc4c68d6556aadf73af34fec62cb0bfc00c0253247",
+        "url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.9.1/BitChord-v1.9.1_x86_64.apk"
+      },
+      {
+        "file": "BitChord-v1.9.1_arm64-v8a.apk",
+        "sha256": "31cdb3d402615ad0134906b28a2ecb13914e83147bd1a1e15d16050a8092d950",
+        "url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.9.1/BitChord-v1.9.1_arm64-v8a.apk"
+      }
+    ]
   }
 }

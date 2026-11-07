@@ -27,6 +27,18 @@ public final class VerifyHostContractsApk {
     static final List<String> LEGACY_CONFIG = List.of(STRING, KIND, STRING, STRING, "Z", "Z", "Z");
     static final List<String> QUALITY_CONFIG =
             List.of(STRING, KIND, STRING, STRING, "Z", "Z", "Z", "Ljava/util/List;", STRING);
+    static final List<String> AUTH_CONFIG =
+            List.of(
+                    STRING,
+                    KIND,
+                    STRING,
+                    STRING,
+                    "Z",
+                    "Z",
+                    "Z",
+                    "Ljava/util/List;",
+                    STRING,
+                    "Ljava/lang/Boolean;");
     static final String PADDING = "Landroidx/compose/foundation/layout/PaddingValuesImpl;";
     static final String F0 = "Lkotlin/jvm/functions/Function0;";
     static final String F1 = "Lkotlin/jvm/functions/Function1;";
@@ -77,24 +89,39 @@ public final class VerifyHostContractsApk {
         check(config != null, "SourceConfig exists");
         long legacy = constructors(config, LEGACY_CONFIG);
         long quality = constructors(config, QUALITY_CONFIG);
-        long fields =
-                stream(config.getFields())
-                        .filter(
-                                f ->
-                                        (f.getName().equals("qualityOptions")
-                                                        && f.getType().equals("Ljava/util/List;"))
-                                                || (f.getName().equals("pickedQuality")
-                                                        && f.getType().equals(STRING)))
-                        .count();
-        boolean old = legacy == 1 && quality == 0 && fields == 0;
-        boolean current = legacy == 0 && quality == 1 && fields == 2;
-        check(old || current, "SourceConfig has exactly one known constructor shape");
+        long auth = constructors(config, AUTH_CONFIG);
+        java.util.Set<String> fields = new java.util.TreeSet<>();
+        for (var f : config.getFields())
+            if ((f.getName().equals("qualityOptions") && f.getType().equals("Ljava/util/List;"))
+                    || (f.getName().equals("pickedQuality") && f.getType().equals(STRING))
+                    || (f.getName().equals("bitchordAuth")
+                            && f.getType().equals("Ljava/lang/Boolean;"))) fields.add(f.getName());
+        boolean old = legacy == 1 && quality == 0 && auth == 0 && fields.isEmpty();
+        boolean picked =
+                legacy == 0
+                        && quality == 1
+                        && auth == 0
+                        && fields.equals(java.util.Set.of("pickedQuality", "qualityOptions"));
+        boolean declared =
+                legacy == 0
+                        && quality == 0
+                        && auth == 1
+                        && fields.equals(
+                                java.util.Set.of(
+                                        "bitchordAuth", "pickedQuality", "qualityOptions"));
+        check(old || picked || declared, "SourceConfig has exactly one known constructor shape");
+        String shape = old ? "1.9" : picked ? "quality" : "auth";
         List<String> screen =
                 join(
                         join(
                                 List.of(PADDING),
-                                current ? List.of(F1, F1, F0, F0, F0) : List.of(F1, F0, F0, F0)),
+                                declared
+                                        ? List.of(F1, F1, F1, F0, F0, F0)
+                                        : picked
+                                                ? List.of(F1, F1, F0, F0, F0)
+                                                : List.of(F1, F0, F0, F0)),
                         TAIL);
+        if (declared) outdatedMarker(config);
         int owners = 0;
         for (ClassDef cls : all.values()) {
             if (!cls.getType().startsWith("Lcom/music/bitchord/ui/screens/")) continue;
@@ -114,9 +141,34 @@ public final class VerifyHostContractsApk {
                     check(reads == 1, "The Sources screen reads the configuration once");
                 }
         }
-        check(
-                owners == 1,
-                "One Sources screen takes the " + (current ? "quality" : "1.9") + " callbacks");
+        check(owners == 1, "One Sources screen takes the " + shape + " callbacks");
+    }
+
+    /** The outdated-addon line reads a getter that tests an addon whose bitchordAuth is false. */
+    static void outdatedMarker(ClassDef config) {
+        int getters = 0;
+        for (Method m : config.getMethods()) {
+            if (!m.getName().equals("getNeedsAddonUpdate")
+                    || !m.getReturnType().equals("Z")
+                    || !m.getParameterTypes().isEmpty()
+                    || m.getImplementation() == null) continue;
+            getters++;
+            int kind = 0, addon = 0, auth = 0, no = 0;
+            for (Instruction i : m.getImplementation().getInstructions())
+                if (((Object) i) instanceof ReferenceInstruction r
+                        && r.getReference() instanceof FieldReference f) {
+                    String owner = f.getDefiningClass();
+                    if (owner.equals(config.getType()) && f.getName().equals("kind")) kind++;
+                    if (owner.equals(KIND) && f.getName().equals("ADDON")) addon++;
+                    if (owner.equals(config.getType()) && f.getName().equals("bitchordAuth"))
+                        auth++;
+                    if (owner.equals("Ljava/lang/Boolean;") && f.getName().equals("FALSE")) no++;
+                }
+            check(
+                    kind == 1 && addon == 1 && auth == 1 && no == 1,
+                    "The outdated marker tests an addon whose bitchordAuth is false");
+        }
+        check(getters == 1, "One outdated marker getter");
     }
 
     /** What the source rows are built and published with. */

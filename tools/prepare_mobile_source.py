@@ -150,7 +150,7 @@ def validate_metadata(manifest, patches, source, provenance):
         app = patch["compatiblePackages"][0]
         if app["packageName"] != "com.music.bitchord" or app["apkFileType"] != "APK":
             raise ValueError("Unexpected target app/file type")
-        versions = ["1.9", "1.9.1-beta1"]
+        versions = ["1.9", "1.9.1-beta1", "1.9.1"]
         if [target["version"] for target in app["targets"]] != versions or any(
             target["minSdk"] != 26 or not target["isExperimental"]
             for target in app["targets"]

@@ -50,6 +50,15 @@ public final class NativeSourceConfigTest {
         Class<?> config = Class.forName("com.music.bitchord.data.sources.SourceConfig");
         Class<?> kind = Class.forName("com.music.bitchord.data.sources.SourceKind");
         Object addon = kind.getField("ADDON").get(null);
+        Class<?>[] seven = {
+            String.class,
+            kind,
+            String.class,
+            String.class,
+            boolean.class,
+            boolean.class,
+            boolean.class
+        };
         try {
             return config.getConstructor(
                             String.class,
@@ -60,18 +69,28 @@ public final class NativeSourceConfigTest {
                             boolean.class,
                             boolean.class,
                             List.class,
-                            String.class)
-                    .newInstance(id, addon, "Community", url, enabled, true, false, options, pick);
-        } catch (NoSuchMethodException legacy) {
-            return config.getConstructor(
                             String.class,
-                            kind,
-                            String.class,
-                            String.class,
-                            boolean.class,
-                            boolean.class,
-                            boolean.class)
-                    .newInstance(id, addon, "Community", url, enabled, true, false);
+                            Boolean.class)
+                    .newInstance(
+                            id, addon, "Community", url, enabled, true, false, options, pick, null);
+        } catch (NoSuchMethodException quality) {
+            try {
+                return config.getConstructor(
+                                String.class,
+                                kind,
+                                String.class,
+                                String.class,
+                                boolean.class,
+                                boolean.class,
+                                boolean.class,
+                                List.class,
+                                String.class)
+                        .newInstance(
+                                id, addon, "Community", url, enabled, true, false, options, pick);
+            } catch (NoSuchMethodException legacy) {
+                return config.getConstructor(seven)
+                        .newInstance(id, addon, "Community", url, enabled, true, false);
+            }
         }
     }
 
@@ -85,7 +104,7 @@ public final class NativeSourceConfigTest {
         check(Boolean.TRUE.equals(field(row, "enabled")), "enabled");
         check(Boolean.TRUE.equals(field(row, "downloads")), "downloads");
         check(Boolean.FALSE.equals(field(row, "lossless")), "lossless gate");
-        if (variant.equals("quality")) {
+        if (!variant.equals("legacy")) {
             check(
                     ((List<?>) field(row, "qualityOptions")).isEmpty(),
                     "internal addons list no qualities");
@@ -94,6 +113,8 @@ public final class NativeSourceConfigTest {
             check(
                     !has(row, "qualityOptions") && !has(row, "pickedQuality"),
                     "legacy row has quality fields");
+        if (variant.equals("auth"))
+            check(field(row, "bitchordAuth") == null, "internal addons declare no verification");
     }
 
     static void published(String variant) throws Exception {
@@ -108,7 +129,7 @@ public final class NativeSourceConfigTest {
         List<Object> now = rows();
         check(now.size() == 2 && now.get(0) == other, "the community row is the same object");
         check(Boolean.FALSE.equals(field(other, "enabled")), "the community toggle is kept");
-        if (variant.equals("quality")) {
+        if (!variant.equals("legacy")) {
             check(field(other, "pickedQuality").equals("mp3"), "the community pick is kept");
             check(field(other, "qualityOptions") == options, "the community options are kept");
         }
@@ -162,8 +183,18 @@ public final class NativeSourceConfigTest {
         check(Boolean.FALSE.equals(field(rows().get(0), "enabled")), "Soulseek starts off");
     }
 
+    static void natives() {
+        check(NativeSourceConfig.isNative("telegram-native"), "Telegram is internal");
+        check(NativeSourceConfig.isNative("flacdownloader-native"), "Flac is internal");
+        check(NativeSourceConfig.isNative("soulseek-native"), "Soulseek is internal");
+        check(!NativeSourceConfig.isNative("community"), "a community addon is external");
+        check(!NativeSourceConfig.isNative("telegram"), "a near id is external");
+        check(!NativeSourceConfig.isNative(null), "no id is external");
+    }
+
     public static void main(String[] args) throws Exception {
         String variant = args[0];
+        natives();
         if (variant.equals("future")) refused();
         else {
             built(variant);

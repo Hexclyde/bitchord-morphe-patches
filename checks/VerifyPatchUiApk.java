@@ -34,6 +34,22 @@ public final class VerifyPatchUiApk {
             for (ClassDef cls : dex.getEntry(entry).getDexFile().getClasses())
                 check(classes.put(cls.getType(), cls) == null, "Unique class " + cls.getType());
         String base = "Lapp/bitchord/telegram/";
+        ClassDef sourceConfig = classes.get("Lcom/music/bitchord/data/sources/SourceConfig;");
+        if (sourceConfig != null) {
+            for (Method method : sourceConfig.getMethods()) {
+                if (!method.getName().equals("getNeedsAddonUpdate")) continue;
+                int nativeChecks = 0;
+                for (Instruction instruction : method.getImplementation().getInstructions()) {
+                    if (instruction instanceof ReferenceInstruction ref
+                            && ref.getReference() instanceof MethodReference call
+                            && call.getDefiningClass().equals(base + "NativeSourceConfig;")
+                            && call.getName().equals("isNative")) nativeChecks++;
+                }
+                check(
+                        nativeChecks == (runtime ? 1 : 0),
+                        "Only installed shared settings filter native outdated-source markers");
+            }
+        }
         String downloadNav = "Lapp/bitchord/soulseek/DownloadNavigation;";
         check(
                 classes.containsKey(downloadNav) == downloads,

@@ -34,6 +34,60 @@ import java.util.function.BooleanSupplier;
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, sdk = 35)
 public class SourceFallbackTest {
+    public static Object stableBest(
+            Object resolver,
+            List<?> sources,
+            Object target,
+            Object request,
+            boolean strict,
+            boolean shared,
+            int drift,
+            Object lengthLater,
+            Object refine,
+            Long timeout,
+            Object accept,
+            Object continuation,
+            int mask) {
+        assertFalse(strict);
+        assertFalse(shared);
+        assertEquals(0, drift);
+        assertNull(lengthLater);
+        assertNull(refine);
+        assertNull(timeout);
+        assertNull(accept);
+        assertEquals(4088, mask);
+        return continuation;
+    }
+
+    @Test
+    public void stableBestLookupUsesDefaultsForNewLengthParameters() throws Exception {
+        java.lang.reflect.Method call =
+                Arrays.stream(SourceFallbackTest.class.getMethods())
+                        .filter(m -> m.getName().equals("stableBest"))
+                        .findFirst()
+                        .get();
+        Object continuation = new Object();
+        assertSame(
+                continuation,
+                SourceFallback.invokeBest(
+                        call,
+                        new Object(),
+                        Collections.emptyList(),
+                        new Object(),
+                        new Object(),
+                        continuation));
+    }
+
+    @Test
+    public void unknownBestLookupSignatureFailsBeforeInvocation() throws Exception {
+        java.lang.reflect.Method call = Object.class.getMethod("toString");
+        assertThrows(
+                NoSuchMethodException.class,
+                () ->
+                        SourceFallback.invokeBest(
+                                call, null, Collections.emptyList(), null, null, null));
+    }
+
     /** Sources are plain strings; a source's config id is the string itself. */
     static final class Fake implements SourceFallback.Host {
         ArrayList<Object> ranked = new ArrayList<>();

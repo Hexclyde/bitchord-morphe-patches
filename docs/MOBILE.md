@@ -4,15 +4,15 @@ Install the patches with Morphe on Android, without root access. To install an M
 
 ## 1. Download Morphe and BitChord
 
-Install [Morphe Manager](https://github.com/MorpheApp/morphe-manager/releases). Then download the original **BitChord 1.9** APK from [BitChord's release page](https://github.com/kushagrasinghx/BitChord/releases/tag/v1.9).
+Install [Morphe Manager](https://github.com/MorpheApp/morphe-manager/releases). Then download the original **BitChord 1.9.1** APK from [BitChord's release page](https://github.com/kushagrasinghx/BitChord/releases/tag/v1.9.1).
 
 Choose the APK for your phone:
 
 | Device | APK |
 | --- | --- |
-| Most current Android phones | `BitChord-v1.9_arm64-v8a.apk` |
-| Older 32-bit ARM phones running Android 8+ | `BitChord-v1.9_armeabi-v7a.apk` |
-| x86-64 Android devices | `BitChord-v1.9_x86_64.apk` |
+| Most current Android phones | `BitChord-v1.9.1_arm64-v8a.apk` |
+| Older 32-bit ARM phones running Android 8+ | `BitChord-v1.9.1_armeabi-v7a.apk` |
+| x86-64 Android devices | `BitChord-v1.9.1_x86_64.apk` |
 
 See [known limitations](KNOWN_LIMITATIONS.md).
 
@@ -51,7 +51,7 @@ See [source download problems](TROUBLESHOOTING.md#the-source-shows-unnamed-or-me
 
 ## 3. Select the APK and patches
 
-1. In Morphe, open **Apps**, choose BitChord and select the original **1.9** APK from Downloads when asked. If you need to select a local APK manually, enable **Expert mode** in **Settings → Advanced → Expert settings**.
+1. In Morphe, open **Apps**, choose BitChord and select the original **1.9.1** APK from Downloads when asked. If you need to select a local APK manually, enable **Expert mode** in **Settings → Advanced → Expert settings**.
 2. Choose this project's source and keep these patches selected:
 
    - **Unofficial Telegram music**

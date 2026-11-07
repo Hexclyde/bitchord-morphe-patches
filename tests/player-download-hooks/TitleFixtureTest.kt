@@ -1,7 +1,11 @@
 package app.bitchord.patches
 
 import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.ClassDef
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
+import com.android.tools.smali.dexlib2.immutable.ImmutableClassDef
+import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
+import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 import com.android.tools.smali.dexlib2.immutable.instruction.*
 import com.android.tools.smali.dexlib2.immutable.reference.*
 
@@ -81,7 +85,70 @@ private fun refuses(name: String, code: List<Instruction>) {
     }
 }
 
+private const val RESOLVER = "Lcom/music/bitchord/data/sources/SourceResolver;"
+private const val SOURCES = "Lcom/music/bitchord/data/sources/"
+private const val CONTINUATION = "Lkotlin/coroutines/jvm/internal/ContinuationImpl;"
+private val matchHead =
+    listOf(
+        SOURCES + "MusicSource;",
+        SOURCES + "TrackMatcher\$Target;",
+        SOURCES + "StreamRequest;",
+        "Z",
+        "Z",
+        "Z",
+        "I",
+    )
+
+private fun resolver(vararg signatures: List<String>): ClassDef =
+    ImmutableClassDef(
+        RESOLVER,
+        17,
+        "Ljava/lang/Object;",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        signatures
+            .map { types ->
+                ImmutableMethod(
+                    RESOLVER,
+                    "matchAndStream",
+                    types.map { ImmutableMethodParameter(it, null, null) },
+                    "Ljava/lang/Object;",
+                    17,
+                    null,
+                    null,
+                    null,
+                )
+            }
+            .toSortedSet(),
+    )
+
+private fun matches(name: String, signature: List<String>, vararg declared: List<String>) {
+    holds(name, playerDownloadMatchSignature(resolver(*declared)) == signature)
+}
+
+private fun refusesMatch(name: String, vararg declared: List<String>) {
+    try {
+        playerDownloadMatchSignature(resolver(*declared))
+        error("Accepted $name")
+    } catch (expected: IllegalStateException) {
+        check(expected.message.orEmpty().startsWith("Player title download layout changed"))
+        passed++
+    }
+}
+
 fun main() {
+    val older = matchHead + CONTINUATION
+    val stable = matchHead + "Lkotlin/jvm/functions/Function1;" + "Z" + CONTINUATION
+    matches("1.9 matching signature", older, older)
+    matches("1.9.1 matching signature", stable, stable)
+    refusesMatch("no matching method")
+    refusesMatch("both signatures", older, stable)
+    refusesMatch("another extra argument", matchHead + "Z" + CONTINUATION)
+    refusesMatch("another lengthLater type", matchHead + "Ljava/lang/Object;" + "Z" + CONTINUATION)
     val base = fixture()
     holds("before authentication condition", playerDownloadTitleAnchor(base, circle) == Pair(1, 15))
     holds(

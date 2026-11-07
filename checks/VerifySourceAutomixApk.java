@@ -793,13 +793,16 @@ public final class VerifySourceAutomixApk {
                         "Ljava/lang/String;");
         check(
                 label >= 2
-                        && calls(
-                                body.get(label - 2),
-                                "Lcom/music/bitchord/ui/AppUi;",
-                                "stringResource",
-                                "Ljava/lang/String;",
-                                "Lorg/jetbrains/compose/resources/StringResource;",
-                                "Landroidx/compose/runtime/ComposerImpl;")
+                        && body.get(label - 2) instanceof ReferenceInstruction call
+                        && call.getReference() instanceof MethodReference reference
+                        && reference.getReturnType().equals("Ljava/lang/String;")
+                        && reference.getParameterTypes().stream()
+                                .map(CharSequence::toString)
+                                .toList()
+                                .equals(
+                                        List.of(
+                                                "Lorg/jetbrains/compose/resources/StringResource;",
+                                                "Landroidx/compose/runtime/ComposerImpl;"))
                         && body.get(label - 1).getOpcode() == Opcode.MOVE_RESULT_OBJECT,
                 "The blend label wraps the existing localized native string");
         int original = ((OneRegisterInstruction) body.get(label - 1)).getRegisterA();

@@ -131,12 +131,31 @@ internal fun BytecodePatchContext.addonBodyHost(): AddonBodyHost {
             } == true
         }
     val self = original.implementation!!.registerCount - original.parameterTypes.size - 1
+    val selfCopies =
+        code.indices
+            .take(32)
+            .filter { at ->
+                val copy = code[at] as? TwoRegisterInstruction
+                code[at].opcode == Opcode.MOVE_OBJECT_FROM16 &&
+                    copy?.registerB == self &&
+                    at < urlCall - 2 &&
+                    code.subList(at + 1, urlCall - 2).none { instruction ->
+                        val written = (instruction as? OneRegisterInstruction)?.registerA
+                        instruction.opcode.setsRegister() &&
+                            (written == copy.registerA ||
+                                (instruction.opcode.setsWideRegister() &&
+                                    written != null &&
+                                    written + 1 == copy.registerA))
+                    }
+            }
+            .map { (code[it] as TwoRegisterInstruction).registerA }
     val read = code[urlCall - 2] as? TwoRegisterInstruction
     val field = (code[urlCall - 2] as? ReferenceInstruction)?.reference as? FieldReference
     val cast = code[urlCall - 1]
     check(
         code[urlCall - 2].opcode == Opcode.IGET_OBJECT &&
-            read?.registerB == self &&
+            read != null &&
+            (read.registerB == self || read.registerB in selfCopies) &&
             field?.definingClass == clazz.type &&
             field.type == "Ljava/lang/Object;" &&
             cast.opcode == Opcode.CHECK_CAST &&

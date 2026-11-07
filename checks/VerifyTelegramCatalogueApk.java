@@ -269,6 +269,20 @@ public final class VerifyTelegramCatalogueApk {
     }
 
     private static void verify() {
+        ClassDef client = classes.get("Lcom/music/bitchord/data/sources/addon/AddonClient;");
+        int catalogueCalls = 0;
+        for (Method method : client.getMethods()) {
+            for (Instruction instruction : code(method)) {
+                if (!(instruction instanceof ReferenceInstruction ref)
+                        || !(ref.getReference() instanceof MethodReference call)
+                        || !call.getName().equals("bitchordTelegramCatalogueCall")) continue;
+                catalogueCalls++;
+                check(
+                        !method.getName().equals("authHeaders"),
+                        "Addon authentication does not use the Telegram catalogue cache");
+            }
+        }
+        check(catalogueCalls == 2, "Only addon search and stream use the catalogue cache bridge");
         Method selected = method(BRIDGE, "catalogueSelected", "J");
         receiverCalls(selected);
         int contains = 0;

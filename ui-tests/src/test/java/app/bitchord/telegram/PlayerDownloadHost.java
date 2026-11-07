@@ -12,6 +12,7 @@ import kotlin.coroutines.CoroutineContext;
 import kotlin.coroutines.EmptyCoroutineContext;
 import kotlin.coroutines.intrinsics.CoroutineSingletons;
 import kotlin.coroutines.jvm.internal.SuspendLambda;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.functions.Function3;
 
@@ -77,6 +78,29 @@ final class PlayerDownloadHost {
             if (cause instanceof Exception) throw (Exception) cause;
             throw failure;
         }
+    }
+
+    /**
+     * Arguments for {@code SourceResolver.matchAndStream}. 1.9 ends at the drift bar; 1.9.1 adds a
+     * runtime lookup and a file-length check, which a download leaves at their defaults.
+     */
+    static Object[] matchArguments(
+            Class<?> resolver, Object source, Object target, Object best, Object step)
+            throws IOException {
+        for (Method m : resolver.getDeclaredMethods()) {
+            if (!m.getName().equals("matchAndStream")) continue;
+            Class<?>[] types = m.getParameterTypes();
+            if (types.length < 8
+                    || types[3] != boolean.class
+                    || types[4] != boolean.class
+                    || types[5] != boolean.class
+                    || types[6] != int.class) continue;
+            if (types.length == 8)
+                return new Object[] {source, target, best, true, true, true, 3, step};
+            if (types.length == 10 && types[7] == Function1.class && types[8] == boolean.class)
+                return new Object[] {source, target, best, true, true, true, 3, null, false, step};
+        }
+        throw new IOException("Download sources use an unknown matching interface");
     }
 
     static Class<?> boxed(Class<?> type) {
@@ -443,14 +467,14 @@ final class PlayerDownloadHost {
                                                                                 SOURCES
                                                                                         + "SourceResolver"),
                                                                         "matchAndStream",
-                                                                        source,
-                                                                        target,
-                                                                        best,
-                                                                        true,
-                                                                        true,
-                                                                        true,
-                                                                        3,
-                                                                        step));
+                                                                        matchArguments(
+                                                                                Class.forName(
+                                                                                        SOURCES
+                                                                                                + "SourceResolver"),
+                                                                                source,
+                                                                                target,
+                                                                                best,
+                                                                                step)));
                                         if (stream == null) return null;
                                         int length = number(stream, "durationSec");
                                         if (length > 0 && !sameDuration(request.seconds, length))

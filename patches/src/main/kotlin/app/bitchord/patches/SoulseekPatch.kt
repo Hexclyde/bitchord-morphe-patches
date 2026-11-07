@@ -30,6 +30,7 @@ private val soulseekTarget =
             listOf(
                 AppTarget(version = "1.9", isExperimental = true, minSdk = 26),
                 AppTarget(version = "1.9.1-beta1", isExperimental = true, minSdk = 26),
+                AppTarget(version = "1.9.1", isExperimental = true, minSdk = 26),
             ),
     )
 
@@ -934,7 +935,8 @@ val nativeSoulseekPatch =
             body.addInstructionsWithLabels(
                 0,
                 """
-                iget-object v0, p0, ${bodyHost.url.definingClass}->${bodyHost.url.name}:${bodyHost.url.type}
+                move-object/from16 v0, p0
+                iget-object v0, v0, ${bodyHost.url.definingClass}->${bodyHost.url.name}:${bodyHost.url.type}
                 check-cast v0, Ljava/lang/String;
                 invoke-static {v0}, ${SOULSEEK}SoulseekAddon;->bodyOrNull(Ljava/lang/String;)Ljava/lang/String;
                 move-result-object v0
@@ -1015,6 +1017,7 @@ val streamseekPreviewPatch =
                     listOf(
                         AppTarget(version = "1.9", isExperimental = true, minSdk = 26),
                         AppTarget(version = "1.9.1-beta1", isExperimental = true, minSdk = 26),
+                        AppTarget(version = "1.9.1", isExperimental = true, minSdk = 26),
                     ),
             )
         )
