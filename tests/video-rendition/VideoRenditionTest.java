@@ -73,6 +73,29 @@ public final class VideoRenditionTest {
 
         Song again = (Song) VideoSwitch.asReplacement(video, back, true);
         check(again.isVideo && again.isVideoOrigin, "the video can be chosen again");
+        VideoSwitch.enabled = true;
+        VideoSwitch.preferredVideo = false;
+        check(
+                !VideoSwitch.pictureAllowed("videoVid001"),
+                "Audio suppresses a queued video's picture");
+        check(!VideoSwitch.pictureAllowed("videoVid002"), "Audio suppresses the next video too");
+        VideoSwitch.noteCurrent(song("audioAud001", false, false, "entry-manual"), 100);
+        VideoSwitch.noteCurrent(song("videoVid001", true, true, "entry-manual"), 101);
+        check(
+                VideoSwitch.pictureAllowed("videoVid001"),
+                "An explicit host version switch keeps its picture");
+        VideoSwitch.noteCurrent(song("videoVid002", true, true, "entry-next"), 102);
+        check(
+                !VideoSwitch.pictureAllowed("videoVid002"),
+                "The host exception ends at the next queue entry");
+        check(!VideoSwitch.pictureAllowed("videoVid001"), "The previous exception is cleared too");
+        VideoSwitch.preferredVideo = true;
+        check(VideoSwitch.pictureAllowed("videoVid001"), "Video permits the host picture check");
+        VideoSwitch.enabled = false;
+        VideoSwitch.preferredVideo = false;
+        check(
+                VideoSwitch.pictureAllowed("videoVid001"),
+                "Disabled switch leaves the host picture alone");
         System.out.println("PASS: " + checks + " video rendition checks.");
     }
 }

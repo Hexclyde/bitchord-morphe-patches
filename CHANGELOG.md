@@ -1,5 +1,7 @@
 ## 1.1.0-beta.19
 
+- Keep video pictures hidden in Audio mode while BitChord 1.9.1 switches a queued video to its song version. Explicit video selections remain available.
+
 - Support the BitChord 1.9.1 universal APK for shared audio, Telegram and Soulseek. Unsupported 32-bit x86 libraries are removed; ARM64, ARMv7 and x86-64 remain available.
 
 - **Unofficial Telegram** catches up a delayed quality upgrade before fading it in. If the copies cannot be aligned, the current audio keeps playing.

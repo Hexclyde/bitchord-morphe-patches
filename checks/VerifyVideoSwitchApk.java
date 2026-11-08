@@ -1037,6 +1037,49 @@ public final class VerifyVideoSwitchApk {
         for (String entry : apk.getDexEntryNames())
             for (ClassDef type : apk.getEntry(entry).getDexFile().getClasses())
                 types.put(type.getType(), type);
+        ClassDef pictureOwner = types.get("Lcom/music/bitchord/playback/MusicOnlyPlayback;");
+        if (pictureOwner != null) {
+            int guards = 0;
+            for (Method method : pictureOwner.getMethods()) {
+                if (method.getImplementation() == null) continue;
+                List<Instruction> code = new ArrayList<>();
+                method.getImplementation().getInstructions().forEach(code::add);
+                for (int i = 0; i < code.size(); i++) {
+                    MethodReference target = call(code.get(i));
+                    if (target == null
+                            || !target.getDefiningClass()
+                                    .equals("Lapp/bitchord/telegram/VideoSwitch;")
+                            || !target.getName().equals("pictureAllowed")) continue;
+                    guards++;
+                    check(i == 0, "Audio picture preference is checked before the host video gate");
+                    check(
+                            code.get(1).getOpcode() == Opcode.MOVE_RESULT
+                                    && code.get(2).getOpcode() == Opcode.IF_NEZ
+                                    && code.get(3).getOpcode() == Opcode.CONST_4
+                                    && code.get(4).getOpcode() == Opcode.RETURN,
+                            "Audio skips the picture gate synchronously");
+                    check(
+                            ((NarrowLiteralInstruction) code.get(3)).getNarrowLiteral() == 0,
+                            "Audio returns no picture");
+                    check(
+                            ((OneRegisterInstruction) code.get(1)).getRegisterA() == 0
+                                    && ((OneRegisterInstruction) code.get(2)).getRegisterA() == 0
+                                    && ((OneRegisterInstruction) code.get(3)).getRegisterA() == 0
+                                    && ((OneRegisterInstruction) code.get(4)).getRegisterA() == 0,
+                            "Picture decision uses its scratch register consistently");
+                    check(
+                            code.stream()
+                                    .skip(5)
+                                    .anyMatch(
+                                            x ->
+                                                    call(x) != null
+                                                            && call(x).getName()
+                                                                    .equals("isActive")),
+                            "Video preserves the host music-only policy");
+                }
+            }
+            check(guards == 1, "The shared video picture gate honors the saved Audio preference");
+        }
         int slots = 0, controllers = 0, controllerCallers = 0, landscape = 0;
         String runtime = "Lapp/bitchord/telegram/VideoSwitch;";
         for (ClassDef type : types.values())

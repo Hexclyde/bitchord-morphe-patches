@@ -63,6 +63,7 @@ public final class VideoSwitch {
 
     static volatile boolean enabled = false;
     static volatile boolean preferredVideo;
+    private static volatile String hostVideoId;
     private static volatile String attempted;
     private static volatile String seenEntry, seenId;
     private static Object eventListener;
@@ -183,6 +184,7 @@ public final class VideoSwitch {
         if (entry == null || !entry.equals(beforeEntry)) {
             keptProvider = null;
             reloadId = null;
+            hostVideoId = null;
         }
         if (entry == null
                 || !entry.equals(beforeEntry)
@@ -191,6 +193,7 @@ public final class VideoSwitch {
                 || beforeId.equals(id)) return;
         attempted = id + "|" + preferredVideo;
         hostLyricsSwitch(playing, beforeId, now);
+        if (lyricsSwitch != null && lyricsSwitch.host) hostVideoId = isVideo(playing) ? id : null;
     }
 
     /** The native lookup still clears its results, jobs and old timed lyrics. */
@@ -407,6 +410,7 @@ public final class VideoSwitch {
     /** A saved YouTube preference, independent of the current song's available versions. */
     static void setPreferredVideo(boolean video) {
         preferredVideo = video;
+        hostVideoId = null;
         if (lyricsSwitch != null && !lyricsSwitch.host && lyricsSwitch.video != video)
             lyricsSwitch = null;
         attempted = null;
@@ -558,6 +562,11 @@ public final class VideoSwitch {
             mode = next;
             if (notify && revision != null) revision.setValue(++changes);
         }
+    }
+
+    /** Keep queued video pictures hidden while Audio waits for its song version. */
+    public static boolean pictureAllowed(String id) {
+        return !enabled || preferredVideo || (hostVideoId != null && hostVideoId.equals(id));
     }
 
     static boolean needsPreferredVersion(Object song) {

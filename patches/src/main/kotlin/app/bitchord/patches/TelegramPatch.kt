@@ -3409,6 +3409,7 @@ val videoSwitchPatch =
  * player Column and landscape main pane.
  */
 private fun BytecodePatchContext.addVideoSwitch() {
+    addVideoPicturePreference()
     addVersionLyricsSelection()
     val remember =
         mutableClassDefBy("Lcom/music/bitchord/playback/PlayerConnectionKt;").methods.single {
@@ -3422,6 +3423,56 @@ private fun BytecodePatchContext.addVideoSwitch() {
     installPlayerHeader(VIDEO_SWITCH)
     installVideoFullscreen()
     println("Added the audio and video switch")
+}
+
+private fun BytecodePatchContext.addVideoPicturePreference() {
+    val owner = "Lcom/music/bitchord/playback/MusicOnlyPlayback;"
+    var present = false
+    classDefForEach { if (it.type == owner) present = true }
+    // BitChord 1.9 predates the shared picture gate.
+    if (!present) return
+    val matches =
+        mutableClassDefBy(owner).methods.filter { method ->
+            method.parameterTypes == listOf("Ljava/lang/String;") &&
+                method.returnType == "Z" &&
+                method.implementation?.instructions?.any {
+                    it.methodRef()?.let { call ->
+                        call.definingClass == owner && call.name == "isActive"
+                    } == true
+                } == true &&
+                method.implementation?.instructions?.any {
+                    it.fieldRef()?.let { field ->
+                        field.definingClass == owner && field.name == "kept"
+                    } == true
+                } == true
+        }
+    check(matches.size == 1) { "The music-video picture gate changed" }
+    val method = matches.single()
+    val code = method.implementation!!.instructions.toList()
+    check(method.accessFlags and 8 != 0 && method.implementation!!.registerCount >= 2) {
+        "The music-video picture gate has no scratch register"
+    }
+    check(
+        code.count { it.opcode == Opcode.RETURN } == 2 &&
+            code.any {
+                it.methodRef()?.let { call ->
+                    call.definingClass == "Ljava/util/Set;" && call.name == "contains"
+                } == true
+            }
+    ) {
+        "The music-video picture decision changed"
+    }
+    method.addInstructionsWithLabels(
+        0,
+        """
+        invoke-static/range {p0 .. p0}, $VIDEO_SWITCH->pictureAllowed(Ljava/lang/String;)Z
+        move-result v0
+        if-nez v0, :host_picture
+        const/4 v0, 0x0
+        return v0
+        """,
+        ExternalLabel("host_picture", code.first()),
+    )
 }
 
 private fun BytecodePatchContext.addVersionLyricsSelection() {
