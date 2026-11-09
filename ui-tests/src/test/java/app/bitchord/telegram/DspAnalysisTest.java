@@ -451,4 +451,153 @@ public class DspAnalysisTest {
         assertEquals(1, closed.get());
         assertArrayEquals(new String[0], directory.list());
     }
+
+    private static final String KEY = "automix17|id|file:///a|2000";
+
+    private Object retry(File directory, AtomicInteger closed, String key, long memory)
+            throws IOException {
+        return DspAnalysis.analyze(
+                "id",
+                directory,
+                () -> source(closed),
+                48000,
+                2,
+                () -> false,
+                () -> memory,
+                count -> {},
+                key);
+    }
+
+    private void deferAfterDecoding(File directory, AtomicInteger closed, String key) {
+        long measurement = DspAnalysis.measurement(22_050);
+        AtomicInteger calls = new AtomicInteger();
+        DspAnalysis.Deferred deferred =
+                assertThrows(
+                        DspAnalysis.Deferred.class,
+                        () ->
+                                DspAnalysis.analyze(
+                                        "id",
+                                        directory,
+                                        () -> source(closed),
+                                        48000,
+                                        2,
+                                        () -> false,
+                                        () -> calls.incrementAndGet() == 1 ? 64L << 20 : 1,
+                                        count -> {},
+                                        key));
+        assertTrue(deferred.decoded);
+        assertEquals(measurement, deferred.required);
+    }
+
+    @Test
+    public void aCompletedDecodeIsReusedAfterATemporaryMemoryDeferral() throws Exception {
+        AtomicInteger closed = new AtomicInteger(), features = new AtomicInteger();
+        AtomicInteger decoded = new AtomicInteger();
+        decoder(200, 0);
+        PlaybackService.DspDecoder inner = PlaybackService.dspDecoder;
+        PlaybackService.dspDecoder =
+                (source, end, abort, chunks) -> {
+                    decoded.incrementAndGet();
+                    return inner.decode(source, end, abort, chunks);
+                };
+        PlaybackService.dspFeatures =
+                (samples, seconds) -> {
+                    features.incrementAndGet();
+                    assertEquals(22050, samples.length);
+                    assertEquals(4000 / 32768f, samples[11025], .00001);
+                    return new Object();
+                };
+        File directory = files.newFolder();
+        deferAfterDecoding(directory, closed, KEY);
+        assertEquals(1, decoded.get());
+        assertEquals("The measured audio is kept for the retry", 1, directory.list().length);
+        assertNotNull(retry(directory, closed, KEY, 64L << 20));
+        assertEquals("The retry does not decode the track again", 1, decoded.get());
+        assertEquals("The retry does not reopen the source", 1, closed.get());
+        assertEquals(1, features.get());
+        assertArrayEquals("Success deletes the kept audio", new String[0], directory.list());
+        assertNotNull(retry(directory, closed, KEY, 64L << 20));
+        assertEquals("Nothing is left to reuse once it was consumed", 2, decoded.get());
+    }
+
+    private AtomicInteger countingDecoder() {
+        AtomicInteger decoded = new AtomicInteger();
+        decoder(200, 0);
+        PlaybackService.DspDecoder inner = PlaybackService.dspDecoder;
+        PlaybackService.dspDecoder =
+                (source, end, abort, chunks) -> {
+                    decoded.incrementAndGet();
+                    return inner.decode(source, end, abort, chunks);
+                };
+        PlaybackService.dspFeatures = (samples, seconds) -> new Object();
+        return decoded;
+    }
+
+    @Test
+    public void keptAudioIsBoundedAndDiscardable() throws Exception {
+        AtomicInteger closed = new AtomicInteger(), decoded = countingDecoder();
+        File directory = files.newFolder();
+        for (String key : new String[] {"k1", "k2", "k3"})
+            deferAfterDecoding(directory, closed, key);
+        assertEquals("At most two decoded tracks are kept", 2, directory.list().length);
+        retry(directory, closed, "k3", 64L << 20);
+        assertEquals("The newest was kept", 3, decoded.get());
+        retry(directory, closed, "k1", 64L << 20);
+        assertEquals("The oldest was evicted, so it decodes again", 4, decoded.get());
+        DspAnalysis.discard("k2");
+        assertArrayEquals("A discarded track is deleted", new String[0], directory.list());
+        retry(directory, closed, "k2", 64L << 20);
+        assertEquals(5, decoded.get());
+    }
+
+    @Test
+    public void keptAudioExpiresAndOnlyServesItsOwnRecording() throws Exception {
+        AtomicInteger closed = new AtomicInteger(), decoded = countingDecoder();
+        long[] now = {1_000_000_000L};
+        DspAnalysis.clock = () -> now[0];
+        try {
+            File directory = files.newFolder();
+            deferAfterDecoding(directory, closed, "k1");
+            retry(directory, closed, "other", 64L << 20);
+            assertEquals("Another recording never adopts it", 2, decoded.get());
+            now[0] += DspAnalysis.KEEP_NANOS + 1;
+            retry(directory, closed, "k1", 64L << 20);
+            assertEquals("An expired track is decoded again", 3, decoded.get());
+            assertArrayEquals(new String[0], directory.list());
+        } finally {
+            DspAnalysis.clock = System::nanoTime;
+        }
+    }
+
+    @Test
+    public void aDamagedKeptTrackIsNeverTrusted() throws Exception {
+        AtomicInteger closed = new AtomicInteger(), decoded = countingDecoder();
+        File directory = files.newFolder();
+        deferAfterDecoding(directory, closed, "k1");
+        File kept = directory.listFiles()[0];
+        try (java.io.RandomAccessFile damaged = new java.io.RandomAccessFile(kept, "rw")) {
+            damaged.setLength(damaged.length() - 4);
+        }
+        retry(directory, closed, "k1", 64L << 20);
+        assertEquals(2, decoded.get());
+        assertArrayEquals(new String[0], directory.list());
+    }
+
+    @Test
+    public void staleScratchFromAnEarlierRunIsSwept() throws Exception {
+        AtomicInteger closed = new AtomicInteger();
+        countingDecoder();
+        File directory = files.newFolder();
+        File stale = new File(directory, "automix-dsp-123.pcm");
+        assertTrue(stale.createNewFile());
+        assertTrue(stale.setLastModified(System.currentTimeMillis() - 3_600_000L));
+        File fresh = new File(directory, "automix-dsp-456.pcm");
+        assertTrue(fresh.createNewFile());
+        File unrelated = new File(directory, "keep.txt");
+        assertTrue(unrelated.createNewFile());
+        retry(directory, closed, KEY, 64L << 20);
+        assertFalse(stale.exists());
+        assertTrue("Another worker's file is not touched", fresh.exists());
+        assertTrue(unrelated.exists());
+    }
 }

@@ -121,6 +121,12 @@ public final class SourceAutomix {
         // Stopped for playback priority, not for a fault; and memory waits in a row, for backoff.
         volatile boolean yielded;
         volatile int deferrals;
+        // Bytes the last memory wait lacked: a release wakes the job only when this now fits.
+        volatile long memoryNeeded;
+        // The first wait of an episode may ask once whether the leased allowance now admits it.
+        volatile boolean leasedRetry;
+        // Set by that one wake: the next try checks the claim itself, not the unleased estimate.
+        volatile boolean skipPreview;
         volatile String phase = "queued";
         long deadline;
 
@@ -204,7 +210,7 @@ public final class SourceAutomix {
                         1,
                         5,
                         TimeUnit.SECONDS,
-                        new LinkedBlockingQueue<>(),
+                        new LinkedBlockingQueue<>(SNAPSHOTS),
                         task -> {
                             Thread thread = new Thread(task, "bitchord-identity");
                             thread.setDaemon(true);
@@ -574,9 +580,14 @@ public final class SourceAutomix {
 
     /** Whether playback, an upgrade or next-song preparation currently outranks this analysis. */
     private static boolean yieldsToPlayback(Job job) {
-        boolean yields = !PlaybackPriority.analysisAllowed();
+        boolean yields = !allowed(job);
         if (yields) job.yielded = true;
         return yields;
+    }
+
+    /** Current and next analysis (no token) is essential and cannot be starved indefinitely. */
+    private static boolean allowed(Job job) {
+        return PlaybackPriority.analysisAllowed(job.id, job.token == 0);
     }
 
     /** Asks again shortly; used when priority, not a fault, stopped an analysis. */
@@ -589,6 +600,64 @@ public final class SourceAutomix {
     static long retryDelayNanos(int deferrals) {
         return Math.min(300_000_000_000L, 15_000_000_000L << Math.min(Math.max(deferrals, 0), 5));
     }
+
+    /** A memory wait retries after 2 s, then 4, 8, 16, 32 and at most every minute. */
+    static long memoryDelayNanos(int deferrals) {
+        return Math.min(60_000_000_000L, 2_000_000_000L << Math.min(Math.max(deferrals - 1, 0), 5));
+    }
+
+    /**
+     * Called when decode or measurement memory is released; wakes memory waits that now fit, so a
+     * job does not sit out its backoff once the heap has room.
+     */
+    public static void memoryAvailable() {
+        long maximum = heapMaximum.getAsLong(), used = heapUsed.getAsLong();
+        long room =
+                Math.max(
+                        SourceAudio.dspAvailable(maximum, used),
+                        SourceAudio.analysisAvailable(maximum, used));
+        boolean woke = false;
+        synchronized (jobs) {
+            for (Map<String, Job> byId : jobs.values())
+                for (Job job : byId.values())
+                    if ("memory".equals(job.phase) && !job.running && job.retryAfter != 0) {
+                        boolean fits = room >= job.memoryNeeded;
+                        if (!fits && !job.leasedRetry) continue;
+                        if (!fits) {
+                            job.leasedRetry = false;
+                            job.skipPreview = true;
+                        }
+                        job.retryAfter = 0;
+                        woke = true;
+                    }
+        }
+        if (woke) post();
+    }
+
+    // Lets tests pin the bounded fallback; the leased model path is otherwise always allowed.
+    static boolean leasedModels = true;
+
+    private static final AtomicBoolean wakePending = new AtomicBoolean(),
+            listening = new AtomicBoolean();
+
+    /** Clears a wake whose post died with its looper. */
+    static void forgetWake() {
+        wakePending.set(false);
+    }
+
+    // Stable identity so the memory ledger registers it once; it only schedules work.
+    private static final Runnable memoryWake =
+            () -> {
+                if (!wakePending.compareAndSet(false, true)) return;
+                Looper main = Looper.getMainLooper();
+                if (main == null
+                        || !new Handler(main)
+                                .post(
+                                        () -> {
+                                            wakePending.set(false);
+                                            memoryAvailable();
+                                        })) wakePending.set(false);
+            };
 
     private static void post() {
         if (!posted.compareAndSet(false, true)) return;
@@ -853,6 +922,7 @@ public final class SourceAutomix {
 
     private static boolean enqueue(
             Object owner, MediaItem item, long runtime, boolean retry, boolean refresh) {
+        if (listening.compareAndSet(false, true)) SourceAudio.onMemoryAvailable(memoryWake);
         return enqueue(owner, item, runtime, retry, refresh, 0);
     }
 
@@ -982,7 +1052,7 @@ public final class SourceAutomix {
                 return true;
             }
             job.running = true;
-            job.phase = "analyzing";
+            job.phase = "queued";
             Map<String, Job> current = state;
             try {
                 ((ExecutorService) field(analyzer, "executor"))
@@ -1019,7 +1089,6 @@ public final class SourceAutomix {
                 return;
             }
             job.yielded = false;
-            if (yieldsToPlayback(job)) throw new Skipped();
             job.attempts++;
             counted = true;
             Map<String, Object> results = (Map<String, Object>) field(job.analyzer, "results");
@@ -1082,8 +1151,12 @@ public final class SourceAutomix {
                 }
             }
             if (result == null) {
+                // Cached results above cost no decode, so only a real measurement yields.
+                if (yieldsToPlayback(job)) throw new Skipped();
                 stage = "memory-preview";
-                if (job.format != null) {
+                boolean leasedTry = job.skipPreview;
+                job.skipPreview = false;
+                if (job.format != null && !leasedTry) {
                     long maximum = heapMaximum.getAsLong(), used = heapUsed.getAsLong();
                     long full =
                             SourceAudio.analysisBytes(job.format.sampleRate, job.format.seconds);
@@ -1096,6 +1169,7 @@ public final class SourceAutomix {
                 }
                 // Resolve before owning the PCM permit: the host resolver may dispatch coroutines.
                 stage = "source-resolution";
+                job.phase = "reading";
                 try (MediaDataSource cached = AutomixAccess.cached(job.uri)) {
                     job.cachedOnly = cached != null;
                 }
@@ -1133,42 +1207,95 @@ public final class SourceAutomix {
                     stage = "bounded-DSP";
                     try (SourceAudio.DspMemory memory =
                             SourceAudio.dspMemory(heapMaximum.getAsLong(), heapUsed.getAsLong())) {
-                        long required = DspAnalysis.bytes(format.sampleRate, format.seconds);
-                        if (required > 0
-                                && !memory.claim(
-                                        required, heapMaximum.getAsLong(), heapUsed.getAsLong()))
-                            throw new DspAnalysis.Deferred(
-                                    required,
-                                    memory.available(heapMaximum.getAsLong(), heapUsed.getAsLong()),
-                                    false);
-                        result =
-                                DspAnalysis.analyze(
-                                        job.id,
-                                        ((Context) job.service).getCacheDir(),
-                                        input::invoke,
-                                        format.sampleRate,
-                                        format.seconds,
-                                        () ->
-                                                job.cancelled
-                                                        || current.get(job.id) != job
-                                                        || yieldsToPlayback(job)
-                                                        || memory.cancelled()
-                                                        || AutomixAccess.stopped()
-                                                        || System.nanoTime() >= job.deadline,
-                                        () ->
-                                                memory.available(
-                                                        heapMaximum.getAsLong(),
-                                                        heapUsed.getAsLong()),
-                                        memory::materialized);
+                        // The pinned ceiling can admit the model where the unpinned one could not.
+                        long modelBytes =
+                                SourceAudio.analysisBytes(format.sampleRate, format.seconds);
+                        boolean leasedModel = false;
+                        if (leasedModels
+                                && modelBytes > 0
+                                && modelBytes
+                                        <= memory.available(
+                                                heapMaximum.getAsLong(), heapUsed.getAsLong())) {
+                            try (MediaDataSource source = input.invoke()) {
+                                leasedModel =
+                                        SourceAudio.analysisLimit(
+                                                        source,
+                                                        job.duration,
+                                                        memory.available(
+                                                                heapMaximum.getAsLong(),
+                                                                heapUsed.getAsLong()))
+                                                == null;
+                            }
+                            leasedModel =
+                                    leasedModel
+                                            && memory.claim(
+                                                    modelBytes,
+                                                    heapMaximum.getAsLong(),
+                                                    heapUsed.getAsLong());
+                        }
+                        if (leasedModel) {
+                            stage = "model-analysis";
+                            job.phase = "analyzing";
+                            models = useModels(job.analyzer);
+                            Object outcome =
+                                    invoke(
+                                            job.analyzer,
+                                            "analyze",
+                                            new Class<?>[] {String.class, Uri.class, double.class},
+                                            job.id,
+                                            job.uri,
+                                            job.format.seconds);
+                            result = outcome == null ? null : field(outcome, "flags");
+                            if (result == null) {
+                                job.phase = "unavailable";
+                                return;
+                            }
+                        } else {
+                            long required = DspAnalysis.bytes(format.sampleRate, format.seconds);
+                            if (required > 0
+                                    && !memory.claim(
+                                            required,
+                                            heapMaximum.getAsLong(),
+                                            heapUsed.getAsLong()))
+                                throw new DspAnalysis.Deferred(
+                                        required,
+                                        memory.available(
+                                                heapMaximum.getAsLong(), heapUsed.getAsLong()),
+                                        false);
+                            result =
+                                    DspAnalysis.analyze(
+                                            job.id,
+                                            ((Context) job.service).getCacheDir(),
+                                            input::invoke,
+                                            format.sampleRate,
+                                            format.seconds,
+                                            () ->
+                                                    job.cancelled
+                                                            || current.get(job.id) != job
+                                                            || yieldsToPlayback(job)
+                                                            || memory.cancelled()
+                                                            || AutomixAccess.stopped()
+                                                            || System.nanoTime() >= job.deadline,
+                                            () ->
+                                                    memory.available(
+                                                            heapMaximum.getAsLong(),
+                                                            heapUsed.getAsLong()),
+                                            count -> {
+                                                memory.materialized(count);
+                                                job.phase = "analyzing";
+                                            },
+                                            job.storeKey);
+                        }
                     }
                     if (result == null) {
                         job.phase = "unavailable";
                         HostLog.d("AutoMix analysis deferred: " + memoryLimit);
                         return;
                     }
-                    measuredDsp = true;
+                    measuredDsp = models == null;
                 } else {
                     stage = "model-analysis";
+                    job.phase = "analyzing";
                     decoding.check();
                     checkLookahead(job, current);
                     long required =
@@ -1239,11 +1366,13 @@ public final class SourceAutomix {
         } catch (Skipped aside) {
             // Not an attempt: nothing was measured, and the next snapshot may try again.
             if (counted) job.attempts = Math.max(0, job.attempts - 1);
-            job.phase = "queued";
+            job.phase = job.yielded ? "waiting" : "queued";
             stoodAside = true;
             if (job.yielded) postLater();
         } catch (DspAnalysis.Deferred waitingForMemory) {
             job.deferrals++;
+            job.memoryNeeded = waitingForMemory.required;
+            if (job.deferrals == 1) job.leasedRetry = true;
             // Only a completed read uses an attempt; once spent, only a manual retry measures.
             job.phase =
                     waitingForMemory.decoded && job.attempts >= ATTEMPTS
@@ -1266,9 +1395,9 @@ public final class SourceAutomix {
             if (error instanceof SourceAudio.Stopped
                             && ((SourceAudio.Stopped) error).reason
                                     == SourceAudio.StopReason.PRIORITY
-                    || job.yielded && !PlaybackPriority.analysisAllowed()) {
+                    || job.yielded && !allowed(job)) {
                 if (counted) job.attempts = Math.max(0, job.attempts - 1);
-                job.phase = "queued";
+                job.phase = "waiting";
                 stoodAside = true;
                 postLater();
                 HostLog.d("AutoMix analysis yielded to playback");
@@ -1292,11 +1421,18 @@ public final class SourceAutomix {
         } finally {
             try {
                 finishModels(models);
-                if (!stoodAside)
-                    job.retryAfter =
-                            System.nanoTime()
-                                    + retryDelayNanos(
-                                            "memory".equals(job.phase) ? job.deferrals : 0);
+                if (!stoodAside) {
+                    boolean memory = "memory".equals(job.phase);
+                    long delay = memory ? memoryDelayNanos(job.deferrals) : retryDelayNanos(0);
+                    job.retryAfter = System.nanoTime() + delay;
+                    // One wake per wait, not a loop: a release can wake it sooner.
+                    Looper main = Looper.getMainLooper();
+                    if (memory && main != null)
+                        new Handler(main).postDelayed(SourceAutomix::post, delay / 1_000_000L + 50);
+                    PlaybackPriority.analysisFinished(job.id);
+                    if (job.done || job.cancelled || current.get(job.id) != job)
+                        DspAnalysis.discard(job.storeKey);
+                }
                 job.running = false;
                 running.remove(job.id);
                 draining.remove(job.id, job);

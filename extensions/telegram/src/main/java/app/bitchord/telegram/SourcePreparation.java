@@ -143,6 +143,10 @@ final class SourcePreparation {
 
         boolean rejected(Uri marked, Object stream);
 
+        default long retryAfterMillis(Uri marked, Object stream) {
+            return 0;
+        }
+
         /**
          * Whether the file really is what it promises, by the format its decoder would be given.
          */
@@ -933,9 +937,29 @@ final class SourcePreparation {
                 checking.add(song);
             }
             try {
-                host.verify(marked, stream, () -> stop(), !foreground);
-                return true;
-            } catch (IOException notNow) {
+                for (int attempt = 0; attempt < 3; attempt++) {
+                    if (stop()) return false;
+                    try {
+                        host.verify(marked, stream, () -> stop(), !foreground);
+                        return true;
+                    } catch (IOException unavailable) {
+                        if (stop() || host.rejected(marked, stream) || attempt == 2) return false;
+                        long retry = host.retryAfterMillis(marked, stream);
+                        if (retry < 0) return false;
+                        long delay = Math.max(500L << attempt, Math.min(8_000L, retry));
+                        long until = System.nanoTime() + delay * 1_000_000L;
+                        while (!stop() && System.nanoTime() < until) {
+                            synchronized (lock) {
+                                try {
+                                    lock.wait(50);
+                                } catch (InterruptedException interrupted) {
+                                    Thread.currentThread().interrupt();
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
                 return false;
             } finally {
                 synchronized (lock) {

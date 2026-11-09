@@ -63,6 +63,17 @@ public class SourcePreferenceTest {
     }
 
     @Test
+    public void refreshedFileMetadataReportsAdvertisedDurationWithoutARequest() {
+        Uri file = Uri.parse("https://telegram.bitchord.invalid/test/audio/recording");
+        SourcePreference.noteAdvertised(file.toString(), 253);
+        assertEquals(253000, SourcePreference.advertised(file));
+        SourcePreference.noteAdvertised(file.toString(), 254);
+        assertEquals(254000, SourcePreference.advertised(file));
+        SourcePreference.noteAdvertised(file.toString(), 0);
+        assertEquals(-1, SourcePreference.advertised(file));
+    }
+
+    @Test
     public void enabledAlternativesKeepTheirRelativeOrderAheadOfYouTube() {
         Object youtube = new Source(Kind.YOUTUBE),
                 telegram = new Source(Kind.ADDON),
@@ -146,6 +157,11 @@ public class SourcePreferenceTest {
     final Map<String, byte[]> files = new ConcurrentHashMap<>();
     final Map<String, AtomicInteger> opens = new ConcurrentHashMap<>();
     final AtomicInteger resolves = new AtomicInteger();
+    final Map<String, AtomicInteger> midTrackFailures = new ConcurrentHashMap<>();
+    java.util.function.Supplier<IOException> midTrackError =
+            () ->
+                    new IOException(
+                            "Reset by https://name:secret@example.invalid/file?token=private");
     java.util.function.Supplier<SourceAudio.AnalysisFormat> originalAnalysisFormats;
     java.util.function.LongSupplier originalHeapMaximum, originalHeapUsed;
     SourceAudio.Backend originalDecoder;
@@ -162,6 +178,9 @@ public class SourcePreferenceTest {
             opens.computeIfAbsent(uri.toString(), k -> new AtomicInteger()).incrementAndGet();
             file = files.get(uri.toString());
             if (file == null) throw new IOException("Not found");
+            AtomicInteger failing = midTrackFailures.get(uri.toString());
+            if (spec.position >= 1_000_000 && failing != null && failing.getAndDecrement() > 0)
+                throw midTrackError.get();
             position = (int) spec.position;
             end =
                     spec.length == androidx.media3.common.C.LENGTH_UNSET
@@ -225,7 +244,9 @@ public class SourcePreferenceTest {
         }
         files.clear();
         opens.clear();
+        midTrackFailures.clear();
         resolves.set(0);
+        SourcePreference.windowRetryMillis = 1;
         AudioDecoder.windows.clear();
         AudioDecoder.corrupt = false;
         AudioDecoder.afterWindow = null;
@@ -735,8 +756,8 @@ public class SourcePreferenceTest {
         retryReady();
         verify();
         assertEquals(
-                "Only the interrupted window is decoded again: " + AudioDecoder.windows,
-                7,
+                "A window finished before the stop is kept: " + AudioDecoder.windows,
+                6,
                 AudioDecoder.windows.size());
         assertTrue(soFar >= 3);
     }
@@ -1052,7 +1073,7 @@ public class SourcePreferenceTest {
         AudioDecoder.afterWindow = null;
         SourcePreference.verifyAhead(
                 plain(), new DataSpec(Uri.parse(CANDIDATE)), () -> false, true);
-        assertEquals("Only the cancelled window is read again", 7, AudioDecoder.windows.size());
+        assertEquals("The window finished before the stop is kept", 6, AudioDecoder.windows.size());
     }
 
     @Test
@@ -1163,27 +1184,42 @@ public class SourcePreferenceTest {
     }
 
     private void driftEvidence(DataSpec request, Uri played, boolean prepared) throws Exception {
+        evidence(request, played, prepared, 180.0, 180.132791, 0, .0855, .16);
+    }
+
+    /** Three complete windows of one recording per side, the candidate's timeline shifted. */
+    private void evidence(
+            DataSpec request,
+            Uri played,
+            boolean prepared,
+            double lengthA,
+            double lengthB,
+            double... shifts)
+            throws Exception {
         String cacheKey = profileKey(request, new DataSpec(Uri.parse(CANDIDATE)), played, prepared);
         java.lang.reflect.Method find =
                 SourcePreference.class.getDeclaredMethod("attempt", String.class);
         find.setAccessible(true);
         Object attempt = find.invoke(null, cacheKey);
+        java.lang.reflect.Field users = attempt.getClass().getDeclaredField("users");
+        users.setAccessible(true);
+        users.setInt(attempt, 0);
         for (String name : new String[] {"durationA", "durationB", "expected"}) {
             java.lang.reflect.Field field = attempt.getClass().getDeclaredField(name);
             field.setAccessible(true);
             field.set(
                     attempt,
                     name.equals("durationA")
-                            ? 180.0
+                            ? lengthA
                             : name.equals("durationB")
-                                    ? 180.132791
+                                    ? lengthB
                                     : new DataSpec(Uri.parse(REFERENCE)));
         }
         java.lang.reflect.Method tune =
                 AudioDecoder.class.getDeclaredMethod("tune", long.class, int.class);
         tune.setAccessible(true);
         float[] whole = (float[]) tune.invoke(null, 91L, 180);
-        double[] starts = {0, 82, 163}, shifts = {0, .0855, .16};
+        double[] starts = {0, 82, 163};
         for (String name : new String[] {"a", "b"}) {
             java.lang.reflect.Field field = attempt.getClass().getDeclaredField(name);
             field.setAccessible(true);
@@ -2067,5 +2103,426 @@ public class SourcePreferenceTest {
                 "Strict policy reuses measurements, not the prepared verdict",
                 measured,
                 AudioDecoder.windows.size());
+    }
+
+    // ── Padded copies, measured lengths and window failures ─────────────────
+
+    private DataSpec padded(int n) {
+        return new DataSpec(Uri.parse("bitchord://watch?v=song&q=hifi-pad" + n));
+    }
+
+    private boolean preparedVerdict(DataSpec request, DataSpec resolved) {
+        try {
+            SourcePreference.verifyPrepared(request, resolved, () -> false, true);
+            return true;
+        } catch (IOException refused) {
+            return false;
+        }
+    }
+
+    @Test
+    public void paddingBoundariesDecidePreparedButNeverAStrictSwap() throws Exception {
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        // length difference, per-window offsets, whether preparation accepts
+        Object[][] cases = {
+            {.75, new double[] {.25, .25, .25}, true},
+            {.751, new double[] {.25, .25, .25}, true},
+            {2.0, new double[] {2, 2, 2}, true},
+            {3.0, new double[] {2, 2, 2}, true},
+            {3.001, new double[] {2, 2, 2}, false},
+            {2.0, new double[] {3.0, 3.0, 3.0}, true},
+            {2.0, new double[] {3.001, 3.001, 3.001}, false},
+            {-2.0, new double[] {-2, -2, -2}, true},
+            {2.0, new double[] {2, 2.0795, 2}, true},
+            {2.0, new double[] {2, 2.081, 2}, false},
+            {2.0, new double[] {2, 2.5, 3}, false},
+        };
+        for (int i = 0; i < cases.length; i++) {
+            DataSpec request = padded(i);
+            double difference = (Double) cases[i][0];
+            evidence(request, null, true, 180, 180 + difference, (double[]) cases[i][1]);
+            assertEquals("case " + i, cases[i][2], preparedVerdict(request, resolved));
+            assertEquals(
+                    "case " + i,
+                    !(Boolean) cases[i][2],
+                    SourcePreference.rejectedPrepared(request, resolved));
+        }
+        assertTrue("Evidence was complete; nothing decoded", AudioDecoder.windows.isEmpty());
+    }
+
+    @Test
+    public void strictBoundaryStaysAtSevenHundredFiftyMilliseconds() throws Exception {
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        DataSpec exact = padded(1), over = padded(2);
+        evidence(exact, null, false, 180, 180.75, .25, .25, .25);
+        SourcePreference.verifyAhead(exact, resolved, () -> false, true);
+        evidence(over, null, false, 180, 180.751, .25, .25, .25);
+        refused(() -> SourcePreference.verifyAhead(over, resolved, () -> false, true));
+        assertTrue(SourcePreference.rejected(over, resolved));
+    }
+
+    @Test
+    public void aTwoSecondPaddedCopyVerifiesForPreparationAndStaysRefusedForASwap()
+            throws Exception {
+        files.put(CANDIDATE, AudioDecoder.file(91, 0, 182, 2000, false));
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        SourcePreference.verifyPrepared(plain(), resolved, () -> false, true);
+        assertFalse(SourcePreference.rejectedPrepared(plain(), resolved));
+        assertEquals(6, AudioDecoder.windows.size());
+        assertNull("Preparation supplies no swap offset", SourcePreference.verifiedOffset("song"));
+        refused(() -> SourcePreference.verifyAhead(plain(), resolved, () -> false, true));
+        assertTrue(SourcePreference.rejected(plain(), resolved));
+        assertEquals("The strict verdict reuses the windows", 6, AudioDecoder.windows.size());
+    }
+
+    @Test
+    public void aPaddedCopyWithAnEditedMiddleOrAnotherRecordingIsStillRefusedForPreparation()
+            throws Exception {
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        files.put(CANDIDATE, AudioDecoder.file(91, 817, 182, 2000, false));
+        refused(() -> SourcePreference.verifyPrepared(plain(), resolved, () -> false, true));
+        assertTrue(SourcePreference.rejectedPrepared(plain(), resolved));
+        for (String field : new String[] {"decisions", "attempts"}) clear(field);
+        files.put(CANDIDATE, AudioDecoder.file(817, 0, 182, 2000, false));
+        refused(() -> SourcePreference.verifyPrepared(plain(), resolved, () -> false, true));
+        assertTrue(SourcePreference.rejectedPrepared(plain(), resolved));
+    }
+
+    @Test
+    public void aCopyBeyondThePreparedBoundIsRefusedByLengthWithoutDecoding() throws Exception {
+        files.put(CANDIDATE, AudioDecoder.file(91, 0, 184, 2000, false));
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        refused(() -> SourcePreference.verifyPrepared(plain(), resolved, () -> false, true));
+        assertTrue(SourcePreference.rejectedPrepared(plain(), resolved));
+        assertTrue(AudioDecoder.windows.isEmpty());
+    }
+
+    private IOException thrown;
+
+    /** The reports a check writes; the exception it ends with is kept in {@code thrown}. */
+    private List<String> reports(Checked run) throws Exception {
+        List<String> found = new ArrayList<>();
+        java.util.function.Consumer<String> previous = HostLog.observer;
+        HostLog.observer =
+                line -> {
+                    if (line.startsWith("Recording check ")) found.add(line);
+                };
+        thrown = null;
+        try {
+            run.run();
+        } catch (IOException failed) {
+            thrown = failed;
+        } finally {
+            HostLog.observer = previous;
+        }
+        return found;
+    }
+
+    private String lastReport(List<String> found) {
+        assertFalse(found.isEmpty());
+        return found.get(found.size() - 1);
+    }
+
+    private void assertSafe(String report) {
+        for (String hidden :
+                new String[] {"secret", "token", "private", "example.invalid", "name:", "https://"})
+            assertFalse(report + " leaked " + hidden, report.contains(hidden));
+        assertFalse(report, report.contains(CANDIDATE) || report.contains(REFERENCE));
+    }
+
+    @Test
+    public void aLengthMismatchReportsTheMeasuredLengthsTheDifferenceAndTheProbeMethod()
+            throws Exception {
+        files.put(CANDIDATE, AudioDecoder.file(91, 0, 182, 0, false));
+        String report =
+                lastReport(
+                        reports(
+                                () ->
+                                        SourcePreference.verifyAhead(
+                                                plain(),
+                                                new DataSpec(Uri.parse(CANDIDATE)),
+                                                () -> false,
+                                                true)));
+        assertTrue(report, report.contains("reason=DURATION_MISMATCH"));
+        assertTrue(
+                report,
+                report.contains(
+                        "measuredReferenceMs=180000; measuredCandidateMs=182000;"
+                                + " differenceMs=2000; limitMs=750;"
+                                + " advertisedReferenceMs=-1; advertisedCandidateMs=-1;"
+                                + " probe=CONTAINER_EXACT"));
+        assertTrue(report, report.contains("failingSide=none; window=-1; fromMs=-1; untilMs=-1"));
+        assertSafe(report);
+    }
+
+    @Test
+    public void aPreparedLengthMismatchNamesTheWiderPreparedLimit() throws Exception {
+        files.put(CANDIDATE, AudioDecoder.file(91, 0, 184, 0, false));
+        String report =
+                lastReport(
+                        reports(
+                                () ->
+                                        SourcePreference.verifyPrepared(
+                                                plain(),
+                                                new DataSpec(Uri.parse(CANDIDATE)),
+                                                () -> false,
+                                                true)));
+        assertTrue(report, report.contains("differenceMs=4000; limitMs=3000;"));
+    }
+
+    @Test
+    public void aGuessedLengthIsReportedAsEstimatedAndNeverAsADifference() throws Exception {
+        SyntheticDecoder.durationMethod = 2;
+        files.put(CANDIDATE, AudioDecoder.file(91, 0, 183, 0, false));
+        String report =
+                lastReport(
+                        reports(
+                                () ->
+                                        SourcePreference.verifyPrepared(
+                                                plain(),
+                                                new DataSpec(Uri.parse(CANDIDATE)),
+                                                () -> false,
+                                                true)));
+        assertTrue(report, report.contains("reason=DURATION_INSUFFICIENT"));
+        assertTrue(report, report.contains("probe=CONTAINER_UNKNOWN"));
+        assertTrue(report, report.contains("measuredReferenceMs=-1; measuredCandidateMs=-1;"));
+        assertTrue(report, report.contains("differenceMs=-1;"));
+    }
+
+    @Test
+    public void aFailedWindowNamesTheSideTheWindowAndItsRangeWithoutLeakingTheCause()
+            throws Exception {
+        midTrackFailures.put(CANDIDATE, new AtomicInteger(100));
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        String report =
+                lastReport(
+                        reports(
+                                () ->
+                                        SourcePreference.verifyPrepared(
+                                                plain(), resolved, () -> false, true)));
+        assertTrue(report, report.contains("reason=IO_UNCLASSIFIED"));
+        assertTrue(
+                report,
+                report.contains(
+                        "failingSide=candidate; window=2; fromMs=82000; untilMs=98000; try=2"));
+        assertTrue(report, report.contains("3 of 6 windows"));
+        assertTrue(report, report.contains("cause=IOException"));
+        assertSafe(report);
+        assertFalse(SourcePreference.rejectedPrepared(plain(), resolved));
+        assertEquals("reference a1, candidate b1, reference a2", 3, AudioDecoder.windows.size());
+    }
+
+    @Test
+    public void aPassingCheckReportsTheMeasuredAndAdvertisedLengthsWithoutExtraReads()
+            throws Exception {
+        List<String> found =
+                reports(
+                        () ->
+                                SourcePreference.verifyPrepared(
+                                        new DataSpec(Uri.parse(MARKED + "&d=180")),
+                                        new DataSpec(Uri.parse(CANDIDATE)),
+                                        () -> false,
+                                        true));
+        assertNull(thrown);
+        String report = lastReport(found);
+        assertTrue(report, report.startsWith("Recording check passed"));
+        assertTrue(report, report.contains("advertisedReferenceMs=180000;"));
+        assertTrue(report, report.contains("advertisedCandidateMs=-1;"));
+        assertTrue(report, report.contains("probe=CONTAINER_EXACT"));
+        assertTrue(report, report.contains("measuredReferenceMs=180000;"));
+        assertEquals("Lengths and windows only: no probe read", 6, AudioDecoder.windows.size());
+        assertSafe(report);
+    }
+
+    @Test
+    public void anUnusableAdvertisedLengthIsUnknown() {
+        assertEquals(-1, SourcePreference.advertised(Uri.parse("bitchord://watch?v=a&d=x")));
+        assertEquals(-1, SourcePreference.advertised(Uri.parse("bitchord://watch?v=a&d=0")));
+        assertEquals(-1, SourcePreference.advertised(Uri.parse("src:telegram::1"), null));
+        assertEquals(215000, SourcePreference.advertised(Uri.parse("bitchord://w?d=215")));
+    }
+
+    @Test
+    public void aFailedReferenceWindowIsAttributedToTheReference() throws Exception {
+        midTrackFailures.put(REFERENCE, new AtomicInteger(100));
+        String report =
+                lastReport(
+                        reports(
+                                () ->
+                                        SourcePreference.verifyPrepared(
+                                                plain(),
+                                                new DataSpec(Uri.parse(CANDIDATE)),
+                                                () -> false,
+                                                true)));
+        // The reference is walked through in order, so its first reopen past 1 MB is window 3.
+        assertTrue(
+                report,
+                report.contains(
+                        "failingSide=reference; window=3; fromMs=163000; untilMs=179000; try=2"));
+        assertTrue(report, report.contains("4 of 6 windows"));
+    }
+
+    @Test
+    public void completedWindowsSurviveATransientFailureAndOnlyTheMissingOnesAreReadLater()
+            throws Exception {
+        midTrackFailures.put(CANDIDATE, new AtomicInteger(100));
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        refused(() -> SourcePreference.verifyPrepared(plain(), resolved, () -> false, true));
+        assertEquals(3, AudioDecoder.windows.size());
+        long wait = SourcePreference.retryAfterMillis(plain(), resolved);
+        assertTrue("Backoff is bounded: " + wait, wait > 0 && wait <= 8000);
+        refused(() -> SourcePreference.verifyPrepared(plain(), resolved, () -> false, true));
+        assertEquals("Nothing is read during the backoff", 3, AudioDecoder.windows.size());
+        midTrackFailures.clear();
+        retryReady();
+        assertEquals(0, SourcePreference.retryAfterMillis(plain(), resolved));
+        SourcePreference.verifyPrepared(plain(), resolved, () -> false, true);
+        assertEquals("Only b2, a3 and b3 were read", 6, AudioDecoder.windows.size());
+        assertFalse(SourcePreference.rejectedPrepared(plain(), resolved));
+    }
+
+    @Test
+    public void oneTransientWindowFailureIsRetriedInPlace() throws Exception {
+        midTrackFailures.put(REFERENCE, new AtomicInteger(1));
+        List<String> found =
+                reports(
+                        () ->
+                                SourcePreference.verifyPrepared(
+                                        plain(),
+                                        new DataSpec(Uri.parse(CANDIDATE)),
+                                        () -> false,
+                                        true));
+        assertNull(thrown);
+        assertTrue(lastReport(found), lastReport(found).startsWith("Recording check passed"));
+        assertEquals(6, AudioDecoder.windows.size());
+        assertEquals(
+                0, SourcePreference.retryAfterMillis(plain(), new DataSpec(Uri.parse(CANDIDATE))));
+    }
+
+    @Test
+    public void aMissingFileIsNotRetriedInPlace() throws Exception {
+        midTrackFailures.put(CANDIDATE, new AtomicInteger(100));
+        midTrackError =
+                () -> new java.io.FileNotFoundException("https://name:secret@example.invalid/a");
+        String report =
+                lastReport(
+                        reports(
+                                () ->
+                                        SourcePreference.verifyPrepared(
+                                                plain(),
+                                                new DataSpec(Uri.parse(CANDIDATE)),
+                                                () -> false,
+                                                true)));
+        assertTrue(report, report.contains("reason=FILE_MISSING"));
+        assertTrue(report, report.contains("fromMs=82000; untilMs=98000; try=1"));
+        assertSafe(report);
+    }
+
+    @Test
+    public void aCachedReferenceThatGoesAwayMidwayIsReadFromTheNetworkCopyInstead()
+            throws Exception {
+        byte[] whole = files.get(REFERENCE);
+        AtomicInteger calls = new AtomicInteger();
+        PlaybackService.cached =
+                uri ->
+                        calls.incrementAndGet() > 3
+                                ? null
+                                : new CachedCopy(whole, new AtomicInteger());
+        List<String> found = reports(this::verify);
+        assertNull(thrown);
+        assertEquals(6, AudioDecoder.windows.size());
+        assertTrue("The network copy was used", opensOf(REFERENCE) > 0);
+        assertTrue(lastReport(found), lastReport(found).contains("reference fell back"));
+        assertFalse(AudioDecoder.corrupt);
+    }
+
+    @Test
+    public void aNetworkRenditionOfAnotherLengthDropsTheWindowsOfTheCachedCopy() throws Exception {
+        byte[] whole = files.get(REFERENCE);
+        AtomicInteger calls = new AtomicInteger();
+        PlaybackService.cached =
+                uri -> {
+                    if (calls.incrementAndGet() <= 3)
+                        return new CachedCopy(whole, new AtomicInteger());
+                    files.put(REFERENCE, AudioDecoder.file(91, 0, 190, 0, true));
+                    return null;
+                };
+        List<String> found = reports(this::verify);
+        assertNotNull(thrown);
+        String report = lastReport(found);
+        assertTrue(report, report.contains("reason=RENDITION_CHANGED"));
+        assertTrue(report, report.contains("reference fell back"));
+        retryNow += TimeUnit.SECONDS.toNanos(30);
+        found = reports(this::verify);
+        // The old 180 s length was not kept: the rendition is measured again and now differs.
+        assertTrue(lastReport(found), lastReport(found).contains("measuredReferenceMs=190000;"));
+        assertTrue(lastReport(found), lastReport(found).contains("reason=DURATION_MISMATCH"));
+    }
+
+    @Test
+    public void priorityStoppingAPreparedCheckKeepsItsWindowsAndWritesNoVerdictOrBackoff()
+            throws Exception {
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        AutoCloseable[] lease = {null};
+        AudioDecoder.afterWindow =
+                done -> {
+                    if (done != 2 || lease[0] != null) return;
+                    lease[0] = PlaybackPriority.upgrade("other-upgrade");
+                };
+        String report =
+                lastReport(
+                        reports(
+                                () ->
+                                        SourcePreference.verifyPrepared(
+                                                plain(), resolved, () -> false, true)));
+        assertTrue(String.valueOf(thrown), thrown instanceof SourceAudio.Stopped);
+        assertTrue(report, report.contains("reason=STOP_"));
+        assertFalse(SourcePreference.rejectedPrepared(plain(), resolved));
+        assertEquals(
+                "Waiting for priority is not a failure",
+                0,
+                SourcePreference.retryAfterMillis(plain(), resolved));
+        int kept = AudioDecoder.windows.size();
+        lease[0].close();
+        PlaybackPriority.reset();
+        AudioDecoder.afterWindow = null;
+        SourcePreference.verifyPrepared(plain(), resolved, () -> false, true);
+        assertEquals("Only the windows not yet measured", 6, AudioDecoder.windows.size());
+        assertTrue(kept >= 2 && kept < 6);
+    }
+
+    @Test
+    public void aRejectedPairHasNoRetry() throws Exception {
+        files.put(CANDIDATE, AudioDecoder.file(817, 0, 180, 0, false));
+        DataSpec resolved = new DataSpec(Uri.parse(CANDIDATE));
+        refused(() -> SourcePreference.verifyPrepared(plain(), resolved, () -> false, true));
+        assertEquals(-1, SourcePreference.retryAfterMillis(plain(), resolved));
+    }
+
+    @Test
+    public void knownInternalFailuresGetFixedCodesAndNeverTheirText() {
+        String[][] known = {
+            {"The cached copy has gone", "CACHE_GONE"},
+            {"Audio source returned no data", "SOURCE_NO_DATA"},
+            {"Audio connection is closed", "CONNECTION_CLOSED"},
+            {"Audio rendition changed during analysis", "RENDITION_CHANGED"},
+            {"Playback source router is not ready", "SOURCE_ROUTER_UNAVAILABLE"},
+        };
+        for (String[] pair : known)
+            assertEquals(pair[1], SourcePreference.diagnosticError(new IOException(pair[0])));
+        assertEquals(
+                "IO_UNCLASSIFIED",
+                SourcePreference.diagnosticError(new IOException("The cached copy has gone: x")));
+        assertEquals(
+                "IOException",
+                SourcePreference.diagnosticCause(
+                        new IOException("https://a:b@c.invalid/?token=1")));
+        assertEquals(
+                "IOException>SocketTimeoutException",
+                SourcePreference.diagnosticCause(
+                        new IOException("x", new java.net.SocketTimeoutException("y"))));
+        assertEquals(
+                "IOException>other",
+                SourcePreference.diagnosticCause(new IOException("x", new Exception("secret") {})));
     }
 }

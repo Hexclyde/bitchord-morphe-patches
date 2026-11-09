@@ -1,18 +1,22 @@
 package app.bitchord.telegram;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BooleanSupplier;
 import java.util.function.LongSupplier;
 
 /**
  * Who may use the device while a song is playing. From most to least urgent: the current song
- * (short, renewable urgent windows), the current song's quality upgrade, preparing the next song,
- * AutoMix analysis, then indexing and other background work.
+ * (short, renewable urgent windows), the current song's quality upgrade, an interactive transition
+ * preview, preparing the next song, AutoMix analysis, then indexing and other background work.
  *
  * <p>Nothing here blocks or touches Android; callers poll, and a worker that must wait uses {@link
  * #awaitBackground}. Every lease is bounded: a holder that never closes only delays lower tiers
- * until its time limit.
+ * until its time limit, and renewing one identity's lease replaces it and cannot extend it past
+ * {@link #MAX_HOLD_NANOS}. The analysis of the current or next transition is let through after
+ * {@link #STARVATION_NANOS} behind preparation, so renewed next-song leases cannot starve it.
  */
 public final class PlaybackPriority {
     private PlaybackPriority() {}
@@ -33,7 +37,14 @@ public final class PlaybackPriority {
     private static final Object lock = new Object();
     private static final List<Lease> upgrades = new ArrayList<>();
     private static final List<Lease> preparations = new ArrayList<>();
+    private static final List<Lease> previews = new ArrayList<>();
     private static final List<Lease> analyses = new ArrayList<>();
+    // First and latest grant of a renewed lease, per tier and identity, so renewal has a limit.
+    private static final Map<String, long[]> chains = bounded();
+    // When each essential analysis was first held back, and the one let through right now.
+    private static final Map<String, long[]> waiting = bounded();
+    private static String letThrough;
+    private static long letThroughUntil;
     private static long quietAt;
     private static boolean quiet;
     private static boolean urgent;
@@ -70,11 +81,39 @@ public final class PlaybackPriority {
             }
     }
 
-    private static Lease grant(String identity, long expires, List<Lease> owner) {
+    private static Map<String, long[]> bounded() {
+        return new LinkedHashMap<String, long[]>() {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<String, long[]> eldest) {
+                return size() > 2 * MAX_LEASES;
+            }
+        };
+    }
+
+    private static Lease grant(String tier, String identity, long now, List<Lease> owner) {
+        long expires = now + UPGRADE_TTL_NANOS;
+        if (owner != analyses) {
+            // A renewal replaces the holder's earlier lease instead of piling up beside it.
+            for (int i = owner.size() - 1; i >= 0; i--)
+                if (owner.get(i).identity.equals(identity)) owner.remove(i).closed = true;
+            String key = tier + identity;
+            long[] chain = chains.get(key);
+            if (chain == null || now - chain[1] - UPGRADE_TTL_NANOS > 0)
+                chain = new long[] {now, now};
+            chain[1] = now;
+            chains.put(key, chain);
+            long limit = chain[0] + MAX_HOLD_NANOS;
+            if (limit - expires < 0) expires = limit;
+        }
+        Lease lease = new Lease(identity, expires, owner);
+        // A renewal past its limit holds nothing.
+        if (expires - now <= 0) {
+            lease.closed = true;
+            return lease;
+        }
         // Past the cap the oldest lease is forgotten (its later close is a no-op), never the new
         // one.
-        if (owner.size() >= MAX_LEASES) owner.remove(0);
-        Lease lease = new Lease(identity, expires, owner);
+        if (owner.size() >= MAX_LEASES) owner.remove(0).closed = true;
         owner.add(lease);
         return lease;
     }
@@ -109,7 +148,7 @@ public final class PlaybackPriority {
         synchronized (lock) {
             long now = clock.getAsLong();
             prune(now);
-            lease = grant(identity, now + UPGRADE_TTL_NANOS, upgrades);
+            lease = grant("u", identity, now, upgrades);
         }
         preempted();
         return lease;
@@ -121,7 +160,7 @@ public final class PlaybackPriority {
         synchronized (lock) {
             long now = clock.getAsLong();
             prune(now);
-            lease = grant(identity, now + UPGRADE_TTL_NANOS, preparations);
+            lease = grant("p", identity, now, preparations);
         }
         preempted();
         return lease;
@@ -131,7 +170,7 @@ public final class PlaybackPriority {
         synchronized (lock) {
             long now = clock.getAsLong();
             prune(now);
-            return grant("analysis", now + UPGRADE_TTL_NANOS, analyses);
+            return grant("a", "analysis", now, analyses);
         }
     }
 
@@ -172,7 +211,10 @@ public final class PlaybackPriority {
         synchronized (lock) {
             long now = clock.getAsLong();
             prune(now);
-            return upgrades.isEmpty() && !settling(now);
+            return upgrades.isEmpty()
+                    && previews.isEmpty()
+                    && !letThroughNow(now)
+                    && !settling(now);
         }
     }
 
@@ -182,6 +224,7 @@ public final class PlaybackPriority {
             long now = clock.getAsLong();
             prune(now);
             return upgrades.isEmpty()
+                    && previews.isEmpty()
                     && preparations.isEmpty()
                     && analyses.isEmpty()
                     && !settling(now);
@@ -193,8 +236,23 @@ public final class PlaybackPriority {
         synchronized (lock) {
             long now = clock.getAsLong();
             prune(now);
-            return upgrades.isEmpty() && preparations.isEmpty() && !settling(now);
+            return analysisFree(now);
         }
+    }
+
+    private static boolean analysisFree(long now) {
+        if (!upgrades.isEmpty() || !previews.isEmpty()) return false;
+        // A let-through analysis ignores preparation, never the current song.
+        if (letThroughNow(now)) return !urgentNow(now);
+        return preparations.isEmpty() && !settling(now);
+    }
+
+    private static boolean letThroughNow(long now) {
+        return letThrough != null && letThroughUntil - now > 0;
+    }
+
+    private static boolean urgentNow(long now) {
+        return urgent && urgentUntil - now > 0;
     }
 
     /**
@@ -208,6 +266,7 @@ public final class PlaybackPriority {
                 long now = clock.getAsLong();
                 prune(now);
                 if (upgrades.isEmpty()
+                        && previews.isEmpty()
                         && preparations.isEmpty()
                         && analyses.isEmpty()
                         && !settling(now)) return true;
@@ -237,7 +296,11 @@ public final class PlaybackPriority {
     private static void prune(long now) {
         expire(upgrades, now);
         expire(preparations, now);
+        expire(previews, now);
         expire(analyses, now);
+        if (letThrough != null && letThroughUntil - now <= 0) letThrough = null;
+        // A held-back analysis nobody has asked about for two minutes is forgotten.
+        waiting.values().removeIf(held -> now - held[1] - UPGRADE_TTL_NANOS > 0);
     }
 
     private static void expire(List<Lease> leases, long now) {
@@ -250,12 +313,90 @@ public final class PlaybackPriority {
         }
     }
 
+    /** Longest an essential analysis waits behind renewed leases before it is let through. */
+    static final long STARVATION_NANOS = 20_000_000_000L;
+
+    /** Longest one let-through analysis holds off next-song preparation. */
+    static final long ESSENTIAL_RUN_NANOS = 90_000_000_000L;
+
+    /** Longest one identity can keep a tier held by renewing its lease. */
+    static final long MAX_HOLD_NANOS = 600_000_000_000L;
+
+    /**
+     * Holds AutoMix analysis and indexing off while a transition preview is prepared and heard.
+     * Source preparation and verification keep running, as the preview may need them. It ranks
+     * below the current song and its upgrade, which it never blocks.
+     */
+    public static AutoCloseable preview(String identity) {
+        Lease lease;
+        synchronized (lock) {
+            long now = clock.getAsLong();
+            prune(now);
+            lease = grant("v", identity, now, previews);
+        }
+        preempted();
+        return lease;
+    }
+
+    static boolean previewActive() {
+        synchronized (lock) {
+            prune(clock.getAsLong());
+            return !previews.isEmpty();
+        }
+    }
+
+    /**
+     * Analysis of one recording. An essential one (the current or next transition) that has been
+     * held back for {@link #STARVATION_NANOS} is let through for {@link #ESSENTIAL_RUN_NANOS},
+     * during which next-song preparation waits; playback, upgrades and previews still win.
+     */
+    static boolean analysisAllowed(String identity, boolean essential) {
+        synchronized (lock) {
+            long now = clock.getAsLong();
+            prune(now);
+            if (analysisFree(now)) return true;
+            if (!essential) return false;
+            long[] held = waiting.get(identity);
+            if (held == null) waiting.put(identity, held = new long[] {now, now});
+            held[1] = now;
+            if (now - held[0] - STARVATION_NANOS < 0
+                    || !upgrades.isEmpty()
+                    || !previews.isEmpty()
+                    || urgentNow(now)) return false;
+            letThrough = identity;
+            letThroughUntil = now + ESSENTIAL_RUN_NANOS;
+            // Held back again only after the run, and for the full bound before the next one.
+            held[0] = letThroughUntil;
+            return true;
+        }
+    }
+
+    /** The analysis ended for good (measured, failed or cancelled), not because it yielded. */
+    static void analysisFinished(String identity) {
+        synchronized (lock) {
+            waiting.remove(identity);
+            if (identity.equals(letThrough)) letThrough = null;
+            lock.notifyAll();
+        }
+    }
+
+    /** Leases currently held across all tiers; for tests. */
+    static int leaseCount() {
+        synchronized (lock) {
+            return upgrades.size() + preparations.size() + previews.size() + analyses.size();
+        }
+    }
+
     /** Forgets everything; for tests. */
     static void reset() {
         synchronized (lock) {
             upgrades.clear();
             preparations.clear();
+            previews.clear();
             analyses.clear();
+            chains.clear();
+            waiting.clear();
+            letThrough = null;
             quiet = false;
             urgent = false;
             clock = System::nanoTime;

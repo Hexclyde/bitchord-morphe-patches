@@ -1859,6 +1859,14 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "\u0623\u0646\u0634\u0626 \u0641\u064a Telegram \u0642\u0646\u0627\u0629"
+                    + " \u062e\u0627\u0635\u0629 \u062a\u0633\u062a\u062e\u062f\u0645\u0647\u0627"
+                    + " \u0648\u062d\u062f\u0643 \u062b\u0645 \u0639\u062f \u0625\u0644\u0649"
+                    + " \u0647\u0646\u0627. \u0627\u0644\u0642\u0646\u0648\u0627\u062a"
+                    + " \u0627\u0644\u0639\u0627\u0645\u0629 \u063a\u064a\u0631"
+                    + " \u0645\u0639\u0631\u0648\u0636\u0629.",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -3068,6 +3076,34 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "\u064a\u062d\u062a\u0641\u0638 \u0628\u0645\u0648\u0633\u064a\u0642\u0649"
+                    + " \u0645\u062d\u0627\u062f\u062b\u0627\u062a\u0643"
+                    + " \u0627\u0644\u0645\u062d\u062f\u062f\u0629 \u0639\u0644\u0649"
+                    + " \u0647\u0630\u0627 \u0627\u0644\u0647\u0627\u062a\u0641."
+                    + " \u062a\u064f\u062d\u062f\u064e\u0651\u062b"
+                    + " \u0645\u0646\u0634\u0648\u0631\u0627\u062a \u0627\u0644\u0635\u0648\u062a"
+                    + " \u0648\u0645\u0644\u0641\u0627\u062a ZIP \u0639\u0646\u062f"
+                    + " \u0648\u0635\u0648\u0644\u0647\u0627 \u0623\u0648"
+                    + " \u062a\u063a\u064a\u064a\u0631\u0647\u0627 \u0623\u0648"
+                    + " \u0627\u062e\u062a\u0641\u0627\u0626\u0647\u0627 \u0645\u0627"
+                    + " \u062f\u0627\u0645 Telegram \u0645\u062a\u0635\u0644\u0627\u064b."
+                    + " \u062a\u0633\u062a\u0643\u0645\u0644 \u0639\u0645\u0644\u064a\u0627\u062a"
+                    + " \u0627\u0644\u0641\u062d\u0635 \u0641\u064a"
+                    + " \u0627\u0644\u062e\u0644\u0641\u064a\u0629 \u0641\u0647\u0631\u0633\u0629"
+                    + " \u0627\u0644\u0633\u062c\u0644 \u0627\u0644\u0633\u0627\u0628\u0642. "
+                    + " \u0625\u064a\u0642\u0627\u0641\u0647 \u064a\u0639\u0646\u064a"
+                    + " \u0625\u064a\u0642\u0627\u0641\u0627\u064b"
+                    + " \u0645\u0624\u0642\u062a\u0627\u064b \u0641\u0642\u0637:"
+                    + " \u064a\u0628\u0642\u0649 \u0627\u0644\u0641\u0647\u0631\u0633"
+                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638 \u0639\u0644\u0649"
+                    + " \u0647\u0630\u0627 \u0627\u0644\u0647\u0627\u062a\u0641"
+                    + " \u0648\u064a\u0645\u0643\u0646\u0643 \u0646\u0633\u062e\u0647"
+                    + " \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0627\u064b \u0623\u0648"
+                    + " \u062a\u0634\u063a\u064a\u0644\u0647 \u0645\u062c\u062f\u062f\u0627\u064b.",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "\u064a\u0645\u0646\u0639 \u0645\u0639\u0627\u062f\u0644\u0629"
@@ -3681,6 +3717,9 @@ final class Translations {
                         + " \u0627\u0644\u0648\u0635\u0648\u0644.",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "\u0644\u0627 \u062a\u0648\u062c\u062f \u0642\u0646\u0627\u0629"
+                        + " \u062e\u0627\u0635\u0629",
                 "No private main channel selected.",
                 "\u0644\u0645 \u062a\u064f\u062d\u062f\u0651\u062f \u0642\u0646\u0627\u0629"
                         + " \u0631\u0626\u064a\u0633\u064a\u0629 \u062e\u0627\u0635\u0629.",
@@ -4297,6 +4336,9 @@ final class Translations {
                     + " \u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649 \u0644\u062f\u064a\u0643"
                     + " \u0644\u0647\u062f\u0641 \u0630\u0627\u0643\u0631\u0629 Telegram"
                     + " \u0627\u0644\u0645\u0624\u0642\u062a\u0629.",
+                "Pick a private channel you created.",
+                "\u0627\u062e\u062a\u0631 \u0642\u0646\u0627\u0629 \u062e\u0627\u0635\u0629"
+                        + " \u0623\u0646\u0634\u0623\u062a\u0647\u0627.",
                 "Pick the quality for this download.",
                 "\u0627\u062e\u062a\u0631 \u062c\u0648\u062f\u0629 \u0647\u0630\u0627"
                         + " \u0627\u0644\u062a\u0646\u0632\u064a\u0644.",
@@ -4488,6 +4530,8 @@ final class Translations {
                 "Privacy and your account",
                 "\u0627\u0644\u062e\u0635\u0648\u0635\u064a\u0629"
                         + " \u0648\u062d\u0633\u0627\u0628\u0643",
+                "Private channel",
+                "\u0642\u0646\u0627\u0629 \u062e\u0627\u0635\u0629",
                 "Private main channel",
                 "\u0627\u0644\u0642\u0646\u0627\u0629"
                         + " \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629"
@@ -4648,6 +4692,9 @@ final class Translations {
                         + " \u062d\u0633\u0627\u0628\u0643 \u0639\u0644\u0649 Telegram",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "\u062c\u0627\u0631\u064d \u0642\u0631\u0627\u0621\u0629"
+                        + " \u0627\u0644\u0635\u0648\u062a\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -4935,6 +4982,13 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "\u0627\u0633\u062a\u0639\u0627\u062f\u0629",
+                "Restore from",
+                "\u0627\u0633\u062a\u0639\u0627\u062f\u0629 \u0645\u0646",
+                "Restore from a private channel",
+                "\u0627\u0633\u062a\u0639\u0627\u062f\u0629 \u0645\u0646 \u0642\u0646\u0627\u0629"
+                        + " \u062e\u0627\u0635\u0629",
+                "Restore from {0}?",
+                "\u0627\u0644\u0627\u0633\u062a\u0639\u0627\u062f\u0629 \u0645\u0646 {0}\u061f",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -5080,6 +5134,8 @@ final class Translations {
                         + " \u0627\u0644\u062a\u0646\u0633\u064a\u0642.",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "\u062d\u0641\u0638 \u0641\u064a \u0645\u0644\u0641",
                 "Save to Music: {0}",
                 "\u0627\u0644\u062d\u0641\u0638 \u0641\u064a"
                         + " \u00ab\u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649\u00bb: {0}",
@@ -5212,6 +5268,13 @@ final class Translations {
                 "Saving selected copies",
                 "\u062c\u0627\u0631\u064d \u062d\u0641\u0638 \u0627\u0644\u0646\u0633\u062e"
                         + " \u0627\u0644\u0645\u062d\u062f\u062f\u0629",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "\u062a\u0648\u0642\u0641 \u062d\u0641\u0638 \u0627\u0644\u0645\u0644\u0641"
+                    + " \u0641\u064a \u0645\u0646\u062a\u0635\u0641\u0647. \u062c\u0631\u0651\u0628"
+                    + " \u0645\u0643\u0627\u0646\u0627\u064b \u0622\u062e\u0631\u061b"
+                    + " \u0641\u0647\u0631\u0633\u0643 \u0627\u0644\u0645\u062d\u0641\u0648\u0638"
+                    + " \u0644\u0645 \u064a\u062a\u063a\u064a\u0631.",
                 "Saving\u2026",
                 "\u062c\u0627\u0631\u064d \u0627\u0644\u062d\u0641\u0638\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -5375,6 +5438,8 @@ final class Translations {
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "\u062a\u0645 \u0627\u062e\u062a\u064a\u0627\u0631 {0}. \u0627\u0628\u062d\u062b"
                         + " \u0641\u064a BitChord \u2192 Addons.",
+                "Send",
+                "\u0625\u0631\u0633\u0627\u0644",
                 "Send audio effects to the installed JamesDSP app",
                 "\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0645\u0624\u062b\u0631\u0627\u062a"
                         + " \u0627\u0644\u0635\u0648\u062a\u064a\u0629 \u0625\u0644\u0649"
@@ -5383,12 +5448,27 @@ final class Translations {
                 "Send code to this number",
                 "\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0631\u0645\u0632 \u0625\u0644\u0649"
                         + " \u0647\u0630\u0627 \u0627\u0644\u0631\u0642\u0645",
+                "Send the backup to",
+                "\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0646\u0633\u062e\u0629"
+                        + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
+                        + " \u0625\u0644\u0649",
+                "Send the backup to {0}?",
+                "\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0646\u0633\u062e\u0629"
+                        + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
+                        + " \u0625\u0644\u0649 {0}\u061f",
                 "Send this offer again",
                 "\u0625\u0639\u0627\u062f\u0629 \u0625\u0631\u0633\u0627\u0644 \u0647\u0630\u0627"
                         + " \u0627\u0644\u0639\u0631\u0636",
                 "Sending file offer",
                 "\u062c\u0627\u0631\u064d \u0625\u0631\u0633\u0627\u0644 \u0639\u0631\u0636"
                         + " \u0627\u0644\u0645\u0644\u0641",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "\u062c\u0627\u0631\u064d \u0625\u0631\u0633\u0627\u0644"
+                        + " \u0627\u0644\u0646\u0633\u062e\u0629"
+                        + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
+                        + " \u0625\u0644\u0649 {0}. \u0633\u062a\u0638\u0647\u0631 \u0641\u064a"
+                        + " Telegram \u0647\u0646\u0627\u0643 \u0639\u0646\u062f"
+                        + " \u0627\u0643\u062a\u0645\u0627\u0644 \u0627\u0644\u0631\u0641\u0639.",
                 "Sends to {0}",
                 "\u064a\u064f\u0631\u0633\u0644 \u0625\u0644\u0649 {0}",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -6450,10 +6530,41 @@ final class Translations {
                 "The App API ID is outside the supported range.",
                 "App API ID \u062e\u0627\u0631\u062c \u0627\u0644\u0646\u0637\u0627\u0642"
                         + " \u0627\u0644\u0645\u062f\u0639\u0648\u0645.",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "\u062e\u0631\u062c\u062a \u0627\u0644\u0646\u0633\u062e\u0629"
+                    + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
+                    + " \u0641\u0627\u0631\u063a\u0629 \u0623\u0648"
+                    + " \u062a\u0627\u0644\u0641\u0629\u060c \u0644\u0630\u0627 \u0644\u0645"
+                    + " \u064a\u064f\u062d\u0641\u0638 \u0634\u064a\u0621."
+                    + " \u0641\u0647\u0631\u0633\u0643 \u0627\u0644\u0645\u062d\u0641\u0648\u0638"
+                    + " \u0644\u0645 \u064a\u062a\u063a\u064a\u0631.",
+                "The backup didn't finish downloading. Try again.",
+                "\u0644\u0645 \u064a\u0643\u062a\u0645\u0644 \u062a\u0646\u0632\u064a\u0644"
+                        + " \u0627\u0644\u0646\u0633\u062e\u0629"
+                        + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629."
+                        + " \u062d\u0627\u0648\u0644 \u0645\u0631\u0629 \u0623\u062e\u0631\u0649.",
                 "The backup file stays where you saved it",
                 "\u064a\u0628\u0642\u0649 \u0645\u0644\u0641 \u0627\u0644\u0646\u0633\u062e\u0629"
                         + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
                         + " \u062d\u064a\u062b \u062d\u0641\u0638\u062a\u0647",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "\u062a\u062d\u062a\u0648\u064a \u0627\u0644\u0646\u0633\u062e\u0629"
+                    + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
+                    + " \u0639\u0644\u0649 \u0625\u0639\u062f\u0627\u062f\u0627\u062a\u0643"
+                    + " \u0648\u0627\u0644\u0623\u0633\u0645\u0627\u0621"
+                    + " \u0627\u0644\u0645\u0635\u062d\u0651\u062d\u0629\u060c"
+                    + " \u0648\u0627\u0644\u0641\u0647\u0631\u0633"
+                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638 \u0625\u0630\u0627"
+                    + " \u0627\u062e\u062a\u0631\u062a\u0647. \u064a\u0645\u0643\u0646"
+                    + " \u0644\u0623\u064a \u0634\u062e\u0635 \u064a\u0633\u062a\u0637\u064a\u0639"
+                    + " \u0641\u062a\u062d \u0627\u0644\u0642\u0646\u0627\u0629"
+                    + " \u0642\u0631\u0627\u0621\u062a\u0647\u0627. \u0644\u0627"
+                    + " \u062a\u062a\u0636\u0645\u0646 \u0623\u0628\u062f\u0627\u064b"
+                    + " \u062a\u0641\u0627\u0635\u064a\u0644 API \u0623\u0648"
+                    + " \u062c\u0644\u0633\u0629 Telegram.",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "\u0623\u0641\u0636\u0644 \u0646\u0633\u062e\u0629 \u0628\u0641\u0642\u062f"
                         + " \u0645\u062a\u0627\u062d\u0629 \u00b7 \u0646\u062d\u0648 8 MB"
@@ -6528,6 +6639,20 @@ final class Translations {
                     + " \u0627\u0644\u0623\u062e\u064a\u0631\u0629 \u062d\u062a\u0649"
                     + " \u0646\u0647\u0627\u064a\u062a\u0647\u0627 \u0628\u0643\u0627\u0645\u0644"
                     + " \u0627\u0644\u0635\u0648\u062a",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "\u0623\u062d\u062f\u062b \u0646\u0633\u062e\u0629"
+                    + " \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629 \u0641\u064a"
+                    + " \u0627\u0644\u0642\u0646\u0627\u0629 \u062a\u0633\u062a\u0628\u062f\u0644"
+                    + " \u0625\u0639\u062f\u0627\u062f\u0627\u062a\u0643"
+                    + " \u0648\u062a\u0636\u064a\u0641 \u0641\u0647\u0631\u0633\u0647\u0627"
+                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638 \u0625\u0644\u0649"
+                    + " \u0647\u0630\u0627 \u0627\u0644\u0641\u0647\u0631\u0633.",
+                "The newest backup posted in a private channel you created",
+                "\u0623\u062d\u062f\u062b \u0646\u0633\u062e\u0629"
+                        + " \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
+                        + " \u0646\u064f\u0634\u0631\u062a \u0641\u064a \u0642\u0646\u0627\u0629"
+                        + " \u062e\u0627\u0635\u0629 \u0623\u0646\u0634\u0623\u062a\u0647\u0627",
                 "The next song already fits",
                 "\u0627\u0644\u0623\u063a\u0646\u064a\u0629"
                     + " \u0627\u0644\u062a\u0627\u0644\u064a\u0629"
@@ -6685,6 +6810,10 @@ final class Translations {
                 "\u0627\u0644\u0623\u063a\u0646\u064a\u0629 \u0643\u0627\u0645\u0644\u0629"
                         + " \u0645\u062e\u0632\u064e\u0651\u0646\u0629"
                         + " \u0645\u0624\u0642\u062a\u064b\u0627.",
+                "There's no BitChord backup in that channel.",
+                "\u0644\u0627 \u062a\u0648\u062c\u062f \u0646\u0633\u062e\u0629"
+                        + " \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629 \u0645\u0646 BitChord"
+                        + " \u0641\u064a \u062a\u0644\u0643 \u0627\u0644\u0642\u0646\u0627\u0629.",
                 "There's no music in this chat yet.",
                 "\u0644\u0627 \u062a\u0648\u062c\u062f \u0645\u0648\u0633\u064a\u0642\u0649"
                         + " \u0641\u064a \u0647\u0630\u0647"
@@ -7301,6 +7430,8 @@ final class Translations {
                 "\u0627\u0646\u062a\u0638\u0631 \u062d\u062a\u0649 \u064a\u0646\u062a\u0647\u064a"
                         + " \u062a\u062d\u0645\u064a\u0644"
                         + " \u0627\u0644\u0645\u0642\u0637\u0639\u064a\u0646",
+                "Waiting",
+                "\u0642\u064a\u062f \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631",
                 "Waiting for a community channel to be indexed",
                 "\u0628\u0627\u0646\u062a\u0638\u0627\u0631 \u0641\u0647\u0631\u0633\u0629"
                         + " \u0625\u062d\u062f\u0649 \u0642\u0646\u0648\u0627\u062a"
@@ -7319,6 +7450,9 @@ final class Translations {
                         + " \u00b7 \u0627\u0644\u0645\u0648\u0636\u0639 \u0641\u064a"
                         + " \u0642\u0627\u0626\u0645\u0629"
                         + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631: {0}",
+                "Waiting for playback",
+                "\u0641\u064a \u0627\u0646\u062a\u0638\u0627\u0631"
+                        + " \u0627\u0644\u062a\u0634\u063a\u064a\u0644",
                 "Waiting for provider",
                 "\u0628\u0627\u0646\u062a\u0638\u0627\u0631"
                         + " \u0627\u0644\u0645\u0632\u0648\u0651\u062f",
@@ -7964,132 +8098,6 @@ final class Translations {
                         + " \u0628\u0644\u0627 \u0641\u0642\u062f \u0623\u0635\u0644\u064b\u0627",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "\u0642\u0646\u0627\u0629 \u062e\u0627\u0635\u0629",
-                "Save to file",
-                "\u062d\u0641\u0638 \u0641\u064a \u0645\u0644\u0641",
-                "Send the backup to",
-                "\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0646\u0633\u062e\u0629"
-                        + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
-                        + " \u0625\u0644\u0649",
-                "Send the backup to {0}?",
-                "\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0646\u0633\u062e\u0629"
-                        + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
-                        + " \u0625\u0644\u0649 {0}\u061f",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "\u062a\u062d\u062a\u0648\u064a \u0627\u0644\u0646\u0633\u062e\u0629"
-                    + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
-                    + " \u0639\u0644\u0649 \u0625\u0639\u062f\u0627\u062f\u0627\u062a\u0643"
-                    + " \u0648\u0627\u0644\u0623\u0633\u0645\u0627\u0621"
-                    + " \u0627\u0644\u0645\u0635\u062d\u0651\u062d\u0629\u060c"
-                    + " \u0648\u0627\u0644\u0641\u0647\u0631\u0633"
-                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638 \u0625\u0630\u0627"
-                    + " \u0627\u062e\u062a\u0631\u062a\u0647. \u064a\u0645\u0643\u0646"
-                    + " \u0644\u0623\u064a \u0634\u062e\u0635 \u064a\u0633\u062a\u0637\u064a\u0639"
-                    + " \u0641\u062a\u062d \u0627\u0644\u0642\u0646\u0627\u0629"
-                    + " \u0642\u0631\u0627\u0621\u062a\u0647\u0627. \u0644\u0627"
-                    + " \u062a\u062a\u0636\u0645\u0646 \u0623\u0628\u062f\u0627\u064b"
-                    + " \u062a\u0641\u0627\u0635\u064a\u0644 API \u0623\u0648"
-                    + " \u062c\u0644\u0633\u0629 Telegram.",
-                "Send",
-                "\u0625\u0631\u0633\u0627\u0644",
-                "Restore from",
-                "\u0627\u0633\u062a\u0639\u0627\u062f\u0629 \u0645\u0646",
-                "Restore from {0}?",
-                "\u0627\u0644\u0627\u0633\u062a\u0639\u0627\u062f\u0629 \u0645\u0646 {0}\u061f",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "\u0623\u062d\u062f\u062b \u0646\u0633\u062e\u0629"
-                    + " \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629 \u0641\u064a"
-                    + " \u0627\u0644\u0642\u0646\u0627\u0629 \u062a\u0633\u062a\u0628\u062f\u0644"
-                    + " \u0625\u0639\u062f\u0627\u062f\u0627\u062a\u0643"
-                    + " \u0648\u062a\u0636\u064a\u0641 \u0641\u0647\u0631\u0633\u0647\u0627"
-                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638 \u0625\u0644\u0649"
-                    + " \u0647\u0630\u0627 \u0627\u0644\u0641\u0647\u0631\u0633.",
-                "No private channel",
-                "\u0644\u0627 \u062a\u0648\u062c\u062f \u0642\u0646\u0627\u0629"
-                        + " \u062e\u0627\u0635\u0629",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "\u0623\u0646\u0634\u0626 \u0641\u064a Telegram \u0642\u0646\u0627\u0629"
-                    + " \u062e\u0627\u0635\u0629 \u062a\u0633\u062a\u062e\u062f\u0645\u0647\u0627"
-                    + " \u0648\u062d\u062f\u0643 \u062b\u0645 \u0639\u062f \u0625\u0644\u0649"
-                    + " \u0647\u0646\u0627. \u0627\u0644\u0642\u0646\u0648\u0627\u062a"
-                    + " \u0627\u0644\u0639\u0627\u0645\u0629 \u063a\u064a\u0631"
-                    + " \u0645\u0639\u0631\u0648\u0636\u0629.",
-                "Restore from a private channel",
-                "\u0627\u0633\u062a\u0639\u0627\u062f\u0629 \u0645\u0646 \u0642\u0646\u0627\u0629"
-                        + " \u062e\u0627\u0635\u0629",
-                "The newest backup posted in a private channel you created",
-                "\u0623\u062d\u062f\u062b \u0646\u0633\u062e\u0629"
-                        + " \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
-                        + " \u0646\u064f\u0634\u0631\u062a \u0641\u064a \u0642\u0646\u0627\u0629"
-                        + " \u062e\u0627\u0635\u0629 \u0623\u0646\u0634\u0623\u062a\u0647\u0627",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "\u062e\u0631\u062c\u062a \u0627\u0644\u0646\u0633\u062e\u0629"
-                    + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
-                    + " \u0641\u0627\u0631\u063a\u0629 \u0623\u0648"
-                    + " \u062a\u0627\u0644\u0641\u0629\u060c \u0644\u0630\u0627 \u0644\u0645"
-                    + " \u064a\u064f\u062d\u0641\u0638 \u0634\u064a\u0621."
-                    + " \u0641\u0647\u0631\u0633\u0643 \u0627\u0644\u0645\u062d\u0641\u0648\u0638"
-                    + " \u0644\u0645 \u064a\u062a\u063a\u064a\u0631.",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "\u062a\u0648\u0642\u0641 \u062d\u0641\u0638 \u0627\u0644\u0645\u0644\u0641"
-                    + " \u0641\u064a \u0645\u0646\u062a\u0635\u0641\u0647. \u062c\u0631\u0651\u0628"
-                    + " \u0645\u0643\u0627\u0646\u0627\u064b \u0622\u062e\u0631\u061b"
-                    + " \u0641\u0647\u0631\u0633\u0643 \u0627\u0644\u0645\u062d\u0641\u0648\u0638"
-                    + " \u0644\u0645 \u064a\u062a\u063a\u064a\u0631.",
-                "Pick a private channel you created.",
-                "\u0627\u062e\u062a\u0631 \u0642\u0646\u0627\u0629 \u062e\u0627\u0635\u0629"
-                        + " \u0623\u0646\u0634\u0623\u062a\u0647\u0627.",
-                "There's no BitChord backup in that channel.",
-                "\u0644\u0627 \u062a\u0648\u062c\u062f \u0646\u0633\u062e\u0629"
-                        + " \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629 \u0645\u0646 BitChord"
-                        + " \u0641\u064a \u062a\u0644\u0643 \u0627\u0644\u0642\u0646\u0627\u0629.",
-                "The backup didn't finish downloading. Try again.",
-                "\u0644\u0645 \u064a\u0643\u062a\u0645\u0644 \u062a\u0646\u0632\u064a\u0644"
-                        + " \u0627\u0644\u0646\u0633\u062e\u0629"
-                        + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629."
-                        + " \u062d\u0627\u0648\u0644 \u0645\u0631\u0629 \u0623\u062e\u0631\u0649.",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "\u062c\u0627\u0631\u064d \u0625\u0631\u0633\u0627\u0644"
-                        + " \u0627\u0644\u0646\u0633\u062e\u0629"
-                        + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
-                        + " \u0625\u0644\u0649 {0}. \u0633\u062a\u0638\u0647\u0631 \u0641\u064a"
-                        + " Telegram \u0647\u0646\u0627\u0643 \u0639\u0646\u062f"
-                        + " \u0627\u0643\u062a\u0645\u0627\u0644 \u0627\u0644\u0631\u0641\u0639.",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "\u064a\u062d\u062a\u0641\u0638 \u0628\u0645\u0648\u0633\u064a\u0642\u0649"
-                    + " \u0645\u062d\u0627\u062f\u062b\u0627\u062a\u0643"
-                    + " \u0627\u0644\u0645\u062d\u062f\u062f\u0629 \u0639\u0644\u0649"
-                    + " \u0647\u0630\u0627 \u0627\u0644\u0647\u0627\u062a\u0641."
-                    + " \u062a\u064f\u062d\u062f\u064e\u0651\u062b"
-                    + " \u0645\u0646\u0634\u0648\u0631\u0627\u062a \u0627\u0644\u0635\u0648\u062a"
-                    + " \u0648\u0645\u0644\u0641\u0627\u062a ZIP \u0639\u0646\u062f"
-                    + " \u0648\u0635\u0648\u0644\u0647\u0627 \u0623\u0648"
-                    + " \u062a\u063a\u064a\u064a\u0631\u0647\u0627 \u0623\u0648"
-                    + " \u0627\u062e\u062a\u0641\u0627\u0626\u0647\u0627 \u0645\u0627"
-                    + " \u062f\u0627\u0645 Telegram \u0645\u062a\u0635\u0644\u0627\u064b."
-                    + " \u062a\u0633\u062a\u0643\u0645\u0644 \u0639\u0645\u0644\u064a\u0627\u062a"
-                    + " \u0627\u0644\u0641\u062d\u0635 \u0641\u064a"
-                    + " \u0627\u0644\u062e\u0644\u0641\u064a\u0629 \u0641\u0647\u0631\u0633\u0629"
-                    + " \u0627\u0644\u0633\u062c\u0644 \u0627\u0644\u0633\u0627\u0628\u0642. "
-                    + " \u0625\u064a\u0642\u0627\u0641\u0647 \u064a\u0639\u0646\u064a"
-                    + " \u0625\u064a\u0642\u0627\u0641\u0627\u064b"
-                    + " \u0645\u0624\u0642\u062a\u0627\u064b \u0641\u0642\u0637:"
-                    + " \u064a\u0628\u0642\u0649 \u0627\u0644\u0641\u0647\u0631\u0633"
-                    + " \u0627\u0644\u0645\u062d\u0641\u0648\u0638 \u0639\u0644\u0649"
-                    + " \u0647\u0630\u0627 \u0627\u0644\u0647\u0627\u062a\u0641"
-                    + " \u0648\u064a\u0645\u0643\u0646\u0643 \u0646\u0633\u062e\u0647"
-                    + " \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0627\u064b \u0623\u0648"
-                    + " \u062a\u0634\u063a\u064a\u0644\u0647 \u0645\u062c\u062f\u062f\u0627\u064b.",
             };
         }
     }
@@ -10056,6 +10064,17 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "Telegram-\u098f \u09b6\u09c1\u09a7\u09c1 \u0986\u09aa\u09a8\u09be\u09b0"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0\u09c7\u09b0"
+                    + " \u099c\u09a8\u09cd\u09af \u098f\u0995\u099f\u09bf"
+                    + " \u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u099f"
+                    + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2 \u09a4\u09c8\u09b0\u09bf"
+                    + " \u0995\u09b0\u09c7 \u09ab\u09bf\u09b0\u09c7 \u0986\u09b8\u09c1\u09a8\u0964"
+                    + " \u09aa\u09be\u09ac\u09b2\u09bf\u0995"
+                    + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2"
+                    + " \u09a6\u09c7\u0996\u09be\u09a8\u09cb \u09b9\u09af\u09bc \u09a8\u09be\u0964",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -11389,6 +11408,35 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "\u0986\u09aa\u09a8\u09be\u09b0 \u09ac\u09c7\u099b\u09c7"
+                    + " \u09a8\u09c7\u0993\u09af\u09bc\u09be"
+                    + " \u099a\u09cd\u09af\u09be\u099f\u09c7\u09b0"
+                    + " \u09ae\u09bf\u0989\u099c\u09bf\u0995 \u098f\u0987 \u09ab\u09cb\u09a8\u09c7"
+                    + " \u09b0\u09be\u0996\u09c7\u0964 Telegram"
+                    + " \u09b8\u0982\u09af\u09c1\u0995\u09cd\u09a4 \u09a5\u09be\u0995\u09b2\u09c7"
+                    + " \u0985\u09a1\u09bf\u0993 \u0993 ZIP \u09aa\u09cb\u09b8\u09cd\u099f"
+                    + " \u0986\u09b8\u09be, \u09ac\u09a6\u09b2\u09be\u09a8\u09cb \u09ac\u09be"
+                    + " \u09ae\u09c1\u099b\u09c7 \u09af\u09be\u0993\u09af\u09bc\u09be\u09b0"
+                    + " \u09b8\u0999\u09cd\u0997\u09c7 \u09b8\u0999\u09cd\u0997\u09c7"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u0986\u09aa\u09a1\u09c7\u099f"
+                    + " \u09b9\u09af\u09bc\u0964"
+                    + " \u09ac\u09cd\u09af\u09be\u0995\u0997\u09cd\u09b0\u09be\u0989\u09a8\u09cd\u09a1"
+                    + " \u09b8\u09cd\u0995\u09cd\u09af\u09be\u09a8 \u0986\u0997\u09c7\u09b0"
+                    + " \u09aa\u09cb\u09b8\u09cd\u099f\u0997\u09c1\u09b2\u09cb\u0993"
+                    + " \u0985\u09a8\u09cd\u09a4\u09b0\u09cd\u09ad\u09c1\u0995\u09cd\u09a4"
+                    + " \u0995\u09b0\u09c7\u0964  \u098f\u099f\u09bf \u09ac\u09a8\u09cd\u09a7"
+                    + " \u0995\u09b0\u09b2\u09c7 \u09b6\u09c1\u09a7\u09c1"
+                    + " \u09ac\u09bf\u09b0\u09a4\u09bf \u09a6\u09c7\u0993\u09af\u09bc\u09be"
+                    + " \u09b9\u09af\u09bc: \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u098f\u0987"
+                    + " \u09ab\u09cb\u09a8\u09c7\u0987 \u09a5\u09be\u0995\u09c7, \u09a4\u09be\u0987"
+                    + " \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09a8\u09bf\u09a4\u09c7"
+                    + " \u09ac\u09be \u0986\u09ac\u09be\u09b0 \u099a\u09be\u09b2\u09c1"
+                    + " \u0995\u09b0\u09a4\u09c7 \u09aa\u09be\u09b0\u09ac\u09c7\u09a8\u0964",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "\u09b8\u09be\u0989\u09a8\u09cd\u09a1 \u09af\u09be\u09a4\u09c7"
@@ -12059,6 +12107,9 @@ final class Translations {
                     + " \u0996\u09c1\u09b2\u09c1\u09a8\u0964",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "\u0995\u09cb\u09a8\u09cb \u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u099f"
+                        + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2 \u09a8\u09c7\u0987",
                 "No private main channel selected.",
                 "\u0995\u09cb\u09a8\u09cb \u09ac\u09cd\u09af\u0995\u09cd\u09a4\u09bf\u0997\u09a4"
                     + " \u09aa\u09cd\u09b0\u09a7\u09be\u09a8"
@@ -12737,6 +12788,11 @@ final class Translations {
                     + " \u0995\u09cd\u09af\u09be\u09b6\u09c7\u09b0"
                     + " \u09b2\u0995\u09cd\u09b7\u09cd\u09af\u09ae\u09be\u09a4\u09cd\u09b0\u09be"
                     + " \u09ae\u09c7\u09a8\u09c7 \u099a\u09b2\u09c7\u0964",
+                "Pick a private channel you created.",
+                "\u0986\u09aa\u09a8\u09be\u09b0 \u09a4\u09c8\u09b0\u09bf \u098f\u0995\u099f\u09bf"
+                        + " \u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u099f"
+                        + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2 \u09ac\u09c7\u099b\u09c7"
+                        + " \u09a8\u09bf\u09a8\u0964",
                 "Pick the quality for this download.",
                 "\u098f\u0987 \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1\u09c7\u09b0"
                         + " \u0995\u09cb\u09af\u09bc\u09be\u09b2\u09bf\u099f\u09bf"
@@ -12941,6 +12997,9 @@ final class Translations {
                 "\u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u09b8\u09bf \u0986\u09b0"
                         + " \u0986\u09aa\u09a8\u09be\u09b0"
                         + " \u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f",
+                "Private channel",
+                "\u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u099f"
+                        + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2",
                 "Private main channel",
                 "\u09ac\u09cd\u09af\u0995\u09cd\u09a4\u09bf\u0997\u09a4"
                         + " \u09aa\u09cd\u09b0\u09a7\u09be\u09a8"
@@ -13114,6 +13173,9 @@ final class Translations {
                         + " \u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "\u0985\u09a1\u09bf\u0993 \u09aa\u09a1\u09bc\u09be"
+                        + " \u09b9\u099a\u09cd\u099b\u09c7\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -13429,6 +13491,16 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "\u09b0\u09bf\u09b8\u09cd\u099f\u09cb\u09b0 \u0995\u09b0\u09c1\u09a8",
+                "Restore from",
+                "\u09af\u09c7\u0996\u09be\u09a8 \u09a5\u09c7\u0995\u09c7"
+                    + " \u09b0\u09bf\u09b8\u09cd\u099f\u09cb\u09b0 \u0995\u09b0\u09ac\u09c7\u09a8",
+                "Restore from a private channel",
+                "\u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u099f"
+                        + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2 \u09a5\u09c7\u0995\u09c7"
+                        + " \u09b0\u09bf\u09b8\u09cd\u099f\u09cb\u09b0",
+                "Restore from {0}?",
+                "{0} \u09a5\u09c7\u0995\u09c7 \u09b0\u09bf\u09b8\u09cd\u099f\u09cb\u09b0"
+                        + " \u0995\u09b0\u09ac\u09c7\u09a8?",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -13590,6 +13662,8 @@ final class Translations {
                     + " \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3 \u0995\u09b0\u09c1\u09a8\u0964",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "\u09ab\u09be\u0987\u09b2\u09c7 \u09b8\u09c7\u09ad \u0995\u09b0\u09c1\u09a8",
                 "Save to Music: {0}",
                 "\u09ae\u09bf\u0989\u099c\u09bf\u0995"
                     + " \u09ab\u09cb\u09b2\u09cd\u09a1\u09be\u09b0\u09c7 \u09b8\u09c7\u09ad: {0}",
@@ -13723,6 +13797,17 @@ final class Translations {
                         + " \u0995\u09aa\u09bf\u0997\u09c1\u09b2\u09cb"
                         + " \u09b8\u0982\u09b0\u0995\u09cd\u09b7\u09a3 \u0995\u09b0\u09be"
                         + " \u09b9\u099a\u09cd\u099b\u09c7",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "\u09ab\u09be\u0987\u09b2 \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
+                        + " \u09ae\u09be\u099d\u09aa\u09a5\u09c7 \u09a5\u09c7\u09ae\u09c7"
+                        + " \u0997\u09c7\u099b\u09c7\u0964 \u0985\u09a8\u09cd\u09af"
+                        + " \u099c\u09be\u09af\u09bc\u0997\u09be\u09af\u09bc"
+                        + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8;"
+                        + " \u0986\u09aa\u09a8\u09be\u09b0 \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
+                        + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
+                        + " \u0985\u09aa\u09b0\u09bf\u09ac\u09b0\u09cd\u09a4\u09bf\u09a4"
+                        + " \u0986\u099b\u09c7\u0964",
                 "Saving\u2026",
                 "\u09b8\u09c7\u09ad \u09b9\u099a\u09cd\u099b\u09c7\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -13899,6 +13984,8 @@ final class Translations {
                 "{0} \u09ac\u09be\u099b\u09be \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964 BitChord"
                         + " \u2192 Addons-\u098f \u09b8\u09be\u09b0\u09cd\u099a"
                         + " \u0995\u09b0\u09c1\u09a8\u0964",
+                "Send",
+                "\u09aa\u09be\u09a0\u09be\u09a8",
                 "Send audio effects to the installed JamesDSP app",
                 "\u0987\u09a8\u09b8\u09cd\u099f\u09b2 \u0995\u09b0\u09be JamesDSP"
                         + " \u0985\u09cd\u09af\u09be\u09aa\u09c7 \u0985\u09a1\u09bf\u0993"
@@ -13906,6 +13993,11 @@ final class Translations {
                 "Send code to this number",
                 "\u098f\u0987 \u09a8\u09ae\u09cd\u09ac\u09b0\u09c7 \u0995\u09cb\u09a1"
                         + " \u09aa\u09be\u09a0\u09be\u09a8",
+                "Send the backup to",
+                "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09aa\u09be\u09a0\u09be\u09a8",
+                "Send the backup to {0}?",
+                "{0}-\u098f \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa"
+                        + " \u09aa\u09be\u09a0\u09be\u09ac\u09c7\u09a8?",
                 "Send this offer again",
                 "\u098f\u0987 \u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09be\u09ac"
                         + " \u0986\u09ac\u09be\u09b0 \u09aa\u09be\u09a0\u09be\u09a8",
@@ -13913,6 +14005,12 @@ final class Translations {
                 "\u09ab\u09be\u0987\u09b2\u09c7\u09b0"
                         + " \u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09be\u09ac"
                         + " \u09aa\u09be\u09a0\u09be\u09a8\u09cb \u09b9\u099a\u09cd\u099b\u09c7",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "{0}-\u098f \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa"
+                    + " \u09aa\u09be\u09a0\u09be\u09a8\u09cb \u09b9\u099a\u09cd\u099b\u09c7\u0964"
+                    + " \u0986\u09aa\u09b2\u09cb\u09a1 \u09b6\u09c7\u09b7 \u09b9\u09b2\u09c7"
+                    + " Telegram-\u098f \u09b8\u09c7\u0996\u09be\u09a8\u09c7"
+                    + " \u09a6\u09c7\u0996\u09be \u09af\u09be\u09ac\u09c7\u0964",
                 "Sends to {0}",
                 "{0}-\u098f \u09aa\u09be\u09a0\u09be\u09af\u09bc",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -15023,11 +15121,43 @@ final class Translations {
                 "The App API ID is outside the supported range.",
                 "App API ID \u09b8\u09be\u09aa\u09cb\u09b0\u09cd\u099f \u0995\u09b0\u09be"
                         + " \u09b8\u09c0\u09ae\u09be\u09b0 \u09ac\u09be\u0987\u09b0\u09c7\u0964",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09ab\u09be\u0981\u0995\u09be"
+                    + " \u09ac\u09be \u09a8\u09b7\u09cd\u099f \u09b9\u09af\u09bc\u09c7\u099b\u09c7,"
+                    + " \u09a4\u09be\u0987 \u0995\u09bf\u099b\u09c1 \u09b8\u09c7\u09ad"
+                    + " \u09b9\u09af\u09bc\u09a8\u09bf\u0964 \u0986\u09aa\u09a8\u09be\u09b0"
+                    + " \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
+                    + " \u0985\u09aa\u09b0\u09bf\u09ac\u09b0\u09cd\u09a4\u09bf\u09a4"
+                    + " \u0986\u099b\u09c7\u0964",
+                "The backup didn't finish downloading. Try again.",
+                "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa"
+                        + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u09b6\u09c7\u09b7"
+                        + " \u09b9\u09af\u09bc\u09a8\u09bf\u0964 \u0986\u09ac\u09be\u09b0"
+                        + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8\u0964",
                 "The backup file stays where you saved it",
                 "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09ab\u09be\u0987\u09b2\u099f\u09bf"
                         + " \u09af\u09c7\u0996\u09be\u09a8\u09c7 \u09b8\u09c7\u09ad"
                         + " \u0995\u09b0\u09c7\u099b\u09c7\u09a8"
                         + " \u09b8\u09c7\u0996\u09be\u09a8\u09c7\u0987 \u09a5\u09be\u0995\u09c7",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa\u09c7 \u0986\u09aa\u09a8\u09be\u09b0"
+                    + " \u09b8\u09c7\u099f\u09bf\u0982\u09b8,"
+                    + " \u09b8\u0982\u09b6\u09cb\u09a7\u09bf\u09a4 \u09a8\u09be\u09ae"
+                    + " \u098f\u09ac\u0982 (\u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09b2\u09c7)"
+                    + " \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09a5\u09be\u0995\u09c7\u0964"
+                    + " \u09af\u09c7-\u0995\u09c7\u0989"
+                    + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u099f\u09bf"
+                    + " \u0996\u09c1\u09b2\u09a4\u09c7 \u09aa\u09be\u09b0\u09b2\u09c7"
+                    + " \u098f\u099f\u09bf \u09aa\u09a1\u09bc\u09a4\u09c7"
+                    + " \u09aa\u09be\u09b0\u09ac\u09c7\u0964 \u0986\u09aa\u09a8\u09be\u09b0 API"
+                    + " \u09a4\u09a5\u09cd\u09af \u0993 Telegram \u09b8\u09c7\u09b6\u09a8"
+                    + " \u098f\u09a4\u09c7 \u0995\u0996\u09a8\u0993 \u09a5\u09be\u0995\u09c7"
+                    + " \u09a8\u09be\u0964",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "\u09aa\u09be\u0993\u09af\u09bc\u09be \u09af\u09be\u09af\u09bc \u098f\u09ae\u09a8"
                         + " \u09b8\u09c7\u09b0\u09be \u09b2\u09b8\u09bf \u0995\u09aa\u09bf \u00b7"
@@ -15108,6 +15238,24 @@ final class Translations {
                 "\u09b6\u09c7\u09b7 \u0997\u09be\u09a8 \u09aa\u09c1\u09b0\u09cb"
                         + " \u09ad\u09b2\u09bf\u0989\u09ae\u09c7 \u09b6\u09c7\u09b7"
                         + " \u09aa\u09b0\u09cd\u09af\u09a8\u09cd\u09a4 \u09ac\u09be\u099c\u09c7",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "\u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7\u09b0"
+                    + " \u09b8\u09ac\u099a\u09c7\u09af\u09bc\u09c7 \u09a8\u09a4\u09c1\u09a8"
+                    + " \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u0986\u09aa\u09a8\u09be\u09b0"
+                    + " \u09b8\u09c7\u099f\u09bf\u0982\u09b8 \u09ac\u09a6\u09b2\u09c7"
+                    + " \u09a6\u09c7\u09ac\u09c7 \u098f\u09ac\u0982 \u098f\u09b0 \u09b8\u09c7\u09ad"
+                    + " \u0995\u09b0\u09be \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
+                    + " \u098f\u0996\u09be\u09a8\u0995\u09be\u09b0"
+                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8\u09c7 \u09af\u09cb\u0997"
+                    + " \u0995\u09b0\u09ac\u09c7\u0964",
+                "The newest backup posted in a private channel you created",
+                "\u0986\u09aa\u09a8\u09be\u09b0 \u09a4\u09c8\u09b0\u09bf"
+                        + " \u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u099f"
+                        + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7"
+                        + " \u09aa\u09cb\u09b8\u09cd\u099f \u0995\u09b0\u09be"
+                        + " \u09b8\u09ac\u099a\u09c7\u09af\u09bc\u09c7 \u09a8\u09a4\u09c1\u09a8"
+                        + " \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa",
                 "The next song already fits",
                 "\u09aa\u09b0\u09c7\u09b0 \u0997\u09be\u09a8"
                         + " \u098f\u09ae\u09a8\u09bf\u09a4\u09c7\u0987"
@@ -15278,6 +15426,10 @@ final class Translations {
                 "The whole song is cached.",
                 "\u09aa\u09c1\u09b0\u09cb \u0997\u09be\u09a8\u099f\u09bf"
                         + " \u0995\u09cd\u09af\u09be\u09b6\u09c7 \u0986\u099b\u09c7\u0964",
+                "There's no BitChord backup in that channel.",
+                "\u0993\u0987 \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7"
+                        + " BitChord-\u098f\u09b0 \u0995\u09cb\u09a8\u09cb"
+                        + " \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09a8\u09c7\u0987\u0964",
                 "There's no music in this chat yet.",
                 "\u098f\u0987 \u099a\u09cd\u09af\u09be\u099f\u09c7 \u098f\u0996\u09a8\u09cb"
                         + " \u0995\u09cb\u09a8\u09cb \u09ae\u09bf\u0989\u099c\u09bf\u0995"
@@ -15918,6 +16070,9 @@ final class Translations {
                     + " \u09b9\u0993\u09af\u09bc\u09be \u09b6\u09c7\u09b7"
                     + " \u09b9\u0993\u09af\u09bc\u09be \u09aa\u09b0\u09cd\u09af\u09a8\u09cd\u09a4"
                     + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be \u0995\u09b0\u09c1\u09a8",
+                "Waiting",
+                "\u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be \u0995\u09b0\u09be"
+                        + " \u09b9\u099a\u09cd\u099b\u09c7",
                 "Waiting for a community channel to be indexed",
                 "\u0995\u09cb\u09a8\u09cb \u0995\u09ae\u09bf\u0989\u09a8\u09bf\u099f\u09bf"
                         + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2"
@@ -15941,6 +16096,10 @@ final class Translations {
                         + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be\u09af\u09bc \u00b7"
                         + " \u09b8\u09be\u09b0\u09bf\u09a4\u09c7"
                         + " \u0985\u09ac\u09b8\u09cd\u09a5\u09be\u09a8 {0}",
+                "Waiting for playback",
+                "\u09aa\u09cd\u09b2\u09c7\u09ac\u09cd\u09af\u09be\u0995\u09c7\u09b0"
+                        + " \u099c\u09a8\u09cd\u09af \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be"
+                        + " \u0995\u09b0\u09be \u09b9\u099a\u09cd\u099b\u09c7",
                 "Waiting for provider",
                 "\u09aa\u09cd\u09b0\u09a6\u09be\u09a8\u0995\u09be\u09b0\u09c0\u09b0"
                         + " \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be\u09af\u09bc",
@@ -16653,147 +16812,6 @@ final class Translations {
                         + " \u09b2\u09b8\u09b2\u09c7\u09b8 \u09a7\u09b0\u09c7",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "\u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u099f"
-                        + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2",
-                "Save to file",
-                "\u09ab\u09be\u0987\u09b2\u09c7 \u09b8\u09c7\u09ad \u0995\u09b0\u09c1\u09a8",
-                "Send the backup to",
-                "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09aa\u09be\u09a0\u09be\u09a8",
-                "Send the backup to {0}?",
-                "{0}-\u098f \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa"
-                        + " \u09aa\u09be\u09a0\u09be\u09ac\u09c7\u09a8?",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa\u09c7 \u0986\u09aa\u09a8\u09be\u09b0"
-                    + " \u09b8\u09c7\u099f\u09bf\u0982\u09b8,"
-                    + " \u09b8\u0982\u09b6\u09cb\u09a7\u09bf\u09a4 \u09a8\u09be\u09ae"
-                    + " \u098f\u09ac\u0982 (\u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09b2\u09c7)"
-                    + " \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
-                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u09a5\u09be\u0995\u09c7\u0964"
-                    + " \u09af\u09c7-\u0995\u09c7\u0989"
-                    + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u099f\u09bf"
-                    + " \u0996\u09c1\u09b2\u09a4\u09c7 \u09aa\u09be\u09b0\u09b2\u09c7"
-                    + " \u098f\u099f\u09bf \u09aa\u09a1\u09bc\u09a4\u09c7"
-                    + " \u09aa\u09be\u09b0\u09ac\u09c7\u0964 \u0986\u09aa\u09a8\u09be\u09b0 API"
-                    + " \u09a4\u09a5\u09cd\u09af \u0993 Telegram \u09b8\u09c7\u09b6\u09a8"
-                    + " \u098f\u09a4\u09c7 \u0995\u0996\u09a8\u0993 \u09a5\u09be\u0995\u09c7"
-                    + " \u09a8\u09be\u0964",
-                "Send",
-                "\u09aa\u09be\u09a0\u09be\u09a8",
-                "Restore from",
-                "\u09af\u09c7\u0996\u09be\u09a8 \u09a5\u09c7\u0995\u09c7"
-                    + " \u09b0\u09bf\u09b8\u09cd\u099f\u09cb\u09b0 \u0995\u09b0\u09ac\u09c7\u09a8",
-                "Restore from {0}?",
-                "{0} \u09a5\u09c7\u0995\u09c7 \u09b0\u09bf\u09b8\u09cd\u099f\u09cb\u09b0"
-                        + " \u0995\u09b0\u09ac\u09c7\u09a8?",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "\u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7\u09b0"
-                    + " \u09b8\u09ac\u099a\u09c7\u09af\u09bc\u09c7 \u09a8\u09a4\u09c1\u09a8"
-                    + " \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u0986\u09aa\u09a8\u09be\u09b0"
-                    + " \u09b8\u09c7\u099f\u09bf\u0982\u09b8 \u09ac\u09a6\u09b2\u09c7"
-                    + " \u09a6\u09c7\u09ac\u09c7 \u098f\u09ac\u0982 \u098f\u09b0 \u09b8\u09c7\u09ad"
-                    + " \u0995\u09b0\u09be \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
-                    + " \u098f\u0996\u09be\u09a8\u0995\u09be\u09b0"
-                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8\u09c7 \u09af\u09cb\u0997"
-                    + " \u0995\u09b0\u09ac\u09c7\u0964",
-                "No private channel",
-                "\u0995\u09cb\u09a8\u09cb \u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u099f"
-                        + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2 \u09a8\u09c7\u0987",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "Telegram-\u098f \u09b6\u09c1\u09a7\u09c1 \u0986\u09aa\u09a8\u09be\u09b0"
-                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0\u09c7\u09b0"
-                    + " \u099c\u09a8\u09cd\u09af \u098f\u0995\u099f\u09bf"
-                    + " \u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u099f"
-                    + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2 \u09a4\u09c8\u09b0\u09bf"
-                    + " \u0995\u09b0\u09c7 \u09ab\u09bf\u09b0\u09c7 \u0986\u09b8\u09c1\u09a8\u0964"
-                    + " \u09aa\u09be\u09ac\u09b2\u09bf\u0995"
-                    + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2"
-                    + " \u09a6\u09c7\u0996\u09be\u09a8\u09cb \u09b9\u09af\u09bc \u09a8\u09be\u0964",
-                "Restore from a private channel",
-                "\u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u099f"
-                        + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2 \u09a5\u09c7\u0995\u09c7"
-                        + " \u09b0\u09bf\u09b8\u09cd\u099f\u09cb\u09b0",
-                "The newest backup posted in a private channel you created",
-                "\u0986\u09aa\u09a8\u09be\u09b0 \u09a4\u09c8\u09b0\u09bf"
-                        + " \u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u099f"
-                        + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7"
-                        + " \u09aa\u09cb\u09b8\u09cd\u099f \u0995\u09b0\u09be"
-                        + " \u09b8\u09ac\u099a\u09c7\u09af\u09bc\u09c7 \u09a8\u09a4\u09c1\u09a8"
-                        + " \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09ab\u09be\u0981\u0995\u09be"
-                    + " \u09ac\u09be \u09a8\u09b7\u09cd\u099f \u09b9\u09af\u09bc\u09c7\u099b\u09c7,"
-                    + " \u09a4\u09be\u0987 \u0995\u09bf\u099b\u09c1 \u09b8\u09c7\u09ad"
-                    + " \u09b9\u09af\u09bc\u09a8\u09bf\u0964 \u0986\u09aa\u09a8\u09be\u09b0"
-                    + " \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
-                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
-                    + " \u0985\u09aa\u09b0\u09bf\u09ac\u09b0\u09cd\u09a4\u09bf\u09a4"
-                    + " \u0986\u099b\u09c7\u0964",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "\u09ab\u09be\u0987\u09b2 \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
-                        + " \u09ae\u09be\u099d\u09aa\u09a5\u09c7 \u09a5\u09c7\u09ae\u09c7"
-                        + " \u0997\u09c7\u099b\u09c7\u0964 \u0985\u09a8\u09cd\u09af"
-                        + " \u099c\u09be\u09af\u09bc\u0997\u09be\u09af\u09bc"
-                        + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8;"
-                        + " \u0986\u09aa\u09a8\u09be\u09b0 \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
-                        + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8"
-                        + " \u0985\u09aa\u09b0\u09bf\u09ac\u09b0\u09cd\u09a4\u09bf\u09a4"
-                        + " \u0986\u099b\u09c7\u0964",
-                "Pick a private channel you created.",
-                "\u0986\u09aa\u09a8\u09be\u09b0 \u09a4\u09c8\u09b0\u09bf \u098f\u0995\u099f\u09bf"
-                        + " \u09aa\u09cd\u09b0\u09be\u0987\u09ad\u09c7\u099f"
-                        + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2 \u09ac\u09c7\u099b\u09c7"
-                        + " \u09a8\u09bf\u09a8\u0964",
-                "There's no BitChord backup in that channel.",
-                "\u0993\u0987 \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2\u09c7"
-                        + " BitChord-\u098f\u09b0 \u0995\u09cb\u09a8\u09cb"
-                        + " \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09a8\u09c7\u0987\u0964",
-                "The backup didn't finish downloading. Try again.",
-                "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa"
-                        + " \u09a1\u09be\u0989\u09a8\u09b2\u09cb\u09a1 \u09b6\u09c7\u09b7"
-                        + " \u09b9\u09af\u09bc\u09a8\u09bf\u0964 \u0986\u09ac\u09be\u09b0"
-                        + " \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c1\u09a8\u0964",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "{0}-\u098f \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa"
-                    + " \u09aa\u09be\u09a0\u09be\u09a8\u09cb \u09b9\u099a\u09cd\u099b\u09c7\u0964"
-                    + " \u0986\u09aa\u09b2\u09cb\u09a1 \u09b6\u09c7\u09b7 \u09b9\u09b2\u09c7"
-                    + " Telegram-\u098f \u09b8\u09c7\u0996\u09be\u09a8\u09c7"
-                    + " \u09a6\u09c7\u0996\u09be \u09af\u09be\u09ac\u09c7\u0964",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "\u0986\u09aa\u09a8\u09be\u09b0 \u09ac\u09c7\u099b\u09c7"
-                    + " \u09a8\u09c7\u0993\u09af\u09bc\u09be"
-                    + " \u099a\u09cd\u09af\u09be\u099f\u09c7\u09b0"
-                    + " \u09ae\u09bf\u0989\u099c\u09bf\u0995 \u098f\u0987 \u09ab\u09cb\u09a8\u09c7"
-                    + " \u09b0\u09be\u0996\u09c7\u0964 Telegram"
-                    + " \u09b8\u0982\u09af\u09c1\u0995\u09cd\u09a4 \u09a5\u09be\u0995\u09b2\u09c7"
-                    + " \u0985\u09a1\u09bf\u0993 \u0993 ZIP \u09aa\u09cb\u09b8\u09cd\u099f"
-                    + " \u0986\u09b8\u09be, \u09ac\u09a6\u09b2\u09be\u09a8\u09cb \u09ac\u09be"
-                    + " \u09ae\u09c1\u099b\u09c7 \u09af\u09be\u0993\u09af\u09bc\u09be\u09b0"
-                    + " \u09b8\u0999\u09cd\u0997\u09c7 \u09b8\u0999\u09cd\u0997\u09c7"
-                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u0986\u09aa\u09a1\u09c7\u099f"
-                    + " \u09b9\u09af\u09bc\u0964"
-                    + " \u09ac\u09cd\u09af\u09be\u0995\u0997\u09cd\u09b0\u09be\u0989\u09a8\u09cd\u09a1"
-                    + " \u09b8\u09cd\u0995\u09cd\u09af\u09be\u09a8 \u0986\u0997\u09c7\u09b0"
-                    + " \u09aa\u09cb\u09b8\u09cd\u099f\u0997\u09c1\u09b2\u09cb\u0993"
-                    + " \u0985\u09a8\u09cd\u09a4\u09b0\u09cd\u09ad\u09c1\u0995\u09cd\u09a4"
-                    + " \u0995\u09b0\u09c7\u0964  \u098f\u099f\u09bf \u09ac\u09a8\u09cd\u09a7"
-                    + " \u0995\u09b0\u09b2\u09c7 \u09b6\u09c1\u09a7\u09c1"
-                    + " \u09ac\u09bf\u09b0\u09a4\u09bf \u09a6\u09c7\u0993\u09af\u09bc\u09be"
-                    + " \u09b9\u09af\u09bc: \u09b8\u09c7\u09ad \u0995\u09b0\u09be"
-                    + " \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 \u098f\u0987"
-                    + " \u09ab\u09cb\u09a8\u09c7\u0987 \u09a5\u09be\u0995\u09c7, \u09a4\u09be\u0987"
-                    + " \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09a8\u09bf\u09a4\u09c7"
-                    + " \u09ac\u09be \u0986\u09ac\u09be\u09b0 \u099a\u09be\u09b2\u09c1"
-                    + " \u0995\u09b0\u09a4\u09c7 \u09aa\u09be\u09b0\u09ac\u09c7\u09a8\u0964",
             };
         }
     }
@@ -17892,6 +17910,10 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "Erstelle in Telegram einen privaten Kanal, den nur du nutzt, und komm dann"
+                        + " zur\u00fcck. \u00d6ffentliche Kan\u00e4le werden nicht angeboten.",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -18691,6 +18713,16 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "H\u00e4lt die Musik aus deinen ausgew\u00e4hlten Chats auf diesem Handy vor."
+                    + " Solange Telegram verbunden ist, wird der Index beim Eintreffen, \u00c4ndern"
+                    + " oder Entfernen von Audio- und ZIP-Beitr\u00e4gen aktualisiert."
+                    + " Hintergrundscans erg\u00e4nzen \u00e4ltere Beitr\u00e4ge.  Beim Ausschalten"
+                    + " wird er nur pausiert: Der gespeicherte Index bleibt auf diesem Handy,"
+                    + " sodass du ihn weiter sichern oder wieder einschalten kannst.",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "Verhindert, dass der Klang zweimal durch einen Equalizer l\u00e4uft, und h\u00e4lt"
@@ -19085,6 +19117,8 @@ final class Translations {
                         + " zu pr\u00fcfen.",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "Kein privater Kanal",
                 "No private main channel selected.",
                 "Kein privater Hauptkanal ausgew\u00e4hlt.",
                 "No profile for this output yet.",
@@ -19471,6 +19505,8 @@ final class Translations {
                 "Photos and files outside your music chats follow the Telegram cache target.",
                 "Fotos und Dateien au\u00dferhalb deiner Musikchats folgen dem"
                         + " Telegram-Cache-Ziel.",
+                "Pick a private channel you created.",
+                "W\u00e4hle einen privaten Kanal, den du erstellt hast.",
                 "Pick the quality for this download.",
                 "W\u00e4hle die Qualit\u00e4t f\u00fcr diesen Download.",
                 "Pitch",
@@ -19621,6 +19657,8 @@ final class Translations {
                 "Datenschutz und Routen",
                 "Privacy and your account",
                 "Datenschutz und dein Konto",
+                "Private channel",
+                "Privater Kanal",
                 "Private main channel",
                 "Privater Hauptkanal",
                 "Private main channel selected.",
@@ -19716,6 +19754,8 @@ final class Translations {
                 "Schreibgesch\u00fctzte Kanalansicht \u00b7 Dein Telegram-Konto",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "Audio wird gelesen\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -19915,6 +19955,12 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "Wiederherstellen",
+                "Restore from",
+                "Wiederherstellen aus",
+                "Restore from a private channel",
+                "Aus privatem Kanal wiederherstellen",
+                "Restore from {0}?",
+                "Aus {0} wiederherstellen?",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -20022,6 +20068,8 @@ final class Translations {
                 "Speichere die Einstellungen bei beendeter Koordination.",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "In Datei speichern",
                 "Save to Music: {0}",
                 "In Musik speichern: {0}",
                 "Saved",
@@ -20101,6 +20149,10 @@ final class Translations {
                 "Speichern pausiert",
                 "Saving selected copies",
                 "Ausgew\u00e4hlte Kopien werden gespeichert",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "Das Speichern der Datei wurde unterbrochen. Versuche einen anderen Ort; dein"
+                        + " gespeicherter Index ist unver\u00e4ndert.",
                 "Saving\u2026",
                 "Wird gespeichert\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -20201,14 +20253,23 @@ final class Translations {
                 "{0} Musik-Chats ausgew\u00e4hlt. Suche in BitChord \u2192 Addons.",
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "{0} ausgew\u00e4hlt. Suche in BitChord \u2192 Addons.",
+                "Send",
+                "Senden",
                 "Send audio effects to the installed JamesDSP app",
                 "Audioeffekte an die installierte JamesDSP-App \u00fcbergeben",
                 "Send code to this number",
                 "Code an diese Nummer senden",
+                "Send the backup to",
+                "Backup senden an",
+                "Send the backup to {0}?",
+                "Backup an {0} senden?",
                 "Send this offer again",
                 "Dieses Angebot erneut senden",
                 "Sending file offer",
                 "Dateiangebot wird gesendet",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "Backup wird an {0} gesendet. Telegram zeigt es dort an, sobald der Upload fertig"
+                        + " ist.",
                 "Sends to {0}",
                 "Wird an {0} gesendet",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -20843,8 +20904,20 @@ final class Translations {
                         + " entfernt. Deine Playlists sind nicht betroffen.",
                 "The App API ID is outside the supported range.",
                 "Die App API ID liegt au\u00dferhalb des unterst\u00fctzten Bereichs.",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "Das Backup war leer oder besch\u00e4digt, deshalb wurde nichts gespeichert. Dein"
+                        + " gespeicherter Index ist unver\u00e4ndert.",
+                "The backup didn't finish downloading. Try again.",
+                "Das Backup wurde nicht fertig heruntergeladen. Versuche es erneut.",
                 "The backup file stays where you saved it",
                 "Die Sicherungsdatei bleibt dort, wo du sie gespeichert hast",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "Das Backup enth\u00e4lt deine Einstellungen und korrigierten Namen, auf Wunsch"
+                    + " auch den gespeicherten Index. Jeder, der den Kanal \u00f6ffnen kann, kann"
+                    + " es lesen. Deine API-Daten und deine Telegram-Sitzung sind nie darin.",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "Die beste verf\u00fcgbare verlustbehaftete Kopie \u00b7 etwa 8 MB pro Song",
                 "The cleaner choice for older recordings.",
@@ -20882,6 +20955,12 @@ final class Translations {
                 "Die Datenbank des Index konnte auf diesem Handy nicht ge\u00f6ffnet werden.",
                 "The last song plays to its end at full volume",
                 "Der letzte Song spielt in voller Lautst\u00e4rke bis zum Ende",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "Das neueste Backup im Kanal ersetzt deine Einstellungen und f\u00fcgt seinen"
+                        + " gespeicherten Index diesem hinzu.",
+                "The newest backup posted in a private channel you created",
+                "Das neueste Backup in einem privaten Kanal, den du erstellt hast",
                 "The next song already fits",
                 "Der n\u00e4chste Song passt schon",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -20962,6 +21041,8 @@ final class Translations {
                 "Die Titell\u00e4nge ist nicht verf\u00fcgbar",
                 "The whole song is cached.",
                 "Der ganze Song ist zwischengespeichert.",
+                "There's no BitChord backup in that channel.",
+                "In diesem Kanal gibt es kein BitChord-Backup.",
                 "There's no music in this chat yet.",
                 "In diesem Chat gibt es noch keine Musik.",
                 "There\u2019s no other version of this song.",
@@ -21343,6 +21424,8 @@ final class Translations {
                 "Warte, bis die aktuelle Aktion abgeschlossen ist.",
                 "Wait for the pair to finish loading",
                 "Warte, bis beide Titel fertig geladen sind",
+                "Waiting",
+                "Warten",
                 "Waiting for a community channel to be indexed",
                 "Warte darauf, dass ein Community-Kanal indexiert wird",
                 "Waiting for device to cool down",
@@ -21353,6 +21436,8 @@ final class Translations {
                 "Warten auf Peer",
                 "Waiting for peer \u00b7 queue position {0}",
                 "Warten auf Peer \u00b7 Warteschlangenposition {0}",
+                "Waiting for playback",
+                "Warten auf Wiedergabe",
                 "Waiting for provider",
                 "Warten auf den Anbieter",
                 "Waiting for receipt",
@@ -21749,67 +21834,6 @@ final class Translations {
                 "{0}, den BitChord bereits als verlustfrei einstuft",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "Privater Kanal",
-                "Save to file",
-                "In Datei speichern",
-                "Send the backup to",
-                "Backup senden an",
-                "Send the backup to {0}?",
-                "Backup an {0} senden?",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "Das Backup enth\u00e4lt deine Einstellungen und korrigierten Namen, auf Wunsch"
-                    + " auch den gespeicherten Index. Jeder, der den Kanal \u00f6ffnen kann, kann"
-                    + " es lesen. Deine API-Daten und deine Telegram-Sitzung sind nie darin.",
-                "Send",
-                "Senden",
-                "Restore from",
-                "Wiederherstellen aus",
-                "Restore from {0}?",
-                "Aus {0} wiederherstellen?",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "Das neueste Backup im Kanal ersetzt deine Einstellungen und f\u00fcgt seinen"
-                        + " gespeicherten Index diesem hinzu.",
-                "No private channel",
-                "Kein privater Kanal",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "Erstelle in Telegram einen privaten Kanal, den nur du nutzt, und komm dann"
-                        + " zur\u00fcck. \u00d6ffentliche Kan\u00e4le werden nicht angeboten.",
-                "Restore from a private channel",
-                "Aus privatem Kanal wiederherstellen",
-                "The newest backup posted in a private channel you created",
-                "Das neueste Backup in einem privaten Kanal, den du erstellt hast",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "Das Backup war leer oder besch\u00e4digt, deshalb wurde nichts gespeichert. Dein"
-                        + " gespeicherter Index ist unver\u00e4ndert.",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "Das Speichern der Datei wurde unterbrochen. Versuche einen anderen Ort; dein"
-                        + " gespeicherter Index ist unver\u00e4ndert.",
-                "Pick a private channel you created.",
-                "W\u00e4hle einen privaten Kanal, den du erstellt hast.",
-                "There's no BitChord backup in that channel.",
-                "In diesem Kanal gibt es kein BitChord-Backup.",
-                "The backup didn't finish downloading. Try again.",
-                "Das Backup wurde nicht fertig heruntergeladen. Versuche es erneut.",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "Backup wird an {0} gesendet. Telegram zeigt es dort an, sobald der Upload fertig"
-                        + " ist.",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "H\u00e4lt die Musik aus deinen ausgew\u00e4hlten Chats auf diesem Handy vor."
-                    + " Solange Telegram verbunden ist, wird der Index beim Eintreffen, \u00c4ndern"
-                    + " oder Entfernen von Audio- und ZIP-Beitr\u00e4gen aktualisiert."
-                    + " Hintergrundscans erg\u00e4nzen \u00e4ltere Beitr\u00e4ge.  Beim Ausschalten"
-                    + " wird er nur pausiert: Der gespeicherte Index bleibt auf diesem Handy,"
-                    + " sodass du ihn weiter sichern oder wieder einschalten kannst.",
             };
         }
     }
@@ -22916,6 +22940,10 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "Crea en Telegram un canal privado que solo uses t\u00fa y vuelve. No se ofrecen"
+                        + " canales p\u00fablicos.",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -23712,6 +23740,16 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "Guarda en este tel\u00e9fono la m\u00fasica de tus chats seleccionados. Mientras"
+                    + " Telegram est\u00e1 conectado, el \u00edndice se actualiza cuando llegan,"
+                    + " cambian o desaparecen publicaciones de audio y archivos ZIP. Los"
+                    + " an\u00e1lisis en segundo plano incorporan el historial anterior.  Al"
+                    + " desactivarlo solo se pausa: el \u00edndice guardado se queda en este"
+                    + " tel\u00e9fono y puedes copiarlo o volver a activarlo.",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "Evita que el sonido se ecualice dos veces y mantiene las canciones fuera del chip"
@@ -24105,6 +24143,8 @@ final class Translations {
                         + " acceso.",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "Ning\u00fan canal privado",
                 "No private main channel selected.",
                 "No se ha seleccionado ning\u00fan canal principal privado.",
                 "No profile for this output yet.",
@@ -24489,6 +24529,8 @@ final class Translations {
                 "Photos and files outside your music chats follow the Telegram cache target.",
                 "Las fotos y los archivos fuera de tus chats de m\u00fasica siguen el l\u00edmite"
                         + " de cach\u00e9 de Telegram.",
+                "Pick a private channel you created.",
+                "Elige un canal privado que hayas creado.",
                 "Pick the quality for this download.",
                 "Elige la calidad de esta descarga.",
                 "Pitch",
@@ -24640,6 +24682,8 @@ final class Translations {
                 "Privacidad y rutas",
                 "Privacy and your account",
                 "Privacidad y tu cuenta",
+                "Private channel",
+                "Canal privado",
                 "Private main channel",
                 "Canal principal privado",
                 "Private main channel selected.",
@@ -24734,6 +24778,8 @@ final class Translations {
                 "Vista de canal de solo lectura \u00b7 Tu cuenta de Telegram",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "Leyendo audio\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -24934,6 +24980,12 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "Restaurar",
+                "Restore from",
+                "Restaurar desde",
+                "Restore from a private channel",
+                "Restaurar desde un canal privado",
+                "Restore from {0}?",
+                "\u00bfRestaurar desde {0}?",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -25042,6 +25094,8 @@ final class Translations {
                 "Guarda los ajustes mientras la coordinaci\u00f3n est\u00e9 detenida.",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "Guardar en archivo",
                 "Save to Music: {0}",
                 "Guardar en M\u00fasica: {0}",
                 "Saved",
@@ -25124,6 +25178,10 @@ final class Translations {
                 "Guardado en pausa",
                 "Saving selected copies",
                 "Guardando las copias elegidas",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "El guardado del archivo se detuvo a medias. Prueba en otro sitio; tu \u00edndice"
+                        + " guardado sigue intacto.",
                 "Saving\u2026",
                 "Guardando\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -25224,14 +25282,23 @@ final class Translations {
                 "{0} chats de m\u00fasica seleccionados. Busca en BitChord \u2192 Addons.",
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "Seleccionado: {0}. Busca en BitChord \u2192 Addons.",
+                "Send",
+                "Enviar",
                 "Send audio effects to the installed JamesDSP app",
                 "Enviar los efectos de audio a la app JamesDSP instalada",
                 "Send code to this number",
                 "Enviar c\u00f3digo a este n\u00famero",
+                "Send the backup to",
+                "Enviar la copia de seguridad a",
+                "Send the backup to {0}?",
+                "\u00bfEnviar la copia de seguridad a {0}?",
                 "Send this offer again",
                 "Volver a enviar esta oferta",
                 "Sending file offer",
                 "Enviando oferta de archivos",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "Enviando la copia de seguridad a {0}. Telegram la muestra all\u00ed cuando termina"
+                        + " de subirse.",
                 "Sends to {0}",
                 "Se env\u00eda a {0}",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -25871,8 +25938,20 @@ final class Translations {
                         + " Tus listas de reproducci\u00f3n no se ven afectadas.",
                 "The App API ID is outside the supported range.",
                 "El App API ID est\u00e1 fuera del rango admitido.",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "La copia de seguridad sali\u00f3 vac\u00eda o da\u00f1ada, as\u00ed que no se"
+                        + " guard\u00f3 nada. Tu \u00edndice guardado sigue intacto.",
+                "The backup didn't finish downloading. Try again.",
+                "La copia de seguridad no termin\u00f3 de descargarse. Int\u00e9ntalo de nuevo.",
                 "The backup file stays where you saved it",
                 "El archivo de copia de seguridad se queda donde lo guardaste",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "La copia contiene tus ajustes y nombres corregidos y, si lo eliges, el \u00edndice"
+                    + " guardado. Cualquiera que pueda abrir el canal puede leerla. Tus datos de"
+                    + " API y tu sesi\u00f3n de Telegram nunca est\u00e1n en ella.",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "La mejor copia con p\u00e9rdida disponible \u00b7 unos 8 MB por canci\u00f3n",
                 "The cleaner choice for older recordings.",
@@ -25910,6 +25989,12 @@ final class Translations {
                 "No se pudo abrir la base de datos del \u00edndice en este tel\u00e9fono.",
                 "The last song plays to its end at full volume",
                 "La \u00faltima canci\u00f3n suena hasta el final a todo volumen",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "La copia m\u00e1s reciente del canal sustituye tus ajustes y a\u00f1ade su"
+                        + " \u00edndice guardado a este.",
+                "The newest backup posted in a private channel you created",
+                "La copia m\u00e1s reciente publicada en un canal privado que creaste",
                 "The next song already fits",
                 "La siguiente canci\u00f3n ya encaja",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -25982,6 +26067,8 @@ final class Translations {
                 "La duraci\u00f3n de la pista no est\u00e1 disponible",
                 "The whole song is cached.",
                 "La canci\u00f3n entera est\u00e1 en cach\u00e9.",
+                "There's no BitChord backup in that channel.",
+                "No hay ninguna copia de BitChord en ese canal.",
                 "There's no music in this chat yet.",
                 "Todav\u00eda no hay m\u00fasica en este chat.",
                 "There\u2019s no other version of this song.",
@@ -26358,6 +26445,8 @@ final class Translations {
                 "Espera a que termine la acci\u00f3n actual.",
                 "Wait for the pair to finish loading",
                 "Espera a que termine de cargar la pareja",
+                "Waiting",
+                "En espera",
                 "Waiting for a community channel to be indexed",
                 "Esperando a que se indexe un canal de la comunidad",
                 "Waiting for device to cool down",
@@ -26368,6 +26457,8 @@ final class Translations {
                 "Esperando al par",
                 "Waiting for peer \u00b7 queue position {0}",
                 "Esperando al par \u00b7 posici\u00f3n en cola {0}",
+                "Waiting for playback",
+                "Esperando la reproducci\u00f3n",
                 "Waiting for provider",
                 "Esperando al proveedor",
                 "Waiting for receipt",
@@ -26762,67 +26853,6 @@ final class Translations {
                 "{0}, que BitChord ya cuenta como sin p\u00e9rdida",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "Canal privado",
-                "Save to file",
-                "Guardar en archivo",
-                "Send the backup to",
-                "Enviar la copia de seguridad a",
-                "Send the backup to {0}?",
-                "\u00bfEnviar la copia de seguridad a {0}?",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "La copia contiene tus ajustes y nombres corregidos y, si lo eliges, el \u00edndice"
-                    + " guardado. Cualquiera que pueda abrir el canal puede leerla. Tus datos de"
-                    + " API y tu sesi\u00f3n de Telegram nunca est\u00e1n en ella.",
-                "Send",
-                "Enviar",
-                "Restore from",
-                "Restaurar desde",
-                "Restore from {0}?",
-                "\u00bfRestaurar desde {0}?",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "La copia m\u00e1s reciente del canal sustituye tus ajustes y a\u00f1ade su"
-                        + " \u00edndice guardado a este.",
-                "No private channel",
-                "Ning\u00fan canal privado",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "Crea en Telegram un canal privado que solo uses t\u00fa y vuelve. No se ofrecen"
-                        + " canales p\u00fablicos.",
-                "Restore from a private channel",
-                "Restaurar desde un canal privado",
-                "The newest backup posted in a private channel you created",
-                "La copia m\u00e1s reciente publicada en un canal privado que creaste",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "La copia de seguridad sali\u00f3 vac\u00eda o da\u00f1ada, as\u00ed que no se"
-                        + " guard\u00f3 nada. Tu \u00edndice guardado sigue intacto.",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "El guardado del archivo se detuvo a medias. Prueba en otro sitio; tu \u00edndice"
-                        + " guardado sigue intacto.",
-                "Pick a private channel you created.",
-                "Elige un canal privado que hayas creado.",
-                "There's no BitChord backup in that channel.",
-                "No hay ninguna copia de BitChord en ese canal.",
-                "The backup didn't finish downloading. Try again.",
-                "La copia de seguridad no termin\u00f3 de descargarse. Int\u00e9ntalo de nuevo.",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "Enviando la copia de seguridad a {0}. Telegram la muestra all\u00ed cuando termina"
-                        + " de subirse.",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "Guarda en este tel\u00e9fono la m\u00fasica de tus chats seleccionados. Mientras"
-                    + " Telegram est\u00e1 conectado, el \u00edndice se actualiza cuando llegan,"
-                    + " cambian o desaparecen publicaciones de audio y archivos ZIP. Los"
-                    + " an\u00e1lisis en segundo plano incorporan el historial anterior.  Al"
-                    + " desactivarlo solo se pausa: el \u00edndice guardado se queda en este"
-                    + " tel\u00e9fono y puedes copiarlo o volver a activarlo.",
             };
         }
     }
@@ -27951,6 +27981,10 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "Cr\u00e9ez dans Telegram un canal priv\u00e9 que vous seul utilisez, puis revenez."
+                        + " Les canaux publics ne sont pas propos\u00e9s.",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -28764,6 +28798,17 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "Conserve sur ce t\u00e9l\u00e9phone la musique de vos discussions"
+                    + " s\u00e9lectionn\u00e9es. Tant que Telegram est connect\u00e9, l\u2019index"
+                    + " est mis \u00e0 jour lorsque des publications audio ou ZIP arrivent,"
+                    + " changent ou disparaissent. Les analyses en arri\u00e8re-plan"
+                    + " compl\u00e8tent l\u2019historique.  Le d\u00e9sactiver le met seulement en"
+                    + " pause : l\u2019index enregistr\u00e9 reste sur ce t\u00e9l\u00e9phone, et"
+                    + " vous pouvez toujours le sauvegarder ou le r\u00e9activer.",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "\u00c9vite que le son soit \u00e9galis\u00e9 deux fois et tient les morceaux"
@@ -29162,6 +29207,8 @@ final class Translations {
                         + " v\u00e9rifier l\u2019acc\u00e8s.",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "Aucun canal priv\u00e9",
                 "No private main channel selected.",
                 "Aucun canal principal priv\u00e9 s\u00e9lectionn\u00e9.",
                 "No profile for this output yet.",
@@ -29560,6 +29607,8 @@ final class Translations {
                 "Photos and files outside your music chats follow the Telegram cache target.",
                 "Les photos et fichiers hors de vos chats musicaux suivent la limite de cache de"
                         + " Telegram.",
+                "Pick a private channel you created.",
+                "Choisissez un canal priv\u00e9 que vous avez cr\u00e9\u00e9.",
                 "Pick the quality for this download.",
                 "Choisissez la qualit\u00e9 de ce t\u00e9l\u00e9chargement.",
                 "Pitch",
@@ -29712,6 +29761,8 @@ final class Translations {
                 "Confidentialit\u00e9 et itin\u00e9raires",
                 "Privacy and your account",
                 "Confidentialit\u00e9 et compte",
+                "Private channel",
+                "Canal priv\u00e9",
                 "Private main channel",
                 "Canal principal priv\u00e9",
                 "Private main channel selected.",
@@ -29810,6 +29861,8 @@ final class Translations {
                 "Vue du canal en lecture seule \u00b7 Votre compte Telegram",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "Lecture du fichier audio\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -30013,6 +30066,12 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "Restaurer",
+                "Restore from",
+                "Restaurer depuis",
+                "Restore from a private channel",
+                "Restaurer depuis un canal priv\u00e9",
+                "Restore from {0}?",
+                "Restaurer depuis {0} ?",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -30122,6 +30181,8 @@ final class Translations {
                 "Enregistrez les param\u00e8tres lorsque la coordination est arr\u00eat\u00e9e.",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "Enregistrer dans un fichier",
                 "Save to Music: {0}",
                 "Enregistrer dans Musique : {0}",
                 "Saved",
@@ -30206,6 +30267,10 @@ final class Translations {
                 "Enregistrement en pause",
                 "Saving selected copies",
                 "Enregistrement des copies choisies",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "L\u2019enregistrement du fichier s\u2019est arr\u00eat\u00e9 en cours de route."
+                        + " Essayez un autre emplacement ; votre index enregistr\u00e9 est intact.",
                 "Saving\u2026",
                 "Enregistrement\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -30310,14 +30375,23 @@ final class Translations {
                         + " Addons.",
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "S\u00e9lection : {0}. Recherchez dans BitChord \u2192 Addons.",
+                "Send",
+                "Envoyer",
                 "Send audio effects to the installed JamesDSP app",
                 "Confier les effets audio \u00e0 l\u2019appli JamesDSP install\u00e9e",
                 "Send code to this number",
                 "Envoyer le code \u00e0 ce num\u00e9ro",
+                "Send the backup to",
+                "Envoyer la sauvegarde \u00e0",
+                "Send the backup to {0}?",
+                "Envoyer la sauvegarde \u00e0 {0} ?",
                 "Send this offer again",
                 "Renvoyer cette offre",
                 "Sending file offer",
                 "Envoi d\u2019une offre de fichiers",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "Envoi de la sauvegarde vers {0}. Telegram l\u2019y affiche une fois l\u2019envoi"
+                        + " termin\u00e9.",
                 "Sends to {0}",
                 "Envoy\u00e9 \u00e0 {0}",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -30965,8 +31039,21 @@ final class Translations {
                         + " appareil. Vos playlists ne sont pas affect\u00e9es.",
                 "The App API ID is outside the supported range.",
                 "L\u2019App API ID est hors de la plage prise en charge.",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "La sauvegarde est sortie vide ou endommag\u00e9e, rien n\u2019a donc \u00e9t\u00e9"
+                        + " enregistr\u00e9. Votre index enregistr\u00e9 est intact.",
+                "The backup didn't finish downloading. Try again.",
+                "La sauvegarde n\u2019a pas fini de se t\u00e9l\u00e9charger. R\u00e9essayez.",
                 "The backup file stays where you saved it",
                 "Le fichier de sauvegarde reste l\u00e0 o\u00f9 vous l\u2019avez enregistr\u00e9",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "La sauvegarde contient vos r\u00e9glages et noms corrig\u00e9s, et l\u2019index"
+                    + " enregistr\u00e9 si vous le choisissez. Toute personne pouvant ouvrir le"
+                    + " canal peut la lire. Vos identifiants API et votre session Telegram n\u2019y"
+                    + " figurent jamais.",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "La meilleure copie avec perte disponible \u00b7 environ 8 MB par morceau",
                 "The cleaner choice for older recordings.",
@@ -31005,6 +31092,13 @@ final class Translations {
                         + " t\u00e9l\u00e9phone.",
                 "The last song plays to its end at full volume",
                 "Le dernier morceau est lu jusqu\u2019au bout \u00e0 plein volume",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "La sauvegarde la plus r\u00e9cente du canal remplace vos r\u00e9glages et ajoute"
+                        + " son index enregistr\u00e9 \u00e0 celui-ci.",
+                "The newest backup posted in a private channel you created",
+                "La sauvegarde la plus r\u00e9cente publi\u00e9e dans un canal priv\u00e9 que vous"
+                        + " avez cr\u00e9\u00e9",
                 "The next song already fits",
                 "Le morceau suivant convient d\u00e9j\u00e0",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -31086,6 +31180,8 @@ final class Translations {
                 "La dur\u00e9e du morceau n\u2019est pas disponible",
                 "The whole song is cached.",
                 "Le morceau entier est en cache.",
+                "There's no BitChord backup in that channel.",
+                "Il n\u2019y a aucune sauvegarde BitChord dans ce canal.",
                 "There's no music in this chat yet.",
                 "Il n\u2019y a pas encore de musique dans cette discussion.",
                 "There\u2019s no other version of this song.",
@@ -31472,6 +31568,8 @@ final class Translations {
                 "Attendez la fin de l\u2019action en cours.",
                 "Wait for the pair to finish loading",
                 "Attendez la fin du chargement des deux morceaux",
+                "Waiting",
+                "En attente",
                 "Waiting for a community channel to be indexed",
                 "En attente de l\u2019indexation d\u2019un canal communautaire",
                 "Waiting for device to cool down",
@@ -31482,6 +31580,8 @@ final class Translations {
                 "En attente du pair",
                 "Waiting for peer \u00b7 queue position {0}",
                 "En attente du pair \u00b7 position dans la file {0}",
+                "Waiting for playback",
+                "En attente de la lecture",
                 "Waiting for provider",
                 "En attente du fournisseur",
                 "Waiting for receipt",
@@ -31891,70 +31991,6 @@ final class Translations {
                 "{0}, que BitChord compte d\u00e9j\u00e0 comme sans perte",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "Canal priv\u00e9",
-                "Save to file",
-                "Enregistrer dans un fichier",
-                "Send the backup to",
-                "Envoyer la sauvegarde \u00e0",
-                "Send the backup to {0}?",
-                "Envoyer la sauvegarde \u00e0 {0} ?",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "La sauvegarde contient vos r\u00e9glages et noms corrig\u00e9s, et l\u2019index"
-                    + " enregistr\u00e9 si vous le choisissez. Toute personne pouvant ouvrir le"
-                    + " canal peut la lire. Vos identifiants API et votre session Telegram n\u2019y"
-                    + " figurent jamais.",
-                "Send",
-                "Envoyer",
-                "Restore from",
-                "Restaurer depuis",
-                "Restore from {0}?",
-                "Restaurer depuis {0} ?",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "La sauvegarde la plus r\u00e9cente du canal remplace vos r\u00e9glages et ajoute"
-                        + " son index enregistr\u00e9 \u00e0 celui-ci.",
-                "No private channel",
-                "Aucun canal priv\u00e9",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "Cr\u00e9ez dans Telegram un canal priv\u00e9 que vous seul utilisez, puis revenez."
-                        + " Les canaux publics ne sont pas propos\u00e9s.",
-                "Restore from a private channel",
-                "Restaurer depuis un canal priv\u00e9",
-                "The newest backup posted in a private channel you created",
-                "La sauvegarde la plus r\u00e9cente publi\u00e9e dans un canal priv\u00e9 que vous"
-                        + " avez cr\u00e9\u00e9",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "La sauvegarde est sortie vide ou endommag\u00e9e, rien n\u2019a donc \u00e9t\u00e9"
-                        + " enregistr\u00e9. Votre index enregistr\u00e9 est intact.",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "L\u2019enregistrement du fichier s\u2019est arr\u00eat\u00e9 en cours de route."
-                        + " Essayez un autre emplacement ; votre index enregistr\u00e9 est intact.",
-                "Pick a private channel you created.",
-                "Choisissez un canal priv\u00e9 que vous avez cr\u00e9\u00e9.",
-                "There's no BitChord backup in that channel.",
-                "Il n\u2019y a aucune sauvegarde BitChord dans ce canal.",
-                "The backup didn't finish downloading. Try again.",
-                "La sauvegarde n\u2019a pas fini de se t\u00e9l\u00e9charger. R\u00e9essayez.",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "Envoi de la sauvegarde vers {0}. Telegram l\u2019y affiche une fois l\u2019envoi"
-                        + " termin\u00e9.",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "Conserve sur ce t\u00e9l\u00e9phone la musique de vos discussions"
-                    + " s\u00e9lectionn\u00e9es. Tant que Telegram est connect\u00e9, l\u2019index"
-                    + " est mis \u00e0 jour lorsque des publications audio ou ZIP arrivent,"
-                    + " changent ou disparaissent. Les analyses en arri\u00e8re-plan"
-                    + " compl\u00e8tent l\u2019historique.  Le d\u00e9sactiver le met seulement en"
-                    + " pause : l\u2019index enregistr\u00e9 reste sur ce t\u00e9l\u00e9phone, et"
-                    + " vous pouvez toujours le sauvegarder ou le r\u00e9activer.",
             };
         }
     }
@@ -33655,6 +33691,14 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "\u05e6\u05d5\u05e8 \u05d1-Telegram \u05e2\u05e8\u05d5\u05e5"
+                    + " \u05e4\u05e8\u05d8\u05d9 \u05e9\u05e8\u05e7 \u05d0\u05ea\u05d4"
+                    + " \u05de\u05e9\u05ea\u05de\u05e9 \u05d1\u05d5 \u05d5\u05d7\u05d6\u05d5\u05e8"
+                    + " \u05dc\u05db\u05d0\u05df. \u05e2\u05e8\u05d5\u05e6\u05d9\u05dd"
+                    + " \u05e6\u05d9\u05d1\u05d5\u05e8\u05d9\u05d9\u05dd \u05dc\u05d0"
+                    + " \u05de\u05d5\u05e6\u05e2\u05d9\u05dd.",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -34828,6 +34872,31 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "\u05e9\u05d5\u05de\u05e8 \u05d1\u05d8\u05dc\u05e4\u05d5\u05df \u05d4\u05d6\u05d4"
+                    + " \u05d0\u05ea \u05d4\u05de\u05d5\u05d6\u05d9\u05e7\u05d4"
+                    + " \u05de\u05d4\u05e6'\u05d0\u05d8\u05d9\u05dd \u05e9\u05d1\u05d7\u05e8\u05ea."
+                    + " \u05db\u05e9\u05d4\u05d7\u05d9\u05d1\u05d5\u05e8 \u05dc-Telegram"
+                    + " \u05e4\u05e2\u05d9\u05dc, \u05d4\u05d0\u05d9\u05e0\u05d3\u05e7\u05e1"
+                    + " \u05de\u05ea\u05e2\u05d3\u05db\u05df"
+                    + " \u05db\u05e9\u05e4\u05d5\u05e1\u05d8\u05d9\u05dd \u05e9\u05dc"
+                    + " \u05d0\u05d5\u05d3\u05d9\u05d5 \u05d5\u05e7\u05d5\u05d1\u05e6\u05d9 ZIP"
+                    + " \u05de\u05d2\u05d9\u05e2\u05d9\u05dd, \u05de\u05e9\u05ea\u05e0\u05d9\u05dd"
+                    + " \u05d0\u05d5 \u05e0\u05e2\u05dc\u05de\u05d9\u05dd."
+                    + " \u05e1\u05e8\u05d9\u05e7\u05d5\u05ea \u05d1\u05e8\u05e7\u05e2"
+                    + " \u05de\u05e9\u05dc\u05d9\u05de\u05d5\u05ea \u05d0\u05ea"
+                    + " \u05d4\u05d4\u05d9\u05e1\u05d8\u05d5\u05e8\u05d9\u05d4. "
+                    + " \u05db\u05d9\u05d1\u05d5\u05d9 \u05d4\u05d0\u05e4\u05e9\u05e8\u05d5\u05ea"
+                    + " \u05e8\u05e7 \u05de\u05e9\u05d4\u05d4 \u05d0\u05d5\u05ea\u05d4:"
+                    + " \u05d4\u05d0\u05d9\u05e0\u05d3\u05e7\u05e1 \u05d4\u05e9\u05de\u05d5\u05e8"
+                    + " \u05e0\u05e9\u05d0\u05e8 \u05d1\u05d8\u05dc\u05e4\u05d5\u05df"
+                    + " \u05d4\u05d6\u05d4, \u05d5\u05d0\u05e4\u05e9\u05e8"
+                    + " \u05dc\u05d2\u05d1\u05d5\u05ea \u05d0\u05d5\u05ea\u05d5 \u05d0\u05d5"
+                    + " \u05dc\u05d4\u05e4\u05e2\u05d9\u05dc \u05d0\u05d5\u05ea\u05d5"
+                    + " \u05e9\u05d5\u05d1.",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "\u05de\u05d5\u05e0\u05e2 \u05e2\u05d9\u05d1\u05d5\u05d3 \u05db\u05e4\u05d5\u05dc"
@@ -35406,6 +35475,8 @@ final class Translations {
                         + " \u05d4\u05d2\u05d9\u05e9\u05d4.",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "\u05d0\u05d9\u05df \u05e2\u05e8\u05d5\u05e5 \u05e4\u05e8\u05d8\u05d9",
                 "No private main channel selected.",
                 "\u05dc\u05d0 \u05e0\u05d1\u05d7\u05e8 \u05e2\u05e8\u05d5\u05e5"
                         + " \u05e8\u05d0\u05e9\u05d9 \u05e4\u05e8\u05d8\u05d9.",
@@ -35994,6 +36065,9 @@ final class Translations {
                     + " \u05d4\u05de\u05d5\u05d6\u05d9\u05e7\u05d4 \u05e9\u05dc\u05da"
                     + " \u05db\u05e4\u05d5\u05e4\u05d9\u05dd \u05dc\u05d9\u05e2\u05d3"
                     + " \u05d4\u05de\u05d8\u05de\u05d5\u05df \u05e9\u05dc Telegram.",
+                "Pick a private channel you created.",
+                "\u05d1\u05d7\u05e8 \u05e2\u05e8\u05d5\u05e5 \u05e4\u05e8\u05d8\u05d9"
+                        + " \u05e9\u05d9\u05e6\u05e8\u05ea.",
                 "Pick the quality for this download.",
                 "\u05d9\u05e9 \u05dc\u05d1\u05d7\u05d5\u05e8 \u05d0\u05ea"
                     + " \u05d4\u05d0\u05d9\u05db\u05d5\u05ea \u05dc\u05d4\u05d5\u05e8\u05d3\u05d4"
@@ -36181,6 +36255,8 @@ final class Translations {
                 "Privacy and your account",
                 "\u05e4\u05e8\u05d8\u05d9\u05d5\u05ea \u05d5\u05d4\u05d7\u05e9\u05d1\u05d5\u05df"
                         + " \u05e9\u05dc\u05da",
+                "Private channel",
+                "\u05e2\u05e8\u05d5\u05e5 \u05e4\u05e8\u05d8\u05d9",
                 "Private main channel",
                 "\u05e2\u05e8\u05d5\u05e5 \u05e8\u05d0\u05e9\u05d9 \u05e4\u05e8\u05d8\u05d9",
                 "Private main channel selected.",
@@ -36330,6 +36406,8 @@ final class Translations {
                         + " \u05d7\u05e9\u05d1\u05d5\u05df \u05d4-Telegram \u05e9\u05dc\u05da",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "\u05e7\u05d5\u05e8\u05d0 \u05d0\u05d5\u05d3\u05d9\u05d5\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -36604,6 +36682,13 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "\u05e9\u05d7\u05d6\u05d5\u05e8",
+                "Restore from",
+                "\u05e9\u05d7\u05d6\u05d5\u05e8 \u05de\u05ea\u05d5\u05da",
+                "Restore from a private channel",
+                "\u05e9\u05d7\u05d6\u05d5\u05e8 \u05de\u05e2\u05e8\u05d5\u05e5"
+                        + " \u05e4\u05e8\u05d8\u05d9",
+                "Restore from {0}?",
+                "\u05dc\u05e9\u05d7\u05d6\u05e8 \u05de\u05ea\u05d5\u05da {0}?",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -36742,6 +36827,8 @@ final class Translations {
                         + " \u05de\u05d5\u05e4\u05e1\u05e7.",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "\u05e9\u05de\u05d9\u05e8\u05d4 \u05dc\u05e7\u05d5\u05d1\u05e5",
                 "Save to Music: {0}",
                 "\u05e9\u05de\u05d9\u05e8\u05d4 \u05d1\u05de\u05d5\u05d6\u05d9\u05e7\u05d4: {0}",
                 "Saved",
@@ -36852,6 +36939,13 @@ final class Translations {
                 "Saving selected copies",
                 "\u05e9\u05de\u05d9\u05e8\u05ea \u05d4\u05e2\u05d5\u05ea\u05e7\u05d9\u05dd"
                         + " \u05e9\u05e0\u05d1\u05d7\u05e8\u05d5",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "\u05e9\u05de\u05d9\u05e8\u05ea \u05d4\u05e7\u05d5\u05d1\u05e5"
+                    + " \u05e0\u05e2\u05e6\u05e8\u05d4 \u05d1\u05d0\u05de\u05e6\u05e2."
+                    + " \u05e0\u05e1\u05d4 \u05de\u05e7\u05d5\u05dd \u05d0\u05d7\u05e8;"
+                    + " \u05d4\u05d0\u05d9\u05e0\u05d3\u05e7\u05e1 \u05d4\u05e9\u05de\u05d5\u05e8"
+                    + " \u05e9\u05dc\u05da \u05dc\u05d0 \u05d4\u05e9\u05ea\u05e0\u05d4.",
                 "Saving\u2026",
                 "\u05e9\u05d5\u05de\u05e8\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -37000,6 +37094,8 @@ final class Translations {
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "\u05e0\u05d1\u05d7\u05e8: {0}. \u05d0\u05e4\u05e9\u05e8 \u05dc\u05d7\u05e4\u05e9"
                         + " \u05d1-BitChord \u2192 \u05ea\u05d5\u05e1\u05e4\u05d9\u05dd.",
+                "Send",
+                "\u05e9\u05dc\u05d9\u05d7\u05d4",
                 "Send audio effects to the installed JamesDSP app",
                 "\u05dc\u05d4\u05e2\u05d1\u05d9\u05e8 \u05d0\u05ea \u05d0\u05e4\u05e7\u05d8\u05d9"
                         + " \u05d4\u05e9\u05de\u05e2"
@@ -37008,12 +37104,22 @@ final class Translations {
                 "Send code to this number",
                 "\u05e9\u05dc\u05d9\u05d7\u05ea \u05e7\u05d5\u05d3 \u05dc\u05de\u05e1\u05e4\u05e8"
                         + " \u05d4\u05d6\u05d4",
+                "Send the backup to",
+                "\u05e9\u05dc\u05d9\u05d7\u05ea \u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05d0\u05dc",
+                "Send the backup to {0}?",
+                "\u05dc\u05e9\u05dc\u05d5\u05d7 \u05d0\u05ea \u05d4\u05d2\u05d9\u05d1\u05d5\u05d9"
+                        + " \u05d0\u05dc {0}?",
                 "Send this offer again",
                 "\u05e9\u05dc\u05d9\u05d7\u05ea \u05d4\u05d4\u05e6\u05e2\u05d4 \u05d4\u05d6\u05d5"
                         + " \u05e9\u05d5\u05d1",
                 "Sending file offer",
                 "\u05d4\u05e6\u05e2\u05ea \u05d4\u05e7\u05d5\u05d1\u05e5"
                         + " \u05e0\u05e9\u05dc\u05d7\u05ea",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "\u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05e0\u05e9\u05dc\u05d7 \u05d0\u05dc {0}."
+                        + " \u05d4\u05d5\u05d0 \u05d9\u05d5\u05e4\u05d9\u05e2 \u05e9\u05dd"
+                        + " \u05d1-Telegram \u05d1\u05e1\u05d9\u05d5\u05dd"
+                        + " \u05d4\u05d4\u05e2\u05dc\u05d0\u05d4.",
                 "Sends to {0}",
                 "\u05e0\u05e9\u05dc\u05d7 \u05d0\u05dc {0}",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -37997,10 +38103,38 @@ final class Translations {
                 "The App API ID is outside the supported range.",
                 "\u05d4-App API ID \u05de\u05d7\u05d5\u05e5 \u05dc\u05d8\u05d5\u05d5\u05d7"
                         + " \u05d4\u05e0\u05ea\u05de\u05da.",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "\u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05d9\u05e6\u05d0 \u05e8\u05d9\u05e7"
+                    + " \u05d0\u05d5 \u05e4\u05d2\u05d5\u05dd, \u05d5\u05dc\u05db\u05df"
+                    + " \u05d3\u05d1\u05e8 \u05dc\u05d0 \u05e0\u05e9\u05de\u05e8."
+                    + " \u05d4\u05d0\u05d9\u05e0\u05d3\u05e7\u05e1 \u05d4\u05e9\u05de\u05d5\u05e8"
+                    + " \u05e9\u05dc\u05da \u05dc\u05d0 \u05d4\u05e9\u05ea\u05e0\u05d4.",
+                "The backup didn't finish downloading. Try again.",
+                "\u05d4\u05d5\u05e8\u05d3\u05ea \u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05dc\u05d0"
+                        + " \u05d4\u05e1\u05ea\u05d9\u05d9\u05de\u05d4. \u05e0\u05e1\u05d4"
+                        + " \u05e9\u05d5\u05d1.",
                 "The backup file stays where you saved it",
                 "\u05e7\u05d5\u05d1\u05e5 \u05d4\u05d2\u05d9\u05d1\u05d5\u05d9"
                     + " \u05e0\u05e9\u05d0\u05e8 \u05d1\u05de\u05e7\u05d5\u05dd \u05e9\u05d1\u05d5"
                     + " \u05e0\u05e9\u05de\u05e8",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "\u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05db\u05d5\u05dc\u05dc \u05d0\u05ea"
+                    + " \u05d4\u05d4\u05d2\u05d3\u05e8\u05d5\u05ea"
+                    + " \u05d5\u05d4\u05e9\u05de\u05d5\u05ea"
+                    + " \u05d4\u05de\u05ea\u05d5\u05e7\u05e0\u05d9\u05dd \u05e9\u05dc\u05da,"
+                    + " \u05d5\u05d0\u05ea \u05d4\u05d0\u05d9\u05e0\u05d3\u05e7\u05e1"
+                    + " \u05d4\u05e9\u05de\u05d5\u05e8 \u05d0\u05dd \u05d1\u05d7\u05e8\u05ea"
+                    + " \u05d1\u05db\u05da. \u05db\u05dc \u05de\u05d9"
+                    + " \u05e9\u05d9\u05db\u05d5\u05dc \u05dc\u05e4\u05ea\u05d5\u05d7 \u05d0\u05ea"
+                    + " \u05d4\u05e2\u05e8\u05d5\u05e5 \u05d9\u05db\u05d5\u05dc"
+                    + " \u05dc\u05e7\u05e8\u05d5\u05d0 \u05d0\u05d5\u05ea\u05d5."
+                    + " \u05e4\u05e8\u05d8\u05d9 \u05d4-API"
+                    + " \u05d5\u05d4\u05d7\u05d9\u05d1\u05d5\u05e8 \u05e9\u05dc\u05da"
+                    + " \u05dc-Telegram \u05dc\u05e2\u05d5\u05dc\u05dd \u05d0\u05d9\u05e0\u05dd"
+                    + " \u05db\u05dc\u05d5\u05dc\u05d9\u05dd \u05d1\u05d5.",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "\u05d4\u05e2\u05d5\u05ea\u05e7 \u05d4\u05d8\u05d5\u05d1"
                     + " \u05d1\u05d9\u05d5\u05ea\u05e8 \u05e2\u05dd \u05d0\u05d5\u05d1\u05d3\u05df"
@@ -38072,6 +38206,20 @@ final class Translations {
                 "\u05d4\u05e9\u05d9\u05e8 \u05d4\u05d0\u05d7\u05e8\u05d5\u05df"
                         + " \u05de\u05ea\u05e0\u05d2\u05df \u05e2\u05d3 \u05e1\u05d5\u05e4\u05d5"
                         + " \u05d1\u05e2\u05d5\u05e6\u05de\u05d4 \u05de\u05dc\u05d0\u05d4",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "\u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05d4\u05d7\u05d3\u05e9"
+                    + " \u05d1\u05d9\u05d5\u05ea\u05e8 \u05d1\u05e2\u05e8\u05d5\u05e5"
+                    + " \u05de\u05d7\u05dc\u05d9\u05e3 \u05d0\u05ea"
+                    + " \u05d4\u05d4\u05d2\u05d3\u05e8\u05d5\u05ea \u05e9\u05dc\u05da"
+                    + " \u05d5\u05de\u05d5\u05e1\u05d9\u05e3 \u05d0\u05ea"
+                    + " \u05d4\u05d0\u05d9\u05e0\u05d3\u05e7\u05e1 \u05d4\u05e9\u05de\u05d5\u05e8"
+                    + " \u05e9\u05dc\u05d5 \u05dc\u05d6\u05d4.",
+                "The newest backup posted in a private channel you created",
+                "\u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05d4\u05d7\u05d3\u05e9"
+                        + " \u05d1\u05d9\u05d5\u05ea\u05e8 \u05e9\u05e4\u05d5\u05e8\u05e1\u05dd"
+                        + " \u05d1\u05e2\u05e8\u05d5\u05e5 \u05e4\u05e8\u05d8\u05d9"
+                        + " \u05e9\u05d9\u05e6\u05e8\u05ea",
                 "The next song already fits",
                 "\u05d4\u05e9\u05d9\u05e8 \u05d4\u05d1\u05d0 \u05db\u05d1\u05e8"
                         + " \u05de\u05ea\u05d0\u05d9\u05dd",
@@ -38211,6 +38359,9 @@ final class Translations {
                 "The whole song is cached.",
                 "\u05d4\u05e9\u05d9\u05e8 \u05db\u05d5\u05dc\u05d5 \u05e0\u05de\u05e6\u05d0"
                         + " \u05d1\u05de\u05d8\u05de\u05d5\u05df.",
+                "There's no BitChord backup in that channel.",
+                "\u05d0\u05d9\u05df \u05d2\u05d9\u05d1\u05d5\u05d9 \u05e9\u05dc BitChord"
+                        + " \u05d1\u05e2\u05e8\u05d5\u05e5 \u05d4\u05d6\u05d4.",
                 "There's no music in this chat yet.",
                 "\u05e2\u05d3\u05d9\u05d9\u05df \u05d0\u05d9\u05df"
                         + " \u05de\u05d5\u05d6\u05d9\u05e7\u05d4 \u05d1\u05e6'\u05d0\u05d8"
@@ -38781,6 +38932,8 @@ final class Translations {
                 "\u05d9\u05e9 \u05dc\u05d4\u05de\u05ea\u05d9\u05df \u05dc\u05e1\u05d9\u05d5\u05dd"
                         + " \u05d8\u05e2\u05d9\u05e0\u05ea \u05e9\u05e0\u05d9"
                         + " \u05d4\u05e7\u05d8\u05e2\u05d9\u05dd",
+                "Waiting",
+                "\u05de\u05de\u05ea\u05d9\u05df",
                 "Waiting for a community channel to be indexed",
                 "\u05de\u05de\u05ea\u05d9\u05df \u05dc\u05d0\u05d9\u05e0\u05d3\u05d5\u05e7\u05e1"
                         + " \u05e9\u05dc \u05e2\u05e8\u05d5\u05e5 \u05e7\u05d4\u05d9\u05dc\u05d4",
@@ -38794,6 +38947,8 @@ final class Translations {
                 "Waiting for peer \u00b7 queue position {0}",
                 "\u05de\u05de\u05ea\u05d9\u05df \u05dc\u05e2\u05de\u05d9\u05ea \u00b7"
                         + " \u05de\u05e7\u05d5\u05dd \u05d1\u05ea\u05d5\u05e8: {0}",
+                "Waiting for playback",
+                "\u05de\u05de\u05ea\u05d9\u05df \u05dc\u05d4\u05e4\u05e2\u05dc\u05d4",
                 "Waiting for provider",
                 "\u05de\u05de\u05ea\u05d9\u05df \u05dc\u05e1\u05e4\u05e7",
                 "Waiting for receipt",
@@ -39404,119 +39559,6 @@ final class Translations {
                         + " \u05db\u05dc\u05dc\u05d0 \u05d0\u05d5\u05d1\u05d3\u05df",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "\u05e2\u05e8\u05d5\u05e5 \u05e4\u05e8\u05d8\u05d9",
-                "Save to file",
-                "\u05e9\u05de\u05d9\u05e8\u05d4 \u05dc\u05e7\u05d5\u05d1\u05e5",
-                "Send the backup to",
-                "\u05e9\u05dc\u05d9\u05d7\u05ea \u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05d0\u05dc",
-                "Send the backup to {0}?",
-                "\u05dc\u05e9\u05dc\u05d5\u05d7 \u05d0\u05ea \u05d4\u05d2\u05d9\u05d1\u05d5\u05d9"
-                        + " \u05d0\u05dc {0}?",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "\u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05db\u05d5\u05dc\u05dc \u05d0\u05ea"
-                    + " \u05d4\u05d4\u05d2\u05d3\u05e8\u05d5\u05ea"
-                    + " \u05d5\u05d4\u05e9\u05de\u05d5\u05ea"
-                    + " \u05d4\u05de\u05ea\u05d5\u05e7\u05e0\u05d9\u05dd \u05e9\u05dc\u05da,"
-                    + " \u05d5\u05d0\u05ea \u05d4\u05d0\u05d9\u05e0\u05d3\u05e7\u05e1"
-                    + " \u05d4\u05e9\u05de\u05d5\u05e8 \u05d0\u05dd \u05d1\u05d7\u05e8\u05ea"
-                    + " \u05d1\u05db\u05da. \u05db\u05dc \u05de\u05d9"
-                    + " \u05e9\u05d9\u05db\u05d5\u05dc \u05dc\u05e4\u05ea\u05d5\u05d7 \u05d0\u05ea"
-                    + " \u05d4\u05e2\u05e8\u05d5\u05e5 \u05d9\u05db\u05d5\u05dc"
-                    + " \u05dc\u05e7\u05e8\u05d5\u05d0 \u05d0\u05d5\u05ea\u05d5."
-                    + " \u05e4\u05e8\u05d8\u05d9 \u05d4-API"
-                    + " \u05d5\u05d4\u05d7\u05d9\u05d1\u05d5\u05e8 \u05e9\u05dc\u05da"
-                    + " \u05dc-Telegram \u05dc\u05e2\u05d5\u05dc\u05dd \u05d0\u05d9\u05e0\u05dd"
-                    + " \u05db\u05dc\u05d5\u05dc\u05d9\u05dd \u05d1\u05d5.",
-                "Send",
-                "\u05e9\u05dc\u05d9\u05d7\u05d4",
-                "Restore from",
-                "\u05e9\u05d7\u05d6\u05d5\u05e8 \u05de\u05ea\u05d5\u05da",
-                "Restore from {0}?",
-                "\u05dc\u05e9\u05d7\u05d6\u05e8 \u05de\u05ea\u05d5\u05da {0}?",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "\u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05d4\u05d7\u05d3\u05e9"
-                    + " \u05d1\u05d9\u05d5\u05ea\u05e8 \u05d1\u05e2\u05e8\u05d5\u05e5"
-                    + " \u05de\u05d7\u05dc\u05d9\u05e3 \u05d0\u05ea"
-                    + " \u05d4\u05d4\u05d2\u05d3\u05e8\u05d5\u05ea \u05e9\u05dc\u05da"
-                    + " \u05d5\u05de\u05d5\u05e1\u05d9\u05e3 \u05d0\u05ea"
-                    + " \u05d4\u05d0\u05d9\u05e0\u05d3\u05e7\u05e1 \u05d4\u05e9\u05de\u05d5\u05e8"
-                    + " \u05e9\u05dc\u05d5 \u05dc\u05d6\u05d4.",
-                "No private channel",
-                "\u05d0\u05d9\u05df \u05e2\u05e8\u05d5\u05e5 \u05e4\u05e8\u05d8\u05d9",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "\u05e6\u05d5\u05e8 \u05d1-Telegram \u05e2\u05e8\u05d5\u05e5"
-                    + " \u05e4\u05e8\u05d8\u05d9 \u05e9\u05e8\u05e7 \u05d0\u05ea\u05d4"
-                    + " \u05de\u05e9\u05ea\u05de\u05e9 \u05d1\u05d5 \u05d5\u05d7\u05d6\u05d5\u05e8"
-                    + " \u05dc\u05db\u05d0\u05df. \u05e2\u05e8\u05d5\u05e6\u05d9\u05dd"
-                    + " \u05e6\u05d9\u05d1\u05d5\u05e8\u05d9\u05d9\u05dd \u05dc\u05d0"
-                    + " \u05de\u05d5\u05e6\u05e2\u05d9\u05dd.",
-                "Restore from a private channel",
-                "\u05e9\u05d7\u05d6\u05d5\u05e8 \u05de\u05e2\u05e8\u05d5\u05e5"
-                        + " \u05e4\u05e8\u05d8\u05d9",
-                "The newest backup posted in a private channel you created",
-                "\u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05d4\u05d7\u05d3\u05e9"
-                        + " \u05d1\u05d9\u05d5\u05ea\u05e8 \u05e9\u05e4\u05d5\u05e8\u05e1\u05dd"
-                        + " \u05d1\u05e2\u05e8\u05d5\u05e5 \u05e4\u05e8\u05d8\u05d9"
-                        + " \u05e9\u05d9\u05e6\u05e8\u05ea",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "\u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05d9\u05e6\u05d0 \u05e8\u05d9\u05e7"
-                    + " \u05d0\u05d5 \u05e4\u05d2\u05d5\u05dd, \u05d5\u05dc\u05db\u05df"
-                    + " \u05d3\u05d1\u05e8 \u05dc\u05d0 \u05e0\u05e9\u05de\u05e8."
-                    + " \u05d4\u05d0\u05d9\u05e0\u05d3\u05e7\u05e1 \u05d4\u05e9\u05de\u05d5\u05e8"
-                    + " \u05e9\u05dc\u05da \u05dc\u05d0 \u05d4\u05e9\u05ea\u05e0\u05d4.",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "\u05e9\u05de\u05d9\u05e8\u05ea \u05d4\u05e7\u05d5\u05d1\u05e5"
-                    + " \u05e0\u05e2\u05e6\u05e8\u05d4 \u05d1\u05d0\u05de\u05e6\u05e2."
-                    + " \u05e0\u05e1\u05d4 \u05de\u05e7\u05d5\u05dd \u05d0\u05d7\u05e8;"
-                    + " \u05d4\u05d0\u05d9\u05e0\u05d3\u05e7\u05e1 \u05d4\u05e9\u05de\u05d5\u05e8"
-                    + " \u05e9\u05dc\u05da \u05dc\u05d0 \u05d4\u05e9\u05ea\u05e0\u05d4.",
-                "Pick a private channel you created.",
-                "\u05d1\u05d7\u05e8 \u05e2\u05e8\u05d5\u05e5 \u05e4\u05e8\u05d8\u05d9"
-                        + " \u05e9\u05d9\u05e6\u05e8\u05ea.",
-                "There's no BitChord backup in that channel.",
-                "\u05d0\u05d9\u05df \u05d2\u05d9\u05d1\u05d5\u05d9 \u05e9\u05dc BitChord"
-                        + " \u05d1\u05e2\u05e8\u05d5\u05e5 \u05d4\u05d6\u05d4.",
-                "The backup didn't finish downloading. Try again.",
-                "\u05d4\u05d5\u05e8\u05d3\u05ea \u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05dc\u05d0"
-                        + " \u05d4\u05e1\u05ea\u05d9\u05d9\u05de\u05d4. \u05e0\u05e1\u05d4"
-                        + " \u05e9\u05d5\u05d1.",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "\u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05e0\u05e9\u05dc\u05d7 \u05d0\u05dc {0}."
-                        + " \u05d4\u05d5\u05d0 \u05d9\u05d5\u05e4\u05d9\u05e2 \u05e9\u05dd"
-                        + " \u05d1-Telegram \u05d1\u05e1\u05d9\u05d5\u05dd"
-                        + " \u05d4\u05d4\u05e2\u05dc\u05d0\u05d4.",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "\u05e9\u05d5\u05de\u05e8 \u05d1\u05d8\u05dc\u05e4\u05d5\u05df \u05d4\u05d6\u05d4"
-                    + " \u05d0\u05ea \u05d4\u05de\u05d5\u05d6\u05d9\u05e7\u05d4"
-                    + " \u05de\u05d4\u05e6'\u05d0\u05d8\u05d9\u05dd \u05e9\u05d1\u05d7\u05e8\u05ea."
-                    + " \u05db\u05e9\u05d4\u05d7\u05d9\u05d1\u05d5\u05e8 \u05dc-Telegram"
-                    + " \u05e4\u05e2\u05d9\u05dc, \u05d4\u05d0\u05d9\u05e0\u05d3\u05e7\u05e1"
-                    + " \u05de\u05ea\u05e2\u05d3\u05db\u05df"
-                    + " \u05db\u05e9\u05e4\u05d5\u05e1\u05d8\u05d9\u05dd \u05e9\u05dc"
-                    + " \u05d0\u05d5\u05d3\u05d9\u05d5 \u05d5\u05e7\u05d5\u05d1\u05e6\u05d9 ZIP"
-                    + " \u05de\u05d2\u05d9\u05e2\u05d9\u05dd, \u05de\u05e9\u05ea\u05e0\u05d9\u05dd"
-                    + " \u05d0\u05d5 \u05e0\u05e2\u05dc\u05de\u05d9\u05dd."
-                    + " \u05e1\u05e8\u05d9\u05e7\u05d5\u05ea \u05d1\u05e8\u05e7\u05e2"
-                    + " \u05de\u05e9\u05dc\u05d9\u05de\u05d5\u05ea \u05d0\u05ea"
-                    + " \u05d4\u05d4\u05d9\u05e1\u05d8\u05d5\u05e8\u05d9\u05d4. "
-                    + " \u05db\u05d9\u05d1\u05d5\u05d9 \u05d4\u05d0\u05e4\u05e9\u05e8\u05d5\u05ea"
-                    + " \u05e8\u05e7 \u05de\u05e9\u05d4\u05d4 \u05d0\u05d5\u05ea\u05d4:"
-                    + " \u05d4\u05d0\u05d9\u05e0\u05d3\u05e7\u05e1 \u05d4\u05e9\u05de\u05d5\u05e8"
-                    + " \u05e0\u05e9\u05d0\u05e8 \u05d1\u05d8\u05dc\u05e4\u05d5\u05df"
-                    + " \u05d4\u05d6\u05d4, \u05d5\u05d0\u05e4\u05e9\u05e8"
-                    + " \u05dc\u05d2\u05d1\u05d5\u05ea \u05d0\u05d5\u05ea\u05d5 \u05d0\u05d5"
-                    + " \u05dc\u05d4\u05e4\u05e2\u05d9\u05dc \u05d0\u05d5\u05ea\u05d5"
-                    + " \u05e9\u05d5\u05d1.",
             };
         }
     }
@@ -41440,6 +41482,16 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "Telegram \u092e\u0947\u0902 \u0938\u093f\u0930\u094d\u092b\u093c"
+                    + " \u0906\u092a\u0915\u0947 \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932"
+                    + " \u0915\u0947 \u0932\u093f\u090f \u090f\u0915"
+                    + " \u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f \u091a\u0948\u0928\u0932"
+                    + " \u092c\u0928\u093e\u090f\u0901, \u092b\u093f\u0930 \u0935\u093e\u092a\u0938"
+                    + " \u0906\u090f\u0901\u0964 \u092a\u092c\u094d\u0932\u093f\u0915"
+                    + " \u091a\u0948\u0928\u0932 \u0928\u0939\u0940\u0902"
+                    + " \u0926\u093f\u0916\u093e\u090f \u091c\u093e\u0924\u0947\u0964",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -42748,6 +42800,36 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "\u0906\u092a\u0915\u0940 \u091a\u0941\u0928\u0940 \u0939\u0941\u0908"
+                    + " \u091a\u0948\u091f \u0915\u093e"
+                    + " \u092e\u094d\u092f\u0942\u091c\u093c\u093f\u0915 \u0907\u0938"
+                    + " \u092b\u093c\u094b\u0928 \u092a\u0930 \u0930\u0916\u0924\u093e"
+                    + " \u0939\u0948\u0964 Telegram \u0938\u0947"
+                    + " \u0915\u0928\u0947\u0915\u094d\u091f \u0939\u094b\u0928\u0947 \u092a\u0930"
+                    + " \u0911\u0921\u093f\u092f\u094b \u0914\u0930 ZIP"
+                    + " \u092a\u094b\u0938\u094d\u091f \u0906\u0928\u0947,"
+                    + " \u092c\u0926\u0932\u0928\u0947 \u092f\u093e \u0939\u091f\u0928\u0947"
+                    + " \u0915\u0947 \u0938\u093e\u0925 \u0907\u0902\u0921\u0947\u0915\u094d\u0938"
+                    + " \u0905\u092a\u0921\u0947\u091f \u0939\u094b\u0924\u093e \u0939\u0948\u0964"
+                    + " \u092c\u0948\u0915\u0917\u094d\u0930\u093e\u0909\u0902\u0921"
+                    + " \u0938\u094d\u0915\u0948\u0928 \u092a\u0941\u0930\u093e\u0928\u0947"
+                    + " \u092a\u094b\u0938\u094d\u091f \u092d\u0940 \u0936\u093e\u092e\u093f\u0932"
+                    + " \u0915\u0930\u0924\u0947 \u0939\u0948\u0902\u0964  \u0907\u0938\u0947"
+                    + " \u092c\u0902\u0926 \u0915\u0930\u0928\u0947 \u092a\u0930 \u092f\u0939"
+                    + " \u0938\u093f\u0930\u094d\u092b\u093c \u0930\u0941\u0915"
+                    + " \u091c\u093e\u0924\u093e \u0939\u0948: \u0938\u0947\u0935"
+                    + " \u0915\u093f\u092f\u093e \u0917\u092f\u093e"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0907\u0938\u0940"
+                    + " \u092b\u093c\u094b\u0928 \u092e\u0947\u0902 \u0930\u0939\u0924\u093e"
+                    + " \u0939\u0948, \u0907\u0938\u0932\u093f\u090f \u0906\u092a"
+                    + " \u0909\u0938\u0915\u093e \u092c\u0948\u0915\u0905\u092a \u0932\u0947"
+                    + " \u0938\u0915\u0924\u0947 \u0939\u0948\u0902 \u092f\u093e"
+                    + " \u0926\u094b\u092c\u093e\u0930\u093e \u091a\u093e\u0932\u0942 \u0915\u0930"
+                    + " \u0938\u0915\u0924\u0947 \u0939\u0948\u0902\u0964",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "\u0906\u0935\u093e\u091c\u093c \u0915\u094b \u0926\u094b \u092c\u093e\u0930"
@@ -43406,6 +43488,9 @@ final class Translations {
                         + " \u0916\u094b\u0932\u0947\u0902\u0964",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "\u0915\u094b\u0908 \u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f"
+                        + " \u091a\u0948\u0928\u0932 \u0928\u0939\u0940\u0902",
                 "No private main channel selected.",
                 "\u0915\u094b\u0908 \u0928\u093f\u091c\u0940 \u092e\u0941\u0916\u094d\u092f"
                     + " \u091a\u0948\u0928\u0932 \u0928\u0939\u0940\u0902 \u091a\u0941\u0928\u093e"
@@ -44062,6 +44147,10 @@ final class Translations {
                         + " \u0915\u0947 \u0932\u0915\u094d\u0937\u094d\u092f \u0915\u0947"
                         + " \u0939\u093f\u0938\u093e\u092c \u0938\u0947 \u0930\u0939\u0924\u0940"
                         + " \u0939\u0948\u0902\u0964",
+                "Pick a private channel you created.",
+                "\u0906\u092a\u0915\u093e \u092c\u0928\u093e\u092f\u093e \u0939\u0941\u0906"
+                        + " \u0915\u094b\u0908 \u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f"
+                        + " \u091a\u0948\u0928\u0932 \u091a\u0941\u0928\u0947\u0902\u0964",
                 "Pick the quality for this download.",
                 "\u0907\u0938 \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0947"
                         + " \u0932\u093f\u090f \u0915\u094d\u0935\u093e\u0932\u093f\u091f\u0940"
@@ -44267,6 +44356,8 @@ final class Translations {
                 "Privacy and your account",
                 "\u092a\u094d\u0930\u093e\u0907\u0935\u0947\u0938\u0940 \u0914\u0930"
                         + " \u0906\u092a\u0915\u093e \u0905\u0915\u093e\u0909\u0902\u091f",
+                "Private channel",
+                "\u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f \u091a\u0948\u0928\u0932",
                 "Private main channel",
                 "\u0928\u093f\u091c\u0940 \u092e\u0941\u0916\u094d\u092f \u091a\u0948\u0928\u0932",
                 "Private main channel selected.",
@@ -44429,6 +44520,9 @@ final class Translations {
                     + " \u0905\u0915\u093e\u0909\u0902\u091f",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "\u0911\u0921\u093f\u092f\u094b \u092a\u0922\u093c\u093e \u091c\u093e"
+                        + " \u0930\u0939\u093e \u0939\u0948\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -44733,6 +44827,16 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "\u0930\u0940\u0938\u094d\u091f\u094b\u0930 \u0915\u0930\u0947\u0902",
+                "Restore from",
+                "\u092f\u0939\u093e\u0901 \u0938\u0947 \u0930\u093f\u0938\u094d\u091f\u094b\u0930"
+                        + " \u0915\u0930\u0947\u0902",
+                "Restore from a private channel",
+                "\u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f \u091a\u0948\u0928\u0932"
+                        + " \u0938\u0947 \u0930\u093f\u0938\u094d\u091f\u094b\u0930"
+                        + " \u0915\u0930\u0947\u0902",
+                "Restore from {0}?",
+                "{0} \u0938\u0947 \u0930\u093f\u0938\u094d\u091f\u094b\u0930"
+                        + " \u0915\u0930\u0947\u0902?",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -44887,6 +44991,9 @@ final class Translations {
                     + " \u0938\u0939\u0947\u091c\u0947\u0902\u0964",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "\u092b\u093c\u093e\u0907\u0932 \u092e\u0947\u0902 \u0938\u0947\u0935"
+                        + " \u0915\u0930\u0947\u0902",
                 "Save to Music: {0}",
                 "\u0938\u0902\u0917\u0940\u0924 \u092e\u0947\u0902 \u0938\u0947\u0935"
                         + " \u0915\u0930\u0947\u0902: {0}",
@@ -45025,6 +45132,16 @@ final class Translations {
                 "\u091a\u0941\u0928\u0940 \u0917\u0908 \u0915\u0949\u092a\u093f\u092f\u093e\u0901"
                         + " \u0938\u0939\u0947\u091c\u0940 \u091c\u093e \u0930\u0939\u0940"
                         + " \u0939\u0948\u0902",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "\u092b\u093c\u093e\u0907\u0932 \u0938\u0947\u0935 \u0915\u0930\u0928\u093e"
+                    + " \u092c\u0940\u091a \u092e\u0947\u0902 \u0930\u0941\u0915"
+                    + " \u0917\u092f\u093e\u0964 \u0915\u094b\u0908 \u0926\u0942\u0938\u0930\u0940"
+                    + " \u091c\u0917\u0939 \u0906\u091c\u093c\u092e\u093e\u090f\u0901;"
+                    + " \u0906\u092a\u0915\u093e \u0938\u0947\u0935 \u0915\u093f\u092f\u093e"
+                    + " \u0917\u092f\u093e \u0907\u0902\u0921\u0947\u0915\u094d\u0938"
+                    + " \u091c\u0948\u0938\u093e \u0925\u093e \u0935\u0948\u0938\u093e"
+                    + " \u0939\u0948\u0964",
                 "Saving\u2026",
                 "\u0938\u0947\u0935 \u0939\u094b \u0930\u0939\u093e \u0939\u0948\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -45194,6 +45311,8 @@ final class Translations {
                 "{0} \u091a\u0941\u0928\u0940 \u0917\u0908\u0902\u0964 BitChord \u2192"
                         + " \u0910\u0921\u0911\u0928 \u092e\u0947\u0902"
                         + " \u0916\u094b\u091c\u0947\u0902\u0964",
+                "Send",
+                "\u092d\u0947\u091c\u0947\u0902",
                 "Send audio effects to the installed JamesDSP app",
                 "\u0911\u0921\u093f\u092f\u094b \u0907\u092b\u093c\u0947\u0915\u094d\u091f"
                         + " \u0907\u0902\u0938\u094d\u091f\u0949\u0932 \u0915\u093f\u090f"
@@ -45202,6 +45321,11 @@ final class Translations {
                 "Send code to this number",
                 "\u0907\u0938 \u0928\u0902\u092c\u0930 \u092a\u0930 \u0915\u094b\u0921"
                         + " \u092d\u0947\u091c\u0947\u0902",
+                "Send the backup to",
+                "\u092c\u0948\u0915\u0905\u092a \u092d\u0947\u091c\u0947\u0902",
+                "Send the backup to {0}?",
+                "\u092c\u0948\u0915\u0905\u092a {0} \u092e\u0947\u0902"
+                        + " \u092d\u0947\u091c\u0947\u0902?",
                 "Send this offer again",
                 "\u092f\u0939 \u092a\u094d\u0930\u0938\u094d\u0924\u093e\u0935 \u092b\u093f\u0930"
                         + " \u092d\u0947\u091c\u0947\u0902",
@@ -45209,6 +45333,13 @@ final class Translations {
                 "\u092b\u093c\u093e\u0907\u0932 \u0915\u093e"
                     + " \u092a\u094d\u0930\u0938\u094d\u0924\u093e\u0935 \u092d\u0947\u091c\u093e"
                     + " \u091c\u093e \u0930\u0939\u093e \u0939\u0948",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "\u092c\u0948\u0915\u0905\u092a {0} \u092e\u0947\u0902 \u092d\u0947\u091c\u093e"
+                        + " \u091c\u093e \u0930\u0939\u093e \u0939\u0948\u0964"
+                        + " \u0905\u092a\u0932\u094b\u0921 \u092a\u0942\u0930\u093e"
+                        + " \u0939\u094b\u0928\u0947 \u092a\u0930 Telegram \u092e\u0947\u0902"
+                        + " \u0935\u0939 \u0935\u0939\u093e\u0901"
+                        + " \u0926\u093f\u0916\u0947\u0917\u093e\u0964",
                 "Sends to {0}",
                 "{0} \u0915\u094b \u092d\u0947\u091c\u0924\u093e \u0939\u0948",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -46307,11 +46438,42 @@ final class Translations {
                 "App API ID \u0938\u092a\u094b\u0930\u094d\u091f \u0915\u0940 \u0917\u0908"
                         + " \u0938\u0940\u092e\u093e \u0938\u0947 \u092c\u093e\u0939\u0930"
                         + " \u0939\u0948\u0964",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "\u092c\u0948\u0915\u0905\u092a \u0916\u093e\u0932\u0940 \u092f\u093e"
+                    + " \u0916\u093c\u0930\u093e\u092c \u0928\u093f\u0915\u0932\u093e,"
+                    + " \u0907\u0938\u0932\u093f\u090f \u0915\u0941\u091b \u0938\u0947\u0935"
+                    + " \u0928\u0939\u0940\u0902 \u0939\u0941\u0906\u0964 \u0906\u092a\u0915\u093e"
+                    + " \u0938\u0947\u0935 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u091c\u0948\u0938\u093e"
+                    + " \u0925\u093e \u0935\u0948\u0938\u093e \u0939\u0948\u0964",
+                "The backup didn't finish downloading. Try again.",
+                "\u092c\u0948\u0915\u0905\u092a \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
+                    + " \u092a\u0942\u0930\u093e \u0928\u0939\u0940\u0902 \u0939\u0941\u0906\u0964"
+                    + " \u092b\u093f\u0930 \u0915\u094b\u0936\u093f\u0936"
+                    + " \u0915\u0930\u0947\u0902\u0964",
                 "The backup file stays where you saved it",
                 "\u092c\u0948\u0915\u0905\u092a \u092b\u093c\u093e\u0907\u0932"
                         + " \u0935\u0939\u0940\u0902 \u0930\u0939\u0924\u0940 \u0939\u0948"
                         + " \u091c\u0939\u093e\u0901 \u0906\u092a\u0928\u0947 \u0909\u0938\u0947"
                         + " \u0938\u0947\u0935 \u0915\u093f\u092f\u093e \u0925\u093e",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "\u092c\u0948\u0915\u0905\u092a \u092e\u0947\u0902 \u0906\u092a\u0915\u0940"
+                    + " \u0938\u0947\u091f\u093f\u0902\u0917, \u0938\u0941\u0927\u093e\u0930\u0947"
+                    + " \u0917\u090f \u0928\u093e\u092e \u0914\u0930"
+                    + " (\u091a\u0941\u0928\u0928\u0947 \u092a\u0930) \u0938\u0947\u0935"
+                    + " \u0915\u093f\u092f\u093e \u0917\u092f\u093e"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0939\u094b\u0924\u093e"
+                    + " \u0939\u0948\u0964 \u091a\u0948\u0928\u0932 \u0916\u094b\u0932"
+                    + " \u0938\u0915\u0928\u0947 \u0935\u093e\u0932\u093e \u0915\u094b\u0908"
+                    + " \u092d\u0940 \u0935\u094d\u092f\u0915\u094d\u0924\u093f \u0907\u0938\u0947"
+                    + " \u092a\u0922\u093c \u0938\u0915\u0924\u093e \u0939\u0948\u0964"
+                    + " \u0906\u092a\u0915\u0940 API \u091c\u093e\u0928\u0915\u093e\u0930\u0940"
+                    + " \u0914\u0930 Telegram \u0938\u0947\u0936\u0928"
+                    + " \u0907\u0938\u092e\u0947\u0902 \u0915\u092d\u0940 \u0928\u0939\u0940\u0902"
+                    + " \u0939\u094b\u0924\u0947\u0964",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "\u0909\u092a\u0932\u092c\u094d\u0927 \u0938\u092c\u0938\u0947"
                         + " \u0905\u091a\u094d\u091b\u0940 \u0932\u0949\u0938\u0940"
@@ -46395,6 +46557,21 @@ final class Translations {
                 "\u0906\u0916\u093f\u0930\u0940 \u0917\u093e\u0928\u093e \u092a\u0942\u0930\u0940"
                         + " \u0906\u0935\u093e\u091c\u093c \u092e\u0947\u0902 \u0905\u0902\u0924"
                         + " \u0924\u0915 \u092c\u091c\u0924\u093e \u0939\u0948",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "\u091a\u0948\u0928\u0932 \u0915\u093e \u0938\u092c\u0938\u0947 \u0928\u092f\u093e"
+                    + " \u092c\u0948\u0915\u0905\u092a \u0906\u092a\u0915\u0940"
+                    + " \u0938\u0947\u091f\u093f\u0902\u0917 \u092c\u0926\u0932"
+                    + " \u0926\u0947\u0917\u093e \u0914\u0930 \u0909\u0938\u0915\u093e"
+                    + " \u0938\u0947\u0935 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"
+                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0907\u0938\u092e\u0947\u0902"
+                    + " \u091c\u094b\u0921\u093c \u0926\u0947\u0917\u093e\u0964",
+                "The newest backup posted in a private channel you created",
+                "\u0906\u092a\u0915\u0947 \u092c\u0928\u093e\u090f"
+                    + " \u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f \u091a\u0948\u0928\u0932"
+                    + " \u092e\u0947\u0902 \u092a\u094b\u0938\u094d\u091f \u0915\u093f\u092f\u093e"
+                    + " \u0917\u092f\u093e \u0938\u092c\u0938\u0947 \u0928\u092f\u093e"
+                    + " \u092c\u0948\u0915\u0905\u092a",
                 "The next song already fits",
                 "\u0905\u0917\u0932\u093e \u0917\u093e\u0928\u093e \u092a\u0939\u0932\u0947"
                         + " \u0938\u0947 \u092b\u093c\u093f\u091f \u0939\u0948",
@@ -46561,6 +46738,10 @@ final class Translations {
                 "The whole song is cached.",
                 "\u092a\u0942\u0930\u093e \u0917\u093e\u0928\u093e \u0915\u0948\u0936"
                         + " \u0939\u0948\u0964",
+                "There's no BitChord backup in that channel.",
+                "\u0909\u0938 \u091a\u0948\u0928\u0932 \u092e\u0947\u0902 BitChord \u0915\u093e"
+                    + " \u0915\u094b\u0908 \u092c\u0948\u0915\u0905\u092a \u0928\u0939\u0940\u0902"
+                    + " \u0939\u0948\u0964",
                 "There's no music in this chat yet.",
                 "\u0907\u0938 \u091a\u0948\u091f \u092e\u0947\u0902 \u0905\u092d\u0940"
                         + " \u0915\u094b\u0908 \u092e\u094d\u092f\u0942\u091c\u093c\u093f\u0915"
@@ -47196,6 +47377,8 @@ final class Translations {
                 "\u0926\u094b\u0928\u094b\u0902 \u091f\u094d\u0930\u0948\u0915 \u0932\u094b\u0921"
                         + " \u0939\u094b\u0928\u0947 \u0924\u0915"
                         + " \u0907\u0902\u0924\u091c\u093c\u093e\u0930 \u0915\u0930\u0947\u0902",
+                "Waiting",
+                "\u092a\u094d\u0930\u0924\u0940\u0915\u094d\u0937\u093e \u092e\u0947\u0902",
                 "Waiting for a community channel to be indexed",
                 "\u0915\u093f\u0938\u0940 \u0915\u092e\u094d\u092f\u0941\u0928\u093f\u091f\u0940"
                         + " \u091a\u0948\u0928\u0932 \u0915\u0947"
@@ -47215,6 +47398,9 @@ final class Translations {
                 "\u092a\u0940\u092f\u0930 \u0915\u093e \u0907\u0902\u0924\u091c\u093c\u093e\u0930"
                         + " \u0939\u0948 \u00b7 \u0915\u0924\u093e\u0930 \u092e\u0947\u0902"
                         + " \u0938\u094d\u0925\u093e\u0928 {0}",
+                "Waiting for playback",
+                "\u092a\u094d\u0932\u0947\u092c\u0948\u0915 \u0915\u0940"
+                        + " \u092a\u094d\u0930\u0924\u0940\u0915\u094d\u0937\u093e \u0939\u0948",
                 "Waiting for provider",
                 "\u092a\u094d\u0930\u0926\u093e\u0924\u093e \u0915\u093e"
                         + " \u0907\u0902\u0924\u091c\u093c\u093e\u0930 \u0939\u0948",
@@ -47915,142 +48101,6 @@ final class Translations {
                         + " \u0939\u0948",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "\u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f \u091a\u0948\u0928\u0932",
-                "Save to file",
-                "\u092b\u093c\u093e\u0907\u0932 \u092e\u0947\u0902 \u0938\u0947\u0935"
-                        + " \u0915\u0930\u0947\u0902",
-                "Send the backup to",
-                "\u092c\u0948\u0915\u0905\u092a \u092d\u0947\u091c\u0947\u0902",
-                "Send the backup to {0}?",
-                "\u092c\u0948\u0915\u0905\u092a {0} \u092e\u0947\u0902"
-                        + " \u092d\u0947\u091c\u0947\u0902?",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "\u092c\u0948\u0915\u0905\u092a \u092e\u0947\u0902 \u0906\u092a\u0915\u0940"
-                    + " \u0938\u0947\u091f\u093f\u0902\u0917, \u0938\u0941\u0927\u093e\u0930\u0947"
-                    + " \u0917\u090f \u0928\u093e\u092e \u0914\u0930"
-                    + " (\u091a\u0941\u0928\u0928\u0947 \u092a\u0930) \u0938\u0947\u0935"
-                    + " \u0915\u093f\u092f\u093e \u0917\u092f\u093e"
-                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0939\u094b\u0924\u093e"
-                    + " \u0939\u0948\u0964 \u091a\u0948\u0928\u0932 \u0916\u094b\u0932"
-                    + " \u0938\u0915\u0928\u0947 \u0935\u093e\u0932\u093e \u0915\u094b\u0908"
-                    + " \u092d\u0940 \u0935\u094d\u092f\u0915\u094d\u0924\u093f \u0907\u0938\u0947"
-                    + " \u092a\u0922\u093c \u0938\u0915\u0924\u093e \u0939\u0948\u0964"
-                    + " \u0906\u092a\u0915\u0940 API \u091c\u093e\u0928\u0915\u093e\u0930\u0940"
-                    + " \u0914\u0930 Telegram \u0938\u0947\u0936\u0928"
-                    + " \u0907\u0938\u092e\u0947\u0902 \u0915\u092d\u0940 \u0928\u0939\u0940\u0902"
-                    + " \u0939\u094b\u0924\u0947\u0964",
-                "Send",
-                "\u092d\u0947\u091c\u0947\u0902",
-                "Restore from",
-                "\u092f\u0939\u093e\u0901 \u0938\u0947 \u0930\u093f\u0938\u094d\u091f\u094b\u0930"
-                        + " \u0915\u0930\u0947\u0902",
-                "Restore from {0}?",
-                "{0} \u0938\u0947 \u0930\u093f\u0938\u094d\u091f\u094b\u0930"
-                        + " \u0915\u0930\u0947\u0902?",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "\u091a\u0948\u0928\u0932 \u0915\u093e \u0938\u092c\u0938\u0947 \u0928\u092f\u093e"
-                    + " \u092c\u0948\u0915\u0905\u092a \u0906\u092a\u0915\u0940"
-                    + " \u0938\u0947\u091f\u093f\u0902\u0917 \u092c\u0926\u0932"
-                    + " \u0926\u0947\u0917\u093e \u0914\u0930 \u0909\u0938\u0915\u093e"
-                    + " \u0938\u0947\u0935 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"
-                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0907\u0938\u092e\u0947\u0902"
-                    + " \u091c\u094b\u0921\u093c \u0926\u0947\u0917\u093e\u0964",
-                "No private channel",
-                "\u0915\u094b\u0908 \u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f"
-                        + " \u091a\u0948\u0928\u0932 \u0928\u0939\u0940\u0902",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "Telegram \u092e\u0947\u0902 \u0938\u093f\u0930\u094d\u092b\u093c"
-                    + " \u0906\u092a\u0915\u0947 \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932"
-                    + " \u0915\u0947 \u0932\u093f\u090f \u090f\u0915"
-                    + " \u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f \u091a\u0948\u0928\u0932"
-                    + " \u092c\u0928\u093e\u090f\u0901, \u092b\u093f\u0930 \u0935\u093e\u092a\u0938"
-                    + " \u0906\u090f\u0901\u0964 \u092a\u092c\u094d\u0932\u093f\u0915"
-                    + " \u091a\u0948\u0928\u0932 \u0928\u0939\u0940\u0902"
-                    + " \u0926\u093f\u0916\u093e\u090f \u091c\u093e\u0924\u0947\u0964",
-                "Restore from a private channel",
-                "\u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f \u091a\u0948\u0928\u0932"
-                        + " \u0938\u0947 \u0930\u093f\u0938\u094d\u091f\u094b\u0930"
-                        + " \u0915\u0930\u0947\u0902",
-                "The newest backup posted in a private channel you created",
-                "\u0906\u092a\u0915\u0947 \u092c\u0928\u093e\u090f"
-                    + " \u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f \u091a\u0948\u0928\u0932"
-                    + " \u092e\u0947\u0902 \u092a\u094b\u0938\u094d\u091f \u0915\u093f\u092f\u093e"
-                    + " \u0917\u092f\u093e \u0938\u092c\u0938\u0947 \u0928\u092f\u093e"
-                    + " \u092c\u0948\u0915\u0905\u092a",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "\u092c\u0948\u0915\u0905\u092a \u0916\u093e\u0932\u0940 \u092f\u093e"
-                    + " \u0916\u093c\u0930\u093e\u092c \u0928\u093f\u0915\u0932\u093e,"
-                    + " \u0907\u0938\u0932\u093f\u090f \u0915\u0941\u091b \u0938\u0947\u0935"
-                    + " \u0928\u0939\u0940\u0902 \u0939\u0941\u0906\u0964 \u0906\u092a\u0915\u093e"
-                    + " \u0938\u0947\u0935 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"
-                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u091c\u0948\u0938\u093e"
-                    + " \u0925\u093e \u0935\u0948\u0938\u093e \u0939\u0948\u0964",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "\u092b\u093c\u093e\u0907\u0932 \u0938\u0947\u0935 \u0915\u0930\u0928\u093e"
-                    + " \u092c\u0940\u091a \u092e\u0947\u0902 \u0930\u0941\u0915"
-                    + " \u0917\u092f\u093e\u0964 \u0915\u094b\u0908 \u0926\u0942\u0938\u0930\u0940"
-                    + " \u091c\u0917\u0939 \u0906\u091c\u093c\u092e\u093e\u090f\u0901;"
-                    + " \u0906\u092a\u0915\u093e \u0938\u0947\u0935 \u0915\u093f\u092f\u093e"
-                    + " \u0917\u092f\u093e \u0907\u0902\u0921\u0947\u0915\u094d\u0938"
-                    + " \u091c\u0948\u0938\u093e \u0925\u093e \u0935\u0948\u0938\u093e"
-                    + " \u0939\u0948\u0964",
-                "Pick a private channel you created.",
-                "\u0906\u092a\u0915\u093e \u092c\u0928\u093e\u092f\u093e \u0939\u0941\u0906"
-                        + " \u0915\u094b\u0908 \u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f"
-                        + " \u091a\u0948\u0928\u0932 \u091a\u0941\u0928\u0947\u0902\u0964",
-                "There's no BitChord backup in that channel.",
-                "\u0909\u0938 \u091a\u0948\u0928\u0932 \u092e\u0947\u0902 BitChord \u0915\u093e"
-                    + " \u0915\u094b\u0908 \u092c\u0948\u0915\u0905\u092a \u0928\u0939\u0940\u0902"
-                    + " \u0939\u0948\u0964",
-                "The backup didn't finish downloading. Try again.",
-                "\u092c\u0948\u0915\u0905\u092a \u0921\u093e\u0909\u0928\u0932\u094b\u0921"
-                    + " \u092a\u0942\u0930\u093e \u0928\u0939\u0940\u0902 \u0939\u0941\u0906\u0964"
-                    + " \u092b\u093f\u0930 \u0915\u094b\u0936\u093f\u0936"
-                    + " \u0915\u0930\u0947\u0902\u0964",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "\u092c\u0948\u0915\u0905\u092a {0} \u092e\u0947\u0902 \u092d\u0947\u091c\u093e"
-                        + " \u091c\u093e \u0930\u0939\u093e \u0939\u0948\u0964"
-                        + " \u0905\u092a\u0932\u094b\u0921 \u092a\u0942\u0930\u093e"
-                        + " \u0939\u094b\u0928\u0947 \u092a\u0930 Telegram \u092e\u0947\u0902"
-                        + " \u0935\u0939 \u0935\u0939\u093e\u0901"
-                        + " \u0926\u093f\u0916\u0947\u0917\u093e\u0964",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "\u0906\u092a\u0915\u0940 \u091a\u0941\u0928\u0940 \u0939\u0941\u0908"
-                    + " \u091a\u0948\u091f \u0915\u093e"
-                    + " \u092e\u094d\u092f\u0942\u091c\u093c\u093f\u0915 \u0907\u0938"
-                    + " \u092b\u093c\u094b\u0928 \u092a\u0930 \u0930\u0916\u0924\u093e"
-                    + " \u0939\u0948\u0964 Telegram \u0938\u0947"
-                    + " \u0915\u0928\u0947\u0915\u094d\u091f \u0939\u094b\u0928\u0947 \u092a\u0930"
-                    + " \u0911\u0921\u093f\u092f\u094b \u0914\u0930 ZIP"
-                    + " \u092a\u094b\u0938\u094d\u091f \u0906\u0928\u0947,"
-                    + " \u092c\u0926\u0932\u0928\u0947 \u092f\u093e \u0939\u091f\u0928\u0947"
-                    + " \u0915\u0947 \u0938\u093e\u0925 \u0907\u0902\u0921\u0947\u0915\u094d\u0938"
-                    + " \u0905\u092a\u0921\u0947\u091f \u0939\u094b\u0924\u093e \u0939\u0948\u0964"
-                    + " \u092c\u0948\u0915\u0917\u094d\u0930\u093e\u0909\u0902\u0921"
-                    + " \u0938\u094d\u0915\u0948\u0928 \u092a\u0941\u0930\u093e\u0928\u0947"
-                    + " \u092a\u094b\u0938\u094d\u091f \u092d\u0940 \u0936\u093e\u092e\u093f\u0932"
-                    + " \u0915\u0930\u0924\u0947 \u0939\u0948\u0902\u0964  \u0907\u0938\u0947"
-                    + " \u092c\u0902\u0926 \u0915\u0930\u0928\u0947 \u092a\u0930 \u092f\u0939"
-                    + " \u0938\u093f\u0930\u094d\u092b\u093c \u0930\u0941\u0915"
-                    + " \u091c\u093e\u0924\u093e \u0939\u0948: \u0938\u0947\u0935"
-                    + " \u0915\u093f\u092f\u093e \u0917\u092f\u093e"
-                    + " \u0907\u0902\u0921\u0947\u0915\u094d\u0938 \u0907\u0938\u0940"
-                    + " \u092b\u093c\u094b\u0928 \u092e\u0947\u0902 \u0930\u0939\u0924\u093e"
-                    + " \u0939\u0948, \u0907\u0938\u0932\u093f\u090f \u0906\u092a"
-                    + " \u0909\u0938\u0915\u093e \u092c\u0948\u0915\u0905\u092a \u0932\u0947"
-                    + " \u0938\u0915\u0924\u0947 \u0939\u0948\u0902 \u092f\u093e"
-                    + " \u0926\u094b\u092c\u093e\u0930\u093e \u091a\u093e\u0932\u0942 \u0915\u0930"
-                    + " \u0938\u0915\u0924\u0947 \u0939\u0948\u0902\u0964",
             };
         }
     }
@@ -49119,6 +49169,10 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "Buat kanal pribadi di Telegram yang hanya Anda pakai, lalu kembali. Kanal publik"
+                        + " tidak ditawarkan.",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -49896,6 +49950,15 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "Menyimpan musik dari chat pilihan Anda di ponsel ini. Saat Telegram terhubung,"
+                    + " indeks diperbarui ketika kiriman audio dan ZIP masuk, berubah, atau hilang."
+                    + " Pemindaian di latar belakang melengkapi riwayat lama.  Menonaktifkannya"
+                    + " hanya menjeda: indeks tersimpan tetap ada di ponsel ini, jadi Anda masih"
+                    + " bisa mencadangkannya atau menyalakannya lagi.",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "Mencegah suara di-equalize dua kali, dan menjauhkan lagu dari chip audio, tempat"
@@ -50284,6 +50347,8 @@ final class Translations {
                 "Tidak ada postingan. Buka chat ini di Telegram untuk memeriksa akses.",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "Tidak ada kanal pribadi",
                 "No private main channel selected.",
                 "Belum memilih kanal utama pribadi.",
                 "No profile for this output yet.",
@@ -50663,6 +50728,8 @@ final class Translations {
                 "Speaker ponsel",
                 "Photos and files outside your music chats follow the Telegram cache target.",
                 "Foto dan file di luar obrolan musik Anda mengikuti target cache Telegram.",
+                "Pick a private channel you created.",
+                "Pilih kanal pribadi buatan Anda.",
                 "Pick the quality for this download.",
                 "Pilih kualitas untuk unduhan ini.",
                 "Pitch",
@@ -50813,6 +50880,8 @@ final class Translations {
                 "Privasi dan jalur koneksi",
                 "Privacy and your account",
                 "Privasi dan akun Anda",
+                "Private channel",
+                "Kanal pribadi",
                 "Private main channel",
                 "Kanal utama pribadi",
                 "Private main channel selected.",
@@ -50906,6 +50975,8 @@ final class Translations {
                 "Tampilan kanal hanya-baca \u00b7 Akun Telegram Anda",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "Membaca audio\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -51103,6 +51174,12 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "Pulihkan",
+                "Restore from",
+                "Pulihkan dari",
+                "Restore from a private channel",
+                "Pulihkan dari kanal pribadi",
+                "Restore from {0}?",
+                "Pulihkan dari {0}?",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -51209,6 +51286,8 @@ final class Translations {
                 "Simpan pengaturan saat koordinasi dihentikan.",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "Simpan ke file",
                 "Save to Music: {0}",
                 "Simpan ke Musik: {0}",
                 "Saved",
@@ -51287,6 +51366,10 @@ final class Translations {
                 "Penyimpanan dijeda",
                 "Saving selected copies",
                 "Menyimpan salinan pilihan",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "Penyimpanan file berhenti di tengah jalan. Coba tempat lain; indeks tersimpan Anda"
+                        + " tidak berubah.",
                 "Saving\u2026",
                 "Menyimpan\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -51382,14 +51465,23 @@ final class Translations {
                 "{0} chat musik dipilih. Cari di BitChord \u2192 Addon.",
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "{0} dipilih. Cari di BitChord \u2192 Addon.",
+                "Send",
+                "Kirim",
                 "Send audio effects to the installed JamesDSP app",
                 "Serahkan efek audio ke aplikasi JamesDSP yang terpasang",
                 "Send code to this number",
                 "Kirim kode ke nomor ini",
+                "Send the backup to",
+                "Kirim cadangan ke",
+                "Send the backup to {0}?",
+                "Kirim cadangan ke {0}?",
                 "Send this offer again",
                 "Kirim tawaran ini lagi",
                 "Sending file offer",
                 "Mengirim tawaran berkas",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "Mengirim cadangan ke {0}. Telegram menampilkannya di sana setelah unggahan"
+                        + " selesai.",
                 "Sends to {0}",
                 "Dikirim ke {0}",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -52008,8 +52100,20 @@ final class Translations {
                         + " tidak terpengaruh.",
                 "The App API ID is outside the supported range.",
                 "App API ID berada di luar rentang yang didukung.",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "Cadangan ternyata kosong atau rusak, jadi tidak ada yang disimpan. Indeks"
+                        + " tersimpan Anda tidak berubah.",
+                "The backup didn't finish downloading. Try again.",
+                "Cadangan belum selesai diunduh. Coba lagi.",
                 "The backup file stays where you saved it",
                 "File cadangan tetap berada di tempat Anda menyimpannya",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "Cadangan berisi pengaturan dan nama yang sudah dikoreksi, serta indeks tersimpan"
+                    + " jika Anda memilihnya. Siapa pun yang bisa membuka kanal dapat membacanya."
+                    + " Detail API dan sesi Telegram Anda tidak pernah disertakan.",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "Salinan lossy terbaik yang tersedia \u00b7 sekitar 8 MB per lagu",
                 "The cleaner choice for older recordings.",
@@ -52046,6 +52150,12 @@ final class Translations {
                 "Database indeks tidak dapat dibuka di ponsel ini.",
                 "The last song plays to its end at full volume",
                 "Lagu terakhir diputar sampai habis dengan volume penuh",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "Cadangan terbaru di kanal menggantikan pengaturan Anda dan menambahkan indeks"
+                        + " tersimpannya ke indeks ini.",
+                "The newest backup posted in a private channel you created",
+                "Cadangan terbaru yang diposting di kanal pribadi buatan Anda",
                 "The next song already fits",
                 "Lagu berikutnya sudah cocok",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -52115,6 +52225,8 @@ final class Translations {
                 "Durasi lagu tidak tersedia",
                 "The whole song is cached.",
                 "Seluruh lagu ada di cache.",
+                "There's no BitChord backup in that channel.",
+                "Tidak ada cadangan BitChord di kanal itu.",
                 "There's no music in this chat yet.",
                 "Belum ada musik di chat ini.",
                 "There\u2019s no other version of this song.",
@@ -52485,6 +52597,8 @@ final class Translations {
                 "Tunggu hingga tindakan saat ini selesai.",
                 "Wait for the pair to finish loading",
                 "Tunggu hingga kedua lagu selesai dimuat",
+                "Waiting",
+                "Menunggu",
                 "Waiting for a community channel to be indexed",
                 "Menunggu kanal komunitas diindeks",
                 "Waiting for device to cool down",
@@ -52495,6 +52609,8 @@ final class Translations {
                 "Menunggu perangkat lain",
                 "Waiting for peer \u00b7 queue position {0}",
                 "Menunggu perangkat lain \u00b7 posisi antrean {0}",
+                "Waiting for playback",
+                "Menunggu pemutaran",
                 "Waiting for provider",
                 "Menunggu penyedia",
                 "Waiting for receipt",
@@ -52878,66 +52994,6 @@ final class Translations {
                 "{0}, yang sudah dianggap lossless oleh BitChord",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "Kanal pribadi",
-                "Save to file",
-                "Simpan ke file",
-                "Send the backup to",
-                "Kirim cadangan ke",
-                "Send the backup to {0}?",
-                "Kirim cadangan ke {0}?",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "Cadangan berisi pengaturan dan nama yang sudah dikoreksi, serta indeks tersimpan"
-                    + " jika Anda memilihnya. Siapa pun yang bisa membuka kanal dapat membacanya."
-                    + " Detail API dan sesi Telegram Anda tidak pernah disertakan.",
-                "Send",
-                "Kirim",
-                "Restore from",
-                "Pulihkan dari",
-                "Restore from {0}?",
-                "Pulihkan dari {0}?",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "Cadangan terbaru di kanal menggantikan pengaturan Anda dan menambahkan indeks"
-                        + " tersimpannya ke indeks ini.",
-                "No private channel",
-                "Tidak ada kanal pribadi",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "Buat kanal pribadi di Telegram yang hanya Anda pakai, lalu kembali. Kanal publik"
-                        + " tidak ditawarkan.",
-                "Restore from a private channel",
-                "Pulihkan dari kanal pribadi",
-                "The newest backup posted in a private channel you created",
-                "Cadangan terbaru yang diposting di kanal pribadi buatan Anda",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "Cadangan ternyata kosong atau rusak, jadi tidak ada yang disimpan. Indeks"
-                        + " tersimpan Anda tidak berubah.",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "Penyimpanan file berhenti di tengah jalan. Coba tempat lain; indeks tersimpan Anda"
-                        + " tidak berubah.",
-                "Pick a private channel you created.",
-                "Pilih kanal pribadi buatan Anda.",
-                "There's no BitChord backup in that channel.",
-                "Tidak ada cadangan BitChord di kanal itu.",
-                "The backup didn't finish downloading. Try again.",
-                "Cadangan belum selesai diunduh. Coba lagi.",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "Mengirim cadangan ke {0}. Telegram menampilkannya di sana setelah unggahan"
-                        + " selesai.",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "Menyimpan musik dari chat pilihan Anda di ponsel ini. Saat Telegram terhubung,"
-                    + " indeks diperbarui ketika kiriman audio dan ZIP masuk, berubah, atau hilang."
-                    + " Pemindaian di latar belakang melengkapi riwayat lama.  Menonaktifkannya"
-                    + " hanya menjeda: indeks tersimpan tetap ada di ponsel ini, jadi Anda masih"
-                    + " bisa mencadangkannya atau menyalakannya lagi.",
             };
         }
     }
@@ -54027,6 +54083,10 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "Crea in Telegram un canale privato che usi solo tu, poi torna qui. I canali"
+                        + " pubblici non vengono proposti.",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -54813,6 +54873,16 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "Conserva su questo telefono la musica delle chat selezionate. Quando Telegram"
+                    + " \u00e8 connesso, l\u2019indice si aggiorna all\u2019arrivo, alla modifica o"
+                    + " alla rimozione dei messaggi con audio e ZIP. Le scansioni in background"
+                    + " recuperano lo storico.  Disattivandolo lo metti solo in pausa:"
+                    + " l\u2019indice salvato resta su questo telefono e puoi comunque salvarne un"
+                    + " backup o riattivarlo.",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "Evita che il suono venga equalizzato due volte e tiene i brani lontani dal chip"
@@ -55205,6 +55275,8 @@ final class Translations {
                 "Nessun post ricevuto. Apri questa chat in Telegram per verificare l\u2019accesso.",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "Nessun canale privato",
                 "No private main channel selected.",
                 "Nessun canale principale privato selezionato.",
                 "No profile for this output yet.",
@@ -55587,6 +55659,8 @@ final class Translations {
                 "Altoparlante del telefono",
                 "Photos and files outside your music chats follow the Telegram cache target.",
                 "Foto e file fuori dalle chat musicali seguono il limite della cache di Telegram.",
+                "Pick a private channel you created.",
+                "Scegli un canale privato che hai creato.",
                 "Pick the quality for this download.",
                 "Scegli la qualit\u00e0 per questo download.",
                 "Pitch",
@@ -55738,6 +55812,8 @@ final class Translations {
                 "Privacy e percorsi",
                 "Privacy and your account",
                 "Privacy e il tuo account",
+                "Private channel",
+                "Canale privato",
                 "Private main channel",
                 "Canale principale privato",
                 "Private main channel selected.",
@@ -55832,6 +55908,8 @@ final class Translations {
                 "Vista canale in sola lettura \u00b7 Il tuo account Telegram",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "Lettura audio\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -56030,6 +56108,12 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "Ripristina",
+                "Restore from",
+                "Ripristina da",
+                "Restore from a private channel",
+                "Ripristina da un canale privato",
+                "Restore from {0}?",
+                "Ripristinare da {0}?",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -56136,6 +56220,8 @@ final class Translations {
                 "Salva le impostazioni mentre il coordinamento \u00e8 fermo.",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "Salva in un file",
                 "Save to Music: {0}",
                 "Salva in Musica: {0}",
                 "Saved",
@@ -56216,6 +56302,10 @@ final class Translations {
                 "Salvataggio in pausa",
                 "Saving selected copies",
                 "Salvataggio delle copie scelte",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "Il salvataggio del file si \u00e8 interrotto a met\u00e0. Prova un altro posto; il"
+                        + " tuo indice salvato \u00e8 intatto.",
                 "Saving\u2026",
                 "Salvataggio\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -56312,14 +56402,23 @@ final class Translations {
                 "{0} chat musicali selezionate. Cerca in BitChord \u2192 Addon.",
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "Selezionata: {0}. Cerca in BitChord \u2192 Addon.",
+                "Send",
+                "Invia",
                 "Send audio effects to the installed JamesDSP app",
                 "Affida gli effetti audio all\u2019app JamesDSP installata",
                 "Send code to this number",
                 "Invia il codice a questo numero",
+                "Send the backup to",
+                "Invia il backup a",
+                "Send the backup to {0}?",
+                "Inviare il backup a {0}?",
                 "Send this offer again",
                 "Invia di nuovo questa offerta",
                 "Sending file offer",
                 "Invio offerta di file",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "Invio del backup a {0}. Telegram lo mostra l\u00ec quando il caricamento \u00e8"
+                        + " finito.",
                 "Sends to {0}",
                 "Inviato a {0}",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -56944,8 +57043,20 @@ final class Translations {
                         + " playlist non cambiano.",
                 "The App API ID is outside the supported range.",
                 "L\u2019App API ID \u00e8 fuori dall\u2019intervallo supportato.",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "Il backup \u00e8 risultato vuoto o danneggiato, quindi non \u00e8 stato salvato"
+                        + " nulla. Il tuo indice salvato \u00e8 intatto.",
+                "The backup didn't finish downloading. Try again.",
+                "Il backup non ha finito di scaricarsi. Riprova.",
                 "The backup file stays where you saved it",
                 "Il file di backup resta dove l\u2019hai salvato",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "Il backup contiene le tue impostazioni e i nomi corretti e, se lo scegli,"
+                    + " l\u2019indice salvato. Chiunque possa aprire il canale pu\u00f2 leggerlo. I"
+                    + " tuoi dati API e la sessione Telegram non ci sono mai.",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "La migliore copia lossy disponibile \u00b7 circa 8 MB a brano",
                 "The cleaner choice for older recordings.",
@@ -56983,6 +57094,12 @@ final class Translations {
                 "Impossibile aprire il database dell\u2019indice su questo telefono.",
                 "The last song plays to its end at full volume",
                 "L\u2019ultimo brano suona fino alla fine a pieno volume",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "Il backup pi\u00f9 recente nel canale sostituisce le tue impostazioni e aggiunge"
+                        + " il suo indice salvato a questo.",
+                "The newest backup posted in a private channel you created",
+                "Il backup pi\u00f9 recente pubblicato in un canale privato che hai creato",
                 "The next song already fits",
                 "Il brano successivo si abbina gi\u00e0",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -57056,6 +57173,8 @@ final class Translations {
                 "La durata del brano non \u00e8 disponibile",
                 "The whole song is cached.",
                 "L\u2019intero brano \u00e8 in cache.",
+                "There's no BitChord backup in that channel.",
+                "In quel canale non c\u2019\u00e8 nessun backup di BitChord.",
                 "There's no music in this chat yet.",
                 "In questa chat non c\u2019\u00e8 ancora musica.",
                 "There\u2019s no other version of this song.",
@@ -57430,6 +57549,8 @@ final class Translations {
                 "Attendi il completamento dell\u2019azione corrente.",
                 "Wait for the pair to finish loading",
                 "Attendi il completamento del caricamento dei due brani",
+                "Waiting",
+                "In attesa",
                 "Waiting for a community channel to be indexed",
                 "In attesa dell\u2019indicizzazione di un canale della community",
                 "Waiting for device to cool down",
@@ -57440,6 +57561,8 @@ final class Translations {
                 "In attesa del peer",
                 "Waiting for peer \u00b7 queue position {0}",
                 "In attesa del peer \u00b7 posizione in coda {0}",
+                "Waiting for playback",
+                "In attesa della riproduzione",
                 "Waiting for provider",
                 "In attesa del fornitore",
                 "Waiting for receipt",
@@ -57831,67 +57954,6 @@ final class Translations {
                 "{0}, che BitChord considera gi\u00e0 lossless",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "Canale privato",
-                "Save to file",
-                "Salva in un file",
-                "Send the backup to",
-                "Invia il backup a",
-                "Send the backup to {0}?",
-                "Inviare il backup a {0}?",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "Il backup contiene le tue impostazioni e i nomi corretti e, se lo scegli,"
-                    + " l\u2019indice salvato. Chiunque possa aprire il canale pu\u00f2 leggerlo. I"
-                    + " tuoi dati API e la sessione Telegram non ci sono mai.",
-                "Send",
-                "Invia",
-                "Restore from",
-                "Ripristina da",
-                "Restore from {0}?",
-                "Ripristinare da {0}?",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "Il backup pi\u00f9 recente nel canale sostituisce le tue impostazioni e aggiunge"
-                        + " il suo indice salvato a questo.",
-                "No private channel",
-                "Nessun canale privato",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "Crea in Telegram un canale privato che usi solo tu, poi torna qui. I canali"
-                        + " pubblici non vengono proposti.",
-                "Restore from a private channel",
-                "Ripristina da un canale privato",
-                "The newest backup posted in a private channel you created",
-                "Il backup pi\u00f9 recente pubblicato in un canale privato che hai creato",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "Il backup \u00e8 risultato vuoto o danneggiato, quindi non \u00e8 stato salvato"
-                        + " nulla. Il tuo indice salvato \u00e8 intatto.",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "Il salvataggio del file si \u00e8 interrotto a met\u00e0. Prova un altro posto; il"
-                        + " tuo indice salvato \u00e8 intatto.",
-                "Pick a private channel you created.",
-                "Scegli un canale privato che hai creato.",
-                "There's no BitChord backup in that channel.",
-                "In quel canale non c\u2019\u00e8 nessun backup di BitChord.",
-                "The backup didn't finish downloading. Try again.",
-                "Il backup non ha finito di scaricarsi. Riprova.",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "Invio del backup a {0}. Telegram lo mostra l\u00ec quando il caricamento \u00e8"
-                        + " finito.",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "Conserva su questo telefono la musica delle chat selezionate. Quando Telegram"
-                    + " \u00e8 connesso, l\u2019indice si aggiorna all\u2019arrivo, alla modifica o"
-                    + " alla rimozione dei messaggi con audio e ZIP. Le scansioni in background"
-                    + " recuperano lo storico.  Disattivandolo lo metti solo in pausa:"
-                    + " l\u2019indice salvato resta su questo telefono e puoi comunque salvarne un"
-                    + " backup o riattivarlo.",
             };
         }
     }
@@ -59009,6 +59071,11 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "\u3042\u306a\u305f\u3060\u3051\u304c\u4f7f\u3046\u975e\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb\u3092"
+                    + " Telegram"
+                    + " \u3067\u4f5c\u6210\u3057\u3066\u304b\u3089\u623b\u3063\u3066\u304f\u3060\u3055\u3044\u3002\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb\u306f\u8868\u793a\u3055\u308c\u307e\u305b\u3093\u3002",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -59809,6 +59876,13 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "\u9078\u629e\u3057\u305f\u30c1\u30e3\u30c3\u30c8\u306e\u97f3\u697d\u3092\u3053\u306e\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u306b\u4fdd\u5b58\u3057\u307e\u3059\u3002Telegram"
+                    + " \u306e\u63a5\u7d9a\u4e2d\u306f\u3001\u97f3\u58f0\u3084 ZIP"
+                    + " \u306e\u6295\u7a3f\u304c\u8ffd\u52a0\u30fb\u5909\u66f4\u30fb\u524a\u9664\u3055\u308c\u308b\u305f\u3073\u306b\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u304c\u66f4\u65b0\u3055\u308c\u307e\u3059\u3002\u30d0\u30c3\u30af\u30b0\u30e9\u30a6\u30f3\u30c9\u306e\u30b9\u30ad\u30e3\u30f3\u3067\u904e\u53bb\u306e\u6295\u7a3f\u3082\u53d6\u308a\u8fbc\u307f\u307e\u3059\u3002\u30aa\u30d5\u306b\u3057\u3066\u3082\u4e00\u6642\u505c\u6b62\u3059\u308b\u3060\u3051\u3067\u3001\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306f\u3053\u306e\u7aef\u672b\u306b\u6b8b\u308b\u306e\u3067\u3001\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3057\u305f\u308a\u518d\u3073\u30aa\u30f3\u306b\u3057\u305f\u308a\u3067\u304d\u307e\u3059\u3002",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "\u97f3\u304c\u4e8c\u91cd\u306b\u30a4\u30b3\u30e9\u30a4\u30ba\u3055\u308c\u308b\u306e\u3092\u9632\u304e\u3001JamesDSP"
@@ -60202,6 +60276,8 @@ final class Translations {
                     + " \u3067\u3053\u306e\u30c1\u30e3\u30c3\u30c8\u3092\u958b\u3044\u3066\u30a2\u30af\u30bb\u30b9\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "\u975e\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb\u304c\u3042\u308a\u307e\u305b\u3093",
                 "No private main channel selected.",
                 "\u975e\u516c\u958b\u30e1\u30a4\u30f3\u30c1\u30e3\u30f3\u30cd\u30eb\u304c\u9078\u629e\u3055\u308c\u3066\u3044\u307e\u305b\u3093\u3002",
                 "No profile for this output yet.",
@@ -60569,6 +60645,8 @@ final class Translations {
                 "\u97f3\u697d\u30c1\u30e3\u30c3\u30c8\u4ee5\u5916\u306e\u5199\u771f\u3068\u30d5\u30a1\u30a4\u30eb\u306f"
                     + " Telegram"
                     + " \u306e\u30ad\u30e3\u30c3\u30b7\u30e5\u4e0a\u9650\u306b\u5f93\u3044\u307e\u3059\u3002",
+                "Pick a private channel you created.",
+                "\u3042\u306a\u305f\u304c\u4f5c\u6210\u3057\u305f\u975e\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb\u3092\u9078\u3093\u3067\u304f\u3060\u3055\u3044\u3002",
                 "Pick the quality for this download.",
                 "\u3053\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u306e\u97f3\u8cea\u3092\u9078\u3093\u3067\u304f\u3060\u3055\u3044\u3002",
                 "Pitch",
@@ -60717,6 +60795,8 @@ final class Translations {
                 "\u30d7\u30e9\u30a4\u30d0\u30b7\u30fc\u3068\u7d4c\u8def",
                 "Privacy and your account",
                 "\u30d7\u30e9\u30a4\u30d0\u30b7\u30fc\u3068\u30a2\u30ab\u30a6\u30f3\u30c8",
+                "Private channel",
+                "\u975e\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb",
                 "Private main channel",
                 "\u975e\u516c\u958b\u30e1\u30a4\u30f3\u30c1\u30e3\u30f3\u30cd\u30eb",
                 "Private main channel selected.",
@@ -60815,6 +60895,8 @@ final class Translations {
                     + " \u00b7 \u3042\u306a\u305f\u306e Telegram \u30a2\u30ab\u30a6\u30f3\u30c8",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "\u97f3\u58f0\u3092\u8aad\u307f\u8fbc\u307f\u4e2d\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -61012,6 +61094,12 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "\u5fa9\u5143",
+                "Restore from",
+                "\u5fa9\u5143\u5143",
+                "Restore from a private channel",
+                "\u975e\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb\u304b\u3089\u5fa9\u5143",
+                "Restore from {0}?",
+                "{0} \u304b\u3089\u5fa9\u5143\u3057\u307e\u3059\u304b\uff1f",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -61121,6 +61209,8 @@ final class Translations {
                 "\u63a5\u7d9a\u8abf\u6574\u3092\u505c\u6b62\u3057\u305f\u72b6\u614b\u3067\u8a2d\u5b9a\u3092\u4fdd\u5b58\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "\u30d5\u30a1\u30a4\u30eb\u306b\u4fdd\u5b58",
                 "Save to Music: {0}",
                 "\u30df\u30e5\u30fc\u30b8\u30c3\u30af\u306b\u4fdd\u5b58: {0}",
                 "Saved",
@@ -61203,6 +61293,9 @@ final class Translations {
                 "\u4fdd\u5b58\u3092\u4e00\u6642\u505c\u6b62\u4e2d",
                 "Saving selected copies",
                 "\u9078\u629e\u3057\u305f\u30b3\u30d4\u30fc\u3092\u4fdd\u5b58\u4e2d",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "\u30d5\u30a1\u30a4\u30eb\u306e\u4fdd\u5b58\u304c\u9014\u4e2d\u3067\u6b62\u307e\u308a\u307e\u3057\u305f\u3002\u5225\u306e\u5834\u6240\u3092\u8a66\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306f\u305d\u306e\u307e\u307e\u3067\u3059\u3002",
                 "Saving\u2026",
                 "\u4fdd\u5b58\u4e2d\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -61302,15 +61395,27 @@ final class Translations {
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "{0} \u3092\u9078\u629e\u3057\u307e\u3057\u305f\u3002\u300cBitChord \u2192"
                     + " \u30a2\u30c9\u30aa\u30f3\u300d\u3067\u691c\u7d22\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+                "Send",
+                "\u9001\u4fe1",
                 "Send audio effects to the installed JamesDSP app",
                 "\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\u6e08\u307f\u306e JamesDSP"
                     + " \u30a2\u30d7\u30ea\u306b\u97f3\u58f0\u30a8\u30d5\u30a7\u30af\u30c8\u3092\u4efb\u305b\u307e\u3059",
                 "Send code to this number",
                 "\u3053\u306e\u756a\u53f7\u306b\u30b3\u30fc\u30c9\u3092\u9001\u4fe1",
+                "Send the backup to",
+                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u306e\u9001\u4fe1\u5148",
+                "Send the backup to {0}?",
+                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3092 {0}"
+                        + " \u306b\u9001\u4fe1\u3057\u307e\u3059\u304b\uff1f",
                 "Send this offer again",
                 "\u3053\u306e\u5171\u6709\u30ea\u30af\u30a8\u30b9\u30c8\u3092\u518d\u9001",
                 "Sending file offer",
                 "\u30d5\u30a1\u30a4\u30eb\u5171\u6709\u30ea\u30af\u30a8\u30b9\u30c8\u3092\u9001\u4fe1\u4e2d",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3092 {0}"
+                    + " \u306b\u9001\u4fe1\u3057\u3066\u3044\u307e\u3059\u3002\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u304c\u7d42\u308f\u308b\u3068"
+                    + " Telegram"
+                    + " \u306e\u305d\u3053\u306b\u8868\u793a\u3055\u308c\u307e\u3059\u3002",
                 "Sends to {0}",
                 "{0} \u306b\u9001\u4fe1",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -61967,8 +62072,19 @@ final class Translations {
                 "{0} \u306e\u30a2\u30c9\u30ec\u30b9\u3001\u30e2\u30c7\u30eb\u3001\u30ad\u30fc\u304c\u3053\u306e\u30c7\u30d0\u30a4\u30b9\u304b\u3089\u524a\u9664\u3055\u308c\u307e\u3059\u3002\u30d7\u30ec\u30a4\u30ea\u30b9\u30c8\u306b\u306f\u5f71\u97ff\u3057\u307e\u305b\u3093\u3002",
                 "The App API ID is outside the supported range.",
                 "App API ID \u304c\u30b5\u30dd\u30fc\u30c8\u7bc4\u56f2\u5916\u3067\u3059\u3002",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u304c\u7a7a\u304b\u7834\u640d\u3057\u3066\u3044\u305f\u305f\u3081\u3001\u4f55\u3082\u4fdd\u5b58\u3055\u308c\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306f\u305d\u306e\u307e\u307e\u3067\u3059\u3002",
+                "The backup didn't finish downloading. Try again.",
+                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u304c\u5b8c\u4e86\u3057\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
                 "The backup file stays where you saved it",
                 "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u30d5\u30a1\u30a4\u30eb\u306f\u4fdd\u5b58\u3057\u305f\u5834\u6240\u306b\u6b8b\u308a\u307e\u3059",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u306b\u306f\u3001\u8a2d\u5b9a\u3001\u4fee\u6b63\u3057\u305f\u540d\u524d\u3001\u9078\u3093\u3060\u5834\u5408\u306f\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u304c\u542b\u307e\u308c\u307e\u3059\u3002\u30c1\u30e3\u30f3\u30cd\u30eb\u3092\u958b\u3051\u308b\u4eba\u306a\u3089\u8ab0\u3067\u3082\u8aad\u3081\u307e\u3059\u3002API"
+                    + " \u306e\u60c5\u5831\u3084 Telegram"
+                    + " \u306e\u30bb\u30c3\u30b7\u30e7\u30f3\u306f\u542b\u307e\u308c\u307e\u305b\u3093\u3002",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "\u5165\u624b\u3067\u304d\u308b\u6700\u826f\u306e\u30ed\u30c3\u30b7\u30fc\u30b3\u30d4\u30fc"
                     + " \u00b7 1 \u66f2\u3042\u305f\u308a\u7d04 8 MB",
@@ -62007,6 +62123,11 @@ final class Translations {
                 "\u3053\u306e\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u3067\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306e\u30c7\u30fc\u30bf\u30d9\u30fc\u30b9\u3092\u958b\u3051\u307e\u305b\u3093\u3067\u3057\u305f\u3002",
                 "The last song plays to its end at full volume",
                 "\u6700\u5f8c\u306e\u66f2\u306f\u6700\u5f8c\u307e\u3067\u30d5\u30eb\u97f3\u91cf\u3067\u518d\u751f\u3055\u308c\u307e\u3059",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "\u30c1\u30e3\u30f3\u30cd\u30eb\u5185\u306e\u6700\u65b0\u306e\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3067\u8a2d\u5b9a\u304c\u7f6e\u304d\u63db\u308f\u308a\u3001\u305d\u306e\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u304c\u3053\u306e\u7aef\u672b\u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306b\u8ffd\u52a0\u3055\u308c\u307e\u3059\u3002",
+                "The newest backup posted in a private channel you created",
+                "\u3042\u306a\u305f\u304c\u4f5c\u6210\u3057\u305f\u975e\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb\u306b\u6295\u7a3f\u3055\u308c\u305f\u6700\u65b0\u306e\u30d0\u30c3\u30af\u30a2\u30c3\u30d7",
                 "The next song already fits",
                 "\u6b21\u306e\u66f2\u306f\u3059\u3067\u306b\u5408\u3063\u3066\u3044\u307e\u3059",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -62081,6 +62202,9 @@ final class Translations {
                 "\u66f2\u306e\u9577\u3055\u3092\u53d6\u5f97\u3067\u304d\u307e\u305b\u3093",
                 "The whole song is cached.",
                 "\u66f2\u5168\u4f53\u304c\u30ad\u30e3\u30c3\u30b7\u30e5\u3055\u308c\u3066\u3044\u307e\u3059\u3002",
+                "There's no BitChord backup in that channel.",
+                "\u305d\u306e\u30c1\u30e3\u30f3\u30cd\u30eb\u306b BitChord"
+                    + " \u306e\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u306f\u3042\u308a\u307e\u305b\u3093\u3002",
                 "There's no music in this chat yet.",
                 "\u3053\u306e\u30c1\u30e3\u30c3\u30c8\u306b\u306f\u307e\u3060\u97f3\u697d\u304c\u3042\u308a\u307e\u305b\u3093\u3002",
                 "There\u2019s no other version of this song.",
@@ -62460,6 +62584,8 @@ final class Translations {
                 "\u73fe\u5728\u306e\u64cd\u4f5c\u304c\u5b8c\u4e86\u3059\u308b\u307e\u3067\u304a\u5f85\u3061\u304f\u3060\u3055\u3044\u3002",
                 "Wait for the pair to finish loading",
                 "\u4e21\u65b9\u306e\u66f2\u306e\u8aad\u307f\u8fbc\u307f\u304c\u5b8c\u4e86\u3059\u308b\u307e\u3067\u304a\u5f85\u3061\u304f\u3060\u3055\u3044",
+                "Waiting",
+                "\u5f85\u6a5f\u4e2d",
                 "Waiting for a community channel to be indexed",
                 "\u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30c1\u30e3\u30f3\u30cd\u30eb\u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u4f5c\u6210\u3092\u5f85\u3063\u3066\u3044\u307e\u3059",
                 "Waiting for device to cool down",
@@ -62471,6 +62597,8 @@ final class Translations {
                 "Waiting for peer \u00b7 queue position {0}",
                 "\u30d4\u30a2\u3092\u5f85\u6a5f\u4e2d \u00b7"
                         + " \u5f85\u3061\u884c\u5217\u306e\u4f4d\u7f6e\uff1a{0}",
+                "Waiting for playback",
+                "\u518d\u751f\u5f85\u3061",
                 "Waiting for provider",
                 "\u30b5\u30fc\u30d3\u30b9\u5074\u306e\u51e6\u7406\u5f85\u3061",
                 "Waiting for receipt",
@@ -62870,66 +62998,6 @@ final class Translations {
                         + " \u3067\u306f\u3059\u3067\u306b\u30ed\u30b9\u30ec\u30b9\u6271\u3044",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "\u975e\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb",
-                "Save to file",
-                "\u30d5\u30a1\u30a4\u30eb\u306b\u4fdd\u5b58",
-                "Send the backup to",
-                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u306e\u9001\u4fe1\u5148",
-                "Send the backup to {0}?",
-                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3092 {0}"
-                        + " \u306b\u9001\u4fe1\u3057\u307e\u3059\u304b\uff1f",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u306b\u306f\u3001\u8a2d\u5b9a\u3001\u4fee\u6b63\u3057\u305f\u540d\u524d\u3001\u9078\u3093\u3060\u5834\u5408\u306f\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u304c\u542b\u307e\u308c\u307e\u3059\u3002\u30c1\u30e3\u30f3\u30cd\u30eb\u3092\u958b\u3051\u308b\u4eba\u306a\u3089\u8ab0\u3067\u3082\u8aad\u3081\u307e\u3059\u3002API"
-                    + " \u306e\u60c5\u5831\u3084 Telegram"
-                    + " \u306e\u30bb\u30c3\u30b7\u30e7\u30f3\u306f\u542b\u307e\u308c\u307e\u305b\u3093\u3002",
-                "Send",
-                "\u9001\u4fe1",
-                "Restore from",
-                "\u5fa9\u5143\u5143",
-                "Restore from {0}?",
-                "{0} \u304b\u3089\u5fa9\u5143\u3057\u307e\u3059\u304b\uff1f",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "\u30c1\u30e3\u30f3\u30cd\u30eb\u5185\u306e\u6700\u65b0\u306e\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3067\u8a2d\u5b9a\u304c\u7f6e\u304d\u63db\u308f\u308a\u3001\u305d\u306e\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u304c\u3053\u306e\u7aef\u672b\u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306b\u8ffd\u52a0\u3055\u308c\u307e\u3059\u3002",
-                "No private channel",
-                "\u975e\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb\u304c\u3042\u308a\u307e\u305b\u3093",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "\u3042\u306a\u305f\u3060\u3051\u304c\u4f7f\u3046\u975e\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb\u3092"
-                    + " Telegram"
-                    + " \u3067\u4f5c\u6210\u3057\u3066\u304b\u3089\u623b\u3063\u3066\u304f\u3060\u3055\u3044\u3002\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb\u306f\u8868\u793a\u3055\u308c\u307e\u305b\u3093\u3002",
-                "Restore from a private channel",
-                "\u975e\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb\u304b\u3089\u5fa9\u5143",
-                "The newest backup posted in a private channel you created",
-                "\u3042\u306a\u305f\u304c\u4f5c\u6210\u3057\u305f\u975e\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb\u306b\u6295\u7a3f\u3055\u308c\u305f\u6700\u65b0\u306e\u30d0\u30c3\u30af\u30a2\u30c3\u30d7",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u304c\u7a7a\u304b\u7834\u640d\u3057\u3066\u3044\u305f\u305f\u3081\u3001\u4f55\u3082\u4fdd\u5b58\u3055\u308c\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306f\u305d\u306e\u307e\u307e\u3067\u3059\u3002",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "\u30d5\u30a1\u30a4\u30eb\u306e\u4fdd\u5b58\u304c\u9014\u4e2d\u3067\u6b62\u307e\u308a\u307e\u3057\u305f\u3002\u5225\u306e\u5834\u6240\u3092\u8a66\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306f\u305d\u306e\u307e\u307e\u3067\u3059\u3002",
-                "Pick a private channel you created.",
-                "\u3042\u306a\u305f\u304c\u4f5c\u6210\u3057\u305f\u975e\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb\u3092\u9078\u3093\u3067\u304f\u3060\u3055\u3044\u3002",
-                "There's no BitChord backup in that channel.",
-                "\u305d\u306e\u30c1\u30e3\u30f3\u30cd\u30eb\u306b BitChord"
-                    + " \u306e\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u306f\u3042\u308a\u307e\u305b\u3093\u3002",
-                "The backup didn't finish downloading. Try again.",
-                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u304c\u5b8c\u4e86\u3057\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3092 {0}"
-                    + " \u306b\u9001\u4fe1\u3057\u3066\u3044\u307e\u3059\u3002\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u304c\u7d42\u308f\u308b\u3068"
-                    + " Telegram"
-                    + " \u306e\u305d\u3053\u306b\u8868\u793a\u3055\u308c\u307e\u3059\u3002",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "\u9078\u629e\u3057\u305f\u30c1\u30e3\u30c3\u30c8\u306e\u97f3\u697d\u3092\u3053\u306e\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u306b\u4fdd\u5b58\u3057\u307e\u3059\u3002Telegram"
-                    + " \u306e\u63a5\u7d9a\u4e2d\u306f\u3001\u97f3\u58f0\u3084 ZIP"
-                    + " \u306e\u6295\u7a3f\u304c\u8ffd\u52a0\u30fb\u5909\u66f4\u30fb\u524a\u9664\u3055\u308c\u308b\u305f\u3073\u306b\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u304c\u66f4\u65b0\u3055\u308c\u307e\u3059\u3002\u30d0\u30c3\u30af\u30b0\u30e9\u30a6\u30f3\u30c9\u306e\u30b9\u30ad\u30e3\u30f3\u3067\u904e\u53bb\u306e\u6295\u7a3f\u3082\u53d6\u308a\u8fbc\u307f\u307e\u3059\u3002\u30aa\u30d5\u306b\u3057\u3066\u3082\u4e00\u6642\u505c\u6b62\u3059\u308b\u3060\u3051\u3067\u3001\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306f\u3053\u306e\u7aef\u672b\u306b\u6b8b\u308b\u306e\u3067\u3001\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3057\u305f\u308a\u518d\u3073\u30aa\u30f3\u306b\u3057\u305f\u308a\u3067\u304d\u307e\u3059\u3002",
             };
         }
     }
@@ -64253,6 +64321,12 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "Telegram\uc5d0\uc11c \ub098\ub9cc \uc4f0\ub294 \ube44\uacf5\uac1c"
+                        + " \ucc44\ub110\uc744 \ub9cc\ub4e0 \ub4a4 \ub2e4\uc2dc \uc640"
+                        + " \uc8fc\uc138\uc694. \uacf5\uac1c \ucc44\ub110\uc740"
+                        + " \ud45c\uc2dc\ub418\uc9c0 \uc54a\uc544\uc694.",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -65186,6 +65260,22 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "\uc120\ud0dd\ud55c \ucc44\ud305\uc758 \uc74c\uc545\uc744 \uc774"
+                    + " \ud734\ub300\uc804\ud654\uc5d0 \ubcf4\uad00\ud574\uc694. Telegram\uc5d0"
+                    + " \uc5f0\uacb0\ub418\uc5b4 \uc788\uc73c\uba74 \uc624\ub514\uc624\uc640 ZIP"
+                    + " \uac8c\uc2dc\ubb3c\uc774 \ucd94\uac00\ub418\uac70\ub098"
+                    + " \ubc14\ub00c\uac70\ub098 \uc0ac\ub77c\uc9c8 \ub54c \uc0c9\uc778\uc774"
+                    + " \uc5c5\ub370\uc774\ud2b8\ub3fc\uc694. \ubc31\uadf8\ub77c\uc6b4\ub4dc"
+                    + " \uc2a4\uce94\uc73c\ub85c \uc774\uc804 \uae30\ub85d\ub3c4"
+                    + " \ubc18\uc601\ud574\uc694.  \ub044\uba74 \uc7a0\uc2dc \uba48\ucd9c"
+                    + " \ubfd0\uc774\uc5d0\uc694. \uc800\uc7a5\ub41c \uc0c9\uc778\uc740 \uc774"
+                    + " \ud734\ub300\ud3f0\uc5d0 \uadf8\ub300\ub85c \ub0a8\uc544\uc11c"
+                    + " \ubc31\uc5c5\ud558\uac70\ub098 \ub2e4\uc2dc \ucf24 \uc218"
+                    + " \uc788\uc5b4\uc694.",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "\uc18c\ub9ac\uac00 \ub450 \ubc88 \uc774\ud004\ub77c\uc774\uc9d5\ub418\ub294"
@@ -65644,6 +65734,8 @@ final class Translations {
                     + " \uad8c\ud55c\uc744 \ud655\uc778\ud558\uc138\uc694.",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "\ube44\uacf5\uac1c \ucc44\ub110 \uc5c6\uc74c",
                 "No private main channel selected.",
                 "\ube44\uacf5\uac1c \uae30\ubcf8 \ucc44\ub110\uc744 \uc120\ud0dd\ud558\uc9c0"
                         + " \uc54a\uc558\uc2b5\ub2c8\ub2e4.",
@@ -66100,6 +66192,9 @@ final class Translations {
                 "Photos and files outside your music chats follow the Telegram cache target.",
                 "\uc74c\uc545 \ucc44\ud305 \uc678\uc758 \uc0ac\uc9c4\uacfc \ud30c\uc77c\uc740"
                         + " Telegram \uce90\uc2dc \ubaa9\ud45c\ub97c \ub530\ub77c\uc694.",
+                "Pick a private channel you created.",
+                "\ub0b4\uac00 \ub9cc\ub4e0 \ube44\uacf5\uac1c \ucc44\ub110\uc744"
+                        + " \uc120\ud0dd\ud558\uc138\uc694.",
                 "Pick the quality for this download.",
                 "\uc774 \ub2e4\uc6b4\ub85c\ub4dc\uc758 \uc74c\uc9c8\uc744"
                         + " \uc120\ud0dd\ud558\uc138\uc694.",
@@ -66261,6 +66356,8 @@ final class Translations {
                 "\uac1c\uc778\uc815\ubcf4 \ubcf4\ud638 \ubc0f \uacbd\ub85c",
                 "Privacy and your account",
                 "\uac1c\uc778\uc815\ubcf4 \ubcf4\ud638 \ubc0f \uacc4\uc815",
+                "Private channel",
+                "\ube44\uacf5\uac1c \ucc44\ub110",
                 "Private main channel",
                 "\ube44\uacf5\uac1c \uae30\ubcf8 \ucc44\ub110",
                 "Private main channel selected.",
@@ -66374,6 +66471,8 @@ final class Translations {
                         + " \uacc4\uc815",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "\uc624\ub514\uc624 \uc77d\ub294 \uc911\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -66595,6 +66694,12 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "\ubcf5\uc6d0",
+                "Restore from",
+                "\ubcf5\uc6d0\ud560 \uacf3",
+                "Restore from a private channel",
+                "\ube44\uacf5\uac1c \ucc44\ub110\uc5d0\uc11c \ubcf5\uc6d0",
+                "Restore from {0}?",
+                "{0}\uc5d0\uc11c \ubcf5\uc6d0\ud560\uae4c\uc694?",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -66709,6 +66814,8 @@ final class Translations {
                         + " \uc124\uc815\uc744 \uc800\uc7a5\ud558\uc138\uc694.",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "\ud30c\uc77c\ub85c \uc800\uc7a5",
                 "Save to Music: {0}",
                 "\uc74c\uc545\uc5d0 \uc800\uc7a5: {0}",
                 "Saved",
@@ -66801,6 +66908,11 @@ final class Translations {
                 "\uc800\uc7a5 \uc77c\uc2dc \uc911\uc9c0\ub428",
                 "Saving selected copies",
                 "\uc120\ud0dd\ud55c \uc0ac\ubcf8 \uc800\uc7a5 \uc911",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "\ud30c\uc77c \uc800\uc7a5\uc774 \uc911\uac04\uc5d0 \uba48\ucdc4\uc5b4\uc694."
+                        + " \ub2e4\ub978 \uc704\uce58\ub97c \uc2dc\ub3c4\ud574 \ubcf4\uc138\uc694."
+                        + " \uc800\uc7a5\ub41c \uc0c9\uc778\uc740 \uadf8\ub300\ub85c\uc608\uc694.",
                 "Saving\u2026",
                 "\uc800\uc7a5 \uc911\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -66922,15 +67034,25 @@ final class Translations {
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "\uc120\ud0dd\ub428: {0}. BitChord \u2192 Addons\uc5d0\uc11c"
                         + " \uac80\uc0c9\ud558\uc138\uc694.",
+                "Send",
+                "\ubcf4\ub0b4\uae30",
                 "Send audio effects to the installed JamesDSP app",
                 "\uc124\uce58\ub41c JamesDSP \uc571\uc5d0 \uc624\ub514\uc624 \ud6a8\uacfc\ub97c"
                         + " \ub9e1\uaca8\uc694",
                 "Send code to this number",
                 "\uc774 \ubc88\ud638\ub85c \ucf54\ub4dc \ubcf4\ub0b4\uae30",
+                "Send the backup to",
+                "\ubc31\uc5c5 \ubcf4\ub0bc \uacf3",
+                "Send the backup to {0}?",
+                "\ubc31\uc5c5\uc744 {0}(\uc73c)\ub85c \ubcf4\ub0bc\uae4c\uc694?",
                 "Send this offer again",
                 "\uc774 \uacf5\uc720 \uc81c\uc548 \ub2e4\uc2dc \ubcf4\ub0b4\uae30",
                 "Sending file offer",
                 "\ud30c\uc77c \uacf5\uc720 \uc81c\uc548 \ubcf4\ub0b4\ub294 \uc911",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "\ubc31\uc5c5\uc744 {0}(\uc73c)\ub85c \ubcf4\ub0b4\ub294 \uc911\uc774\uc5d0\uc694."
+                        + " \uc5c5\ub85c\ub4dc\uac00 \ub05d\ub098\uba74 Telegram\uc5d0\uc11c"
+                        + " \ud655\uc778\ud560 \uc218 \uc788\uc5b4\uc694.",
                 "Sends to {0}",
                 "{0}(\uc73c)\ub85c \uc804\uc1a1",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -67692,9 +67814,27 @@ final class Translations {
                     + " \uc601\ud5a5\uc774 \uc5c6\uc5b4\uc694.",
                 "The App API ID is outside the supported range.",
                 "App API ID\uac00 \uc9c0\uc6d0 \ubc94\uc704\ub97c \ubc97\uc5b4\ub0ac\uc5b4\uc694.",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "\ubc31\uc5c5\uc774 \ube44\uc5b4 \uc788\uac70\ub098 \uc190\uc0c1\ub418\uc5b4"
+                    + " \uc544\ubb34\uac83\ub3c4 \uc800\uc7a5\ub418\uc9c0 \uc54a\uc558\uc5b4\uc694."
+                    + " \uc800\uc7a5\ub41c \uc0c9\uc778\uc740 \uadf8\ub300\ub85c\uc608\uc694.",
+                "The backup didn't finish downloading. Try again.",
+                "\ubc31\uc5c5 \ub2e4\uc6b4\ub85c\ub4dc\uac00 \ub05d\ub098\uc9c0"
+                        + " \uc54a\uc558\uc5b4\uc694. \ub2e4\uc2dc \uc2dc\ub3c4\ud574"
+                        + " \uc8fc\uc138\uc694.",
                 "The backup file stays where you saved it",
                 "\ubc31\uc5c5 \ud30c\uc77c\uc740 \uc800\uc7a5\ud55c \uc704\uce58\uc5d0"
                         + " \uadf8\ub300\ub85c \ub0a8\uc544\uc694",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "\ubc31\uc5c5\uc5d0\ub294 \uc124\uc815, \uace0\uce5c \uc774\ub984,"
+                        + " \uadf8\ub9ac\uace0 \uc120\ud0dd\ud558\uba74 \uc800\uc7a5\ub41c"
+                        + " \uc0c9\uc778\uc774 \ub4e4\uc5b4 \uc788\uc5b4\uc694. \ucc44\ub110\uc744"
+                        + " \uc5f4 \uc218 \uc788\ub294 \uc0ac\ub78c\uc740 \ub204\uad6c\ub098"
+                        + " \uc77d\uc744 \uc218 \uc788\uc5b4\uc694. API \uc815\ubcf4\uc640 Telegram"
+                        + " \uc138\uc158\uc740 \ub4e4\uc5b4\uac00\uc9c0 \uc54a\uc544\uc694.",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "\uc81c\uacf5\ub418\ub294 \uac00\uc7a5 \uc88b\uc740 \uc190\uc2e4 \uc555\ucd95"
                         + " \ubc84\uc804 \u00b7 \ub178\ub798 \ud55c \uace1\ub2f9 \uc57d 8 MB",
@@ -67746,6 +67886,14 @@ final class Translations {
                 "The last song plays to its end at full volume",
                 "\ub9c8\uc9c0\ub9c9 \ub178\ub798\ub294 \ub05d\uae4c\uc9c0 \uc6d0\ub798"
                         + " \uc74c\ub7c9\uc73c\ub85c \uc7ac\uc0dd\ub3fc\uc694",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "\ucc44\ub110\uc758 \uac00\uc7a5 \ucd5c\uadfc \ubc31\uc5c5\uc774 \uc124\uc815\uc744"
+                        + " \ub300\uccb4\ud558\uace0, \uadf8 \uc800\uc7a5\ub41c \uc0c9\uc778\uc774"
+                        + " \uc774 \uc0c9\uc778\uc5d0 \ucd94\uac00\ub3fc\uc694.",
+                "The newest backup posted in a private channel you created",
+                "\ub0b4\uac00 \ub9cc\ub4e0 \ube44\uacf5\uac1c \ucc44\ub110\uc5d0 \uc62c\ub9b0"
+                        + " \uac00\uc7a5 \ucd5c\uadfc \ubc31\uc5c5",
                 "The next song already fits",
                 "\ub2e4\uc74c \ub178\ub798\uac00 \uc774\ubbf8 \uc798 \uc5b4\uc6b8\ub824\uc694",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -67851,6 +67999,8 @@ final class Translations {
                 "\uace1 \uae38\uc774\ub97c \ud655\uc778\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4",
                 "The whole song is cached.",
                 "\uace1 \uc804\uccb4\uac00 \uce90\uc2dc\ub418\uc5b4 \uc788\uc5b4\uc694.",
+                "There's no BitChord backup in that channel.",
+                "\uadf8 \ucc44\ub110\uc5d0\ub294 BitChord \ubc31\uc5c5\uc774 \uc5c6\uc5b4\uc694.",
                 "There's no music in this chat yet.",
                 "\uc774 \ucc44\ud305\uc5d0\ub294 \uc544\uc9c1 \uc74c\uc545\uc774"
                         + " \uc5c6\uc5b4\uc694.",
@@ -68298,6 +68448,8 @@ final class Translations {
                 "Wait for the pair to finish loading",
                 "\ub450 \uace1\uc744 \ubaa8\ub450 \ubd88\ub7ec\uc62c \ub54c\uae4c\uc9c0"
                         + " \uae30\ub2e4\ub9ac\uc138\uc694",
+                "Waiting",
+                "\ub300\uae30 \uc911",
                 "Waiting for a community channel to be indexed",
                 "\ucee4\ubba4\ub2c8\ud2f0 \ucc44\ub110 \uc0c9\uc778\uc744 \uae30\ub2e4\ub9ac\ub294"
                         + " \uc911",
@@ -68309,6 +68461,8 @@ final class Translations {
                 "\ud53c\uc5b4 \ub300\uae30 \uc911",
                 "Waiting for peer \u00b7 queue position {0}",
                 "\ud53c\uc5b4 \ub300\uae30 \uc911 \u00b7 \ub300\uae30\uc5f4 \uc704\uce58 {0}",
+                "Waiting for playback",
+                "\uc7ac\uc0dd \ub300\uae30 \uc911",
                 "Waiting for provider",
                 "\uc11c\ube44\uc2a4 \uc751\ub2f5 \ub300\uae30 \uc911",
                 "Waiting for receipt",
@@ -68780,86 +68934,6 @@ final class Translations {
                 "{0}, BitChord\uc5d0\uc11c \uc774\ubbf8 \ubb34\uc190\uc2e4\ub85c \ucde8\uae09",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "\ube44\uacf5\uac1c \ucc44\ub110",
-                "Save to file",
-                "\ud30c\uc77c\ub85c \uc800\uc7a5",
-                "Send the backup to",
-                "\ubc31\uc5c5 \ubcf4\ub0bc \uacf3",
-                "Send the backup to {0}?",
-                "\ubc31\uc5c5\uc744 {0}(\uc73c)\ub85c \ubcf4\ub0bc\uae4c\uc694?",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "\ubc31\uc5c5\uc5d0\ub294 \uc124\uc815, \uace0\uce5c \uc774\ub984,"
-                        + " \uadf8\ub9ac\uace0 \uc120\ud0dd\ud558\uba74 \uc800\uc7a5\ub41c"
-                        + " \uc0c9\uc778\uc774 \ub4e4\uc5b4 \uc788\uc5b4\uc694. \ucc44\ub110\uc744"
-                        + " \uc5f4 \uc218 \uc788\ub294 \uc0ac\ub78c\uc740 \ub204\uad6c\ub098"
-                        + " \uc77d\uc744 \uc218 \uc788\uc5b4\uc694. API \uc815\ubcf4\uc640 Telegram"
-                        + " \uc138\uc158\uc740 \ub4e4\uc5b4\uac00\uc9c0 \uc54a\uc544\uc694.",
-                "Send",
-                "\ubcf4\ub0b4\uae30",
-                "Restore from",
-                "\ubcf5\uc6d0\ud560 \uacf3",
-                "Restore from {0}?",
-                "{0}\uc5d0\uc11c \ubcf5\uc6d0\ud560\uae4c\uc694?",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "\ucc44\ub110\uc758 \uac00\uc7a5 \ucd5c\uadfc \ubc31\uc5c5\uc774 \uc124\uc815\uc744"
-                        + " \ub300\uccb4\ud558\uace0, \uadf8 \uc800\uc7a5\ub41c \uc0c9\uc778\uc774"
-                        + " \uc774 \uc0c9\uc778\uc5d0 \ucd94\uac00\ub3fc\uc694.",
-                "No private channel",
-                "\ube44\uacf5\uac1c \ucc44\ub110 \uc5c6\uc74c",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "Telegram\uc5d0\uc11c \ub098\ub9cc \uc4f0\ub294 \ube44\uacf5\uac1c"
-                        + " \ucc44\ub110\uc744 \ub9cc\ub4e0 \ub4a4 \ub2e4\uc2dc \uc640"
-                        + " \uc8fc\uc138\uc694. \uacf5\uac1c \ucc44\ub110\uc740"
-                        + " \ud45c\uc2dc\ub418\uc9c0 \uc54a\uc544\uc694.",
-                "Restore from a private channel",
-                "\ube44\uacf5\uac1c \ucc44\ub110\uc5d0\uc11c \ubcf5\uc6d0",
-                "The newest backup posted in a private channel you created",
-                "\ub0b4\uac00 \ub9cc\ub4e0 \ube44\uacf5\uac1c \ucc44\ub110\uc5d0 \uc62c\ub9b0"
-                        + " \uac00\uc7a5 \ucd5c\uadfc \ubc31\uc5c5",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "\ubc31\uc5c5\uc774 \ube44\uc5b4 \uc788\uac70\ub098 \uc190\uc0c1\ub418\uc5b4"
-                    + " \uc544\ubb34\uac83\ub3c4 \uc800\uc7a5\ub418\uc9c0 \uc54a\uc558\uc5b4\uc694."
-                    + " \uc800\uc7a5\ub41c \uc0c9\uc778\uc740 \uadf8\ub300\ub85c\uc608\uc694.",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "\ud30c\uc77c \uc800\uc7a5\uc774 \uc911\uac04\uc5d0 \uba48\ucdc4\uc5b4\uc694."
-                        + " \ub2e4\ub978 \uc704\uce58\ub97c \uc2dc\ub3c4\ud574 \ubcf4\uc138\uc694."
-                        + " \uc800\uc7a5\ub41c \uc0c9\uc778\uc740 \uadf8\ub300\ub85c\uc608\uc694.",
-                "Pick a private channel you created.",
-                "\ub0b4\uac00 \ub9cc\ub4e0 \ube44\uacf5\uac1c \ucc44\ub110\uc744"
-                        + " \uc120\ud0dd\ud558\uc138\uc694.",
-                "There's no BitChord backup in that channel.",
-                "\uadf8 \ucc44\ub110\uc5d0\ub294 BitChord \ubc31\uc5c5\uc774 \uc5c6\uc5b4\uc694.",
-                "The backup didn't finish downloading. Try again.",
-                "\ubc31\uc5c5 \ub2e4\uc6b4\ub85c\ub4dc\uac00 \ub05d\ub098\uc9c0"
-                        + " \uc54a\uc558\uc5b4\uc694. \ub2e4\uc2dc \uc2dc\ub3c4\ud574"
-                        + " \uc8fc\uc138\uc694.",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "\ubc31\uc5c5\uc744 {0}(\uc73c)\ub85c \ubcf4\ub0b4\ub294 \uc911\uc774\uc5d0\uc694."
-                        + " \uc5c5\ub85c\ub4dc\uac00 \ub05d\ub098\uba74 Telegram\uc5d0\uc11c"
-                        + " \ud655\uc778\ud560 \uc218 \uc788\uc5b4\uc694.",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "\uc120\ud0dd\ud55c \ucc44\ud305\uc758 \uc74c\uc545\uc744 \uc774"
-                    + " \ud734\ub300\uc804\ud654\uc5d0 \ubcf4\uad00\ud574\uc694. Telegram\uc5d0"
-                    + " \uc5f0\uacb0\ub418\uc5b4 \uc788\uc73c\uba74 \uc624\ub514\uc624\uc640 ZIP"
-                    + " \uac8c\uc2dc\ubb3c\uc774 \ucd94\uac00\ub418\uac70\ub098"
-                    + " \ubc14\ub00c\uac70\ub098 \uc0ac\ub77c\uc9c8 \ub54c \uc0c9\uc778\uc774"
-                    + " \uc5c5\ub370\uc774\ud2b8\ub3fc\uc694. \ubc31\uadf8\ub77c\uc6b4\ub4dc"
-                    + " \uc2a4\uce94\uc73c\ub85c \uc774\uc804 \uae30\ub85d\ub3c4"
-                    + " \ubc18\uc601\ud574\uc694.  \ub044\uba74 \uc7a0\uc2dc \uba48\ucd9c"
-                    + " \ubfd0\uc774\uc5d0\uc694. \uc800\uc7a5\ub41c \uc0c9\uc778\uc740 \uc774"
-                    + " \ud734\ub300\ud3f0\uc5d0 \uadf8\ub300\ub85c \ub0a8\uc544\uc11c"
-                    + " \ubc31\uc5c5\ud558\uac70\ub098 \ub2e4\uc2dc \ucf24 \uc218"
-                    + " \uc788\uc5b4\uc694.",
             };
         }
     }
@@ -69984,6 +70058,10 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "Utw\u00f3rz w Telegramie kana\u0142 prywatny, z kt\u00f3rego korzystasz tylko Ty,"
+                        + " i wr\u00f3\u0107. Kana\u0142y publiczne nie s\u0105 proponowane.",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -70790,6 +70868,17 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "Przechowuje na tym telefonie muzyk\u0119 z wybranych czat\u00f3w. Gdy Telegram"
+                    + " jest po\u0142\u0105czony, indeks aktualizuje si\u0119 wraz z pojawianiem"
+                    + " si\u0119, zmian\u0105 lub usuwaniem post\u00f3w z d\u017awi\u0119kiem i"
+                    + " plikami ZIP. Skanowanie w tle uzupe\u0142nia histori\u0119. "
+                    + " Wy\u0142\u0105czenie tylko go wstrzymuje: zapisany indeks zostaje na tym"
+                    + " telefonie, wi\u0119c nadal mo\u017cesz zrobi\u0107 jego kopi\u0119 lub"
+                    + " w\u0142\u0105czy\u0107 go ponownie.",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "Zapobiega podw\u00f3jnej korekcji d\u017awi\u0119ku i nie wysy\u0142a utwor\u00f3w"
@@ -71187,6 +71276,8 @@ final class Translations {
                         + " dost\u0119p.",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "Brak kana\u0142u prywatnego",
                 "No private main channel selected.",
                 "Nie wybrano prywatnego kana\u0142u g\u0142\u00f3wnego.",
                 "No profile for this output yet.",
@@ -71584,6 +71675,8 @@ final class Translations {
                 "Photos and files outside your music chats follow the Telegram cache target.",
                 "Zdj\u0119cia i pliki spoza czat\u00f3w muzycznych podlegaj\u0105 docelowemu"
                         + " rozmiarowi pami\u0119ci podr\u0119cznej Telegrama.",
+                "Pick a private channel you created.",
+                "Wybierz kana\u0142 prywatny, kt\u00f3ry utworzy\u0142e\u015b.",
                 "Pick the quality for this download.",
                 "Wybierz jako\u015b\u0107 tego pobierania.",
                 "Pitch",
@@ -71734,6 +71827,8 @@ final class Translations {
                 "Prywatno\u015b\u0107 i trasy po\u0142\u0105cze\u0144",
                 "Privacy and your account",
                 "Prywatno\u015b\u0107 i twoje konto",
+                "Private channel",
+                "Kana\u0142 prywatny",
                 "Private main channel",
                 "Prywatny kana\u0142 g\u0142\u00f3wny",
                 "Private main channel selected.",
@@ -71831,6 +71926,8 @@ final class Translations {
                 "Widok kana\u0142u tylko do odczytu \u00b7 Twoje konto Telegram",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "Odczytywanie d\u017awi\u0119ku\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -72035,6 +72132,12 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "Przywr\u00f3\u0107",
+                "Restore from",
+                "Przywr\u00f3\u0107 z",
+                "Restore from a private channel",
+                "Przywr\u00f3\u0107 z kana\u0142u prywatnego",
+                "Restore from {0}?",
+                "Przywr\u00f3ci\u0107 z: {0}?",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -72144,6 +72247,8 @@ final class Translations {
                 "Zapisz ustawienia przy zatrzymanej koordynacji.",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "Zapisz do pliku",
                 "Save to Music: {0}",
                 "Zapisuj w folderze Muzyka: {0}",
                 "Saved",
@@ -72226,6 +72331,10 @@ final class Translations {
                 "Zapisywanie wstrzymane",
                 "Saving selected copies",
                 "Zapisywanie wybranych kopii",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "Zapisywanie pliku urwa\u0142o si\u0119 w po\u0142owie. Spr\u00f3buj w innym"
+                        + " miejscu; Tw\u00f3j zapisany indeks jest nietkni\u0119ty.",
                 "Saving\u2026",
                 "Zapisywanie\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -72326,14 +72435,23 @@ final class Translations {
                 "Wybrano czat\u00f3w muzycznych: {0}. Szukaj w BitChord \u2192 Dodatki.",
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "Wybrano: {0}. Szukaj w BitChord \u2192 Dodatki.",
+                "Send",
+                "Wy\u015blij",
                 "Send audio effects to the installed JamesDSP app",
                 "Przeka\u017c efekty d\u017awi\u0119kowe do zainstalowanej aplikacji JamesDSP",
                 "Send code to this number",
                 "Wy\u015blij kod na ten numer",
+                "Send the backup to",
+                "Wy\u015blij kopi\u0119 zapasow\u0105 do",
+                "Send the backup to {0}?",
+                "Wys\u0142a\u0107 kopi\u0119 zapasow\u0105 do: {0}?",
                 "Send this offer again",
                 "Wy\u015blij t\u0119 ofert\u0119 ponownie",
                 "Sending file offer",
                 "Wysy\u0142anie oferty pliku",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "Wysy\u0142anie kopii zapasowej do: {0}. Telegram poka\u017ce j\u0105 tam po"
+                        + " zako\u0144czeniu przesy\u0142ania.",
                 "Sends to {0}",
                 "Wysy\u0142ane do {0}",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -72985,8 +73103,21 @@ final class Translations {
                         + " urz\u0105dzenia. Nie wp\u0142ynie to na playlisty.",
                 "The App API ID is outside the supported range.",
                 "App API ID jest poza obs\u0142ugiwanym zakresem.",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "Kopia zapasowa wysz\u0142a pusta lub uszkodzona, wi\u0119c nic nie zapisano."
+                        + " Tw\u00f3j zapisany indeks jest nietkni\u0119ty.",
+                "The backup didn't finish downloading. Try again.",
+                "Kopia zapasowa nie zosta\u0142a w pe\u0142ni pobrana. Spr\u00f3buj ponownie.",
                 "The backup file stays where you saved it",
                 "Plik kopii zapasowej zostaje tam, gdzie zosta\u0142 zapisany",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "Kopia zawiera Twoje ustawienia i poprawione nazwy, a je\u015bli wybierzesz,"
+                    + " tak\u017ce zapisany indeks. Ka\u017cdy, kto mo\u017ce otworzy\u0107"
+                    + " kana\u0142, mo\u017ce j\u0105 przeczyta\u0107. Twoich danych API ani sesji"
+                    + " Telegrama nigdy w niej nie ma.",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "Najlepsza dost\u0119pna kopia stratna \u00b7 oko\u0142o 8 MB na utw\u00f3r",
                 "The cleaner choice for older recordings.",
@@ -73026,6 +73157,12 @@ final class Translations {
                 "The last song plays to its end at full volume",
                 "Ostatni utw\u00f3r gra do ko\u0144ca z pe\u0142n\u0105"
                         + " g\u0142o\u015bno\u015bci\u0105",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "Najnowsza kopia na kanale zast\u0105pi Twoje ustawienia i doda sw\u00f3j zapisany"
+                        + " indeks do tego.",
+                "The newest backup posted in a private channel you created",
+                "Najnowsza kopia opublikowana na utworzonym przez Ciebie kanale prywatnym",
                 "The next song already fits",
                 "Nast\u0119pny utw\u00f3r ju\u017c pasuje",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -73103,6 +73240,8 @@ final class Translations {
                 "D\u0142ugo\u015b\u0107 utworu jest niedost\u0119pna",
                 "The whole song is cached.",
                 "Ca\u0142y utw\u00f3r jest w pami\u0119ci podr\u0119cznej.",
+                "There's no BitChord backup in that channel.",
+                "Na tym kanale nie ma kopii zapasowej BitChord.",
                 "There's no music in this chat yet.",
                 "W tym czacie nie ma jeszcze muzyki.",
                 "There\u2019s no other version of this song.",
@@ -73489,6 +73628,8 @@ final class Translations {
                 "Poczekaj na zako\u0144czenie bie\u017c\u0105cej czynno\u015bci.",
                 "Wait for the pair to finish loading",
                 "Poczekaj, a\u017c oba utwory zostan\u0105 wczytane",
+                "Waiting",
+                "Oczekiwanie",
                 "Waiting for a community channel to be indexed",
                 "Oczekiwanie na zindeksowanie kana\u0142u spo\u0142eczno\u015bci",
                 "Waiting for device to cool down",
@@ -73499,6 +73640,8 @@ final class Translations {
                 "Oczekiwanie na drugiego u\u017cytkownika",
                 "Waiting for peer \u00b7 queue position {0}",
                 "Oczekiwanie na u\u017cytkownika \u00b7 pozycja w kolejce {0}",
+                "Waiting for playback",
+                "Oczekiwanie na odtwarzanie",
                 "Waiting for provider",
                 "Oczekiwanie na dostawc\u0119",
                 "Waiting for receipt",
@@ -73906,69 +74049,6 @@ final class Translations {
                 "{0}, kt\u00f3ry BitChord ju\u017c uznaje za bezstratny",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "Kana\u0142 prywatny",
-                "Save to file",
-                "Zapisz do pliku",
-                "Send the backup to",
-                "Wy\u015blij kopi\u0119 zapasow\u0105 do",
-                "Send the backup to {0}?",
-                "Wys\u0142a\u0107 kopi\u0119 zapasow\u0105 do: {0}?",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "Kopia zawiera Twoje ustawienia i poprawione nazwy, a je\u015bli wybierzesz,"
-                    + " tak\u017ce zapisany indeks. Ka\u017cdy, kto mo\u017ce otworzy\u0107"
-                    + " kana\u0142, mo\u017ce j\u0105 przeczyta\u0107. Twoich danych API ani sesji"
-                    + " Telegrama nigdy w niej nie ma.",
-                "Send",
-                "Wy\u015blij",
-                "Restore from",
-                "Przywr\u00f3\u0107 z",
-                "Restore from {0}?",
-                "Przywr\u00f3ci\u0107 z: {0}?",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "Najnowsza kopia na kanale zast\u0105pi Twoje ustawienia i doda sw\u00f3j zapisany"
-                        + " indeks do tego.",
-                "No private channel",
-                "Brak kana\u0142u prywatnego",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "Utw\u00f3rz w Telegramie kana\u0142 prywatny, z kt\u00f3rego korzystasz tylko Ty,"
-                        + " i wr\u00f3\u0107. Kana\u0142y publiczne nie s\u0105 proponowane.",
-                "Restore from a private channel",
-                "Przywr\u00f3\u0107 z kana\u0142u prywatnego",
-                "The newest backup posted in a private channel you created",
-                "Najnowsza kopia opublikowana na utworzonym przez Ciebie kanale prywatnym",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "Kopia zapasowa wysz\u0142a pusta lub uszkodzona, wi\u0119c nic nie zapisano."
-                        + " Tw\u00f3j zapisany indeks jest nietkni\u0119ty.",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "Zapisywanie pliku urwa\u0142o si\u0119 w po\u0142owie. Spr\u00f3buj w innym"
-                        + " miejscu; Tw\u00f3j zapisany indeks jest nietkni\u0119ty.",
-                "Pick a private channel you created.",
-                "Wybierz kana\u0142 prywatny, kt\u00f3ry utworzy\u0142e\u015b.",
-                "There's no BitChord backup in that channel.",
-                "Na tym kanale nie ma kopii zapasowej BitChord.",
-                "The backup didn't finish downloading. Try again.",
-                "Kopia zapasowa nie zosta\u0142a w pe\u0142ni pobrana. Spr\u00f3buj ponownie.",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "Wysy\u0142anie kopii zapasowej do: {0}. Telegram poka\u017ce j\u0105 tam po"
-                        + " zako\u0144czeniu przesy\u0142ania.",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "Przechowuje na tym telefonie muzyk\u0119 z wybranych czat\u00f3w. Gdy Telegram"
-                    + " jest po\u0142\u0105czony, indeks aktualizuje si\u0119 wraz z pojawianiem"
-                    + " si\u0119, zmian\u0105 lub usuwaniem post\u00f3w z d\u017awi\u0119kiem i"
-                    + " plikami ZIP. Skanowanie w tle uzupe\u0142nia histori\u0119. "
-                    + " Wy\u0142\u0105czenie tylko go wstrzymuje: zapisany indeks zostaje na tym"
-                    + " telefonie, wi\u0119c nadal mo\u017cesz zrobi\u0107 jego kopi\u0119 lub"
-                    + " w\u0142\u0105czy\u0107 go ponownie.",
             };
         }
     }
@@ -75078,6 +75158,10 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "Crie no Telegram um canal privado que s\u00f3 voc\u00ea use e volte aqui. Canais"
+                        + " p\u00fablicos n\u00e3o s\u00e3o oferecidos.",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -75875,6 +75959,16 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "Mant\u00e9m neste celular as m\u00fasicas dos chats selecionados. Enquanto o"
+                        + " Telegram estiver conectado, o \u00edndice \u00e9 atualizado quando"
+                        + " mensagens com \u00e1udio e ZIP chegam, mudam ou s\u00e3o removidas. As"
+                        + " verifica\u00e7\u00f5es em segundo plano completam o hist\u00f3rico. "
+                        + " Desativar apenas o pausa: o \u00edndice salvo continua neste telefone e"
+                        + " voc\u00ea ainda pode fazer backup dele ou ativ\u00e1-lo de novo.",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "Evita que o som seja equalizado duas vezes e mant\u00e9m as m\u00fasicas fora do"
@@ -76266,6 +76360,8 @@ final class Translations {
                 "Nenhuma postagem recebida. Abra este chat no Telegram para verificar o acesso.",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "Nenhum canal privado",
                 "No private main channel selected.",
                 "Nenhum canal principal privado selecionado.",
                 "No profile for this output yet.",
@@ -76649,6 +76745,8 @@ final class Translations {
                 "Photos and files outside your music chats follow the Telegram cache target.",
                 "Fotos e arquivos fora dos seus chats de m\u00fasica seguem o limite de cache do"
                         + " Telegram.",
+                "Pick a private channel you created.",
+                "Escolha um canal privado que voc\u00ea criou.",
                 "Pick the quality for this download.",
                 "Escolha a qualidade deste download.",
                 "Pitch",
@@ -76800,6 +76898,8 @@ final class Translations {
                 "Privacidade e rotas",
                 "Privacy and your account",
                 "Privacidade e sua conta",
+                "Private channel",
+                "Canal privado",
                 "Private main channel",
                 "Canal principal privado",
                 "Private main channel selected.",
@@ -76894,6 +76994,8 @@ final class Translations {
                 "Visualiza\u00e7\u00e3o do canal somente leitura \u00b7 Sua conta do Telegram",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "Lendo \u00e1udio\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -77096,6 +77198,12 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "Restaurar",
+                "Restore from",
+                "Restaurar de",
+                "Restore from a private channel",
+                "Restaurar de um canal privado",
+                "Restore from {0}?",
+                "Restaurar de {0}?",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -77203,6 +77311,8 @@ final class Translations {
                 "Salve as configura\u00e7\u00f5es com a coordena\u00e7\u00e3o interrompida.",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "Salvar em arquivo",
                 "Save to Music: {0}",
                 "Salvar em M\u00fasica: {0}",
                 "Saved",
@@ -77285,6 +77395,10 @@ final class Translations {
                 "Salvamento pausado",
                 "Saving selected copies",
                 "Salvando as c\u00f3pias escolhidas",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "O salvamento do arquivo parou no meio. Tente outro lugar; seu \u00edndice salvo"
+                        + " continua intacto.",
                 "Saving\u2026",
                 "Salvando\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -77382,14 +77496,22 @@ final class Translations {
                 "{0} chats de m\u00fasica selecionados. Busque em BitChord \u2192 Addons.",
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "Selecionado: {0}. Busque em BitChord \u2192 Addons.",
+                "Send",
+                "Enviar",
                 "Send audio effects to the installed JamesDSP app",
                 "Enviar os efeitos de \u00e1udio para o app JamesDSP instalado",
                 "Send code to this number",
                 "Enviar c\u00f3digo para este n\u00famero",
+                "Send the backup to",
+                "Enviar o backup para",
+                "Send the backup to {0}?",
+                "Enviar o backup para {0}?",
                 "Send this offer again",
                 "Enviar esta oferta novamente",
                 "Sending file offer",
                 "Enviando oferta de arquivos",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "Enviando o backup para {0}. O Telegram o mostra l\u00e1 quando o envio terminar.",
                 "Sends to {0}",
                 "Enviado para {0}",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -78029,8 +78151,21 @@ final class Translations {
                         + " Suas playlists n\u00e3o s\u00e3o afetadas.",
                 "The App API ID is outside the supported range.",
                 "O App API ID est\u00e1 fora do intervalo compat\u00edvel.",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "O backup saiu vazio ou danificado, ent\u00e3o nada foi salvo. Seu \u00edndice"
+                        + " salvo continua intacto.",
+                "The backup didn't finish downloading. Try again.",
+                "O backup n\u00e3o terminou de baixar. Tente de novo.",
                 "The backup file stays where you saved it",
                 "O arquivo de backup fica onde voc\u00ea o salvou",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "O backup cont\u00e9m suas configura\u00e7\u00f5es e nomes corrigidos e, se"
+                    + " voc\u00ea escolher, o \u00edndice salvo. Qualquer pessoa que consiga abrir"
+                    + " o canal pode l\u00ea-lo. Seus dados de API e sua sess\u00e3o do Telegram"
+                    + " nunca v\u00e3o nele.",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "A melhor c\u00f3pia com perdas dispon\u00edvel \u00b7 cerca de 8 MB por"
                         + " m\u00fasica",
@@ -78069,6 +78204,12 @@ final class Translations {
                 "N\u00e3o foi poss\u00edvel abrir o banco de dados do \u00edndice neste celular.",
                 "The last song plays to its end at full volume",
                 "A \u00faltima m\u00fasica toca at\u00e9 o fim no volume total",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "O backup mais recente do canal substitui suas configura\u00e7\u00f5es e soma o"
+                        + " \u00edndice salvo dele a este.",
+                "The newest backup posted in a private channel you created",
+                "O backup mais recente publicado em um canal privado que voc\u00ea criou",
                 "The next song already fits",
                 "A pr\u00f3xima m\u00fasica j\u00e1 combina",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -78147,6 +78288,8 @@ final class Translations {
                 "A dura\u00e7\u00e3o da faixa n\u00e3o est\u00e1 dispon\u00edvel",
                 "The whole song is cached.",
                 "A m\u00fasica inteira est\u00e1 em cache.",
+                "There's no BitChord backup in that channel.",
+                "N\u00e3o h\u00e1 backup do BitChord nesse canal.",
                 "There's no music in this chat yet.",
                 "Ainda n\u00e3o h\u00e1 m\u00fasicas neste chat.",
                 "There\u2019s no other version of this song.",
@@ -78522,6 +78665,8 @@ final class Translations {
                 "Aguarde a conclus\u00e3o da a\u00e7\u00e3o atual.",
                 "Wait for the pair to finish loading",
                 "Aguarde o t\u00e9rmino do carregamento das duas faixas",
+                "Waiting",
+                "Aguardando",
                 "Waiting for a community channel to be indexed",
                 "Aguardando a indexa\u00e7\u00e3o de um canal da comunidade",
                 "Waiting for device to cool down",
@@ -78532,6 +78677,8 @@ final class Translations {
                 "Aguardando o par",
                 "Waiting for peer \u00b7 queue position {0}",
                 "Aguardando o par \u00b7 posi\u00e7\u00e3o na fila {0}",
+                "Waiting for playback",
+                "Aguardando reprodu\u00e7\u00e3o",
                 "Waiting for provider",
                 "Aguardando o provedor",
                 "Waiting for receipt",
@@ -78931,67 +79078,6 @@ final class Translations {
                 "{0}, que o BitChord j\u00e1 conta como sem perdas",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "Canal privado",
-                "Save to file",
-                "Salvar em arquivo",
-                "Send the backup to",
-                "Enviar o backup para",
-                "Send the backup to {0}?",
-                "Enviar o backup para {0}?",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "O backup cont\u00e9m suas configura\u00e7\u00f5es e nomes corrigidos e, se"
-                    + " voc\u00ea escolher, o \u00edndice salvo. Qualquer pessoa que consiga abrir"
-                    + " o canal pode l\u00ea-lo. Seus dados de API e sua sess\u00e3o do Telegram"
-                    + " nunca v\u00e3o nele.",
-                "Send",
-                "Enviar",
-                "Restore from",
-                "Restaurar de",
-                "Restore from {0}?",
-                "Restaurar de {0}?",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "O backup mais recente do canal substitui suas configura\u00e7\u00f5es e soma o"
-                        + " \u00edndice salvo dele a este.",
-                "No private channel",
-                "Nenhum canal privado",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "Crie no Telegram um canal privado que s\u00f3 voc\u00ea use e volte aqui. Canais"
-                        + " p\u00fablicos n\u00e3o s\u00e3o oferecidos.",
-                "Restore from a private channel",
-                "Restaurar de um canal privado",
-                "The newest backup posted in a private channel you created",
-                "O backup mais recente publicado em um canal privado que voc\u00ea criou",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "O backup saiu vazio ou danificado, ent\u00e3o nada foi salvo. Seu \u00edndice"
-                        + " salvo continua intacto.",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "O salvamento do arquivo parou no meio. Tente outro lugar; seu \u00edndice salvo"
-                        + " continua intacto.",
-                "Pick a private channel you created.",
-                "Escolha um canal privado que voc\u00ea criou.",
-                "There's no BitChord backup in that channel.",
-                "N\u00e3o h\u00e1 backup do BitChord nesse canal.",
-                "The backup didn't finish downloading. Try again.",
-                "O backup n\u00e3o terminou de baixar. Tente de novo.",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "Enviando o backup para {0}. O Telegram o mostra l\u00e1 quando o envio terminar.",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "Mant\u00e9m neste celular as m\u00fasicas dos chats selecionados. Enquanto o"
-                        + " Telegram estiver conectado, o \u00edndice \u00e9 atualizado quando"
-                        + " mensagens com \u00e1udio e ZIP chegam, mudam ou s\u00e3o removidas. As"
-                        + " verifica\u00e7\u00f5es em segundo plano completam o hist\u00f3rico. "
-                        + " Desativar apenas o pausa: o \u00edndice salvo continua neste telefone e"
-                        + " voc\u00ea ainda pode fazer backup dele ou ativ\u00e1-lo de novo.",
             };
         }
     }
@@ -81118,6 +81204,17 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "\u0421\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u0432 Telegram"
+                    + " \u0437\u0430\u043a\u0440\u044b\u0442\u044b\u0439"
+                    + " \u043a\u0430\u043d\u0430\u043b, \u043a\u043e\u0442\u043e\u0440\u044b\u043c"
+                    + " \u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442\u0435\u0441\u044c"
+                    + " \u0442\u043e\u043b\u044c\u043a\u043e \u0432\u044b, \u0438"
+                    + " \u0432\u0435\u0440\u043d\u0438\u0442\u0435\u0441\u044c."
+                    + " \u041f\u0443\u0431\u043b\u0438\u0447\u043d\u044b\u0435"
+                    + " \u043a\u0430\u043d\u0430\u043b\u044b \u043d\u0435"
+                    + " \u043f\u0440\u0435\u0434\u043b\u0430\u0433\u0430\u044e\u0442\u0441\u044f.",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -82538,6 +82635,40 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "\u0425\u0440\u0430\u043d\u0438\u0442 \u043d\u0430 \u044d\u0442\u043e\u043c"
+                    + " \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0435"
+                    + " \u043c\u0443\u0437\u044b\u043a\u0443 \u0438\u0437"
+                    + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0445"
+                    + " \u0447\u0430\u0442\u043e\u0432. \u041f\u043e\u043a\u0430 Telegram"
+                    + " \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0451\u043d,"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441"
+                    + " \u043e\u0431\u043d\u043e\u0432\u043b\u044f\u0435\u0442\u0441\u044f"
+                    + " \u043f\u0440\u0438 \u043f\u043e\u044f\u0432\u043b\u0435\u043d\u0438\u0438,"
+                    + " \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u0438 \u0438\u043b\u0438"
+                    + " \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0438"
+                    + " \u0430\u0443\u0434\u0438\u043e\u0437\u0430\u043f\u0438\u0441\u0435\u0439"
+                    + " \u0438 ZIP-\u0430\u0440\u0445\u0438\u0432\u043e\u0432."
+                    + " \u0424\u043e\u043d\u043e\u0432\u043e\u0435"
+                    + " \u0441\u043a\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435"
+                    + " \u0434\u043e\u043f\u043e\u043b\u043d\u044f\u0435\u0442"
+                    + " \u0438\u0441\u0442\u043e\u0440\u0438\u044e.  \u041f\u0440\u0438"
+                    + " \u0432\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0438 \u043e\u043d"
+                    + " \u043b\u0438\u0448\u044c"
+                    + " \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u0430\u0432\u043b\u0438\u0432\u0430\u0435\u0442\u0441\u044f:"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441"
+                    + " \u043e\u0441\u0442\u0430\u0451\u0442\u0441\u044f \u043d\u0430"
+                    + " \u044d\u0442\u043e\u043c \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0435,"
+                    + " \u0435\u0433\u043e \u043c\u043e\u0436\u043d\u043e"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0432"
+                    + " \u0440\u0435\u0437\u0435\u0440\u0432\u043d\u0443\u044e"
+                    + " \u043a\u043e\u043f\u0438\u044e \u0438\u043b\u0438"
+                    + " \u0441\u043d\u043e\u0432\u0430"
+                    + " \u0432\u043a\u043b\u044e\u0447\u0438\u0442\u044c.",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "\u041d\u0435 \u0434\u0430\u0451\u0442 \u0437\u0432\u0443\u043a\u0443"
@@ -83242,6 +83373,9 @@ final class Translations {
                     + " \u0434\u043e\u0441\u0442\u0443\u043f.",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "\u041d\u0435\u0442 \u0437\u0430\u043a\u0440\u044b\u0442\u043e\u0433\u043e"
+                        + " \u043a\u0430\u043d\u0430\u043b\u0430",
                 "No private main channel selected.",
                 "\u0427\u0430\u0441\u0442\u043d\u044b\u0439"
                         + " \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439"
@@ -83975,6 +84109,11 @@ final class Translations {
                     + " \u0447\u0430\u0442\u043e\u0432"
                     + " \u043f\u043e\u0434\u0447\u0438\u043d\u044f\u044e\u0442\u0441\u044f"
                     + " \u043b\u0438\u043c\u0438\u0442\u0443 \u043a\u0435\u0448\u0430 Telegram.",
+                "Pick a private channel you created.",
+                "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435"
+                    + " \u0441\u043e\u0437\u0434\u0430\u043d\u043d\u044b\u0439"
+                    + " \u0432\u0430\u043c\u0438 \u0437\u0430\u043a\u0440\u044b\u0442\u044b\u0439"
+                    + " \u043a\u0430\u043d\u0430\u043b.",
                 "Pick the quality for this download.",
                 "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435"
                     + " \u043a\u0430\u0447\u0435\u0441\u0442\u0432\u043e \u0434\u043b\u044f"
@@ -84193,6 +84332,8 @@ final class Translations {
                 "Privacy and your account",
                 "\u041a\u043e\u043d\u0444\u0438\u0434\u0435\u043d\u0446\u0438\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c"
                     + " \u0438 \u0430\u043a\u043a\u0430\u0443\u043d\u0442",
+                "Private channel",
+                "\u0417\u0430\u043a\u0440\u044b\u0442\u044b\u0439 \u043a\u0430\u043d\u0430\u043b",
                 "Private main channel",
                 "\u0427\u0430\u0441\u0442\u043d\u044b\u0439"
                         + " \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439"
@@ -84364,6 +84505,8 @@ final class Translations {
                     + " \u0412\u0430\u0448 \u0430\u043a\u043a\u0430\u0443\u043d\u0442 Telegram",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "\u0427\u0442\u0435\u043d\u0438\u0435 \u0430\u0443\u0434\u0438\u043e\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -84699,6 +84842,16 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "\u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c",
+                "Restore from",
+                "\u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c"
+                        + " \u0438\u0437",
+                "Restore from a private channel",
+                "\u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c"
+                        + " \u0438\u0437 \u0437\u0430\u043a\u0440\u044b\u0442\u043e\u0433\u043e"
+                        + " \u043a\u0430\u043d\u0430\u043b\u0430",
+                "Restore from {0}?",
+                "\u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c"
+                        + " \u0438\u0437 \u00ab{0}\u00bb?",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -84870,6 +85023,9 @@ final class Translations {
                     + " \u043a\u043e\u043e\u0440\u0434\u0438\u043d\u0430\u0446\u0438\u0438.",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0432"
+                        + " \u0444\u0430\u0439\u043b",
                 "Save to Music: {0}",
                 "\u0421\u043e\u0445\u0440\u0430\u043d\u044f\u0442\u044c \u0432"
                         + " \u00ab\u041c\u0443\u0437\u044b\u043a\u0443\u00bb: {0}",
@@ -85021,6 +85177,17 @@ final class Translations {
                 "\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435"
                         + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0445"
                         + " \u043a\u043e\u043f\u0438\u0439",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435"
+                    + " \u0444\u0430\u0439\u043b\u0430"
+                    + " \u043e\u0431\u043e\u0440\u0432\u0430\u043b\u043e\u0441\u044c \u043d\u0430"
+                    + " \u043f\u043e\u043b\u043f\u0443\u0442\u0438."
+                    + " \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435"
+                    + " \u0434\u0440\u0443\u0433\u043e\u0435 \u043c\u0435\u0441\u0442\u043e;"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441 \u043d\u0435"
+                    + " \u0442\u0440\u043e\u043d\u0443\u0442.",
                 "Saving\u2026",
                 "\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -85203,6 +85370,8 @@ final class Translations {
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "\u0412\u044b\u0431\u0440\u0430\u043d\u043e {0}. \u0418\u0449\u0438\u0442\u0435"
                         + " \u0432 BitChord \u2192 \u0410\u0434\u0434\u043e\u043d\u044b.",
+                "Send",
+                "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c",
                 "Send audio effects to the installed JamesDSP app",
                 "\u041f\u0435\u0440\u0435\u0434\u0430\u0432\u0430\u0442\u044c"
                     + " \u0437\u0432\u0443\u043a\u043e\u0432\u044b\u0435"
@@ -85212,6 +85381,12 @@ final class Translations {
                 "Send code to this number",
                 "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c \u043a\u043e\u0434"
                         + " \u043d\u0430 \u044d\u0442\u043e\u0442 \u043d\u043e\u043c\u0435\u0440",
+                "Send the backup to",
+                "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c"
+                        + " \u043a\u043e\u043f\u0438\u044e \u0432",
+                "Send the backup to {0}?",
+                "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c"
+                        + " \u043a\u043e\u043f\u0438\u044e \u0432 \u00ab{0}\u00bb?",
                 "Send this offer again",
                 "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c \u044d\u0442\u043e"
                         + " \u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u0435"
@@ -85220,6 +85395,15 @@ final class Translations {
                 "\u041e\u0442\u043f\u0440\u0430\u0432\u043a\u0430"
                         + " \u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u044f"
                         + " \u0444\u0430\u0439\u043b\u0430",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u0430\u044f"
+                    + " \u043a\u043e\u043f\u0438\u044f"
+                    + " \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u0442\u0441\u044f"
+                    + " \u0432 \u00ab{0}\u00bb. \u041a\u043e\u0433\u0434\u0430"
+                    + " \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0430"
+                    + " \u0437\u0430\u043a\u043e\u043d\u0447\u0438\u0442\u0441\u044f,"
+                    + " \u043e\u043d\u0430 \u043f\u043e\u044f\u0432\u0438\u0442\u0441\u044f"
+                    + " \u0442\u0430\u043c \u0432 Telegram.",
                 "Sends to {0}",
                 "\u041e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0432"
                         + " {0}",
@@ -86446,12 +86630,49 @@ final class Translations {
                 "App API ID \u0432\u043d\u0435"
                     + " \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043c\u043e\u0433\u043e"
                     + " \u0434\u0438\u0430\u043f\u0430\u0437\u043e\u043d\u0430.",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u0430\u044f"
+                    + " \u043a\u043e\u043f\u0438\u044f"
+                    + " \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u0430\u0441\u044c"
+                    + " \u043f\u0443\u0441\u0442\u043e\u0439 \u0438\u043b\u0438"
+                    + " \u043f\u043e\u0432\u0440\u0435\u0436\u0434\u0451\u043d\u043d\u043e\u0439,"
+                    + " \u043f\u043e\u044d\u0442\u043e\u043c\u0443"
+                    + " \u043d\u0438\u0447\u0435\u0433\u043e \u043d\u0435"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e."
+                    + " \u0421\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441 \u043d\u0435"
+                    + " \u0442\u0440\u043e\u043d\u0443\u0442.",
+                "The backup didn't finish downloading. Try again.",
+                "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u0430\u044f"
+                        + " \u043a\u043e\u043f\u0438\u044f \u043d\u0435"
+                        + " \u0441\u043a\u0430\u0447\u0430\u043b\u0430\u0441\u044c \u0434\u043e"
+                        + " \u043a\u043e\u043d\u0446\u0430."
+                        + " \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435"
+                        + " \u0435\u0449\u0451 \u0440\u0430\u0437.",
                 "The backup file stays where you saved it",
                 "\u0424\u0430\u0439\u043b \u0440\u0435\u0437\u0435\u0440\u0432\u043d\u043e\u0439"
                         + " \u043a\u043e\u043f\u0438\u0438"
                         + " \u043e\u0441\u0442\u0430\u0451\u0442\u0441\u044f \u0442\u0430\u043c,"
                         + " \u0433\u0434\u0435 \u0432\u044b \u0435\u0433\u043e"
                         + " \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u043b\u0438",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "\u0412 \u043a\u043e\u043f\u0438\u0438 \u0432\u0430\u0448\u0438"
+                    + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438,"
+                    + " \u0438\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0435"
+                    + " \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044f \u0438,"
+                    + " \u0435\u0441\u043b\u0438 \u0432\u044b\u0431\u0440\u0430\u043d\u043e,"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441."
+                    + " \u041f\u0440\u043e\u0447\u0438\u0442\u0430\u0442\u044c \u0435\u0451"
+                    + " \u0441\u043c\u043e\u0436\u0435\u0442 \u043b\u044e\u0431\u043e\u0439,"
+                    + " \u043a\u0442\u043e \u043c\u043e\u0436\u0435\u0442"
+                    + " \u043e\u0442\u043a\u0440\u044b\u0442\u044c \u043a\u0430\u043d\u0430\u043b."
+                    + " \u0412\u0430\u0448\u0438 \u0434\u0430\u043d\u043d\u044b\u0435 API \u0438"
+                    + " \u0441\u0435\u0441\u0441\u0438\u044f Telegram \u0432 \u043d\u0435\u0451"
+                    + " \u043d\u0435 \u043f\u043e\u043f\u0430\u0434\u0430\u044e\u0442.",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "\u041b\u0443\u0447\u0448\u0430\u044f"
                         + " \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u0430\u044f"
@@ -86541,6 +86762,23 @@ final class Translations {
                         + " \u0434\u043e \u043a\u043e\u043d\u0446\u0430 \u043d\u0430"
                         + " \u043f\u043e\u043b\u043d\u043e\u0439"
                         + " \u0433\u0440\u043e\u043c\u043a\u043e\u0441\u0442\u0438",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "\u0421\u0430\u043c\u0430\u044f \u043d\u043e\u0432\u0430\u044f"
+                    + " \u043a\u043e\u043f\u0438\u044f \u0432 \u043a\u0430\u043d\u0430\u043b\u0435"
+                    + " \u0437\u0430\u043c\u0435\u043d\u0438\u0442 \u0432\u0430\u0448\u0438"
+                    + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438, \u0430 \u0435\u0451"
+                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
+                    + " \u0438\u043d\u0434\u0435\u043a\u0441 \u0431\u0443\u0434\u0435\u0442"
+                    + " \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d \u043a"
+                    + " \u044d\u0442\u043e\u043c\u0443.",
+                "The newest backup posted in a private channel you created",
+                "\u0421\u0430\u043c\u0430\u044f \u043d\u043e\u0432\u0430\u044f"
+                    + " \u043a\u043e\u043f\u0438\u044f,"
+                    + " \u043e\u043f\u0443\u0431\u043b\u0438\u043a\u043e\u0432\u0430\u043d\u043d\u0430\u044f"
+                    + " \u0432 \u0441\u043e\u0437\u0434\u0430\u043d\u043d\u043e\u043c"
+                    + " \u0432\u0430\u043c\u0438 \u0437\u0430\u043a\u0440\u044b\u0442\u043e\u043c"
+                    + " \u043a\u0430\u043d\u0430\u043b\u0435",
                 "The next song already fits",
                 "\u0421\u043b\u0435\u0434\u0443\u044e\u0449\u0430\u044f"
                         + " \u043f\u0435\u0441\u043d\u044f \u0443\u0436\u0435"
@@ -86726,6 +86964,10 @@ final class Translations {
                 "The whole song is cached.",
                 "\u0412\u0441\u044f \u043f\u0435\u0441\u043d\u044f \u0432"
                         + " \u043a\u0435\u0448\u0435.",
+                "There's no BitChord backup in that channel.",
+                "\u0412 \u044d\u0442\u043e\u043c \u043a\u0430\u043d\u0430\u043b\u0435"
+                    + " \u043d\u0435\u0442 \u0440\u0435\u0437\u0435\u0440\u0432\u043d\u043e\u0439"
+                    + " \u043a\u043e\u043f\u0438\u0438 BitChord.",
                 "There's no music in this chat yet.",
                 "\u0412 \u044d\u0442\u043e\u043c \u0447\u0430\u0442\u0435 \u043f\u043e\u043a\u0430"
                         + " \u043d\u0435\u0442 \u043c\u0443\u0437\u044b\u043a\u0438.",
@@ -87420,6 +87662,8 @@ final class Translations {
                         + " \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0438\u044f"
                         + " \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438"
                         + " \u043e\u0431\u043e\u0438\u0445 \u0442\u0440\u0435\u043a\u043e\u0432",
+                "Waiting",
+                "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435",
                 "Waiting for a community channel to be indexed",
                 "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435"
                         + " \u0438\u043d\u0434\u0435\u043a\u0441\u0430\u0446\u0438\u0438"
@@ -87440,6 +87684,9 @@ final class Translations {
                         + " \u0443\u0447\u0430\u0441\u0442\u043d\u0438\u043a\u0430 \u00b7"
                         + " \u043c\u0435\u0441\u0442\u043e \u0432"
                         + " \u043e\u0447\u0435\u0440\u0435\u0434\u0438: {0}",
+                "Waiting for playback",
+                "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435"
+                    + " \u0432\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u0435\u0434\u0435\u043d\u0438\u044f",
                 "Waiting for provider",
                 "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435"
                         + " \u043f\u0440\u043e\u0432\u0430\u0439\u0434\u0435\u0440\u0430",
@@ -88206,160 +88453,6 @@ final class Translations {
                         + " \u043f\u043e\u0442\u0435\u0440\u044c",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "\u0417\u0430\u043a\u0440\u044b\u0442\u044b\u0439 \u043a\u0430\u043d\u0430\u043b",
-                "Save to file",
-                "\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0432"
-                        + " \u0444\u0430\u0439\u043b",
-                "Send the backup to",
-                "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c"
-                        + " \u043a\u043e\u043f\u0438\u044e \u0432",
-                "Send the backup to {0}?",
-                "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c"
-                        + " \u043a\u043e\u043f\u0438\u044e \u0432 \u00ab{0}\u00bb?",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "\u0412 \u043a\u043e\u043f\u0438\u0438 \u0432\u0430\u0448\u0438"
-                    + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438,"
-                    + " \u0438\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0435"
-                    + " \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044f \u0438,"
-                    + " \u0435\u0441\u043b\u0438 \u0432\u044b\u0431\u0440\u0430\u043d\u043e,"
-                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
-                    + " \u0438\u043d\u0434\u0435\u043a\u0441."
-                    + " \u041f\u0440\u043e\u0447\u0438\u0442\u0430\u0442\u044c \u0435\u0451"
-                    + " \u0441\u043c\u043e\u0436\u0435\u0442 \u043b\u044e\u0431\u043e\u0439,"
-                    + " \u043a\u0442\u043e \u043c\u043e\u0436\u0435\u0442"
-                    + " \u043e\u0442\u043a\u0440\u044b\u0442\u044c \u043a\u0430\u043d\u0430\u043b."
-                    + " \u0412\u0430\u0448\u0438 \u0434\u0430\u043d\u043d\u044b\u0435 API \u0438"
-                    + " \u0441\u0435\u0441\u0441\u0438\u044f Telegram \u0432 \u043d\u0435\u0451"
-                    + " \u043d\u0435 \u043f\u043e\u043f\u0430\u0434\u0430\u044e\u0442.",
-                "Send",
-                "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c",
-                "Restore from",
-                "\u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c"
-                        + " \u0438\u0437",
-                "Restore from {0}?",
-                "\u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c"
-                        + " \u0438\u0437 \u00ab{0}\u00bb?",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "\u0421\u0430\u043c\u0430\u044f \u043d\u043e\u0432\u0430\u044f"
-                    + " \u043a\u043e\u043f\u0438\u044f \u0432 \u043a\u0430\u043d\u0430\u043b\u0435"
-                    + " \u0437\u0430\u043c\u0435\u043d\u0438\u0442 \u0432\u0430\u0448\u0438"
-                    + " \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438, \u0430 \u0435\u0451"
-                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
-                    + " \u0438\u043d\u0434\u0435\u043a\u0441 \u0431\u0443\u0434\u0435\u0442"
-                    + " \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d \u043a"
-                    + " \u044d\u0442\u043e\u043c\u0443.",
-                "No private channel",
-                "\u041d\u0435\u0442 \u0437\u0430\u043a\u0440\u044b\u0442\u043e\u0433\u043e"
-                        + " \u043a\u0430\u043d\u0430\u043b\u0430",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "\u0421\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u0432 Telegram"
-                    + " \u0437\u0430\u043a\u0440\u044b\u0442\u044b\u0439"
-                    + " \u043a\u0430\u043d\u0430\u043b, \u043a\u043e\u0442\u043e\u0440\u044b\u043c"
-                    + " \u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442\u0435\u0441\u044c"
-                    + " \u0442\u043e\u043b\u044c\u043a\u043e \u0432\u044b, \u0438"
-                    + " \u0432\u0435\u0440\u043d\u0438\u0442\u0435\u0441\u044c."
-                    + " \u041f\u0443\u0431\u043b\u0438\u0447\u043d\u044b\u0435"
-                    + " \u043a\u0430\u043d\u0430\u043b\u044b \u043d\u0435"
-                    + " \u043f\u0440\u0435\u0434\u043b\u0430\u0433\u0430\u044e\u0442\u0441\u044f.",
-                "Restore from a private channel",
-                "\u0412\u043e\u0441\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c"
-                        + " \u0438\u0437 \u0437\u0430\u043a\u0440\u044b\u0442\u043e\u0433\u043e"
-                        + " \u043a\u0430\u043d\u0430\u043b\u0430",
-                "The newest backup posted in a private channel you created",
-                "\u0421\u0430\u043c\u0430\u044f \u043d\u043e\u0432\u0430\u044f"
-                    + " \u043a\u043e\u043f\u0438\u044f,"
-                    + " \u043e\u043f\u0443\u0431\u043b\u0438\u043a\u043e\u0432\u0430\u043d\u043d\u0430\u044f"
-                    + " \u0432 \u0441\u043e\u0437\u0434\u0430\u043d\u043d\u043e\u043c"
-                    + " \u0432\u0430\u043c\u0438 \u0437\u0430\u043a\u0440\u044b\u0442\u043e\u043c"
-                    + " \u043a\u0430\u043d\u0430\u043b\u0435",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u0430\u044f"
-                    + " \u043a\u043e\u043f\u0438\u044f"
-                    + " \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u0430\u0441\u044c"
-                    + " \u043f\u0443\u0441\u0442\u043e\u0439 \u0438\u043b\u0438"
-                    + " \u043f\u043e\u0432\u0440\u0435\u0436\u0434\u0451\u043d\u043d\u043e\u0439,"
-                    + " \u043f\u043e\u044d\u0442\u043e\u043c\u0443"
-                    + " \u043d\u0438\u0447\u0435\u0433\u043e \u043d\u0435"
-                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e."
-                    + " \u0421\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
-                    + " \u0438\u043d\u0434\u0435\u043a\u0441 \u043d\u0435"
-                    + " \u0442\u0440\u043e\u043d\u0443\u0442.",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435"
-                    + " \u0444\u0430\u0439\u043b\u0430"
-                    + " \u043e\u0431\u043e\u0440\u0432\u0430\u043b\u043e\u0441\u044c \u043d\u0430"
-                    + " \u043f\u043e\u043b\u043f\u0443\u0442\u0438."
-                    + " \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435"
-                    + " \u0434\u0440\u0443\u0433\u043e\u0435 \u043c\u0435\u0441\u0442\u043e;"
-                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
-                    + " \u0438\u043d\u0434\u0435\u043a\u0441 \u043d\u0435"
-                    + " \u0442\u0440\u043e\u043d\u0443\u0442.",
-                "Pick a private channel you created.",
-                "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435"
-                    + " \u0441\u043e\u0437\u0434\u0430\u043d\u043d\u044b\u0439"
-                    + " \u0432\u0430\u043c\u0438 \u0437\u0430\u043a\u0440\u044b\u0442\u044b\u0439"
-                    + " \u043a\u0430\u043d\u0430\u043b.",
-                "There's no BitChord backup in that channel.",
-                "\u0412 \u044d\u0442\u043e\u043c \u043a\u0430\u043d\u0430\u043b\u0435"
-                    + " \u043d\u0435\u0442 \u0440\u0435\u0437\u0435\u0440\u0432\u043d\u043e\u0439"
-                    + " \u043a\u043e\u043f\u0438\u0438 BitChord.",
-                "The backup didn't finish downloading. Try again.",
-                "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u0430\u044f"
-                        + " \u043a\u043e\u043f\u0438\u044f \u043d\u0435"
-                        + " \u0441\u043a\u0430\u0447\u0430\u043b\u0430\u0441\u044c \u0434\u043e"
-                        + " \u043a\u043e\u043d\u0446\u0430."
-                        + " \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435"
-                        + " \u0435\u0449\u0451 \u0440\u0430\u0437.",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u0430\u044f"
-                    + " \u043a\u043e\u043f\u0438\u044f"
-                    + " \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u0442\u0441\u044f"
-                    + " \u0432 \u00ab{0}\u00bb. \u041a\u043e\u0433\u0434\u0430"
-                    + " \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0430"
-                    + " \u0437\u0430\u043a\u043e\u043d\u0447\u0438\u0442\u0441\u044f,"
-                    + " \u043e\u043d\u0430 \u043f\u043e\u044f\u0432\u0438\u0442\u0441\u044f"
-                    + " \u0442\u0430\u043c \u0432 Telegram.",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "\u0425\u0440\u0430\u043d\u0438\u0442 \u043d\u0430 \u044d\u0442\u043e\u043c"
-                    + " \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0435"
-                    + " \u043c\u0443\u0437\u044b\u043a\u0443 \u0438\u0437"
-                    + " \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0445"
-                    + " \u0447\u0430\u0442\u043e\u0432. \u041f\u043e\u043a\u0430 Telegram"
-                    + " \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0451\u043d,"
-                    + " \u0438\u043d\u0434\u0435\u043a\u0441"
-                    + " \u043e\u0431\u043d\u043e\u0432\u043b\u044f\u0435\u0442\u0441\u044f"
-                    + " \u043f\u0440\u0438 \u043f\u043e\u044f\u0432\u043b\u0435\u043d\u0438\u0438,"
-                    + " \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u0438 \u0438\u043b\u0438"
-                    + " \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0438"
-                    + " \u0430\u0443\u0434\u0438\u043e\u0437\u0430\u043f\u0438\u0441\u0435\u0439"
-                    + " \u0438 ZIP-\u0430\u0440\u0445\u0438\u0432\u043e\u0432."
-                    + " \u0424\u043e\u043d\u043e\u0432\u043e\u0435"
-                    + " \u0441\u043a\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435"
-                    + " \u0434\u043e\u043f\u043e\u043b\u043d\u044f\u0435\u0442"
-                    + " \u0438\u0441\u0442\u043e\u0440\u0438\u044e.  \u041f\u0440\u0438"
-                    + " \u0432\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0438 \u043e\u043d"
-                    + " \u043b\u0438\u0448\u044c"
-                    + " \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u0430\u0432\u043b\u0438\u0432\u0430\u0435\u0442\u0441\u044f:"
-                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0439"
-                    + " \u0438\u043d\u0434\u0435\u043a\u0441"
-                    + " \u043e\u0441\u0442\u0430\u0451\u0442\u0441\u044f \u043d\u0430"
-                    + " \u044d\u0442\u043e\u043c \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0435,"
-                    + " \u0435\u0433\u043e \u043c\u043e\u0436\u043d\u043e"
-                    + " \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0432"
-                    + " \u0440\u0435\u0437\u0435\u0440\u0432\u043d\u0443\u044e"
-                    + " \u043a\u043e\u043f\u0438\u044e \u0438\u043b\u0438"
-                    + " \u0441\u043d\u043e\u0432\u0430"
-                    + " \u0432\u043a\u043b\u044e\u0447\u0438\u0442\u044c.",
             };
         }
     }
@@ -89692,6 +89785,13 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "\u0e2a\u0e23\u0e49\u0e32\u0e07\u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27\u0e43\u0e19"
+                    + " Telegram"
+                    + " \u0e17\u0e35\u0e48\u0e43\u0e0a\u0e49\u0e04\u0e19\u0e40\u0e14\u0e35\u0e22\u0e27"
+                    + " \u0e41\u0e25\u0e49\u0e27\u0e01\u0e25\u0e31\u0e1a\u0e21\u0e32\u0e17\u0e35\u0e48\u0e19\u0e35\u0e48"
+                    + " \u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e32\u0e18\u0e32\u0e23\u0e13\u0e30\u0e08\u0e30\u0e44\u0e21\u0e48\u0e41\u0e2a\u0e14\u0e07",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -90616,6 +90716,20 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "\u0e40\u0e01\u0e47\u0e1a\u0e40\u0e1e\u0e25\u0e07\u0e08\u0e32\u0e01\u0e41\u0e0a\u0e17\u0e17\u0e35\u0e48\u0e04\u0e38\u0e13\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e44\u0e27\u0e49\u0e1a\u0e19\u0e42\u0e17\u0e23\u0e28\u0e31\u0e1e\u0e17\u0e4c\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e19\u0e35\u0e49"
+                    + " \u0e02\u0e13\u0e30\u0e17\u0e35\u0e48 Telegram"
+                    + " \u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d\u0e2d\u0e22\u0e39\u0e48"
+                    + " \u0e14\u0e31\u0e0a\u0e19\u0e35\u0e08\u0e30\u0e2d\u0e31\u0e1b\u0e40\u0e14\u0e15\u0e40\u0e21\u0e37\u0e48\u0e2d\u0e21\u0e35\u0e42\u0e1e\u0e2a\u0e15\u0e4c\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e2b\u0e23\u0e37\u0e2d"
+                    + " ZIP \u0e43\u0e2b\u0e21\u0e48"
+                    + " \u0e40\u0e21\u0e37\u0e48\u0e2d\u0e42\u0e1e\u0e2a\u0e15\u0e4c\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e41\u0e1b\u0e25\u0e07\u0e2b\u0e23\u0e37\u0e2d\u0e2b\u0e32\u0e22\u0e44\u0e1b"
+                    + " \u0e01\u0e32\u0e23\u0e2a\u0e41\u0e01\u0e19\u0e43\u0e19\u0e40\u0e1a\u0e37\u0e49\u0e2d\u0e07\u0e2b\u0e25\u0e31\u0e07\u0e08\u0e30\u0e44\u0e25\u0e48\u0e40\u0e01\u0e47\u0e1a\u0e1b\u0e23\u0e30\u0e27\u0e31\u0e15\u0e34\u0e22\u0e49\u0e2d\u0e19\u0e2b\u0e25\u0e31\u0e07"
+                    + " \u0e01\u0e32\u0e23\u0e1b\u0e34\u0e14\u0e40\u0e1b\u0e47\u0e19\u0e40\u0e1e\u0e35\u0e22\u0e07\u0e01\u0e32\u0e23\u0e2b\u0e22\u0e38\u0e14\u0e44\u0e27\u0e49\u0e0a\u0e31\u0e48\u0e27\u0e04\u0e23\u0e32\u0e27"
+                    + " \u0e14\u0e31\u0e0a\u0e19\u0e35\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49\u0e08\u0e30\u0e22\u0e31\u0e07\u0e2d\u0e22\u0e39\u0e48\u0e43\u0e19\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e19\u0e35\u0e49"
+                    + " \u0e08\u0e36\u0e07\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2b\u0e23\u0e37\u0e2d\u0e40\u0e1b\u0e34\u0e14\u0e43\u0e2b\u0e21\u0e48\u0e44\u0e14\u0e49",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "\u0e1b\u0e49\u0e2d\u0e07\u0e01\u0e31\u0e19\u0e44\u0e21\u0e48\u0e43\u0e2b\u0e49\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e16\u0e39\u0e01\u0e1b\u0e23\u0e31\u0e1a\u0e2d\u0e35\u0e04\u0e27\u0e2d\u0e44\u0e25\u0e40\u0e0b\u0e2d\u0e23\u0e4c\u0e0b\u0e49\u0e33\u0e2a\u0e2d\u0e07\u0e04\u0e23\u0e31\u0e49\u0e07"
@@ -91073,6 +91187,8 @@ final class Translations {
                     + " \u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a\u0e2a\u0e34\u0e17\u0e18\u0e34\u0e4c\u0e01\u0e32\u0e23\u0e40\u0e02\u0e49\u0e32\u0e16\u0e36\u0e07",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "\u0e44\u0e21\u0e48\u0e21\u0e35\u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27",
                 "No private main channel selected.",
                 "\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e0a\u0e48\u0e2d\u0e07\u0e2b\u0e25\u0e31\u0e01\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27",
                 "No profile for this output yet.",
@@ -91503,6 +91619,8 @@ final class Translations {
                 "Photos and files outside your music chats follow the Telegram cache target.",
                 "\u0e23\u0e39\u0e1b\u0e20\u0e32\u0e1e\u0e41\u0e25\u0e30\u0e44\u0e1f\u0e25\u0e4c\u0e19\u0e2d\u0e01\u0e41\u0e0a\u0e15\u0e40\u0e1e\u0e25\u0e07\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13\u0e08\u0e30\u0e40\u0e1b\u0e47\u0e19\u0e44\u0e1b\u0e15\u0e32\u0e21\u0e40\u0e1b\u0e49\u0e32\u0e2b\u0e21\u0e32\u0e22\u0e41\u0e04\u0e0a\u0e02\u0e2d\u0e07"
                     + " Telegram",
+                "Pick a private channel you created.",
+                "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27\u0e17\u0e35\u0e48\u0e04\u0e38\u0e13\u0e2a\u0e23\u0e49\u0e32\u0e07",
                 "Pick the quality for this download.",
                 "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e04\u0e38\u0e13\u0e20\u0e32\u0e1e\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e01\u0e32\u0e23\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e19\u0e35\u0e49",
                 "Pitch",
@@ -91662,6 +91780,8 @@ final class Translations {
                 "\u0e04\u0e27\u0e32\u0e21\u0e40\u0e1b\u0e47\u0e19\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27\u0e41\u0e25\u0e30\u0e40\u0e2a\u0e49\u0e19\u0e17\u0e32\u0e07",
                 "Privacy and your account",
                 "\u0e04\u0e27\u0e32\u0e21\u0e40\u0e1b\u0e47\u0e19\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27\u0e41\u0e25\u0e30\u0e1a\u0e31\u0e0d\u0e0a\u0e35\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13",
+                "Private channel",
+                "\u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27",
                 "Private main channel",
                 "\u0e0a\u0e48\u0e2d\u0e07\u0e2b\u0e25\u0e31\u0e01\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27",
                 "Private main channel selected.",
@@ -91771,6 +91891,8 @@ final class Translations {
                     + " \u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e2d\u0e48\u0e32\u0e19\u0e40\u0e2a\u0e35\u0e22\u0e07\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -91993,6 +92115,12 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "\u0e01\u0e39\u0e49\u0e04\u0e37\u0e19",
+                "Restore from",
+                "\u0e01\u0e39\u0e49\u0e04\u0e37\u0e19\u0e08\u0e32\u0e01",
+                "Restore from a private channel",
+                "\u0e01\u0e39\u0e49\u0e04\u0e37\u0e19\u0e08\u0e32\u0e01\u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27",
+                "Restore from {0}?",
+                "\u0e01\u0e39\u0e49\u0e04\u0e37\u0e19\u0e08\u0e32\u0e01 {0} \u0e44\u0e2b\u0e21",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -92110,6 +92238,8 @@ final class Translations {
                 "\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e02\u0e13\u0e30\u0e17\u0e35\u0e48\u0e2b\u0e22\u0e38\u0e14\u0e01\u0e32\u0e23\u0e1b\u0e23\u0e30\u0e2a\u0e32\u0e19\u0e01\u0e32\u0e23\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d\u0e2d\u0e22\u0e39\u0e48",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e40\u0e1b\u0e47\u0e19\u0e44\u0e1f\u0e25\u0e4c",
                 "Save to Music: {0}",
                 "\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e25\u0e07\u0e42\u0e1f\u0e25\u0e40\u0e14\u0e2d\u0e23\u0e4c\u0e40\u0e1e\u0e25\u0e07:"
                     + " {0}",
@@ -92214,6 +92344,11 @@ final class Translations {
                 "\u0e2b\u0e22\u0e38\u0e14\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e0a\u0e31\u0e48\u0e27\u0e04\u0e23\u0e32\u0e27",
                 "Saving selected copies",
                 "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e2a\u0e33\u0e40\u0e19\u0e32\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "\u0e01\u0e32\u0e23\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e1f\u0e25\u0e4c\u0e2b\u0e22\u0e38\u0e14\u0e01\u0e25\u0e32\u0e07\u0e04\u0e31\u0e19"
+                    + " \u0e25\u0e2d\u0e07\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e17\u0e35\u0e48\u0e2d\u0e37\u0e48\u0e19"
+                    + " \u0e14\u0e31\u0e0a\u0e19\u0e35\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13\u0e44\u0e21\u0e48\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e41\u0e1b\u0e25\u0e07",
                 "Saving\u2026",
                 "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -92334,16 +92469,27 @@ final class Translations {
                 "\u0e40\u0e25\u0e37\u0e2d\u0e01 {0} \u0e41\u0e25\u0e49\u0e27"
                         + " \u0e04\u0e49\u0e19\u0e2b\u0e32\u0e44\u0e14\u0e49\u0e43\u0e19 BitChord"
                         + " \u2192 \u0e41\u0e2d\u0e14\u0e2d\u0e2d\u0e19",
+                "Send",
+                "\u0e2a\u0e48\u0e07",
                 "Send audio effects to the installed JamesDSP app",
                 "\u0e2a\u0e48\u0e07\u0e40\u0e2d\u0e1f\u0e40\u0e1f\u0e01\u0e15\u0e4c\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e43\u0e2b\u0e49\u0e41\u0e2d\u0e1b"
                     + " JamesDSP"
                     + " \u0e17\u0e35\u0e48\u0e15\u0e34\u0e14\u0e15\u0e31\u0e49\u0e07\u0e44\u0e27\u0e49",
                 "Send code to this number",
                 "\u0e2a\u0e48\u0e07\u0e23\u0e2b\u0e31\u0e2a\u0e44\u0e1b\u0e22\u0e31\u0e07\u0e2b\u0e21\u0e32\u0e22\u0e40\u0e25\u0e02\u0e19\u0e35\u0e49",
+                "Send the backup to",
+                "\u0e2a\u0e48\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e44\u0e1b\u0e17\u0e35\u0e48",
+                "Send the backup to {0}?",
+                "\u0e2a\u0e48\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e44\u0e1b\u0e17\u0e35\u0e48"
+                    + " {0} \u0e44\u0e2b\u0e21",
                 "Send this offer again",
                 "\u0e2a\u0e48\u0e07\u0e04\u0e33\u0e02\u0e2d\u0e41\u0e0a\u0e23\u0e4c\u0e19\u0e35\u0e49\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
                 "Sending file offer",
                 "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e2a\u0e48\u0e07\u0e04\u0e33\u0e02\u0e2d\u0e41\u0e0a\u0e23\u0e4c\u0e44\u0e1f\u0e25\u0e4c",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e2a\u0e48\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e44\u0e1b\u0e17\u0e35\u0e48"
+                    + " {0} Telegram"
+                    + " \u0e08\u0e30\u0e41\u0e2a\u0e14\u0e07\u0e17\u0e35\u0e48\u0e19\u0e31\u0e48\u0e19\u0e40\u0e21\u0e37\u0e48\u0e2d\u0e2d\u0e31\u0e1b\u0e42\u0e2b\u0e25\u0e14\u0e40\u0e2a\u0e23\u0e47\u0e08",
                 "Sends to {0}",
                 "\u0e2a\u0e48\u0e07\u0e44\u0e1b\u0e22\u0e31\u0e07 {0}",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -93136,8 +93282,26 @@ final class Translations {
                 "The App API ID is outside the supported range.",
                 "App API ID"
                     + " \u0e2d\u0e22\u0e39\u0e48\u0e19\u0e2d\u0e01\u0e0a\u0e48\u0e27\u0e07\u0e17\u0e35\u0e48\u0e23\u0e2d\u0e07\u0e23\u0e31\u0e1a",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e17\u0e35\u0e48\u0e44\u0e14\u0e49\u0e27\u0e48\u0e32\u0e07\u0e40\u0e1b\u0e25\u0e48\u0e32\u0e2b\u0e23\u0e37\u0e2d\u0e40\u0e2a\u0e35\u0e22\u0e2b\u0e32\u0e22"
+                    + " \u0e08\u0e36\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e2d\u0e30\u0e44\u0e23\u0e16\u0e39\u0e01\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01"
+                    + " \u0e14\u0e31\u0e0a\u0e19\u0e35\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13\u0e44\u0e21\u0e48\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e41\u0e1b\u0e25\u0e07",
+                "The backup didn't finish downloading. Try again.",
+                "\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e44\u0e21\u0e48\u0e40\u0e2a\u0e23\u0e47\u0e08"
+                    + " \u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
                 "The backup file stays where you saved it",
                 "\u0e44\u0e1f\u0e25\u0e4c\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e08\u0e30\u0e22\u0e31\u0e07\u0e2d\u0e22\u0e39\u0e48\u0e17\u0e35\u0e48\u0e17\u0e35\u0e48\u0e04\u0e38\u0e13\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e21\u0e35\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32"
+                    + " \u0e0a\u0e37\u0e48\u0e2d\u0e17\u0e35\u0e48\u0e41\u0e01\u0e49\u0e44\u0e02\u0e41\u0e25\u0e49\u0e27"
+                    + " \u0e41\u0e25\u0e30\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49\u0e2b\u0e32\u0e01\u0e04\u0e38\u0e13\u0e40\u0e25\u0e37\u0e2d\u0e01"
+                    + " \u0e17\u0e38\u0e01\u0e04\u0e19\u0e17\u0e35\u0e48\u0e40\u0e1b\u0e34\u0e14\u0e0a\u0e48\u0e2d\u0e07\u0e44\u0e14\u0e49\u0e08\u0e30\u0e2d\u0e48\u0e32\u0e19\u0e44\u0e14\u0e49"
+                    + " \u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25 API"
+                    + " \u0e41\u0e25\u0e30\u0e40\u0e0b\u0e2a\u0e0a\u0e31\u0e19 Telegram"
+                    + " \u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13\u0e08\u0e30\u0e44\u0e21\u0e48\u0e2d\u0e22\u0e39\u0e48\u0e43\u0e19\u0e19\u0e31\u0e49\u0e19",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "\u0e2a\u0e33\u0e40\u0e19\u0e32 lossy"
                     + " \u0e17\u0e35\u0e48\u0e14\u0e35\u0e17\u0e35\u0e48\u0e2a\u0e38\u0e14\u0e17\u0e35\u0e48\u0e21\u0e35"
@@ -93181,6 +93345,12 @@ final class Translations {
                 "\u0e40\u0e1b\u0e34\u0e14\u0e10\u0e32\u0e19\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e02\u0e2d\u0e07\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e1a\u0e19\u0e42\u0e17\u0e23\u0e28\u0e31\u0e1e\u0e17\u0e4c\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e19\u0e35\u0e49\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49",
                 "The last song plays to its end at full volume",
                 "\u0e40\u0e1e\u0e25\u0e07\u0e2a\u0e38\u0e14\u0e17\u0e49\u0e32\u0e22\u0e40\u0e25\u0e48\u0e19\u0e08\u0e19\u0e08\u0e1a\u0e17\u0e35\u0e48\u0e23\u0e30\u0e14\u0e31\u0e1a\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e40\u0e15\u0e47\u0e21",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14\u0e43\u0e19\u0e0a\u0e48\u0e2d\u0e07\u0e08\u0e30\u0e41\u0e17\u0e19\u0e17\u0e35\u0e48\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13"
+                    + " \u0e41\u0e25\u0e30\u0e40\u0e1e\u0e34\u0e48\u0e21\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49\u0e02\u0e2d\u0e07\u0e21\u0e31\u0e19\u0e40\u0e02\u0e49\u0e32\u0e01\u0e31\u0e1a\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e19\u0e35\u0e49",
+                "The newest backup posted in a private channel you created",
+                "\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14\u0e17\u0e35\u0e48\u0e42\u0e1e\u0e2a\u0e15\u0e4c\u0e43\u0e19\u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27\u0e17\u0e35\u0e48\u0e04\u0e38\u0e13\u0e2a\u0e23\u0e49\u0e32\u0e07",
                 "The next song already fits",
                 "\u0e40\u0e1e\u0e25\u0e07\u0e16\u0e31\u0e14\u0e44\u0e1b\u0e40\u0e02\u0e49\u0e32\u0e01\u0e31\u0e19\u0e2d\u0e22\u0e39\u0e48\u0e41\u0e25\u0e49\u0e27",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -93278,6 +93448,9 @@ final class Translations {
                 "\u0e44\u0e21\u0e48\u0e21\u0e35\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e04\u0e27\u0e32\u0e21\u0e22\u0e32\u0e27\u0e40\u0e1e\u0e25\u0e07",
                 "The whole song is cached.",
                 "\u0e41\u0e04\u0e0a\u0e40\u0e1e\u0e25\u0e07\u0e19\u0e35\u0e49\u0e44\u0e27\u0e49\u0e17\u0e31\u0e49\u0e07\u0e40\u0e1e\u0e25\u0e07\u0e41\u0e25\u0e49\u0e27",
+                "There's no BitChord backup in that channel.",
+                "\u0e44\u0e21\u0e48\u0e21\u0e35\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e02\u0e2d\u0e07"
+                    + " BitChord \u0e43\u0e19\u0e0a\u0e48\u0e2d\u0e07\u0e19\u0e31\u0e49\u0e19",
                 "There's no music in this chat yet.",
                 "\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e40\u0e1e\u0e25\u0e07\u0e43\u0e19\u0e41\u0e0a\u0e17\u0e19\u0e35\u0e49",
                 "There\u2019s no other version of this song.",
@@ -93713,6 +93886,8 @@ final class Translations {
                 "\u0e23\u0e2d\u0e43\u0e2b\u0e49\u0e01\u0e32\u0e23\u0e14\u0e33\u0e40\u0e19\u0e34\u0e19\u0e01\u0e32\u0e23\u0e1b\u0e31\u0e08\u0e08\u0e38\u0e1a\u0e31\u0e19\u0e40\u0e2a\u0e23\u0e47\u0e08\u0e01\u0e48\u0e2d\u0e19",
                 "Wait for the pair to finish loading",
                 "\u0e23\u0e2d\u0e08\u0e19\u0e01\u0e27\u0e48\u0e32\u0e40\u0e1e\u0e25\u0e07\u0e17\u0e31\u0e49\u0e07\u0e04\u0e39\u0e48\u0e08\u0e30\u0e42\u0e2b\u0e25\u0e14\u0e40\u0e2a\u0e23\u0e47\u0e08",
+                "Waiting",
+                "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d",
                 "Waiting for a community channel to be indexed",
                 "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d\u0e43\u0e2b\u0e49\u0e0a\u0e48\u0e2d\u0e07\u0e0a\u0e38\u0e21\u0e0a\u0e19\u0e17\u0e33\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e40\u0e2a\u0e23\u0e47\u0e08",
                 "Waiting for device to cool down",
@@ -93724,6 +93899,8 @@ final class Translations {
                 "Waiting for peer \u00b7 queue position {0}",
                 "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c"
                     + " \u00b7 \u0e25\u0e33\u0e14\u0e31\u0e1a\u0e43\u0e19\u0e04\u0e34\u0e27 {0}",
+                "Waiting for playback",
+                "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d\u0e01\u0e32\u0e23\u0e40\u0e25\u0e48\u0e19",
                 "Waiting for provider",
                 "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d\u0e1c\u0e39\u0e49\u0e43\u0e2b\u0e49\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23",
                 "Waiting for receipt",
@@ -94223,84 +94400,6 @@ final class Translations {
                         + " lossless \u0e2d\u0e22\u0e39\u0e48\u0e41\u0e25\u0e49\u0e27",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "\u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27",
-                "Save to file",
-                "\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e40\u0e1b\u0e47\u0e19\u0e44\u0e1f\u0e25\u0e4c",
-                "Send the backup to",
-                "\u0e2a\u0e48\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e44\u0e1b\u0e17\u0e35\u0e48",
-                "Send the backup to {0}?",
-                "\u0e2a\u0e48\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e44\u0e1b\u0e17\u0e35\u0e48"
-                    + " {0} \u0e44\u0e2b\u0e21",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e21\u0e35\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32"
-                    + " \u0e0a\u0e37\u0e48\u0e2d\u0e17\u0e35\u0e48\u0e41\u0e01\u0e49\u0e44\u0e02\u0e41\u0e25\u0e49\u0e27"
-                    + " \u0e41\u0e25\u0e30\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49\u0e2b\u0e32\u0e01\u0e04\u0e38\u0e13\u0e40\u0e25\u0e37\u0e2d\u0e01"
-                    + " \u0e17\u0e38\u0e01\u0e04\u0e19\u0e17\u0e35\u0e48\u0e40\u0e1b\u0e34\u0e14\u0e0a\u0e48\u0e2d\u0e07\u0e44\u0e14\u0e49\u0e08\u0e30\u0e2d\u0e48\u0e32\u0e19\u0e44\u0e14\u0e49"
-                    + " \u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25 API"
-                    + " \u0e41\u0e25\u0e30\u0e40\u0e0b\u0e2a\u0e0a\u0e31\u0e19 Telegram"
-                    + " \u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13\u0e08\u0e30\u0e44\u0e21\u0e48\u0e2d\u0e22\u0e39\u0e48\u0e43\u0e19\u0e19\u0e31\u0e49\u0e19",
-                "Send",
-                "\u0e2a\u0e48\u0e07",
-                "Restore from",
-                "\u0e01\u0e39\u0e49\u0e04\u0e37\u0e19\u0e08\u0e32\u0e01",
-                "Restore from {0}?",
-                "\u0e01\u0e39\u0e49\u0e04\u0e37\u0e19\u0e08\u0e32\u0e01 {0} \u0e44\u0e2b\u0e21",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14\u0e43\u0e19\u0e0a\u0e48\u0e2d\u0e07\u0e08\u0e30\u0e41\u0e17\u0e19\u0e17\u0e35\u0e48\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13"
-                    + " \u0e41\u0e25\u0e30\u0e40\u0e1e\u0e34\u0e48\u0e21\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49\u0e02\u0e2d\u0e07\u0e21\u0e31\u0e19\u0e40\u0e02\u0e49\u0e32\u0e01\u0e31\u0e1a\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e19\u0e35\u0e49",
-                "No private channel",
-                "\u0e44\u0e21\u0e48\u0e21\u0e35\u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "\u0e2a\u0e23\u0e49\u0e32\u0e07\u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27\u0e43\u0e19"
-                    + " Telegram"
-                    + " \u0e17\u0e35\u0e48\u0e43\u0e0a\u0e49\u0e04\u0e19\u0e40\u0e14\u0e35\u0e22\u0e27"
-                    + " \u0e41\u0e25\u0e49\u0e27\u0e01\u0e25\u0e31\u0e1a\u0e21\u0e32\u0e17\u0e35\u0e48\u0e19\u0e35\u0e48"
-                    + " \u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e32\u0e18\u0e32\u0e23\u0e13\u0e30\u0e08\u0e30\u0e44\u0e21\u0e48\u0e41\u0e2a\u0e14\u0e07",
-                "Restore from a private channel",
-                "\u0e01\u0e39\u0e49\u0e04\u0e37\u0e19\u0e08\u0e32\u0e01\u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27",
-                "The newest backup posted in a private channel you created",
-                "\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14\u0e17\u0e35\u0e48\u0e42\u0e1e\u0e2a\u0e15\u0e4c\u0e43\u0e19\u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27\u0e17\u0e35\u0e48\u0e04\u0e38\u0e13\u0e2a\u0e23\u0e49\u0e32\u0e07",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e17\u0e35\u0e48\u0e44\u0e14\u0e49\u0e27\u0e48\u0e32\u0e07\u0e40\u0e1b\u0e25\u0e48\u0e32\u0e2b\u0e23\u0e37\u0e2d\u0e40\u0e2a\u0e35\u0e22\u0e2b\u0e32\u0e22"
-                    + " \u0e08\u0e36\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e2d\u0e30\u0e44\u0e23\u0e16\u0e39\u0e01\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01"
-                    + " \u0e14\u0e31\u0e0a\u0e19\u0e35\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13\u0e44\u0e21\u0e48\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e41\u0e1b\u0e25\u0e07",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "\u0e01\u0e32\u0e23\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e1f\u0e25\u0e4c\u0e2b\u0e22\u0e38\u0e14\u0e01\u0e25\u0e32\u0e07\u0e04\u0e31\u0e19"
-                    + " \u0e25\u0e2d\u0e07\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e17\u0e35\u0e48\u0e2d\u0e37\u0e48\u0e19"
-                    + " \u0e14\u0e31\u0e0a\u0e19\u0e35\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13\u0e44\u0e21\u0e48\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e41\u0e1b\u0e25\u0e07",
-                "Pick a private channel you created.",
-                "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27\u0e17\u0e35\u0e48\u0e04\u0e38\u0e13\u0e2a\u0e23\u0e49\u0e32\u0e07",
-                "There's no BitChord backup in that channel.",
-                "\u0e44\u0e21\u0e48\u0e21\u0e35\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e02\u0e2d\u0e07"
-                    + " BitChord \u0e43\u0e19\u0e0a\u0e48\u0e2d\u0e07\u0e19\u0e31\u0e49\u0e19",
-                "The backup didn't finish downloading. Try again.",
-                "\u0e14\u0e32\u0e27\u0e19\u0e4c\u0e42\u0e2b\u0e25\u0e14\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e44\u0e21\u0e48\u0e40\u0e2a\u0e23\u0e47\u0e08"
-                    + " \u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e2a\u0e48\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e44\u0e1b\u0e17\u0e35\u0e48"
-                    + " {0} Telegram"
-                    + " \u0e08\u0e30\u0e41\u0e2a\u0e14\u0e07\u0e17\u0e35\u0e48\u0e19\u0e31\u0e48\u0e19\u0e40\u0e21\u0e37\u0e48\u0e2d\u0e2d\u0e31\u0e1b\u0e42\u0e2b\u0e25\u0e14\u0e40\u0e2a\u0e23\u0e47\u0e08",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "\u0e40\u0e01\u0e47\u0e1a\u0e40\u0e1e\u0e25\u0e07\u0e08\u0e32\u0e01\u0e41\u0e0a\u0e17\u0e17\u0e35\u0e48\u0e04\u0e38\u0e13\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e44\u0e27\u0e49\u0e1a\u0e19\u0e42\u0e17\u0e23\u0e28\u0e31\u0e1e\u0e17\u0e4c\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e19\u0e35\u0e49"
-                    + " \u0e02\u0e13\u0e30\u0e17\u0e35\u0e48 Telegram"
-                    + " \u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d\u0e2d\u0e22\u0e39\u0e48"
-                    + " \u0e14\u0e31\u0e0a\u0e19\u0e35\u0e08\u0e30\u0e2d\u0e31\u0e1b\u0e40\u0e14\u0e15\u0e40\u0e21\u0e37\u0e48\u0e2d\u0e21\u0e35\u0e42\u0e1e\u0e2a\u0e15\u0e4c\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e2b\u0e23\u0e37\u0e2d"
-                    + " ZIP \u0e43\u0e2b\u0e21\u0e48"
-                    + " \u0e40\u0e21\u0e37\u0e48\u0e2d\u0e42\u0e1e\u0e2a\u0e15\u0e4c\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e41\u0e1b\u0e25\u0e07\u0e2b\u0e23\u0e37\u0e2d\u0e2b\u0e32\u0e22\u0e44\u0e1b"
-                    + " \u0e01\u0e32\u0e23\u0e2a\u0e41\u0e01\u0e19\u0e43\u0e19\u0e40\u0e1a\u0e37\u0e49\u0e2d\u0e07\u0e2b\u0e25\u0e31\u0e07\u0e08\u0e30\u0e44\u0e25\u0e48\u0e40\u0e01\u0e47\u0e1a\u0e1b\u0e23\u0e30\u0e27\u0e31\u0e15\u0e34\u0e22\u0e49\u0e2d\u0e19\u0e2b\u0e25\u0e31\u0e07"
-                    + " \u0e01\u0e32\u0e23\u0e1b\u0e34\u0e14\u0e40\u0e1b\u0e47\u0e19\u0e40\u0e1e\u0e35\u0e22\u0e07\u0e01\u0e32\u0e23\u0e2b\u0e22\u0e38\u0e14\u0e44\u0e27\u0e49\u0e0a\u0e31\u0e48\u0e27\u0e04\u0e23\u0e32\u0e27"
-                    + " \u0e14\u0e31\u0e0a\u0e19\u0e35\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49\u0e08\u0e30\u0e22\u0e31\u0e07\u0e2d\u0e22\u0e39\u0e48\u0e43\u0e19\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e19\u0e35\u0e49"
-                    + " \u0e08\u0e36\u0e07\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2b\u0e23\u0e37\u0e2d\u0e40\u0e1b\u0e34\u0e14\u0e43\u0e2b\u0e21\u0e48\u0e44\u0e14\u0e49",
             };
         }
     }
@@ -95453,6 +95552,11 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "Telegram\u2019da yaln\u0131zca sizin kulland\u0131\u011f\u0131n\u0131z bir"
+                    + " \u00f6zel kanal olu\u015fturup geri gelin. Herkese a\u00e7\u0131k kanallar"
+                    + " \u00f6nerilmez.",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -96285,6 +96389,16 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "Se\u00e7ti\u011finiz sohbetlerdeki m\u00fczikleri bu telefonda tutar. Telegram"
+                    + " ba\u011fl\u0131yken ses ve ZIP g\u00f6nderileri geldik\u00e7e,"
+                    + " de\u011fi\u015ftik\u00e7e veya silindik\u00e7e dizin g\u00fcncellenir. Arka"
+                    + " plan taramalar\u0131 ge\u00e7mi\u015f g\u00f6nderileri de ekler.  Kapatmak"
+                    + " onu yaln\u0131zca duraklat\u0131r: kay\u0131tl\u0131 dizin bu telefonda"
+                    + " kal\u0131r, yine yedekleyebilir veya yeniden a\u00e7abilirsiniz.",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "Sesin iki kez ekolayz\u0131rdan ge\u00e7mesini \u00f6nler ve"
@@ -96691,6 +96805,8 @@ final class Translations {
                         + " Telegram\u2019da a\u00e7\u0131n.",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "\u00d6zel kanal yok",
                 "No private main channel selected.",
                 "\u00d6zel ana kanal se\u00e7ilmedi.",
                 "No profile for this output yet.",
@@ -97094,6 +97210,8 @@ final class Translations {
                 "Photos and files outside your music chats follow the Telegram cache target.",
                 "M\u00fczik sohbetlerinizin d\u0131\u015f\u0131ndaki foto\u011fraflar ve dosyalar"
                         + " Telegram \u00f6nbellek hedefine tabidir.",
+                "Pick a private channel you created.",
+                "Olu\u015fturdu\u011funuz bir \u00f6zel kanal\u0131 se\u00e7in.",
                 "Pick the quality for this download.",
                 "Bu indirme i\u00e7in kaliteyi se\u00e7in.",
                 "Pitch",
@@ -97247,6 +97365,8 @@ final class Translations {
                 "Gizlilik ve ba\u011flant\u0131 yollar\u0131",
                 "Privacy and your account",
                 "Gizlilik ve hesab\u0131n\u0131z",
+                "Private channel",
+                "\u00d6zel kanal",
                 "Private main channel",
                 "\u00d6zel ana kanal",
                 "Private main channel selected.",
@@ -97347,6 +97467,8 @@ final class Translations {
                         + " hesab\u0131n\u0131z",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "Ses okunuyor\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -97553,6 +97675,12 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "Geri y\u00fckle",
+                "Restore from",
+                "\u015euradan geri y\u00fckle",
+                "Restore from a private channel",
+                "\u00d6zel kanaldan geri y\u00fckle",
+                "Restore from {0}?",
+                "{0} kanal\u0131ndan geri y\u00fcklensin mi?",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -97663,6 +97791,8 @@ final class Translations {
                 "Ayarlar\u0131 koordinasyon durdurulmu\u015fken kaydedin.",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "Dosyaya kaydet",
                 "Save to Music: {0}",
                 "M\u00fczik klas\u00f6r\u00fcne kaydet: {0}",
                 "Saved",
@@ -97748,6 +97878,10 @@ final class Translations {
                 "Kaydetme duraklat\u0131ld\u0131",
                 "Saving selected copies",
                 "Se\u00e7ilen kopyalar kaydediliyor",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "Dosyay\u0131 kaydetme yar\u0131da kesildi. Ba\u015fka bir yer deneyin;"
+                        + " kay\u0131tl\u0131 dizininize dokunulmad\u0131.",
                 "Saving\u2026",
                 "Kaydediliyor\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -97852,14 +97986,23 @@ final class Translations {
                         + " aray\u0131n.",
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "Se\u00e7ildi: {0}. BitChord \u2192 Eklentiler\u2019de aray\u0131n.",
+                "Send",
+                "G\u00f6nder",
                 "Send audio effects to the installed JamesDSP app",
                 "Ses efektlerini y\u00fckl\u00fc JamesDSP uygulamas\u0131na devredin",
                 "Send code to this number",
                 "Kodu bu numaraya g\u00f6nder",
+                "Send the backup to",
+                "Yede\u011fi \u015furaya g\u00f6nder",
+                "Send the backup to {0}?",
+                "Yedek {0} kanal\u0131na g\u00f6nderilsin mi?",
                 "Send this offer again",
                 "Bu teklifi yeniden g\u00f6nder",
                 "Sending file offer",
                 "Dosya teklifi g\u00f6nderiliyor",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "Yedek {0} kanal\u0131na g\u00f6nderiliyor. Y\u00fckleme bitince Telegram\u2019da"
+                        + " orada g\u00f6r\u00fcn\u00fcr.",
                 "Sends to {0}",
                 "{0} adresine g\u00f6nderilir",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -98525,8 +98668,21 @@ final class Translations {
                         + " \u00c7alma listeleriniz etkilenmez.",
                 "The App API ID is outside the supported range.",
                 "App API ID desteklenen aral\u0131\u011f\u0131n d\u0131\u015f\u0131nda.",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "Yedek bo\u015f veya bozuk \u00e7\u0131kt\u0131, bu y\u00fczden hi\u00e7bir"
+                        + " \u015fey kaydedilmedi. Kay\u0131tl\u0131 dizininize dokunulmad\u0131.",
+                "The backup didn't finish downloading. Try again.",
+                "Yedek tam indirilemedi. Yeniden deneyin.",
                 "The backup file stays where you saved it",
                 "Yedek dosyas\u0131 kaydetti\u011finiz yerde kal\u0131r",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "Yedek; ayarlar\u0131n\u0131z\u0131, d\u00fczeltilmi\u015f adlar\u0131 ve"
+                    + " se\u00e7erseniz kay\u0131tl\u0131 dizini i\u00e7erir. Kanal\u0131"
+                    + " a\u00e7abilen herkes okuyabilir. API bilgileriniz ve Telegram oturumunuz"
+                    + " hi\u00e7bir zaman i\u00e7inde olmaz.",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "Sunulan en iyi kay\u0131pl\u0131 kopya \u00b7 \u015fark\u0131 ba\u015f\u0131na"
                         + " yakla\u015f\u0131k 8 MB",
@@ -98565,6 +98721,12 @@ final class Translations {
                 "Dizin veritaban\u0131 bu telefonda a\u00e7\u0131lamad\u0131.",
                 "The last song plays to its end at full volume",
                 "Son \u015fark\u0131 sonuna kadar tam sesle \u00e7alar",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "Kanaldaki en yeni yedek ayarlar\u0131n\u0131z\u0131n yerine ge\u00e7er ve"
+                        + " kay\u0131tl\u0131 dizinini bu dizine ekler.",
+                "The newest backup posted in a private channel you created",
+                "Olu\u015fturdu\u011funuz bir \u00f6zel kanalda payla\u015f\u0131lan en yeni yedek",
                 "The next song already fits",
                 "S\u0131radaki \u015fark\u0131 zaten uyuyor",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -98643,6 +98805,8 @@ final class Translations {
                 "Par\u00e7a s\u00fcresi mevcut de\u011fil",
                 "The whole song is cached.",
                 "\u015eark\u0131n\u0131n tamam\u0131 \u00f6nbellekte.",
+                "There's no BitChord backup in that channel.",
+                "Bu kanalda BitChord yede\u011fi yok.",
                 "There's no music in this chat yet.",
                 "Bu sohbette hen\u00fcz m\u00fczik yok.",
                 "There\u2019s no other version of this song.",
@@ -99036,6 +99200,8 @@ final class Translations {
                 "Ge\u00e7erli i\u015flemin tamamlanmas\u0131n\u0131 bekleyin.",
                 "Wait for the pair to finish loading",
                 "Her iki par\u00e7an\u0131n y\u00fcklenmesini bekleyin",
+                "Waiting",
+                "Bekleniyor",
                 "Waiting for a community channel to be indexed",
                 "Bir topluluk kanal\u0131n\u0131n dizine eklenmesi bekleniyor",
                 "Waiting for device to cool down",
@@ -99046,6 +99212,8 @@ final class Translations {
                 "E\u015f bekleniyor",
                 "Waiting for peer \u00b7 queue position {0}",
                 "E\u015f bekleniyor \u00b7 kuyruk konumu {0}",
+                "Waiting for playback",
+                "Oynatma bekleniyor",
                 "Waiting for provider",
                 "Hizmet sa\u011flay\u0131c\u0131 bekleniyor",
                 "Waiting for receipt",
@@ -99463,69 +99631,6 @@ final class Translations {
                 "{0}; BitChord bunu zaten kay\u0131ps\u0131z say\u0131yor",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "\u00d6zel kanal",
-                "Save to file",
-                "Dosyaya kaydet",
-                "Send the backup to",
-                "Yede\u011fi \u015furaya g\u00f6nder",
-                "Send the backup to {0}?",
-                "Yedek {0} kanal\u0131na g\u00f6nderilsin mi?",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "Yedek; ayarlar\u0131n\u0131z\u0131, d\u00fczeltilmi\u015f adlar\u0131 ve"
-                    + " se\u00e7erseniz kay\u0131tl\u0131 dizini i\u00e7erir. Kanal\u0131"
-                    + " a\u00e7abilen herkes okuyabilir. API bilgileriniz ve Telegram oturumunuz"
-                    + " hi\u00e7bir zaman i\u00e7inde olmaz.",
-                "Send",
-                "G\u00f6nder",
-                "Restore from",
-                "\u015euradan geri y\u00fckle",
-                "Restore from {0}?",
-                "{0} kanal\u0131ndan geri y\u00fcklensin mi?",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "Kanaldaki en yeni yedek ayarlar\u0131n\u0131z\u0131n yerine ge\u00e7er ve"
-                        + " kay\u0131tl\u0131 dizinini bu dizine ekler.",
-                "No private channel",
-                "\u00d6zel kanal yok",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "Telegram\u2019da yaln\u0131zca sizin kulland\u0131\u011f\u0131n\u0131z bir"
-                    + " \u00f6zel kanal olu\u015fturup geri gelin. Herkese a\u00e7\u0131k kanallar"
-                    + " \u00f6nerilmez.",
-                "Restore from a private channel",
-                "\u00d6zel kanaldan geri y\u00fckle",
-                "The newest backup posted in a private channel you created",
-                "Olu\u015fturdu\u011funuz bir \u00f6zel kanalda payla\u015f\u0131lan en yeni yedek",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "Yedek bo\u015f veya bozuk \u00e7\u0131kt\u0131, bu y\u00fczden hi\u00e7bir"
-                        + " \u015fey kaydedilmedi. Kay\u0131tl\u0131 dizininize dokunulmad\u0131.",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "Dosyay\u0131 kaydetme yar\u0131da kesildi. Ba\u015fka bir yer deneyin;"
-                        + " kay\u0131tl\u0131 dizininize dokunulmad\u0131.",
-                "Pick a private channel you created.",
-                "Olu\u015fturdu\u011funuz bir \u00f6zel kanal\u0131 se\u00e7in.",
-                "There's no BitChord backup in that channel.",
-                "Bu kanalda BitChord yede\u011fi yok.",
-                "The backup didn't finish downloading. Try again.",
-                "Yedek tam indirilemedi. Yeniden deneyin.",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "Yedek {0} kanal\u0131na g\u00f6nderiliyor. Y\u00fckleme bitince Telegram\u2019da"
-                        + " orada g\u00f6r\u00fcn\u00fcr.",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "Se\u00e7ti\u011finiz sohbetlerdeki m\u00fczikleri bu telefonda tutar. Telegram"
-                    + " ba\u011fl\u0131yken ses ve ZIP g\u00f6nderileri geldik\u00e7e,"
-                    + " de\u011fi\u015ftik\u00e7e veya silindik\u00e7e dizin g\u00fcncellenir. Arka"
-                    + " plan taramalar\u0131 ge\u00e7mi\u015f g\u00f6nderileri de ekler.  Kapatmak"
-                    + " onu yaln\u0131zca duraklat\u0131r: kay\u0131tl\u0131 dizin bu telefonda"
-                    + " kal\u0131r, yine yedekleyebilir veya yeniden a\u00e7abilirsiniz.",
             };
         }
     }
@@ -101423,6 +101528,16 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "Telegram \u0645\u06cc\u06ba \u0635\u0631\u0641 \u0627\u067e\u0646\u06d2"
+                    + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0627 \u0627\u06cc\u06a9"
+                    + " \u0646\u062c\u06cc \u0686\u06cc\u0646\u0644"
+                    + " \u0628\u0646\u0627\u0626\u06cc\u06ba \u0627\u0648\u0631 \u067e\u06be\u0631"
+                    + " \u0648\u0627\u067e\u0633 \u0622\u0626\u06cc\u06ba\u06d4"
+                    + " \u0639\u0648\u0627\u0645\u06cc \u0686\u06cc\u0646\u0644"
+                    + " \u0646\u06c1\u06cc\u06ba \u062f\u06a9\u06be\u0627\u0626\u06d2"
+                    + " \u062c\u0627\u062a\u06d2\u06d4",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -102689,6 +102804,33 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "\u0645\u0646\u062a\u062e\u0628 \u0686\u06cc\u0679\u0633 \u06a9\u06cc"
+                    + " \u0645\u0648\u0633\u06cc\u0642\u06cc \u0627\u0633 \u0641\u0648\u0646"
+                    + " \u067e\u0631 \u0631\u06a9\u06be\u062a\u0627 \u06c1\u06d2\u06d4 Telegram"
+                    + " \u0633\u06d2 \u0631\u0627\u0628\u0637\u06c1 \u0642\u0627\u0626\u0645"
+                    + " \u06c1\u0648\u0646\u06d2 \u067e\u0631 \u0622\u0688\u06cc\u0648"
+                    + " \u0627\u0648\u0631 ZIP \u067e\u0648\u0633\u0679\u0633 \u06a9\u06d2"
+                    + " \u0622\u0646\u06d2\u060c \u0628\u062f\u0644\u0646\u06d2 \u06cc\u0627"
+                    + " \u062d\u0630\u0641 \u06c1\u0648\u0646\u06d2 \u06a9\u06d2"
+                    + " \u0633\u0627\u062a\u06be \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                    + " \u062a\u0627\u0632\u06c1 \u06c1\u0648\u062a\u0627 \u06c1\u06d2\u06d4"
+                    + " \u067e\u0633 \u0645\u0646\u0638\u0631 \u06a9\u06cc"
+                    + " \u0627\u0633\u06a9\u06cc\u0646\u0646\u06af \u067e\u0631\u0627\u0646\u06cc"
+                    + " \u067e\u0648\u0633\u0679\u0633 \u0628\u06be\u06cc \u0634\u0627\u0645\u0644"
+                    + " \u06a9\u0631\u062a\u06cc \u06c1\u06d2\u06d4  \u0627\u0633\u06d2"
+                    + " \u0628\u0646\u062f \u06a9\u0631\u0646\u06d2 \u0633\u06d2 \u06cc\u06c1"
+                    + " \u0635\u0631\u0641 \u0631\u06a9 \u062c\u0627\u062a\u0627 \u06c1\u06d2:"
+                    + " \u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                    + " \u0627\u0633\u06cc \u0641\u0648\u0646 \u0645\u06cc\u06ba"
+                    + " \u0631\u06c1\u062a\u0627 \u06c1\u06d2\u060c \u0627\u0633 \u0644\u06cc\u06d2"
+                    + " \u0622\u067e \u0627\u0633 \u06a9\u0627 \u0628\u06cc\u06a9 \u0627\u067e"
+                    + " \u0644\u06d2 \u0633\u06a9\u062a\u06d2 \u06c1\u06cc\u06ba \u06cc\u0627"
+                    + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u0622\u0646 \u06a9\u0631"
+                    + " \u0633\u06a9\u062a\u06d2 \u06c1\u06cc\u06ba\u06d4",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "\u0622\u0648\u0627\u0632 \u06a9\u0648 \u062f\u0648 \u0628\u0627\u0631"
@@ -103322,6 +103464,9 @@ final class Translations {
                         + " \u06a9\u06be\u0648\u0644\u06cc\u06ba\u06d4",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "\u06a9\u0648\u0626\u06cc \u0646\u062c\u06cc \u0686\u06cc\u0646\u0644"
+                        + " \u0646\u06c1\u06cc\u06ba",
                 "No private main channel selected.",
                 "\u06a9\u0648\u0626\u06cc \u0646\u062c\u06cc \u0645\u0631\u06a9\u0632\u06cc"
                         + " \u0686\u06cc\u0646\u0644 \u0645\u0646\u062a\u062e\u0628"
@@ -103974,6 +104119,10 @@ final class Translations {
                     + " \u0641\u0627\u0626\u0644\u06cc\u06ba Telegram \u06a9\u06cc\u0634"
                     + " \u06a9\u06d2 \u06c1\u062f\u0641 \u06a9\u06d2 \u0645\u0637\u0627\u0628\u0642"
                     + " \u0631\u06c1\u062a\u06cc \u06c1\u06cc\u06ba\u06d4",
+                "Pick a private channel you created.",
+                "\u0627\u067e\u0646\u0627 \u0628\u0646\u0627\u06cc\u0627 \u06c1\u0648\u0627"
+                        + " \u06a9\u0648\u0626\u06cc \u0646\u062c\u06cc \u0686\u06cc\u0646\u0644"
+                        + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba\u06d4",
                 "Pick the quality for this download.",
                 "\u0627\u0633 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u06a9\u06d2"
                         + " \u0644\u06cc\u06d2 \u06a9\u0648\u0627\u0644\u0679\u06cc"
@@ -104172,6 +104321,8 @@ final class Translations {
                 "Privacy and your account",
                 "\u0631\u0627\u0632\u062f\u0627\u0631\u06cc \u0627\u0648\u0631 \u0622\u067e"
                         + " \u06a9\u0627 \u0627\u06a9\u0627\u0624\u0646\u0679",
+                "Private channel",
+                "\u0646\u062c\u06cc \u0686\u06cc\u0646\u0644",
                 "Private main channel",
                 "\u0646\u062c\u06cc \u0645\u0631\u06a9\u0632\u06cc \u0686\u06cc\u0646\u0644",
                 "Private main channel selected.",
@@ -104326,6 +104477,9 @@ final class Translations {
                         + " \u06a9\u0627 Telegram \u0627\u06a9\u0627\u0624\u0646\u0679",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "\u0622\u0688\u06cc\u0648 \u067e\u0691\u06be\u06cc \u062c\u0627 \u0631\u06c1\u06cc"
+                        + " \u06c1\u06d2\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -104628,6 +104782,14 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "\u0628\u062d\u0627\u0644 \u06a9\u0631\u06cc\u06ba",
+                "Restore from",
+                "\u06cc\u06c1\u0627\u06ba \u0633\u06d2 \u0628\u062d\u0627\u0644"
+                        + " \u06a9\u0631\u06cc\u06ba",
+                "Restore from a private channel",
+                "\u0646\u062c\u06cc \u0686\u06cc\u0646\u0644 \u0633\u06d2 \u0628\u062d\u0627\u0644"
+                        + " \u06a9\u0631\u06cc\u06ba",
+                "Restore from {0}?",
+                "{0} \u0633\u06d2 \u0628\u062d\u0627\u0644 \u06a9\u0631\u06cc\u06ba\u061f",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -104788,6 +104950,9 @@ final class Translations {
                     + " \u06a9\u0631\u06cc\u06ba\u06d4",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "\u0641\u0627\u0626\u0644 \u0645\u06cc\u06ba \u0645\u062d\u0641\u0648\u0638"
+                        + " \u06a9\u0631\u06cc\u06ba",
                 "Save to Music: {0}",
                 "\u0645\u0648\u0633\u06cc\u0642\u06cc \u0645\u06cc\u06ba"
                         + " \u0645\u062d\u0641\u0648\u0638 \u06a9\u0631\u06cc\u06ba: {0}",
@@ -104921,6 +105086,14 @@ final class Translations {
                 "\u0645\u0646\u062a\u062e\u0628 \u0646\u0642\u0648\u0644"
                     + " \u0645\u062d\u0641\u0648\u0638 \u06a9\u06cc \u062c\u0627 \u0631\u06c1\u06cc"
                     + " \u06c1\u06cc\u06ba",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "\u0641\u0627\u0626\u0644 \u0645\u062d\u0641\u0648\u0638 \u06a9\u0631\u0646\u0627"
+                    + " \u0628\u06cc\u0686 \u0645\u06cc\u06ba \u0631\u06a9 \u06af\u06cc\u0627\u06d4"
+                    + " \u06a9\u0648\u0626\u06cc \u0627\u0648\u0631 \u062c\u06af\u06c1"
+                    + " \u0622\u0632\u0645\u0627\u0626\u06cc\u06ba\u061b \u0622\u067e \u06a9\u0627"
+                    + " \u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                    + " \u062c\u0648\u06ba \u06a9\u0627 \u062a\u0648\u06ba \u06c1\u06d2\u06d4",
                 "Saving\u2026",
                 "\u0645\u062d\u0641\u0648\u0638 \u06c1\u0648 \u0631\u06c1\u0627 \u06c1\u06d2\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -105086,6 +105259,8 @@ final class Translations {
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "\u0645\u0646\u062a\u062e\u0628: {0}\u06d4 BitChord \u2192 Addons"
                     + " \u0645\u06cc\u06ba \u062a\u0644\u0627\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
+                "Send",
+                "\u0628\u06be\u06cc\u062c\u06cc\u06ba",
                 "Send audio effects to the installed JamesDSP app",
                 "\u0622\u0688\u06cc\u0648 \u0627\u06cc\u0641\u06cc\u06a9\u0679\u0633"
                         + " \u0646\u0635\u0628 \u0634\u062f\u06c1 JamesDSP \u0627\u06cc\u067e"
@@ -105093,6 +105268,11 @@ final class Translations {
                 "Send code to this number",
                 "\u0627\u0633 \u0646\u0645\u0628\u0631 \u067e\u0631 \u06a9\u0648\u0688"
                         + " \u0628\u06be\u06cc\u062c\u06cc\u06ba",
+                "Send the backup to",
+                "\u0628\u06cc\u06a9 \u0627\u067e \u0628\u06be\u06cc\u062c\u06cc\u06ba",
+                "Send the backup to {0}?",
+                "\u0628\u06cc\u06a9 \u0627\u067e {0} \u0645\u06cc\u06ba"
+                        + " \u0628\u06be\u06cc\u062c\u06cc\u06ba\u061f",
                 "Send this offer again",
                 "\u06cc\u06c1 \u067e\u06cc\u0634\u06a9\u0634 \u062f\u0648\u0628\u0627\u0631\u06c1"
                         + " \u0628\u06be\u06cc\u062c\u06cc\u06ba",
@@ -105100,6 +105280,13 @@ final class Translations {
                 "\u0641\u0627\u0626\u0644 \u06a9\u06cc \u067e\u06cc\u0634\u06a9\u0634"
                         + " \u0628\u06be\u06cc\u062c\u06cc \u062c\u0627 \u0631\u06c1\u06cc"
                         + " \u06c1\u06d2",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "\u0628\u06cc\u06a9 \u0627\u067e {0} \u0645\u06cc\u06ba"
+                    + " \u0628\u06be\u06cc\u062c\u0627 \u062c\u0627 \u0631\u06c1\u0627"
+                    + " \u06c1\u06d2\u06d4 \u0627\u067e \u0644\u0648\u0688 \u0645\u06a9\u0645\u0644"
+                    + " \u06c1\u0648\u0646\u06d2 \u067e\u0631 Telegram \u0645\u06cc\u06ba"
+                    + " \u0648\u06c1\u0627\u06ba \u0646\u0638\u0631 \u0622\u0626\u06d2"
+                    + " \u06af\u0627\u06d4",
                 "Sends to {0}",
                 "{0} \u06a9\u0648 \u0628\u06be\u06cc\u062c\u062a\u0627 \u06c1\u06d2",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -106195,11 +106382,40 @@ final class Translations {
                 "The App API ID is outside the supported range.",
                 "App API ID \u0645\u0639\u0627\u0648\u0646 \u062d\u062f \u0633\u06d2"
                         + " \u0628\u0627\u06c1\u0631 \u06c1\u06d2\u06d4",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "\u0628\u06cc\u06a9 \u0627\u067e \u062e\u0627\u0644\u06cc \u06cc\u0627"
+                    + " \u062e\u0631\u0627\u0628 \u0646\u06a9\u0644\u0627\u060c \u0627\u0633"
+                    + " \u0644\u06cc\u06d2 \u06a9\u0686\u06be \u0645\u062d\u0641\u0648\u0638"
+                    + " \u0646\u06c1\u06cc\u06ba \u06c1\u0648\u0627\u06d4 \u0622\u067e \u06a9\u0627"
+                    + " \u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                    + " \u062c\u0648\u06ba \u06a9\u0627 \u062a\u0648\u06ba \u06c1\u06d2\u06d4",
+                "The backup didn't finish downloading. Try again.",
+                "\u0628\u06cc\u06a9 \u0627\u067e \u06a9\u06cc \u0688\u0627\u0624\u0646"
+                        + " \u0644\u0648\u0688 \u0645\u06a9\u0645\u0644 \u0646\u06c1\u06cc\u06ba"
+                        + " \u06c1\u0648\u0626\u06cc\u06d4 \u062f\u0648\u0628\u0627\u0631\u06c1"
+                        + " \u06a9\u0648\u0634\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
                 "The backup file stays where you saved it",
                 "\u0628\u06cc\u06a9 \u0627\u067e \u0641\u0627\u0626\u0644 \u0648\u06c1\u06cc\u06ba"
                     + " \u0631\u06c1\u062a\u06cc \u06c1\u06d2 \u062c\u06c1\u0627\u06ba \u0622\u067e"
                     + " \u0646\u06d2 \u0627\u0633\u06d2 \u0645\u062d\u0641\u0648\u0638"
                     + " \u06a9\u06cc\u0627",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "\u0628\u06cc\u06a9 \u0627\u067e \u0645\u06cc\u06ba \u0622\u067e \u06a9\u06cc"
+                    + " \u0633\u06cc\u0679\u0646\u06af\u0632\u060c \u062f\u0631\u0633\u062a"
+                    + " \u06a9\u06cc\u06d2 \u06af\u0626\u06d2 \u0646\u0627\u0645 \u0627\u0648\u0631"
+                    + " (\u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u0646\u06d2 \u067e\u0631)"
+                    + " \u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                    + " \u06c1\u0648\u062a\u0627 \u06c1\u06d2\u06d4 \u0686\u06cc\u0646\u0644"
+                    + " \u06a9\u06be\u0648\u0644 \u0633\u06a9\u0646\u06d2 \u0648\u0627\u0644\u0627"
+                    + " \u06c1\u0631 \u0634\u062e\u0635 \u0627\u0633\u06d2 \u067e\u0691\u06be"
+                    + " \u0633\u06a9\u062a\u0627 \u06c1\u06d2\u06d4 \u0622\u067e \u06a9\u06cc API"
+                    + " \u062a\u0641\u0635\u06cc\u0644\u0627\u062a \u0627\u0648\u0631 Telegram"
+                    + " \u0633\u06cc\u0634\u0646 \u0627\u0633 \u0645\u06cc\u06ba"
+                    + " \u06a9\u0628\u06be\u06cc \u0646\u06c1\u06cc\u06ba"
+                    + " \u06c1\u0648\u062a\u06d2\u06d4",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "\u062f\u0633\u062a\u06cc\u0627\u0628 \u0628\u06c1\u062a\u0631\u06cc\u0646"
                     + " \u0644\u0627\u0633\u06cc \u06a9\u0627\u067e\u06cc \u00b7 \u0641\u06cc"
@@ -106277,6 +106493,21 @@ final class Translations {
                 "\u0622\u062e\u0631\u06cc \u06af\u0627\u0646\u0627 \u067e\u0648\u0631\u06cc"
                     + " \u0622\u0648\u0627\u0632 \u0645\u06cc\u06ba \u0622\u062e\u0631 \u062a\u06a9"
                     + " \u0686\u0644\u062a\u0627 \u06c1\u06d2",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "\u0686\u06cc\u0646\u0644 \u06a9\u0627 \u062a\u0627\u0632\u06c1"
+                        + " \u062a\u0631\u06cc\u0646 \u0628\u06cc\u06a9 \u0627\u067e \u0622\u067e"
+                        + " \u06a9\u06cc \u0633\u06cc\u0679\u0646\u06af\u0632 \u0628\u062f\u0644"
+                        + " \u062f\u06d2 \u06af\u0627 \u0627\u0648\u0631 \u0627\u0633 \u06a9\u0627"
+                        + " \u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633"
+                        + " \u0627\u0633 \u0627\u0646\u0688\u06cc\u06a9\u0633 \u0645\u06cc\u06ba"
+                        + " \u0634\u0627\u0645\u0644 \u06a9\u0631 \u062f\u06d2 \u06af\u0627\u06d4",
+                "The newest backup posted in a private channel you created",
+                "\u0622\u067e \u06a9\u06d2 \u0628\u0646\u0627\u0626\u06d2 \u06c1\u0648\u0626\u06d2"
+                        + " \u0646\u062c\u06cc \u0686\u06cc\u0646\u0644 \u0645\u06cc\u06ba"
+                        + " \u067e\u0648\u0633\u0679 \u06a9\u06cc\u0627 \u06af\u06cc\u0627"
+                        + " \u062a\u0627\u0632\u06c1 \u062a\u0631\u06cc\u0646 \u0628\u06cc\u06a9"
+                        + " \u0627\u067e",
                 "The next song already fits",
                 "\u0627\u06af\u0644\u0627 \u06af\u0627\u0646\u0627 \u067e\u06c1\u0644\u06d2"
                         + " \u06c1\u06cc \u0645\u0648\u0632\u0648\u06ba \u06c1\u06d2",
@@ -106439,6 +106670,10 @@ final class Translations {
                 "The whole song is cached.",
                 "\u067e\u0648\u0631\u0627 \u06af\u0627\u0646\u0627 \u06a9\u06cc\u0634"
                         + " \u06c1\u06d2\u06d4",
+                "There's no BitChord backup in that channel.",
+                "\u0627\u0633 \u0686\u06cc\u0646\u0644 \u0645\u06cc\u06ba BitChord \u06a9\u0627"
+                        + " \u06a9\u0648\u0626\u06cc \u0628\u06cc\u06a9 \u0627\u067e"
+                        + " \u0646\u06c1\u06cc\u06ba \u06c1\u06d2\u06d4",
                 "There's no music in this chat yet.",
                 "\u0627\u0633 \u0686\u06cc\u0679 \u0645\u06cc\u06ba \u0627\u0628\u06be\u06cc"
                         + " \u06a9\u0648\u0626\u06cc \u0645\u0648\u0633\u06cc\u0642\u06cc"
@@ -107058,6 +107293,8 @@ final class Translations {
                 "\u062f\u0648\u0646\u0648\u06ba \u0679\u0631\u06cc\u06a9 \u0644\u0648\u0688"
                     + " \u06c1\u0648\u0646\u06d2 \u062a\u06a9 \u0627\u0646\u062a\u0638\u0627\u0631"
                     + " \u06a9\u0631\u06cc\u06ba",
+                "Waiting",
+                "\u0627\u0646\u062a\u0638\u0627\u0631 \u062c\u0627\u0631\u06cc \u06c1\u06d2",
                 "Waiting for a community channel to be indexed",
                 "\u06a9\u0633\u06cc \u06a9\u0645\u06cc\u0648\u0646\u0679\u06cc"
                     + " \u0686\u06cc\u0646\u0644 \u06a9\u06d2 \u0627\u0646\u0688\u06cc\u06a9\u0633"
@@ -107076,6 +107313,9 @@ final class Translations {
                 "\u0633\u0627\u062a\u06be\u06cc \u06a9\u0627 \u0627\u0646\u062a\u0638\u0627\u0631"
                         + " \u06c1\u06d2 \u00b7 \u0642\u0637\u0627\u0631 \u0645\u06cc\u06ba"
                         + " \u0645\u0642\u0627\u0645 {0}",
+                "Waiting for playback",
+                "\u067e\u0644\u06d2 \u0628\u06cc\u06a9 \u06a9\u0627"
+                        + " \u0627\u0646\u062a\u0638\u0627\u0631 \u06c1\u06d2",
                 "Waiting for provider",
                 "\u0641\u0631\u0627\u06c1\u0645 \u06a9\u0646\u0646\u062f\u06c1 \u06a9\u0627"
                         + " \u0627\u0646\u062a\u0638\u0627\u0631 \u06c1\u06d2",
@@ -107747,133 +107987,6 @@ final class Translations {
                         + " \u06c1\u06d2",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "\u0646\u062c\u06cc \u0686\u06cc\u0646\u0644",
-                "Save to file",
-                "\u0641\u0627\u0626\u0644 \u0645\u06cc\u06ba \u0645\u062d\u0641\u0648\u0638"
-                        + " \u06a9\u0631\u06cc\u06ba",
-                "Send the backup to",
-                "\u0628\u06cc\u06a9 \u0627\u067e \u0628\u06be\u06cc\u062c\u06cc\u06ba",
-                "Send the backup to {0}?",
-                "\u0628\u06cc\u06a9 \u0627\u067e {0} \u0645\u06cc\u06ba"
-                        + " \u0628\u06be\u06cc\u062c\u06cc\u06ba\u061f",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "\u0628\u06cc\u06a9 \u0627\u067e \u0645\u06cc\u06ba \u0622\u067e \u06a9\u06cc"
-                    + " \u0633\u06cc\u0679\u0646\u06af\u0632\u060c \u062f\u0631\u0633\u062a"
-                    + " \u06a9\u06cc\u06d2 \u06af\u0626\u06d2 \u0646\u0627\u0645 \u0627\u0648\u0631"
-                    + " (\u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u0646\u06d2 \u067e\u0631)"
-                    + " \u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633"
-                    + " \u06c1\u0648\u062a\u0627 \u06c1\u06d2\u06d4 \u0686\u06cc\u0646\u0644"
-                    + " \u06a9\u06be\u0648\u0644 \u0633\u06a9\u0646\u06d2 \u0648\u0627\u0644\u0627"
-                    + " \u06c1\u0631 \u0634\u062e\u0635 \u0627\u0633\u06d2 \u067e\u0691\u06be"
-                    + " \u0633\u06a9\u062a\u0627 \u06c1\u06d2\u06d4 \u0622\u067e \u06a9\u06cc API"
-                    + " \u062a\u0641\u0635\u06cc\u0644\u0627\u062a \u0627\u0648\u0631 Telegram"
-                    + " \u0633\u06cc\u0634\u0646 \u0627\u0633 \u0645\u06cc\u06ba"
-                    + " \u06a9\u0628\u06be\u06cc \u0646\u06c1\u06cc\u06ba"
-                    + " \u06c1\u0648\u062a\u06d2\u06d4",
-                "Send",
-                "\u0628\u06be\u06cc\u062c\u06cc\u06ba",
-                "Restore from",
-                "\u06cc\u06c1\u0627\u06ba \u0633\u06d2 \u0628\u062d\u0627\u0644"
-                        + " \u06a9\u0631\u06cc\u06ba",
-                "Restore from {0}?",
-                "{0} \u0633\u06d2 \u0628\u062d\u0627\u0644 \u06a9\u0631\u06cc\u06ba\u061f",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "\u0686\u06cc\u0646\u0644 \u06a9\u0627 \u062a\u0627\u0632\u06c1"
-                        + " \u062a\u0631\u06cc\u0646 \u0628\u06cc\u06a9 \u0627\u067e \u0622\u067e"
-                        + " \u06a9\u06cc \u0633\u06cc\u0679\u0646\u06af\u0632 \u0628\u062f\u0644"
-                        + " \u062f\u06d2 \u06af\u0627 \u0627\u0648\u0631 \u0627\u0633 \u06a9\u0627"
-                        + " \u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633"
-                        + " \u0627\u0633 \u0627\u0646\u0688\u06cc\u06a9\u0633 \u0645\u06cc\u06ba"
-                        + " \u0634\u0627\u0645\u0644 \u06a9\u0631 \u062f\u06d2 \u06af\u0627\u06d4",
-                "No private channel",
-                "\u06a9\u0648\u0626\u06cc \u0646\u062c\u06cc \u0686\u06cc\u0646\u0644"
-                        + " \u0646\u06c1\u06cc\u06ba",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "Telegram \u0645\u06cc\u06ba \u0635\u0631\u0641 \u0627\u067e\u0646\u06d2"
-                    + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0627 \u0627\u06cc\u06a9"
-                    + " \u0646\u062c\u06cc \u0686\u06cc\u0646\u0644"
-                    + " \u0628\u0646\u0627\u0626\u06cc\u06ba \u0627\u0648\u0631 \u067e\u06be\u0631"
-                    + " \u0648\u0627\u067e\u0633 \u0622\u0626\u06cc\u06ba\u06d4"
-                    + " \u0639\u0648\u0627\u0645\u06cc \u0686\u06cc\u0646\u0644"
-                    + " \u0646\u06c1\u06cc\u06ba \u062f\u06a9\u06be\u0627\u0626\u06d2"
-                    + " \u062c\u0627\u062a\u06d2\u06d4",
-                "Restore from a private channel",
-                "\u0646\u062c\u06cc \u0686\u06cc\u0646\u0644 \u0633\u06d2 \u0628\u062d\u0627\u0644"
-                        + " \u06a9\u0631\u06cc\u06ba",
-                "The newest backup posted in a private channel you created",
-                "\u0622\u067e \u06a9\u06d2 \u0628\u0646\u0627\u0626\u06d2 \u06c1\u0648\u0626\u06d2"
-                        + " \u0646\u062c\u06cc \u0686\u06cc\u0646\u0644 \u0645\u06cc\u06ba"
-                        + " \u067e\u0648\u0633\u0679 \u06a9\u06cc\u0627 \u06af\u06cc\u0627"
-                        + " \u062a\u0627\u0632\u06c1 \u062a\u0631\u06cc\u0646 \u0628\u06cc\u06a9"
-                        + " \u0627\u067e",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "\u0628\u06cc\u06a9 \u0627\u067e \u062e\u0627\u0644\u06cc \u06cc\u0627"
-                    + " \u062e\u0631\u0627\u0628 \u0646\u06a9\u0644\u0627\u060c \u0627\u0633"
-                    + " \u0644\u06cc\u06d2 \u06a9\u0686\u06be \u0645\u062d\u0641\u0648\u0638"
-                    + " \u0646\u06c1\u06cc\u06ba \u06c1\u0648\u0627\u06d4 \u0622\u067e \u06a9\u0627"
-                    + " \u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633"
-                    + " \u062c\u0648\u06ba \u06a9\u0627 \u062a\u0648\u06ba \u06c1\u06d2\u06d4",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "\u0641\u0627\u0626\u0644 \u0645\u062d\u0641\u0648\u0638 \u06a9\u0631\u0646\u0627"
-                    + " \u0628\u06cc\u0686 \u0645\u06cc\u06ba \u0631\u06a9 \u06af\u06cc\u0627\u06d4"
-                    + " \u06a9\u0648\u0626\u06cc \u0627\u0648\u0631 \u062c\u06af\u06c1"
-                    + " \u0622\u0632\u0645\u0627\u0626\u06cc\u06ba\u061b \u0622\u067e \u06a9\u0627"
-                    + " \u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633"
-                    + " \u062c\u0648\u06ba \u06a9\u0627 \u062a\u0648\u06ba \u06c1\u06d2\u06d4",
-                "Pick a private channel you created.",
-                "\u0627\u067e\u0646\u0627 \u0628\u0646\u0627\u06cc\u0627 \u06c1\u0648\u0627"
-                        + " \u06a9\u0648\u0626\u06cc \u0646\u062c\u06cc \u0686\u06cc\u0646\u0644"
-                        + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba\u06d4",
-                "There's no BitChord backup in that channel.",
-                "\u0627\u0633 \u0686\u06cc\u0646\u0644 \u0645\u06cc\u06ba BitChord \u06a9\u0627"
-                        + " \u06a9\u0648\u0626\u06cc \u0628\u06cc\u06a9 \u0627\u067e"
-                        + " \u0646\u06c1\u06cc\u06ba \u06c1\u06d2\u06d4",
-                "The backup didn't finish downloading. Try again.",
-                "\u0628\u06cc\u06a9 \u0627\u067e \u06a9\u06cc \u0688\u0627\u0624\u0646"
-                        + " \u0644\u0648\u0688 \u0645\u06a9\u0645\u0644 \u0646\u06c1\u06cc\u06ba"
-                        + " \u06c1\u0648\u0626\u06cc\u06d4 \u062f\u0648\u0628\u0627\u0631\u06c1"
-                        + " \u06a9\u0648\u0634\u0634 \u06a9\u0631\u06cc\u06ba\u06d4",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "\u0628\u06cc\u06a9 \u0627\u067e {0} \u0645\u06cc\u06ba"
-                    + " \u0628\u06be\u06cc\u062c\u0627 \u062c\u0627 \u0631\u06c1\u0627"
-                    + " \u06c1\u06d2\u06d4 \u0627\u067e \u0644\u0648\u0688 \u0645\u06a9\u0645\u0644"
-                    + " \u06c1\u0648\u0646\u06d2 \u067e\u0631 Telegram \u0645\u06cc\u06ba"
-                    + " \u0648\u06c1\u0627\u06ba \u0646\u0638\u0631 \u0622\u0626\u06d2"
-                    + " \u06af\u0627\u06d4",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "\u0645\u0646\u062a\u062e\u0628 \u0686\u06cc\u0679\u0633 \u06a9\u06cc"
-                    + " \u0645\u0648\u0633\u06cc\u0642\u06cc \u0627\u0633 \u0641\u0648\u0646"
-                    + " \u067e\u0631 \u0631\u06a9\u06be\u062a\u0627 \u06c1\u06d2\u06d4 Telegram"
-                    + " \u0633\u06d2 \u0631\u0627\u0628\u0637\u06c1 \u0642\u0627\u0626\u0645"
-                    + " \u06c1\u0648\u0646\u06d2 \u067e\u0631 \u0622\u0688\u06cc\u0648"
-                    + " \u0627\u0648\u0631 ZIP \u067e\u0648\u0633\u0679\u0633 \u06a9\u06d2"
-                    + " \u0622\u0646\u06d2\u060c \u0628\u062f\u0644\u0646\u06d2 \u06cc\u0627"
-                    + " \u062d\u0630\u0641 \u06c1\u0648\u0646\u06d2 \u06a9\u06d2"
-                    + " \u0633\u0627\u062a\u06be \u0627\u0646\u0688\u06cc\u06a9\u0633"
-                    + " \u062a\u0627\u0632\u06c1 \u06c1\u0648\u062a\u0627 \u06c1\u06d2\u06d4"
-                    + " \u067e\u0633 \u0645\u0646\u0638\u0631 \u06a9\u06cc"
-                    + " \u0627\u0633\u06a9\u06cc\u0646\u0646\u06af \u067e\u0631\u0627\u0646\u06cc"
-                    + " \u067e\u0648\u0633\u0679\u0633 \u0628\u06be\u06cc \u0634\u0627\u0645\u0644"
-                    + " \u06a9\u0631\u062a\u06cc \u06c1\u06d2\u06d4  \u0627\u0633\u06d2"
-                    + " \u0628\u0646\u062f \u06a9\u0631\u0646\u06d2 \u0633\u06d2 \u06cc\u06c1"
-                    + " \u0635\u0631\u0641 \u0631\u06a9 \u062c\u0627\u062a\u0627 \u06c1\u06d2:"
-                    + " \u0645\u062d\u0641\u0648\u0638 \u0627\u0646\u0688\u06cc\u06a9\u0633"
-                    + " \u0627\u0633\u06cc \u0641\u0648\u0646 \u0645\u06cc\u06ba"
-                    + " \u0631\u06c1\u062a\u0627 \u06c1\u06d2\u060c \u0627\u0633 \u0644\u06cc\u06d2"
-                    + " \u0622\u067e \u0627\u0633 \u06a9\u0627 \u0628\u06cc\u06a9 \u0627\u067e"
-                    + " \u0644\u06d2 \u0633\u06a9\u062a\u06d2 \u06c1\u06cc\u06ba \u06cc\u0627"
-                    + " \u062f\u0648\u0628\u0627\u0631\u06c1 \u0622\u0646 \u06a9\u0631"
-                    + " \u0633\u06a9\u062a\u06d2 \u06c1\u06cc\u06ba\u06d4",
             };
         }
     }
@@ -109140,6 +109253,11 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "H\u00e3y t\u1ea1o trong Telegram m\u1ed9t k\u00eanh ri\u00eang t\u01b0 ch\u1ec9"
+                    + " m\u00ecnh b\u1ea1n d\u00f9ng r\u1ed3i quay l\u1ea1i. K\u00eanh c\u00f4ng"
+                    + " khai kh\u00f4ng \u0111\u01b0\u1ee3c \u0111\u1ec1 xu\u1ea5t.",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -110033,6 +110151,20 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "Gi\u1eef nh\u1ea1c t\u1eeb c\u00e1c cu\u1ed9c tr\u00f2 chuy\u1ec7n \u0111\u00e3"
+                    + " ch\u1ecdn tr\u00ean \u0111i\u1ec7n tho\u1ea1i n\u00e0y. Khi Telegram"
+                    + " \u0111\u01b0\u1ee3c k\u1ebft n\u1ed1i, ch\u1ec9 m\u1ee5c c\u1eadp nh\u1eadt"
+                    + " khi b\u00e0i \u0111\u0103ng \u00e2m thanh v\u00e0 ZIP xu\u1ea5t hi\u1ec7n,"
+                    + " thay \u0111\u1ed5i ho\u1eb7c b\u1ecb x\u00f3a. Qu\u00e9t trong n\u1ec1n"
+                    + " b\u1ed5 sung c\u00e1c b\u00e0i \u0111\u0103ng c\u0169.  T\u1eaft t\u00ednh"
+                    + " n\u0103ng n\u00e0y ch\u1ec9 t\u1ea1m d\u1eebng: ch\u1ec9 m\u1ee5c"
+                    + " \u0111\u00e3 l\u01b0u v\u1eabn \u1edf l\u1ea1i tr\u00ean \u0111i\u1ec7n"
+                    + " tho\u1ea1i n\u00e0y, n\u00ean b\u1ea1n v\u1eabn c\u00f3 th\u1ec3 sao"
+                    + " l\u01b0u ho\u1eb7c b\u1eadt l\u1ea1i.",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "Tr\u00e1nh \u0111\u1ec3 \u00e2m thanh b\u1ecb ch\u1ec9nh \u00e2m hai l\u1ea7n,"
@@ -110473,6 +110605,8 @@ final class Translations {
                         + " ki\u1ec3m tra quy\u1ec1n truy c\u1eadp.",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "Ch\u01b0a c\u00f3 k\u00eanh ri\u00eang t\u01b0",
                 "No private main channel selected.",
                 "Ch\u01b0a ch\u1ecdn k\u00eanh ch\u00ednh ri\u00eang t\u01b0.",
                 "No profile for this output yet.",
@@ -110916,6 +111050,8 @@ final class Translations {
                 "\u1ea2nh v\u00e0 t\u1ec7p ngo\u00e0i c\u00e1c cu\u1ed9c tr\u00f2 chuy\u1ec7n"
                         + " nh\u1ea1c c\u1ee7a b\u1ea1n tu\u00e2n theo m\u1ee5c ti\u00eau b\u1ed9"
                         + " nh\u1edb \u0111\u1ec7m Telegram.",
+                "Pick a private channel you created.",
+                "H\u00e3y ch\u1ecdn m\u1ed9t k\u00eanh ri\u00eang t\u01b0 do b\u1ea1n t\u1ea1o.",
                 "Pick the quality for this download.",
                 "Ch\u1ecdn ch\u1ea5t l\u01b0\u1ee3ng cho l\u1ea7n t\u1ea3i n\u00e0y.",
                 "Pitch",
@@ -111073,6 +111209,8 @@ final class Translations {
                 "Quy\u1ec1n ri\u00eang t\u01b0 v\u00e0 tuy\u1ebfn k\u1ebft n\u1ed1i",
                 "Privacy and your account",
                 "Quy\u1ec1n ri\u00eang t\u01b0 v\u00e0 t\u00e0i kho\u1ea3n c\u1ee7a b\u1ea1n",
+                "Private channel",
+                "K\u00eanh ri\u00eang t\u01b0",
                 "Private main channel",
                 "K\u00eanh ch\u00ednh ri\u00eang t\u01b0",
                 "Private main channel selected.",
@@ -111182,6 +111320,8 @@ final class Translations {
                         + " kho\u1ea3n Telegram c\u1ee7a b\u1ea1n",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "\u0110ang \u0111\u1ecdc \u00e2m thanh\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -111401,6 +111541,12 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "Kh\u00f4i ph\u1ee5c",
+                "Restore from",
+                "Kh\u00f4i ph\u1ee5c t\u1eeb",
+                "Restore from a private channel",
+                "Kh\u00f4i ph\u1ee5c t\u1eeb k\u00eanh ri\u00eang t\u01b0",
+                "Restore from {0}?",
+                "Kh\u00f4i ph\u1ee5c t\u1eeb {0}?",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -111514,6 +111660,8 @@ final class Translations {
                         + " d\u1eebng.",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "L\u01b0u v\u00e0o t\u1ec7p",
                 "Save to Music: {0}",
                 "L\u01b0u v\u00e0o Nh\u1ea1c: {0}",
                 "Saved",
@@ -111603,6 +111751,11 @@ final class Translations {
                 "\u0110\u00e3 t\u1ea1m d\u1eebng l\u01b0u",
                 "Saving selected copies",
                 "\u0110ang l\u01b0u c\u00e1c b\u1ea3n sao \u0111\u00e3 ch\u1ecdn",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "Vi\u1ec7c l\u01b0u t\u1ec7p d\u1eebng gi\u1eefa ch\u1eebng. H\u00e3y th\u1eed"
+                        + " n\u01a1i kh\u00e1c; ch\u1ec9 m\u1ee5c \u0111\u00e3 l\u01b0u c\u1ee7a"
+                        + " b\u1ea1n v\u1eabn nguy\u00ean v\u1eb9n.",
                 "Saving\u2026",
                 "\u0110ang l\u01b0u\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -111715,15 +111868,24 @@ final class Translations {
                         + " Addon.",
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "\u0110\u00e3 ch\u1ecdn {0}. H\u00e3y t\u00ecm trong BitChord \u2192 Addon.",
+                "Send",
+                "G\u1eedi",
                 "Send audio effects to the installed JamesDSP app",
                 "Chuy\u1ec3n vi\u1ec7c x\u1eed l\u00fd hi\u1ec7u \u1ee9ng \u00e2m thanh cho"
                         + " \u1ee9ng d\u1ee5ng JamesDSP \u0111\u00e3 c\u00e0i",
                 "Send code to this number",
                 "G\u1eedi m\u00e3 \u0111\u1ebfn s\u1ed1 n\u00e0y",
+                "Send the backup to",
+                "G\u1eedi b\u1ea3n sao l\u01b0u t\u1edbi",
+                "Send the backup to {0}?",
+                "G\u1eedi b\u1ea3n sao l\u01b0u t\u1edbi {0}?",
                 "Send this offer again",
                 "G\u1eedi l\u1ea1i \u0111\u1ec1 ngh\u1ecb n\u00e0y",
                 "Sending file offer",
                 "\u0110ang g\u1eedi \u0111\u1ec1 ngh\u1ecb chia s\u1ebb t\u1ec7p",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "\u0110ang g\u1eedi b\u1ea3n sao l\u01b0u t\u1edbi {0}. Telegram s\u1ebd hi\u1ec7n"
+                        + " n\u00f3 \u1edf \u0111\u00f3 khi t\u1ea3i l\u00ean xong.",
                 "Sends to {0}",
                 "G\u1eedi \u0111\u1ebfn {0}",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -112459,8 +112621,24 @@ final class Translations {
                         + " h\u01b0\u1edfng.",
                 "The App API ID is outside the supported range.",
                 "App API ID n\u1eb1m ngo\u00e0i ph\u1ea1m vi \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3.",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "B\u1ea3n sao l\u01b0u b\u1ecb tr\u1ed1ng ho\u1eb7c h\u1ecfng n\u00ean ch\u01b0a"
+                    + " l\u01b0u g\u00ec c\u1ea3. Ch\u1ec9 m\u1ee5c \u0111\u00e3 l\u01b0u c\u1ee7a"
+                    + " b\u1ea1n v\u1eabn nguy\u00ean v\u1eb9n.",
+                "The backup didn't finish downloading. Try again.",
+                "B\u1ea3n sao l\u01b0u ch\u01b0a t\u1ea3i xong. H\u00e3y th\u1eed l\u1ea1i.",
                 "The backup file stays where you saved it",
                 "T\u1ec7p sao l\u01b0u v\u1eabn \u1edf n\u01a1i b\u1ea1n \u0111\u00e3 l\u01b0u",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "B\u1ea3n sao l\u01b0u g\u1ed3m c\u00e0i \u0111\u1eb7t, t\u00ean \u0111\u00e3"
+                    + " s\u1eeda v\u00e0 ch\u1ec9 m\u1ee5c \u0111\u00e3 l\u01b0u n\u1ebfu b\u1ea1n"
+                    + " ch\u1ecdn. Ai m\u1edf \u0111\u01b0\u1ee3c k\u00eanh \u0111\u1ec1u"
+                    + " \u0111\u1ecdc \u0111\u01b0\u1ee3c. Th\u00f4ng tin API v\u00e0 phi\u00ean"
+                    + " Telegram c\u1ee7a b\u1ea1n kh\u00f4ng bao gi\u1edd n\u1eb1m trong"
+                    + " \u0111\u00f3.",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "B\u1ea3n lossy t\u1ed1t nh\u1ea5t hi\u1ec7n c\u00f3 \u00b7 kho\u1ea3ng 8 MB"
                         + " m\u1ed7i b\u00e0i",
@@ -112505,6 +112683,15 @@ final class Translations {
                 "The last song plays to its end at full volume",
                 "B\u00e0i cu\u1ed1i ph\u00e1t \u0111\u1ebfn h\u1ebft v\u1edbi \u00e2m"
                         + " l\u01b0\u1ee3ng \u0111\u1ea7y \u0111\u1ee7",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "B\u1ea3n sao l\u01b0u m\u1edbi nh\u1ea5t trong k\u00eanh s\u1ebd thay c\u00e0i"
+                        + " \u0111\u1eb7t c\u1ee7a b\u1ea1n v\u00e0 th\u00eam ch\u1ec9 m\u1ee5c"
+                        + " \u0111\u00e3 l\u01b0u c\u1ee7a n\u00f3 v\u00e0o ch\u1ec9 m\u1ee5c"
+                        + " n\u00e0y.",
+                "The newest backup posted in a private channel you created",
+                "B\u1ea3n sao l\u01b0u m\u1edbi nh\u1ea5t \u0111\u0103ng trong k\u00eanh ri\u00eang"
+                        + " t\u01b0 do b\u1ea1n t\u1ea1o",
                 "The next song already fits",
                 "B\u00e0i ti\u1ebfp theo \u0111\u00e3 ph\u00f9 h\u1ee3p",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -112602,6 +112789,9 @@ final class Translations {
                 "The whole song is cached.",
                 "To\u00e0n b\u1ed9 b\u00e0i h\u00e1t \u0111\u00e3 \u0111\u01b0\u1ee3c l\u01b0u"
                         + " trong b\u1ed9 nh\u1edb \u0111\u1ec7m.",
+                "There's no BitChord backup in that channel.",
+                "K\u00eanh \u0111\u00f3 kh\u00f4ng c\u00f3 b\u1ea3n sao l\u01b0u BitChord"
+                        + " n\u00e0o.",
                 "There's no music in this chat yet.",
                 "Chat n\u00e0y ch\u01b0a c\u00f3 nh\u1ea1c.",
                 "There\u2019s no other version of this song.",
@@ -113028,6 +113218,8 @@ final class Translations {
                 "\u0110\u1ee3i thao t\u00e1c hi\u1ec7n t\u1ea1i ho\u00e0n t\u1ea5t.",
                 "Wait for the pair to finish loading",
                 "Ch\u1edd t\u1ea3i xong c\u1ea3 hai b\u00e0i",
+                "Waiting",
+                "\u0110ang ch\u1edd",
                 "Waiting for a community channel to be indexed",
                 "\u0110ang ch\u1edd m\u1ed9t k\u00eanh c\u1ed9ng \u0111\u1ed3ng \u0111\u01b0\u1ee3c"
                         + " l\u1eadp ch\u1ec9 m\u1ee5c",
@@ -113040,6 +113232,8 @@ final class Translations {
                 "Waiting for peer \u00b7 queue position {0}",
                 "\u0110ang ch\u1edd thi\u1ebft b\u1ecb kh\u00e1c \u00b7 v\u1ecb tr\u00ed h\u00e0ng"
                         + " \u0111\u1ee3i {0}",
+                "Waiting for playback",
+                "\u0110ang ch\u1edd ph\u00e1t",
                 "Waiting for provider",
                 "\u0110ang ch\u1edd nh\u00e0 cung c\u1ea5p",
                 "Waiting for receipt",
@@ -113495,81 +113689,6 @@ final class Translations {
                 "{0}, codec m\u00e0 BitChord \u0111\u00e3 coi l\u00e0 lossless",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "K\u00eanh ri\u00eang t\u01b0",
-                "Save to file",
-                "L\u01b0u v\u00e0o t\u1ec7p",
-                "Send the backup to",
-                "G\u1eedi b\u1ea3n sao l\u01b0u t\u1edbi",
-                "Send the backup to {0}?",
-                "G\u1eedi b\u1ea3n sao l\u01b0u t\u1edbi {0}?",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "B\u1ea3n sao l\u01b0u g\u1ed3m c\u00e0i \u0111\u1eb7t, t\u00ean \u0111\u00e3"
-                    + " s\u1eeda v\u00e0 ch\u1ec9 m\u1ee5c \u0111\u00e3 l\u01b0u n\u1ebfu b\u1ea1n"
-                    + " ch\u1ecdn. Ai m\u1edf \u0111\u01b0\u1ee3c k\u00eanh \u0111\u1ec1u"
-                    + " \u0111\u1ecdc \u0111\u01b0\u1ee3c. Th\u00f4ng tin API v\u00e0 phi\u00ean"
-                    + " Telegram c\u1ee7a b\u1ea1n kh\u00f4ng bao gi\u1edd n\u1eb1m trong"
-                    + " \u0111\u00f3.",
-                "Send",
-                "G\u1eedi",
-                "Restore from",
-                "Kh\u00f4i ph\u1ee5c t\u1eeb",
-                "Restore from {0}?",
-                "Kh\u00f4i ph\u1ee5c t\u1eeb {0}?",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "B\u1ea3n sao l\u01b0u m\u1edbi nh\u1ea5t trong k\u00eanh s\u1ebd thay c\u00e0i"
-                        + " \u0111\u1eb7t c\u1ee7a b\u1ea1n v\u00e0 th\u00eam ch\u1ec9 m\u1ee5c"
-                        + " \u0111\u00e3 l\u01b0u c\u1ee7a n\u00f3 v\u00e0o ch\u1ec9 m\u1ee5c"
-                        + " n\u00e0y.",
-                "No private channel",
-                "Ch\u01b0a c\u00f3 k\u00eanh ri\u00eang t\u01b0",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "H\u00e3y t\u1ea1o trong Telegram m\u1ed9t k\u00eanh ri\u00eang t\u01b0 ch\u1ec9"
-                    + " m\u00ecnh b\u1ea1n d\u00f9ng r\u1ed3i quay l\u1ea1i. K\u00eanh c\u00f4ng"
-                    + " khai kh\u00f4ng \u0111\u01b0\u1ee3c \u0111\u1ec1 xu\u1ea5t.",
-                "Restore from a private channel",
-                "Kh\u00f4i ph\u1ee5c t\u1eeb k\u00eanh ri\u00eang t\u01b0",
-                "The newest backup posted in a private channel you created",
-                "B\u1ea3n sao l\u01b0u m\u1edbi nh\u1ea5t \u0111\u0103ng trong k\u00eanh ri\u00eang"
-                        + " t\u01b0 do b\u1ea1n t\u1ea1o",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "B\u1ea3n sao l\u01b0u b\u1ecb tr\u1ed1ng ho\u1eb7c h\u1ecfng n\u00ean ch\u01b0a"
-                    + " l\u01b0u g\u00ec c\u1ea3. Ch\u1ec9 m\u1ee5c \u0111\u00e3 l\u01b0u c\u1ee7a"
-                    + " b\u1ea1n v\u1eabn nguy\u00ean v\u1eb9n.",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "Vi\u1ec7c l\u01b0u t\u1ec7p d\u1eebng gi\u1eefa ch\u1eebng. H\u00e3y th\u1eed"
-                        + " n\u01a1i kh\u00e1c; ch\u1ec9 m\u1ee5c \u0111\u00e3 l\u01b0u c\u1ee7a"
-                        + " b\u1ea1n v\u1eabn nguy\u00ean v\u1eb9n.",
-                "Pick a private channel you created.",
-                "H\u00e3y ch\u1ecdn m\u1ed9t k\u00eanh ri\u00eang t\u01b0 do b\u1ea1n t\u1ea1o.",
-                "There's no BitChord backup in that channel.",
-                "K\u00eanh \u0111\u00f3 kh\u00f4ng c\u00f3 b\u1ea3n sao l\u01b0u BitChord"
-                        + " n\u00e0o.",
-                "The backup didn't finish downloading. Try again.",
-                "B\u1ea3n sao l\u01b0u ch\u01b0a t\u1ea3i xong. H\u00e3y th\u1eed l\u1ea1i.",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "\u0110ang g\u1eedi b\u1ea3n sao l\u01b0u t\u1edbi {0}. Telegram s\u1ebd hi\u1ec7n"
-                        + " n\u00f3 \u1edf \u0111\u00f3 khi t\u1ea3i l\u00ean xong.",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "Gi\u1eef nh\u1ea1c t\u1eeb c\u00e1c cu\u1ed9c tr\u00f2 chuy\u1ec7n \u0111\u00e3"
-                    + " ch\u1ecdn tr\u00ean \u0111i\u1ec7n tho\u1ea1i n\u00e0y. Khi Telegram"
-                    + " \u0111\u01b0\u1ee3c k\u1ebft n\u1ed1i, ch\u1ec9 m\u1ee5c c\u1eadp nh\u1eadt"
-                    + " khi b\u00e0i \u0111\u0103ng \u00e2m thanh v\u00e0 ZIP xu\u1ea5t hi\u1ec7n,"
-                    + " thay \u0111\u1ed5i ho\u1eb7c b\u1ecb x\u00f3a. Qu\u00e9t trong n\u1ec1n"
-                    + " b\u1ed5 sung c\u00e1c b\u00e0i \u0111\u0103ng c\u0169.  T\u1eaft t\u00ednh"
-                    + " n\u0103ng n\u00e0y ch\u1ec9 t\u1ea1m d\u1eebng: ch\u1ec9 m\u1ee5c"
-                    + " \u0111\u00e3 l\u01b0u v\u1eabn \u1edf l\u1ea1i tr\u00ean \u0111i\u1ec7n"
-                    + " tho\u1ea1i n\u00e0y, n\u00ean b\u1ea1n v\u1eabn c\u00f3 th\u1ec3 sao"
-                    + " l\u01b0u ho\u1eb7c b\u1eadt l\u1ea1i.",
             };
         }
     }
@@ -114642,6 +114761,10 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "\u8acb\u5148\u5728 Telegram"
+                    + " \u5efa\u7acb\u53ea\u6709\u4f60\u4f7f\u7528\u7684\u79c1\u4eba\u983b\u9053\uff0c\u518d\u56de\u4f86\u3002\u4e0d\u6703\u5217\u51fa\u516c\u958b\u983b\u9053\u3002",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -115442,6 +115565,13 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "\u5c07\u6240\u9078\u804a\u5929\u5ba4\u7684\u97f3\u6a02\u4fdd\u5b58\u5728\u9019\u90e8\u624b\u6a5f\u4e0a\u3002Telegram"
+                    + " \u9023\u7dda\u6642\uff0c\u97f3\u8a0a\u548c ZIP"
+                    + " \u8cbc\u6587\u4e00\u6709\u65b0\u589e\u3001\u8b8a\u66f4\u6216\u79fb\u9664\uff0c\u7d22\u5f15\u5c31\u6703\u66f4\u65b0\u3002\u80cc\u666f\u6383\u63cf\u6703\u88dc\u9f4a\u904e\u5f80\u5167\u5bb9\u3002\u95dc\u9589\u5f8c\u53ea\u6703\u66ab\u505c\uff0c\u5df2\u5132\u5b58\u7d22\u5f15\u6703\u7559\u5728\u9019\u90e8\u624b\u6a5f\u4e0a\uff0c\u4ecd\u53ef\u5099\u4efd\u6216\u91cd\u65b0\u958b\u555f\u3002",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "\u907f\u514d\u8072\u97f3\u88ab\u5747\u8861\u8655\u7406\u5169\u6b21\uff0c\u4e26\u8b93\u6b4c\u66f2\u4e0d\u7d93\u904e\u97f3\u8a0a\u6676\u7247\uff0c\u5426\u5247"
@@ -115827,6 +115957,8 @@ final class Translations {
                     + " \u4e2d\u958b\u555f\u9019\u500b\u804a\u5929\u5ba4\u4ee5\u6aa2\u67e5\u5b58\u53d6\u6b0a\u9650\u3002",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "\u6c92\u6709\u79c1\u4eba\u983b\u9053",
                 "No private main channel selected.",
                 "\u672a\u9078\u64c7\u79c1\u4eba\u4e3b\u983b\u9053\u3002",
                 "No profile for this output yet.",
@@ -116194,6 +116326,8 @@ final class Translations {
                 "Photos and files outside your music chats follow the Telegram cache target.",
                 "\u97f3\u6a02\u804a\u5929\u4e4b\u5916\u7684\u7167\u7247\u548c\u6a94\u6848\u9075\u5faa"
                     + " Telegram \u5feb\u53d6\u76ee\u6a19\u3002",
+                "Pick a private channel you created.",
+                "\u8acb\u9078\u64c7\u4f60\u5efa\u7acb\u7684\u79c1\u4eba\u983b\u9053\u3002",
                 "Pick the quality for this download.",
                 "\u9078\u64c7\u9019\u6b21\u4e0b\u8f09\u7684\u97f3\u8cea\u3002",
                 "Pitch",
@@ -116340,6 +116474,8 @@ final class Translations {
                 "\u96b1\u79c1\u6b0a\u548c\u8def\u7531",
                 "Privacy and your account",
                 "\u96b1\u79c1\u8207\u4f60\u7684\u5e33\u865f",
+                "Private channel",
+                "\u79c1\u4eba\u983b\u9053",
                 "Private main channel",
                 "\u79c1\u4eba\u4e3b\u983b\u9053",
                 "Private main channel selected.",
@@ -116437,6 +116573,8 @@ final class Translations {
                 "\u552f\u8b80\u983b\u9053\u6aa2\u8996 \u00b7 \u4f60\u7684 Telegram \u5e33\u865f",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "\u6b63\u5728\u8b80\u53d6\u97f3\u8a0a\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -116634,6 +116772,12 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "\u9084\u539f",
+                "Restore from",
+                "\u5f9e\u9019\u88e1\u9084\u539f",
+                "Restore from a private channel",
+                "\u5f9e\u79c1\u4eba\u983b\u9053\u9084\u539f",
+                "Restore from {0}?",
+                "\u8981\u5f9e\u300c{0}\u300d\u9084\u539f\u55ce\uff1f",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -116743,6 +116887,8 @@ final class Translations {
                 "\u8acb\u5728\u505c\u6b62\u9023\u7dda\u5354\u8abf\u6642\u5132\u5b58\u8a2d\u5b9a\u3002",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "\u5132\u5b58\u70ba\u6a94\u6848",
                 "Save to Music: {0}",
                 "\u5132\u5b58\u5230\u97f3\u6a02\uff1a{0}",
                 "Saved",
@@ -116824,6 +116970,9 @@ final class Translations {
                 "\u5132\u5b58\u5df2\u66ab\u505c",
                 "Saving selected copies",
                 "\u6b63\u5728\u5132\u5b58\u6240\u9078\u526f\u672c",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "\u6a94\u6848\u5132\u5b58\u5230\u4e00\u534a\u5c31\u4e2d\u65b7\u4e86\u3002\u8acb\u63db\u500b\u4f4d\u7f6e\u518d\u8a66\uff1b\u4f60\u7684\u5df2\u5132\u5b58\u7d22\u5f15\u5b8c\u5168\u6c92\u8b8a\u3002",
                 "Saving\u2026",
                 "\u6b63\u5728\u5132\u5b58\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -116926,15 +117075,24 @@ final class Translations {
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "\u5df2\u9078\u64c7 {0}\u3002\u8acb\u5728\u300cBitChord \u2192"
                         + " \u5916\u639b\u300d\u4e2d\u641c\u5c0b\u3002",
+                "Send",
+                "\u50b3\u9001",
                 "Send audio effects to the installed JamesDSP app",
                 "\u5c07\u97f3\u6548\u4ea4\u7d66\u5df2\u5b89\u88dd\u7684 JamesDSP"
                         + " \u61c9\u7528\u7a0b\u5f0f\u8655\u7406",
                 "Send code to this number",
                 "\u50b3\u9001\u9a57\u8b49\u78bc\u81f3\u6b64\u865f\u78bc",
+                "Send the backup to",
+                "\u5c07\u5099\u4efd\u50b3\u9001\u5230",
+                "Send the backup to {0}?",
+                "\u8981\u5c07\u5099\u4efd\u50b3\u9001\u5230\u300c{0}\u300d\u55ce\uff1f",
                 "Send this offer again",
                 "\u91cd\u65b0\u50b3\u9001\u6b64\u5206\u4eab\u8acb\u6c42",
                 "Sending file offer",
                 "\u6b63\u5728\u50b3\u9001\u6a94\u6848\u5206\u4eab\u8acb\u6c42",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "\u6b63\u5728\u5c07\u5099\u4efd\u50b3\u9001\u5230\u300c{0}\u300d\u3002\u4e0a\u50b3\u5b8c\u6210\u5f8c\u6703\u986f\u793a\u5728"
+                    + " Telegram \u7684\u8a72\u983b\u9053\u4e2d\u3002",
                 "Sends to {0}",
                 "\u5c07\u50b3\u9001\u5230 {0}",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -117576,8 +117734,19 @@ final class Translations {
                 "{0} \u7684\u4f4d\u5740\u3001\u6a21\u578b\u548c\u91d1\u9470\u5c07\u5f9e\u6b64\u88dd\u7f6e\u79fb\u9664\u3002\u4f60\u7684\u64ad\u653e\u6e05\u55ae\u4e0d\u53d7\u5f71\u97ff\u3002",
                 "The App API ID is outside the supported range.",
                 "App API ID \u8d85\u51fa\u652f\u63f4\u7bc4\u570d\u3002",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "\u5099\u4efd\u662f\u7a7a\u7684\u6216\u5df2\u640d\u6bc0\uff0c\u6240\u4ee5\u6c92\u6709\u5132\u5b58\u4efb\u4f55\u5167\u5bb9\u3002\u4f60\u7684\u5df2\u5132\u5b58\u7d22\u5f15\u5b8c\u5168\u6c92\u8b8a\u3002",
+                "The backup didn't finish downloading. Try again.",
+                "\u5099\u4efd\u6c92\u6709\u4e0b\u8f09\u5b8c\u6210\u3002\u8acb\u518d\u8a66\u4e00\u6b21\u3002",
                 "The backup file stays where you saved it",
                 "\u5099\u4efd\u6a94\u4ecd\u4fdd\u7559\u5728\u4f60\u5132\u5b58\u7684\u4f4d\u7f6e",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "\u5099\u4efd\u5305\u542b\u4f60\u7684\u8a2d\u5b9a\u3001\u4fee\u6b63\u904e\u7684\u540d\u7a31\uff0c\u4ee5\u53ca\u4f60\u9078\u64c7\u6642\u7684\u5df2\u5132\u5b58\u7d22\u5f15\u3002\u80fd\u958b\u555f\u8a72\u983b\u9053\u7684\u4eba\u90fd\u80fd\u8b80\u53d6\u3002\u4f60\u7684"
+                    + " API \u8cc7\u6599\u548c Telegram"
+                    + " \u5de5\u4f5c\u968e\u6bb5\u7d55\u4e0d\u6703\u653e\u9032\u53bb\u3002",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "\u53ef\u53d6\u5f97\u7684\u6700\u4f73\u6709\u640d\u7248\u672c \u00b7"
                         + " \u6bcf\u9996\u6b4c\u7d04 8 MB",
@@ -117614,6 +117783,11 @@ final class Translations {
                 "\u7121\u6cd5\u5728\u9019\u90e8\u624b\u6a5f\u4e0a\u958b\u555f\u7d22\u5f15\u8cc7\u6599\u5eab\u3002",
                 "The last song plays to its end at full volume",
                 "\u6700\u5f8c\u4e00\u9996\u6b4c\u4ee5\u5168\u97f3\u91cf\u64ad\u653e\u5230\u7d50\u675f",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "\u983b\u9053\u4e2d\u6700\u65b0\u7684\u5099\u4efd\u6703\u53d6\u4ee3\u4f60\u7684\u8a2d\u5b9a\uff0c\u4e26\u628a\u5b83\u7684\u5df2\u5132\u5b58\u7d22\u5f15\u52a0\u9032\u76ee\u524d\u7684\u7d22\u5f15\u3002",
+                "The newest backup posted in a private channel you created",
+                "\u4f60\u5efa\u7acb\u7684\u79c1\u4eba\u983b\u9053\u4e2d\u6700\u65b0\u767c\u5e03\u7684\u5099\u4efd",
                 "The next song already fits",
                 "\u4e0b\u4e00\u9996\u6b4c\u5df2\u7d93\u5f88\u5408\u9069",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -117686,6 +117860,8 @@ final class Translations {
                 "\u7121\u6cd5\u53d6\u5f97\u66f2\u76ee\u9577\u5ea6",
                 "The whole song is cached.",
                 "\u6574\u9996\u6b4c\u66f2\u5df2\u5feb\u53d6\u3002",
+                "There's no BitChord backup in that channel.",
+                "\u8a72\u983b\u9053\u88e1\u6c92\u6709 BitChord \u5099\u4efd\u3002",
                 "There's no music in this chat yet.",
                 "\u9019\u500b\u804a\u5929\u5ba4\u4e2d\u9084\u6c92\u6709\u97f3\u6a02\u3002",
                 "There\u2019s no other version of this song.",
@@ -118065,6 +118241,8 @@ final class Translations {
                 "\u8acb\u7b49\u5f85\u76ee\u524d\u64cd\u4f5c\u5b8c\u6210\u3002",
                 "Wait for the pair to finish loading",
                 "\u8acb\u7b49\u5f85\u5169\u9996\u66f2\u76ee\u8f09\u5165\u5b8c\u6210",
+                "Waiting",
+                "\u7b49\u5f85\u4e2d",
                 "Waiting for a community channel to be indexed",
                 "\u7b49\u5f85\u793e\u7fa4\u983b\u9053\u5b8c\u6210\u7d22\u5f15",
                 "Waiting for device to cool down",
@@ -118075,6 +118253,8 @@ final class Translations {
                 "\u6b63\u5728\u7b49\u5f85\u7bc0\u9ede",
                 "Waiting for peer \u00b7 queue position {0}",
                 "\u6b63\u5728\u7b49\u5f85\u7bc0\u9ede \u00b7 \u4f47\u5217\u4f4d\u7f6e {0}",
+                "Waiting for playback",
+                "\u7b49\u5f85\u64ad\u653e",
                 "Waiting for provider",
                 "\u7b49\u5f85\u670d\u52d9\u5546",
                 "Waiting for receipt",
@@ -118466,61 +118646,6 @@ final class Translations {
                 "{0}\uff0cBitChord \u5df2\u5c07\u5176\u8996\u70ba\u7121\u640d",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "\u79c1\u4eba\u983b\u9053",
-                "Save to file",
-                "\u5132\u5b58\u70ba\u6a94\u6848",
-                "Send the backup to",
-                "\u5c07\u5099\u4efd\u50b3\u9001\u5230",
-                "Send the backup to {0}?",
-                "\u8981\u5c07\u5099\u4efd\u50b3\u9001\u5230\u300c{0}\u300d\u55ce\uff1f",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "\u5099\u4efd\u5305\u542b\u4f60\u7684\u8a2d\u5b9a\u3001\u4fee\u6b63\u904e\u7684\u540d\u7a31\uff0c\u4ee5\u53ca\u4f60\u9078\u64c7\u6642\u7684\u5df2\u5132\u5b58\u7d22\u5f15\u3002\u80fd\u958b\u555f\u8a72\u983b\u9053\u7684\u4eba\u90fd\u80fd\u8b80\u53d6\u3002\u4f60\u7684"
-                    + " API \u8cc7\u6599\u548c Telegram"
-                    + " \u5de5\u4f5c\u968e\u6bb5\u7d55\u4e0d\u6703\u653e\u9032\u53bb\u3002",
-                "Send",
-                "\u50b3\u9001",
-                "Restore from",
-                "\u5f9e\u9019\u88e1\u9084\u539f",
-                "Restore from {0}?",
-                "\u8981\u5f9e\u300c{0}\u300d\u9084\u539f\u55ce\uff1f",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "\u983b\u9053\u4e2d\u6700\u65b0\u7684\u5099\u4efd\u6703\u53d6\u4ee3\u4f60\u7684\u8a2d\u5b9a\uff0c\u4e26\u628a\u5b83\u7684\u5df2\u5132\u5b58\u7d22\u5f15\u52a0\u9032\u76ee\u524d\u7684\u7d22\u5f15\u3002",
-                "No private channel",
-                "\u6c92\u6709\u79c1\u4eba\u983b\u9053",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "\u8acb\u5148\u5728 Telegram"
-                    + " \u5efa\u7acb\u53ea\u6709\u4f60\u4f7f\u7528\u7684\u79c1\u4eba\u983b\u9053\uff0c\u518d\u56de\u4f86\u3002\u4e0d\u6703\u5217\u51fa\u516c\u958b\u983b\u9053\u3002",
-                "Restore from a private channel",
-                "\u5f9e\u79c1\u4eba\u983b\u9053\u9084\u539f",
-                "The newest backup posted in a private channel you created",
-                "\u4f60\u5efa\u7acb\u7684\u79c1\u4eba\u983b\u9053\u4e2d\u6700\u65b0\u767c\u5e03\u7684\u5099\u4efd",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "\u5099\u4efd\u662f\u7a7a\u7684\u6216\u5df2\u640d\u6bc0\uff0c\u6240\u4ee5\u6c92\u6709\u5132\u5b58\u4efb\u4f55\u5167\u5bb9\u3002\u4f60\u7684\u5df2\u5132\u5b58\u7d22\u5f15\u5b8c\u5168\u6c92\u8b8a\u3002",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "\u6a94\u6848\u5132\u5b58\u5230\u4e00\u534a\u5c31\u4e2d\u65b7\u4e86\u3002\u8acb\u63db\u500b\u4f4d\u7f6e\u518d\u8a66\uff1b\u4f60\u7684\u5df2\u5132\u5b58\u7d22\u5f15\u5b8c\u5168\u6c92\u8b8a\u3002",
-                "Pick a private channel you created.",
-                "\u8acb\u9078\u64c7\u4f60\u5efa\u7acb\u7684\u79c1\u4eba\u983b\u9053\u3002",
-                "There's no BitChord backup in that channel.",
-                "\u8a72\u983b\u9053\u88e1\u6c92\u6709 BitChord \u5099\u4efd\u3002",
-                "The backup didn't finish downloading. Try again.",
-                "\u5099\u4efd\u6c92\u6709\u4e0b\u8f09\u5b8c\u6210\u3002\u8acb\u518d\u8a66\u4e00\u6b21\u3002",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "\u6b63\u5728\u5c07\u5099\u4efd\u50b3\u9001\u5230\u300c{0}\u300d\u3002\u4e0a\u50b3\u5b8c\u6210\u5f8c\u6703\u986f\u793a\u5728"
-                    + " Telegram \u7684\u8a72\u983b\u9053\u4e2d\u3002",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "\u5c07\u6240\u9078\u804a\u5929\u5ba4\u7684\u97f3\u6a02\u4fdd\u5b58\u5728\u9019\u90e8\u624b\u6a5f\u4e0a\u3002Telegram"
-                    + " \u9023\u7dda\u6642\uff0c\u97f3\u8a0a\u548c ZIP"
-                    + " \u8cbc\u6587\u4e00\u6709\u65b0\u589e\u3001\u8b8a\u66f4\u6216\u79fb\u9664\uff0c\u7d22\u5f15\u5c31\u6703\u66f4\u65b0\u3002\u80cc\u666f\u6383\u63cf\u6703\u88dc\u9f4a\u904e\u5f80\u5167\u5bb9\u3002\u95dc\u9589\u5f8c\u53ea\u6703\u66ab\u505c\uff0c\u5df2\u5132\u5b58\u7d22\u5f15\u6703\u7559\u5728\u9019\u90e8\u624b\u6a5f\u4e0a\uff0c\u4ecd\u53ef\u5099\u4efd\u6216\u91cd\u65b0\u958b\u555f\u3002",
             };
         }
     }
@@ -119592,6 +119717,10 @@ final class Translations {
                 "Crash details could not be copied",
                 "Create",
                 "Create",
+                "Create a private channel in Telegram that only you use, then come back. Public"
+                        + " channels are not offered.",
+                "\u8bf7\u5148\u5728 Telegram"
+                    + " \u521b\u5efa\u53ea\u6709\u4f60\u4f7f\u7528\u7684\u79c1\u6709\u9891\u9053\uff0c\u518d\u56de\u6765\u3002\u4e0d\u4f1a\u5217\u51fa\u516c\u5f00\u9891\u9053\u3002",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other",
                 "Create an audio copy in the public sharing inventory. Other Soulseek users can"
@@ -120390,6 +120519,13 @@ final class Translations {
                         + " device. No Google account needed. Audio is streamed when played.",
                 "Keep public YouTube playlists in your library, or save independent copies on this"
                         + " device. No Google account needed. Audio is streamed when played.",
+                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
+                    + " they arrive, change or disappear while Telegram is connected. Background"
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.",
+                "\u5c06\u6240\u9009\u804a\u5929\u4e2d\u7684\u97f3\u4e50\u4fdd\u5b58\u5728\u8fd9\u90e8\u624b\u673a\u4e0a\u3002Telegram"
+                    + " \u8fde\u63a5\u65f6\uff0c\u97f3\u9891\u548c ZIP"
+                    + " \u5e16\u5b50\u4e00\u6709\u65b0\u589e\u3001\u66f4\u6539\u6216\u79fb\u9664\uff0c\u7d22\u5f15\u5c31\u4f1a\u66f4\u65b0\u3002\u540e\u53f0\u626b\u63cf\u4f1a\u8865\u5168\u5386\u53f2\u5185\u5bb9\u3002\u5173\u95ed\u540e\u53ea\u4f1a\u6682\u505c\uff0c\u5df2\u4fdd\u5b58\u7d22\u5f15\u4f1a\u7559\u5728\u8fd9\u90e8\u624b\u673a\u4e0a\uff0c\u4ecd\u53ef\u5907\u4efd\u6216\u91cd\u65b0\u5f00\u542f\u3002",
                 "Keeps the sound from being equalised twice, and keeps songs off the audio chip,"
                         + " where JamesDSP couldn\u2019t hear them.",
                 "\u907f\u514d\u58f0\u97f3\u88ab\u5747\u8861\u4e24\u6b21\uff0c\u5e76\u4e14\u4e0d\u8ba9\u6b4c\u66f2\u8d70\u97f3\u9891\u82af\u7247\uff0c\u56e0\u4e3a"
@@ -120774,6 +120910,8 @@ final class Translations {
                     + " \u4e2d\u6253\u5f00\u6b64\u804a\u5929\u4ee5\u68c0\u67e5\u8bbf\u95ee\u6743\u9650\u3002",
                 "No preview report is available",
                 "No preview report is available",
+                "No private channel",
+                "\u6ca1\u6709\u79c1\u6709\u9891\u9053",
                 "No private main channel selected.",
                 "\u672a\u9009\u62e9\u79c1\u5bc6\u4e3b\u9891\u9053\u3002",
                 "No profile for this output yet.",
@@ -121140,6 +121278,8 @@ final class Translations {
                 "Photos and files outside your music chats follow the Telegram cache target.",
                 "\u97f3\u4e50\u804a\u5929\u4e4b\u5916\u7684\u7167\u7247\u548c\u6587\u4ef6\u9075\u5faa"
                     + " Telegram \u7f13\u5b58\u76ee\u6807\u3002",
+                "Pick a private channel you created.",
+                "\u8bf7\u9009\u62e9\u4f60\u521b\u5efa\u7684\u79c1\u6709\u9891\u9053\u3002",
                 "Pick the quality for this download.",
                 "\u9009\u62e9\u6b64\u6b21\u4e0b\u8f7d\u7684\u97f3\u8d28\u3002",
                 "Pitch",
@@ -121286,6 +121426,8 @@ final class Translations {
                 "\u9690\u79c1\u548c\u8def\u7531",
                 "Privacy and your account",
                 "\u9690\u79c1\u4e0e\u4f60\u7684\u8d26\u53f7",
+                "Private channel",
+                "\u79c1\u6709\u9891\u9053",
                 "Private main channel",
                 "\u79c1\u5bc6\u4e3b\u9891\u9053",
                 "Private main channel selected.",
@@ -121383,6 +121525,8 @@ final class Translations {
                 "\u53ea\u8bfb\u9891\u9053\u89c6\u56fe \u00b7 \u4f60\u7684 Telegram \u8d26\u53f7",
                 "Readiness not reported",
                 "Readiness not reported",
+                "Reading audio\u2026",
+                "\u6b63\u5728\u8bfb\u53d6\u97f3\u9891\u2026",
                 "Reading playlists\u2026",
                 "Reading playlists\u2026",
                 "Reading playlist\u2026",
@@ -121579,6 +121723,12 @@ final class Translations {
                 "Restart the preview to hear the beginning again",
                 "Restore",
                 "\u6062\u590d",
+                "Restore from",
+                "\u4ece\u8fd9\u91cc\u6062\u590d",
+                "Restore from a private channel",
+                "\u4ece\u79c1\u6709\u9891\u9053\u6062\u590d",
+                "Restore from {0}?",
+                "\u8981\u4ece\u201c{0}\u201d\u6062\u590d\u5417\uff1f",
                 "Restore original to phone folder",
                 "Restore original to phone folder",
                 "Restore submitted \u00b7 follow progress in Downloads",
@@ -121688,6 +121838,8 @@ final class Translations {
                 "\u8bf7\u5728\u505c\u6b62\u8fde\u63a5\u534f\u8c03\u65f6\u4fdd\u5b58\u8bbe\u7f6e\u3002",
                 "Save to device playlists",
                 "Save to device playlists",
+                "Save to file",
+                "\u4fdd\u5b58\u4e3a\u6587\u4ef6",
                 "Save to Music: {0}",
                 "\u4fdd\u5b58\u5230\u97f3\u4e50\uff1a{0}",
                 "Saved",
@@ -121768,6 +121920,9 @@ final class Translations {
                 "\u4fdd\u5b58\u5df2\u6682\u505c",
                 "Saving selected copies",
                 "\u6b63\u5728\u4fdd\u5b58\u6240\u9009\u526f\u672c",
+                "Saving the file stopped part-way. Try another place; your saved index is"
+                        + " untouched.",
+                "\u6587\u4ef6\u4fdd\u5b58\u5230\u4e00\u534a\u5c31\u4e2d\u65ad\u4e86\u3002\u8bf7\u6362\u4e2a\u4f4d\u7f6e\u518d\u8bd5\uff1b\u4f60\u7684\u5df2\u4fdd\u5b58\u7d22\u5f15\u5b8c\u5168\u6ca1\u53d8\u3002",
                 "Saving\u2026",
                 "\u6b63\u5728\u4fdd\u5b58\u2026",
                 "SD cards and USB drives appear in Android\u2019s folder picker. Offline HLS/DASH"
@@ -121870,15 +122025,24 @@ final class Translations {
                 "Selected {0}. Search in BitChord \u2192 Addons.",
                 "\u5df2\u9009\u62e9 {0}\u3002\u8bf7\u5728\u300cBitChord \u2192"
                         + " \u63d2\u4ef6\u300d\u4e2d\u641c\u7d22\u3002",
+                "Send",
+                "\u53d1\u9001",
                 "Send audio effects to the installed JamesDSP app",
                 "\u5c06\u97f3\u6548\u4ea4\u7ed9\u5df2\u5b89\u88c5\u7684 JamesDSP"
                         + " \u5e94\u7528\u5904\u7406",
                 "Send code to this number",
                 "\u5411\u6b64\u53f7\u7801\u53d1\u9001\u9a8c\u8bc1\u7801",
+                "Send the backup to",
+                "\u5c06\u5907\u4efd\u53d1\u9001\u5230",
+                "Send the backup to {0}?",
+                "\u8981\u5c06\u5907\u4efd\u53d1\u9001\u5230\u201c{0}\u201d\u5417\uff1f",
                 "Send this offer again",
                 "\u91cd\u65b0\u53d1\u9001\u6b64\u5206\u4eab\u8bf7\u6c42",
                 "Sending file offer",
                 "\u6b63\u5728\u53d1\u9001\u6587\u4ef6\u5206\u4eab\u8bf7\u6c42",
+                "Sending the backup to {0}. Telegram shows it there when it is up.",
+                "\u6b63\u5728\u5c06\u5907\u4efd\u53d1\u9001\u5230\u201c{0}\u201d\u3002\u4e0a\u4f20\u5b8c\u6210\u540e\u4f1a\u663e\u793a\u5728"
+                    + " Telegram \u7684\u8be5\u9891\u9053\u4e2d\u3002",
                 "Sends to {0}",
                 "\u5c06\u53d1\u9001\u5230 {0}",
                 "Separation adds about 1.6 seconds of audio delay. The filter is used when the"
@@ -122512,8 +122676,19 @@ final class Translations {
                 "{0} \u7684\u5730\u5740\u3001\u6a21\u578b\u548c\u5bc6\u94a5\u5c06\u4ece\u6b64\u8bbe\u5907\u79fb\u9664\u3002\u4f60\u7684\u6b4c\u5355\u4e0d\u53d7\u5f71\u54cd\u3002",
                 "The App API ID is outside the supported range.",
                 "App API ID \u8d85\u51fa\u652f\u6301\u8303\u56f4\u3002",
+                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                        + " untouched.",
+                "\u5907\u4efd\u662f\u7a7a\u7684\u6216\u5df2\u635f\u574f\uff0c\u6240\u4ee5\u6ca1\u6709\u4fdd\u5b58\u4efb\u4f55\u5185\u5bb9\u3002\u4f60\u7684\u5df2\u4fdd\u5b58\u7d22\u5f15\u5b8c\u5168\u6ca1\u53d8\u3002",
+                "The backup didn't finish downloading. Try again.",
+                "\u5907\u4efd\u6ca1\u6709\u4e0b\u8f7d\u5b8c\u6210\u3002\u8bf7\u518d\u8bd5\u4e00\u6b21\u3002",
                 "The backup file stays where you saved it",
                 "\u5907\u4efd\u6587\u4ef6\u4ecd\u4fdd\u7559\u5728\u4f60\u4fdd\u5b58\u7684\u4f4d\u7f6e",
+                "The backup holds your settings and corrected names, and the saved index if you"
+                    + " chose it. Anyone who can open the channel can read it. Your API details and"
+                    + " Telegram session are never in it.",
+                "\u5907\u4efd\u5305\u542b\u4f60\u7684\u8bbe\u7f6e\u3001\u4fee\u6b63\u8fc7\u7684\u540d\u79f0\uff0c\u4ee5\u53ca\u4f60\u9009\u62e9\u65f6\u7684\u5df2\u4fdd\u5b58\u7d22\u5f15\u3002\u80fd\u6253\u5f00\u8be5\u9891\u9053\u7684\u4eba\u90fd\u80fd\u8bfb\u53d6\u3002\u4f60\u7684"
+                    + " API \u4fe1\u606f\u548c Telegram"
+                    + " \u4f1a\u8bdd\u7edd\u4e0d\u4f1a\u653e\u8fdb\u53bb\u3002",
                 "The best lossy copy on offer \u00b7 around 8 MB a song",
                 "\u53ef\u7528\u7684\u6700\u4f73\u6709\u635f\u7248\u672c \u00b7"
                         + " \u6bcf\u9996\u6b4c\u7ea6 8 MB",
@@ -122550,6 +122725,11 @@ final class Translations {
                 "\u65e0\u6cd5\u5728\u8fd9\u90e8\u624b\u673a\u4e0a\u6253\u5f00\u7d22\u5f15\u6570\u636e\u5e93\u3002",
                 "The last song plays to its end at full volume",
                 "\u6700\u540e\u4e00\u9996\u6b4c\u4ee5\u5168\u97f3\u91cf\u64ad\u653e\u5230\u7ed3\u675f",
+                "The newest backup in the channel replaces your settings and adds its saved index"
+                        + " to this one.",
+                "\u9891\u9053\u4e2d\u6700\u65b0\u7684\u5907\u4efd\u4f1a\u66ff\u6362\u4f60\u7684\u8bbe\u7f6e\uff0c\u5e76\u628a\u5b83\u7684\u5df2\u4fdd\u5b58\u7d22\u5f15\u6dfb\u52a0\u5230\u5f53\u524d\u7d22\u5f15\u3002",
+                "The newest backup posted in a private channel you created",
+                "\u4f60\u521b\u5efa\u7684\u79c1\u6709\u9891\u9053\u4e2d\u6700\u65b0\u53d1\u5e03\u7684\u5907\u4efd",
                 "The next song already fits",
                 "\u4e0b\u4e00\u9996\u6b4c\u5df2\u7ecf\u5f88\u5408\u9002",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -122622,6 +122802,8 @@ final class Translations {
                 "\u65e0\u6cd5\u83b7\u53d6\u66f2\u76ee\u65f6\u957f",
                 "The whole song is cached.",
                 "\u6574\u9996\u6b4c\u66f2\u5df2\u7f13\u5b58\u3002",
+                "There's no BitChord backup in that channel.",
+                "\u8be5\u9891\u9053\u91cc\u6ca1\u6709 BitChord \u5907\u4efd\u3002",
                 "There's no music in this chat yet.",
                 "\u6b64\u804a\u5929\u4e2d\u8fd8\u6ca1\u6709\u97f3\u4e50\u3002",
                 "There\u2019s no other version of this song.",
@@ -123002,6 +123184,8 @@ final class Translations {
                 "\u8bf7\u7b49\u5f85\u5f53\u524d\u64cd\u4f5c\u5b8c\u6210\u3002",
                 "Wait for the pair to finish loading",
                 "\u8bf7\u7b49\u5f85\u4e24\u9996\u66f2\u76ee\u8f7d\u5165\u5b8c\u6210",
+                "Waiting",
+                "\u7b49\u5f85\u4e2d",
                 "Waiting for a community channel to be indexed",
                 "\u7b49\u5f85\u793e\u533a\u9891\u9053\u5b8c\u6210\u7d22\u5f15",
                 "Waiting for device to cool down",
@@ -123012,6 +123196,8 @@ final class Translations {
                 "\u6b63\u5728\u7b49\u5f85\u8282\u70b9",
                 "Waiting for peer \u00b7 queue position {0}",
                 "\u6b63\u5728\u7b49\u5f85\u8282\u70b9 \u00b7 \u961f\u5217\u4f4d\u7f6e {0}",
+                "Waiting for playback",
+                "\u7b49\u5f85\u64ad\u653e",
                 "Waiting for provider",
                 "\u7b49\u5f85\u670d\u52a1\u5546",
                 "Waiting for receipt",
@@ -123404,61 +123590,6 @@ final class Translations {
                 "{0}\uff0cBitChord \u5df2\u5c06\u5176\u89c6\u4e3a\u65e0\u635f",
                 "{0}, {1} items",
                 "{0}, {1} items",
-                "Private channel",
-                "\u79c1\u6709\u9891\u9053",
-                "Save to file",
-                "\u4fdd\u5b58\u4e3a\u6587\u4ef6",
-                "Send the backup to",
-                "\u5c06\u5907\u4efd\u53d1\u9001\u5230",
-                "Send the backup to {0}?",
-                "\u8981\u5c06\u5907\u4efd\u53d1\u9001\u5230\u201c{0}\u201d\u5417\uff1f",
-                "The backup holds your settings and corrected names, and the saved index if you"
-                    + " chose it. Anyone who can open the channel can read it. Your API details and"
-                    + " Telegram session are never in it.",
-                "\u5907\u4efd\u5305\u542b\u4f60\u7684\u8bbe\u7f6e\u3001\u4fee\u6b63\u8fc7\u7684\u540d\u79f0\uff0c\u4ee5\u53ca\u4f60\u9009\u62e9\u65f6\u7684\u5df2\u4fdd\u5b58\u7d22\u5f15\u3002\u80fd\u6253\u5f00\u8be5\u9891\u9053\u7684\u4eba\u90fd\u80fd\u8bfb\u53d6\u3002\u4f60\u7684"
-                    + " API \u4fe1\u606f\u548c Telegram"
-                    + " \u4f1a\u8bdd\u7edd\u4e0d\u4f1a\u653e\u8fdb\u53bb\u3002",
-                "Send",
-                "\u53d1\u9001",
-                "Restore from",
-                "\u4ece\u8fd9\u91cc\u6062\u590d",
-                "Restore from {0}?",
-                "\u8981\u4ece\u201c{0}\u201d\u6062\u590d\u5417\uff1f",
-                "The newest backup in the channel replaces your settings and adds its saved index"
-                        + " to this one.",
-                "\u9891\u9053\u4e2d\u6700\u65b0\u7684\u5907\u4efd\u4f1a\u66ff\u6362\u4f60\u7684\u8bbe\u7f6e\uff0c\u5e76\u628a\u5b83\u7684\u5df2\u4fdd\u5b58\u7d22\u5f15\u6dfb\u52a0\u5230\u5f53\u524d\u7d22\u5f15\u3002",
-                "No private channel",
-                "\u6ca1\u6709\u79c1\u6709\u9891\u9053",
-                "Create a private channel in Telegram that only you use, then come back. Public"
-                        + " channels are not offered.",
-                "\u8bf7\u5148\u5728 Telegram"
-                    + " \u521b\u5efa\u53ea\u6709\u4f60\u4f7f\u7528\u7684\u79c1\u6709\u9891\u9053\uff0c\u518d\u56de\u6765\u3002\u4e0d\u4f1a\u5217\u51fa\u516c\u5f00\u9891\u9053\u3002",
-                "Restore from a private channel",
-                "\u4ece\u79c1\u6709\u9891\u9053\u6062\u590d",
-                "The newest backup posted in a private channel you created",
-                "\u4f60\u521b\u5efa\u7684\u79c1\u6709\u9891\u9053\u4e2d\u6700\u65b0\u53d1\u5e03\u7684\u5907\u4efd",
-                "The backup came out empty or damaged, so nothing was saved. Your saved index is"
-                        + " untouched.",
-                "\u5907\u4efd\u662f\u7a7a\u7684\u6216\u5df2\u635f\u574f\uff0c\u6240\u4ee5\u6ca1\u6709\u4fdd\u5b58\u4efb\u4f55\u5185\u5bb9\u3002\u4f60\u7684\u5df2\u4fdd\u5b58\u7d22\u5f15\u5b8c\u5168\u6ca1\u53d8\u3002",
-                "Saving the file stopped part-way. Try another place; your saved index is"
-                        + " untouched.",
-                "\u6587\u4ef6\u4fdd\u5b58\u5230\u4e00\u534a\u5c31\u4e2d\u65ad\u4e86\u3002\u8bf7\u6362\u4e2a\u4f4d\u7f6e\u518d\u8bd5\uff1b\u4f60\u7684\u5df2\u4fdd\u5b58\u7d22\u5f15\u5b8c\u5168\u6ca1\u53d8\u3002",
-                "Pick a private channel you created.",
-                "\u8bf7\u9009\u62e9\u4f60\u521b\u5efa\u7684\u79c1\u6709\u9891\u9053\u3002",
-                "There's no BitChord backup in that channel.",
-                "\u8be5\u9891\u9053\u91cc\u6ca1\u6709 BitChord \u5907\u4efd\u3002",
-                "The backup didn't finish downloading. Try again.",
-                "\u5907\u4efd\u6ca1\u6709\u4e0b\u8f7d\u5b8c\u6210\u3002\u8bf7\u518d\u8bd5\u4e00\u6b21\u3002",
-                "Sending the backup to {0}. Telegram shows it there when it is up.",
-                "\u6b63\u5728\u5c06\u5907\u4efd\u53d1\u9001\u5230\u201c{0}\u201d\u3002\u4e0a\u4f20\u5b8c\u6210\u540e\u4f1a\u663e\u793a\u5728"
-                    + " Telegram \u7684\u8be5\u9891\u9053\u4e2d\u3002",
-                "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
-                    + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off only pauses it: the saved index"
-                    + " stays on this phone, so you can still back it up or turn it on again.",
-                "\u5c06\u6240\u9009\u804a\u5929\u4e2d\u7684\u97f3\u4e50\u4fdd\u5b58\u5728\u8fd9\u90e8\u624b\u673a\u4e0a\u3002Telegram"
-                    + " \u8fde\u63a5\u65f6\uff0c\u97f3\u9891\u548c ZIP"
-                    + " \u5e16\u5b50\u4e00\u6709\u65b0\u589e\u3001\u66f4\u6539\u6216\u79fb\u9664\uff0c\u7d22\u5f15\u5c31\u4f1a\u66f4\u65b0\u3002\u540e\u53f0\u626b\u63cf\u4f1a\u8865\u5168\u5386\u53f2\u5185\u5bb9\u3002\u5173\u95ed\u540e\u53ea\u4f1a\u6682\u505c\uff0c\u5df2\u4fdd\u5b58\u7d22\u5f15\u4f1a\u7559\u5728\u8fd9\u90e8\u624b\u673a\u4e0a\uff0c\u4ecd\u53ef\u5907\u4efd\u6216\u91cd\u65b0\u5f00\u542f\u3002",
             };
         }
     }

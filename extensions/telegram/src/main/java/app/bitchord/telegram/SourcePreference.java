@@ -300,11 +300,22 @@ public final class SourcePreference {
         final long created = System.nanoTime();
         final String id = UUID.randomUUID().toString();
         String context;
-        long retryAt;
+        volatile long retryAt;
         int failures;
         int users;
         DataSpec expected;
         double durationA = -1, durationB = -1;
+
+        // What the last report says about lengths and the window being read; measurements only.
+        double lengthA = -1, lengthB = -1;
+        // The window being read: side, 1-based number and range in milliseconds; null when none.
+        String side;
+        String probeA = "UNKNOWN", probeB = "UNKNOWN";
+        int window, tries;
+        long fromMillis, untilMillis;
+        long advertisedA = -1, advertisedB = -1;
+        long limitMillis = -1;
+        boolean fellBack;
         final RecordingIdentity.Window[] a = new RecordingIdentity.Window[WINDOWS],
                 b = new RecordingIdentity.Window[WINDOWS];
 
@@ -320,10 +331,29 @@ public final class SourcePreference {
 
     private static final Map<String, Attempt> attempts = new LinkedHashMap<>();
 
+    /** Policies compare the same measured windows differently; they never share a verdict. */
+    private static String attemptKey(String key) {
+        if (key.startsWith(STRICT)) return key.substring(STRICT.length());
+        if (key.startsWith(PREPARED)) return key.substring(PREPARED.length());
+        return key;
+    }
+
+    /**
+     * How long until a preparation check of this pair may be tried again after a failure that
+     * proved nothing: 0 when it may run now, -1 when the pair was found to be another recording.
+     */
+    static long retryAfterMillis(DataSpec requested, DataSpec resolved) {
+        if (rejectedPrepared(requested, resolved)) return -1;
+        synchronized (attempts) {
+            Attempt found =
+                    attempts.get(attemptKey(decisionKey(requested.uri, resolved.uri, null, true)));
+            long wait = found == null ? 0 : found.retryAt - retryClock.getAsLong();
+            return wait <= 0 ? 0 : (wait + 999_999) / 1_000_000;
+        }
+    }
+
     private static Attempt attempt(String key) throws IOException {
-        // Policies compare the same measured windows differently; they never share a verdict.
-        if (key.startsWith(STRICT)) key = key.substring(STRICT.length());
-        else if (key.startsWith(PREPARED)) key = key.substring(PREPARED.length());
+        key = attemptKey(key);
         synchronized (attempts) {
             Attempt found = attempts.get(key);
             if (found != null
@@ -371,6 +401,7 @@ public final class SourcePreference {
         final BooleanSupplier stale;
         final boolean background, upgrade;
         SourceAudio audio;
+        String probe = "UNKNOWN";
 
         Copy(
                 DataSpec spec,
@@ -400,12 +431,17 @@ public final class SourcePreference {
             return audio.view();
         }
 
-        /** After each extractor: its read errors were swallowed, and the connection can rest. */
-        void finished(boolean gotNothing) throws IOException {
+        /** A read error was swallowed by the extractor and looked like the end of the file. */
+        void intact() throws IOException {
             if (audio != null) {
                 audio.rethrowFailure();
                 audio.idle();
             }
+        }
+
+        /** After each extractor: its read errors were swallowed, and the connection can rest. */
+        void finished(boolean gotNothing) throws IOException {
+            intact();
             SourceAudio.checkLeased();
             if (System.nanoTime() > deadline)
                 throw new SourceAudio.Stopped(SourceAudio.StopReason.DEADLINE);
@@ -688,6 +724,9 @@ public final class SourcePreference {
         BooleanSupplier stale =
                 asked != null ? asked.cancelled : upgrade ? () -> !parked(original) : () -> false;
         String stage = "reference";
+        attempt.side = null;
+        attempt.advertisedA = advertised(original, played);
+        attempt.advertisedB = advertised(candidate);
         CheckReason reason = CheckReason.UNCLASSIFIED;
         Copy expectedCopy = null, resolvedCopy = null;
         try {
@@ -712,27 +751,36 @@ public final class SourcePreference {
                 }
             }
             long deadline = System.nanoTime() + budget;
+            boolean background = asked != null && asked.background,
+                    upgradeRead = upgrade && asked == null;
             expectedCopy =
                     new Copy(
                             attempt.expected,
                             local ? reference : null,
                             deadline,
                             stale,
-                            asked != null && asked.background,
-                            upgrade && asked == null);
+                            background,
+                            upgradeRead);
             DataSpec file = wholeFile(resolved);
-            resolvedCopy =
-                    new Copy(
-                            file,
-                            null,
-                            deadline,
-                            stale,
-                            asked != null && asked.background,
-                            upgrade && asked == null);
+            resolvedCopy = new Copy(file, null, deadline, stale, background, upgradeRead);
             stage = "length";
-            if (attempt.durationA < 0) attempt.durationA = duration(expectedCopy);
-            if (attempt.durationB < 0) attempt.durationB = duration(resolvedCopy);
+            if (attempt.durationA < 0) {
+                attempt.durationA = duration(expectedCopy);
+                attempt.probeA = expectedCopy.probe;
+            }
+            if (attempt.durationB < 0) {
+                attempt.durationB = duration(resolvedCopy);
+                attempt.probeB = resolvedCopy.probe;
+            }
             double durationA = attempt.durationA, durationB = attempt.durationB;
+            attempt.advertisedB = advertised(candidate);
+            attempt.lengthA = durationA;
+            attempt.lengthB = durationB;
+            double limit =
+                    prepared
+                            ? RecordingIdentity.MAX_PREPARED_DURATION_DIFFERENCE
+                            : RecordingIdentity.MAX_DURATION_DIFFERENCE;
+            attempt.limitMillis = Math.round(limit * 1000);
             if (!(durationA >= RecordingIdentity.MIN_SECONDS
                     && durationB >= RecordingIdentity.MIN_SECONDS)) {
                 if (attempt.durationA < RecordingIdentity.MIN_SECONDS) attempt.durationA = -1;
@@ -740,7 +788,7 @@ public final class SourcePreference {
                 reason = CheckReason.DURATION_INSUFFICIENT;
                 throw new IOException("Not enough audio to verify an automatic source replacement");
             }
-            if (Math.abs(durationA - durationB) > RecordingIdentity.MAX_DURATION_DIFFERENCE) {
+            if (Math.abs(durationA - durationB) > limit) {
                 decisions.put(key, false);
                 conclusive = true;
                 reason = CheckReason.DURATION_MISMATCH;
@@ -749,23 +797,59 @@ public final class SourcePreference {
             double[] points = {0, Math.max(0, durationA / 2 - 8), Math.max(0, durationA - 17)};
             for (int i = 0; i < points.length; i++) {
                 stage = "window " + (i + 1);
-                if (attempt.a[i] == null)
-                    attempt.a[i] =
-                            measurable(
-                                    window(
-                                            "reference " + (i + 1),
-                                            expectedCopy,
-                                            points[i],
-                                            Math.min(points[i] + 16, durationA)));
-                if (attempt.b[i] == null)
+                double until = Math.min(points[i] + 16, durationA);
+                if (attempt.a[i] == null) {
+                    try {
+                        attempt.a[i] =
+                                measured(
+                                        attempt,
+                                        "reference",
+                                        i + 1,
+                                        expectedCopy,
+                                        points[i],
+                                        until);
+                    } catch (IOException failed) {
+                        // A cached copy can vanish between two reads; the same stream is still
+                        // there to read from the network, and its windows are comparable.
+                        if (expectedCopy.local == null || !fallbackWorthy(failed)) throw failed;
+                        expectedCopy.close();
+                        attempt.expected = SourceAutomix.resolve(reference);
+                        attempt.fellBack = true;
+                        expectedCopy =
+                                new Copy(
+                                        attempt.expected,
+                                        null,
+                                        deadline,
+                                        stale,
+                                        background,
+                                        upgradeRead);
+                        // The windows read so far came from the cached copy. They stay only if the
+                        // network rendition has the same length; otherwise they are dropped and
+                        // the next attempt measures it afresh.
+                        double network = duration(expectedCopy);
+                        attempt.probeA = expectedCopy.probe;
+                        if (!(Math.abs(network - durationA) <= RENDITION_TOLERANCE)) {
+                            java.util.Arrays.fill(attempt.a, null);
+                            attempt.durationA = -1;
+                            throw new IOException("Audio rendition changed during analysis");
+                        }
+                        attempt.a[i] =
+                                measured(
+                                        attempt,
+                                        "reference",
+                                        i + 1,
+                                        expectedCopy,
+                                        points[i],
+                                        until);
+                    }
+                }
+                if (attempt.b[i] == null) {
+                    until = Math.min(points[i] + 16, durationB);
                     attempt.b[i] =
-                            measurable(
-                                    window(
-                                            "candidate " + (i + 1),
-                                            resolvedCopy,
-                                            points[i],
-                                            Math.min(points[i] + 16, durationB)));
+                            measured(attempt, "candidate", i + 1, resolvedCopy, points[i], until);
+                }
             }
+            attempt.side = null;
             stage = "comparison";
             Double offset =
                     prepared
@@ -868,7 +952,7 @@ public final class SourcePreference {
                 String.format(
                         Locale.US,
                         "Recording check %s at %s after %d ms, %d of %d windows; reference %s;"
-                                + " candidate %s%s; %s",
+                                + " candidate %s%s%s; %s",
                         outcome,
                         stage,
                         (System.nanoTime() - started) / 1_000_000,
@@ -881,7 +965,98 @@ public final class SourcePreference {
                                 + (reason == CheckReason.UNCLASSIFIED
                                         ? diagnosticError(error)
                                         : reason.name()),
+                        detail(attempt, error),
                         attempt.context));
+    }
+
+    /**
+     * Machine-readable fields, always all present, -1 where unknown: measured lengths, their
+     * difference and the limit, the lengths the providers advertised, how the lengths were found,
+     * and the window that failed. Numbers and fixed words only.
+     */
+    private static String detail(Attempt attempt, Throwable error) {
+        boolean known = attempt.lengthA > 0 && attempt.lengthB > 0;
+        StringBuilder text = new StringBuilder();
+        if (error != null) text.append("; cause=").append(diagnosticCause(error));
+        text.append(
+                String.format(
+                        Locale.US,
+                        "; measuredReferenceMs=%d; measuredCandidateMs=%d; differenceMs=%d;"
+                                + " limitMs=%d; advertisedReferenceMs=%d; advertisedCandidateMs=%d;"
+                                + " probe=%s",
+                        millis(attempt.lengthA),
+                        millis(attempt.lengthB),
+                        known ? Math.round(Math.abs(attempt.lengthA - attempt.lengthB) * 1000) : -1,
+                        attempt.limitMillis,
+                        attempt.advertisedA,
+                        attempt.advertisedB,
+                        probe(attempt)));
+        text.append("; referenceProbe=")
+                .append(attempt.probeA)
+                .append("; candidateProbe=")
+                .append(attempt.probeB);
+        boolean failed = error != null && attempt.side != null;
+        text.append(
+                String.format(
+                        Locale.US,
+                        "; failingSide=%s; window=%d; fromMs=%d; untilMs=%d; try=%d",
+                        failed ? attempt.side : "none",
+                        failed ? attempt.window : -1,
+                        failed ? attempt.fromMillis : -1,
+                        failed ? attempt.untilMillis : -1,
+                        failed ? attempt.tries : -1));
+        if (attempt.fellBack) text.append("; reference fell back to a network copy");
+        return text.toString();
+    }
+
+    private static long millis(double seconds) {
+        return seconds > 0 ? Math.round(seconds * 1000) : -1;
+    }
+
+    /**
+     * How the lengths were found. They come from the host decoder's containerDurationSeconds, which
+     * gives a value only for a length read from timestamps or the stream itself and nothing for a
+     * guess from the bitrate, so no further read is made to say more.
+     */
+    private static String probe(Attempt attempt) {
+        if (attempt.lengthA < 0 || attempt.lengthB < 0) return "NONE";
+        int exact = (attempt.lengthA > 0 ? 1 : 0) + (attempt.lengthB > 0 ? 1 : 0);
+        return exact == 2
+                ? "CONTAINER_EXACT"
+                : exact == 1 ? "CONTAINER_PARTIAL" : "CONTAINER_UNKNOWN";
+    }
+
+    private static final Map<String, Long> advertisedFiles = new LinkedHashMap<>();
+
+    static void noteAdvertised(String url, long seconds) {
+        if (url == null) return;
+        synchronized (advertisedFiles) {
+            String key = identity(url);
+            advertisedFiles.remove(key);
+            if (seconds > 0 && seconds <= 86_400) advertisedFiles.put(key, seconds * 1000);
+            while (advertisedFiles.size() > 128)
+                advertisedFiles.remove(advertisedFiles.keySet().iterator().next());
+        }
+    }
+
+    /** The length a provider advertised in a request's {@code d} (seconds), or -1. */
+    static long advertised(Uri... uris) {
+        for (Uri uri : uris) {
+            try {
+                if (uri == null || !uri.isHierarchical()) continue;
+                synchronized (advertisedFiles) {
+                    Long found = advertisedFiles.get(identity(uri.toString()));
+                    if (found != null) return found;
+                }
+                String seconds = uri.getQueryParameter("d");
+                if (seconds == null) continue;
+                long found = Long.parseLong(seconds);
+                if (found > 0 && found <= 86_400) return found * 1000;
+            } catch (RuntimeException unusable) {
+                // Not a number: treated as unknown.
+            }
+        }
+        return -1;
     }
 
     static String diagnosticError(Throwable error) {
@@ -904,6 +1079,17 @@ public final class SourcePreference {
             if (current instanceof java.io.EOFException) return "UNEXPECTED_EOF";
             if (current instanceof java.io.FileNotFoundException) return "FILE_MISSING";
             if (current instanceof MediaCodec.CodecException) return "DECODE_FAILURE";
+            if (current.getClass() == IOException.class) {
+                // Fixed texts of this package's own readers; any other text stays unreported.
+                String text = current.getMessage();
+                if ("The cached copy has gone".equals(text)) return "CACHE_GONE";
+                if ("Audio source returned no data".equals(text)) return "SOURCE_NO_DATA";
+                if ("Audio connection is closed".equals(text)) return "CONNECTION_CLOSED";
+                if ("Audio rendition changed during analysis".equals(text))
+                    return "RENDITION_CHANGED";
+                if ("Playback source router is not ready".equals(text))
+                    return "SOURCE_ROUTER_UNAVAILABLE";
+            }
             Throwable cause = current.getCause();
             if (cause == current) break;
             current = cause;
@@ -913,13 +1099,96 @@ public final class SourcePreference {
                 : error instanceof IOException ? "IO_UNCLASSIFIED" : "INTERNAL_UNCLASSIFIED";
     }
 
+    /** The decoder finished without a read failing, but produced nothing to compare. */
+    private static final class Unmeasurable extends IOException {
+        Unmeasurable() {
+            super("Recording verification is waiting for enough measurable audio");
+        }
+    }
+
     private static RecordingIdentity.Window measurable(RecordingIdentity.Window window)
             throws IOException {
         if (window == null
                 || window.seconds < RecordingIdentity.MIN_SECONDS
-                || window.fingerprint.size() < 100)
-            throw new IOException("Recording verification is waiting for enough measurable audio");
+                || window.fingerprint.size() < 100) throw new Unmeasurable();
         return window;
+    }
+
+    private static final int WINDOW_TRIES = 2;
+
+    /** How far a network rendition's length may differ from the cached copy's it replaces. */
+    private static final double RENDITION_TOLERANCE = 0.05;
+
+    static volatile long windowRetryMillis = 250;
+
+    /** A window read, complete or not at all; a failed one is tried once more if that can help. */
+    private static RecordingIdentity.Window measured(
+            Attempt attempt, String side, int number, Copy copy, double from, double until)
+            throws Exception {
+        attempt.side = side;
+        attempt.window = number;
+        attempt.fromMillis = Math.round(from * 1000);
+        attempt.untilMillis = Math.round(until * 1000);
+        for (int tries = 1; ; tries++) {
+            attempt.tries = tries;
+            try {
+                return measurable(window(side + " " + number, copy, from, until));
+            } catch (IOException failed) {
+                if (tries >= WINDOW_TRIES || !transientFailure(failed) || copy.expired())
+                    throw failed;
+                pause(copy);
+            }
+        }
+    }
+
+    private static void pause(Copy copy) throws IOException {
+        long until = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(windowRetryMillis);
+        try {
+            while (System.nanoTime() < until && !copy.expired())
+                Thread.sleep(Math.max(1, Math.min(50, windowRetryMillis)));
+        } catch (InterruptedException interrupted) {
+            Thread.currentThread().interrupt();
+            throw new InterruptedIOException("Recording verification interrupted");
+        }
+    }
+
+    /** Whether reading the same bytes again could succeed. */
+    static boolean transientFailure(IOException error) {
+        if (error instanceof SourceAudio.Stopped || error instanceof Unmeasurable) return false;
+        String reason = diagnosticError(error);
+        if (reason.startsWith("HTTP_")) {
+            int status = Integer.parseInt(reason.substring(5));
+            return status == 408 || status == 429 || status >= 500;
+        }
+        switch (reason) {
+            case "FILE_MISSING":
+            case "RENDITION_CHANGED":
+            case "DECODE_FAILURE":
+            case "CACHE_GONE":
+            case "IO_INTERRUPTED":
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    /** A cached reference that cannot be read on is replaced by the same stream's network copy. */
+    private static boolean fallbackWorthy(IOException error) {
+        return !(error instanceof SourceAudio.Stopped) && !(error instanceof Unmeasurable);
+    }
+
+    /** Type names along the cause chain; never a message, an address or a name. */
+    static String diagnosticCause(Throwable error) {
+        StringBuilder chain = new StringBuilder();
+        Throwable current = error;
+        for (int depth = 0; current != null && depth < 4; depth++) {
+            String name = current.getClass().getSimpleName();
+            if (depth > 0) chain.append('>');
+            chain.append(name.isEmpty() ? "other" : name);
+            if (current.getCause() == current) break;
+            current = current.getCause();
+        }
+        return chain.toString();
     }
 
     /** A verified relative time shift for a same-recording upgrade, consumed by the host swap. */
@@ -961,12 +1230,15 @@ public final class SourcePreference {
 
     private static double duration(Copy copy) throws Exception {
         Object found;
+        SourceAudio.takeDurationProbe();
         try (MediaDataSource source = copy.open()) {
             Method method =
                     Class.forName("com.music.bitchord.playback.smart.AudioDecoder")
                             .getDeclaredMethod("containerDurationSeconds", MediaDataSource.class);
             method.setAccessible(true);
             found = method.invoke(null, source);
+        } finally {
+            copy.probe = SourceAudio.takeDurationProbe();
         }
         copy.finished(!(found instanceof Number));
         return found instanceof Number ? ((Number) found).doubleValue() : 0;
@@ -1030,8 +1302,13 @@ public final class SourcePreference {
                                 null, source, from, until, (Function0<Boolean>) copy::expired, tap);
             }
             long decoded = System.nanoTime();
-            copy.finished(timing == null || count[0] == 0);
-            if (timing == null || count[0] == 0) return null;
+            // A decode that ended without a stop is complete even if playback wants the device
+            // now; its window is kept and the stop is noticed at the next read.
+            if (timing == null || count[0] == 0) {
+                copy.finished(true);
+                return null;
+            }
+            copy.intact();
             RecordingIdentity.Window window =
                     new RecordingIdentity.Window(
                             samples[0],

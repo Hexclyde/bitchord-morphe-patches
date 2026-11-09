@@ -1,5 +1,11 @@
 ## 1.1.0-beta.19
 
+- **Automix Editor** previews take priority over indexing and background preparation. Track headers distinguish queued work, playback waits, memory waits and audio reads from analysis.
+- AutoMix reuses completed decoding after a temporary memory wait and retries promptly when resources become available. Model analysis can use a larger allowance while playback buffers stay under an enforced ceiling.
+
+- **Unofficial Telegram** reuses confirmed cached file ranges instead of asking Telegram again for every small read. It searches further matching pages and tries distinct posts even when their titles and durations match. File reads verify the selected message's file identity.
+- Recording verification retries temporary window-read failures without repeating completed windows. Prepared playback accepts small padding differences only after matching fingerprints across the recording.
+
 - Playback preparation pauses competing Telegram indexing, archive checks and AutoMix analysis. Background work resumes after playback settles.
 - Recording checks share completed windows for the same audio pair, reject interrupted reads and retry temporary read failures with a delay. Standby upgrades seek from the current playback position and measured recording offset.
 - **Diagnostics** includes recording-check identities, stages and timing, and separates system memory, Java heap, playback reserves and analysis allowances.

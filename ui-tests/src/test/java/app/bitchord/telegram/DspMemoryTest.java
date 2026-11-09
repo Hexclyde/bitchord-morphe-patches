@@ -153,11 +153,12 @@ public class DspMemoryTest {
         try (SourceAudio.JavaMemory model = SourceAudio.reserveJava(MAXIMUM, 38 * MB, 16 * MB)) {
             assertNotNull(model);
             assertEquals(82 * MB, memory.available(MAXIMUM, 38 * MB));
-            assertEquals(10 * MB, SourceAudio.analysisAvailable(MAXIMUM, 38 * MB));
+            // The unleased figure is 13 MiB here, so a 16 MiB model grant leaves nothing.
+            assertEquals(0, SourceAudio.analysisAvailable(MAXIMUM, 38 * MB));
         }
         assertEquals(98 * MB, memory.available(MAXIMUM, 38 * MB));
         memory.close();
-        assertEquals(58 * MB, SourceAudio.analysisAvailable(MAXIMUM, 38 * MB));
+        assertEquals(13 * MB, SourceAudio.analysisAvailable(MAXIMUM, 38 * MB));
     }
 
     @Test
@@ -170,7 +171,7 @@ public class DspMemoryTest {
         assertFalse(memory.claim(33 * MB, MAXIMUM, 38 * MB));
         memory.close();
         assertFalse(memory.claim(1, MAXIMUM, 38 * MB));
-        assertEquals(58 * MB, SourceAudio.analysisAvailable(MAXIMUM, 38 * MB));
+        assertEquals(13 * MB, SourceAudio.analysisAvailable(MAXIMUM, 38 * MB));
     }
 
     @Test

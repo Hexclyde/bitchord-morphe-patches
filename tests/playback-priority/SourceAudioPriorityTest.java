@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /** Deterministic checks of analysis memory accounting and priority-aware decoding. */
 public final class SourceAudioPriorityTest {
-    static final long MB = 1L << 20, MAX = 192 * MB;
+    static final long MB = 1L << 20, MAX = 192 * MB, BIG = 512 * MB;
 
     static void check(boolean ok, String what) {
         if (!ok) throw new AssertionError(what);
@@ -15,49 +15,51 @@ public final class SourceAudioPriorityTest {
         PlaybackPriority.reset();
     }
 
+    // A 192 MiB heap has no analysis headroom left once the player's reserve is kept (see below),
+    // so the grant bookkeeping is checked on a larger one.
     /** Heap growth nobody reported is other memory: it must not release a pending grant. */
     static void unrelatedHeapGrowthDoesNotReleaseAGrant() {
         reset();
-        long before = SourceAudio.analysisAvailable(MAX, 38 * MB);
-        try (SourceAudio.JavaMemory grant = SourceAudio.reserveJava(MAX, 38 * MB, 16 * MB)) {
+        long before = SourceAudio.analysisAvailable(BIG, 38 * MB);
+        try (SourceAudio.JavaMemory grant = SourceAudio.reserveJava(BIG, 38 * MB, 16 * MB)) {
             check(grant != null, "granted");
-            long promised = SourceAudio.analysisAvailable(MAX, 38 * MB);
+            long promised = SourceAudio.analysisAvailable(BIG, 38 * MB);
             check(promised == before - 16 * MB, "a promise is charged in full: " + promised);
             // 16 MiB of playback or UI allocation lands; the grant is still entirely pending.
-            long grown = SourceAudio.analysisAvailable(MAX, 54 * MB);
+            long grown = SourceAudio.analysisAvailable(BIG, 54 * MB);
             check(grown == before - 32 * MB, "growth is charged on top of the promise: " + grown);
             check(grant.pending() == 16 * MB, "still pending");
         }
-        check(SourceAudio.analysisAvailable(MAX, 38 * MB) == before, "released on close");
+        check(SourceAudio.analysisAvailable(BIG, 38 * MB) == before, "released on close");
     }
 
     /** What the owner reports allocated moves from pending into the heap figure, once. */
     static void materializationIsCountedOnce() {
         reset();
-        long before = SourceAudio.analysisAvailable(MAX, 38 * MB);
-        try (SourceAudio.JavaMemory grant = SourceAudio.reserveJava(MAX, 38 * MB, 16 * MB)) {
+        long before = SourceAudio.analysisAvailable(BIG, 38 * MB);
+        try (SourceAudio.JavaMemory grant = SourceAudio.reserveJava(BIG, 38 * MB, 16 * MB)) {
             grant.materialized(4 * MB);
             check(grant.pending() == 12 * MB, "partly materialized");
             // 4 MiB really landed in the heap and 12 MiB is still promised.
             check(
-                    SourceAudio.analysisAvailable(MAX, 42 * MB) == before - 16 * MB,
-                    "no double count: " + SourceAudio.analysisAvailable(MAX, 42 * MB));
+                    SourceAudio.analysisAvailable(BIG, 42 * MB) == before - 16 * MB,
+                    "no double count: " + SourceAudio.analysisAvailable(BIG, 42 * MB));
             grant.materialized(12 * MB);
             grant.materialized(12 * MB);
             grant.materialized(-5);
             check(grant.pending() == 0, "clamped to the grant, never negative");
             check(
-                    SourceAudio.analysisAvailable(MAX, 54 * MB) == before - 16 * MB,
+                    SourceAudio.analysisAvailable(BIG, 54 * MB) == before - 16 * MB,
                     "fully landed, counted once");
         }
-        check(SourceAudio.analysisAvailable(MAX, 38 * MB) == before, "released on close");
+        check(SourceAudio.analysisAvailable(BIG, 38 * MB) == before, "released on close");
         // A closed grant ignores late reports and a second close is harmless.
-        SourceAudio.JavaMemory late = SourceAudio.reserveJava(MAX, 38 * MB, 8 * MB);
+        SourceAudio.JavaMemory late = SourceAudio.reserveJava(BIG, 38 * MB, 8 * MB);
         late.close();
         late.materialized(8 * MB);
         late.close();
         check(late.pending() == 0, "closed grants hold nothing");
-        check(SourceAudio.analysisAvailable(MAX, 38 * MB) == before, "no residue");
+        check(SourceAudio.analysisAvailable(BIG, 38 * MB) == before, "no residue");
     }
 
     /** Only the exact allocation the DSP owner reports is credited; the rest stays reserved. */
@@ -74,6 +76,244 @@ public final class SourceAudioPriorityTest {
         memory.materialized(1 * MB);
         memory.close();
         check(SourceAudio.memoryDiagnostics(MAX, 38 * MB).contains("pendingMiB=0"), "closed");
+    }
+
+    static final class Lease implements AutoCloseable {
+        int closed;
+
+        public void close() {
+            closed++;
+        }
+    }
+
+    /**
+     * A pinned lease whose loading ceiling is a quarter of the heap and nothing is retained yet.
+     */
+    static SourceAudio.DspMemory pinned(long maximum, long used, Lease lease) {
+        return SourceAudio.dspMemory(
+                maximum, used, lease, () -> maximum / 4, () -> !PlaybackPriority.analysisAllowed());
+    }
+
+    /**
+     * What a constrained and a roomy heap may give analysis, with and without the pinned ceiling.
+     */
+    static void headroomScalesWithTheHeapAndTheCeiling() {
+        reset();
+        SourceAudio.physicalAvailable = () -> 2048 * MB;
+        try (SourceAudio.DspMemory small = pinned(MAX, 38 * MB, new Lease());
+                SourceAudio.DspMemory large = pinned(512 * MB, 38 * MB, new Lease())) {
+            // The stock player may still grow to 141 MiB (192) or half the heap (512).
+            check(SourceAudio.analysisAvailable(MAX, 38 * MB) == 13 * MB, "192 unpinned");
+            check(SourceAudio.analysisAvailable(512 * MB, 38 * MB) == 218 * MB, "512 unpinned");
+            // Pinned to a quarter of the heap: 48 MiB and 128 MiB of growth stay reserved.
+            check(small.available(MAX, 38 * MB) == 98 * MB, "192 pinned " + small.available);
+            check(large.available(512 * MB, 38 * MB) == 338 * MB, "512 pinned " + large.available);
+            check(
+                    SourceAudio.analysisAvailable(MAX, 38 * MB) <= small.available
+                            && SourceAudio.analysisAvailable(512 * MB, 38 * MB) <= large.available,
+                    "a pin never lowers the estimate");
+        } finally {
+            SourceAudio.physicalAvailable = () -> -1;
+        }
+    }
+
+    /** Concurrent claims share one heap: each sees the others' promises, materialized or not. */
+    static void concurrentClaimsShareTheHeadroom() {
+        reset();
+        SourceAudio.physicalAvailable = () -> 2048 * MB;
+        try {
+            Lease first = new Lease(), second = new Lease();
+            try (SourceAudio.DspMemory a = pinned(512 * MB, 38 * MB, first);
+                    SourceAudio.DspMemory b = pinned(512 * MB, 38 * MB, second)) {
+                check(a.claim(200 * MB, 512 * MB, 38 * MB), "first claim");
+                check(
+                        b.available(512 * MB, 38 * MB) == 138 * MB,
+                        "" + b.available(512 * MB, 38 * MB));
+                check(!b.claim(138 * MB + 1, 512 * MB, 38 * MB), "one byte over");
+                // 80 MiB lands in the heap: moved from pending into used, counted once.
+                a.materialized(80 * MB);
+                check(
+                        b.available(512 * MB, 118 * MB) == 138 * MB,
+                        "counted once: " + b.available(512 * MB, 118 * MB));
+                check(b.claim(138 * MB, 512 * MB, 118 * MB), "exactly what is left");
+            }
+            check(first.closed == 1 && second.closed == 1, "leases released");
+            check(
+                    SourceAudio.memoryDiagnostics(512 * MB, 38 * MB).contains("pendingMiB=0"),
+                    "none");
+            // The constrained heap has room for one claim only.
+            try (SourceAudio.DspMemory a = pinned(MAX, 38 * MB, new Lease());
+                    SourceAudio.DspMemory b = pinned(MAX, 38 * MB, new Lease())) {
+                check(a.claim(98 * MB, MAX, 38 * MB), "all of it");
+                check(b.available(MAX, 38 * MB) == 0, "" + b.available(MAX, 38 * MB));
+                check(!b.claim(1, MAX, 38 * MB), "nothing left for a second");
+            }
+        } finally {
+            SourceAudio.physicalAvailable = () -> -1;
+        }
+    }
+
+    /** Taking the exact estimate works; a byte more, or a changed heap limit, does not. */
+    static void claimsStopAtTheBoundary() {
+        reset();
+        SourceAudio.physicalAvailable = () -> 2048 * MB;
+        try {
+            try (SourceAudio.DspMemory memory = pinned(MAX, 38 * MB, new Lease())) {
+                check(!memory.claim(98 * MB + 1, MAX, 38 * MB), "over");
+                check(!memory.claim(98 * MB, 256 * MB, 38 * MB), "heap limit moved");
+                check(memory.claim(98 * MB, MAX, 38 * MB), "exact");
+                check(memory.claim(98 * MB, MAX, 38 * MB), "the same grant is not charged twice");
+            }
+            // A ceiling that stopped being readable gives nothing.
+            try (SourceAudio.DspMemory lost =
+                    SourceAudio.dspMemory(MAX, 38 * MB, new Lease(), () -> -1, () -> false)) {
+                check(lost.available(MAX, 38 * MB) == 0, "pin lost");
+            }
+            // A ceiling at or above the free heap gives nothing.
+            try (SourceAudio.DspMemory full =
+                    SourceAudio.dspMemory(MAX, 38 * MB, new Lease(), () -> 154 * MB, () -> false)) {
+                check(full.available(MAX, 38 * MB) == 0, "no room beyond the ceiling");
+            }
+        } finally {
+            SourceAudio.physicalAvailable = () -> -1;
+        }
+    }
+
+    /** Playback needing the device ends analysis; the grant and the lease go back exactly once. */
+    static void cancellationReleasesThePinnedGrant() {
+        reset();
+        SourceAudio.physicalAvailable = () -> 2048 * MB;
+        try {
+            Lease lease = new Lease();
+            SourceAudio.DspMemory memory = pinned(512 * MB, 38 * MB, lease);
+            check(memory.claim(100 * MB, 512 * MB, 38 * MB), "claimed");
+            check(SourceAudio.analysisAvailable(512 * MB, 38 * MB) == 118 * MB, "promised");
+            AutoCloseable upgrade = PlaybackPriority.upgrade("song");
+            check(memory.cancelled(), "told to stop");
+            check(memory.available(512 * MB, 38 * MB) == 0, "and offered nothing");
+            // The grant stays charged until the owner returns: the memory is still in use.
+            check(SourceAudio.analysisAvailable(512 * MB, 38 * MB) == 118 * MB, "still held");
+            memory.close();
+            memory.close();
+            check(lease.closed == 1, "lease released once");
+            check(SourceAudio.analysisAvailable(512 * MB, 38 * MB) == 218 * MB, "grant returned");
+            try {
+                upgrade.close();
+            } catch (Exception impossible) {
+                throw new AssertionError(impossible);
+            }
+        } finally {
+            SourceAudio.physicalAvailable = () -> -1;
+        }
+    }
+
+    /** System memory is a diagnostic: neither low nor unreadable values change what heap allows. */
+    static void systemMemoryDoesNotChangeHeapAdmission() {
+        reset();
+        try (SourceAudio.DspMemory memory = pinned(512 * MB, 38 * MB, new Lease())) {
+            long[] free = {2048 * MB, 100 * MB, 0, -1};
+            for (long value : free) {
+                SourceAudio.physicalAvailable = () -> value;
+                check(memory.available(512 * MB, 38 * MB) == 338 * MB, "free " + value / MB);
+                check(memory.claim(338 * MB, 512 * MB, 38 * MB), "claim at free " + value / MB);
+            }
+            SourceAudio.physicalAvailable =
+                    () -> {
+                        throw new IllegalStateException("unreadable");
+                    };
+            check(memory.available(512 * MB, 38 * MB) == 338 * MB, "a failing reader is unknown");
+        } finally {
+            SourceAudio.physicalAvailable = () -> -1;
+        }
+    }
+
+    static void releaseWakesBoundedDistinctListenersOnce() throws Exception {
+        reset();
+        Runnable[] added = new Runnable[6];
+        int[] calls = new int[6];
+        try {
+            for (int i = 0; i < 6; i++) {
+                int n = i;
+                added[i] = () -> calls[n]++;
+                SourceAudio.onMemoryAvailable(added[i]);
+            }
+            SourceAudio.onMemoryAvailable(added[0]);
+            SourceAudio.onMemoryAvailable(null);
+            SourceAudio.JavaMemory grant = SourceAudio.reserveJava(BIG, 38 * MB, 8 * MB);
+            check(calls[0] + calls[1] + calls[2] + calls[3] == 0, "nothing before release");
+            grant.close();
+            grant.close();
+            for (int i = 0; i < 4; i++) check(calls[i] == 1, "listener " + i + ": " + calls[i]);
+            check(calls[4] == 0 && calls[5] == 0, "no more than four");
+            // A lease and its grant wake once between them.
+            SourceAudio.DspMemory memory = pinned(BIG, 38 * MB, new Lease());
+            check(memory.claim(8 * MB, BIG, 38 * MB), "claimed");
+            memory.close();
+            memory.close();
+            check(calls[0] == 2, "one wakeup for a lease: " + calls[0]);
+            // A claim that never took memory is still a release of its lease.
+            pinned(BIG, 38 * MB, new Lease()).close();
+            check(calls[0] == 3, "idle lease: " + calls[0]);
+            SourceAudio.removeMemoryListener(added[0]);
+            SourceAudio.reserveJava(BIG, 38 * MB, 8 * MB).close();
+            check(calls[0] == 3 && calls[1] == 4, "removed listener stays quiet");
+            // A failing listener cannot stop the others.
+            SourceAudio.removeMemoryListener(added[1]);
+            Runnable failing =
+                    () -> {
+                        throw new IllegalStateException("listener");
+                    };
+            SourceAudio.onMemoryAvailable(failing);
+            SourceAudio.reserveJava(BIG, 38 * MB, 8 * MB).close();
+            check(calls[2] == 5 && calls[3] == 5, "others still woken " + calls[2]);
+        } finally {
+            for (Runnable listener : added) SourceAudio.removeMemoryListener(listener);
+            SourceAudio.removeMemoryListener(null);
+        }
+    }
+
+    /** The wakeup runs after the memory is back and while no accounting lock is held. */
+    static void wakeupRunsOutsideTheLedgerLock() throws Exception {
+        reset();
+        long before = SourceAudio.analysisAvailable(BIG, 38 * MB);
+        boolean[] seen = new boolean[3];
+        java.util.concurrent.atomic.AtomicBoolean entered =
+                new java.util.concurrent.atomic.AtomicBoolean();
+        Runnable listener =
+                () -> {
+                    // The probe below releases memory too; only the first wakeup is examined.
+                    if (!entered.compareAndSet(false, true)) return;
+                    seen[0] = SourceAudio.analysisAvailable(BIG, 38 * MB) == before;
+                    // Another thread needs the ledger lock; it cannot get it if this thread holds
+                    // it.
+                    Thread other =
+                            new Thread(
+                                    () -> {
+                                        SourceAudio.JavaMemory probe =
+                                                SourceAudio.reserveJava(BIG, 38 * MB, 1 * MB);
+                                        seen[1] = probe != null;
+                                        if (probe != null) probe.close();
+                                    });
+                    other.start();
+                    try {
+                        other.join(2_000);
+                    } catch (InterruptedException interrupted) {
+                        Thread.currentThread().interrupt();
+                    }
+                    seen[2] = !other.isAlive();
+                };
+        SourceAudio.onMemoryAvailable(listener);
+        try {
+            SourceAudio.JavaMemory grant = SourceAudio.reserveJava(BIG, 38 * MB, 16 * MB);
+            grant.close();
+        } finally {
+            SourceAudio.removeMemoryListener(listener);
+        }
+        check(seen[0], "memory already returned");
+        check(
+                seen[1] && seen[2],
+                "ledger usable from another thread during the callback "
+                        + java.util.Arrays.toString(seen));
     }
 
     static void openGrantsAreBounded() {
@@ -97,18 +337,18 @@ public final class SourceAudioPriorityTest {
 
     static void grantsAreReleasedOnEveryExit() {
         reset();
-        long before = SourceAudio.analysisAvailable(MAX, 38 * MB);
-        SourceAudio.JavaMemory grant = SourceAudio.reserveJava(MAX, 38 * MB, 8 * MB);
+        long before = SourceAudio.analysisAvailable(BIG, 38 * MB);
+        SourceAudio.JavaMemory grant = SourceAudio.reserveJava(BIG, 38 * MB, 8 * MB);
         grant.close();
         grant.close();
-        check(SourceAudio.analysisAvailable(MAX, 38 * MB) == before, "double close");
-        try (SourceAudio.JavaMemory failed = SourceAudio.reserveJava(MAX, 38 * MB, MAX)) {
+        check(SourceAudio.analysisAvailable(BIG, 38 * MB) == before, "double close");
+        try (SourceAudio.JavaMemory failed = SourceAudio.reserveJava(BIG, 38 * MB, BIG)) {
             check(failed == null, "refused when it cannot fit");
         }
-        try (SourceAudio.JavaMemory thrown = SourceAudio.reserveJava(MAX, 38 * MB, 8 * MB)) {
+        try (SourceAudio.JavaMemory thrown = SourceAudio.reserveJava(BIG, 38 * MB, 8 * MB)) {
             throw new IllegalStateException("analysis failed");
         } catch (IllegalStateException expected) {
-            check(SourceAudio.analysisAvailable(MAX, 38 * MB) == before, "released on throw");
+            check(SourceAudio.analysisAvailable(BIG, 38 * MB) == before, "released on throw");
         }
     }
 
@@ -371,6 +611,13 @@ public final class SourceAudioPriorityTest {
         unrelatedHeapGrowthDoesNotReleaseAGrant();
         materializationIsCountedOnce();
         dspCreditsOnlyWhatItReports();
+        headroomScalesWithTheHeapAndTheCeiling();
+        concurrentClaimsShareTheHeadroom();
+        claimsStopAtTheBoundary();
+        cancellationReleasesThePinnedGrant();
+        systemMemoryDoesNotChangeHeapAdmission();
+        releaseWakesBoundedDistinctListenersOnce();
+        wakeupRunsOutsideTheLedgerLock();
         openGrantsAreBounded();
         grantsAreReleasedOnEveryExit();
         growthReserveStaysConservativeWithoutAGate();
@@ -384,6 +631,6 @@ public final class SourceAudioPriorityTest {
         urgencyFollowsThePlayersState();
         diagnosticsIncludeProcessMemory();
         PlaybackPriority.reset();
-        System.out.println("SourceAudioPriorityTest: 15 passed");
+        System.out.println("SourceAudioPriorityTest: 22 passed");
     }
 }

@@ -546,6 +546,15 @@ final class SourcePreparationHost implements SourcePreparation.Host {
     }
 
     @Override
+    public long retryAfterMillis(Uri marked, Object stream) {
+        try {
+            return SourcePreference.retryAfterMillis(new DataSpec(marked), spec(stream));
+        } catch (Exception unavailable) {
+            return 0;
+        }
+    }
+
+    @Override
     public boolean rejected(Uri marked, Object stream) {
         try {
             return SourcePreference.rejectedPrepared(new DataSpec(marked), spec(stream));

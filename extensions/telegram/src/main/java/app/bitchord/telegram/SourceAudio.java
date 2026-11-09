@@ -64,11 +64,9 @@ public final class SourceAudio extends MediaDataSource {
                         public void close() {}
                     };
 
-    /** Playback buffers may grow after analysis starts, so their share stays reserved. */
+    // Without an enforced ceiling, reserve the canvas and both players' possible buffer growth.
     static long analysisAvailable(long maximum, long used) {
-        if (maximum <= 0 || used < 0 || used >= maximum) return 0;
-        long available = maximum - used - pendingJava(null);
-        return Math.max(0, available - maximum / 2);
+        return dspAvailable(maximum, used, -1, null, 0);
     }
 
     /**
@@ -112,12 +110,50 @@ public final class SourceAudio extends MediaDataSource {
 
         @Override
         public void close() {
+            if (release()) memoryReleased();
+        }
+
+        /** Returns the grant without waking listeners; true only the first time. */
+        boolean release() {
             synchronized (JavaMemory.class) {
-                if (closed) return;
+                if (closed) return false;
                 closed = true;
                 open.remove(this);
+                return true;
             }
         }
+    }
+
+    private static final int MAX_LISTENERS = 4;
+    private static final List<Runnable> listeners = new java.util.ArrayList<>();
+
+    /** Signals outside accounting locks; listeners must only schedule work, never block. */
+    static void onMemoryAvailable(Runnable listener) {
+        if (listener == null) return;
+        synchronized (listeners) {
+            if (listeners.contains(listener)) return;
+            if (listeners.size() < MAX_LISTENERS) listeners.add(listener);
+            else HostLog.d("Memory wakeup listener limit reached");
+        }
+    }
+
+    static void removeMemoryListener(Runnable listener) {
+        synchronized (listeners) {
+            listeners.remove(listener);
+        }
+    }
+
+    private static void memoryReleased() {
+        Runnable[] snapshot;
+        synchronized (listeners) {
+            snapshot = listeners.toArray(new Runnable[0]);
+        }
+        for (Runnable listener : snapshot)
+            try {
+                listener.run();
+            } catch (RuntimeException | LinkageError failed) {
+                HostLog.d("Memory wakeup listener failed");
+            }
     }
 
     /** Bytes promised by open grants (other than {@code own}) and not yet reported allocated. */
@@ -210,11 +246,16 @@ public final class SourceAudio extends MediaDataSource {
     }
 
     private static long dspAvailable(long maximum, long used, long growth, JavaMemory own) {
+        return dspAvailable(maximum, used, growth, own, DSP_MARGIN);
+    }
+
+    private static long dspAvailable(
+            long maximum, long used, long growth, JavaMemory own, long margin) {
         if (maximum <= 0 || used < 0 || used >= maximum) return 0;
         if (growth < 0) growth = Math.max(maximum / 2, STOCK_PLAYER_RESERVE);
         long free = maximum - used - pendingJava(own);
         if (growth >= free) return 0;
-        return Math.max(0, free - growth - DSP_MARGIN);
+        return Math.max(0, free - growth - margin);
     }
 
     static long dspAvailable(long maximum, long used) {
@@ -369,17 +410,32 @@ public final class SourceAudio extends MediaDataSource {
         }
 
         @Override
-        public synchronized void close() {
-            if (closed) return;
-            closed = true;
-            if (allocation != null) allocation.close();
+        public void close() {
+            JavaMemory grant;
+            synchronized (this) {
+                if (closed) return;
+                closed = true;
+                grant = allocation;
+            }
+            if (grant != null) grant.release();
             if (lease != null)
                 try {
                     lease.close();
                 } catch (Exception | LinkageError unavailable) {
                     HostLog.d("AutoMix memory allowance could not be released");
                 }
+            memoryReleased();
         }
+    }
+
+    /** A lease whose pinned ceiling and cancellation the caller supplies. */
+    static DspMemory dspMemory(
+            long maximum,
+            long used,
+            AutoCloseable lease,
+            LongSupplier growth,
+            BooleanSupplier stopped) {
+        return new DspMemory(maximum, used, lease, growth, stopped);
     }
 
     static DspMemory dspMemory(long maximum, long used) {
@@ -1323,9 +1379,25 @@ public final class SourceAudio extends MediaDataSource {
      * The container's length in seconds, or null when it is unknown or only guessed from the
      * bitrate. Reads through the decoder library on the calling thread.
      */
+    private static final ThreadLocal<String> durationProbe = new ThreadLocal<>();
+
+    static String takeDurationProbe() {
+        String value = durationProbe.get();
+        durationProbe.remove();
+        return value == null ? "UNKNOWN" : value;
+    }
+
     public static Double containerDurationSeconds(MediaDataSource source) {
+        durationProbe.set("UNKNOWN");
         try {
             Info info = probe(source);
+            if (info != null)
+                durationProbe.set(
+                        !info.qualified
+                                ? "UNQUALIFIED"
+                                : info.method == Info.FROM_PTS
+                                        ? "PTS"
+                                        : info.method == Info.FROM_STREAM ? "STREAM" : "ESTIMATED");
             return info != null && info.exactDuration() ? info.us / 1_000_000d : null;
         } catch (IOException | RuntimeException | LinkageError unreadable) {
             return null;

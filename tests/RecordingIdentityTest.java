@@ -112,6 +112,82 @@ public final class RecordingIdentityTest {
                 measurements.contains("offset span 160 ms")
                         && measurements.contains("duration-normalized span 38 ms"),
                 "Comparison logs distinguish raw drift from duration-explained drift");
+
+        // Padding moves every window by the same amount and changes the total length.
+        RecordingIdentity.Window[] padded = {
+            window(song, 0, 2), window(song, 13, 15), window(song, 26, 28)
+        };
+        check(
+                RecordingIdentity.match(a, padded, 40, 42) == null,
+                "A swap still refuses a 2 s length difference");
+        check(
+                RecordingIdentity.matchesPrepared(a, padded, 40, 42),
+                "Preparation accepts constant padding");
+        check(
+                RecordingIdentity.matchesPrepared(padded, a, 42, 40),
+                "Padding is accepted in either direction");
+        check(
+                RecordingIdentity.matchesPrepared(a, padded, 40, 40.75 + 0.0001),
+                "Just past the strict length limit uses the padding path");
+        check(
+                RecordingIdentity.matchesPrepared(a, padded, 40, 43)
+                        && RecordingIdentity.matchesPrepared(a, padded, 43, 40),
+                "Preparation accepts exactly 3 s of length difference");
+        check(
+                !RecordingIdentity.matchesPrepared(a, padded, 40, 43.001)
+                        && !RecordingIdentity.matchesPrepared(a, padded, 43.001, 40),
+                "Preparation refuses more than 3 s of length difference");
+        RecordingIdentity.Window[] far = {
+            window(song, 0, 3.001), window(song, 13, 16.001), window(song, 26, 29.001)
+        };
+        check(
+                !RecordingIdentity.matchesPrepared(a, far, 40, 42)
+                        && RecordingIdentity.matchesPrepared(
+                                a,
+                                new RecordingIdentity.Window[] {
+                                    window(song, 0, 3), window(song, 13, 16), window(song, 26, 29)
+                                },
+                                40,
+                                42),
+                "The constant offset is bounded at 3 s");
+        RecordingIdentity.Window[] paddedDrift = {padded[0], window(song, 13, 15.081), padded[2]};
+        check(
+                !RecordingIdentity.matchesPrepared(a, paddedDrift, 40, 42)
+                        && RecordingIdentity.matchesPrepared(
+                                a,
+                                new RecordingIdentity.Window[] {
+                                    padded[0], window(song, 13, 15.079), padded[2]
+                                },
+                                40,
+                                42),
+                "Padded windows still share one timeline within 80 ms");
+        check(
+                !RecordingIdentity.matchesPrepared(
+                        a,
+                        new RecordingIdentity.Window[] {
+                            padded[0], window(other, 13, 15), padded[2]
+                        },
+                        40,
+                        42),
+                "Padding cannot hide a different middle");
+        check(
+                !RecordingIdentity.matchesPrepared(
+                        a,
+                        new RecordingIdentity.Window[] {
+                            window(other, 0, 2), window(other, 13, 15), window(other, 26, 28)
+                        },
+                        40,
+                        42),
+                "Padding cannot turn another recording into this one");
+        RecordingIdentity.Window[] slowed = {
+            window(song, 0, 0), window(song, 13, 13.3), window(song, 26, 26.6)
+        };
+        check(
+                !RecordingIdentity.matchesPrepared(a, slowed, 40, 42),
+                "Beyond 0.75 s a rate difference is not explained away");
+        check(
+                RecordingIdentity.match(spaced, clock, 213.941, 214.073791) == null,
+                "The padding path never changes the strict swap's decision");
         System.out.println("PASS: " + checks + " multi-window recording identity checks");
     }
 }

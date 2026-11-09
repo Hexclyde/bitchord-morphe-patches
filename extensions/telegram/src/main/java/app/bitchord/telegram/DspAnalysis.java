@@ -111,21 +111,156 @@ final class DspAnalysis {
             LongSupplier available,
             LongConsumer allocated)
             throws IOException {
+        return analyze(id, directory, open, rate, seconds, stopped, available, allocated, null);
+    }
+
+    /** Longest a decoded track is kept for a retry after a memory wait. */
+    static final long KEEP_NANOS = 600_000_000_000L;
+
+    /** Most decoded tracks kept at once; the oldest is deleted first. */
+    static final int KEEP_MAX = 2;
+
+    static LongSupplier clock = System::nanoTime;
+
+    /** A finished decode waiting for memory; trusted only while the file is exactly as left. */
+    private static final class Kept {
+        final File file;
+        final long frames, length, modified, expires;
+
+        Kept(File file, long frames, long expires) {
+            this.file = file;
+            this.frames = frames;
+            this.length = file.length();
+            this.modified = file.lastModified();
+            this.expires = expires;
+        }
+
+        boolean intact(long now) {
+            return now - expires < 0
+                    && file.isFile()
+                    && file.length() == length
+                    && file.lastModified() == modified
+                    && length == frames * 4;
+        }
+    }
+
+    // Insertion order is age: the eldest is evicted first.
+    private static final java.util.LinkedHashMap<String, Kept> kept =
+            new java.util.LinkedHashMap<>();
+
+    private static String slot(String keep, int rate, double seconds) {
+        return keep + "|" + rate + "|" + seconds;
+    }
+
+    /** Drops what was kept for a recording that was cancelled, replaced or finished. */
+    static void discard(String key) {
+        if (key == null) return;
+        synchronized (kept) {
+            java.util.Iterator<java.util.Map.Entry<String, Kept>> each = kept.entrySet().iterator();
+            while (each.hasNext()) {
+                java.util.Map.Entry<String, Kept> entry = each.next();
+                if (!entry.getKey().startsWith(key + "|")) continue;
+                entry.getValue().file.delete();
+                each.remove();
+            }
+        }
+    }
+
+    /** Drops every kept decode, as when the service ends. */
+    static void discardAll() {
+        synchronized (kept) {
+            for (Kept entry : kept.values()) entry.file.delete();
+            kept.clear();
+        }
+    }
+
+    /** Takes the kept decode for a retry, or null; an expired or altered file is deleted. */
+    private static Kept take(String slot) {
+        long now = clock.getAsLong();
+        synchronized (kept) {
+            java.util.Iterator<Kept> each = kept.values().iterator();
+            while (each.hasNext()) {
+                Kept entry = each.next();
+                if (entry.intact(now)) continue;
+                entry.file.delete();
+                each.remove();
+            }
+            return slot == null ? null : kept.remove(slot);
+        }
+    }
+
+    private static void keep(String slot, Kept entry) {
+        synchronized (kept) {
+            Kept old = kept.put(slot, entry);
+            if (old != null && !old.file.equals(entry.file)) old.file.delete();
+            while (kept.size() > KEEP_MAX) {
+                java.util.Iterator<Kept> eldest = kept.values().iterator();
+                eldest.next().file.delete();
+                eldest.remove();
+            }
+        }
+    }
+
+    /** Scratch left by an earlier run that was killed; a live worker's file keeps a fresh time. */
+    private static void sweep(File directory) {
+        File[] files = directory.listFiles();
+        if (files == null) return;
+        long old = System.currentTimeMillis() - KEEP_NANOS / 1_000_000L;
+        synchronized (kept) {
+            for (File file : files) {
+                String name = file.getName();
+                if (!name.startsWith("automix-dsp-") || !name.endsWith(".pcm")) continue;
+                if (file.lastModified() >= old) continue;
+                boolean tracked = false;
+                for (Kept entry : kept.values()) tracked |= entry.file.equals(file);
+                if (!tracked) file.delete();
+            }
+        }
+    }
+
+    /**
+     * {@code keep} names the recording: when the measurement memory is short after a complete
+     * decode, the decoded PCM is kept briefly so the retry measures it without decoding again.
+     */
+    static Object analyze(
+            String id,
+            File directory,
+            Supplier<MediaDataSource> open,
+            int rate,
+            double seconds,
+            BooleanSupplier stopped,
+            LongSupplier available,
+            LongConsumer allocated,
+            String keep)
+            throws IOException {
         long required = bytes(rate, seconds);
         check(stopped);
         if (required < 0) return null;
+        sweep(directory);
+        String slot = keep == null ? null : slot(keep, rate, seconds);
+        Kept reuse = take(slot);
         long availableBytes = available.getAsLong();
-        if (required > availableBytes) throw new Deferred(required, availableBytes, false);
-        File scratch = File.createTempFile("automix-dsp-", ".pcm", directory);
+        if (reuse == null && required > availableBytes)
+            throw new Deferred(required, availableBytes, false);
+        File scratch =
+                reuse != null ? reuse.file : File.createTempFile("automix-dsp-", ".pcm", directory);
+        boolean retained = false;
         try {
-            long frames = decode(scratch, open, rate, seconds, stopped);
+            long frames =
+                    reuse != null ? reuse.frames : decode(scratch, open, rate, seconds, stopped);
             check(stopped);
             if (frames <= 0 || Math.abs(frames / (double) RATE - seconds) > .75)
                 throw new IOException("The whole selected audio was not decoded");
             // The source is closed and the resampler dropped: only the measured PCM remains.
             long measured = measurement(frames);
             availableBytes = available.getAsLong();
-            if (measured > availableBytes) throw new Deferred(measured, availableBytes, true);
+            if (measured > availableBytes) {
+                if (slot != null && !stopped.getAsBoolean()) {
+                    keep(slot, new Kept(scratch, frames, clock.getAsLong() + KEEP_NANOS));
+                    retained = true;
+                }
+                throw new Deferred(measured, availableBytes, true);
+            }
             check(stopped);
             float[] mono = read(scratch, (int) frames, stopped, allocated);
             check(stopped);
@@ -136,7 +271,7 @@ final class DspAnalysis {
                     ? null
                     : PlaybackService.bitchordDspResult(features, id, measuredSeconds);
         } finally {
-            scratch.delete();
+            if (!retained) scratch.delete();
         }
     }
 

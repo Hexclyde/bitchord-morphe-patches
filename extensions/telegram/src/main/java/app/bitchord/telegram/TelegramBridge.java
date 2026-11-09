@@ -1319,6 +1319,15 @@ public final class TelegramBridge {
 
     /** As above; a background search gives way to BitChord's own lookups. */
     public List<JSONObject> searchTracks(String query, boolean background) throws Exception {
+        return searchTracks(query, background, false);
+    }
+
+    public List<JSONObject> searchCandidates(String query) throws Exception {
+        return searchTracks(query, false, true);
+    }
+
+    private List<JSONObject> searchTracks(String query, boolean background, boolean preserveCopies)
+            throws Exception {
         requireReady();
         long session = generation;
         LiveSearch.Result found = search(query, session, background);
@@ -1339,7 +1348,8 @@ public final class TelegramBridge {
                             });
         if (session != generation) throw new IOException("Telegram session changed. Search again.");
         if (hideUnplayable) rows = DolbySupport.playable(rows, formats::get);
-        if (hideDuplicates) rows = Duplicates.best(rows, formats::get);
+        if (preserveCopies) rows = Duplicates.candidates(rows, formats::get);
+        else if (hideDuplicates) rows = Duplicates.best(rows, formats::get);
         error = found.warning;
         status =
                 Strings.f(rows.size() == 1 ? "Found {0} track." : "Found {0} tracks.", rows.size());
@@ -2226,9 +2236,8 @@ public final class TelegramBridge {
         }
         requireReady();
         if (session != generation) throw new IOException("Telegram session changed. Try again.");
-        return row == null || !index.current(row)
-                ? null
-                : index.withFound(row).put("_indexCatalogueEpoch", revision);
+        if (row == null || !index.current(row)) return null;
+        return index.withFound(row).put("_indexCatalogueEpoch", revision);
     }
 
     /** A message the player may read: from an allowed chat, and allowed to be saved. */

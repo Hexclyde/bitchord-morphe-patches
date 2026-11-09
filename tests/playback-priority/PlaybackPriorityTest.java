@@ -184,6 +184,140 @@ public final class PlaybackPriorityTest {
         check(PlaybackPriority.backgroundAllowed(), "indexing resumes when decoder releases");
     }
 
+    static void previewOutranksSpeculativeWorkButNotPlayback() throws Exception {
+        reset();
+        int[] preempted = {0};
+        Runnable hook = () -> preempted[0]++;
+        PlaybackPriority.onPreempt(hook);
+        AutoCloseable preview = PlaybackPriority.preview("pair");
+        check(preempted[0] >= 1, "starting a preview preempts running background readers");
+        check(PlaybackPriority.previewActive(), "preview held");
+        check(
+                !PlaybackPriority.preparationAllowed(),
+                "interactive preview holds off speculative preparation");
+        check(PlaybackPriority.verificationAllowed(), "its verification keeps running");
+        check(!PlaybackPriority.analysisAllowed(), "analysis yields to preview");
+        check(!PlaybackPriority.backgroundAllowed(), "indexing yields to preview");
+        check(!PlaybackPriority.upgradeActive(), "a preview is not a quality upgrade");
+        check(PlaybackPriority.verificationAllowed(), "preview never blocks current-song checks");
+        AutoCloseable upgrade = PlaybackPriority.upgrade("current");
+        check(PlaybackPriority.upgradeActive(), "an upgrade still registers beside a preview");
+        upgrade.close();
+        preview.close();
+        check(!PlaybackPriority.previewActive(), "closed");
+        check(!PlaybackPriority.analysisAllowed(), "analysis settles after the preview");
+        now.addAndGet(PlaybackPriority.SETTLE_NANOS);
+        check(
+                PlaybackPriority.analysisAllowed() && PlaybackPriority.backgroundAllowed(),
+                "resumes");
+        preview.close();
+        check(PlaybackPriority.analysisAllowed(), "closing twice starts no second grace");
+        AutoCloseable lost = PlaybackPriority.preview("lost");
+        now.addAndGet(PlaybackPriority.UPGRADE_TTL_NANOS);
+        check(!PlaybackPriority.previewActive(), "a preview nobody closed still expires");
+        lost.close();
+    }
+
+    static void renewedPreparationDoesNotStarveCurrentAnalysis() throws Exception {
+        reset();
+        long waited = 0;
+        int step = 0;
+        while (waited < PlaybackPriority.STARVATION_NANOS) {
+            AutoCloseable prep = PlaybackPriority.nextPreparation("next" + step++ % 3);
+            check(
+                    !PlaybackPriority.analysisAllowed("current", true),
+                    "denied while next-song leases keep renewing, after " + waited / S + " s");
+            now.addAndGet(2 * S);
+            waited += 2 * S;
+            prep.close();
+            // Shorter than the settle grace: the leases are back to back.
+            now.addAndGet(100 * MS);
+            waited += 100 * MS;
+        }
+        AutoCloseable renewed = PlaybackPriority.nextPreparation("next-again");
+        check(PlaybackPriority.analysisAllowed("current", true), "let through after the bound");
+        check(PlaybackPriority.analysisAllowed(), "the decoder's own check agrees");
+        check(!PlaybackPriority.preparationAllowed(), "speculative preparation steps aside");
+        PlaybackPriority.analysisFinished("current");
+        check(!PlaybackPriority.analysisAllowed(), "the grant ends with the analysis");
+        renewed.close();
+        now.addAndGet(PlaybackPriority.SETTLE_NANOS);
+        check(PlaybackPriority.preparationAllowed(), "next-song preparation resumes");
+    }
+
+    static void starvedAnalysisStillYieldsToPlaybackAndIsBounded() throws Exception {
+        reset();
+        AutoCloseable upgrade = PlaybackPriority.upgrade("current");
+        check(!PlaybackPriority.analysisAllowed("a", true), "starts waiting");
+        now.addAndGet(5 * PlaybackPriority.STARVATION_NANOS);
+        check(!PlaybackPriority.analysisAllowed("a", true), "an upgrade is never overridden");
+        upgrade.close();
+        now.addAndGet(PlaybackPriority.SETTLE_NANOS);
+        AutoCloseable prep = PlaybackPriority.nextPreparation("n");
+        check(PlaybackPriority.analysisAllowed("a", true), "waited long enough");
+        PlaybackPriority.playbackUrgent(2000);
+        check(!PlaybackPriority.analysisAllowed("a", true), "an urgent window still wins");
+        now.addAndGet(2000 * MS + PlaybackPriority.SETTLE_NANOS);
+        check(PlaybackPriority.analysisAllowed("a", true), "and then it continues");
+        now.addAndGet(PlaybackPriority.ESSENTIAL_RUN_NANOS);
+        check(!PlaybackPriority.analysisAllowed("a", true), "the let-through is bounded");
+        check(!PlaybackPriority.analysisAllowed(), "and so is the decoder's view");
+        check(!PlaybackPriority.analysisAllowed("speculative", false), "speculation never starts");
+        now.addAndGet(100 * PlaybackPriority.STARVATION_NANOS);
+        AutoCloseable again = PlaybackPriority.nextPreparation("n2");
+        check(!PlaybackPriority.analysisAllowed("speculative", false), "or gets promoted");
+        again.close();
+        prep.close();
+    }
+
+    static void renewingOneIdentityKeepsOneLeaseAndIsBounded() throws Exception {
+        reset();
+        AutoCloseable other = PlaybackPriority.upgrade("other");
+        for (int i = 0; i < 3 * PlaybackPriority.MAX_LEASES; i++) PlaybackPriority.upgrade("song");
+        check(
+                PlaybackPriority.leaseCount() == 2,
+                "renewal replaces: " + PlaybackPriority.leaseCount());
+        other.close();
+        AutoCloseable last = PlaybackPriority.upgrade("song");
+        last.close();
+        check(!PlaybackPriority.upgradeActive(), "closing the newest lease releases the tier");
+        reset();
+        long freedAt = -1, first = now.get();
+        for (int minute = 0; minute < 20 && freedAt < 0; minute++) {
+            PlaybackPriority.nextPreparation("song");
+            if (PlaybackPriority.analysisAllowed()) freedAt = now.get() - first;
+            now.addAndGet(60 * S);
+        }
+        check(
+                freedAt >= 0 && freedAt <= PlaybackPriority.MAX_HOLD_NANOS + 60 * S,
+                "renewals cannot hold a tier for ever: " + freedAt / S + " s");
+        check(
+                freedAt >= PlaybackPriority.MAX_HOLD_NANOS - 60 * S,
+                "but not cut short: " + freedAt / S);
+    }
+
+    static void everyLeasePathReleases() throws Exception {
+        reset();
+        AutoCloseable[] all = {
+            PlaybackPriority.upgrade("a"),
+            PlaybackPriority.nextPreparation("b"),
+            PlaybackPriority.preview("c"),
+            PlaybackPriority.analysis()
+        };
+        check(PlaybackPriority.leaseCount() == 4, "four held");
+        for (AutoCloseable lease : all) {
+            lease.close();
+            lease.close();
+        }
+        check(PlaybackPriority.leaseCount() == 0, "none leaked");
+        try (AutoCloseable lease = PlaybackPriority.preview("scoped")) {
+            check(PlaybackPriority.leaseCount() == 1, "scoped");
+            throw new IllegalStateException("fails inside");
+        } catch (IllegalStateException expected) {
+        }
+        check(PlaybackPriority.leaseCount() == 0, "released when the holder throws");
+    }
+
     static volatile Boolean result;
 
     static boolean awaitAfter(AtomicBoolean cancel, long millis) throws Exception {
@@ -201,16 +335,75 @@ public final class PlaybackPriorityTest {
     }
 
     public static void main(String[] args) throws Exception {
-        upgradeBlocksUntilClosedAndSettled();
-        overlappingUpgradesAndExpiry();
-        urgentIsBoundedAndMonotonic();
-        nextPreparationOutranksAnalysisAndIndexing();
-        leasesAreCappedAndOldestIsForgotten();
-        preemptionHooksRunOnEveryHigherPriorityStart();
-        awaitBackgroundIsCancellableAndWakes();
-        playbackOutranksVerificationAndPreparation();
-        analysisPausesIndexingButNeverBlocksPreparation();
+        String[] failed = new String[1];
+        int[] count = {0};
+        for (java.util.concurrent.Callable<?> test :
+                java.util.List.<java.util.concurrent.Callable<?>>of(
+                        () -> {
+                            upgradeBlocksUntilClosedAndSettled();
+                            return null;
+                        },
+                        () -> {
+                            overlappingUpgradesAndExpiry();
+                            return null;
+                        },
+                        () -> {
+                            urgentIsBoundedAndMonotonic();
+                            return null;
+                        },
+                        () -> {
+                            nextPreparationOutranksAnalysisAndIndexing();
+                            return null;
+                        },
+                        () -> {
+                            leasesAreCappedAndOldestIsForgotten();
+                            return null;
+                        },
+                        () -> {
+                            preemptionHooksRunOnEveryHigherPriorityStart();
+                            return null;
+                        },
+                        () -> {
+                            awaitBackgroundIsCancellableAndWakes();
+                            return null;
+                        },
+                        () -> {
+                            playbackOutranksVerificationAndPreparation();
+                            return null;
+                        },
+                        () -> {
+                            analysisPausesIndexingButNeverBlocksPreparation();
+                            return null;
+                        },
+                        () -> {
+                            previewOutranksSpeculativeWorkButNotPlayback();
+                            return null;
+                        },
+                        () -> {
+                            renewedPreparationDoesNotStarveCurrentAnalysis();
+                            return null;
+                        },
+                        () -> {
+                            starvedAnalysisStillYieldsToPlaybackAndIsBounded();
+                            return null;
+                        },
+                        () -> {
+                            renewingOneIdentityKeepsOneLeaseAndIsBounded();
+                            return null;
+                        },
+                        () -> {
+                            everyLeasePathReleases();
+                            return null;
+                        }))
+            try {
+                test.call();
+                count[0]++;
+            } catch (Throwable error) {
+                System.out.println("FAILED: " + error.getMessage());
+                failed[0] = error.getMessage();
+            }
         PlaybackPriority.reset();
-        System.out.println("PlaybackPriorityTest: 9 passed");
+        if (failed[0] != null) throw new AssertionError("PlaybackPriorityTest failed");
+        System.out.println("PlaybackPriorityTest: " + count[0] + " passed");
     }
 }

@@ -206,11 +206,7 @@ public final class LiveSearch implements AutoCloseable {
                                             throw new TimeoutException(
                                                     "Telegram search timed out.");
                                         try {
-                                            return gateway.search(
-                                                    new TdApi.SearchChatMessages(
-                                                            chat, null, query, null, 0, 0, 100,
-                                                            filter),
-                                                    left);
+                                            return pages(chat, query, filter, deadline);
                                         } catch (RateLimited e) {
                                             rateLimited(e.retrySeconds);
                                             throw e;
@@ -227,13 +223,15 @@ public final class LiveSearch implements AutoCloseable {
                                     ? job.get()
                                     : job.get(Math.max(0, left), TimeUnit.NANOSECONDS);
                     if (found == null || found.messages == null) continue;
-                    for (int n = 0; n < Math.min(100, found.messages.length); n++) {
+                    if (found.totalCount < 0) problem = new IOException("Search page unavailable");
+                    for (int n = 0; n < Math.min(MAX_RESULTS, found.messages.length); n++) {
                         TdApi.Message message = found.messages[n];
                         if (message == null || message.chatId != jobChats.get(i)) continue;
                         JSONObject row = TrackMetadata.from(message);
                         if (row != null && unique.size() < MAX_RESULTS)
                             unique.put(row.getString("id"), row);
                     }
+                    if (unique.size() >= MAX_RESULTS) break;
                 } catch (ExecutionException e) {
                     problem = cause(e);
                 } catch (TimeoutException e) {
@@ -258,6 +256,46 @@ public final class LiveSearch implements AutoCloseable {
                         : "Some Telegram searches did not finish. Results are partial; try again or"
                                 + " select fewer chats.";
         return new Result(new ArrayList<>(unique.values()), warning);
+    }
+
+    private TdApi.FoundChatMessages pages(
+            long chat, String query, TdApi.SearchMessagesFilter filter, long deadline)
+            throws Exception {
+        List<TdApi.Message> messages = new ArrayList<>();
+        Set<Long> seen = new HashSet<>();
+        long from = 0;
+        for (int page = 0; page < 3 && messages.size() < MAX_RESULTS; page++) {
+            long left = TimeUnit.NANOSECONDS.toMillis(deadline - System.nanoTime());
+            if (left <= 0 || Thread.currentThread().isInterrupted()) {
+                if (!messages.isEmpty())
+                    return new TdApi.FoundChatMessages(
+                            -1, messages.toArray(new TdApi.Message[0]), 0);
+                throw new TimeoutException("Telegram search timed out.");
+            }
+            TdApi.FoundChatMessages found;
+            try {
+                found =
+                        gateway.search(
+                                new TdApi.SearchChatMessages(
+                                        chat, null, query, null, from, 0, 100, filter),
+                                left);
+            } catch (Exception unavailable) {
+                if (unavailable instanceof RateLimited)
+                    rateLimited(((RateLimited) unavailable).retrySeconds);
+                if (messages.isEmpty()) throw unavailable;
+                return new TdApi.FoundChatMessages(-1, messages.toArray(new TdApi.Message[0]), 0);
+            }
+            if (found == null || found.messages == null) break;
+            for (TdApi.Message message : found.messages)
+                if (message != null
+                        && message.chatId == chat
+                        && seen.add(message.id)
+                        && messages.size() < MAX_RESULTS) messages.add(message);
+            if (found.nextFromMessageId == 0 || found.nextFromMessageId == from) break;
+            from = found.nextFromMessageId;
+        }
+        return new TdApi.FoundChatMessages(
+                messages.size(), messages.toArray(new TdApi.Message[0]), 0);
     }
 
     /**

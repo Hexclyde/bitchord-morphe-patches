@@ -4,6 +4,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.*;
 import com.android.tools.smali.dexlib2.iface.reference.*;
 import com.android.tools.smali.dexlib2.immutable.instruction.ImmutableInstruction21t;
 import com.android.tools.smali.dexlib2.immutable.instruction.ImmutableInstruction35c;
+import com.android.tools.smali.dexlib2.immutable.instruction.ImmutableInstruction3rc;
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableMethodReference;
 
 import java.io.File;
@@ -59,6 +60,74 @@ public final class VerifySourceAutomixApk {
             }
         check(found >= 0, "Required bounded analysis call: " + name);
         return found;
+    }
+
+    static final String AUDIO = "Lapp/bitchord/telegram/SourceAudio;",
+            RUNTIME = "Lapp/bitchord/telegram/SourceAutomix;";
+
+    static int leaseCall(List<Instruction> body) {
+        return unique(
+                body,
+                AUDIO,
+                "dspMemory",
+                "Lapp/bitchord/telegram/SourceAudio$DspMemory;",
+                "J",
+                "J");
+    }
+
+    /**
+     * Calls of one contract: exactly one outside the memory lease (the unleased preflight) and
+     * exactly one that cannot be reached without it (the leased model path). Returns {outside,
+     * leased}.
+     */
+    static int[] split(
+            List<Instruction> body,
+            int lease,
+            String owner,
+            String name,
+            String result,
+            String... parameters) {
+        List<Integer> found = new ArrayList<>();
+        for (int i = 0; i < body.size(); i++)
+            if (calls(body.get(i), owner, name, result, parameters)) found.add(i);
+        check(found.size() == 2, "One unleased and one leased call: " + name);
+        int a = found.get(0), b = found.get(1);
+        boolean aLeased = !reaches(body, 0, a, lease), bLeased = !reaches(body, 0, b, lease);
+        check(aLeased != bLeased, "Exactly one " + name + " call requires the memory lease");
+        return aLeased ? new int[] {b, a} : new int[] {a, b};
+    }
+
+    /** The same call with another method name; large methods use the range encoding. */
+    static Instruction renamed(Instruction old, String name) {
+        MethodReference ref = call(old);
+        MethodReference moved =
+                new ImmutableMethodReference(
+                        ref.getDefiningClass(), name, ref.getParameterTypes(), ref.getReturnType());
+        if (old instanceof RegisterRangeInstruction range)
+            return new ImmutableInstruction3rc(
+                    old.getOpcode(), range.getStartRegister(), range.getRegisterCount(), moved);
+        FiveRegisterInstruction five = (FiveRegisterInstruction) old;
+        return new ImmutableInstruction35c(
+                old.getOpcode(),
+                five.getRegisterCount(),
+                five.getRegisterC(),
+                five.getRegisterD(),
+                five.getRegisterE(),
+                five.getRegisterF(),
+                five.getRegisterG(),
+                moved);
+    }
+
+    static int[] limits(List<Instruction> body) {
+        return split(
+                body,
+                leaseCall(body),
+                AUDIO,
+                "analysisLimit",
+                "Ljava/lang/String;",
+                "Landroid/media/MediaDataSource;",
+                "D",
+                "J");
     }
 
     /** Normal control flow must not bypass a preflight stage or accept a rejection. */
@@ -204,15 +273,7 @@ public final class VerifySourceAutomixApk {
     }
 
     static int preflightAvailable(List<Instruction> body) {
-        int limit =
-                unique(
-                        body,
-                        "Lapp/bitchord/telegram/SourceAudio;",
-                        "analysisLimit",
-                        "Ljava/lang/String;",
-                        "Landroid/media/MediaDataSource;",
-                        "D",
-                        "J");
+        int limit = limits(body)[0];
         int found = -1;
         for (int i = 0; i < limit; i++)
             if (calls(
@@ -240,15 +301,8 @@ public final class VerifySourceAutomixApk {
                         "Lkotlin/jvm/functions/Function0;",
                         "Landroid/net/Uri;");
         int available = preflightAvailable(body);
-        int limit =
-                unique(
-                        body,
-                        audio,
-                        "analysisLimit",
-                        "Ljava/lang/String;",
-                        "Landroid/media/MediaDataSource;",
-                        "D",
-                        "J");
+        int[] limitCalls = limits(body);
+        int limit = limitCalls[0], leasedLimit = limitCalls[1];
         int cancelled = unique(body, permit, "check", "V");
         int structural =
                 unique(
@@ -263,7 +317,8 @@ public final class VerifySourceAutomixApk {
                         "D",
                         "Ljava/util/function/BooleanSupplier;",
                         "Ljava/util/function/LongSupplier;",
-                        "Ljava/util/function/LongConsumer;");
+                        "Ljava/util/function/LongConsumer;",
+                        "Ljava/lang/String;");
         int lease =
                 unique(
                         body,
@@ -272,8 +327,15 @@ public final class VerifySourceAutomixApk {
                         "Lapp/bitchord/telegram/SourceAudio$DspMemory;",
                         "J",
                         "J");
-        int models =
-                unique(body, runtime, "useModels", "[Ljava/lang/Object;", "Ljava/lang/Object;");
+        int[] modelCalls =
+                split(
+                        body,
+                        lease,
+                        runtime,
+                        "useModels",
+                        "[Ljava/lang/Object;",
+                        "Ljava/lang/Object;");
+        int models = modelCalls[0], leasedModels = modelCalls[1];
         check(
                 decode < reader
                         && reader < available
@@ -335,6 +397,37 @@ public final class VerifySourceAutomixApk {
         check(
                 limit < lease && lease < structural && !reaches(body, 0, structural, lease),
                 "Bounded structural DSP holds the installed player loading ceiling");
+        // The leased model path may only run after admission, the lease, a passing limit check
+        // against the leased allowance, and a granted claim.
+        String held = "Lapp/bitchord/telegram/SourceAudio$DspMemory;";
+        int claim = -1;
+        for (int i = leasedLimit + 1; i < leasedModels; i++)
+            if (calls(body.get(i), held, "claim", "Z", "J", "J", "J")) claim = i;
+        check(claim >= 0, "The leased model path claims its memory");
+        check(
+                decode < lease
+                        && lease < leasedLimit
+                        && leasedLimit < claim
+                        && claim < leasedModels,
+                "Leased model use follows admission, lease, limit check and claim");
+        for (int stage : new int[] {decode, lease, leasedLimit, claim})
+            check(
+                    !reaches(body, 0, leasedModels, stage),
+                    "Leased model use cannot bypass stage " + stage);
+        check(
+                body.get(leasedLimit + 1).getOpcode() == Opcode.MOVE_RESULT_OBJECT
+                        && body.get(claim + 1).getOpcode() == Opcode.MOVE_RESULT,
+                "Leased limit and claim keep their results");
+        int rejection = ((OneRegisterInstruction) body.get(leasedLimit + 1)).getRegisterA();
+        boolean limitTested = false, claimTested = false;
+        int granted = ((OneRegisterInstruction) body.get(claim + 1)).getRegisterA();
+        for (int i = leasedLimit + 2; i < leasedModels; i++)
+            if (body.get(i) instanceof OneRegisterInstruction test
+                    && (test.getOpcode() == Opcode.IF_EQZ || test.getOpcode() == Opcode.IF_NEZ)) {
+                if (i < claim && test.getRegisterA() == rejection) limitTested = true;
+                if (i > claim && test.getRegisterA() == granted) claimTested = true;
+            }
+        check(limitTested && claimTested, "Leased model use tests its limit and its claim");
         int release = -1, published = -1, closes = 0;
         for (int i = 0; i < body.size(); i++) {
             if (calls(body.get(i), "Lapp/bitchord/telegram/SourceAudio$DspMemory;", "close", "V")) {
@@ -383,35 +476,11 @@ public final class VerifySourceAutomixApk {
             }
             if (name.equals("analysisAvailable")) index = preflightAvailable(body);
             check(index >= 0, "Regression fixture contains " + name);
-            FiveRegisterInstruction invoke = (FiveRegisterInstruction) mutant.get(index);
-            MethodReference ref = call(mutant.get(index));
-            mutant.set(
-                    index,
-                    new ImmutableInstruction35c(
-                            mutant.get(index).getOpcode(),
-                            invoke.getRegisterCount(),
-                            invoke.getRegisterC(),
-                            invoke.getRegisterD(),
-                            invoke.getRegisterE(),
-                            invoke.getRegisterF(),
-                            invoke.getRegisterG(),
-                            new ImmutableMethodReference(
-                                    ref.getDefiningClass(),
-                                    name + "Bypassed",
-                                    ref.getParameterTypes(),
-                                    ref.getReturnType())));
+            mutant.set(index, renamed(mutant.get(index), name + "Bypassed"));
             rejects(mutant, "missing " + name, analysisMethod);
         }
         List<Instruction> mutant = new ArrayList<>(body);
-        int limit =
-                unique(
-                        body,
-                        audio,
-                        "analysisLimit",
-                        "Ljava/lang/String;",
-                        "Landroid/media/MediaDataSource;",
-                        "D",
-                        "J");
+        int limit = limits(body)[0];
         int result = ((OneRegisterInstruction) body.get(limit + 1)).getRegisterA();
         for (int i = limit + 2; i < body.size(); i++)
             if (body.get(i).getOpcode() == Opcode.IF_EQZ
@@ -426,12 +495,13 @@ public final class VerifySourceAutomixApk {
             }
         rejects(mutant, "inverted memory rejection", analysisMethod);
         int models =
-                unique(
+                split(
                         body,
+                        leaseCall(body),
                         "Lapp/bitchord/telegram/SourceAutomix;",
                         "useModels",
                         "[Ljava/lang/Object;",
-                        "Ljava/lang/Object;");
+                        "Ljava/lang/Object;")[0];
         int[] addresses = new int[body.size()];
         for (int i = 1; i < body.size(); i++)
             addresses[i] = addresses[i - 1] + body.get(i - 1).getCodeUnits();
@@ -463,7 +533,8 @@ public final class VerifySourceAutomixApk {
                         "D",
                         "Ljava/util/function/BooleanSupplier;",
                         "Ljava/util/function/LongSupplier;",
-                        "Ljava/util/function/LongConsumer;");
+                        "Ljava/util/function/LongConsumer;",
+                        "Ljava/lang/String;");
         List<Instruction> missingDsp = new ArrayList<>(body);
         RegisterRangeInstruction boundedCall =
                 (RegisterRangeInstruction) missingDsp.get(structural);
@@ -512,23 +583,7 @@ public final class VerifySourceAutomixApk {
                         "J",
                         "J");
         List<Instruction> skippedLease = new ArrayList<>(body);
-        FiveRegisterInstruction leaseCall = (FiveRegisterInstruction) body.get(lease);
-        MethodReference leaseRef = call(body.get(lease));
-        skippedLease.set(
-                lease,
-                new ImmutableInstruction35c(
-                        body.get(lease).getOpcode(),
-                        leaseCall.getRegisterCount(),
-                        leaseCall.getRegisterC(),
-                        leaseCall.getRegisterD(),
-                        leaseCall.getRegisterE(),
-                        leaseCall.getRegisterF(),
-                        leaseCall.getRegisterG(),
-                        new ImmutableMethodReference(
-                                leaseRef.getDefiningClass(),
-                                "dspMemoryBypassed",
-                                leaseRef.getParameterTypes(),
-                                leaseRef.getReturnType())));
+        skippedLease.set(lease, renamed(body.get(lease), "dspMemoryBypassed"));
         rejects(skippedLease, "bounded DSP loading lease removed", analysisMethod);
         List<Instruction> leakedLease = new ArrayList<>(body);
         boolean removedClose = false;
@@ -555,7 +610,23 @@ public final class VerifySourceAutomixApk {
             }
         check(removedClose, "Regression fixture contains normal DSP lease cleanup");
         rejects(leakedLease, "bounded DSP loading lease leaked on publication", analysisMethod);
-        System.out.println("PASS: 11 bounded analysis preflight negative variants rejected");
+        List<Instruction> unclaimed = new ArrayList<>(body);
+        boolean renamed = false;
+        for (int i = 0; i < body.size(); i++)
+            if (calls(
+                    body.get(i),
+                    "Lapp/bitchord/telegram/SourceAudio$DspMemory;",
+                    "claim",
+                    "Z",
+                    "J",
+                    "J",
+                    "J")) {
+                unclaimed.set(i, renamed(body.get(i), "claimBypassed"));
+                renamed = true;
+            }
+        check(renamed, "Regression fixture contains the memory claims");
+        rejects(unclaimed, "leased model path without its memory claim", analysisMethod);
+        System.out.println("PASS: 12 bounded analysis preflight negative variants rejected");
     }
 
     static void rejects(List<Instruction> body, String name, Method analysisMethod) {
@@ -577,6 +648,21 @@ public final class VerifySourceAutomixApk {
         for (Method method : owner.getMethods())
             if (method.getName().equals(name)) found.add(method);
         check(found.size() == 1, "One qualified native bridge: " + name);
+        return found.get(0);
+    }
+
+    /**
+     * The one method with this name and exact parameter types; overloads are separate contracts.
+     */
+    static Method named(ClassDef owner, String name, String... parameters) {
+        List<Method> found = new ArrayList<>();
+        for (Method method : owner.getMethods())
+            if (method.getName().equals(name)
+                    && method.getParameterTypes().stream()
+                            .map(Object::toString)
+                            .collect(java.util.stream.Collectors.toList())
+                            .equals(List.of(parameters))) found.add(method);
+        check(found.size() == 1, "One qualified method: " + name + List.of(parameters));
         return found.get(0);
     }
 
@@ -819,8 +905,19 @@ public final class VerifySourceAutomixApk {
     }
 
     static void dspContracts(Map<String, ClassDef> types, boolean regressions) {
-        Method factory = named(types.get("Lapp/bitchord/telegram/SourceAudio;"), "dspMemory");
+        ClassDef audio = types.get("Lapp/bitchord/telegram/SourceAudio;");
+        // The production factory takes and pins the loading lease; the scoped one only wraps a
+        // caller-owned lease, so the resource-path check belongs to the production signature.
+        Method factory = named(audio, "dspMemory", "J", "J");
         resourcePaths(code(factory), factory, 0, Set.of(), true);
+        named(
+                audio,
+                "dspMemory",
+                "J",
+                "J",
+                "Ljava/lang/AutoCloseable;",
+                "Ljava/util/function/LongSupplier;",
+                "Ljava/util/function/BooleanSupplier;");
         ClassDef host = types.get(HOST);
         Method decode = named(host, "bitchordDspDecode"),
                 mono = named(host, "bitchordDspMono"),

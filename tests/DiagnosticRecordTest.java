@@ -36,6 +36,65 @@ public final class DiagnosticRecordTest {
         check(
                 proof.getString("reason").equals("STOP_PRIORITY"),
                 "Priority distinguished from read failure");
+        JSONObject lengths =
+                new JSONObject(
+                        DiagnosticRecord.safeLine(
+                                'D',
+                                "Recording check stopped at window 2 after 1705 ms, 2 of 6 windows;"
+                                    + " reason=SOURCE_NO_DATA;"
+                                    + " cause=IOException>SocketTimeoutException;"
+                                    + " measuredReferenceMs=253000 measuredCandidateMs=254200"
+                                    + " differenceMs=1200 limitMs=3000 advertisedReferenceMs=253000"
+                                    + " advertisedCandidateMs=253000 probe=HOST_CONTAINER"
+                                    + " failingSide=candidate window=2 fromMs=118500 untilMs=134500"
+                                    + " try=2 secret=PRIVATEKEY"));
+        check(
+                lengths.getLong("differenceMs") == 1200
+                        && lengths.getLong("advertisedCandidateMs") == 253000,
+                "Measured and advertised lengths stay distinct");
+        check(
+                lengths.getString("failingSide").equals("candidate")
+                        && lengths.getLong("fromMs") == 118500
+                        && lengths.getInt("window") == 2,
+                "Failed read position survives export");
+        check(
+                lengths.getString("reason").equals("SOURCE_NO_DATA")
+                        && lengths.getString("probe").equals("HOST_CONTAINER"),
+                "Probe and read cause survive export");
+        check(
+                lengths.getString("causeChain").equals("IOException>SocketTimeoutException"),
+                "Underlying failure classes survive export");
+        check(
+                !lengths.toString().contains("PRIVATEKEY"),
+                "Measurement metadata excludes free text");
+        check(
+                DiagnosticRecord.sanitize(lengths.toString()).equals(lengths.toString()),
+                "Measurement metadata survives archive validation");
+        JSONObject unknownCause =
+                new JSONObject(
+                        DiagnosticRecord.safeLine(
+                                'D',
+                                "Recording check stopped at length after 1 ms, 0 of 6 windows;"
+                                    + " cause=PrivateAccountException; reason=IO_UNCLASSIFIED"));
+        check(
+                unknownCause.getString("causeChain").equals("OTHER")
+                        && !unknownCause.toString().contains("PrivateAccount"),
+                "Unknown exception names do not leak into diagnostics");
+        JSONObject stages =
+                new JSONObject(
+                        DiagnosticRecord.safeLine(
+                                'D',
+                                "AutoMix preview timing: tapMs=4 sessionMs=2 sessionReused=true"
+                                    + " decksMs=20 seekMs=1 prepareMs=4 resolveMs=unavailable"
+                                    + " verifyMs=unavailable ctorMs=29 outReadyMs=100 inReadyMs=120"
+                                    + " outPlayMs=110 inPlayMs=400 stalls=0 stallMs=0"
+                                    + " end=completed"));
+        check(
+                stages.getLong("decksMs") == 20 && stages.getBoolean("sessionReused"),
+                "Preview construction and session reuse are exported");
+        check(
+                stages.getLong("resolveMs") == -1 && stages.getLong("verifyMs") == -1,
+                "Unavailable preview timings never become zero latency");
         JSONObject budget =
                 new JSONObject(
                         DiagnosticRecord.safeLine(
@@ -50,6 +109,23 @@ public final class DiagnosticRecordTest {
                         && budget.getLong("systemFreeMiB") == 8192
                         && budget.getLong("dspAvailableMiB") == 7,
                 "System RAM and app analysis allowance stay separate");
+        JSONObject mapping =
+                new JSONObject(
+                        DiagnosticRecord.safeLine(
+                                'D',
+                                "Telegram file mapping message=0956f5cf-8d08-3db3-895a-9d4e3aa1e76b"
+                                    + " file=72 unique=67d0f73b-1e64-3127-b49b-200e1460a0e3"
+                                    + " advertisedMs=253000 sizeBytes=40000000 token=PRIVATEKEY"));
+        check(
+                mapping.getString("reason").equals("TELEGRAM_FILE_MAPPING")
+                        && mapping.getInt("file_number") == 72
+                        && mapping.getLong("advertised_ms") == 253000,
+                "Mapped file and advertised length survive export");
+        check(
+                mapping.has("message_identity")
+                        && mapping.has("file_identity")
+                        && !mapping.toString().contains("PRIVATEKEY"),
+                "Only bounded mapping identities exported");
         String[] secrets = {
             "person@example.invalid",
             "+15551234567",

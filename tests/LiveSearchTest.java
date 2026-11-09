@@ -110,6 +110,65 @@ public final class LiveSearchTest {
 
     public static void main(String[] args) throws Exception {
         metadataCooldown();
+        try (LiveSearch search =
+                new LiveSearch(
+                        (request, timeout) -> {
+                            if (!(request.filter instanceof TdApi.SearchMessagesFilterAudio))
+                                return found();
+                            if (request.fromMessageId == 0)
+                                return new TdApi.FoundChatMessages(
+                                        2,
+                                        new TdApi.Message[] {
+                                            TestMessages.audio(-10, 200, "Rainbow in the Dark")
+                                        },
+                                        100);
+                            check(
+                                    request.fromMessageId == 100,
+                                    "Search follows Telegram continuation");
+                            return found(TestMessages.audio(-10, 99, "Rainbow in the Dark"));
+                        })) {
+            check(
+                    search.search(chats(-10), "rainbow in the dark", 1).tracks.size() == 2,
+                    "Distinct matching posts on a later page remain candidates");
+        }
+        try (LiveSearch search =
+                new LiveSearch(
+                        (request, timeout) -> {
+                            if (!(request.filter instanceof TdApi.SearchMessagesFilterAudio))
+                                return found();
+                            if (request.fromMessageId == 0)
+                                return new TdApi.FoundChatMessages(
+                                        2,
+                                        new TdApi.Message[] {
+                                            TestMessages.audio(-10, 200, "Rainbow")
+                                        },
+                                        100);
+                            throw new java.io.IOException("Second page unavailable");
+                        })) {
+            LiveSearch.Result partial = search.search(chats(-10), "rainbow", 1);
+            check(
+                    partial.tracks.size() == 1 && !partial.warning.isEmpty(),
+                    "A failed later page preserves earlier candidates and marks partial results");
+        }
+        AtomicInteger paged = new AtomicInteger();
+        try (LiveSearch search =
+                new LiveSearch(
+                        (request, timeout) -> {
+                            if (!(request.filter instanceof TdApi.SearchMessagesFilterAudio))
+                                return found();
+                            paged.incrementAndGet();
+                            return new TdApi.FoundChatMessages(
+                                    1000,
+                                    new TdApi.Message[] {
+                                        TestMessages.audio(
+                                                -10, 900 - request.fromMessageId, "Rainbow")
+                                    },
+                                    request.fromMessageId + 1);
+                        })) {
+            check(
+                    search.search(chats(-10), "rainbow", 1).tracks.size() == 3 && paged.get() == 3,
+                    "Matching pagination is bounded without traversing the whole channel");
+        }
         // The remote fixture models a channel with 223,657 tracks; only the matching old message is
         // returned.
         AtomicInteger calls = new AtomicInteger();

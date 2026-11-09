@@ -660,7 +660,7 @@ public class VerifyApk {
                                 if (cls.getType().equals("Lapp/bitchord/telegram/InternalAddon;")
                                         && target.getDefiningClass()
                                                 .equals("Lapp/bitchord/telegram/TelegramBridge;")
-                                        && target.getName().equals("searchTracks"))
+                                        && target.getName().equals("searchCandidates"))
                                     liveSearchCall = true;
                                 if (cls.getType().equals("Lapp/bitchord/telegram/TelegramActivity;")
                                         && target.getDefiningClass()

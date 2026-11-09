@@ -271,4 +271,95 @@ public class TransitionTempoPreviewTest {
         assertEquals("outgoing-paused", ending());
         assertTrue(line(), line().contains(" source=none code=-1 cause=none "));
     }
+
+    @Test
+    public void anAuditionOutranksBackgroundWorkUntilItEnds() throws Exception {
+        PlaybackPriority.reset();
+        assertFalse(PlaybackPriority.previewActive());
+        TransitionPreview.Audition preview = begin(new TransitionEdit());
+        assertTrue(
+                "The audition owns the priority while it prepares",
+                PlaybackPriority.previewActive());
+        assertFalse(PlaybackPriority.backgroundAllowed());
+        preview.stop();
+        assertFalse(PlaybackPriority.previewActive());
+        assertEquals(0, PlaybackPriority.leaseCount());
+    }
+
+    @Test
+    public void aFailedSetupReleasesThePreviewPriority() throws Exception {
+        PlaybackPriority.reset();
+        TransitionPreview.Factory working = TransitionPreview.factory;
+        TransitionPreview.factory =
+                (owner, side) -> {
+                    if (side == 1) throw new IllegalStateException("failed");
+                    return working.create(owner, side);
+                };
+        try {
+            begin(new TransitionEdit());
+            fail();
+        } catch (IllegalStateException expected) {
+            assertFalse(PlaybackPriority.previewActive());
+            assertEquals(0, PlaybackPriority.leaseCount());
+        } finally {
+            TransitionPreview.factory = working;
+        }
+    }
+
+    @Test
+    public void repeatedAuditionsNeverStackPreviewLeases() throws Exception {
+        PlaybackPriority.reset();
+        for (int i = 0; i < 5; i++) {
+            TransitionPreview.Audition preview = begin(new TransitionEdit());
+            assertEquals(1, PlaybackPriority.leaseCount());
+            preview.stop();
+            assertEquals(0, PlaybackPriority.leaseCount());
+        }
+    }
+
+    @Test
+    public void timingNamesEveryStageAndNeverInventsUnobservableOnes() throws Exception {
+        TransitionPreview.tapped();
+        TransitionPreview.Audition preview = begin(new TransitionEdit());
+        tick();
+        preview.stop();
+        String line = line();
+        assertNotNull(line);
+        for (String field : new String[] {"tapMs", "sessionMs", "decksMs", "seekMs", "prepareMs"})
+            assertTrue(field, timing(field) >= 0);
+        assertTrue(line, line.contains(" sessionReused="));
+        assertTrue(line, line.contains(" resolveMs=unavailable verifyMs=unavailable "));
+    }
+
+    @Test
+    public void auditionWithoutATapReportsNoTapTime() throws Exception {
+        begin(new TransitionEdit()).stop();
+        assertEquals(-1, timing("tapMs"));
+    }
+
+    @Test
+    public void repeatedAuditionsLeaveThePausedMainPlayerAndQueueAlone() throws Exception {
+        TransitionPreview.Session held = TransitionPreview.acquire(TransitionRuntime.pair());
+        long position = held.main.getCurrentPosition();
+        int index = held.main.getCurrentMediaItemIndex(), count = held.main.getMediaItemCount();
+        for (int i = 0; i < 4; i++) {
+            TransitionPreview.Audition preview = held.start(new TransitionEdit(), () -> {});
+            if (i % 2 == 0) tick();
+            // A tap during an audition starts the next one; the earlier decks must be gone.
+            if (i == 2) {
+                TransitionPreview.Audition next = held.start(new TransitionEdit(), () -> {});
+                assertTrue(preview.closed);
+                next.stop();
+                continue;
+            }
+            preview.stop();
+        }
+        assertEquals(position, held.main.getCurrentPosition());
+        assertEquals(index, held.main.getCurrentMediaItemIndex());
+        assertEquals(count, held.main.getMediaItemCount());
+        assertFalse(held.main.getPlayWhenReady());
+        assertTrue(held.unchanged());
+        for (AutoMixTestDeck deck : decks()) assertTrue(deck.closed);
+        assertEquals(0, PlaybackPriority.leaseCount());
+    }
 }

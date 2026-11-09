@@ -98,13 +98,29 @@ final class TransitionPreview {
                 : null;
     }
 
+    // Timing handed to the next audition: the tap, and how the session was obtained.
+    private static long tapAt = -1, acquireMs = -1;
+    private static boolean acquireReused;
+
+    /** Marks the user's tap so the audition can report tap-to-start. */
+    static void tapped() {
+        tapAt = SystemClock.elapsedRealtime();
+    }
+
     static Session acquire(TransitionRuntime.Pair pair) throws Exception {
         if (!AutomixAccess.enabled())
             throw new IllegalStateException("Enable Automix in Playback settings first");
+        long began = SystemClock.elapsedRealtime();
         Session previous = existing(pair);
-        if (previous != null && previous.unchanged()) return previous;
+        acquireReused = previous != null && previous.unchanged();
+        if (acquireReused) {
+            acquireMs = SystemClock.elapsedRealtime() - began;
+            return previous;
+        }
         if (held != null) held.close(false);
-        return new Session(pair);
+        Session fresh = new Session(pair);
+        acquireMs = SystemClock.elapsedRealtime() - began;
+        return fresh;
     }
 
     static void releaseService() {
@@ -659,9 +675,14 @@ final class TransitionPreview {
         private final double begin, end;
         private AudioManager focusManager;
         private AudioFocusRequest focus;
+        // Ranks the audition above speculative preparation and background reads while it lives.
+        private AutoCloseable priority;
         private boolean started, incomingStarted, buffering;
         // Milliseconds since construction began; -1 until observed.
         private final long created = SystemClock.elapsedRealtime();
+        // Tap, session, deck, seek and prepare milliseconds; -1 when not reached.
+        private long tapMs = -1, sessionMs = acquireMs, decksMs = -1, seekMs = -1, prepareMs = -1;
+        private final boolean sessionReused = acquireReused;
         private long constructed = -1, outReady = -1, inReady = -1, outPlay = -1, inPlay = -1;
         private long stallStart, stallMs;
         private int stalls;
@@ -674,10 +695,13 @@ final class TransitionPreview {
 
         Audition(Session session, TransitionEdit edit, Runnable done) throws Exception {
             edit.validate();
+            if (tapAt >= 0) tapMs = SystemClock.elapsedRealtime() - tapAt;
+            tapAt = -1;
             this.session = session;
             draft = edit.copy();
             pair = session.selectedPair();
             this.done = done;
+            priority = PlaybackPriority.preview("transition-preview");
             double length = draft.sourceSpan(0);
             begin = length > HEARD_SECONDS ? .5 - HEARD_SECONDS / 2 / length : 0;
             end = length > HEARD_SECONDS ? .5 + HEARD_SECONDS / 2 / length : 1;
@@ -714,8 +738,11 @@ final class TransitionPreview {
                         || focusManager.requestAudioFocus(focus)
                                 != AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
                     throw new IllegalStateException("Preview audio focus is unavailable");
+                long made = 0, seeks = 0, prepares = 0, mark;
                 for (int side = 0; side < 2; side++) {
+                    mark = SystemClock.elapsedRealtime();
                     Deck deck = decks[side] = factory.create(session.service, side);
+                    made += SystemClock.elapsedRealtime() - mark;
                     Player player = deck.player();
                     player.setAudioAttributes(session.main.getAudioAttributes(), false);
                     TransitionRuntime.pcall(player, "setRepeatMode", new Class<?>[] {int.class}, 0);
@@ -731,6 +758,7 @@ final class TransitionPreview {
                                     rate * (side == 0 ? 1f : (float) draft.overlapRate[1]),
                                     session.parameters.pitch));
                     player.setVolume(side == 0 ? session.volume : 0);
+                    mark = SystemClock.elapsedRealtime();
                     player.seekTo(
                             0,
                             Math.round(
@@ -742,9 +770,15 @@ final class TransitionPreview {
                                                                     * draft.overlapRate[1]
                                                                     / draft.overlapRate[0])
                                             * 1000));
+                    seeks += SystemClock.elapsedRealtime() - mark;
                     deck.effects(draft, side, 0);
+                    mark = SystemClock.elapsedRealtime();
                     player.prepare();
+                    prepares += SystemClock.elapsedRealtime() - mark;
                 }
+                decksMs = made;
+                seekMs = seeks;
+                prepareMs = prepares;
                 constructed = since();
                 handler.post(tick);
             } catch (Exception | LinkageError failure) {
@@ -764,7 +798,20 @@ final class TransitionPreview {
         /** One line of counts and milliseconds, with no track, source or account details. */
         private void report(String end) {
             HostLog.d(
-                    "AutoMix preview timing: ctorMs="
+                    "AutoMix preview timing: tapMs="
+                            + tapMs
+                            + " sessionMs="
+                            + sessionMs
+                            + " sessionReused="
+                            + sessionReused
+                            + " decksMs="
+                            + decksMs
+                            + " seekMs="
+                            + seekMs
+                            + " prepareMs="
+                            + prepareMs
+                            // The host's source resolver and verifier are not observable here.
+                            + " resolveMs=unavailable verifyMs=unavailable ctorMs="
                             + constructed
                             + " outReadyMs="
                             + outReady
@@ -938,6 +985,14 @@ final class TransitionPreview {
         }
 
         private void releaseDecks() {
+            if (priority != null) {
+                try {
+                    priority.close();
+                } catch (Exception ignored) {
+                    /* A lease has nothing left to release. */
+                }
+                priority = null;
+            }
             for (Deck deck : decks)
                 if (deck != null) {
                     try {

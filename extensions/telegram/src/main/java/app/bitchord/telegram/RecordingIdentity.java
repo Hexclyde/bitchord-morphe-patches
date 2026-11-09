@@ -3,6 +3,13 @@ package app.bitchord.telegram;
 /** Recording evidence is separate from advertised codec/quality and never a probability score. */
 final class RecordingIdentity {
     static final double MAX_DURATION_DIFFERENCE = 0.75, MAX_OFFSET_DRIFT = 0.080;
+
+    /**
+     * Whole-track preparation may also accept leading or trailing padding: up to the 3 s the source
+     * search already allows for a contained title, with one constant offset in every window.
+     */
+    static final double MAX_PREPARED_DURATION_DIFFERENCE = 3.0, MAX_PREPARED_OFFSET = 3.0;
+
     static final int MIN_SECONDS = 10;
 
     static final class Window {
@@ -37,6 +44,11 @@ final class RecordingIdentity {
                 || candidateDuration <= 0
                 || Math.abs(referenceDuration - candidateDuration) > MAX_DURATION_DIFFERENCE)
             return null;
+        return aligned(reference, candidate);
+    }
+
+    /** One constant offset across every window, whatever the lengths. */
+    private static Double aligned(Window[] reference, Window[] candidate) {
         double sum = 0, min = Double.POSITIVE_INFINITY, max = Double.NEGATIVE_INFINITY;
         for (int i = 0; i < reference.length; i++) {
             Window a = reference[i], b = candidate[i];
@@ -70,13 +82,18 @@ final class RecordingIdentity {
                 || !Double.isFinite(candidateDuration)
                 || referenceDuration <= 0
                 || candidateDuration <= 0
-                || Math.abs(referenceDuration - candidateDuration) > MAX_DURATION_DIFFERENCE)
-            return false;
+                || Math.abs(referenceDuration - candidateDuration)
+                        > MAX_PREPARED_DURATION_DIFFERENCE) return false;
         for (int i = 0; i < reference.length; i++)
             if (reference[i] == null
                     || candidate[i] == null
                     || !Double.isFinite(reference[i].start)
                     || !Double.isFinite(candidate[i].start)) return false;
+        if (Math.abs(referenceDuration - candidateDuration) > MAX_DURATION_DIFFERENCE) {
+            // Padding moves every window by the same amount; a rate or an edit does not.
+            Double offset = aligned(reference, candidate);
+            return offset != null && Math.abs(offset) <= MAX_PREPARED_OFFSET;
+        }
         if (match(reference, candidate, referenceDuration, candidateDuration) != null) return true;
 
         // The container durations anchor the rate difference; never fit a slope to the excerpts.

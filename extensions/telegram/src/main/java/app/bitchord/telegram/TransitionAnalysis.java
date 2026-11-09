@@ -42,10 +42,13 @@ final class TransitionAnalysis {
                 case "disabled":
                     return Strings.t("Enable Automix in Playback settings first.");
                 case "analyzing":
-                case "queued":
                     return Strings.t("Analyzing selected audio…");
+                case "queued":
+                    return Strings.t("Queued");
+                case "reading":
+                    return Strings.t("Reading audio…");
                 case "waiting":
-                    return Strings.t("Waiting to analyze");
+                    return Strings.t("Waiting for playback");
                 case "failed":
                     return Strings.t("Could not read this track's audio.");
                 case "ready":
@@ -66,11 +69,15 @@ final class TransitionAnalysis {
             if (ready) return Strings.t("Ready");
             switch (phase) {
                 case "analyzing":
+                    return Strings.t("Analyzing…");
                 case "queued":
+                    return Strings.t("Queued");
+                case "reading":
+                    return Strings.t("Reading audio…");
                 case "waiting":
                 case "memory":
                 case "thermal":
-                    return Strings.t("Analyzing…");
+                    return Strings.t("Waiting");
                 default:
                     return Strings.t("Unavailable");
             }

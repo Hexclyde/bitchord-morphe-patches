@@ -4164,6 +4164,7 @@ public final class TransitionEditorActivity extends Activity {
             normalize();
             if (automaticMix == null && autoApply) applyPending = true;
             auditionBefore = automaticMix != null;
+            TransitionPreview.tapped();
             holdSession();
             final int generation = ++previewGeneration;
             audition =

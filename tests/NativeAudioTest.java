@@ -159,6 +159,18 @@ public final class NativeAudioTest {
     }
 
     public static void main(String[] args) throws Exception {
+        org.drinkless.tdlib.TdApi.File mapped = new org.drinkless.tdlib.TdApi.File();
+        mapped.id = 7;
+        mapped.remote = new org.drinkless.tdlib.TdApi.RemoteFile();
+        mapped.remote.uniqueId = "current";
+        JSONObject mapping = new JSONObject().put("file", 7).put("unique", "current");
+        NativeAudio.checkFile(mapping, mapped);
+        mapped.id = 8;
+        denied(() -> NativeAudio.checkFile(mapping, mapped), "wrong mapped file number");
+        mapped.id = 7;
+        mapped.remote.uniqueId = "another";
+        denied(() -> NativeAudio.checkFile(mapping, mapped), "changed stable file identity");
+
         File file = Files.createTempFile("native-telegram-", ".audio").toFile();
         TelegramBridge bridge = new TelegramBridge(file);
         NativeAudio audio = bridge.audio;
@@ -275,6 +287,24 @@ public final class NativeAudioTest {
             }
             try (NativeAudio.Reader reader = audio.open(url, 0, -1)) {
                 content(bytes(reader), 0, bridge.length);
+            }
+            try (NativeAudio.Reader reader = audio.open(url, 0, 128 * 1024)) {
+                int files = bridge.fileRequests, prefixes = bridge.prefixRequests;
+                content(bytes(reader), 0, 128 * 1024);
+                check(
+                        bridge.fileRequests - files <= 1 && bridge.prefixRequests - prefixes <= 1,
+                        "A confirmed cached range needs no TDLib round trip for each small read");
+            }
+            try (NativeAudio.Reader reader = audio.open(url, 0, 16384)) {
+                byte[] head = new byte[8192];
+                check(reader.read(head, 0, head.length) == head.length, "Cached head is readable");
+                content(head, 0, head.length);
+                try (RandomAccessFile truncated = new RandomAccessFile(bridge.file, "rw")) {
+                    truncated.setLength(0);
+                }
+                bridge.available.clear();
+                bridge.limit = 0;
+                content(bytes(reader), 8192, 8192);
             }
             check(bridge.downloads >= 2, "Reads fetch bounded native windows");
             check(!audio.active() && audio.leases.isEmpty(), "Completed readers release leases");

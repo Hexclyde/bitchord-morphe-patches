@@ -351,10 +351,15 @@ public class SourceAudioDecoderTest {
         for (long method : new long[] {SourceAudio.Info.FROM_PTS, SourceAudio.Info.FROM_STREAM}) {
             SyntheticDecoder.durationMethod = method;
             assertEquals(30.0, SourceAudio.containerDurationSeconds(file(30, false)), 0);
+            assertEquals(
+                    method == SourceAudio.Info.FROM_PTS ? "PTS" : "STREAM",
+                    SourceAudio.takeDurationProbe());
+            assertEquals("UNKNOWN", SourceAudio.takeDurationProbe());
         }
         for (long method : new long[] {2, 3, 7, -1}) {
             SyntheticDecoder.durationMethod = method;
             assertNull("method " + method, SourceAudio.containerDurationSeconds(file(30, false)));
+            assertEquals("ESTIMATED", SourceAudio.takeDurationProbe());
         }
     }
 

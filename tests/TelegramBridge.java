@@ -73,7 +73,7 @@ final class TelegramBridge {
     boolean signedIn = true, mediaAllowed = true;
     final LiveSearch remoteSearch = new LiveSearch((request, timeout) -> call(request));
     long offset, limit;
-    int polls, downloads, optimizations, priority;
+    int polls, downloads, optimizations, priority, fileRequests, prefixRequests;
     boolean stall, truncateNext;
     boolean revokeOnPrefix, changeTagAfterSearch;
     int cancellations;
@@ -99,6 +99,10 @@ final class TelegramBridge {
 
     void requireReady() throws IOException {
         if (!signedIn) throw new IOException("Sign in first");
+    }
+
+    List<JSONObject> searchCandidates(String query) throws Exception {
+        return searchTracks(query);
     }
 
     List<JSONObject> searchTracks(String query) throws Exception {
@@ -152,7 +156,10 @@ final class TelegramBridge {
                                     : new TdApi.Message[0],
                             0);
         }
-        if (fn instanceof TdApi.GetFile) return (T) file();
+        if (fn instanceof TdApi.GetFile) {
+            fileRequests++;
+            return (T) file();
+        }
         if (fn instanceof TdApi.DownloadFile) {
             TdApi.DownloadFile d = (TdApi.DownloadFile) fn;
             offset = d.offset;
@@ -163,6 +170,7 @@ final class TelegramBridge {
             return (T) file();
         }
         if (fn instanceof TdApi.GetFileDownloadedPrefixSize) {
+            prefixRequests++;
             long pos = ((TdApi.GetFileDownloadedPrefixSize) fn).offset;
             TdApi.FileDownloadedPrefixSize prefix = new TdApi.FileDownloadedPrefixSize();
             for (Map.Entry<Long, Long> e : available.entrySet())

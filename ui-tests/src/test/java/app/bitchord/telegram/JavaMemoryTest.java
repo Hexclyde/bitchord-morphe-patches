@@ -27,6 +27,7 @@ public class JavaMemoryTest {
     @After
     public void release() {
         for (SourceAudio.JavaMemory loan : held) loan.close();
+        held.clear();
     }
 
     @Test
@@ -70,6 +71,52 @@ public class JavaMemoryTest {
                     {192 * MB, 80 * MB, Long.MAX_VALUE}
                 }) assertNull(reserve(values[0], values[1], values[2]));
         assertNotNull(reserve(192 * MB, 80 * MB, 64 * MB));
+    }
+
+    @Test
+    public void constrainedAndRoomyHeapsAdmitWhatTheirHeadroomAllows() {
+        // Margin is the eighth of the heap, clamped to 8..24 MiB: 24 MiB on both.
+        assertNull(reserve(192 * MB, 38 * MB, 130 * MB + 1));
+        assertNotNull(reserve(192 * MB, 38 * MB, 130 * MB));
+        assertNull(reserve(192 * MB, 38 * MB, 1));
+        release();
+        assertNull(reserve(512 * MB, 38 * MB, 450 * MB + 1));
+        assertNotNull(reserve(512 * MB, 38 * MB, 450 * MB));
+    }
+
+    @Test
+    public void concurrentGrantsShareOneHeapAndReturnItOnClose() {
+        SourceAudio.JavaMemory a = reserve(512 * MB, 38 * MB, 150 * MB);
+        SourceAudio.JavaMemory b = reserve(512 * MB, 38 * MB, 150 * MB);
+        SourceAudio.JavaMemory c = reserve(512 * MB, 38 * MB, 150 * MB);
+        assertNotNull(a);
+        assertNotNull(b);
+        assertNotNull(c);
+        assertNull(reserve(512 * MB, 38 * MB, 1));
+        // Memory that landed in the heap moves from pending into used and is counted once.
+        a.materialized(150 * MB);
+        assertNull(reserve(512 * MB, 188 * MB, 1));
+        a.close();
+        SourceAudio.JavaMemory again = reserve(512 * MB, 38 * MB, 150 * MB);
+        assertNotNull(again);
+        // The same two grants leave a constrained heap with nothing.
+        again.close();
+        b.close();
+        c.close();
+        assertNotNull(reserve(192 * MB, 38 * MB, 65 * MB));
+        assertNotNull(reserve(192 * MB, 38 * MB, 65 * MB));
+        assertNull(reserve(192 * MB, 38 * MB, 1));
+    }
+
+    @Test
+    public void analysisHeadroomShrinksByPromisesAndRecoversOnClose() {
+        long before = SourceAudio.analysisAvailable(512 * MB, 38 * MB);
+        assertEquals(218 * MB, before);
+        SourceAudio.JavaMemory loan = reserve(512 * MB, 38 * MB, 100 * MB);
+        assertEquals(before - 100 * MB, SourceAudio.analysisAvailable(512 * MB, 38 * MB));
+        loan.close();
+        assertEquals(before, SourceAudio.analysisAvailable(512 * MB, 38 * MB));
+        assertEquals(13 * MB, SourceAudio.analysisAvailable(192 * MB, 38 * MB));
     }
 
     @Test

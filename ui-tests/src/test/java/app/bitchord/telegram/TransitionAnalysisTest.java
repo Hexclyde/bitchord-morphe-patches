@@ -112,10 +112,22 @@ public class TransitionAnalysisTest {
     }
 
     @Test
+    public void waitingBadgesNeverClaimActiveAnalysis() {
+        TransitionAnalysis.Snapshot snapshot = new TransitionAnalysis.Snapshot();
+        for (String phase : new String[] {"waiting", "memory", "thermal"}) {
+            snapshot.phase = phase;
+            assertEquals("Waiting", snapshot.badge());
+        }
+        snapshot.phase = "reading";
+        assertEquals("Reading audio…", snapshot.badge());
+    }
+
+    @Test
     public void everyNotReadyPhaseNamesItsOwnReason() {
         String[][] expected = {
-            {"waiting", "Waiting to analyze"},
-            {"queued", "Analyzing selected audio…"},
+            {"waiting", "Waiting for playback"},
+            {"queued", "Queued"},
+            {"reading", "Reading audio…"},
             {"analyzing", "Analyzing selected audio…"},
             {"failed", "Could not read this track's audio."},
             {"ready", "Analysis result could not be read"},

@@ -39,6 +39,8 @@ BitChord 1.9.1 add-ons declaring `bitchordAuth` require the upstream service to 
 - TrueHD Atmos in MKA is recognized. AC-4 needs a device decoder; height playback also needs compatible hardware and a suitable master.
 - Telegram links and channel videos open in Telegram. Some sponsored-message formats, custom emoji and link previews cannot render; Telegram errors can appear in English.
 
+The source duration tolerance filters advertised search results. Recording verification compares measured audio: whole-track preparation allows up to three seconds of padding only when three fingerprint windows agree on a constant offset. Mid-song replacement keeps the stricter 750 ms duration limit and 80 ms offset-drift limit. A similar title and duration alone never authorize a replacement.
+
 ## Downloads and storage
 
 - FLAC metadata preservation keeps existing embedded tags when no non-empty replacement is supplied. It does not fetch missing release dates, restore tags already removed from older files, or add every embedded field to Downloads cards.

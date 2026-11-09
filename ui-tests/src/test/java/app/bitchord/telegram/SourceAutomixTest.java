@@ -167,6 +167,7 @@ public class SourceAutomixTest {
 
     @Before
     public void setup() throws Exception {
+        SourceAutomix.forgetWake();
         originalFormats = SourceAudio.analysisFormats;
         originalMaximum = SourceAutomix.heapMaximum;
         originalUsed = SourceAutomix.heapUsed;
@@ -207,6 +208,9 @@ public class SourceAutomixTest {
 
     @After
     public void restoreFormats() throws Exception {
+        DspAnalysis.discardAll();
+        SourceAutomix.forgetWake();
+        SourceAutomix.leasedModels = true;
         SourceAutomix.statReader = originalStat;
         SourceAutomix.identityClock = originalClock;
         PlaybackService.restorer = null;
@@ -251,6 +255,7 @@ public class SourceAutomixTest {
     void guardedLowMemory() {
         SourceAutomix.heapMaximum = () -> 192L << 20;
         SourceAutomix.heapUsed = () -> 38L << 20;
+        SourceAutomix.leasedModels = false;
         SteadyPlayback.enabled = true;
         SteadyPlayback.heapBytes = SourceAutomix.heapMaximum;
         dspControl = new DspControl();
@@ -470,7 +475,10 @@ public class SourceAutomixTest {
             SourceAutomix.request(callback, item("content://music/low-memory"), 2000L);
             Map<Object, Map<String, SourceAutomix.Job>> all =
                     (Map<Object, Map<String, SourceAutomix.Job>>) jobs.get(null);
-            all.get(callback.f$0.trackAnalyzer).get("recording-1").retryAfter = 0;
+            SourceAutomix.Job waiting = all.get(callback.f$0.trackAnalyzer).get("recording-1");
+            waiting.retryAfter = 0;
+            // Kept audio expired: every try is a full read, which is what the bound counts.
+            DspAnalysis.discard(waiting.storeKey);
         }
         assertEquals("Completed source reads are limited to three attempts", 3, decoded.get());
         assertTrue(callback.f$0.trackAnalyzer.results.isEmpty());
@@ -528,6 +536,7 @@ public class SourceAutomixTest {
             assertEquals(i < 2 ? "memory" : "memory_limit", job("recording-1").phase);
             assertEquals(i < 2 ? waiting : limit, TransitionAnalysis.read(pair, 0).state());
             job("recording-1").retryAfter = 0;
+            DspAnalysis.discard(job("recording-1").storeKey);
         }
         assertEquals(3, decoded.get());
         int reads = opened.get();
@@ -753,6 +762,249 @@ public class SourceAutomixTest {
                     throw new IllegalStateException("constructor failed");
                 };
         assertNotNull(SourceAudio.analysisLimit(cachedAudio(), 120, 512L << 20));
+    }
+
+    @Test
+    public void cachedAnalysisIsRestoredWhilePreparationHoldsThePriority() throws Exception {
+        PlaybackPriority.reset();
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        TrackAnalysis stored = cached("recording-1", 120);
+        PlaybackService.restorer =
+                (target, key) -> {
+                    if (key.equals("recording-1"))
+                        nativePublish(((Analyzer) target).results, "recording-1", stored);
+                };
+        try (AutoCloseable lease = PlaybackPriority.nextPreparation("next")) {
+            SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        } finally {
+            PlaybackService.restorer = null;
+            PlaybackPriority.reset();
+        }
+        assertEquals("ready", job("recording-1").phase);
+        assertSame(stored, analyzer.results.get("recording-1"));
+        assertTrue(analyzer.analyzed.isEmpty());
+    }
+
+    @Test
+    public void aMeasurementThatPlaybackHoldsBackReportsWaiting() throws Exception {
+        PlaybackPriority.reset();
+        try (AutoCloseable lease = PlaybackPriority.nextPreparation("next")) {
+            SourceAutomix.request(callback, item("content://music/42"), 120000L);
+            SourceAutomix.Job job = job("recording-1");
+            assertEquals("waiting", job.phase);
+            assertEquals(0, job.attempts);
+            TransitionRuntime.Pair pair =
+                    new TransitionRuntime.Pair("recording-1", "recording-2", "A", "B", 2, 2, 0);
+            assertEquals(
+                    Strings.t("Waiting for playback"), TransitionAnalysis.read(pair, 0).state());
+            assertTrue(callback.f$0.trackAnalyzer.analyzed.isEmpty());
+        } finally {
+            PlaybackPriority.reset();
+        }
+    }
+
+    @Test
+    public void renewedPreparationCannotStarveTheCurrentAnalysis() throws Exception {
+        PlaybackPriority.reset();
+        java.util.concurrent.atomic.AtomicLong now =
+                new java.util.concurrent.atomic.AtomicLong(1_000_000_000_000L);
+        java.util.function.LongSupplier original = PlaybackPriority.clock;
+        PlaybackPriority.clock = now::get;
+        try {
+            AutoCloseable lease = PlaybackPriority.nextPreparation("next");
+            SourceAutomix.request(callback, item("content://music/42"), 120000L);
+            assertEquals("waiting", job("recording-1").phase);
+            for (int i = 0; i < 4; i++) {
+                now.addAndGet(10_000_000_000L);
+                lease.close();
+                lease = PlaybackPriority.nextPreparation("next" + i);
+            }
+            job("recording-1").retryAfter = 0;
+            SourceAutomix.request(callback, item("content://music/42"), 120000L);
+            assertEquals("ready", job("recording-1").phase);
+            lease.close();
+        } finally {
+            PlaybackPriority.clock = original;
+            PlaybackPriority.reset();
+        }
+    }
+
+    @Test
+    public void everyAnalysisPathLeavesNoPriorityLease() throws Exception {
+        PlaybackPriority.reset();
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        SourceAutomix.request(callback, item("content://music/42"), 120000L);
+        assertEquals("ready", job("recording-1").phase);
+        assertEquals(0, PlaybackPriority.leaseCount());
+        analyzer.fail = true;
+        analyzer.results.clear();
+        job("recording-1").retryAfter = 0;
+        SourceAutomix.request(callback, item("content://music/43"), 120000L);
+        assertEquals(0, PlaybackPriority.leaseCount());
+    }
+
+    @Test
+    public void aMemoryWaitStartsShortAndGrowsToACap() {
+        long previous = 0;
+        for (int i = 1; i < 20; i++) {
+            long delay = SourceAutomix.memoryDelayNanos(i);
+            assertTrue(delay >= previous);
+            assertTrue(delay <= 60_000_000_000L);
+            previous = delay;
+        }
+        assertTrue(SourceAutomix.memoryDelayNanos(1) <= 4_000_000_000L);
+    }
+
+    @Test
+    public void releasedMemoryWakesOnlyWaitsThatNowFit() throws Exception {
+        guardedLowMemory();
+        SourceAudio.analysisFormats = () -> format(48000, 2_000_000);
+        SourceAutomix.heapUsed = () -> 170L << 20;
+        DspAnalysisTest.decoder(200, 0);
+        SourceAutomix.request(callback, item("content://music/low-memory"), 2000L);
+        SourceAutomix.Job job = job("recording-1");
+        assertEquals("memory", job.phase);
+        assertTrue(job.retryAfter - System.nanoTime() <= 4_000_000_000L);
+        long held = job.retryAfter;
+        job.leasedRetry = false;
+        SourceAutomix.memoryAvailable();
+        assertEquals("Still short: no wake", held, job.retryAfter);
+        SourceAutomix.heapUsed = () -> 38L << 20;
+        SourceAutomix.memoryAvailable();
+        assertTrue("Fits now: woken", job.retryAfter == 0 || "ready".equals(job.phase));
+    }
+
+    private void idleMain() {
+        org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+    }
+
+    private void releaseSomeMemory() {
+        try (SourceAudio.JavaMemory grant =
+                SourceAudio.reserveJava(192L << 20, 38L << 20, 1 << 20)) {
+            assertNotNull(grant);
+        }
+    }
+
+    private SourceAutomix.Job memoryWaitWithKnownFormat(
+            java.util.concurrent.atomic.AtomicInteger measured) throws Exception {
+        guardedLowMemory();
+        SourceAudio.analysisFormats = () -> format(48000, 2_000_000);
+        DspAnalysisTest.decoder(200, 0);
+        PlaybackService.dspFeatures =
+                (samples, seconds) -> {
+                    measured.incrementAndGet();
+                    return new Object();
+                };
+        SourceAutomix.heapUsed = () -> 170L << 20;
+        SourceAutomix.request(callback, item("content://music/low-memory"), 2000L);
+        SourceAutomix.Job job = job("recording-1");
+        assertEquals("memory", job.phase);
+        assertNotNull("The format probe ran before the claim failed", job.format);
+        SourceAutomix.heapUsed = () -> 38L << 20;
+        return job;
+    }
+
+    @Test
+    public void aReleaseReevaluatesTheLeasedAllowanceInsteadOfSittingOutTheBackoff()
+            throws Exception {
+        java.util.concurrent.atomic.AtomicInteger measured =
+                new java.util.concurrent.atomic.AtomicInteger();
+        SourceAutomix.Job job = memoryWaitWithKnownFormat(measured);
+        assertEquals("Nothing runs before a release", 0, measured.get());
+        releaseSomeMemory();
+        idleMain();
+        assertEquals("The wait is cut short", 0, job.retryAfter);
+        SourceAutomix.request(callback, item("content://music/low-memory"), 2000L);
+        assertEquals("ready", job.phase);
+        assertEquals(1, measured.get());
+    }
+
+    @Test
+    public void manyReleasesScheduleOneWakeAndTheCallbackDoesNoWork() throws Exception {
+        java.util.concurrent.atomic.AtomicInteger measured =
+                new java.util.concurrent.atomic.AtomicInteger();
+        SourceAutomix.Job job = memoryWaitWithKnownFormat(measured);
+        long held = job.retryAfter;
+        for (int i = 0; i < 20; i++) releaseSomeMemory();
+        assertEquals("The callback only schedules", held, job.retryAfter);
+        assertEquals("memory", job.phase);
+        idleMain();
+        assertEquals("One wake, however many releases", 0, job.retryAfter);
+        SourceAutomix.request(callback, item("content://music/low-memory"), 2000L);
+        assertEquals(1, measured.get());
+        for (int i = 0; i < 5; i++) {
+            releaseSomeMemory();
+            idleMain();
+        }
+        assertEquals("A finished job is not woken again", 1, measured.get());
+        assertEquals("ready", job.phase);
+    }
+
+    @Test
+    public void aWaitThatCannotFitEvenLeasedIsWokenAtMostOncePerEpisode() throws Exception {
+        java.util.concurrent.atomic.AtomicInteger measured =
+                new java.util.concurrent.atomic.AtomicInteger();
+        SourceAutomix.Job job = memoryWaitWithKnownFormat(measured);
+        SourceAutomix.heapUsed = () -> 170L << 20;
+        releaseSomeMemory();
+        idleMain();
+        assertEquals("The one leased re-check", 0, job.retryAfter);
+        SourceAutomix.request(callback, item("content://music/low-memory"), 2000L);
+        assertEquals("memory", job.phase);
+        long held = job.retryAfter;
+        assertTrue(held > 0);
+        for (int i = 0; i < 10; i++) {
+            releaseSomeMemory();
+            idleMain();
+        }
+        assertEquals("Releases without room do not wake it", held, job.retryAfter);
+        assertEquals(0, measured.get());
+    }
+
+    @Test
+    public void modelAnalysisUsesTheLeasedAllowanceWhenOnlyThatFits() throws Exception {
+        SourceAutomix.heapMaximum = () -> 300L << 20;
+        SourceAutomix.heapUsed = () -> 100L << 20;
+        SteadyPlayback.enabled = true;
+        SteadyPlayback.heapBytes = SourceAutomix.heapMaximum;
+        dspControl = new DspControl();
+        SteadyPlayback.loadControl(dspControl);
+        assertTrue(SteadyPlayback.allowLoading(dspControl, new DspParameters()));
+        SourceAudio.analysisFormats = () -> format(48000, 2_000_000);
+        long modelBytes = SourceAudio.analysisBytes(48000, 2);
+        assertTrue(modelBytes > SourceAudio.analysisAvailable(300L << 20, 100L << 20));
+        try (SourceAudio.DspMemory probe = SourceAudio.dspMemory(300L << 20, 100L << 20)) {
+            assertTrue(modelBytes < probe.available());
+        }
+        Analyzer analyzer = callback.f$0.trackAnalyzer;
+        PlaybackService.dspFeatures =
+                (samples, seconds) -> {
+                    fail("The bounded fallback must not run when the model fits leased");
+                    return null;
+                };
+        SourceAutomix.request(callback, item("content://music/low-memory"), 2000L);
+        assertEquals("ready", job("recording-1").phase);
+        assertEquals("The model analyzer measured it", 1, analyzer.analyzed.size());
+        assertEquals(0, PlaybackPriority.leaseCount());
+    }
+
+    @Test
+    public void withoutTheCeilingHooksModelAnalysisKeepsTheBoundedFallback() throws Exception {
+        SourceAutomix.heapMaximum = () -> 300L << 20;
+        SourceAutomix.heapUsed = () -> 100L << 20;
+        SteadyPlayback.enabled = false;
+        SourceAudio.analysisFormats = () -> format(48000, 2_000_000);
+        DspAnalysisTest.decoder(200, 0);
+        java.util.concurrent.atomic.AtomicInteger measured =
+                new java.util.concurrent.atomic.AtomicInteger();
+        PlaybackService.dspFeatures =
+                (samples, seconds) -> {
+                    measured.incrementAndGet();
+                    return new Object();
+                };
+        SourceAutomix.request(callback, item("content://music/low-memory"), 2000L);
+        assertTrue(callback.f$0.trackAnalyzer.analyzed.isEmpty());
+        assertEquals(1, measured.get());
     }
 
     MediaItem item(String uri) {

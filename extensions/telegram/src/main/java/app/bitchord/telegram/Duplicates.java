@@ -45,6 +45,15 @@ final class Duplicates {
         return kept;
     }
 
+    /** Playback must try distinct files even when their advertised song details match. */
+    static List<JSONObject> candidates(List<JSONObject> rows, Headers headers) {
+        Map<String, JSONObject> unique = new LinkedHashMap<>();
+        for (JSONObject row : rows) unique.putIfAbsent(row.optString("id"), row);
+        List<JSONObject> result = new ArrayList<>(unique.values());
+        result.sort((a, b) -> compare(b, a, headers));
+        return result;
+    }
+
     static String song(JSONObject row) {
         return String.join(" ", TrackNames.words(row.optString("title")))
                 + "|"

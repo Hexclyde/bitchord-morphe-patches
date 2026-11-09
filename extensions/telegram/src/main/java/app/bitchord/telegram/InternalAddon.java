@@ -84,7 +84,7 @@ public final class InternalAddon {
                     }
                 }
             JSONArray tracks = new JSONArray();
-            List<JSONObject> rows = bridge.searchTracks(query);
+            List<JSONObject> rows = bridge.searchCandidates(query);
             bridge.decorate(rows);
             StringBuilder found = new StringBuilder();
             for (int i = 0; i < Math.min(3, rows.size()); i++)

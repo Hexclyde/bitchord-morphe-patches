@@ -54,7 +54,7 @@ public final class DiagnosticRecord {
     private static final Pattern PREVIEW_FIELD =
             Pattern.compile(
                     "(?:^|"
-                        + " )(ctorMs|outReadyMs|inReadyMs|outPlayMs|inPlayMs|stalls|stallMs)=(-?[0-9]{1,10})(?=$|"
+                        + " )(tapMs|sessionMs|decksMs|seekMs|prepareMs|resolveMs|verifyMs|ctorMs|outReadyMs|inReadyMs|outPlayMs|inPlayMs|stalls|stallMs)=(-?[0-9]{1,10})(?=$|"
                         + " )");
     private static final Pattern PREVIEW_END =
             Pattern.compile(
@@ -73,8 +73,9 @@ public final class DiagnosticRecord {
             set(
                     "PASSED DURATION_INSUFFICIENT DURATION_MISMATCH IDENTITY_MISMATCH"
                         + " NETWORK_TIMEOUT DNS_FAILURE CONNECT_FAILURE TLS_FAILURE IO_INTERRUPTED"
-                        + " UNEXPECTED_EOF FILE_MISSING DECODE_FAILURE IO_UNCLASSIFIED"
-                        + " INTERNAL_UNCLASSIFIED NONE STOP_UNSPECIFIED STOP_CLOSED"
+                        + " CACHE_GONE SOURCE_NO_DATA CONNECTION_CLOSED RENDITION_CHANGED"
+                        + " SOURCE_ROUTER_UNAVAILABLE UNEXPECTED_EOF FILE_MISSING DECODE_FAILURE"
+                        + " IO_UNCLASSIFIED INTERNAL_UNCLASSIFIED NONE STOP_UNSPECIFIED STOP_CLOSED"
                         + " STOP_INTERRUPTED STOP_PLAYBACK_STOPPED STOP_CANCELLED STOP_DEADLINE"
                         + " STOP_BYTE_LIMIT STOP_READER_RELEASED STOP_READ_PERMISSION STOP_PRIORITY"
                         + " STOP_MEMORY");
@@ -84,6 +85,33 @@ public final class DiagnosticRecord {
             Pattern.compile(
                     "(?:^| )(track|candidate|pair|attempt)=([A-Za-z0-9_-]{11}|[a-f0-9-]{36})(?=$|"
                             + " )");
+    private static final Pattern MAPPING_ID =
+            Pattern.compile("(?:^| )(message|unique|candidate)=([a-f0-9-]{36})(?= |$)");
+    private static final Pattern MAPPING_NUMBER =
+            Pattern.compile("(?:^| )(file|advertisedMs|sizeBytes)=([0-9]{1,12})(?= |$)");
+    private static final Set<String> CHECK_EXCEPTIONS =
+            set(
+                    "IOException EOFException InterruptedIOException FileNotFoundException"
+                            + " SocketTimeoutException SocketException ConnectException"
+                            + " UnknownHostException SSLException SSLHandshakeException"
+                            + " IllegalStateException IllegalArgumentException SecurityException"
+                            + " InvocationTargetException InvalidResponseCodeException"
+                            + " HttpDataSourceException DataSourceException ParserException Stopped"
+                            + " Unmeasurable RuntimeException Exception OTHER");
+    private static final Pattern CHECK_CAUSE =
+            Pattern.compile("(?:^|; )cause=([A-Za-z>]{1,180})(?=$|[ ;])");
+    private static final Pattern CHECK_MEASUREMENT =
+            Pattern.compile(
+                    "(?:^|["
+                        + " ;,])(measuredReferenceMs|measuredCandidateMs|differenceMs|limitMs|advertisedReferenceMs|advertisedCandidateMs|fromMs|untilMs|window|try)=(-?[0-9]{1,10})(?=$|["
+                        + " ;,])");
+    private static final Pattern CHECK_SIDE =
+            Pattern.compile("(?:^|[ ;,])failingSide=(reference|candidate|none)(?=$|[ ;,])");
+    private static final Pattern CHECK_PROBE =
+            Pattern.compile(
+                    "(?:^|["
+                        + " ;,])(probe|referenceProbe|candidateProbe)=(HOST_CONTAINER|MEDIA_EXTRACTOR|PTS|STREAM|ESTIMATED|UNQUALIFIED|UNKNOWN|CONTAINER_EXACT|CONTAINER_PARTIAL|CONTAINER_UNKNOWN|NONE)(?=$|["
+                        + " ;,])");
     private static final Pattern CHECK_TIMING =
             Pattern.compile(" at (reference|length|window [123]|comparison) after ([0-9]{1,9}) ms");
     private static final Pattern MEMORY_FIELD =
@@ -109,7 +137,9 @@ public final class DiagnosticRecord {
                     "google-account youtube-music play-store external-intent other-scheme other-web"
                             + " blank invalid unknown");
     private static final Set<String> BOOLEANS =
-            set("main reload crashed visible connected available foreground enabled handled");
+            set(
+                    "main reload crashed visible connected available foreground enabled handled"
+                            + " sessionReused");
     private static final Pattern VERSION =
             Pattern.compile("[0-9]{1,6}(?:\\.[0-9]{1,6}){1,3}(?:-beta\\.?[0-9]{1,4})?");
     private static final Pattern HTTP =
@@ -124,6 +154,7 @@ public final class DiagnosticRecord {
     private static Set<String> reasons() {
         Set<String> all = new java.util.LinkedHashSet<>(REASONS);
         all.addAll(SOURCE_REASONS);
+        all.add("TELEGRAM_FILE_MAPPING");
         return all;
     }
 
@@ -205,6 +236,8 @@ public final class DiagnosticRecord {
                                                 "[A-Za-z0-9_-]{11}|[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}"))
                             out.put(key, value);
                         break;
+                    case "message_identity":
+                    case "file_identity":
                     case "candidate":
                     case "pair":
                     case "attempt":
@@ -213,6 +246,47 @@ public final class DiagnosticRecord {
                                         .matches("[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}"))
                             out.put(key, value);
                         break;
+                    case "causeChain":
+                        if (value instanceof String && ((String) value).length() <= 180) {
+                            String[] chain = ((String) value).split(">", -1);
+                            if (chain.length <= 4) {
+                                for (int i = 0; i < chain.length; i++)
+                                    if (!CHECK_EXCEPTIONS.contains(chain[i])) chain[i] = "OTHER";
+                                out.put(key, String.join(">", chain));
+                            }
+                        }
+                        break;
+                    case "failingSide":
+                        out.put(key, enumValue(value, set("reference candidate none"), "none"));
+                        break;
+                    case "probe":
+                    case "referenceProbe":
+                    case "candidateProbe":
+                        out.put(
+                                key,
+                                enumValue(
+                                        value,
+                                        set(
+                                                "HOST_CONTAINER MEDIA_EXTRACTOR PTS STREAM"
+                                                        + " ESTIMATED UNQUALIFIED UNKNOWN"
+                                                        + " CONTAINER_EXACT CONTAINER_PARTIAL"
+                                                        + " CONTAINER_UNKNOWN NONE"),
+                                        "UNKNOWN"));
+                        break;
+                    case "measuredReferenceMs":
+                    case "measuredCandidateMs":
+                    case "advertisedReferenceMs":
+                    case "advertisedCandidateMs":
+                    case "differenceMs":
+                    case "limitMs":
+                    case "fromMs":
+                    case "untilMs":
+                        integer(out, key, value, -1, 86_400_000);
+                        break;
+                    case "window":
+                    case "try":
+                        integer(out, key, value, -1, 6);
+                        break;
                     case "verification_stage":
                         out.put(
                                 key,
@@ -220,6 +294,15 @@ public final class DiagnosticRecord {
                                         value,
                                         set("reference length window1 window2 window3 comparison"),
                                         "unknown"));
+                        break;
+                    case "file_number":
+                        integer(out, key, value, 0, Integer.MAX_VALUE);
+                        break;
+                    case "advertised_ms":
+                        integer(out, key, value, 0, 86_400_000);
+                        break;
+                    case "size_bytes":
+                        integer(out, key, value, 0, 1L << 40);
                         break;
                     case "heapUsedMiB":
                     case "heapMaxMiB":
@@ -237,6 +320,13 @@ public final class DiagnosticRecord {
                     case "preview_code":
                         integer(out, key, value, -1, 100000);
                         break;
+                    case "tapMs":
+                    case "sessionMs":
+                    case "decksMs":
+                    case "seekMs":
+                    case "prepareMs":
+                    case "resolveMs":
+                    case "verifyMs":
                     case "ctorMs":
                     case "outReadyMs":
                     case "inReadyMs":
@@ -498,6 +588,10 @@ public final class DiagnosticRecord {
             values.put("reason", "AUTOMIX_PREVIEW_TIMING");
             Matcher timing = PREVIEW_FIELD.matcher(text);
             while (timing.find()) values.put(timing.group(1), Long.parseLong(timing.group(2)));
+            if (text.contains(" resolveMs=unavailable ")) values.put("resolveMs", -1);
+            if (text.contains(" verifyMs=unavailable ")) values.put("verifyMs", -1);
+            if (text.contains(" sessionReused=true ")) values.put("sessionReused", true);
+            else if (text.contains(" sessionReused=false ")) values.put("sessionReused", false);
             Matcher end = PREVIEW_END.matcher(text);
             if (end.find()) values.put("end", end.group(1));
             Matcher source = PREVIEW_SOURCE.matcher(text);
@@ -523,6 +617,28 @@ public final class DiagnosticRecord {
             values.put("reason", "AUTOMIX_PREVIEW_FAILED");
             values.put("error", analysisError(previewError.group(1)));
         }
+        if (text.startsWith("Telegram file mapping ")) {
+            values.put("category", "TELEGRAM");
+            values.put("reason", "TELEGRAM_FILE_MAPPING");
+            Matcher identity = MAPPING_ID.matcher(text);
+            while (identity.find())
+                values.put(
+                        identity.group(1).equals("message")
+                                ? "message_identity"
+                                : identity.group(1).equals("unique")
+                                        ? "file_identity"
+                                        : "candidate",
+                        identity.group(2));
+            Matcher number = MAPPING_NUMBER.matcher(text);
+            while (number.find())
+                values.put(
+                        number.group(1).equals("file")
+                                ? "file_number"
+                                : number.group(1).equals("advertisedMs")
+                                        ? "advertised_ms"
+                                        : "size_bytes",
+                        Long.parseLong(number.group(2)));
+        }
         if (text.startsWith("Recording check ")) {
             values.put("category", "SOURCE");
             Matcher result = SOURCE_REASON.matcher(text);
@@ -533,6 +649,15 @@ public final class DiagnosticRecord {
                     values.put("http_status", Integer.parseInt(result.group(1).substring(5)));
                 }
             }
+            Matcher cause = CHECK_CAUSE.matcher(text);
+            if (cause.find()) values.put("causeChain", cause.group(1));
+            Matcher measurement = CHECK_MEASUREMENT.matcher(text);
+            while (measurement.find())
+                values.put(measurement.group(1), Long.parseLong(measurement.group(2)));
+            Matcher side = CHECK_SIDE.matcher(text);
+            if (side.find()) values.put("failingSide", side.group(1));
+            Matcher probe = CHECK_PROBE.matcher(text);
+            while (probe.find()) values.put(probe.group(1), probe.group(2));
             Matcher context = CHECK_CONTEXT.matcher(text);
             while (context.find()) values.put(context.group(1), context.group(2));
             Matcher timing = CHECK_TIMING.matcher(text);

@@ -54,6 +54,16 @@ public final class DuplicatesTest {
                 "Lossless beats a 320 kbps MP3");
         check(Duplicates.compare(zip24, rows.get(1), headers::get) > 0, "24-bit beats 16-bit");
         check(Duplicates.best(List.of(), headers::get).isEmpty(), "Nothing in, nothing out");
+        List<JSONObject> candidates = Duplicates.candidates(rows, headers::get);
+        check(
+                candidates.size() == rows.size(),
+                "Different posts remain eligible after another copy fails");
+        check(
+                candidates.get(0) == zip24,
+                "Candidates prefer measured quality without hiding alternatives");
+        check(
+                Duplicates.candidates(List.of(rows.get(0), rows.get(0)), headers::get).size() == 1,
+                "The same post is only tried once");
         System.out.println("PASS: " + checks + " duplicate song and best copy checks.");
     }
 }

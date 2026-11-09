@@ -296,6 +296,7 @@ public class TransitionEditorScreenTest {
         if (activity != null) activity.pause().stop().destroy();
         TransitionRuntime.release();
         SourceAutomix.release(service);
+        PlaybackPriority.reset();
         TransitionPreview.factory = previousFactory;
         TransitionPairSelection.reader = previousReader;
         android.content.ContentResolver files =
@@ -398,7 +399,7 @@ public class TransitionEditorScreenTest {
                         .getWindow()
                         .getDecorView();
         View pending = sheet.findViewWithTag("automix-analysis-track:1");
-        assertTrue(containsText(pending, Strings.t("Analyzing selected audio…")));
+        assertTrue(containsText(pending, Strings.t("Queued")));
         assertNull(pending.findViewWithTag("automix-analysis-energy:1"));
         assertNotNull(sheet.findViewWithTag("automix-analysis-energy:0"));
         Analysis unavailable = new Analysis();
@@ -413,7 +414,7 @@ public class TransitionEditorScreenTest {
                 .idleFor(java.time.Duration.ofMillis(1100));
         View complete = sheet.findViewWithTag("automix-analysis-track:1");
         assertTrue(containsText(complete, Strings.t("Ready")));
-        assertFalse(containsText(complete, Strings.t("Analyzing selected audio…")));
+        assertFalse(containsText(complete, Strings.t("Queued")));
         assertTrue(containsText(complete, Strings.t("Not available")));
         assertNull(complete.findViewWithTag("automix-analysis-energy:1"));
         Analysis measured = new Analysis();

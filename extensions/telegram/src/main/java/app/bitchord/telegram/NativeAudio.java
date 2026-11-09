@@ -73,6 +73,14 @@ final class NativeAudio {
         }
     }
 
+    static void checkFile(JSONObject row, TdApi.File file) throws IOException {
+        if (file == null || file.id != row.optInt("file"))
+            throw new IOException("Telegram file mapping changed");
+        String unique = row.optString("unique");
+        if (!unique.isEmpty() && (file.remote == null || !unique.equals(file.remote.uniqueId)))
+            throw new IOException("Telegram file identity changed");
+    }
+
     Reader open(String url, long position, long length) throws IOException {
         return open(url, position, length, null);
     }
@@ -100,6 +108,25 @@ final class NativeAudio {
             fileId = row.getInt("file");
             long chat = row.getLong("chat");
             TdApi.File file = bridge.call(new TdApi.GetFile(fileId));
+            checkFile(row, file);
+            SourcePreference.noteAdvertised(url, row.optLong("duration", 0));
+            HostLog.d(
+                    "Telegram file mapping candidate="
+                            + java.util.UUID.nameUUIDFromBytes(
+                                    url.getBytes(java.nio.charset.StandardCharsets.UTF_8))
+                            + " message="
+                            + java.util.UUID.nameUUIDFromBytes(
+                                    id.getBytes(java.nio.charset.StandardCharsets.UTF_8))
+                            + " file="
+                            + row.optInt("file")
+                            + " unique="
+                            + java.util.UUID.nameUUIDFromBytes(
+                                    row.optString("unique")
+                                            .getBytes(java.nio.charset.StandardCharsets.UTF_8))
+                            + " advertisedMs="
+                            + row.optLong("duration") * 1000L
+                            + " sizeBytes="
+                            + row.optLong("size"));
             // A song inside a zip is read from its place in the zip, in its own positions; a track
             // of a cue sheet is read as a WAV file of just that track.
             JSONObject zip = row.optJSONObject("zip"), cue = row.optJSONObject("cue");
@@ -293,6 +320,8 @@ final class NativeAudio {
         // Set for a song inside a zip: positions are the song's, read through the zip.
         ZipDirectory.Source entry;
         long fileSize;
+        String availablePath;
+        long availableFrom, availableUntil, availableLength, availableModified;
 
         Reader(
                 NativeAudio owner,
@@ -402,6 +431,26 @@ final class NativeAudio {
                 // it's opened. Ask again, downloading the part again if it was deleted.
                 for (int attempt = 1; ; attempt++) {
                     check();
+                    if (availablePath != null && at >= availableFrom && at < availableUntil) {
+                        int count =
+                                (int)
+                                        Math.min(
+                                                Math.min(availableUntil - at, limit - at),
+                                                Math.min(length, 64 * 1024));
+                        File cached = new File(availablePath);
+                        try (RandomAccessFile input = new RandomAccessFile(cached, "r")) {
+                            if (input.length() == availableLength
+                                    && cached.lastModified() == availableModified) {
+                                input.seek(at);
+                                input.readFully(buffer, offset, count);
+                                check();
+                                return count;
+                            }
+                        } catch (java.io.FileNotFoundException | EOFException gone) {
+                            // A moved or trimmed cache is revalidated below.
+                        }
+                        availablePath = null;
+                    }
                     // TDLib has one requested download window per file. Serialize each
                     // bounded read, then let another reader seek without cancelling it.
                     long prefix =
@@ -456,6 +505,13 @@ final class NativeAudio {
                         continue;
                     }
                     check();
+                    // A confirmed contiguous range stays readable without two RPCs per chunk.
+                    availablePath = file.local.path;
+                    File cached = new File(availablePath);
+                    availableLength = cached.length();
+                    availableModified = cached.lastModified();
+                    availableFrom = at;
+                    availableUntil = at + Math.min(prefix, limit - at);
                     return count;
                 }
             }

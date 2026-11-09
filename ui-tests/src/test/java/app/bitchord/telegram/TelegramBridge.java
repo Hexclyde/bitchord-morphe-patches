@@ -239,6 +239,10 @@ public final class TelegramBridge {
         useTrackNames = on;
     }
 
+    List<JSONObject> searchCandidates(String query) throws Exception {
+        return searchTracks(query);
+    }
+
     List<JSONObject> searchTracks(String query) throws Exception {
         List<JSONObject> found = new ArrayList<>();
         for (JSONObject row : searchResults)

@@ -123,6 +123,8 @@ public class SourcePreparationTest {
         String cachedRevision = "cache-v1";
         final Set<String> leftToHost = ConcurrentHashMap.newKeySet();
         final Set<String> noCopy = ConcurrentHashMap.newKeySet();
+        int transientFailures, retryQueries;
+        long retryDelay;
         final Set<String> rejectedFiles = ConcurrentHashMap.newKeySet();
         final Set<String> completeRenditions = ConcurrentHashMap.newKeySet();
         final Set<String> held = ConcurrentHashMap.newKeySet();
@@ -236,6 +238,7 @@ public class SourcePreparationTest {
                     }
                 }
                 if (cancelled.getAsBoolean()) throw new IOException("Cancelled");
+                if (transientFailures-- > 0) throw new IOException("Temporary read failure");
                 if (undecided) throw new IOException("Not enough audio");
                 if (rejectedFiles.contains(file)) throw new IOException("Not the recording");
             } catch (InterruptedException interrupted) {
@@ -247,6 +250,11 @@ public class SourcePreparationTest {
 
         public void trust(Uri marked, Object stream) {
             trusted.add((String) stream);
+        }
+
+        public long retryAfterMillis(Uri marked, Object stream) {
+            retryQueries++;
+            return retryDelay;
         }
 
         public boolean rejected(Uri marked, Object stream) {
@@ -662,13 +670,35 @@ public class SourcePreparationTest {
     }
 
     @Test
+    public void transientVerificationRetriesTheSameCopyWithoutAnotherSearch() throws Exception {
+        host.transientFailures = 1;
+        read("a");
+        idle();
+        assertEquals(Arrays.asList("a"), host.lookups);
+        assertEquals(Arrays.asList("a_0", "a_0"), host.verified);
+        assertEquals(1, host.retryQueries);
+        assertFalse(host.parked.isEmpty());
+    }
+
+    @Test
+    public void verificationCanEndRetriesWithoutRejectingTheRecording() throws Exception {
+        host.transientFailures = 1;
+        host.retryDelay = -1;
+        read("a");
+        idle();
+        assertEquals(Arrays.asList("a_0"), host.verified);
+        assertTrue(host.rejectedFiles.isEmpty());
+        assertTrue(host.parked.isEmpty());
+    }
+
+    @Test
     public void anUnfinishedCheckIsReportedSeparatelyFromRejectedMatches() throws Exception {
         host.undecided = true;
 
         assertEquals(song("a").toString(), read("a"));
         idle();
 
-        assertEquals(Arrays.asList("a_0"), host.verified);
+        assertEquals(Arrays.asList("a_0", "a_0", "a_0"), host.verified);
         assertTrue(host.rejectedFiles.isEmpty());
         assertTrue(host.parked.isEmpty());
         assertTrue(
