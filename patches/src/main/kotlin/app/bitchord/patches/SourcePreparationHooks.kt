@@ -6,6 +6,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.*
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
+import app.morphe.patcher.util.smali.ExternalLabel
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.*
@@ -440,6 +441,52 @@ internal fun BytecodePatchContext.addSourcePreparation() {
     needsField(resolver, "INSTANCE")
     needsField(quality, "forced")
     needsField(quality, "refused")
+    // A playback period reads the stream pinned to its own tagged rendition URI. BitChord's lookup
+    // is otherwise by song id, a slot another provider's upgrade or any clean-up can change, which
+    // would join a different file onto a period already reading one. Untagged and unpinned
+    // URIs fall through to the original lookup. The extension trusts the pin only when it finds
+    // the marker method below, so a build without this hook keeps refusing a changed slot.
+    val lookupOwner = mutableClassDefBy(quality)
+    check(lookupOwner.methods.none { it.name == "bitchordPinnedLookup" }) {
+        "Source preparation's pinned stream marker already exists"
+    }
+    val forcedLookup =
+        lookupOwner.methods.single {
+            it.name == "forcedStream" &&
+                it.parameterTypes.map(CharSequence::toString) == listOf(URI) &&
+                it.returnType == stream &&
+                AccessFlags.STATIC.isSet(it.accessFlags)
+        }
+    // v0 is a local, not the URI parameter, and BitChord writes it before reading it.
+    check(forcedLookup.implementation!!.registerCount >= 2) {
+        "BitChord's forced stream lookup has no free register"
+    }
+    forcedLookup.addInstructionsWithLabels(
+        0,
+        """
+        invoke-static/range {p0 .. p0}, $PREPARE->pinnedStream($URI)Ljava/lang/Object;
+        move-result-object v0
+        if-eqz v0, :unpinned
+        check-cast v0, $stream
+        return-object v0
+        """,
+        ExternalLabel("unpinned", forcedLookup.implementation!!.instructions.first()),
+    )
+    val pinnedMarker =
+        MutableMethod(
+            ImmutableMethod(
+                quality,
+                "bitchordPinnedLookup",
+                emptyList(),
+                "Z",
+                AccessFlags.PUBLIC.value or AccessFlags.STATIC.value,
+                null,
+                null,
+                ImmutableMethodImplementation(1, emptyList<Instruction>(), emptyList(), emptyList()),
+            )
+        )
+    pinnedMarker.addInstructions(0, "const/4 v0, 0x1\nreturn v0")
+    lookupOwner.methods.add(pinnedMarker)
     needsField(choice, "refusedSubstitutes")
     needsField(CACHE, "cache")
     needsField(CACHE, "INSTANCE")

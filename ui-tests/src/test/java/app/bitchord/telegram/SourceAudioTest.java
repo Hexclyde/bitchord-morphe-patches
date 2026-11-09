@@ -244,6 +244,23 @@ public class SourceAudioTest {
     }
 
     @Test
+    public void nearlyFullHeapKeepsOnlyAReadThroughWindow() throws Exception {
+        file(24 * 1024 * 1024);
+        java.util.function.LongSupplier original = SourceAudio.heapFree;
+        SourceAudio.heapFree = () -> 8L << 20;
+        try (SourceAudio input = open("https://host/hires.flac")) {
+            for (long position = 0; position < audio.length; position += 2100)
+                assertRead(input, position, Math.min(2048, (int) (audio.length - position)));
+            assertTrue(
+                    "Held blocks: " + input.heldBlocks(),
+                    input.heldBlocks() <= SourceAudio.PRESSURE_BLOCKS);
+            assertRead(input, 0, 2048);
+        } finally {
+            SourceAudio.heapFree = original;
+        }
+    }
+
+    @Test
     public void eachExtractorMayCloseItsViewWithoutClosingTheFile() throws Exception {
         file(4 * 1024 * 1024);
         try (SourceAudio input = open("https://host/a.webm")) {

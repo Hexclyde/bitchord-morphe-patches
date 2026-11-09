@@ -1,5 +1,9 @@
 ## 1.1.0-beta.19
 
+- Playing sources keep their own file routes when another quality upgrade fails or changes the shared lookup. Source labels and upgrade bookkeeping wait for the replacement player; cancelled swaps release their standby buffers.
+- AutoMix separates Java measurement arrays from native working memory and reduces read-cache allocations under heap pressure. Decoder checks account for the source channel count.
+- Recording diagnostics distinguish allocation refusal, empty or incomplete decoded audio, callback failures and HTTP errors, with sample counts and timestamp ranges.
+
 - **Automix Editor** previews take priority over indexing and background preparation. Track headers distinguish queued work, playback waits, memory waits and audio reads from analysis.
 - AutoMix reuses completed decoding after a temporary memory wait and retries promptly when resources become available. Model analysis can use a larger allowance while playback buffers stay under an enforced ceiling.
 

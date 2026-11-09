@@ -1159,7 +1159,8 @@ public final class SourceAutomix {
                 if (job.format != null && !leasedTry) {
                     long maximum = heapMaximum.getAsLong(), used = heapUsed.getAsLong();
                     long full =
-                            SourceAudio.analysisBytes(job.format.sampleRate, job.format.seconds);
+                            SourceAudio.analysisBytes(
+                                    job.format.sampleRate, job.format.seconds, job.format.channels);
                     long bounded = DspAnalysis.bytes(job.format.sampleRate, job.format.seconds);
                     long available = SourceAudio.dspAvailable(maximum, used);
                     if (full > SourceAudio.analysisAvailable(maximum, used)
@@ -1209,7 +1210,8 @@ public final class SourceAutomix {
                             SourceAudio.dspMemory(heapMaximum.getAsLong(), heapUsed.getAsLong())) {
                         // The pinned ceiling can admit the model where the unpinned one could not.
                         long modelBytes =
-                                SourceAudio.analysisBytes(format.sampleRate, format.seconds);
+                                SourceAudio.analysisBytes(
+                                        format.sampleRate, format.seconds, format.channels);
                         boolean leasedModel = false;
                         if (leasedModels
                                 && modelBytes > 0
@@ -1299,7 +1301,8 @@ public final class SourceAutomix {
                     decoding.check();
                     checkLookahead(job, current);
                     long required =
-                            SourceAudio.analysisBytes(job.format.sampleRate, job.format.seconds);
+                            SourceAudio.analysisBytes(
+                                    job.format.sampleRate, job.format.seconds, job.format.channels);
                     try (SourceAudio.JavaMemory allocation =
                             SourceAudio.reserveJava(
                                     heapMaximum.getAsLong(), heapUsed.getAsLong(), required)) {

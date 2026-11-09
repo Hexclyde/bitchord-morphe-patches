@@ -302,17 +302,20 @@ public class DspAnalysisTest {
                 decode,
                 DspAnalysis.bytes(48000, 2));
         assertEquals(
-                "A long track is bound by Java mono plus the native input copy",
-                2_654_269L * 8 + (16L << 20),
+                "A long track is bound by the Java mono array plus the 16 MiB margin",
+                2_654_269L * 4 + (16L << 20),
                 DspAnalysis.bytes(48000, 240));
-        assertEquals(9_930_769L * 8 + (16L << 20), DspAnalysis.bytes(48000, 900));
+        assertEquals(
+                "A very long track is bound by the Java mono array",
+                9_930_769L * 4 + (16L << 20),
+                DspAnalysis.bytes(48000, 900));
         for (double seconds : new double[] {2, 30, 240, 900}) {
             long frames = (long) Math.ceil((seconds + .75) * DspAnalysis.RATE);
             assertEquals(
                     Math.max(decode, DspAnalysis.measurement(frames)),
                     DspAnalysis.bytes(48000, seconds));
         }
-        assertEquals(176_400L + (16L << 20), DspAnalysis.measurement(22_050));
+        assertEquals(88_200L + (16L << 20), DspAnalysis.measurement(22_050));
     }
 
     @Test

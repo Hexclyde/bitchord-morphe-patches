@@ -291,6 +291,16 @@ public final class SourceFirst {
     }
 
     /**
+     * The stream a playback period approved for exactly this tagged rendition URI, for BitChord's
+     * own stream lookup, so every later read of the period follows that file and never the stream
+     * parked by song id. Null for anything else. Pure snapshot.
+     */
+    public static Object pinnedStream(Uri uri) {
+        SourcePreparation running = active;
+        return running == null || uri == null ? null : running.pinnedStream(uri);
+    }
+
+    /**
      * Whether analysing this entry's source now cannot read a copy about to be replaced. Pure
      * snapshot: nothing is bound, removed or held. True when the engine is absent or off. The
      * verified form asks the host whether a prepared copy still stands, so only a worker uses it.

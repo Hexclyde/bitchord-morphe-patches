@@ -55,6 +55,8 @@ public interface Player {
 
     void stop();
 
+    void clearMediaItems();
+
     PlaybackException getPlayerError();
 
     int getCurrentMediaItemIndex();
@@ -66,6 +68,8 @@ public interface Player {
     void moveMediaItems(int fromIndex, int toIndex, int newIndex);
 
     void addListener(Listener listener);
+
+    void removeListener(Listener listener);
 
     android.os.Looper getApplicationLooper();
 

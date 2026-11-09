@@ -137,10 +137,14 @@ public class SourceAutomixTest {
     DspControl dspControl;
 
     static SourceAudio.AnalysisFormat format(int rate, long durationUs) {
+        return format(rate, durationUs, 2);
+    }
+
+    static SourceAudio.AnalysisFormat format(int rate, long durationUs, int channels) {
         return new SourceAudio.AnalysisFormat() {
             public android.media.MediaFormat read(android.media.MediaDataSource source) {
                 android.media.MediaFormat format =
-                        android.media.MediaFormat.createAudioFormat("audio/flac", rate, 2);
+                        android.media.MediaFormat.createAudioFormat("audio/flac", rate, channels);
                 format.setLong(android.media.MediaFormat.KEY_DURATION, durationUs);
                 return format;
             }
@@ -680,9 +684,38 @@ public class SourceAutomixTest {
         // 330 s at 48 kHz: two full mono buffers + 11.025 kHz DSP + 16 MiB margin.
         assertEquals(158_050_216L, SourceAudio.analysisBytes(48000, 330));
         assertTrue(SourceAudio.analysisBytes(96000, 330) > (192L << 20));
+        assertEquals(
+                "Stereo is the baseline the 20 bytes per frame region was sized for",
+                SourceAudio.analysisBytes(48000, 330),
+                SourceAudio.analysisBytes(48000, 330, 2));
+        assertEquals(
+                "Mono is never reserved below stereo",
+                SourceAudio.analysisBytes(48000, 330),
+                SourceAudio.analysisBytes(48000, 330, 1));
+        assertTrue(
+                "5.1 chunks and flattened copies are three times stereo's",
+                SourceAudio.analysisBytes(48000, 330, 6) - SourceAudio.analysisBytes(48000, 330)
+                        >= 48000L * 330 * 4 * 4);
+        for (int invalid : new int[] {0, -1, 9, 64})
+            assertEquals(
+                    "Channel count " + invalid + " is rejected, not clamped",
+                    -1,
+                    SourceAudio.analysisBytes(48000, 330, invalid));
+        assertTrue(SourceAudio.analysisBytes(48000, 330, 8) > 0);
         SourceAudio.analysisFormats = () -> format(48000, 330_000_000);
         assertNotNull(SourceAudio.analysisLimit(cachedAudio(), 330, 158_050_215L));
         assertNull(SourceAudio.analysisLimit(cachedAudio(), 330, 158_050_216L));
+        SourceAudio.analysisFormats = () -> format(48000, 330_000_000, 6);
+        assertNotNull(
+                "A 5.1 source needs more than the stereo bound",
+                SourceAudio.analysisLimit(cachedAudio(), 330, 158_050_216L));
+        assertNull(
+                SourceAudio.analysisLimit(
+                        cachedAudio(), 330, SourceAudio.analysisBytes(48000, 330, 6)));
+        SourceAudio.analysisFormats = () -> format(48000, 330_000_000, 9);
+        assertNotNull(
+                "An impossible channel count is not estimated downward",
+                SourceAudio.analysisLimit(cachedAudio(), 330, 1L << 40));
         SourceAudio.analysisFormats = () -> format(96000, 330_000_000);
         assertNotNull(
                 "A short queue label cannot hide a long high-rate container",

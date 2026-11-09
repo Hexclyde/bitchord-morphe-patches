@@ -684,7 +684,6 @@ final class SourcePreparationHost implements SourcePreparation.Host {
     @Override
     public boolean park(String mediaId, Object stream) {
         try {
-            Object held = forced().get(mediaId);
             String identity =
                     source(stream)
                             + "|"
@@ -694,6 +693,7 @@ final class SourcePreparationHost implements SourcePreparation.Host {
                             + "|"
                             + terms(stream);
             synchronized (parkedIdentities) {
+                Object held = forced().get(mediaId);
                 if (held != null && !identity.equals(parkedIdentities.get(mediaId))) {
                     boolean active =
                             onPlayer(
@@ -729,10 +729,9 @@ final class SourcePreparationHost implements SourcePreparation.Host {
     @Override
     public void unpark(String mediaId, Object stream) {
         try {
-            if (forced().remove(mediaId, stream))
-                synchronized (parkedIdentities) {
-                    parkedIdentities.remove(mediaId);
-                }
+            synchronized (parkedIdentities) {
+                if (forced().remove(mediaId, stream)) parkedIdentities.remove(mediaId);
+            }
         } catch (Exception ignored) {
             // BitChord refuses a stream it can't find.
         }
@@ -750,6 +749,17 @@ final class SourcePreparationHost implements SourcePreparation.Host {
             return forced().get(mediaId);
         } catch (Exception unavailable) {
             return null;
+        }
+    }
+
+    /** True once the patch made BitChord's stream lookup ask {@link SourceFirst#pinnedStream}. */
+    @Override
+    public boolean pinsDownstream() {
+        try {
+            type(PLAYBACK + "QualityUpgrade").getMethod("bitchordPinnedLookup");
+            return true;
+        } catch (Exception absent) {
+            return false;
         }
     }
 

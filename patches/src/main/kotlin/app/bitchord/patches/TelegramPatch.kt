@@ -485,6 +485,10 @@ private const val SERVICE = "Lcom/music/bitchord/playback/PlaybackService;"
 private const val VERSION_SWAP =
     "Lcom/music/bitchord/playback/PlaybackService\$smoothSwapCurrentTrackVersion\$1;"
 private const val SMOOTH = "Lapp/bitchord/telegram/SmoothUpgrade;"
+private const val EXO_PLAYER = "Landroidx/media3/exoplayer/ExoPlayer;"
+private const val WATCH_UPGRADE = "Lcom/music/bitchord/playback/PlaybackService\$watchUpgrade\$1;"
+private const val NERD_STATS = "Lcom/music/bitchord/data/NerdStats;"
+private const val STREAM_FORMAT = "Lcom/music/bitchord/data/sources/StreamFormat;"
 private const val PLAYER = "Landroidx/media3/common/Player;"
 private const val MEDIA_ITEM = "Landroidx/media3/common/MediaItem;"
 
@@ -1068,6 +1072,78 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
     check(owner.registerB < 16 && r.registerC == s.registerC && r.registerC == p.registerC) {
         "Quality upgrade player register changed"
     }
+    // The commit also records the new stream in BitChord's statistics and drops the fallback it
+    // kept for the song. Those must only happen once the copy is heard, which the swap decides
+    // later and can refuse.
+    fun commitCall(name: String, owner: String, parameters: List<String>, from: Int): Int {
+        val found =
+            (from until logged).filter { index ->
+                steps[index].methodRef()?.let {
+                    it.definingClass == owner &&
+                        it.name == name &&
+                        it.parameterTypes.map(CharSequence::toString) == parameters
+                } == true
+            }
+        check(found.size == 1) { "Quality upgrade $name call changed" }
+        val registers = steps[found.single()] as? FiveRegisterInstruction
+        check(
+            registers != null &&
+                registers.registerCount == parameters.size + (if (owner == NERD_STATS) 0 else 1) &&
+                steps.getOrNull(found.single() + 1)?.opcode?.name?.startsWith("move-result") != true
+        ) {
+            "Quality upgrade $name registers changed"
+        }
+        return found.single()
+    }
+    val stream =
+        commitCall(
+            "onSourceStream",
+            NERD_STATS,
+            listOf("Ljava/lang/String;", STREAM_FORMAT, "Ljava/lang/String;"),
+            replace,
+        )
+    val source =
+        commitCall(
+            "recordSource",
+            NERD_STATS,
+            listOf("Ljava/lang/String;", "Ljava/lang/String;"),
+            replace,
+        )
+    val shelved =
+        commitCall(
+            "remove",
+            "Ljava/util/concurrent/ConcurrentHashMap;",
+            listOf("Ljava/lang/Object;"),
+            prepare,
+        )
+    check(
+        steps.subList(prepare, shelved).any {
+            it.opcode == Opcode.SGET_OBJECT &&
+                it.fieldRef()?.definingClass == "Lcom/music/bitchord/playback/QualityUpgrade;" &&
+                it.fieldRef()?.name == "shelved"
+        }
+    ) {
+        "Quality upgrade fallback map changed"
+    }
+    fun registersOf(index: Int) =
+        (steps[index] as FiveRegisterInstruction).let {
+            listOf(it.registerC, it.registerD, it.registerE).take(it.registerCount)
+        }
+    for (index in listOf(stream, source, shelved)) check(registersOf(index).all { it < 16 }) {
+        "Quality upgrade bookkeeping registers changed"
+    }
+    commit.replaceInstruction(
+        shelved,
+        "invoke-static {${registersOf(shelved).joinToString { "v$it" }}}, $SMOOTH->shelved(Ljava/util/concurrent/ConcurrentHashMap;Ljava/lang/Object;)V",
+    )
+    commit.replaceInstruction(
+        source,
+        "invoke-static {${registersOf(source).joinToString { "v$it" }}}, $SMOOTH->source(Ljava/lang/String;Ljava/lang/String;)V",
+    )
+    commit.replaceInstruction(
+        stream,
+        "invoke-static {${registersOf(stream).joinToString { "v$it" }}}, $SMOOTH->stream(Ljava/lang/String;${STREAM_FORMAT}Ljava/lang/String;)V",
+    )
     commit.replaceInstruction(
         prepare,
         "invoke-static {v${p.registerC}}, $SMOOTH->prepare($PLAYER)V",
@@ -1080,6 +1156,74 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
         replace,
         "invoke-static {v${owner.registerB}, v${r.registerC}, v${r.registerD}, v${r.registerE}}, $SMOOTH->replace(Ljava/lang/Object;${PLAYER}I$MEDIA_ITEM)V",
     )
+    // BitChord also starts a check, at commit, that reverts a copy of the wrong length. Started
+    // before the copy is heard it would judge the copy still playing, so it starts once heard.
+    val watchInits =
+        steps.indices.filter {
+            steps[it].methodRef()?.let { m ->
+                m.definingClass == WATCH_UPGRADE && m.name == "<init>" && m.parameterTypes.size == 7
+            } == true
+        }
+    check(watchInits.size == 1) { "Quality upgrade duration check changed" }
+    val watchLaunch = watchInits.single() + 1
+    val watchCall = steps.getOrNull(watchLaunch) as? FiveRegisterInstruction
+    check(
+        watchCall != null &&
+            watchCall.opcode == Opcode.INVOKE_STATIC &&
+            watchCall.registerCount == 5 &&
+            maxOf(
+                watchCall.registerC,
+                watchCall.registerD,
+                watchCall.registerE,
+                watchCall.registerF,
+                watchCall.registerG,
+            ) < 16 &&
+            watchCall.methodRef()!!.let {
+                it.definingClass == "Lkotlinx/coroutines/JobKt;" &&
+                    it.name == "launch\$default" &&
+                    it.parameterTypes.size == 5
+            } &&
+            steps.getOrNull(watchLaunch + 1)?.opcode?.name?.startsWith("move-result") != true
+    ) {
+        "Quality upgrade duration check launch changed"
+    }
+    commit.replaceInstruction(
+        watchLaunch,
+        "invoke-static {v${watchCall!!.registerC}, v${watchCall.registerD}, v${watchCall.registerE}, v${watchCall.registerF}, v${watchCall.registerG}}, $SMOOTH->watch(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V",
+    )
+    val watcher =
+        mutableClassDefBy(WATCH_UPGRADE).methods.single {
+            it.name == "invokeSuspend" && it.parameterTypes == listOf("Ljava/lang/Object;")
+        }
+    val watchBody = watcher.implementation!!.instructions.toList()
+    for ((name, hook, parameters) in
+        listOf(
+            Triple("replaceMediaItem", "restoreCopy", listOf("I", MEDIA_ITEM)),
+            Triple("seekTo", "restoreSeek", listOf("I", "J")),
+        )) {
+        val index =
+            watchBody.indices.single {
+                watchBody[it].methodRef()?.let { call ->
+                    call.definingClass == PLAYER &&
+                        call.name == name &&
+                        call.parameterTypes.map(CharSequence::toString) == parameters
+                } == true
+            }
+        val registers = watchBody[index] as FiveRegisterInstruction
+        val values =
+            listOf(
+                    registers.registerC,
+                    registers.registerD,
+                    registers.registerE,
+                    registers.registerF,
+                )
+                .take(registers.registerCount)
+        check(values.all { it < 16 }) { "Upgrade rollback registers changed" }
+        watcher.replaceInstruction(
+            index,
+            "invoke-static {${values.joinToString { "v$it" }}}, $SMOOTH->$hook($PLAYER${parameters.joinToString("")})V",
+        )
+    }
     // R8 reuses this register while building the item; capture the service before that happens.
     commit.addInstruction(
         ownerAt + 1,
@@ -1212,6 +1356,145 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
     )
     val waitRegister = (body[wait] as OneRegisterInstruction).registerA
     run.replaceInstruction(wait, "const-wide/16 v$waitRegister, 0xa28")
+    // The copy is only the one that plays once the swap adopts it, after the crossfade, or applies
+    // it directly; that is when BitChord's statistics and fallback for the song may change.
+    val directs =
+        body.indices.filter {
+            body[it].opcode == Opcode.INVOKE_INTERFACE &&
+                body[it].methodRef()?.let { m ->
+                    m.definingClass == PLAYER &&
+                        m.name == "replaceMediaItem" &&
+                        m.parameterTypes.map(CharSequence::toString) == listOf("I", MEDIA_ITEM)
+                } == true
+        }
+    val adoptions =
+        body.indices.filter {
+            body[it].methodRef()?.let { m ->
+                m.definingClass == SERVICE && m.name == "access\$adoptPlayerForVersionSwap"
+            } == true
+        }
+    check(directs.size in 1..2 && adoptions.size == 1) { "Version swap adoption changed" }
+    val adopt = body[adoptions.single()] as? FiveRegisterInstruction
+    check(
+        adopt != null &&
+            adopt.registerCount == 3 &&
+            body[adoptions.single()].methodRef()!!.parameterTypes.map(CharSequence::toString) ==
+                listOf(SERVICE, EXO_PLAYER, EXO_PLAYER) &&
+            maxOf(adopt.registerC, adopt.registerD, adopt.registerE) < 16 &&
+            body[adoptions.single()].methodRef()!!.returnType == "V"
+    ) {
+        "Version swap adoption registers changed"
+    }
+    for (index in directs) {
+        val direct = body[index] as FiveRegisterInstruction
+        check(
+            direct.registerCount == 3 &&
+                maxOf(direct.registerC, direct.registerD, direct.registerE) < 16
+        ) {
+            "Version swap direct replacement registers changed"
+        }
+        run.replaceInstruction(
+            index,
+            "invoke-static {v${direct.registerC}, v${direct.registerD}, v${direct.registerE}}, $SMOOTH->replaced(${PLAYER}I$MEDIA_ITEM)V",
+        )
+    }
+    // The swap can also end without adopting. Each way out tells the extension, so what it holds
+    // for the copy is let go at once and not only when a newer upgrade comes. Insertions go
+    // from the end of the method, so the indexes of those before are still right. None is at a
+    // jump target: each follows an instruction that is straight-line code.
+    val swapInserts = mutableListOf<Pair<Int, String>>()
+    for ((ownerType, fieldName) in
+        listOf(
+            SERVICE to "versionSwapGeneration",
+            SERVICE to "versionSwapJob",
+            SERVICE to "spare",
+            VERSION_SWAP to "this\$0",
+            VERSION_SWAP to "\$activePlayer",
+            VERSION_SWAP to "\$targetMediaItem",
+            VERSION_SWAP to "\$generation",
+        )) check(classDefBy(ownerType).fields.any { it.name == fieldName }) {
+        "Version swap ownership field changed: $fieldName"
+    }
+    val coroutineRegister = run.implementation!!.registerCount - 2
+    check(
+        body.none {
+            it.opcode.setsRegister() &&
+                it is OneRegisterInstruction &&
+                (it.registerA == coroutineRegister ||
+                    (it.opcode.setsWideRegister() && it.registerA + 1 == coroutineRegister))
+        }
+    ) {
+        "Version swap coroutine register is overwritten"
+    }
+    val captureSwap = "invoke-static/range {p0 .. p0}, $SMOOTH->captureSwap(Ljava/lang/Object;)V"
+    swapInserts += 0 to "invoke-static/range {p0 .. p0}, $SMOOTH->bindSwap(Ljava/lang/Object;)V"
+    for (index in directs) swapInserts += index to captureSwap
+
+    // Straight-line code follows the adoption, so nothing is skipped by a jump into it.
+    swapInserts +=
+        adoptions.single() + 1 to
+            "$captureSwap\ninvoke-static {v${adopt.registerC}, v${adopt.registerD}, v${adopt.registerE}}, $SMOOTH->adopted(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V"
+    // The swap stops the standby player and clears it when the playing track changed; the
+    // service's swap mark is cleared next.
+    val abortMarks =
+        body.indices.mapNotNull { stop ->
+            if (
+                body[stop].methodRef()?.let {
+                    it.definingClass == PLAYER && it.name == "clearMediaItems"
+                } != true
+            )
+                return@mapNotNull null
+            val mark =
+                (stop + 1 until minOf(stop + 10, body.size)).firstOrNull {
+                    body[it].opcode == Opcode.IPUT_OBJECT &&
+                        body[it].fieldRef()?.let { field ->
+                            field.definingClass == SERVICE && field.name == "swappingMediaId"
+                        } == true
+                } ?: return@mapNotNull null
+            val exit = (mark + 1 until body.size).first { body[it].opcode == Opcode.RETURN_OBJECT }
+            // The direct-replacement fallback still has a copy to prepare.
+            if ((mark + 1 until exit).any { body[it].methodRef()?.name == "replaceMediaItem" }) null
+            else mark
+        }
+    check(abortMarks.size == 2) { "Version swap abort paths changed" }
+    for (abortMark in abortMarks) {
+        swapInserts +=
+            abortMark to
+                "$captureSwap\ninvoke-static/range {v${(body[abortMark] as TwoRegisterInstruction).registerB} .. v${(body[abortMark] as TwoRegisterInstruction).registerB}}, $SMOOTH->abandoned(Ljava/lang/Object;)V"
+    }
+    // Every failure and cancel ends at one place, which rethrows after reading the
+    // generation.
+    val exitRethrow = body.indices.last { body[it].opcode == Opcode.THROW }
+    val exitGeneration =
+        (maxOf(0, exitRethrow - 20) until exitRethrow).lastOrNull {
+            body[it].methodRef()?.let { m ->
+                m.definingClass == SERVICE && m.name == "access\$getVersionSwapGeneration\$p"
+            } == true
+        } ?: throw PatchException("Version swap failure path not found")
+    val exitGenerationCall = body[exitGeneration] as? FiveRegisterInstruction
+    val exitFailure = (body[exitRethrow] as OneRegisterInstruction).registerA
+    check(
+        exitGenerationCall != null &&
+            exitGenerationCall.registerCount == 1 &&
+            body[exitGeneration + 1].opcode == Opcode.MOVE_RESULT &&
+            body[exitGeneration + 2].opcode == Opcode.IF_NE &&
+            maxOf(exitGenerationCall.registerC, exitFailure) < 16 &&
+            (exitGeneration + 1 until exitRethrow).none {
+                val at = body[it]
+                at is OneRegisterInstruction &&
+                    at.opcode.setsRegister() &&
+                    at.registerA == exitFailure
+            }
+    ) {
+        "Version swap failure path changed"
+    }
+    swapInserts +=
+        exitGeneration + 2 to
+            "$captureSwap\ninvoke-static {v${exitGenerationCall!!.registerC}, v$exitFailure}, $SMOOTH->ended(Ljava/lang/Object;Ljava/lang/Throwable;)V"
+    for ((index, code) in swapInserts.sortedByDescending { it.first }) run.addInstructions(
+        index,
+        code,
+    )
     println("Held the upgrade's crossfade until the new copy plays in step")
 }
 

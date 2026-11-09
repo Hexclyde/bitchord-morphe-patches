@@ -203,13 +203,24 @@ public final class SourceAudio extends MediaDataSource {
     }
 
     static final class AnalysisInfo {
-        final int sampleRate;
+        final int sampleRate, channels;
         final double seconds;
 
         AnalysisInfo(int sampleRate, double seconds) {
+            this(sampleRate, seconds, 2);
+        }
+
+        AnalysisInfo(int sampleRate, double seconds, int channels) {
             this.sampleRate = sampleRate;
             this.seconds = seconds;
+            this.channels = channels;
         }
+    }
+
+    private static int channelsOf(MediaFormat format) {
+        return format.containsKey(MediaFormat.KEY_CHANNEL_COUNT)
+                ? format.getInteger(MediaFormat.KEY_CHANNEL_COUNT)
+                : 2;
     }
 
     /** Inspect the pinned source without taking ownership of its reader. */
@@ -231,9 +242,12 @@ public final class SourceAudio extends MediaDataSource {
                 // Queue labels may describe another rendition or round up to a whole second.
                 if (measured > 0) seconds = measured;
             }
+            int channels = channelsOf(format);
             if (rate <= 0 || !Double.isFinite(seconds) || seconds <= 0)
                 throw new IOException("Selected audio duration or sample rate is unusable");
-            return new AnalysisInfo(rate, seconds);
+            if (channels < 1 || channels > 8)
+                throw new IOException("Selected audio channel count is unusable");
+            return new AnalysisInfo(rate, seconds, channels);
         } catch (RuntimeException | LinkageError unavailable) {
             throw new IOException("Selected audio format could not be inspected", unavailable);
         }
@@ -458,11 +472,18 @@ public final class SourceAudio extends MediaDataSource {
 
     /** Peak live Java PCM, with room for DSP reduction, model tensors and read overhead. */
     static long analysisBytes(int sampleRate, double seconds) {
+        return analysisBytes(sampleRate, seconds, 2);
+    }
+
+    /** As above; more than two channels grow the copies. Counts outside 1..8 are unusable (-1). */
+    static long analysisBytes(int sampleRate, double seconds, int channels) {
         if (sampleRate <= 0 || !Double.isFinite(seconds) || seconds <= 0) return -1;
+        if (channels < 1 || channels > 8) return -1;
+        int wide = Math.max(2, channels);
         // decodeRegion keeps chunks while flattening; structure then resamples to 11.025 kHz.
-        double structure = sampleRate * seconds * 8 + 11_025d * seconds * 4;
-        // Stereo chunks + flattened channels + mono, then the bounded model tensor copies.
-        double region = sampleRate * Math.min(seconds, 30) * 20 + (64L << 20);
+        double structure = sampleRate * seconds * 4 * wide + 11_025d * seconds * 4;
+        // Chunks + flattened channels (4 bytes each per channel) + mono, then the model tensors.
+        double region = sampleRate * Math.min(seconds, 30) * (8 * wide + 4) + (64L << 20);
         double required = Math.max(structure, region) + (16L << 20);
         return !Double.isFinite(required) || required >= Long.MAX_VALUE
                 ? -1
@@ -483,7 +504,11 @@ public final class SourceAudio extends MediaDataSource {
             double seconds = Math.max(0, requestedSeconds);
             if (format.containsKey(MediaFormat.KEY_DURATION))
                 seconds = Math.max(seconds, format.getLong(MediaFormat.KEY_DURATION) / 1_000_000d);
-            long required = analysisBytes(format.getInteger(MediaFormat.KEY_SAMPLE_RATE), seconds);
+            long required =
+                    analysisBytes(
+                            format.getInteger(MediaFormat.KEY_SAMPLE_RATE),
+                            seconds,
+                            channelsOf(format));
             if (required < 0) return "selected audio duration or sample rate is unusable";
             return required <= available
                     ? null
@@ -690,6 +715,18 @@ public final class SourceAudio extends MediaDataSource {
     }
 
     static final int BLOCK = 64 * 1024, MAX_BLOCKS = 128;
+
+    /** Blocks one reader keeps while the Java heap is nearly full: 2 MiB instead of 8 MiB. */
+    static final int PRESSURE_BLOCKS = 32;
+
+    private static final long PRESSURE_FREE = 32L << 20;
+
+    /** Java heap not in use, in bytes (uncollected garbage counts as used); tests replace it. */
+    static LongSupplier heapFree =
+            () -> {
+                Runtime runtime = Runtime.getRuntime();
+                return runtime.maxMemory() - (runtime.totalMemory() - runtime.freeMemory());
+            };
 
     /** The furthest gap read through rather than asking for a new connection. */
     static final long MAX_SKIP = 512 * 1024;
@@ -1016,8 +1053,10 @@ public final class SourceAudio extends MediaDataSource {
             block = Arrays.copyOf(block, got);
         } else if (size >= 0 && position >= size) disconnect();
         blocks.put(start / BLOCK, block);
+        // Under heap pressure keep only a read-through window; the rest is read again if needed.
+        int keep = heapFree.getAsLong() < PRESSURE_FREE ? PRESSURE_BLOCKS : MAX_BLOCKS;
         Iterator<Long> oldest = blocks.keySet().iterator();
-        while (blocks.size() > MAX_BLOCKS) {
+        while (blocks.size() > keep) {
             oldest.next();
             oldest.remove();
         }

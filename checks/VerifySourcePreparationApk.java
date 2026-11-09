@@ -438,6 +438,56 @@ public final class VerifySourcePreparationApk {
                 "Public canonical bridge ABI: " + name + args(method));
     }
 
+    private static void pinnedLookup() {
+        String quality = "Lcom/music/bitchord/playback/QualityUpgrade;";
+        String stream = "Lcom/music/bitchord/data/sources/SourceStream;";
+        Method lookup = method(quality, "forcedStream", URI);
+        List<Instruction> body = code(lookup);
+        check(calls(body.get(0), FIRST, "pinnedStream"), "Pinned rendition lookup runs first");
+        check(
+                Arrays.equals(registers(body.get(0)), new int[] {parameter(lookup, 0)}),
+                "Pinned lookup receives the original URI");
+        check(
+                body.get(1).getOpcode() == Opcode.MOVE_RESULT_OBJECT,
+                "Pinned stream result is consumed");
+        int value = ((OneRegisterInstruction) body.get(1)).getRegisterA();
+        check(value < parameter(lookup, 0), "Pinned lookup scratch register is local");
+        check(
+                body.get(2).getOpcode() == Opcode.IF_EQZ
+                        && ((OneRegisterInstruction) body.get(2)).getRegisterA() == value,
+                "Only an absent pin falls through");
+        check(
+                body.get(3).getOpcode() == Opcode.CHECK_CAST
+                        && ((OneRegisterInstruction) body.get(3)).getRegisterA() == value
+                        && ((TypeReference) ((ReferenceInstruction) body.get(3)).getReference())
+                                .getType()
+                                .equals(stream),
+                "Pin is a SourceStream");
+        check(
+                body.get(4).getOpcode() == Opcode.RETURN_OBJECT
+                        && ((OneRegisterInstruction) body.get(4)).getRegisterA() == value,
+                "Pinned stream returns without consulting the song registry");
+        int skip =
+                body.get(2).getCodeUnits()
+                        + body.get(3).getCodeUnits()
+                        + body.get(4).getCodeUnits();
+        check(
+                ((OffsetInstruction) body.get(2)).getCodeOffset() == skip,
+                "Missing pin reaches the original lookup");
+        Method capability = method(quality, "bitchordPinnedLookup");
+        check(
+                AccessFlags.PUBLIC.isSet(capability.getAccessFlags())
+                        && AccessFlags.STATIC.isSet(capability.getAccessFlags()),
+                "Pinned lookup capability is public static");
+        List<Instruction> marker = code(capability);
+        check(
+                marker.size() == 2
+                        && marker.get(0).getOpcode() == Opcode.CONST_4
+                        && ((NarrowLiteralInstruction) marker.get(0)).getNarrowLiteral() == 1
+                        && marker.get(1).getOpcode() == Opcode.RETURN,
+                "Pinned lookup capability is enabled");
+    }
+
     private static void runtimeAbi() {
         publicStatic("tag", ITEM, ITEM);
         publicStatic("renditionUri", URI, ITEM);
@@ -596,6 +646,7 @@ public final class VerifySourcePreparationApk {
             taggingAndRanking();
             upgradeGuard();
             nativeContext();
+            pinnedLookup();
             runtimeAbi();
             reflectionAbi();
         }

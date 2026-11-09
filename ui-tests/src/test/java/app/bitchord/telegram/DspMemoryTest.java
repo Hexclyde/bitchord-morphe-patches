@@ -473,7 +473,7 @@ public class DspMemoryTest {
         SourceAudio.DspMemory memory = memory(152 * MB);
         assertEquals(32 * MB, memory.available());
         assertTrue(DspAnalysis.bytes(48000, 187) <= memory.available());
-        for (double seconds : new double[] {214, 302})
+        for (double seconds : new double[] {400, 900})
             assertTrue(DspAnalysis.bytes(48000, seconds) > memory.available());
         assertEquals(96, allocator.allocatedCount + allocator.availableCount);
     }

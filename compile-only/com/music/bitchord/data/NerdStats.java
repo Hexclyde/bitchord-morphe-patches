@@ -7,6 +7,13 @@ public final class NerdStats {
         return null;
     }
 
+    public static void onSourceStream(
+            String mediaId,
+            com.music.bitchord.data.sources.StreamFormat format,
+            String sourceName) {}
+
+    public static void recordSource(String mediaId, String sourceName) {}
+
     public static final class Snapshot {
         public final String mimeType, sourceName;
         public final Integer bitrateKbps;

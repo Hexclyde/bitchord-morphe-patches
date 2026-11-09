@@ -706,7 +706,7 @@ public final class VersionAlign {
                     } catch (Exception e) {
                         HostLog.d(
                                 "Unofficial Telegram couldn't line up the upgrade: "
-                                        + e.getMessage());
+                                        + e.getClass().getSimpleName());
                     }
                     double[] measured = result;
                     handler.post(() -> then.done(measured, id));

@@ -164,6 +164,16 @@ final class SourcePreparation {
 
         Object parkedStream(String mediaId);
 
+        /**
+         * Whether BitChord's own stream lookup, for a rendition URI, answers with the stream this
+         * engine pinned to that exact URI ({@link #pinnedStream}) before it looks at the stream
+         * parked by song id. False when the lookup is only by song id: another upgrade or a cleanup
+         * then changes what a period reads, so a changed parked stream has to be refused.
+         */
+        default boolean pinsDownstream() {
+            return false;
+        }
+
         /** Stops BitChord looking for yet another copy while this one is used, or lets it again. */
         void holdUpgrades(String mediaId, boolean hold);
 
@@ -531,7 +541,12 @@ final class SourcePreparation {
             String id = uri.getQueryParameter("v");
             if (choice.stream != null) {
                 String changed = null;
-                if (!choice.url.equals(host.parked(id))) changed = "the pinned stream changed";
+                // The downstream lookup follows this period's own approved stream only when the
+                // entry is tagged and the host answers by rendition URI. Otherwise it follows
+                // whatever is parked for the song, and a different one must not be joined.
+                boolean pinned = uri.getQueryParameter(ENTRY) != null && host.pinsDownstream();
+                if (!pinned && !choice.url.equals(host.parked(id)))
+                    changed = "the pinned stream changed";
                 else if (!java.util.Objects.equals(
                         choice.identity, host.contentIdentity(choice.stream)))
                     changed = "the file identity changed";
@@ -560,6 +575,34 @@ final class SourcePreparation {
             }
             return spec;
         }
+    }
+
+    /**
+     * The stream approved for exactly this tagged rendition URI while a live playback period still
+     * owns it, else null. It is immutable once approved: a later upgrade, failure or clean-up of
+     * the same song's shared parked slot cannot change it. Owned by the period, so it ends with the
+     * period. Binds, removes and holds nothing.
+     */
+    Object pinnedStream(Uri uri) {
+        if (uri == null
+                || !"bitchord".equals(uri.getScheme())
+                || !"watch".equals(uri.getAuthority())
+                || uri.getQueryParameter(ENTRY) == null) return null;
+        String marker = uri.getQueryParameter("q"), key = entryKey(uri);
+        if (marker == null || !marker.startsWith("hifi")) return null;
+        List<Object> owned = new ArrayList<>();
+        synchronized (periods) {
+            owned.addAll(periods.values());
+        }
+        for (Object bound : owned)
+            if (bound instanceof Mapped) {
+                Mapped choice = (Mapped) bound;
+                if (choice.stream != null
+                        && key.equals(entryKey(choice.marked))
+                        && marker.equals(choice.marked.getQueryParameter("q")))
+                    return choice.stream;
+            }
+        return null;
     }
 
     private Mapped decide(Uri uri) throws Exception {

@@ -978,6 +978,17 @@ public final class SourcePreference {
         boolean known = attempt.lengthA > 0 && attempt.lengthB > 0;
         StringBuilder text = new StringBuilder();
         if (error != null) text.append("; cause=").append(diagnosticCause(error));
+        if (error instanceof Unmeasurable) {
+            Unmeasurable empty = (Unmeasurable) error;
+            text.append("; decodedSamples=")
+                    .append(empty.samples)
+                    .append("; decodedRate=")
+                    .append(empty.rate)
+                    .append("; firstTimestampUs=")
+                    .append(empty.firstTimestamp)
+                    .append("; lastTimestampUs=")
+                    .append(empty.lastTimestamp);
+        }
         text.append(
                 String.format(
                         Locale.US,
@@ -1060,11 +1071,15 @@ public final class SourcePreference {
     }
 
     static String diagnosticError(Throwable error) {
+        if (error instanceof Unmeasurable) return ((Unmeasurable) error).reason;
         Throwable current = error;
         for (int depth = 0; current != null && depth < 8; depth++) {
             if (current instanceof SourceAudio.Stopped)
                 return "STOP_" + ((SourceAudio.Stopped) current).reason.name();
-            if (current.getClass().getSimpleName().equals("InvalidResponseCodeException")) {
+            if (current.getClass().getSimpleName().equals("InvalidResponseCodeException")
+                    || current.getClass()
+                            .getSimpleName()
+                            .equals("HttpDataSource$InvalidResponseCodeException")) {
                 try {
                     int status = current.getClass().getField("responseCode").getInt(current);
                     if (status >= 100 && status <= 599) return "HTTP_" + status;
@@ -1101,8 +1116,27 @@ public final class SourcePreference {
 
     /** The decoder finished without a read failing, but produced nothing to compare. */
     private static final class Unmeasurable extends IOException {
+        final String reason;
+        final int samples, rate;
+        final long firstTimestamp, lastTimestamp;
+
         Unmeasurable() {
-            super("Recording verification is waiting for enough measurable audio");
+            this("DECODE_INSUFFICIENT_AUDIO", -1, -1, -1, -1, null);
+        }
+
+        Unmeasurable(
+                String reason,
+                int samples,
+                int rate,
+                long firstTimestamp,
+                long lastTimestamp,
+                Throwable cause) {
+            super("Recording verification is waiting for enough measurable audio", cause);
+            this.reason = reason;
+            this.samples = samples;
+            this.rate = rate;
+            this.firstTimestamp = firstTimestamp;
+            this.lastTimestamp = lastTimestamp;
         }
     }
 
@@ -1258,17 +1292,25 @@ public final class SourcePreference {
         SourceAudio.JavaMemory[] allocation = {null};
         int[] sampleRate = {0};
         int[] count = {0};
+        long[] timestamps = {Long.MIN_VALUE, Long.MIN_VALUE};
+        Exception[] callbackFailure = {null};
+        String[] callbackReason = {"DECODE_CALLBACK_FAILURE"};
         Function4<ByteBuffer, MediaCodec.BufferInfo, Integer, Integer, Unit> tap =
                 (bytes, info, channels, rate) -> {
                     if (first[0] == 0) first[0] = System.nanoTime();
                     try {
+                        if (timestamps[0] == Long.MIN_VALUE)
+                            timestamps[0] = info.presentationTimeUs;
+                        timestamps[1] = info.presentationTimeUs;
                         if (allocation[0] == null) {
+                            sampleRate[0] = rate;
                             allocation[0] =
                                     SourceAudio.reserveJava(verificationBytes(rate, until - from));
-                            if (allocation[0] == null)
+                            if (allocation[0] == null) {
+                                callbackReason[0] = "MEMORY_ADMISSION";
                                 throw new IllegalStateException(
                                         "Audio verification is waiting for memory");
-                            sampleRate[0] = rate;
+                            }
                             samples[0] = new float[(int) Math.ceil(rate * (until - from)) + 65536];
                             allocation[0].materialized((long) samples[0].length * Float.BYTES);
                         }
@@ -1282,6 +1324,7 @@ public final class SourcePreference {
                         count[0] += chunk.length;
                         return Unit.INSTANCE;
                     } catch (Exception error) {
+                        callbackFailure[0] = error;
                         throw new IllegalStateException(error);
                     }
                 };
@@ -1306,7 +1349,15 @@ public final class SourcePreference {
             // now; its window is kept and the stop is noticed at the next read.
             if (timing == null || count[0] == 0) {
                 copy.finished(true);
-                return null;
+                throw new Unmeasurable(
+                        callbackFailure[0] != null
+                                ? callbackReason[0]
+                                : count[0] == 0 ? "DECODE_NO_AUDIO" : "DECODE_INCOMPLETE_AUDIO",
+                        count[0],
+                        sampleRate[0],
+                        timestamps[0] == Long.MIN_VALUE ? -1 : timestamps[0],
+                        timestamps[1] == Long.MIN_VALUE ? -1 : timestamps[1],
+                        callbackFailure[0]);
             }
             copy.intact();
             RecordingIdentity.Window window =

@@ -79,9 +79,13 @@ final class DspAnalysis {
         return Math.max(decode, measurement((long) Math.ceil((seconds + .75) * RATE)));
     }
 
-    /** The Java mono array and the native analyzer's input copy, with its working remainder. */
+    /**
+     * Java mono array plus the existing 16 MiB working margin. The native analyzer's input copy is
+     * malloc, not Java heap (the patch checks the host reaches a native method), so it is not
+     * charged; the margin is kept because the host's Java-side peak is unmeasured.
+     */
     static long measurement(long frames) {
-        return frames * 8 + (16L << 20);
+        return frames * 4 + (16L << 20);
     }
 
     static Object analyze(
@@ -266,6 +270,8 @@ final class DspAnalysis {
             check(stopped);
             double measuredSeconds = frames / (double) RATE;
             Object features = PlaybackService.bitchordDspFeatures(mono, measuredSeconds);
+            // The array is finished with; do not hold it while the result is built.
+            mono = null;
             check(stopped);
             return features == null
                     ? null

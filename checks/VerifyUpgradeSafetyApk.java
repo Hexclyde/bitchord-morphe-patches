@@ -50,7 +50,7 @@ public final class VerifyUpgradeSafetyApk {
 
     public static void main(String[] args) throws Exception {
         var dex = DexFileFactory.loadDexContainer(new File(args[0]), Opcodes.getDefault());
-        int guarded = 0, priority = 0, audition = 0;
+        int guarded = 0, priority = 0, audition = 0, deferred = 0, adoption = 0;
         for (String entry : dex.getDexEntryNames())
             for (ClassDef cls : dex.getEntry(entry).getDexFile().getClasses())
                 for (Method method : cls.getMethods()) {
@@ -58,7 +58,36 @@ public final class VerifyUpgradeSafetyApk {
                     MethodImplementation impl = method.getImplementation();
                     if (impl == null) continue;
                     Map<Integer, Instruction> code = new LinkedHashMap<>();
-                    int pc = 0, smooth = -1, verified = -1;
+                    int pc = 0, smooth = -1, verified = -1, adopting = -1, adopted = -1;
+                    List<Instruction> sequence = new ArrayList<>();
+                    impl.getInstructions().forEach(sequence::add);
+                    if (cls.getType().contains("$smoothSwapCurrentTrackVersion$1;")
+                            && method.getName().equals("invokeSuspend")) {
+                        MethodReference entryCall = call(sequence.get(0));
+                        if (entryCall == null || !entryCall.getName().equals("bindSwap"))
+                            throw new AssertionError(
+                                    "Swap coroutine does not bind its own attempt");
+                        for (int n = 1; n < sequence.size(); n++) {
+                            MethodReference callback = call(sequence.get(n));
+                            if (callback != null
+                                    && callback.getDefiningClass()
+                                            .equals("Lapp/bitchord/telegram/SmoothUpgrade;")
+                                    && Set.of("adopted", "replaced", "abandoned", "ended")
+                                            .contains(callback.getName())) {
+                                MethodReference capture = call(sequence.get(n - 1));
+                                if (capture == null || !capture.getName().equals("captureSwap"))
+                                    throw new AssertionError(
+                                            "Swap callback lost its attempt owner");
+                                if (!(sequence.get(n - 1) instanceof RegisterRangeInstruction range)
+                                        || range.getStartRegister() != impl.getRegisterCount() - 2
+                                        || range.getRegisterCount() != 1)
+                                    throw new AssertionError(
+                                            "Swap callback captures the wrong coroutine");
+                            }
+                        }
+                    }
+                    Set<String> held = new HashSet<>();
+                    boolean direct = false;
                     for (Instruction i : impl.getInstructions()) {
                         code.put(pc, i);
                         pc += i.getCodeUnits();
@@ -113,6 +142,17 @@ public final class VerifyUpgradeSafetyApk {
                                         "Standby seek does not use the current audition position");
                             audition++;
                         }
+                        String owner = target.getDefiningClass();
+                        if (owner.equals("Lapp/bitchord/telegram/SmoothUpgrade;")
+                                && Set.of("stream", "source", "shelved").contains(target.getName()))
+                            held.add(target.getName());
+                        if (owner.equals("Lcom/music/bitchord/data/NerdStats;")
+                                && Set.of("onSourceStream", "recordSource")
+                                        .contains(target.getName())) direct = true;
+                        if (target.getName().equals("access$adoptPlayerForVersionSwap"))
+                            adopting = at.getKey();
+                        if (owner.equals("Lapp/bitchord/telegram/SmoothUpgrade;")
+                                && target.getName().equals("adopted")) adopted = at.getKey();
                         if (target.getName().equals("alignedOffset")) {
                             if (target.getDefiningClass()
                                     .equals("Lapp/bitchord/telegram/SmoothUpgrade;"))
@@ -144,6 +184,17 @@ public final class VerifyUpgradeSafetyApk {
                                             + method.getName());
                         guarded++;
                     }
+                    if (held.size() == 3) {
+                        if (direct)
+                            throw new AssertionError(
+                                    "The commit still records the source before adoption");
+                        deferred++;
+                    }
+                    if (adopting >= 0) {
+                        if (adopted < adopting)
+                            throw new AssertionError("Adopting the player is not reported");
+                        adoption++;
+                    }
                     if (smooth >= 0 && verified >= 0) {
                         if (smooth >= verified)
                             throw new AssertionError(
@@ -151,16 +202,21 @@ public final class VerifyUpgradeSafetyApk {
                         priority++;
                     }
                 }
-        if (guarded != 2 || priority != 1 || audition != 1)
+        if (guarded != 2 || priority != 1 || audition != 1 || deferred != 1 || adoption != 1)
             throw new AssertionError(
                     "Missing upgrade guards or alignment priority: "
                             + guarded
                             + "/"
                             + priority
                             + "/"
-                            + audition);
+                            + audition
+                            + "/"
+                            + deferred
+                            + "/"
+                            + adoption);
         System.out.println(
                 "PASS: 2 cancellation paths preserve the outgoing player; measured offset has"
-                        + " priority; standby seek consumes the current audition position");
+                        + " priority; standby seek consumes the current audition position; the"
+                        + " source record waits for the replacement player");
     }
 }

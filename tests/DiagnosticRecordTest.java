@@ -47,7 +47,14 @@ public final class DiagnosticRecordTest {
                                     + " differenceMs=1200 limitMs=3000 advertisedReferenceMs=253000"
                                     + " advertisedCandidateMs=253000 probe=HOST_CONTAINER"
                                     + " failingSide=candidate window=2 fromMs=118500 untilMs=134500"
-                                    + " try=2 secret=PRIVATEKEY"));
+                                    + " try=2 decodedSamples=705600 decodedRate=44100"
+                                    + " firstTimestampUs=118500000 lastTimestampUs=134500000"
+                                    + " secret=PRIVATEKEY"));
+        check(
+                lengths.getLong("decodedSamples") == 705600
+                        && lengths.getLong("decodedRate") == 44100
+                        && lengths.getLong("lastTimestampUs") == 134500000,
+                "Decoded window measurements survive export");
         check(
                 lengths.getLong("differenceMs") == 1200
                         && lengths.getLong("advertisedCandidateMs") == 253000,

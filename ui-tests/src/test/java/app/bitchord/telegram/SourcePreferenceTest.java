@@ -1942,6 +1942,59 @@ public class SourcePreferenceTest {
     }
 
     @Test
+    public void verificationMemoryDenialSurvivesTheDecoderCallbackBoundary() throws Exception {
+        List<SourceAudio.JavaMemory> held = new ArrayList<>();
+        try {
+            for (int i = 0; i < 16; i++) {
+                SourceAudio.JavaMemory grant = SourceAudio.reserveJava(1L << 30, 0, 1);
+                assertNotNull(grant);
+                held.add(grant);
+            }
+            String report = failureReport(AudioDecoder.file(91, 0, 180, 0, false));
+            assertTrue(report, report.contains("reason=MEMORY_ADMISSION"));
+            assertTrue(report, report.contains("decodedSamples=0"));
+            assertTrue(report, report.contains("decodedRate=44100"));
+            assertFalse(SourcePreference.rejected(plain(), new DataSpec(Uri.parse(CANDIDATE))));
+        } finally {
+            for (SourceAudio.JavaMemory grant : held) grant.close();
+        }
+    }
+
+    @Test
+    public void emptyDecodeReportsSamplesWithoutRejectingTheRecording() throws Exception {
+        SyntheticDecoder.malformedFrame = 0;
+        String report = failureReport(AudioDecoder.file(91, 0, 180, 0, false));
+        assertTrue(report, report.contains("reason=DECODE_NO_AUDIO"));
+        assertTrue(report, report.contains("decodedSamples=0"));
+        assertTrue(report, report.contains("decodedRate=0"));
+        assertFalse(SourcePreference.rejected(plain(), new DataSpec(Uri.parse(CANDIDATE))));
+    }
+
+    public static class HttpDataSource$InvalidResponseCodeException extends IOException {
+        public final int responseCode;
+
+        HttpDataSource$InvalidResponseCodeException(int status) {
+            super("private request details");
+            responseCode = status;
+        }
+    }
+
+    @Test
+    public void shrunkHostHttpFailureRetainsItsStatus() {
+        assertEquals(
+                "HTTP_429",
+                SourcePreference.diagnosticError(
+                        new HttpDataSource$InvalidResponseCodeException(429)));
+        assertEquals(
+                "HTTP_403",
+                SourcePreference.diagnosticError(
+                        new HttpDataSource$InvalidResponseCodeException(403)));
+        assertFalse(
+                SourcePreference.transientFailure(
+                        new HttpDataSource$InvalidResponseCodeException(403)));
+    }
+
+    @Test
     public void diagnosticCategoriesNeverIncludeExceptionMessages() {
         String secret = "https://name:private@example.invalid/file?token=private";
         Throwable[] failures = {

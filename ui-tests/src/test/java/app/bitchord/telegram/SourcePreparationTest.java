@@ -113,7 +113,7 @@ public class SourcePreparationTest {
         boolean catalogue;
         boolean honest = true, claimable = true, unknownQuality;
         String terms = "session", content = "v1", provider = "telegram";
-        boolean stableIdentity = true;
+        boolean stableIdentity = true, pinsDownstream;
         volatile boolean undecided;
         long warmMs;
         int kbps = 1000;
@@ -286,6 +286,10 @@ public class SourcePreparationTest {
 
         public Object parkedStream(String id) {
             return parked.get(id);
+        }
+
+        public boolean pinsDownstream() {
+            return pinsDownstream;
         }
 
         public void holdUpgrades(String id, boolean hold) {
@@ -523,6 +527,56 @@ public class SourcePreparationTest {
         try {
             preparation.route(period, new DataSpec(song("a"), 5000, -1));
             fail("Would mix two files in one entry");
+        } catch (IOException expected) {
+        }
+    }
+
+    @Test
+    public void aPeriodKeepsReadingItsApprovedFileWhileAnotherProviderUpgradesAndFails()
+            throws Exception {
+        host.pinsDownstream = true;
+        Uri tagged = entry("a", "playing");
+        DataSpec first = preparation.route(period, new DataSpec(tagged));
+        assertEquals("tg://a_0", host.parked.get("a"));
+        assertEquals("tg://a_0", preparation.pinnedStream(first.uri));
+        // Another provider's upgrade takes the shared slot, then fails and clears it.
+        host.parked.put("a", "tg://24bit");
+        DataSpec seek = preparation.route(period, new DataSpec(tagged, 5000, -1));
+        assertEquals("Same rendition", first.uri, seek.uri);
+        assertEquals(5000, seek.position);
+        assertEquals("tg://a_0", preparation.pinnedStream(seek.uri));
+        host.parked.remove("a");
+        DataSpec again = preparation.route(period, new DataSpec(tagged, 9000, -1));
+        assertEquals(first.uri, again.uri);
+        assertEquals(
+                "Reads the same Telegram file", "tg://a_0", preparation.pinnedStream(again.uri));
+        // The pin is only for this entry's exact rendition.
+        assertNull(preparation.pinnedStream(song("a")));
+        assertNull(preparation.pinnedStream(entry("a", "other")));
+        assertNull(
+                preparation.pinnedStream(
+                        entry("a", "playing")
+                                .buildUpon()
+                                .appendQueryParameter("q", "hifi" + "0".repeat(32))
+                                .build()));
+    }
+
+    @Test
+    public void aPinnedPeriodStillRefusesAChangedFileOrChangedPermissions() throws Exception {
+        host.pinsDownstream = true;
+        Uri tagged = entry("a", "playing");
+        preparation.route(period, new DataSpec(tagged));
+        host.content = "v2";
+        try {
+            preparation.route(period, new DataSpec(tagged, 5000, -1));
+            fail("The file identity changed");
+        } catch (IOException expected) {
+        }
+        host.content = "v1";
+        host.terms = "session-2";
+        try {
+            preparation.route(period, new DataSpec(tagged, 5000, -1));
+            fail("The permissions changed");
         } catch (IOException expected) {
         }
     }

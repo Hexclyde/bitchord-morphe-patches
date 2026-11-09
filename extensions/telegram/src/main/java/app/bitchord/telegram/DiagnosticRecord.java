@@ -75,7 +75,9 @@ public final class DiagnosticRecord {
                         + " NETWORK_TIMEOUT DNS_FAILURE CONNECT_FAILURE TLS_FAILURE IO_INTERRUPTED"
                         + " CACHE_GONE SOURCE_NO_DATA CONNECTION_CLOSED RENDITION_CHANGED"
                         + " SOURCE_ROUTER_UNAVAILABLE UNEXPECTED_EOF FILE_MISSING DECODE_FAILURE"
-                        + " IO_UNCLASSIFIED INTERNAL_UNCLASSIFIED NONE STOP_UNSPECIFIED STOP_CLOSED"
+                        + " DECODE_NO_AUDIO DECODE_INCOMPLETE_AUDIO DECODE_INSUFFICIENT_AUDIO"
+                        + " DECODE_CALLBACK_FAILURE MEMORY_ADMISSION IO_UNCLASSIFIED"
+                        + " INTERNAL_UNCLASSIFIED NONE STOP_UNSPECIFIED STOP_CLOSED"
                         + " STOP_INTERRUPTED STOP_PLAYBACK_STOPPED STOP_CANCELLED STOP_DEADLINE"
                         + " STOP_BYTE_LIMIT STOP_READER_RELEASED STOP_READ_PERMISSION STOP_PRIORITY"
                         + " STOP_MEMORY");
@@ -92,18 +94,18 @@ public final class DiagnosticRecord {
     private static final Set<String> CHECK_EXCEPTIONS =
             set(
                     "IOException EOFException InterruptedIOException FileNotFoundException"
-                            + " SocketTimeoutException SocketException ConnectException"
-                            + " UnknownHostException SSLException SSLHandshakeException"
-                            + " IllegalStateException IllegalArgumentException SecurityException"
-                            + " InvocationTargetException InvalidResponseCodeException"
-                            + " HttpDataSourceException DataSourceException ParserException Stopped"
-                            + " Unmeasurable RuntimeException Exception OTHER");
+                        + " SocketTimeoutException SocketException ConnectException"
+                        + " UnknownHostException SSLException SSLHandshakeException"
+                        + " IllegalStateException IllegalArgumentException SecurityException"
+                        + " InvocationTargetException InvalidResponseCodeException"
+                        + " HttpDataSourceException DataSourceException ParserException Stopped"
+                        + " Unmeasurable IllegalStateException RuntimeException Exception OTHER");
     private static final Pattern CHECK_CAUSE =
             Pattern.compile("(?:^|; )cause=([A-Za-z>]{1,180})(?=$|[ ;])");
     private static final Pattern CHECK_MEASUREMENT =
             Pattern.compile(
                     "(?:^|["
-                        + " ;,])(measuredReferenceMs|measuredCandidateMs|differenceMs|limitMs|advertisedReferenceMs|advertisedCandidateMs|fromMs|untilMs|window|try)=(-?[0-9]{1,10})(?=$|["
+                        + " ;,])(measuredReferenceMs|measuredCandidateMs|differenceMs|limitMs|advertisedReferenceMs|advertisedCandidateMs|fromMs|untilMs|window|try|decodedSamples|decodedRate|firstTimestampUs|lastTimestampUs)=(-?[0-9]{1,12})(?=$|["
                         + " ;,])");
     private static final Pattern CHECK_SIDE =
             Pattern.compile("(?:^|[ ;,])failingSide=(reference|candidate|none)(?=$|[ ;,])");
@@ -282,6 +284,14 @@ public final class DiagnosticRecord {
                     case "fromMs":
                     case "untilMs":
                         integer(out, key, value, -1, 86_400_000);
+                        break;
+                    case "decodedSamples":
+                    case "decodedRate":
+                        integer(out, key, value, -1, 20_000_000);
+                        break;
+                    case "firstTimestampUs":
+                    case "lastTimestampUs":
+                        integer(out, key, value, -86_400_000_000L, 86_400_000_000L);
                         break;
                     case "window":
                     case "try":
