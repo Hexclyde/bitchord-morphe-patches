@@ -117,7 +117,7 @@ def main():
         r'default = "",\s+required = false', patch
     ):
         errors.append("Blank API credential defaults need review")
-    from prepare_mobile_source import load_config, validate_metadata
+    from prepare_mobile_source import load_config, validate_metadata, manifest_for
 
     source, metadata = load_config()
     validate_metadata(
@@ -134,6 +134,9 @@ def main():
             "bitchord-patches-" + metadata["patch_bundle_version"] + ".mpp"
         )
         verify_bundle(bundle, metadata)
+        expected_manifest = manifest_for(bundle, source, metadata)
+        if json.loads((ROOT / "patches-bundle.json").read_text()) != expected_manifest:
+            errors.append("Source manifest differs from the exact MPP metadata")
         rows = (args.assets / "SHA256SUMS").read_text().splitlines()
         expected_names = {bundle.name, "patches-bundle.json", "patches-list.json"}
         if len(rows) != len(expected_names):
