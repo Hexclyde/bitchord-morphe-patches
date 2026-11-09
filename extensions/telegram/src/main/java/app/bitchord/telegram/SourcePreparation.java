@@ -788,17 +788,42 @@ final class SourcePreparation {
 
         boolean stop() {
             synchronized (lock) {
-                return cancelled || closed || !on;
+                return cancelled
+                        || closed
+                        || !on
+                        || (!foreground && !PlaybackPriority.preparationAllowed());
             }
         }
 
         @Override
         public void run() throws Exception {
             try {
-                prepare();
-            } catch (Exception unavailable) {
-                if (!stop()) decline(id, song, DECLINED_MS, "the sources couldn't be asked");
-                host.log("Source preparation: " + unavailable.getClass().getSimpleName());
+                while (true) {
+                    while (!foreground && !PlaybackPriority.preparationAllowed()) {
+                        synchronized (lock) {
+                            if (cancelled || closed || !on) return;
+                            lock.wait(100);
+                        }
+                    }
+                    synchronized (lock) {
+                        if (cancelled || closed || !on) return;
+                    }
+                    if (!foreground && !PlaybackPriority.preparationAllowed()) continue;
+                    boolean yielded;
+                    try (AutoCloseable priority = PlaybackPriority.nextPreparation(id)) {
+                        try {
+                            prepare();
+                        } catch (Exception unavailable) {
+                            if (!stop())
+                                decline(id, song, DECLINED_MS, "the sources couldn't be asked");
+                            host.log(
+                                    "Source preparation: "
+                                            + unavailable.getClass().getSimpleName());
+                        }
+                        yielded = !foreground && !PlaybackPriority.preparationAllowed();
+                    }
+                    if (!yielded || done.isDone()) return;
+                }
             } finally {
                 finish(null);
             }

@@ -24,6 +24,11 @@ public final class FileChecksTest {
         final List<String> changed = new ArrayList<>();
         String pause = "", answer = "";
         int lookups, decodes;
+        boolean allowed = true, stop;
+
+        public boolean backgroundAllowed() {
+            return allowed;
+        }
 
         Host(TelegramIndex index) {
             this.index = index;
@@ -46,6 +51,7 @@ public final class FileChecksTest {
         }
 
         public byte[] range(int file, long offset, int length) {
+            if (stop) throw new NativeAudio.Deferred("playback needs the network");
             byte[] b = files.get(file);
             return Arrays.copyOfRange(b, (int) offset, (int) Math.min(b.length, offset + length));
         }
@@ -264,6 +270,26 @@ public final class FileChecksTest {
         checks.clear();
         check(checks.status().isEmpty(), "signing out clears the counts");
         check(checks.key().equals("Key12345"), "the AcoustID key isn't Telegram's, and stays");
+        // Playback needs the network: nothing is read, and a read playback stopped half way is
+        // tried again at once rather than counted as a failure of the file.
+        FileChecks gated = new FileChecks(null, null, host, clock::get);
+        gated.checkInBackground = true;
+        store.put(
+                -100, Collections.singletonList(row(21, 11, "flac", genuine.length, 10, true)), 3);
+        host.allowed = false;
+        check(
+                gated.step() == 1000 && index.found("check", "-100_21") == null,
+                "waits while playback needs the network");
+        host.allowed = true;
+        host.stop = true;
+        gated.step();
+        host.stop = false;
+        check(index.found("check", "-100_21") == null, "an interrupted read gives no verdict");
+        gated.step();
+        JSONObject resumed = index.found("check", "-100_21");
+        check(
+                resumed != null && resumed.optString("verdict").equals("ok"),
+                "the interrupted file is the next one checked: " + resumed);
         store.clear();
         check(store.found("check", "-100_2") == null, "clearing the index clears what was found");
         System.out.println("PASS: " + passed + " file check, recognition and saved-result checks.");

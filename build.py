@@ -240,6 +240,7 @@ shared_ui = {
     "TransitionRuntime",
     "TransitionEditorActivity",
     "SourcePreference",
+    "PlaybackPriority",
     "RecordingIdentity",
 }
 for source in (OUT / "extension-classes").rglob("*.class"):

@@ -45,6 +45,7 @@ public final class SourcePreference {
     private static final Map<String, Boolean> decisions = new ConcurrentHashMap<>();
     private static final Map<String, Double> offsets = new ConcurrentHashMap<>();
     private static final Map<String, double[]> pendingOffsets = new ConcurrentHashMap<>();
+    static java.util.function.LongSupplier retryClock = System::nanoTime;
     private static final long BUDGET = 45_000_000_000L;
 
     /**
@@ -297,6 +298,11 @@ public final class SourcePreference {
     private static final class Attempt {
         final ReentrantLock lock = new ReentrantLock();
         final long created = System.nanoTime();
+        final String id = UUID.randomUUID().toString();
+        String context;
+        long retryAt;
+        int failures;
+        int users;
         DataSpec expected;
         double durationA = -1, durationB = -1;
         final RecordingIdentity.Window[] a = new RecordingIdentity.Window[WINDOWS],
@@ -312,30 +318,49 @@ public final class SourcePreference {
         }
     }
 
-    private static final Map<String, Attempt> attempts =
-            new LinkedHashMap<String, Attempt>() {
-                @Override
-                protected boolean removeEldestEntry(Map.Entry<String, Attempt> eldest) {
-                    return size() > KEPT;
-                }
-            };
+    private static final Map<String, Attempt> attempts = new LinkedHashMap<>();
 
-    private static Attempt attempt(String key) {
+    private static Attempt attempt(String key) throws IOException {
+        // Policies compare the same measured windows differently; they never share a verdict.
+        if (key.startsWith(STRICT)) key = key.substring(STRICT.length());
+        else if (key.startsWith(PREPARED)) key = key.substring(PREPARED.length());
         synchronized (attempts) {
             Attempt found = attempts.get(key);
-            if (found == null
-                    || (System.nanoTime() - found.created > KEPT_NANOS && !found.lock.isLocked())) {
+            if (found != null
+                    && found.users == 0
+                    && System.nanoTime() - found.created > KEPT_NANOS) {
+                attempts.remove(key);
+                found = null;
+            }
+            if (found == null) {
+                if (attempts.size() >= KEPT) {
+                    java.util.Iterator<Attempt> entries = attempts.values().iterator();
+                    while (entries.hasNext()) {
+                        if (entries.next().users == 0) {
+                            entries.remove();
+                            break;
+                        }
+                    }
+                }
+                if (attempts.size() >= KEPT)
+                    throw new IOException("Recording verification queue is full");
                 found = new Attempt();
                 attempts.put(key, found);
             }
+            found.users++;
             return found;
         }
     }
 
-    private static void forget(String key) {
+    private static void releaseAttempt(String key, Attempt attempt) {
         synchronized (attempts) {
-            attempts.remove(key);
+            attempt.users--;
         }
+    }
+
+    private static String identity(String value) {
+        return UUID.nameUUIDFromBytes(value.getBytes(java.nio.charset.StandardCharsets.UTF_8))
+                .toString();
     }
 
     /** One copy being verified, read through a single source for all of its windows. */
@@ -344,9 +369,18 @@ public final class SourcePreference {
         final Uri local;
         final long deadline;
         final BooleanSupplier stale;
+        final boolean background, upgrade;
         SourceAudio audio;
 
-        Copy(DataSpec spec, Uri local, long deadline, BooleanSupplier stale) {
+        Copy(
+                DataSpec spec,
+                Uri local,
+                long deadline,
+                BooleanSupplier stale,
+                boolean background,
+                boolean upgrade) {
+            this.background = background;
+            this.upgrade = upgrade;
             this.spec = spec;
             this.local = local;
             this.deadline = deadline;
@@ -358,7 +392,11 @@ public final class SourcePreference {
                 audio =
                         local != null
                                 ? SourceAudio.whole(local, deadline, stale)
-                                : new SourceAudio(spec, deadline, stale);
+                                : background
+                                        ? SourceAudio.preparation(spec, deadline, stale)
+                                        : upgrade
+                                                ? SourceAudio.verification(spec, deadline, stale)
+                                                : new SourceAudio(spec, deadline, stale);
             return audio.view();
         }
 
@@ -368,15 +406,11 @@ public final class SourcePreference {
                 audio.rethrowFailure();
                 audio.idle();
             }
-            // What did arrive is kept, however late: the next attempt needn't read it again.
-            if (gotNothing) {
-                // A decode stopped by the job, the player or an interrupt returns no audio.
-                SourceAudio.checkLeased();
-                if (System.nanoTime() > deadline)
-                    throw new SourceAudio.Stopped(SourceAudio.StopReason.DEADLINE);
-                if (stale.getAsBoolean())
-                    throw new SourceAudio.Stopped(SourceAudio.StopReason.CANCELLED);
-            }
+            SourceAudio.checkLeased();
+            if (System.nanoTime() > deadline)
+                throw new SourceAudio.Stopped(SourceAudio.StopReason.DEADLINE);
+            if (stale.getAsBoolean())
+                throw new SourceAudio.Stopped(SourceAudio.StopReason.CANCELLED);
         }
 
         boolean expired() {
@@ -561,7 +595,12 @@ public final class SourcePreference {
                 asked != null ? asked.cancelled : upgrade ? () -> !parked(original) : () -> false;
         Attempt attempt = attempt(key);
         // The shared permit precedes the per-recording lock, including analyzer re-entry.
-        try (SourceAudio.Decoding decoding = SourceAudio.decode(deadline, cancelled)) {
+        try (SourceAudio.Decoding decoding =
+                asked != null && asked.background
+                        ? SourceAudio.decodePreparation(deadline, cancelled)
+                        : upgrade && asked == null
+                                ? SourceAudio.decodeUpgrade(deadline, cancelled)
+                                : SourceAudio.decodeVerification(deadline, cancelled)) {
             while (true) {
                 decoding.check();
                 if (attempt.lock.tryLock(
@@ -574,6 +613,21 @@ public final class SourcePreference {
                 // Whoever held the lock may have answered this already.
                 known = decisions.get(key);
                 if (known != null) return settled(known, key, mediaId, resolved, prepared);
+                if (attempt.retryAt > retryClock.getAsLong())
+                    throw new IOException("Recording verification retry is deferred");
+                attempt.context =
+                        "track="
+                                + (mediaId != null && mediaId.matches("[A-Za-z0-9_-]{11}")
+                                        ? mediaId
+                                        : identity(String.valueOf(mediaId)))
+                                + " candidate="
+                                + identity(candidate.toString())
+                                + " pair="
+                                + identity(key)
+                                + " policy="
+                                + (prepared ? "prepared" : "strict")
+                                + " attempt="
+                                + attempt.id;
                 // Everything this starts, the extractor's and decoder's work included, yields to
                 // the
                 // player that's being listened to.
@@ -598,6 +652,8 @@ public final class SourcePreference {
         } catch (InterruptedException interrupted) {
             Thread.currentThread().interrupt();
             throw new InterruptedIOException("Recording verification interrupted");
+        } finally {
+            releaseAttempt(key, attempt);
         }
     }
 
@@ -656,15 +712,31 @@ public final class SourcePreference {
                 }
             }
             long deadline = System.nanoTime() + budget;
-            expectedCopy = new Copy(attempt.expected, local ? reference : null, deadline, stale);
+            expectedCopy =
+                    new Copy(
+                            attempt.expected,
+                            local ? reference : null,
+                            deadline,
+                            stale,
+                            asked != null && asked.background,
+                            upgrade && asked == null);
             DataSpec file = wholeFile(resolved);
-            resolvedCopy = new Copy(file, null, deadline, stale);
+            resolvedCopy =
+                    new Copy(
+                            file,
+                            null,
+                            deadline,
+                            stale,
+                            asked != null && asked.background,
+                            upgrade && asked == null);
             stage = "length";
             if (attempt.durationA < 0) attempt.durationA = duration(expectedCopy);
             if (attempt.durationB < 0) attempt.durationB = duration(resolvedCopy);
             double durationA = attempt.durationA, durationB = attempt.durationB;
             if (!(durationA >= RecordingIdentity.MIN_SECONDS
                     && durationB >= RecordingIdentity.MIN_SECONDS)) {
+                if (attempt.durationA < RecordingIdentity.MIN_SECONDS) attempt.durationA = -1;
+                if (attempt.durationB < RecordingIdentity.MIN_SECONDS) attempt.durationB = -1;
                 reason = CheckReason.DURATION_INSUFFICIENT;
                 throw new IOException("Not enough audio to verify an automatic source replacement");
             }
@@ -760,18 +832,23 @@ public final class SourcePreference {
             return resolved;
         } catch (IOException error) {
             report("stopped", stage, started, attempt, expectedCopy, resolvedCopy, error, reason);
-            // Time ran out or nobody's waiting: what was decoded is still good for the next caller.
-            if (!(error instanceof SourceAudio.Stopped)) forget(key);
+            // Completed windows belong to this exact pair; a partial read never becomes a window.
+            if (!conclusive && !(error instanceof SourceAudio.Stopped)) {
+                attempt.failures = Math.min(attempt.failures + 1, 5);
+                attempt.retryAt =
+                        retryClock.getAsLong()
+                                + TimeUnit.MILLISECONDS.toNanos(
+                                        Math.min(8000, 250L << attempt.failures));
+            }
             throw error;
         } catch (Exception error) {
             report("stopped", stage, started, attempt, expectedCopy, resolvedCopy, error, reason);
-            forget(key);
+            attempt.retryAt = retryClock.getAsLong() + TimeUnit.SECONDS.toNanos(1);
             throw new IOException("Could not verify automatic source replacement", error);
         } finally {
             if (expectedCopy != null) expectedCopy.close();
             if (resolvedCopy != null) resolvedCopy.close();
-            if (conclusive) forget(key);
-            else if (!Boolean.TRUE.equals(decisions.get(key))) decisions.remove(key);
+            if (!conclusive && !Boolean.TRUE.equals(decisions.get(key))) decisions.remove(key);
             verifying.remove();
             SourceAutomix.leaveQuiet();
         }
@@ -791,7 +868,7 @@ public final class SourcePreference {
                 String.format(
                         Locale.US,
                         "Recording check %s at %s after %d ms, %d of %d windows; reference %s;"
-                                + " candidate %s%s",
+                                + " candidate %s%s; %s",
                         outcome,
                         stage,
                         (System.nanoTime() - started) / 1_000_000,
@@ -803,7 +880,8 @@ public final class SourcePreference {
                                 + "; reason="
                                 + (reason == CheckReason.UNCLASSIFIED
                                         ? diagnosticError(error)
-                                        : reason.name())));
+                                        : reason.name()),
+                        attempt.context));
     }
 
     static String diagnosticError(Throwable error) {
@@ -811,6 +889,13 @@ public final class SourcePreference {
         for (int depth = 0; current != null && depth < 8; depth++) {
             if (current instanceof SourceAudio.Stopped)
                 return "STOP_" + ((SourceAudio.Stopped) current).reason.name();
+            if (current.getClass().getSimpleName().equals("InvalidResponseCodeException")) {
+                try {
+                    int status = current.getClass().getField("responseCode").getInt(current);
+                    if (status >= 100 && status <= 599) return "HTTP_" + status;
+                } catch (ReflectiveOperationException unavailable) {
+                }
+            }
             if (current instanceof java.net.SocketTimeoutException) return "NETWORK_TIMEOUT";
             if (current instanceof java.net.UnknownHostException) return "DNS_FAILURE";
             if (current instanceof java.net.ConnectException) return "CONNECT_FAILURE";
@@ -847,6 +932,12 @@ public final class SourcePreference {
         } catch (Exception ignored) {
             return null;
         }
+    }
+
+    public static Long peekVerifiedOffset(String mediaId) {
+        double[] found = mediaId == null ? null : pendingOffsets.get(mediaId);
+        if (found == null || System.currentTimeMillis() - found[1] > 60_000) return null;
+        return Math.round(found[0]);
     }
 
     /** The verified shift for {@code mediaId}'s upgrade, in milliseconds, once; or null. */
@@ -891,7 +982,7 @@ public final class SourcePreference {
                 decoder.getDeclaredMethod(
                         "toMono", ByteBuffer.class, MediaCodec.BufferInfo.class, int.class);
         mono.setAccessible(true);
-        ArrayList<float[]> chunks = new ArrayList<>();
+        float[][] samples = {null};
         SourceAudio.JavaMemory[] allocation = {null};
         int[] sampleRate = {0};
         int[] count = {0};
@@ -906,15 +997,17 @@ public final class SourcePreference {
                                 throw new IllegalStateException(
                                         "Audio verification is waiting for memory");
                             sampleRate[0] = rate;
+                            samples[0] = new float[(int) Math.ceil(rate * (until - from)) + 65536];
+                            allocation[0].materialized((long) samples[0].length * Float.BYTES);
                         }
                         if (rate != sampleRate[0])
                             throw new IllegalStateException(
                                     "Audio verification sample rate changed");
                         float[] chunk = (float[]) mono.invoke(null, bytes, info, channels);
-                        count[0] += chunk.length;
-                        if (count[0] > 192000 * 24)
+                        if (chunk.length > samples[0].length - count[0])
                             throw new IllegalStateException("Audio verification window exceeded");
-                        chunks.add(chunk);
+                        System.arraycopy(chunk, 0, samples[0], count[0], chunk.length);
+                        count[0] += chunk.length;
                         return Unit.INSTANCE;
                     } catch (Exception error) {
                         throw new IllegalStateException(error);
@@ -939,15 +1032,10 @@ public final class SourcePreference {
             long decoded = System.nanoTime();
             copy.finished(timing == null || count[0] == 0);
             if (timing == null || count[0] == 0) return null;
-            float[] pcm = new float[count[0]];
-            int at = 0;
-            for (float[] chunk : chunks) {
-                System.arraycopy(chunk, 0, pcm, at, chunk.length);
-                at += chunk.length;
-            }
             RecordingIdentity.Window window =
                     new RecordingIdentity.Window(
-                            pcm,
+                            samples[0],
+                            count[0],
                             ((Number) pairValue(timing, "first")).intValue(),
                             ((Number) pairValue(timing, "second")).doubleValue());
             long done = System.nanoTime();
@@ -970,9 +1058,10 @@ public final class SourcePreference {
     }
 
     static long verificationBytes(int rate, double seconds) {
-        if (rate <= 0 || !Double.isFinite(seconds) || seconds <= 0 || seconds > 24) return -1;
-        // Mono chunks and their flat copy, one decoder frame, source blocks and fingerprint work.
-        double bytes = (Math.ceil(rate * seconds) + 65536) * 8 + (12L << 20);
+        if (rate <= 0 || rate > 768000 || !Double.isFinite(seconds) || seconds <= 0 || seconds > 24)
+            return -1;
+        // One mono window, one decoder frame, source blocks and fingerprint work.
+        double bytes = (Math.ceil(rate * seconds) + 65536) * 4 + (12L << 20);
         return bytes >= Long.MAX_VALUE ? -1 : (long) bytes;
     }
 

@@ -71,14 +71,43 @@ public final class SourceAudio extends MediaDataSource {
         return Math.max(0, available - maximum / 2);
     }
 
+    /**
+     * A promise of Java heap, charged in full against what is free until the holder reports what it
+     * actually allocated. Nothing is inferred from heap growth: only {@link #materialized} reduces
+     * what is still pending, so unrelated allocation can never release a grant.
+     */
     static final class JavaMemory implements AutoCloseable {
-        private static long pending;
+        private static final java.util.List<JavaMemory> open = new java.util.ArrayList<>();
         final long bytes;
+        // Bytes the owner reports as allocated; guarded by JavaMemory.class.
+        private long consumed;
         private boolean closed;
 
         private JavaMemory(long bytes) {
             this.bytes = bytes;
-            pending += bytes;
+            open.add(this);
+        }
+
+        /**
+         * Reports {@code count} bytes of this grant as now allocated on the Java heap, once, right
+         * AFTER the allocation succeeded (a late call only over-counts, an early one would
+         * under-count). Only call it for heap this grant's owner allocated itself: native copies,
+         * temporary disk and other threads' memory are never reported. The total is clamped to the
+         * grant, and a closed grant ignores it.
+         */
+        void materialized(long count) {
+            if (count <= 0) return;
+            synchronized (JavaMemory.class) {
+                if (closed) return;
+                consumed = Math.min(bytes, consumed + Math.min(count, bytes));
+            }
+        }
+
+        /** Bytes promised and not yet reported as allocated. */
+        long pending() {
+            synchronized (JavaMemory.class) {
+                return closed ? 0 : bytes - consumed;
+            }
         }
 
         @Override
@@ -86,16 +115,23 @@ public final class SourceAudio extends MediaDataSource {
             synchronized (JavaMemory.class) {
                 if (closed) return;
                 closed = true;
-                pending -= bytes;
+                open.remove(this);
             }
         }
     }
 
+    /** Bytes promised by open grants (other than {@code own}) and not yet reported allocated. */
     private static long pendingJava(JavaMemory own) {
         synchronized (JavaMemory.class) {
-            return JavaMemory.pending - (own == null || own.closed ? 0 : own.bytes);
+            long sum = 0;
+            for (JavaMemory grant : JavaMemory.open) {
+                if (grant != own) sum += grant.bytes - grant.consumed;
+            }
+            return sum;
         }
     }
+
+    private static final int MAX_GRANTS = 16;
 
     static JavaMemory reserveJava(long bytes) {
         Runtime runtime = Runtime.getRuntime();
@@ -120,10 +156,12 @@ public final class SourceAudio extends MediaDataSource {
     static JavaMemory reserveJava(long maximum, long used, long bytes) {
         synchronized (JavaMemory.class) {
             if (maximum <= 0 || used < 0 || used >= maximum || bytes <= 0) return null;
+            // Grants are few and short; a leak must not grow the list without limit.
+            if (JavaMemory.open.size() >= MAX_GRANTS) return null;
             // Playback loading and the visible screen can still grow during an allocation.
             long margin = Math.max(8L << 20, Math.min(24L << 20, maximum / 8));
             long free = maximum - used - margin;
-            if (bytes > free || JavaMemory.pending > free - bytes) return null;
+            if (bytes > free || pendingJava(null) > free - bytes) return null;
             return new JavaMemory(bytes);
         }
     }
@@ -189,6 +227,87 @@ public final class SourceAudio extends MediaDataSource {
         return dspAvailable(maximum, used, growth);
     }
 
+    /** Physical memory the system reports as available, in bytes, or -1 if unreadable. */
+    static LongSupplier physicalAvailable =
+            () -> {
+                try (java.io.BufferedReader in =
+                        new java.io.BufferedReader(new java.io.FileReader("/proc/meminfo"))) {
+                    for (int i = 0; i < 16; i++) {
+                        String line = in.readLine();
+                        if (line == null) break;
+                        if (line.startsWith("MemAvailable:"))
+                            return Long.parseLong(line.replaceAll("[^0-9]", "")) * 1024;
+                    }
+                } catch (IOException | RuntimeException unreadable) {
+                    // Diagnostics only.
+                }
+                return -1;
+            };
+
+    /** This process's resident set from /proc/self/status, in bytes, or -1. Diagnostics only. */
+    static LongSupplier processResident =
+            () -> {
+                try (java.io.BufferedReader in =
+                        new java.io.BufferedReader(new java.io.FileReader("/proc/self/status"))) {
+                    for (int i = 0; i < 64; i++) {
+                        String line = in.readLine();
+                        if (line == null) break;
+                        if (line.startsWith("VmRSS:"))
+                            return Long.parseLong(line.replaceAll("[^0-9]", "")) * 1024;
+                    }
+                } catch (IOException | RuntimeException unreadable) {
+                    // Diagnostics only.
+                }
+                return -1;
+            };
+
+    /** Native (malloc) heap this process holds, in bytes, or -1 where Android does not say. */
+    static LongSupplier nativeHeap =
+            () -> {
+                try {
+                    return android.os.Debug.getNativeHeapAllocatedSize();
+                } catch (RuntimeException | LinkageError unavailable) {
+                    return -1;
+                }
+            };
+
+    private static String mib(long bytes) {
+        return bytes < 0 ? "?" : Long.toString(bytes >> 20);
+    }
+
+    /**
+     * One bounded line separating the Java heap (used of maximum), grants not yet allocated, the
+     * room kept for playback to grow, what analysis may take, and the system's free memory, which
+     * is not heap and does not raise the heap limit.
+     */
+    static String memoryDiagnostics(long maximum, long used) {
+        long growth = -1;
+        try {
+            growth = SteadyPlayback.analysisGrowth(maximum);
+        } catch (RuntimeException | LinkageError unavailable) {
+            // Reported as the stock reserve below.
+        }
+        boolean enforced = growth >= 0;
+        if (!enforced) growth = Math.max(maximum / 2, STOCK_PLAYER_RESERVE);
+        return "heapUsedMiB="
+                + mib(used)
+                + ", heapMaxMiB="
+                + mib(maximum)
+                + ", pendingMiB="
+                + mib(pendingJava(null))
+                + ", playbackReserveMiB="
+                + mib(growth)
+                + (enforced ? "(enforced)" : "(assumed)")
+                + ", dspAvailableMiB="
+                + mib(dspAvailable(maximum, used, enforced ? growth : -1))
+                + ", systemFreeMiB="
+                + mib(physicalAvailable.getAsLong())
+                + ", processRssMiB="
+                + mib(processResident.getAsLong())
+                + ", nativeHeapMiB="
+                + mib(nativeHeap.getAsLong());
+    }
+
     /** A relaxed estimate is valid only while the native loading ceiling stays pinned. */
     static final class DspMemory implements AutoCloseable {
         final long available;
@@ -244,6 +363,11 @@ public final class SourceAudio extends MediaDataSource {
             return allocation != null;
         }
 
+        /** Reports heap this lease's owner just allocated; see {@link JavaMemory#materialized}. */
+        synchronized void materialized(long count) {
+            if (!closed && allocation != null) allocation.materialized(count);
+        }
+
         @Override
         public synchronized void close() {
             if (closed) return;
@@ -272,7 +396,8 @@ public final class SourceAudio extends MediaDataSource {
         } catch (RuntimeException | LinkageError unavailable) {
             // The conservative calculation needs no optional runtime or loading hooks.
         }
-        return new DspMemory(maximum, used, null, () -> -1, () -> false);
+        return new DspMemory(
+                maximum, used, null, () -> -1, () -> !PlaybackPriority.analysisAllowed());
     }
 
     /** Peak live Java PCM, with room for DSP reduction, model tensors and read overhead. */
@@ -335,19 +460,29 @@ public final class SourceAudio extends MediaDataSource {
         private long deadline;
         private final BooleanSupplier cancelled;
         private final boolean host;
+        // Verification yields to playback; analysis also yields to preparation and upgrades.
+        private final boolean yields;
+        private boolean upgrade;
         private Decoding outer;
+        private AutoCloseable priority;
         private boolean released;
         volatile boolean memoryStopped;
 
-        private Decoding(long deadline, BooleanSupplier cancelled, boolean host) {
+        private Decoding(long deadline, BooleanSupplier cancelled, boolean host, boolean yields) {
             this.deadline = deadline;
             this.cancelled = cancelled;
             this.host = host;
+            this.yields = yields;
         }
 
         void check() throws IOException {
+            if (outer != null) outer.check();
             if (Thread.currentThread().isInterrupted()) throw new Stopped(StopReason.INTERRUPTED);
             if (host && AutomixAccess.stopped()) throw new Stopped(StopReason.PLAYBACK_STOPPED);
+            if (yields
+                    ? !PlaybackPriority.analysisAllowed()
+                    : upgrade && !PlaybackPriority.verificationAllowed())
+                throw new Stopped(StopReason.PRIORITY);
             if (cancelled.getAsBoolean()) throw new Stopped(StopReason.CANCELLED);
             if (System.nanoTime() >= deadline) throw new Stopped(StopReason.DEADLINE);
             checkMemory();
@@ -361,6 +496,10 @@ public final class SourceAudio extends MediaDataSource {
                     if (outer == null) leased.remove();
                     else leased.set(outer);
                 }
+                try {
+                    if (priority != null) priority.close();
+                } catch (Exception ignored) {
+                }
                 decoding.unlock();
             }
         }
@@ -372,8 +511,29 @@ public final class SourceAudio extends MediaDataSource {
         if (lease != null) lease.check();
     }
 
+    /** Background analysis: stops, without fault, when playback or an upgrade needs the device. */
     static Decoding decode(long deadline, BooleanSupplier cancelled) throws IOException {
-        return admit(new Decoding(deadline, cancelled, true));
+        return admit(new Decoding(deadline, cancelled, true, true));
+    }
+
+    /**
+     * Verification of the selected audio for the current song. It shares the one permit but is may
+     * be required by the buffering player itself.
+     */
+    static Decoding decodeVerification(long deadline, BooleanSupplier cancelled)
+            throws IOException {
+        return admit(new Decoding(deadline, cancelled, true, false));
+    }
+
+    static Decoding decodeUpgrade(long deadline, BooleanSupplier cancelled) throws IOException {
+        Decoding permit = new Decoding(deadline, cancelled, true, false);
+        permit.upgrade = true;
+        return admit(permit);
+    }
+
+    static Decoding decodePreparation(long deadline, BooleanSupplier cancelled) throws IOException {
+        return decodeVerification(
+                deadline, () -> cancelled.getAsBoolean() || !PlaybackPriority.preparationAllowed());
     }
 
     private static Decoding admit(Decoding permit) throws IOException {
@@ -388,6 +548,7 @@ public final class SourceAudio extends MediaDataSource {
                     boolean admitted = false;
                     try {
                         permit.check();
+                        if (permit.yields) permit.priority = PlaybackPriority.analysis();
                         permit.outer = leased.get();
                         leased.set(permit);
                         admitted = true;
@@ -416,6 +577,7 @@ public final class SourceAudio extends MediaDataSource {
                 if (Thread.currentThread().isInterrupted())
                     throw new Stopped(StopReason.INTERRUPTED);
                 if (AutomixAccess.stopped()) throw new Stopped(StopReason.PLAYBACK_STOPPED);
+                if (!PlaybackPriority.analysisAllowed()) throw new Stopped(StopReason.PRIORITY);
                 if (cancelled.getAsBoolean()) throw new Stopped(StopReason.CANCELLED);
                 if (System.nanoTime() >= deadline) throw new Stopped(StopReason.DEADLINE);
                 checkMemory();
@@ -454,7 +616,8 @@ public final class SourceAudio extends MediaDataSource {
         BYTE_LIMIT,
         READER_RELEASED,
         READ_PERMISSION,
-        MEMORY
+        MEMORY,
+        PRIORITY
     }
 
     static final class Stopped extends IOException {
@@ -482,11 +645,14 @@ public final class SourceAudio extends MediaDataSource {
     private final BooleanSupplier cancelled;
     private final Supplier<DataSource> sources;
     private final Map<Long, byte[]> blocks = new LinkedHashMap<>(16, 0.75f, true);
-    private DataSource source;
+    private volatile DataSource source;
     private long size = -1, position = -1, spent;
     private int opens;
     private long sourceNanos;
     private boolean closed;
+    // Set from any thread when playback needs the device; see preempt().
+    private volatile boolean aborted;
+    private final BooleanSupplier priorityAllowed;
     private String served;
     private IOException failure;
 
@@ -495,18 +661,162 @@ public final class SourceAudio extends MediaDataSource {
     }
 
     SourceAudio(DataSpec spec, long deadline, BooleanSupplier cancelled) throws IOException {
-        this(spec, deadline, cancelled, AutomixAccess::source);
+        this(spec, deadline, cancelled, AutomixAccess::source, false);
+    }
+
+    /**
+     * Background analysis of a source: as the plain constructor, but the reader gives way to
+     * playback priority, including mid-read. When an upgrade, next-song preparation or urgent
+     * window starts, this reader's own connection is closed from a helper thread, which unblocks a
+     * read stuck in it, and the read fails with {@link StopReason#PRIORITY}. Only this reader's
+     * connection is closed: not a shared foreground source, a sibling reader or a TDLib client.
+     */
+    static SourceAudio background(DataSpec spec, long deadline, BooleanSupplier cancelled)
+            throws IOException {
+        return new SourceAudio(spec, deadline, cancelled, AutomixAccess::source, true);
+    }
+
+    SourceAudio(
+            DataSpec spec,
+            long deadline,
+            BooleanSupplier cancelled,
+            Supplier<DataSource> sources,
+            boolean yields)
+            throws IOException {
+        this(spec, deadline, cancelled, sources, yields ? PlaybackPriority::analysisAllowed : null);
+    }
+
+    static SourceAudio verification(DataSpec spec, long deadline, BooleanSupplier cancelled)
+            throws IOException {
+        return new SourceAudio(
+                spec,
+                deadline,
+                cancelled,
+                AutomixAccess::source,
+                PlaybackPriority::verificationAllowed);
+    }
+
+    static SourceAudio preparation(DataSpec spec, long deadline, BooleanSupplier cancelled)
+            throws IOException {
+        return new SourceAudio(
+                spec,
+                deadline,
+                cancelled,
+                AutomixAccess::source,
+                PlaybackPriority::preparationAllowed);
     }
 
     private SourceAudio(
-            DataSpec spec, long deadline, BooleanSupplier cancelled, Supplier<DataSource> sources)
+            DataSpec spec,
+            long deadline,
+            BooleanSupplier cancelled,
+            Supplier<DataSource> sources,
+            BooleanSupplier priorityAllowed)
             throws IOException {
         if (spec == null) throw new IOException("Audio source is not resolved");
         this.spec = spec;
         this.deadline = deadline;
         this.cancelled = cancelled;
         this.sources = sources;
-        reopen(0);
+        this.priorityAllowed = priorityAllowed;
+        // Registered before the first open, which may itself block.
+        if (priorityAllowed != null) register(this);
+        try {
+            reopen(0);
+        } catch (IOException | RuntimeException | Error failed) {
+            unregister(this);
+            throw failed;
+        }
+    }
+
+    // ── Preemption of blocked background reads ──────────────────────────────
+
+    private static final int MAX_READERS = 16;
+    private static final java.util.List<SourceAudio> readers = new java.util.ArrayList<>();
+    private static final java.util.concurrent.atomic.AtomicBoolean closing =
+            new java.util.concurrent.atomic.AtomicBoolean();
+    private static java.util.concurrent.ThreadPoolExecutor closer;
+
+    static {
+        PlaybackPriority.onPreempt(SourceAudio::preempt);
+    }
+
+    private static void register(SourceAudio reader) {
+        synchronized (readers) {
+            // Past the cap a reader is still stopped at its next check, just not mid-read.
+            if (readers.size() < MAX_READERS) readers.add(reader);
+        }
+    }
+
+    private static void unregister(SourceAudio reader) {
+        synchronized (readers) {
+            readers.remove(reader);
+        }
+    }
+
+    /** Open background readers; for diagnostics and tests. */
+    static int openReaders() {
+        synchronized (readers) {
+            return readers.size();
+        }
+    }
+
+    /**
+     * Called by {@link PlaybackPriority} on whatever thread asks for the device, so it only queues
+     * work: one coalesced task on one short-lived daemon thread closes the readers' connections.
+     */
+    private static void preempt() {
+        synchronized (readers) {
+            if (readers.isEmpty()) return;
+        }
+        if (!closing.compareAndSet(false, true)) return;
+        try {
+            synchronized (readers) {
+                if (closer == null) {
+                    closer =
+                            new java.util.concurrent.ThreadPoolExecutor(
+                                    1,
+                                    1,
+                                    5,
+                                    TimeUnit.SECONDS,
+                                    new java.util.concurrent.LinkedBlockingQueue<>(),
+                                    task -> {
+                                        Thread thread = new Thread(task, "SourceAudio-preempt");
+                                        thread.setDaemon(true);
+                                        return thread;
+                                    });
+                    closer.allowCoreThreadTimeOut(true);
+                }
+            }
+            closer.execute(
+                    () -> {
+                        closing.set(false);
+                        SourceAudio[] snapshot;
+                        synchronized (readers) {
+                            snapshot = readers.toArray(new SourceAudio[0]);
+                        }
+                        for (SourceAudio reader : snapshot)
+                            if (reader.priorityAllowed != null
+                                    && !reader.priorityAllowed.getAsBoolean()) reader.abort();
+                    });
+        } catch (RuntimeException rejected) {
+            closing.set(false);
+        }
+    }
+
+    /**
+     * Ends this reader for good, from any thread, without taking its monitor (a blocked read holds
+     * it). Closing the reader's own connection is what unblocks a read in progress.
+     */
+    private void abort() {
+        aborted = true;
+        DataSource open = source;
+        if (open == null) return;
+        try {
+            open.close();
+        } catch (Exception | LinkageError ignored) {
+            // The reader is finished either way; its next check stops it.
+        }
     }
 
     /**
@@ -514,7 +824,8 @@ public final class SourceAudio extends MediaDataSource {
      * no deadline, so it gets the same blocks and the same checks as anything else.
      */
     static SourceAudio whole(Uri uri, long deadline, BooleanSupplier cancelled) throws IOException {
-        return new SourceAudio(new DataSpec(uri), deadline, cancelled, () -> new Cached(uri));
+        return new SourceAudio(
+                new DataSpec(uri), deadline, cancelled, () -> new Cached(uri), false);
     }
 
     /** BitChord's cached reader as a source. Only ever asked for the next bytes in order. */
@@ -569,6 +880,8 @@ public final class SourceAudio extends MediaDataSource {
         if (closed) throw new Stopped(StopReason.CLOSED);
         if (Thread.currentThread().isInterrupted()) throw new Stopped(StopReason.INTERRUPTED);
         if (AutomixAccess.stopped()) throw new Stopped(StopReason.PLAYBACK_STOPPED);
+        if (aborted || priorityAllowed != null && !priorityAllowed.getAsBoolean())
+            throw new Stopped(StopReason.PRIORITY);
         if (cancelled.getAsBoolean()) throw new Stopped(StopReason.CANCELLED);
         if (System.nanoTime() > deadline) throw new Stopped(StopReason.DEADLINE);
         if (spent > MAX_BYTES) throw new Stopped(StopReason.BYTE_LIMIT);
@@ -582,6 +895,8 @@ public final class SourceAudio extends MediaDataSource {
         if (source == null) throw new IOException("Playback source router is not ready");
         opens++;
         try {
+            // An abort that arrived before the connection was visible still ends it.
+            if (aborted) throw new Stopped(StopReason.PRIORITY);
             long remaining = source.open(at == 0 ? spec : spec.subrange(at));
             Uri actual = source.getUri();
             String next = actual == null ? spec.uri.toString() : actual.toString();
@@ -592,6 +907,8 @@ public final class SourceAudio extends MediaDataSource {
             position = at;
         } catch (IOException | RuntimeException error) {
             disconnect();
+            // A read that failed after an abort is the abort, not a fault in the file.
+            if (aborted && !(error instanceof Stopped)) throw new Stopped(StopReason.PRIORITY);
             throw error;
         }
     }
@@ -620,7 +937,9 @@ public final class SourceAudio extends MediaDataSource {
             while (got < wanted) {
                 check();
                 long began = System.nanoTime();
-                int read = source.read(block, got, wanted - got);
+                DataSource connection = source;
+                if (connection == null) throw new IOException("Audio connection is closed");
+                int read = connection.read(block, got, wanted - got);
                 sourceNanos += System.nanoTime() - began;
                 if (read < 0) break;
                 if (read == 0) throw new IOException("Audio source returned no data");
@@ -630,6 +949,8 @@ public final class SourceAudio extends MediaDataSource {
             }
         } catch (IOException | RuntimeException error) {
             disconnect();
+            // A read that failed after an abort is the abort, not a fault in the file.
+            if (aborted && !(error instanceof Stopped)) throw new Stopped(StopReason.PRIORITY);
             throw error;
         }
         if (got < wanted) {
@@ -751,6 +1072,7 @@ public final class SourceAudio extends MediaDataSource {
     @Override
     public synchronized void close() throws IOException {
         closed = true;
+        unregister(this);
         blocks.clear();
         DataSource open = source;
         source = null;
@@ -983,6 +1305,7 @@ public final class SourceAudio extends MediaDataSource {
                                         new Decoding(
                                                 System.nanoTime() + probeNanos,
                                                 () -> false,
+                                                false,
                                                 false));
             long handle = decoder.open(new Input(source, stopOf(lease, null), probeNanos));
             try {
@@ -1034,7 +1357,14 @@ public final class SourceAudio extends MediaDataSource {
             BooleanSupplier requested = () -> Boolean.TRUE.equals(abort.invoke());
             Decoding lease = leased.get();
             if (lease == null) {
-                lease = own = admit(new Decoding(System.nanoTime() + ADMISSION, requested, false));
+                lease =
+                        own =
+                                admit(
+                                        new Decoding(
+                                                System.nanoTime() + ADMISSION,
+                                                requested,
+                                                false,
+                                                false));
                 // Waiting for the permit is limited; the work ends at the idle limit or on abort.
                 own.deadline = Long.MAX_VALUE;
             }

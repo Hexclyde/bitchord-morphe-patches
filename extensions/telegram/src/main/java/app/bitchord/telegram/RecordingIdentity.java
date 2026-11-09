@@ -10,9 +10,15 @@ final class RecordingIdentity {
         final double start, seconds;
 
         Window(float[] mono, int rate, double start) {
-            this.fingerprint = Fingerprint.of(mono, mono.length, rate);
+            this(mono, mono.length, rate, start);
+        }
+
+        Window(float[] mono, int length, int rate, double start) {
+            if (length < 0 || length > mono.length || rate <= 0)
+                throw new IllegalArgumentException("Invalid recording window");
+            this.fingerprint = Fingerprint.of(mono, length, rate);
             this.start = start;
-            this.seconds = mono.length / (double) rate;
+            this.seconds = length / (double) rate;
         }
     }
 

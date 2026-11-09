@@ -573,6 +573,8 @@ public class TelegramScreenTest {
         android.net.Uri file = android.net.Uri.parse("content://test/backup.gz");
         java.io.ByteArrayOutputStream written = new java.io.ByteArrayOutputStream();
         Shadows.shadowOf(activity.getContentResolver()).registerOutputStream(file, written);
+        Shadows.shadowOf(activity.getContentResolver())
+                .registerInputStream(file, readBack(written));
         Shadows.shadowOf(activity)
                 .receiveResult(
                         save,
@@ -580,7 +582,9 @@ public class TelegramScreenTest {
                         new android.content.Intent().setData(file));
         idle();
         assertEquals(java.util.Arrays.asList("backup true"), bridge.backups);
-        assertEquals(1, written.size());
+        assertTrue("A whole file, not 0 KB", written.size() > 20);
+        IndexTransfer.check(new java.io.ByteArrayInputStream(written.toByteArray()));
+        assertEquals("Backup saved.", bridge.status);
 
         // Restoring reads the file picked.
         clickRow("Restore");
@@ -636,6 +640,125 @@ public class TelegramScreenTest {
         assertTrue(bridge.collections.contains("album playlist Night Sessions"));
     }
 
+    /** What a document provider hands back after a save: the bytes that were written. */
+    static java.io.InputStream readBack(java.io.ByteArrayOutputStream written) {
+        return new java.io.InputStream() {
+            java.io.InputStream in;
+
+            java.io.InputStream open() {
+                if (in == null) in = new java.io.ByteArrayInputStream(written.toByteArray());
+                return in;
+            }
+
+            @Override
+            public int read() throws java.io.IOException {
+                return open().read();
+            }
+
+            @Override
+            public int read(byte[] b, int off, int len) throws java.io.IOException {
+                return open().read(b, off, len);
+            }
+        };
+    }
+
+    @Test
+    public void aFailedOrEmptyBackupNeverSignsOutOrClaimsSuccess() throws Exception {
+        TelegramBridge bridge = activity.bridge;
+        signedIn();
+        for (int attempt = 0; attempt < 2; attempt++) {
+            click("Sign out");
+            idle();
+            org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+                    .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                    .performClick();
+            Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+            android.content.Intent save =
+                    Shadows.shadowOf(activity).getNextStartedActivityForResult().intent;
+            android.net.Uri file = android.net.Uri.parse("content://test/bad" + attempt + ".gz");
+            if (attempt == 0)
+                // The disk fills up part-way.
+                Shadows.shadowOf(activity.getContentResolver())
+                        .registerOutputStream(
+                                file,
+                                new java.io.OutputStream() {
+                                    @Override
+                                    public void write(int b) throws java.io.IOException {
+                                        throw new java.io.IOException("Disk full");
+                                    }
+                                });
+            else {
+                // The provider takes the bytes and keeps nothing.
+                Shadows.shadowOf(activity.getContentResolver())
+                        .registerOutputStream(file, new java.io.ByteArrayOutputStream());
+                Shadows.shadowOf(activity.getContentResolver())
+                        .registerInputStream(file, new java.io.ByteArrayInputStream(new byte[0]));
+            }
+            Shadows.shadowOf(activity)
+                    .receiveResult(
+                            save,
+                            android.app.Activity.RESULT_OK,
+                            new android.content.Intent().setData(file));
+            idle();
+            assertTrue("Still signed in", bridge.ready());
+            assertNull("No backup remembered", bridge.lastBackup());
+            assertFalse(bridge.backups.contains("logout"));
+            assertNotEquals("Backup saved.", bridge.status);
+            assertEquals(IndexTransfer.CUT_SHORT, bridge.error);
+        }
+    }
+
+    @Test
+    public void aPrivateChannelBacksUpAndRestoresOnlyAfterAsking() throws Exception {
+        TelegramBridge bridge = activity.bridge;
+        signedIn();
+        openTab("Advanced");
+        clickRow("Back up");
+        android.app.AlertDialog ask =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        ask.getButton(android.app.AlertDialog.BUTTON_NEUTRAL).performClick();
+        idle();
+        assertEquals(
+                "No private channel",
+                Shadows.shadowOf(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+                        .getTitle()
+                        .toString());
+        assertTrue("Nothing posted", bridge.backups.isEmpty());
+
+        org.drinkless.tdlib.TdApi.Chat mine = new org.drinkless.tdlib.TdApi.Chat();
+        mine.id = 77;
+        mine.title = "My backups";
+        bridge.owned.add(mine);
+        clickRow("Back up");
+        org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+                .getButton(android.app.AlertDialog.BUTTON_NEUTRAL)
+                .performClick();
+        idle();
+        Shadows.shadowOf(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+                .clickOnItem(0);
+        idle();
+        assertTrue("Choosing the channel posts nothing yet", bridge.backups.isEmpty());
+        org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+                .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                .performClick();
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        idle();
+        assertEquals(java.util.Arrays.asList("backup true to 77"), bridge.backups);
+
+        clickRow("Restore from a private channel");
+        idle();
+        Shadows.shadowOf(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+                .clickOnItem(0);
+        idle();
+        assertEquals(1, bridge.backups.size());
+        org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+                .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                .performClick();
+        Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
+        idle();
+        assertEquals("restore from 77", bridge.backups.get(1));
+    }
+
     @Test
     public void signOutWithBackupAndComeBack() throws Exception {
         TelegramBridge bridge = activity.bridge;
@@ -674,6 +797,8 @@ public class TelegramScreenTest {
         android.net.Uri file = android.net.Uri.parse("content://test/signout.gz");
         java.io.ByteArrayOutputStream written = new java.io.ByteArrayOutputStream();
         Shadows.shadowOf(activity.getContentResolver()).registerOutputStream(file, written);
+        Shadows.shadowOf(activity.getContentResolver())
+                .registerInputStream(file, readBack(written));
         Shadows.shadowOf(activity)
                 .receiveResult(
                         save,
@@ -684,7 +809,7 @@ public class TelegramScreenTest {
                 "Backed up with the index, then signed out",
                 java.util.Arrays.asList("backup true", "logout"),
                 bridge.backups);
-        assertEquals(1, written.size());
+        assertTrue(written.size() > 20);
         assertFalse(bridge.ready());
         assertEquals("content://test/signout.gz", bridge.lastBackup().getString("uri"));
 

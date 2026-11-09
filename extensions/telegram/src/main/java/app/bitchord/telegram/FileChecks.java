@@ -38,6 +38,16 @@ final class FileChecks {
             return 0;
         }
 
+        /** False while playback needs the network; file reads and checks wait. */
+        default boolean backgroundAllowed() {
+            return true;
+        }
+
+        /** As above, and false while playback needs the processor for its own work. */
+        default boolean analysisAllowed() {
+            return true;
+        }
+
         /** The start of a file, decoded to mono. */
         Audio decode(String id, int seconds) throws Exception;
 
@@ -215,6 +225,7 @@ final class FileChecks {
     /** Does one file's worth of work. Returns how long to wait before the next. */
     long step() {
         if (!host.ready()) return 5000;
+        if (!host.backgroundAllowed() || !host.analysisAllowed()) return 1000;
         JSONObject due = nextPlayed();
         if (due != null) {
             work(due, false);
@@ -278,11 +289,25 @@ final class FileChecks {
     }
 
     private void work(JSONObject row, boolean background) {
-        if (needsCheck(row)) check(row, background);
+        if (needsCheck(row) && !check(row, background)) return;
         if (needsName(row)) name(row, background);
     }
 
-    private void check(JSONObject row, boolean background) {
+    /** Playback took the network or the file: not a failure of the file, so it is tried again. */
+    private boolean yielded(JSONObject row, boolean background, Exception e) {
+        boolean deferred = !host.backgroundAllowed() || !host.analysisAllowed();
+        for (Throwable t = e; t != null && !deferred; t = t.getCause())
+            deferred = t instanceof NativeAudio.Deferred;
+        if (!deferred) return false;
+        synchronized (this) {
+            if (background) page.addFirst(row);
+            else played.put(row.optString("id"), new Object[] {row, 0L});
+        }
+        return true;
+    }
+
+    /** False when it was put back to wait for playback. */
+    private boolean check(JSONObject row, boolean background) {
         String key = LosslessCheck.key(row);
         long[] read = {0};
         try {
@@ -317,6 +342,7 @@ final class FileChecks {
         } catch (LiveSearch.RateLimited e) {
             failed.put(key, clock.millis());
         } catch (Exception e) {
+            if (yielded(row, background, e)) return false;
             failed.put(key, clock.millis());
             HostLog.d(
                     "Unofficial Telegram couldn't check "
@@ -326,6 +352,7 @@ final class FileChecks {
         } finally {
             if (background) spend("bytes", read[0]);
         }
+        return true;
     }
 
     private JSONObject checkFile(JSONObject row, long[] read) throws Exception {
@@ -383,6 +410,7 @@ final class FileChecks {
         } catch (AcoustId.BadKey e) {
             keyProblem = e.getMessage();
         } catch (Exception e) {
+            if (yielded(row, background, e)) return;
             failed.put(id, clock.millis());
             HostLog.d(
                     "Unofficial Telegram couldn't recognise "

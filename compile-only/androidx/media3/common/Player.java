@@ -12,6 +12,8 @@ public interface Player {
         // R8 reordered these arguments in the pinned BitChord APK.
         default void onMediaItemTransition(int reason, MediaItem mediaItem) {}
 
+        default void onPlaybackStateChanged(int state) {}
+
         default void onIsPlayingChanged(boolean isPlaying) {}
 
         default void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {}

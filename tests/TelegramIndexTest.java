@@ -327,6 +327,52 @@ public final class TelegramIndexTest {
             archive.closeEntry();
         }
         byte[] archive = bytes.toByteArray();
+        // Playback needs the network while an archive is read: the archive stays waiting.
+        IndexStore.Memory deferredStore = new IndexStore.Memory();
+        AtomicBoolean busy = new AtomicBoolean(true);
+        TelegramIndex.Pages deferredPages =
+                new TelegramIndex.Pages() {
+                    public TdApi.FoundChatMessages page(long chat, int kind, long from) {
+                        return null;
+                    }
+
+                    public int count(long chat, int kind) {
+                        return 0;
+                    }
+
+                    public int position(long chat, int kind, long message) {
+                        return 0;
+                    }
+
+                    public byte[] range(int file, long offset, int length) {
+                        if (busy.get()) throw new NativeAudio.Deferred("playback has priority");
+                        return Arrays.copyOfRange(
+                                archive,
+                                (int) offset,
+                                (int) Math.min(archive.length, offset + length));
+                    }
+                };
+        TelegramIndex deferredIndex = new TelegramIndex(deferredStore, deferredPages, time::get);
+        TdApi.Message waiting = TestMessages.document(-100, 700, "Later.zip");
+        ((TdApi.MessageDocument) waiting.content).document.document.size = archive.length;
+        deferredIndex.message(waiting);
+        for (int i = 0; i < 4; i++)
+            try {
+                deferredIndex.step(List.of(-100L));
+            } catch (NativeAudio.Deferred expected) {
+                checks++;
+            }
+        check(
+                deferredStore.zipsWaiting(List.of(-100L)) == 1,
+                "An archive interrupted by playback is not marked done");
+        busy.set(false);
+        for (int i = 0; i < 4 && deferredStore.zipsWaiting(List.of(-100L)) > 0; i++)
+            deferredIndex.step(List.of(-100L));
+        check(
+                deferredStore.zipsWaiting(List.of(-100L)) == 0
+                        && deferredStore.row(-100, 700, 1) != null,
+                "The archive is read once playback lets go");
+
         CountDownLatch reading = new CountDownLatch(1), finish = new CountDownLatch(1);
         IndexStore.Memory archiveStore = new IndexStore.Memory();
         TelegramIndex.Pages archivePages =

@@ -515,6 +515,33 @@ public final class TelegramBridge {
 
     final List<String> backups = new ArrayList<>();
 
+    void backupToChannel(long chat, boolean withIndex) {
+        backups.add("backup " + withIndex + " to " + chat);
+    }
+
+    void restoreFromChannel(long chat) {
+        backups.add("restore from " + chat);
+    }
+
+    java.io.File backupFile(boolean withIndex) throws Exception {
+        java.io.File file = java.io.File.createTempFile("bitchord-backup", ".gz");
+        try (java.io.OutputStream out = new java.io.FileOutputStream(file)) {
+            IndexTransfer.write(
+                    out,
+                    new org.json.JSONObject()
+                            .put("format", IndexTransfer.BACKUP)
+                            .put("version", IndexTransfer.VERSION),
+                    java.util.Collections.emptyList(),
+                    (chat, message, limit) -> java.util.Collections.emptyList());
+        }
+        backups.add("backup " + withIndex);
+        return file;
+    }
+
+    java.io.File indexFile(long chat) throws Exception {
+        return backupFile(true);
+    }
+
     void backup(java.io.OutputStream out, boolean withIndex) throws Exception {
         out.write(new byte[] {1});
         backups.add("backup " + withIndex);

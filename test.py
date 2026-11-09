@@ -71,6 +71,7 @@ SOURCES = [
     "HostLog",
     "Downmix",
     "SmoothUpgrade",
+    "PlaybackPriority",
     "LiveSearch",
     "IndexStore",
     "TelegramIndex",
@@ -238,6 +239,7 @@ subprocess.run(
             if path.relative_to(ROOT / "tests").parts[0]
             not in {
                 "karaoke-memory",
+                "playback-priority",
                 "source-config",
                 "video-rendition",
                 "soulseek",
@@ -324,3 +326,5 @@ for suite in (
     subprocess.run([sys.executable, str(ROOT / "tests" / suite / "run.py")], check=True)
 
 subprocess.run(["bash", str(ROOT / "tests/karaoke-memory/run.sh")], check=True)
+
+subprocess.run(["bash", str(ROOT / "tests/playback-priority/run.sh")], check=True)

@@ -11,10 +11,10 @@ import org.robolectric.annotation.Config;
 @Config(manifest = Config.NONE, sdk = 35)
 public class VerificationMemoryTest {
     @Test
-    public void verificationAllowsBothMonoCopiesAndBoundedReadWork() {
+    public void verificationAllowsOneMonoWindowAndBoundedReadWork() {
         for (int rate : new int[] {44100, 48000, 96000, 192000, 384000})
             assertEquals(
-                    (16L * rate + 65536) * 8 + (12L << 20),
+                    (16L * rate + 65536) * 4 + (12L << 20),
                     SourcePreference.verificationBytes(rate, 16));
     }
 

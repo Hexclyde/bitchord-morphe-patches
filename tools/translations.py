@@ -69,7 +69,7 @@ def java(source, languages):
     ]
     for lang in languages:
         lines.append(f'            case "{lang}":')
-        lines.append(f"                return {method(lang)}();")
+        lines.append(f"                return {method(lang)}.table();")
     lines += [
         "            default:",
         "                return new String[0];",
@@ -79,14 +79,17 @@ def java(source, languages):
     for lang, table in languages.items():
         lines += [
             "",
-            f"    private static String[] {method(lang)}() {{",
-            "        return new String[] {",
+            # A class each: one class file holds at most 65535 constants, and all the
+            # languages together passed that.
+            f"    private static final class {method(lang)} {{",
+            "        static String[] table() {",
+            "            return new String[] {",
         ]
         for english in source:
             if english in table:
-                lines.append(f"            {literal(english)},")
-                lines.append(f"            {literal(table[english])},")
-        lines += ["        };", "    }"]
+                lines.append(f"                {literal(english)},")
+                lines.append(f"                {literal(table[english])},")
+        lines += ["            };", "        }", "    }"]
     lines.append("}")
     return "\n".join(lines) + "\n"
 

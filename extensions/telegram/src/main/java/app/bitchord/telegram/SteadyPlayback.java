@@ -57,6 +57,7 @@ public final class SteadyPlayback {
 
     private static final Map<Object, Boolean> observedControls = new java.util.WeakHashMap<>();
     private static final List<AnalysisLease> analysisLeases = new ArrayList<>();
+    private static final int MAX_ANALYSIS_LEASES = 8;
     private static int residentHolds;
     private static boolean gateObserved;
     private static long configurationEpoch;
@@ -400,7 +401,7 @@ public final class SteadyPlayback {
 
         @Override
         public long getAsLong() {
-            if (closed || cancelled) return -1;
+            if (getAsBoolean()) return -1;
             try {
                 return Math.max(0, Math.min(budget, loadingBudget()) - retained(observed()));
             } catch (Exception | LinkageError unavailable) {
@@ -411,7 +412,9 @@ public final class SteadyPlayback {
 
         @Override
         public boolean getAsBoolean() {
-            return closed || cancelled;
+            // Upgrade or urgent playback ends the analysis; its ceiling stays pinned until it
+            // returns, so the memory it still holds is never counted as free.
+            return closed || cancelled || !PlaybackPriority.analysisAllowed();
         }
 
         @Override
@@ -426,6 +429,7 @@ public final class SteadyPlayback {
     }
 
     static AnalysisLease analysisLease(long maximum) {
+        if (!PlaybackPriority.analysisAllowed()) return null;
         long epoch;
         synchronized (controls) {
             epoch = configurationEpoch;
@@ -433,6 +437,8 @@ public final class SteadyPlayback {
         if (analysisGrowth(maximum) < 0) return null;
         synchronized (controls) {
             if (configurationEpoch != epoch) return null;
+            // One analysis runs at a time; a leaked lease must not pile up or pin the ceiling.
+            if (analysisLeases.size() >= MAX_ANALYSIS_LEASES) return null;
             AnalysisLease lease = new AnalysisLease(maximum);
             analysisLeases.add(lease);
             controls.replaceAll((owner, previous) -> -1);

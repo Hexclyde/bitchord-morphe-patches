@@ -337,10 +337,27 @@ public final class TelegramBridge {
                             }
 
                             @Override
+                            public boolean backgroundAllowed() {
+                                return TelegramBridge.this.backgroundAllowed();
+                            }
+
+                            @Override
+                            public boolean analysisAllowed() {
+                                return TelegramBridge.this.analysisAllowed();
+                            }
+
+                            @Override
                             public FileChecks.Audio decode(String id, int seconds)
                                     throws Exception {
                                 SoundCheck.Pcm pcm =
-                                        AudioDecode.start(TelegramBridge.this, id, seconds, 30);
+                                        AudioDecode.decode(
+                                                TelegramBridge.this,
+                                                id,
+                                                0,
+                                                seconds,
+                                                30,
+                                                AudioDecode.BUDGET_MILLIS,
+                                                backgroundGuard());
                                 return new FileChecks.Audio(pcm.samples, pcm.length, pcm.rate);
                             }
 
@@ -369,7 +386,19 @@ public final class TelegramBridge {
         soundCheck =
                 new SoundCheck(
                         new File(home, "sound-checks.json"),
-                        (id, seconds) -> AudioDecode.start(this, id, seconds),
+                        (id, seconds) ->
+                                AudioDecode.decode(
+                                        this,
+                                        id,
+                                        0,
+                                        seconds,
+                                        seconds,
+                                        AudioDecode.BUDGET_MILLIS,
+                                        () -> {
+                                            if (!PlaybackPriority.analysisAllowed())
+                                                throw new NativeAudio.Deferred(
+                                                        "Playback needs the decoder");
+                                        }),
                         title ->
                                 toast(
                                         Strings.f(
@@ -497,6 +526,41 @@ public final class TelegramBridge {
      * session are never in it.
      */
     public void backup(OutputStream out, boolean withIndex) throws Exception {
+        writeBackup(out, withIndex);
+        status = Strings.t("Backup saved.");
+    }
+
+    /**
+     * A backup as a checked file in the app's cache, ready to copy to where the user chose or to
+     * post. Nothing the user has is touched, and an empty or cut-short file is an error.
+     */
+    File backupFile(boolean withIndex) throws Exception {
+        File folder = new File(context.getCacheDir(), "shared-index");
+        folder.mkdirs();
+        File file =
+                new File(
+                        folder,
+                        "bitchord-telegram-backup-"
+                                + today()
+                                + "-"
+                                + java.util.UUID.randomUUID()
+                                + ".gz");
+        File partial = new File(folder, file.getName() + ".part");
+        try {
+            try (OutputStream out = new FileOutputStream(partial)) {
+                writeBackup(out, withIndex);
+            }
+            try (InputStream in = new FileInputStream(partial)) {
+                IndexTransfer.check(in);
+            }
+            if (!partial.renameTo(file)) throw new IOException(IndexTransfer.CUT_SHORT);
+            return file;
+        } finally {
+            partial.delete();
+        }
+    }
+
+    private void writeBackup(OutputStream out, boolean withIndex) throws Exception {
         JSONObject settings =
                 new JSONObject()
                         .put("config", new JSONObject(config.toString()))
@@ -509,10 +573,92 @@ public final class TelegramBridge {
                         .put("created", today())
                         .put("settings", settings);
         List<IndexTransfer.Section> sections = new ArrayList<>();
-        if (withIndex && index.enabled)
+        // Paused or not: turning the index off keeps what it has.
+        if (withIndex)
             for (long chat : indexedChats()) sections.add(index.section(chat, title(chat)));
         IndexTransfer.write(out, header, sections, index::exportRows);
-        status = Strings.t("Backup saved.");
+    }
+
+    /** Backups posted in a private channel are named like this. */
+    private static boolean isBackup(String name) {
+        return name != null && name.startsWith("bitchord-telegram-backup-");
+    }
+
+    /**
+     * Posts a backup in one of the account's own private channels. Only a channel this account
+     * created that has no public @username is accepted, checked again here rather than trusted from
+     * the picker.
+     */
+    public void backupToChannel(long target, boolean withIndex) throws Exception {
+        requireReady();
+        TdApi.Chat chat = call(new TdApi.GetChat(target));
+        if (ownChannel(chat) != Boolean.FALSE)
+            throw new IOException("Pick a private channel you created.");
+        File file = backupFile(withIndex);
+        // The file stays in the cache: Telegram uploads from it after this returns.
+        call(
+                new TdApi.SendMessage(
+                        target,
+                        null,
+                        null,
+                        null,
+                        null,
+                        new TdApi.InputMessageDocument(
+                                new TdApi.InputDocument(
+                                        new TdApi.InputFileLocal(file.getAbsolutePath()),
+                                        null,
+                                        true),
+                                new TdApi.FormattedText(
+                                        "BitChord backup", new TdApi.TextEntity[0]))),
+                30000);
+        status =
+                Strings.f(
+                        "Sending the backup to {0}. Telegram shows it there when it is up.",
+                        chat.title);
+    }
+
+    /** Restores the newest backup posted in one of the account's own private channels. */
+    public void restoreFromChannel(long source) throws Exception {
+        requireReady();
+        TdApi.Chat chat = call(new TdApi.GetChat(source));
+        if (ownChannel(chat) != Boolean.FALSE)
+            throw new IOException("Pick a private channel you created.");
+        TdApi.FoundChatMessages found =
+                call(
+                        new TdApi.SearchChatMessages(
+                                source,
+                                null,
+                                "",
+                                null,
+                                0,
+                                0,
+                                50,
+                                new TdApi.SearchMessagesFilterDocument()),
+                        15000);
+        TdApi.Document newest = null;
+        int newestDate = 0;
+        if (found != null && found.messages != null)
+            for (TdApi.Message m : found.messages) {
+                if (!(m.content instanceof TdApi.MessageDocument)) continue;
+                TdApi.Document d = ((TdApi.MessageDocument) m.content).document;
+                if (d != null
+                        && isBackup(d.fileName)
+                        && d.document.size <= MAX_SHARED_BYTES
+                        && m.date > newestDate) {
+                    newest = d;
+                    newestDate = m.date;
+                }
+            }
+        if (newest == null) throw new IOException("There's no BitChord backup in that channel.");
+        TdApi.File file = call(new TdApi.DownloadFile(newest.document.id, 1, 0, 0, true), 600000);
+        if (file.local == null || !file.local.isDownloadingCompleted)
+            throw new IOException("The backup didn't finish downloading. Try again.");
+        try (InputStream in = new FileInputStream(file.local.path)) {
+            IndexTransfer.check(in);
+        }
+        try (InputStream in = new FileInputStream(file.local.path)) {
+            restore(in);
+        }
     }
 
     /**
@@ -556,13 +702,12 @@ public final class TelegramBridge {
 
     /** A chat's saved index as a file in the app's cache, named for the chat. */
     File indexFile(long chat) throws Exception {
-        if (!index.enabled)
-            throw new IOException("Turn on Saved index first. The songs come from it.");
         if (index.count(chat) == 0) throw new IOException("There's no music in this chat yet.");
         File folder = new File(context.getCacheDir(), "shared-index");
         folder.mkdirs();
         File file = new File(folder, IndexTransfer.fileName(chat, today()));
-        try (OutputStream out = new FileOutputStream(file)) {
+        File partial = new File(folder, file.getName() + ".part");
+        try (OutputStream out = new FileOutputStream(partial)) {
             IndexTransfer.write(
                     out,
                     new JSONObject()
@@ -571,18 +716,23 @@ public final class TelegramBridge {
                     Collections.singletonList(index.section(chat, title(chat))),
                     index::exportRows);
         }
+        try (InputStream in = new FileInputStream(partial)) {
+            IndexTransfer.check(in);
+            if (!partial.renameTo(file)) throw new IOException(IndexTransfer.CUT_SHORT);
+        } finally {
+            partial.delete();
+        }
         return file;
     }
 
     /** Writes a chat's saved index to a file the user picked. */
     public void exportIndex(long chat, OutputStream out) throws Exception {
         File file = indexFile(chat);
-        try (InputStream in = new FileInputStream(file)) {
-            byte[] buffer = new byte[64 * 1024];
-            int n;
-            while ((n = in.read(buffer)) > 0) out.write(buffer, 0, n);
+        try {
+            IndexTransfer.deliver(file, out);
+        } finally {
+            file.delete();
         }
-        file.delete();
         status = Strings.t("Index file saved.");
     }
 
@@ -1420,10 +1570,13 @@ public final class TelegramBridge {
             try {
                 if (!ready() || !index.enabled) wait = 5000;
                 else if (!indexPause().isEmpty()) wait = 30000;
+                else if (!awaitBackground()) return;
                 else if (!remoteSearch.idle()) wait = 1000;
                 else if (importShared()) wait = 1000;
                 else if (!index.step(indexedChats(), mainChannel.main())) wait = 60000;
                 else pace = Math.max(FASTEST_PACE, pace * 9 / 10);
+            } catch (NativeAudio.Deferred e) {
+                wait = 1000; // the zip stays queued; the next step goes through the gate again
             } catch (LiveSearch.RateLimited e) {
                 pace = Math.min(SLOWEST_PACE, pace * 2);
                 wait = 1000L * e.retrySeconds + 1000;
@@ -1448,32 +1601,45 @@ public final class TelegramBridge {
         }
     }
 
-    /**
-     * Bytes of a Telegram file, downloading only that part: how zips are looked into without
-     * downloading them.
-     */
+    /** Part of a Telegram file for background work; see {@link NativeAudio#readRange}. */
     byte[] readRange(int file, long offset, int length) throws Exception {
-        TdApi.File info = call(new TdApi.GetFile(file), 15000);
-        if (offset < 0 || offset >= info.size) return new byte[0];
-        int wanted = (int) Math.min(length, info.size - offset);
-        long deadline = System.currentTimeMillis() + 60000;
-        long have = call(new TdApi.GetFileDownloadedPrefixSize(file, offset), 15000).size;
-        if (have < wanted) {
-            call(new TdApi.DownloadFile(file, 1, offset, wanted, false), 15000);
-            while ((have = call(new TdApi.GetFileDownloadedPrefixSize(file, offset), 15000).size)
-                    < wanted) {
-                if (System.currentTimeMillis() > deadline)
-                    throw new IOException("Telegram download timed out");
-                Thread.sleep(100);
-            }
+        return audio.readRange(file, offset, length, backgroundGuard());
+    }
+
+    /** Throws {@link NativeAudio.Deferred} while playback needs the network. */
+    Runnable backgroundGuard() {
+        return () -> {
+            if (!backgroundAllowed()) throw new NativeAudio.Deferred("Playback has priority");
+        };
+    }
+
+    /** False while playback starts, rebuffers, seeks or upgrades; background work waits. */
+    boolean backgroundAllowed() {
+        try {
+            return PlaybackPriority.backgroundAllowed();
+        } catch (LinkageError absent) {
+            return true;
         }
-        String path = call(new TdApi.GetFile(file), 15000).local.path;
-        byte[] out = new byte[wanted];
-        try (RandomAccessFile input = new RandomAccessFile(path, "r")) {
-            input.seek(offset);
-            input.readFully(out);
+    }
+
+    /**
+     * As {@link #backgroundAllowed}, and also false while playback is busy enough to need the CPU.
+     */
+    boolean analysisAllowed() {
+        try {
+            return PlaybackPriority.analysisAllowed();
+        } catch (LinkageError absent) {
+            return true;
         }
-        return out;
+    }
+
+    /** Blocks a worker thread until background work may run; false once it is interrupted. */
+    boolean awaitBackground() {
+        try {
+            return PlaybackPriority.awaitBackground(() -> Thread.currentThread().isInterrupted());
+        } catch (LinkageError absent) {
+            return !Thread.currentThread().isInterrupted();
+        }
     }
 
     /**
@@ -1495,6 +1661,7 @@ public final class TelegramBridge {
         while (true) {
             long wait = 60000;
             try {
+                if (!awaitBackground()) return;
                 if (ready()) wait = mainChannel.step(index);
             } catch (LiveSearch.RateLimited e) {
                 showRateLimit(e.retrySeconds);
@@ -1516,6 +1683,7 @@ public final class TelegramBridge {
         while (true) {
             long wait;
             try {
+                if (!awaitBackground()) return;
                 wait = checks.step();
             } catch (RuntimeException e) {
                 wait = 60000;
@@ -1757,8 +1925,8 @@ public final class TelegramBridge {
         if (on && savedIndexBroken)
             throw new IOException("The index's database couldn't be opened on this phone.");
         synchronized (catalogueState) {
+            // Off pauses: the saved index stays, ready to back up or to pick up again.
             index.enabled = on;
-            if (!on) index.clear();
         }
         config.put("searchIndex", on);
         saveConfig();
@@ -2344,7 +2512,6 @@ public final class TelegramBridge {
     /** Files in the saved index of the chats a backup would include. */
     public int indexedFiles() {
         int files = 0;
-        if (!index.enabled) return 0;
         for (long chat : indexedChats())
             try {
                 files += index.count(chat);

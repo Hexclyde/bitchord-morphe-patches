@@ -254,6 +254,15 @@ final class SoundCheck {
 
     /** Compares what was heard with each candidate's start. Runs off the audio thread. */
     void compare(Capture c) {
+        while (!PlaybackPriority.analysisAllowed()) {
+            if (clock.millis() - c.startedAt >= CAPTURE_MILLIS) return;
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException cancelled) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
         List<Fingerprint> heard = new ArrayList<>();
         for (Heard h : c.sinks.values())
             if (h.length >= h.rate * 10) heard.add(Fingerprint.of(h.samples, h.length, h.rate));
@@ -262,6 +271,8 @@ final class SoundCheck {
             Pcm start;
             try {
                 start = reference.load(candidate.id, REFERENCE_SECONDS);
+            } catch (NativeAudio.Deferred deferred) {
+                return;
             } catch (Exception e) {
                 record(candidate, null, null, c.startSeconds);
                 HostLog.d(

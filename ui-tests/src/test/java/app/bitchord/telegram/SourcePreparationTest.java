@@ -362,6 +362,7 @@ public class SourcePreparationTest {
 
     @Before
     public void setup() {
+        PlaybackPriority.reset();
         host = new Fake();
         preparation = new SourcePreparation(host, 300);
         preparation.playing(true);
@@ -390,6 +391,35 @@ public class SourcePreparationTest {
     }
 
     // ── Which copy a song opens from ────────────────────────────────────────
+
+    @Test
+    public void currentUpgradeDefersNextPreparationThenResumes() throws Exception {
+        AutoCloseable upgrade = PlaybackPriority.upgrade("current");
+        try {
+            queue("a");
+            Thread.sleep(100);
+            assertTrue(host.lookups.isEmpty());
+        } finally {
+            upgrade.close();
+        }
+        idle();
+        assertEquals(Collections.singletonList("a"), host.lookups);
+        assertEquals(hifi("a"), read("a"));
+    }
+
+    @Test
+    public void changingTheQueueDuringAnUpgradeCancelsTheOldPreparation() throws Exception {
+        AutoCloseable upgrade = PlaybackPriority.upgrade("current");
+        try {
+            queue("a");
+            Thread.sleep(100);
+            queue("b");
+        } finally {
+            upgrade.close();
+        }
+        idle();
+        assertEquals(Collections.singletonList("b"), host.lookups);
+    }
 
     @Test
     public void nothingRunsUntilTheQueueOrAPlayerAsks() throws Exception {

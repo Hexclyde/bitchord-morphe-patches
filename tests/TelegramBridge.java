@@ -73,7 +73,8 @@ final class TelegramBridge {
     boolean signedIn = true, mediaAllowed = true;
     final LiveSearch remoteSearch = new LiveSearch((request, timeout) -> call(request));
     long offset, limit;
-    int polls, downloads, optimizations;
+    int polls, downloads, optimizations, priority;
+    boolean stall, truncateNext;
     boolean revokeOnPrefix, changeTagAfterSearch;
     int cancellations;
     final Map<Long, Long> available = new TreeMap<>();
@@ -155,6 +156,7 @@ final class TelegramBridge {
         if (fn instanceof TdApi.DownloadFile) {
             TdApi.DownloadFile d = (TdApi.DownloadFile) fn;
             offset = d.offset;
+            priority = d.priority;
             limit = d.limit;
             polls = 0;
             downloads++;
@@ -166,6 +168,7 @@ final class TelegramBridge {
             for (Map.Entry<Long, Long> e : available.entrySet())
                 if (pos >= e.getKey() && pos < e.getValue()) prefix.size = e.getValue() - pos;
             if (prefix.size == 0
+                    && !stall
                     && limit > 0
                     && ++polls > 1
                     && pos >= offset
@@ -178,6 +181,14 @@ final class TelegramBridge {
                 }
                 available.put(offset, offset + limit);
                 prefix.size = offset + limit - pos;
+                if (truncateNext) {
+                    // TDLib trimmed the cache between the prefix answer and the open.
+                    truncateNext = false;
+                    try (RandomAccessFile f = new RandomAccessFile(file, "rw")) {
+                        f.setLength(offset);
+                    }
+                    available.clear();
+                }
                 if (revokeOnPrefix) {
                     revokeOnPrefix = false;
                     generation++;

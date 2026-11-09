@@ -158,6 +158,7 @@ for name in (
     "TransitionRuntime.java",
     "TransitionEditorActivity.java",
     "SourcePreference.java",
+    "PlaybackPriority.java",
     "RecordingIdentity.java",
     "DownloadControls.java",
     "DownloadSelection.java",

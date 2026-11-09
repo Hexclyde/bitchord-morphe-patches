@@ -20,7 +20,7 @@ Yes, after its upload to Telegram has completed. The channel message and file mu
 
 You don't have to wait for anything. Search runs against your selected chats when you enter a query, and returns up to 200 tracks, so search by a specific title, artist or filename.
 
-With **Saved index** on (under **Music library**), the patch also lists your selected chats' music in the background, slowly, so it never looks like a burst of searches. Once it's built, lookups are answered from it, and Telegram is only searched when it has nothing. It also answers when Telegram's search is rate limited or busy. Turning it off deletes it.
+With **Saved index** on (under **Music library**), the patch also lists your selected chats' music in the background, slowly, so it never looks like a burst of searches. Once it's built, lookups are answered from it, and Telegram is only searched when it has nothing. It also answers when Telegram's search is rate limited or busy. Turning it off only pauses it: the saved index stays on your phone, and you can still back it up or turn it back on.
 
 The **Saved index** line counts the files as they come in, against Telegram's own count for the chat. It speeds up while Telegram answers without asking for a pause, up to about 8,000 files a minute, and slows down when Telegram asks. A channel of 200,000 files takes about an hour the first time, and uses about 150 MB of storage. **Index only on Wi-Fi** and **Index only while charging** hold it back until then; search and playback aren't affected.
 
@@ -194,7 +194,7 @@ On the **Advanced** tab of the Telegram page. **Basic** has what most people nee
 
 ## Can I back up my settings or move them to another phone?
 
-Yes. On the **Advanced** tab, **Backup and sharing → Back up** saves a file wherever you choose: your settings, your music chats, your corrected names, your main channel setup, and the saved index too if you leave **Include the saved index** ticked. **Restore** reads it back. A backup never holds your API details or your Telegram session, so on a new phone you enter the API details and sign in first, then restore.
+Yes. On the **Advanced** tab, **Backup and sharing → Back up** saves a file wherever you choose, or posts it in a private channel you created (public chats aren't offered, and nothing is posted until you confirm). **Restore from a private channel** reads the newest backup there. A backup is built and checked before it's written, and its destination is read back, so an empty or cut-short save is reported as an error. It holds: your settings, your music chats, your corrected names, your main channel setup, and the saved index too if you leave **Include the saved index** ticked. **Restore** reads it back. A backup never holds your API details or your Telegram session, so on a new phone you enter the API details and sign in first, then restore.
 
 Signing out removes your music chats, the saved index, corrected names and main channel setup from the phone, so **Session → Sign out** offers **Back up and sign out** first. You're signed out only once the backup is saved. When you sign in again on the same phone, the **Basic** tab shows **Welcome back → Restore what you had before signing out**, and one tap brings everything back, with the index and its checks, without reading your chats from Telegram again. **Start fresh** stops offering it; the file stays where you saved it, and **Restore** can still read it later.
 

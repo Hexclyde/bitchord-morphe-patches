@@ -64,6 +64,27 @@ public final class SmoothUpgrade {
         }
     }
 
+    private static final java.util.Map<String, AutoCloseable> auditions = new java.util.HashMap<>();
+
+    public static void auditionStarted(String mediaId) {
+        synchronized (auditions) {
+            auditionEnded(mediaId);
+            auditions.put(mediaId, PlaybackPriority.upgrade(mediaId));
+        }
+    }
+
+    public static void auditionEnded(String mediaId) {
+        synchronized (auditions) {
+            AutoCloseable lease = auditions.remove(mediaId);
+            if (lease != null) {
+                try {
+                    lease.close();
+                } catch (Exception ignored) {
+                }
+            }
+        }
+    }
+
     /**
      * Replaces where BitChord's audition of an upgrade starts. It's handed the position from when
      * the upgrade began, before the copy was fetched and checked, but it must then buffer past
@@ -76,7 +97,27 @@ public final class SmoothUpgrade {
             MediaItem current = player == null ? null : player.getCurrentMediaItem();
             if (item == null || current == null || !Objects.equals(item.mediaId, current.mediaId))
                 return at;
-            return Math.max(at, player.getCurrentPosition());
+            long currentAt = Math.max(at, player.getCurrentPosition());
+            Long offset = null;
+            try {
+                offset =
+                        (Long)
+                                Class.forName("app.bitchord.telegram.SourcePreference")
+                                        .getMethod("peekVerifiedOffset", String.class)
+                                        .invoke(null, item.mediaId);
+            } catch (ReflectiveOperationException unavailable) {
+            }
+            long target = Math.max(0, currentAt + (offset == null ? 0 : offset));
+            HostLog.d(
+                    "Upgrade audition track="
+                            + item.mediaId
+                            + " snapshotMs="
+                            + at
+                            + " currentMs="
+                            + currentAt
+                            + " targetMs="
+                            + target);
+            return target;
         } catch (Throwable unavailable) {
             return at;
         }

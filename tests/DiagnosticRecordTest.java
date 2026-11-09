@@ -13,6 +13,43 @@ public final class DiagnosticRecordTest {
     }
 
     public static void main(String[] args) throws Exception {
+        String id = "01234567-89ab-cdef-0123-456789abcdef";
+        JSONObject proof =
+                new JSONObject(
+                        DiagnosticRecord.safeLine(
+                                'D',
+                                "Recording check stopped at window 2 after 1234 ms, 3 of 6 windows;"
+                                        + " reason=STOP_PRIORITY track=1aokooixKIo candidate="
+                                        + id
+                                        + " pair="
+                                        + id
+                                        + " attempt="
+                                        + id));
+        check(proof.getString("track").equals("1aokooixKIo"), "Track context preserved");
+        check(
+                proof.getString("candidate").equals(id) && proof.getString("attempt").equals(id),
+                "Opaque identities preserved");
+        check(
+                proof.getString("verification_stage").equals("window2")
+                        && proof.getLong("elapsed_ms") == 1234,
+                "Stage and elapsed time preserved");
+        check(
+                proof.getString("reason").equals("STOP_PRIORITY"),
+                "Priority distinguished from read failure");
+        JSONObject budget =
+                new JSONObject(
+                        DiagnosticRecord.safeLine(
+                                'D',
+                                "AutoMix analysis is waiting for memory: stage=before-decode,"
+                                    + " neededKiB=36000, availableKiB=7400, heapUsedMiB=180,"
+                                    + " heapMaxMiB=256, pendingMiB=12,"
+                                    + " playbackReserveMiB=48(enforced), dspAvailableMiB=7,"
+                                    + " systemFreeMiB=8192, processRssMiB=260, nativeHeapMiB=25"));
+        check(
+                budget.getLong("heapMaxMiB") == 256
+                        && budget.getLong("systemFreeMiB") == 8192
+                        && budget.getLong("dspAvailableMiB") == 7,
+                "System RAM and app analysis allowance stay separate");
         String[] secrets = {
             "person@example.invalid",
             "+15551234567",

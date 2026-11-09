@@ -687,6 +687,57 @@ private fun BytecodePatchContext.canonicalizeStatsMeasurement(owner: String) {
  * read from BitChord's own launcher for that swap rather than assumed.
  */
 private fun BytecodePatchContext.addSmoothUpgrade() {
+    val auditionEdits = mutableListOf<Triple<String, String, Pair<Int, Pair<String, Int>>>>()
+    classDefForEach { type ->
+        for (method in type.methods) {
+            val code = method.implementation?.instructions?.toList() ?: continue
+            for (index in code.indices) {
+                val field = code[index].fieldRef() ?: continue
+                if (
+                    code[index].opcode != Opcode.SGET_OBJECT ||
+                        field.definingClass != "Lcom/music/bitchord/playback/QualityUpgrade;" ||
+                        field.name != "auditioning" ||
+                        field.type != "Ljava/util/Set;"
+                )
+                    continue
+                val mutation =
+                    (index + 1 until minOf(index + 6, code.size)).firstOrNull {
+                        val call = code[it].methodRef()
+                        call?.definingClass == "Ljava/util/Collection;" &&
+                            call.name in setOf("add", "remove") &&
+                            call.parameterTypes.map(CharSequence::toString) ==
+                                listOf("Ljava/lang/Object;")
+                    } ?: continue
+                val call =
+                    code[mutation] as? FiveRegisterInstruction
+                        ?: throw PatchException("Quality audition collection registers changed")
+                check(code.getOrNull(mutation + 1)?.opcode != Opcode.MOVE_RESULT) {
+                    "Quality audition collection result is now used"
+                }
+                val hook =
+                    if (code[mutation].methodRef()!!.name == "add") "auditionStarted"
+                    else "auditionEnded"
+                auditionEdits +=
+                    Triple(type.type, method.name, mutation + 1 to (hook to call.registerD))
+            }
+        }
+    }
+    check(
+        auditionEdits.count { it.third.second.first == "auditionStarted" } == 1 &&
+            auditionEdits.count { it.third.second.first == "auditionEnded" } == 3
+    ) {
+        "Quality audition lifecycle changed"
+    }
+    for ((type, name, edit) in auditionEdits.sortedByDescending { it.third.first }) {
+        val (index, hook) = edit
+        mutableClassDefBy(type)
+            .methods
+            .single { it.name == name }
+            .addInstruction(
+                index,
+                "invoke-static {v${hook.second}}, $SMOOTH->${hook.first}(Ljava/lang/String;)V",
+            )
+    }
     // 1. BitChord's version-swap launcher, inlined by R8 wherever its one caller ended up.
     val launcherClass =
         classDefByStrings("version swap deferred: Automix is mid-transition").singleOrNull()

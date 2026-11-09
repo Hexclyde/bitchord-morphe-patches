@@ -41,46 +41,147 @@ final class IndexTransfer {
         List<JSONObject> after(long chat, long message, int limit) throws Exception;
     }
 
-    /** Writes a header line, then each chat's section. */
+    /**
+     * Writes a header line, then each chat's section. The gzip is finished and {@code out} flushed,
+     * but {@code out} is left open: its owner closes it, once.
+     */
     static void write(OutputStream out, JSONObject header, List<Section> chats, Rows rows)
             throws Exception {
-        Writer w = new OutputStreamWriter(new GZIPOutputStream(out), StandardCharsets.UTF_8);
-        w.write(header.toString());
-        w.write('\n');
-        for (Section s : chats) {
-            w.write(
-                    new JSONObject()
-                            .put("chat", s.chat)
-                            .put("title", s.title)
-                            .put("newest", s.newest)
-                            .put("complete", s.complete)
-                            .toString());
-            w.write('\n');
-            // Pages of files after a message. A post's songs (a zip's) share its message, so a page
-            // can end inside a post: the next starts at that post again, skipping what's written.
-            long lastMessage = 0, lastEntry = -1;
-            while (true) {
-                List<JSONObject> page = rows.after(s.chat, Math.max(0, lastMessage - 1), 1000);
-                boolean wrote = false;
-                for (JSONObject row : page) {
-                    long message = row.optLong("message"), entry = row.optLong("entry");
-                    if (message < lastMessage || (message == lastMessage && entry <= lastEntry))
-                        continue;
-                    lastMessage = message;
-                    lastEntry = entry;
-                    wrote = true;
-                    JSONObject clean = clean(row, s.chat);
-                    if (clean != null) {
-                        w.write(clean.toString());
-                        w.write('\n');
+        OutputStream open =
+                new FilterOutputStream(out) {
+                    @Override
+                    public void write(byte[] b, int off, int len) throws IOException {
+                        this.out.write(b, off, len);
                     }
+
+                    @Override
+                    public void close() throws IOException {
+                        flush();
+                    }
+                };
+        try (Writer w =
+                new OutputStreamWriter(new GZIPOutputStream(open), StandardCharsets.UTF_8)) {
+            w.write(header.toString());
+            w.write('\n');
+            for (Section s : chats) {
+                w.write(
+                        new JSONObject()
+                                .put("chat", s.chat)
+                                .put("title", s.title)
+                                .put("newest", s.newest)
+                                .put("complete", s.complete)
+                                .toString());
+                w.write('\n');
+                // Pages of files after a message. A post's songs (a zip's) share its message, so a
+                // page
+                // can end inside a post: the next starts at that post again, skipping what's
+                // written.
+                long lastMessage = 0, lastEntry = -1;
+                while (true) {
+                    List<JSONObject> page = rows.after(s.chat, Math.max(0, lastMessage - 1), 1000);
+                    boolean wrote = false;
+                    for (JSONObject row : page) {
+                        long message = row.optLong("message"), entry = row.optLong("entry");
+                        if (message < lastMessage || (message == lastMessage && entry <= lastEntry))
+                            continue;
+                        lastMessage = message;
+                        lastEntry = entry;
+                        wrote = true;
+                        JSONObject clean = clean(row, s.chat);
+                        if (clean != null) {
+                            w.write(clean.toString());
+                            w.write('\n');
+                        }
+                    }
+                    if (!wrote || page.size() < 1000) break;
                 }
-                if (!wrote || page.size() < 1000) break;
+                w.write("{\"end\":true}\n");
             }
-            w.write("{\"end\":true}\n");
         }
-        w.flush();
-        w.close();
+    }
+
+    static final String EMPTY =
+            "The backup came out empty or damaged, so nothing was saved. Your saved index is"
+                    + " untouched.";
+
+    /**
+     * Throws unless the stream is a whole index or backup file: gzip that reads to its end (its
+     * checksum is verified there) after a header of ours. Nothing is kept in memory.
+     */
+    static void check(InputStream in) throws IOException {
+        try {
+            BufferedReader r =
+                    new BufferedReader(
+                            new InputStreamReader(new GZIPInputStream(in), StandardCharsets.UTF_8));
+            JSONObject header = new JSONObject(String.valueOf(line(r)));
+            String format = header.optString("format");
+            if (!format.equals(INDEX) && !format.equals(BACKUP)) throw new IOException(EMPTY);
+            if (header.optInt("version", -1) != VERSION) throw new IOException(EMPTY);
+            boolean section = false;
+            long chat = 0;
+            int count = 0;
+            String text;
+            while ((text = line(r)) != null) {
+                if (text.isEmpty()) continue;
+                JSONObject row = new JSONObject(text);
+                if (!section) {
+                    if (!row.has("chat")) throw new IOException(EMPTY);
+                    chat = row.getLong("chat");
+                    section = true;
+                } else if (row.optBoolean("end")) section = false;
+                else {
+                    if (++count > MAX_FILES || clean(row, chat) == null)
+                        throw new IOException(EMPTY);
+                }
+            }
+            if (section || (format.equals(INDEX) && count == 0)) throw new IOException(EMPTY);
+        } catch (IOException e) {
+            if (EMPTY.equals(e.getMessage())) throw e;
+            throw new IOException(EMPTY, e);
+        } catch (org.json.JSONException e) {
+            throw new IOException(EMPTY, e);
+        }
+    }
+
+    static final String CUT_SHORT =
+            "Saving the file stopped part-way. Try another place; your saved index is untouched.";
+
+    /**
+     * Copies a checked file to where the user chose, then flushes. The caller closes {@code out}
+     * once; a write that fails or comes up short is an error, never a success.
+     */
+    static void deliver(File file, OutputStream out) throws IOException {
+        long written = 0;
+        try (InputStream in = new FileInputStream(file)) {
+            byte[] buffer = new byte[64 * 1024];
+            int n;
+            while ((n = in.read(buffer)) > 0) {
+                out.write(buffer, 0, n);
+                written += n;
+            }
+            out.flush();
+        } catch (IOException e) {
+            throw new IOException(CUT_SHORT, e);
+        }
+        if (written == 0 || written != file.length()) throw new IOException(CUT_SHORT);
+    }
+
+    static void verifyDelivered(File file, InputStream saved) throws IOException {
+        try (InputStream expected = new FileInputStream(file)) {
+            byte[] buffer = new byte[64 * 1024], actual = new byte[64 * 1024];
+            int count;
+            while ((count = expected.read(buffer)) != -1) {
+                int read = 0;
+                while (read < count) {
+                    int n = saved.read(actual, read, count - read);
+                    if (n <= 0) throw new IOException(CUT_SHORT);
+                    read += n;
+                }
+                for (int i = 0; i < count; i++)
+                    if (buffer[i] != actual[i]) throw new IOException(CUT_SHORT);
+            }
+            if (saved.read() != -1) throw new IOException(CUT_SHORT);
+        }
     }
 
     /** The header of a file and its sections. */

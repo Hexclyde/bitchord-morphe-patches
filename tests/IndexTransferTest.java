@@ -128,6 +128,144 @@ public final class IndexTransferTest {
         check(
                 !IndexTransfer.forChat("bitchord-index-1001234-x.jsonl.gz", -100123),
                 "Not another chat's");
+
+        // A paused index keeps its files, backs up as a whole non-empty file and can be reloaded.
+        mine.enabled = false;
+        check(other.count(chat) == 2200, "Pausing deletes nothing");
+        IndexTransfer.Section paused = mine.section(chat, "Paused");
+        check(paused.newest == 1600, "A paused index still knows its newest post");
+        File backup = File.createTempFile("backup", ".gz");
+        try {
+            int[] closes = {0};
+            try (OutputStream file =
+                    new FilterOutputStream(new FileOutputStream(backup)) {
+                        @Override
+                        public void write(byte[] b, int off, int len) throws IOException {
+                            out.write(b, off, len);
+                        }
+
+                        @Override
+                        public void close() throws IOException {
+                            closes[0]++;
+                            super.close();
+                        }
+                    }) {
+                IndexTransfer.write(
+                        file,
+                        new JSONObject().put("format", IndexTransfer.BACKUP).put("version", 1),
+                        List.of(paused),
+                        mine::exportRows);
+                check(closes[0] == 0, "Writing leaves the stream for its owner to close once");
+            }
+            check(closes[0] == 1, "Closed once");
+            check(backup.length() > 100, "Not 0 KB: " + backup.length());
+            try (InputStream in = new FileInputStream(backup)) {
+                IndexTransfer.check(in);
+            }
+            try (InputStream in = new FileInputStream(backup)) {
+                check(
+                        IndexTransfer.read(in).sections.get(0).rows.size() == 2200,
+                        "Every file written while paused");
+            }
+
+            // Delivering to the chosen place: whole, or an error.
+            ByteArrayOutputStream chosen = new ByteArrayOutputStream();
+            IndexTransfer.deliver(backup, chosen);
+            check(chosen.size() == backup.length(), "Delivered every byte");
+            IndexTransfer.check(new ByteArrayInputStream(chosen.toByteArray()));
+            IndexTransfer.verifyDelivered(backup, new ByteArrayInputStream(chosen.toByteArray()));
+            byte[] altered = chosen.toByteArray();
+            altered[altered.length / 2] ^= 1;
+            try {
+                IndexTransfer.verifyDelivered(backup, new ByteArrayInputStream(altered));
+                check(false, "A provider must commit exactly the backup written");
+            } catch (IOException expected) {
+                check(true, "Changed saved bytes rejected");
+            }
+            try {
+                IndexTransfer.deliver(
+                        backup,
+                        new OutputStream() {
+                            @Override
+                            public void write(int b) throws IOException {
+                                throw new IOException("Disk full");
+                            }
+                        });
+                check(false, "A failed write is never a success");
+            } catch (IOException e) {
+                check(e.getMessage().equals(IndexTransfer.CUT_SHORT), "Says it stopped");
+            }
+            File empty = File.createTempFile("empty", ".gz");
+            try {
+                IndexTransfer.deliver(empty, new ByteArrayOutputStream());
+                check(false, "An empty file is never delivered");
+            } catch (IOException e) {
+                check(true, "Refused");
+            } finally {
+                empty.delete();
+            }
+            // Reloaded into a paused index too: the files come back.
+            IndexStore.Memory fresh = new IndexStore.Memory();
+            TelegramIndex reloaded =
+                    new TelegramIndex(fresh, new MainChannelTest.Chats(), clock::get);
+            reloaded.enabled = false;
+            try (InputStream in = new FileInputStream(backup)) {
+                check(
+                        reloaded.importSection(IndexTransfer.read(in).sections.get(0)) == 2200,
+                        "Reloads while paused");
+            }
+            check(fresh.count(chat) == 2200, "Stored");
+
+            // What is not a whole file is refused before anyone is told it worked.
+            byte[] whole = chosen.toByteArray();
+            for (byte[] bad :
+                    new byte[][] {
+                        new byte[0],
+                        Arrays.copyOf(whole, whole.length / 2),
+                        Arrays.copyOf(whole, whole.length - 4)
+                    }) {
+                try {
+                    IndexTransfer.check(new ByteArrayInputStream(bad));
+                    check(false, "Not a whole file: " + bad.length);
+                } catch (IOException e) {
+                    check(true, "Refused");
+                }
+            }
+        } finally {
+            backup.delete();
+        }
+
+        // A write cut short (cancelled, or a read failing) deletes nothing and finishes nothing.
+        ByteArrayOutputStream cut = new ByteArrayOutputStream();
+        try {
+            IndexTransfer.write(
+                    cut,
+                    new JSONObject().put("format", IndexTransfer.BACKUP).put("version", 1),
+                    List.of(section),
+                    (c, m, n) -> {
+                        throw new InterruptedException("cancelled");
+                    });
+            check(false, "Cancelled");
+        } catch (InterruptedException e) {
+            check(other.count(chat) == 2200 && store.count(chat) == 2200, "Nothing deleted");
+        }
+        for (String body :
+                new String[] {
+                    "{\"format\":\"bitchord-index\",\"version\":1}\n",
+                    "{\"format\":\"bitchord-backup\",\"version\":1}\n{\"chat\":-100}\n",
+                    "{\"format\":\"bitchord-backup\",\"version\":1}\nnot-json\n"
+                }) {
+            ByteArrayOutputStream compressed = new ByteArrayOutputStream();
+            try (GZIPOutputStream gzip = new GZIPOutputStream(compressed)) {
+                gzip.write(body.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            }
+            try {
+                IndexTransfer.check(new ByteArrayInputStream(compressed.toByteArray()));
+                check(false, "Valid gzip must also contain a complete index");
+            } catch (IOException expected) {
+                check(true, "Incomplete or invalid content rejected");
+            }
+        }
         System.out.println(
                 "PASS: " + checks + " index file export, import and strict reading checks.");
     }

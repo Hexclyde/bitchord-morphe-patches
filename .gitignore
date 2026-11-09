@@ -267,3 +267,5 @@ remove-beta18-branch.ps1
 /ui-tests/src/test/java/app/bitchord/telegram/SourceFallback.java
 
 /ui-tests/src/test/java/app/bitchord/telegram/NativeSourceConfig.java
+
+/ui-tests/src/test/java/app/bitchord/telegram/PlaybackPriority.java

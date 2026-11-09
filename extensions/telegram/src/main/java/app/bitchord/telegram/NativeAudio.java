@@ -12,6 +12,10 @@ final class NativeAudio {
     final TelegramBridge bridge;
     final Object cacheGuard = new Object();
     final Semaphore slots = new Semaphore(3);
+
+    /** Background reads (checks, naming) never take a playback slot. */
+    final Semaphore backgroundSlots = new Semaphore(1);
+
     final Map<Integer, Lease> leases = new HashMap<>();
     int active;
 
@@ -22,7 +26,25 @@ final class NativeAudio {
     static final int TRIM_EVERY_SECONDS = 300;
 
     static final class Lease {
-        int readers;
+        /** Every reader of the file; {@code background} of them are background reads. */
+        int readers, background;
+    }
+
+    /**
+     * Background work stops because playback needs the network or the file. Unchecked so it passes
+     * through readers and extractors; it is no failure of the file.
+     */
+    static final class Deferred extends CancellationException {
+        Deferred(String message) {
+            super(message);
+        }
+    }
+
+    /** True while playback itself reads the file: background reads leave its download alone. */
+    private boolean played(Lease lease) {
+        synchronized (cacheGuard) {
+            return lease.readers > lease.background;
+        }
     }
 
     NativeAudio(TelegramBridge bridge) {
@@ -52,8 +74,18 @@ final class NativeAudio {
     }
 
     Reader open(String url, long position, long length) throws IOException {
+        return open(url, position, length, null);
+    }
+
+    /**
+     * As above. With a {@code guard}, the read is background work: it uses its own slot, throws
+     * {@link Deferred} from the guard when playback needs the network, and gives way when playback
+     * opens the same file.
+     */
+    Reader open(String url, long position, long length, Runnable guard) throws IOException {
         if (position < 0 || length < -1) throw new IOException("Invalid audio range");
-        if (!slots.tryAcquire()) throw new IOException("Too many active Telegram reads");
+        Semaphore slot = guard == null ? slots : backgroundSlots;
+        if (!slot.tryAcquire()) throw new IOException("Too many active Telegram reads");
         boolean counted = false;
         Lease lease = null;
         int fileId = 0;
@@ -93,6 +125,7 @@ final class NativeAudio {
                     leases.put(fileId, lease);
                 }
                 lease.readers++;
+                if (guard != null) lease.background++;
             }
             Reader reader =
                     new Reader(
@@ -107,6 +140,11 @@ final class NativeAudio {
                             size,
                             row.optString("mime"),
                             lease);
+            reader.slot = slot;
+            if (guard != null) {
+                reader.background = true;
+                reader.cancellation = guard;
+            }
             if (cue != null)
                 reader.entry =
                         new CueAudio(
@@ -132,22 +170,95 @@ final class NativeAudio {
             reader.check();
             return reader;
         } catch (Exception e) {
-            if (counted) release(fileId, lease);
-            else slots.release();
+            if (counted) release(fileId, lease, slot, guard != null, true);
+            else slot.release();
             throw io(e);
         }
     }
 
-    void release(int id, Lease lease) {
+    void release(int id, Lease lease, Semaphore slot, boolean background, boolean cancel) {
         synchronized (cacheGuard) {
             try {
+                if (background) lease.background--;
                 if (--lease.readers == 0) {
                     leases.remove(id);
-                    bridge.cancelDownload(id);
+                    if (cancel) bridge.cancelDownload(id);
                 }
             } finally {
                 active--;
-                slots.release();
+                slot.release();
+            }
+        }
+    }
+
+    /**
+     * Bytes of a Telegram file, downloading only that part: how zips are looked into without
+     * downloading them. Background work: the file counts as read for as long as this runs, so
+     * playback closing it doesn't cancel this download, and when playback reads the same file this
+     * stops with {@link Deferred} instead of replacing the one download window TDLib keeps per
+     * file. {@code guard} throws {@link Deferred} when playback needs the network.
+     */
+    byte[] readRange(int file, long offset, int length, Runnable guard) throws Exception {
+        Lease lease;
+        synchronized (cacheGuard) {
+            lease = leases.get(file);
+            if (lease == null) leases.put(file, lease = new Lease());
+            lease.readers++;
+            lease.background++;
+        }
+        boolean aborted = true;
+        try {
+            byte[] out = readRangeLeased(file, offset, length, guard, lease);
+            aborted = false;
+            return out;
+        } finally {
+            synchronized (cacheGuard) {
+                lease.background--;
+                if (--lease.readers == 0) {
+                    leases.remove(file);
+                    if (aborted) bridge.cancelDownload(file);
+                }
+            }
+        }
+    }
+
+    private byte[] readRangeLeased(int file, long offset, int length, Runnable guard, Lease lease)
+            throws Exception {
+        TdApi.File info = bridge.call(new TdApi.GetFile(file), 15000);
+        if (offset < 0 || offset >= info.size) return new byte[0];
+        int wanted = (int) Math.min(length, info.size - offset);
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(60);
+        for (int attempt = 1; ; attempt++) {
+            if (guard != null) guard.run();
+            long have =
+                    bridge.call(new TdApi.GetFileDownloadedPrefixSize(file, offset), 15000).size;
+            if (have < wanted) {
+                if (played(lease)) throw new Deferred("Telegram file is playing");
+                bridge.call(new TdApi.DownloadFile(file, 1, offset, wanted, false), 15000);
+                while ((have =
+                                bridge.call(
+                                                new TdApi.GetFileDownloadedPrefixSize(file, offset),
+                                                15000)
+                                        .size)
+                        < wanted) {
+                    if (guard != null) guard.run();
+                    if (played(lease)) throw new Deferred("Telegram file is playing");
+                    if (System.nanoTime() > deadline)
+                        throw new IOException("Telegram download timed out");
+                    Thread.sleep(100);
+                }
+            }
+            String path = bridge.call(new TdApi.GetFile(file), 15000).local.path;
+            byte[] out = new byte[wanted];
+            // TDLib may move the finished file or delete it to free space between asking and
+            // opening, or while it is read; the part is then asked for again.
+            try (RandomAccessFile input = new RandomAccessFile(path, "r")) {
+                input.seek(offset);
+                input.readFully(out);
+                return out;
+            } catch (FileNotFoundException | EOFException gone) {
+                if (attempt >= MOVED_ATTEMPTS) throw gone;
+                Thread.sleep(50L * attempt);
             }
         }
     }
@@ -172,6 +283,8 @@ final class NativeAudio {
         final long chat, message, generation, total;
         final String tag, mime;
         final Lease lease;
+        Semaphore slot;
+        boolean background;
         long revision, checkedAt;
         long position, end;
         volatile boolean cancelled;
@@ -207,6 +320,7 @@ final class NativeAudio {
                             ? mime
                             : "application/octet-stream";
             this.lease = lease;
+            this.slot = owner.slots;
             revision = owner.bridge.mediaRevision;
             checkedAt = System.nanoTime();
         }
@@ -215,6 +329,7 @@ final class NativeAudio {
             cancellation.run();
             if (cancelled || Thread.currentThread().isInterrupted())
                 throw new InterruptedIOException("Telegram read cancelled");
+            if (background && owner.played(lease)) throw new Deferred("Telegram file is playing");
             owner.bridge.requireReady();
             if (generation != owner.bridge.generation || !tag.equals(owner.bridge.sessionTag))
                 throw new IOException("Telegram session changed");
@@ -293,7 +408,8 @@ final class NativeAudio {
                             owner.bridge.call(new TdApi.GetFileDownloadedPrefixSize(id, at)).size;
                     if (prefix <= 0) {
                         long wanted = Math.min(limit - at, 4L * 1024 * 1024);
-                        owner.bridge.call(new TdApi.DownloadFile(id, 32, at, wanted, false));
+                        owner.bridge.call(
+                                new TdApi.DownloadFile(id, background ? 1 : 32, at, wanted, false));
                         long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(40);
                         do {
                             check();
@@ -319,7 +435,7 @@ final class NativeAudio {
                     try (RandomAccessFile input = new RandomAccessFile(file.local.path, "r")) {
                         input.seek(at);
                         input.readFully(buffer, offset, count);
-                    } catch (java.io.FileNotFoundException gone) {
+                    } catch (java.io.FileNotFoundException | EOFException gone) {
                         if (attempt >= MOVED_ATTEMPTS) throw gone;
                         if (attempt == 1)
                             HostLog.d(
@@ -331,7 +447,11 @@ final class NativeAudio {
                         // download it again if it isn't; otherwise it keeps naming the old path.
                         owner.bridge.call(
                                 new TdApi.DownloadFile(
-                                        id, 32, at, Math.min(limit - at, 4L * 1024 * 1024), false));
+                                        id,
+                                        background ? 1 : 32,
+                                        at,
+                                        Math.min(limit - at, 4L * 1024 * 1024),
+                                        false));
                         Thread.sleep(50L * attempt);
                         continue;
                     }
@@ -347,7 +467,7 @@ final class NativeAudio {
             synchronized (this) {
                 if (!released) {
                     released = true;
-                    owner.release(id, lease);
+                    owner.release(id, lease, slot, background, true);
                 }
             }
         }

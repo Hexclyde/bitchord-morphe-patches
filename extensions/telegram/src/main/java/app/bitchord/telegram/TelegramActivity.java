@@ -795,12 +795,20 @@ public final class TelegramActivity extends Activity {
                                 : cachedIndexStatus,
                         "Only Telegram’s own search is used",
                         bridge.searchIndex(),
-                        bridge::setSearchIndex);
+                        on -> {
+                            bridge.setSearchIndex(on);
+                            if (!on)
+                                runOnUiThread(
+                                        () -> {
+                                            if (!isFinishing() && !isDestroyed()) startBackup();
+                                        });
+                        });
         paragraph(
                 music,
                 "Keeps music from your selected chats on this phone. Audio and ZIP posts update as"
                     + " they arrive, change or disappear while Telegram is connected. Background"
-                    + " scans catch up on history. Turning it off deletes the index.");
+                    + " scans catch up on history. Turning it off only pauses it: the saved index"
+                    + " stays on this phone, so you can still back it up or turn it on again.");
         divider(music);
         toggle(
                 music,
@@ -1079,6 +1087,13 @@ public final class TelegramActivity extends Activity {
         divider(card);
         row(
                 card,
+                "Restore from a private channel",
+                "The newest backup posted in a private channel you created",
+                "Choose",
+                this::chooseRestoreChannel);
+        divider(card);
+        row(
+                card,
                 "Share a chat’s index",
                 "Post it in Telegram, or save it as a file",
                 "Choose",
@@ -1113,8 +1128,11 @@ public final class TelegramActivity extends Activity {
                                 withIndex,
                                 (d, i, on) -> withIndex[0] = on)
                         .setNegativeButton(Strings.t("Cancel"), null)
+                        .setNeutralButton(
+                                Strings.t("Private channel"),
+                                (d, w) -> chooseBackupChannel(withIndex[0]))
                         .setPositiveButton(
-                                Strings.t("Back up"),
+                                Strings.t("Save to file"),
                                 (d, w) -> {
                                     backupWithIndex = withIndex[0];
                                     signOutAfterBackup = false;
@@ -1124,6 +1142,83 @@ public final class TelegramActivity extends Activity {
         secureWindow(dialog.getWindow());
         dialog.show();
         style.tuneDialog(dialog);
+    }
+
+    /**
+     * Lists the private channels this account created, then posts or restores only after an
+     * explicit confirmation naming the channel. Public chats are never offered.
+     */
+    void chooseBackupChannel(boolean withIndex) {
+        pickPrivateChannel(
+                "Send the backup to",
+                channel ->
+                        confirm(
+                                Strings.f("Send the backup to {0}?", channel.title),
+                                "The backup holds your settings and corrected names, and the"
+                                        + " saved index if you chose it. Anyone who can open the"
+                                        + " channel can read it. Your API details and Telegram"
+                                        + " session are never in it.",
+                                "Send",
+                                () ->
+                                        run(
+                                                false,
+                                                () ->
+                                                        bridge.backupToChannel(
+                                                                channel.id, withIndex))));
+    }
+
+    void chooseRestoreChannel() {
+        pickPrivateChannel(
+                "Restore from",
+                channel ->
+                        confirm(
+                                Strings.f("Restore from {0}?", channel.title),
+                                "The newest backup in the channel replaces your settings and adds"
+                                        + " its saved index to this one.",
+                                "Restore",
+                                () -> run(() -> bridge.restoreFromChannel(channel.id))));
+    }
+
+    void pickPrivateChannel(String title, java.util.function.Consumer<TdApi.Chat> chosen) {
+        bridge.work.execute(
+                () -> {
+                    List<TdApi.Chat> channels;
+                    try {
+                        channels = bridge.ownedPrivateChannels();
+                    } catch (Exception e) {
+                        bridge.fail(e);
+                        runOnUiThread(this::updateStatus);
+                        return;
+                    }
+                    runOnUiThread(
+                            () -> {
+                                if (isFinishing() || isDestroyed()) return;
+                                if (channels.isEmpty()) {
+                                    confirm(
+                                            "No private channel",
+                                            "Create a private channel in Telegram that only you"
+                                                + " use, then come back. Public channels are not"
+                                                + " offered.",
+                                            "Done",
+                                            () -> {});
+                                    return;
+                                }
+                                String[] labels = new String[channels.size()];
+                                for (int i = 0; i < labels.length; i++)
+                                    labels[i] = channels.get(i).title;
+                                AlertDialog dialog =
+                                        new AlertDialog.Builder(this)
+                                                .setTitle(Strings.t(title))
+                                                .setItems(
+                                                        labels,
+                                                        (d, i) -> chosen.accept(channels.get(i)))
+                                                .setNegativeButton(Strings.t("Cancel"), null)
+                                                .create();
+                                secureWindow(dialog.getWindow());
+                                dialog.show();
+                                style.tuneDialog(dialog);
+                            });
+                });
     }
 
     void chooseShareTarget(TdApi.Chat chat) {
@@ -1211,10 +1306,15 @@ public final class TelegramActivity extends Activity {
             run(
                     signOut,
                     () -> {
-                        try (java.io.OutputStream out =
-                                getContentResolver().openOutputStream(uri, "wt")) {
-                            bridge.backup(out, backupWithIndex);
+                        // Made and checked in the cache first, so the chosen file is only touched
+                        // by a backup that is whole.
+                        java.io.File made = bridge.backupFile(backupWithIndex);
+                        try {
+                            saveChecked(made, uri);
+                        } finally {
+                            made.delete();
                         }
+                        bridge.status = Strings.t("Backup saved.");
                         // Only once the backup is safely written.
                         if (signOut) {
                             try {
@@ -1232,10 +1332,13 @@ public final class TelegramActivity extends Activity {
             run(
                     false,
                     () -> {
-                        try (java.io.OutputStream out =
-                                getContentResolver().openOutputStream(uri, "wt")) {
-                            bridge.exportIndex(exportChat, out);
+                        java.io.File made = bridge.indexFile(exportChat);
+                        try {
+                            saveChecked(made, uri);
+                        } finally {
+                            made.delete();
                         }
+                        bridge.status = Strings.t("Index file saved.");
                     });
         else if (request == RESTORE)
             run(
@@ -1244,6 +1347,22 @@ public final class TelegramActivity extends Activity {
                             bridge.restore(in);
                         }
                     });
+    }
+
+    /**
+     * Copies a checked file to a picked document, closing it once, then reads the document back:
+     * some providers only commit on close, so a copy that "worked" can still be empty.
+     */
+    void saveChecked(java.io.File made, android.net.Uri uri) throws Exception {
+        java.io.OutputStream out = getContentResolver().openOutputStream(uri, "wt");
+        if (out == null) throw new java.io.IOException(IndexTransfer.CUT_SHORT);
+        try (java.io.OutputStream target = out) {
+            IndexTransfer.deliver(made, target);
+        }
+        try (java.io.InputStream back = getContentResolver().openInputStream(uri)) {
+            if (back == null) throw new java.io.IOException(IndexTransfer.EMPTY);
+            IndexTransfer.verifyDelivered(made, back);
+        }
     }
 
     void trackDetails() {

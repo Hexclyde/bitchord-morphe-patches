@@ -118,6 +118,9 @@ public final class SourceAutomix {
         volatile boolean adopted;
         volatile int attempts;
         volatile long retryAfter;
+        // Stopped for playback priority, not for a fault; and memory waits in a row, for backoff.
+        volatile boolean yielded;
+        volatile int deferrals;
         volatile String phase = "queued";
         long deadline;
 
@@ -530,13 +533,61 @@ public final class SourceAutomix {
         } catch (Exception unavailable) {
             return;
         }
+        try {
+            playbackNeeds(player);
+        } catch (Throwable unavailable) {
+            // Priority is advisory: without it analysis only waits less.
+        }
         post();
+    }
+
+    /**
+     * How long the current song needs the device, from the player's own state: buffering, or
+     * playing with almost nothing buffered ahead. Zero means no urgency. Pure, for tests.
+     */
+    static long urgentMillis(int state, boolean playWhenReady, long bufferedAheadMs) {
+        if (!playWhenReady) return 0;
+        // Player.STATE_BUFFERING is 2 and STATE_READY is 3.
+        if (state == 2) return 5_000;
+        return state == 3 && bufferedAheadMs >= 0 && bufferedAheadMs < 3_000 ? 4_000 : 0;
+    }
+
+    /** Called on the player's thread, where the current song's state is known. */
+    private static void playbackNeeds(Object player) throws Exception {
+        Class<?>[] none = new Class<?>[0];
+        boolean wanted =
+                Boolean.TRUE.equals(TransitionRuntime.pcall(player, "getPlayWhenReady", none));
+        int state = number(TransitionRuntime.pcall(player, "getPlaybackState", none));
+        long ahead =
+                ((Number) TransitionRuntime.pcall(player, "getBufferedPosition", none)).longValue()
+                        - ((Number) TransitionRuntime.pcall(player, "getCurrentPosition", none))
+                                .longValue();
+        long millis = urgentMillis(state, wanted, ahead);
+        if (millis > 0) PlaybackPriority.playbackUrgent(millis);
     }
 
     /** The host dropped its read-ahead (pause, stop, new queue): only speculation is cancelled. */
     public static void cancelLookahead(Object owner) {
         Job spec = lookahead;
         if (spec != null && spec.service == owner) cancelSpeculation();
+    }
+
+    /** Whether playback, an upgrade or next-song preparation currently outranks this analysis. */
+    private static boolean yieldsToPlayback(Job job) {
+        boolean yields = !PlaybackPriority.analysisAllowed();
+        if (yields) job.yielded = true;
+        return yields;
+    }
+
+    /** Asks again shortly; used when priority, not a fault, stopped an analysis. */
+    private static void postLater() {
+        Looper main = Looper.getMainLooper();
+        if (main != null) new Handler(main).postDelayed(SourceAutomix::post, 1_500);
+    }
+
+    /** A memory wait grows 15 s, 30 s, 60 s... up to five minutes, so it isn't retried blindly. */
+    static long retryDelayNanos(int deferrals) {
+        return Math.min(300_000_000_000L, 15_000_000_000L << Math.min(Math.max(deferrals, 0), 5));
     }
 
     private static void post() {
@@ -906,6 +957,7 @@ public final class SourceAutomix {
             if (retry && !job.running && !job.done) {
                 job.attempts = 0;
                 job.retryAfter = 0;
+                job.deferrals = 0;
             }
             if (job.done
                     || job.running
@@ -966,6 +1018,8 @@ public final class SourceAutomix {
                 job.phase = "thermal";
                 return;
             }
+            job.yielded = false;
+            if (yieldsToPlayback(job)) throw new Skipped();
             job.attempts++;
             counted = true;
             Map<String, Object> results = (Map<String, Object>) field(job.analyzer, "results");
@@ -1097,13 +1151,15 @@ public final class SourceAutomix {
                                         () ->
                                                 job.cancelled
                                                         || current.get(job.id) != job
+                                                        || yieldsToPlayback(job)
                                                         || memory.cancelled()
                                                         || AutomixAccess.stopped()
                                                         || System.nanoTime() >= job.deadline,
                                         () ->
                                                 memory.available(
                                                         heapMaximum.getAsLong(),
-                                                        heapUsed.getAsLong()));
+                                                        heapUsed.getAsLong()),
+                                        memory::materialized);
                     }
                     if (result == null) {
                         job.phase = "unavailable";
@@ -1170,6 +1226,7 @@ public final class SourceAutomix {
                     job.storeKey,
                     result);
             job.done = true;
+            job.deferrals = 0;
             job.phase = "ready";
             HostLog.d(
                     (restored
@@ -1184,7 +1241,9 @@ public final class SourceAutomix {
             if (counted) job.attempts = Math.max(0, job.attempts - 1);
             job.phase = "queued";
             stoodAside = true;
+            if (job.yielded) postLater();
         } catch (DspAnalysis.Deferred waitingForMemory) {
+            job.deferrals++;
             // Only a completed read uses an attempt; once spent, only a manual retry measures.
             job.phase =
                     waitingForMemory.decoded && job.attempts >= ATTEMPTS
@@ -1199,13 +1258,26 @@ public final class SourceAutomix {
                             + ", availableKiB="
                             + Math.max(0, waitingForMemory.available) / 1024
                             + ", decoded="
-                            + waitingForMemory.decoded);
+                            + waitingForMemory.decoded
+                            + ", "
+                            + SourceAudio.memoryDiagnostics(
+                                    heapMaximum.getAsLong(), heapUsed.getAsLong()));
         } catch (Throwable error) {
-            if (decoding != null && decoding.memoryStopped
+            if (error instanceof SourceAudio.Stopped
+                            && ((SourceAudio.Stopped) error).reason
+                                    == SourceAudio.StopReason.PRIORITY
+                    || job.yielded && !PlaybackPriority.analysisAllowed()) {
+                if (counted) job.attempts = Math.max(0, job.attempts - 1);
+                job.phase = "queued";
+                stoodAside = true;
+                postLater();
+                HostLog.d("AutoMix analysis yielded to playback");
+            } else if (decoding != null && decoding.memoryStopped
                     || error instanceof SourceAudio.Stopped
                             && ((SourceAudio.Stopped) error).reason
                                     == SourceAudio.StopReason.MEMORY) {
                 job.phase = "memory";
+                job.deferrals++;
                 if (counted) job.attempts = Math.max(0, job.attempts - 1);
                 HostLog.d("AutoMix analysis is waiting for playback memory");
             } else {
@@ -1220,7 +1292,11 @@ public final class SourceAutomix {
         } finally {
             try {
                 finishModels(models);
-                if (!stoodAside) job.retryAfter = System.nanoTime() + 15_000_000_000L;
+                if (!stoodAside)
+                    job.retryAfter =
+                            System.nanoTime()
+                                    + retryDelayNanos(
+                                            "memory".equals(job.phase) ? job.deferrals : 0);
                 job.running = false;
                 running.remove(job.id);
                 draining.remove(job.id, job);
@@ -1399,7 +1475,7 @@ public final class SourceAutomix {
                         pinned.put(key, spec);
                     }
                 }
-                return new SourceAudio(spec, deadline, cancelled);
+                return SourceAudio.background(spec, deadline, cancelled);
             } catch (Exception error) {
                 return null;
             } finally {

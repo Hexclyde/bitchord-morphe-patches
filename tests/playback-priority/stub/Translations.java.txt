@@ -1,0 +1,8 @@
+package app.bitchord.telegram;
+
+/** No translated text is read by these checks. */
+final class Translations {
+    static String[] table(String language) {
+        return null;
+    }
+}

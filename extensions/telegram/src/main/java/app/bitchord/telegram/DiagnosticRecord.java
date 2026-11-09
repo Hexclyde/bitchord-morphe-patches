@@ -76,9 +76,21 @@ public final class DiagnosticRecord {
                         + " UNEXPECTED_EOF FILE_MISSING DECODE_FAILURE IO_UNCLASSIFIED"
                         + " INTERNAL_UNCLASSIFIED NONE STOP_UNSPECIFIED STOP_CLOSED"
                         + " STOP_INTERRUPTED STOP_PLAYBACK_STOPPED STOP_CANCELLED STOP_DEADLINE"
-                        + " STOP_BYTE_LIMIT STOP_READER_RELEASED STOP_READ_PERMISSION");
+                        + " STOP_BYTE_LIMIT STOP_READER_RELEASED STOP_READ_PERMISSION STOP_PRIORITY"
+                        + " STOP_MEMORY");
     private static final Pattern SOURCE_REASON =
-            Pattern.compile("(?:^|; )reason=([A-Z_]{1,40})(?:$|;| )");
+            Pattern.compile("(?:^|; )reason=([A-Z_0-9]{1,40})(?:$|;| )");
+    private static final Pattern CHECK_CONTEXT =
+            Pattern.compile(
+                    "(?:^| )(track|candidate|pair|attempt)=([A-Za-z0-9_-]{11}|[a-f0-9-]{36})(?=$|"
+                            + " )");
+    private static final Pattern CHECK_TIMING =
+            Pattern.compile(" at (reference|length|window [123]|comparison) after ([0-9]{1,9}) ms");
+    private static final Pattern MEMORY_FIELD =
+            Pattern.compile(
+                    "(?:^|,"
+                        + " )(heapUsedMiB|heapMaxMiB|pendingMiB|playbackReserveMiB|dspAvailableMiB|systemFreeMiB|processRssMiB|nativeHeapMiB)=([0-9]{1,9})(?=$|[,"
+                        + " (])");
     private static final Pattern WINDOWS =
             Pattern.compile(", ([0-9]{1,2}) of ([0-9]{1,2}) windows(?:;|$)");
     private static final Set<String> ERRORS =
@@ -185,6 +197,39 @@ public final class DiagnosticRecord {
                         break;
                     case "stage":
                         out.put(key, enumValue(value, ANALYSIS_STAGES, "unknown"));
+                        break;
+                    case "track":
+                        if (value instanceof String
+                                && ((String) value)
+                                        .matches(
+                                                "[A-Za-z0-9_-]{11}|[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}"))
+                            out.put(key, value);
+                        break;
+                    case "candidate":
+                    case "pair":
+                    case "attempt":
+                        if (value instanceof String
+                                && ((String) value)
+                                        .matches("[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}"))
+                            out.put(key, value);
+                        break;
+                    case "verification_stage":
+                        out.put(
+                                key,
+                                enumValue(
+                                        value,
+                                        set("reference length window1 window2 window3 comparison"),
+                                        "unknown"));
+                        break;
+                    case "heapUsedMiB":
+                    case "heapMaxMiB":
+                    case "pendingMiB":
+                    case "playbackReserveMiB":
+                    case "dspAvailableMiB":
+                    case "systemFreeMiB":
+                    case "processRssMiB":
+                    case "nativeHeapMiB":
+                        integer(out, key, value, 0, 1 << 24);
                         break;
                     case "preview_source":
                         out.put(key, enumValue(value, set("none outgoing incoming"), "none"));
@@ -436,6 +481,8 @@ public final class DiagnosticRecord {
                     || text.startsWith("AutoMix reused")) values.put("reason", "AUTOMIX_READY");
             else if (text.startsWith("AutoMix analysis deferred"))
                 values.put("reason", "AUTOMIX_DEFERRED");
+            Matcher memory = MEMORY_FIELD.matcher(text);
+            while (memory.find()) values.put(memory.group(1), Long.parseLong(memory.group(2)));
             Matcher field = ANALYSIS_FIELD.matcher(text);
             while (field.find()) {
                 if ("stage".equals(field.group(1))) values.put("stage", field.group(2));
@@ -479,8 +526,20 @@ public final class DiagnosticRecord {
         if (text.startsWith("Recording check ")) {
             values.put("category", "SOURCE");
             Matcher result = SOURCE_REASON.matcher(text);
-            if (result.find() && SOURCE_REASONS.contains(result.group(1)))
-                values.put("reason", result.group(1));
+            if (result.find()) {
+                if (SOURCE_REASONS.contains(result.group(1))) values.put("reason", result.group(1));
+                else if (result.group(1).matches("HTTP_[1-5][0-9]{2}")) {
+                    values.put("reason", "FAILED");
+                    values.put("http_status", Integer.parseInt(result.group(1).substring(5)));
+                }
+            }
+            Matcher context = CHECK_CONTEXT.matcher(text);
+            while (context.find()) values.put(context.group(1), context.group(2));
+            Matcher timing = CHECK_TIMING.matcher(text);
+            if (timing.find()) {
+                values.put("verification_stage", timing.group(1).replace(" ", ""));
+                values.put("elapsed_ms", Long.parseLong(timing.group(2)));
+            }
             Matcher windows = WINDOWS.matcher(text);
             if (windows.find()) {
                 values.put("windows", Integer.parseInt(windows.group(1)));

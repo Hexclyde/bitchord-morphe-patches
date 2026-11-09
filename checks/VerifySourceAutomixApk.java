@@ -262,7 +262,8 @@ public final class VerifySourceAutomixApk {
                         "I",
                         "D",
                         "Ljava/util/function/BooleanSupplier;",
-                        "Ljava/util/function/LongSupplier;");
+                        "Ljava/util/function/LongSupplier;",
+                        "Ljava/util/function/LongConsumer;");
         int lease =
                 unique(
                         body,
@@ -461,7 +462,8 @@ public final class VerifySourceAutomixApk {
                         "I",
                         "D",
                         "Ljava/util/function/BooleanSupplier;",
-                        "Ljava/util/function/LongSupplier;");
+                        "Ljava/util/function/LongSupplier;",
+                        "Ljava/util/function/LongConsumer;");
         List<Instruction> missingDsp = new ArrayList<>(body);
         RegisterRangeInstruction boundedCall =
                 (RegisterRangeInstruction) missingDsp.get(structural);

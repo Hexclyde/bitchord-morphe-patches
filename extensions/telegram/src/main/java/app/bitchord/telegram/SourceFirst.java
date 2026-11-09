@@ -93,6 +93,7 @@ public final class SourceFirst {
         if (running == null || !(player instanceof Player)) return;
         try {
             Player queue = (Player) player;
+            watchPriority(queue);
             int next = (Integer) Player.class.getMethod("getNextMediaItemIndex").invoke(queue);
             int count = (Integer) Player.class.getMethod("getMediaItemCount").invoke(queue);
             List<Uri> items = new ArrayList<>();
@@ -124,6 +125,75 @@ public final class SourceFirst {
         } catch (Throwable unavailable) {
             HostLog.d("Source preparation skipped: " + unavailable.getClass().getSimpleName());
         }
+    }
+
+    private static final java.util.Map<Player, Boolean> watched = new java.util.WeakHashMap<>();
+
+    static void watchPriority(Player player) {
+        synchronized (watched) {
+            if (watched.containsKey(player)) return;
+            watched.put(player, true);
+        }
+        java.lang.ref.WeakReference<Player> reference = new java.lang.ref.WeakReference<>(player);
+        android.os.Handler handler = new android.os.Handler(player.getApplicationLooper());
+        class Urgency implements Player.Listener, Runnable {
+            private Player current() {
+                Player found = reference.get();
+                try {
+                    return found != null && found == hostPlayer(service) ? found : null;
+                } catch (Exception unavailable) {
+                    return null;
+                }
+            }
+
+            public void run() {
+                handler.removeCallbacks(this);
+                Player found = current();
+                if (found != null
+                        && found.getPlayWhenReady()
+                        && found.getPlaybackState() == Player.STATE_BUFFERING) {
+                    PlaybackPriority.playbackUrgent(2000);
+                    handler.postDelayed(this, 1000);
+                }
+            }
+
+            public void onPlaybackStateChanged(int state) {
+                run();
+            }
+
+            public void onPlayWhenReadyChanged(int reason, boolean ready) {
+                run();
+            }
+
+            public void onPlayWhenReadyChanged(boolean ready, int reason) {
+                run();
+            }
+
+            public void onPositionDiscontinuity(int reason) {
+                if (current() != null) PlaybackPriority.playbackUrgent(2000);
+                run();
+            }
+
+            public void onPositionDiscontinuity(
+                    int reason, Player.PositionInfo oldPosition, Player.PositionInfo newPosition) {
+                onPositionDiscontinuity(reason);
+            }
+
+            public void onPositionDiscontinuity(
+                    Player.PositionInfo oldPosition, Player.PositionInfo newPosition, int reason) {
+                onPositionDiscontinuity(reason);
+            }
+        }
+        Urgency listener = new Urgency();
+        if (android.os.Looper.myLooper() == player.getApplicationLooper()) {
+            player.addListener(listener);
+            listener.run();
+        } else
+            handler.post(
+                    () -> {
+                        player.addListener(listener);
+                        listener.run();
+                    });
     }
 
     private static void current(SourcePreparation running, Player player) {

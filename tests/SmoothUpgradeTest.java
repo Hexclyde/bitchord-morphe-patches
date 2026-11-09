@@ -67,6 +67,25 @@ public final class SmoothUpgradeTest {
     }
 
     public static void main(String[] args) throws Exception {
+        PlaybackPriority.reset();
+        long[] now = {1};
+        PlaybackPriority.clock = () -> now[0];
+        SmoothUpgrade.auditionStarted("current");
+        check(PlaybackPriority.upgradeActive(), "Audition reserves playback preparation");
+        check(!PlaybackPriority.analysisAllowed(), "Analysis yields while auditioning");
+        SmoothUpgrade.auditionEnded("other");
+        check(PlaybackPriority.upgradeActive(), "Another track cannot release this audition");
+        SmoothUpgrade.auditionEnded("current");
+        check(!PlaybackPriority.upgradeActive(), "Completion releases the reservation");
+        now[0] += PlaybackPriority.SETTLE_NANOS + 1;
+        check(PlaybackPriority.backgroundAllowed(), "Background work resumes after settling");
+        SmoothUpgrade.auditionStarted("expires");
+        now[0] += PlaybackPriority.UPGRADE_TTL_NANOS + PlaybackPriority.SETTLE_NANOS + 1;
+        check(
+                !PlaybackPriority.upgradeActive(),
+                "An abandoned audition cannot starve background work");
+        SmoothUpgrade.auditionEnded("expires");
+        PlaybackPriority.reset();
         Object service = new Object();
         SmoothUpgrade.captureOwner(service);
         java.util.concurrent.atomic.AtomicReference<Object> otherOwner =

@@ -125,6 +125,8 @@ final class ZipAlbums {
                 if (album == null || done.contains(album.getInt("entry"))) continue;
                 tracks.addAll(tracks(range, sheet, album));
                 done.add(album.getInt("entry"));
+            } catch (NativeAudio.Deferred ex) {
+                throw ex;
             } catch (Exception ex) {
                 // A sheet that can't be read leaves the album as one file.
             }
@@ -153,6 +155,8 @@ final class ZipAlbums {
                                     album,
                                     album.getInt("entry"),
                                     album.optString("album")));
+            } catch (NativeAudio.Deferred ex) {
+                throw ex;
             } catch (Exception ex) {
                 // No sheet of its own.
             }

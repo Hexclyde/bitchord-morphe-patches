@@ -50,7 +50,7 @@ public final class VerifyUpgradeSafetyApk {
 
     public static void main(String[] args) throws Exception {
         var dex = DexFileFactory.loadDexContainer(new File(args[0]), Opcodes.getDefault());
-        int guarded = 0, priority = 0;
+        int guarded = 0, priority = 0, audition = 0;
         for (String entry : dex.getDexEntryNames())
             for (ClassDef cls : dex.getEntry(entry).getDexFile().getClasses())
                 for (Method method : cls.getMethods()) {
@@ -66,6 +66,53 @@ public final class VerifyUpgradeSafetyApk {
                     for (var at : code.entrySet()) {
                         MethodReference target = call(at.getValue());
                         if (target == null) continue;
+                        if (target.getDefiningClass()
+                                        .equals("Lapp/bitchord/telegram/SmoothUpgrade;")
+                                && target.getName().equals("auditionPosition")) {
+                            int next = at.getKey() + at.getValue().getCodeUnits();
+                            Instruction result = code.get(next);
+                            if (result == null || result.getOpcode() != Opcode.MOVE_RESULT_WIDE)
+                                throw new AssertionError("Audition position result is ignored");
+                            int position = ((OneRegisterInstruction) result).getRegisterA();
+                            next += result.getCodeUnits();
+                            boolean consumed = false;
+                            for (int step = 0; step < 8 && code.containsKey(next); step++) {
+                                Instruction instruction = code.get(next);
+                                MethodReference seek = call(instruction);
+                                if (seek != null && seek.getName().equals("seekTo")) {
+                                    int slot = 1;
+                                    for (CharSequence type : seek.getParameterTypes()) {
+                                        if (type.toString().equals("J")) {
+                                            int actual;
+                                            if (instruction
+                                                    instanceof RegisterRangeInstruction range)
+                                                actual = range.getStartRegister() + slot;
+                                            else {
+                                                FiveRegisterInstruction registers =
+                                                        (FiveRegisterInstruction) instruction;
+                                                int[] argsAt = {
+                                                    registers.getRegisterC(),
+                                                    registers.getRegisterD(),
+                                                    registers.getRegisterE(),
+                                                    registers.getRegisterF(),
+                                                    registers.getRegisterG()
+                                                };
+                                                actual = argsAt[slot];
+                                            }
+                                            consumed = actual == position;
+                                            break;
+                                        }
+                                        slot += type.toString().equals("D") ? 2 : 1;
+                                    }
+                                    break;
+                                }
+                                next += instruction.getCodeUnits();
+                            }
+                            if (!consumed)
+                                throw new AssertionError(
+                                        "Standby seek does not use the current audition position");
+                            audition++;
+                        }
                         if (target.getName().equals("alignedOffset")) {
                             if (target.getDefiningClass()
                                     .equals("Lapp/bitchord/telegram/SmoothUpgrade;"))
@@ -104,11 +151,16 @@ public final class VerifyUpgradeSafetyApk {
                         priority++;
                     }
                 }
-        if (guarded != 2 || priority != 1)
+        if (guarded != 2 || priority != 1 || audition != 1)
             throw new AssertionError(
-                    "Missing upgrade guards or alignment priority: " + guarded + "/" + priority);
+                    "Missing upgrade guards or alignment priority: "
+                            + guarded
+                            + "/"
+                            + priority
+                            + "/"
+                            + audition);
         System.out.println(
                 "PASS: 2 cancellation paths preserve the outgoing player; measured offset has"
-                        + " priority");
+                        + " priority; standby seek consumes the current audition position");
     }
 }

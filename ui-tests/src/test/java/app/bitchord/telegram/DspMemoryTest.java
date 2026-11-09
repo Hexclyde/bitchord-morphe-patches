@@ -174,11 +174,11 @@ public class DspMemoryTest {
     }
 
     @Test
-    public void actualFormatUsesLongerDurationAndClosesOnlyItsProbe() throws Exception {
+    public void actualFormatUsesMeasuredDurationAndClosesOnlyItsProbe() throws Exception {
         SourceAudio.AnalysisInfo info = SourceAudio.analysisInfo(source(), 120);
         assertEquals(48000, info.sampleRate);
         assertEquals(214d, info.seconds, 0);
-        assertEquals(300d, SourceAudio.analysisInfo(source(), 300).seconds, 0);
+        assertEquals(214d, SourceAudio.analysisInfo(source(), 300).seconds, 0);
         assertEquals(2, probesClosed);
         assertEquals(0, sourcesClosed);
     }

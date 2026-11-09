@@ -43,6 +43,121 @@ public final class NativeAudioTest {
         checks++;
     }
 
+    static void background(TelegramBridge bridge, NativeAudio audio, String url) throws Exception {
+        bridge.available.clear();
+        bridge.limit = 0;
+        bridge.stall = false;
+        int downloads = bridge.downloads, cancellations = bridge.cancellations;
+        content(audio.readRange(7, 4096, 777, () -> {}), 4096, 777);
+        check(
+                bridge.priority == 1 && bridge.downloads == downloads + 1,
+                "Background range read asks for one low-priority window");
+        check(
+                audio.leases.isEmpty() && bridge.cancellations == cancellations,
+                "A finished background read leaves no lease and cancels nothing");
+
+        // Slow download that playback interrupts: the read stops at once and cancels its window.
+        bridge.available.clear();
+        bridge.stall = true;
+        int[] guards = {0};
+        try {
+            audio.readRange(
+                    7,
+                    1_000_000,
+                    100,
+                    () -> {
+                        if (++guards[0] == 4) throw new NativeAudio.Deferred("urgent");
+                    });
+            throw new AssertionError("Stalled background read finished");
+        } catch (NativeAudio.Deferred expected) {
+            checks++;
+        }
+        check(guards[0] == 4, "The guard is polled while the download is slow");
+        check(
+                audio.leases.isEmpty() && bridge.cancellations == cancellations + 1,
+                "Aborted background read cancels its own download");
+
+        // Playback closing the same file does not cancel a background read that still waits.
+        bridge.available.clear();
+        final int before = bridge.cancellations;
+        guards[0] = 0;
+        try {
+            audio.readRange(
+                    7,
+                    2_000_000,
+                    100,
+                    () -> {
+                        try {
+                            if (guards[0]++ == 1) {
+                                audio.open(url, 0, 1).close();
+                                check(
+                                        bridge.cancellations == before && audio.leases.size() == 1,
+                                        "Playback closing leaves the background lease");
+                            }
+                            if (guards[0] == 4) throw new NativeAudio.Deferred("urgent");
+                        } catch (IOException e) {
+                            throw new AssertionError(e);
+                        }
+                    });
+            throw new AssertionError("Stalled background read finished");
+        } catch (NativeAudio.Deferred expected) {
+            checks++;
+        }
+
+        // Playback owns the file: background asks for nothing and leaves its window alone.
+        bridge.available.clear();
+        bridge.stall = false;
+        NativeAudio.Reader playing = audio.open(url, 0, 10);
+        downloads = bridge.downloads;
+        try {
+            audio.readRange(7, 3_000_000, 100, () -> {});
+            throw new AssertionError("Background replaced the playing download window");
+        } catch (NativeAudio.Deferred expected) {
+            checks++;
+        }
+        check(bridge.downloads == downloads, "No DownloadFile while playback reads the file");
+        cancellations = bridge.cancellations;
+        playing.close();
+        check(bridge.cancellations == cancellations + 1, "Playback still cancels its own window");
+
+        // Background readers have their own slot and give way when playback opens the file.
+        NativeAudio.Reader quiet = audio.open(url, 0, 10, () -> {});
+        NativeAudio.Reader a = audio.open(url, 0, 10),
+                b = audio.open(url, 0, 10),
+                c = audio.open(url, 0, 10);
+        denied(() -> audio.open(url, 0, 10, () -> {}), "second background reader");
+        denied(() -> audio.open(url, 0, 10), "fourth playback reader");
+        try {
+            quiet.read(new byte[1], 0, 1);
+            throw new AssertionError("Background reader read beside playback");
+        } catch (NativeAudio.Deferred expected) {
+            checks++;
+        }
+        a.close();
+        b.close();
+        c.close();
+        bridge.available.clear();
+        content(bytes(quiet), 0, 10);
+        check(bridge.priority == 1, "Background reader downloads at low priority");
+        quiet.close();
+        check(
+                audio.slots.availablePermits() == 3
+                        && audio.backgroundSlots.availablePermits() == 1
+                        && !audio.active()
+                        && audio.leases.isEmpty(),
+                "Slot accounting stays clean");
+
+        // A file TDLib trimmed while it was read is fetched again, not failed.
+        bridge.available.clear();
+        bridge.truncateNext = true;
+        content(audio.readRange(7, 5000, 300, () -> {}), 5000, 300);
+        bridge.available.clear();
+        bridge.truncateNext = true;
+        try (NativeAudio.Reader reader = audio.open(url, 6000, 300)) {
+            content(bytes(reader), 6000, 300);
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         File file = Files.createTempFile("native-telegram-", ".audio").toFile();
         TelegramBridge bridge = new TelegramBridge(file);
@@ -270,6 +385,7 @@ public final class NativeAudioTest {
             check(
                     audio.leases.isEmpty() && audio.slots.availablePermits() == 3,
                     "Repeated open/close does not grow the file-lock map");
+            background(bridge, audio, url);
             System.out.println(
                     "PASS: "
                             + checks

@@ -1,5 +1,11 @@
 ## 1.1.0-beta.19
 
+- Playback preparation pauses competing Telegram indexing, archive checks and AutoMix analysis. Background work resumes after playback settles.
+- Recording checks share completed windows for the same audio pair, reject interrupted reads and retry temporary read failures with a delay. Standby upgrades seek from the current playback position and measured recording offset.
+- **Diagnostics** includes recording-check identities, stages and timing, and separates system memory, Java heap, playback reserves and analysis allowances.
+
+- **Saved index** now pauses instead of deleting. Turning it off keeps the index, and it can still be backed up or shared. **Back up** can save to a file or post to a private channel you created, and **Restore from a private channel** reads it back. A backup is written to a temporary file, checked, then copied and read back, so an empty or failed save is reported as an error.
+
 - Keep video pictures hidden in Audio mode while BitChord 1.9.1 switches a queued video to its song version. Explicit video selections remain available.
 
 - Support the BitChord 1.9.1 universal APK for shared audio, Telegram and Soulseek. Unsupported 32-bit x86 libraries are removed; ARM64, ARMv7 and x86-64 remain available.

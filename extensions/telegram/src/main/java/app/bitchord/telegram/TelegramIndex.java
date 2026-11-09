@@ -342,7 +342,8 @@ final class TelegramIndex {
                             + (songs.size() == 1 ? " song" : " songs")
                             + " in "
                             + zip.optString("fileName"));
-        } catch (LiveSearch.RateLimited e) {
+        } catch (LiveSearch.RateLimited | NativeAudio.Deferred e) {
+            // Not the archive's fault: it stays waiting and is read again later.
             throw e;
         } catch (Exception e) {
             HostLog.d(
@@ -711,7 +712,10 @@ final class TelegramIndex {
         IndexTransfer.Section s = new IndexTransfer.Section();
         s.chat = chat;
         s.title = title == null ? "" : title;
-        s.newest = newestMessage(chat);
+        // Read straight from the store: a paused index still has its files to back up.
+        List<JSONObject> newest =
+                held.contains(chat) ? Collections.<JSONObject>emptyList() : store.newest(chat, 1);
+        s.newest = newest.isEmpty() ? 0 : newest.get(0).optLong("message");
         s.complete = state(chat).builtAt > 0;
         return s;
     }
@@ -738,7 +742,6 @@ final class TelegramIndex {
      * up with posts since; otherwise its own build goes on as usual. Returns the files added.
      */
     synchronized int importSection(IndexTransfer.Section section) throws Exception {
-        if (!enabled) return 0;
         long chat = section.chat;
         if (held.contains(chat)) return 0;
         IndexStore.State state = state(chat);
@@ -933,7 +936,7 @@ final class TelegramIndex {
         return Strings.f("{0} days", Math.round(m / 1440.0));
     }
 
-    /** Forgets everything, on disk too: when it's turned off or you sign out. */
+    /** Forgets everything, on disk too: when you sign out. Turning the index off keeps it. */
     synchronized void clear() throws Exception {
         states.clear();
         asked.clear();

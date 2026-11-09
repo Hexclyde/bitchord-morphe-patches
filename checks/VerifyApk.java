@@ -281,7 +281,7 @@ public class VerifyApk {
         Set<String> unreachable = new TreeSet<>(), reached = new TreeSet<>();
         int microGHooks = 0, signInLoads = 0; // MicroG RE sign-in hook; Google's sign-in page loads
         boolean smoothEntry = false;
-        int auditionPositionHooks = 0;
+        int auditionPositionHooks = 0, auditionStarts = 0, auditionEnds = 0;
         int legendTexts = 0, legendCalls = 0, searchHooks = 0, legendLinks = 0, matchHooks = 0;
         boolean downmixTarget = false;
         boolean liveSearchCall = false, slider = false;
@@ -713,6 +713,10 @@ public class VerifyApk {
                                         && !cls.getType().startsWith("Lapp/bitchord/telegram/")) {
                                     if (target.getName().equals("auditionPosition"))
                                         auditionPositionHooks++;
+                                    else if (target.getName().equals("auditionStarted"))
+                                        auditionStarts++;
+                                    else if (target.getName().equals("auditionEnded"))
+                                        auditionEnds++;
                                     else smoothHooks.add(cls.getType() + ">" + target.getName());
                                     if (target.getName().equals("captureOwner")) {
                                         Instruction previous =
@@ -1167,6 +1171,8 @@ public class VerifyApk {
             check(
                     smoothEntry
                             && auditionPositionHooks == 1
+                            && auditionStarts == 1
+                            && auditionEnds == 3
                             && smoothHooks.equals(
                                     new TreeSet<>(
                                             List.of(

@@ -36,6 +36,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.function.BooleanSupplier;
+import java.util.function.LongConsumer;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
@@ -92,6 +93,24 @@ final class DspAnalysis {
             BooleanSupplier stopped,
             LongSupplier available)
             throws IOException {
+        return analyze(id, directory, open, rate, seconds, stopped, available, count -> {});
+    }
+
+    /**
+     * {@code allocated} is told, once and right after it succeeds, how many Java heap bytes the
+     * measured mono array took: the one allocation here that a memory grant covers exactly. The
+     * native analyzer's copy and the working remainder are not Java heap and are never reported.
+     */
+    static Object analyze(
+            String id,
+            File directory,
+            Supplier<MediaDataSource> open,
+            int rate,
+            double seconds,
+            BooleanSupplier stopped,
+            LongSupplier available,
+            LongConsumer allocated)
+            throws IOException {
         long required = bytes(rate, seconds);
         check(stopped);
         if (required < 0) return null;
@@ -108,7 +127,7 @@ final class DspAnalysis {
             availableBytes = available.getAsLong();
             if (measured > availableBytes) throw new Deferred(measured, availableBytes, true);
             check(stopped);
-            float[] mono = read(scratch, (int) frames, stopped);
+            float[] mono = read(scratch, (int) frames, stopped, allocated);
             check(stopped);
             double measuredSeconds = frames / (double) RATE;
             Object features = PlaybackService.bitchordDspFeatures(mono, measuredSeconds);
@@ -199,10 +218,13 @@ final class DspAnalysis {
             throw new IOException("The selected audio timestamps are not continuous");
     }
 
-    private static float[] read(File file, int frames, BooleanSupplier stopped) throws IOException {
+    private static float[] read(
+            File file, int frames, BooleanSupplier stopped, LongConsumer allocated)
+            throws IOException {
         if (frames <= 0 || frames > RATE * (MAX_SECONDS + 1) || file.length() != frames * 4L)
             throw new IOException("The measured audio exceeded its storage limit");
         float[] samples = new float[frames];
+        allocated.accept(frames * 4L);
         ByteBuffer bytes = ByteBuffer.allocate(IO_BYTES).order(ByteOrder.LITTLE_ENDIAN);
         try (FileInputStream input = new FileInputStream(file)) {
             int at = 0;

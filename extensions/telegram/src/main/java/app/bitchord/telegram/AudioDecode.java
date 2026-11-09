@@ -45,10 +45,23 @@ final class AudioDecode {
             int least,
             long budgetMillis)
             throws Exception {
+        return decode(bridge, telegramId, fromMs, seconds, least, budgetMillis, null);
+    }
+
+    /** As above; with a {@code guard} the file is read as background work. */
+    static SoundCheck.Pcm decode(
+            TelegramBridge bridge,
+            String telegramId,
+            long fromMs,
+            int seconds,
+            int least,
+            long budgetMillis,
+            Runnable guard)
+            throws Exception {
         long deadline = System.currentTimeMillis() + budgetMillis;
         MediaExtractor extractor = new MediaExtractor();
         MediaCodec codec = null;
-        try (Source source = new Source(bridge, bridge.url() + "/audio/" + telegramId)) {
+        try (Source source = new Source(bridge, bridge.url() + "/audio/" + telegramId, guard)) {
             extractor.setDataSource(source);
             int track = -1;
             MediaFormat format = null;
@@ -143,12 +156,14 @@ final class AudioDecode {
     static final class Source extends MediaDataSource {
         final TelegramBridge bridge;
         final String url;
+        final Runnable guard;
         NativeAudio.Reader reader;
         long size = -1;
 
-        Source(TelegramBridge bridge, String url) throws IOException {
+        Source(TelegramBridge bridge, String url, Runnable guard) throws IOException {
             this.bridge = bridge;
             this.url = url;
+            this.guard = guard;
             open(0);
             size = reader.total;
         }
@@ -156,7 +171,7 @@ final class AudioDecode {
         private void open(long position) throws IOException {
             if (reader != null) reader.close();
             reader = null;
-            reader = bridge.audio.open(url, position, -1);
+            reader = bridge.audio.open(url, position, -1, guard);
         }
 
         @Override

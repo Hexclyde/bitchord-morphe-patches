@@ -94,6 +94,7 @@ public final class VerifyPatchUiApk {
                         "DspAnalysis",
                         "SourceAutomix",
                         "SourcePreference",
+                        "PlaybackPriority",
                         "RecordingIdentity",
                         "TelegramStyle",
                         "TelegramSwitch",

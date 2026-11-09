@@ -195,8 +195,17 @@ public class SourcePreferenceTest {
         ((Map<?, ?>) f.get(null)).clear();
     }
 
+    private long retryNow;
+
+    private void retryReady() {
+        retryNow += TimeUnit.SECONDS.toNanos(10);
+    }
+
     @Before
     public void network() throws Exception {
+        PlaybackPriority.reset();
+        retryNow = System.nanoTime();
+        SourcePreference.retryClock = () -> retryNow;
         originalAnalysisFormats = SourceAudio.analysisFormats;
         originalDecoder = SourceAudio.decoder;
         SyntheticDecoder.reset();
@@ -541,6 +550,7 @@ public class SourcePreferenceTest {
         assertFalse(SourcePreference.rejected(plain(), resolved));
         assertTrue(AudioDecoder.windows.isEmpty());
         SyntheticDecoder.durationMethod = 0;
+        retryReady();
         files.put(CANDIDATE, AudioDecoder.file(91, 0, 180, 250, false));
         assertSame(resolved, SourcePreference.guard(plain(), resolved));
         assertEquals(6, AudioDecoder.windows.size());
@@ -577,6 +587,7 @@ public class SourcePreferenceTest {
         assertTrue(AudioDecoder.windows.isEmpty());
         assertEquals(SyntheticDecoder.opened.get(), SyntheticDecoder.closed.get());
         SyntheticDecoder.unqualified = false;
+        retryReady();
         files.put(CANDIDATE, AudioDecoder.file(91, 0, 180, 250, false));
         assertSame(resolved, SourcePreference.guard(plain(), resolved));
         assertEquals(6, AudioDecoder.windows.size());
@@ -721,10 +732,11 @@ public class SourcePreferenceTest {
         PlaybackService.stopped = false;
         AudioDecoder.afterWindow = null;
         int soFar = AudioDecoder.windows.size();
+        retryReady();
         verify();
         assertEquals(
-                "Windows already decoded aren't decoded again: " + AudioDecoder.windows,
-                6,
+                "Only the interrupted window is decoded again: " + AudioDecoder.windows,
+                7,
                 AudioDecoder.windows.size());
         assertTrue(soFar >= 3);
     }
@@ -806,6 +818,15 @@ public class SourcePreferenceTest {
             assertTrue(expected.getMessage(), expected.getMessage().contains("Connection lost"));
         }
         PlaybackService.source = Remote::new;
+        int requests = opensOf(CANDIDATE);
+        try {
+            verify();
+            fail("An immediate retry must wait");
+        } catch (IOException deferred) {
+            assertTrue(deferred.getMessage().contains("deferred"));
+        }
+        assertEquals(requests, opensOf(CANDIDATE));
+        retryReady();
         verify();
     }
 
@@ -1008,6 +1029,15 @@ public class SourcePreferenceTest {
     }
 
     @Test
+    public void foregroundPreparationCanVerifyWhileItsPlayerIsBuffering() throws Exception {
+        PlaybackPriority.playbackUrgent(30000);
+        SourcePreference.verifyAhead(
+                plain(), new DataSpec(Uri.parse(CANDIDATE)), () -> false, false);
+        assertEquals(6, AudioDecoder.windows.size());
+        assertFalse(SourcePreference.rejected(plain(), new DataSpec(Uri.parse(CANDIDATE))));
+    }
+
+    @Test
     public void aCheckAheadStopsWhenCancelledAndKeepsWhatItDecoded() throws Exception {
         boolean[] cancelled = {false};
         AudioDecoder.afterWindow = done -> cancelled[0] = done == 3;
@@ -1022,7 +1052,7 @@ public class SourcePreferenceTest {
         AudioDecoder.afterWindow = null;
         SourcePreference.verifyAhead(
                 plain(), new DataSpec(Uri.parse(CANDIDATE)), () -> false, true);
-        assertEquals("Continued, not restarted", 6, AudioDecoder.windows.size());
+        assertEquals("Only the cancelled window is read again", 7, AudioDecoder.windows.size());
     }
 
     @Test
@@ -1997,5 +2027,45 @@ public class SourcePreferenceTest {
         } finally {
             YouTubePolicy.reset();
         }
+    }
+
+    @Test
+    public void activeVerificationCannotBeEvictedByOtherCandidates() throws Exception {
+        java.lang.reflect.Method get =
+                SourcePreference.class.getDeclaredMethod("attempt", String.class);
+        get.setAccessible(true);
+        Object first = get.invoke(null, "first");
+        for (int i = 1; i < 8; i++) get.invoke(null, "other-" + i);
+        try {
+            get.invoke(null, "ninth");
+            fail("The active queue is bounded");
+        } catch (java.lang.reflect.InvocationTargetException expected) {
+            assertTrue(expected.getCause() instanceof IOException);
+        }
+        assertSame(first, get.invoke(null, "first"));
+    }
+
+    @Test
+    public void auditionOffsetPeekDoesNotConsumeHandoverProof() throws Exception {
+        verify();
+        Long first = SourcePreference.peekVerifiedOffset("song");
+        assertNotNull(first);
+        assertEquals(first, SourcePreference.peekVerifiedOffset("song"));
+        assertEquals(first, SourcePreference.verifiedOffset("song"));
+        assertNull(SourcePreference.peekVerifiedOffset("song"));
+    }
+
+    @Test
+    public void policiesReuseWindowsButEvaluateTheirOwnVerdict() throws Exception {
+        SourcePreference.verifyPrepared(
+                plain(), new DataSpec(Uri.parse(CANDIDATE)), () -> false, true);
+        int measured = AudioDecoder.windows.size();
+        assertEquals(6, measured);
+        SourcePreference.verifyAhead(
+                plain(), new DataSpec(Uri.parse(CANDIDATE)), () -> false, true);
+        assertEquals(
+                "Strict policy reuses measurements, not the prepared verdict",
+                measured,
+                AudioDecoder.windows.size());
     }
 }
