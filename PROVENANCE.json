@@ -1,5 +1,5 @@
 {
-  "build_date": "2026-11-09",
+  "build_date": "2026-11-10",
   "app_version": "1.9",
   "app_source_commit": "04f64c9f11bd2714d01bbc6da401f146f3d9399f",
   "original_apk_url": "https://github.com/kushagrasinghx/BitChord/releases/download/v1.9/BitChord-v1.9_arm64-v8a.apk",
@@ -94,7 +94,7 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "cc932f26ac294828f1382b3e2230b1f2d5109454f37b864b3f9c10b4cd232ed3",
+  "patch_bundle_sha256": "d92281f6e5e596d8d967820f88aa83dfb3d3407eb898aa8d0e8133b4e788654a",
   "soulseek_development": {
     "status": "experimental-local-build",
     "baseline_commit": "3de260f7f1d7967c5a97ce924085d7d42bec18af",
