@@ -34,7 +34,11 @@ public final class PlaybackStats {
                     item == null || item.localConfiguration == null
                             ? null
                             : SourceFirst.audibleUri(item.localConfiguration.uri);
-            Object format = player.getClass().getMethod("getAudioFormat").invoke(player);
+            // Invoke the public interface: ExoPlayerImpl itself may be package-private.
+            Object format =
+                    Class.forName("androidx.media3.exoplayer.ExoPlayer")
+                            .getMethod("getAudioFormat")
+                            .invoke(player);
             Integer rate = null;
             if (format != null) {
                 for (String field : new String[] {"averageBitrate", "bitrate"}) {
