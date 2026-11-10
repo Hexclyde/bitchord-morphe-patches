@@ -84,6 +84,14 @@ public final class NativeAudioV2Test {
                 content(block, reader.read(block, 0, 100), 100);
             }
             check(bridge.downloads == downloads, "Warm cache needs no downloadFile");
+            byte[] directory = bridge.audio.readRange(7, 0, ZipDirectory.MAX_DIRECTORY, () -> {});
+            check(directory.length == bridge.length, "Existing ZIP directory limit is accepted");
+            content(directory, directory.length, 0);
+            try {
+                bridge.audio.readRange(7, 0, ZipDirectory.MAX_DIRECTORY + 1, () -> {});
+                throw new AssertionError("Unbounded metadata range accepted");
+            } catch (IOException expected) {
+            }
             bridge.available.clear();
             bridge.limit = 0;
             bridge.truncateNext = true;

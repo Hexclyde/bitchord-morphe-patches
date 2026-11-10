@@ -419,7 +419,7 @@ final class NativeAudio {
 
     private byte[] coordinatedRange(int file, long offset, int length, Runnable guard)
             throws Exception {
-        if (length < 0 || length > 8 * 1024 * 1024)
+        if (length < 0 || length > ZipDirectory.MAX_DIRECTORY)
             throw new IOException("Telegram range exceeds memory limit");
         if (guard != null) guard.run();
         bridge.requireReady();
