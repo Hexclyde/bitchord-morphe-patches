@@ -1290,6 +1290,11 @@ public final class TelegramBridge {
 
     private void update(TdApi.Object obj, long clientGeneration) {
         DownloadUploadBridge.onUpdate(this, obj);
+        if (obj instanceof TdApi.UpdateFile) {
+            TdApi.File updated = ((TdApi.UpdateFile) obj).file;
+            if (updated != null && updated.local != null)
+                audio.trace.update(updated.id, updated.local.downloadedSize);
+        }
         if (obj instanceof TdApi.UpdateAuthorizationState) {
             authorizationRevision++;
             auth = ((TdApi.UpdateAuthorizationState) obj).authorizationState;
@@ -1309,6 +1314,7 @@ public final class TelegramBridge {
             } else if (auth instanceof TdApi.AuthorizationStateReady) {
                 status = "Telegram connected. Select music chats, then search in BitChord.";
                 setForeground(foreground);
+                streamSession();
             } else if (auth instanceof TdApi.AuthorizationStateClosed) {
                 status = "Telegram session closed. Restart BitChord to connect again.";
             } else status = auth.getClass().getSimpleName().replace("AuthorizationState", "");
@@ -1509,6 +1515,33 @@ public final class TelegramBridge {
             super("Telegram " + error.code + ": " + error.message);
             code = error.code;
         }
+    }
+
+    volatile String runtimeTdlibVersion = "unknown";
+
+    void streamSession() {
+        Client target = client;
+        if (target == null) return;
+        target.send(
+                new TdApi.GetOption("version"),
+                object -> {
+                    if (object instanceof TdApi.OptionValueString)
+                        runtimeTdlibVersion = ((TdApi.OptionValueString) object).value;
+                    recordStreamSession();
+                });
+    }
+
+    void recordStreamSession() {
+        if (!Diagnostics.active()) return;
+        Map<String, Object> fields = new LinkedHashMap<>();
+        fields.put("wrapper_version", "java-stream-1");
+        for (String part : PatchVersion.BUILD.split(" ")) {
+            if (part.startsWith("commit=")) fields.put("wrapper_commit", part.substring(7));
+            if (part.startsWith("source=")) fields.put("wrapper_fingerprint", part.substring(7));
+        }
+        fields.put("tdlib_version", runtimeTdlibVersion);
+        fields.put("stream_v2", false);
+        Diagnostics.record("telegram.stream.session", fields);
     }
 
     public <T extends TdApi.Object> T call(TdApi.Function<T> fn) throws Exception {

@@ -123,6 +123,7 @@ public final class Diagnostics {
         deadline = System.currentTimeMillis() + LIMIT_MS;
         prefs.edit().putLong("until", deadline).apply();
         event("recording.started");
+        if (TelegramBridge.instance != null) TelegramBridge.instance.streamSession();
         event("environment.sdk sdk=" + Build.VERSION.SDK_INT + " patch=" + PatchVersion.BUILD);
         java.util.Map<String, Object> hardware = new java.util.LinkedHashMap<>();
         hardware.put("sdk", Build.VERSION.SDK_INT);
@@ -288,6 +289,14 @@ public final class Diagnostics {
         } catch (Throwable ignored) {
             dropped.incrementAndGet();
         }
+    }
+
+    /** Typed, allowlisted events share the existing bounded recorder and export path. */
+    static void record(String type, Map<String, ?> values) {
+        if (!active()) return;
+        java.util.Map<String, Object> fields = new java.util.LinkedHashMap<>(values);
+        fields.put("at", System.currentTimeMillis());
+        append(DiagnosticRecord.structured(type, fields));
     }
 
     private static void append(String record) {

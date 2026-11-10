@@ -10,6 +10,11 @@ import java.util.concurrent.*;
 /** Byte-range reader over TDLib file downloads. */
 final class NativeAudio {
     final TelegramBridge bridge;
+    final TelegramStreamTrace trace =
+            new TelegramStreamTrace(
+                    Diagnostics::record, Diagnostics::active, () -> System.nanoTime() / 1_000_000L);
+    final java.util.concurrent.atomic.AtomicLong seekGeneration =
+            new java.util.concurrent.atomic.AtomicLong();
     final Object cacheGuard = new Object();
     final Semaphore slots = new Semaphore(3);
 
@@ -91,6 +96,7 @@ final class NativeAudio {
      * opens the same file.
      */
     Reader open(String url, long position, long length, Runnable guard) throws IOException {
+        long traceStarted = System.nanoTime() / 1_000_000L;
         if (position < 0 || length < -1) throw new IOException("Invalid audio range");
         Semaphore slot = guard == null ? slots : backgroundSlots;
         if (!slot.tryAcquire()) throw new IOException("Too many active Telegram reads");
@@ -167,6 +173,17 @@ final class NativeAudio {
                             size,
                             row.optString("mime"),
                             lease);
+            reader.trace =
+                    trace.begin(
+                            fileId,
+                            position,
+                            length,
+                            guard == null ? "playback" : "background",
+                            guard == null ? 32 : 1,
+                            seekGeneration.get(),
+                            false,
+                            traceStarted);
+            if (file.local != null) trace.update(fileId, file.local.downloadedSize);
             reader.slot = slot;
             if (guard != null) {
                 reader.background = true;
@@ -311,6 +328,7 @@ final class NativeAudio {
         final String tag, mime;
         final Lease lease;
         Semaphore slot;
+        TelegramStreamTrace.Request trace;
         boolean background;
         long revision, checkedAt;
         long position, end;
@@ -399,9 +417,12 @@ final class NativeAudio {
                                 ? physical(position, end, buffer, offset, wanted)
                                 : entry.read(position, buffer, offset, wanted);
                 if (count < 0) return -1;
+                if (trace != null) trace.served(position, count);
                 position += count;
                 return count;
             } catch (Exception e) {
+                if (trace != null)
+                    trace.end(e instanceof CancellationException ? "cancelled" : "failed");
                 throw io(e);
             }
         }
@@ -443,6 +464,7 @@ final class NativeAudio {
                                     && cached.lastModified() == availableModified) {
                                 input.seek(at);
                                 input.readFully(buffer, offset, count);
+                                if (trace != null) trace.readable(at, count, length);
                                 check();
                                 return count;
                             }
@@ -455,6 +477,10 @@ final class NativeAudio {
                     // bounded read, then let another reader seek without cancelling it.
                     long prefix =
                             owner.bridge.call(new TdApi.GetFileDownloadedPrefixSize(id, at)).size;
+                    if (trace != null) {
+                        trace.initial(prefix);
+                        trace.readable(at, prefix, length);
+                    }
                     if (prefix <= 0) {
                         long wanted = Math.min(limit - at, 4L * 1024 * 1024);
                         owner.bridge.call(
@@ -470,8 +496,10 @@ final class NativeAudio {
                                                     new TdApi.GetFileDownloadedPrefixSize(id, at),
                                                     Math.min(millis, 15000))
                                             .size;
+                            if (trace != null) trace.readable(at, prefix, length);
                             if (prefix > 0) break;
                             Thread.sleep(100);
+                            if (trace != null) trace.wake(false, false);
                         } while (true);
                     }
                     check();
@@ -519,6 +547,7 @@ final class NativeAudio {
 
         public void close() {
             cancelled = true;
+            if (trace != null) trace.end(position == end ? "complete" : "cancelled");
             if (entry != null) entry.close();
             synchronized (this) {
                 if (!released) {

@@ -25,7 +25,10 @@ public final class DiagnosticRecord {
                         + " login.navigation.requested login.page.started login.page.finished"
                         + " login.history login.web.error login.http.error login.tls.error"
                         + " login.renderer.gone java.crash patch.event network.event playback.event"
-                        + " source.event download.event");
+                        + " source.event download.event telegram.stream.session"
+                        + " telegram.stream.request telegram.stream.progress"
+                        + " telegram.stream.readable telegram.stream.end telegram.stream.wake"
+                        + " telegram.stream.window telegram.stream.output");
     private static final Set<String> CATEGORIES =
             set(
                     "APP ACTIVITY SERVICE LOGIN WEBVIEW MICROG NETWORK PLAYER SOURCE DOWNLOAD"
@@ -209,6 +212,83 @@ public final class DiagnosticRecord {
                 Object value = field.getValue();
                 if (key == null || key.length() > 32 || value == null) continue;
                 switch (key) {
+                    case "request_id":
+                    case "parent_request_id":
+                    case "stream_generation":
+                    case "file_ref":
+                    case "offset_bytes":
+                    case "length_bytes":
+                    case "cache_bytes":
+                    case "uncached_bytes":
+                    case "new_bytes_estimate":
+                    case "buffer_ms":
+                    case "poll_wakes":
+                    case "update_wakes":
+                    case "unreadable_wakes":
+                    case "underruns":
+                    case "mono_ms":
+                        integer(out, key, value, 0, Long.MAX_VALUE);
+                        break;
+                    case "first_byte_ms":
+                    case "required_range_ms":
+                    case "before_progress_ms":
+                    case "after_progress_ms":
+                    case "output_ms":
+                        integer(out, key, value, -1, 3600000);
+                        break;
+                    case "consumer":
+                        out.put(
+                                key,
+                                enumValue(
+                                        value,
+                                        set(
+                                                "playback seek preview verification analysis"
+                                                    + " background download metadata artwork backup"
+                                                    + " sponsor"),
+                                        "background"));
+                        break;
+                    case "wake":
+                        out.put(
+                                key,
+                                enumValue(value, set("update fallback immediate"), "immediate"));
+                        break;
+                    case "stream_status":
+                        out.put(
+                                key,
+                                enumValue(
+                                        value,
+                                        set(
+                                                "open complete cancelled superseded timeout failed"
+                                                    + " session-change shutdown deferred"),
+                                        "failed"));
+                        break;
+                    case "stream_v2":
+                    case "progress_reset":
+                    case "range_readable":
+                        if (value instanceof Boolean) out.put(key, value);
+                        break;
+                    case "priority":
+                        integer(out, key, value, 1, 32);
+                        break;
+                    case "wrapper_version":
+                        out.put(key, enumValue(value, set("java-stream-1"), "java-stream-1"));
+                        break;
+                    case "wrapper_commit":
+                        if (value instanceof String
+                                && ((String) value).matches("[a-f0-9]{12}(?:-dirty)?|archive"))
+                            out.put(key, value);
+                        break;
+                    case "wrapper_fingerprint":
+                        if (value instanceof String && ((String) value).matches("[a-f0-9]{16}"))
+                            out.put(key, value);
+                        break;
+                    case "tdlib_version":
+                        if (value instanceof String
+                                && (((String) value).equals("unknown")
+                                        || ((String) value).length() <= 40
+                                                && VERSION.matcher((String) value).matches()))
+                            out.put(key, value);
+                        break;
                     case "severity":
                         out.put(key, enumValue(value, set("DEBUG INFO WARN ERROR FATAL"), "INFO"));
                         break;

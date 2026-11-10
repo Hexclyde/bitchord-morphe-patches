@@ -57,6 +57,7 @@ SOURCES = [
     "TelegramCatalogueCalls",
     "TelegramLegendRows",
     "DiagnosticRecord",
+    "TelegramStreamTrace",
     "DiagnosticStore",
     "CachePolicy",
     "TrackMetadata",
