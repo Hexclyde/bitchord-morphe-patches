@@ -30,6 +30,7 @@ ON_BY_DEFAULT = {
     "Sign in with MicroG",
 }
 OFF_BY_DEFAULT = {
+    "Expanded Java heap",
     "Diagnostics",
     "Unofficial Soulseek audio",
     "Karaoke",
