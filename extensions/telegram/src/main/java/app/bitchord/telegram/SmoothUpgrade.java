@@ -227,6 +227,20 @@ public final class SmoothUpgrade {
         if (previous != null) drop(previous, "a newer upgrade started", false);
         SwapCommit next = new SwapCommit(service, player, target);
         commit = next;
+        AutoCloseable priority = PlaybackPriority.upgrade(next.mediaId + ":handover");
+        addCleanup(
+                next,
+                () -> {
+                    try {
+                        priority.close();
+                    } catch (Exception ignored) {
+                    }
+                });
+        note(
+                "Upgrade handover track="
+                        + next.mediaId
+                        + " stage=awaiting-audible patch="
+                        + PatchVersion.BUILD);
         try {
             addCleanup(
                     next,
@@ -489,6 +503,7 @@ public final class SmoothUpgrade {
             h.cleanups.clear();
         }
         finish(h, cleanups);
+        note("Upgrade handover track=" + h.mediaId + " stage=audible generation=" + h.generation);
         for (Runnable action : run) {
             try {
                 action.run();
@@ -922,7 +937,7 @@ public final class SmoothUpgrade {
         final MediaItem target;
         final Double offset;
         final Object reference;
-        long began, looked;
+        long began, looked, listenAfter;
         int seeks;
         double first = Double.NaN, cut;
         VersionAlign.Heard catching;
@@ -1032,12 +1047,16 @@ public final class SmoothUpgrade {
 
     private static boolean step(Settling s, Player spare) throws Exception {
         long now = now();
+        // A seek is asynchronous: polling READY again can still see pre-seek PCM/positions.
+        // Give one full comparison window to the new sink before spending another correction.
+        if (now < s.listenAfter) return false;
         // A slow seek can leave the new copy beyond the waveform search window.
         if (s.offset != null
                 && Math.abs(s.main.getCurrentPosition() + s.offset - spare.getCurrentPosition())
                         > 300
                 && s.seeks < 2) {
             s.seeks++;
+            s.listenAfter = now + 600;
             if (s.measuring != null) s.measuring.cancel(true);
             s.measuring = null;
             spare.seekTo(
@@ -1078,6 +1097,7 @@ public final class SmoothUpgrade {
         if (s.seeks >= 2) throw abort(s, spare, "the copies are still too far apart");
         // Sought a little short, so it's behind and the rest is cut.
         s.seeks++;
+        s.listenAfter = now + 600;
         spare.seekTo(
                 spare.getCurrentMediaItemIndex(),
                 Math.max(0, spare.getCurrentPosition() + Math.round((lag - 20) * speed)));

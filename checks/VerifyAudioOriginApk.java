@@ -224,7 +224,7 @@ public final class VerifyAudioOriginApk {
         check(
                 reflectArgs.length == 5
                         && value(adapter, reflectArgs[1], reflect).equals(ADAPTER + "->sourceFirst")
-                        && value(adapter, reflectArgs[2], reflect).equals("text:renditionUri"),
+                        && value(adapter, reflectArgs[2], reflect).equals("text:audibleUri"),
                 "Adapter invokes the optional per-entry renditionUri accessor");
         boolean currentArgument = false;
         List<Instruction> adapterCode = code(adapter);
@@ -261,7 +261,7 @@ public final class VerifyAudioOriginApk {
                     optionalName |= "app.bitchord.telegram.SourceFirst".equals(text(i));
         check(optionalName, "Canonical runtime is discovered by its optional class name");
         if (types.containsKey(BASE + "SourceFirst;")) {
-            Method getter = method(BASE + "SourceFirst;", "renditionUri", ITEM);
+            Method getter = method(BASE + "SourceFirst;", "audibleUri", ITEM);
             check(
                     getter.getReturnType().equals(URI) && (getter.getAccessFlags() & 9) == 9,
                     "Installed canonical accessor is public static and returns a URI");
@@ -397,7 +397,7 @@ public final class VerifyAudioOriginApk {
     static void bitrateMeasurement(Method callback) {
         List<Instruction> lines = code(callback);
         String prepare = BASE + "SourceFirst;";
-        int canonical = site(callback, prepare, "renditionUri");
+        int canonical = site(callback, prepare, "audibleUri");
         int stringify = site(callback, URI, "toString");
         int[] uri = registers(lines.get(canonical));
         check(
@@ -417,7 +417,7 @@ public final class VerifyAudioOriginApk {
                 "Bitrate URI result cannot bypass its canonical call");
         check(
                 value(callback, registers(lines.get(stringify))[0], stringify)
-                        .equals(prepare + "->renditionUri"),
+                        .equals(prepare + "->audibleUri"),
                 "Bitrate measurement key describes the selected rendition");
         check(
                 !reachableWithout(callback, stringify, canonical)
@@ -443,8 +443,7 @@ public final class VerifyAudioOriginApk {
         int[] captured = registers(lines.get(construct));
         check(
                 captured.length == 7
-                        && value(callback, captured[1], construct)
-                                .equals(prepare + "->renditionUri")
+                        && value(callback, captured[1], construct).equals(prepare + "->audibleUri")
                         && value(callback, captured[5], construct).equals(URI + "->toString")
                         && value(callback, registers(lines.get(cached))[1], cached)
                                 .equals(URI + "->toString"),

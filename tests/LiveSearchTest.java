@@ -25,6 +25,26 @@ public final class LiveSearchTest {
         return new TdApi.FoundChatMessages(messages.length, messages, 0);
     }
 
+    private static void catalogueMissRecovery() throws Exception {
+        AtomicInteger calls = new AtomicInteger();
+        try (LiveSearch search =
+                new LiveSearch(
+                        (request, timeout) -> {
+                            calls.incrementAndGet();
+                            return found();
+                        },
+                        () -> 1000L,
+                        1000)) {
+            search.search(chats(-100), "missing", 1);
+            int first = calls.get();
+            search.search(chats(-100), "missing", 1);
+            check(calls.get() == first, "An empty successful answer is briefly cached");
+            search.clearMisses();
+            search.search(chats(-100), "missing", 1);
+            check(calls.get() > first, "New catalogue rows invalidate cached live misses");
+        }
+    }
+
     private static void metadataCooldown() throws Exception {
         AtomicLong now = new AtomicLong(1000);
         AtomicInteger gatewayCalls = new AtomicInteger(), metadataCalls = new AtomicInteger();
@@ -109,6 +129,7 @@ public final class LiveSearchTest {
     }
 
     public static void main(String[] args) throws Exception {
+        catalogueMissRecovery();
         metadataCooldown();
         try (LiveSearch search =
                 new LiveSearch(

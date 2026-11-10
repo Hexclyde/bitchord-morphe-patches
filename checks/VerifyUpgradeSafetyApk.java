@@ -50,7 +50,7 @@ public final class VerifyUpgradeSafetyApk {
 
     public static void main(String[] args) throws Exception {
         var dex = DexFileFactory.loadDexContainer(new File(args[0]), Opcodes.getDefault());
-        int guarded = 0, priority = 0, audition = 0, deferred = 0, adoption = 0;
+        int guarded = 0, priority = 0, audition = 0, deferred = 0, adoption = 0, bufferedLogs = 0;
         for (String entry : dex.getDexEntryNames())
             for (ClassDef cls : dex.getEntry(entry).getDexFile().getClasses())
                 for (Method method : cls.getMethods()) {
@@ -61,6 +61,16 @@ public final class VerifyUpgradeSafetyApk {
                     int pc = 0, smooth = -1, verified = -1, adopting = -1, adopted = -1;
                     List<Instruction> sequence = new ArrayList<>();
                     impl.getInstructions().forEach(sequence::add);
+                    for (Instruction line : sequence) {
+                        if (line instanceof ReferenceInstruction reference
+                                && reference.getReference() instanceof StringReference text) {
+                            if (text.getString().equals("upgraded to "))
+                                throw new AssertionError(
+                                        "Host still reports success before asynchronous adoption");
+                            if (text.getString().equals("buffered replacement: ")) bufferedLogs++;
+                        }
+                    }
+
                     if (cls.getType().contains("$smoothSwapCurrentTrackVersion$1;")
                             && method.getName().equals("invokeSuspend")) {
                         MethodReference entryCall = call(sequence.get(0));
@@ -202,7 +212,12 @@ public final class VerifyUpgradeSafetyApk {
                         priority++;
                     }
                 }
-        if (guarded != 2 || priority != 1 || audition != 1 || deferred != 1 || adoption != 1)
+        if (guarded != 2
+                || priority != 1
+                || audition != 1
+                || deferred != 1
+                || adoption != 1
+                || bufferedLogs != 1)
             throw new AssertionError(
                     "Missing upgrade guards or alignment priority: "
                             + guarded

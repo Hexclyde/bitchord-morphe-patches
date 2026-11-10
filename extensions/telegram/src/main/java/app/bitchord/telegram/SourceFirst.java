@@ -284,6 +284,18 @@ public final class SourceFirst {
         return original == null || running == null ? original : running.renditionUri(original);
     }
 
+    /** Read-only view for telemetry; unlike preparation this cannot select a new copy. */
+    public static Uri audibleUri(MediaItem item) {
+        return item == null || item.localConfiguration == null
+                ? null
+                : audibleUri(item.localConfiguration.uri);
+    }
+
+    public static Uri audibleUri(Uri uri) {
+        SourcePreparation running = active;
+        return running == null || uri == null ? uri : running.audibleUri(uri);
+    }
+
     /** Used at the host key factory so actual reads, analysis and labels share one entry key. */
     public static String cacheKey(Uri original, String computed) {
         SourcePreparation running = active;

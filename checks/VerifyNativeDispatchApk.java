@@ -152,6 +152,46 @@ public final class VerifyNativeDispatchApk {
             if (switchAt < 0 && readsClassId(code.get(i), cls.getType())) switchAt = i + 1;
         }
         VerifyApk.check(urlAt > 0, "Metadata host builds the request");
+        boolean telegram =
+                code.stream()
+                        .anyMatch(
+                                i -> {
+                                    MethodReference ref = call(i);
+                                    return ref != null
+                                            && ref.getDefiningClass().equals(TG + "InternalAddon;")
+                                            && ref.getName().equals("bodyOrNull");
+                                });
+        if (telegram) {
+            MethodReference gate = call(code.get(urlAt - 1));
+            VerifyApk.check(
+                    gate != null
+                            && gate.getDefiningClass().equals(TG + "AddonAvailability;")
+                            && gate.getName().equals("before"),
+                    "External request checks shared cooldown");
+            int observed = 0;
+            for (int i = 2; i < code.size(); i++) {
+                MethodReference ref = call(code.get(i));
+                if (ref == null
+                        || !ref.getDefiningClass().equals(TG + "AddonAvailability;")
+                        || !ref.getName().equals("response")) continue;
+                observed++;
+                MethodReference execute = call(code.get(i - 2));
+                VerifyApk.check(
+                        code.get(i - 1).getOpcode() == Opcode.MOVE_RESULT_OBJECT
+                                && execute != null
+                                && execute.getName().equals("execute")
+                                && execute.getReturnType().equals("Lokhttp3/Response;"),
+                        "Cooldown observes the actual HTTP response before body handling");
+                VerifyApk.check(
+                        (code.get(i) instanceof RegisterRangeInstruction range
+                                        ? range.getStartRegister()
+                                        : ((FiveRegisterInstruction) code.get(i)).getRegisterC())
+                                == ((OneRegisterInstruction) code.get(i - 1)).getRegisterA(),
+                        "Cooldown receives the host response register");
+            }
+            VerifyApk.check(observed == 1, "HTTP status is observed once");
+        }
+
         boolean merged = switchAt >= 0;
         if (merged)
             while (code.get(switchAt).getOpcode() != Opcode.PACKED_SWITCH

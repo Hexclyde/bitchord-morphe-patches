@@ -369,7 +369,12 @@ public class TelegramScreenTest {
         if (name.equals("Advanced")) {
             for (String title :
                     new String[] {
-                        "Main channel", "Track details", "Playback", "Storage", "Backup and sharing"
+                        "Main channel",
+                        "Track details",
+                        "Playback",
+                        "Storage",
+                        "Automatic backup",
+                        "Backup and sharing"
                     }) {
                 View header = activity.body.findViewWithTag("telegram-section:" + title);
                 if (header != null && !header.isSelected()) header.performClick();
@@ -757,6 +762,99 @@ public class TelegramScreenTest {
         Shadows.shadowOf(android.os.Looper.getMainLooper()).idle();
         idle();
         assertEquals("restore from 77", bridge.backups.get(1));
+    }
+
+    @Test
+    public void automaticBackupCard() throws Exception {
+        TelegramBridge bridge = activity.bridge;
+        signedIn();
+        openTab("Advanced");
+        AutoBackup backup = bridge.autoBackup();
+        assertNotNull(
+                "The card is on the Advanced tab",
+                activity.body.findViewWithTag("telegram-section:Automatic backup"));
+        assertEquals("Every 24 hours by default", 24, backup.intervalHours());
+        assertNotNull(
+                "The next backup is not planned while off", text(activity.body, "Back up now"));
+        assertNull("No credentials on the card", text(activity.body, "App API hash"));
+
+        // Pick the channel: remembered by the backup, apart from the main channel.
+        org.drinkless.tdlib.TdApi.Chat mine = new org.drinkless.tdlib.TdApi.Chat();
+        mine.id = 77;
+        mine.title = "My backups";
+        bridge.owned.add(mine);
+        clickRow("Backup channel");
+        idle();
+        Shadows.shadowOf(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+                .clickOnItem(0);
+        idle();
+        assertEquals("Choosing alone changes nothing", 0, backup.target());
+        org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog()
+                .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                .performClick();
+        idle();
+        assertEquals(77, backup.target());
+        assertEquals("My backups", backup.targetTitle());
+        assertEquals("The main channel is separate", 0, bridge.mainChannel.main());
+
+        // A custom number of hours: a wrong entry keeps the dialog open and says why.
+        clickRow("How often");
+        idle();
+        Shadows.shadowOf(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+                .clickOnItem(5);
+        idle();
+        android.app.AlertDialog custom =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        EditText hours = (EditText) findFirst(custom.getWindow().getDecorView(), EditText.class);
+        hours.setText("0");
+        custom.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
+        assertTrue("Zero is refused", custom.isShowing() && hours.getError() != null);
+        hours.setText("36");
+        custom.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
+        idle();
+        assertEquals(36, backup.intervalHours());
+
+        // A preset.
+        clickRow("How often");
+        idle();
+        Shadows.shadowOf(org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog())
+                .clickOnItem(2);
+        idle();
+        assertEquals(6, backup.intervalHours());
+
+        // Turning it on plans a persisted job that needs only a connection.
+        backup.setEnabled(true);
+        AutoBackupJob.schedule(RuntimeEnvironment.getApplication(), backup, true);
+        android.app.job.JobScheduler jobs =
+                (android.app.job.JobScheduler)
+                        RuntimeEnvironment.getApplication()
+                                .getSystemService(android.content.Context.JOB_SCHEDULER_SERVICE);
+        android.app.job.JobInfo job = jobs.getPendingJob(AutoBackupJob.JOB_ID);
+        assertNotNull("A job is planned", job);
+        assertTrue("and survives a reboot", job.isPersisted());
+        assertEquals(android.app.job.JobInfo.NETWORK_TYPE_ANY, job.getNetworkType());
+        // Planning again at start-up keeps the planned time.
+        long latency = job.getMinLatencyMillis();
+        AutoBackupJob.schedule(RuntimeEnvironment.getApplication(), backup, false);
+        assertEquals(latency, jobs.getPendingJob(AutoBackupJob.JOB_ID).getMinLatencyMillis());
+        // Turning it off cancels it.
+        backup.setEnabled(false);
+        AutoBackupJob.schedule(RuntimeEnvironment.getApplication(), backup, true);
+        assertNull(jobs.getPendingJob(AutoBackupJob.JOB_ID));
+
+        clickRow("Back up now");
+        idle();
+        assertTrue(bridge.backups.contains("backup now"));
+    }
+
+    static View findFirst(View root, Class<? extends View> type) {
+        if (type.isInstance(root)) return root;
+        if (root instanceof ViewGroup)
+            for (int i = 0; i < ((ViewGroup) root).getChildCount(); i++) {
+                View found = findFirst(((ViewGroup) root).getChildAt(i), type);
+                if (found != null) return found;
+            }
+        return null;
     }
 
     @Test

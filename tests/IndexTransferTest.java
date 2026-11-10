@@ -39,8 +39,8 @@ public final class IndexTransferTest {
         IndexStore.Memory store = new IndexStore.Memory();
         List<JSONObject> rows = new ArrayList<>();
         for (int m = 1; m <= 1500; m++) rows.add(row(chat, m, 0, "Song " + m));
-        // A zip post with 700 songs straddles a page boundary.
-        for (int e = 1; e <= 700; e++)
+        // A zip post with 1700 songs straddles a page boundary.
+        for (int e = 1; e <= 1700; e++)
             rows.add(
                     row(chat, 1600, e, "Zip song " + e)
                             .put(
@@ -69,11 +69,11 @@ public final class IndexTransferTest {
         check(read.sections.size() == 1, "One chat");
         List<JSONObject> back = read.sections.get(0).rows;
         check(
-                back.size() == 2200,
+                back.size() == 3200,
                 "Every file, across pages and inside the large post: " + back.size());
         Set<String> ids = new HashSet<>();
         for (JSONObject r : back) ids.add(r.getString("id"));
-        check(ids.size() == 2200, "Each once");
+        check(ids.size() == 3200, "Each once");
         JSONObject first = back.get(0);
         check(
                 first.getInt("file") == 0 && !first.has("cover"),
@@ -85,7 +85,7 @@ public final class IndexTransferTest {
         TelegramIndex mine = new TelegramIndex(other, new MainChannelTest.Chats(), clock::get);
         other.put(chat, List.of(row(chat, 5, 0, "Own copy").put("file", 77)), 1);
         int added = mine.importSection(read.sections.get(0));
-        check(added == 2199, "Added all but the one it had: " + added);
+        check(added == 3199, "Added all but the one it had: " + added);
         check(other.row(chat, 5, 0).getInt("file") == 77, "Its own file kept");
         check(mine.built(chat), "Counts as built");
         check(mine.search(Set.of(chat), "zip song 650", true).size() == 1, "Searchable");
@@ -131,7 +131,7 @@ public final class IndexTransferTest {
 
         // A paused index keeps its files, backs up as a whole non-empty file and can be reloaded.
         mine.enabled = false;
-        check(other.count(chat) == 2200, "Pausing deletes nothing");
+        check(other.count(chat) == 3200, "Pausing deletes nothing");
         IndexTransfer.Section paused = mine.section(chat, "Paused");
         check(paused.newest == 1600, "A paused index still knows its newest post");
         File backup = File.createTempFile("backup", ".gz");
@@ -164,7 +164,7 @@ public final class IndexTransferTest {
             }
             try (InputStream in = new FileInputStream(backup)) {
                 check(
-                        IndexTransfer.read(in).sections.get(0).rows.size() == 2200,
+                        IndexTransfer.read(in).sections.get(0).rows.size() == 3200,
                         "Every file written while paused");
             }
 
@@ -211,10 +211,10 @@ public final class IndexTransferTest {
             reloaded.enabled = false;
             try (InputStream in = new FileInputStream(backup)) {
                 check(
-                        reloaded.importSection(IndexTransfer.read(in).sections.get(0)) == 2200,
+                        reloaded.importSection(IndexTransfer.read(in).sections.get(0)) == 3200,
                         "Reloads while paused");
             }
-            check(fresh.count(chat) == 2200, "Stored");
+            check(fresh.count(chat) == 3200, "Stored");
 
             // What is not a whole file is refused before anyone is told it worked.
             byte[] whole = chosen.toByteArray();
@@ -242,12 +242,12 @@ public final class IndexTransferTest {
                     cut,
                     new JSONObject().put("format", IndexTransfer.BACKUP).put("version", 1),
                     List.of(section),
-                    (c, m, n) -> {
+                    (c, m, e, n) -> {
                         throw new InterruptedException("cancelled");
                     });
             check(false, "Cancelled");
         } catch (InterruptedException e) {
-            check(other.count(chat) == 2200 && store.count(chat) == 2200, "Nothing deleted");
+            check(other.count(chat) == 3200 && store.count(chat) == 3200, "Nothing deleted");
         }
         for (String body :
                 new String[] {

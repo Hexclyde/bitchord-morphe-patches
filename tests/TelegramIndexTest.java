@@ -534,6 +534,89 @@ public final class TelegramIndexTest {
                 "The published cue album contains its committed child tracks");
     }
 
+    /**
+     * A partly built index is backed up with where it got to, and restored without finishing it.
+     */
+    static void partialCheckpoint() throws Exception {
+        IndexStore.Memory store = new IndexStore.Memory();
+        FakeChat chat = new FakeChat();
+        for (long id = 1; id <= 250; id++) chat.add(id, "Song " + id);
+        AtomicLong clock = new AtomicLong(1_000_000);
+        TelegramIndex index = new TelegramIndex(store, chat, clock::get);
+        Set<Long> chats = Collections.singleton(-100L);
+        check(index.step(chats), "A first page is read");
+        IndexTransfer.Section section = index.section(-100, "Music");
+        check(
+                !section.complete && section.progress != null,
+                "A partial index carries its progress");
+        check(
+                section.progress.getJSONArray("scanned").getInt(0) >= 100
+                        && !section.progress.getJSONArray("complete").getBoolean(0),
+                "with what was read and that the kind is not done");
+        section.rows.addAll(index.exportRows(-100, 0, 1000));
+        check(section.rows.size() >= 100, "and at least as many files as the progress says");
+
+        // A fresh phone takes the files and carries on from the checkpoint, not from the top.
+        IndexStore.Memory otherStore = new IndexStore.Memory();
+        FakeChat other = new FakeChat();
+        other.audio.putAll(chat.audio);
+        TelegramIndex fresh = new TelegramIndex(otherStore, other, clock::get);
+        fresh.importSection(section);
+        check(!fresh.built(-100), "A partial backup does not make the index complete");
+        build(fresh, chats);
+        check(fresh.built(-100) && otherStore.count(-100) == 250, "and it finishes from there");
+        FakeChat scratch = new FakeChat();
+        scratch.audio.putAll(chat.audio);
+        build(new TelegramIndex(new IndexStore.Memory(), scratch, clock::get), chats);
+        check(
+                other.calls.get() < scratch.calls.get(),
+                "reading less than from the top: "
+                        + other.calls.get()
+                        + " vs "
+                        + scratch.calls.get());
+
+        // Per kind: progress further along here is kept; a kind already done is never reopened.
+        IndexStore.Memory ahead = new IndexStore.Memory();
+        FakeChat third = new FakeChat();
+        third.audio.putAll(chat.audio);
+        TelegramIndex local = new TelegramIndex(ahead, third, clock::get);
+        local.step(chats);
+        local.step(chats);
+        IndexStore.State before = ahead.state(-100);
+        long cursor = before.cursor[0];
+        int scanned = before.scanned[0];
+        local.importSection(section);
+        IndexStore.State after = ahead.state(-100);
+        check(
+                after.cursor[0] == cursor && after.scanned[0] == scanned,
+                "Progress further along on this phone is kept");
+
+        // A forged or inconsistent checkpoint is ignored.
+        IndexTransfer.Section bad = new IndexTransfer.Section();
+        bad.chat = -100;
+        bad.progress = new JSONObject(section.progress.toString());
+        bad.progress.getJSONArray("scanned").put(0, 10).put(1, 99999);
+        bad.progress.getJSONArray("total").put(0, 5);
+        check(IndexTransfer.progress(bad.progress) == null, "Scanned beyond the total is refused");
+
+        // Archives still to be looked into: the checkpoint is withheld, never claimed done.
+        IndexStore.Memory zipStore = new IndexStore.Memory();
+        FakeChat zipChat = new FakeChat();
+        for (long id = 1; id <= 250; id++) zipChat.add(id, "Song " + id);
+        TelegramIndex zips = new TelegramIndex(zipStore, zipChat, clock::get);
+        zips.step(chats);
+        zips.message(TestMessages.document(-100, 900, "Pending.zip"));
+        check(zipStore.zipsOutstanding(-100), "An archive is waiting");
+        check(zips.section(-100, "Music").progress == null, "so no checkpoint is written");
+        IndexStore.State completedWithArchive = zipStore.state(-100);
+        completedWithArchive.builtAt = clock.get();
+        zipStore.save(completedWithArchive);
+        TelegramIndex restoredWithArchive = new TelegramIndex(zipStore, zipChat, clock::get);
+        check(
+                !restoredWithArchive.section(-100, "Music").complete,
+                "Pending archives prevent a completed backup claim");
+    }
+
     static void buildResetRace() throws Exception {
         IndexStore.Memory saved = new IndexStore.Memory();
         IndexStore.State rebuilding = saved.state(-100);
@@ -737,10 +820,24 @@ public final class TelegramIndexTest {
         check(reopened.search(chats, "nobody", true).size() == 1, "Kept through a rate limit");
         chat.limited.set(false);
 
-        // Off: no work, no answers, and the files are deleted.
+        // Paused indexing leaves retained fallback results available; explicit clear deletes them.
         reopened.enabled = false;
         check(!reopened.step(chats), "No work while off");
         check(reopened.search(chats, "nobody", false) == null, "No answers while off");
+        check(
+                reopened.searchRetained(chats, "nobody", false).size() == 1,
+                "Paused index remains available as playback fallback");
+        IndexTransfer.Section snapshot = reopened.section(-100, "Music");
+        check(
+                !reopened.exportRows(snapshot, 0, -1, 1000).isEmpty(),
+                "Snapshot rows can be exported");
+        store.advance(-100, 999, 1);
+        try {
+            reopened.exportRows(snapshot, 0, -1, 1000);
+            throw new AssertionError("Export accepted a deletion after its checkpoint");
+        } catch (java.io.IOException expected) {
+            check(true, "Concurrent deletion invalidates backup snapshot");
+        }
         reopened.clear();
         check(store.count(-100) == 0, "Files deleted");
         reopened.enabled = true;
@@ -779,6 +876,7 @@ public final class TelegramIndexTest {
         check(TelegramIndex.timeLeft(0.2).equals("1 min"), "At least a minute");
 
         realtime();
+        partialCheckpoint();
         buildResetRace();
         System.out.println(
                 "PASS: " + checks + " saved index build, top-up, rebuild and search checks.");

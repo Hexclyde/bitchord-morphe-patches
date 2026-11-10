@@ -133,7 +133,7 @@ final class AudioOriginHost implements AudioOrigin.Host {
     public Uri renditionUri(MediaItem item) {
         if (item == null) return null;
         try {
-            Object uri = call(sourceFirst, "renditionUri", new Class<?>[] {MediaItem.class}, item);
+            Object uri = call(sourceFirst, "audibleUri", new Class<?>[] {MediaItem.class}, item);
             if (uri instanceof Uri) return (Uri) uri;
         } catch (ReflectiveOperationException | RuntimeException | LinkageError absent) {
             // Source preparation is optional. The item's own URI remains the fallback.

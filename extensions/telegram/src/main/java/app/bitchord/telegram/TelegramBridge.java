@@ -87,6 +87,8 @@ public final class TelegramBridge {
     volatile boolean paramsSent;
     volatile long mediaRevision;
     final AtomicLong catalogueRevision = new AtomicLong();
+    private final SearchPlan.Misses searchMisses =
+            new SearchPlan.Misses(() -> System.nanoTime() / 1000000L, 120000);
     private volatile Set<Long> catalogueAuxiliary = Collections.emptySet();
     final TelegramMediaChanges mediaChanges = new TelegramMediaChanges();
     final TelegramCatalogueUpdates catalogueUpdates;
@@ -464,6 +466,11 @@ public final class TelegramBridge {
         checking.setDaemon(true);
         checking.setPriority(Thread.MIN_PRIORITY);
         checking.start();
+        try {
+            openAutoBackup();
+        } catch (Exception e) {
+            HostLog.d("Automatic backup couldn't start: " + e.getClass().getSimpleName());
+        }
         if (context instanceof Application) TelegramLifecycle.install((Application) context, this);
     }
 
@@ -521,12 +528,12 @@ public final class TelegramBridge {
     }
 
     /**
-     * Writes a backup: the settings, corrected names and main channel setup, and with {@code
-     * withIndex}, the saved index of every chat it covers. The app's API details and the Telegram
-     * session are never in it.
+     * Writes a backup: the supported settings, corrected names and main channel setup, and with
+     * {@code withIndex}, the saved index of every chat it covers. The app's API details, the
+     * Telegram session and the key that protects it are never in it.
      */
     public void backup(OutputStream out, boolean withIndex) throws Exception {
-        writeBackup(out, withIndex);
+        writeBackup(out, withIndex ? AutoBackup.Contents.BOTH : AutoBackup.Contents.SETTINGS);
         status = Strings.t("Backup saved.");
     }
 
@@ -535,12 +542,19 @@ public final class TelegramBridge {
      * post. Nothing the user has is touched, and an empty or cut-short file is an error.
      */
     File backupFile(boolean withIndex) throws Exception {
-        File folder = new File(context.getCacheDir(), "shared-index");
+        return backupFile(withIndex ? AutoBackup.Contents.BOTH : AutoBackup.Contents.SETTINGS);
+    }
+
+    File backupFile(AutoBackup.Contents contents) throws Exception {
+        return backupFile(contents, new File(context.getCacheDir(), "shared-index"));
+    }
+
+    private File backupFile(AutoBackup.Contents contents, File folder) throws Exception {
         folder.mkdirs();
         File file =
                 new File(
                         folder,
-                        "bitchord-telegram-backup-"
+                        AutoBackup.FILE_PREFIX
                                 + today()
                                 + "-"
                                 + java.util.UUID.randomUUID()
@@ -548,7 +562,7 @@ public final class TelegramBridge {
         File partial = new File(folder, file.getName() + ".part");
         try {
             try (OutputStream out = new FileOutputStream(partial)) {
-                writeBackup(out, withIndex);
+                writeBackup(out, contents);
             }
             try (InputStream in = new FileInputStream(partial)) {
                 IndexTransfer.check(in);
@@ -560,28 +574,47 @@ public final class TelegramBridge {
         }
     }
 
-    private void writeBackup(OutputStream out, boolean withIndex) throws Exception {
-        JSONObject settings =
-                new JSONObject()
-                        .put("config", new JSONObject(config.toString()))
-                        .put("trackNames", readJson(new File(home, "track-names.json")))
-                        .put("mainChannel", readJson(new File(home, "main-channel.json")));
+    private void writeBackup(OutputStream out, AutoBackup.Contents contents) throws Exception {
         JSONObject header =
                 new JSONObject()
                         .put("format", IndexTransfer.BACKUP)
                         .put("version", IndexTransfer.VERSION)
-                        .put("created", today())
-                        .put("settings", settings);
+                        .put("created", today());
+        try {
+            // Whose chats these are, so a restore on another account doesn't adopt them.
+            if (ready()) header.put("account", BackupSettings.account(call(new TdApi.GetMe()).id));
+        } catch (Exception unknown) {
+            HostLog.d("A backup is being written without an account marker");
+        }
+        header.put("chats", new JSONArray(new TreeSet<>(selected)));
+        if (contents != AutoBackup.Contents.INDEX) {
+            // Only the supported settings. The session key and API details are not among them.
+            JSONObject settings;
+            synchronized (this) {
+                settings = new JSONObject().put("preferences", BackupSettings.export(config));
+            }
+            settings.put("trackNames", readJson(new File(home, "track-names.json")))
+                    .put("mainChannel", readJson(new File(home, "main-channel.json")));
+            header.put("settings", settings);
+        }
         List<IndexTransfer.Section> sections = new ArrayList<>();
         // Paused or not: turning the index off keeps what it has.
-        if (withIndex)
+        if (contents != AutoBackup.Contents.SETTINGS)
             for (long chat : indexedChats()) sections.add(index.section(chat, title(chat)));
-        IndexTransfer.write(out, header, sections, index::exportRows);
+        Map<Long, IndexTransfer.Section> snapshots = new HashMap<>();
+        for (IndexTransfer.Section section : sections) snapshots.put(section.chat, section);
+        IndexTransfer.write(
+                out,
+                header,
+                sections,
+                (chat, message, entry, limit) ->
+                        index.exportRows(snapshots.get(chat), message, entry, limit));
+        for (IndexTransfer.Section section : sections) index.assertExportCurrent(section);
     }
 
     /** Backups posted in a private channel are named like this. */
     private static boolean isBackup(String name) {
-        return name != null && name.startsWith("bitchord-telegram-backup-");
+        return name != null && name.startsWith(AutoBackup.FILE_PREFIX);
     }
 
     /**
@@ -643,6 +676,7 @@ public final class TelegramBridge {
                 TdApi.Document d = ((TdApi.MessageDocument) m.content).document;
                 if (d != null
                         && isBackup(d.fileName)
+                        && m.sendingState == null
                         && d.document.size <= MAX_SHARED_BYTES
                         && m.date > newestDate) {
                     newest = d;
@@ -661,43 +695,356 @@ public final class TelegramBridge {
         }
     }
 
+    /** Whether this account can open the chat now; false when signed out or it isn't reachable. */
+    private boolean reachable(long chat) {
+        try {
+            return ready() && call(new TdApi.GetChat(chat), 15000) != null;
+        } catch (Exception unavailable) {
+            return false;
+        }
+    }
+
     /**
-     * Restores a backup, or adds an index file someone shared: its settings replace these, and its
-     * index is added to this one.
+     * Restores a backup, or adds an index file someone shared. Only the supported settings are
+     * taken from a backup: the session key and API details stay as they are. Chats, the main
+     * channel and corrected names come back only for the account the backup was made with, and a
+     * chat only if this account can open it. Chats are added to the ones already chosen, and the
+     * saved index is added to this one, partial progress included.
      */
     public void restore(InputStream in) throws Exception {
         IndexTransfer.Contents contents = IndexTransfer.read(in);
+        boolean backup = IndexTransfer.BACKUP.equals(contents.header.optString("format"));
         JSONObject settings = contents.header.optJSONObject("settings");
+        String account = contents.header.optString("account");
+        boolean mine = false;
+        if (backup && ready())
+            try {
+                mine =
+                        account.isEmpty()
+                                || account.equals(
+                                        BackupSettings.account(call(new TdApi.GetMe()).id));
+            } catch (Exception unknown) {
+                mine = false;
+            }
+        int skipped = 0;
         if (settings != null) {
-            JSONObject restored = settings.optJSONObject("config");
-            if (restored != null) {
-                config = restored;
+            JSONObject preferences = settings.optJSONObject("preferences");
+            // Backups from earlier versions kept them under "config"; the same allowlist applies.
+            if (preferences == null) preferences = settings.optJSONObject("config");
+            if (preferences != null) {
+                synchronized (this) {
+                    BackupSettings.merge(config, preferences);
+                }
                 applyConfig();
                 saveConfig();
                 clearCatalogueLookups();
             }
             JSONObject trackNames = settings.optJSONObject("trackNames");
-            if (trackNames != null) {
+            if (trackNames != null && mine) {
                 writeJson(new File(home, "track-names.json"), trackNames);
                 names.reload();
             }
             JSONObject main = settings.optJSONObject("mainChannel");
-            if (main != null) {
-                writeJson(new File(home, "main-channel.json"), main);
-                mainChannel.reload();
+            if (main != null && mine && main.optLong("main") != 0) {
+                boolean usable = false;
+                try {
+                    usable =
+                            ownChannel(call(new TdApi.GetChat(main.getLong("main")), 15000))
+                                    == Boolean.FALSE;
+                } catch (Exception unavailable) {
+                    usable = false;
+                }
+                if (usable) {
+                    writeJson(new File(home, "main-channel.json"), main);
+                    mainChannel.reload();
+                } else skipped++;
             }
         }
+        if (backup && mine) {
+            Set<Long> chats =
+                    new TreeSet<>(BackupSettings.chats(contents.header.optJSONArray("chats")));
+            chats.addAll(
+                    BackupSettings.chats(
+                            settings == null || settings.optJSONObject("config") == null
+                                    ? null
+                                    : settings.optJSONObject("config").optJSONArray("chats")));
+            for (long chat : chats)
+                if (reachable(chat)) selected.add(chat);
+                else skipped++;
+        }
+        if (backup && mine) saveConfig();
         int files = 0;
-        for (IndexTransfer.Section section : contents.sections)
+        for (IndexTransfer.Section section : contents.sections) {
+            // A backup's chats are this account's; a shared index file brings its own.
+            if (backup && !(mine && reachable(section.chat))) {
+                skipped++;
+                continue;
+            }
             files += index.importSection(section);
+        }
         indexedChats();
         clearCatalogueLookups();
-        status =
+        String added =
                 settings != null
                         ? Strings.f(
                                 "Restored. {0} files added to the saved index.",
                                 Strings.number(files))
                         : Strings.f("{0} files added to the saved index.", Strings.number(files));
+        status =
+                skipped == 0
+                        ? added
+                        : added
+                                + " "
+                                + Strings.f(
+                                        "{0} chats or settings from the backup were left out"
+                                                + " because this account can't use them.",
+                                        Strings.number(skipped));
+    }
+
+    // ── Automatic backups ───────────────────────────────────────────────────
+
+    /** Posts that Telegram has finished or refused, by the temporary id the send returned. */
+    private final LinkedHashMap<Long, AutoBackup.Sent> sendResults =
+            new LinkedHashMap<Long, AutoBackup.Sent>() {
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<Long, AutoBackup.Sent> eldest) {
+                    return size() > 16;
+                }
+            };
+
+    private volatile AutoBackup autoBackup;
+
+    /** The scheduled backups' settings and state; null until Telegram has started. */
+    public AutoBackup autoBackup() {
+        return autoBackup;
+    }
+
+    private void openAutoBackup() throws Exception {
+        final File file = new File(home, "auto-backup.json");
+        autoBackup =
+                new AutoBackup(
+                        backupHost,
+                        new AutoBackup.Store() {
+                            @Override
+                            public JSONObject read() throws Exception {
+                                return file.isFile() ? readJson(file) : null;
+                            }
+
+                            @Override
+                            public void write(JSONObject state) throws Exception {
+                                writeJson(file, state);
+                            }
+                        },
+                        System::currentTimeMillis);
+        AutoBackupJob.schedule(context, autoBackup, false);
+    }
+
+    /** Called from the update thread when a message finished sending or failed. */
+    private void sendFinished(long temporaryId, TdApi.Message message, String failure) {
+        AutoBackup.Sent sent = sent(message);
+        if (!sent.caption.startsWith(AutoBackup.MARKER)) return;
+        sent.failed = failure != null;
+        sent.pending = false;
+        if (failure != null) sent.reason = AutoBackup.safe(failure);
+        synchronized (sendResults) {
+            sendResults.put(temporaryId, sent);
+            sendResults.notifyAll();
+        }
+    }
+
+    private static AutoBackup.Sent sent(TdApi.Message message) {
+        AutoBackup.Sent sent = new AutoBackup.Sent();
+        sent.chat = message.chatId;
+        sent.id = message.id;
+        sent.date = message.date;
+        sent.outgoing = message.isOutgoing;
+        sent.pending = message.sendingState instanceof TdApi.MessageSendingStatePending;
+        if (message.sendingState instanceof TdApi.MessageSendingStateFailed) {
+            sent.failed = true;
+            TdApi.Error error = ((TdApi.MessageSendingStateFailed) message.sendingState).error;
+            sent.reason = error == null ? "" : AutoBackup.safe(error.message);
+        }
+        if (message.content instanceof TdApi.MessageDocument) {
+            TdApi.MessageDocument document = (TdApi.MessageDocument) message.content;
+            if (document.document != null) {
+                sent.name = document.document.fileName == null ? "" : document.document.fileName;
+                if (document.document.document != null)
+                    sent.size =
+                            Math.max(
+                                    document.document.document.size,
+                                    document.document.document.expectedSize);
+            }
+            if (document.caption != null && document.caption.text != null)
+                sent.caption = document.caption.text;
+        }
+        return sent;
+    }
+
+    private final AutoBackup.Host backupHost =
+            new AutoBackup.Host() {
+                @Override
+                public boolean ready() {
+                    return TelegramBridge.this.ready();
+                }
+
+                @Override
+                public boolean allowed(boolean manual) {
+                    // Below playback, previews and foreground searches, even when asked for.
+                    return backgroundAllowed() && analysisAllowed() && remoteSearch.idle();
+                }
+
+                @Override
+                public String account() throws Exception {
+                    return BackupSettings.account(call(new TdApi.GetMe()).id);
+                }
+
+                @Override
+                public boolean ownedPrivateChannel(long chat) throws Exception {
+                    return ownChannel(call(new TdApi.GetChat(chat))) == Boolean.FALSE;
+                }
+
+                @Override
+                public File stage(AutoBackup.Contents contents) throws Exception {
+                    // Kept in the app's own files, so a pending upload survives the cache being
+                    // cleared; the user's exported backups use the cache.
+                    return backupFile(contents, new File(home, "auto-backup"));
+                }
+
+                @Override
+                public long send(long chat, File file, String caption) throws Exception {
+                    TdApi.Message queued;
+                    try {
+                        queued =
+                                call(
+                                        new TdApi.SendMessage(
+                                                chat,
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                new TdApi.InputMessageDocument(
+                                                        new TdApi.InputDocument(
+                                                                new TdApi.InputFileLocal(
+                                                                        file.getAbsolutePath()),
+                                                                null,
+                                                                true),
+                                                        new TdApi.FormattedText(
+                                                                caption, new TdApi.TextEntity[0]))),
+                                        30000);
+                    } catch (TelegramFailure e) {
+                        // Telegram answered with a refusal, so nothing was queued.
+                        Exception limit = rateLimitOr(e);
+                        if (limit instanceof LiveSearch.RateLimited)
+                            throw new AutoBackup.FloodWait(
+                                    ((LiveSearch.RateLimited) limit).retrySeconds);
+                        throw e;
+                    } catch (TimeoutException | InterruptedException silent) {
+                        throw new AutoBackup.Uncertain("Telegram didn't answer the send.");
+                    }
+                    return queued.id;
+                }
+
+                @Override
+                public AutoBackup.Sent await(long chat, long temporaryId, long millis)
+                        throws Exception {
+                    long end = android.os.SystemClock.elapsedRealtime() + millis;
+                    synchronized (sendResults) {
+                        while (true) {
+                            AutoBackup.Sent done = sendResults.get(temporaryId);
+                            if (done != null) return done;
+                            long left = end - android.os.SystemClock.elapsedRealtime();
+                            if (left <= 0) return null;
+                            sendResults.wait(left);
+                        }
+                    }
+                }
+
+                @Override
+                public AutoBackup.Sent find(long chat, String token) throws Exception {
+                    synchronized (sendResults) {
+                        for (AutoBackup.Sent done : sendResults.values())
+                            if (done.chat == chat && done.caption.endsWith(" " + token))
+                                return done;
+                    }
+                    for (AutoBackup.Sent s : backupHistory(chat, 100))
+                        if (s.caption.endsWith(" " + token)) return s;
+                    return null;
+                }
+
+                @Override
+                public List<AutoBackup.Sent> documents(long chat) throws Exception {
+                    List<AutoBackup.Sent> mine = new ArrayList<>();
+                    for (AutoBackup.Sent s : backupHistory(chat, 300)) if (s.outgoing) mine.add(s);
+                    return mine;
+                }
+
+                @Override
+                public void delete(long chat, long[] ids) throws Exception {
+                    call(new TdApi.DeleteMessages(chat, ids, true));
+                }
+
+                @Override
+                public void discard(long chat, long id) throws Exception {
+                    call(new TdApi.DeleteMessages(chat, new long[] {id}, true));
+                }
+            };
+
+    /** The newest documents in a chat, as far back as {@code limit} messages, newest first. */
+    private List<AutoBackup.Sent> backupHistory(long chat, int limit) throws Exception {
+        List<AutoBackup.Sent> out = new ArrayList<>();
+        long from = 0;
+        for (int seen = 0; seen < limit; ) {
+            TdApi.Messages page = call(new TdApi.GetChatHistory(chat, from, 0, 50, false), 15000);
+            if (page == null || page.messages == null || page.messages.length == 0) break;
+            for (TdApi.Message m : page.messages) {
+                from = m.id;
+                seen++;
+                if (m.content instanceof TdApi.MessageDocument) out.add(sent(m));
+            }
+        }
+        return out;
+    }
+
+    private final java.util.concurrent.atomic.AtomicBoolean backingUp =
+            new java.util.concurrent.atomic.AtomicBoolean();
+
+    /** Starts a backup the user asked for; false when one is already running. */
+    public boolean backupNow() {
+        if (!backingUp.compareAndSet(false, true)) return false;
+        Thread thread =
+                new Thread(
+                        () -> {
+                            try {
+                                AutoBackup.Outcome outcome =
+                                        runAutoBackup(
+                                                new java.util.concurrent.atomic.AtomicBoolean(),
+                                                true);
+                                AutoBackupJob.reschedule(context, outcome.delayMillis);
+                            } catch (Exception e) {
+                                HostLog.d(
+                                        "Automatic backup stopped: "
+                                                + e.getClass().getSimpleName());
+                            } finally {
+                                backingUp.set(false);
+                            }
+                        },
+                        "Telegram backup");
+        thread.setDaemon(true);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
+        return true;
+    }
+
+    public boolean backingUp() {
+        return backingUp.get();
+    }
+
+    /** One scheduled or requested run; the job calls this on its own thread. */
+    AutoBackup.Outcome runAutoBackup(java.util.concurrent.atomic.AtomicBoolean stop, boolean manual)
+            throws Exception {
+        AutoBackup backup = autoBackup;
+        if (backup == null) return new AutoBackup.Outcome(AutoBackup.BUSY_MILLIS);
+        return manual ? backup.runNow(stop) : backup.run(stop);
     }
 
     /** A chat's saved index as a file in the app's cache, named for the chat. */
@@ -974,6 +1321,17 @@ public final class TelegramBridge {
                 if (changed) mediaRevision++;
             }
             if (changed) clearCatalogueLookups();
+        } else if (obj instanceof TdApi.UpdateMessageSendSucceeded) {
+            TdApi.UpdateMessageSendSucceeded sent = (TdApi.UpdateMessageSendSucceeded) obj;
+            sendFinished(sent.oldMessageId, sent.message, null);
+        } else if (obj instanceof TdApi.UpdateMessageSendFailed) {
+            TdApi.UpdateMessageSendFailed sent = (TdApi.UpdateMessageSendFailed) obj;
+            sendFinished(
+                    sent.oldMessageId,
+                    sent.message,
+                    sent.error == null || sent.error.message == null
+                            ? "Telegram couldn't post the backup."
+                            : sent.error.message);
         } else if (obj instanceof TdApi.UpdateChatFolders) {
             TdApi.ChatFolderInfo[] list = ((TdApi.UpdateChatFolders) obj).chatFolders;
             folders = list == null ? new TdApi.ChatFolderInfo[0] : list;
@@ -1068,6 +1426,7 @@ public final class TelegramBridge {
 
     private void clearCatalogueLookups() {
         remoteSearch.clear();
+        searchMisses.clear();
         TelegramCatalogueCalls.changed(nextCatalogueRevision());
         SourceFirst.catalogueChanged();
         wakeIndex();
@@ -1347,9 +1706,20 @@ public final class TelegramBridge {
                                 }
                             });
         if (session != generation) throw new IOException("Telegram session changed. Search again.");
+        int shown = rows.size();
         if (hideUnplayable) rows = DolbySupport.playable(rows, formats::get);
+        int playable = rows.size();
         if (preserveCopies) rows = Duplicates.candidates(rows, formats::get);
         else if (hideDuplicates) rows = Duplicates.best(rows, formats::get);
+        Map<String, Integer> hidden = new HashMap<>();
+        hidden.put("unplayable", shown - playable);
+        hidden.put("duplicate-copy", playable - rows.size());
+        boolean incomplete = found.warning != null && !found.warning.isEmpty();
+        HostLog.d(
+                found.report.with(hidden).line()
+                        + ", shown "
+                        + rows.size()
+                        + (incomplete ? ", incomplete: not a confirmed zero" : ""));
         error = found.warning;
         status =
                 Strings.f(rows.size() == 1 ? "Found {0} track." : "Found {0} tracks.", rows.size());
@@ -1357,8 +1727,8 @@ public final class TelegramBridge {
     }
 
     /**
-     * Searches the index first and Telegram second, and falls back to the index when Telegram can't
-     * answer: rate limited, busy or timed out.
+     * Searches Telegram first and the saved index only when Telegram can't answer or finds nothing,
+     * so a chat's songs are found while the index is off, empty or still building.
      */
     private LiveSearch.Result search(String query, long session, boolean background)
             throws Exception {
@@ -1369,64 +1739,23 @@ public final class TelegramBridge {
             rows.add(new JSONObject(row.toString()).put("_indexCatalogueEpoch", revision));
         if (revision != catalogueRevision.get() || session != generation)
             throw new IOException("Telegram catalogue changed. Search again.");
-        return new LiveSearch.Result(rows, found.warning);
+        return new LiveSearch.Result(rows, found.warning, found.report);
     }
 
     private LiveSearch.Result searchCurrent(String query, long session, boolean background)
             throws Exception {
         Set<Long> chats = new HashSet<>(selected);
-        // Once every selected chat is indexed, the index answers without asking Telegram. A
-        // background search takes its answer even when it's empty; anything else asks Telegram
-        // when the index has nothing, in case the file was posted since the last top-up.
-        List<JSONObject> indexed = index.search(chats, query, true);
-        if (indexed != null && (background || !indexed.isEmpty()))
-            return new LiveSearch.Result(indexed, "");
-        LiveSearch.Result found;
-        try {
-            found = remoteSearch.search(chats, query, session, background);
-        } catch (Exception e) {
-            if (background) throw e;
-            List<JSONObject> saved = index.search(chats, query, false);
-            if (saved == null) throw e;
-            HostLog.d(
-                    "Unofficial Telegram search '"
-                            + query
-                            + "' failed ("
-                            + e.getMessage()
-                            + "); answered from the saved index with "
-                            + saved.size()
-                            + (saved.size() == 1 ? " file" : " files"));
-            return new LiveSearch.Result(saved, "");
-        }
-        if (background || !found.tracks.isEmpty()) return found;
-        // Nothing found. Telegram matches whole words, so a file it has can still be missed, as
-        // "You're" is for BitChord's "youre": try the saved index, then Telegram without those
-        // words.
-        List<JSONObject> saved = index.search(chats, query, false);
-        if (saved != null && !saved.isEmpty()) {
-            HostLog.d(
-                    "Unofficial Telegram search '"
-                            + query
-                            + "' found nothing on Telegram; the saved index has "
-                            + saved.size()
-                            + (saved.size() == 1 ? " file" : " files"));
-            return new LiveSearch.Result(saved, "");
-        }
-        String relaxed = TelegramIndex.withoutContractions(query);
-        if (relaxed == null) return found;
-        List<String> wanted = TrackNames.words(query);
-        List<JSONObject> kept = new ArrayList<>();
-        LiveSearch.Result again = remoteSearch.search(chats, relaxed, session, false);
-        for (JSONObject row : again.tracks) if (TelegramIndex.matches(row, wanted)) kept.add(row);
-        HostLog.d(
-                "Unofficial Telegram search '"
-                        + query
-                        + "' found nothing; searched again as '"
-                        + relaxed
-                        + "' and kept "
-                        + kept.size()
-                        + (kept.size() == 1 ? " file" : " files"));
-        return new LiveSearch.Result(kept, again.warning);
+        searchMisses.scope(catalogueRevision.get(), chats);
+        return SearchPlan.run(
+                query,
+                background,
+                chats,
+                text -> remoteSearch.search(chats, text, session, background),
+                (text, complete) ->
+                        complete
+                                ? index.search(chats, text, true)
+                                : index.searchRetained(chats, text, false),
+                searchMisses);
     }
 
     /** At most this many of a chat's newest files go into a playlist or a download. */
@@ -1584,7 +1913,13 @@ public final class TelegramBridge {
                 else if (!remoteSearch.idle()) wait = 1000;
                 else if (importShared()) wait = 1000;
                 else if (!index.step(indexedChats(), mainChannel.main())) wait = 60000;
-                else pace = Math.max(FASTEST_PACE, pace * 9 / 10);
+                else {
+                    // New index rows can answer a remembered miss; only the misses are dropped, so
+                    // searches in flight and playback routes are left alone.
+                    searchMisses.clear();
+                    remoteSearch.clearMisses();
+                    pace = Math.max(FASTEST_PACE, pace * 9 / 10);
+                }
             } catch (NativeAudio.Deferred e) {
                 wait = 1000; // the zip stays queued; the next step goes through the gate again
             } catch (LiveSearch.RateLimited e) {

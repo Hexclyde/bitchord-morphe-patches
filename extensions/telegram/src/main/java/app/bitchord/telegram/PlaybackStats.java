@@ -19,6 +19,132 @@ public final class PlaybackStats {
     private static final Map<Snapshot, TelemetryProvenance> provenance =
             Collections.synchronizedMap(new WeakHashMap<Snapshot, TelemetryProvenance>());
 
+    private static final ThreadLocal<Observation> observation = new ThreadLocal<>();
+
+    private static final class Observation {
+        final androidx.media3.common.Player player;
+        final androidx.media3.common.MediaItem item;
+        final android.net.Uri uri;
+        final Integer bitrate;
+
+        Observation(androidx.media3.common.Player player) throws Exception {
+            this.player = player;
+            item = player.getCurrentMediaItem();
+            uri =
+                    item == null || item.localConfiguration == null
+                            ? null
+                            : SourceFirst.audibleUri(item.localConfiguration.uri);
+            Object format = player.getClass().getMethod("getAudioFormat").invoke(player);
+            Integer rate = null;
+            if (format != null) {
+                for (String field : new String[] {"averageBitrate", "bitrate"}) {
+                    int bits = format.getClass().getField(field).getInt(format);
+                    if (bits > 0) {
+                        rate = (int) (((long) bits + 500) / 1000);
+                        break;
+                    }
+                }
+            }
+            bitrate = rate;
+        }
+    }
+
+    /** Runs at the beginning of the host's synchronous, generation-checked publication. */
+    public static void observe(androidx.media3.common.Player player) {
+        observation.remove();
+        try {
+            observation.set(new Observation(player));
+        } catch (Exception unavailable) {
+            /* Unbound metadata is not evidence of a source switch. */
+        }
+    }
+
+    /** Every host panel receives this same immutable snapshot, before StateFlow publication. */
+    public static Snapshot active(Snapshot snapshot) {
+        Observation seen = observation.get();
+        observation.remove();
+        boolean stable = false;
+        AudioOrigin.Source source = null;
+        Integer bitrate = null;
+        if (seen != null) {
+            try {
+                androidx.media3.common.MediaItem current = seen.player.getCurrentMediaItem();
+                android.net.Uri uri =
+                        current == null || current.localConfiguration == null
+                                ? null
+                                : SourceFirst.audibleUri(current.localConfiguration.uri);
+                stable = current == seen.item && java.util.Objects.equals(uri, seen.uri);
+                if (stable) {
+                    bitrate = seen.bitrate;
+                    source = AudioOrigin.activeSource(current);
+                }
+            } catch (Exception unavailable) {
+                stable = false;
+            }
+        }
+        return bound(snapshot, bitrate, source, stable);
+    }
+
+    /** Only the cache/file record for this rendition may supply advertised encoded metadata. */
+    static Snapshot bound(
+            Snapshot s, Integer encodedRate, AudioOrigin.Source source, boolean stable) {
+        if (s == null) return null;
+        if (!stable) {
+            encodedRate = null;
+            source = null;
+        }
+        boolean matches = source != null && compatible(s.mimeType, source.codec);
+        TelemetryProvenance origin = provenance.get(s);
+        Integer rate = null;
+        if (encodedRate != null) {
+            rate = encodedRate;
+            origin = TelemetryProvenance.AUTHORITATIVE;
+        } else if (stable && origin == TelemetryProvenance.MEASURED) {
+            // The worker and its cache are keyed by the read-only audible URI.
+            rate = s.bitrateKbps;
+        } else if (matches && source.kbps != null && source.kbps > 0) {
+            rate = source.kbps;
+            origin = TelemetryProvenance.DERIVED;
+        }
+        if (rate == null) origin = TelemetryProvenance.UNKNOWN;
+        boolean encodedDepth =
+                "audio/flac".equals(s.mimeType)
+                        || "audio/x-flac".equals(s.mimeType)
+                        || "audio/alac".equals(s.mimeType)
+                        || (s.mimeType != null && s.mimeType.startsWith("audio/dsd"));
+        Integer bits =
+                encodedDepth && matches && source.bits != null && source.bits > 0
+                        ? source.bits
+                        : null;
+        if ("audio/raw".equals(s.mimeType)
+                || "audio/wav".equals(s.mimeType)
+                || "audio/x-wav".equals(s.mimeType)) bits = s.bitDepth;
+        Snapshot clean =
+                new Snapshot(
+                        s.mimeType,
+                        rate,
+                        s.sampleRateHz,
+                        s.channels,
+                        bits,
+                        null,
+                        source == null ? "Unknown source" : source.name,
+                        s.container,
+                        origin,
+                        s.pcmDataRateKbps,
+                        null);
+        capture(clean, origin);
+        return clean;
+    }
+
+    static boolean compatible(String mime, String codec) {
+        if (mime == null || codec == null) return false;
+        String m = mime.toLowerCase(java.util.Locale.ROOT);
+        String c = codec.toLowerCase(java.util.Locale.ROOT);
+        if (c.equals("mp3")) c = "mpeg";
+        if (c.equals("aac")) return m.equals("audio/mp4a-latm") || m.equals("audio/aac");
+        return m.equals("audio/" + c) || m.equals("audio/x-" + c);
+    }
+
     public static void capture(Snapshot snapshot, TelemetryProvenance origin) {
         if (snapshot == null) return;
         synchronized (provenance) {
@@ -56,17 +182,11 @@ public final class PlaybackStats {
         return (format.length() == 0 ? "" : format + "\n") + source + " · " + rate;
     }
 
-    /**
-     * YouTube never sends lossless or Dolby audio. When BitChord labels one "YouTube", it's a
-     * better copy that replaced the stream, played again from BitChord's song cache, which keeps
-     * the song's YouTube source: the Telegram copy, when Telegram is set up.
-     */
+    /** Codec alone cannot identify the provider of a cached copy. */
     static String sourceOf(String source, String mime) {
-        if (source == null || !source.trim().equalsIgnoreCase("YouTube") || !notFromYouTube(mime))
-            return source;
-        return TelegramBridge.instance != null
-                ? Strings.t("Unofficial Telegram (saved copy)")
-                : Strings.t("Saved copy");
+        if (source != null && source.trim().equalsIgnoreCase("YouTube") && notFromYouTube(mime))
+            return "Unknown source";
+        return source;
     }
 
     static boolean notFromYouTube(String mime) {

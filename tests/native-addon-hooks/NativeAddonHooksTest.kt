@@ -1,5 +1,6 @@
 package app.bitchord.patches
 
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.smali.ExternalLabel
@@ -347,6 +348,38 @@ private fun synthetic() {
     )
     ensure(site.url.name == "\$cachedPlaceholder", "The request URL field is found")
 
+    val availability = MutableMethod(host(plain()))
+    availability.addInstructions(
+        availability.implementation!!.instructions.count() - 1,
+        """
+        invoke-virtual {v3}, Lokhttp3/internal/connection/RealCall;->execute()Lokhttp3/Response;
+        move-result-object v4
+        """,
+    )
+    val availabilityHost = AddonBodyHost(availability, site.url, null)
+    availabilityHost.installAvailability()
+    val once = availability.implementation!!.instructions.count()
+    availabilityHost.installAvailability()
+    ensure(
+        availability.implementation!!.instructions.count() == once,
+        "HTTP availability hooks install once",
+    )
+    val availabilityCalls =
+        availability.implementation!!
+            .instructions
+            .mapNotNull {
+                ((it as? ReferenceInstruction)?.reference as? MethodReference)
+                    ?.takeIf { ref ->
+                        ref.definingClass == "Lapp/bitchord/telegram/AddonAvailability;"
+                    }
+                    ?.name
+            }
+            .toList()
+    ensure(
+        availabilityCalls == listOf("before", "response"),
+        "HTTP availability observes requests and responses in order",
+    )
+
     // The first hook, with the guard the dispatch needs, in both installation orders.
     for ((first, second) in listOf(OWNER_A to OWNER_B, OWNER_B to OWNER_A)) {
         val method = MutableMethod(host(merged()))
@@ -415,6 +448,24 @@ private fun apk(path: String) {
     val all = dex.dexEntryNames.flatMap { dex.getEntry(it)!!.dexFile.classes.toList() }
     val site = locateAddonBody(all)
     val size = site.method.implementation!!.instructions.count()
+    val availability = MutableMethod(site.method)
+    AddonBodyHost(availability, site.url, site.branch).installAvailability()
+    ensure(
+        availability.implementation!!.instructions.count() == size + 2,
+        "The HTTP gate and response hook match $path",
+    )
+    for ((owner, name, type) in
+        listOf(
+            Triple("Lokhttp3/Response;", "code", "I"),
+            Triple("Lokhttp3/Response;", "request", "Lokhttp3/Request;"),
+            Triple("Lokhttp3/Response;", "headers", "Lokhttp3/Headers;"),
+            Triple("Lokhttp3/Request;", "url", "Lokhttp3/HttpUrl;"),
+        )) ensure(
+        all.single { it.type == owner }
+            .fields
+            .any { it.name == name && it.type == type && AccessFlags.PUBLIC.isSet(it.accessFlags) },
+        "HTTP response field is public: $owner $name",
+    )
     for ((first, second) in listOf(OWNER_A to OWNER_B, OWNER_B to OWNER_A)) {
         val method = MutableMethod(site.method)
         install(method, first, "external_a")

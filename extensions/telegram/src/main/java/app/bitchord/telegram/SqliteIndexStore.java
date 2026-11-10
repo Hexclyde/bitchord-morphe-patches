@@ -484,6 +484,26 @@ final class SqliteIndexStore implements IndexStore {
     }
 
     @Override
+    public List<JSONObject> afterEntry(long chat, long message, int entry, int limit)
+            throws Exception {
+        List<JSONObject> found = new ArrayList<>();
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT row FROM files WHERE chat = ? AND (message > ? OR (message = ? AND"
+                                + " entry > ?)) ORDER BY message, entry LIMIT "
+                                + Math.max(0, limit),
+                        new String[] {
+                            Long.toString(chat),
+                            Long.toString(message),
+                            Long.toString(message),
+                            Integer.toString(entry)
+                        })) {
+            while (c.moveToNext()) found.add(new JSONObject(c.getString(0)));
+        }
+        return found;
+    }
+
+    @Override
     public int countAfter(long chat, long message) {
         try (Cursor c =
                 db.rawQuery(
@@ -629,6 +649,16 @@ final class SqliteIndexStore implements IndexStore {
                 if (c.moveToFirst()) n += c.getInt(0);
             }
         return n;
+    }
+
+    @Override
+    public boolean zipsOutstanding(long chat) {
+        try (Cursor c =
+                db.rawQuery(
+                        "SELECT 1 FROM zips WHERE done != 1 AND chat = ? LIMIT 1",
+                        new String[] {Long.toString(chat)})) {
+            return c.moveToFirst();
+        }
     }
 
     @Override

@@ -15,13 +15,46 @@ public final class NerdStats {
     public static void recordSource(String mediaId, String sourceName) {}
 
     public static final class Snapshot {
-        public final String mimeType, sourceName;
-        public final Integer bitrateKbps;
+        public final String mimeType, sourceName, container;
+        public final Integer bitrateKbps, sampleRateHz, channels, bitDepth, pcmDataRateKbps;
+        public final com.music.bitchord.data.sources.StreamFormat claimed;
 
         public Snapshot(String mime, Integer bitrate, String source) {
+            this(
+                    mime,
+                    bitrate,
+                    null,
+                    null,
+                    null,
+                    null,
+                    source,
+                    null,
+                    TelemetryProvenance.UNKNOWN,
+                    null,
+                    null);
+        }
+
+        public Snapshot(
+                String mime,
+                Integer bitrate,
+                Integer rate,
+                Integer channels,
+                Integer depth,
+                com.music.bitchord.data.sources.StreamFormat claimed,
+                String source,
+                String container,
+                TelemetryProvenance provenance,
+                Integer pcmRate,
+                String mediaId) {
             mimeType = mime;
             bitrateKbps = bitrate;
             sourceName = source;
+            sampleRateHz = rate;
+            this.channels = channels;
+            bitDepth = depth;
+            this.claimed = claimed;
+            this.container = container;
+            pcmDataRateKbps = pcmRate;
         }
     }
 }

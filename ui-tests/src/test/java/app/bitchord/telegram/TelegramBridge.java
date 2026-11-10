@@ -519,6 +519,87 @@ public final class TelegramBridge {
 
     final List<String> backups = new ArrayList<>();
 
+    private AutoBackup autoBackup;
+    boolean backingUp;
+
+    AutoBackup autoBackup() {
+        if (autoBackup == null)
+            try {
+                autoBackup =
+                        new AutoBackup(
+                                new AutoBackup.Host() {
+                                    public boolean ready() {
+                                        return false;
+                                    }
+
+                                    public boolean allowed(boolean manual) {
+                                        return true;
+                                    }
+
+                                    public String account() {
+                                        return "framework";
+                                    }
+
+                                    public boolean ownedPrivateChannel(long chat) {
+                                        return true;
+                                    }
+
+                                    public java.io.File stage(AutoBackup.Contents c) {
+                                        throw new UnsupportedOperationException();
+                                    }
+
+                                    public long send(long chat, java.io.File f, String caption) {
+                                        throw new UnsupportedOperationException();
+                                    }
+
+                                    public AutoBackup.Sent await(long chat, long id, long millis) {
+                                        return null;
+                                    }
+
+                                    public AutoBackup.Sent find(long chat, String token) {
+                                        return null;
+                                    }
+
+                                    public List<AutoBackup.Sent> documents(long chat) {
+                                        return new ArrayList<>();
+                                    }
+
+                                    public void delete(long chat, long[] ids) {}
+
+                                    public void discard(long chat, long id) {}
+                                },
+                                new AutoBackup.Store() {
+                                    JSONObject saved;
+
+                                    public JSONObject read() {
+                                        return saved;
+                                    }
+
+                                    public void write(JSONObject state) throws Exception {
+                                        saved = new JSONObject(state.toString());
+                                    }
+                                },
+                                System::currentTimeMillis);
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        return autoBackup;
+    }
+
+    AutoBackup.Outcome runAutoBackup(java.util.concurrent.atomic.AtomicBoolean stop, boolean manual)
+            throws Exception {
+        return manual ? autoBackup().runNow(stop) : autoBackup().run(stop);
+    }
+
+    boolean backingUp() {
+        return backingUp;
+    }
+
+    boolean backupNow() {
+        backups.add("backup now");
+        return true;
+    }
+
     void backupToChannel(long chat, boolean withIndex) {
         backups.add("backup " + withIndex + " to " + chat);
     }
@@ -536,7 +617,7 @@ public final class TelegramBridge {
                             .put("format", IndexTransfer.BACKUP)
                             .put("version", IndexTransfer.VERSION),
                     java.util.Collections.emptyList(),
-                    (chat, message, limit) -> java.util.Collections.emptyList());
+                    (chat, message, entry, limit) -> java.util.Collections.emptyList());
         }
         backups.add("backup " + withIndex);
         return file;

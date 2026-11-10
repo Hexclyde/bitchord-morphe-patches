@@ -228,6 +228,28 @@ private val telegramResources = resourcePatch {
             )
             // Settings opens this activity explicitly, so it needs no launcher entry.
             app.appendChild(activity)
+            // Automatic backups run as a persisted job, which Android only restores after a
+            // restart for an app that holds this permission.
+            val bootName = "android.permission.RECEIVE_BOOT_COMPLETED"
+            if (
+                (0 until permissions.length).none {
+                    (permissions.item(it) as org.w3c.dom.Element).getAttributeNS(ANDROID, "name") ==
+                        bootName
+                }
+            ) {
+                val bootPermission = doc.createElement("uses-permission")
+                bootPermission.setAttributeNS(ANDROID, "android:name", bootName)
+                doc.documentElement.insertBefore(bootPermission, app)
+            }
+            val backupJob = doc.createElement("service")
+            backupJob.setAttributeNS(ANDROID, "android:name", "app.bitchord.telegram.AutoBackupJob")
+            backupJob.setAttributeNS(
+                ANDROID,
+                "android:permission",
+                "android.permission.BIND_JOB_SERVICE",
+            )
+            backupJob.setAttributeNS(ANDROID, "android:exported", "false")
+            app.appendChild(backupJob)
         }
     }
 }
@@ -680,7 +702,7 @@ private fun BytecodePatchContext.canonicalizeStatsMeasurement(owner: String) {
     }
     measurement.addInstructions(
         read + 1,
-        "invoke-static/range {v$uri .. v$uri}, Lapp/bitchord/telegram/SourceFirst;->renditionUri($uriType)$uriType\n" +
+        "invoke-static/range {v$uri .. v$uri}, Lapp/bitchord/telegram/SourceFirst;->audibleUri($uriType)$uriType\n" +
             "move-result-object v$uri",
     )
 }
@@ -1040,6 +1062,10 @@ private fun BytecodePatchContext.addSmoothUpgrade() {
             ((it as? ReferenceInstruction)?.reference as? StringReference)?.string == "upgraded to "
         }
     check(marker in 0 until logged) { "Quality upgrade commit layout changed" }
+    // Buffering and launching the asynchronous swap do not prove audible adoption.
+    val logRegister = (steps[logged] as OneRegisterInstruction).registerA
+    commit.replaceInstruction(logged, "const-string v$logRegister, \"buffered replacement: \"")
+
     fun call(name: String, parameters: List<String>): Int {
         val found =
             (marker until logged).filter { index ->
@@ -2206,6 +2232,17 @@ val nativeTelegramPatch =
                         it.parameterTypes == listOf(playback.type) &&
                         it.returnType == "V"
                 }
+            val originalPublish = publish.implementation!!.instructions.toList()
+            check(
+                originalPublish[1].fieldRef()?.name == "player" &&
+                    (originalPublish[1] as? TwoRegisterInstruction)?.registerA == 1
+            ) {
+                "Stats active player capture changed"
+            }
+            publish.addInstruction(
+                2,
+                "invoke-static {v1}, $statsType->observe(Landroidx/media3/common/Player;)V",
+            )
             val publishCode = publish.implementation!!.instructions.toList()
             val lossless =
                 publishCode.indexOfFirst {
@@ -2255,9 +2292,10 @@ val nativeTelegramPatch =
             val constructor = publish.implementation!!.instructions[constructorIndex]
             val constructorArgs = argumentRegisters(constructor)
             check(constructorArgs == (5..16).toList()) { "Snapshot constructor arguments changed" }
-            publish.addInstruction(
+            publish.addInstructions(
                 constructorIndex + 1,
-                "invoke-static {v5, v14}, $statsType->capture(${snapshotType}Lcom/music/bitchord/data/TelemetryProvenance;)V",
+                "invoke-static {v5, v14}, $statsType->capture(${snapshotType}Lcom/music/bitchord/data/TelemetryProvenance;)V\n" +
+                    "invoke-static {v5}, $statsType->active($snapshotType)$snapshotType\nmove-result-object v5",
             )
 
             val controls = mutableClassDefBy("Lcom/music/bitchord/ui/player/PlayerControlsKt;")

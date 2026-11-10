@@ -388,10 +388,16 @@ public final class SmoothUpgradeTest {
         check(run.untouched(), "A player cannot be adopted over itself");
         adopted(run.service, run.main, run.spare(item("song")));
         check(run.untouched(), "Another item of the song is not the upgrade");
+        check(
+                PlaybackPriority.upgradeActive(),
+                "Alignment retains priority after audition has ended");
         adopted(run.service, run.main, run.spare(item("other")));
         check(run.untouched(), "Another song's adoption is not the upgrade");
         run.adopt();
         check(run.committed(), "Adoption commits the statistics, in order: " + run.recorded);
+        check(
+                !PlaybackPriority.upgradeActive(),
+                "Audible adoption releases the handover reservation");
         run.recorded.clear();
         run.adopt();
         check(run.recorded.isEmpty(), "An upgrade commits once");
@@ -987,6 +993,13 @@ public final class SmoothUpgradeTest {
         check(
                 newPosition[0] == 72_250 && incomingCalls.equals(List.of("seek:72250")),
                 "Resync uses the live position plus the verified recording offset");
+        // seekTo can return while the sink still contains pre-seek audio. Repeated polling
+        // must not spend both retries on that same old position/window.
+        newPosition[0] = 70_000;
+        check(
+                SmoothUpgrade.settled(incoming) == Player.STATE_BUFFERING && late.seeks == 1,
+                "An asynchronous seek is allowed to settle before another correction");
+        newPosition[0] = 72_250;
         late.began = System.nanoTime() / 1_000_000 - SmoothUpgrade.SETTLE_MS - 1;
         check(
                 SmoothUpgrade.settled(incoming) == Player.STATE_READY,

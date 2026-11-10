@@ -1,6 +1,7 @@
 """Paths and versions shared by build.py, test.py and validate_apks.py."""
 
 import json
+import hashlib
 import os
 import re
 import subprocess
@@ -23,10 +24,31 @@ def patch_version_source(version=None):
         value,
     ):
         raise ValueError("Invalid patch bundle version")
+    digest = hashlib.sha256()
+    for folder in ("extensions", "patches", "compile-only"):
+        for path in sorted((ROOT / folder).rglob("*")):
+            if path.is_file() and path.suffix in (".java", ".kt", ".xml"):
+                digest.update(str(path.relative_to(ROOT)).encode())
+                digest.update(path.read_bytes())
+    try:
+        revision = subprocess.check_output(
+            ["git", "rev-parse", "--short=12", "HEAD"],
+            cwd=ROOT,
+            stderr=subprocess.DEVNULL,
+            text=True,
+        ).strip()
+        if subprocess.check_output(
+            ["git", "status", "--porcelain"], cwd=ROOT, text=True
+        ).strip():
+            revision += "-dirty"
+    except (OSError, subprocess.CalledProcessError):
+        revision = "archive"
+    identity = f"{value} commit={revision} source={digest.hexdigest()[:16]}"
     return (
         "package app.bitchord.telegram;\n\n"
         "final class PatchVersion {\n"
-        f"    static final String VALUE = {json.dumps(value)};\n\n"
+        f"    static final String VALUE = {json.dumps(value)};\n"
+        f"    static final String BUILD = {json.dumps(identity)};\n\n"
         "    private PatchVersion() {}\n"
         "}\n"
     )

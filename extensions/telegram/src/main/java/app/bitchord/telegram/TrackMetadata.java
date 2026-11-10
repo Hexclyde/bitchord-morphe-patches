@@ -18,6 +18,81 @@ public final class TrackMetadata {
         return value == null ? "" : value;
     }
 
+    private static final java.util.regex.Pattern AUDIO_NAME =
+            java.util.regex.Pattern.compile(
+                    ".*\\.(flac|mp3|m4a|aac|ogg|opus|wav|alac|aiff|ac3|eac3|ec3|ac4|mka)$");
+    private static final java.util.regex.Pattern ARCHIVE_NAME =
+            java.util.regex.Pattern.compile(".*\\.(zip|rar|7z|cue|iso|tar|gz)$");
+
+    /**
+     * A music file sent as a document: by its extension, or, when it has none, by an audio type
+     * Telegram recorded for it.
+     */
+    static boolean audioDocument(String name, String mime) {
+        return AUDIO_NAME.matcher(text(name).toLowerCase(Locale.ROOT)).matches()
+                || (!mimeFormat(mime).isEmpty() && !text(name).contains("."));
+    }
+
+    /** The file format an audio type stands for, or "" when it isn't one the player reads. */
+    static String mimeFormat(String mime) {
+        switch (text(mime).toLowerCase(Locale.ROOT)) {
+            case "audio/flac":
+            case "audio/x-flac":
+                return "flac";
+            case "audio/mpeg":
+            case "audio/mp3":
+                return "mp3";
+            case "audio/mp4":
+            case "audio/x-m4a":
+            case "audio/m4a":
+                return "m4a";
+            case "audio/aac":
+                return "aac";
+            case "audio/ogg":
+                return "ogg";
+            case "audio/opus":
+                return "opus";
+            case "audio/wav":
+            case "audio/x-wav":
+            case "audio/wave":
+                return "wav";
+            case "audio/aiff":
+            case "audio/x-aiff":
+                return "aiff";
+            case "audio/ac3":
+                return "ac3";
+            case "audio/eac3":
+                return "eac3";
+            case "audio/x-matroska":
+                return "mka";
+            default:
+                return "";
+        }
+    }
+
+    /**
+     * Why a post isn't a song the player can use, as a fixed name for the log, or "" when it is
+     * one. A zip, rar or cue sheet is named apart: its songs are only reached through the saved
+     * index.
+     */
+    static String rejection(TdApi.Message m) {
+        if (m == null || m.chatId == 0 || m.id <= 0) return "invalid";
+        if (!MediaPolicy.savable(m)) return "protected";
+        if (m.content instanceof TdApi.MessageAudio) {
+            TdApi.Audio a = ((TdApi.MessageAudio) m.content).audio;
+            return a == null || a.audio == null ? "no-file" : "";
+        }
+        if (m.content instanceof TdApi.MessageDocument) {
+            TdApi.Document d = ((TdApi.MessageDocument) m.content).document;
+            if (d == null || d.document == null) return "no-file";
+            if (audioDocument(d.fileName, d.mimeType)) return "";
+            return ARCHIVE_NAME.matcher(text(d.fileName).toLowerCase(Locale.ROOT)).matches()
+                    ? "archive-or-cue"
+                    : "other-file-type";
+        }
+        return "not-audio";
+    }
+
     public static JSONObject from(TdApi.Message m) throws Exception {
         if (m == null || m.chatId == 0 || m.id <= 0 || !MediaPolicy.savable(m)) return null;
         TdApi.File file;
@@ -48,10 +123,7 @@ public final class TrackMetadata {
             mime = text(d.mimeType);
             title = "";
             cover = d.thumbnail;
-            if (!name.toLowerCase(Locale.ROOT)
-                    .matches(
-                            ".*\\.(flac|mp3|m4a|aac|ogg|opus|wav|alac|aiff|ac3|eac3|ec3|ac4|mka)$"))
-                return null;
+            if (!audioDocument(name, mime)) return null;
         } else return null;
         if (file == null) return null;
         if (title.isEmpty()) title = name;
@@ -59,6 +131,7 @@ public final class TrackMetadata {
                 name.contains(".")
                         ? name.substring(name.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT)
                         : "";
+        if (format.isEmpty()) format = mimeFormat(mime);
         JSONObject row =
                 new JSONObject()
                         .put("id", m.chatId + "_" + m.id)

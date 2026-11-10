@@ -285,7 +285,11 @@ public class VerifyApk {
         int legendTexts = 0, legendCalls = 0, searchHooks = 0, legendLinks = 0, matchHooks = 0;
         boolean downmixTarget = false;
         boolean liveSearchCall = false, slider = false;
-        int statsFormatHooks = 0, statsCaptureHooks = 0, statsMeasureHooks = 0;
+        int statsFormatHooks = 0,
+                statsCaptureHooks = 0,
+                statsMeasureHooks = 0,
+                statsObserveHooks = 0,
+                statsActiveHooks = 0;
         int playingHooks = 0, transitionHooks = 0;
         Set<String> policyRequests = new HashSet<>();
         Set<String> statsFields = new HashSet<>(), hostStatsFields = new HashSet<>();
@@ -671,8 +675,10 @@ public class VerifyApk {
                                                 .equals(
                                                         "Lorg/drinkless/tdlib/TdApi$GetChatHistory;"))
                                     check(
-                                            method.getName().equals("channelHistory"),
-                                            "History is confined to the explicit channel page");
+                                            Set.of("channelHistory", "backupHistory")
+                                                    .contains(method.getName()),
+                                            "History is confined to the channel page and backup"
+                                                + " confirmation");
                                 if (cls.getType().equals("Lapp/bitchord/telegram/TelegramUi;")
                                         && (target.getDefiningClass()
                                                         .equals(
@@ -840,7 +846,9 @@ public class VerifyApk {
                                             && target.getName().equals("fetch")) downloadHooks++;
                                 }
                                 if (target.getDefiningClass()
-                                        .equals("Lapp/bitchord/telegram/PlaybackStats;")) {
+                                                .equals("Lapp/bitchord/telegram/PlaybackStats;")
+                                        && !cls.getType()
+                                                .equals("Lapp/bitchord/telegram/PlaybackStats;")) {
                                     switch (target.getName()) {
                                         case "decorate" -> {
                                             statsFormatHooks++;
@@ -860,6 +868,37 @@ public class VerifyApk {
                                                             && move.getRegisterB() == 45,
                                                     "Overlay uses saved snapshot rather than a"
                                                             + " newer global snapshot");
+                                        }
+                                        case "observe" -> {
+                                            statsObserveHooks++;
+                                            check(
+                                                    method.getName()
+                                                                    .equals(
+                                                                            "access$publishNerdStats")
+                                                            && argument(instruction, 0) == 1,
+                                                    "Snapshot binds the actual active player before"
+                                                            + " publication");
+                                        }
+                                        case "active" -> {
+                                            statsActiveHooks++;
+                                            check(
+                                                    method.getName()
+                                                                    .equals(
+                                                                            "access$publishNerdStats")
+                                                            && argument(instruction, 0) == 5
+                                                            && instructions
+                                                                            .get(index + 1)
+                                                                            .getOpcode()
+                                                                    == Opcode.MOVE_RESULT_OBJECT
+                                                            && ((OneRegisterInstruction)
+                                                                                    instructions
+                                                                                            .get(
+                                                                                                    index
+                                                                                                            + 1))
+                                                                            .getRegisterA()
+                                                                    == 5,
+                                                    "All panels receive the checked snapshot in the"
+                                                            + " published register");
                                         }
                                         case "capture" -> {
                                             statsCaptureHooks++;
@@ -1123,14 +1162,18 @@ public class VerifyApk {
                                             "Lapp/bitchord/soulseek/SoulseekBridge;")),
                     "Patches & tweaks page matches the selected features");
             check(
-                    statsFormatHooks == 1 && statsCaptureHooks == 1 && statsMeasureHooks == 1,
+                    statsFormatHooks == 1
+                            && statsCaptureHooks == 1
+                            && statsMeasureHooks == 1
+                            && statsObserveHooks == 1
+                            && statsActiveHooks == 1,
                     "Exactly one of each stats hook");
             check(statsTwoLines, "Source and bitrate have a visible second line");
             check(
                     statsGeneration && statsActive,
                     "Original generation and active-item publication guards remain");
             check(
-                    statsFields.size() == 3 && hostStatsFields.containsAll(statsFields),
+                    statsFields.size() == 8 && hostStatsFields.containsAll(statsFields),
                     "Stats helper resolves real optimized host fields");
             check(
                     types.contains("Lapp/bitchord/telegram/PlaybackStats;"),

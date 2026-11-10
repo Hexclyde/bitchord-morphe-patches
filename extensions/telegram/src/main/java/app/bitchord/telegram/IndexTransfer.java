@@ -1,5 +1,6 @@
 package app.bitchord.telegram;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -31,14 +32,62 @@ final class IndexTransfer {
     /** One chat's part of a file. */
     static final class Section {
         long chat, newest;
+        // Export-only mutation fence; never serialized into a portable backup.
+        long exportEpoch = -1;
         String title = "";
         boolean complete;
+
+        /**
+         * Where the build stood when the section was written; null in files from older versions.
+         */
+        JSONObject progress;
+
         final List<JSONObject> rows = new ArrayList<>();
+    }
+
+    /**
+     * A section's build progress with only sensible values, or null: a cursor and a count for each
+     * kind of post, and whether that kind is done. A file that says otherwise is read as if it
+     * carried no progress, so the chat is built from where this phone already was.
+     */
+    static JSONObject progress(JSONObject saved) {
+        try {
+            if (saved == null) return null;
+            JSONArray cursor = saved.getJSONArray("cursor"),
+                    complete = saved.getJSONArray("complete"),
+                    total = saved.getJSONArray("total"),
+                    scanned = saved.getJSONArray("scanned");
+            JSONArray c = new JSONArray(),
+                    d = new JSONArray(),
+                    t = new JSONArray(),
+                    n = new JSONArray();
+            if (cursor.length() != TelegramIndex.KINDS
+                    || complete.length() != TelegramIndex.KINDS
+                    || total.length() != TelegramIndex.KINDS
+                    || scanned.length() != TelegramIndex.KINDS) return null;
+            for (int k = 0; k < TelegramIndex.KINDS; k++) {
+                long at = cursor.getLong(k);
+                int all = total.getInt(k), done = scanned.getInt(k);
+                boolean finished = complete.getBoolean(k);
+                if (at < 0 || all < -1 || done < 0 || (all >= 0 && done > all)) return null;
+                c.put(finished ? 0 : at);
+                d.put(finished);
+                t.put(all);
+                n.put(done);
+            }
+            return new JSONObject()
+                    .put("cursor", c)
+                    .put("complete", d)
+                    .put("total", t)
+                    .put("scanned", n);
+        } catch (org.json.JSONException invalid) {
+            return null;
+        }
     }
 
     /** Where files come from when writing: a chat's rows, a page at a time. */
     interface Rows {
-        List<JSONObject> after(long chat, long message, int limit) throws Exception;
+        List<JSONObject> after(long chat, long message, int entry, int limit) throws Exception;
     }
 
     /**
@@ -70,15 +119,13 @@ final class IndexTransfer {
                                 .put("title", s.title)
                                 .put("newest", s.newest)
                                 .put("complete", s.complete)
+                                .put("progress", s.progress == null ? JSONObject.NULL : s.progress)
                                 .toString());
                 w.write('\n');
-                // Pages of files after a message. A post's songs (a zip's) share its message, so a
-                // page
-                // can end inside a post: the next starts at that post again, skipping what's
-                // written.
+                // Include the archive entry in the cursor: one post may span several pages.
                 long lastMessage = 0, lastEntry = -1;
                 while (true) {
-                    List<JSONObject> page = rows.after(s.chat, Math.max(0, lastMessage - 1), 1000);
+                    List<JSONObject> page = rows.after(s.chat, lastMessage, (int) lastEntry, 1000);
                     boolean wrote = false;
                     for (JSONObject row : page) {
                         long message = row.optLong("message"), entry = row.optLong("entry");
@@ -216,6 +263,7 @@ final class IndexTransfer {
                 section.title = text(o.optString("title"), 256);
                 section.newest = Math.max(0, o.optLong("newest"));
                 section.complete = o.optBoolean("complete");
+                section.progress = progress(o.optJSONObject("progress"));
                 contents.sections.add(section);
             } else if (o.optBoolean("end")) section = null;
             else {

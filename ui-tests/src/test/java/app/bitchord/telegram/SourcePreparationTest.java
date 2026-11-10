@@ -878,6 +878,26 @@ public class SourcePreparationTest {
     }
 
     @Test
+    public void telemetryDoesNotSelectPreparedAudio() throws Exception {
+        Uri uri = entry("a", "stats");
+        preparation.upcoming(Collections.singletonList(uri));
+        idle();
+        assertEquals(
+                "A ready candidate is not an audible period", uri, preparation.audibleUri(uri));
+        Object period = new Object();
+        DataSpec chosen = preparation.route(period, new DataSpec(uri));
+        assertNotEquals(uri, chosen.uri);
+        assertEquals(
+                "Only the period's chosen copy supplies telemetry",
+                chosen.uri,
+                preparation.audibleUri(uri));
+        assertEquals(
+                "Another queue generation cannot borrow this rendition",
+                entry("a", "later"),
+                preparation.audibleUri(entry("a", "later")));
+    }
+
+    @Test
     public void selectingAnUpcomingWaitUsesItsOriginalForegroundDeadline() throws Exception {
         Uri current = entry("a", "playing"), next = entry("b", "future");
         preparation.retainCurrentEntries(Collections.singletonList(current));

@@ -343,6 +343,8 @@ interface IndexStore {
     /** One chat's files posted after {@code message}, oldest first. */
     List<JSONObject> after(long chat, long message, int limit) throws Exception;
 
+    List<JSONObject> afterEntry(long chat, long message, int entry, int limit) throws Exception;
+
     /** How many of one chat's files were posted after {@code message}. */
     int countAfter(long chat, long message) throws Exception;
 
@@ -377,6 +379,9 @@ interface IndexStore {
     void wakeZips(long chat) throws Exception;
 
     int zipsWaiting(Collection<Long> chats) throws Exception;
+
+    /** Whether a chat has archives not looked into yet, including ones put off for later. */
+    boolean zipsOutstanding(long chat) throws Exception;
 
     /** Drops a chat's files from before this generation. */
     void prune(long chat, long generation) throws Exception;
@@ -732,6 +737,20 @@ interface IndexStore {
         }
 
         @Override
+        public synchronized List<JSONObject> afterEntry(
+                long chat, long message, int entry, int limit) throws Exception {
+            List<JSONObject> found = new ArrayList<>();
+            for (Entry e :
+                    files.getOrDefault(chat, new TreeMap<>())
+                            .tailMap(key(message, Math.max(0, entry + 1)), true)
+                            .values()) {
+                if (found.size() >= limit) break;
+                found.add(new JSONObject(e.row));
+            }
+            return found;
+        }
+
+        @Override
         public synchronized int countAfter(long chat, long message) {
             return files.getOrDefault(chat, new TreeMap<>())
                     .tailMap(key(message + 1, 0), true)
@@ -827,6 +846,13 @@ interface IndexStore {
                     if (!zipsDone.contains(chat + "_" + message)
                             && !zipsDeferred.contains(chat + "_" + message)) n++;
             return n;
+        }
+
+        @Override
+        public synchronized boolean zipsOutstanding(long chat) {
+            for (long message : zips.getOrDefault(chat, new TreeMap<>()).keySet())
+                if (!zipsDone.contains(chat + "_" + message)) return true;
+            return false;
         }
 
         @Override

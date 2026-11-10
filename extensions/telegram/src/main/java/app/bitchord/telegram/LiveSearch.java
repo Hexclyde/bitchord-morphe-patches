@@ -31,10 +31,16 @@ public final class LiveSearch implements AutoCloseable {
     public static final class Result {
         public final List<JSONObject> tracks;
         public final String warning;
+        final SearchReport report;
 
         Result(List<JSONObject> tracks, String warning) {
+            this(tracks, warning, SearchReport.NONE);
+        }
+
+        Result(List<JSONObject> tracks, String warning, SearchReport report) {
             this.tracks = Collections.unmodifiableList(new ArrayList<>(tracks));
             this.warning = warning;
+            this.report = report;
         }
     }
 
@@ -59,6 +65,9 @@ public final class LiveSearch implements AutoCloseable {
     // BitChord's own lookups count here; background searches only run while there are none.
     private final java.util.concurrent.atomic.AtomicInteger foreground =
             new java.util.concurrent.atomic.AtomicInteger();
+    static final String PARTIAL =
+            "Some Telegram searches did not finish. Results are partial; try again or select"
+                    + " fewer chats.";
     static final String BUSY = "Telegram search is busy. Try again shortly.";
 
     /** How long a lookup for playback waits for a free search before giving up. */
@@ -81,6 +90,8 @@ public final class LiveSearch implements AutoCloseable {
         }
     }
 
+    private final AtomicLong missRevision = new AtomicLong();
+
     private final LinkedHashMap<String, Entry> cache = new LinkedHashMap<>(16, 0.75f, true);
 
     public LiveSearch(Gateway gateway) {
@@ -97,6 +108,14 @@ public final class LiveSearch implements AutoCloseable {
         epoch.incrementAndGet();
         synchronized (cache) {
             cache.clear();
+        }
+    }
+
+    /** New catalogue rows invalidate empty answers without cancelling active searches. */
+    void clearMisses() {
+        synchronized (cache) {
+            missRevision.incrementAndGet();
+            cache.entrySet().removeIf(e -> e.getValue().result.tracks.isEmpty());
         }
     }
 
@@ -117,11 +136,13 @@ public final class LiveSearch implements AutoCloseable {
         chats.remove(0L);
         if (chats.isEmpty()) return new Result(Collections.emptyList(), "");
         if (chats.size() > 100) throw new IOException("Select at most 100 music chats.");
-        long currentEpoch = epoch.get();
+        long currentEpoch = epoch.get(), currentMissRevision = missRevision.get();
         String key = session + "/" + currentEpoch + "/" + chats + "/" + q;
         synchronized (cache) {
             Entry entry = cache.get(key);
-            if (entry != null && entry.expires > clock.millis()) return entry.result;
+            if (entry != null && entry.expires > clock.millis())
+                return new Result(
+                        entry.result.tracks, entry.result.warning, entry.result.report.fromCache());
             cache.remove(key);
         }
         long remaining = cooldownUntil.get() - clock.millis();
@@ -156,7 +177,8 @@ public final class LiveSearch implements AutoCloseable {
                 throw new IOException("Music-chat selection changed. Search again.");
             if (result.warning.isEmpty())
                 synchronized (cache) {
-                    cache.put(key, new Entry(clock.millis() + 30000, result));
+                    if (!result.tracks.isEmpty() || currentMissRevision == missRevision.get())
+                        cache.put(key, new Entry(clock.millis() + 30000, result));
                     while (cache.size() > MAX_QUERIES)
                         cache.remove(cache.keySet().iterator().next());
                 }
@@ -177,6 +199,7 @@ public final class LiveSearch implements AutoCloseable {
         List<Future<TdApi.FoundChatMessages>> jobs = new ArrayList<>();
         List<Long> jobChats = new ArrayList<>();
         LinkedHashMap<String, JSONObject> unique = new LinkedHashMap<>();
+        SearchReport.Builder report = new SearchReport.Builder(chats);
         Exception problem = null;
         try {
             // Search audio across every selected chat, then files: documents are filtered to
@@ -227,15 +250,22 @@ public final class LiveSearch implements AutoCloseable {
                     for (int n = 0; n < Math.min(MAX_RESULTS, found.messages.length); n++) {
                         TdApi.Message message = found.messages[n];
                         if (message == null || message.chatId != jobChats.get(i)) continue;
-                        JSONObject row = TrackMetadata.from(message);
-                        if (row != null && unique.size() < MAX_RESULTS)
-                            unique.put(row.getString("id"), row);
+                        String why = TrackMetadata.rejection(message);
+                        JSONObject row = why.isEmpty() ? TrackMetadata.from(message) : null;
+                        if (row == null) {
+                            report.rejected(why.isEmpty() ? "unreadable" : why);
+                        } else if (unique.size() < MAX_RESULTS) {
+                            if (unique.put(row.getString("id"), row) == null) report.accepted();
+                            else report.rejected("duplicate");
+                        } else report.rejected("over-limit");
                     }
                     if (unique.size() >= MAX_RESULTS) break;
                 } catch (ExecutionException e) {
                     problem = cause(e);
+                    report.unfinished(SearchReport.causeOf(problem));
                 } catch (TimeoutException e) {
                     problem = e;
+                    report.unfinished(SearchReport.causeOf(e));
                 }
             }
         } catch (RejectedExecutionException e) {
@@ -250,12 +280,9 @@ public final class LiveSearch implements AutoCloseable {
                     : new IOException(
                             "Telegram search unavailable or timed out. Try again shortly.",
                             problem);
-        String warning =
-                problem == null
-                        ? ""
-                        : "Some Telegram searches did not finish. Results are partial; try again or"
-                                + " select fewer chats.";
-        return new Result(new ArrayList<>(unique.values()), warning);
+        String warning = problem == null ? "" : PARTIAL;
+        return new Result(
+                new ArrayList<>(unique.values()), warning, report.build(SearchReport.Origin.LIVE));
     }
 
     private TdApi.FoundChatMessages pages(

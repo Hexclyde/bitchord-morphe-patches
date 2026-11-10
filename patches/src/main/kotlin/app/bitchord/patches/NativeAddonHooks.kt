@@ -107,6 +107,7 @@ internal class AddonBodyHost(val method: MutableMethod, val url: FieldReference,
      * installed in either order form one chain.
      */
     fun install(owner: String, label: String) {
+        if (owner.startsWith("Lapp/bitchord/telegram/InternalAddon;")) installAvailability()
         val first = method.implementation!!.instructions.first()
         val read =
             """
@@ -130,6 +131,44 @@ internal class AddonBodyHost(val method: MutableMethod, val url: FieldReference,
                 if-ne v1, v0, :$label
                 """
         method.addInstructionsWithLabels(0, guard + read, ExternalLabel(label, first))
+    }
+
+    /** Gates external requests and observes their status without replacing the host transport. */
+    fun installAvailability() {
+        val helper = "Lapp/bitchord/telegram/AddonAvailability;"
+        val code = method.implementation!!.instructions.toList()
+        if (code.any { it.method()?.definingClass == helper }) return
+        val request =
+            code.indices.single {
+                code[it].method()?.let { ref ->
+                    ref.definingClass == "Lokhttp3/Request\$Builder;" &&
+                        ref.name == "url" &&
+                        ref.parameterTypes == listOf("Ljava/lang/String;")
+                } == true
+            }
+        val execute =
+            code.indices.single {
+                it > request &&
+                    code[it].method()?.let { ref ->
+                        ref.definingClass.startsWith("Lokhttp3/") &&
+                            ref.name == "execute" &&
+                            ref.parameterTypes.isEmpty() &&
+                            ref.returnType == "Lokhttp3/Response;"
+                    } == true
+            }
+        check(code[execute + 1].opcode == Opcode.MOVE_RESULT_OBJECT) {
+            "Addon HTTP response capture changed"
+        }
+        val response = (code[execute + 1] as OneRegisterInstruction).registerA
+        val address = (code[request] as FiveRegisterInstruction).registerD
+        method.addInstructions(
+            execute + 2,
+            "invoke-static/range {v$response .. v$response}, $helper->response(Lokhttp3/Response;)V",
+        )
+        method.addInstructions(
+            request,
+            "invoke-static/range {v$address .. v$address}, $helper->before(Ljava/lang/String;)V",
+        )
     }
 }
 

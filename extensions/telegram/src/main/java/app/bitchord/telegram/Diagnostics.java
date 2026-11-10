@@ -123,7 +123,7 @@ public final class Diagnostics {
         deadline = System.currentTimeMillis() + LIMIT_MS;
         prefs.edit().putLong("until", deadline).apply();
         event("recording.started");
-        event("environment.sdk sdk=" + Build.VERSION.SDK_INT + " patch=" + PatchVersion.VALUE);
+        event("environment.sdk sdk=" + Build.VERSION.SDK_INT + " patch=" + PatchVersion.BUILD);
         java.util.Map<String, Object> hardware = new java.util.LinkedHashMap<>();
         hardware.put("sdk", Build.VERSION.SDK_INT);
         hardware.put("manufacturer", Build.MANUFACTURER);
@@ -139,7 +139,7 @@ public final class Diagnostics {
             // Package details can be unavailable during an update.
         }
         hardware.put("app_version", version);
-        hardware.put("patch", PatchVersion.VALUE);
+        hardware.put("patch", PatchVersion.BUILD);
         append(DiagnosticRecord.structured("environment.sdk", hardware));
         try {
             android.content.pm.PackageInfo info = WebView.getCurrentWebViewPackage();
@@ -201,7 +201,7 @@ public final class Diagnostics {
             content = current == null ? "Recorder unavailable\n" : current.snapshot();
         }
         return "BitChord support report\nPatch bundle: "
-                + PatchVersion.VALUE
+                + PatchVersion.BUILD
                 + "\nScope: this application's structured events and classified TrackLog events."
                 + "\nGoogle/MicroG service internals and other applications' logs are unavailable."
                 + "\nMessages, account values, page contents and URL parameters are excluded."

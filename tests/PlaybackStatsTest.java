@@ -117,7 +117,7 @@ public final class PlaybackStatsTest {
         // A substituted FLAC played again from BitChord's song cache keeps its YouTube label.
         TelegramBridge.instance = null;
         check(
-                PlaybackStats.sourceOf("YouTube", "audio/flac").equals("Saved copy"),
+                PlaybackStats.sourceOf("YouTube", "audio/flac").equals("Unknown source"),
                 "YouTube never sends FLAC");
         check(PlaybackStats.sourceOf("YouTube", "audio/opus").equals("YouTube"), "Opus is");
         check(
@@ -131,8 +131,126 @@ public final class PlaybackStatsTest {
                                         2862,
                                         "YouTube",
                                         TelemetryProvenance.MEASURED))
-                        .contains("Saved copy · ≈2862 kbps avg"),
+                        .contains("Unknown source · ≈2862 kbps avg"),
                 "The stats line says so");
+        java.lang.reflect.Constructor<com.music.bitchord.data.sources.StreamFormat> ctor =
+                com.music.bitchord.data.sources.StreamFormat.class.getDeclaredConstructor();
+        ctor.setAccessible(true);
+        com.music.bitchord.data.sources.StreamFormat candidate = ctor.newInstance();
+        java.lang.reflect.Field codec = candidate.getClass().getField("codec");
+        codec.setAccessible(true);
+        codec.set(candidate, "FLAC");
+        Snapshot mixed =
+                new Snapshot(
+                        "audio/opus",
+                        3296,
+                        48000,
+                        2,
+                        null,
+                        candidate,
+                        "Unofficial Telegram",
+                        null,
+                        TelemetryProvenance.DERIVED,
+                        null,
+                        "rAeanjCnUmI");
+        PlaybackStats.capture(mixed, TelemetryProvenance.DERIVED);
+        AudioOrigin.Source unknownRateYoutube =
+                new AudioOrigin.Source(
+                        "youtube", "YouTube", "YOUTUBE", "served", "opus", null, null, 48000);
+        AudioOrigin.Source measuredTelegram =
+                new AudioOrigin.Source(
+                        "telegram-native",
+                        "Unofficial Telegram",
+                        "ADDON",
+                        "served",
+                        "flac",
+                        3296,
+                        24,
+                        96000);
+        Snapshot pending = PlaybackStats.bound(mixed, null, unknownRateYoutube, true);
+        check(
+                pending.bitrateKbps == null
+                        && pending.claimed == null
+                        && pending.sourceName.equals("YouTube")
+                        && pending.mimeType.equals("audio/opus"),
+                "Downer: a verified but inaudible FLAC cannot label the Opus snapshot");
+        Snapshot failed = PlaybackStats.bound(mixed, 116, unknownRateYoutube, true);
+        check(
+                failed.bitrateKbps == 116 && failed.claimed == null,
+                "Aborted handover retains the encoded Opus measurement");
+        Snapshot heardFlac =
+                new Snapshot(
+                        "audio/flac",
+                        3296,
+                        96000,
+                        2,
+                        24,
+                        candidate,
+                        "Unofficial Telegram",
+                        null,
+                        TelemetryProvenance.MEASURED,
+                        null,
+                        "rAeanjCnUmI");
+        PlaybackStats.capture(heardFlac, TelemetryProvenance.MEASURED);
+        Snapshot adopted = PlaybackStats.bound(heardFlac, null, measuredTelegram, true);
+        check(
+                adopted.claimed == null
+                        && adopted.bitrateKbps == 3296
+                        && adopted.sampleRateHz == 96000
+                        && adopted.bitDepth == 24,
+                "Confirmed FLAC keeps a coherent encoded-format snapshot");
+        check(
+                PlaybackStats.decorate("FLAC", adopted).contains("≈3296 kbps avg"),
+                "Confirmed file average is labelled, not PCM throughput");
+        Snapshot cancelled = PlaybackStats.bound(heardFlac, null, null, false);
+        check(
+                cancelled.claimed == null && cancelled.bitrateKbps == null,
+                "Changed rendition or generation cannot reuse asynchronous candidate metadata");
+        check(
+                !PlaybackStats.compatible("audio/opus", "FLAC")
+                        && !PlaybackStats.compatible("audio/raw", "FLAC"),
+                "Decoded PCM does not prove FLAC encoding");
+        AudioOrigin.Source youtube =
+                new AudioOrigin.Source(
+                        "youtube", "YouTube", "YOUTUBE", "served", "opus", 116, null, 48000);
+        Snapshot audible = PlaybackStats.bound(mixed, null, youtube, true);
+        check(
+                audible.bitrateKbps == 116
+                        && audible.claimed == null
+                        && audible.sourceName.equals("YouTube")
+                        && audible.bitDepth == null,
+                "Publication uses the audible rendition record instead of the shared song claim");
+        AudioOrigin.Source telegram =
+                new AudioOrigin.Source(
+                        "telegram-native",
+                        "Unofficial Telegram",
+                        "ADDON",
+                        "served",
+                        "flac",
+                        3296,
+                        24,
+                        96000);
+        Snapshot confirmed = PlaybackStats.bound(heardFlac, null, telegram, true);
+        check(
+                confirmed.bitrateKbps == 3296
+                        && confirmed.bitDepth == 24
+                        && confirmed.sampleRateHz == 96000
+                        && confirmed.claimed == null,
+                "A confirmed source supplies encoded depth without retaining unbound song claims");
+        Snapshot unknownDepth = PlaybackStats.bound(heardFlac, null, null, true);
+        check(
+                unknownDepth.bitDepth == null && unknownDepth.sourceName.equals("Unknown source"),
+                "Decoder PCM depth and codec cannot invent original bit depth or provider");
+        Snapshot stale = PlaybackStats.bound(heardFlac, 3296, telegram, false);
+        check(
+                stale.bitrateKbps == null && stale.bitDepth == null && stale.claimed == null,
+                "A stale generation discards even an otherwise valid old measurement");
+        AudioOrigin.Source opusPcm =
+                new AudioOrigin.Source(
+                        "youtube", "YouTube", "YOUTUBE", "served", "opus", 116, 16, 48000);
+        check(
+                PlaybackStats.bound(mixed, null, opusPcm, true).bitDepth == null,
+                "PCM depth is not the encoded depth of lossy Opus");
         System.out.println(
                 "PASS: " + checks + " playback source/bitrate provenance and formatting checks.");
     }

@@ -557,6 +557,12 @@ final class TelegramIndex {
     List<JSONObject> search(Collection<Long> selected, String query, boolean complete)
             throws Exception {
         if (!enabled) return null;
+        return searchRetained(selected, query, complete);
+    }
+
+    /** Pausing indexing does not remove its saved fallback catalogue. */
+    List<JSONObject> searchRetained(Collection<Long> selected, String query, boolean complete)
+            throws Exception {
         List<Long> chats = new ArrayList<>();
         boolean any = false;
         for (long id : new TreeSet<>(selected)) {
@@ -708,22 +714,52 @@ final class TelegramIndex {
     }
 
     /** A chat's part of an index file: its files, and how far its index has got. */
-    IndexTransfer.Section section(long chat, String title) throws Exception {
+    synchronized IndexTransfer.Section section(long chat, String title) throws Exception {
         IndexTransfer.Section s = new IndexTransfer.Section();
         s.chat = chat;
+        s.exportEpoch = store.epoch();
         s.title = title == null ? "" : title;
         // Read straight from the store: a paused index still has its files to back up.
         List<JSONObject> newest =
                 held.contains(chat) ? Collections.<JSONObject>emptyList() : store.newest(chat, 1);
         s.newest = newest.isEmpty() ? 0 : newest.get(0).optLong("message");
-        s.complete = state(chat).builtAt > 0;
+        IndexStore.State state = state(chat);
+        s.complete = state.builtAt > 0;
+        // Capture progress before streaming rows. Additions can advance afterwards; removals
+        // or resets invalidate the export through its mutation fence.
+        s.progress = IndexTransfer.progress(state.toJson());
+        // Archives still to be looked into are not in the file, and a reader that took the
+        // progress as done would never look into them. Without that progress the reader scans
+        // the chat itself, from where it was.
+        if (store.zipsOutstanding(chat)) {
+            s.progress = null;
+            s.complete = false;
+        }
+        assertExportCurrent(s);
         return s;
+    }
+
+    void assertExportCurrent(IndexTransfer.Section section) throws Exception {
+        if (held.contains(section.chat) || section.exportEpoch != store.epoch())
+            throw new java.io.IOException("The index changed while backing up. Try again.");
+    }
+
+    List<JSONObject> exportRows(IndexTransfer.Section section, long message, int entry, int limit)
+            throws Exception {
+        assertExportCurrent(section);
+        List<JSONObject> rows = exportRows(section.chat, message, entry, limit);
+        assertExportCurrent(section);
+        return rows;
     }
 
     /** One chat's files after a message, oldest first, for writing an index file. */
     List<JSONObject> exportRows(long chat, long message, int limit) throws Exception {
+        return exportRows(chat, message, 65535, limit);
+    }
+
+    List<JSONObject> exportRows(long chat, long message, int entry, int limit) throws Exception {
         if (held.contains(chat)) return Collections.emptyList();
-        List<JSONObject> rows = store.after(chat, message, limit);
+        List<JSONObject> rows = store.afterEntry(chat, message, entry, limit);
         for (JSONObject row : rows) {
             List<String> remove = new ArrayList<>();
             Iterator<String> keys = row.keys();
@@ -763,6 +799,22 @@ final class TelegramIndex {
                     Collections.emptyList(),
                     state.generation,
                     readEpoch);
+        JSONObject progress = state.builtAt == 0 ? IndexTransfer.progress(section.progress) : null;
+        if (progress != null && !section.complete) {
+            // Each kind of post on its own: one that is further along in the file is taken, one
+            // that is further along here is kept. Nothing becomes complete that wasn't.
+            boolean changed = false;
+            for (int k = 0; k < KINDS; k++) {
+                int theirs = progress.getJSONArray("scanned").getInt(k);
+                if (state.complete[k] || theirs <= state.scanned[k]) continue;
+                state.cursor[k] = progress.getJSONArray("cursor").getLong(k);
+                state.complete[k] = progress.getJSONArray("complete").getBoolean(k);
+                state.total[k] = progress.getJSONArray("total").getInt(k);
+                state.scanned[k] = theirs;
+                changed = true;
+            }
+            if (changed) store.save(state);
+        }
         if (section.complete && state.builtAt == 0) {
             Arrays.fill(state.complete, true);
             Arrays.fill(state.cursor, 0);

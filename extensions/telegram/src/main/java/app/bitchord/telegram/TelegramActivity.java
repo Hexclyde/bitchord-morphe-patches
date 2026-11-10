@@ -940,6 +940,7 @@ public final class TelegramActivity extends Activity {
                                         bridge.setCacheLimitBytes(
                                                 CachePolicy.bytesAt(cacheSlider.getProgress()))));
         action(storage, "Clear Telegram audio cache", false, () -> run(() -> bridge.clearCache()));
+        automaticBackup();
         backupAndSharing();
     }
 
@@ -1059,6 +1060,272 @@ public final class TelegramActivity extends Activity {
                 () -> run(() -> bridge.forgetBackup()));
     }
 
+    // ── Automatic backup ────────────────────────────────────────────────────
+
+    private String automaticSummary() {
+        AutoBackup backup = bridge.autoBackup();
+        if (backup == null) return "";
+        return Strings.t(backup.enabled() ? "On" : "Off");
+    }
+
+    private static String when(long millis) {
+        return millis <= 0
+                ? Strings.t("Never")
+                : java.text.DateFormat.getDateTimeInstance(
+                                java.text.DateFormat.MEDIUM, java.text.DateFormat.SHORT)
+                        .format(new Date(millis));
+    }
+
+    private static String every(long hours) {
+        return hours == 1 ? Strings.t("Every hour") : Strings.f("Every {0} hours", hours);
+    }
+
+    /** Backups posted on a schedule to a private channel of your own. */
+    void automaticBackup() {
+        final AutoBackup backup = bridge.autoBackup();
+        LinearLayout card = card("Automatic backup");
+        if (backup == null) {
+            paragraph(card, "Automatic backup isn’t available right now.");
+            return;
+        }
+        toggle(
+                card,
+                "Back up automatically",
+                "A backup is posted to your private channel on a schedule",
+                "Off",
+                backup.enabled(),
+                on -> {
+                    if (on && backup.target() == 0)
+                        throw new java.io.IOException("Choose the backup channel first.");
+                    backup.setEnabled(on);
+                    AutoBackupJob.schedule(getApplicationContext(), backup, true);
+                },
+                null,
+                "Runs in the background when there is a connection, after playback, previews and"
+                    + " searches. If the phone was off for several intervals it makes one backup,"
+                    + " not one for each.");
+        divider(card);
+        row(
+                card,
+                "Backup channel",
+                backup.target() == 0 ? "Not chosen" : backup.targetTitle(),
+                "Choose",
+                () ->
+                        pickPrivateChannel(
+                                "Send backups to",
+                                channel ->
+                                        confirm(
+                                                Strings.f("Send backups to {0}?", channel.title),
+                                                "Anyone who can open the channel can read them."
+                                                    + " Your API details and Telegram session are"
+                                                    + " never in a backup.",
+                                                "Use this channel",
+                                                () ->
+                                                        run(
+                                                                false,
+                                                                () -> {
+                                                                    backup.setTarget(
+                                                                            channel.id,
+                                                                            channel.title);
+                                                                    AutoBackupJob.schedule(
+                                                                            getApplicationContext(),
+                                                                            backup,
+                                                                            true);
+                                                                }))));
+        divider(card);
+        AutoBackup.Contents contents = backup.contents();
+        row(
+                card,
+                "What to include",
+                contents == AutoBackup.Contents.INDEX
+                        ? "The saved index"
+                        : contents == AutoBackup.Contents.SETTINGS
+                                ? "Settings"
+                                : "The saved index and settings",
+                "Change",
+                () ->
+                        choose(
+                                "What to include",
+                                new String[] {
+                                    "The saved index and settings", "The saved index", "Settings"
+                                },
+                                i ->
+                                        run(
+                                                false,
+                                                () ->
+                                                        backup.setContents(
+                                                                i == 0
+                                                                        ? AutoBackup.Contents.BOTH
+                                                                        : i == 1
+                                                                                ? AutoBackup
+                                                                                        .Contents
+                                                                                        .INDEX
+                                                                                : AutoBackup
+                                                                                        .Contents
+                                                                                        .SETTINGS))));
+        divider(card);
+        row(
+                card,
+                "How often",
+                every(backup.intervalHours()),
+                "Change",
+                () -> chooseInterval(backup));
+        divider(card);
+        row(
+                card,
+                "Backups to keep",
+                backup.keep() == 0 ? "All of them" : Strings.f("The newest {0}", backup.keep()),
+                "Change",
+                () ->
+                        choose(
+                                "Backups to keep",
+                                new String[] {
+                                    "The newest 1",
+                                    "The newest 3",
+                                    "The newest 5",
+                                    "The newest 10",
+                                    "The newest 25",
+                                    "All of them"
+                                },
+                                i ->
+                                        run(
+                                                false,
+                                                () ->
+                                                        backup.setKeep(
+                                                                new int[] {1, 3, 5, 10, 25, 0}
+                                                                        [i]))));
+        paragraph(
+                card,
+                "Only backups this app posted in that channel are ever removed, and only after a"
+                        + " newer one is confirmed there.");
+        divider(card);
+        row(
+                card,
+                bridge.backingUp() ? "Backing up…" : "Back up now",
+                "Posts one now, whatever the schedule says",
+                "Start",
+                () -> {
+                    if (backup.target() == 0) {
+                        bridge.error = Strings.t("Choose the backup channel first.");
+                        updateStatus();
+                    } else if (!bridge.backupNow()) {
+                        bridge.status = Strings.t("A backup is already running.");
+                        updateStatus();
+                    } else {
+                        bridge.status = Strings.t("Backing up. Progress is shown below.");
+                        updateStatus();
+                    }
+                });
+        divider(card);
+        row(
+                card,
+                "Restore the newest backup",
+                "From the backup channel",
+                "Restore",
+                () -> {
+                    if (backup.target() == 0) chooseRestoreChannel();
+                    else
+                        confirm(
+                                Strings.f("Restore from {0}?", backup.targetTitle()),
+                                "Adds the newest backup’s saved index to this one and takes its"
+                                    + " supported settings. Your Telegram session and API details"
+                                    + " are not touched.",
+                                "Restore",
+                                () -> run(() -> bridge.restoreFromChannel(backup.target())));
+                });
+        if (backup.unresolved())
+            paragraph(
+                    card,
+                    "The last backup hasn’t been confirmed by Telegram yet. It is kept and checked,"
+                            + " and nothing new is sent until Telegram says what became of it.");
+        divider(card);
+        StringBuilder state = new StringBuilder();
+        state.append(Strings.f("Last attempt: {0}", when(backup.lastAttempt())))
+                .append('\n')
+                .append(Strings.f("Last success: {0}", when(backup.lastSuccess())))
+                .append('\n')
+                .append(
+                        Strings.f(
+                                "Next backup: {0}",
+                                backup.nextAt() == 0
+                                        ? Strings.t("Not planned")
+                                        : when(backup.nextAt())));
+        if (!backup.error().isEmpty())
+            state.append('\n').append(Strings.f("Last problem: {0}", backup.error()));
+        paragraph(card, state.toString());
+    }
+
+    void choose(String title, String[] labels, java.util.function.IntConsumer chosen) {
+        String[] shown = new String[labels.length];
+        for (int i = 0; i < shown.length; i++) shown[i] = Strings.t(labels[i]);
+        AlertDialog dialog =
+                new AlertDialog.Builder(this)
+                        .setTitle(Strings.t(title))
+                        .setItems(shown, (d, i) -> chosen.accept(i))
+                        .setNegativeButton(Strings.t("Cancel"), null)
+                        .create();
+        secureWindow(dialog.getWindow());
+        dialog.show();
+        style.tuneDialog(dialog);
+    }
+
+    void chooseInterval(AutoBackup backup) {
+        long[] presets = AutoBackup.PRESET_HOURS;
+        String[] labels = new String[presets.length + 1];
+        for (int i = 0; i < presets.length; i++) labels[i] = every(presets[i]);
+        labels[presets.length] = "Another number of hours…";
+        choose(
+                "How often",
+                labels,
+                i -> {
+                    if (i < presets.length)
+                        run(
+                                false,
+                                () -> {
+                                    backup.setIntervalHours(presets[i]);
+                                    AutoBackupJob.schedule(getApplicationContext(), backup, true);
+                                });
+                    else customInterval(backup);
+                });
+    }
+
+    void customInterval(AutoBackup backup) {
+        EditText hours = new EditText(this);
+        hours.setInputType(InputType.TYPE_CLASS_NUMBER);
+        hours.setHint(Strings.f("1 to {0}", AutoBackup.MAX_HOURS));
+        hours.setText(Long.toString(backup.intervalHours()));
+        AlertDialog dialog =
+                new AlertDialog.Builder(this)
+                        .setTitle(Strings.t("Hours between backups"))
+                        .setView(hours)
+                        .setNegativeButton(Strings.t("Cancel"), null)
+                        .setPositiveButton(Strings.t("Save"), null)
+                        .create();
+        secureWindow(dialog.getWindow());
+        dialog.show();
+        style.tuneDialog(dialog);
+        // Checked here so a wrong entry keeps the dialog open and says why.
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener(
+                        v -> {
+                            long value;
+                            try {
+                                value = AutoBackup.parseHours(hours.getText().toString());
+                            } catch (IllegalArgumentException wrong) {
+                                hours.setError(Strings.t(wrong.getMessage()));
+                                return;
+                            }
+                            dialog.dismiss();
+                            run(
+                                    false,
+                                    () -> {
+                                        backup.setIntervalHours(value);
+                                        AutoBackupJob.schedule(
+                                                getApplicationContext(), backup, true);
+                                    });
+                        });
+    }
+
     static final int BACKUP = 41, RESTORE = 42, EXPORT_INDEX = 43;
     boolean backupWithIndex = true, signOutAfterBackup;
     long exportChat;
@@ -1173,8 +1440,9 @@ public final class TelegramActivity extends Activity {
                 channel ->
                         confirm(
                                 Strings.f("Restore from {0}?", channel.title),
-                                "The newest backup in the channel replaces your settings and adds"
-                                        + " its saved index to this one.",
+                                "The newest backup in the channel adds its saved index to this one"
+                                    + " and takes its supported settings. Your Telegram session and"
+                                    + " API details are not touched.",
                                 "Restore",
                                 () -> run(() -> bridge.restoreFromChannel(channel.id))));
     }
@@ -2301,11 +2569,13 @@ public final class TelegramActivity extends Activity {
                                         ? Strings.t("Report audio quality")
                                         : key.equals("Playback")
                                                 ? Strings.t("Telegram source")
-                                                : key.equals("Backup and sharing")
-                                                        ? Strings.t("Back up")
-                                                                + " · "
-                                                                + Strings.t("Restore")
-                                                        : "";
+                                                : key.equals("Automatic backup")
+                                                        ? automaticSummary()
+                                                        : key.equals("Backup and sharing")
+                                                                ? Strings.t("Back up")
+                                                                        + " · "
+                                                                        + Strings.t("Restore")
+                                                                : "";
         TextView header = style.text(title, 17, style.foreground, style.semibold);
         header.setTag("telegram-section:" + key);
         header.setPadding(style.dp(16), style.dp(16), style.dp(16), style.dp(16));

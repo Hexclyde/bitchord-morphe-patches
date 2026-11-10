@@ -420,6 +420,35 @@ final class SourcePreparation {
                 .build();
     }
 
+    /** Statistics must observe a live period, never bind a pending preparation to its entry. */
+    Uri audibleUri(Uri item) {
+        Mapped choice = audibleMapping(item);
+        return choice == null ? item : choice.marked;
+    }
+
+    private Mapped audibleMapping(Uri item) {
+        if (item == null || item.getQueryParameter(ENTRY) == null) return null;
+        String key = entryKey(item), marker = item.getQueryParameter("q");
+        Object entry;
+        synchronized (lock) {
+            entry = entries.get(key);
+        }
+        if (marker == null && entry == PLAIN) return null;
+        synchronized (periods) {
+            for (Object bound : periods.values()) {
+                if (bound instanceof Mapped) {
+                    Mapped choice = (Mapped) bound;
+                    if (key.equals(entryKey(choice.marked))
+                            && (marker == null
+                                    ? entry == choice
+                                    : marker.equals(choice.marked.getQueryParameter("q"))))
+                        return choice;
+                }
+            }
+        }
+        return null;
+    }
+
     /** The same seam is used by playback, analysis and the audible source label. */
     Uri renditionUri(Uri item) {
         if (!eligible(item)) return item;
