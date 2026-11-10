@@ -96,6 +96,8 @@ final class Translations {
                     + " \u0627\u0644\u0633\u0627\u0639\u0629. \u0627\u0644\u0623\u0628\u0637\u0623"
                     + " \u0623\u0643\u062b\u0631 \u0623\u0645\u0627\u0646\u064b\u0627"
                     + " \u0644\u062d\u0633\u0627\u0628\u0643.",
+                "1 to {0}",
+                "\u0645\u0646 1 \u0625\u0644\u0649 {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -125,6 +127,11 @@ final class Translations {
                 "@channel or numeric chat ID",
                 "@channel \u0623\u0648 \u0645\u0639\u0631\u0651\u0641 \u0631\u0642\u0645\u064a"
                         + " \u0644\u0644\u0645\u062d\u0627\u062f\u062b\u0629",
+                "A backup is already running.",
+                "\u0647\u0646\u0627\u0643 \u0646\u0633\u062e\u0629"
+                        + " \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629 \u0642\u064a\u062f"
+                        + " \u0627\u0644\u0625\u0646\u0634\u0627\u0621"
+                        + " \u0628\u0627\u0644\u0641\u0639\u0644.",
                 "A better copy fades in without a gap",
                 "\u062a\u0638\u0647\u0631 \u0627\u0644\u0646\u0633\u062e\u0629"
                         + " \u0627\u0644\u0623\u0641\u0636\u0644"
@@ -786,6 +793,11 @@ final class Translations {
                     + " \u062e\u0644\u0627\u0644 \u062f\u0642\u064a\u0642\u0629 \u0639\u0646\u062f"
                     + " \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644"
                     + " \u0645\u062c\u062f\u062f\u064b\u0627.",
+                "Backing up. Progress is shown below.",
+                "\u062c\u0627\u0631\u064d \u0627\u0644\u0646\u0633\u062e"
+                        + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a."
+                        + " \u064a\u0638\u0647\u0631 \u0627\u0644\u062a\u0642\u062f\u0645"
+                        + " \u0623\u062f\u0646\u0627\u0647.",
                 "Backup and sharing",
                 "\u0627\u0644\u0646\u0633\u062e"
                         + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a"
@@ -1415,6 +1427,10 @@ final class Translations {
                         + " \u0645\u062d\u0641\u0648\u0638",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "\u0627\u062e\u062a\u0631 \u0642\u0646\u0627\u0629 \u0627\u0644\u0646\u0633\u062e"
+                        + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a"
+                        + " \u0623\u0648\u0644\u0627\u064b.",
                 "Choose the services you want to use.",
                 "\u0627\u062e\u062a\u0631 \u0627\u0644\u062e\u062f\u0645\u0627\u062a"
                         + " \u0627\u0644\u062a\u064a \u062a\u0631\u064a\u062f"
@@ -2451,11 +2467,15 @@ final class Translations {
                         + " \u062d\u062a\u0649 \u0644\u0648 \u0643\u0627\u0646"
                         + " \u0645\u0648\u062c\u0648\u062f\u064b\u0627"
                         + " \u0645\u0633\u0628\u0642\u064b\u0627",
+                "Every hour",
+                "\u0643\u0644 \u0633\u0627\u0639\u0629",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "\u0643\u0644 \u0645\u0644\u0641 \u0628\u0644\u0627 \u0641\u0642\u062f \u0641\u064a"
                     + " \u0645\u062d\u0627\u062f\u062b\u0627\u062a"
                     + " \u0627\u0644\u0645\u0648\u0633\u064a\u0642\u0649\u060c \u062d\u062a\u0649 1"
                     + " GB \u064a\u0648\u0645\u064a\u064b\u0627",
+                "Every {0} hours",
+                "\u0643\u0644 {0} \u0633\u0627\u0639\u0627\u062a",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "\u064a\u0645\u0643\u0646 \u0644\u0643\u0644 \u0645\u0646 \u064a\u0631\u0649 {0}"
                         + " \u0631\u0624\u064a\u0629 \u0642\u0627\u0626\u0645\u0629"
@@ -2878,6 +2898,10 @@ final class Translations {
                     + " \u062d\u0630\u0641\u0647\u0627. \u062a\u0639\u062f\u064a\u0644"
                     + " \u0627\u0644\u0634\u0628\u0643\u0629 \u0644\u0627 \u064a\u063a\u064a\u0631"
                     + " \u0633\u0631\u0639\u0629 \u0627\u0644\u062a\u0634\u063a\u064a\u0644.",
+                "Hours between backups",
+                "\u0627\u0644\u0633\u0627\u0639\u0627\u062a \u0628\u064a\u0646"
+                        + " \u0627\u0644\u0646\u0633\u062e"
+                        + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629",
                 "How far the selected filters sweep.",
                 "\u0645\u062f\u0649 \u0627\u0644\u0645\u0633\u062d"
                         + " \u0644\u0644\u0645\u0631\u0634\u062d\u0627\u062a"
@@ -3152,6 +3176,8 @@ final class Translations {
                     + " \u0645\u0646 \u0623\u0646 \u0645\u0648\u0642\u0639\u0647 \u0645\u0644\u0641"
                     + " \u064a\u0645\u0644\u0643\u0647 \u0647\u0630\u0627"
                     + " \u0627\u0644\u062a\u0637\u0628\u064a\u0642.",
+                "Last attempt: {0}",
+                "\u0622\u062e\u0631 \u0645\u062d\u0627\u0648\u0644\u0629: {0}",
                 "Last chosen: {0}",
                 "\u0622\u062e\u0631 \u0627\u062e\u062a\u064a\u0627\u0631: {0}",
                 "Last cleanup removed {0} items, {1}",
@@ -3159,6 +3185,8 @@ final class Translations {
                         + " \u0627\u0644\u0639\u0646\u0627\u0635\u0631"
                         + " \u0627\u0644\u0645\u064f\u0632\u0627\u0644\u0629 {0}\u060c"
                         + " \u0628\u062d\u062c\u0645 {1}",
+                "Last problem: {0}",
+                "\u0622\u062e\u0631 \u0645\u0634\u0643\u0644\u0629: {0}",
                 "Last run handled {0} songs",
                 "\u0639\u0627\u0644\u062c \u0627\u0644\u062a\u0634\u063a\u064a\u0644"
                         + " \u0627\u0644\u0623\u062e\u064a\u0631 \u0639\u062f\u062f"
@@ -3169,6 +3197,8 @@ final class Translations {
                         + " \u0642\u0627\u0626\u0645\u0629"
                         + " \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631 \u0641\u064a"
                         + " \u0622\u062e\u0631 \u062a\u0634\u063a\u064a\u0644: {0}",
+                "Last success: {0}",
+                "\u0622\u062e\u0631 \u0646\u062c\u0627\u062d: {0}",
                 "Last used: {0}",
                 "\u0622\u062e\u0631 \u0627\u0633\u062a\u062e\u062f\u0627\u0645: {0}",
                 "Later",
@@ -3562,6 +3592,8 @@ final class Translations {
                     + " \u0648\u0646\u0633\u0628\u0629 \u0628\u064a\u0646 0.5\u00d7 \u06482\u00d7",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "\u0623\u0628\u062f\u0627\u064b",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "\u062a\u064f\u062d\u0641\u0638 \u0627\u0644\u0645\u0644\u0641\u0627\u062a"
@@ -3588,6 +3620,10 @@ final class Translations {
                 "\u0627\u0644\u0623\u062d\u062f\u062b \u0623\u0648\u0644\u064b\u0627",
                 "newest {0} of {1} songs",
                 "\u0623\u062d\u062f\u062b {0} \u0645\u0646 {1} \u0623\u063a\u0646\u064a\u0629",
+                "Next backup: {0}",
+                "\u0627\u0644\u0646\u0633\u062e\u0629"
+                        + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
+                        + " \u0627\u0644\u062a\u0627\u0644\u064a\u0629: {0}",
                 "No albums found in this chat yet.",
                 "\u0644\u0645 \u064a\u064f\u0639\u062b\u0631 \u0639\u0644\u0649"
                     + " \u0623\u0644\u0628\u0648\u0645\u0627\u062a \u0641\u064a \u0647\u0630\u0647"
@@ -3828,6 +3864,8 @@ final class Translations {
                     + " \u0627\u0644\u0645\u062d\u0627\u0648\u0644\u0629.",
                 "Not managed here",
                 "\u0644\u0627 \u064a\u064f\u062f\u0627\u0631 \u0645\u0646 \u0647\u0646\u0627",
+                "Not planned",
+                "\u063a\u064a\u0631 \u0645\u062c\u062f\u0648\u0644\u0629",
                 "Not played yet",
                 "\u0644\u0645 \u062a\u064f\u0634\u063a\u064e\u0651\u0644 \u0628\u0639\u062f",
                 "Not reported",
@@ -5445,6 +5483,10 @@ final class Translations {
                         + " \u0627\u0644\u0635\u0648\u062a\u064a\u0629 \u0625\u0644\u0649"
                         + " \u062a\u0637\u0628\u064a\u0642 JamesDSP"
                         + " \u0627\u0644\u0645\u062b\u0628\u0651\u062a",
+                "Send backups to {0}?",
+                "\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0646\u0633\u062e"
+                        + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
+                        + " \u0625\u0644\u0649 {0}\u061f",
                 "Send code to this number",
                 "\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0631\u0645\u0632 \u0625\u0644\u0649"
                         + " \u0647\u0630\u0627 \u0627\u0644\u0631\u0642\u0645",
@@ -6653,6 +6695,8 @@ final class Translations {
                         + " \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
                         + " \u0646\u064f\u0634\u0631\u062a \u0641\u064a \u0642\u0646\u0627\u0629"
                         + " \u062e\u0627\u0635\u0629 \u0623\u0646\u0634\u0623\u062a\u0647\u0627",
+                "The newest {0}",
+                "\u0623\u062d\u062f\u062b {0}",
                 "The next song already fits",
                 "\u0627\u0644\u0623\u063a\u0646\u064a\u0629"
                     + " \u0627\u0644\u062a\u0627\u0644\u064a\u0629"
@@ -7890,6 +7934,16 @@ final class Translations {
                 "{0} \u0642\u0646\u0627\u0629",
                 "{0} channels",
                 "{0} \u0642\u0646\u0648\u0627\u062a",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "\u062a\u0645 \u062a\u062e\u0637\u064a {0} \u0645\u0646"
+                    + " \u0627\u0644\u0645\u062d\u0627\u062f\u062b\u0627\u062a \u0623\u0648"
+                    + " \u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0641\u064a"
+                    + " \u0627\u0644\u0646\u0633\u062e\u0629"
+                    + " \u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629"
+                    + " \u0644\u0623\u0646 \u0647\u0630\u0627 \u0627\u0644\u062d\u0633\u0627\u0628"
+                    + " \u0644\u0627 \u064a\u0645\u0643\u0646\u0647"
+                    + " \u0627\u0633\u062a\u062e\u062f\u0627\u0645\u0647\u0627.",
                 "{0} completed.",
                 "\u0627\u0643\u062a\u0645\u0644 {0}.",
                 "{0} controls",
@@ -8148,6 +8202,8 @@ final class Translations {
                     + " \u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f\u09c7\u09b0"
                     + " \u099c\u09a8\u09cd\u09af \u09ac\u09c7\u09b6\u09bf"
                     + " \u09a8\u09bf\u09b0\u09be\u09aa\u09a6\u0964",
+                "1 to {0}",
+                "\u09e7 \u09a5\u09c7\u0995\u09c7 {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -8176,6 +8232,10 @@ final class Translations {
                 "@channel or numeric chat ID",
                 "@channel \u09ac\u09be \u09b8\u0982\u0996\u09cd\u09af\u09be\u09b0"
                         + " \u099a\u09cd\u09af\u09be\u099f ID",
+                "A backup is already running.",
+                "\u098f\u0995\u099f\u09bf \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa"
+                        + " \u0987\u09a4\u09bf\u09ae\u09a7\u09cd\u09af\u09c7\u0987"
+                        + " \u099a\u09b2\u099b\u09c7\u0964",
                 "A better copy fades in without a gap",
                 "\u09ad\u09be\u09b2\u09cb \u0995\u09aa\u09bf \u0995\u09cb\u09a8\u09cb"
                     + " \u09ac\u09bf\u09b0\u09a4\u09bf \u099b\u09be\u09a1\u09bc\u09be\u0987"
@@ -8901,6 +8961,11 @@ final class Translations {
                     + " \u09b8\u09be\u0987\u09a8 \u0987\u09a8 \u0995\u09b0\u09b2\u09c7 \u098f\u0995"
                     + " \u09ae\u09bf\u09a8\u09bf\u099f\u09c7 \u09b8\u09ac \u09ab\u09bf\u09b0\u09c7"
                     + " \u0986\u09b8\u09ac\u09c7\u0964",
+                "Backing up. Progress is shown below.",
+                "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u09b9\u099a\u09cd\u099b\u09c7\u0964"
+                        + " \u0985\u0997\u09cd\u09b0\u0997\u09a4\u09bf \u09a8\u09bf\u099a\u09c7"
+                        + " \u09a6\u09c7\u0996\u09be\u09a8\u09cb"
+                        + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964",
                 "Backup and sharing",
                 "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa \u0986\u09b0"
                         + " \u09b6\u09c7\u09af\u09bc\u09be\u09b0\u09bf\u0982",
@@ -9581,6 +9646,10 @@ final class Translations {
                         + " \u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a8",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "\u09aa\u09cd\u09b0\u09a5\u09ae\u09c7 \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa"
+                        + " \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2 \u09ac\u09c7\u099b\u09c7"
+                        + " \u09a8\u09bf\u09a8\u0964",
                 "Choose the services you want to use.",
                 "\u0986\u09aa\u09a8\u09bf \u09af\u09c7"
                         + " \u09b8\u09be\u09b0\u09cd\u09ad\u09bf\u09b8\u0997\u09c1\u09b2\u09cb"
@@ -10727,12 +10796,16 @@ final class Translations {
                 "\u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u09ab\u09be\u0987\u09b2"
                         + " \u0995\u09aa\u09bf \u09b9\u09af\u09bc, \u0986\u0997\u09c7"
                         + " \u09a5\u09c7\u0995\u09c7 \u09a5\u09be\u0995\u09b2\u09c7\u0993",
+                "Every hour",
+                "\u09aa\u09cd\u09b0\u09a4\u09bf \u0998\u09a3\u09cd\u099f\u09be\u09af\u09bc",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "\u0986\u09aa\u09a8\u09be\u09b0 \u09ae\u09bf\u0989\u099c\u09bf\u0995"
                     + " \u099a\u09cd\u09af\u09be\u099f\u09c7\u09b0"
                     + " \u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u09b2\u09b8\u09b2\u09c7\u09b8"
                     + " \u09ab\u09be\u0987\u09b2, \u09a6\u09bf\u09a8\u09c7"
                     + " \u09b8\u09b0\u09cd\u09ac\u09cb\u099a\u09cd\u099a 1 GB",
+                "Every {0} hours",
+                "\u09aa\u09cd\u09b0\u09a4\u09bf {0} \u0998\u09a3\u09cd\u099f\u09be\u09af\u09bc",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "{0} \u09af\u09be\u09b0\u09be \u09a6\u09c7\u0996\u09a4\u09c7"
                     + " \u09aa\u09be\u09af\u09bc, \u09a4\u09be\u09b0\u09be \u09b8\u09ac\u09be\u0987"
@@ -11199,6 +11272,10 @@ final class Translations {
                     + " \u09b8\u09ae\u09cd\u09aa\u09be\u09a6\u09a8\u09be\u09af\u09bc"
                     + " \u09aa\u09cd\u09b2\u09c7\u09ac\u09cd\u09af\u09be\u0995\u09c7\u09b0"
                     + " \u0997\u09a4\u09bf \u09ac\u09a6\u09b2\u09be\u09af\u09bc \u09a8\u09be\u0964",
+                "Hours between backups",
+                "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa\u09c7\u09b0"
+                        + " \u09ae\u09a7\u09cd\u09af\u09ac\u09b0\u09cd\u09a4\u09c0"
+                        + " \u09b8\u09ae\u09af\u09bc (\u0998\u09a3\u09cd\u099f\u09be)",
                 "How far the selected filters sweep.",
                 "\u09a8\u09bf\u09b0\u09cd\u09ac\u09be\u099a\u09bf\u09a4"
                     + " \u09ab\u09bf\u09b2\u09cd\u099f\u09be\u09b0\u09c7\u09b0"
@@ -11496,6 +11573,8 @@ final class Translations {
                     + " \u09ab\u09be\u0987\u09b2 \u09b9\u09bf\u09b8\u09c7\u09ac\u09c7"
                     + " \u09a8\u09bf\u09b6\u09cd\u099a\u09bf\u09a4 \u0995\u09b0\u09be"
                     + " \u09af\u09be\u09af\u09bc\u09a8\u09bf\u0964",
+                "Last attempt: {0}",
+                "\u09b6\u09c7\u09b7 \u099a\u09c7\u09b7\u09cd\u099f\u09be: {0}",
                 "Last chosen: {0}",
                 "\u09b6\u09c7\u09b7\u09ac\u09be\u09b0 \u09ac\u09c7\u099b\u09c7"
                         + " \u09a8\u09c7\u0993\u09af\u09bc\u09be: {0}",
@@ -11504,6 +11583,8 @@ final class Translations {
                         + " {0}\u099f\u09bf \u0986\u0987\u099f\u09c7\u09ae"
                         + " \u09b8\u09b0\u09be\u09a8\u09cb \u09b9\u09af\u09bc\u09c7\u099b\u09c7,"
                         + " \u09ae\u09cb\u099f {1}",
+                "Last problem: {0}",
+                "\u09b6\u09c7\u09b7 \u09b8\u09ae\u09b8\u09cd\u09af\u09be: {0}",
                 "Last run handled {0} songs",
                 "\u09b6\u09c7\u09b7\u09ac\u09be\u09b0 {0}\u099f\u09bf \u0997\u09be\u09a8"
                         + " \u09aa\u09cd\u09b0\u0995\u09cd\u09b0\u09bf\u09af\u09bc\u09be"
@@ -11512,6 +11593,9 @@ final class Translations {
                 "\u09b6\u09c7\u09b7\u09ac\u09be\u09b0 {0}\u099f\u09bf \u0997\u09be\u09a8"
                         + " \u09b8\u09be\u09b0\u09bf\u09a4\u09c7 \u09b0\u09be\u0996\u09be"
                         + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7",
+                "Last success: {0}",
+                "\u09b6\u09c7\u09b7 \u09b8\u09ab\u09b2 \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa:"
+                        + " {0}",
                 "Last used: {0}",
                 "\u09b6\u09c7\u09b7 \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0: {0}",
                 "Later",
@@ -11936,6 +12020,8 @@ final class Translations {
                         + " \u09aa\u09cd\u09b0\u09af\u09bc\u09cb\u099c\u09a8",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "\u0995\u0996\u09a8\u09cb \u09a8\u09af\u09bc",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "\u09a8\u09a4\u09c1\u09a8 \u0985\u09a1\u09bf\u0993 \u09ab\u09be\u0987\u09b2"
@@ -11965,6 +12051,9 @@ final class Translations {
                 "{1}\u099f\u09bf\u09b0 \u09ae\u09a7\u09cd\u09af\u09c7"
                         + " \u09b8\u09ac\u099a\u09c7\u09af\u09bc\u09c7 \u09a8\u09a4\u09c1\u09a8"
                         + " {0}\u099f\u09bf \u0997\u09be\u09a8",
+                "Next backup: {0}",
+                "\u09aa\u09b0\u09ac\u09b0\u09cd\u09a4\u09c0"
+                        + " \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa: {0}",
                 "No albums found in this chat yet.",
                 "\u098f\u0987 \u099a\u09cd\u09af\u09be\u099f\u09c7 \u098f\u0996\u09a8\u09cb"
                     + " \u0995\u09cb\u09a8\u09cb \u0985\u09cd\u09af\u09be\u09b2\u09ac\u09be\u09ae"
@@ -12230,6 +12319,9 @@ final class Translations {
                 "Not managed here",
                 "\u098f\u0996\u09be\u09a8\u09c7 \u09aa\u09b0\u09bf\u099a\u09be\u09b2\u09bf\u09a4"
                         + " \u09b9\u09af\u09bc \u09a8\u09be",
+                "Not planned",
+                "\u09b8\u09ae\u09af\u09bc \u09a8\u09bf\u09b0\u09cd\u09a7\u09be\u09b0\u09bf\u09a4"
+                        + " \u09a8\u09af\u09bc",
                 "Not played yet",
                 "\u098f\u0996\u09a8\u09cb \u099a\u09be\u09b2\u09be\u09a8\u09cb"
                         + " \u09b9\u09af\u09bc\u09a8\u09bf",
@@ -13990,6 +14082,9 @@ final class Translations {
                 "\u0987\u09a8\u09b8\u09cd\u099f\u09b2 \u0995\u09b0\u09be JamesDSP"
                         + " \u0985\u09cd\u09af\u09be\u09aa\u09c7 \u0985\u09a1\u09bf\u0993"
                         + " \u0987\u09ab\u09c7\u0995\u09cd\u099f \u09aa\u09be\u09a0\u09be\u09a8",
+                "Send backups to {0}?",
+                "{0}-\u098f \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa"
+                        + " \u09aa\u09be\u09a0\u09be\u09ac\u09c7\u09a8?",
                 "Send code to this number",
                 "\u098f\u0987 \u09a8\u09ae\u09cd\u09ac\u09b0\u09c7 \u0995\u09cb\u09a1"
                         + " \u09aa\u09be\u09a0\u09be\u09a8",
@@ -15256,6 +15351,8 @@ final class Translations {
                         + " \u09aa\u09cb\u09b8\u09cd\u099f \u0995\u09b0\u09be"
                         + " \u09b8\u09ac\u099a\u09c7\u09af\u09bc\u09c7 \u09a8\u09a4\u09c1\u09a8"
                         + " \u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa",
+                "The newest {0}",
+                "\u09b8\u09be\u09ae\u09cd\u09aa\u09cd\u09b0\u09a4\u09bf\u0995 {0}\u099f\u09bf",
                 "The next song already fits",
                 "\u09aa\u09b0\u09c7\u09b0 \u0997\u09be\u09a8"
                         + " \u098f\u09ae\u09a8\u09bf\u09a4\u09c7\u0987"
@@ -16590,6 +16687,16 @@ final class Translations {
                 "{0}\u099f\u09bf \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2",
                 "{0} channels",
                 "{0}\u099f\u09bf \u099a\u09cd\u09af\u09be\u09a8\u09c7\u09b2",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "\u09ac\u09cd\u09af\u09be\u0995\u0986\u09aa\u09c7\u09b0 {0}\u099f\u09bf"
+                    + " \u099a\u09cd\u09af\u09be\u099f \u09ac\u09be \u09b8\u09c7\u099f\u09bf\u0982"
+                    + " \u09ac\u09be\u09a6 \u09a6\u09c7\u0993\u09af\u09bc\u09be"
+                    + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7 \u0995\u09be\u09b0\u09a3 \u098f\u0987"
+                    + " \u0985\u09cd\u09af\u09be\u0995\u09be\u0989\u09a8\u09cd\u099f"
+                    + " \u09b8\u09c7\u0997\u09c1\u09b2\u09bf"
+                    + " \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 \u0995\u09b0\u09a4\u09c7"
+                    + " \u09aa\u09be\u09b0\u09c7 \u09a8\u09be\u0964",
                 "{0} completed.",
                 "{0} \u09b8\u09ae\u09cd\u09aa\u09a8\u09cd\u09a8"
                         + " \u09b9\u09af\u09bc\u09c7\u099b\u09c7\u0964",
@@ -16842,6 +16949,8 @@ final class Translations {
                 "1 song",
                 "1 to 500 an hour. Slower is safer for your account.",
                 "1 bis 500 pro Stunde. Langsamer ist sicherer f\u00fcr dein Konto.",
+                "1 to {0}",
+                "1 bis {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -16856,6 +16965,8 @@ final class Translations {
                     + " und die Downloads belegen zus\u00e4tzlichen Speicher.",
                 "@channel or numeric chat ID",
                 "@kanal oder numerische Chat-ID",
+                "A backup is already running.",
+                "Eine Sicherung l\u00e4uft bereits.",
                 "A better copy fades in without a gap",
                 "Eine bessere Kopie wird ohne L\u00fccke eingeblendet",
                 "A browser is required to open the service account page.",
@@ -17263,6 +17374,8 @@ final class Translations {
                 "Back up first and they come back in a minute when you sign in again.",
                 "Sichere zuerst, dann ist alles in einer Minute zur\u00fcck, wenn du dich wieder"
                         + " anmeldest.",
+                "Backing up. Progress is shown below.",
+                "Sicherung l\u00e4uft. Der Fortschritt wird unten angezeigt.",
                 "Backup and sharing",
                 "Sicherung und Teilen",
                 "Backup from {0}",
@@ -17627,6 +17740,8 @@ final class Translations {
                 "Gespeicherten Peer w\u00e4hlen",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "W\u00e4hle zuerst den Sicherungskanal.",
                 "Choose the services you want to use.",
                 "W\u00e4hle die Dienste, die du verwenden m\u00f6chtest.",
                 "Choose this music chat first.",
@@ -18315,8 +18430,12 @@ final class Translations {
                 "Alle Dolby-Dateien werden angezeigt",
                 "Every file is copied, even if it\u2019s already there",
                 "Jede Datei wird kopiert, auch wenn sie schon da ist",
+                "Every hour",
+                "Jede Stunde",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "Jede verlustfreie Datei in deinen Musik-Chats, bis zu 1 GB pro Tag",
+                "Every {0} hours",
+                "Alle {0} Stunden",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "Jeder, der {0} sehen kann, kann die Musikliste von {1} sehen.",
                 "Exact duplicates",
@@ -18577,6 +18696,8 @@ final class Translations {
                 "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
                 "Cue gedr\u00fcckt halten, um ihn zu ersetzen oder zu entfernen."
                         + " Grid-\u00c4nderungen \u00e4ndern das Wiedergabetempo nicht.",
+                "Hours between backups",
+                "Stunden zwischen Sicherungen",
                 "How far the selected filters sweep.",
                 "Wie weit die ausgew\u00e4hlten Filter durchlaufen werden.",
                 "How loud songs play when BitChord\u2019s loudness normalisation",
@@ -18745,14 +18866,20 @@ final class Translations {
                 "Kept because its location couldn't be confirmed as a file this app owns.",
                 "Behalten, weil sich der Speicherort nicht als Datei dieser App best\u00e4tigen"
                         + " lie\u00df.",
+                "Last attempt: {0}",
+                "Letzter Versuch: {0}",
                 "Last chosen: {0}",
                 "Zuletzt gew\u00e4hlt: {0}",
                 "Last cleanup removed {0} items, {1}",
                 "Letzte Bereinigung entfernte {0} Elemente, {1}",
+                "Last problem: {0}",
+                "Letztes Problem: {0}",
                 "Last run handled {0} songs",
                 "Letzter Lauf hat {0} Songs verarbeitet",
                 "Last run queued {0} songs",
                 "Letzter Lauf reihte {0} Songs ein",
+                "Last success: {0}",
+                "Letzte erfolgreiche Sicherung: {0}",
                 "Last used: {0}",
                 "Zuletzt verwendet: {0}",
                 "Later",
@@ -19011,6 +19138,8 @@ final class Translations {
                 "Ben\u00f6tigt beide Tempi und ein Verh\u00e4ltnis zwischen 0,5\u00d7 und 2\u00d7",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "Nie",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "Neue Audiodateien werden in diesem Ordner gespeichert. Bereits eingereihte"
@@ -19027,6 +19156,8 @@ final class Translations {
                 "Neueste zuerst",
                 "newest {0} of {1} songs",
                 "neueste {0} von {1} Songs",
+                "Next backup: {0}",
+                "N\u00e4chste Sicherung: {0}",
                 "No albums found in this chat yet.",
                 "In diesem Chat wurden noch keine Alben gefunden.",
                 "No API key saved",
@@ -19179,6 +19310,8 @@ final class Translations {
                         + " \u201eErneut versuchen\u201c.",
                 "Not managed here",
                 "Hier nicht verwaltet",
+                "Not planned",
+                "Nicht geplant",
                 "Not played yet",
                 "Noch nicht abgespielt",
                 "Not reported",
@@ -20257,6 +20390,8 @@ final class Translations {
                 "Senden",
                 "Send audio effects to the installed JamesDSP app",
                 "Audioeffekte an die installierte JamesDSP-App \u00fcbergeben",
+                "Send backups to {0}?",
+                "Sicherungen an {0} senden?",
                 "Send code to this number",
                 "Code an diese Nummer senden",
                 "Send the backup to",
@@ -20961,6 +21096,8 @@ final class Translations {
                         + " gespeicherten Index diesem hinzu.",
                 "The newest backup posted in a private channel you created",
                 "Das neueste Backup in einem privaten Kanal, den du erstellt hast",
+                "The newest {0}",
+                "Die neuesten {0}",
                 "The next song already fits",
                 "Der n\u00e4chste Song passt schon",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -21682,6 +21819,10 @@ final class Translations {
                 "{0} Kanal",
                 "{0} channels",
                 "{0} Kan\u00e4le",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "{0} Chats oder Einstellungen aus der Sicherung wurden ausgelassen, weil dieses"
+                        + " Konto sie nicht verwenden kann.",
                 "{0} completed.",
                 "{0} abgeschlossen.",
                 "{0} controls",
@@ -21862,6 +22003,8 @@ final class Translations {
                 "1 song",
                 "1 to 500 an hour. Slower is safer for your account.",
                 "De 1 a 500 por hora. M\u00e1s lento es m\u00e1s seguro para tu cuenta.",
+                "1 to {0}",
+                "De 1 a {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -21876,6 +22019,8 @@ final class Translations {
                         + " BitChord, que son aparte, usan almacenamiento adicional.",
                 "@channel or numeric chat ID",
                 "@canal o ID num\u00e9rico del chat",
+                "A backup is already running.",
+                "Ya hay una copia de seguridad en curso.",
                 "A better copy fades in without a gap",
                 "Una copia mejor entra con fundido, sin cortes",
                 "A browser is required to open the service account page.",
@@ -22288,6 +22433,8 @@ final class Translations {
                 "Back up first and they come back in a minute when you sign in again.",
                 "Haz primero una copia de seguridad y volver\u00e1n en un minuto cuando vuelvas a"
                         + " iniciar sesi\u00f3n.",
+                "Backing up. Progress is shown below.",
+                "Creando copia de seguridad. El progreso se muestra abajo.",
                 "Backup and sharing",
                 "Copia de seguridad y compartir",
                 "Backup from {0}",
@@ -22655,6 +22802,8 @@ final class Translations {
                 "Elegir par guardado",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "Elige primero el canal de copias de seguridad.",
                 "Choose the services you want to use.",
                 "Elige los servicios que quieras usar.",
                 "Choose this music chat first.",
@@ -23342,9 +23491,13 @@ final class Translations {
                 "Se muestran todos los archivos Dolby",
                 "Every file is copied, even if it\u2019s already there",
                 "Se copian todos los archivos, aunque ya est\u00e9n",
+                "Every hour",
+                "Cada hora",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "Todos los archivos sin p\u00e9rdida de tus chats de m\u00fasica, hasta 1 GB al"
                         + " d\u00eda",
+                "Every {0} hours",
+                "Cada {0} horas",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "Todos los que pueden ver {0} pueden ver la lista de m\u00fasica de {1}.",
                 "Exact duplicates",
@@ -23604,6 +23757,8 @@ final class Translations {
                 "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
                 "Mant\u00e9n pulsado un cue para reemplazarlo o eliminarlo. Editar la"
                         + " cuadr\u00edcula no cambia la velocidad.",
+                "Hours between backups",
+                "Horas entre copias de seguridad",
                 "How far the selected filters sweep.",
                 "Amplitud del barrido de los filtros seleccionados.",
                 "How loud songs play when BitChord\u2019s loudness normalisation",
@@ -23771,14 +23926,20 @@ final class Translations {
                 "Kept because its location couldn't be confirmed as a file this app owns.",
                 "Se conserva porque no se pudo confirmar que su ubicaci\u00f3n sea un archivo de"
                         + " esta aplicaci\u00f3n.",
+                "Last attempt: {0}",
+                "\u00daltimo intento: {0}",
                 "Last chosen: {0}",
                 "\u00daltima elecci\u00f3n: {0}",
                 "Last cleanup removed {0} items, {1}",
                 "La \u00faltima limpieza quit\u00f3 {0} elementos, {1}",
+                "Last problem: {0}",
+                "\u00daltimo problema: {0}",
                 "Last run handled {0} songs",
                 "La \u00faltima ejecuci\u00f3n proces\u00f3 {0} canciones",
                 "Last run queued {0} songs",
                 "La \u00faltima ejecuci\u00f3n puso {0} canciones en cola",
+                "Last success: {0}",
+                "\u00daltima copia correcta: {0}",
                 "Last used: {0}",
                 "\u00daltimo uso: {0}",
                 "Later",
@@ -24037,6 +24198,8 @@ final class Translations {
                 "Requiere ambos tempos y una relaci\u00f3n entre 0,5\u00d7 y 2\u00d7",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "Nunca",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "Los archivos de audio nuevos usan esta carpeta. Las descargas en cola y los"
@@ -24053,6 +24216,8 @@ final class Translations {
                 "M\u00e1s recientes primero",
                 "newest {0} of {1} songs",
                 "las {0} m\u00e1s recientes de {1} canciones",
+                "Next backup: {0}",
+                "Pr\u00f3xima copia: {0}",
                 "No albums found in this chat yet.",
                 "Todav\u00eda no se encontraron \u00e1lbumes en este chat.",
                 "No API key saved",
@@ -24203,6 +24368,8 @@ final class Translations {
                 "No hay memoria suficiente para analizar esta pista. Toca Reintentar.",
                 "Not managed here",
                 "No se gestiona aqu\u00ed",
+                "Not planned",
+                "Sin programar",
                 "Not played yet",
                 "Sin reproducir todav\u00eda",
                 "Not reported",
@@ -25286,6 +25453,8 @@ final class Translations {
                 "Enviar",
                 "Send audio effects to the installed JamesDSP app",
                 "Enviar los efectos de audio a la app JamesDSP instalada",
+                "Send backups to {0}?",
+                "\u00bfEnviar copias de seguridad a {0}?",
                 "Send code to this number",
                 "Enviar c\u00f3digo a este n\u00famero",
                 "Send the backup to",
@@ -25995,6 +26164,8 @@ final class Translations {
                         + " \u00edndice guardado a este.",
                 "The newest backup posted in a private channel you created",
                 "La copia m\u00e1s reciente publicada en un canal privado que creaste",
+                "The newest {0}",
+                "Las {0} m\u00e1s recientes",
                 "The next song already fits",
                 "La siguiente canci\u00f3n ya encaja",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -26701,6 +26872,10 @@ final class Translations {
                 "{0} canal",
                 "{0} channels",
                 "{0} canales",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "Se omitieron {0} chats o ajustes de la copia porque esta cuenta no puede"
+                        + " utilizarlos.",
                 "{0} completed.",
                 "{0} completado.",
                 "{0} controls",
@@ -26883,6 +27058,8 @@ final class Translations {
                 "1 song",
                 "1 to 500 an hour. Slower is safer for your account.",
                 "De 1 \u00e0 500 par heure. Plus lent, c\u2019est plus s\u00fbr pour votre compte.",
+                "1 to {0}",
+                "De 1 \u00e0 {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -26897,6 +27074,8 @@ final class Translations {
                     + " t\u00e9l\u00e9chargements de BitChord utilisent de l\u2019espace en plus.",
                 "@channel or numeric chat ID",
                 "@canal ou ID num\u00e9rique de discussion",
+                "A backup is already running.",
+                "Une sauvegarde est d\u00e9j\u00e0 en cours.",
                 "A better copy fades in without a gap",
                 "Une meilleure copie arrive en fondu, sans coupure",
                 "A browser is required to open the service account page.",
@@ -27318,6 +27497,8 @@ final class Translations {
                 "Back up first and they come back in a minute when you sign in again.",
                 "Sauvegardez d\u2019abord et tout revient en une minute quand vous vous"
                         + " reconnectez.",
+                "Backing up. Progress is shown below.",
+                "Sauvegarde en cours. La progression est affich\u00e9e ci-dessous.",
                 "Backup and sharing",
                 "Sauvegarde et partage",
                 "Backup from {0}",
@@ -27693,6 +27874,8 @@ final class Translations {
                 "Choisir un pair enregistr\u00e9",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "Choisissez d\u2019abord le canal de sauvegarde.",
                 "Choose the services you want to use.",
                 "Choisissez les services que vous souhaitez utiliser.",
                 "Choose this music chat first.",
@@ -28392,9 +28575,13 @@ final class Translations {
                 "Every file is copied, even if it\u2019s already there",
                 "Chaque fichier est copi\u00e9, m\u00eame s\u2019il est d\u00e9j\u00e0"
                         + " pr\u00e9sent",
+                "Every hour",
+                "Toutes les heures",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "Tous les fichiers sans perte de vos discussions musicales, jusqu\u2019\u00e0 1 GB"
                         + " par jour",
+                "Every {0} hours",
+                "Toutes les {0} heures",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "Toute personne qui voit {0} peut voir la liste de la musique de {1}.",
                 "Exact duplicates",
@@ -28661,6 +28848,8 @@ final class Translations {
                 "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
                 "Maintenez un cue pour le remplacer ou le supprimer. Modifier la grille ne change"
                         + " pas la vitesse.",
+                "Hours between backups",
+                "Heures entre les sauvegardes",
                 "How far the selected filters sweep.",
                 "\u00c9tendue du balayage des filtres s\u00e9lectionn\u00e9s.",
                 "How loud songs play when BitChord\u2019s loudness normalisation",
@@ -28832,14 +29021,20 @@ final class Translations {
                 "Kept because its location couldn't be confirmed as a file this app owns.",
                 "Conserv\u00e9 car son emplacement n\u2019a pas pu \u00eatre confirm\u00e9 comme un"
                         + " fichier de cette appli.",
+                "Last attempt: {0}",
+                "Derni\u00e8re tentative : {0}",
                 "Last chosen: {0}",
                 "Dernier choix : {0}",
                 "Last cleanup removed {0} items, {1}",
                 "Le dernier nettoyage a retir\u00e9 {0} \u00e9l\u00e9ments, {1}",
+                "Last problem: {0}",
+                "Dernier probl\u00e8me : {0}",
                 "Last run handled {0} songs",
                 "La derni\u00e8re ex\u00e9cution a trait\u00e9 {0} morceaux",
                 "Last run queued {0} songs",
                 "La derni\u00e8re ex\u00e9cution a mis {0} morceaux en file d\u2019attente",
+                "Last success: {0}",
+                "Derni\u00e8re sauvegarde r\u00e9ussie : {0}",
                 "Last used: {0}",
                 "Derni\u00e8re utilisation : {0}",
                 "Later",
@@ -29100,6 +29295,8 @@ final class Translations {
                 "N\u00e9cessite les deux tempos et un rapport entre 0,5\u00d7 et 2\u00d7",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "Jamais",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "Les nouveaux fichiers audio utilisent ce dossier. Les t\u00e9l\u00e9chargements en"
@@ -29117,6 +29314,8 @@ final class Translations {
                 "Plus r\u00e9centes d\u2019abord",
                 "newest {0} of {1} songs",
                 "les {0} morceaux les plus r\u00e9cents sur {1}",
+                "Next backup: {0}",
+                "Prochaine sauvegarde : {0}",
                 "No albums found in this chat yet.",
                 "Aucun album trouv\u00e9 dans cette discussion pour l\u2019instant.",
                 "No API key saved",
@@ -29268,6 +29467,8 @@ final class Translations {
                 "M\u00e9moire insuffisante pour analyser ce titre. Appuyez sur R\u00e9essayer.",
                 "Not managed here",
                 "Non g\u00e9r\u00e9 ici",
+                "Not planned",
+                "Non planifi\u00e9e",
                 "Not played yet",
                 "Pas encore \u00e9cout\u00e9",
                 "Not reported",
@@ -30379,6 +30580,8 @@ final class Translations {
                 "Envoyer",
                 "Send audio effects to the installed JamesDSP app",
                 "Confier les effets audio \u00e0 l\u2019appli JamesDSP install\u00e9e",
+                "Send backups to {0}?",
+                "Envoyer les sauvegardes vers {0} ?",
                 "Send code to this number",
                 "Envoyer le code \u00e0 ce num\u00e9ro",
                 "Send the backup to",
@@ -31099,6 +31302,8 @@ final class Translations {
                 "The newest backup posted in a private channel you created",
                 "La sauvegarde la plus r\u00e9cente publi\u00e9e dans un canal priv\u00e9 que vous"
                         + " avez cr\u00e9\u00e9",
+                "The newest {0}",
+                "Les {0} plus r\u00e9centes",
                 "The next song already fits",
                 "Le morceau suivant convient d\u00e9j\u00e0",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -31836,6 +32041,10 @@ final class Translations {
                 "{0} canal",
                 "{0} channels",
                 "{0} canaux",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "{0} discussions ou param\u00e8tres de la sauvegarde ont \u00e9t\u00e9"
+                        + " ignor\u00e9s, car ce compte ne peut pas les utiliser.",
                 "{0} completed.",
                 "{0} termin\u00e9.",
                 "{0} controls",
@@ -32040,6 +32249,8 @@ final class Translations {
                     + " \u05d0\u05d9\u05d8\u05d9 \u05d9\u05d5\u05ea\u05e8 \u05d1\u05d8\u05d5\u05d7"
                     + " \u05d9\u05d5\u05ea\u05e8 \u05dc\u05d7\u05e9\u05d1\u05d5\u05df"
                     + " \u05e9\u05dc\u05da.",
+                "1 to {0}",
+                "1 \u05e2\u05d3 {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -32065,6 +32276,8 @@ final class Translations {
                 "@channel or numeric chat ID",
                 "@channel \u05d0\u05d5 \u05de\u05d6\u05d4\u05d4 \u05e6'\u05d0\u05d8"
                         + " \u05de\u05e1\u05e4\u05e8\u05d9",
+                "A backup is already running.",
+                "\u05d2\u05d9\u05d1\u05d5\u05d9 \u05db\u05d1\u05e8 \u05de\u05ea\u05d1\u05e6\u05e2.",
                 "A better copy fades in without a gap",
                 "\u05e2\u05d5\u05ea\u05e7 \u05d8\u05d5\u05d1 \u05d9\u05d5\u05ea\u05e8"
                         + " \u05e0\u05db\u05e0\u05e1 \u05d1\u05d4\u05d3\u05e8\u05d2\u05d4,"
@@ -32677,6 +32890,10 @@ final class Translations {
                     + " \u05d5\u05db\u05da \u05d4\u05db\u05d5\u05dc \u05d9\u05d7\u05d6\u05d5\u05e8"
                     + " \u05ea\u05d5\u05da \u05d3\u05e7\u05d4"
                     + " \u05d1\u05d4\u05ea\u05d7\u05d1\u05e8\u05d5\u05ea \u05d4\u05d1\u05d0\u05d4.",
+                "Backing up. Progress is shown below.",
+                "\u05de\u05ea\u05d1\u05e6\u05e2 \u05d2\u05d9\u05d1\u05d5\u05d9."
+                        + " \u05d4\u05d4\u05ea\u05e7\u05d3\u05de\u05d5\u05ea"
+                        + " \u05de\u05d5\u05e6\u05d2\u05ea \u05dc\u05de\u05d8\u05d4.",
                 "Backup and sharing",
                 "\u05d2\u05d9\u05d1\u05d5\u05d9 \u05d5\u05e9\u05d9\u05ea\u05d5\u05e3",
                 "Backup from {0}",
@@ -33264,6 +33481,10 @@ final class Translations {
                 "\u05d1\u05d7\u05d9\u05e8\u05ea \u05e2\u05de\u05d9\u05ea \u05e9\u05de\u05d5\u05e8",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "\u05d9\u05e9 \u05dc\u05d1\u05d7\u05d5\u05e8 \u05ea\u05d7\u05d9\u05dc\u05d4"
+                        + " \u05d0\u05ea \u05e2\u05e8\u05d5\u05e5"
+                        + " \u05d4\u05d2\u05d9\u05d1\u05d5\u05d9.",
                 "Choose the services you want to use.",
                 "\u05d9\u05e9 \u05dc\u05d1\u05d7\u05d5\u05e8 \u05d0\u05ea"
                     + " \u05d4\u05e9\u05d9\u05e8\u05d5\u05ea\u05d9\u05dd \u05e9\u05d1\u05d4\u05dd"
@@ -34261,11 +34482,15 @@ final class Translations {
                 "\u05db\u05dc \u05e7\u05d5\u05d1\u05e5 \u05de\u05d5\u05e2\u05ea\u05e7, \u05d2\u05dd"
                         + " \u05d0\u05dd \u05d4\u05d5\u05d0 \u05db\u05d1\u05e8"
                         + " \u05e7\u05d9\u05d9\u05dd",
+                "Every hour",
+                "\u05db\u05dc \u05e9\u05e2\u05d4",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "\u05db\u05dc \u05d4\u05e7\u05d1\u05e6\u05d9\u05dd \u05dc\u05dc\u05d0"
                     + " \u05d0\u05d5\u05d1\u05d3\u05df \u05d1\u05e6'\u05d0\u05d8\u05d9"
                     + " \u05d4\u05de\u05d5\u05d6\u05d9\u05e7\u05d4 \u05e9\u05dc\u05da, \u05e2\u05d3"
                     + " 1 GB \u05d1\u05d9\u05d5\u05dd",
+                "Every {0} hours",
+                "\u05db\u05dc {0} \u05e9\u05e2\u05d5\u05ea",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "\u05db\u05dc \u05de\u05d9 \u05e9\u05d9\u05db\u05d5\u05dc"
                     + " \u05dc\u05e8\u05d0\u05d5\u05ea \u05d0\u05ea {0} \u05d9\u05d5\u05db\u05dc"
@@ -34677,6 +34902,9 @@ final class Translations {
                     + " \u05d4\u05e8\u05e9\u05ea \u05d0\u05d9\u05e0\u05d4 \u05de\u05e9\u05e0\u05d4"
                     + " \u05d0\u05ea \u05de\u05d4\u05d9\u05e8\u05d5\u05ea"
                     + " \u05d4\u05e0\u05d2\u05d9\u05e0\u05d4.",
+                "Hours between backups",
+                "\u05e9\u05e2\u05d5\u05ea \u05d1\u05d9\u05df"
+                        + " \u05d2\u05d9\u05d1\u05d5\u05d9\u05d9\u05dd",
                 "How far the selected filters sweep.",
                 "\u05d8\u05d5\u05d5\u05d7 \u05d4\u05e1\u05e8\u05d9\u05e7\u05d4 \u05e9\u05dc"
                         + " \u05d4\u05de\u05e1\u05e0\u05e0\u05d9\u05dd"
@@ -34943,11 +35171,16 @@ final class Translations {
                     + " \u05d4\u05d5\u05d0 \u05e7\u05d5\u05d1\u05e5"
                     + " \u05d1\u05d1\u05e2\u05dc\u05d5\u05ea"
                     + " \u05d4\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d4 \u05d4\u05d6\u05d5.",
+                "Last attempt: {0}",
+                "\u05d4\u05e0\u05d9\u05e1\u05d9\u05d5\u05df \u05d4\u05d0\u05d7\u05e8\u05d5\u05df:"
+                        + " {0}",
                 "Last chosen: {0}",
                 "\u05d1\u05d7\u05d9\u05e8\u05d4 \u05d0\u05d7\u05e8\u05d5\u05e0\u05d4: {0}",
                 "Last cleanup removed {0} items, {1}",
                 "\u05d4\u05e0\u05d9\u05e7\u05d5\u05d9 \u05d4\u05d0\u05d7\u05e8\u05d5\u05df"
                         + " \u05d4\u05e1\u05d9\u05e8 {0} \u05e4\u05e8\u05d9\u05d8\u05d9\u05dd, {1}",
+                "Last problem: {0}",
+                "\u05d4\u05d1\u05e2\u05d9\u05d4 \u05d4\u05d0\u05d7\u05e8\u05d5\u05e0\u05d4: {0}",
                 "Last run handled {0} songs",
                 "\u05d1\u05d4\u05e8\u05e6\u05d4 \u05d4\u05d0\u05d7\u05e8\u05d5\u05e0\u05d4"
                         + " \u05d8\u05d5\u05e4\u05dc\u05d5 \u05e9\u05d9\u05e8\u05d9\u05dd: {0}",
@@ -34955,6 +35188,9 @@ final class Translations {
                 "\u05e9\u05d9\u05e8\u05d9\u05dd \u05e9\u05e0\u05d5\u05e1\u05e4\u05d5"
                         + " \u05dc\u05ea\u05d5\u05e8 \u05d1\u05d4\u05e8\u05e6\u05d4"
                         + " \u05d4\u05d0\u05d7\u05e8\u05d5\u05e0\u05d4: {0}",
+                "Last success: {0}",
+                "\u05d4\u05d4\u05e6\u05dc\u05d7\u05d4 \u05d4\u05d0\u05d7\u05e8\u05d5\u05e0\u05d4:"
+                        + " {0}",
                 "Last used: {0}",
                 "\u05e9\u05d9\u05de\u05d5\u05e9 \u05d0\u05d7\u05e8\u05d5\u05df: {0}",
                 "Later",
@@ -35324,6 +35560,8 @@ final class Translations {
                     + " \u05d5\u05d9\u05d7\u05e1 \u05d1\u05d9\u05df 0.5\u00d7 \u05dc\u05be2\u00d7",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "\u05de\u05e2\u05d5\u05dc\u05dd \u05dc\u05d0",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "\u05e7\u05d5\u05d1\u05e6\u05d9 \u05e9\u05de\u05e2 \u05d7\u05d3\u05e9\u05d9\u05dd"
@@ -35348,6 +35586,8 @@ final class Translations {
                 "newest {0} of {1} songs",
                 "{0} \u05d4\u05e9\u05d9\u05e8\u05d9\u05dd \u05d4\u05d7\u05d3\u05e9\u05d9\u05dd"
                         + " \u05d1\u05d9\u05d5\u05ea\u05e8 \u05de\u05ea\u05d5\u05da {1}",
+                "Next backup: {0}",
+                "\u05d4\u05d2\u05d9\u05d1\u05d5\u05d9 \u05d4\u05d1\u05d0: {0}",
                 "No albums found in this chat yet.",
                 "\u05e2\u05d3\u05d9\u05d9\u05df \u05dc\u05d0 \u05e0\u05de\u05e6\u05d0\u05d5"
                         + " \u05d0\u05dc\u05d1\u05d5\u05de\u05d9\u05dd \u05d1\u05e6'\u05d0\u05d8"
@@ -35581,6 +35821,8 @@ final class Translations {
                     + " \u05e0\u05d9\u05e1\u05d9\u05d5\u05df \u05d7\u05d5\u05d6\u05e8.",
                 "Not managed here",
                 "\u05dc\u05d0 \u05de\u05e0\u05d5\u05d4\u05dc \u05db\u05d0\u05df",
+                "Not planned",
+                "\u05dc\u05d0 \u05de\u05ea\u05d5\u05d6\u05de\u05df",
                 "Not played yet",
                 "\u05e2\u05d3\u05d9\u05d9\u05df \u05dc\u05d0 \u05d4\u05d5\u05e9\u05de\u05e2",
                 "Not reported",
@@ -37101,6 +37343,9 @@ final class Translations {
                         + " \u05d4\u05e9\u05de\u05e2"
                         + " \u05dc\u05d0\u05e4\u05dc\u05d9\u05e7\u05e6\u05d9\u05d9\u05ea JamesDSP"
                         + " \u05d4\u05de\u05d5\u05ea\u05e7\u05e0\u05ea",
+                "Send backups to {0}?",
+                "\u05dc\u05e9\u05dc\u05d5\u05d7 \u05d2\u05d9\u05d1\u05d5\u05d9\u05d9\u05dd"
+                        + " \u05d0\u05dc {0}?",
                 "Send code to this number",
                 "\u05e9\u05dc\u05d9\u05d7\u05ea \u05e7\u05d5\u05d3 \u05dc\u05de\u05e1\u05e4\u05e8"
                         + " \u05d4\u05d6\u05d4",
@@ -38220,6 +38465,8 @@ final class Translations {
                         + " \u05d1\u05d9\u05d5\u05ea\u05e8 \u05e9\u05e4\u05d5\u05e8\u05e1\u05dd"
                         + " \u05d1\u05e2\u05e8\u05d5\u05e5 \u05e4\u05e8\u05d8\u05d9"
                         + " \u05e9\u05d9\u05e6\u05e8\u05ea",
+                "The newest {0}",
+                "{0} \u05d4\u05d0\u05d7\u05e8\u05d5\u05e0\u05d9\u05dd",
                 "The next song already fits",
                 "\u05d4\u05e9\u05d9\u05e8 \u05d4\u05d1\u05d0 \u05db\u05d1\u05e8"
                         + " \u05de\u05ea\u05d0\u05d9\u05dd",
@@ -39357,6 +39604,15 @@ final class Translations {
                 "{0} \u05e2\u05e8\u05d5\u05e5",
                 "{0} channels",
                 "{0} \u05e2\u05e8\u05d5\u05e6\u05d9\u05dd",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "{0} \u05e6\u05f3\u05d0\u05d8\u05d9\u05dd \u05d0\u05d5"
+                    + " \u05d4\u05d2\u05d3\u05e8\u05d5\u05ea"
+                    + " \u05de\u05d4\u05d2\u05d9\u05d1\u05d5\u05d9"
+                    + " \u05d4\u05d5\u05e9\u05de\u05d8\u05d5 \u05de\u05e9\u05d5\u05dd"
+                    + " \u05e9\u05d7\u05e9\u05d1\u05d5\u05df \u05d6\u05d4 \u05d0\u05d9\u05e0\u05d5"
+                    + " \u05d9\u05db\u05d5\u05dc \u05dc\u05d4\u05e9\u05ea\u05de\u05e9"
+                    + " \u05d1\u05d4\u05dd.",
                 "{0} completed.",
                 "{0} \u05d4\u05d5\u05e9\u05dc\u05dd.",
                 "{0} controls",
@@ -39610,6 +39866,8 @@ final class Translations {
                     + " \u0906\u092a\u0915\u0947 \u0905\u0915\u093e\u0909\u0902\u091f \u0915\u0947"
                     + " \u0932\u093f\u090f \u091c\u093c\u094d\u092f\u093e\u0926\u093e"
                     + " \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0939\u0948\u0964",
+                "1 to {0}",
+                "1 \u0938\u0947 {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -39640,6 +39898,9 @@ final class Translations {
                 "@channel or numeric chat ID",
                 "@channel \u092f\u093e \u091a\u0948\u091f \u0915\u0940"
                         + " \u0938\u0902\u0916\u094d\u092f\u093e \u0935\u093e\u0932\u0940 ID",
+                "A backup is already running.",
+                "\u090f\u0915 \u092c\u0948\u0915\u0905\u092a \u092a\u0939\u0932\u0947 \u0938\u0947"
+                        + " \u091a\u0932 \u0930\u0939\u093e \u0939\u0948\u0964",
                 "A better copy fades in without a gap",
                 "\u092c\u0947\u0939\u0924\u0930 \u0915\u0949\u092a\u0940 \u092c\u093f\u0928\u093e"
                         + " \u0930\u0941\u0915\u093e\u0935\u091f \u0915\u0947"
@@ -40352,6 +40613,11 @@ final class Translations {
                     + " \u0907\u0928 \u0915\u0930\u0928\u0947 \u092a\u0930 \u092f\u0947"
                     + " \u090f\u0915 \u092e\u093f\u0928\u091f \u092e\u0947\u0902"
                     + " \u0935\u093e\u092a\u0938 \u0906 \u091c\u093e\u090f\u0901\u0917\u0947\u0964",
+                "Backing up. Progress is shown below.",
+                "\u092c\u0948\u0915\u0905\u092a \u092c\u0928\u093e\u092f\u093e \u091c\u093e"
+                    + " \u0930\u0939\u093e \u0939\u0948\u0964 \u092a\u094d\u0930\u0917\u0924\u093f"
+                    + " \u0928\u0940\u091a\u0947 \u0926\u093f\u0916\u093e\u0908 \u0917\u0908"
+                    + " \u0939\u0948\u0964",
                 "Backup and sharing",
                 "\u092c\u0948\u0915\u0905\u092a \u0914\u0930"
                         + " \u0936\u0947\u092f\u0930\u093f\u0902\u0917",
@@ -41012,6 +41278,9 @@ final class Translations {
                         + " \u092a\u0940\u092f\u0930 \u091a\u0941\u0928\u0947\u0902",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "\u092a\u0939\u0932\u0947 \u092c\u0948\u0915\u0905\u092a \u091a\u0948\u0928\u0932"
+                        + " \u091a\u0941\u0928\u0947\u0902\u0964",
                 "Choose the services you want to use.",
                 "\u0935\u0947 \u0938\u0947\u0935\u093e\u090f\u0901 \u091a\u0941\u0928\u0947\u0902"
                     + " \u091c\u093f\u0928\u0915\u093e \u0906\u092a \u0909\u092a\u092f\u094b\u0917"
@@ -42115,12 +42384,16 @@ final class Translations {
                         + " \u0939\u094b\u0924\u0940 \u0939\u0948, \u092d\u0932\u0947 \u0939\u0940"
                         + " \u0935\u0939 \u092a\u0939\u0932\u0947 \u0938\u0947"
                         + " \u092e\u094c\u091c\u0942\u0926 \u0939\u094b",
+                "Every hour",
+                "\u0939\u0930 \u0918\u0902\u091f\u0947",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "\u0906\u092a\u0915\u0940 \u092e\u094d\u092f\u0942\u091c\u093c\u093f\u0915"
                         + " \u091a\u0948\u091f \u0915\u0940 \u0939\u0930"
                         + " \u0932\u0949\u0938\u0932\u0947\u0938 \u092b\u093c\u093e\u0907\u0932,"
                         + " \u0930\u094b\u091c\u093c \u091c\u093c\u094d\u092f\u093e\u0926\u093e"
                         + " \u0938\u0947 \u091c\u093c\u094d\u092f\u093e\u0926\u093e 1 GB",
+                "Every {0} hours",
+                "\u0939\u0930 {0} \u0918\u0902\u091f\u0947",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "{0} \u0915\u094b \u0926\u0947\u0916\u0928\u0947 \u0935\u093e\u0932\u093e"
                     + " \u0939\u0930 \u0935\u094d\u092f\u0915\u094d\u0924\u093f {1} \u0915\u0947"
@@ -42591,6 +42864,9 @@ final class Translations {
                     + " \u0917\u094d\u0930\u093f\u0921 \u0938\u0902\u092a\u093e\u0926\u0928"
                     + " \u0938\u0947 \u092a\u094d\u0932\u0947\u092c\u0948\u0915 \u0917\u0924\u093f"
                     + " \u0928\u0939\u0940\u0902 \u092c\u0926\u0932\u0924\u0940\u0964",
+                "Hours between backups",
+                "\u092c\u0948\u0915\u0905\u092a \u0915\u0947 \u092c\u0940\u091a"
+                        + " \u0918\u0902\u091f\u094b\u0902 \u0915\u093e \u0905\u0902\u0924\u0930",
                 "How far the selected filters sweep.",
                 "\u091a\u0941\u0928\u0947 \u0917\u090f \u092b\u093c\u093f\u0932\u094d\u091f\u0930"
                         + " \u0915\u0947 \u0938\u094d\u0935\u0940\u092a \u0915\u0940"
@@ -42884,11 +43160,15 @@ final class Translations {
                     + " \u0938\u0915\u0940 \u0915\u093f \u092f\u0939 \u0907\u0938 \u0910\u092a"
                     + " \u0915\u0940 \u0905\u092a\u0928\u0940 \u092b\u093c\u093e\u0907\u0932"
                     + " \u0939\u0948\u0964",
+                "Last attempt: {0}",
+                "\u092a\u093f\u091b\u0932\u093e \u092a\u094d\u0930\u092f\u093e\u0938: {0}",
                 "Last chosen: {0}",
                 "\u092a\u093f\u091b\u0932\u0940 \u092c\u093e\u0930 \u091a\u0941\u0928\u093e: {0}",
                 "Last cleanup removed {0} items, {1}",
                 "\u092a\u093f\u091b\u0932\u0940 \u0938\u092b\u093c\u093e\u0908 \u092e\u0947\u0902"
                     + " {0} \u0906\u0907\u091f\u092e \u0939\u091f\u093e\u090f \u0917\u090f, {1}",
+                "Last problem: {0}",
+                "\u092a\u093f\u091b\u0932\u0940 \u0938\u092e\u0938\u094d\u092f\u093e: {0}",
                 "Last run handled {0} songs",
                 "\u092a\u093f\u091b\u0932\u0940 \u092c\u093e\u0930 {0} \u0917\u093e\u0928\u0947"
                         + " \u0938\u0902\u092d\u093e\u0932\u0947 \u0917\u090f",
@@ -42896,6 +43176,9 @@ final class Translations {
                 "\u092a\u093f\u091b\u0932\u0940 \u092c\u093e\u0930 {0} \u0917\u093e\u0928\u0947"
                         + " \u0915\u0924\u093e\u0930 \u092e\u0947\u0902 \u0932\u0917\u093e\u090f"
                         + " \u0917\u090f",
+                "Last success: {0}",
+                "\u092a\u093f\u091b\u0932\u093e \u0938\u092b\u0932 \u092c\u0948\u0915\u0905\u092a:"
+                        + " {0}",
                 "Last used: {0}",
                 "\u092a\u093f\u091b\u0932\u0940 \u092c\u093e\u0930"
                         + " \u0907\u0938\u094d\u0924\u0947\u092e\u093e\u0932: {0}",
@@ -43323,6 +43606,8 @@ final class Translations {
                     + " \u091a\u093e\u0939\u093f\u090f",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "\u0915\u092d\u0940 \u0928\u0939\u0940\u0902",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "\u0928\u0908 \u0911\u0921\u093f\u092f\u094b"
@@ -43349,6 +43634,8 @@ final class Translations {
                 "newest {0} of {1} songs",
                 "{1} \u092e\u0947\u0902 \u0938\u0947 \u0938\u092c\u0938\u0947 \u0928\u090f {0}"
                         + " \u0917\u093e\u0928\u0947",
+                "Next backup: {0}",
+                "\u0905\u0917\u0932\u093e \u092c\u0948\u0915\u0905\u092a: {0}",
                 "No albums found in this chat yet.",
                 "\u0907\u0938 \u091a\u0948\u091f \u092e\u0947\u0902 \u0905\u092d\u0940"
                     + " \u0915\u094b\u0908 \u090f\u0932\u094d\u092c\u092e \u0928\u0939\u0940\u0902"
@@ -43613,6 +43900,8 @@ final class Translations {
                 "Not managed here",
                 "\u092f\u0939\u093e\u0901 \u092e\u0948\u0928\u0947\u091c \u0928\u0939\u0940\u0902"
                         + " \u0939\u094b\u0924\u093e",
+                "Not planned",
+                "\u0928\u093f\u0930\u094d\u0927\u093e\u0930\u093f\u0924 \u0928\u0939\u0940\u0902",
                 "Not played yet",
                 "\u0905\u092d\u0940 \u0924\u0915 \u0928\u0939\u0940\u0902 \u091a\u0932\u093e",
                 "Not reported",
@@ -45318,6 +45607,8 @@ final class Translations {
                         + " \u0907\u0902\u0938\u094d\u091f\u0949\u0932 \u0915\u093f\u090f"
                         + " \u0939\u0941\u090f JamesDSP \u0910\u092a \u0915\u094b"
                         + " \u0938\u094c\u0902\u092a\u0947\u0902",
+                "Send backups to {0}?",
+                "\u092c\u0948\u0915\u0905\u092a {0} \u092a\u0930 \u092d\u0947\u091c\u0947\u0902?",
                 "Send code to this number",
                 "\u0907\u0938 \u0928\u0902\u092c\u0930 \u092a\u0930 \u0915\u094b\u0921"
                         + " \u092d\u0947\u091c\u0947\u0902",
@@ -46572,6 +46863,8 @@ final class Translations {
                     + " \u092e\u0947\u0902 \u092a\u094b\u0938\u094d\u091f \u0915\u093f\u092f\u093e"
                     + " \u0917\u092f\u093e \u0938\u092c\u0938\u0947 \u0928\u092f\u093e"
                     + " \u092c\u0948\u0915\u0905\u092a",
+                "The newest {0}",
+                "\u0938\u092c\u0938\u0947 \u0928\u090f {0}",
                 "The next song already fits",
                 "\u0905\u0917\u0932\u093e \u0917\u093e\u0928\u093e \u092a\u0939\u0932\u0947"
                         + " \u0938\u0947 \u092b\u093c\u093f\u091f \u0939\u0948",
@@ -47891,6 +48184,14 @@ final class Translations {
                 "{0} \u091a\u0948\u0928\u0932",
                 "{0} channels",
                 "{0} \u091a\u0948\u0928\u0932",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "\u092c\u0948\u0915\u0905\u092a \u0938\u0947 {0} \u091a\u0948\u091f \u092f\u093e"
+                    + " \u0938\u0947\u091f\u093f\u0902\u0917 \u091b\u094b\u0921\u093c \u0926\u0940"
+                    + " \u0917\u0908\u0902 \u0915\u094d\u092f\u094b\u0902\u0915\u093f \u092f\u0939"
+                    + " \u0916\u093e\u0924\u093e \u0909\u0928\u0915\u093e"
+                    + " \u0909\u092a\u092f\u094b\u0917 \u0928\u0939\u0940\u0902 \u0915\u0930"
+                    + " \u0938\u0915\u0924\u093e\u0964",
                 "{0} completed.",
                 "{0} \u092a\u0942\u0930\u093e \u0939\u094b \u0917\u092f\u093e\u0964",
                 "{0} controls",
@@ -48128,6 +48429,8 @@ final class Translations {
                 "1 song",
                 "1 to 500 an hour. Slower is safer for your account.",
                 "1 hingga 500 per jam. Makin lambat makin aman untuk akun Anda.",
+                "1 to {0}",
+                "1 hingga {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -48142,6 +48445,8 @@ final class Translations {
                         + " terpisah memakai penyimpanan tambahan.",
                 "@channel or numeric chat ID",
                 "@kanal atau ID chat numerik",
+                "A backup is already running.",
+                "Pencadangan sedang berlangsung.",
                 "A better copy fades in without a gap",
                 "Salinan yang lebih baik masuk perlahan tanpa jeda",
                 "A browser is required to open the service account page.",
@@ -48536,6 +48841,8 @@ final class Translations {
                         + " mengindeks ulang {0} file.",
                 "Back up first and they come back in a minute when you sign in again.",
                 "Cadangkan dulu, lalu semuanya kembali dalam semenit saat Anda masuk lagi.",
+                "Backing up. Progress is shown below.",
+                "Mencadangkan. Progres ditampilkan di bawah.",
                 "Backup and sharing",
                 "Cadangan dan berbagi",
                 "Backup from {0}",
@@ -48893,6 +49200,8 @@ final class Translations {
                 "Pilih perangkat tersimpan",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "Pilih saluran pencadangan terlebih dahulu.",
                 "Choose the services you want to use.",
                 "Pilih layanan yang ingin digunakan.",
                 "Choose this music chat first.",
@@ -49564,8 +49873,12 @@ final class Translations {
                 "Semua file Dolby ditampilkan",
                 "Every file is copied, even if it\u2019s already there",
                 "Setiap file disalin, meskipun sudah ada",
+                "Every hour",
+                "Setiap jam",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "Setiap file lossless di chat musik Anda, hingga 1 GB per hari",
+                "Every {0} hours",
+                "Setiap {0} jam",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "Semua yang dapat melihat {0} dapat melihat daftar musik di {1}.",
                 "Exact duplicates",
@@ -49816,6 +50129,8 @@ final class Translations {
                 "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
                 "Tahan cue untuk mengganti atau menghapusnya. Pengeditan kisi tidak mengubah"
                         + " kecepatan pemutaran.",
+                "Hours between backups",
+                "Jam antar pencadangan",
                 "How far the selected filters sweep.",
                 "Rentang sapuan filter yang dipilih.",
                 "How loud songs play when BitChord\u2019s loudness normalisation",
@@ -49981,14 +50296,20 @@ final class Translations {
                 "Kept because its location couldn't be confirmed as a file this app owns.",
                 "Dipertahankan karena lokasinya tidak bisa dipastikan sebagai file milik aplikasi"
                         + " ini.",
+                "Last attempt: {0}",
+                "Percobaan terakhir: {0}",
                 "Last chosen: {0}",
                 "Terakhir dipilih: {0}",
                 "Last cleanup removed {0} items, {1}",
                 "Pembersihan terakhir menghapus {0} item, {1}",
+                "Last problem: {0}",
+                "Masalah terakhir: {0}",
                 "Last run handled {0} songs",
                 "Proses terakhir menangani {0} lagu",
                 "Last run queued {0} songs",
                 "Proses terakhir mengantrekan {0} lagu",
+                "Last success: {0}",
+                "Pencadangan berhasil terakhir: {0}",
                 "Last used: {0}",
                 "Terakhir dipakai: {0}",
                 "Later",
@@ -50243,6 +50564,8 @@ final class Translations {
                 "Memerlukan kedua tempo dan rasio antara 0,5\u00d7 hingga 2\u00d7",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "Belum pernah",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "File audio baru menggunakan folder ini. Unduhan yang sudah mengantre dan file"
@@ -50259,6 +50582,8 @@ final class Translations {
                 "Terbaru dulu",
                 "newest {0} of {1} songs",
                 "{0} terbaru dari {1} lagu",
+                "Next backup: {0}",
+                "Pencadangan berikutnya: {0}",
                 "No albums found in this chat yet.",
                 "Belum ada album yang ditemukan di chat ini.",
                 "No API key saved",
@@ -50407,6 +50732,8 @@ final class Translations {
                 "Memori tidak cukup untuk menganalisis lagu ini. Ketuk Coba lagi.",
                 "Not managed here",
                 "Tidak dikelola di sini",
+                "Not planned",
+                "Belum dijadwalkan",
                 "Not played yet",
                 "Belum diputar",
                 "Not reported",
@@ -51469,6 +51796,8 @@ final class Translations {
                 "Kirim",
                 "Send audio effects to the installed JamesDSP app",
                 "Serahkan efek audio ke aplikasi JamesDSP yang terpasang",
+                "Send backups to {0}?",
+                "Kirim cadangan ke {0}?",
                 "Send code to this number",
                 "Kirim kode ke nomor ini",
                 "Send the backup to",
@@ -52156,6 +52485,8 @@ final class Translations {
                         + " tersimpannya ke indeks ini.",
                 "The newest backup posted in a private channel you created",
                 "Cadangan terbaru yang diposting di kanal pribadi buatan Anda",
+                "The newest {0}",
+                "{0} terbaru",
                 "The next song already fits",
                 "Lagu berikutnya sudah cocok",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -52843,6 +53174,10 @@ final class Translations {
                 "{0} kanal",
                 "{0} channels",
                 "{0} kanal",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "{0} obrolan atau pengaturan dari cadangan dilewati karena akun ini tidak dapat"
+                        + " menggunakannya.",
                 "{0} completed.",
                 "{0} selesai.",
                 "{0} controls",
@@ -53023,6 +53358,8 @@ final class Translations {
                 "1 to 500 an hour. Slower is safer for your account.",
                 "Da 1 a 500 all\u2019ora. Pi\u00f9 lento \u00e8 pi\u00f9 sicuro per il tuo"
                         + " account.",
+                "1 to {0}",
+                "Da 1 a {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -53037,6 +53374,8 @@ final class Translations {
                     + " BitChord, che sono separati, occupano altro spazio.",
                 "@channel or numeric chat ID",
                 "@canale o ID numerico della chat",
+                "A backup is already running.",
+                "\u00c8 gi\u00e0 in corso un backup.",
                 "A better copy fades in without a gap",
                 "Una copia migliore entra in dissolvenza, senza interruzioni",
                 "A browser is required to open the service account page.",
@@ -53441,6 +53780,8 @@ final class Translations {
                         + " indicizzare di nuovo {0} file.",
                 "Back up first and they come back in a minute when you sign in again.",
                 "Fai prima un backup e torneranno in un minuto quando accedi di nuovo.",
+                "Backing up. Progress is shown below.",
+                "Backup in corso. L\u2019avanzamento \u00e8 mostrato sotto.",
                 "Backup and sharing",
                 "Backup e condivisione",
                 "Backup from {0}",
@@ -53802,6 +54143,8 @@ final class Translations {
                 "Scegli peer salvato",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "Scegli prima il canale per i backup.",
                 "Choose the services you want to use.",
                 "Scegli i servizi che vuoi usare.",
                 "Choose this music chat first.",
@@ -54480,8 +54823,12 @@ final class Translations {
                 "Appaiono tutti i file Dolby",
                 "Every file is copied, even if it\u2019s already there",
                 "Ogni file viene copiato, anche se \u00e8 gi\u00e0 presente",
+                "Every hour",
+                "Ogni ora",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "Ogni file lossless delle tue chat musicali, fino a 1 GB al giorno",
+                "Every {0} hours",
+                "Ogni {0} ore",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "Chiunque possa vedere {0} pu\u00f2 vedere l\u2019elenco della musica in {1}.",
                 "Exact duplicates",
@@ -54737,6 +55084,8 @@ final class Translations {
                 "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
                 "Tieni premuto un cue per sostituirlo o rimuoverlo. Modificare la griglia non"
                         + " cambia la velocit\u00e0.",
+                "Hours between backups",
+                "Ore tra i backup",
                 "How far the selected filters sweep.",
                 "Ampiezza della scansione dei filtri selezionati.",
                 "How loud songs play when BitChord\u2019s loudness normalisation",
@@ -54905,14 +55254,20 @@ final class Translations {
                 "Kept because its location couldn't be confirmed as a file this app owns.",
                 "Mantenuto perch\u00e9 non \u00e8 stato possibile confermare che la posizione sia"
                         + " un file di questa app.",
+                "Last attempt: {0}",
+                "Ultimo tentativo: {0}",
                 "Last chosen: {0}",
                 "Ultima scelta: {0}",
                 "Last cleanup removed {0} items, {1}",
                 "L\u2019ultima pulizia ha rimosso {0} elementi, {1}",
+                "Last problem: {0}",
+                "Ultimo problema: {0}",
                 "Last run handled {0} songs",
                 "L\u2019ultima esecuzione ha elaborato {0} brani",
                 "Last run queued {0} songs",
                 "L\u2019ultima esecuzione ha messo in coda {0} brani",
+                "Last success: {0}",
+                "Ultimo backup riuscito: {0}",
                 "Last used: {0}",
                 "Ultimo utilizzo: {0}",
                 "Later",
@@ -55171,6 +55526,8 @@ final class Translations {
                 "Richiede entrambi i tempi e un rapporto tra 0,5\u00d7 e 2\u00d7",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "Mai",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "I nuovi file audio usano questa cartella. I download gi\u00e0 in coda e i file"
@@ -55187,6 +55544,8 @@ final class Translations {
                 "Prima i pi\u00f9 recenti",
                 "newest {0} of {1} songs",
                 "i {0} pi\u00f9 recenti di {1} brani",
+                "Next backup: {0}",
+                "Prossimo backup: {0}",
                 "No albums found in this chat yet.",
                 "Ancora nessun album trovato in questa chat.",
                 "No API key saved",
@@ -55335,6 +55694,8 @@ final class Translations {
                 "Memoria insufficiente per analizzare questo brano. Tocca Riprova.",
                 "Not managed here",
                 "Non gestito qui",
+                "Not planned",
+                "Non pianificato",
                 "Not played yet",
                 "Non ancora riprodotto",
                 "Not reported",
@@ -56406,6 +56767,8 @@ final class Translations {
                 "Invia",
                 "Send audio effects to the installed JamesDSP app",
                 "Affida gli effetti audio all\u2019app JamesDSP installata",
+                "Send backups to {0}?",
+                "Inviare i backup a {0}?",
                 "Send code to this number",
                 "Invia il codice a questo numero",
                 "Send the backup to",
@@ -57100,6 +57463,8 @@ final class Translations {
                         + " il suo indice salvato a questo.",
                 "The newest backup posted in a private channel you created",
                 "Il backup pi\u00f9 recente pubblicato in un canale privato che hai creato",
+                "The newest {0}",
+                "I {0} pi\u00f9 recenti",
                 "The next song already fits",
                 "Il brano successivo si abbina gi\u00e0",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -57802,6 +58167,10 @@ final class Translations {
                 "{0} canale",
                 "{0} channels",
                 "{0} canali",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "{0} chat o impostazioni del backup sono state ignorate perch\u00e9 questo account"
+                        + " non pu\u00f2 utilizzarle.",
                 "{0} completed.",
                 "{0} completato.",
                 "{0} controls",
@@ -57983,6 +58352,8 @@ final class Translations {
                 "1 to 500 an hour. Slower is safer for your account.",
                 "1 \u6642\u9593\u306b 1\u301c500"
                     + " \u4ef6\u3002\u9045\u3044\u307b\u3069\u30a2\u30ab\u30a6\u30f3\u30c8\u306b\u3068\u3063\u3066\u5b89\u5168\u3067\u3059\u3002",
+                "1 to {0}",
+                "1\u301c{0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -58000,6 +58371,8 @@ final class Translations {
                 "@channel or numeric chat ID",
                 "@\u30c1\u30e3\u30f3\u30cd\u30eb\u540d\u307e\u305f\u306f\u6570\u5b57\u306e\u30c1\u30e3\u30c3\u30c8"
                     + " ID",
+                "A backup is already running.",
+                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u306f\u3059\u3067\u306b\u5b9f\u884c\u4e2d\u3067\u3059\u3002",
                 "A better copy fades in without a gap",
                 "\u3088\u308a\u826f\u3044\u30b3\u30d4\u30fc\u306b\u9014\u5207\u308c\u305a\u30d5\u30a7\u30fc\u30c9\u30a4\u30f3",
                 "A browser is required to open the service account page.",
@@ -58418,6 +58791,8 @@ final class Translations {
                 "Back up first and they come back in a minute when you sign in again.",
                 "\u5148\u306b\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3057\u3066\u304a\u3051\u3070\u3001\u518d\u30ed\u30b0\u30a4\u30f3\u6642\u306b"
                     + " 1 \u5206\u3067\u5143\u306b\u623b\u308a\u307e\u3059\u3002",
+                "Backing up. Progress is shown below.",
+                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u4e2d\u3067\u3059\u3002\u9032\u884c\u72b6\u6cc1\u306f\u4e0b\u306b\u8868\u793a\u3055\u308c\u307e\u3059\u3002",
                 "Backup and sharing",
                 "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3068\u5171\u6709",
                 "Backup from {0}",
@@ -58794,6 +59169,8 @@ final class Translations {
                 "\u4fdd\u5b58\u6e08\u307f\u306e\u30d4\u30a2\u3092\u9078\u629e",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "\u5148\u306b\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u5148\u306e\u30c1\u30e3\u30f3\u30cd\u30eb\u3092\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
                 "Choose the services you want to use.",
                 "\u5229\u7528\u3059\u308b\u30b5\u30fc\u30d3\u30b9\u3092\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
                 "Choose this music chat first.",
@@ -59477,9 +59854,13 @@ final class Translations {
                 "\u3059\u3079\u3066\u306e Dolby \u30d5\u30a1\u30a4\u30eb\u3092\u8868\u793a",
                 "Every file is copied, even if it\u2019s already there",
                 "\u65e2\u306b\u3042\u308b\u30d5\u30a1\u30a4\u30eb\u3082\u542b\u3081\u3001\u3059\u3079\u3066\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u30b3\u30d4\u30fc",
+                "Every hour",
+                "1\u6642\u9593\u3054\u3068",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "\u97f3\u697d\u30c1\u30e3\u30c3\u30c8\u5185\u306e\u3059\u3079\u3066\u306e\u30ed\u30b9\u30ec\u30b9\u30d5\u30a1\u30a4\u30eb\uff081"
                     + " \u65e5\u6700\u5927 1 GB\uff09",
+                "Every {0} hours",
+                "{0}\u6642\u9593\u3054\u3068",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "{0} \u3092\u898b\u3089\u308c\u308b\u4eba\u306f\u5168\u54e1\u3001{1}"
                     + " \u306e\u97f3\u697d\u306e\u4e00\u89a7\u3092\u898b\u3089\u308c\u307e\u3059\u3002",
@@ -59728,6 +60109,8 @@ final class Translations {
                 "High-pass",
                 "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
                 "\u30ad\u30e5\u30fc\u3092\u9577\u62bc\u3057\u3059\u308b\u3068\u7f6e\u63db\u3084\u524a\u9664\u304c\u3067\u304d\u307e\u3059\u3002\u30b0\u30ea\u30c3\u30c9\u306e\u7de8\u96c6\u3067\u518d\u751f\u901f\u5ea6\u306f\u5909\u308f\u308a\u307e\u305b\u3093\u3002",
+                "Hours between backups",
+                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u306e\u9593\u9694\uff08\u6642\u9593\uff09",
                 "How far the selected filters sweep.",
                 "\u9078\u629e\u3057\u305f\u30d5\u30a3\u30eb\u30bf\u30fc\u306e\u30b9\u30a4\u30fc\u30d7\u7bc4\u56f2\u3002",
                 "How loud songs play when BitChord\u2019s loudness normalisation",
@@ -59904,16 +60287,22 @@ final class Translations {
                 "\u518d\u751f\u4e2d\u307e\u305f\u306f\u6b21\u306b\u518d\u751f\u3055\u308c\u308b\u305f\u3081\u4fdd\u6301\u3057\u307e\u3057\u305f\u3002",
                 "Kept because its location couldn't be confirmed as a file this app owns.",
                 "\u3053\u306e\u30a2\u30d7\u30ea\u306e\u30d5\u30a1\u30a4\u30eb\u3067\u3042\u308b\u3053\u3068\u3092\u5834\u6240\u304b\u3089\u78ba\u8a8d\u3067\u304d\u306a\u304b\u3063\u305f\u305f\u3081\u4fdd\u6301\u3057\u307e\u3057\u305f\u3002",
+                "Last attempt: {0}",
+                "\u524d\u56de\u306e\u8a66\u884c\uff1a{0}",
                 "Last chosen: {0}",
                 "\u524d\u56de\u306e\u9078\u629e\uff1a{0}",
                 "Last cleanup removed {0} items, {1}",
                 "\u524d\u56de\u306e\u30af\u30ea\u30fc\u30f3\u30a2\u30c3\u30d7\u3067 {0}"
                         + " \u4ef6\u3001{1} \u3092\u524a\u9664",
+                "Last problem: {0}",
+                "\u76f4\u8fd1\u306e\u554f\u984c\uff1a{0}",
                 "Last run handled {0} songs",
                 "\u524d\u56de\u306e\u5b9f\u884c\u3067 {0} \u66f2\u3092\u51e6\u7406",
                 "Last run queued {0} songs",
                 "\u524d\u56de\u306e\u5b9f\u884c\u3067 {0}"
                         + " \u66f2\u3092\u30ad\u30e5\u30fc\u306b\u8ffd\u52a0",
+                "Last success: {0}",
+                "\u524d\u56de\u306e\u6210\u529f\uff1a{0}",
                 "Last used: {0}",
                 "\u6700\u7d42\u4f7f\u7528: {0}",
                 "Later",
@@ -60174,6 +60563,8 @@ final class Translations {
                 "\u4e21\u65b9\u306e\u30c6\u30f3\u30dd\u3068\u30010.5\u500d\u304b\u30892\u500d\u306e\u7bc4\u56f2\u306e\u6bd4\u7387\u304c\u5fc5\u8981\u3067\u3059",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "\u306a\u3057",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "\u65b0\u3057\u3044\u97f3\u58f0\u30d5\u30a1\u30a4\u30eb\u306f\u3053\u306e\u30d5\u30a9\u30eb\u30c0\u306b\u4fdd\u5b58\u3055\u308c\u307e\u3059\u3002\u5f85\u6a5f\u4e2d\u306e\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3068\u4fdd\u5b58\u6e08\u307f\u30d5\u30a1\u30a4\u30eb\u306e\u5834\u6240\u306f\u5909\u308f\u308a\u307e\u305b\u3093\u3002",
@@ -60189,6 +60580,8 @@ final class Translations {
                 "\u65b0\u3057\u3044\u9806",
                 "newest {0} of {1} songs",
                 "{1} \u66f2\u4e2d\u6700\u65b0\u306e {0} \u66f2",
+                "Next backup: {0}",
+                "\u6b21\u56de\u306e\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\uff1a{0}",
                 "No albums found in this chat yet.",
                 "\u3053\u306e\u30c1\u30e3\u30c3\u30c8\u3067\u306f\u307e\u3060\u30a2\u30eb\u30d0\u30e0\u304c\u898b\u3064\u304b\u3063\u3066\u3044\u307e\u305b\u3093\u3002",
                 "No API key saved",
@@ -60332,6 +60725,8 @@ final class Translations {
                 "\u3053\u306e\u66f2\u3092\u89e3\u6790\u3059\u308b\u305f\u3081\u306e\u30e1\u30e2\u30ea\u304c\u4e0d\u8db3\u3057\u3066\u3044\u307e\u3059\u3002\u300c\u518d\u8a66\u884c\u300d\u3092\u30bf\u30c3\u30d7\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
                 "Not managed here",
                 "\u3053\u3053\u3067\u306f\u7ba1\u7406\u3055\u308c\u307e\u305b\u3093",
+                "Not planned",
+                "\u672a\u8a2d\u5b9a",
                 "Not played yet",
                 "\u672a\u518d\u751f",
                 "Not reported",
@@ -61400,6 +61795,8 @@ final class Translations {
                 "Send audio effects to the installed JamesDSP app",
                 "\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\u6e08\u307f\u306e JamesDSP"
                     + " \u30a2\u30d7\u30ea\u306b\u97f3\u58f0\u30a8\u30d5\u30a7\u30af\u30c8\u3092\u4efb\u305b\u307e\u3059",
+                "Send backups to {0}?",
+                "\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3092{0}\u306b\u9001\u4fe1\u3057\u307e\u3059\u304b\uff1f",
                 "Send code to this number",
                 "\u3053\u306e\u756a\u53f7\u306b\u30b3\u30fc\u30c9\u3092\u9001\u4fe1",
                 "Send the backup to",
@@ -62128,6 +62525,8 @@ final class Translations {
                 "\u30c1\u30e3\u30f3\u30cd\u30eb\u5185\u306e\u6700\u65b0\u306e\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u3067\u8a2d\u5b9a\u304c\u7f6e\u304d\u63db\u308f\u308a\u3001\u305d\u306e\u4fdd\u5b58\u6e08\u307f\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u304c\u3053\u306e\u7aef\u672b\u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306b\u8ffd\u52a0\u3055\u308c\u307e\u3059\u3002",
                 "The newest backup posted in a private channel you created",
                 "\u3042\u306a\u305f\u304c\u4f5c\u6210\u3057\u305f\u975e\u516c\u958b\u30c1\u30e3\u30f3\u30cd\u30eb\u306b\u6295\u7a3f\u3055\u308c\u305f\u6700\u65b0\u306e\u30d0\u30c3\u30af\u30a2\u30c3\u30d7",
+                "The newest {0}",
+                "\u6700\u65b0\u306e{0}\u4ef6",
                 "The next song already fits",
                 "\u6b21\u306e\u66f2\u306f\u3059\u3067\u306b\u5408\u3063\u3066\u3044\u307e\u3059",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -62832,6 +63231,9 @@ final class Translations {
                 "{0} \u4ef6\u306e\u30c1\u30e3\u30f3\u30cd\u30eb",
                 "{0} channels",
                 "{0} \u4ef6\u306e\u30c1\u30e3\u30f3\u30cd\u30eb",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "\u3053\u306e\u30a2\u30ab\u30a6\u30f3\u30c8\u3067\u306f\u5229\u7528\u3067\u304d\u306a\u3044\u305f\u3081\u3001\u30d0\u30c3\u30af\u30a2\u30c3\u30d7\u5185\u306e{0}\u4ef6\u306e\u30c1\u30e3\u30c3\u30c8\u307e\u305f\u306f\u8a2d\u5b9a\u3092\u30b9\u30ad\u30c3\u30d7\u3057\u307e\u3057\u305f\u3002",
                 "{0} completed.",
                 "{0}\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f\u3002",
                 "{0} controls",
@@ -63034,6 +63436,8 @@ final class Translations {
                 "1 to 500 an hour. Slower is safer for your account.",
                 "\uc2dc\uac04\ub2f9 1~500\uac1c. \ub290\ub9b4\uc218\ub85d \uacc4\uc815\uc5d0 \ub354"
                         + " \uc548\uc804\ud574\uc694.",
+                "1 to {0}",
+                "1~{0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -63052,6 +63456,8 @@ final class Translations {
                     + " \uc800\uc7a5 \uacf5\uac04\uc744 \uc0ac\uc6a9\ud574\uc694.",
                 "@channel or numeric chat ID",
                 "@\ucc44\ub110 \ub610\ub294 \uc22b\uc790 \ucc44\ud305 ID",
+                "A backup is already running.",
+                "\ubc31\uc5c5\uc774 \uc774\ubbf8 \uc9c4\ud589 \uc911\uc785\ub2c8\ub2e4.",
                 "A better copy fades in without a gap",
                 "\ub354 \uc88b\uc740 \ubc84\uc804\uc774 \ub04a\uae40 \uc5c6\uc774"
                         + " \ud398\uc774\ub4dc\uc778\ub3fc\uc694",
@@ -63535,6 +63941,9 @@ final class Translations {
                 "Back up first and they come back in a minute when you sign in again.",
                 "\uba3c\uc800 \ubc31\uc5c5\ud558\uba74 \ub2e4\uc2dc \ub85c\uadf8\uc778\ud560 \ub54c"
                         + " 1\ubd84 \ub9cc\uc5d0 \ub3cc\uc544\uc640\uc694.",
+                "Backing up. Progress is shown below.",
+                "\ubc31\uc5c5 \uc911\uc785\ub2c8\ub2e4. \uc9c4\ud589 \uc0c1\ud669\uc740"
+                        + " \uc544\ub798\uc5d0 \ud45c\uc2dc\ub429\ub2c8\ub2e4.",
                 "Backup and sharing",
                 "\ubc31\uc5c5 \ubc0f \uacf5\uc720",
                 "Backup from {0}",
@@ -63986,6 +64395,8 @@ final class Translations {
                 "\uc800\uc7a5\ub41c \ud53c\uc5b4 \uc120\ud0dd",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "\uba3c\uc800 \ubc31\uc5c5 \ucc44\ub110\uc744 \uc120\ud0dd\ud558\uc138\uc694.",
                 "Choose the services you want to use.",
                 "\uc0ac\uc6a9\ud560 \uc11c\ube44\uc2a4\ub97c \uc120\ud0dd\ud558\uc138\uc694.",
                 "Choose this music chat first.",
@@ -64787,9 +65198,13 @@ final class Translations {
                 "Every file is copied, even if it\u2019s already there",
                 "\uc774\ubbf8 \uc788\uc5b4\ub3c4 \ubaa8\ub4e0 \ud30c\uc77c\uc744"
                         + " \ubcf5\uc0ac\ud574\uc694",
+                "Every hour",
+                "\ub9e4\uc2dc\uac04",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "\uc74c\uc545 \ucc44\ud305\uc758 \ubaa8\ub4e0 \ubb34\uc190\uc2e4 \ud30c\uc77c,"
                         + " \ud558\ub8e8 \ucd5c\ub300 1 GB",
+                "Every {0} hours",
+                "{0}\uc2dc\uac04\ub9c8\ub2e4",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "{0}\uc744(\ub97c) \ubcfc \uc218 \uc788\ub294 \ubaa8\ub4e0 \uc0ac\ub78c\uc774"
                         + " {1}\uc758 \uc74c\uc545 \ubaa9\ub85d\uc744 \ubcfc \uc218"
@@ -65106,6 +65521,8 @@ final class Translations {
                         + " \uc0ad\uc81c\ud558\uc138\uc694. \uadf8\ub9ac\ub4dc \ud3b8\uc9d1\uc740"
                         + " \uc7ac\uc0dd \uc18d\ub3c4\ub97c \ubc14\uafb8\uc9c0"
                         + " \uc54a\uc2b5\ub2c8\ub2e4.",
+                "Hours between backups",
+                "\ubc31\uc5c5 \uac04\uaca9(\uc2dc\uac04)",
                 "How far the selected filters sweep.",
                 "\uc120\ud0dd\ud55c \ud544\ud130\uc758 \uc2a4\uc715"
                         + " \ubc94\uc704\uc785\ub2c8\ub2e4.",
@@ -65306,17 +65723,23 @@ final class Translations {
                 "Kept because its location couldn't be confirmed as a file this app owns.",
                 "\uc774 \uc571\uc758 \ud30c\uc77c\uc778\uc9c0 \uc704\uce58\ub97c \ud655\uc778\ud560"
                         + " \uc218 \uc5c6\uc5b4 \uc720\uc9c0\ud588\uc5b4\uc694.",
+                "Last attempt: {0}",
+                "\ub9c8\uc9c0\ub9c9 \uc2dc\ub3c4: {0}",
                 "Last chosen: {0}",
                 "\ub9c8\uc9c0\ub9c9 \uc120\ud0dd: {0}",
                 "Last cleanup removed {0} items, {1}",
                 "\ub9c8\uc9c0\ub9c9 \uc815\ub9ac\uc5d0\uc11c \ud56d\ubaa9 {0}\uac1c, {1}"
                         + " \uc81c\uac70",
+                "Last problem: {0}",
+                "\ucd5c\uadfc \ubb38\uc81c: {0}",
                 "Last run handled {0} songs",
                 "\uc9c0\ub09c \uc2e4\ud589\uc5d0\uc11c {0}\uace1\uc744"
                         + " \ucc98\ub9ac\ud588\uc5b4\uc694",
                 "Last run queued {0} songs",
                 "\uc9c0\ub09c \uc2e4\ud589\uc5d0\uc11c {0}\uace1\uc744 \ub300\uae30\uc5f4\uc5d0"
                         + " \ucd94\uac00\ud588\uc5b4\uc694",
+                "Last success: {0}",
+                "\ub9c8\uc9c0\ub9c9 \uc131\uacf5: {0}",
                 "Last used: {0}",
                 "\ub9c8\uc9c0\ub9c9 \uc0ac\uc6a9: {0}",
                 "Later",
@@ -65610,6 +66033,8 @@ final class Translations {
                         + " \uc0ac\uc774\uc758 \ube44\uc728\uc774 \ud544\uc694\ud569\ub2c8\ub2e4",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "\uc5c6\uc74c",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "\uc0c8 \uc624\ub514\uc624 \ud30c\uc77c\uc740 \uc774 \ud3f4\ub354\uc5d0"
@@ -65629,6 +66054,8 @@ final class Translations {
                 "\ucd5c\uc2e0\uc21c",
                 "newest {0} of {1} songs",
                 "\ub178\ub798 {1}\uace1 \uc911 \ucd5c\uc2e0 {0}\uace1",
+                "Next backup: {0}",
+                "\ub2e4\uc74c \ubc31\uc5c5: {0}",
                 "No albums found in this chat yet.",
                 "\uc774 \ucc44\ud305\uc5d0\uc11c \uc544\uc9c1 \uc568\ubc94\uc744 \ucc3e\uc9c0"
                         + " \ubabb\ud588\uc5b4\uc694.",
@@ -65815,6 +66242,8 @@ final class Translations {
                         + " \ub204\ub974\uc138\uc694.",
                 "Not managed here",
                 "\uc5ec\uae30\uc11c \uad00\ub9ac\ud558\uc9c0 \uc54a\uc74c",
+                "Not planned",
+                "\uc608\uc57d\ub418\uc9c0 \uc54a\uc74c",
                 "Not played yet",
                 "\uc544\uc9c1 \uc7ac\uc0dd \uc548 \ud568",
                 "Not reported",
@@ -67039,6 +67468,8 @@ final class Translations {
                 "Send audio effects to the installed JamesDSP app",
                 "\uc124\uce58\ub41c JamesDSP \uc571\uc5d0 \uc624\ub514\uc624 \ud6a8\uacfc\ub97c"
                         + " \ub9e1\uaca8\uc694",
+                "Send backups to {0}?",
+                "{0}\uc5d0 \ubc31\uc5c5\uc744 \ubcf4\ub0bc\uae4c\uc694?",
                 "Send code to this number",
                 "\uc774 \ubc88\ud638\ub85c \ucf54\ub4dc \ubcf4\ub0b4\uae30",
                 "Send the backup to",
@@ -67894,6 +68325,8 @@ final class Translations {
                 "The newest backup posted in a private channel you created",
                 "\ub0b4\uac00 \ub9cc\ub4e0 \ube44\uacf5\uac1c \ucc44\ub110\uc5d0 \uc62c\ub9b0"
                         + " \uac00\uc7a5 \ucd5c\uadfc \ubc31\uc5c5",
+                "The newest {0}",
+                "\ucd5c\uadfc {0}\uac1c",
                 "The next song already fits",
                 "\ub2e4\uc74c \ub178\ub798\uac00 \uc774\ubbf8 \uc798 \uc5b4\uc6b8\ub824\uc694",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -68768,6 +69201,11 @@ final class Translations {
                 "\ucc44\ub110 {0}\uac1c",
                 "{0} channels",
                 "\ucc44\ub110 {0}\uac1c",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "\uc774 \uacc4\uc815\uc5d0\uc11c \uc0ac\uc6a9\ud560 \uc218 \uc5c6\uc5b4"
+                    + " \ubc31\uc5c5\uc758 \ucc44\ud305 \ub610\ub294 \uc124\uc815 {0}\uac1c\ub97c"
+                    + " \uac74\ub108\ub6f0\uc5c8\uc2b5\ub2c8\ub2e4.",
                 "{0} completed.",
                 "{0} \uc644\ub8cc.",
                 "{0} controls",
@@ -68963,6 +69401,8 @@ final class Translations {
                 "1 song",
                 "1 to 500 an hour. Slower is safer for your account.",
                 "Od 1 do 500 na godzin\u0119. Wolniej jest bezpieczniej dla twojego konta.",
+                "1 to {0}",
+                "Od 1 do {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -68978,6 +69418,8 @@ final class Translations {
                     + " miejsce.",
                 "@channel or numeric chat ID",
                 "@kana\u0142 lub numeryczne ID czatu",
+                "A backup is already running.",
+                "Tworzenie kopii zapasowej ju\u017c trwa.",
                 "A better copy fades in without a gap",
                 "Lepsza kopia wchodzi p\u0142ynnie, bez przerwy",
                 "A browser is required to open the service account page.",
@@ -69393,6 +69835,8 @@ final class Translations {
                 "Back up first and they come back in a minute when you sign in again.",
                 "Najpierw zr\u00f3b kopi\u0119 zapasow\u0105, a po ponownym zalogowaniu"
                         + " wr\u00f3c\u0105 w minut\u0119.",
+                "Backing up. Progress is shown below.",
+                "Tworzenie kopii zapasowej. Post\u0119p jest widoczny poni\u017cej.",
                 "Backup and sharing",
                 "Kopia zapasowa i udost\u0119pnianie",
                 "Backup from {0}",
@@ -69765,6 +70209,8 @@ final class Translations {
                 "Wybierz zapisane urz\u0105dzenie",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "Najpierw wybierz kana\u0142 kopii zapasowych.",
                 "Choose the services you want to use.",
                 "Wybierz us\u0142ugi, z kt\u00f3rych chcesz korzysta\u0107.",
                 "Choose this music chat first.",
@@ -70466,8 +70912,12 @@ final class Translations {
                 "Pokazywany jest ka\u017cdy plik Dolby",
                 "Every file is copied, even if it\u2019s already there",
                 "Kopiowany jest ka\u017cdy plik, nawet je\u015bli ju\u017c tam jest",
+                "Every hour",
+                "Co godzin\u0119",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "Ka\u017cdy bezstratny plik z twoich czat\u00f3w muzycznych, do 1 GB dziennie",
+                "Every {0} hours",
+                "Co {0} godz.",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "Ka\u017cdy, kto widzi {0}, zobaczy list\u0119 muzyki z {1}.",
                 "Exact duplicates",
@@ -70732,6 +71182,8 @@ final class Translations {
                 "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
                 "Przytrzymaj cue, aby go zast\u0105pi\u0107 lub usun\u0105\u0107. Edycja siatki nie"
                         + " zmienia pr\u0119dko\u015bci odtwarzania.",
+                "Hours between backups",
+                "Liczba godzin mi\u0119dzy kopiami",
                 "How far the selected filters sweep.",
                 "Zakres przemiatania wybranych filtr\u00f3w.",
                 "How loud songs play when BitChord\u2019s loudness normalisation",
@@ -70901,14 +71353,20 @@ final class Translations {
                 "Kept because its location couldn't be confirmed as a file this app owns.",
                 "Zachowano, bo nie uda\u0142o si\u0119 potwierdzi\u0107, \u017ce ta lokalizacja to"
                         + " plik nale\u017c\u0105cy do tej aplikacji.",
+                "Last attempt: {0}",
+                "Ostatnia pr\u00f3ba: {0}",
                 "Last chosen: {0}",
                 "Ostatni wyb\u00f3r: {0}",
                 "Last cleanup removed {0} items, {1}",
                 "Ostatnie czyszczenie: usuni\u0119te elementy ({0}), {1}",
+                "Last problem: {0}",
+                "Ostatni problem: {0}",
                 "Last run handled {0} songs",
                 "Utwory obs\u0142u\u017cone podczas ostatniego uruchomienia: {0}",
                 "Last run queued {0} songs",
                 "Ostatnio dodane do kolejki utwory: {0}",
+                "Last success: {0}",
+                "Ostatnia udana kopia: {0}",
                 "Last used: {0}",
                 "Ostatnie u\u017cycie: {0}",
                 "Later",
@@ -71170,6 +71628,8 @@ final class Translations {
                 "Wymaga obu temp i proporcji od 0,5\u00d7 do 2\u00d7",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "Nigdy",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "Nowe pliki audio b\u0119d\u0105 zapisywane w tym folderze. Pliki ju\u017c zapisane"
@@ -71186,6 +71646,8 @@ final class Translations {
                 "Najpierw najnowsze",
                 "newest {0} of {1} songs",
                 "najnowsze utwory: {0} z {1}",
+                "Next backup: {0}",
+                "Nast\u0119pna kopia: {0}",
                 "No albums found in this chat yet.",
                 "W tym czacie nie znaleziono jeszcze album\u00f3w.",
                 "No API key saved",
@@ -71339,6 +71801,8 @@ final class Translations {
                         + " Spr\u00f3buj ponownie.",
                 "Not managed here",
                 "Niezarz\u0105dzane tutaj",
+                "Not planned",
+                "Nie zaplanowano",
                 "Not played yet",
                 "Jeszcze nieodtwarzane",
                 "Not reported",
@@ -72439,6 +72903,8 @@ final class Translations {
                 "Wy\u015blij",
                 "Send audio effects to the installed JamesDSP app",
                 "Przeka\u017c efekty d\u017awi\u0119kowe do zainstalowanej aplikacji JamesDSP",
+                "Send backups to {0}?",
+                "Wysy\u0142a\u0107 kopie zapasowe do {0}?",
                 "Send code to this number",
                 "Wy\u015blij kod na ten numer",
                 "Send the backup to",
@@ -73163,6 +73629,8 @@ final class Translations {
                         + " indeks do tego.",
                 "The newest backup posted in a private channel you created",
                 "Najnowsza kopia opublikowana na utworzonym przez Ciebie kanale prywatnym",
+                "The newest {0}",
+                "Najnowsze {0}",
                 "The next song already fits",
                 "Nast\u0119pny utw\u00f3r ju\u017c pasuje",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -73894,6 +74362,10 @@ final class Translations {
                 "{0} kana\u0142",
                 "{0} channels",
                 "Kana\u0142y: {0}",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "Pomini\u0119to {0} czat\u00f3w lub ustawie\u0144 z kopii, poniewa\u017c to konto"
+                        + " nie mo\u017ce z nich korzysta\u0107.",
                 "{0} completed.",
                 "Uko\u0144czono: {0}.",
                 "{0} controls",
@@ -74078,6 +74550,8 @@ final class Translations {
                 "1 song",
                 "1 to 500 an hour. Slower is safer for your account.",
                 "De 1 a 500 por hora. Mais devagar \u00e9 mais seguro para sua conta.",
+                "1 to {0}",
+                "1 a {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -74093,6 +74567,8 @@ final class Translations {
                         + " armazenamento adicional.",
                 "@channel or numeric chat ID",
                 "@canal ou ID num\u00e9rico do chat",
+                "A backup is already running.",
+                "J\u00e1 existe uma c\u00f3pia de seguran\u00e7a em andamento.",
                 "A better copy fades in without a gap",
                 "Uma c\u00f3pia melhor entra com fade, sem pausa",
                 "A browser is required to open the service account page.",
@@ -74506,6 +74982,8 @@ final class Translations {
                         + " sem indexar {0} arquivos de novo.",
                 "Back up first and they come back in a minute when you sign in again.",
                 "Fa\u00e7a backup antes e tudo volta em um minuto quando voc\u00ea entrar de novo.",
+                "Backing up. Progress is shown below.",
+                "Criando c\u00f3pia de seguran\u00e7a. O progresso aparece abaixo.",
                 "Backup and sharing",
                 "Backup e compartilhamento",
                 "Backup from {0}",
@@ -74873,6 +75351,8 @@ final class Translations {
                 "Escolher par salvo",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "Escolha primeiro o canal de c\u00f3pias de seguran\u00e7a.",
                 "Choose the services you want to use.",
                 "Escolha os servi\u00e7os que deseja usar.",
                 "Choose this music chat first.",
@@ -75561,8 +76041,12 @@ final class Translations {
                 "Todos os arquivos Dolby aparecem",
                 "Every file is copied, even if it\u2019s already there",
                 "Todos os arquivos s\u00e3o copiados, mesmo que j\u00e1 existam",
+                "Every hour",
+                "A cada hora",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "Todos os arquivos sem perdas dos seus chats de m\u00fasica, at\u00e9 1 GB por dia",
+                "Every {0} hours",
+                "A cada {0} horas",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "Todos que podem ver {0} podem ver a lista de m\u00fasicas de {1}.",
                 "Exact duplicates",
@@ -75822,6 +76306,8 @@ final class Translations {
                 "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
                 "Mantenha um cue premido para o substituir ou remover. Editar a grelha n\u00e3o"
                         + " altera a velocidade.",
+                "Hours between backups",
+                "Horas entre c\u00f3pias de seguran\u00e7a",
                 "How far the selected filters sweep.",
                 "Amplitude da varredura dos filtros selecionados.",
                 "How loud songs play when BitChord\u2019s loudness normalisation",
@@ -75990,14 +76476,20 @@ final class Translations {
                 "Kept because its location couldn't be confirmed as a file this app owns.",
                 "Mantido porque n\u00e3o foi poss\u00edvel confirmar que o local \u00e9 um arquivo"
                         + " deste app.",
+                "Last attempt: {0}",
+                "\u00daltima tentativa: {0}",
                 "Last chosen: {0}",
                 "\u00daltima escolha: {0}",
                 "Last cleanup removed {0} items, {1}",
                 "A \u00faltima limpeza removeu {0} itens, {1}",
+                "Last problem: {0}",
+                "\u00daltimo problema: {0}",
                 "Last run handled {0} songs",
                 "A \u00faltima execu\u00e7\u00e3o processou {0} m\u00fasicas",
                 "Last run queued {0} songs",
                 "A \u00faltima execu\u00e7\u00e3o colocou {0} m\u00fasicas na fila",
+                "Last success: {0}",
+                "\u00daltima c\u00f3pia bem-sucedida: {0}",
                 "Last used: {0}",
                 "\u00daltimo uso: {0}",
                 "Later",
@@ -76255,6 +76747,8 @@ final class Translations {
                 "Requer os dois tempos e uma propor\u00e7\u00e3o entre 0,5\u00d7 e 2\u00d7",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "Nunca",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "Novos arquivos de \u00e1udio usam esta pasta. Downloads j\u00e1 na fila e arquivos"
@@ -76271,6 +76765,8 @@ final class Translations {
                 "Mais recentes primeiro",
                 "newest {0} of {1} songs",
                 "as {0} mais recentes de {1} m\u00fasicas",
+                "Next backup: {0}",
+                "Pr\u00f3xima c\u00f3pia: {0}",
                 "No albums found in this chat yet.",
                 "Nenhum \u00e1lbum encontrado neste chat ainda.",
                 "No API key saved",
@@ -76420,6 +76916,8 @@ final class Translations {
                 "Mem\u00f3ria insuficiente para analisar esta faixa. Toque em Tentar novamente.",
                 "Not managed here",
                 "N\u00e3o gerenciado aqui",
+                "Not planned",
+                "N\u00e3o agendada",
                 "Not played yet",
                 "Ainda n\u00e3o tocada",
                 "Not reported",
@@ -77500,6 +77998,8 @@ final class Translations {
                 "Enviar",
                 "Send audio effects to the installed JamesDSP app",
                 "Enviar os efeitos de \u00e1udio para o app JamesDSP instalado",
+                "Send backups to {0}?",
+                "Enviar c\u00f3pias de seguran\u00e7a para {0}?",
                 "Send code to this number",
                 "Enviar c\u00f3digo para este n\u00famero",
                 "Send the backup to",
@@ -78210,6 +78710,8 @@ final class Translations {
                         + " \u00edndice salvo dele a este.",
                 "The newest backup posted in a private channel you created",
                 "O backup mais recente publicado em um canal privado que voc\u00ea criou",
+                "The newest {0}",
+                "As {0} mais recentes",
                 "The next song already fits",
                 "A pr\u00f3xima m\u00fasica j\u00e1 combina",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -78925,6 +79427,10 @@ final class Translations {
                 "{0} canal",
                 "{0} channels",
                 "{0} canais",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "{0} conversas ou configura\u00e7\u00f5es da c\u00f3pia foram ignoradas porque esta"
+                        + " conta n\u00e3o pode utiliz\u00e1-las.",
                 "{0} completed.",
                 "{0} conclu\u00eddo.",
                 "{0} controls",
@@ -79132,6 +79638,8 @@ final class Translations {
                     + " \u043c\u0435\u0434\u043b\u0435\u043d\u043d\u0435\u0435, \u0442\u0435\u043c"
                     + " \u0431\u0435\u0437\u043e\u043f\u0430\u0441\u043d\u0435\u0435"
                     + " \u0434\u043b\u044f \u0430\u043a\u043a\u0430\u0443\u043d\u0442\u0430.",
+                "1 to {0}",
+                "\u041e\u0442 1 \u0434\u043e {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -79163,6 +79671,11 @@ final class Translations {
                 "@\u043a\u0430\u043d\u0430\u043b \u0438\u043b\u0438"
                         + " \u0447\u0438\u0441\u043b\u043e\u0432\u043e\u0439 ID"
                         + " \u0447\u0430\u0442\u0430",
+                "A backup is already running.",
+                "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u043e\u0435"
+                        + " \u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435"
+                        + " \u0443\u0436\u0435"
+                        + " \u0432\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u0442\u0441\u044f.",
                 "A better copy fades in without a gap",
                 "\u041b\u0443\u0447\u0448\u0430\u044f \u043a\u043e\u043f\u0438\u044f"
                     + " \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0430\u0435\u0442\u0441\u044f"
@@ -79946,6 +80459,12 @@ final class Translations {
                         + " \u0432\u0445\u043e\u0434\u0430 \u0432\u0441\u0451"
                         + " \u0432\u0435\u0440\u043d\u0451\u0442\u0441\u044f \u0437\u0430"
                         + " \u043c\u0438\u043d\u0443\u0442\u0443.",
+                "Backing up. Progress is shown below.",
+                "\u0421\u043e\u0437\u0434\u0430\u0451\u0442\u0441\u044f"
+                        + " \u0440\u0435\u0437\u0435\u0440\u0432\u043d\u0430\u044f"
+                        + " \u043a\u043e\u043f\u0438\u044f. \u0425\u043e\u0434"
+                        + " \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u044f"
+                        + " \u043f\u043e\u043a\u0430\u0437\u0430\u043d \u043d\u0438\u0436\u0435.",
                 "Backup and sharing",
                 "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u044b\u0435"
                         + " \u043a\u043e\u043f\u0438\u0438 \u0438 \u043e\u0431\u043c\u0435\u043d",
@@ -80674,6 +81193,12 @@ final class Translations {
                         + " \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u043e",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "\u0421\u043d\u0430\u0447\u0430\u043b\u0430"
+                        + " \u0432\u044b\u0431\u0435\u0440\u0438\u0442\u0435"
+                        + " \u043a\u0430\u043d\u0430\u043b \u0434\u043b\u044f"
+                        + " \u0440\u0435\u0437\u0435\u0440\u0432\u043d\u044b\u0445"
+                        + " \u043a\u043e\u043f\u0438\u0439.",
                 "Choose the services you want to use.",
                 "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435"
                     + " \u0441\u0435\u0440\u0432\u0438\u0441\u044b,"
@@ -81899,12 +82424,16 @@ final class Translations {
                         + " \u043a\u0430\u0436\u0434\u044b\u0439 \u0444\u0430\u0439\u043b,"
                         + " \u0434\u0430\u0436\u0435 \u0435\u0441\u043b\u0438 \u043e\u043d"
                         + " \u0443\u0436\u0435 \u0435\u0441\u0442\u044c",
+                "Every hour",
+                "\u041a\u0430\u0436\u0434\u044b\u0439 \u0447\u0430\u0441",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "\u0412\u0441\u0435 \u0444\u0430\u0439\u043b\u044b \u0431\u0435\u0437"
                         + " \u043f\u043e\u0442\u0435\u0440\u044c \u0432"
                         + " \u043c\u0443\u0437\u044b\u043a\u0430\u043b\u044c\u043d\u044b\u0445"
                         + " \u0447\u0430\u0442\u0430\u0445, \u0434\u043e 1 GB \u0432"
                         + " \u0434\u0435\u043d\u044c",
+                "Every {0} hours",
+                "\u041a\u0430\u0436\u0434\u044b\u0435 {0} \u0447",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "\u0412\u0441\u0435, \u043a\u0442\u043e \u0432\u0438\u0434\u0438\u0442 {0},"
                     + " \u043c\u043e\u0433\u0443\u0442 \u0443\u0432\u0438\u0434\u0435\u0442\u044c"
@@ -82409,6 +82938,10 @@ final class Translations {
                     + " \u043d\u0435 \u043c\u0435\u043d\u044f\u0435\u0442"
                     + " \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u044c"
                     + " \u0432\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u0435\u0434\u0435\u043d\u0438\u044f.",
+                "Hours between backups",
+                "\u0418\u043d\u0442\u0435\u0440\u0432\u0430\u043b \u043c\u0435\u0436\u0434\u0443"
+                        + " \u043a\u043e\u043f\u0438\u044f\u043c\u0438 \u0432"
+                        + " \u0447\u0430\u0441\u0430\u0445",
                 "How far the selected filters sweep.",
                 "\u0414\u0438\u0430\u043f\u0430\u0437\u043e\u043d"
                         + " \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f"
@@ -82723,6 +83256,9 @@ final class Translations {
                         + " \u0447\u0442\u043e \u044d\u0442\u043e \u0444\u0430\u0439\u043b"
                         + " \u0434\u0430\u043d\u043d\u043e\u0433\u043e"
                         + " \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f.",
+                "Last attempt: {0}",
+                "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u044f\u044f"
+                        + " \u043f\u043e\u043f\u044b\u0442\u043a\u0430: {0}",
                 "Last chosen: {0}",
                 "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0439"
                         + " \u0432\u044b\u0431\u043e\u0440: {0}",
@@ -82731,6 +83267,9 @@ final class Translations {
                         + " \u043e\u0447\u0438\u0441\u0442\u043a\u0430"
                         + " \u0443\u0434\u0430\u043b\u0438\u043b\u0430"
                         + " \u044d\u043b\u0435\u043c\u0435\u043d\u0442\u044b ({0}), {1}",
+                "Last problem: {0}",
+                "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u044f\u044f"
+                        + " \u043f\u0440\u043e\u0431\u043b\u0435\u043c\u0430: {0}",
                 "Last run handled {0} songs",
                 "\u041e\u0431\u0440\u0430\u0431\u043e\u0442\u0430\u043d\u043e"
                         + " \u043f\u0435\u0441\u0435\u043d \u043f\u0440\u0438"
@@ -82742,6 +83281,10 @@ final class Translations {
                         + " \u043e\u0447\u0435\u0440\u0435\u0434\u044c \u043f\u0440\u0438"
                         + " \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u043c"
                         + " \u0437\u0430\u043f\u0443\u0441\u043a\u0435: {0}",
+                "Last success: {0}",
+                "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435"
+                    + " \u0443\u0441\u043f\u0435\u0448\u043d\u043e\u0435"
+                    + " \u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435: {0}",
                 "Last used: {0}",
                 "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435"
                     + " \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435:"
@@ -83203,6 +83746,8 @@ final class Translations {
                     + " \u043e\u0442 0,5\u00d7 \u0434\u043e 2\u00d7",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "\u041d\u0438\u043a\u043e\u0433\u0434\u0430",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "\u041d\u043e\u0432\u044b\u0435"
@@ -83232,6 +83777,9 @@ final class Translations {
                 "newest {0} of {1} songs",
                 "\u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 {0} \u0438\u0437 {1}"
                         + " \u043f\u0435\u0441\u0435\u043d",
+                "Next backup: {0}",
+                "\u0421\u043b\u0435\u0434\u0443\u044e\u0449\u0430\u044f"
+                        + " \u043a\u043e\u043f\u0438\u044f: {0}",
                 "No albums found in this chat yet.",
                 "\u0412 \u044d\u0442\u043e\u043c \u0447\u0430\u0442\u0435 \u043f\u043e\u043a\u0430"
                         + " \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e"
@@ -83507,6 +84055,9 @@ final class Translations {
                 "Not managed here",
                 "\u0417\u0434\u0435\u0441\u044c \u043d\u0435"
                         + " \u0443\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u0442\u0441\u044f",
+                "Not planned",
+                "\u041d\u0435"
+                    + " \u0437\u0430\u043f\u043b\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u043e",
                 "Not played yet",
                 "\u0415\u0449\u0451 \u043d\u0435"
                     + " \u0432\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u043b\u043e\u0441\u044c",
@@ -85378,6 +85929,10 @@ final class Translations {
                     + " \u044d\u0444\u0444\u0435\u043a\u0442\u044b"
                     + " \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u043d\u043e\u043c\u0443"
                     + " \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044e JamesDSP",
+                "Send backups to {0}?",
+                "\u041e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0442\u044c"
+                        + " \u0440\u0435\u0437\u0435\u0440\u0432\u043d\u044b\u0435"
+                        + " \u043a\u043e\u043f\u0438\u0438 \u0432 {0}?",
                 "Send code to this number",
                 "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c \u043a\u043e\u0434"
                         + " \u043d\u0430 \u044d\u0442\u043e\u0442 \u043d\u043e\u043c\u0435\u0440",
@@ -86779,6 +87334,8 @@ final class Translations {
                     + " \u0432 \u0441\u043e\u0437\u0434\u0430\u043d\u043d\u043e\u043c"
                     + " \u0432\u0430\u043c\u0438 \u0437\u0430\u043a\u0440\u044b\u0442\u043e\u043c"
                     + " \u043a\u0430\u043d\u0430\u043b\u0435",
+                "The newest {0}",
+                "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 {0}",
                 "The next song already fits",
                 "\u0421\u043b\u0435\u0434\u0443\u044e\u0449\u0430\u044f"
                         + " \u043f\u0435\u0441\u043d\u044f \u0443\u0436\u0435"
@@ -88221,6 +88778,15 @@ final class Translations {
                 "\u043a\u0430\u043d\u0430\u043b\u043e\u0432: {0}",
                 "{0} channels",
                 "\u043a\u0430\u043d\u0430\u043b\u043e\u0432: {0}",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "\u041f\u0440\u043e\u043f\u0443\u0449\u0435\u043d\u043e"
+                    + " \u0447\u0430\u0442\u043e\u0432 \u0438\u043b\u0438"
+                    + " \u043d\u0430\u0441\u0442\u0440\u043e\u0435\u043a \u0438\u0437"
+                    + " \u043a\u043e\u043f\u0438\u0438: {0}. \u042d\u0442\u043e\u0442"
+                    + " \u0430\u043a\u043a\u0430\u0443\u043d\u0442 \u043d\u0435"
+                    + " \u043c\u043e\u0436\u0435\u0442 \u0438\u0445"
+                    + " \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c.",
                 "{0} completed.",
                 "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e: {0}.",
                 "{0} controls",
@@ -88488,6 +89054,8 @@ final class Translations {
                 "1 \u0e16\u0e36\u0e07 500"
                     + " \u0e15\u0e48\u0e2d\u0e0a\u0e31\u0e48\u0e27\u0e42\u0e21\u0e07"
                     + " \u0e22\u0e34\u0e48\u0e07\u0e0a\u0e49\u0e32\u0e22\u0e34\u0e48\u0e07\u0e1b\u0e25\u0e2d\u0e14\u0e20\u0e31\u0e22\u0e15\u0e48\u0e2d\u0e1a\u0e31\u0e0d\u0e0a\u0e35\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13",
+                "1 to {0}",
+                "1 \u0e16\u0e36\u0e07 {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -88511,6 +89079,8 @@ final class Translations {
                 "@channel or numeric chat ID",
                 "@channel \u0e2b\u0e23\u0e37\u0e2d ID"
                     + " \u0e41\u0e0a\u0e17\u0e41\u0e1a\u0e1a\u0e15\u0e31\u0e27\u0e40\u0e25\u0e02",
+                "A backup is already running.",
+                "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2d\u0e22\u0e39\u0e48\u0e41\u0e25\u0e49\u0e27",
                 "A better copy fades in without a gap",
                 "\u0e2a\u0e33\u0e40\u0e19\u0e32\u0e17\u0e35\u0e48\u0e14\u0e35\u0e01\u0e27\u0e48\u0e32\u0e08\u0e30\u0e40\u0e1f\u0e14\u0e40\u0e02\u0e49\u0e32\u0e21\u0e32\u0e42\u0e14\u0e22\u0e44\u0e21\u0e48\u0e21\u0e35\u0e0a\u0e48\u0e27\u0e07\u0e40\u0e07\u0e35\u0e22\u0e1a",
                 "A browser is required to open the service account page.",
@@ -89004,6 +89574,9 @@ final class Translations {
                 "Back up first and they come back in a minute when you sign in again.",
                 "\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e44\u0e27\u0e49\u0e01\u0e48\u0e2d\u0e19"
                     + " \u0e41\u0e25\u0e49\u0e27\u0e17\u0e38\u0e01\u0e2d\u0e22\u0e48\u0e32\u0e07\u0e08\u0e30\u0e01\u0e25\u0e31\u0e1a\u0e21\u0e32\u0e20\u0e32\u0e22\u0e43\u0e19\u0e2b\u0e19\u0e36\u0e48\u0e07\u0e19\u0e32\u0e17\u0e35\u0e40\u0e21\u0e37\u0e48\u0e2d\u0e04\u0e38\u0e13\u0e25\u0e07\u0e0a\u0e37\u0e48\u0e2d\u0e40\u0e02\u0e49\u0e32\u0e43\u0e0a\u0e49\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
+                "Backing up. Progress is shown below.",
+                "\u0e01\u0e33\u0e25\u0e31\u0e07\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25"
+                    + " \u0e04\u0e27\u0e32\u0e21\u0e04\u0e37\u0e1a\u0e2b\u0e19\u0e49\u0e32\u0e41\u0e2a\u0e14\u0e07\u0e2d\u0e22\u0e39\u0e48\u0e14\u0e49\u0e32\u0e19\u0e25\u0e48\u0e32\u0e07",
                 "Backup and sharing",
                 "\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e41\u0e25\u0e30\u0e01\u0e32\u0e23\u0e41\u0e0a\u0e23\u0e4c",
                 "Backup from {0}",
@@ -89455,6 +90028,8 @@ final class Translations {
                 "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e40\u0e1e\u0e35\u0e22\u0e23\u0e4c\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e01\u0e48\u0e2d\u0e19",
                 "Choose the services you want to use.",
                 "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23\u0e17\u0e35\u0e48\u0e04\u0e38\u0e13\u0e15\u0e49\u0e2d\u0e07\u0e01\u0e32\u0e23\u0e43\u0e0a\u0e49",
                 "Choose this music chat first.",
@@ -90253,11 +90828,15 @@ final class Translations {
                 "Every file is copied, even if it\u2019s already there",
                 "\u0e04\u0e31\u0e14\u0e25\u0e2d\u0e01\u0e17\u0e38\u0e01\u0e44\u0e1f\u0e25\u0e4c"
                     + " \u0e41\u0e21\u0e49\u0e08\u0e30\u0e21\u0e35\u0e2d\u0e22\u0e39\u0e48\u0e41\u0e25\u0e49\u0e27\u0e01\u0e47\u0e15\u0e32\u0e21",
+                "Every hour",
+                "\u0e17\u0e38\u0e01\u0e0a\u0e31\u0e48\u0e27\u0e42\u0e21\u0e07",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "\u0e17\u0e38\u0e01\u0e44\u0e1f\u0e25\u0e4c lossless"
                     + " \u0e43\u0e19\u0e41\u0e0a\u0e17\u0e40\u0e1e\u0e25\u0e07\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13"
                     + " \u0e2a\u0e39\u0e07\u0e2a\u0e38\u0e14 1 GB"
                     + " \u0e15\u0e48\u0e2d\u0e27\u0e31\u0e19",
+                "Every {0} hours",
+                "\u0e17\u0e38\u0e01 {0} \u0e0a\u0e31\u0e48\u0e27\u0e42\u0e21\u0e07",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "\u0e17\u0e38\u0e01\u0e04\u0e19\u0e17\u0e35\u0e48\u0e40\u0e2b\u0e47\u0e19 {0}"
                     + " \u0e08\u0e30\u0e40\u0e2b\u0e47\u0e19\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e40\u0e1e\u0e25\u0e07\u0e43\u0e19"
@@ -90553,6 +91132,8 @@ final class Translations {
                 "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
                 "\u0e01\u0e14\u0e04\u0e34\u0e27\u0e04\u0e49\u0e32\u0e07\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e41\u0e17\u0e19\u0e17\u0e35\u0e48\u0e2b\u0e23\u0e37\u0e2d\u0e25\u0e1a"
                     + " \u0e01\u0e32\u0e23\u0e41\u0e01\u0e49\u0e44\u0e02\u0e01\u0e23\u0e34\u0e14\u0e44\u0e21\u0e48\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e04\u0e27\u0e32\u0e21\u0e40\u0e23\u0e47\u0e27\u0e43\u0e19\u0e01\u0e32\u0e23\u0e40\u0e25\u0e48\u0e19",
+                "Hours between backups",
+                "\u0e08\u0e33\u0e19\u0e27\u0e19\u0e0a\u0e31\u0e48\u0e27\u0e42\u0e21\u0e07\u0e23\u0e30\u0e2b\u0e27\u0e48\u0e32\u0e07\u0e01\u0e32\u0e23\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25",
                 "How far the selected filters sweep.",
                 "\u0e0a\u0e48\u0e27\u0e07\u0e01\u0e32\u0e23\u0e01\u0e27\u0e32\u0e14\u0e04\u0e27\u0e32\u0e21\u0e16\u0e35\u0e48\u0e02\u0e2d\u0e07\u0e15\u0e31\u0e27\u0e01\u0e23\u0e2d\u0e07\u0e17\u0e35\u0e48\u0e40\u0e25\u0e37\u0e2d\u0e01",
                 "How loud songs play when BitChord\u2019s loudness normalisation",
@@ -90755,17 +91336,24 @@ final class Translations {
                 "\u0e40\u0e01\u0e47\u0e1a\u0e44\u0e27\u0e49\u0e40\u0e1e\u0e23\u0e32\u0e30\u0e01\u0e33\u0e25\u0e31\u0e07\u0e40\u0e25\u0e48\u0e19\u0e2b\u0e23\u0e37\u0e2d\u0e08\u0e30\u0e40\u0e25\u0e48\u0e19\u0e40\u0e1b\u0e47\u0e19\u0e25\u0e33\u0e14\u0e31\u0e1a\u0e16\u0e31\u0e14\u0e44\u0e1b",
                 "Kept because its location couldn't be confirmed as a file this app owns.",
                 "\u0e40\u0e01\u0e47\u0e1a\u0e44\u0e27\u0e49\u0e40\u0e1e\u0e23\u0e32\u0e30\u0e22\u0e37\u0e19\u0e22\u0e31\u0e19\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e27\u0e48\u0e32\u0e15\u0e33\u0e41\u0e2b\u0e19\u0e48\u0e07\u0e19\u0e35\u0e49\u0e40\u0e1b\u0e47\u0e19\u0e44\u0e1f\u0e25\u0e4c\u0e02\u0e2d\u0e07\u0e41\u0e2d\u0e1b\u0e19\u0e35\u0e49",
+                "Last attempt: {0}",
+                "\u0e04\u0e27\u0e32\u0e21\u0e1e\u0e22\u0e32\u0e22\u0e32\u0e21\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14:"
+                    + " {0}",
                 "Last chosen: {0}",
                 "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14: {0}",
                 "Last cleanup removed {0} items, {1}",
                 "\u0e01\u0e32\u0e23\u0e25\u0e49\u0e32\u0e07\u0e04\u0e23\u0e31\u0e49\u0e07\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14\u0e19\u0e33\u0e2d\u0e2d\u0e01"
                     + " {0} \u0e23\u0e32\u0e22\u0e01\u0e32\u0e23 \u0e23\u0e27\u0e21 {1}",
+                "Last problem: {0}",
+                "\u0e1b\u0e31\u0e0d\u0e2b\u0e32\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14: {0}",
                 "Last run handled {0} songs",
                 "\u0e01\u0e32\u0e23\u0e17\u0e33\u0e07\u0e32\u0e19\u0e04\u0e23\u0e31\u0e49\u0e07\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14\u0e08\u0e31\u0e14\u0e01\u0e32\u0e23"
                     + " {0} \u0e40\u0e1e\u0e25\u0e07",
                 "Last run queued {0} songs",
                 "\u0e01\u0e32\u0e23\u0e17\u0e33\u0e07\u0e32\u0e19\u0e04\u0e23\u0e31\u0e49\u0e07\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14\u0e08\u0e31\u0e14\u0e04\u0e34\u0e27"
                     + " {0} \u0e40\u0e1e\u0e25\u0e07",
+                "Last success: {0}",
+                "\u0e2a\u0e33\u0e40\u0e23\u0e47\u0e08\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14: {0}",
                 "Last used: {0}",
                 "\u0e43\u0e0a\u0e49\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14: {0}",
                 "Later",
@@ -91073,6 +91661,8 @@ final class Translations {
                     + " 0.5\u00d7 \u0e16\u0e36\u0e07 2\u00d7",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "\u0e44\u0e21\u0e48\u0e40\u0e04\u0e22",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "\u0e44\u0e1f\u0e25\u0e4c\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e43\u0e2b\u0e21\u0e48\u0e08\u0e30\u0e43\u0e0a\u0e49\u0e42\u0e1f\u0e25\u0e40\u0e14\u0e2d\u0e23\u0e4c\u0e19\u0e35\u0e49"
@@ -91090,6 +91680,9 @@ final class Translations {
                 "newest {0} of {1} songs",
                 "{0} \u0e40\u0e1e\u0e25\u0e07\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14\u0e08\u0e32\u0e01\u0e17\u0e31\u0e49\u0e07\u0e2b\u0e21\u0e14"
                     + " {1} \u0e40\u0e1e\u0e25\u0e07",
+                "Next backup: {0}",
+                "\u0e01\u0e32\u0e23\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e04\u0e23\u0e31\u0e49\u0e07\u0e16\u0e31\u0e14\u0e44\u0e1b:"
+                    + " {0}",
                 "No albums found in this chat yet.",
                 "\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e1e\u0e1a\u0e2d\u0e31\u0e25\u0e1a\u0e31\u0e49\u0e21\u0e43\u0e19\u0e41\u0e0a\u0e17\u0e19\u0e35\u0e49",
                 "No API key saved",
@@ -91259,6 +91852,8 @@ final class Translations {
                     + " \u0e41\u0e15\u0e30\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07",
                 "Not managed here",
                 "\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e08\u0e31\u0e14\u0e01\u0e32\u0e23\u0e17\u0e35\u0e48\u0e19\u0e35\u0e48",
+                "Not planned",
+                "\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e01\u0e33\u0e2b\u0e19\u0e14\u0e40\u0e27\u0e25\u0e32",
                 "Not played yet",
                 "\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e40\u0e25\u0e48\u0e19",
                 "Not reported",
@@ -92475,6 +93070,9 @@ final class Translations {
                 "\u0e2a\u0e48\u0e07\u0e40\u0e2d\u0e1f\u0e40\u0e1f\u0e01\u0e15\u0e4c\u0e40\u0e2a\u0e35\u0e22\u0e07\u0e43\u0e2b\u0e49\u0e41\u0e2d\u0e1b"
                     + " JamesDSP"
                     + " \u0e17\u0e35\u0e48\u0e15\u0e34\u0e14\u0e15\u0e31\u0e49\u0e07\u0e44\u0e27\u0e49",
+                "Send backups to {0}?",
+                "\u0e2a\u0e48\u0e07\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e44\u0e1b\u0e22\u0e31\u0e07"
+                    + " {0} \u0e2b\u0e23\u0e37\u0e2d\u0e44\u0e21\u0e48",
                 "Send code to this number",
                 "\u0e2a\u0e48\u0e07\u0e23\u0e2b\u0e31\u0e2a\u0e44\u0e1b\u0e22\u0e31\u0e07\u0e2b\u0e21\u0e32\u0e22\u0e40\u0e25\u0e02\u0e19\u0e35\u0e49",
                 "Send the backup to",
@@ -93351,6 +93949,8 @@ final class Translations {
                     + " \u0e41\u0e25\u0e30\u0e40\u0e1e\u0e34\u0e48\u0e21\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e44\u0e27\u0e49\u0e02\u0e2d\u0e07\u0e21\u0e31\u0e19\u0e40\u0e02\u0e49\u0e32\u0e01\u0e31\u0e1a\u0e14\u0e31\u0e0a\u0e19\u0e35\u0e19\u0e35\u0e49",
                 "The newest backup posted in a private channel you created",
                 "\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14\u0e17\u0e35\u0e48\u0e42\u0e1e\u0e2a\u0e15\u0e4c\u0e43\u0e19\u0e0a\u0e48\u0e2d\u0e07\u0e2a\u0e48\u0e27\u0e19\u0e15\u0e31\u0e27\u0e17\u0e35\u0e48\u0e04\u0e38\u0e13\u0e2a\u0e23\u0e49\u0e32\u0e07",
+                "The newest {0}",
+                "\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14 {0} \u0e23\u0e32\u0e22\u0e01\u0e32\u0e23",
                 "The next song already fits",
                 "\u0e40\u0e1e\u0e25\u0e07\u0e16\u0e31\u0e14\u0e44\u0e1b\u0e40\u0e02\u0e49\u0e32\u0e01\u0e31\u0e19\u0e2d\u0e22\u0e39\u0e48\u0e41\u0e25\u0e49\u0e27",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -94198,6 +94798,11 @@ final class Translations {
                 "{0} \u0e0a\u0e48\u0e2d\u0e07",
                 "{0} channels",
                 "{0} \u0e0a\u0e48\u0e2d\u0e07",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "\u0e02\u0e49\u0e32\u0e21\u0e41\u0e0a\u0e15\u0e2b\u0e23\u0e37\u0e2d\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32"
+                    + " {0} \u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e08\u0e32\u0e01\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e33\u0e23\u0e2d\u0e07"
+                    + " \u0e40\u0e19\u0e37\u0e48\u0e2d\u0e07\u0e08\u0e32\u0e01\u0e1a\u0e31\u0e0d\u0e0a\u0e35\u0e19\u0e35\u0e49\u0e44\u0e21\u0e48\u0e2a\u0e32\u0e21\u0e32\u0e23\u0e16\u0e43\u0e0a\u0e49\u0e07\u0e32\u0e19\u0e44\u0e14\u0e49",
                 "{0} completed.",
                 "{0} \u0e40\u0e2a\u0e23\u0e47\u0e08\u0e41\u0e25\u0e49\u0e27",
                 "{0} controls",
@@ -94431,6 +95036,8 @@ final class Translations {
                 "1 to 500 an hour. Slower is safer for your account.",
                 "Saatte 1 ile 500 aras\u0131. Daha yava\u015f, hesab\u0131n\u0131z i\u00e7in daha"
                         + " g\u00fcvenli.",
+                "1 to {0}",
+                "1 ile {0} aras\u0131",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -94446,6 +95053,8 @@ final class Translations {
                     + " kullan\u0131r.",
                 "@channel or numeric chat ID",
                 "@kanal veya say\u0131sal sohbet kimli\u011fi",
+                "A backup is already running.",
+                "Bir yedekleme zaten s\u00fcr\u00fcyor.",
                 "A better copy fades in without a gap",
                 "Daha iyi kopya kesinti olmadan yumu\u015fak\u00e7a ge\u00e7er",
                 "A browser is required to open the service account page.",
@@ -94875,6 +95484,8 @@ final class Translations {
                 "Back up first and they come back in a minute when you sign in again.",
                 "\u00d6nce yedekleyin; tekrar giri\u015f yapt\u0131\u011f\u0131n\u0131zda bir"
                         + " dakikada geri gelirler.",
+                "Backing up. Progress is shown below.",
+                "Yedekleniyor. \u0130lerleme a\u015fa\u011f\u0131da g\u00f6sterilir.",
                 "Backup and sharing",
                 "Yedekleme ve payla\u015f\u0131m",
                 "Backup from {0}",
@@ -95263,6 +95874,8 @@ final class Translations {
                 "Kay\u0131tl\u0131 e\u015fi se\u00e7",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "\u00d6nce yedekleme kanal\u0131n\u0131 se\u00e7in.",
                 "Choose the services you want to use.",
                 "Kullanmak istedi\u011finiz hizmetleri se\u00e7in.",
                 "Choose this music chat first.",
@@ -95972,9 +96585,13 @@ final class Translations {
                 "T\u00fcm Dolby dosyalar\u0131 g\u00f6r\u00fcn\u00fcr",
                 "Every file is copied, even if it\u2019s already there",
                 "Zaten olsa bile her dosya kopyalan\u0131r",
+                "Every hour",
+                "Her saat",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "M\u00fczik sohbetlerinizdeki t\u00fcm kay\u0131ps\u0131z dosyalar, g\u00fcnde en"
                         + " fazla 1 GB",
+                "Every {0} hours",
+                "Her {0} saatte bir",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "{0} sohbetini g\u00f6rebilen herkes {1} i\u00e7indeki m\u00fczik listesini"
                         + " g\u00f6rebilir.",
@@ -96250,6 +96867,8 @@ final class Translations {
                 "De\u011fi\u015ftirmek veya silmek i\u00e7in cue i\u015faretini bas\u0131l\u0131"
                         + " tutun. Izgara d\u00fczenlemeleri oynatma h\u0131z\u0131n\u0131"
                         + " de\u011fi\u015ftirmez.",
+                "Hours between backups",
+                "Yedeklemeler aras\u0131ndaki saat say\u0131s\u0131",
                 "How far the selected filters sweep.",
                 "Se\u00e7ili filtrelerin tarama aral\u0131\u011f\u0131.",
                 "How loud songs play when BitChord\u2019s loudness normalisation",
@@ -96425,14 +97044,20 @@ final class Translations {
                 "Kept because its location couldn't be confirmed as a file this app owns.",
                 "Konumunun bu uygulamaya ait bir dosya oldu\u011fu"
                         + " do\u011frulanamad\u0131\u011f\u0131 i\u00e7in sakland\u0131.",
+                "Last attempt: {0}",
+                "Son deneme: {0}",
                 "Last chosen: {0}",
                 "Son se\u00e7ilen: {0}",
                 "Last cleanup removed {0} items, {1}",
                 "Son temizlikte {0} \u00f6\u011fe kald\u0131r\u0131ld\u0131, {1}",
+                "Last problem: {0}",
+                "Son sorun: {0}",
                 "Last run handled {0} songs",
                 "Son \u00e7al\u0131\u015ft\u0131rmada {0} \u015fark\u0131 i\u015flendi",
                 "Last run queued {0} songs",
                 "Son \u00e7al\u0131\u015fmada {0} \u015fark\u0131 s\u0131raya al\u0131nd\u0131",
+                "Last success: {0}",
+                "Son ba\u015far\u0131l\u0131 yedekleme: {0}",
                 "Last used: {0}",
                 "Son kullan\u0131m: {0}",
                 "Later",
@@ -96699,6 +97324,8 @@ final class Translations {
                 "Her iki tempo ve 0,5\u00d7 ile 2\u00d7 aras\u0131nda bir oran gerekir",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "Hi\u00e7bir zaman",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "Yeni ses dosyalar\u0131 bu klas\u00f6re kaydedilir. Kuyruktaki indirmelerin ve"
@@ -96715,6 +97342,8 @@ final class Translations {
                 "\u00d6nce en yeni",
                 "newest {0} of {1} songs",
                 "en yeni {0} / {1} \u015fark\u0131",
+                "Next backup: {0}",
+                "Sonraki yedekleme: {0}",
                 "No albums found in this chat yet.",
                 "Bu sohbette hen\u00fcz alb\u00fcm bulunamad\u0131.",
                 "No API key saved",
@@ -96870,6 +97499,8 @@ final class Translations {
                         + " se\u00e7ene\u011fine dokunun.",
                 "Not managed here",
                 "Burada y\u00f6netilmeyenler",
+                "Not planned",
+                "Planlanmad\u0131",
                 "Not played yet",
                 "Hen\u00fcz \u00e7al\u0131nmad\u0131",
                 "Not reported",
@@ -97990,6 +98621,8 @@ final class Translations {
                 "G\u00f6nder",
                 "Send audio effects to the installed JamesDSP app",
                 "Ses efektlerini y\u00fckl\u00fc JamesDSP uygulamas\u0131na devredin",
+                "Send backups to {0}?",
+                "Yedekler {0} kanal\u0131na g\u00f6nderilsin mi?",
                 "Send code to this number",
                 "Kodu bu numaraya g\u00f6nder",
                 "Send the backup to",
@@ -98727,6 +99360,8 @@ final class Translations {
                         + " kay\u0131tl\u0131 dizinini bu dizine ekler.",
                 "The newest backup posted in a private channel you created",
                 "Olu\u015fturdu\u011funuz bir \u00f6zel kanalda payla\u015f\u0131lan en yeni yedek",
+                "The newest {0}",
+                "En yeni {0}",
                 "The next song already fits",
                 "S\u0131radaki \u015fark\u0131 zaten uyuyor",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -99475,6 +100110,10 @@ final class Translations {
                 "{0} kanal",
                 "{0} channels",
                 "{0} kanal",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "Bu hesap kullanamad\u0131\u011f\u0131 i\u00e7in yedekteki {0} sohbet veya ayar"
+                        + " atland\u0131.",
                 "{0} completed.",
                 "{0} tamamland\u0131.",
                 "{0} controls",
@@ -99681,6 +100320,8 @@ final class Translations {
                     + " \u0622\u067e \u06a9\u06d2 \u0627\u06a9\u0627\u0624\u0646\u0679 \u06a9\u06d2"
                     + " \u0644\u06cc\u06d2 \u0632\u06cc\u0627\u062f\u06c1"
                     + " \u0645\u062d\u0641\u0648\u0638 \u06c1\u06d2\u06d4",
+                "1 to {0}",
+                "1 \u0633\u06d2 {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -99709,6 +100350,9 @@ final class Translations {
                     + " \u06c1\u06cc\u06ba\u06d4",
                 "@channel or numeric chat ID",
                 "@channel \u06cc\u0627 \u0686\u06cc\u0679 \u06a9\u06cc \u0639\u062f\u062f\u06cc ID",
+                "A backup is already running.",
+                "\u0627\u06cc\u06a9 \u0628\u06cc\u06a9 \u0627\u067e \u067e\u06c1\u0644\u06d2"
+                        + " \u06c1\u06cc \u062c\u0627\u0631\u06cc \u06c1\u06d2\u06d4",
                 "A better copy fades in without a gap",
                 "\u0628\u06c1\u062a\u0631 \u06a9\u0627\u067e\u06cc \u0628\u063a\u06cc\u0631"
                         + " \u0648\u0642\u0641\u06d2 \u06a9\u06d2 \u0622\u06c1\u0633\u062a\u06c1"
@@ -100412,6 +101056,10 @@ final class Translations {
                     + " \u0627\u06cc\u06a9 \u0645\u0646\u0679 \u0645\u06cc\u06ba"
                     + " \u0648\u0627\u067e\u0633 \u0622 \u062c\u0627\u0626\u06cc\u06ba"
                     + " \u06af\u06d2\u06d4",
+                "Backing up. Progress is shown below.",
+                "\u0628\u06cc\u06a9 \u0627\u067e \u0628\u0646 \u0631\u06c1\u0627 \u06c1\u06d2\u06d4"
+                    + " \u067e\u06cc\u0634 \u0631\u0641\u062a \u0646\u06cc\u0686\u06d2"
+                    + " \u062f\u06a9\u06be\u0627\u0626\u06cc \u06af\u0626\u06cc \u06c1\u06d2\u06d4",
                 "Backup and sharing",
                 "\u0628\u06cc\u06a9 \u0627\u067e \u0627\u0648\u0631"
                         + " \u0634\u06cc\u0626\u0631\u0646\u06af",
@@ -101066,6 +101714,9 @@ final class Translations {
                         + " \u06a9\u0631\u06cc\u06ba",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "\u067e\u06c1\u0644\u06d2 \u0628\u06cc\u06a9 \u0627\u067e \u0686\u06cc\u0646\u0644"
+                        + " \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba\u06d4",
                 "Choose the services you want to use.",
                 "\u062c\u0646 \u0633\u0631\u0648\u0633\u0632 \u06a9\u0648"
                         + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u06a9\u0631\u0646\u0627"
@@ -102147,12 +102798,16 @@ final class Translations {
                         + " \u06c1\u0648\u062a\u06cc \u06c1\u06d2\u060c \u0686\u0627\u06c1\u06d2"
                         + " \u0648\u06c1 \u067e\u06c1\u0644\u06d2 \u0633\u06d2"
                         + " \u0645\u0648\u062c\u0648\u062f \u06c1\u0648",
+                "Every hour",
+                "\u06c1\u0631 \u06af\u06be\u0646\u0679\u06d2",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "\u0622\u067e \u06a9\u06cc \u0645\u06cc\u0648\u0632\u06a9 \u0686\u06cc\u0679\u0633"
                     + " \u06a9\u06cc \u06c1\u0631 \u0644\u0627\u0633 \u0644\u06cc\u0633"
                     + " \u0641\u0627\u0626\u0644\u060c \u0631\u0648\u0632\u0627\u0646\u06c1"
                     + " \u0632\u06cc\u0627\u062f\u06c1 \u0633\u06d2 \u0632\u06cc\u0627\u062f\u06c1"
                     + " 1 GB",
+                "Every {0} hours",
+                "\u06c1\u0631 {0} \u06af\u06be\u0646\u0679\u06d2",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "\u062c\u0648 \u0628\u06be\u06cc {0} \u062f\u06cc\u06a9\u06be"
                     + " \u0633\u06a9\u062a\u0627 \u06c1\u06d2 \u0648\u06c1 {1} \u0645\u06cc\u06ba"
@@ -102604,6 +103259,9 @@ final class Translations {
                         + " \u067e\u0644\u06d2 \u0628\u06cc\u06a9 \u06a9\u06cc"
                         + " \u0631\u0641\u062a\u0627\u0631 \u0646\u06c1\u06cc\u06ba"
                         + " \u0628\u062f\u0644\u062a\u06cc\u06d4",
+                "Hours between backups",
+                "\u0628\u06cc\u06a9 \u0627\u067e \u06a9\u06d2 \u062f\u0631\u0645\u06cc\u0627\u0646"
+                        + " \u06af\u06be\u0646\u0679\u06d2",
                 "How far the selected filters sweep.",
                 "\u0645\u0646\u062a\u062e\u0628 \u0641\u0644\u0679\u0631\u0632 \u06a9\u06d2"
                         + " \u0633\u0648\u06cc\u067e \u06a9\u06cc \u062d\u062f\u06d4",
@@ -102886,12 +103544,16 @@ final class Translations {
                         + " \u0633\u06a9\u06cc \u06a9\u06c1 \u06cc\u06c1 \u0627\u0633"
                         + " \u0627\u06cc\u067e \u06a9\u06cc \u0627\u067e\u0646\u06cc"
                         + " \u0641\u0627\u0626\u0644 \u06c1\u06d2\u06d4",
+                "Last attempt: {0}",
+                "\u0622\u062e\u0631\u06cc \u06a9\u0648\u0634\u0634: {0}",
                 "Last chosen: {0}",
                 "\u0622\u062e\u0631\u06cc \u0627\u0646\u062a\u062e\u0627\u0628: {0}",
                 "Last cleanup removed {0} items, {1}",
                 "\u067e\u0686\u06be\u0644\u06cc \u0635\u0641\u0627\u0626\u06cc \u0645\u06cc\u06ba"
                         + " {0} \u0622\u0626\u0679\u0645\u0632 \u06c1\u0679\u0627\u0626\u06d2"
                         + " \u06af\u0626\u06d2\u060c {1}",
+                "Last problem: {0}",
+                "\u0622\u062e\u0631\u06cc \u0645\u0633\u0626\u0644\u06c1: {0}",
                 "Last run handled {0} songs",
                 "\u067e\u0686\u06be\u0644\u06cc \u0628\u0627\u0631 {0} \u06af\u0627\u0646\u06d2"
                         + " \u0646\u0645\u0679\u0627\u0626\u06d2 \u06af\u0626\u06d2",
@@ -102899,6 +103561,9 @@ final class Translations {
                 "\u067e\u0686\u06be\u0644\u06cc \u0628\u0627\u0631 {0} \u06af\u0627\u0646\u06d2"
                     + " \u0642\u0637\u0627\u0631 \u0645\u06cc\u06ba \u0644\u06af\u0627\u0626\u06d2"
                     + " \u06af\u0626\u06d2",
+                "Last success: {0}",
+                "\u0622\u062e\u0631\u06cc \u06a9\u0627\u0645\u06cc\u0627\u0628 \u0628\u06cc\u06a9"
+                        + " \u0627\u067e: {0}",
                 "Last used: {0}",
                 "\u0622\u062e\u0631\u06cc \u0627\u0633\u062a\u0639\u0645\u0627\u0644: {0}",
                 "Later",
@@ -103306,6 +103971,8 @@ final class Translations {
                         + " \u062f\u0631\u06a9\u0627\u0631 \u06c1\u06d2",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "\u06a9\u0628\u06be\u06cc \u0646\u06c1\u06cc\u06ba",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "\u0646\u0626\u06cc \u0622\u0688\u06cc\u0648 \u0641\u0627\u0626\u0644\u06cc\u06ba"
@@ -103332,6 +103999,8 @@ final class Translations {
                 "newest {0} of {1} songs",
                 "{1} \u0645\u06cc\u06ba \u0633\u06d2 \u062a\u0627\u0632\u06c1"
                         + " \u062a\u0631\u06cc\u0646 {0} \u06af\u0627\u0646\u06d2",
+                "Next backup: {0}",
+                "\u0627\u06af\u0644\u0627 \u0628\u06cc\u06a9 \u0627\u067e: {0}",
                 "No albums found in this chat yet.",
                 "\u0627\u0633 \u0686\u06cc\u0679 \u0645\u06cc\u06ba \u0627\u0628\u06be\u06cc"
                         + " \u062a\u06a9 \u06a9\u0648\u0626\u06cc \u0627\u0644\u0628\u0645"
@@ -103584,6 +104253,8 @@ final class Translations {
                 "Not managed here",
                 "\u06cc\u06c1\u0627\u06ba \u0633\u0646\u0628\u06be\u0627\u0644\u0627"
                         + " \u0646\u06c1\u06cc\u06ba \u062c\u0627\u062a\u0627",
+                "Not planned",
+                "\u0637\u06d2 \u0646\u06c1\u06cc\u06ba \u06c1\u0648\u0627",
                 "Not played yet",
                 "\u0627\u0628\u06be\u06cc \u062a\u06a9 \u0646\u06c1\u06cc\u06ba \u0686\u0644\u0627",
                 "Not reported",
@@ -105265,6 +105936,9 @@ final class Translations {
                 "\u0622\u0688\u06cc\u0648 \u0627\u06cc\u0641\u06cc\u06a9\u0679\u0633"
                         + " \u0646\u0635\u0628 \u0634\u062f\u06c1 JamesDSP \u0627\u06cc\u067e"
                         + " \u06a9\u06d2 \u0633\u067e\u0631\u062f \u06a9\u0631\u06cc\u06ba",
+                "Send backups to {0}?",
+                "\u0628\u06cc\u06a9 \u0627\u067e {0} \u06a9\u0648"
+                        + " \u0628\u06be\u06cc\u062c\u06cc\u06ba\u061f",
                 "Send code to this number",
                 "\u0627\u0633 \u0646\u0645\u0628\u0631 \u067e\u0631 \u06a9\u0648\u0688"
                         + " \u0628\u06be\u06cc\u062c\u06cc\u06ba",
@@ -106508,6 +107182,8 @@ final class Translations {
                         + " \u067e\u0648\u0633\u0679 \u06a9\u06cc\u0627 \u06af\u06cc\u0627"
                         + " \u062a\u0627\u0632\u06c1 \u062a\u0631\u06cc\u0646 \u0628\u06cc\u06a9"
                         + " \u0627\u067e",
+                "The newest {0}",
+                "\u062a\u0627\u0632\u06c1 \u062a\u0631\u06cc\u0646 {0}",
                 "The next song already fits",
                 "\u0627\u06af\u0644\u0627 \u06af\u0627\u0646\u0627 \u067e\u06c1\u0644\u06d2"
                         + " \u06c1\u06cc \u0645\u0648\u0632\u0648\u06ba \u06c1\u06d2",
@@ -107782,6 +108458,15 @@ final class Translations {
                 "{0} \u0686\u06cc\u0646\u0644",
                 "{0} channels",
                 "{0} \u0686\u06cc\u0646\u0644\u0632",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "\u0628\u06cc\u06a9 \u0627\u067e \u0633\u06d2 {0} \u0686\u06cc\u0679\u0633"
+                        + " \u06cc\u0627 \u062a\u0631\u062a\u06cc\u0628\u0627\u062a"
+                        + " \u0686\u06be\u0648\u0691 \u062f\u06cc \u06af\u0626\u06cc\u06ba"
+                        + " \u06a9\u06cc\u0648\u0646\u06a9\u06c1 \u06cc\u06c1"
+                        + " \u0627\u06a9\u0627\u0624\u0646\u0679 \u0627\u0646\u06c1\u06cc\u06ba"
+                        + " \u0627\u0633\u062a\u0639\u0645\u0627\u0644 \u0646\u06c1\u06cc\u06ba"
+                        + " \u06a9\u0631 \u0633\u06a9\u062a\u0627\u06d4",
                 "{0} completed.",
                 "{0} \u0645\u06a9\u0645\u0644 \u06c1\u0648 \u06af\u06cc\u0627\u06d4",
                 "{0} controls",
@@ -108020,6 +108705,8 @@ final class Translations {
                 "1 to 500 an hour. Slower is safer for your account.",
                 "T\u1eeb 1 \u0111\u1ebfn 500 m\u1ed7i gi\u1edd. C\u00e0ng ch\u1eadm c\u00e0ng an"
                         + " to\u00e0n cho t\u00e0i kho\u1ea3n c\u1ee7a b\u1ea1n.",
+                "1 to {0}",
+                "T\u1eeb 1 \u0111\u1ebfn {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -108039,6 +108726,8 @@ final class Translations {
                         + " l\u01b0\u1ee3ng.",
                 "@channel or numeric chat ID",
                 "@k\u00eanh ho\u1eb7c ID chat d\u1ea1ng s\u1ed1",
+                "A backup is already running.",
+                "M\u1ed9t b\u1ea3n sao l\u01b0u \u0111ang \u0111\u01b0\u1ee3c t\u1ea1o.",
                 "A better copy fades in without a gap",
                 "B\u1ea3n t\u1ed1t h\u01a1n \u0111\u01b0\u1ee3c chuy\u1ec3n v\u00e0o m\u01b0\u1ee3t"
                         + " m\u00e0, kh\u00f4ng ng\u1eaft qu\u00e3ng",
@@ -108510,6 +109199,9 @@ final class Translations {
                 "H\u00e3y sao l\u01b0u tr\u01b0\u1edbc, ch\u00fang s\u1ebd tr\u1edf l\u1ea1i sau"
                         + " kho\u1ea3ng m\u1ed9t ph\u00fat khi b\u1ea1n \u0111\u0103ng nh\u1eadp"
                         + " l\u1ea1i.",
+                "Backing up. Progress is shown below.",
+                "\u0110ang sao l\u01b0u. Ti\u1ebfn \u0111\u1ed9 \u0111\u01b0\u1ee3c hi\u1ec3n"
+                        + " th\u1ecb b\u00ean d\u01b0\u1edbi.",
                 "Backup and sharing",
                 "Sao l\u01b0u v\u00e0 chia s\u1ebb",
                 "Backup from {0}",
@@ -108933,6 +109625,8 @@ final class Translations {
                 "Ch\u1ecdn thi\u1ebft b\u1ecb \u0111\u00e3 l\u01b0u",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "H\u00e3y ch\u1ecdn k\u00eanh sao l\u01b0u tr\u01b0\u1edbc.",
                 "Choose the services you want to use.",
                 "Ch\u1ecdn c\u00e1c d\u1ecbch v\u1ee5 b\u1ea1n mu\u1ed1n d\u00f9ng.",
                 "Choose this music chat first.",
@@ -109698,9 +110392,13 @@ final class Translations {
                 "Hi\u1ec7n m\u1ecdi t\u1ec7p Dolby",
                 "Every file is copied, even if it\u2019s already there",
                 "Sao ch\u00e9p m\u1ecdi t\u1ec7p, k\u1ec3 c\u1ea3 t\u1ec7p \u0111\u00e3 c\u00f3",
+                "Every hour",
+                "M\u1ed7i gi\u1edd",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "M\u1ecdi t\u1ec7p lossless trong chat nh\u1ea1c c\u1ee7a b\u1ea1n, t\u1ed1i"
                         + " \u0111a 1 GB m\u1ed7i ng\u00e0y",
+                "Every {0} hours",
+                "M\u1ed7i {0} gi\u1edd",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "M\u1ecdi ng\u01b0\u1eddi xem \u0111\u01b0\u1ee3c {0} \u0111\u1ec1u c\u00f3"
                         + " th\u1ec3 th\u1ea5y danh s\u00e1ch nh\u1ea1c trong {1}.",
@@ -109998,6 +110696,8 @@ final class Translations {
                 "Nh\u1ea5n gi\u1eef cue \u0111\u1ec3 thay th\u1ebf ho\u1eb7c x\u00f3a. S\u1eeda"
                         + " l\u01b0\u1edbi kh\u00f4ng thay \u0111\u1ed5i t\u1ed1c \u0111\u1ed9"
                         + " ph\u00e1t.",
+                "Hours between backups",
+                "S\u1ed1 gi\u1edd gi\u1eefa c\u00e1c l\u1ea7n sao l\u01b0u",
                 "How far the selected filters sweep.",
                 "Ph\u1ea1m vi qu\u00e9t c\u1ee7a c\u00e1c b\u1ed9 l\u1ecdc \u0111\u00e3 ch\u1ecdn.",
                 "How loud songs play when BitChord\u2019s loudness normalisation",
@@ -110195,17 +110895,23 @@ final class Translations {
                 "\u0110\u01b0\u1ee3c gi\u1eef l\u1ea1i v\u00ec kh\u00f4ng th\u1ec3 x\u00e1c"
                         + " nh\u1eadn v\u1ecb tr\u00ed c\u1ee7a m\u1ee5c n\u00e0y l\u00e0 t\u1ec7p"
                         + " thu\u1ed9c \u1ee9ng d\u1ee5ng n\u00e0y.",
+                "Last attempt: {0}",
+                "L\u1ea7n th\u1eed g\u1ea7n nh\u1ea5t: {0}",
                 "Last chosen: {0}",
                 "L\u1ea7n ch\u1ecdn g\u1ea7n nh\u1ea5t: {0}",
                 "Last cleanup removed {0} items, {1}",
                 "L\u1ea7n d\u1ecdn d\u1eb9p g\u1ea7n nh\u1ea5t \u0111\u00e3 x\u00f3a {0} m\u1ee5c,"
                         + " {1}",
+                "Last problem: {0}",
+                "S\u1ef1 c\u1ed1 g\u1ea7n nh\u1ea5t: {0}",
                 "Last run handled {0} songs",
                 "L\u1ea7n ch\u1ea1y tr\u01b0\u1edbc \u0111\u00e3 x\u1eed l\u00fd {0} b\u00e0i"
                         + " h\u00e1t",
                 "Last run queued {0} songs",
                 "L\u1ea7n ch\u1ea1y g\u1ea7n nh\u1ea5t \u0111\u00e3 th\u00eam {0} b\u00e0i v\u00e0o"
                         + " h\u00e0ng \u0111\u1ee3i",
+                "Last success: {0}",
+                "L\u1ea7n sao l\u01b0u th\u00e0nh c\u00f4ng g\u1ea7n nh\u1ea5t: {0}",
                 "Last used: {0}",
                 "S\u1eed d\u1ee5ng l\u1ea7n cu\u1ed1i: {0}",
                 "Later",
@@ -110491,6 +111197,8 @@ final class Translations {
                         + " l\u1ec7 t\u1eeb 0,5\u00d7 \u0111\u1ebfn 2\u00d7",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "Ch\u01b0a bao gi\u1edd",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "C\u00e1c t\u1ec7p \u00e2m thanh m\u1edbi d\u00f9ng th\u01b0 m\u1ee5c n\u00e0y."
@@ -110509,6 +111217,8 @@ final class Translations {
                 "M\u1edbi nh\u1ea5t tr\u01b0\u1edbc",
                 "newest {0} of {1} songs",
                 "{0} b\u00e0i m\u1edbi nh\u1ea5t tr\u00ean {1} b\u00e0i",
+                "Next backup: {0}",
+                "L\u1ea7n sao l\u01b0u ti\u1ebfp theo: {0}",
                 "No albums found in this chat yet.",
                 "Ch\u01b0a t\u00ecm th\u1ea5y album n\u00e0o trong chat n\u00e0y.",
                 "No API key saved",
@@ -110679,6 +111389,8 @@ final class Translations {
                         + " n\u00e0y. Nh\u1ea5n Th\u1eed l\u1ea1i.",
                 "Not managed here",
                 "Kh\u00f4ng qu\u1ea3n l\u00fd t\u1ea1i \u0111\u00e2y",
+                "Not planned",
+                "Ch\u01b0a l\u00ean l\u1ecbch",
                 "Not played yet",
                 "Ch\u01b0a ph\u00e1t",
                 "Not reported",
@@ -111873,6 +112585,8 @@ final class Translations {
                 "Send audio effects to the installed JamesDSP app",
                 "Chuy\u1ec3n vi\u1ec7c x\u1eed l\u00fd hi\u1ec7u \u1ee9ng \u00e2m thanh cho"
                         + " \u1ee9ng d\u1ee5ng JamesDSP \u0111\u00e3 c\u00e0i",
+                "Send backups to {0}?",
+                "G\u1eedi b\u1ea3n sao l\u01b0u t\u1edbi {0}?",
                 "Send code to this number",
                 "G\u1eedi m\u00e3 \u0111\u1ebfn s\u1ed1 n\u00e0y",
                 "Send the backup to",
@@ -112692,6 +113406,8 @@ final class Translations {
                 "The newest backup posted in a private channel you created",
                 "B\u1ea3n sao l\u01b0u m\u1edbi nh\u1ea5t \u0111\u0103ng trong k\u00eanh ri\u00eang"
                         + " t\u01b0 do b\u1ea1n t\u1ea1o",
+                "The newest {0}",
+                "{0} b\u1ea3n m\u1edbi nh\u1ea5t",
                 "The next song already fits",
                 "B\u00e0i ti\u1ebfp theo \u0111\u00e3 ph\u00f9 h\u1ee3p",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -113525,6 +114241,11 @@ final class Translations {
                 "{0} k\u00eanh",
                 "{0} channels",
                 "{0} k\u00eanh",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "\u0110\u00e3 b\u1ecf qua {0} cu\u1ed9c tr\u00f2 chuy\u1ec7n ho\u1eb7c c\u00e0i"
+                        + " \u0111\u1eb7t trong b\u1ea3n sao l\u01b0u v\u00ec t\u00e0i kho\u1ea3n"
+                        + " n\u00e0y kh\u00f4ng th\u1ec3 s\u1eed d\u1ee5ng ch\u00fang.",
                 "{0} completed.",
                 "\u0110\u00e3 ho\u00e0n t\u1ea5t {0}.",
                 "{0} controls",
@@ -113716,6 +114437,8 @@ final class Translations {
                 "1 to 500 an hour. Slower is safer for your account.",
                 "\u6bcf\u5c0f\u6642 1 \u5230 500"
                     + " \u500b\u3002\u8d8a\u6162\u5c0d\u4f60\u7684\u5e33\u865f\u8d8a\u5b89\u5168\u3002",
+                "1 to {0}",
+                "1 \u81f3 {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -113731,6 +114454,8 @@ final class Translations {
                     + " \u53e6\u5916\u7684\u6b4c\u66f2\u5feb\u53d6\u548c\u4e0b\u8f09\u6703\u4f54\u7528\u984d\u5916\u7684\u5132\u5b58\u7a7a\u9593\u3002",
                 "@channel or numeric chat ID",
                 "@\u983b\u9053\u540d\u7a31\u6216\u6578\u5b57\u804a\u5929\u5ba4 ID",
+                "A backup is already running.",
+                "\u5df2\u6709\u5099\u4efd\u6b63\u5728\u9032\u884c\u3002",
                 "A better copy fades in without a gap",
                 "\u66f4\u597d\u7684\u7248\u672c\u6703\u7121\u7e2b\u6de1\u5165",
                 "A browser is required to open the service account page.",
@@ -114127,6 +114852,8 @@ final class Translations {
                     + " {0} \u500b\u6a94\u6848\u3002",
                 "Back up first and they come back in a minute when you sign in again.",
                 "\u5148\u5099\u4efd\uff0c\u91cd\u65b0\u767b\u5165\u5f8c\u4e00\u5206\u9418\u5167\u5c31\u80fd\u5fa9\u539f\u3002",
+                "Backing up. Progress is shown below.",
+                "\u6b63\u5728\u5099\u4efd\u3002\u9032\u5ea6\u986f\u793a\u65bc\u4e0b\u65b9\u3002",
                 "Backup and sharing",
                 "\u5099\u4efd\u8207\u5206\u4eab",
                 "Backup from {0}",
@@ -114488,6 +115215,8 @@ final class Translations {
                 "\u9078\u64c7\u5df2\u5132\u5b58\u7684\u7bc0\u9ede",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "\u8acb\u5148\u9078\u64c7\u5099\u4efd\u983b\u9053\u3002",
                 "Choose the services you want to use.",
                 "\u8acb\u9078\u64c7\u8981\u4f7f\u7528\u7684\u670d\u52d9\u3002",
                 "Choose this music chat first.",
@@ -115165,9 +115894,13 @@ final class Translations {
                 "\u986f\u793a\u6240\u6709 Dolby \u6a94\u6848",
                 "Every file is copied, even if it\u2019s already there",
                 "\u8907\u88fd\u6bcf\u500b\u6a94\u6848\uff0c\u5373\u4f7f\u5df2\u7d93\u5b58\u5728",
+                "Every hour",
+                "\u6bcf\u5c0f\u6642",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "\u97f3\u6a02\u804a\u5929\u5ba4\u4e2d\u7684\u6bcf\u500b\u7121\u640d\u6a94\u6848\uff0c\u6bcf\u5929\u6700\u591a"
                     + " 1 GB",
+                "Every {0} hours",
+                "\u6bcf {0} \u5c0f\u6642",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "\u6240\u6709\u80fd\u770b\u5230 {0} \u7684\u4eba\u90fd\u80fd\u770b\u5230 {1}"
                         + " \u4e2d\u7684\u97f3\u6a02\u6e05\u55ae\u3002",
@@ -115425,6 +116158,8 @@ final class Translations {
                 "High-pass",
                 "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
                 "\u9577\u6309\u63d0\u793a\u9ede\u53ef\u53d6\u4ee3\u6216\u522a\u9664\u3002\u7de8\u8f2f\u7db2\u683c\u4e0d\u6703\u6539\u8b8a\u64ad\u653e\u901f\u5ea6\u3002",
+                "Hours between backups",
+                "\u5099\u4efd\u9593\u9694\uff08\u5c0f\u6642\uff09",
                 "How far the selected filters sweep.",
                 "\u6240\u9078\u6ffe\u6ce2\u5668\u7684\u6383\u983b\u7bc4\u570d\u3002",
                 "How loud songs play when BitChord\u2019s loudness normalisation",
@@ -115593,14 +116328,20 @@ final class Translations {
                 "\u5df2\u4fdd\u7559\uff0c\u56e0\u70ba\u5b83\u6b63\u5728\u64ad\u653e\u6216\u5373\u5c07\u64ad\u653e\u3002",
                 "Kept because its location couldn't be confirmed as a file this app owns.",
                 "\u5df2\u4fdd\u7559\uff0c\u56e0\u70ba\u7121\u6cd5\u78ba\u8a8d\u5176\u4f4d\u7f6e\u662f\u6b64\u61c9\u7528\u7a0b\u5f0f\u64c1\u6709\u7684\u6a94\u6848\u3002",
+                "Last attempt: {0}",
+                "\u4e0a\u6b21\u5617\u8a66\uff1a{0}",
                 "Last chosen: {0}",
                 "\u4e0a\u6b21\u9078\u64c7\uff1a{0}",
                 "Last cleanup removed {0} items, {1}",
                 "\u4e0a\u6b21\u6e05\u7406\u79fb\u9664\u4e86 {0} \u500b\u9805\u76ee\uff0c{1}",
+                "Last problem: {0}",
+                "\u6700\u8fd1\u7684\u554f\u984c\uff1a{0}",
                 "Last run handled {0} songs",
                 "\u4e0a\u6b21\u57f7\u884c\u8655\u7406\u4e86 {0} \u9996\u6b4c\u66f2",
                 "Last run queued {0} songs",
                 "\u4e0a\u6b21\u57f7\u884c\u5c07 {0} \u9996\u6b4c\u66f2\u52a0\u5165\u4f47\u5217",
+                "Last success: {0}",
+                "\u4e0a\u6b21\u6210\u529f\uff1a{0}",
                 "Last used: {0}",
                 "\u4e0a\u6b21\u4f7f\u7528\uff1a{0}",
                 "Later",
@@ -115854,6 +116595,8 @@ final class Translations {
                     + " 0.5\u00d7 \u81f3 2\u00d7 \u4e4b\u9593",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "\u5f9e\u672a",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "\u65b0\u7684\u97f3\u8a0a\u6a94\u6848\u6703\u5132\u5b58\u5230\u6b64\u8cc7\u6599\u593e\u3002\u5df2\u6392\u5165\u4f47\u5217\u7684\u4e0b\u8f09\u8207\u5df2\u5132\u5b58\u6a94\u6848\u7684\u4f4d\u7f6e\u4e0d\u6703\u8b8a\u66f4\u3002",
@@ -115869,6 +116612,8 @@ final class Translations {
                 "\u6700\u65b0\u512a\u5148",
                 "newest {0} of {1} songs",
                 "{1} \u9996\u4e2d\u6700\u65b0\u7684 {0} \u9996",
+                "Next backup: {0}",
+                "\u4e0b\u6b21\u5099\u4efd\uff1a{0}",
                 "No albums found in this chat yet.",
                 "\u9019\u500b\u804a\u5929\u5ba4\u4e2d\u5c1a\u672a\u627e\u5230\u5c08\u8f2f\u3002",
                 "No API key saved",
@@ -116014,6 +116759,8 @@ final class Translations {
                 "\u8a18\u61b6\u9ad4\u4e0d\u8db3\uff0c\u7121\u6cd5\u5206\u6790\u6b64\u66f2\u76ee\u3002\u8acb\u9ede\u9078\u300c\u91cd\u8a66\u300d\u3002",
                 "Not managed here",
                 "\u4e0d\u5728\u6b64\u8655\u7ba1\u7406",
+                "Not planned",
+                "\u672a\u6392\u7a0b",
                 "Not played yet",
                 "\u5c1a\u672a\u64ad\u653e",
                 "Not reported",
@@ -117080,6 +117827,8 @@ final class Translations {
                 "Send audio effects to the installed JamesDSP app",
                 "\u5c07\u97f3\u6548\u4ea4\u7d66\u5df2\u5b89\u88dd\u7684 JamesDSP"
                         + " \u61c9\u7528\u7a0b\u5f0f\u8655\u7406",
+                "Send backups to {0}?",
+                "\u5c07\u5099\u4efd\u50b3\u9001\u5230 {0}\uff1f",
                 "Send code to this number",
                 "\u50b3\u9001\u9a57\u8b49\u78bc\u81f3\u6b64\u865f\u78bc",
                 "Send the backup to",
@@ -117788,6 +118537,8 @@ final class Translations {
                 "\u983b\u9053\u4e2d\u6700\u65b0\u7684\u5099\u4efd\u6703\u53d6\u4ee3\u4f60\u7684\u8a2d\u5b9a\uff0c\u4e26\u628a\u5b83\u7684\u5df2\u5132\u5b58\u7d22\u5f15\u52a0\u9032\u76ee\u524d\u7684\u7d22\u5f15\u3002",
                 "The newest backup posted in a private channel you created",
                 "\u4f60\u5efa\u7acb\u7684\u79c1\u4eba\u983b\u9053\u4e2d\u6700\u65b0\u767c\u5e03\u7684\u5099\u4efd",
+                "The newest {0}",
+                "\u6700\u65b0\u7684 {0} \u500b",
                 "The next song already fits",
                 "\u4e0b\u4e00\u9996\u6b4c\u5df2\u7d93\u5f88\u5408\u9069",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -118488,6 +119239,10 @@ final class Translations {
                 "{0} \u500b\u983b\u9053",
                 "{0} channels",
                 "{0} \u500b\u983b\u9053",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "\u5df2\u7565\u904e\u5099\u4efd\u4e2d\u7684 {0}"
+                    + " \u500b\u804a\u5929\u6216\u8a2d\u5b9a\uff0c\u56e0\u70ba\u6b64\u5e33\u865f\u7121\u6cd5\u4f7f\u7528\u5b83\u5011\u3002",
                 "{0} completed.",
                 "{0} \u5df2\u5b8c\u6210\u3002",
                 "{0} controls",
@@ -118673,6 +119428,8 @@ final class Translations {
                 "1 to 500 an hour. Slower is safer for your account.",
                 "\u6bcf\u5c0f\u65f6 1 \u5230 500"
                     + " \u4e2a\u3002\u8d8a\u6162\u5bf9\u4f60\u7684\u8d26\u53f7\u8d8a\u5b89\u5168\u3002",
+                "1 to {0}",
+                "1 \u81f3 {0}",
                 "30-second preview complete",
                 "30-second preview complete",
                 "30-second preview \u00b7 temporary data",
@@ -118688,6 +119445,8 @@ final class Translations {
                     + " \u5355\u72ec\u7684\u6b4c\u66f2\u7f13\u5b58\u548c\u4e0b\u8f7d\u4f1a\u5360\u7528\u989d\u5916\u5b58\u50a8\u7a7a\u95f4\u3002",
                 "@channel or numeric chat ID",
                 "@\u9891\u9053\u540d\u6216\u6570\u5b57\u804a\u5929 ID",
+                "A backup is already running.",
+                "\u5df2\u6709\u5907\u4efd\u6b63\u5728\u8fdb\u884c\u3002",
                 "A better copy fades in without a gap",
                 "\u66f4\u597d\u7684\u7248\u672c\u65e0\u7f1d\u6de1\u5165",
                 "A browser is required to open the service account page.",
@@ -119083,6 +119842,8 @@ final class Translations {
                     + " {0} \u4e2a\u6587\u4ef6\u3002",
                 "Back up first and they come back in a minute when you sign in again.",
                 "\u5148\u5907\u4efd\uff0c\u91cd\u65b0\u767b\u5f55\u540e\u4e00\u5206\u949f\u5185\u5c31\u80fd\u6062\u590d\u3002",
+                "Backing up. Progress is shown below.",
+                "\u6b63\u5728\u5907\u4efd\u3002\u8fdb\u5ea6\u663e\u793a\u5728\u4e0b\u65b9\u3002",
                 "Backup and sharing",
                 "\u5907\u4efd\u4e0e\u5206\u4eab",
                 "Backup from {0}",
@@ -119444,6 +120205,8 @@ final class Translations {
                 "\u9009\u62e9\u5df2\u4fdd\u5b58\u7684\u8282\u70b9",
                 "Choose source and quality",
                 "Choose source and quality",
+                "Choose the backup channel first.",
+                "\u8bf7\u5148\u9009\u62e9\u5907\u4efd\u9891\u9053\u3002",
                 "Choose the services you want to use.",
                 "\u8bf7\u9009\u62e9\u8981\u4f7f\u7528\u7684\u670d\u52a1\u3002",
                 "Choose this music chat first.",
@@ -120120,9 +120883,13 @@ final class Translations {
                 "\u663e\u793a\u6240\u6709 Dolby \u6587\u4ef6",
                 "Every file is copied, even if it\u2019s already there",
                 "\u590d\u5236\u6bcf\u4e2a\u6587\u4ef6\uff0c\u5373\u4f7f\u5df2\u7ecf\u5b58\u5728",
+                "Every hour",
+                "\u6bcf\u5c0f\u65f6",
                 "Every lossless file in your music chats, up to 1 GB a day",
                 "\u97f3\u4e50\u804a\u5929\u4e2d\u7684\u6bcf\u4e2a\u65e0\u635f\u6587\u4ef6\uff0c\u6bcf\u5929\u6700\u591a"
                     + " 1 GB",
+                "Every {0} hours",
+                "\u6bcf {0} \u5c0f\u65f6",
                 "Everyone who can see {0} can see the list of music in {1}.",
                 "\u6240\u6709\u80fd\u770b\u5230 {0} \u7684\u4eba\u90fd\u80fd\u770b\u5230 {1}"
                         + " \u4e2d\u7684\u97f3\u4e50\u5217\u8868\u3002",
@@ -120379,6 +121146,8 @@ final class Translations {
                 "High-pass",
                 "Hold a cue to replace or remove it. Grid edits do not change playback speed.",
                 "\u957f\u6309\u63d0\u793a\u70b9\u53ef\u66ff\u6362\u6216\u5220\u9664\u3002\u7f16\u8f91\u7f51\u683c\u4e0d\u4f1a\u6539\u53d8\u64ad\u653e\u901f\u5ea6\u3002",
+                "Hours between backups",
+                "\u5907\u4efd\u95f4\u9694\uff08\u5c0f\u65f6\uff09",
                 "How far the selected filters sweep.",
                 "\u6240\u9009\u6ee4\u6ce2\u5668\u7684\u626b\u9891\u8303\u56f4\u3002",
                 "How loud songs play when BitChord\u2019s loudness normalisation",
@@ -120547,14 +121316,20 @@ final class Translations {
                 "\u5df2\u4fdd\u7559\uff0c\u56e0\u4e3a\u5b83\u6b63\u5728\u64ad\u653e\u6216\u5373\u5c06\u64ad\u653e\u3002",
                 "Kept because its location couldn't be confirmed as a file this app owns.",
                 "\u5df2\u4fdd\u7559\uff0c\u56e0\u4e3a\u65e0\u6cd5\u786e\u8ba4\u5176\u4f4d\u7f6e\u662f\u6b64\u5e94\u7528\u62e5\u6709\u7684\u6587\u4ef6\u3002",
+                "Last attempt: {0}",
+                "\u4e0a\u6b21\u5c1d\u8bd5\uff1a{0}",
                 "Last chosen: {0}",
                 "\u4e0a\u6b21\u9009\u62e9\uff1a{0}",
                 "Last cleanup removed {0} items, {1}",
                 "\u4e0a\u6b21\u6e05\u7406\u79fb\u9664\u4e86 {0} \u4e2a\u9879\u76ee\uff0c{1}",
+                "Last problem: {0}",
+                "\u6700\u8fd1\u7684\u95ee\u9898\uff1a{0}",
                 "Last run handled {0} songs",
                 "\u4e0a\u6b21\u8fd0\u884c\u5904\u7406\u4e86 {0} \u9996\u6b4c\u66f2",
                 "Last run queued {0} songs",
                 "\u4e0a\u6b21\u8fd0\u884c\u5c06 {0} \u9996\u6b4c\u66f2\u52a0\u5165\u961f\u5217",
+                "Last success: {0}",
+                "\u4e0a\u6b21\u6210\u529f\uff1a{0}",
                 "Last used: {0}",
                 "\u4e0a\u6b21\u4f7f\u7528\uff1a{0}",
                 "Later",
@@ -120807,6 +121582,8 @@ final class Translations {
                     + " 0.5\u00d7 \u81f3 2\u00d7 \u4e4b\u95f4",
                 "Needs verification",
                 "Needs verification",
+                "Never",
+                "\u4ece\u672a",
                 "New audio files use this folder. Queued downloads and saved files keep their"
                         + " locations.",
                 "\u65b0\u97f3\u9891\u6587\u4ef6\u5c06\u4fdd\u5b58\u5230\u6b64\u6587\u4ef6\u5939\u3002\u5df2\u6392\u961f\u7684\u4e0b\u8f7d\u548c\u5df2\u4fdd\u5b58\u6587\u4ef6\u7684\u4f4d\u7f6e\u4fdd\u6301\u4e0d\u53d8\u3002",
@@ -120822,6 +121599,8 @@ final class Translations {
                 "\u6700\u65b0\u7684\u4f18\u5148",
                 "newest {0} of {1} songs",
                 "{1} \u9996\u4e2d\u6700\u65b0\u7684 {0} \u9996",
+                "Next backup: {0}",
+                "\u4e0b\u6b21\u5907\u4efd\uff1a{0}",
                 "No albums found in this chat yet.",
                 "\u6b64\u804a\u5929\u4e2d\u5c1a\u672a\u627e\u5230\u4e13\u8f91\u3002",
                 "No API key saved",
@@ -120966,6 +121745,8 @@ final class Translations {
                 "\u5185\u5b58\u4e0d\u8db3\uff0c\u65e0\u6cd5\u5206\u6790\u6b64\u66f2\u76ee\u3002\u8bf7\u70b9\u6309\u201c\u91cd\u8bd5\u201d\u3002",
                 "Not managed here",
                 "\u4e0d\u5728\u6b64\u5904\u7ba1\u7406",
+                "Not planned",
+                "\u672a\u8ba1\u5212",
                 "Not played yet",
                 "\u5c1a\u672a\u64ad\u653e",
                 "Not reported",
@@ -122030,6 +122811,8 @@ final class Translations {
                 "Send audio effects to the installed JamesDSP app",
                 "\u5c06\u97f3\u6548\u4ea4\u7ed9\u5df2\u5b89\u88c5\u7684 JamesDSP"
                         + " \u5e94\u7528\u5904\u7406",
+                "Send backups to {0}?",
+                "\u5c06\u5907\u4efd\u53d1\u9001\u5230 {0}\uff1f",
                 "Send code to this number",
                 "\u5411\u6b64\u53f7\u7801\u53d1\u9001\u9a8c\u8bc1\u7801",
                 "Send the backup to",
@@ -122730,6 +123513,8 @@ final class Translations {
                 "\u9891\u9053\u4e2d\u6700\u65b0\u7684\u5907\u4efd\u4f1a\u66ff\u6362\u4f60\u7684\u8bbe\u7f6e\uff0c\u5e76\u628a\u5b83\u7684\u5df2\u4fdd\u5b58\u7d22\u5f15\u6dfb\u52a0\u5230\u5f53\u524d\u7d22\u5f15\u3002",
                 "The newest backup posted in a private channel you created",
                 "\u4f60\u521b\u5efa\u7684\u79c1\u6709\u9891\u9053\u4e2d\u6700\u65b0\u53d1\u5e03\u7684\u5907\u4efd",
+                "The newest {0}",
+                "\u6700\u65b0\u7684 {0} \u4e2a",
                 "The next song already fits",
                 "\u4e0b\u4e00\u9996\u6b4c\u5df2\u7ecf\u5f88\u5408\u9002",
                 "The next song is picked to mix well: a neighbouring key, a close tempo",
@@ -123432,6 +124217,10 @@ final class Translations {
                 "{0} \u4e2a\u9891\u9053",
                 "{0} channels",
                 "{0} \u4e2a\u9891\u9053",
+                "{0} chats or settings from the backup were left out because this account can't use"
+                        + " them.",
+                "\u5df2\u8df3\u8fc7\u5907\u4efd\u4e2d\u7684 {0}"
+                    + " \u4e2a\u804a\u5929\u6216\u8bbe\u7f6e\uff0c\u56e0\u4e3a\u6b64\u8d26\u6237\u65e0\u6cd5\u4f7f\u7528\u5b83\u4eec\u3002",
                 "{0} completed.",
                 "{0} \u5df2\u5b8c\u6210\u3002",
                 "{0} controls",

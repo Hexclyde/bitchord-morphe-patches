@@ -678,7 +678,7 @@ public class VerifyApk {
                                             Set.of("channelHistory", "backupHistory")
                                                     .contains(method.getName()),
                                             "History is confined to the channel page and backup"
-                                                + " confirmation");
+                                                    + " confirmation");
                                 if (cls.getType().equals("Lapp/bitchord/telegram/TelegramUi;")
                                         && (target.getDefiningClass()
                                                         .equals(
