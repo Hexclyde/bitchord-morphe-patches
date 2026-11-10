@@ -79,7 +79,7 @@ public final class TelegramStreamTraceTest {
         check(!encoded.contains("DO-NOT-EXPORT"), "Secrets excluded");
         System.out.println(
                 "PASS Telegram stream trace: timing, shared progress, cache, generation, export and"
-                    + " privacy");
+                        + " privacy");
     }
 
     private static void check(boolean value, String reason) {

@@ -221,11 +221,19 @@ public final class DiagnosticRecord {
                     case "cache_bytes":
                     case "uncached_bytes":
                     case "new_bytes_estimate":
+                    case "prefix_calls":
+                    case "handle_opens":
+                    case "part_fallbacks":
                     case "buffer_ms":
                     case "poll_wakes":
                     case "update_wakes":
+                    case "control_wakes":
                     case "unreadable_wakes":
                     case "underruns":
+                    case "rebuffer_count":
+                    case "process_cpu_ms":
+                    case "interval_ms":
+                    case "retry_after_ms":
                     case "mono_ms":
                         integer(out, key, value, 0, Long.MAX_VALUE);
                         break;
@@ -233,6 +241,7 @@ public final class DiagnosticRecord {
                     case "required_range_ms":
                     case "before_progress_ms":
                     case "after_progress_ms":
+                    case "range_after_progress_ms":
                     case "output_ms":
                         integer(out, key, value, -1, 3600000);
                         break;
@@ -259,13 +268,32 @@ public final class DiagnosticRecord {
                                         value,
                                         set(
                                                 "open complete cancelled superseded timeout failed"
-                                                    + " session-change shutdown deferred"),
+                                                        + " session-change shutdown deferred"),
                                         "failed"));
                         break;
                     case "stream_v2":
+                    case "output_supported":
                     case "progress_reset":
                     case "range_readable":
                         if (value instanceof Boolean) out.put(key, value);
+                        break;
+                    case "output_signal":
+                        out.put(
+                                key,
+                                enumValue(
+                                        value,
+                                        set(
+                                                "seek ready sink-advancing sink-started underrun"
+                                                        + " rebuffer sample"),
+                                        "ready"));
+                        break;
+                    case "container_format":
+                        out.put(
+                                key,
+                                enumValue(value, set("mp4 flac mp3 ogg wav unknown"), "unknown"));
+                        break;
+                    case "range_kind":
+                        out.put(key, enumValue(value, set("read container-prefetch"), "read"));
                         break;
                     case "priority":
                         integer(out, key, value, 1, 32);
