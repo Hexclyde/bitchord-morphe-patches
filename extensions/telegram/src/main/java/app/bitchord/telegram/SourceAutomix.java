@@ -1056,7 +1056,7 @@ public final class SourceAutomix {
             Map<String, Job> current = state;
             try {
                 ((ExecutorService) field(analyzer, "executor"))
-                        .execute(() -> analyze(job, current, running));
+                        .execute(() -> traceAnalysis(job, current, running));
             } catch (RuntimeException error) {
                 job.running = false;
                 job.phase = "unavailable";
@@ -1070,11 +1070,27 @@ public final class SourceAutomix {
         return true;
     }
 
+    private static void traceAnalysis(Job job, Map<String, Job> current, Set<String> running) {
+        PerformanceTrace.Span trace = PerformanceTrace.begin(PerformanceTrace.Stage.ANALYSIS);
+        try {
+            analyze(job, current, running);
+        } finally {
+            trace.measure("required_bytes", job.memoryNeeded);
+            trace.end(
+                    job.done
+                            ? PerformanceTrace.Outcome.COMPLETE
+                            : job.cancelled
+                                    ? PerformanceTrace.Outcome.CANCELLED
+                                    : "failed".equals(job.phase)
+                                            ? PerformanceTrace.Outcome.FAILED
+                                            : PerformanceTrace.Outcome.DEFERRED);
+        }
+    }
+
     private static void analyze(Job job, Map<String, Job> current, Set<String> running) {
         Object[] models = null;
         SourceAudio.Decoding decoding = null;
         String stage = "starting";
-        PerformanceTrace.Span trace = PerformanceTrace.begin(PerformanceTrace.Stage.ANALYSIS);
         boolean counted = false, stoodAside = false;
         active.set(job);
         enterQuiet();
@@ -1423,15 +1439,6 @@ public final class SourceAutomix {
                                 + dspFailureSite(error));
             }
         } finally {
-            trace.measure("required_bytes", job.memoryNeeded);
-            trace.end(
-                    job.done
-                            ? PerformanceTrace.Outcome.COMPLETE
-                            : job.cancelled
-                                    ? PerformanceTrace.Outcome.CANCELLED
-                                    : "failed".equals(job.phase)
-                                            ? PerformanceTrace.Outcome.FAILED
-                                            : PerformanceTrace.Outcome.DEFERRED);
             try {
                 finishModels(models);
                 if (!stoodAside) {
