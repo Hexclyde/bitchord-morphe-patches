@@ -94,7 +94,7 @@
     "openssl": "OpenSSL 3.5.9 29 Sep 2026"
   },
   "media3_host_version": "1.11.0",
-  "patch_bundle_sha256": "ef48a3ffc808f7d3c986e643299a603592ffb1015b68b9994342bb7a29cda08c",
+  "patch_bundle_sha256": "1da613d4b137e03ad9e758f5ed23803a5039639096d3357733bd18ce87d33f48",
   "soulseek_development": {
     "status": "experimental-local-build",
     "baseline_commit": "3de260f7f1d7967c5a97ce924085d7d42bec18af",
