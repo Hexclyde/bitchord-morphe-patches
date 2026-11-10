@@ -77,7 +77,7 @@ public final class NativeAudioV2Test {
                 check(
                         bridge.audio.slots.availablePermits() == 0,
                         "All three interactive slots remain available beside analysis and"
-                            + " verification");
+                                + " verification");
                 check(
                         bridge.audio.auxiliarySlots.availablePermits() == 0,
                         "Auxiliary readers use their own bounded pool");
