@@ -21,6 +21,8 @@ I add a Download control beside the player's favourite and menu actions. It uses
 
 [Playback, storage and playlist settings](docs/BETA18-FEATURES.md) include Play alongside other apps, Steady playback, Smart downloads, Karaoke, cache management and local Smart playlists. Patch download controls also appear in BitChord’s Downloads settings. Cleanup rules and external playlist suggestions require explicit activation.
 
+The [Telegram streaming experiment](docs/TELEGRAM-STREAMING.md) adds correlated diagnostics and an optional Java download-window coordinator. Its flag defaults off; TDLib and the bundled native libraries are unchanged. Device comparisons are required before enabling it by default.
+
 In **Sources → YouTube Music**, turn the switch off and choose **Playback only** to keep YouTube search and playlist metadata, or **Full disable** to hide its catalogue too. Queued songs use a saved download, a matching local music file or another enabled source. If none has playable audio, **No audio track found** appears. Local matching uses the music-library permission and does not request access during playback.
 
 ## Patches
