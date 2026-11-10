@@ -84,6 +84,12 @@ different range merely because they report progress. Session changes and shutdow
 drain registrations. Cancellation, errors and permission failures close the v2 reader.
 Registrations and per-file bookkeeping are bounded.
 
+In v2, source-router verification/analysis and other noninteractive readers use
+two auxiliary permits, separate from the three interactive permits. Guarded
+decoder work retains its single background permit. This prevents low-priority
+readers from occupying every playback/preview slot before the coordinator can
+arbitrate their ranges. Flag-off slot limits are unchanged.
+
 `FLOOD_WAIT`, `FLOOD_PREMIUM_WAIT`, explicit retry-after messages and error 429
 establish backoff shared by the coordinator's files. Cached reads remain possible.
 The wrapper does not set undocumented TDLib options or change account limits.

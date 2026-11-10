@@ -21,6 +21,9 @@ final class NativeAudio {
     /** Background reads (checks, naming) never take a playback slot. */
     final Semaphore backgroundSlots = new Semaphore(1);
 
+    // v2 source-router analysis/verification has no Runnable guard. Keep it off playback slots.
+    final Semaphore auxiliarySlots = new Semaphore(2);
+
     volatile TelegramStreamCoordinator windows;
 
     final Map<Integer, Lease> leases = new HashMap<>();
@@ -117,7 +120,10 @@ final class NativeAudio {
             throws IOException {
         long traceStarted = System.nanoTime() / 1_000_000L;
         if (position < 0 || length < -1) throw new IOException("Invalid audio range");
-        Semaphore slot = guard == null ? slots : backgroundSlots;
+        Semaphore slot =
+                guard != null
+                        ? backgroundSlots
+                        : windows != null && !consumer.interactive() ? auxiliarySlots : slots;
         if (!slot.tryAcquire()) throw new IOException("Too many active Telegram reads");
         boolean counted = false;
         Lease lease = null;

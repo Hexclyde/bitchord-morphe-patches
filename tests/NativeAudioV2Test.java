@@ -59,6 +59,34 @@ public final class NativeAudioV2Test {
             enable(bridge);
             String url = bridge.url() + "/audio/10_20";
             byte[] block = new byte[8192];
+            try (NativeAudio.Reader analysis =
+                            bridge.audio.open(
+                                    url, 0, 1, null, TelegramStreamCoordinator.Consumer.ANALYSIS);
+                    NativeAudio.Reader verification =
+                            bridge.audio.open(
+                                    url,
+                                    0,
+                                    1,
+                                    null,
+                                    TelegramStreamCoordinator.Consumer.VERIFICATION);
+                    NativeAudio.Reader play = bridge.audio.open(url, 0, 1);
+                    NativeAudio.Reader next = bridge.audio.open(url, 0, 1);
+                    NativeAudio.Reader preview =
+                            bridge.audio.open(
+                                    url, 0, 1, null, TelegramStreamCoordinator.Consumer.PREVIEW)) {
+                check(
+                        bridge.audio.slots.availablePermits() == 0,
+                        "All three interactive slots remain available beside analysis and"
+                            + " verification");
+                check(
+                        bridge.audio.auxiliarySlots.availablePermits() == 0,
+                        "Auxiliary readers use their own bounded pool");
+            }
+            check(
+                    bridge.audio.slots.availablePermits() == 3
+                            && bridge.audio.auxiliarySlots.availablePermits() == 2
+                            && bridge.audio.windows.active() == 0,
+                    "Both reader pools and registrations recover on close");
             try (NativeAudio.Reader reader = bridge.audio.open(url, 0, 32768)) {
                 int n = reader.read(block, 0, block.length);
                 content(block, n, 0);
