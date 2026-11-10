@@ -59,6 +59,19 @@ with tempfile.TemporaryDirectory(prefix="bitchord-upload-tests-") as temporary:
             str(output),
             *map(str, sources.rglob("*.java")),
             str(ROOT / "vendor/tdlib-api/TdApi.java"),
+            *(
+                str(
+                    ROOT
+                    / "extensions/telegram/src/main/java/app/bitchord/telegram"
+                    / (name + ".java")
+                )
+                for name in (
+                    "TelegramStreamCoordinator",
+                    "TelegramStreamTrace",
+                    "DiagnosticRecord",
+                    "DiagnosticStore",
+                )
+            ),
             str(
                 ROOT
                 / "extensions/telegram/src/main/java/app/bitchord/telegram/DownloadUploadBridge.java"

@@ -80,7 +80,10 @@ public final class TelegramStreamCoordinatorTest {
             f.get(2, TimeUnit.SECONDS);
             throw new AssertionError("Cancelled read succeeded");
         } catch (ExecutionException expected) {
-            check(expected.getCause() instanceof IOException, "Classified read failure");
+            check(
+                    expected.getCause() instanceof IOException
+                            || expected.getCause() instanceof CancellationException,
+                    "Classified read failure");
         }
     }
 

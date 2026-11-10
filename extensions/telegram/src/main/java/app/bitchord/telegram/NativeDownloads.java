@@ -80,7 +80,8 @@ public final class NativeDownloads {
             throws IOException {
         JobKt.ensureActive(context);
         TelegramBridge bridge = InternalAddon.bridge();
-        try (NativeAudio.Reader reader = bridge.audio.open(url, 0, -1)) {
+        try (NativeAudio.Reader reader =
+                bridge.audio.open(url, 0, -1, null, TelegramStreamCoordinator.Consumer.DOWNLOAD)) {
             reader.cancellation = () -> JobKt.ensureActive(context);
             byte[] buffer = new byte[64 * 1024];
             long written = 0;

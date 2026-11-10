@@ -748,6 +748,8 @@ public final class SourceAudio extends MediaDataSource {
     private final BooleanSupplier priorityAllowed;
     private String served;
     private IOException failure;
+    private TelegramStreamCoordinator.Consumer streamConsumer =
+            TelegramStreamCoordinator.Consumer.ANALYSIS;
 
     SourceAudio(DataSpec spec, long deadline) throws IOException {
         this(spec, deadline, () -> false);
@@ -781,22 +783,28 @@ public final class SourceAudio extends MediaDataSource {
 
     static SourceAudio verification(DataSpec spec, long deadline, BooleanSupplier cancelled)
             throws IOException {
-        return new SourceAudio(
-                spec,
-                deadline,
-                cancelled,
-                AutomixAccess::source,
-                PlaybackPriority::verificationAllowed);
+        try (TelegramStreamContext scope =
+                new TelegramStreamContext(TelegramStreamCoordinator.Consumer.VERIFICATION)) {
+            return new SourceAudio(
+                    spec,
+                    deadline,
+                    cancelled,
+                    AutomixAccess::source,
+                    PlaybackPriority::verificationAllowed);
+        }
     }
 
     static SourceAudio preparation(DataSpec spec, long deadline, BooleanSupplier cancelled)
             throws IOException {
-        return new SourceAudio(
-                spec,
-                deadline,
-                cancelled,
-                AutomixAccess::source,
-                PlaybackPriority::preparationAllowed);
+        try (TelegramStreamContext scope =
+                new TelegramStreamContext(TelegramStreamCoordinator.Consumer.VERIFICATION)) {
+            return new SourceAudio(
+                    spec,
+                    deadline,
+                    cancelled,
+                    AutomixAccess::source,
+                    PlaybackPriority::preparationAllowed);
+        }
     }
 
     private SourceAudio(
@@ -812,6 +820,8 @@ public final class SourceAudio extends MediaDataSource {
         this.cancelled = cancelled;
         this.sources = sources;
         this.priorityAllowed = priorityAllowed;
+        if (TelegramStreamContext.consumer() == TelegramStreamCoordinator.Consumer.VERIFICATION)
+            streamConsumer = TelegramStreamCoordinator.Consumer.VERIFICATION;
         // Registered before the first open, which may itself block.
         if (priorityAllowed != null) register(this);
         try {
@@ -987,7 +997,7 @@ public final class SourceAudio extends MediaDataSource {
         source = sources.get();
         if (source == null) throw new IOException("Playback source router is not ready");
         opens++;
-        try {
+        try (TelegramStreamContext scope = new TelegramStreamContext(streamConsumer)) {
             // An abort that arrived before the connection was visible still ends it.
             if (aborted) throw new Stopped(StopReason.PRIORITY);
             long remaining = source.open(at == 0 ? spec : spec.subrange(at));

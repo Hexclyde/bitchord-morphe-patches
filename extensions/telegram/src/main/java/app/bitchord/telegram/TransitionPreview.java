@@ -677,6 +677,7 @@ final class TransitionPreview {
         private AudioFocusRequest focus;
         // Ranks the audition above speculative preparation and background reads while it lives.
         private AutoCloseable priority;
+        private final java.util.List<AutoCloseable> streamTags = new java.util.ArrayList<>();
         private boolean started, incomingStarted, buffering;
         // Milliseconds since construction began; -1 until observed.
         private final long created = SystemClock.elapsedRealtime();
@@ -715,6 +716,13 @@ final class TransitionPreview {
                             + 30000
                             + Math.round((draft.overlap + 3) / rate * 1000);
             try {
+                for (MediaItem item : new MediaItem[] {pair.outgoing, pair.incoming}) {
+                    streamTags.add(TelegramStreamContext.preview(item.mediaId));
+                    if (item.localConfiguration != null)
+                        streamTags.add(
+                                TelegramStreamContext.preview(
+                                        item.localConfiguration.uri.toString()));
+                }
                 focusManager = SoundExtras.app().getSystemService(AudioManager.class);
                 focus =
                         new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
@@ -985,6 +993,13 @@ final class TransitionPreview {
         }
 
         private void releaseDecks() {
+            for (AutoCloseable tag : streamTags) {
+                try {
+                    tag.close();
+                } catch (Exception ignored) {
+                }
+            }
+            streamTags.clear();
             if (priority != null) {
                 try {
                     priority.close();

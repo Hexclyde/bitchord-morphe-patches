@@ -30,6 +30,60 @@ public final class TelegramBridge {
             new ChannelSponsorship(request -> this.backend.call(request));
     final NativeAudio audio = new NativeAudio(this);
 
+    void streamSession() {}
+
+    boolean streamV2;
+    int streamThreshold = 15;
+
+    boolean streamV2Enabled() {
+        return streamV2;
+    }
+
+    void setStreamV2Enabled(boolean enabled) {
+        streamV2 = enabled;
+        audio.windows = enabled ? streams.coordinator : null;
+    }
+
+    int streamLowWaterSeconds() {
+        return streamThreshold;
+    }
+
+    void setStreamLowWaterSeconds(int seconds) {
+        streamThreshold = seconds;
+    }
+
+    final FixtureStreams streams = new FixtureStreams();
+
+    final class FixtureStreams {
+        final TelegramStreamCoordinator coordinator =
+                new TelegramStreamCoordinator(
+                        new TelegramStreamCoordinator.Backend() {
+                            public long prefix(int file, long offset) throws Exception {
+                                return call(new TdApi.GetFileDownloadedPrefixSize(file, offset))
+                                        .size;
+                            }
+
+                            public void download(
+                                    int file,
+                                    int priority,
+                                    long offset,
+                                    long length,
+                                    TelegramStreamCoordinator.Reply reply) {
+                                try {
+                                    call(
+                                            new TdApi.DownloadFile(
+                                                    file, priority, offset, length, false));
+                                    reply.done(null, 0);
+                                } catch (Exception failure) {
+                                    reply.done(new java.io.IOException(failure), 0);
+                                }
+                            }
+
+                            public void cancel(int file) {}
+                        },
+                        () -> System.nanoTime() / 1000000L);
+    }
+
     interface NativeBackend {
         TdApi.Object call(TdApi.Function<?> request) throws Exception;
     }

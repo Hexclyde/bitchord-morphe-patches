@@ -349,6 +349,8 @@ final class TelegramStreamCoordinator {
         }
 
         private void check() throws IOException {
+            if (closed && end.equals("superseded"))
+                throw new CancellationException("Telegram stream superseded");
             if (closed) throw new IOException("Telegram stream consumer " + end);
             if (Thread.currentThread().isInterrupted())
                 throw new InterruptedIOException("Telegram stream interrupted");

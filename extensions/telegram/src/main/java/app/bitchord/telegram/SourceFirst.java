@@ -149,12 +149,14 @@ public final class SourceFirst {
             public void run() {
                 handler.removeCallbacks(this);
                 Player found = current();
+                if (found != null) TelegramStreamPlayback.activity(found);
                 if (found != null
                         && found.getPlayWhenReady()
                         && found.getPlaybackState() == Player.STATE_BUFFERING) {
                     PlaybackPriority.playbackUrgent(2000);
                     handler.postDelayed(this, 1000);
-                }
+                } else if (found != null && found.getPlayWhenReady() && Diagnostics.active())
+                    handler.postDelayed(this, 1000);
             }
 
             public void onPlaybackStateChanged(int state) {
@@ -176,22 +178,26 @@ public final class SourceFirst {
 
             public void onPositionDiscontinuity(
                     int reason, Player.PositionInfo oldPosition, Player.PositionInfo newPosition) {
+                Player found = current();
+                if (reason == 1 && found != null) TelegramStreamPlayback.seek(found);
                 onPositionDiscontinuity(reason);
             }
 
             public void onPositionDiscontinuity(
                     Player.PositionInfo oldPosition, Player.PositionInfo newPosition, int reason) {
-                onPositionDiscontinuity(reason);
+                onPositionDiscontinuity(reason, oldPosition, newPosition);
             }
         }
         Urgency listener = new Urgency();
         if (android.os.Looper.myLooper() == player.getApplicationLooper()) {
             player.addListener(listener);
+            TelegramStreamPlayback.watch(player, () -> listener.current() != null);
             listener.run();
         } else
             handler.post(
                     () -> {
                         player.addListener(listener);
+                        TelegramStreamPlayback.watch(player, () -> listener.current() != null);
                         listener.run();
                     });
     }

@@ -66,8 +66,13 @@ final class TelegramBridge {
     String sessionTag = "test-session";
     final NativeAudio audioReader = new NativeAudio(this);
     final NativeAudio audioManager = audioReader;
-    final File file;
+    File file;
     final NativeAudio audio = audioReader;
+
+    boolean streamV2Enabled() {
+        return audio.windows != null;
+    }
+
     final long length = 5L * 1024 * 1024 + 31;
 
     boolean signedIn = true, mediaAllowed = true;
@@ -77,6 +82,7 @@ final class TelegramBridge {
     boolean stall, truncateNext;
     boolean revokeOnPrefix, changeTagAfterSearch;
     int cancellations;
+    int partReads;
     final Map<Long, Long> available = new TreeMap<>();
     long cacheLimit = CachePolicy.DEFAULT_BYTES, lastOptimized;
 
@@ -205,6 +211,17 @@ final class TelegramBridge {
             }
             return (T) prefix;
         }
+        if (fn instanceof TdApi.ReadFilePart) {
+            partReads++;
+            TdApi.ReadFilePart part = (TdApi.ReadFilePart) fn;
+            TdApi.Data result = new TdApi.Data();
+            result.data = new byte[(int) part.count];
+            try (RandomAccessFile input = new RandomAccessFile(file, "r")) {
+                input.seek(part.offset);
+                input.readFully(result.data);
+            }
+            return (T) result;
+        }
         throw new AssertionError("Unexpected request " + fn.getClass());
     }
 
@@ -214,6 +231,13 @@ final class TelegramBridge {
         f.size = length;
         f.local = new TdApi.LocalFile();
         f.local.path = file.getAbsolutePath();
+        f.local.downloadOffset = offset;
+        for (Map.Entry<Long, Long> range : available.entrySet()) {
+            f.local.downloadedSize += range.getValue() - range.getKey();
+            if (offset >= range.getKey() && offset < range.getValue())
+                f.local.downloadedPrefixSize = range.getValue() - offset;
+        }
+        f.local.isDownloadingCompleted = available.getOrDefault(0L, 0L) >= length;
         return f;
     }
 

@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 /** Explicit, bounded recording for application and login failures. */
 public final class Diagnostics {
+    static volatile Runnable streamSessionProbe = () -> {};
     private static final long LIMIT_MS = 15 * 60 * 1000L;
     private static final Map<WebView, Boolean> watched =
             Collections.synchronizedMap(new WeakHashMap<>());
@@ -123,7 +124,7 @@ public final class Diagnostics {
         deadline = System.currentTimeMillis() + LIMIT_MS;
         prefs.edit().putLong("until", deadline).apply();
         event("recording.started");
-        if (TelegramBridge.instance != null) TelegramBridge.instance.streamSession();
+        streamSessionProbe.run();
         event("environment.sdk sdk=" + Build.VERSION.SDK_INT + " patch=" + PatchVersion.BUILD);
         java.util.Map<String, Object> hardware = new java.util.LinkedHashMap<>();
         hardware.put("sdk", Build.VERSION.SDK_INT);

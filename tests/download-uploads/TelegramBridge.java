@@ -11,6 +11,35 @@ import java.util.concurrent.atomic.AtomicInteger;
 /** In-memory TDLib server behavior for the production receipt state machine. */
 public final class TelegramBridge {
     public static TelegramBridge instance;
+    final FixtureStreams streams = new FixtureStreams();
+
+    boolean streamV2Enabled() {
+        return false;
+    }
+
+    final class FixtureStreams {
+        final FixtureCoordinator coordinator = new FixtureCoordinator();
+
+        TdApi.File download(TdApi.DownloadFile request, Object consumer, long timeout)
+                throws Exception {
+            return call(request, (int) timeout);
+        }
+
+        void cancelIfUnused(int file) throws Exception {
+            call(new TdApi.CancelDownloadFile(file, false));
+        }
+
+        void cancelIfUnused(int file, long timeout) throws Exception {
+            call(new TdApi.CancelDownloadFile(file, false), (int) timeout);
+        }
+    }
+
+    static final class FixtureCoordinator {
+        boolean active(int file) {
+            return false;
+        }
+    }
+
     public final File home;
     public long generation = 1;
     public volatile long authorizationRevision;

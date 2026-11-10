@@ -25,6 +25,11 @@
 /ui-tests/src/test/java/app/bitchord/telegram/CachePolicy.java
 /ui-tests/src/test/java/app/bitchord/telegram/InternalAddon.java
 /ui-tests/src/test/java/app/bitchord/telegram/NativeAudio.java
+/ui-tests/src/test/java/app/bitchord/telegram/TelegramStreamTrace.java
+/ui-tests/src/test/java/app/bitchord/telegram/TelegramStreamCoordinator.java
+/ui-tests/src/test/java/app/bitchord/telegram/TelegramStreamContext.java
+/ui-tests/src/test/java/app/bitchord/telegram/TelegramStreamPlayback.java
+/ui-tests/src/test/java/app/bitchord/telegram/TelegramContainerRanges.java
 /ui-tests/src/test/java/app/bitchord/telegram/TelegramDataSource.java
 /ui-tests/src/test/java/app/bitchord/telegram/NativeDownloads.java
 /ui-tests/src/test/java/app/bitchord/telegram/TrackMetadata.java

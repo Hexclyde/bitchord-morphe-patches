@@ -361,6 +361,26 @@ public class TelegramScreenTest {
         screenshot("cache-settings");
     }
 
+    @org.junit.Test
+    public void coordinatedStreamingStartsOffAndExposesItsBufferThreshold() throws Exception {
+        signedIn();
+        openTab("Advanced");
+        assertFalse(activity.bridge.streamV2Enabled());
+        assertEquals(15, activity.bridge.streamLowWaterSeconds());
+        clickRow("Experimental Telegram streaming");
+        idle();
+        assertTrue(activity.bridge.streamV2Enabled());
+        clickRow("Streaming buffer threshold");
+        android.app.AlertDialog dialog =
+                org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        dialog.getListView().performItemClick(null, 3, 3);
+        idle();
+        assertEquals(20, activity.bridge.streamLowWaterSeconds());
+        clickRow("Experimental Telegram streaming");
+        idle();
+        assertFalse(activity.bridge.streamV2Enabled());
+    }
+
     /** Opens the Basic or Advanced tab. */
     void openTab(String name) {
         click(name);

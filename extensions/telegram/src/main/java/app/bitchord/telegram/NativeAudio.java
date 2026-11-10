@@ -21,6 +21,8 @@ final class NativeAudio {
     /** Background reads (checks, naming) never take a playback slot. */
     final Semaphore backgroundSlots = new Semaphore(1);
 
+    volatile TelegramStreamCoordinator windows;
+
     final Map<Integer, Lease> leases = new HashMap<>();
     int active;
 
@@ -96,12 +98,30 @@ final class NativeAudio {
      * opens the same file.
      */
     Reader open(String url, long position, long length, Runnable guard) throws IOException {
+        return open(
+                url,
+                position,
+                length,
+                guard,
+                guard == null
+                        ? TelegramStreamContext.consumer()
+                        : TelegramStreamCoordinator.Consumer.BACKGROUND);
+    }
+
+    Reader open(
+            String url,
+            long position,
+            long length,
+            Runnable guard,
+            TelegramStreamCoordinator.Consumer consumer)
+            throws IOException {
         long traceStarted = System.nanoTime() / 1_000_000L;
         if (position < 0 || length < -1) throw new IOException("Invalid audio range");
         Semaphore slot = guard == null ? slots : backgroundSlots;
         if (!slot.tryAcquire()) throw new IOException("Too many active Telegram reads");
         boolean counted = false;
         Lease lease = null;
+        Reader opened = null;
         int fileId = 0;
         try {
             long generation = bridge.generation;
@@ -173,17 +193,41 @@ final class NativeAudio {
                             size,
                             row.optString("mime"),
                             lease);
-            reader.trace =
-                    trace.begin(
-                            fileId,
-                            position,
-                            length,
-                            guard == null ? "playback" : "background",
-                            guard == null ? 32 : 1,
-                            seekGeneration.get(),
-                            false,
-                            traceStarted);
-            if (file.local != null) trace.update(fileId, file.local.downloadedSize);
+            reader.consumer = consumer;
+            opened = reader;
+            reader.slot = slot;
+            try {
+                if (windows != null) {
+                    long bitrate =
+                            row.optLong("duration") > 0
+                                    ? file.size * 8 / row.optLong("duration")
+                                    : 0;
+                    reader.window = windows.register(fileId, consumer, bitrate);
+                    windows.seed(fileId, state(file));
+                }
+                reader.trace =
+                        trace.begin(
+                                fileId,
+                                position,
+                                length,
+                                consumer.label(),
+                                reader.window == null
+                                        ? (guard == null ? 32 : 1)
+                                        : consumer.priority,
+                                reader.window == null
+                                        ? seekGeneration.get()
+                                        : reader.window.generation,
+                                reader.window != null,
+                                traceStarted);
+                if (reader.trace != null)
+                    reader.trace.format = TelegramContainerRanges.format(reader.mime);
+                if (reader.trace != null) trace.bind(fileId, url);
+                if (reader.window != null) reader.window.trace = reader.trace;
+                if (file.local != null) trace.update(fileId, file.local.downloadedSize);
+            } catch (Exception failed) {
+                if (reader.window != null) reader.window.close();
+                throw failed;
+            }
             reader.slot = slot;
             if (guard != null) {
                 reader.background = true;
@@ -211,9 +255,15 @@ final class NativeAudio {
                                 size);
             reader.fileSize = file.size;
             reader.revision = permissionRevision;
-            reader.check();
+            try {
+                reader.check();
+            } catch (Exception failed) {
+                if (reader.window != null) reader.window.close();
+                throw failed;
+            }
             return reader;
         } catch (Exception e) {
+            if (opened != null && opened.window != null) opened.window.close();
             if (counted) release(fileId, lease, slot, guard != null, true);
             else slot.release();
             throw io(e);
@@ -243,6 +293,7 @@ final class NativeAudio {
      * file. {@code guard} throws {@link Deferred} when playback needs the network.
      */
     byte[] readRange(int file, long offset, int length, Runnable guard) throws Exception {
+        if (windows != null) return coordinatedRange(file, offset, length, guard);
         Lease lease;
         synchronized (cacheGuard) {
             lease = leases.get(file);
@@ -268,7 +319,40 @@ final class NativeAudio {
 
     private byte[] readRangeLeased(int file, long offset, int length, Runnable guard, Lease lease)
             throws Exception {
+        TelegramStreamTrace.Request request =
+                trace.begin(
+                        file,
+                        offset,
+                        length,
+                        "background",
+                        1,
+                        seekGeneration.get(),
+                        false,
+                        System.nanoTime() / 1_000_000L);
+        try {
+            byte[] bytes = readRangeMeasured(file, offset, length, guard, lease, request);
+            if (request != null) {
+                request.served(offset, bytes.length);
+                request.end("complete");
+            }
+            return bytes;
+        } catch (Exception failure) {
+            if (request != null)
+                request.end(failure instanceof CancellationException ? "cancelled" : "failed");
+            throw failure;
+        }
+    }
+
+    private byte[] readRangeMeasured(
+            int file,
+            long offset,
+            int length,
+            Runnable guard,
+            Lease lease,
+            TelegramStreamTrace.Request request)
+            throws Exception {
         TdApi.File info = bridge.call(new TdApi.GetFile(file), 15000);
+        if (info.local != null) trace.update(file, info.local.downloadedSize);
         if (offset < 0 || offset >= info.size) return new byte[0];
         int wanted = (int) Math.min(length, info.size - offset);
         long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(60);
@@ -276,8 +360,14 @@ final class NativeAudio {
             if (guard != null) guard.run();
             long have =
                     bridge.call(new TdApi.GetFileDownloadedPrefixSize(file, offset), 15000).size;
+            if (request != null) {
+                request.prefixCalls++;
+                request.initial(have);
+                request.readable(offset, have, wanted);
+            }
             if (have < wanted) {
                 if (played(lease)) throw new Deferred("Telegram file is playing");
+                if (request != null) request.window(offset, wanted, 1);
                 bridge.call(new TdApi.DownloadFile(file, 1, offset, wanted, false), 15000);
                 while ((have =
                                 bridge.call(
@@ -290,6 +380,14 @@ final class NativeAudio {
                     if (System.nanoTime() > deadline)
                         throw new IOException("Telegram download timed out");
                     Thread.sleep(100);
+                    if (request != null) {
+                        request.prefixCalls++;
+                        request.wake(false, false);
+                    }
+                }
+                if (request != null) {
+                    request.prefixCalls++;
+                    request.readable(offset, have, wanted);
                 }
             }
             String path = bridge.call(new TdApi.GetFile(file), 15000).local.path;
@@ -304,6 +402,66 @@ final class NativeAudio {
                 if (attempt >= MOVED_ATTEMPTS) throw gone;
                 Thread.sleep(50L * attempt);
             }
+        }
+    }
+
+    static TelegramStreamCoordinator.State state(TdApi.File file) {
+        TdApi.LocalFile local = file.local;
+        return new TelegramStreamCoordinator.State(
+                local == null ? "" : local.path,
+                file.size,
+                local == null ? 0 : local.downloadOffset,
+                local == null ? 0 : local.downloadedPrefixSize,
+                local == null ? 0 : local.downloadedSize,
+                local != null && local.isDownloadingCompleted,
+                local != null && local.isDownloadingActive);
+    }
+
+    private byte[] coordinatedRange(int file, long offset, int length, Runnable guard)
+            throws Exception {
+        if (length < 0 || length > 8 * 1024 * 1024)
+            throw new IOException("Telegram range exceeds memory limit");
+        if (guard != null) guard.run();
+        bridge.requireReady();
+        long session = bridge.generation;
+        TdApi.File initial = bridge.call(new TdApi.GetFile(file), 15000);
+        if (offset < 0 || offset >= initial.size) return new byte[0];
+        int wanted = (int) Math.min(length, initial.size - offset);
+        try (TelegramStreamCoordinator.Registration registration =
+                windows.register(file, TelegramStreamCoordinator.Consumer.BACKGROUND, 0)) {
+            windows.seed(file, state(initial));
+            registration.trace =
+                    trace.begin(
+                            file,
+                            offset,
+                            wanted,
+                            "background",
+                            1,
+                            registration.generation,
+                            true,
+                            System.nanoTime() / 1_000_000L);
+            registration.await(
+                    offset,
+                    wanted,
+                    60000,
+                    () -> {
+                        if (guard != null) guard.run();
+                        if (session != bridge.generation)
+                            throw new CancellationException("Telegram session changed");
+                    });
+            TdApi.File current = bridge.call(new TdApi.GetFile(file), 15000);
+            byte[] bytes = new byte[wanted];
+            try (RandomAccessFile input = new RandomAccessFile(current.local.path, "r")) {
+                input.seek(offset);
+                input.readFully(bytes);
+            } catch (FileNotFoundException | EOFException moved) {
+                bytes = bridge.call(new TdApi.ReadFilePart(file, offset, wanted), 15000).data;
+                if (bytes.length != wanted)
+                    throw new EOFException("Incomplete Telegram cached range");
+            }
+            if (registration.trace != null) registration.trace.served(offset, wanted);
+            registration.end = "complete";
+            return bytes;
         }
     }
 
@@ -329,6 +487,10 @@ final class NativeAudio {
         final Lease lease;
         Semaphore slot;
         TelegramStreamTrace.Request trace;
+        TelegramStreamCoordinator.Registration window;
+        TelegramStreamCoordinator.Consumer consumer;
+        RandomAccessFile handle;
+        String handlePath;
         boolean background;
         long revision, checkedAt;
         long position, end;
@@ -340,6 +502,12 @@ final class NativeAudio {
         long fileSize;
         String availablePath;
         long availableFrom, availableUntil, availableLength, availableModified;
+        long lastDownloaded = -1;
+        byte[] containerHead;
+        int containerHeadSize;
+        boolean containerHinted;
+        String containerFormat;
+        volatile TelegramStreamCoordinator.Registration metadata;
 
         Reader(
                 NativeAudio owner,
@@ -366,6 +534,7 @@ final class NativeAudio {
                     mime.matches("[a-zA-Z0-9.+-]+/[a-zA-Z0-9.+-]+")
                             ? mime
                             : "application/octet-stream";
+            this.containerFormat = TelegramContainerRanges.format(this.mime);
             this.lease = lease;
             this.slot = owner.slots;
             revision = owner.bridge.mediaRevision;
@@ -408,21 +577,36 @@ final class NativeAudio {
             if (offset < 0 || length < 0 || offset > buffer.length - length)
                 throw new IndexOutOfBoundsException();
             if (length == 0) return 0;
-            check();
-            if (position == end) return -1;
             try {
+                check();
+                if (position == end) return -1;
                 int wanted = (int) Math.min(length, end - position);
                 int count =
                         entry == null
                                 ? physical(position, end, buffer, offset, wanted)
                                 : entry.read(position, buffer, offset, wanted);
                 if (count < 0) return -1;
+                if (entry == null && position == 0 && (window != null || trace != null)) {
+                    containerFormat =
+                            TelegramContainerRanges.sniff(
+                                    java.util.Arrays.copyOfRange(buffer, offset, offset + count),
+                                    count,
+                                    containerFormat);
+                    if (trace != null) trace.format = containerFormat;
+                }
+                if (entry == null && window != null)
+                    prefetchContainer(position, buffer, offset, count);
                 if (trace != null) trace.served(position, count);
                 position += count;
                 return count;
             } catch (Exception e) {
                 if (trace != null)
                     trace.end(e instanceof CancellationException ? "cancelled" : "failed");
+                if (window != null) {
+                    window.end = "failed";
+                    window.close();
+                    close();
+                }
                 throw io(e);
             }
         }
@@ -446,6 +630,7 @@ final class NativeAudio {
         private int physical(long at, long limit, byte[] buffer, int offset, int length)
                 throws Exception {
             if (at >= limit) return -1;
+            if (window != null) return coordinatedPhysical(at, limit, buffer, offset, length);
             synchronized (lease) {
                 // TDLib moves a file out of its temp folder once the download completes, and
                 // deletes cached files to free space, so the path it gave may be gone by the time
@@ -460,6 +645,7 @@ final class NativeAudio {
                                                 Math.min(length, 64 * 1024));
                         File cached = new File(availablePath);
                         try (RandomAccessFile input = new RandomAccessFile(cached, "r")) {
+                            if (trace != null) trace.handleOpens++;
                             if (input.length() == availableLength
                                     && cached.lastModified() == availableModified) {
                                 input.seek(at);
@@ -478,11 +664,13 @@ final class NativeAudio {
                     long prefix =
                             owner.bridge.call(new TdApi.GetFileDownloadedPrefixSize(id, at)).size;
                     if (trace != null) {
+                        trace.prefixCalls++;
                         trace.initial(prefix);
                         trace.readable(at, prefix, length);
                     }
                     if (prefix <= 0) {
                         long wanted = Math.min(limit - at, 4L * 1024 * 1024);
+                        if (trace != null) trace.window(at, wanted, background ? 1 : 32);
                         owner.bridge.call(
                                 new TdApi.DownloadFile(id, background ? 1 : 32, at, wanted, false));
                         long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(40);
@@ -496,6 +684,7 @@ final class NativeAudio {
                                                     new TdApi.GetFileDownloadedPrefixSize(id, at),
                                                     Math.min(millis, 15000))
                                             .size;
+                            if (trace != null) trace.prefixCalls++;
                             if (trace != null) trace.readable(at, prefix, length);
                             if (prefix > 0) break;
                             Thread.sleep(100);
@@ -510,6 +699,7 @@ final class NativeAudio {
                                             Math.min(prefix, Math.min(length, 64 * 1024)),
                                             limit - at);
                     try (RandomAccessFile input = new RandomAccessFile(file.local.path, "r")) {
+                        if (trace != null) trace.handleOpens++;
                         input.seek(at);
                         input.readFully(buffer, offset, count);
                     } catch (java.io.FileNotFoundException | EOFException gone) {
@@ -545,14 +735,155 @@ final class NativeAudio {
             }
         }
 
+        private int coordinatedPhysical(long at, long limit, byte[] buffer, int offset, int length)
+                throws Exception {
+            int wanted = (int) Math.min(Math.min(length, 64 * 1024), limit - at);
+            for (int attempt = 1; ; attempt++) {
+                check();
+                TelegramStreamCoordinator.State known = owner.windows.state(id);
+                if (known != null) {
+                    if (lastDownloaded >= 0 && known.downloaded < lastDownloaded) {
+                        closeHandle();
+                        availablePath = null;
+                    }
+                    lastDownloaded = known.downloaded;
+                }
+                if (known != null && availablePath != null && !availablePath.equals(known.path)) {
+                    closeHandle();
+                    availablePath = null;
+                }
+                if (availablePath == null || at < availableFrom || at + wanted > availableUntil) {
+                    long have = window.await(at, wanted, 40000, this::check);
+                    TdApi.File current = owner.bridge.call(new TdApi.GetFile(id), 15000);
+                    check();
+                    owner.windows.seed(id, state(current));
+                    availablePath = current.local.path;
+                    availableFrom = at;
+                    availableUntil = at + Math.min(have, limit - at);
+                }
+                try {
+                    if (availablePath == null || availablePath.isEmpty())
+                        throw new FileNotFoundException();
+                    File current = new File(availablePath);
+                    if (!current.isFile()) throw new FileNotFoundException();
+                    if (handle == null || !availablePath.equals(handlePath)) {
+                        closeHandle();
+                        handle = new RandomAccessFile(current, "r");
+                        handlePath = availablePath;
+                        if (trace != null) trace.handleOpens++;
+                    }
+                    handle.seek(at);
+                    handle.readFully(buffer, offset, wanted);
+                    check();
+                    if (at + wanted < end) window.consumed(at + wanted, availableUntil);
+                    return wanted;
+                } catch (FileNotFoundException | EOFException moved) {
+                    closeHandle();
+                    availablePath = null;
+                    try {
+                        if (trace != null) trace.partFallbacks++;
+                        byte[] bytes =
+                                owner.bridge.call(new TdApi.ReadFilePart(id, at, wanted), 15000)
+                                        .data;
+                        if (bytes.length != wanted) throw new EOFException();
+                        System.arraycopy(bytes, 0, buffer, offset, wanted);
+                        check();
+                        return wanted;
+                    } catch (Exception unavailable) {
+                        if (attempt >= MOVED_ATTEMPTS) throw unavailable;
+                        owner.windows.invalidate(id);
+                        window.refetch(at, wanted);
+                    }
+                }
+            }
+        }
+
+        private void closeHandle() {
+            if (handle != null) {
+                try {
+                    handle.close();
+                } catch (IOException ignored) {
+                }
+                handle = null;
+                handlePath = null;
+            }
+        }
+
+        private void prefetchContainer(long at, byte[] bytes, int offset, int count)
+                throws Exception {
+            if (containerHinted || !consumer.interactive() || at > 65536) return;
+            String format = containerFormat;
+            if (!format.equals("mp4")) {
+                containerHinted = true;
+                return;
+            }
+            if (containerHead == null) containerHead = new byte[65536];
+            if (at != containerHeadSize) return;
+            int copy = Math.min(count, containerHead.length - containerHeadSize);
+            System.arraycopy(bytes, offset, containerHead, containerHeadSize, copy);
+            containerHeadSize += copy;
+            long hint = TelegramContainerRanges.next(containerHead, containerHeadSize, 0, total);
+            if (hint < 0) return;
+            containerHinted = true;
+            containerHead = null;
+            // A declared mdat end gives an exact atom boundary; never scan or fetch a whole file.
+            for (int round = 0; hint >= 0 && round < 3; round++) {
+                check();
+                int needed = (int) Math.min(65536, total - hint);
+                try (TelegramStreamCoordinator.Registration registration =
+                        owner.windows.register(id, consumer, 0)) {
+                    metadata = registration;
+                    registration.readAhead = false;
+                    registration.trace =
+                            owner.trace.begin(
+                                    id,
+                                    hint,
+                                    needed,
+                                    consumer.label(),
+                                    consumer.priority,
+                                    registration.generation,
+                                    true,
+                                    System.nanoTime() / 1_000_000L);
+                    if (registration.trace != null) {
+                        registration.trace.format = "mp4";
+                        registration.trace.rangeKind = "container-prefetch";
+                    }
+                    registration.await(hint, needed, 10000, this::check);
+                    TdApi.File file = owner.bridge.call(new TdApi.GetFile(id), 15000);
+                    byte[] header = new byte[needed];
+                    try (RandomAccessFile input = new RandomAccessFile(file.local.path, "r")) {
+                        input.seek(hint);
+                        input.readFully(header);
+                    }
+                    check();
+                    if (registration.trace != null) registration.trace.served(hint, needed);
+                    registration.end = "complete";
+                    hint = TelegramContainerRanges.next(header, needed, hint, total);
+                } catch (IOException unavailable) {
+                    check(); // Optional hint failure must not hide a permission/session change.
+                    break; // The extractor can request its normal ranges.
+                } finally {
+                    metadata = null;
+                }
+            }
+            availablePath = null; // Restore the foreground window on its next read.
+        }
+
         public void close() {
             cancelled = true;
+            TelegramStreamCoordinator.Registration hint = metadata;
+            if (hint != null) hint.close();
+            if (window != null) {
+                window.end = position == end ? "complete" : "cancelled";
+                window.close();
+            }
             if (trace != null) trace.end(position == end ? "complete" : "cancelled");
             if (entry != null) entry.close();
             synchronized (this) {
                 if (!released) {
                     released = true;
-                    owner.release(id, lease, slot, background, true);
+                    closeHandle();
+                    owner.release(id, lease, slot, background, window == null);
                 }
             }
         }

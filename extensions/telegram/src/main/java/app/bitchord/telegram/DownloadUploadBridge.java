@@ -398,7 +398,10 @@ public final class DownloadUploadBridge {
             check(value, generation, authorization);
             readbackStarted = true;
             TdApi.File downloaded =
-                    value.call(new TdApi.DownloadFile(fileId, 8, 0, 0, true), 600000);
+                    value.streams.download(
+                            new TdApi.DownloadFile(fileId, 8, 0, 0, true),
+                            TelegramStreamCoordinator.Consumer.BACKGROUND,
+                            600000);
             check(value, generation, authorization);
             if (downloaded.local == null || !downloaded.local.isDownloadingCompleted)
                 throw new IOException("Telegram read-back did not finish");
@@ -433,8 +436,9 @@ public final class DownloadUploadBridge {
         } finally {
             if (fileId != 0 && readbackStarted)
                 try {
-                    value.call(new TdApi.CancelDownloadFile(fileId, false), 15000);
-                    value.call(new TdApi.DeleteFile(fileId), 15000);
+                    value.streams.cancelIfUnused(fileId, 15000);
+                    if (!value.streamV2Enabled() || !value.streams.coordinator.active(fileId))
+                        value.call(new TdApi.DeleteFile(fileId), 15000);
                 } catch (Exception ignored) {
                 }
             ACTIVE.remove(key, Thread.currentThread());

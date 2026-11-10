@@ -834,6 +834,37 @@ public final class TelegramActivity extends Activity {
         mainChannel();
         trackDetails();
         LinearLayout playback = card("Playback");
+        toggle(
+                playback,
+                "Experimental Telegram streaming",
+                "Coordinated ranges and progress wakeups",
+                "Original Telegram streaming",
+                bridge.streamV2Enabled(),
+                bridge::setStreamV2Enabled,
+                null,
+                "Default off. Stop playback before changing this option. Compare both modes using"
+                        + " Diagnostics.");
+        divider(playback);
+        row(
+                playback,
+                "Streaming buffer threshold",
+                "Extend read-ahead below this amount of audio",
+                bridge.streamLowWaterSeconds() + " s",
+                () -> {
+                    int[] seconds = {5, 10, 15, 20, 30};
+                    new android.app.AlertDialog.Builder(this)
+                            .setTitle("Streaming buffer threshold")
+                            .setItems(
+                                    new String[] {"5 s", "10 s", "15 s", "20 s", "30 s"},
+                                    (dialog, which) ->
+                                            run(
+                                                    () ->
+                                                            bridge.setStreamLowWaterSeconds(
+                                                                    seconds[which])))
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                });
+        divider(playback);
         row(
                 playback,
                 "Telegram source",

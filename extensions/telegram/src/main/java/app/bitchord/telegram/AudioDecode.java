@@ -171,7 +171,15 @@ final class AudioDecode {
         private void open(long position) throws IOException {
             if (reader != null) reader.close();
             reader = null;
-            reader = bridge.audio.open(url, position, -1, guard);
+            reader =
+                    bridge.audio.open(
+                            url,
+                            position,
+                            -1,
+                            guard,
+                            guard == null
+                                    ? TelegramStreamCoordinator.Consumer.VERIFICATION
+                                    : TelegramStreamCoordinator.Consumer.ANALYSIS);
         }
 
         @Override

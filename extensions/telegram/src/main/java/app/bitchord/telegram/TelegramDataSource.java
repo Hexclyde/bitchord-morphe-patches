@@ -23,7 +23,19 @@ public final class TelegramDataSource extends BaseDataSource {
         transferInitializing(spec);
         try {
             TelegramBridge bridge = InternalAddon.bridge();
-            reader = bridge.audio.open(spec.uri.toString(), spec.position, spec.length);
+            String key = null;
+            try {
+                key = (String) DataSpec.class.getField("key").get(spec);
+            } catch (ReflectiveOperationException unavailable) {
+                /* Older host has no cache key. */
+            }
+            reader =
+                    bridge.audio.open(
+                            spec.uri.toString(),
+                            spec.position,
+                            spec.length,
+                            null,
+                            TelegramStreamContext.forSource(key, spec.uri.toString()));
             uri = spec.uri;
             transferStarted(spec);
             started = true;

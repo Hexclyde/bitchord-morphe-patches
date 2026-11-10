@@ -80,6 +80,8 @@ public final class TelegramBridge {
     volatile CompletableFuture<Void> clientClosed;
     volatile boolean restarting;
     final NativeAudio audio = new NativeAudio(this);
+    final TelegramStreams streams = new TelegramStreams(this);
+    private volatile boolean streamV2;
     volatile String sessionTag;
     public volatile TdApi.AuthorizationState auth;
     public volatile String status = "Starting Telegram…";
@@ -449,6 +451,7 @@ public final class TelegramBridge {
         saveConfig();
         // No logs of phone numbers, codes, passwords or session data.
         Client.execute(new TdApi.SetLogVerbosityLevel(0));
+        Diagnostics.streamSessionProbe = this::streamSession;
         startClient();
         Thread catalogue = new Thread(this::runCatalogueUpdates, "Telegram catalogue");
         catalogue.setDaemon(true);
@@ -500,6 +503,13 @@ public final class TelegramBridge {
         indexChargingOnly = config.optBoolean("indexChargingOnly", false);
         SoundCheck.active = config.optBoolean("soundCheck", false) ? soundCheck : null;
         useSharedIndexes = config.optBoolean("useSharedIndexes", true);
+        streamV2 = config.optBoolean("telegram_stream_v2", false);
+        streams.coordinator.lowWaterMs =
+                Math.max(
+                        5000,
+                        Math.min(30000, config.optLong("telegram_stream_low_water_ms", 15000)));
+        streams.coordinator.targetAheadMs = streams.coordinator.lowWaterMs * 2;
+        audio.windows = streamV2 ? streams.coordinator : null;
         checks.checkLossless = config.optBoolean("checkLossless", true);
         LosslessCheck.enabled = checks.checkLossless;
         checks.checkInBackground = config.optBoolean("checkInBackground", false);
@@ -684,7 +694,11 @@ public final class TelegramBridge {
                 }
             }
         if (newest == null) throw new IOException("There's no BitChord backup in that channel.");
-        TdApi.File file = call(new TdApi.DownloadFile(newest.document.id, 1, 0, 0, true), 600000);
+        TdApi.File file =
+                streams.download(
+                        new TdApi.DownloadFile(newest.document.id, 1, 0, 0, true),
+                        TelegramStreamCoordinator.Consumer.BACKUP,
+                        600000);
         if (file.local == null || !file.local.isDownloadingCompleted)
             throw new IOException("The backup didn't finish downloading. Try again.");
         try (InputStream in = new FileInputStream(file.local.path)) {
@@ -1199,7 +1213,10 @@ public final class TelegramBridge {
                 }
                 if (newest == null) continue;
                 TdApi.File file =
-                        call(new TdApi.DownloadFile(newest.document.id, 1, 0, 0, true), 600000);
+                        streams.download(
+                                new TdApi.DownloadFile(newest.document.id, 1, 0, 0, true),
+                                TelegramStreamCoordinator.Consumer.BACKUP,
+                                600000);
                 if (file.local == null || !file.local.isDownloadingCompleted) continue;
                 int added = 0;
                 try (InputStream in = new FileInputStream(file.local.path)) {
@@ -1225,6 +1242,8 @@ public final class TelegramBridge {
     }
 
     private void startClient() throws Exception {
+        streams.reset(false);
+        audio.trace.reset();
         final long current;
         synchronized (clientState) {
             current = ++generation;
@@ -1292,8 +1311,10 @@ public final class TelegramBridge {
         DownloadUploadBridge.onUpdate(this, obj);
         if (obj instanceof TdApi.UpdateFile) {
             TdApi.File updated = ((TdApi.UpdateFile) obj).file;
-            if (updated != null && updated.local != null)
+            if (updated != null && updated.local != null) {
                 audio.trace.update(updated.id, updated.local.downloadedSize);
+                if (streamV2) streams.update(updated);
+            }
         }
         if (obj instanceof TdApi.UpdateAuthorizationState) {
             authorizationRevision++;
@@ -1312,10 +1333,13 @@ public final class TelegramBridge {
                                 : "Add your application credentials to connect.";
                 work.execute(this::configure);
             } else if (auth instanceof TdApi.AuthorizationStateReady) {
+                streams.reset(false);
                 status = "Telegram connected. Select music chats, then search in BitChord.";
                 setForeground(foreground);
                 streamSession();
             } else if (auth instanceof TdApi.AuthorizationStateClosed) {
+                streams.reset(false);
+                audio.trace.reset();
                 status = "Telegram session closed. Restart BitChord to connect again.";
             } else status = auth.getClass().getSimpleName().replace("AuthorizationState", "");
         } else if (obj instanceof TdApi.UpdateChatHasProtectedContent
@@ -1517,6 +1541,35 @@ public final class TelegramBridge {
         }
     }
 
+    public boolean streamV2Enabled() {
+        return streamV2;
+    }
+
+    public synchronized void setStreamV2Enabled(boolean enabled) throws Exception {
+        if (audio.active() || streams.coordinator.active() != 0 || streams.busy())
+            throw new IOException(
+                    "Stop playback and wait for Telegram reads before changing streaming mode");
+        config.put("telegram_stream_v2", enabled);
+        saveConfig();
+        streams.reset(false);
+        streamV2 = enabled;
+        audio.windows = enabled ? streams.coordinator : null;
+        recordStreamSession();
+    }
+
+    public int streamLowWaterSeconds() {
+        return (int) (streams.coordinator.lowWaterMs / 1000);
+    }
+
+    public synchronized void setStreamLowWaterSeconds(int seconds) throws Exception {
+        if (seconds < 5 || seconds > 30)
+            throw new IllegalArgumentException("Buffer threshold must be 5 to 30 seconds");
+        config.put("telegram_stream_low_water_ms", seconds * 1000L);
+        saveConfig();
+        streams.coordinator.lowWaterMs = seconds * 1000L;
+        streams.coordinator.targetAheadMs = seconds * 2000L;
+    }
+
     volatile String runtimeTdlibVersion = "unknown";
 
     void streamSession() {
@@ -1540,7 +1593,7 @@ public final class TelegramBridge {
             if (part.startsWith("source=")) fields.put("wrapper_fingerprint", part.substring(7));
         }
         fields.put("tdlib_version", runtimeTdlibVersion);
-        fields.put("stream_v2", false);
+        fields.put("stream_v2", streamV2);
         Diagnostics.record("telegram.stream.session", fields);
     }
 
@@ -2354,8 +2407,9 @@ public final class TelegramBridge {
                 artwork.fill(
                         current,
                         (file, done) ->
-                                target.send(
+                                streams.send(
                                         new TdApi.DownloadFile(file, 4, 0, 0, true),
+                                        TelegramStreamCoordinator.Consumer.ARTWORK,
                                         result -> {
                                             TdApi.File local =
                                                     result instanceof TdApi.File
@@ -2393,9 +2447,10 @@ public final class TelegramBridge {
     }
 
     /** Downloads just the start of an audio file and hands over its path for header reading. */
-    private static void probe(Client target, int file, Artwork.Done done) {
-        target.send(
+    private void probe(Client target, int file, Artwork.Done done) {
+        streams.send(
                 new TdApi.DownloadFile(file, 2, 0, FormatProbe.HEAD_BYTES, true),
+                TelegramStreamCoordinator.Consumer.METADATA,
                 result -> {
                     TdApi.File local = result instanceof TdApi.File ? (TdApi.File) result : null;
                     done.finished(
@@ -2776,7 +2831,11 @@ public final class TelegramBridge {
     public String downloadSponsorFile(int file) throws Exception {
         requireReady();
         long session = generation;
-        TdApi.File result = call(new TdApi.DownloadFile(file, 16, 0, 0, true), 40000);
+        TdApi.File result =
+                streams.download(
+                        new TdApi.DownloadFile(file, 16, 0, 0, true),
+                        TelegramStreamCoordinator.Consumer.SPONSOR,
+                        40000);
         if (session != generation
                 || result.local == null
                 || !result.local.isDownloadingCompleted
@@ -2789,8 +2848,9 @@ public final class TelegramBridge {
     void releaseSponsorFile(int file) {
         Client target = client;
         if (target != null) {
-            target.send(new TdApi.CancelDownloadFile(file, false), null);
-            target.send(new TdApi.DeleteFile(file), null);
+            streams.cancelIfUnused(file);
+            if (!streamV2 || !streams.coordinator.active(file))
+                target.send(new TdApi.DeleteFile(file), null);
         }
     }
 
@@ -2853,7 +2913,7 @@ public final class TelegramBridge {
     }
 
     void cancelDownload(int id) {
-        client.send(new TdApi.CancelDownloadFile(id, false), null);
+        streams.cancelIfUnused(id);
     }
 
     /** How long a downloaded file is kept from trimming the cache to its size, in seconds. */
@@ -2922,6 +2982,8 @@ public final class TelegramBridge {
     public void logout() throws Exception {
         if (audio.active()) throw new IOException("Stop playback before signing out");
         call(new TdApi.LogOut());
+        streams.reset(true);
+        audio.trace.reset();
         synchronized (catalogueState) {
             auth = null;
             selected.clear();
