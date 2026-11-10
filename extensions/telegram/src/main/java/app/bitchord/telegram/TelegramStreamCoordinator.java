@@ -384,6 +384,7 @@ final class TelegramStreamCoordinator {
                     }
                     initial = false;
                     if (ready) {
+                        guard.check();
                         synchronized (TelegramStreamCoordinator.this) {
                             check();
                             demand = false;

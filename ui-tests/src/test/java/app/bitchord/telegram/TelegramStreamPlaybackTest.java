@@ -25,7 +25,7 @@ public class TelegramStreamPlaybackTest {
         TelegramBridge.init(RuntimeEnvironment.getApplication());
         TelegramBridge bridge = TelegramBridge.instance;
         String uri = bridge.url() + "/audio/10_20";
-        MediaItem item = new MediaItem.Builder().setMediaId("unit-test").setUri(uri).build();
+        MediaItem[] item = {new MediaItem.Builder().setMediaId("unit-test").setUri(uri).build()};
         AnalyticsListener[] analytics = new AnalyticsListener[1];
         Player player =
                 (Player)
@@ -35,7 +35,7 @@ public class TelegramStreamPlaybackTest {
                                 (proxy, method, args) -> {
                                     switch (method.getName()) {
                                         case "getCurrentMediaItem":
-                                            return item;
+                                            return item[0];
                                         case "getPlayWhenReady":
                                         case "isPlaying":
                                             return true;
@@ -79,6 +79,24 @@ public class TelegramStreamPlaybackTest {
             assertEquals(1700, audible.getLong("buffer_ms"));
             assertTrue(after.stream().anyMatch(r -> r.optLong("underruns") == 1));
             assertFalse(after.toString().contains(uri));
+            item[0] =
+                    new MediaItem.Builder()
+                            .setMediaId("other")
+                            .setUri("bitchord://watch?v=other")
+                            .build();
+            long generation = bridge.audio.seekGeneration.get();
+            TelegramStreamPlayback.seek(player);
+            assertEquals(generation + 1, bridge.audio.seekGeneration.get());
+            JSONObject unconfirmed =
+                    output().stream()
+                            .filter(
+                                    r ->
+                                            r.optLong("stream_generation") == generation + 1
+                                                    && r.optString("output_signal").equals("seek"))
+                            .findFirst()
+                            .get();
+            assertEquals("unconfirmed", unconfirmed.getString("source_scope"));
+            assertFalse(unconfirmed.has("file_ref"));
         } finally {
             Diagnostics.stop();
         }

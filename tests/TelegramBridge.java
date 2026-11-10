@@ -181,7 +181,7 @@ final class TelegramBridge {
             TdApi.FileDownloadedPrefixSize prefix = new TdApi.FileDownloadedPrefixSize();
             for (Map.Entry<Long, Long> e : available.entrySet())
                 if (pos >= e.getKey() && pos < e.getValue()) prefix.size = e.getValue() - pos;
-            if (prefix.size == 0
+            if (prefix.size < Math.max(0, offset + limit - pos)
                     && !stall
                     && limit > 0
                     && ++polls > 1

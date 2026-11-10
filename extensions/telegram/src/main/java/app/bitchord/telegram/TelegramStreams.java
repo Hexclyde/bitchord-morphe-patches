@@ -138,7 +138,14 @@ final class TelegramStreams {
         }
         owner.requireReady();
         long session = owner.generation;
+        TelegramStreamCoordinator.Guard access =
+                () -> {
+                    owner.requireReady();
+                    if (session != owner.generation || Thread.currentThread().isInterrupted())
+                        throw new CancellationException("Telegram session changed");
+                };
         TdApi.File initial = owner.call(new TdApi.GetFile(request.fileId), 15000);
+        access.check();
         try (TelegramStreamCoordinator.Registration registration =
                 coordinator.register(request.fileId, consumer, 0)) {
             update(initial, false);
@@ -156,17 +163,17 @@ final class TelegramStreams {
                             System.nanoTime() / 1_000_000L);
             owner.audio.trace.update(
                     request.fileId, initial.local == null ? 0 : initial.local.downloadedSize);
-            registration.await(
-                    request.offset,
-                    required,
-                    timeout,
-                    () -> {
-                        owner.requireReady();
-                        if (session != owner.generation || Thread.currentThread().isInterrupted())
-                            throw new CancellationException("Telegram session changed");
-                    });
+            registration.await(request.offset, required, timeout, access);
+            TdApi.File result = owner.call(new TdApi.GetFile(request.fileId), 15000);
+            access.check();
+            if (initial.remote != null
+                    && result.remote != null
+                    && initial.remote.uniqueId != null
+                    && !initial.remote.uniqueId.isEmpty()
+                    && !initial.remote.uniqueId.equals(result.remote.uniqueId))
+                throw new IOException("Telegram file identity changed");
             registration.end = "complete";
-            return owner.call(new TdApi.GetFile(request.fileId), 15000);
+            return result;
         }
     }
 

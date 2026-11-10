@@ -198,6 +198,8 @@ final class NativeAudio {
             reader.slot = slot;
             try {
                 if (windows != null) {
+                    if (generation != bridge.generation || !tag.equals(bridge.sessionTag))
+                        throw new IOException("Telegram session changed");
                     long bitrate =
                             row.optLong("duration") > 0
                                     ? file.size * 8 / row.optLong("duration")
@@ -424,12 +426,23 @@ final class NativeAudio {
         if (guard != null) guard.run();
         bridge.requireReady();
         long session = bridge.generation;
+        TelegramStreamCoordinator coordinator = windows;
+        if (coordinator == null) throw new Deferred("Telegram streaming configuration changed");
+        TelegramStreamCoordinator.Guard access =
+                () -> {
+                    if (guard != null) guard.run();
+                    bridge.requireReady();
+                    if (session != bridge.generation || coordinator != windows)
+                        throw new CancellationException(
+                                "Telegram session or streaming configuration changed");
+                };
         TdApi.File initial = bridge.call(new TdApi.GetFile(file), 15000);
+        access.check();
         if (offset < 0 || offset >= initial.size) return new byte[0];
         int wanted = (int) Math.min(length, initial.size - offset);
         try (TelegramStreamCoordinator.Registration registration =
-                windows.register(file, TelegramStreamCoordinator.Consumer.BACKGROUND, 0)) {
-            windows.seed(file, state(initial));
+                coordinator.register(file, TelegramStreamCoordinator.Consumer.BACKGROUND, 0)) {
+            coordinator.seed(file, state(initial));
             registration.trace =
                     trace.begin(
                             file,
@@ -440,16 +453,9 @@ final class NativeAudio {
                             registration.generation,
                             true,
                             System.nanoTime() / 1_000_000L);
-            registration.await(
-                    offset,
-                    wanted,
-                    60000,
-                    () -> {
-                        if (guard != null) guard.run();
-                        if (session != bridge.generation)
-                            throw new CancellationException("Telegram session changed");
-                    });
+            registration.await(offset, wanted, 60000, access);
             TdApi.File current = bridge.call(new TdApi.GetFile(file), 15000);
+            access.check();
             byte[] bytes = new byte[wanted];
             try (RandomAccessFile input = new RandomAccessFile(current.local.path, "r")) {
                 input.seek(offset);
@@ -459,6 +465,7 @@ final class NativeAudio {
                 if (bytes.length != wanted)
                     throw new EOFException("Incomplete Telegram cached range");
             }
+            access.check();
             if (registration.trace != null) registration.trace.served(offset, wanted);
             registration.end = "complete";
             return bytes;

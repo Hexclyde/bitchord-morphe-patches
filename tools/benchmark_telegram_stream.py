@@ -147,6 +147,12 @@ def summarize(rows, enabled):
             if r.get("output_signal") == "sink-advancing"
         ),
         "physical_seek_to_audio_ms": None,
+        "telegram_confirmed_seek_to_sink_ms": distribution(
+            r.get("output_ms", -1)
+            for r in output
+            if r.get("output_signal") == "sink-advancing"
+            and r.get("source_scope") == "telegram"
+        ),
         "cache_served_bytes": sum(r.get("cache_bytes", 0) for r in timing),
         "not_cached_at_open_served_bytes": sum(
             r.get("uncached_bytes", 0) for r in timing

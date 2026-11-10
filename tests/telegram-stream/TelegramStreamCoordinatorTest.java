@@ -143,6 +143,24 @@ public final class TelegramStreamCoordinatorTest {
             check(r.await(5000, 128, 100, () -> {}) == 128, "Partly cached data readable");
             r.close();
             check(fake.commands.size() == requests, "Cache requires no downloadFile");
+            r = c.register(7, TelegramStreamCoordinator.Consumer.PLAYBACK, 128000);
+            final int[] checks = {0};
+            try {
+                r.await(
+                        5000,
+                        128,
+                        100,
+                        () -> {
+                            if (++checks[0] == 2)
+                                throw new CancellationException(
+                                        "Changed during availability check");
+                        });
+                throw new AssertionError("Returned cached data after session changed");
+            } catch (CancellationException expected) {
+            }
+            check(
+                    c.active() == 0,
+                    "Cached readiness repeats its access guard and releases on failure");
 
             fake = new FakeTdlib();
             c = create(fake);
@@ -256,21 +274,27 @@ public final class TelegramStreamCoordinatorTest {
             c.reset(false);
             failed(waiting);
             check(c.active() == 0, "Session change cleans every registration");
+            r = c.register(7, TelegramStreamCoordinator.Consumer.ANALYSIS, 0);
+            waiting = read(r, 850, 50);
+            until(() -> ending.commands.size() == 2);
+            c.seek();
+            failed(waiting);
+            check(c.active() == 0, "Seek drops speculative analysis without an identity failure");
             r = c.register(7, TelegramStreamCoordinator.Consumer.BACKGROUND, 0);
             waiting = read(r, 900, 50);
-            until(() -> ending.commands.size() == 2);
-            fake.replies.get(1).done(new IOException("Rejected"), 0);
+            until(() -> ending.commands.size() == 3);
+            fake.replies.get(2).done(new IOException("Rejected"), 0);
             failed(waiting);
             check(c.active() == 0, "Failure releases registration");
             r = c.register(7, TelegramStreamCoordinator.Consumer.BACKGROUND, 0);
             waiting = read(r, 1000, 50);
-            until(() -> ending.commands.size() == 3);
+            until(() -> ending.commands.size() == 4);
             r.close();
             failed(waiting);
             check(c.active() == 0, "Cancellation releases registration");
             r = c.register(7, TelegramStreamCoordinator.Consumer.BACKGROUND, 0);
             waiting = read(r, 1100, 50);
-            until(() -> ending.commands.size() == 4);
+            until(() -> ending.commands.size() == 5);
             c.reset(true);
             failed(waiting);
             check(c.active() == 0, "Shutdown releases registration");

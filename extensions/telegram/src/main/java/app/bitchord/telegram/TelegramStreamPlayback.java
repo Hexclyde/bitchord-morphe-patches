@@ -92,15 +92,6 @@ final class TelegramStreamPlayback {
     static void seek(Player player) {
         TelegramBridge bridge = TelegramBridge.instance;
         if (bridge == null) return;
-        try {
-            androidx.media3.common.MediaItem item = player.getCurrentMediaItem();
-            if (item == null
-                    || item.localConfiguration == null
-                    || !InternalAddon.reserved(
-                            SourceFirst.audibleUri(item.localConfiguration.uri).toString())) return;
-        } catch (RuntimeException unavailable) {
-            return;
-        }
         long generation = bridge.audio.seekGeneration.incrementAndGet();
         if (bridge.streamV2Enabled()) {
             bridge.streams.coordinator.seek();
@@ -133,8 +124,9 @@ final class TelegramStreamPlayback {
         } catch (RuntimeException unavailable) {
             return;
         }
-        if (!InternalAddon.reserved(uri)) return;
         Map<String, Object> fields = new LinkedHashMap<>();
+        boolean confirmed = InternalAddon.reserved(uri);
+        fields.put("source_scope", confirmed ? "telegram" : "unconfirmed");
         fields.put("request_id", timing.request);
         fields.put(
                 "stream_generation",
@@ -143,7 +135,7 @@ final class TelegramStreamPlayback {
                                 ? bridge.streams.coordinator.generation()
                                 : bridge.audio.seekGeneration.get())
                         : timing.generation);
-        long file = bridge.audio.trace.fileRef(uri);
+        long file = confirmed ? bridge.audio.trace.fileRef(uri) : 0;
         if (file > 0) fields.put("file_ref", file);
         fields.put("mono_ms", now());
         fields.put("output_ms", latency);

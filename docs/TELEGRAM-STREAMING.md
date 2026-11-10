@@ -155,6 +155,10 @@ The player-reported seek discontinuity is the seek start signal, not a UI tap
 timestamp. `onAudioPositionAdvancing`, when exposed, is an audio-sink proxy, not a
 measurement at a speaker/Bluetooth device. Unavailable output timing stays `-1`.
 Never substitute decoder initialization or `STATE_READY` for audio output.
+Player samples continue when source identity is unavailable; `source_scope` is
+then `unconfirmed` and no Telegram file is attributed. The harness separates
+confirmed Telegram seek samples from general player seek samples. Host metadata
+or an advertised quality label alone is not evidence of the audible source.
 
 ## Reproducible comparison
 

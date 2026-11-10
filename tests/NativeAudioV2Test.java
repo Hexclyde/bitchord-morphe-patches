@@ -100,6 +100,18 @@ public final class NativeAudioV2Test {
             }
             check(bridge.partReads > 0, "Eviction attempts the readFilePart recovery path");
             check(bridge.audio.windows.active() == 0, "Eviction recovery leaves no registration");
+            bridge.available.clear();
+            bridge.limit = 0;
+            bridge.revokeOnPrefix = true;
+            try {
+                bridge.audio.readRange(7, 45000, 128, () -> {});
+                throw new AssertionError("Returned a range after its session changed");
+            } catch (java.util.concurrent.CancellationException expected) {
+            }
+            check(
+                    bridge.audio.windows.active() == 0,
+                    "Session change during readiness releases the range registration");
+            url = bridge.url() + "/audio/10_20";
             NativeAudio.Reader denied = bridge.audio.open(url, 0, 100);
             bridge.selected.clear();
             try {

@@ -287,6 +287,9 @@ public final class DiagnosticRecord {
                                                         + " rebuffer sample"),
                                         "ready"));
                         break;
+                    case "source_scope":
+                        out.put(key, enumValue(value, set("telegram unconfirmed"), "unconfirmed"));
+                        break;
                     case "container_format":
                         out.put(
                                 key,
