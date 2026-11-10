@@ -57,7 +57,7 @@ public final class AddonAvailability {
         if (key == null) return;
         synchronized (pauses) {
             EndpointCooldown state = pauses.get(key);
-            if (code == 503) {
+            if (code == 503 || code == 429) {
                 if (state == null) {
                     if (pauses.size() >= 64) pauses.remove(pauses.keySet().iterator().next());
                     state = new EndpointCooldown(clock);

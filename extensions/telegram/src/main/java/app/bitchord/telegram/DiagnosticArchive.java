@@ -63,6 +63,18 @@ final class DiagnosticArchive {
                 zip.putNextEntry(new ZipEntry("bitchord-diagnostics.txt"));
                 zip.write(bytes);
                 zip.closeEntry();
+                zip.putNextEntry(new ZipEntry("performance-summary.txt"));
+                zip.write(DiagnosticTimeline.summary(report).getBytes(StandardCharsets.UTF_8));
+                zip.closeEntry();
+                zip.putNextEntry(new ZipEntry("timeline.csv"));
+                zip.write(DiagnosticTimeline.render(report).getBytes(StandardCharsets.UTF_8));
+                zip.closeEntry();
+                zip.putNextEntry(new ZipEntry("events.jsonl"));
+                for (String line : report.split("\n")) {
+                    String safe = DiagnosticRecord.sanitize(line);
+                    if (safe != null) zip.write((safe + "\n").getBytes(StandardCharsets.UTF_8));
+                }
+                zip.closeEntry();
             }
             complete = true;
         } finally {

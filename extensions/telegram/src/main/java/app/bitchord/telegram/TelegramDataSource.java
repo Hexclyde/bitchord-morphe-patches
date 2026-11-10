@@ -12,6 +12,8 @@ public final class TelegramDataSource extends BaseDataSource {
     private NativeAudio.Reader reader;
     private Uri uri;
     private boolean started;
+    private PerformanceTrace.Span operation;
+    private long delivered;
 
     public TelegramDataSource() {
         super(true);
@@ -20,6 +22,8 @@ public final class TelegramDataSource extends BaseDataSource {
     @Override
     public long open(DataSpec spec) throws IOException {
         if (reader != null) throw new IOException("Telegram data source is already open");
+        operation = PerformanceTrace.begin(PerformanceTrace.Stage.SOURCE_OPEN);
+        delivered = 0;
         transferInitializing(spec);
         try {
             TelegramBridge bridge = InternalAddon.bridge();
@@ -29,6 +33,7 @@ public final class TelegramDataSource extends BaseDataSource {
             started = true;
             return reader.remaining();
         } catch (IOException | RuntimeException e) {
+            if (operation != null) operation.end(PerformanceTrace.Outcome.FAILED);
             close();
             throw e;
         }
@@ -39,7 +44,10 @@ public final class TelegramDataSource extends BaseDataSource {
         if (length == 0) return 0;
         if (reader == null) throw new IOException("Telegram data source is not open");
         int read = reader.read(buffer, offset, length);
-        if (read > 0) bytesTransferred(read);
+        if (read > 0) {
+            delivered += read;
+            bytesTransferred(read);
+        }
         return read;
     }
 
@@ -62,6 +70,14 @@ public final class TelegramDataSource extends BaseDataSource {
         try {
             if (reader != null) reader.close();
         } finally {
+            if (operation != null) {
+                operation.progress(
+                        delivered,
+                        0); // Application delivery, including local TDLib cache; never network
+                // speed.
+                operation.close();
+                operation = null;
+            }
             reader = null;
             uri = null;
             if (started) {

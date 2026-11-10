@@ -4,6 +4,7 @@ package androidx.media3.common;
 public interface Player {
     int STATE_BUFFERING = 2;
     int STATE_READY = 3;
+    int DISCONTINUITY_REASON_SEEK = 1;
     int STATE_ENDED = 4;
     int MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED = 3;
 

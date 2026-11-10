@@ -10,13 +10,16 @@ import java.util.*;
 /** A private journal rebuilt only from validated records when it is read or exported. */
 public final class DiagnosticStore {
     public static final int MAX_RECORDS = 512, MAX_BYTES = 128 * 1024, MAX_LINE = 2048;
-    private final File file;
+    private final File file, previous;
+    private long writtenBytes, rotations;
     private final ArrayDeque<String> records = new ArrayDeque<>();
     private int bytes;
     private long dropped, corrupt;
 
     public DiagnosticStore(File file) throws IOException {
         this.file = file.getAbsoluteFile();
+        previous = new File(this.file.getParentFile(), this.file.getName() + ".previous");
+        check(previous);
         File parent = this.file.getParentFile();
         if (parent == null
                 || Files.isSymbolicLink(parent.toPath())
@@ -34,9 +37,13 @@ public final class DiagnosticStore {
             else if (!temporary.delete())
                 throw new IOException("Diagnostic recovery is unavailable");
         }
+        if (previous.exists()) {
+            privateFile(previous);
+            load(previous);
+        }
         if (this.file.exists()) {
             privateFile(this.file);
-            load();
+            load(this.file);
             if (this.file.length() > MAX_BYTES || corrupt > 0) rewrite();
         }
     }
@@ -55,8 +62,8 @@ public final class DiagnosticStore {
             throw new IOException("Diagnostic file permissions are unavailable");
     }
 
-    private void load() throws IOException {
-        try (RandomAccessFile input = new RandomAccessFile(file, "r")) {
+    private void load(File source) throws IOException {
+        try (RandomAccessFile input = new RandomAccessFile(source, "r")) {
             long offset = Math.max(0, input.length() - MAX_BYTES);
             input.seek(offset);
             if (offset > 0) {
@@ -109,13 +116,26 @@ public final class DiagnosticStore {
         int length = safe.getBytes(StandardCharsets.UTF_8).length + 1;
         check(file);
         add(safe);
-        if (file.exists() && file.length() + length <= MAX_BYTES && records.size() < MAX_RECORDS) {
-            try (FileOutputStream output = new FileOutputStream(file, true)) {
-                privateFile(file);
-                output.write((safe + "\n").getBytes(StandardCharsets.UTF_8));
-                output.flush();
-            }
-        } else rewrite();
+        // Two bounded segments avoid rewriting the entire retained tail for every event.
+        check(previous);
+        if (file.exists() && file.length() + length > MAX_BYTES) {
+            Files.move(file.toPath(), previous.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            rotations++;
+        }
+        boolean created = !file.exists();
+        try (FileOutputStream output = new FileOutputStream(file, true)) {
+            if (created) privateFile(file);
+            output.write((safe + "\n").getBytes(StandardCharsets.UTF_8));
+            writtenBytes += length;
+        }
+    }
+
+    synchronized long writtenBytes() {
+        return writtenBytes;
+    }
+
+    synchronized long rotations() {
+        return rotations;
     }
 
     private void rewrite() throws IOException {
@@ -137,6 +157,9 @@ public final class DiagnosticStore {
             Files.move(temporary.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
         privateFile(file);
+        check(previous);
+        if (previous.exists() && !previous.delete())
+            throw new IOException("Diagnostic recovery cleanup failed");
     }
 
     public synchronized String snapshot() {
@@ -169,6 +192,9 @@ public final class DiagnosticStore {
 
     public synchronized void clear() throws IOException {
         check(file);
+        check(previous);
+        if (previous.exists() && !previous.delete())
+            throw new IOException("Diagnostic segment could not be cleared");
         File temporary = new File(file.getParentFile(), file.getName() + ".tmp");
         check(temporary);
         if (file.exists() && !file.delete() || temporary.exists() && !temporary.delete())

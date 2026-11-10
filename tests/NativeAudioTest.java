@@ -296,6 +296,41 @@ public final class NativeAudioTest {
                         "A confirmed cached range needs no TDLib round trip for each small read");
             }
             try (NativeAudio.Reader reader = audio.open(url, 0, 16384)) {
+                reader.read(new byte[8192], 0, 8192);
+                Object lease = audio.leases.values().iterator().next();
+                java.util.concurrent.CountDownLatch held =
+                        new java.util.concurrent.CountDownLatch(1);
+                java.util.concurrent.CountDownLatch release =
+                        new java.util.concurrent.CountDownLatch(1);
+                Thread holder =
+                        new Thread(
+                                () -> {
+                                    synchronized (lease) {
+                                        held.countDown();
+                                        try {
+                                            release.await(3, java.util.concurrent.TimeUnit.SECONDS);
+                                        } catch (InterruptedException ignored) {
+                                            Thread.currentThread().interrupt();
+                                        }
+                                    }
+                                });
+                holder.start();
+                held.await();
+                long began = System.nanoTime();
+                try {
+                    content(bytes(reader), 8192, 8192);
+                } finally {
+                    release.countDown();
+                    holder.join();
+                }
+                check(
+                        java.util.concurrent.TimeUnit.NANOSECONDS.toMillis(
+                                        System.nanoTime() - began)
+                                < 1500,
+                        "Confirmed local bytes must not wait behind another reader's download"
+                                + " lease");
+            }
+            try (NativeAudio.Reader reader = audio.open(url, 0, 16384)) {
                 byte[] head = new byte[8192];
                 check(reader.read(head, 0, head.length) == head.length, "Cached head is readable");
                 content(head, 0, head.length);

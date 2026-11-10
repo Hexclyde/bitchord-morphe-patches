@@ -162,6 +162,7 @@ public final class SoundExtras {
         if (preferences != null || context == null) return;
         Context application = context.getApplicationContext();
         app = application;
+        HeapStatus.init(application);
         SharedPreferences saved =
                 application.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         // Preserve a user's earlier adjustments when introducing the enable switches.

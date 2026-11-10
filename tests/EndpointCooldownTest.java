@@ -30,9 +30,10 @@ public final class EndpointCooldownTest {
         check(pause.remaining() <= EndpointCooldown.LONGEST_MILLIS, "it never passes ten minutes");
         now.addAndGet(EndpointCooldown.LONGEST_MILLIS + 1);
         check(
-                pause.failed(Long.MAX_VALUE) == EndpointCooldown.LONGEST_MILLIS,
-                "a service's own retry time is capped too");
+                pause.failed(Long.MAX_VALUE) == EndpointCooldown.MAX_SERVER_RETRY_MILLIS,
+                "server retry is bounded separately from automatic backoff");
         now.addAndGet(EndpointCooldown.LONGEST_MILLIS + 1);
+        now.addAndGet(EndpointCooldown.MAX_SERVER_RETRY_MILLIS);
         check(pause.failed(5_000) == 5_000, "a short retry time is followed");
         pause.succeeded();
         check(pause.remaining() == 0, "an answer ends the pause");

@@ -1074,6 +1074,7 @@ public final class SourceAutomix {
         Object[] models = null;
         SourceAudio.Decoding decoding = null;
         String stage = "starting";
+        PerformanceTrace.Span trace = PerformanceTrace.begin(PerformanceTrace.Stage.ANALYSIS);
         boolean counted = false, stoodAside = false;
         active.set(job);
         enterQuiet();
@@ -1422,6 +1423,15 @@ public final class SourceAutomix {
                                 + dspFailureSite(error));
             }
         } finally {
+            trace.measure("required_bytes", job.memoryNeeded);
+            trace.end(
+                    job.done
+                            ? PerformanceTrace.Outcome.COMPLETE
+                            : job.cancelled
+                                    ? PerformanceTrace.Outcome.CANCELLED
+                                    : "failed".equals(job.phase)
+                                            ? PerformanceTrace.Outcome.FAILED
+                                            : PerformanceTrace.Outcome.DEFERRED);
             try {
                 finishModels(models);
                 if (!stoodAside) {

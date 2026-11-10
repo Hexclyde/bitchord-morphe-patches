@@ -1,5 +1,10 @@
 ## 1.1.0-beta.19
 
+- **Expanded Java heap** requests Android’s larger app heap and displays the measured device limit. Managed work remains capped at 1024 MiB or the smaller granted limit, with playback reserves and bounded analysis preserved. Install the patched APK and restart the app to activate it.
+- **Detailed performance recording** offers bounded 2, 5 and 15 minute sessions, issue markers, correlated operation spans, memory samples and timeline export. Telegram cache reads and estimated download progress remain separate.
+- Telegram search collects completed chat requests without waiting behind a slower earlier request when enough results are available. Background searches have a separate bounded worker. Confirmed cached audio reads no longer wait for another reader’s download lease.
+- Diagnostics rotates append-only segments instead of rewriting the retained history for every event. Provider cooldown also handles HTTP 429 and longer server retry instructions.
+
 - Player statistics, the quality badge, Audio Pipeline and exported logs use the active rendition's snapshot. A pending or rejected FLAC copy cannot lend its bitrate to Opus playback. Cached source labels use saved provenance, and unknown encoded bit depth remains unknown. File-derived bitrate is labelled as an estimate or average.
 - Smooth upgrades allow seek results to settle before another alignment correction. Failed alignment retains the current audio; recording and timing checks remain enforced. Handover diagnostics include the patch revision and source fingerprint.
 

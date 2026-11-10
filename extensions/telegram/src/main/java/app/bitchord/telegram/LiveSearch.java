@@ -60,6 +60,20 @@ public final class LiveSearch implements AutoCloseable {
                         t.setDaemon(true);
                         return t;
                     });
+    // A background catalogue/legend lookup cannot occupy the interactive request queue.
+    private final ThreadPoolExecutor backgroundRequests =
+            new ThreadPoolExecutor(
+                    1,
+                    1,
+                    0,
+                    TimeUnit.SECONDS,
+                    new ArrayBlockingQueue<Runnable>(200),
+                    r -> {
+                        Thread thread = new Thread(r, "Telegram background search");
+                        thread.setDaemon(true);
+                        return thread;
+                    });
+    private final Semaphore backgroundSearch = new Semaphore(1);
     private static final int SLOTS = 3;
     private final Semaphore searches = new Semaphore(SLOTS);
     // BitChord's own lookups count here; background searches only run while there are none.
@@ -130,6 +144,29 @@ public final class LiveSearch implements AutoCloseable {
      */
     public Result search(Set<Long> selected, String query, long session, boolean background)
             throws Exception {
+        try (PerformanceTrace.Span trace = PerformanceTrace.begin(PerformanceTrace.Stage.SEARCH)) {
+            try {
+                return searchTraced(selected, query, session, background, trace);
+            } catch (InterruptedException e) {
+                trace.end(PerformanceTrace.Outcome.CANCELLED);
+                throw e;
+            } catch (Exception e) {
+                trace.end(
+                        e instanceof TimeoutException
+                                ? PerformanceTrace.Outcome.TIMEOUT
+                                : PerformanceTrace.Outcome.FAILED);
+                throw e;
+            }
+        }
+    }
+
+    private Result searchTraced(
+            Set<Long> selected,
+            String query,
+            long session,
+            boolean background,
+            PerformanceTrace.Span trace)
+            throws Exception {
         String q = query == null ? "" : query.trim();
         if (q.length() > 256) throw new IOException("Search text is too long.");
         List<Long> chats = new ArrayList<>(new TreeSet<>(selected));
@@ -152,27 +189,44 @@ public final class LiveSearch implements AutoCloseable {
                 other = pending.putIfAbsent(key, own);
         if (other != null) {
             try {
-                return other.get(timeoutMillis + 1000, TimeUnit.MILLISECONDS);
+                try (PerformanceTrace.Span wait =
+                        PerformanceTrace.begin(PerformanceTrace.Stage.SEARCH_SLOT, trace)) {
+                    return other.get(timeoutMillis + 1000, TimeUnit.MILLISECONDS);
+                }
             } catch (ExecutionException e) {
                 throw cause(e);
             }
         }
-        boolean acquired = false, counted = false;
+        boolean acquired = false, counted = false, backgroundAcquired = false;
         try {
-            if (background) {
-                if (foreground.get() > 0 || !(acquired = searches.tryAcquire()))
-                    throw new IOException(BUSY);
-            } else {
-                foreground.incrementAndGet();
-                counted = true;
-                if (!(acquired =
-                        searches.tryAcquire(
-                                Math.min(timeoutMillis, WAIT_MILLIS), TimeUnit.MILLISECONDS))) {
-                    HostLog.d("Telegram search for '" + q + "' waited too long for a free slot");
-                    throw new IOException(BUSY);
+            PerformanceTrace.Span slot =
+                    PerformanceTrace.begin(PerformanceTrace.Stage.SEARCH_SLOT, trace);
+            try {
+                if (background) {
+                    if (foreground.get() > 0
+                            || !(backgroundAcquired = backgroundSearch.tryAcquire())
+                            || !(acquired = searches.tryAcquire())) throw new IOException(BUSY);
+                } else {
+                    foreground.incrementAndGet();
+                    counted = true;
+                    if (!(acquired =
+                            searches.tryAcquire(
+                                    Math.min(timeoutMillis, WAIT_MILLIS), TimeUnit.MILLISECONDS))) {
+                        HostLog.d(
+                                "Telegram search for '" + q + "' waited too long for a free slot");
+                        throw new IOException(BUSY);
+                    }
                 }
+            } catch (Exception unavailable) {
+                slot.end(
+                        unavailable instanceof InterruptedException
+                                ? PerformanceTrace.Outcome.CANCELLED
+                                : PerformanceTrace.Outcome.DEFERRED);
+                throw unavailable;
+            } finally {
+                slot.close();
             }
-            Result result = fetch(chats, q);
+            Result result = fetch(chats, q, background, trace);
             if (currentEpoch != epoch.get())
                 throw new IOException("Music-chat selection changed. Search again.");
             if (result.warning.isEmpty())
@@ -189,15 +243,20 @@ public final class LiveSearch implements AutoCloseable {
             throw e;
         } finally {
             if (acquired) searches.release();
+            if (backgroundAcquired) backgroundSearch.release();
             if (counted) foreground.decrementAndGet();
             pending.remove(key, own);
         }
     }
 
-    private Result fetch(List<Long> chats, String query) throws Exception {
+    private Result fetch(
+            List<Long> chats, String query, boolean background, PerformanceTrace.Span trace)
+            throws Exception {
         final long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeoutMillis);
         List<Future<TdApi.FoundChatMessages>> jobs = new ArrayList<>();
-        List<Long> jobChats = new ArrayList<>();
+        Map<Future<TdApi.FoundChatMessages>, Long> jobChats = new HashMap<>();
+        CompletionService<TdApi.FoundChatMessages> completed =
+                new ExecutorCompletionService<>(background ? backgroundRequests : requests);
         LinkedHashMap<String, JSONObject> unique = new LinkedHashMap<>();
         SearchReport.Builder report = new SearchReport.Builder(chats);
         Exception problem = null;
@@ -210,9 +269,12 @@ public final class LiveSearch implements AutoCloseable {
                             kind == 0
                                     ? new TdApi.SearchMessagesFilterAudio()
                                     : new TdApi.SearchMessagesFilterDocument();
-                    jobs.add(
-                            requests.submit(
+                    final long queuedAt = System.nanoTime();
+                    Future<TdApi.FoundChatMessages> submitted =
+                            completed.submit(
                                     () -> {
+                                        if (background && foreground.get() > 0)
+                                            throw new IOException(BUSY);
                                         if (cooldownUntil.get() > clock.millis())
                                             throw new RateLimited(
                                                     (int)
@@ -229,27 +291,47 @@ public final class LiveSearch implements AutoCloseable {
                                             throw new TimeoutException(
                                                     "Telegram search timed out.");
                                         try {
-                                            return pages(chat, query, filter, deadline);
+                                            try (PerformanceTrace.Span request =
+                                                    PerformanceTrace.begin(
+                                                            PerformanceTrace.Stage.SEARCH_CHAT,
+                                                            trace)) {
+                                                request.progress(0, System.nanoTime() - queuedAt);
+                                                try {
+                                                    return pages(chat, query, filter, deadline);
+                                                } catch (InterruptedException e) {
+                                                    request.end(PerformanceTrace.Outcome.CANCELLED);
+                                                    throw e;
+                                                } catch (Exception e) {
+                                                    request.end(
+                                                            e instanceof TimeoutException
+                                                                    ? PerformanceTrace.Outcome
+                                                                            .TIMEOUT
+                                                                    : PerformanceTrace.Outcome
+                                                                            .FAILED);
+                                                    throw e;
+                                                }
+                                            }
                                         } catch (RateLimited e) {
                                             rateLimited(e.retrySeconds);
                                             throw e;
                                         }
-                                    }));
-                    jobChats.add(chat);
+                                    });
+                    jobs.add(submitted);
+                    jobChats.put(submitted, chat);
                 }
             for (int i = 0; i < jobs.size(); i++) {
                 try {
-                    Future<TdApi.FoundChatMessages> job = jobs.get(i);
-                    long left = deadline - System.nanoTime();
-                    TdApi.FoundChatMessages found =
-                            job.isDone()
-                                    ? job.get()
-                                    : job.get(Math.max(0, left), TimeUnit.NANOSECONDS);
+                    Future<TdApi.FoundChatMessages> job =
+                            completed.poll(
+                                    Math.max(0, deadline - System.nanoTime()),
+                                    TimeUnit.NANOSECONDS);
+                    if (job == null) throw new TimeoutException("Telegram search timed out.");
+                    TdApi.FoundChatMessages found = job.get();
                     if (found == null || found.messages == null) continue;
                     if (found.totalCount < 0) problem = new IOException("Search page unavailable");
                     for (int n = 0; n < Math.min(MAX_RESULTS, found.messages.length); n++) {
                         TdApi.Message message = found.messages[n];
-                        if (message == null || message.chatId != jobChats.get(i)) continue;
+                        if (message == null || message.chatId != jobChats.get(job)) continue;
                         String why = TrackMetadata.rejection(message);
                         JSONObject row = why.isEmpty() ? TrackMetadata.from(message) : null;
                         if (row == null) {
@@ -268,11 +350,19 @@ public final class LiveSearch implements AutoCloseable {
                     report.unfinished(SearchReport.causeOf(e));
                 }
             }
+        } catch (InterruptedException cancelled) {
+            trace.end(PerformanceTrace.Outcome.CANCELLED);
+            throw cancelled;
         } catch (RejectedExecutionException e) {
             problem = new IOException(BUSY, e);
         } finally {
             for (Future<?> job : jobs) if (!job.isDone()) job.cancel(true);
             requests.purge();
+            backgroundRequests.purge();
+            trace.end(
+                    problem == null
+                            ? PerformanceTrace.Outcome.COMPLETE
+                            : PerformanceTrace.Outcome.FAILED);
         }
         if (unique.isEmpty() && problem != null)
             throw problem instanceof RateLimited
@@ -407,5 +497,6 @@ public final class LiveSearch implements AutoCloseable {
     public void close() {
         clear();
         requests.shutdownNow();
+        backgroundRequests.shutdownNow();
     }
 }

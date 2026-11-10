@@ -272,3 +272,11 @@ remove-beta18-branch.ps1
 /ui-tests/src/test/java/app/bitchord/telegram/NativeSourceConfig.java
 
 /ui-tests/src/test/java/app/bitchord/telegram/PlaybackPriority.java
+
+/ui-tests/src/test/java/app/bitchord/telegram/HeapStatus.java
+/ui-tests/src/test/java/app/bitchord/telegram/PerformanceTrace.java
+/ui-tests/src/test/java/app/bitchord/telegram/SeekTrace.java
+
+/ui-tests/src/test/java/app/bitchord/telegram/DiagnosticTimeline.java
+
+/ui-tests/src/test/java/app/bitchord/telegram/TelegramProgress.java

@@ -107,6 +107,53 @@ internal fun BytecodePatchContext.addDiagnosticsHooks(startup: MutableMethod) {
     mutable(logging.single())
         .addInstructions(0, "invoke-static/range {p0 .. p1}, $DIAGNOSTICS->nativeLine(C$STRING)V")
 
+    // Host command boundaries include UI and service commands that call the public Player ABI.
+    for (method in
+        allClasses.filter { it.type.startsWith("Lcom/music/bitchord/") }.flatMap { it.methods }) {
+        val sites =
+            method.code().mapIndexedNotNull { index, instruction ->
+                val call = instruction.call() ?: return@mapIndexedNotNull null
+                if (!call.definingClass.startsWith("Landroidx/media3/") || call.returnType != "V")
+                    return@mapIndexedNotNull null
+                val regs = registers(instruction)
+                val hook =
+                    when {
+                        call.name == "seekTo" && call.parameterTypes == listOf("J") ->
+                            invoke("seek", "Ljava/lang/Object;J", regs)
+                        call.name == "setPlayWhenReady" && call.parameterTypes == listOf("Z") ->
+                            invoke("playingRequested", "Ljava/lang/Object;Z", regs)
+                        call.name == "play" && call.parameterTypes.isEmpty() ->
+                            invoke("playRequested", "Ljava/lang/Object;", regs)
+                        call.name == "pause" && call.parameterTypes.isEmpty() ->
+                            invoke("pauseRequested", "Ljava/lang/Object;", regs)
+                        call.name == "prepare" && call.parameterTypes.isEmpty() ->
+                            invoke("prepareRequested", "Ljava/lang/Object;", regs)
+                        call.name in
+                            listOf(
+                                "seekToNextMediaItem",
+                                "seekToPreviousMediaItem",
+                                "seekToNext",
+                                "seekToPrevious",
+                            ) && call.parameterTypes.isEmpty() ->
+                            invoke("skipRequested", "Ljava/lang/Object;", regs)
+                        call.name in
+                            listOf(
+                                "addMediaItem",
+                                "removeMediaItem",
+                                "clearMediaItems",
+                                "moveMediaItem",
+                                "replaceMediaItem",
+                            ) -> invoke("queueRequested", "Ljava/lang/Object;", regs.take(1))
+                        else -> null
+                    }
+                if (hook == null) null else index to hook
+            }
+        if (sites.isNotEmpty()) {
+            val changed = mutable(method)
+            for ((index, hook) in sites.asReversed()) changed.addInstructions(index, hook)
+        }
+    }
+
     val login =
         "https://accounts.google.com/ServiceLogin?ltmpl=music&service=youtube" +
             "&prompt=select_account&continue=https%3A%2F%2Fmusic.youtube.com%2F"

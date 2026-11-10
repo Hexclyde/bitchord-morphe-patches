@@ -128,7 +128,104 @@ public final class LiveSearchTest {
         }
     }
 
+    private static void completedResultsDoNotWaitForSlowFirstChat() throws Exception {
+        CountDownLatch slowStarted = new CountDownLatch(1);
+        AtomicBoolean cancelled = new AtomicBoolean();
+        try (LiveSearch search =
+                new LiveSearch(
+                        (request, timeout) -> {
+                            if (request.chatId == 10
+                                    && request.filter instanceof TdApi.SearchMessagesFilterAudio) {
+                                slowStarted.countDown();
+                                try {
+                                    new CountDownLatch(1).await();
+                                } catch (InterruptedException expected) {
+                                    cancelled.set(true);
+                                    throw expected;
+                                }
+                            }
+                            slowStarted.await(1, TimeUnit.SECONDS);
+                            TdApi.Message[] rows = new TdApi.Message[100];
+                            for (int i = 0; i < rows.length; i++)
+                                rows[i] =
+                                        TestMessages.audio(
+                                                request.chatId,
+                                                i
+                                                        + (request.filter
+                                                                        instanceof
+                                                                        TdApi
+                                                                                .SearchMessagesFilterAudio
+                                                                ? 1
+                                                                : 101),
+                                                "Song");
+                            return found(rows);
+                        },
+                        () -> 1000L,
+                        4000)) {
+            long start = System.nanoTime();
+            check(
+                    search.search(chats(10, 20), "song", 1).tracks.size() == 200,
+                    "Completed chats supply bounded useful results");
+            check(
+                    TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) < 2000,
+                    "Slow first future must not hold completed results until deadline");
+            for (int i = 0; i < 100 && !cancelled.get(); i++) Thread.sleep(10);
+            check(cancelled.get(), "Unneeded slow request cancelled");
+        }
+    }
+
+    private static void backgroundCannotOccupyInteractiveWorkers() throws Exception {
+        ExecutorService caller = Executors.newSingleThreadExecutor();
+        CountDownLatch entered = new CountDownLatch(1);
+        try (LiveSearch search =
+                new LiveSearch(
+                        (request, timeout) -> {
+                            if (request.query.equals("background")) {
+                                entered.countDown();
+                                new CountDownLatch(1).await();
+                            }
+                            TdApi.Message[] rows = new TdApi.Message[100];
+                            for (int i = 0; i < rows.length; i++)
+                                rows[i] =
+                                        TestMessages.audio(
+                                                request.chatId,
+                                                i
+                                                        + (request.filter
+                                                                        instanceof
+                                                                        TdApi
+                                                                                .SearchMessagesFilterAudio
+                                                                ? 1
+                                                                : 101),
+                                                "Song");
+                            return found(rows);
+                        },
+                        () -> 1000L,
+                        4000)) {
+            Future<?> old =
+                    caller.submit(
+                            () -> {
+                                try {
+                                    search.search(chats(10, 20, 30), "background", 1, true);
+                                } catch (Exception expected) {
+                                }
+                            });
+            check(entered.await(1, TimeUnit.SECONDS), "Background request entered transport");
+            long start = System.nanoTime();
+            check(
+                    search.search(chats(40), "foreground", 1).tracks.size() == 200,
+                    "Foreground request remains available");
+            check(
+                    TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) < 1500,
+                    "Background queue must not hold interactive workers");
+            old.cancel(true);
+        } finally {
+            caller.shutdownNow();
+        }
+    }
+
     public static void main(String[] args) throws Exception {
+        completedResultsDoNotWaitForSlowFirstChat();
+        backgroundCannotOccupyInteractiveWorkers();
         catalogueMissRecovery();
         metadataCooldown();
         try (LiveSearch search =

@@ -2909,6 +2909,16 @@ private fun extrasPatch(
 
 private const val WHERE = " Settings are in Settings, Patches & tweaks."
 
+/** Changes the host application, not the extension manifest. */
+private val expandedHeapResources = resourcePatch {
+    execute {
+        document("AndroidManifest.xml").use { doc ->
+            val app = doc.getElementsByTagName("application").item(0) as org.w3c.dom.Element
+            app.setAttributeNS(ANDROID, "android:largeHeap", "true")
+        }
+    }
+}
+
 private val diagnosticsResources = resourcePatch {
     execute {
         document("AndroidManifest.xml").use { doc ->
@@ -2939,6 +2949,15 @@ val diagnosticsPatch =
         markApplied("diagnosticsApplied")
         addDiagnosticsHooks(ApplicationCreate.method)
     }
+
+@Suppress("unused")
+val expandedJavaHeapPatch =
+    extrasPatch(
+        "Expanded Java heap",
+        "Requests Android's larger Java heap. Diagnostics shows the measured device limit; managed working budgets remain capped at 1024 MiB.",
+        expandedHeapResources,
+        diagnosticsPatch,
+    ) {}
 
 @Suppress("unused")
 val singPatch =

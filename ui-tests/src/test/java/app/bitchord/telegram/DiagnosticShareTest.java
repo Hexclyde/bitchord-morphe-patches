@@ -65,7 +65,17 @@ public class DiagnosticShareTest {
                             new File(activity.getCacheDir(), "diagnostic-exports"),
                             uri.getLastPathSegment());
             try (ZipFile archive = new ZipFile(zip)) {
-                assertEquals(1, archive.size());
+                assertEquals(4, archive.size());
+                assertNotNull(archive.getEntry("timeline.csv"));
+                assertNotNull(archive.getEntry("performance-summary.txt"));
+                assertNotNull(archive.getEntry("events.jsonl"));
+                String jsonl =
+                        new String(
+                                archive.getInputStream(archive.getEntry("events.jsonl"))
+                                        .readAllBytes(),
+                                java.nio.charset.StandardCharsets.UTF_8);
+                for (String row : jsonl.split("\n"))
+                    if (!row.isEmpty()) assertEquals(row, DiagnosticRecord.sanitize(row));
                 String content =
                         new String(
                                 archive.getInputStream(archive.getEntry("bitchord-diagnostics.txt"))

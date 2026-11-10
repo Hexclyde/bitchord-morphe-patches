@@ -60,6 +60,7 @@ PATCHES = [
     "Install as Bitchord+",
     "Sign in with MicroG",
     "Diagnostics",
+    "Expanded Java heap",
     "Karaoke",
     "Pitch control",
     "Loudness level",

@@ -1290,6 +1290,15 @@ public final class TelegramBridge {
 
     private void update(TdApi.Object obj, long clientGeneration) {
         DownloadUploadBridge.onUpdate(this, obj);
+        if (obj instanceof TdApi.UpdateFile && clientGeneration == generation) {
+            TdApi.File file = ((TdApi.UpdateFile) obj).file;
+            if (file != null && file.local != null)
+                audio.progress.observe(
+                        file.id,
+                        clientGeneration,
+                        file.remote == null ? "" : file.remote.uniqueId,
+                        file.local.downloadedSize);
+        }
         if (obj instanceof TdApi.UpdateAuthorizationState) {
             authorizationRevision++;
             auth = ((TdApi.UpdateAuthorizationState) obj).authorizationState;

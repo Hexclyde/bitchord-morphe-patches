@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
 public final class DiagnosticsActivity extends Activity {
     private static final int SAVE = 2301;
     private TelegramStyle style;
-    private TextView state, start, stop, save, share, delete;
+    private TextView state, start, stop, save, share, delete, heap;
     private boolean sharing;
     private long exportRevision;
     private final Handler ui = new Handler(Looper.getMainLooper());
@@ -82,6 +82,9 @@ public final class DiagnosticsActivity extends Activity {
                         style.regular);
         explanation.setPadding(0, style.dp(16), 0, style.dp(20));
         body.addView(explanation);
+        heap = style.text(HeapStatus.description(), 14, style.secondary, style.regular);
+        heap.setTag("diagnostics-heap");
+        body.addView(heap);
         state = style.text("", 18, style.foreground, style.semibold);
         state.setTag("diagnostics-state");
         state.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
@@ -95,6 +98,21 @@ public final class DiagnosticsActivity extends Activity {
                             Diagnostics.start(this);
                             status();
                         });
+        action(
+                body,
+                "Detailed performance recording",
+                "diagnostics-detailed",
+                () -> {
+                    new AlertDialog.Builder(this)
+                            .setTitle("Recording duration")
+                            .setItems(
+                                    new String[] {"2 minutes", "5 minutes", "15 minutes"},
+                                    (dialog, selected) -> {
+                                        Diagnostics.start(this, new int[] {2, 5, 15}[selected]);
+                                        status();
+                                    })
+                            .show();
+                });
         stop =
                 action(
                         body,
@@ -104,6 +122,16 @@ public final class DiagnosticsActivity extends Activity {
                             Diagnostics.stop();
                             status();
                         });
+        action(
+                body,
+                "Mark issue",
+                "diagnostics-mark",
+                () -> {
+                    Diagnostics.event("recording.mark");
+                    try (PerformanceTrace.Span issue =
+                            PerformanceTrace.begin(PerformanceTrace.Stage.ISSUE)) {}
+                    message("Issue marked if recording is active");
+                });
         share = action(body, Strings.t("Share"), "diagnostics-share", this::share);
         save = action(body, Strings.t("Save"), "diagnostics-save", this::save);
         delete =
@@ -153,6 +181,7 @@ public final class DiagnosticsActivity extends Activity {
 
     private void status() {
         if (state == null) return;
+        if (heap != null) heap.setText(HeapStatus.description());
         boolean active = Diagnostics.active();
         state.setText(active ? Strings.t("Recording") : Strings.t("Off"));
         start.setEnabled(!active);

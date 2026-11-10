@@ -58,6 +58,8 @@ SOURCES = [
     "TelegramLegendRows",
     "DiagnosticRecord",
     "DiagnosticStore",
+    "PerformanceTrace",
+    "TelegramProgress",
     "CachePolicy",
     "TrackMetadata",
     "TrackNames",
@@ -164,6 +166,7 @@ SOURCES = [
 TESTS = [
     "DiagnosticRecordTest",
     "DiagnosticStoreTest",
+    "PerformanceTraceTest",
     "BitPerfectTest",
     "DownloadProbeTest",
     "NativeAudioTest",

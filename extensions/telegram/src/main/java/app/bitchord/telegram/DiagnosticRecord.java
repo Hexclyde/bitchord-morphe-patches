@@ -19,13 +19,13 @@ public final class DiagnosticRecord {
     private static final Set<String> TYPES =
             set(
                     "event host.line process.started process.restarted recording.started"
-                        + " recording.stopped recording.expired environment.sdk webview.provider"
-                        + " service.package activity.created activity.started activity.resumed"
-                        + " activity.paused activity.stopped activity.destroyed login.view.created"
-                        + " login.navigation.requested login.page.started login.page.finished"
-                        + " login.history login.web.error login.http.error login.tls.error"
-                        + " login.renderer.gone java.crash patch.event network.event playback.event"
-                        + " source.event download.event");
+                        + " recording.mark recording.stopped recording.expired environment.sdk"
+                        + " webview.provider service.package activity.created activity.started"
+                        + " activity.resumed activity.paused activity.stopped activity.destroyed"
+                        + " login.view.created login.navigation.requested login.page.started"
+                        + " login.page.finished login.history login.web.error login.http.error"
+                        + " login.tls.error login.renderer.gone java.crash patch.event"
+                        + " network.event playback.event source.event download.event");
     private static final Set<String> CATEGORIES =
             set(
                     "APP ACTIVITY SERVICE LOGIN WEBVIEW MICROG NETWORK PLAYER SOURCE DOWNLOAD"
@@ -161,6 +161,7 @@ public final class DiagnosticRecord {
     }
 
     public static String structured(String type, Map<String, ?> fields) {
+        if ("performance.span".equals(type)) return PerformanceTrace.encode(fields);
         try {
             String safeType =
                     type != null && type.length() <= 64 && TYPES.contains(type) ? type : "event";
@@ -512,7 +513,7 @@ public final class DiagnosticRecord {
                     || text.indexOf(']') >= 0) return null;
             JSONObject input = new JSONObject(text);
             String type = input.optString("type", "");
-            if (!TYPES.contains(type)) return null;
+            if (!TYPES.contains(type) && !type.equals("performance.span")) return null;
             Map<String, Object> fields = new LinkedHashMap<>();
             for (Iterator<String> keys = input.keys(); keys.hasNext(); ) {
                 String key = keys.next();

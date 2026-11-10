@@ -10,6 +10,7 @@ import java.util.concurrent.*;
 /** Byte-range reader over TDLib file downloads. */
 final class NativeAudio {
     final TelegramBridge bridge;
+    final TelegramProgress progress = new TelegramProgress();
     final Object cacheGuard = new Object();
     final Semaphore slots = new Semaphore(3);
 
@@ -28,6 +29,8 @@ final class NativeAudio {
     static final class Lease {
         /** Every reader of the file; {@code background} of them are background reads. */
         int readers, background;
+
+        volatile long operation;
     }
 
     /**
@@ -109,6 +112,12 @@ final class NativeAudio {
             long chat = row.getLong("chat");
             TdApi.File file = bridge.call(new TdApi.GetFile(fileId));
             checkFile(row, file);
+            if (file.local != null)
+                progress.observe(
+                        file.id,
+                        generation,
+                        file.remote == null ? "" : file.remote.uniqueId,
+                        file.local.downloadedSize);
             SourcePreference.noteAdvertised(url, row.optLong("duration", 0));
             HostLog.d(
                     "Telegram file mapping candidate="
@@ -310,6 +319,9 @@ final class NativeAudio {
         final long chat, message, generation, total;
         final String tag, mime;
         final Lease lease;
+        final PerformanceTrace.Span trace =
+                PerformanceTrace.begin(PerformanceTrace.Stage.SOURCE_OPEN);
+        long physicalBytes;
         Semaphore slot;
         boolean background;
         long revision, checkedAt;
@@ -425,94 +437,132 @@ final class NativeAudio {
         private int physical(long at, long limit, byte[] buffer, int offset, int length)
                 throws Exception {
             if (at >= limit) return -1;
+            check();
+            // This reader's confirmed local span does not alter TDLib's download window.
+            // Do not wait behind another reader's missing range to consume already cached data.
+            if (availablePath != null && at >= availableFrom && at < availableUntil) {
+                int count =
+                        (int)
+                                Math.min(
+                                        Math.min(availableUntil - at, limit - at),
+                                        Math.min(length, 64 * 1024));
+                File cached = new File(availablePath);
+                try (RandomAccessFile input = new RandomAccessFile(cached, "r")) {
+                    if (input.length() == availableLength
+                            && cached.lastModified() == availableModified) {
+                        input.seek(at);
+                        input.readFully(buffer, offset, count);
+                        check();
+                        physicalBytes += count;
+                        return count;
+                    }
+                } catch (java.io.FileNotFoundException | EOFException gone) {
+                    // A moved or trimmed cache is revalidated below.
+                }
+                availablePath = null;
+            }
+            PerformanceTrace.Span waiting =
+                    PerformanceTrace.begin(PerformanceTrace.Stage.LEASE_WAIT, trace);
+            waiting.measure("owner_operation", lease.operation);
             synchronized (lease) {
-                // TDLib moves a file out of its temp folder once the download completes, and
-                // deletes cached files to free space, so the path it gave may be gone by the time
-                // it's opened. Ask again, downloading the part again if it was deleted.
-                for (int attempt = 1; ; attempt++) {
-                    check();
-                    if (availablePath != null && at >= availableFrom && at < availableUntil) {
+                waiting.close();
+                lease.operation = trace.operation;
+                try {
+                    // TDLib moves a file out of its temp folder once the download completes, and
+                    // deletes cached files to free space, so the path it gave may be gone by the
+                    // time
+                    // it's opened. Ask again, downloading the part again if it was deleted.
+                    for (int attempt = 1; ; attempt++) {
+                        check();
+                        // TDLib has one requested download window per file. Serialize each
+                        // bounded read, then let another reader seek without cancelling it.
+                        long prefix =
+                                owner.bridge.call(new TdApi.GetFileDownloadedPrefixSize(id, at))
+                                        .size;
+                        if (prefix <= 0) {
+                            PerformanceTrace.Span range =
+                                    PerformanceTrace.begin(
+                                            PerformanceTrace.Stage.RANGE_WAIT, trace);
+                            range.measure("range_offset", at);
+                            range.measure("range_limit", Math.min(limit - at, 4L * 1024 * 1024));
+                            range.measure("priority", background ? 1 : 32);
+                            try {
+                                long wanted = Math.min(limit - at, 4L * 1024 * 1024);
+                                owner.bridge.call(
+                                        new TdApi.DownloadFile(
+                                                id, background ? 1 : 32, at, wanted, false));
+                                long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(40);
+                                do {
+                                    long observedProgress = owner.progress.version(id);
+                                    check();
+                                    long millis =
+                                            TimeUnit.NANOSECONDS.toMillis(
+                                                    deadline - System.nanoTime());
+                                    if (millis <= 0)
+                                        throw new IOException("Telegram download timed out");
+                                    prefix =
+                                            owner.bridge.call(
+                                                            new TdApi.GetFileDownloadedPrefixSize(
+                                                                    id, at),
+                                                            Math.min(millis, 15000))
+                                                    .size;
+                                    if (prefix > 0) break;
+                                    owner.progress.await(id, observedProgress, millis);
+                                } while (true);
+                            } catch (Exception failed) {
+                                range.end(
+                                        failed instanceof InterruptedException
+                                                ? PerformanceTrace.Outcome.CANCELLED
+                                                : PerformanceTrace.Outcome.FAILED);
+                                throw failed;
+                            } finally {
+                                range.close();
+                            }
+                        }
+                        check();
+                        TdApi.File file = owner.bridge.call(new TdApi.GetFile(id));
                         int count =
                                 (int)
                                         Math.min(
-                                                Math.min(availableUntil - at, limit - at),
-                                                Math.min(length, 64 * 1024));
-                        File cached = new File(availablePath);
-                        try (RandomAccessFile input = new RandomAccessFile(cached, "r")) {
-                            if (input.length() == availableLength
-                                    && cached.lastModified() == availableModified) {
-                                input.seek(at);
-                                input.readFully(buffer, offset, count);
-                                check();
-                                return count;
-                            }
+                                                Math.min(prefix, Math.min(length, 64 * 1024)),
+                                                limit - at);
+                        try (RandomAccessFile input = new RandomAccessFile(file.local.path, "r")) {
+                            input.seek(at);
+                            input.readFully(buffer, offset, count);
                         } catch (java.io.FileNotFoundException | EOFException gone) {
-                            // A moved or trimmed cache is revalidated below.
+                            if (attempt >= MOVED_ATTEMPTS) throw gone;
+                            if (attempt == 1)
+                                HostLog.d(
+                                        "Unofficial Telegram file "
+                                                + id
+                                                + " moved or was deleted while it was read;"
+                                                + " fetching it again");
+                            // Asking for the part makes TDLib check the file is still there and
+                            // download it again if it isn't; otherwise it keeps naming the old
+                            // path.
+                            owner.bridge.call(
+                                    new TdApi.DownloadFile(
+                                            id,
+                                            background ? 1 : 32,
+                                            at,
+                                            Math.min(limit - at, 4L * 1024 * 1024),
+                                            false));
+                            Thread.sleep(50L * attempt);
+                            continue;
                         }
-                        availablePath = null;
+                        check();
+                        // A confirmed contiguous range stays readable without two RPCs per chunk.
+                        availablePath = file.local.path;
+                        File cached = new File(availablePath);
+                        availableLength = cached.length();
+                        availableModified = cached.lastModified();
+                        availableFrom = at;
+                        availableUntil = at + Math.min(prefix, limit - at);
+                        physicalBytes += count;
+                        return count;
                     }
-                    // TDLib has one requested download window per file. Serialize each
-                    // bounded read, then let another reader seek without cancelling it.
-                    long prefix =
-                            owner.bridge.call(new TdApi.GetFileDownloadedPrefixSize(id, at)).size;
-                    if (prefix <= 0) {
-                        long wanted = Math.min(limit - at, 4L * 1024 * 1024);
-                        owner.bridge.call(
-                                new TdApi.DownloadFile(id, background ? 1 : 32, at, wanted, false));
-                        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(40);
-                        do {
-                            check();
-                            long millis =
-                                    TimeUnit.NANOSECONDS.toMillis(deadline - System.nanoTime());
-                            if (millis <= 0) throw new IOException("Telegram download timed out");
-                            prefix =
-                                    owner.bridge.call(
-                                                    new TdApi.GetFileDownloadedPrefixSize(id, at),
-                                                    Math.min(millis, 15000))
-                                            .size;
-                            if (prefix > 0) break;
-                            Thread.sleep(100);
-                        } while (true);
-                    }
-                    check();
-                    TdApi.File file = owner.bridge.call(new TdApi.GetFile(id));
-                    int count =
-                            (int)
-                                    Math.min(
-                                            Math.min(prefix, Math.min(length, 64 * 1024)),
-                                            limit - at);
-                    try (RandomAccessFile input = new RandomAccessFile(file.local.path, "r")) {
-                        input.seek(at);
-                        input.readFully(buffer, offset, count);
-                    } catch (java.io.FileNotFoundException | EOFException gone) {
-                        if (attempt >= MOVED_ATTEMPTS) throw gone;
-                        if (attempt == 1)
-                            HostLog.d(
-                                    "Unofficial Telegram file "
-                                            + id
-                                            + " moved or was deleted while it was read; fetching"
-                                            + " it again");
-                        // Asking for the part makes TDLib check the file is still there and
-                        // download it again if it isn't; otherwise it keeps naming the old path.
-                        owner.bridge.call(
-                                new TdApi.DownloadFile(
-                                        id,
-                                        background ? 1 : 32,
-                                        at,
-                                        Math.min(limit - at, 4L * 1024 * 1024),
-                                        false));
-                        Thread.sleep(50L * attempt);
-                        continue;
-                    }
-                    check();
-                    // A confirmed contiguous range stays readable without two RPCs per chunk.
-                    availablePath = file.local.path;
-                    File cached = new File(availablePath);
-                    availableLength = cached.length();
-                    availableModified = cached.lastModified();
-                    availableFrom = at;
-                    availableUntil = at + Math.min(prefix, limit - at);
-                    return count;
+                } finally {
+                    lease.operation = 0;
                 }
             }
         }
@@ -523,6 +573,8 @@ final class NativeAudio {
             synchronized (this) {
                 if (!released) {
                     released = true;
+                    trace.measure("physical_cache_bytes", physicalBytes);
+                    trace.close();
                     owner.release(id, lease, slot, background, true);
                 }
             }

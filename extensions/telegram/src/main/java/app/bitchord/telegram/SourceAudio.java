@@ -167,6 +167,30 @@ public final class SourceAudio extends MediaDataSource {
         }
     }
 
+    static final long WORKING_HEAP_CEILING = 1024L << 20;
+
+    static long workingHeapMaximum(long runtimeMaximum) {
+        return Math.min(runtimeMaximum, WORKING_HEAP_CEILING);
+    }
+
+    static void traceMemory() {
+        Runtime runtime = Runtime.getRuntime();
+        long maximum = runtime.maxMemory(), used = runtime.totalMemory() - runtime.freeMemory();
+        long growth = SteadyPlayback.analysisGrowth(maximum);
+        if (growth < 0) growth = Math.max(workingHeapMaximum(maximum) / 2, STOCK_PLAYER_RESERVE);
+        try (PerformanceTrace.Span span = PerformanceTrace.begin(PerformanceTrace.Stage.MEMORY)) {
+            span.measure("heap_max", maximum);
+            span.measure("heap_used", used);
+            span.measure("working_ceiling", workingHeapMaximum(maximum));
+            span.measure("pending", pendingJava(null));
+            span.measure("playback_reserve", growth);
+            span.measure("analysis_allowance", dspAvailable(maximum, used));
+            span.measure("native_heap", nativeHeap.getAsLong());
+            span.measure("process_rss", processResident.getAsLong());
+            span.measure("system_available", physicalAvailable.getAsLong());
+        }
+    }
+
     private static final int MAX_GRANTS = 16;
 
     static JavaMemory reserveJava(long bytes) {
@@ -190,6 +214,7 @@ public final class SourceAudio extends MediaDataSource {
     }
 
     static JavaMemory reserveJava(long maximum, long used, long bytes) {
+        maximum = workingHeapMaximum(maximum);
         synchronized (JavaMemory.class) {
             if (maximum <= 0 || used < 0 || used >= maximum || bytes <= 0) return null;
             // Grants are few and short; a leak must not grow the list without limit.
@@ -265,6 +290,7 @@ public final class SourceAudio extends MediaDataSource {
 
     private static long dspAvailable(
             long maximum, long used, long growth, JavaMemory own, long margin) {
+        maximum = workingHeapMaximum(maximum);
         if (maximum <= 0 || used < 0 || used >= maximum) return 0;
         if (growth < 0) growth = Math.max(maximum / 2, STOCK_PLAYER_RESERVE);
         long free = maximum - used - pendingJava(own);

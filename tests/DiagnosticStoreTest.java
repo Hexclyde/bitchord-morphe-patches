@@ -66,6 +66,14 @@ public final class DiagnosticStoreTest {
                     recovered.size() <= DiagnosticStore.MAX_RECORDS
                             && file.length() <= DiagnosticStore.MAX_BYTES,
                     "Journal exceeded memory/disk bounds");
+            check(
+                    recovered.writtenBytes() < 200_000,
+                    "Saturation rewrites history for every event");
+            for (int index = 0; index < 4000; index++) recovered.append(event(index));
+            check(recovered.rotations() > 0, "Journal must rotate at the byte bound");
+            check(
+                    recovered.writtenBytes() < 2_000_000,
+                    "Rotation has excessive write amplification");
             check(recovered.dropped() > 0, "Bounded eviction was not reported");
             String snapshot = recovered.snapshot();
             JSONObject header = new JSONObject(snapshot.split("\n")[0]);

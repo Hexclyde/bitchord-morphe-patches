@@ -48,6 +48,15 @@ public class DspMemoryTest {
         field.set(null, value);
     }
 
+    @Test
+    public void managedCeilingDoesNotSpendBeyondOneGiBOrTheDeviceLimit() {
+        assertEquals(256 * MB, SourceAudio.workingHeapMaximum(256 * MB));
+        assertEquals(1024 * MB, SourceAudio.workingHeapMaximum(2048 * MB));
+        assertNull(SourceAudio.reserveJava(2048 * MB, 1024 * MB, MB));
+        assertEquals(0, SourceAudio.dspAvailable(2048 * MB, 1024 * MB));
+        assertNull(SourceAudio.reserveJava(256 * MB, 252 * MB, 36 * MB));
+    }
+
     @Before
     public void setup() throws Exception {
         formats = SourceAudio.analysisFormats;

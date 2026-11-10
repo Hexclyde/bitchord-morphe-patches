@@ -138,6 +138,7 @@ public final class SmoothUpgrade {
      * that belongs to this one attempt and waits for it.
      */
     static final class SwapCommit {
+        final PerformanceTrace.Span trace = PerformanceTrace.begin(PerformanceTrace.Stage.HANDOVER);
         final String mediaId;
         final MediaItem target;
         final Object targetRendition;
@@ -496,6 +497,8 @@ public final class SmoothUpgrade {
         synchronized (h) {
             if (h.state != 0) return;
             h.state = 1;
+            if (h.generation != null) h.trace.measure("generation", h.generation);
+            h.trace.close();
             h.service = null;
             run = new java.util.ArrayList<>(h.held);
             h.held.clear();
@@ -523,6 +526,7 @@ public final class SmoothUpgrade {
         synchronized (h) {
             if (h.state != 0) return;
             h.state = 2;
+            h.trace.end(PerformanceTrace.Outcome.CANCELLED);
             service = h.service;
             h.service = null;
             h.held.clear();

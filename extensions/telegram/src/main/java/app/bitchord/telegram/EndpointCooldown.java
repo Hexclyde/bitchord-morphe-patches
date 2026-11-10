@@ -12,6 +12,8 @@ final class EndpointCooldown {
     /** The first pause; each later failure without a retry time doubles it, up to the longest. */
     static final long SHORTEST_MILLIS = 30_000, LONGEST_MILLIS = 10 * 60_000L;
 
+    static final long MAX_SERVER_RETRY_MILLIS = 3_600_000L;
+
     private final Clock clock;
     private long until, next = SHORTEST_MILLIS;
 
@@ -27,7 +29,10 @@ final class EndpointCooldown {
     synchronized long failed(long retryMillis) {
         long now = clock.millis();
         if (until > now) return until - now;
-        long wait = retryMillis > 0 ? Math.min(LONGEST_MILLIS, Math.max(1000, retryMillis)) : next;
+        long wait =
+                retryMillis > 0
+                        ? Math.min(MAX_SERVER_RETRY_MILLIS, Math.max(1000, retryMillis))
+                        : next;
         next = Math.min(LONGEST_MILLIS, next * 2);
         until = now + wait;
         return wait;

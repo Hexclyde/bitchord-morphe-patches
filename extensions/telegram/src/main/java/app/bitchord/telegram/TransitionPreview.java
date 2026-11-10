@@ -663,6 +663,7 @@ final class TransitionPreview {
     }
 
     static final class Audition {
+        final PerformanceTrace.Span trace = PerformanceTrace.begin(PerformanceTrace.Stage.PREVIEW);
         final Session session;
         final TransitionEdit draft;
         final TransitionRuntime.Pair pair;
@@ -797,6 +798,23 @@ final class TransitionPreview {
 
         /** One line of counts and milliseconds, with no track, source or account details. */
         private void report(String end) {
+            trace.measure("tap_ms", tapMs);
+            trace.measure("session_ms", sessionMs);
+            trace.measure("decks_ms", decksMs);
+            trace.measure("seek_ms", seekMs);
+            trace.measure("prepare_ms", prepareMs);
+            trace.measure("out_ready_ms", outReady);
+            trace.measure("in_ready_ms", inReady);
+            trace.measure("out_progress_ms", outPlay);
+            trace.measure("in_progress_ms", inPlay);
+            trace.measure("stalls", stalls);
+            trace.measure("stall_ms", stallMs);
+            trace.end(
+                    end.equals("completed")
+                            ? PerformanceTrace.Outcome.COMPLETE
+                            : end.equals("error") || end.equals("setup-failed")
+                                    ? PerformanceTrace.Outcome.FAILED
+                                    : PerformanceTrace.Outcome.CANCELLED);
             HostLog.d(
                     "AutoMix preview timing: tapMs="
                             + tapMs

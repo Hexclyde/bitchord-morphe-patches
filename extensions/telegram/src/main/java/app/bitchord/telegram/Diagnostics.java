@@ -48,7 +48,49 @@ public final class Diagnostics {
 
     private Diagnostics() {}
 
+    public static void seek(Object player, long target) {
+        try {
+            SeekTrace.requested(player, target);
+        } catch (RuntimeException | LinkageError unavailable) {
+            /* Observers must never change playback. */
+        }
+    }
+
+    private static void action(PerformanceTrace.Stage stage, Object player) {
+        if (!active()) return;
+        try (PerformanceTrace.Span span = PerformanceTrace.begin(stage)) {
+            span.measure("player", Integer.toUnsignedLong(System.identityHashCode(player)));
+        } catch (RuntimeException | LinkageError ignored) {
+        }
+    }
+
+    public static void playRequested(Object player) {
+        action(PerformanceTrace.Stage.PLAY_REQUESTED, player);
+    }
+
+    public static void pauseRequested(Object player) {
+        action(PerformanceTrace.Stage.PAUSE_REQUESTED, player);
+    }
+
+    public static void skipRequested(Object player) {
+        action(PerformanceTrace.Stage.SKIP_REQUESTED, player);
+    }
+
+    public static void prepareRequested(Object player) {
+        action(PerformanceTrace.Stage.PREPARE_REQUESTED, player);
+    }
+
+    public static void queueRequested(Object player) {
+        action(PerformanceTrace.Stage.QUEUE_REQUESTED, player);
+    }
+
+    public static void playingRequested(Object player, boolean playing) {
+        if (playing) playRequested(player);
+        else pauseRequested(player);
+    }
+
     public static synchronized void init(Context context) {
+        HeapStatus.init(context);
         if (!SoundExtras.diagnosticsApplied() || app != null || context == null) return;
         try {
             app = context.getApplicationContext();
@@ -74,6 +116,22 @@ public final class Diagnostics {
             deadline = prefs.getLong("until", 0);
             long now = System.currentTimeMillis();
             if (deadline <= now || deadline > now + LIMIT_MS) deadline = 0;
+            if (deadline > now && prefs.getBoolean("detailed", false)) {
+                // A restarted process has new span IDs; the report retains the old process's
+                // unfinished starts.
+                PerformanceTrace.start(
+                        Diagnostics::performance, prefs.getString("recording", null));
+                sampleResources(generation);
+            }
+            if (deadline > now) {
+                final long resumedGeneration = generation;
+                new android.os.Handler(android.os.Looper.getMainLooper())
+                        .postDelayed(
+                                () -> {
+                                    if (resumedGeneration == generation) stop();
+                                },
+                                deadline - now);
+            }
             if (app instanceof Application)
                 ((Application) app).registerActivityLifecycleCallbacks(new Lifecycle());
             installCrashHandler();
@@ -116,12 +174,34 @@ public final class Diagnostics {
     }
 
     static synchronized void start(Context context) {
+        start(context, 15, false);
+    }
+
+    static synchronized void start(Context context, int minutes) {
+        start(context, minutes, true);
+    }
+
+    private static synchronized void start(Context context, int minutes, boolean detailed) {
         init(context);
         if (prefs == null) return;
         installCrashHandler();
         generation++;
-        deadline = System.currentTimeMillis() + LIMIT_MS;
-        prefs.edit().putLong("until", deadline).apply();
+        if (detailed) PerformanceTrace.start(Diagnostics::performance);
+        else PerformanceTrace.stop();
+        deadline = System.currentTimeMillis() + Math.min(15, Math.max(2, minutes)) * 60_000L;
+        prefs.edit()
+                .putLong("until", deadline)
+                .putBoolean("detailed", detailed)
+                .putString("recording", PerformanceTrace.recordingId())
+                .apply();
+        final long recordingGeneration = generation;
+        new android.os.Handler(android.os.Looper.getMainLooper())
+                .postDelayed(
+                        () -> {
+                            if (recordingGeneration == generation) stop();
+                        },
+                        Math.max(0, deadline - System.currentTimeMillis()));
+        if (detailed) sampleResources(generation);
         event("recording.started");
         event("environment.sdk sdk=" + Build.VERSION.SDK_INT + " patch=" + PatchVersion.BUILD);
         java.util.Map<String, Object> hardware = new java.util.LinkedHashMap<>();
@@ -168,6 +248,7 @@ public final class Diagnostics {
     }
 
     static synchronized void stop() {
+        PerformanceTrace.stop();
         event("recording.stopped");
         deadline = 0;
         if (prefs != null) prefs.edit().remove("until").apply();
@@ -190,6 +271,41 @@ public final class Diagnostics {
         } else erasePending = true;
     }
 
+    private static void sampleResources(long revision) {
+        if (revision != generation || !active()) return;
+        try {
+            writer.execute(
+                    () -> {
+                        if (revision != generation || !active()) return;
+                        SourceAudio.traceMemory();
+                        new android.os.Handler(android.os.Looper.getMainLooper())
+                                .postDelayed(() -> sampleResources(revision), 5000);
+                    });
+        } catch (java.util.concurrent.RejectedExecutionException full) {
+            dropped.incrementAndGet();
+        }
+    }
+
+    private static void performance(Map<String, Object> fields) {
+        if (!active()) return;
+        final long revision = generation;
+        try {
+            writer.execute(
+                    () -> {
+                        if (revision != generation || store == null) return;
+                        String encoded = PerformanceTrace.encode(fields);
+                        if (encoded != null)
+                            try {
+                                store.append(encoded);
+                            } catch (java.io.IOException ignored) {
+                                dropped.incrementAndGet();
+                            }
+                    });
+        } catch (java.util.concurrent.RejectedExecutionException full) {
+            dropped.incrementAndGet();
+        }
+    }
+
     static String report() {
         String content;
         try {
@@ -207,6 +323,8 @@ public final class Diagnostics {
                 + "\nMessages, account values, page contents and URL parameters are excluded."
                 + "\nWriter queue events dropped: "
                 + dropped.get()
+                + "\n"
+                + HeapStatus.description()
                 + "\n"
                 + patchState()
                 + "\n"

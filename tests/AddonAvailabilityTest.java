@@ -56,6 +56,12 @@ public final class AddonAvailabilityTest {
         AddonAvailability.observe("https://other.example/search", 404, null);
         AddonAvailability.before("https://other.example/search");
         check(true, "Missing tracks do not impose a server cooldown");
+        AddonAvailability.observe(source, 429, "1800");
+        now.addAndGet(600_001);
+        blocked(source);
+        now.addAndGet(1_200_000);
+        AddonAvailability.before(source);
+        check(true, "429 respects a thirty-minute server retry across callers");
         AddonAvailability.reset();
         AddonAvailability.before(source);
         check(true, "Reset releases state");
